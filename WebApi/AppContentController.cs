@@ -167,10 +167,8 @@ namespace ToSic.SexyContent.WebApi
         public void Delete(string contentType, int id)
         {
             InitEavAndSerializer();
-            IEntity itm = App.Data.Out["Default"].List[id];
-
+            IEntity itm = App.Data.Out["Default"].List[id]; // pre-fetch for security checks
             contentType = Delete_SharedCode(contentType, itm);
-
             _entitiesController.Delete(contentType, id);
         }
 
@@ -194,26 +192,9 @@ namespace ToSic.SexyContent.WebApi
         public void Delete(string contentType, Guid guid)
         {
             InitEavAndSerializer();
-
-            // try to pre-fetch for security and content-type check
-            IEntity itm = App.Data.Out["Default"].LightList.FirstOrDefault(e => e.EntityGuid == guid);
-	        Delete_SharedCode(contentType, itm);
-
-            //var autoAllowAdmin = true;
-            //// special case: contentType "any" - in this case it looks up the type
-            //if (contentType == "any")
-            //{
-            //    autoAllowAdmin = false;
-            //    contentType = itm?.Type.Name;
-            //}
-
-            //if (string.IsNullOrEmpty(contentType))
-            //    ThrowHttpError(HttpStatusCode.NotFound, "item " + guid + " not found");
-
-            //// do additional check if type given matches the type of the id etc.
-            //itm = _entitiesController.GetEntityOrThrowError(contentType, itm.EntityId, appId: App.AppId);
-
-            //PerformSecurityCheck(contentType, PermissionGrant.Delete, autoAllowAdmin, itm);
+            IEntity itm = App.Data.Out["Default"].LightList     // pre-fetch for security and content-type check
+                .FirstOrDefault(e => e.EntityGuid == guid);
+            contentType = Delete_SharedCode(contentType, itm);
             _entitiesController.Delete(contentType, guid);
         }
 
