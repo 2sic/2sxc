@@ -31,29 +31,23 @@
             // delete command - try to really delete a content-item
             "delete": function (sxc, itemId, itemGuid, itemTitle) {
                 // first show main warning / get ok
-                // todo: i18n
-                var ok = confirm("BETA!\n\n"
-                    + "This will really delete item " + itemId
-                    + (itemTitle ? " \"" + itemTitle + "\"" : "")
-                    + ". "
-                    + "\n\nThis cannot be undone. Are you sure?");
+                var ok = confirm($2sxc.translate("Delete.Confirm")
+                    .replace("{id}", itemId)
+                    .replace("{title}", itemTitle));
                 if (!ok) return;
 
                 sxc.webApi.delete("app-content/any/" + itemGuid, null, null, true)
                     .success(function () {
                         location.reload();
                     }).error(function (error) {
-                        // todo: i18n
-                        var msgJs = "\n\nPlease check javascript console for more information.";
+                        var msgJs = $2sxc.translate("Delete.ErrCheckConsole");
                         // check if it's a permission config problem
                         console.log(error);
                         if (error.status === 401) {
-                            // todo: i18n
-                            alert("Can't delete - permissions missing. " + msgJs);
+                            alert($2sxc.translate("Delete.ErrPermission") + msgJs);
                         }
                         if (error.status === 400) {
-                            // todo: i18n
-                            alert("Can't delete - item is probably in use elsewhere. " + msgJs);
+                            alert($2sxc.translate("Delete.ErrInUse") + msgJs);
                         }
                     });
             }
@@ -179,8 +173,10 @@
                 // disabled: true,
                 showCondition: function (settings) {
                     // can never be used for a modulelist item, as it is always in use somewhere
-                    if (settings.useModuleList) return false;
-                    // check if all data exists
+                    if (settings.useModuleList)
+                        return false;
+
+                    // check if all data exists required for deleting
                     return settings.entityId && settings.entityGuid && settings.entityTitle;
                 },
                 code: function (settings, event, sxc) {
@@ -2474,7 +2470,11 @@ $(document).ready(function () {
             },
             {
                 name: "list",
-                buttons: "add,remove,delete,moveup,movedown,instance-list,replace"
+                buttons: "add,remove,moveup,movedown,instance-list,replace"
+            },
+            {
+                name: "data",
+                buttons: "delete"
             },
             {
                 name: "instance",

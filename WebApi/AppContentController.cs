@@ -167,6 +167,10 @@ namespace ToSic.SexyContent.WebApi
         public void Delete(string contentType, int id)
         {
             InitEavAndSerializer();
+            // don't allow type "any" on this
+            if(contentType == "any")
+                throw new Exception("type any not allowed with id-only, requires guid");
+
             IEntity itm = App.Data.Out["Default"].List[id]; // pre-fetch for security checks
             contentType = Delete_SharedCode(contentType, itm);
             _entitiesController.Delete(contentType, id);
