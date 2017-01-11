@@ -25,7 +25,14 @@
 		"AppSettingsDisabled": "no app settings to configure",
 		"AppResources": "app resources in all languages",
 		"AppResourcesDisabled": "no app-resources to translate",
-		"ConfirmRemove": "This will remove this content-item from this list, but not delete it (so you can add it again later). \nSee 2sxc.org/help for more. \n\nOk to remove?"
+		"ConfirmRemove": "This will remove this content-item from this list, but not delete it (so you can add it again later). \nSee 2sxc.org/help for more. \n\nOk to remove?",
+		"Delete": "delete item"
+	},
+	"Delete": {
+		"Confirm": "This will really delete item {id} \"{title}\". \n\nThis cannot be undone. Are you sure?",
+		"ErrPermission": "Can't delete - permissions missing.",
+		"ErrInUse": "Can't delete - item is probably in use elsewhere.",
+		"ErrCheckConsole": "\n\nPlease check javascript console for more information."
 	},
 	"EditFormTitle": {
 		"Content": "Content",
