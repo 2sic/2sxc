@@ -88,6 +88,7 @@
 		"H1": "Ü1",
 		"H2": "Ü2",
 		"H3": "Ü3",
-		"Remove": "Entfernen"
+		"Remove": "Entfernen",
+		"ContentBlock.Add": "App oder Inhaltsbaustein einfügen"
 	}
 }

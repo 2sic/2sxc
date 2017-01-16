@@ -1839,7 +1839,7 @@ angular.module("sxcFieldTemplates")
             editor.addButton("addcontentblock", {
                 icon: " icon-eav-star",
                 classes: "btn-addcontentblock",
-                tooltip: "add content block (todo i18n)",
+                tooltip: "ContentBlock.Add",
                 onclick: function() {
                     var guid = Math.uuid().toLowerCase(); // requires the uuid-generator to be included
 

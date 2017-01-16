@@ -273,15 +273,19 @@ angular.module("eavFieldTemplates")
 
         // ajax call to get all entities
         // todo: move to a service some time + enhance to provide more fields if needed
-        $scope.getAvailableEntities = function (ctName) {
-            if (!ctName)
-                ctName = contentType.resolve(); // pick up from linked drop-down
+        $scope.getAvailableEntities = function () {
+            //if (!ctName)
+            var ctName = contentType.resolve(); // always get the latest definition, possibly from another drop-down
 
             // check if we should get all or only the selected ones...
             // if we can't add, then we only need one...
-            var itemFilter = $scope.to.settings.merged.EnableAddExisting
-                ? null
-                : $scope.model[$scope.options.key].Values[0].Value;
+            var itemFilter = null;
+            try {
+                itemFilter = $scope.to.settings.merged.EnableAddExisting
+                    ? null
+                    : $scope.model[$scope.options.key].Values[0].Value;
+            }
+            catch(err) {}
 
             return $http.post("eav/EntityPicker/getavailableentities", itemFilter, {
                 params: {
@@ -298,7 +302,7 @@ angular.module("eavFieldTemplates")
             var newMask = contentType.resolve();
             if (lastContentType !== newMask || force) {
                 lastContentType = newMask;
-                return $scope.getAvailableEntities(newMask);
+                return $scope.getAvailableEntities();
             }
             return $q.when();
         };

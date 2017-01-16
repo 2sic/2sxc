@@ -153,11 +153,14 @@
 		},
 		"C#": {
 			"Title": "c# code",
-			"Basics.Title": "Basics like using or function blocks"
+			"Basics.Title": "Basics like using or function blocks",
+			"InnerContent.Title": "Inner Content / Very-Rich-Text",
+			"Headers.Title": "Page headers / titles"
 		},
 		"Html": {
 			"Title": "Html snippets",
-			"Resources.Title": "Resources like javascripts and css"
+			"Resources.Title": "Resources like javascripts and css",
+			"2sxcScripts.Title": "2sxc Scripts"
 		}
 	}
 }

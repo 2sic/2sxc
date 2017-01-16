@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Hosting;
 
 namespace ToSic.SexyContent.Internal
 {
@@ -13,12 +14,10 @@ namespace ToSic.SexyContent.Internal
         public const string RazorVb = "VB Razor";
         public const string TokenReplace = "Token";
 
-        public SxcInstance _sxcInstance;
         public App App;
         public TemplateManager(App app)
         {
-            ///_sxcInstance = sxc;
-            App = app;//sxc.App;
+            App = app;
         }
 
         /// <summary>
@@ -65,11 +64,12 @@ namespace ToSic.SexyContent.Internal
         /// Creates a directory and copies the needed web.config for razor files
         /// if the directory does not exist.
         /// </summary>
-        /// <param name="server"></param>
         /// <param name="templateLocation"></param>
-        internal void EnsureTemplateFolderExists(HttpServerUtility server, string templateLocation)
+        public void EnsureTemplateFolderExists(string templateLocation)
         {
-            var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem ? server.MapPath(Settings.PortalHostDirectory) : App.OwnerPortalSettings.HomeDirectoryMapPath;
+            var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
+                ? HostingEnvironment.MapPath(Settings.PortalHostDirectory) 
+                : App.OwnerPortalSettings.HomeDirectoryMapPath;
             var sexyFolderPath = Path.Combine(portalPath, Settings.TemplateFolder);
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
@@ -80,7 +80,7 @@ namespace ToSic.SexyContent.Internal
 
             // Create web.config (copy from DesktopModules folder)
             if (!sexyFolder.GetFiles("web.config").Any())
-                File.Copy(server.MapPath(Settings.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
+                File.Copy(HostingEnvironment.MapPath(Settings.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
 
             // Create a Content folder (or App Folder)
             if (!String.IsNullOrEmpty(App.Folder))
@@ -101,7 +101,7 @@ namespace ToSic.SexyContent.Internal
             var templatePathRootMapPath = server.MapPath(GetTemplatePathRoot(templateLocation, App));
             var directory = new DirectoryInfo(templatePathRootMapPath);
 
-            EnsureTemplateFolderExists(server, templateLocation);
+            EnsureTemplateFolderExists(templateLocation);
 
             // Filter the files according to type
             var fileFilter = "*.html";

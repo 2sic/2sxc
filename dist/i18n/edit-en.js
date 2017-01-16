@@ -92,6 +92,7 @@
 		"H1": "H1",
 		"H2": "H2",
 		"H3": "H3",
-		"Remove": "Remove"
+		"Remove": "Remove",
+		"ContentBlock.Add": "add app or content-block"
 	}
 }
