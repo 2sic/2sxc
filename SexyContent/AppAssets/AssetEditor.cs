@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.AppAssets
 {
@@ -17,17 +18,11 @@ namespace ToSic.SexyContent.AppAssets
 
         private readonly App _app;
 
-        /// <summary>
-        /// This tells us if the file is in the apps global area (in portal _default) or in the local area (current portal)
-        /// </summary>
-        //public bool Global { get; }
-
         public AssetEditor(App app, int templateId, UserInfo userInfo, PortalSettings portalSettings)//, bool global = false)
         {
             _app = app;
             _userInfo = userInfo;
             _portalSettings = portalSettings;
-            //Global = global;
 
             var template = _app.TemplateManager.GetTemplate(templateId);
             EditInfo = TemplateAssetsInfo(template);
@@ -38,7 +33,6 @@ namespace ToSic.SexyContent.AppAssets
             _app = app;
             _userInfo = userInfo;
             _portalSettings = portalSettings;
-            //Global = global;
 
             EditInfo = new AssetEditInfo(_app.AppId, _app.Name, path, global);
         }
@@ -151,6 +145,9 @@ namespace ToSic.SexyContent.AppAssets
             // don't create if it already exits
             if (File.Exists(absolutePath)) return false;
 
+            // ensure the web.config exists (usually missing in the global area)
+            new Internal.TemplateManager(_app).EnsureTemplateFolderExists(EditInfo.LocationScope);
+
             // check if the folder to it already exists, or create it...
             var foundFolder = absolutePath.LastIndexOf("\\", StringComparison.InvariantCulture);
             if (foundFolder > -1)
@@ -168,6 +165,13 @@ namespace ToSic.SexyContent.AppAssets
             stream.Close();
 
             return true;
+        }
+
+        private void EnsureWebConfigExists(App app, string scope)
+        {
+            new Internal.TemplateManager(app).EnsureTemplateFolderExists(scope);
+
+            return;
         }
     }
 }

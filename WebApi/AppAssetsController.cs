@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.AppAssets;
@@ -24,20 +25,20 @@ namespace ToSic.SexyContent.WebApi
 
         #region Public API
 
-        private bool _allowFullAccess;
+        // private bool _allowFullAccess;
         [HttpGet]
         public  List<string> List(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {
             // set global access security if ok...
-            _allowFullAccess = UserInfo.IsSuperUser;
+            var allowFullAccess = UserInfo.IsSuperUser;
 
             // make sure the folder-param is not null if it's missing
             if (string.IsNullOrEmpty(path)) path = "";
-            var appPath = ResolveAppPath(appId, global);
+            var appPath = ResolveAppPath(appId, global, allowFullAccess);
             var fullPath = Path.Combine(appPath, path);
 
             // make sure the resulting path is still inside 2sxc
-            if (!_allowFullAccess && !fullPath.Contains("2sxc"))
+            if (!allowFullAccess && !fullPath.Contains("2sxc"))
                 throw new DirectoryNotFoundException("the folder is not inside 2sxc-scope any more and the current user doesn't have the permissions - must cancel");
 
             // if the directory doesn't exist, return empty list
@@ -65,7 +66,7 @@ namespace ToSic.SexyContent.WebApi
                 //Directory.GetFiles(fullPath, mask, opt)
                 //    .Select(Path.GetFullPath)
                 )
-                .Select(p => EnsurePathMayBeAccessed(p, appPath))   // do another security check
+                .Select(p => EnsurePathMayBeAccessed(p, appPath, allowFullAccess))   // do another security check
                 .Select(x => x.Replace(appPath + "\\", ""))         // truncate / remove internal server root path
                 .Select(x => x.Replace("\\", "/"))                  // tip the slashes to web-convention - important, because old entries for templates used that slash
                 .ToList();
@@ -119,11 +120,11 @@ namespace ToSic.SexyContent.WebApi
         }
 
 
-        private string ResolveAppPath(int appId, bool global)
+        private string ResolveAppPath(int appId, bool global,  bool allowFullAccess)
         {
             var thisApp = new App(PortalSettings.Current, appId);
 
-            if (global && !_allowFullAccess)
+            if (global && !allowFullAccess)
                 throw new NotSupportedException("only host user may access global files");
 
             var appPath = Internal.TemplateManager.GetTemplatePathRoot(global
@@ -147,9 +148,6 @@ namespace ToSic.SexyContent.WebApi
         [HttpPost]
         public bool Create([FromUri] int appId, [FromUri] string path,[FromBody] ContentHelper content, bool global = false)
         {
-            // set global access security if ok...
-            _allowFullAccess = UserInfo.IsSuperUser;
-
             path = path.Replace("/", "\\");
 
             var thisApp = new App(PortalSettings.Current, appId);
@@ -184,9 +182,6 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public AssetEditInfo Asset(int templateId = 0, string path = null, bool global = false)
         {
-            // set global access security if ok...
-            _allowFullAccess = UserInfo.IsSuperUser;
-
             var assetEditor = (templateId != 0 && path == null)
                 ? new AssetEditor(SxcContext.App, templateId, UserInfo, PortalSettings)
                 : new AssetEditor(SxcContext.App, path, UserInfo, PortalSettings, global);
@@ -206,9 +201,6 @@ namespace ToSic.SexyContent.WebApi
         [HttpPost]
         public bool Asset([FromBody] AssetEditInfo template,[FromUri] int templateId = 0, [FromUri] bool global = false, [FromUri] string path = null)
         {
-            // set global access security if ok...
-            _allowFullAccess = UserInfo.IsSuperUser;
-
             var assetEditor = (templateId != 0 && path == null)
                 ? new AssetEditor(SxcContext.App, templateId, UserInfo, PortalSettings)
                 : new AssetEditor(SxcContext.App, path, UserInfo, PortalSettings, global);
@@ -220,12 +212,12 @@ namespace ToSic.SexyContent.WebApi
         #endregion
 
         #region Helpers
-        private string EnsurePathMayBeAccessed(string p, string appPath)
+        private string EnsurePathMayBeAccessed(string p, string appPath, bool allowFullAccess)
         {
             if (appPath == null) throw new ArgumentNullException(nameof(appPath));
             // security check, to ensure no results leak from outside the app
 
-            if (!_allowFullAccess && !p.StartsWith(appPath))
+            if (!allowFullAccess && !p.StartsWith(appPath))
                 throw new DirectoryNotFoundException("Result was not inside the app any more - must cancel");
             return p;
         }

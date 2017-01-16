@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.Internal
             {
                 // configure it
                 var tm = new TemplateManager(sxc.App);
-                tm.EnsureTemplateFolderExists(server, Settings.TemplateLocations.PortalFileSystem);
+                tm.EnsureTemplateFolderExists(Settings.TemplateLocations.PortalFileSystem);
             };
         }
 

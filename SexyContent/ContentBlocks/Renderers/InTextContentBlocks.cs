@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
                 if (found)
                 {
                     var itms = (IList<DynamicEntity>)objFound;
-                    if (itms.Count > 0)
+                    if (itms?.Count > 0)
                         subitem = itms.FirstOrDefault(i => i.EntityGuid == guid);
                 }
 
