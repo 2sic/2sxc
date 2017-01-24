@@ -370,7 +370,7 @@ angular.module("Adam")
                 var config = {
                     url: url,
                     urlRoot: url,
-                    maxFilesize: 100,
+                    maxFilesize: 10000, // 10'000 MB = 10 GB, note that it will also be stopped on the server if it's larger than the really allowed sized
                     paramName: "uploadfile",
                     maxThumbnailFilesize: 10,
 
@@ -423,7 +423,7 @@ angular.module("Adam")
                 };
 
                 // delay building the dropszone till the DOM is ready
-                $timeout(function() {
+                $timeout(function () {
                     var dropzone = new Dropzone(element[0], config);
 
                     angular.forEach(eventHandlers, function(handler, event) {
@@ -1837,12 +1837,12 @@ angular.module("sxcFieldTemplates")
 
             // #region inside content
             editor.addButton("addcontentblock", {
-                icon: " icon-eav-star",
+                icon: " icon-eav-content-block",
                 classes: "btn-addcontentblock",
                 tooltip: "ContentBlock.Add",
                 onclick: function() {
                     var guid = Math.uuid().toLowerCase(); // requires the uuid-generator to be included
-
+                    
                     vm.editor.insertContent("<hr sxc=\"sxc-content-block\" guid=\"" + guid + "\" />");
                 }
             });

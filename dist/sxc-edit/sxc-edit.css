@@ -187,11 +187,13 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .icon-eav-side-marker:before { content: '\e857'; } /* '' */
 .icon-eav-git-branch:before { content: '\e858'; } /* '' */
 .icon-eav-git-pull-request:before { content: '\e859'; } /* '' */
+.icon-eav-content-block:before { content: '\e9bd'; } /* '' */
+.icon-eav-app:before { content: '\e9bf'; } /* '' */
 @font-face {
   font-family: 'app-icons';
-    src: url('../lib/fonts/app-icons.woff?08.09.00') format('woff'),
-     url('../lib/fonts/app-icons.eot?08.09.00#iefix') format('embedded-opentype'),
-     url('../lib/fonts/app-icons.ttf?08.09.00') format('truetype');
+    src: url('../lib/fonts/app-icons.woff?08.09.01') format('woff'),
+     url('../lib/fonts/app-icons.eot?08.09.01#iefix') format('embedded-opentype'),
+     url('../lib/fonts/app-icons.ttf?08.09.01') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

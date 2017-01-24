@@ -3113,7 +3113,7 @@ angular.module("EavServices")
             t.liveListCache.isLoaded = false;
 
             t.liveList = function getAllLive() {
-                if (t.liveListCache.length === 0)
+                if (t.liveListCache.length === 0 && !t.liveListCache.isLoaded)
                     t.liveListReload();
                 return t.liveListCache;
             };
