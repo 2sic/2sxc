@@ -11,6 +11,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.Internal;
 using System;
+using System.Linq;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -29,29 +30,40 @@ namespace ToSic.SexyContent.WebApi
             return PreviousSelector.GetControllerMapping();
         }
 
+        private bool HandleRequestWithThisController(HttpRequestMessage request)
+        {
+            var allowedRoutes = new[] { "DesktopModules/2sxc/API/app-api/", "API/2sxc/app-api/" };
+            var routeData = request.GetRouteData();
+
+            if (!(allowedRoutes.Any(a => routeData.Route.RouteTemplate.Contains(a))))
+                return false;
+            
+            //if (request.FindModuleInfo().DesktopModule.ModuleName != "2sxc-app")
+            //    return false;
+
+            return true;
+        }
+
         public HttpControllerDescriptor SelectController(HttpRequestMessage request)
         {
-
-            var routeData = request.GetRouteData();
-            var module = request.FindModuleInfo();
-
-            // Handle the app-api queries
-            if (!routeData.Route.RouteTemplate.Contains("DesktopModules/2sxc/API/app-api/") ||
-                module.DesktopModule.ModuleName != "2sxc-app")
+            if(!HandleRequestWithThisController(request))
                 return PreviousSelector.SelectController(request);
 
+            var routeData = request.GetRouteData();
             var controllerTypeName = routeData.Values["controller"] + "Controller";
-
+            // Handle the app-api queries
             try
             {
+                var appFolder = routeData.Values["appname"]?.ToString();
+
+                if(appFolder == null || !(appFolder is String))
+                {
+                    var sexy = Helpers.GetSxcOfApiRequest(request);// request.GetSxcOfModuleContext();
+                    appFolder = sexy.App.Folder;
+                }
+
                 var portalSettings = PortalSettings.Current;
-                var sexy = Helpers.GetSxcOfApiRequest(request);// request.GetSxcOfModuleContext();
-
-                // previously we assumed that there is a sub-folder with a future-app-id, but 2015-05-15 decided it's probably not worth trying, because each request currently needs tokens anyhow
-                // if ((string) routeData.Values["appFolder"] != "auto-detect-app" && (string) routeData.Values["appFolder"] != sexy.App.Folder)
-                //    throw new HttpException("AppFolder was not correct - was " + routeData.Values["appFolder"] + " but should be " + sexy.App.Folder);
-
-                var controllerPath = Path.Combine(AppHelpers.AppBasePath(portalSettings), sexy.App.Folder,
+                var controllerPath = Path.Combine(AppHelpers.AppBasePath(portalSettings), appFolder,
                     "Api/" + controllerTypeName + ".cs");
 
                 if (File.Exists(HostingEnvironment.MapPath(controllerPath)))
