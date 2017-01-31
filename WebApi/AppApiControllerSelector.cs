@@ -30,18 +30,11 @@ namespace ToSic.SexyContent.WebApi
             return PreviousSelector.GetControllerMapping();
         }
 
+        private static string[] AllowedRoutes = new[] { "desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/" };
         private bool HandleRequestWithThisController(HttpRequestMessage request)
         {
-            var allowedRoutes = new[] { "DesktopModules/2sxc/API/app-api/", "API/2sxc/app-api/" };
             var routeData = request.GetRouteData();
-
-            if (!(allowedRoutes.Any(a => routeData.Route.RouteTemplate.Contains(a))))
-                return false;
-            
-            //if (request.FindModuleInfo().DesktopModule.ModuleName != "2sxc-app")
-            //    return false;
-
-            return true;
+            return AllowedRoutes.Any(a => routeData.Route.RouteTemplate.ToLower().Contains(a));
         }
 
         public HttpControllerDescriptor SelectController(HttpRequestMessage request)
@@ -54,17 +47,17 @@ namespace ToSic.SexyContent.WebApi
             // Handle the app-api queries
             try
             {
-                var appFolder = routeData.Values["appname"]?.ToString();
+                var appFolder = routeData.Values["appfolder"]?.ToString();
 
                 if(appFolder == null || !(appFolder is String))
                 {
-                    var sexy = Helpers.GetSxcOfApiRequest(request);// request.GetSxcOfModuleContext();
+                    var sexy = Helpers.GetSxcOfApiRequest(request);
                     appFolder = sexy.App.Folder;
                 }
 
                 var portalSettings = PortalSettings.Current;
                 var controllerPath = Path.Combine(AppHelpers.AppBasePath(portalSettings), appFolder,
-                    "Api/" + controllerTypeName + ".cs");
+                    "api/" + controllerTypeName + ".cs");
 
                 if (File.Exists(HostingEnvironment.MapPath(controllerPath)))
                 {
