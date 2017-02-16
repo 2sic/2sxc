@@ -8,7 +8,6 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Web.Api;
 using ToSic.SexyContent.Internal;
 using System;
 using System.Linq;
@@ -30,7 +29,7 @@ namespace ToSic.SexyContent.WebApi
             return PreviousSelector.GetControllerMapping();
         }
 
-        private static string[] AllowedRoutes = new[] { "desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/" };
+        private static readonly string[] AllowedRoutes = { "desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/" };
         private bool HandleRequestWithThisController(HttpRequestMessage request)
         {
             var routeData = request.GetRouteData();
@@ -49,7 +48,7 @@ namespace ToSic.SexyContent.WebApi
             {
                 var appFolder = routeData.Values["appfolder"]?.ToString();
 
-                if(appFolder == null || !(appFolder is String))
+                if(appFolder == null)
                 {
                     var sexy = Helpers.GetSxcOfApiRequest(request);
                     appFolder = sexy.App.Folder;
