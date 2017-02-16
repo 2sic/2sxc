@@ -18,28 +18,39 @@ namespace ToSic.SexyContent.WebApi
             // app-query    will try to request a query
             // app-api      will call custom c# web-apis of a specific app
 
+            var stdNsWebApi = new[] {"ToSic.SexyContent.WebApi"};
+            var stdNsAdam = new[] {"ToSic.SexyContent.Adam"};
 
 
-			mapRouteManager.MapHttpRoute("2sxc", "EAV", "EAV/{controller}/{action}", new[] { "ToSic.SexyContent.EAVExtensions.EavApiProxies" });
+            mapRouteManager.MapHttpRoute("2sxc", "EAV", "EAV/{controller}/{action}", new[] { "ToSic.SexyContent.EAVExtensions.EavApiProxies" });
 
 
             mapRouteManager.MapHttpRoute("2sxc", "View", "view/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi.View" });
 
-            mapRouteManager.MapHttpRoute("2sxc", "adam", "app-content/{contenttype}/{guid}/{field}", new { controller = "Adam" }, new[] { "ToSic.SexyContent.Adam" });
-            mapRouteManager.MapHttpRoute("2sxc", "adam2", "app-content/{contenttype}/{guid}/{field}/{action}", new { controller = "Adam" }, new[] { "ToSic.SexyContent.Adam" });
+            var stdNsApps = new[] {"ToSic.SexyContent.Apps"};
+            mapRouteManager.MapHttpRoute("2sxc", "adam", "app-content/{contenttype}/{guid}/{field}", new { controller = "Adam" }, stdNsAdam);
+            mapRouteManager.MapHttpRoute("2sxc", "adam2", "app-content/{contenttype}/{guid}/{field}/{action}", new { controller = "Adam" }, stdNsAdam);
 
+            // App Content routes
+            // 2. Type and null or int-id
+            // 3. Type and guid-id
             mapRouteManager.MapHttpRoute("2sxc", "app-content", "app-content/{contenttype}/{id}", new { controller = "AppContent", id = RouteParameter.Optional }, 
-                new { id = @"^\d+$" },   // Only matches if "id" is one or more digits.
-                new[] { "ToSic.SexyContent.WebApi" });
-            mapRouteManager.MapHttpRoute("2sxc", "app-content-guid", "app-content/{contenttype}/{guid}", new { controller = "AppContent" },
-                new[] { "ToSic.SexyContent.WebApi" });
-            mapRouteManager.MapHttpRoute("2sxc", "app-api", "app-api/{controller}/{action}", new[] { "ToSic.SexyContent.Apps" });
-            mapRouteManager.MapHttpRoute("2sxc", "app-api-nomod", "app-api/{appfolder}/{controller}/{action}", new[] { "ToSic.SexyContent.Apps" });
-            mapRouteManager.MapHttpRoute("2sxc", "app-query", "app-query/{name}", new { controller = "AppQuery"}, new[] { "ToSic.SexyContent.WebApi" });
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-nomod", "app-query/{appname}/{name}", new { controller = "AppQuery" }, new[] { "ToSic.SexyContent.WebApi" });
-			mapRouteManager.MapHttpRoute("2sxc", "app", "app/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi" });
+                new { id = @"^\d*$" },   // Only matches if "id" is null, or built only with digits.
+                stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-content-guid", "app-content/{contenttype}/{guid}", new { controller = "AppContent" }, stdNsWebApi);
+
+
+            mapRouteManager.MapHttpRoute("2sxc", "app-api", "app-api/{controller}/{action}", stdNsApps);
+            mapRouteManager.MapHttpRoute("2sxc", "app-api-nomod", "app-api/{appfolder}/{controller}/{action}", stdNsApps);
+
+
+            mapRouteManager.MapHttpRoute("2sxc", "app-query", "app-query/{name}", new { controller = "AppQuery"}, stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-nomod", "app-query/{appname}/{name}", new { controller = "AppQuery" }, stdNsWebApi);
+
+
+			mapRouteManager.MapHttpRoute("2sxc", "app", "app/{controller}/{action}", stdNsWebApi);
 			mapRouteManager.MapHttpRoute("2sxc", "dnn", "dnn/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi.Dnn" });
-            mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", new[] { "ToSic.SexyContent.WebApi" });
+            mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", stdNsWebApi);
 
             var config = GlobalConfiguration.Configuration;
             var previousSelector = config.Services.GetService(typeof(IHttpControllerSelector)) as IHttpControllerSelector;

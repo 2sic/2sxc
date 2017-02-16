@@ -162,6 +162,9 @@ namespace ToSic.SexyContent.WebApi
 	        return new MetadataController().GetAssignedEntities(assignmentObjectTypeId, "guid", keyGuid.ToString(), contentType);
 		}
 
+
+        #region Delete
+
         [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public void Delete(string contentType, int id)
@@ -202,7 +205,7 @@ namespace ToSic.SexyContent.WebApi
             _entitiesController.Delete(contentType, guid);
         }
 
-
+        #endregion
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
