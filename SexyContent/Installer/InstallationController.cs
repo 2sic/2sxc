@@ -38,6 +38,16 @@ namespace ToSic.SexyContent.Installer
 
         internal string UpgradeModule(string version)
         {
+            // Todo: Check if table "ToSIC_SexyContent_ContentGroupItems" exists. 
+            // If it's gone, then PROBABLY skip all upgrade-codes incl. 8.11!
+            //var runDbChangesBefore811 = true;
+
+            //if (!runDbChangesBefore811 && !(version > "08.11.00"))
+            //{
+            //    // todo: maybe log so we can see that this happened?
+            //    return version;
+            //}
+
             _logger.LogStep(version, "UpgradeModule starting", false);
 
             // Configure Unity / eav, etc.
