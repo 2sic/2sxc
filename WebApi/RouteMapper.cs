@@ -39,15 +39,23 @@ namespace ToSic.SexyContent.WebApi
             mapRouteManager.MapHttpRoute("2sxc", "app-content-guid", "app-content/{contenttype}/{guid}", new { controller = "AppContent" }, stdNsWebApi);
 
             // App-API routes - for the custom code API calls of an app
-            mapRouteManager.MapHttpRoute("2sxc", "app-api", "app-api/{controller}/{action}", stdNsApps);
-            mapRouteManager.MapHttpRoute("2sxc", "app-api-nomod", "app-api/{appfolder}/{controller}/{action}", stdNsApps);
+            mapRouteManager.MapHttpRoute("2sxc", "app-api", "app-api/{controller}/{action}", stdNsApps);    // old, before v08.10
+            mapRouteManager.MapHttpRoute("2sxc", "app-api-auto", "app/auto/api/{controller}/{action}", stdNsApps);  // new, v08.10+
+            mapRouteManager.MapHttpRoute("2sxc", "app-api-public", "app/{appfolder}/api/{controller}/{action}", stdNsApps); // new public v08.10+
 
             // App-Query routes - to access designed queries
+            // these are the old routes, before 2sxc v08.10
             mapRouteManager.MapHttpRoute("2sxc", "app-query", "app-query/{name}", new { controller = "AppQuery"}, stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-nomod", "app-query/{appname}/{name}", new { controller = "AppQuery" }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-nomod", "app-query/{appname}/{name}", new { controller = "AppQuery" }, stdNsWebApi); // keep for backward compatibility...
+            // new routes, v08.10+
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto", "app/auto/query/{name}", new { controller = "AppQuery" }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-named", "app/{appname}/query/{name}", new { controller = "AppQuery" }, stdNsWebApi);
 
             // System calls to app, dnn, default
-			mapRouteManager.MapHttpRoute("2sxc", "app", "app/{controller}/{action}", stdNsWebApi);
+            // 2017-02-17 2dm: disabled, as the "app" route will be used for apps now: 
+            // mapRouteManager.MapHttpRoute("2sxc", "app", "app/{controller}/{action}", stdNsWebApi);
+            // 2017-02-17 2dm: new alternate route to replace the "app" route, because I want app to be reserved!
+            mapRouteManager.MapHttpRoute("2sxc", "app-sys", "app-sys/{controller}/{action}", stdNsWebApi);  
 			mapRouteManager.MapHttpRoute("2sxc", "dnn", "dnn/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi.Dnn" });
             mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", stdNsWebApi);
 

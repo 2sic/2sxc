@@ -517,7 +517,7 @@ angular.module("SourceEditor")
 
             var svc = {
                 get: function() {
-                    return $http.get("app/appassets/asset", { params: params })
+                    return $http.get("app-sys/appassets/asset", { params: params })
                         .then(function(result) {
                             var data = result.data;
                             if (data.Type.toLowerCase() === "auto") {
@@ -538,7 +538,7 @@ angular.module("SourceEditor")
                 },
 
                 save: function(item) {
-                    return $http.post("app/appassets/asset", item, { params: params });
+                    return $http.post("app-sys/appassets/asset", item, { params: params });
                 }
             };
 

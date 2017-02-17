@@ -52,7 +52,7 @@ function runOneInstallJob(packages, i, progressIndicator, $http) {
     var currentPackage = packages[i];
     console.log(currentPackage.displayName + "(" + i + ") started");
     progressIndicator.label = currentPackage.displayName;
-    return $http.get("app/installer/installpackage",
+    return $http.get("app-sys/installer/installpackage",
         { params: { "packageUrl": currentPackage.url } })
 
 

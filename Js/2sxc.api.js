@@ -22,7 +22,7 @@
             $2sxc._data[cacheKey] = {};
 
         var controller = $2sxc._controllers[cacheKey] = {
-            serviceScopes: ["app", "app-api", "app-query", "app-content", "eav", "view", "dnn"],
+            serviceScopes: ["app", "app-sys", "app-api", "app-query", "app-content", "eav", "view", "dnn"],
             serviceRoot: $.ServicesFramework(id).getServiceRoot("2sxc"),
             resolveServiceUrl: function resolveServiceUrl(virtualPath) {
                 var scope = virtualPath.split("/")[0].toLowerCase();
@@ -36,7 +36,7 @@
             data: {
                 // source path defaulting to current page + optional params
                 sourceUrl: function (params) {
-                    var url = controller.resolveServiceUrl("app/appcontent/GetContentBlockData");
+                    var url = controller.resolveServiceUrl("app-sys/appcontent/GetContentBlockData");
                     if (typeof params == "string") // text like 'id=7'
                         url += "&" + params;
                     return url;

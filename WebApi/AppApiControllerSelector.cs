@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.WebApi
             return PreviousSelector.GetControllerMapping();
         }
 
-        private static readonly string[] AllowedRoutes = { "desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/" };
+        private static readonly string[] AllowedRoutes = { "desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/", "api/2sxc/app/*/api/" }; // todo!!!
         private bool HandleRequestWithThisController(HttpRequestMessage request)
         {
             var routeData = request.GetRouteData();

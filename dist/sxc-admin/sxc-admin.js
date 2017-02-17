@@ -373,17 +373,17 @@
         return srvc;
 
         function getAppInfo() {
-            return $http.get(eavConfig.getUrlPrefix("api") + "/app/ImportExport/GetAppInfo", { params: { appId: appId, zoneId: zoneId } }).then(function (result) { return result.data; });
+            return $http.get(eavConfig.getUrlPrefix("api") + "/app-sys/ImportExport/GetAppInfo", { params: { appId: appId, zoneId: zoneId } }).then(function (result) { return result.data; });
         }
 
         function exportApp(includeContentGroups, resetAppGuid) {
-            window.open(eavConfig.getUrlPrefix("api") + "/app/ImportExport/ExportApp?appId=" + appId + "&zoneId=" + zoneId + "&includeContentGroups=" + includeContentGroups + "&resetAppGuid=" + resetAppGuid, "_self", "");
+            window.open(eavConfig.getUrlPrefix("api") + "/app-sys/ImportExport/ExportApp?appId=" + appId + "&zoneId=" + zoneId + "&includeContentGroups=" + includeContentGroups + "&resetAppGuid=" + resetAppGuid, "_self", "");
             return $q.when(true);
         }
 
         function exportForVersionControl(includeContentGroups, resetAppGuid) {
             // todo: put params in nice params object
-            return $http.get("app/ImportExport/ExportForVersionControl?appId=" + appId + "&zoneId=" + zoneId + "&includeContentGroups=" + includeContentGroups + "&resetAppGuid=" + resetAppGuid);
+            return $http.get("app-sys/ImportExport/ExportForVersionControl?appId=" + appId + "&zoneId=" + zoneId + "&includeContentGroups=" + includeContentGroups + "&resetAppGuid=" + resetAppGuid);
 
         }
     }
@@ -500,11 +500,11 @@
 
 
         function getContentInfo(scope) {
-            return $http.get(eavConfig.getUrlPrefix("api") + "/app/ImportExport/GetContentInfo", { params: { appId: appId, zoneId: zoneId, scope: scope || "2SexyContent" } }).then(function (result) { return result.data; });
+            return $http.get(eavConfig.getUrlPrefix("api") + "/app-sys/ImportExport/GetContentInfo", { params: { appId: appId, zoneId: zoneId, scope: scope || "2SexyContent" } }).then(function (result) { return result.data; });
         }
 
         function exportContent(contentTypeIds, entityIds, templateIds) {
-            window.open(eavConfig.getUrlPrefix("api") + "/app/ImportExport/ExportContent?appId=" + appId + "&zoneId=" + zoneId + "&contentTypeIdsString=" + contentTypeIds.join(";") + "&entityIdsString=" + entityIds.join(";") + "&templateIdsString=" + templateIds.join(";"), "_self", "");
+            window.open(eavConfig.getUrlPrefix("api") + "/app-sys/ImportExport/ExportContent?appId=" + appId + "&zoneId=" + zoneId + "&contentTypeIdsString=" + contentTypeIds.join(";") + "&entityIdsString=" + entityIds.join(";") + "&templateIdsString=" + templateIds.join(";"), "_self", "");
             return $q.when(true);
         }
     }
@@ -564,7 +564,7 @@
         function importApp(file) {
             return $http({
                 method: "POST",
-                url: "app/ImportExport/ImportApp",
+                url: "app-sys/ImportExport/ImportApp",
                 headers: { "Content-Type": undefined },
                 transformRequest: function (data) {
                     var formData = new FormData();
@@ -635,7 +635,7 @@
         function importContent(file) {
             return $http({
                 method: "POST",
-                url: "app/ImportExport/ImportContent",
+                url: "app-sys/ImportExport/ImportContent",
                 headers: { "Content-Type": undefined },
                 transformRequest: function (data) {
                     var formData = new FormData();
@@ -940,7 +940,7 @@ angular.module("SxcServices")
 
         // this will retrieve an advanced getting-started url to use in an the iframe
         svc.getDialogSettings = function gettingStartedUrl() {
-            return $http.get("app/system/dialogsettings", { params: { appId: appId } });
+            return $http.get("app-sys/system/dialogsettings", { params: { appId: appId } });
         };
         return svc;
     }]);
@@ -959,11 +959,11 @@ angular.module("SxcServices")
 
             // ReSharper disable once UseOfImplicitGlobalInFunctionScope
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get("app/appassets/list", { params: angular.extend({}, svc.params, { withSubfolders: true }) });
+                return $http.get("app-sys/appassets/list", { params: angular.extend({}, svc.params, { withSubfolders: true }) });
             }));
 
             svc.create = function create(path, content) {
-                return $http.post("app/appassets/create", { content: content || "" }, { params: angular.extend({}, svc.params, { path: path }) })
+                return $http.post("app-sys/appassets/create", { content: content || "" }, { params: angular.extend({}, svc.params, { path: path }) })
                     .then(function(result) {
                         if (result.data === false) // must check for an explicit false, to avoid undefineds
                             alert("server reported that create failed - the file probably already exists"); // todo: i18n
@@ -974,7 +974,7 @@ angular.module("SxcServices")
 
             //// delete, then reload, for now must use httpget because delete sometimes causes issues
             //svc.delete = function del(id) {
-            //    return $http.get("app/template/delete", {params: {appId: svc.appId, Id: id }})
+            //    return $http.get("app-sys/template/delete", {params: {appId: svc.appId, Id: id }})
             //        .then(svc.liveListReload);
             //};
             return svc;
@@ -1030,20 +1030,20 @@ angular.module("SxcServices")
             var svc = {
                 zoneId: zoneId
             };
-
+            
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get("app/system/apps", { params: { zoneId: svc.zoneId } });
+                return $http.get("app-sys/system/apps", { params: { zoneId: svc.zoneId } });
             }));
 
             svc.create = function create(name) {
-                return $http.post("app/system/app", {}, { params: { zoneId: svc.zoneId, name: name } })
+                return $http.post("app-sys/system/app", {}, { params: { zoneId: svc.zoneId, name: name } })
                     .then(svc.liveListReload);
             };
 
             // delete, then reload
             // for unclear reason, the verb DELETE fails, so I'm using get for now
             svc.delete = function del(appId) {
-                return $http.get("app/system/deleteapp", {params: { zoneId: svc.zoneId, appId: appId } })
+                return $http.get("app-sys/system/deleteapp", {params: { zoneId: svc.zoneId, appId: appId } })
                     .then(svc.liveListReload);
             };
 
@@ -1059,51 +1059,27 @@ angular.module("SxcServices")
         return function createSvc(appId) {
             var svc = {
                 getItems: function(item) {
-                    return $http.get('app/contentgroup/replace', { params: { appId: appId, guid: item.guid, part: item.part, index: item.index } });
+                    return $http.get("app-sys/contentgroup/replace", { params: { appId: appId, guid: item.guid, part: item.part, index: item.index } });
                 },
                 saveItem: function(item) {
-                    return $http.post('app/contentgroup/replace', {}, { params: { guid: item.guid, part: item.part, index: item.index, entityId: item.id } });
+                    return $http.post("app-sys/contentgroup/replace", {}, { params: { guid: item.guid, part: item.part, index: item.index, entityId: item.id } });
                 },
 
                 getList: function (contentGroup) {
-                    return $http.get('app/contentgroup/itemlist', { params: { appId: appId, guid: contentGroup.guid } });
+                    return $http.get("app-sys/contentgroup/itemlist", { params: { appId: appId, guid: contentGroup.guid } });
                 },
 
                 saveList: function (contentGroup, resortedList) {
-                    return $http.post('app/contentgroup/itemlist', resortedList, { params: { appId: appId, guid: contentGroup.guid } });
+                    return $http.post("app-sys/contentgroup/itemlist", resortedList, { params: { appId: appId, guid: contentGroup.guid } });
                 },
 
                 getHeader: function (contentGroup) {
-                    return $http.get('app/contentgroup/header', { params: { appId: appId, guid: contentGroup.guid } });
+                    return $http.get("app-sys/contentgroup/header", { params: { appId: appId, guid: contentGroup.guid } });
                 }
 
 
             };
 
-            return svc;
-        };
-    }]);
-angular.module("SxcServices")
-    /*@ngInject*/
-    .factory("importExportSvc", ["$http", "eavConfig", "svcCreator", function ($http, eavConfig, svcCreator) {
-
-        // Construct a service for this specific appId
-        return function createSvc(appId) {
-            var svc = {
-                appId: appId
-            };
-
-            // todo: 2tk - everything here is only demo code
-
-            svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get("app/template/getall", { params: { appId: svc.appId } });
-            }));
-
-            // delete, then reload
-            svc.delete = function del(id) {
-                return $http.delete("sxc/templates/delete", {params: {appId: svc.appId, id: id }})
-                    .then(svc.liveListReload);
-            };
             return svc;
         };
     }]);
@@ -1170,17 +1146,17 @@ angular.module("SxcServices")
             };
 
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get("app/system/getlanguages");//, { params: { appId: svc.appId } });
+                return $http.get("app-sys/system/getlanguages");//, { params: { appId: svc.appId } });
             }));
 
             // delete, then reload
             svc.toggle = function toggle(item) {
-                return $http.get("app/system/switchlanguage", {params: {cultureCode: item.Code, enable: !item.IsEnabled }})
+                return $http.get("app-sys/system/switchlanguage", {params: {cultureCode: item.Code, enable: !item.IsEnabled }})
                     .then(svc.liveListReload);
             };
 
             svc.save = function save(item) {
-                return $http.get("app/system/switchlanguage", { params: { cultureCode: item.Code, enable: item.IsEnabled } })
+                return $http.get("app-sys/system/switchlanguage", { params: { cultureCode: item.Code, enable: item.IsEnabled } })
                     .then(svc.liveListReload);
             };
 
@@ -1289,12 +1265,12 @@ angular.module("SxcServices")
             };
 
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get("app/template/getall", { params: { appId: svc.appId } });
+                return $http.get("app-sys/template/getall", { params: { appId: svc.appId } });
             }));
-
+            
             // delete, then reload, for now must use httpget because delete sometimes causes issues
             svc.delete = function del(id) {
-                return $http.get("app/template/delete", {params: {appId: svc.appId, Id: id }})
+                return $http.get("app-sys/template/delete", {params: {appId: svc.appId, Id: id }})
                     .then(svc.liveListReload);
             };
             return svc;
@@ -1311,7 +1287,7 @@ angular.module("SxcServices")
             };
 
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get("app/appassets/list", { params: { appId: svc.appId, path: "api", mask: "*.cs" } });
+                return $http.get("app-sys/appassets/list", { params: { appId: svc.appId, path: "api", mask: "*.cs" } });
             }));
 
             return svc;
