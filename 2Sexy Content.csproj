@@ -277,7 +277,6 @@
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="Environment\Dnn7\DataSources\DnnFormAndList.cs" />
-    <Compile Include="WebApi\AppWithoutModuleQueryController.cs" />
     <Compile Include="WebApi\Dnn\DnnApiControllerWithFixes.cs" />
     <Compile Include="WebApi\Dnn\ModuleController.cs" />
     <Compile Include="WebApi\ImportExport\HttpResponseMessageHelper.cs" />

@@ -51,7 +51,7 @@
             return function(contentType) {
                 var oneType = {};
                 oneType.contentType = contentType;
-                oneType.root = "app-content/" + contentType;
+                oneType.root = "app/auto/content/" + contentType;
 
                 // will get one or all of a content-type, depending on if an id was supplied
                 oneType.get = oneType.read = function get(id) {
@@ -75,7 +75,7 @@
         .factory("query", ["$http", "sxc", function($http, sxc) {
             var createQueryObj = function(name) {
                 var qry = {
-                    root: "app-query/" + name
+                    root: "app/auto/query/" + name
                 };
 
                 qry.get = function(config) {

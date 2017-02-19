@@ -227,28 +227,49 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
 	    public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
-	    {
-            // if app-path specified, use that app, otherwise use from context
-            var appId = GetAppIdFromPathOrContext(appPath);
+        {
+            return GetAndSerializeOneAfterSecurityChecks(contentType,
+                appId => _entitiesController.GetEntityOrThrowError(contentType, id, appId),
+                appPath);
 
-            InitEavAndSerializer(appId);
-            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId);
-            PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm, useContext: appPath == null, appId: appId);
-	        return _entitiesController.GetOne(contentType, id);
-	    }
+            //// if app-path specified, use that app, otherwise use from context
+            //var appId = GetAppIdFromPathOrContext(appPath);
+
+            //InitEavAndSerializer(appId);
+            //IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId);
+            //PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm, useContext: appPath == null, appId: appId);
+            //return _entitiesController.Serializer.Prepare(itm);
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public Dictionary<string, object> GetOne(string contentType, Guid guid, string appPath = null)
         {
+            return GetAndSerializeOneAfterSecurityChecks(contentType,
+                appId => _entitiesController.GetEntityOrThrowError(contentType, guid, appId),
+                appPath);
+        }
+
+        /// <summary>
+        /// Preprocess security / context, then get the item based on an passed in method, 
+        /// ...then process/finish
+        /// </summary>
+        /// <param name="contentType"></param>
+        /// <param name="GetOne"></param>
+        /// <param name="appPath"></param>
+        /// <returns></returns>
+        private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<int, IEntity> GetOne, string appPath)
+        {
             // if app-path specified, use that app, otherwise use from context
             var appId = GetAppIdFromPathOrContext(appPath);
 
             InitEavAndSerializer(appId);
-            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, guid, appId);
+            IEntity itm = GetOne(appId);// _entitiesController.GetEntityOrThrowError(contentType, guid, appId);
             PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm, useContext: appPath == null, appId: appId);
             return _entitiesController.Serializer.Prepare(itm);
         }
+
+
         [HttpPost]
         [HttpPatch]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]

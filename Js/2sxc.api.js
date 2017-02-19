@@ -186,7 +186,7 @@
                     var sf = $.ServicesFramework(id);
                     var base = (settings.url)
                         ? controller.resolveServiceUrl(settings.url)
-                        : sf.getServiceRoot("2sxc") + "app-api/" + settings.controller + "/" + settings.action;
+                        : sf.getServiceRoot("2sxc") + "app/auto/api/" + settings.controller + "/" + settings.action;
                     return base + (settings.params === null ? "" : ("?" + $.param(settings.params)));
                 }
             },
