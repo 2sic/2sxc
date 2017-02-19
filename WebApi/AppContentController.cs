@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json.Linq;
@@ -18,32 +19,28 @@ using ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight;
 
 namespace ToSic.SexyContent.WebApi
 {
-	/// <summary>
-	/// Direct access to app-content items, simple manipulations etc.
-	/// Should check for security at each standard call - to see if the current user may do this
-	/// Then we can reduce security access level to anonymous, because each method will do the security check
-	/// todo: security
-	/// </summary>
-	[SupportedModules("2sxc,2sxc-app")]
-	public class AppContentController : SxcApiController
+    /// <summary>
+    /// Direct access to app-content items, simple manipulations etc.
+    /// Should check for security at each standard call - to see if the current user may do this
+    /// Then we can reduce security access level to anonymous, because each method will do the security check
+    /// todo: security
+    /// </summary>
+    // [SupportedModules("2sxc,2sxc-app")]
+    [AllowAnonymous]
+    public class AppContentController : SxcApiController
 	{
 	    private EntitiesController _entitiesController;
 
-        //2016-10-4 disabled this, as I moved the eav.configuration...to the DnnApi...fixes class
-		//public AppContentController()
-		//{
-			// Eav.Configuration.SetConnectionString("SiteSqlServer");
-            // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-            //		    (eavWebApi.Serializer as Serializer).Sxc = Sexy;
-		//}
-
-	    private void InitEavAndSerializer()
+	    private void InitEavAndSerializer(int? appId = null)
 	    {
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-            _entitiesController = new EntitiesController(App.AppId);
+            _entitiesController = new EntitiesController(appId ?? App.AppId);
             _entitiesController.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
 
-            ((Serializer)_entitiesController.Serializer).Sxc = SxcContext;	        
+            // only do this if we have a real context - otherwise don't do this
+	        if (!appId.HasValue)
+	            ((Serializer) _entitiesController.Serializer).Sxc = SxcContext;
+
 	    }
 
         /// <summary>
@@ -51,12 +48,20 @@ namespace ToSic.SexyContent.WebApi
         /// </summary>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
-        public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string cultureCode = null)
+        public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null, string cultureCode = null)
         {
-            // todo: check if we could change it to optionally also just deliver the "own" entities - as of now, not supported
-            InitEavAndSerializer();
-            PerformSecurityCheck(contentType, PermissionGrant.Read, true);
+            // if app-path specified, use that app, otherwise use from context
+            var appId = GetAppIdFromPathOrContext(appPath);
+
+            InitEavAndSerializer(appId);
+            PerformSecurityCheck(contentType, PermissionGrant.Read, true, useContext: appPath == null, appId: appId);
             return _entitiesController.GetEntities(contentType, cultureCode);
+        }
+
+        private int GetAppIdFromPathOrContext(string appPath)
+        {
+            var appId = appPath == null || appPath == "auto" ? App.AppId : GetCurrentAppIdFromPath(appPath);
+            return appId;
         }
 
         [HttpGet]
@@ -103,37 +108,47 @@ namespace ToSic.SexyContent.WebApi
 	    /// <param name="grant"></param>
 	    /// <param name="autoAllowAdmin"></param>
 	    /// <param name="specificItem"></param>
-	    private void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false, IEntity specificItem = null)
+	    private void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false, IEntity specificItem = null, bool useContext = true, int? appId = null)
 	    {
+            // make sure we have the right appId, zoneId and module-context
+	        var contextMod = useContext ? Dnn.Module : null;
+            var zoneId = useContext ? App.ZoneId as int? : null;
+	        if(useContext) appId = App.AppId;
+	        if (!useContext) autoAllowAdmin = false; // auto-check not possible when not using context
+
             // Check if we can find this content-type
             var ctc = new ContentTypeController();
-            ctc.SetAppIdAndUser(App.AppId);
+            ctc.SetAppIdAndUser(appId.Value);
 
-            var cache = DataSource.GetCache(null, App.AppId);
+            var cache = DataSource.GetCache(zoneId, appId);
             var ct = cache.GetContentType(contentType);
 
-	        if (ct == null)
-	        {
-	            ThrowHttpError(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.",
-	                "content-types");
-	            return;
-	        }
+            if (ct == null)
+            {
+                ThrowHttpError(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.",
+                    "content-types");
+                return;
+            }
 
-	        // Check if the content-type has a GUID as name - only these can have permission assignments
+            // Check if the content-type has a GUID as name - only these can have permission assignments
             Guid ctGuid;
-	        var staticNameIsGuid = Guid.TryParse(ct.StaticName, out ctGuid);
-            if(!staticNameIsGuid)
-                ThrowHttpError(HttpStatusCode.Unauthorized, "Content Type '" + contentType + "' is not a standard Content Type - no permissions possible.");
+            var staticNameIsGuid = Guid.TryParse(ct.StaticName, out ctGuid);
+            if (!staticNameIsGuid)
+                ThrowHttpError(HttpStatusCode.Unauthorized,
+                    "Content Type '" + contentType + "' is not a standard Content Type - no permissions possible.");
 
             // Check permissions in 2sxc - or check if the user has admin-right (in which case he's always granted access for these types of content)
-            var permissionChecker = new PermissionController(App.ZoneId, App.AppId, ctGuid, specificItem, Dnn.Module);
+            var permissionChecker = new PermissionController(zoneId, appId.Value, ctGuid, specificItem, contextMod);
             var allowed = permissionChecker.UserMay(grant);
 
-            var isAdmin = autoAllowAdmin && DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(Dnn.Module);
+            var isAdmin = autoAllowAdmin &&
+                          DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(contextMod);
 
-            if(!(allowed || isAdmin))
-                ThrowHttpError(HttpStatusCode.Unauthorized, "Request not allowed. User needs permissions to " + grant + " for Content Type '" + contentType + "'.", "permissions"); 
-	    }
+            if (!(allowed || isAdmin))
+                ThrowHttpError(HttpStatusCode.Unauthorized,
+                    "Request not allowed. User needs permissions to " + grant + " for Content Type '" + contentType + "'.",
+                    "permissions");
+        }
 
         /// <summary>
         /// Throw a correct HTTP error with the right error-numbr. This is important for the JavaScript which changes behavior & error messages based on http status code
@@ -189,7 +204,7 @@ namespace ToSic.SexyContent.WebApi
 	            contentType = itm?.Type.Name;
 	        }
 
-	        itm = _entitiesController.GetEntityOrThrowError(contentType, itm.EntityId, appId: App.AppId);
+	        // itm = _entitiesController.GetEntityOrThrowError(contentType, itm.EntityId, appId: App.AppId);
 	        PerformSecurityCheck(contentType, PermissionGrant.Delete, autoAllowAdmin, itm);
 	        return contentType;
 	    }
@@ -199,8 +214,10 @@ namespace ToSic.SexyContent.WebApi
         public void Delete(string contentType, Guid guid)
         {
             InitEavAndSerializer();
-            IEntity itm = App.Data.Out["Default"].LightList     // pre-fetch for security and content-type check
-                .FirstOrDefault(e => e.EntityGuid == guid);
+            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, guid, App.AppId);
+
+            //IEntity itm = App.Data.Out["Default"].LightList     // pre-fetch for security and content-type check
+            //    .FirstOrDefault(e => e.EntityGuid == guid);
             contentType = Delete_SharedCode(contentType, itm);
             _entitiesController.Delete(contentType, guid);
         }
@@ -209,15 +226,30 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
-	    public Dictionary<string, object> GetOne(string contentType, int id)
+	    public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
 	    {
-            InitEavAndSerializer();
-            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId: App.AppId);
-            PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm);
+            // if app-path specified, use that app, otherwise use from context
+            var appId = GetAppIdFromPathOrContext(appPath);
+
+            InitEavAndSerializer(appId);
+            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId);
+            PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm, useContext: appPath == null, appId: appId);
 	        return _entitiesController.GetOne(contentType, id);
 	    }
 
-	    [HttpPost]
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+        public Dictionary<string, object> GetOne(string contentType, Guid guid, string appPath = null)
+        {
+            // if app-path specified, use that app, otherwise use from context
+            var appId = GetAppIdFromPathOrContext(appPath);
+
+            InitEavAndSerializer(appId);
+            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, guid, appId);
+            PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm, useContext: appPath == null, appId: appId);
+            return _entitiesController.Serializer.Prepare(itm);
+        }
+        [HttpPost]
         [HttpPatch]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
 	    public Dictionary<string, object> Create(string contentType, Dictionary<string, object> newContentItem)

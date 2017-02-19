@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.WebApi
             // Handle the app-api queries
             try
             {
-                var appFolder = routeData.Values["appfolder"]?.ToString();
+                var appFolder = routeData.Values["apppath"]?.ToString();
 
                 if(appFolder == null)
                 {

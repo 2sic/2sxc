@@ -253,7 +253,11 @@
     };
 
     $2sxc._controllers = {};
-    $2sxc.description = "The 2sxc Controller object";
+    $2sxc.sysinfo = {
+        version: "08.10.01",
+        description: "The 2sxc Controller object"
+    };
+
     $2sxc.beta = {};
     $2sxc._data = {};
     

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using ToSic.Eav;
-using ToSic.SexyContent.Security;
 
 namespace ToSic.SexyContent.Security
 {
@@ -16,6 +12,7 @@ namespace ToSic.SexyContent.Security
     /// </summary>
     public class PermissionController
     {
+        // todo: move consts to Constants
         public const int AssignmentObjectId = 4;
         public const string ContentTypeName = "PermissionConfiguration";
         public const string Condition = "Condition";
@@ -24,9 +21,9 @@ namespace ToSic.SexyContent.Security
         readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
         private readonly string _keyOwner = "Owner";
 
-        public int AppId { get; private set; }
-        public int ZoneId { get; private set; }
-        public Guid TypeGuid { get; private set; }
+        private int AppId { get; }
+        private int? ZoneId { get; }
+        private Guid TypeGuid { get; }
 
         public IEntity TargetItem { get; set; }
 
@@ -43,10 +40,9 @@ namespace ToSic.SexyContent.Security
                 }
                 return _permissionList;
             }
-            private set { _permissionList = value; }
         }
 
-        public ModuleInfo Module { get; private set; }
+        public ModuleInfo Module { get; }
 
         /// <summary>
         /// Initialize this object so it can then give information regarding the permissions of an entity.
@@ -56,7 +52,7 @@ namespace ToSic.SexyContent.Security
         /// <param name="appId">EAV APP</param>
         /// <param name="typeGuid">Entity GUID to check permissions against</param>
         /// <param name="module">DNN Module - necessary for SecurityAccessLevel checks</param>
-        public PermissionController(int zoneId, int appId, Guid typeGuid, ModuleInfo module = null)
+        public PermissionController(int? zoneId, int appId, Guid typeGuid, ModuleInfo module = null)
         {
             ZoneId = zoneId;
             AppId = appId;
@@ -64,7 +60,7 @@ namespace ToSic.SexyContent.Security
             Module = module;
         }
 
-        public PermissionController(int zoneId, int appId, Guid typeGuid, IEntity targetItem, ModuleInfo module = null)
+        public PermissionController(int? zoneId, int appId, Guid typeGuid, IEntity targetItem, ModuleInfo module = null)
         {
             ZoneId = zoneId;
             AppId = appId;
@@ -135,6 +131,9 @@ namespace ToSic.SexyContent.Security
                         return true;
                     
                     // check within module context
+                    if(Module == null)
+                        throw new Exception("trying to check permission " + _salPrefix + ", but don't have module in context");
+
                     return DotNetNuke.Security.Permissions.ModulePermissionController
                         .HasModuleAccess(sal, CustomPermissionKey, Module);
                 }

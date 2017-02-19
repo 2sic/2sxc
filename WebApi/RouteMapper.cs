@@ -20,13 +20,15 @@ namespace ToSic.SexyContent.WebApi
 
             var stdNsWebApi = new[] {"ToSic.SexyContent.WebApi"};
             var stdNsApps = new[] {"ToSic.SexyContent.Apps"};
+            var stdNsAdam = new[] {"ToSic.SexyContent.Adam"};
 
-
+            #region EAV and View-routes
             mapRouteManager.MapHttpRoute("2sxc", "EAV", "EAV/{controller}/{action}", new[] { "ToSic.SexyContent.EAVExtensions.EavApiProxies" });
             mapRouteManager.MapHttpRoute("2sxc", "View", "view/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi.View" });
+            #endregion
 
+            #region old API routes before 08.10
             // ADAM routes
-            var stdNsAdam = new[] {"ToSic.SexyContent.Adam"};
             mapRouteManager.MapHttpRoute("2sxc", "adam", "app-content/{contenttype}/{guid}/{field}", new { controller = "Adam" }, stdNsAdam);
             mapRouteManager.MapHttpRoute("2sxc", "adam2", "app-content/{contenttype}/{guid}/{field}/{action}", new { controller = "Adam" }, stdNsAdam);
 
@@ -40,17 +42,46 @@ namespace ToSic.SexyContent.WebApi
 
             // App-API routes - for the custom code API calls of an app
             mapRouteManager.MapHttpRoute("2sxc", "app-api", "app-api/{controller}/{action}", stdNsApps);    // old, before v08.10
-            mapRouteManager.MapHttpRoute("2sxc", "app-api-auto", "app/auto/api/{controller}/{action}", stdNsApps);  // new, v08.10+
-            mapRouteManager.MapHttpRoute("2sxc", "app-api-public", "app/{appfolder}/api/{controller}/{action}", stdNsApps); // new public v08.10+
 
             // App-Query routes - to access designed queries
             // these are the old routes, before 2sxc v08.10
-            mapRouteManager.MapHttpRoute("2sxc", "app-query", "app-query/{name}", new { controller = "AppQuery"}, stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-query", "app-query/{name}", new { controller = "AppQuery" }, stdNsWebApi);
             mapRouteManager.MapHttpRoute("2sxc", "app-query-nomod", "app-query/{appname}/{name}", new { controller = "AppQuery" }, stdNsWebApi); // keep for backward compatibility...
-            // new routes, v08.10+
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto", "app/auto/query/{name}", new { controller = "AppQuery" }, stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-named", "app/{appname}/query/{name}", new { controller = "AppQuery" }, stdNsWebApi);
+            #endregion
 
+            #region new API routes after 08.10
+
+            var appAuto = "app/auto/";
+            var appPath = "app/{apppath}/";
+            // ADAM routes
+            mapRouteManager.MapHttpRoute("2sxc", "adam-auto", appAuto + "content/{contenttype}/{guid}/{field}", new { controller = "Adam" }, stdNsAdam);
+            mapRouteManager.MapHttpRoute("2sxc", "adam2-auto", appAuto + "content/{contenttype}/{guid}/{field}/{action}", new { controller = "Adam" }, stdNsAdam);
+
+            // App Content routes - for GET/DELETE/PUT entities using REST
+            // 1. Type and null or int-id
+            // 2. Type and guid-id
+            mapRouteManager.MapHttpRoute("2sxc", "app-content-auto", appAuto + "content/{contenttype}/{id}", new { controller = "AppContent", id = RouteParameter.Optional },
+                new { id = @"^\d*$" },   // Only matches if "id" is null, or built only with digits.
+                stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-content-new-guid", appAuto + "content/{contenttype}/{guid}", new { controller = "AppContent" }, stdNsWebApi);
+
+            mapRouteManager.MapHttpRoute("2sxc", "app-content-new-named", appPath + "content/{contenttype}/{id}", new { controller = "AppContent", id = RouteParameter.Optional },
+                new { id = @"^\d*$" },   // Only matches if "id" is null, or built only with digits.
+                stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-content-new-guid-named", appPath + "content/{contenttype}/{guid}", new { controller = "AppContent" }, stdNsWebApi);
+
+            // App-API routes - for the custom code API calls of an app
+            mapRouteManager.MapHttpRoute("2sxc", "app-api-auto", appAuto + "api/{controller}/{action}", stdNsApps);  // new, v08.10+
+            mapRouteManager.MapHttpRoute("2sxc", "app-api-public", appPath + "api/{controller}/{action}", stdNsApps); // new public v08.10+
+
+            // App-Query routes - to access designed queries
+            // new routes, v08.10+
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto", appAuto + "query/{name}", new { controller = "AppQuery" }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-public", appPath + "query/{name}", new { controller = "AppQuery" }, stdNsWebApi);
+            #endregion
+
+
+            #region API calls for app-sys, dnn, default
             // System calls to app, dnn, default
             // 2017-02-17 2dm: disabled, as the "app" route will be used for apps now: 
             // mapRouteManager.MapHttpRoute("2sxc", "app", "app/{controller}/{action}", stdNsWebApi);
@@ -58,6 +89,7 @@ namespace ToSic.SexyContent.WebApi
             mapRouteManager.MapHttpRoute("2sxc", "app-sys", "app-sys/{controller}/{action}", stdNsWebApi);  
 			mapRouteManager.MapHttpRoute("2sxc", "dnn", "dnn/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi.Dnn" });
             mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", stdNsWebApi);
+            #endregion
 
             // Add custom service locator into the chain of service-locators
             // this is needed to enable custom API controller lookup for the app-api

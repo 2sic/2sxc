@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
@@ -6,6 +7,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.WebApi.Dnn;
 
@@ -129,6 +131,21 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
         public AdamNavigator AsAdam(IEntity entity, string fieldName) => AppAndDataHelpers.AsAdam(entity, fieldName);
+        #endregion
+
+        #region App-Helpers for anonyous access APIs
+
+        internal int GetCurrentAppIdFromPath(string appPath)
+        {
+            // check zone
+            var zid = ZoneHelpers.GetZoneID(PortalSettings.PortalId);
+            if (zid == null)
+                throw new Exception("zone not found");
+
+            // get app from appname
+            var aid = AppHelpers.GetAppIdFromGuidName(zid.Value, appPath, true);
+            return aid;
+        }
         #endregion
     }
 }

@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
         [ValidateAntiForgeryToken]                                          // currently only available for modules, so always require the security token
-        public dynamic Query([FromUri] string name)
+        public dynamic Query([FromUri] string name)//, [FromUri] string appPath = null)
         {
             // use the previously defined query, or just get it from the request (module-mode)
             if (_queryApp == null)
@@ -47,26 +47,14 @@ namespace ToSic.SexyContent.WebApi
                 });
 
             return new Serializer().Prepare(query);
-            // 2016-05-03 2dm - if it turns out that the serializer on the Sxc-object is better (can't find a reason why)...
-            // ...then I would need this variation below:
-            //return _useModuleAndCheckModulePermissions
-            //    ? Sxc.Serializer.Prepare(query)
-            //    : new Serializer().Prepare(query);
         }
 
         [AllowAnonymous]
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
-        public dynamic PublicQuery([FromUri] string appname, [FromUri] string name)
+        public dynamic PublicQuery([FromUri] string appPath, [FromUri] string name)
         {
-            // check zone
-            var zid = ZoneHelpers.GetZoneID(PortalSettings.PortalId);
-            if (zid == null)
-                throw new Exception("zone not found");
-
-            // get app from appname
-            var aid = AppHelpers.GetAppIdFromGuidName(zid.Value, appname, true);
-            _queryApp = new App(PortalSettings, aid);
+            _queryApp = new App(PortalSettings, GetCurrentAppIdFromPath(appPath));
 
             // ensure the queries can be executed (needs configuration provider, usually given in SxcInstance, but we don't hav that here)
             var config = DataSources.ConfigurationProvider.GetConfigProviderForModule(0, _queryApp, null);
@@ -76,7 +64,6 @@ namespace ToSic.SexyContent.WebApi
             // now just run the default query check and serializer
             return Query(name);
         }
-
 
         private DeferredPipelineQuery GetQueryByName(string name)
         {
