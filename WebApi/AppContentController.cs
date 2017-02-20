@@ -10,6 +10,7 @@ using DotNetNuke.Web.Api;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.ValueProvider;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Security;
@@ -42,6 +43,8 @@ namespace ToSic.SexyContent.WebApi
 
 	    }
 
+
+        #region Get List
         /// <summary>
         /// Get all Entities of specified Type
         /// </summary>
@@ -50,24 +53,29 @@ namespace ToSic.SexyContent.WebApi
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null, string cultureCode = null)
         {
             // if app-path specified, use that app, otherwise use from context
-            var appId = GetAppIdFromPathOrContext(appPath);
+            var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
-            InitEavAndSerializer(appId);
             PerformSecurityCheck(contentType, PermissionGrant.Read, true, useContext: appPath == null, appId: appId);
             return _entitiesController.GetEntities(contentType, cultureCode);
         }
-        
+
+        #endregion
+
         /// <summary>
         /// Retrieve the appId - either based on the parameter, or if missing, use context
         /// Note that this will fail, if both appPath and context are missing
         /// </summary>
         /// <param name="appPath"></param>
         /// <returns></returns>
-        private int GetAppIdFromPathOrContext(string appPath)
-            => appPath == null || appPath == "auto"
+        private int GetAppIdFromPathOrContext_AndInitEavAndSerializer(string appPath)
+        {
+            var appId = appPath == null || appPath == "auto"
                 ? App.AppId
                 : GetCurrentAppIdFromPath(appPath);
-        
+            InitEavAndSerializer(appId);
+            return appId;
+        }
+
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
@@ -106,20 +114,27 @@ namespace ToSic.SexyContent.WebApi
             return response;
     }
 
-	    /// <summary>
-	    /// Check if a user may do something - and throw an error if the permission is not given
-	    /// </summary>
-	    /// <param name="contentType"></param>
-	    /// <param name="grant"></param>
-	    /// <param name="autoAllowAdmin"></param>
-	    /// <param name="specificItem"></param>
-	    private void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false, IEntity specificItem = null, bool useContext = true, int? appId = null)
+
+        #region Security Checks 
+        /// <summary>
+        /// Check if a user may do something - and throw an error if the permission is not given
+        /// </summary>
+        /// <param name="contentType"></param>
+        /// <param name="grant"></param>
+        /// <param name="autoAllowAdmin"></param>
+        /// <param name="specificItem"></param>
+        /// <param name="useContext"></param>
+        /// <param name="appId"></param>
+        private void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false, IEntity specificItem = null, bool useContext = true, int? appId = null)
 	    {
             // make sure we have the right appId, zoneId and module-context
 	        var contextMod = useContext ? Dnn.Module : null;
             var zoneId = useContext ? App.ZoneId as int? : null;
 	        if(useContext) appId = App.AppId;
 	        if (!useContext) autoAllowAdmin = false; // auto-check not possible when not using context
+
+            if(!appId.HasValue)
+                throw new Exception("app id doesn't have value, and apparently didn't get it from context either");
 
             // Check if we can find this content-type
             var ctc = new ContentTypeController();
@@ -171,12 +186,14 @@ namespace ToSic.SexyContent.WebApi
 	        });
 	    }
 
-	    /// <summary>
-		/// Get Entities with specified AssignmentObjectTypeId and Key
-		/// </summary>
-		[HttpGet]
+        #endregion
+
+        /// <summary>
+        /// Get Entities with specified AssignmentObjectTypeId and Key
+        /// </summary>
+        [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-		public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType)
+		public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, [FromUri] string appPath = null)
 		{
             InitEavAndSerializer();
 	        return new MetadataController().GetAssignedEntities(assignmentObjectTypeId, "guid", keyGuid.ToString(), contentType);
@@ -187,7 +204,7 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
-        public void Delete(string contentType, int id)
+        public void Delete(string contentType, int id, [FromUri] string appPath = null)
         {
             InitEavAndSerializer();
             // don't allow type "any" on this
@@ -229,6 +246,7 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
+        #region GetOne by ID / GUID
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
 	    public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
@@ -247,6 +265,7 @@ namespace ToSic.SexyContent.WebApi
                 appPath);
         }
 
+
         /// <summary>
         /// Preprocess security / context, then get the item based on an passed in method, 
         /// ...then process/finish
@@ -258,43 +277,86 @@ namespace ToSic.SexyContent.WebApi
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<int, IEntity> getOne, string appPath)
         {
             // if app-path specified, use that app, otherwise use from context
-            var appId = GetAppIdFromPathOrContext(appPath);
+            var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
-            InitEavAndSerializer(appId);
             IEntity itm = getOne(appId);
             PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm, useContext: appPath == null, appId: appId);
             return _entitiesController.Serializer.Prepare(itm);
         }
+        #endregion
 
+        #region Create
+     //   [HttpPost]
+     //   [HttpPatch]
+     //   [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+	    //public Dictionary<string, object> Create([FromUri] string contentType, [FromBody] Dictionary<string, object> newContentItem, [FromUri] string appPath = null)
+	    //{
+     //       // if app-path specified, use that app, otherwise use from context
+     //       var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
+     //       IEntity itm = null;
+     //       var perm = PermissionGrant.Create;
+
+     //       // Now check standard create-permissions
+     //       PerformSecurityCheck(contentType, perm, true, itm, appPath == null, appId);
+
+     //       // Convert to case-insensitive dictionary just to be safe!
+     //       newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
+
+     //       // Now create the cleaned up import-dictionary so we can create a new entity
+     //       var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem, appId);
+
+	    //    var userName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+
+     //       // try to create
+     //       var currentApp = new App(PortalSettings, appId);
+     //       currentApp.InitData(false, new ValueCollectionProvider());
+     //       currentApp.Data.Create(contentType, cleanedNewItem, userName); // full version, with "who did it" for the log entry
+
+     //       // Todo: try to return the newly created object 
+     //       return null;
+	    //}
 
         [HttpPost]
-        [HttpPatch]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
-	    public Dictionary<string, object> Create(string contentType, Dictionary<string, object> newContentItem)
-	    {
-            InitEavAndSerializer();
-            // Now check standard create-permissions
-            PerformSecurityCheck(contentType, PermissionGrant.Create, true);
+        public Dictionary<string, object> CreateOrUpdate([FromUri] string contentType, [FromBody] Dictionary<string, object> newContentItem, [FromUri] int? id = null, [FromUri] string appPath = null)
+        {
+            // if app-path specified, use that app, otherwise use from context
+            var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
+
+            // Check that this ID is actually of this content-type,
+            // this throws an error if it's not the correct type
+            var itm = id == null 
+                ? null 
+                : _entitiesController.GetEntityOrThrowError(contentType, id.Value, appId);
+            var perm = id == null 
+                ? PermissionGrant.Create 
+                : PermissionGrant.Update;
+
+            PerformSecurityCheck(contentType, perm, true, itm, appPath == null, appId);
 
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
 
             // Now create the cleaned up import-dictionary so we can create a new entity
-            var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem);
+            var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem, appId);
 
-	        // Get user name/id when creating, would be important if one day checking for author
-	        //var x = Dnn.User.UserID;
-	        //var userName = (x == -1) ? "Anonymous" : "dnn:id=" + x;
-
-	        var userName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+            var userName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
 
             // try to create
-            App.Data.Create(contentType, cleanedNewItem, userName); // full version, with "who did it" for the log entry
-
-            // Todo: try to return the newly created object 
-            return null;
-	    }
-
+            var currentApp = new App(PortalSettings, appId);
+            currentApp.InitData(false, new ValueCollectionProvider());
+            if (id == null)
+            {
+                currentApp.Data.Create(contentType, cleanedNewItem, userName);
+                // Todo: try to return the newly created object 
+                return null;
+            }
+            else
+            {
+                currentApp.Data.Update(id.Value, cleanedNewItem, userName); 
+                return _entitiesController.Serializer.Prepare(currentApp.Data.List[id.Value]);
+            }
+        }
 
         /// <summary>
         /// Construct an import-friedly, type-controlled value-dictionary to create or update an entity
@@ -302,10 +364,10 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="contentType"></param>
         /// <param name="newContentItem"></param>
         /// <returns></returns>
-	    private Dictionary<string, object> CreateEntityDictionary(string contentType, Dictionary<string, object> newContentItem)
+        private Dictionary<string, object> CreateEntityDictionary(string contentType, Dictionary<string, object> newContentItem, int appId)
 	    {
             // Retrieve content-type definition and check all the fields that this content-type has
-	        var cache = (BaseCache) DataSource.GetCache(App.ZoneId, App.AppId);
+	        var cache = (BaseCache) DataSource.GetCache(null, appId);
 	        var listOfTypes = cache.GetContentType(contentType);// as ContentType;
 	        var attribs = listOfTypes.AttributeDefinitions;
 
@@ -420,36 +482,7 @@ namespace ToSic.SexyContent.WebApi
 	    }
 
 
-        [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
-        public Dictionary<string, object> Create(string contentType, int id, Dictionary<string, object> newContentItem)
-        {
-            InitEavAndSerializer();
-            // Now check standard create-permissions
 
-            // Check that this ID is actually of this content-type,
-            // this throws an error if it's not the correct type
-            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId: App.AppId);
-
-
-            PerformSecurityCheck(contentType, PermissionGrant.Update, true, itm);
-
-
-            // Convert to case-insensitive dictionary just to be safe!
-            newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
-
-            // Now create the cleaned up import-dictionary so we can create a new entity
-            var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem);
-
-            // Get user name/id when creating, would be important if one day checking for author
-            var x = Dnn.User.UserID;
-            var userName = (x == -1) ? "Anonymous" : "dnn:id=" + x;
-
-            // try to create
-            App.Data.Update(id, cleanedNewItem, userName); // full version, with "who did it" for the log entry
-
-            // Todo: try to return the newly created object 
-            return _entitiesController.Serializer.Prepare(App.Data.List[id]);
-        }
+        #endregion
     }
 }
