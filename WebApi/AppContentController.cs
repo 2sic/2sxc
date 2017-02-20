@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
-using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json.Linq;
@@ -57,12 +56,18 @@ namespace ToSic.SexyContent.WebApi
             PerformSecurityCheck(contentType, PermissionGrant.Read, true, useContext: appPath == null, appId: appId);
             return _entitiesController.GetEntities(contentType, cultureCode);
         }
-
+        
+        /// <summary>
+        /// Retrieve the appId - either based on the parameter, or if missing, use context
+        /// Note that this will fail, if both appPath and context are missing
+        /// </summary>
+        /// <param name="appPath"></param>
+        /// <returns></returns>
         private int GetAppIdFromPathOrContext(string appPath)
-        {
-            var appId = appPath == null || appPath == "auto" ? App.AppId : GetCurrentAppIdFromPath(appPath);
-            return appId;
-        }
+            => appPath == null || appPath == "auto"
+                ? App.AppId
+                : GetCurrentAppIdFromPath(appPath);
+        
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
@@ -231,14 +236,6 @@ namespace ToSic.SexyContent.WebApi
             return GetAndSerializeOneAfterSecurityChecks(contentType,
                 appId => _entitiesController.GetEntityOrThrowError(contentType, id, appId),
                 appPath);
-
-            //// if app-path specified, use that app, otherwise use from context
-            //var appId = GetAppIdFromPathOrContext(appPath);
-
-            //InitEavAndSerializer(appId);
-            //IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId);
-            //PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm, useContext: appPath == null, appId: appId);
-            //return _entitiesController.Serializer.Prepare(itm);
         }
 
         [HttpGet]
@@ -255,16 +252,16 @@ namespace ToSic.SexyContent.WebApi
         /// ...then process/finish
         /// </summary>
         /// <param name="contentType"></param>
-        /// <param name="GetOne"></param>
+        /// <param name="getOne"></param>
         /// <param name="appPath"></param>
         /// <returns></returns>
-        private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<int, IEntity> GetOne, string appPath)
+        private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<int, IEntity> getOne, string appPath)
         {
             // if app-path specified, use that app, otherwise use from context
             var appId = GetAppIdFromPathOrContext(appPath);
 
             InitEavAndSerializer(appId);
-            IEntity itm = GetOne(appId);// _entitiesController.GetEntityOrThrowError(contentType, guid, appId);
+            IEntity itm = getOne(appId);
             PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm, useContext: appPath == null, appId: appId);
             return _entitiesController.Serializer.Prepare(itm);
         }

@@ -11,9 +11,15 @@ using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.Internal;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ToSic.SexyContent.WebApi
 {
+    /// <summary>
+    /// This controller will check if it's responsible (based on url)
+    /// ...and if yes, compile / run the app-specific api controllers
+    /// ...otherwise hand processing back to next api controller up-stream
+    /// </summary>
     public class AppApiControllerSelector : IHttpControllerSelector
     {
         private readonly HttpConfiguration _config;
@@ -29,11 +35,21 @@ namespace ToSic.SexyContent.WebApi
             return PreviousSelector.GetControllerMapping();
         }
 
-        private static readonly string[] AllowedRoutes = { "desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/", "api/2sxc/app/*/api/" }; // todo!!!
+        private static readonly string[] AllowedRoutes = {"desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/"}; // old routes, dnn 7/8 & dnn 9 
+
+
+        private static readonly string[] RegExRoutes = { @"desktopmodules\/2sxc\/api\/app\/[^/]+\/api", @"api\/2sxc\/app\/[^/]+\/api" }; // todo!!!
         private bool HandleRequestWithThisController(HttpRequestMessage request)
         {
             var routeData = request.GetRouteData();
-            return AllowedRoutes.Any(a => routeData.Route.RouteTemplate.ToLower().Contains(a));
+            var simpleMatch = AllowedRoutes.Any(a => routeData.Route.RouteTemplate.ToLower().Contains(a));
+            if (simpleMatch)
+                return true;
+
+            var rexMatch = RegExRoutes.Any(
+                a => new Regex(a, RegexOptions.None).IsMatch(routeData.Route.RouteTemplate.ToLower()) );
+            return rexMatch;
+
         }
 
         public HttpControllerDescriptor SelectController(HttpRequestMessage request)
@@ -67,12 +83,12 @@ namespace ToSic.SexyContent.WebApi
             }
             catch (Exception e)
             {
-                var exception = new Exception("Error while selecting / compiling a controller for the request. Pls check the event-log and the code. See the inner exception for more details.", e);
+                var exception = new Exception("2sxc Api Controller Finder: Error while selecting / compiling a controller for the request. Pls check the event-log and the code. See the inner exception for more details.", e);
                 DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
                 throw new HttpResponseException(request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception.Message, e));
             }
 
-            throw new HttpResponseException(request.CreateErrorResponse(HttpStatusCode.NotFound, "Controller " + controllerTypeName + " not found in app."));
+            throw new HttpResponseException(request.CreateErrorResponse(HttpStatusCode.NotFound, "2sxc Api Controller Finder: Controller " + controllerTypeName + " not found in app."));
         }
     }
 }
