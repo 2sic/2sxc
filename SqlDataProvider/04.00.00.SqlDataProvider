@@ -1,4 +1,10 @@
-﻿
+﻿-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
 -- Script Block for 2SexyContent 05.05.00 Update
 -- ---------------------------------------------
 -- This SQL Script Block must be included in every .SqlDataProvider file

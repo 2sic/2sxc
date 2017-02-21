@@ -161,6 +161,21 @@ WHERE(DesktopModules.ModuleName = N'2sxc' OR DesktopModules.ModuleName = N'2sxc-
             sqlConnection.Close();
         }
 
+        internal void Version081100()
+        {
+            logger.LogStep("08.11.00", "Start", false);
+
+            // Remove old database tables
+            var sql = @"DROP TABLE ToSIC_SexyContent_ContentGroupItems;
+DROP TABLE ToSIC_SexyContent_Templates;";
+
+            var sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString);
+            sqlConnection.Open();
+            var sqlCommand = new SqlCommand(sql, sqlConnection);
+            sqlCommand.ExecuteNonQuery();
+            sqlConnection.Close();
+        }
+
         private void RemoveModuleControls(IEnumerable<string> controls)
         {
             logger.LogStep("08.--.--", "RemoveModuleControlls - Start", false);

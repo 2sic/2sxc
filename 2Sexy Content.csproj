@@ -415,6 +415,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="package.json" />
+    <Content Include="SqlDataProvider\00.99.00.SqlDataProvider" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
