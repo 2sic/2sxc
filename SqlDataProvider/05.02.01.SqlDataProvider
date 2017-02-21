@@ -5,6 +5,8 @@ BEGIN
 	RETURN
 END
 
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- Script Block for 2SexyContent 05.05.00 Update
 -- ---------------------------------------------
 -- This SQL Script Block must be included in every .SqlDataProvider file
@@ -15,15 +17,15 @@ END
 -- the installation works.
 
 DECLARE @IsUpgradeFromPreviousVersion int
-SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N'2SexyContent') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N''2SexyContent'') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
 
 If @IsUpgradeFromPreviousVersion = 1
 BEGIN
 	UPDATE       DesktopModules
-	SET                ModuleName = N'2sxc'
-	WHERE        (ModuleName = N'2SexyContent')
+	SET                ModuleName = N''2sxc''
+	WHERE        (ModuleName = N''2SexyContent'')
 
-	RAISERROR(N'Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************', 16, 1)
+	RAISERROR(N''Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************'', 16, 1)
 	RETURN
 END
 
@@ -35,10 +37,10 @@ SET XACT_ABORT ON
 BEGIN TRANSACTION SexyContentUpdate
 
 /****** Object:  Table [dbo].[ToSIC_EAV_EntityRelationships]    Script Date: 18.07.2013 14:12:38 ******/
-EXEC('SET ANSI_NULLS ON
-SET QUOTED_IDENTIFIER ON')
+EXEC(''SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON'')
 
-EXEC('CREATE TABLE [dbo].[ToSIC_EAV_EntityRelationships](
+EXEC(''CREATE TABLE [dbo].[ToSIC_EAV_EntityRelationships](
 	[AttributeID] [int] NOT NULL,
 	[ParentEntityID] [int] NOT NULL,
 	[ChildEntityID] [int] NOT NULL,
@@ -68,18 +70,18 @@ REFERENCES [dbo].[ToSIC_EAV_Entities] ([EntityID])
 ALTER TABLE [dbo].[ToSIC_EAV_EntityRelationships] CHECK CONSTRAINT [FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_ParentEntities]
 
 
-INSERT INTO [dbo].[ToSIC_EAV_AttributeTypes] ([Type]) VALUES (''Entity'')
-')
+INSERT INTO [dbo].[ToSIC_EAV_AttributeTypes] ([Type]) VALUES (''''Entity'''')
+'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_EntityRelationships]    Script Date: 29.07.2013 16:09:21 ******/
-EXEC('SET ANSI_NULLS ON
-SET QUOTED_IDENTIFIER ON')
+EXEC(''SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON'')
 -- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
 -- =============================================
-EXEC('CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_EntityRelationships]
+EXEC(''CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_EntityRelationships]
    ON  [dbo].[ToSIC_EAV_EntityRelationships]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -99,11 +101,11 @@ BEGIN
 		,@newData xml
 	
 	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
-				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
 				RETURN
 			END
 		ELSE
@@ -121,37 +123,37 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = ParentEntityID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = ParentEntityID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
 
 
-END');
+END'');
 
 
 
--- Must create @Entity Content-Type (AttributeSet must have Scope = ''System'' and StaticName = ''@Entity'')
+-- Must create @Entity Content-Type (AttributeSet must have Scope = ''''System'''' and StaticName = ''''@Entity'''')
 
-EXEC ToSIC_EAV_ChangeLogAdd 'System'
+EXEC ToSIC_EAV_ChangeLogAdd ''System''
 DECLARE @ChangeLogID int
 -- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-IF SERVERPROPERTY('edition') <> 'SQL Azure' OR CAST(SERVERPROPERTY('ProductVersion') AS CHAR(2)) >= '12'
+IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
 ELSE
 	SET @ChangeLogID = 1
@@ -159,18 +161,18 @@ SELECT @ChangeLogID
 
 -- Insert AttributeSet @Entity
 INSERT INTO ToSIC_EAV_AttributeSets (StaticName, Name, [Scope], Description, ChangeLogCreated, ChangeLogDeleted, AppID)
-VALUES ('@Entity', '@Entity', 'System', 'Entity UI Definitions', @ChangeLogID, NULL, 1)
+VALUES (''@Entity'', ''@Entity'', ''System'', ''Entity UI Definitions'', @ChangeLogID, NULL, 1)
 
 DECLARE @EntityAttributeSetID int
 SELECT @EntityAttributeSetID = AttributeSetID 
 FROM ToSIC_EAV_AttributeSets
-WHERE StaticName = '@Entity'
+WHERE StaticName = ''@Entity''
 
 -- Insert AllowMultiValue + EntityType field
 IF @EntityAttributeSetID IS NOT NULL
 BEGIN
 	INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-	VALUES ('AllowMultiValue', 'Boolean', @ChangeLogID)
+	VALUES (''AllowMultiValue'', ''Boolean'', @ChangeLogID)
 	
 	DECLARE @AllowMultiValueAttributeID int
 	SET @AllowMultiValueAttributeID = SCOPE_IDENTITY()
@@ -180,7 +182,7 @@ BEGIN
 	
 	
 	INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-	VALUES ('EntityType', 'String', @ChangeLogID)
+	VALUES (''EntityType'', ''String'', @ChangeLogID)
 	
 	DECLARE @EntityTypeAttributeID int
 	SET @EntityTypeAttributeID = SCOPE_IDENTITY()
@@ -190,4 +192,4 @@ BEGIN
 END
 
 
-COMMIT TRANSACTION SexyContentUpdate
+COMMIT TRANSACTION SexyContentUpdate')

@@ -5,6 +5,8 @@ BEGIN
 	RETURN
 END
 
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- Script Block for 2SexyContent 05.05.00 Update
 -- ---------------------------------------------
 -- This SQL Script Block must be included in every .SqlDataProvider file
@@ -15,15 +17,15 @@ END
 -- the installation works.
 
 DECLARE @IsUpgradeFromPreviousVersion int
-SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N'2SexyContent') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N''2SexyContent'') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
 
 If @IsUpgradeFromPreviousVersion = 1
 BEGIN
 	UPDATE       DesktopModules
-	SET                ModuleName = N'2sxc'
-	WHERE        (ModuleName = N'2SexyContent')
+	SET                ModuleName = N''2sxc''
+	WHERE        (ModuleName = N''2SexyContent'')
 
-	RAISERROR(N'Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************', 16, 1)
+	RAISERROR(N''Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************'', 16, 1)
 	RETURN
 END
 
@@ -34,11 +36,11 @@ SET XACT_ABORT ON
 
 BEGIN TRANSACTION SexyContentUpdate;
 
-EXEC ToSIC_EAV_ChangeLogAdd 'System'
+EXEC ToSIC_EAV_ChangeLogAdd ''System''
 
 -- Extend AttributeSets with 2 Columns: UsesConfigurationOfAttributeSet & AlwaysShareConfiguration
 
-EXEC('ALTER TABLE dbo.ToSIC_EAV_AttributeSets ADD
+EXEC(''ALTER TABLE dbo.ToSIC_EAV_AttributeSets ADD
 	UsesConfigurationOfAttributeSet int NULL,
 	AlwaysShareConfiguration bit NOT NULL CONSTRAINT DF_ToSIC_EAV_AttributeSets_AlwaysShareConfiguration DEFAULT 0
 
@@ -54,21 +56,21 @@ ALTER TABLE dbo.ToSIC_EAV_AttributeSets ADD CONSTRAINT
 	
 
 
-ALTER TABLE dbo.ToSIC_EAV_AttributeSets SET (LOCK_ESCALATION = TABLE)')
+ALTER TABLE dbo.ToSIC_EAV_AttributeSets SET (LOCK_ESCALATION = TABLE)'')
 
 
 -- Set AlwaysShareConfiguration on System-AttributeSets
-EXEC('UPDATE	ToSIC_EAV_AttributeSets
+EXEC(''UPDATE	ToSIC_EAV_AttributeSets
 SET		AlwaysShareConfiguration = 1
-WHERE	(Scope = N''System'' OR Scope = N''2SexyContent-System'') AND AlwaysShareConfiguration = 0')
+WHERE	(Scope = N''''System'''' OR Scope = N''''2SexyContent-System'''') AND AlwaysShareConfiguration = 0'')
 
 
 
 -- Create AttributeSets @String/@All etc for all Apps
-EXEC('
+EXEC(''
 DECLARE @ChangeLogID int
 -- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	SET @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
 ELSE
 	SET @ChangeLogID = 1
@@ -97,7 +99,7 @@ FROM            ToSIC_EAV_Entities INNER JOIN
                          DescribingEntityAttributeSets.AppID <> AttributeSets.AppID INNER JOIN
                          ToSIC_EAV_AttributeSets AS DestinationAttributeSet ON DescribingEntityAttributeSets.StaticName = DestinationAttributeSet.StaticName AND 
                          AttributeSets.AppID = DestinationAttributeSet.AppID
-WHERE        (ToSIC_EAV_Entities.AssignmentObjectTypeID = 2) AND (DescribingEntityAttributeSets.Scope = N''System'') AND (DescribingEntityAttributeSets.AppID = 1) AND 
+WHERE        (ToSIC_EAV_Entities.AssignmentObjectTypeID = 2) AND (DescribingEntityAttributeSets.Scope = N''''System'''') AND (DescribingEntityAttributeSets.AppID = 1) AND 
                          (ToSIC_EAV_Entities.ChangeLogDeleted IS NULL) AND (DescribingEntityAttributeSets.ChangeLogDeleted IS NULL)
 
 
@@ -110,14 +112,14 @@ FROM            ToSIC_EAV_Entities INNER JOIN
                          ToSIC_SexyContent_Templates ON ToSIC_EAV_Entities.KeyNumber = ToSIC_SexyContent_Templates.TemplateID INNER JOIN
                              (SELECT        PortalID, CAST(SettingValue AS int) AS ZoneID
                                FROM            PortalSettings
-                               WHERE        (SettingName = N''ToSIC_SexyContent_ZoneID'')) AS PortalZoneMapping ON 
+                               WHERE        (SettingName = N''''ToSIC_SexyContent_ZoneID'''')) AS PortalZoneMapping ON 
                          ToSIC_SexyContent_Templates.PortalID = PortalZoneMapping.PortalID INNER JOIN
                          ToSIC_EAV_Apps ON PortalZoneMapping.ZoneID = ToSIC_EAV_Apps.ZoneID INNER JOIN
                          ToSIC_EAV_AttributeSets AS DestinationAttributeSet ON ToSIC_EAV_Apps.AppID = DestinationAttributeSet.AppID AND 
                          DescribingEntityAttributeSets.StaticName = DestinationAttributeSet.StaticName
-WHERE        (DescribingEntityAttributeSets.Scope = N''2SexyContent-System'') AND (DescribingEntityAttributeSets.AppID = 1) AND (ToSIC_EAV_Entities.ChangeLogDeleted IS NULL)
-                          AND (DescribingEntityAttributeSets.ChangeLogDeleted IS NULL) AND (ToSIC_EAV_AssignmentObjectTypes.Name = N''2SexyContent-Template'')
-')
+WHERE        (DescribingEntityAttributeSets.Scope = N''''2SexyContent-System'''') AND (DescribingEntityAttributeSets.AppID = 1) AND (ToSIC_EAV_Entities.ChangeLogDeleted IS NULL)
+                          AND (DescribingEntityAttributeSets.ChangeLogDeleted IS NULL) AND (ToSIC_EAV_AssignmentObjectTypes.Name = N''''2SexyContent-Template'''')
+'')
 
 
 -- Correct AssignmentObjectTypeID for wrong assigned entities
@@ -126,8 +128,8 @@ SET                AssignmentObjectTypeID = 1
 FROM            ToSIC_EAV_Entities INNER JOIN
                          ToSIC_EAV_AttributeSets ON ToSIC_EAV_Entities.AttributeSetID = ToSIC_EAV_AttributeSets.AttributeSetID INNER JOIN
                          ToSIC_EAV_AssignmentObjectTypes ON ToSIC_EAV_Entities.AssignmentObjectTypeID = ToSIC_EAV_AssignmentObjectTypes.AssignmentObjectTypeID
-WHERE        (ToSIC_EAV_AssignmentObjectTypes.Name = N'2SexyContent')
+WHERE        (ToSIC_EAV_AssignmentObjectTypes.Name = N''2SexyContent'')
 
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
---ROLLBACK TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;')

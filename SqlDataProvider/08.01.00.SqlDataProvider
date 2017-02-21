@@ -5,17 +5,19 @@ BEGIN
 	RETURN
 END
 
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- make sure sql rolls back automatically in case of error.
 SET XACT_ABORT ON
 
 BEGIN TRANSACTION SexyContentUpdate;
 
-EXEC ToSIC_EAV_ChangeLogAdd 'System'
+EXEC ToSIC_EAV_ChangeLogAdd ''System''
 
 UPDATE  ToSIC_EAV_AssignmentObjectTypes
-SET              Name = N'CmsObject', Description = N'References to CMS objects like files and pages'
+SET              Name = N''CmsObject'', Description = N''References to CMS objects like files and pages''
 WHERE     (AssignmentObjectTypeID = 10)
 
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
---ROLLBACK TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;')

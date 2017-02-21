@@ -5,6 +5,8 @@ BEGIN
 	RETURN
 END
 
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- Script Block for 2SexyContent 05.05.00 Update
 -- ---------------------------------------------
 -- This SQL Script Block must be included in every .SqlDataProvider file
@@ -15,15 +17,15 @@ END
 -- the installation works.
 
 DECLARE @IsUpgradeFromPreviousVersion int
-SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N'2SexyContent') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N''2SexyContent'') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
 
 If @IsUpgradeFromPreviousVersion = 1
 BEGIN
 	UPDATE       DesktopModules
-	SET                ModuleName = N'2sxc'
-	WHERE        (ModuleName = N'2SexyContent')
+	SET                ModuleName = N''2sxc''
+	WHERE        (ModuleName = N''2SexyContent'')
 
-	RAISERROR(N'Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************', 16, 1)
+	RAISERROR(N''Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************'', 16, 1)
 	RETURN
 END
 
@@ -33,11 +35,11 @@ Begin Transaction
 
 Declare @ChangeLogID int
 Declare @NewAttributeSetID int
-Declare @NewAttributeSetName nvarchar(100) = '2SexyContent-Template-ContentTypes'
+Declare @NewAttributeSetName nvarchar(100) = ''2SexyContent-Template-ContentTypes''
 
 -- Insert ChangeLog and define ChangeLog ID
 Insert Into ToSIC_EAV_ChangeLog ([Timestamp], [User])
-Values (GETDATE(), 'System')
+Values (GETDATE(), ''System'')
 Set @ChangeLogID = @@Identity
 
 -- Check if it already exists, otherwise exit
@@ -50,7 +52,7 @@ Begin
 	
 	-- Insert new record, if not already existing
 	Insert Into ToSIC_EAV_AttributeSets (StaticName, Name, Scope, [Description], ChangeLogCreated)
-	Values ('2SexyContent-Template-ContentTypes', '2SexyContent-Template-ContentTypes', 'SexyContent-System', '2SexyContent-Template-Defaults', @ChangeLogID)
+	Values (''2SexyContent-Template-ContentTypes'', ''2SexyContent-Template-ContentTypes'', ''SexyContent-System'', ''2SexyContent-Template-Defaults'', @ChangeLogID)
 
 	-- Get ID
 	Select @NewAttributeSetID = AttributeSetID 
@@ -61,19 +63,19 @@ Begin
 
 	-- ItemType
 	Insert Into ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-	Values ('ItemType', 'String', @ChangeLogID)
+	Values (''ItemType'', ''String'', @ChangeLogID)
 	Insert Into ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
 	Values (@NewAttributeSetID, @@IDENTITY, 1, 0, 1)
 
 	-- ContentTypeID
 	Insert Into ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-	Values ('ContentTypeID', 'Number', @ChangeLogID)
+	Values (''ContentTypeID'', ''Number'', @ChangeLogID)
 	Insert Into ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
 	Values (@NewAttributeSetID, @@IDENTITY, 1, 1, 1)
 
 	-- DemoEntityID
 	Insert Into ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-	Values ('DemoEntityID', 'Number', @ChangeLogID)
+	Values (''DemoEntityID'', ''Number'', @ChangeLogID)
 	Insert Into ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
 	Values (@NewAttributeSetID, @@IDENTITY, 1, 2, 1)
 
@@ -84,7 +86,7 @@ Declare @FileAttributeSetID int
 
 Select @FileAttributeSetID = AttributeSetID 
 From ToSIC_EAV_AttributeSets
-Where StaticName = '@File'
+Where StaticName = ''@File''
 
 If @FileAttributeSetID IS NOT NULL
 Begin
@@ -93,15 +95,15 @@ Begin
 	Select @PathsField = ToSIC_EAV_Attributes.AttributeID
 	From ToSIC_EAV_Attributes INNER JOIN
 	ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
-	Where ToSIC_EAV_Attributes.StaticName = 'Paths' And ToSIC_EAV_AttributesInSets.AttributeSetID = @FileAttributeSetID
+	Where ToSIC_EAV_Attributes.StaticName = ''Paths'' And ToSIC_EAV_AttributesInSets.AttributeSetID = @FileAttributeSetID
 
 	If @PathsField IS NULL
 	Begin
 		Insert Into ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-		Values ('Paths', 'String', @ChangeLogID)
+		Values (''Paths'', ''String'', @ChangeLogID)
 		Insert Into ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
 		Values (@FileAttributeSetID, @@IDENTITY, 0, 1, 1)
 	End
 End
 
-Commit
+Commit')

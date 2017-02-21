@@ -5,25 +5,27 @@ BEGIN
 	RETURN
 END
 
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- make sure sql rolls back automatically in case of error.
 SET XACT_ABORT ON
 
 BEGIN TRANSACTION SexyContentUpdate;
 
 -- Create Table ContextInfo for SQL Azure Compatibility
-EXEC('CREATE TABLE [dbo].[ToSIC_EAV_ContextInfo] (
+EXEC(''CREATE TABLE [dbo].[ToSIC_EAV_ContextInfo] (
 	[ContextInfo] varbinary(128) not null,
 	[ChangeID] nvarchar(128) not null,
 	[UpdatedAt] datetime NOT NULL,
 	CONSTRAINT [PK_ToSIC_EAV_ContextInfo] PRIMARY KEY CLUSTERED ([ContextInfo] ASC)
-)')
+)'')
 
 -- Update ToSIC_EAV_ChangeLogSet for SQL Azure Compatibility
 -- 
 -- Special Note 2016-04-18 2dm
 -- changed the server-type detection from SQL-Azr to SQL-Azr-V12
 -- because only that old version needs this special code
-EXEC('ALTER PROCEDURE [dbo].[ToSIC_EAV_ChangeLogSet]
+EXEC(''ALTER PROCEDURE [dbo].[ToSIC_EAV_ChangeLogSet]
   @ChangeID int
 AS
 
@@ -33,11 +35,11 @@ SET NOCOUNT ON
 DELETE FROM [dbo].[ToSIC_EAV_ContextInfo] WHERE [UpdatedAt] < DATEADD(mi, -5, GETUTCDATE())
 
 -- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 BEGIN
     DECLARE @b varbinary(128)
     SET @b = CONVERT(varbinary(128),newid())
-    EXEC sp_executesql @statement=N''SET CONTEXT_INFO @b'',@params=N''@b varbinary(128)'',@b=@b
+    EXEC sp_executesql @statement=N''''SET CONTEXT_INFO @b'''',@params=N''''@b varbinary(128)'''',@b=@b
 	print @b
 END
 
@@ -52,10 +54,10 @@ IF EXISTS (SELECT * FROM [dbo].[ToSIC_EAV_ContextInfo] WHERE [ContextInfo] = @Co
 	WHERE
 		ContextInfo = @ContextInfo
 ELSE
-	INSERT INTO [dbo].[ToSIC_EAV_ContextInfo] ([ContextInfo], [ChangeID], [UpdatedAt]) VALUES (@ContextInfo, @ChangeID, GETUTCDATE());')
+	INSERT INTO [dbo].[ToSIC_EAV_ContextInfo] ([ContextInfo], [ChangeID], [UpdatedAt]) VALUES (@ContextInfo, @ChangeID, GETUTCDATE());'')
 
 -- Add ToSIC_EAV_ChangeLogGet
-EXEC('CREATE PROCEDURE [dbo].[ToSIC_EAV_ChangeLogGet]
+EXEC(''CREATE PROCEDURE [dbo].[ToSIC_EAV_ChangeLogGet]
 AS
     SET NOCOUNT ON
     DECLARE @ContextInfo varbinary(128)
@@ -68,12 +70,12 @@ AS
     FROM [dbo].[ToSIC_EAV_ContextInfo]
     WHERE [ContextInfo] = @ContextInfo
 
-	RETURN @ChangeID')
+	RETURN @ChangeID'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_Apps]    Script Date: 28.08.2014 09:04:35 ******/
-EXEC('SET ANSI_NULLS ON')
-EXEC('SET QUOTED_IDENTIFIER ON')
-EXEC('ALTER TRIGGER [dbo].[AutoLogAllChangesToTimeline_Apps]
+EXEC(''SET ANSI_NULLS ON'')
+EXEC(''SET QUOTED_IDENTIFIER ON'')
+EXEC(''ALTER TRIGGER [dbo].[AutoLogAllChangesToTimeline_Apps]
    ON  [dbo].[ToSIC_EAV_Apps]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -95,7 +97,7 @@ BEGIN
 	EXEC @sysLogId = [dbo].[ToSIC_EAV_ChangeLogGet]
 	IF @sysLogId = 0
 	BEGIN
-		RAISERROR (''ChangeLogID is not set'', 0, 1)
+		RAISERROR (''''ChangeLogID is not set'''', 0, 1)
 		RETURN
 	END
 
@@ -108,31 +110,31 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = AppID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = AppID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
-END')
+END'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_AssignmentObjectTypes]    Script Date: 28.08.2014 09:08:32 ******/
-EXEC('SET ANSI_NULLS ON')
-EXEC('SET QUOTED_IDENTIFIER ON')
-EXEC('-- =============================================
+EXEC(''SET ANSI_NULLS ON'')
+EXEC(''SET QUOTED_IDENTIFIER ON'')
+EXEC(''-- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
@@ -159,7 +161,7 @@ BEGIN
 	EXEC @sysLogId = [dbo].[ToSIC_EAV_ChangeLogGet]
 	IF @sysLogId = 0
 	BEGIN
-		RAISERROR (''ChangeLogID is not set'', 0, 1)
+		RAISERROR (''''ChangeLogID is not set'''', 0, 1)
 		RETURN
 	END
 
@@ -172,31 +174,31 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = AssignmentObjectTypeID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = AssignmentObjectTypeID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
-END')
+END'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_AttributeGroups]    Script Date: 28.08.2014 09:09:11 ******/
-EXEC('SET ANSI_NULLS ON')
-EXEC('SET QUOTED_IDENTIFIER ON')
-EXEC('-- =============================================
+EXEC(''SET ANSI_NULLS ON'')
+EXEC(''SET QUOTED_IDENTIFIER ON'')
+EXEC(''-- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
@@ -223,7 +225,7 @@ BEGIN
 	EXEC @sysLogId = [dbo].[ToSIC_EAV_ChangeLogGet]
 	IF @sysLogId = 0
 	BEGIN
-		RAISERROR (''ChangeLogID is not set'', 0, 1)
+		RAISERROR (''''ChangeLogID is not set'''', 0, 1)
 		RETURN
 	END
 
@@ -236,31 +238,31 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = AttributeGroupID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = AttributeGroupID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
-END')
+END'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_Attributes]    Script Date: 28.08.2014 09:10:17 ******/
-EXEC('SET ANSI_NULLS ON')
-EXEC('SET QUOTED_IDENTIFIER ON')
-EXEC('-- =============================================
+EXEC(''SET ANSI_NULLS ON'')
+EXEC(''SET QUOTED_IDENTIFIER ON'')
+EXEC(''-- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
@@ -287,7 +289,7 @@ BEGIN
 	EXEC @sysLogId = [dbo].[ToSIC_EAV_ChangeLogGet]
 	IF @sysLogId = 0
 	BEGIN
-		RAISERROR (''ChangeLogID is not set'', 0, 1)
+		RAISERROR (''''ChangeLogID is not set'''', 0, 1)
 		RETURN
 	END
 
@@ -300,31 +302,31 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = AttributeID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = AttributeID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
-END')
+END'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_AttributeSets]    Script Date: 28.08.2014 09:11:17 ******/
-EXEC('SET ANSI_NULLS ON')
-EXEC('SET QUOTED_IDENTIFIER ON')
-EXEC('-- =============================================
+EXEC(''SET ANSI_NULLS ON'')
+EXEC(''SET QUOTED_IDENTIFIER ON'')
+EXEC(''-- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
@@ -351,7 +353,7 @@ BEGIN
 	EXEC @sysLogId = [dbo].[ToSIC_EAV_ChangeLogGet]
 	IF @sysLogId = 0
 	BEGIN
-		RAISERROR (''ChangeLogID is not set'', 0, 1)
+		RAISERROR (''''ChangeLogID is not set'''', 0, 1)
 		RETURN
 	END
 
@@ -364,31 +366,31 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = AttributeSetID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = AttributeSetID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
-END')
+END'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_AttributesInSets]    Script Date: 28.08.2014 09:11:48 ******/
-EXEC('SET ANSI_NULLS ON')
-EXEC('SET QUOTED_IDENTIFIER ON')
-EXEC('-- =============================================
+EXEC(''SET ANSI_NULLS ON'')
+EXEC(''SET QUOTED_IDENTIFIER ON'')
+EXEC(''-- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
@@ -415,7 +417,7 @@ BEGIN
 	EXEC @sysLogId = [dbo].[ToSIC_EAV_ChangeLogGet]
 	IF @sysLogId = 0
 	BEGIN
-		RAISERROR (''ChangeLogID is not set'', 0, 1)
+		RAISERROR (''''ChangeLogID is not set'''', 0, 1)
 		RETURN
 	END
 
@@ -428,31 +430,31 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = AttributeSetID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = AttributeSetID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
-END')
+END'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_Dimensions]    Script Date: 28.08.2014 09:12:22 ******/
-EXEC('SET ANSI_NULLS ON')
-EXEC('SET QUOTED_IDENTIFIER ON')
-EXEC('-- =============================================
+EXEC(''SET ANSI_NULLS ON'')
+EXEC(''SET QUOTED_IDENTIFIER ON'')
+EXEC(''-- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
@@ -479,7 +481,7 @@ BEGIN
 	EXEC @sysLogId = [dbo].[ToSIC_EAV_ChangeLogGet]
 	IF @sysLogId = 0
 	BEGIN
-		RAISERROR (''ChangeLogID is not set'', 0, 1)
+		RAISERROR (''''ChangeLogID is not set'''', 0, 1)
 		RETURN
 	END
 
@@ -492,31 +494,31 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = DimensionID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = DimensionID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
-END')
+END'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_Entities]    Script Date: 28.08.2014 09:13:02 ******/
-EXEC('SET ANSI_NULLS ON')
-EXEC('SET QUOTED_IDENTIFIER ON')
-EXEC('-- =============================================
+EXEC(''SET ANSI_NULLS ON'')
+EXEC(''SET QUOTED_IDENTIFIER ON'')
+EXEC(''-- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
@@ -543,7 +545,7 @@ BEGIN
 	EXEC @sysLogId = [dbo].[ToSIC_EAV_ChangeLogGet]
 	IF @sysLogId = 0
 	BEGIN
-		RAISERROR (''ChangeLogID is not set'', 0, 1)
+		RAISERROR (''''ChangeLogID is not set'''', 0, 1)
 		RETURN
 	END
 
@@ -556,31 +558,31 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = EntityID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = EntityID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
-END')
+END'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_EntityRelationships]    Script Date: 28.08.2014 09:13:24 ******/
-EXEC('SET ANSI_NULLS ON')
-EXEC('SET QUOTED_IDENTIFIER ON')
-EXEC('-- =============================================
+EXEC(''SET ANSI_NULLS ON'')
+EXEC(''SET QUOTED_IDENTIFIER ON'')
+EXEC(''-- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
@@ -607,7 +609,7 @@ BEGIN
 	EXEC @sysLogId = [dbo].[ToSIC_EAV_ChangeLogGet]
 	IF @sysLogId = 0
 	BEGIN
-		RAISERROR (''ChangeLogID is not set'', 0, 1)
+		RAISERROR (''''ChangeLogID is not set'''', 0, 1)
 		RETURN
 	END
 
@@ -620,31 +622,31 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = ParentEntityID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = ParentEntityID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
-END')
+END'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_Values]    Script Date: 28.08.2014 09:13:52 ******/
-EXEC('SET ANSI_NULLS ON')
-EXEC('SET QUOTED_IDENTIFIER ON')
-EXEC('-- =============================================
+EXEC(''SET ANSI_NULLS ON'')
+EXEC(''SET QUOTED_IDENTIFIER ON'')
+EXEC(''-- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
@@ -671,7 +673,7 @@ BEGIN
 	EXEC @sysLogId = [dbo].[ToSIC_EAV_ChangeLogGet]
 	IF @sysLogId = 0
 	BEGIN
-		RAISERROR (''ChangeLogID is not set'', 0, 1)
+		RAISERROR (''''ChangeLogID is not set'''', 0, 1)
 		RETURN
 	END
 
@@ -684,31 +686,31 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = ValueID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = ValueID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
-END')
+END'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_ValuesDimensions]    Script Date: 28.08.2014 09:14:12 ******/
-EXEC('SET ANSI_NULLS ON')
-EXEC('SET QUOTED_IDENTIFIER ON')
-EXEC('-- =============================================
+EXEC(''SET ANSI_NULLS ON'')
+EXEC(''SET QUOTED_IDENTIFIER ON'')
+EXEC(''-- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
@@ -735,7 +737,7 @@ BEGIN
 	EXEC @sysLogId = [dbo].[ToSIC_EAV_ChangeLogGet]
 	IF @sysLogId = 0
 	BEGIN
-		RAISERROR (''ChangeLogID is not set'', 0, 1)
+		RAISERROR (''''ChangeLogID is not set'''', 0, 1)
 		RETURN
 	END
 
@@ -748,31 +750,31 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = ValueID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = ValueID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
-END')
+END'')
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_Zones]    Script Date: 28.08.2014 09:14:33 ******/
-EXEC('SET ANSI_NULLS ON')
-EXEC('SET QUOTED_IDENTIFIER ON')
-EXEC('ALTER TRIGGER [dbo].[AutoLogAllChangesToTimeline_Zones]
+EXEC(''SET ANSI_NULLS ON'')
+EXEC(''SET QUOTED_IDENTIFIER ON'')
+EXEC(''ALTER TRIGGER [dbo].[AutoLogAllChangesToTimeline_Zones]
    ON  [dbo].[ToSIC_EAV_Zones]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -794,7 +796,7 @@ BEGIN
 	EXEC @sysLogId = [dbo].[ToSIC_EAV_ChangeLogGet]
 	IF @sysLogId = 0
 	BEGIN
-		RAISERROR (''ChangeLogID is not set'', 0, 1)
+		RAISERROR (''''ChangeLogID is not set'''', 0, 1)
 		RETURN
 	END
 
@@ -807,37 +809,37 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = ZoneID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = ZoneID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
-END')
+END'')
 
 -- Fix some Key-Names to match Name-Schema
-EXEC('EXEC sp_rename ''dbo.PK_Ext_AssignmentObjectTypes'', ''PK_ToSIC_EAV_AssignmentObjectTypes''')
-EXEC('EXEC sp_rename ''dbo.PK_Attachments'', ''PK_ToSIC_EAV_Attachments''')
-EXEC('EXEC sp_rename ''dbo.PK_Ext_Keys'', ''PK_ToSIC_EAV_Attributes''')
-EXEC('EXEC sp_rename ''dbo.PK_Ext_Extensions'', ''PK_ToSIC_EAV_AttributeSets''')
-EXEC('EXEC sp_rename ''dbo.PK_ToSIC_EAV_Types'', ''PK_ToSIC_EAV_AttributeTypes''')
-EXEC('EXEC sp_rename ''dbo.PK_Ext_ValueSets'', ''PK_ToSIC_EAV_Entities''')
-EXEC('EXEC sp_rename ''dbo.PK_Ext_Values'', ''PK_ToSIC_EAV_Values''')
+EXEC(''EXEC sp_rename ''''dbo.PK_Ext_AssignmentObjectTypes'''', ''''PK_ToSIC_EAV_AssignmentObjectTypes'''''')
+EXEC(''EXEC sp_rename ''''dbo.PK_Attachments'''', ''''PK_ToSIC_EAV_Attachments'''''')
+EXEC(''EXEC sp_rename ''''dbo.PK_Ext_Keys'''', ''''PK_ToSIC_EAV_Attributes'''''')
+EXEC(''EXEC sp_rename ''''dbo.PK_Ext_Extensions'''', ''''PK_ToSIC_EAV_AttributeSets'''''')
+EXEC(''EXEC sp_rename ''''dbo.PK_ToSIC_EAV_Types'''', ''''PK_ToSIC_EAV_AttributeTypes'''''')
+EXEC(''EXEC sp_rename ''''dbo.PK_Ext_ValueSets'''', ''''PK_ToSIC_EAV_Entities'''''')
+EXEC(''EXEC sp_rename ''''dbo.PK_Ext_Values'''', ''''PK_ToSIC_EAV_Values'''''')
 
 
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
---ROLLBACK TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;')

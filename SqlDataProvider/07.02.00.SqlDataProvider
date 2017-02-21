@@ -5,30 +5,32 @@ BEGIN
 	RETURN
 END
 
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- make sure sql rolls back automatically in case of error.
 SET XACT_ABORT ON
 
 BEGIN TRANSACTION SexyContentUpdate;
 
-EXEC ToSIC_EAV_ChangeLogAdd 'System'
+EXEC ToSIC_EAV_ChangeLogAdd ''System''
 
 -- Remove all keys on old tables
-IF (OBJECT_ID('FK_ToSIC_SexyContent_Templates_ToSIC_EAV_AttributeSets', 'F') IS NOT NULL)
+IF (OBJECT_ID(''FK_ToSIC_SexyContent_Templates_ToSIC_EAV_AttributeSets'', ''F'') IS NOT NULL)
 BEGIN
 	ALTER TABLE [dbo].[ToSIC_SexyContent_Templates] DROP CONSTRAINT [FK_ToSIC_SexyContent_Templates_ToSIC_EAV_AttributeSets]
 END
 
-IF (OBJECT_ID('FK_ToSIC_SexyContent_Templates_ToSIC_EAV_Entities', 'F') IS NOT NULL)
+IF (OBJECT_ID(''FK_ToSIC_SexyContent_Templates_ToSIC_EAV_Entities'', ''F'') IS NOT NULL)
 BEGIN
 	ALTER TABLE [dbo].[ToSIC_SexyContent_Templates] DROP CONSTRAINT [FK_ToSIC_SexyContent_Templates_ToSIC_EAV_Entities]
 END
 
-IF (OBJECT_ID('FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_EAV_Entities', 'F') IS NOT NULL)
+IF (OBJECT_ID(''FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_EAV_Entities'', ''F'') IS NOT NULL)
 BEGIN
 	ALTER TABLE [dbo].[ToSIC_SexyContent_ContentGroupItems] DROP CONSTRAINT [FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_EAV_Entities]
 END
 
-IF (OBJECT_ID('FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates', 'F') IS NOT NULL)
+IF (OBJECT_ID(''FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates'', ''F'') IS NOT NULL)
 BEGIN
 	ALTER TABLE [dbo].[ToSIC_SexyContent_ContentGroupItems] DROP CONSTRAINT [FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates]
 END
@@ -37,3 +39,4 @@ END
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
 --ROLLBACK TRANSACTION SexyContentUpdate;
+')
