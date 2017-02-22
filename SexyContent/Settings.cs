@@ -68,7 +68,7 @@ namespace ToSic.SexyContent
                 "08.11.00"
             };
 
-            internal const string LastVersionWithServerChanges = "08.05.05";
+            internal const string LastVersionWithServerChanges = "08.11.00";
         }
 
         #region System Initialization
