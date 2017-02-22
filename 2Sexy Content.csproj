@@ -414,6 +414,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="package.json" />
+    <Content Include="SqlDataProvider\00.99.00.SqlDataProvider" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
@@ -451,6 +452,7 @@
     <Content Include="SqlDataProvider\07.00.03.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.02.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.02.02.SqlDataProvider" />
+    <Content Include="SqlDataProvider\08.05.02.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
   </ItemGroup>

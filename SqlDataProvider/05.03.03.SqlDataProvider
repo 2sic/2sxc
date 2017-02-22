@@ -1,4 +1,12 @@
-﻿
+﻿-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- Script Block for 2SexyContent 05.05.00 Update
 -- ---------------------------------------------
 -- This SQL Script Block must be included in every .SqlDataProvider file
@@ -9,15 +17,15 @@
 -- the installation works.
 
 DECLARE @IsUpgradeFromPreviousVersion int
-SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N'2SexyContent') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N''2SexyContent'') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
 
 If @IsUpgradeFromPreviousVersion = 1
 BEGIN
 	UPDATE       DesktopModules
-	SET                ModuleName = N'2sxc'
-	WHERE        (ModuleName = N'2SexyContent')
+	SET                ModuleName = N''2sxc''
+	WHERE        (ModuleName = N''2SexyContent'')
 
-	RAISERROR(N'Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************', 16, 1)
+	RAISERROR(N''Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************'', 16, 1)
 	RETURN
 END
 
@@ -28,10 +36,10 @@ SET XACT_ABORT ON
 
 BEGIN TRANSACTION SexyContentUpdate;
 
-EXEC ToSIC_EAV_ChangeLogAdd 'System'
+EXEC ToSIC_EAV_ChangeLogAdd ''System''
 DECLARE @ChangeLogID int
 -- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-IF SERVERPROPERTY('edition') <> 'SQL Azure' OR CAST(SERVERPROPERTY('ProductVersion') AS CHAR(2)) >= '12'
+IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
 ELSE
 	SET @ChangeLogID = 1
@@ -41,7 +49,7 @@ SELECT @ChangeLogID
 DECLARE @EntityAttributeSetID int
 SELECT @EntityAttributeSetID = AttributeSetID 
 FROM ToSIC_EAV_AttributeSets
-WHERE StaticName = '@Entity'
+WHERE StaticName = ''@Entity''
 
 -- Remove ListId field for @Entity again
 IF @EntityAttributeSetID IS NOT NULL
@@ -50,7 +58,7 @@ BEGIN
 	DECLARE @ListIdAttributeID int
 	Select @ListIdAttributeID = ToSIC_EAV_Attributes.AttributeID
 	From ToSIC_EAV_Attributes INNER JOIN ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
-	Where ToSIC_EAV_Attributes.StaticName = 'ModuleId' And ToSIC_EAV_AttributesInSets.AttributeSetID = @EntityAttributeSetID
+	Where ToSIC_EAV_Attributes.StaticName = ''ModuleId'' And ToSIC_EAV_AttributesInSets.AttributeSetID = @EntityAttributeSetID
 	
 	IF @ListIdAttributeID IS NOT NULL
 	BEGIN
@@ -74,4 +82,4 @@ END
 
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
---ROLLBACK TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;')

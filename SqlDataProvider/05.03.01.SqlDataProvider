@@ -1,4 +1,12 @@
-﻿
+﻿-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- Script Block for 2SexyContent 05.05.00 Update
 -- ---------------------------------------------
 -- This SQL Script Block must be included in every .SqlDataProvider file
@@ -9,15 +17,15 @@
 -- the installation works.
 
 DECLARE @IsUpgradeFromPreviousVersion int
-SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N'2SexyContent') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N''2SexyContent'') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
 
 If @IsUpgradeFromPreviousVersion = 1
 BEGIN
 	UPDATE       DesktopModules
-	SET                ModuleName = N'2sxc'
-	WHERE        (ModuleName = N'2SexyContent')
+	SET                ModuleName = N''2sxc''
+	WHERE        (ModuleName = N''2SexyContent'')
 
-	RAISERROR(N'Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************', 16, 1)
+	RAISERROR(N''Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************'', 16, 1)
 	RETURN
 END
 
@@ -30,10 +38,10 @@ SET XACT_ABORT ON
 BEGIN TRANSACTION SexyContentUpdate;
 
 -- Correct Attribute descriptions for FileFilter and Paths (@File AttributeSet)
-EXEC ToSIC_EAV_ChangeLogAdd 'System'
+EXEC ToSIC_EAV_ChangeLogAdd ''System''
 DECLARE @ChangeLogID int
 -- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-IF SERVERPROPERTY('edition') <> 'SQL Azure' OR CAST(SERVERPROPERTY('ProductVersion') AS CHAR(2)) >= '12'
+IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
 ELSE
 	Set @ChangeLogID = 1
@@ -43,27 +51,27 @@ DECLARE @FileAttributeSetID int
 
 SELECT @FileAttributeSetID = AttributeSetID 
 FROM ToSIC_EAV_AttributeSets
-WHERE StaticName = '@File'
+WHERE StaticName = ''@File''
 
 IF @FileAttributeSetID IS NOT NULL
 BEGIN
 	DECLARE @MetaAttributeSetID int
 	SELECT @MetaAttributeSetID = AttributeSetID 
 	FROM ToSIC_EAV_AttributeSets
-	WHERE StaticName = '@All'
+	WHERE StaticName = ''@All''
 
 	-- Find Notes Attribute
 	DECLARE @NotesAttributeID int
 	Select @NotesAttributeID = ToSIC_EAV_Attributes.AttributeID
 	From ToSIC_EAV_Attributes INNER JOIN
 	ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
-	Where ToSIC_EAV_Attributes.StaticName = 'Notes' And ToSIC_EAV_AttributesInSets.AttributeSetID = @MetaAttributeSetID
+	Where ToSIC_EAV_Attributes.StaticName = ''Notes'' And ToSIC_EAV_AttributesInSets.AttributeSetID = @MetaAttributeSetID
 
 	DECLARE @FileFilterAttributeID int
 	Select @FileFilterAttributeID = ToSIC_EAV_Attributes.AttributeID
 	From ToSIC_EAV_Attributes INNER JOIN
 	ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
-	Where ToSIC_EAV_Attributes.StaticName = 'FileFilter' And ToSIC_EAV_AttributesInSets.AttributeSetID = @FileAttributeSetID
+	Where ToSIC_EAV_Attributes.StaticName = ''FileFilter'' And ToSIC_EAV_AttributesInSets.AttributeSetID = @FileAttributeSetID
 
 	IF @FileFilterAttributeID IS NOT NULL AND @NotesAttributeID IS NOT NULL
 	BEGIN
@@ -78,14 +86,14 @@ BEGIN
 
 			IF @TargetValueID IS NOT NULL
 			BEGIN
-				UPDATE [dbo].[ToSIC_EAV_Values] SET [Value] = 'Enter the allowed file extensions, comma-separated. Example: *.jpg,*.bmp,*.png,*.gif' WHERE [ValueID] = @TargetValueID
+				UPDATE [dbo].[ToSIC_EAV_Values] SET [Value] = ''Enter the allowed file extensions, comma-separated. Example: *.jpg,*.bmp,*.png,*.gif'' WHERE [ValueID] = @TargetValueID
 			END
 		END
 	END
 END
 
 -- Add indexes (performance optimizations while rebuilding cache)
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'ToSIC_EAV_Values') AND name = N'IX_EAV_Values1')
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N''ToSIC_EAV_Values'') AND name = N''IX_EAV_Values1'')
 CREATE NONCLUSTERED INDEX [IX_EAV_Values1] ON [dbo].[ToSIC_EAV_Values]
 (
 [AttributeID] ASC,
@@ -93,7 +101,7 @@ CREATE NONCLUSTERED INDEX [IX_EAV_Values1] ON [dbo].[ToSIC_EAV_Values]
 [ChangeLogDeleted] ASC
 )
 
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'ToSIC_EAV_Values') AND name = N'IX_EAV_Values2')
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N''ToSIC_EAV_Values'') AND name = N''IX_EAV_Values2'')
 CREATE NONCLUSTERED INDEX [IX_EAV_Values2] ON [dbo].[ToSIC_EAV_Values]
 (
 	[EntityID] ASC,
@@ -109,7 +117,7 @@ INCLUDE ( 	[Value],
 DECLARE @NumberAttributeSetID int
 SELECT @NumberAttributeSetID = AttributeSetID 
 FROM ToSIC_EAV_AttributeSets
-WHERE StaticName = '@Number'
+WHERE StaticName = ''@Number''
 
 -- Insert InputType + AddressMask field for @Number
 IF @NumberAttributeSetID IS NOT NULL
@@ -117,21 +125,21 @@ BEGIN
 
 	-- Get @String Meta AttributeSetID
 	DECLARE @StringAttributeSetID int
-	SELECT @StringAttributeSetID = AttributeSetID FROM ToSIC_EAV_AttributeSets WHERE StaticName = '@String'
+	SELECT @StringAttributeSetID = AttributeSetID FROM ToSIC_EAV_AttributeSets WHERE StaticName = ''@String''
 
 	DECLARE @AllAttributeSetID int
-	SELECT @AllAttributeSetID = AttributeSetID FROM ToSIC_EAV_AttributeSets WHERE StaticName = '@All'
+	SELECT @AllAttributeSetID = AttributeSetID FROM ToSIC_EAV_AttributeSets WHERE StaticName = ''@All''
 	
 	DECLARE @InputTypeAttributeID int
 	Select @InputTypeAttributeID = ToSIC_EAV_Attributes.AttributeID
 	From ToSIC_EAV_Attributes INNER JOIN ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
-	Where ToSIC_EAV_Attributes.StaticName = 'InputType' And ToSIC_EAV_AttributesInSets.AttributeSetID = @NumberAttributeSetID
+	Where ToSIC_EAV_Attributes.StaticName = ''InputType'' And ToSIC_EAV_AttributesInSets.AttributeSetID = @NumberAttributeSetID
 	
 	IF @InputTypeAttributeID IS NULL
 	BEGIN
 	
 		INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-		VALUES ('InputType', 'String', @ChangeLogID)
+		VALUES (''InputType'', ''String'', @ChangeLogID)
 		SET @InputTypeAttributeID = SCOPE_IDENTITY()
 		
 		INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
@@ -142,10 +150,10 @@ BEGIN
 		
 		-- Add InputType and DropdownValues
 		INSERT INTO [dbo].[ToSIC_EAV_Values]([EntityID], [AttributeID], [Value], [ChangeLogCreated])
-		SELECT    SCOPE_IDENTITY(), ToSIC_EAV_Attributes.AttributeID, CASE StaticName WHEN 'InputType' THEN 'DropDown' WHEN 'DropdownValues' THEN 'Simple Text:default
-GPS:gps' ELSE NULL END AS Value, @ChangeLogID
+		SELECT    SCOPE_IDENTITY(), ToSIC_EAV_Attributes.AttributeID, CASE StaticName WHEN ''InputType'' THEN ''DropDown'' WHEN ''DropdownValues'' THEN ''Simple Text:default
+GPS:gps'' ELSE NULL END AS Value, @ChangeLogID
 		FROM ToSIC_EAV_Attributes INNER JOIN ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
-		WHERE StaticName IN ('InputType', 'DropdownValues') AND AttributeSetID = @StringAttributeSetID
+		WHERE StaticName IN (''InputType'', ''DropdownValues'') AND AttributeSetID = @StringAttributeSetID
 		
 		
 		INSERT INTO [dbo].[ToSIC_EAV_Entities] ([EntityGUID], [AttributeSetID], [AssignmentObjectTypeID], [KeyNumber], SortOrder, [ChangeLogCreated])
@@ -153,10 +161,10 @@ GPS:gps' ELSE NULL END AS Value, @ChangeLogID
 		
 		-- Add Notes
 		INSERT INTO [dbo].[ToSIC_EAV_Values]([EntityID], [AttributeID], [Value], [ChangeLogCreated])
-		SELECT    SCOPE_IDENTITY(), ToSIC_EAV_Attributes.AttributeID, CASE StaticName WHEN 'Notes' THEN 'Simple Text or GPS. GPS creates a Google Maps Picker. The Field below must also be a Number field but have InputType: Simple Text.'
-		WHEN 'Name' THEN 'InputType' ELSE NULL END AS Value, @ChangeLogID
+		SELECT    SCOPE_IDENTITY(), ToSIC_EAV_Attributes.AttributeID, CASE StaticName WHEN ''Notes'' THEN ''Simple Text or GPS. GPS creates a Google Maps Picker. The Field below must also be a Number field but have InputType: Simple Text.''
+		WHEN ''Name'' THEN ''InputType'' ELSE NULL END AS Value, @ChangeLogID
 		FROM ToSIC_EAV_Attributes INNER JOIN ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
-		WHERE StaticName IN ('Name', 'Notes') AND AttributeSetID = @AllAttributeSetID
+		WHERE StaticName IN (''Name'', ''Notes'') AND AttributeSetID = @AllAttributeSetID
 		
 	END
 	
@@ -165,13 +173,13 @@ GPS:gps' ELSE NULL END AS Value, @ChangeLogID
 	DECLARE @AddressMaskAttributeID int
 	Select @AddressMaskAttributeID = ToSIC_EAV_Attributes.AttributeID
 	From ToSIC_EAV_Attributes INNER JOIN ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
-	Where ToSIC_EAV_Attributes.StaticName = 'AddressMask' And ToSIC_EAV_AttributesInSets.AttributeSetID = @NumberAttributeSetID
+	Where ToSIC_EAV_Attributes.StaticName = ''AddressMask'' And ToSIC_EAV_AttributesInSets.AttributeSetID = @NumberAttributeSetID
 	
 	IF @AddressMaskAttributeID IS NULL
 	BEGIN
 	
 		INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-		VALUES ('AddressMask', 'String', @ChangeLogID)
+		VALUES (''AddressMask'', ''String'', @ChangeLogID)
 		SET @AddressMaskAttributeID = SCOPE_IDENTITY()
 		
 		INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
@@ -182,14 +190,14 @@ GPS:gps' ELSE NULL END AS Value, @ChangeLogID
 		
 		-- Add Notes
 		INSERT INTO [dbo].[ToSIC_EAV_Values]([EntityID], [AttributeID], [Value], [ChangeLogCreated])
-		SELECT    SCOPE_IDENTITY(), ToSIC_EAV_Attributes.AttributeID, CASE StaticName WHEN 'Notes' THEN 'Tokens to search address in Map. E.g. "[Address] [Zip] [City]"'
-		WHEN 'Name' THEN 'AddressMask' ELSE NULL END AS Value, @ChangeLogID
+		SELECT    SCOPE_IDENTITY(), ToSIC_EAV_Attributes.AttributeID, CASE StaticName WHEN ''Notes'' THEN ''Tokens to search address in Map. E.g. "[Address] [Zip] [City]"''
+		WHEN ''Name'' THEN ''AddressMask'' ELSE NULL END AS Value, @ChangeLogID
 		FROM ToSIC_EAV_Attributes INNER JOIN ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
-		WHERE StaticName IN ('Name', 'Notes') AND AttributeSetID = @AllAttributeSetID
+		WHERE StaticName IN (''Name'', ''Notes'') AND AttributeSetID = @AllAttributeSetID
 		
 	END
 END
 
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
---ROLLBACK TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;')

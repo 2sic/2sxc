@@ -1,4 +1,12 @@
-﻿
+﻿-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- Script Block for 2SexyContent 05.05.00 Update
 -- ---------------------------------------------
 -- This SQL Script Block must be included in every .SqlDataProvider file
@@ -9,15 +17,15 @@
 -- the installation works.
 
 DECLARE @IsUpgradeFromPreviousVersion int
-SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N'2SexyContent') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N''2SexyContent'') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
 
 If @IsUpgradeFromPreviousVersion = 1
 BEGIN
 	UPDATE       DesktopModules
-	SET                ModuleName = N'2sxc'
-	WHERE        (ModuleName = N'2SexyContent')
+	SET                ModuleName = N''2sxc''
+	WHERE        (ModuleName = N''2SexyContent'')
 
-	RAISERROR(N'Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************', 16, 1)
+	RAISERROR(N''Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************'', 16, 1)
 	RETURN
 END
 
@@ -27,11 +35,11 @@ Begin Transaction
 
 Declare @ChangeLogID int
 Declare @AttributeSetID int
-Declare @AttributeSetName nvarchar(100) = '2SexyContent-Template-ContentTypes'
+Declare @AttributeSetName nvarchar(100) = ''2SexyContent-Template-ContentTypes''
 
 -- Insert ChangeLog and define ChangeLog ID
 Insert Into ToSIC_EAV_ChangeLog ([Timestamp], [User])
-Values (GETDATE(), 'System')
+Values (GETDATE(), ''System'')
 Set @ChangeLogID = @@Identity
 
 -- Check if it already exists, otherwise exit
@@ -45,6 +53,6 @@ Begin
 	UPDATE ToSIC_EAV_AttributesInSets SET IsTitle = 0 WHERE (SortOrder = 1 OR SortOrder = 2) AND AttributeSetID = @AttributeSetID
 End
 
-UPDATE ToSIC_EAV_AttributeSets SET Scope = '2SexyContent-System' WHERE StaticName = @AttributeSetName
+UPDATE ToSIC_EAV_AttributeSets SET Scope = ''2SexyContent-System'' WHERE StaticName = @AttributeSetName
 
-Commit
+Commit')

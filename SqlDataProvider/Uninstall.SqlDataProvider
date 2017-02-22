@@ -3,9 +3,11 @@
 DROP TABLE [dbo].[ToSIC_EAV_EntityRelationships]
 GO
 
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_ContentGroupItems]') AND TYPE IN (N'U'))
 DROP TABLE [dbo].[ToSIC_SexyContent_ContentGroupItems]
 GO
 
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U'))
 DROP TABLE [dbo].[ToSIC_SexyContent_Templates]
 GO
 

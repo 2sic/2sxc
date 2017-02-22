@@ -1,13 +1,22 @@
+-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- make sure sql rolls back automatically in case of error.
 SET XACT_ABORT ON
 
 BEGIN TRANSACTION SexyContentUpdate;
 
-EXEC ToSIC_EAV_ChangeLogAdd 'System'
+EXEC ToSIC_EAV_ChangeLogAdd ''System''
 
 DECLARE @ChangeLogID int
 -- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-IF SERVERPROPERTY('edition') <> 'SQL Azure' OR CAST(SERVERPROPERTY('ProductVersion') AS CHAR(2)) >= '12'
+IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	SET @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
 ELSE
 	SET @ChangeLogID = 1
@@ -15,71 +24,71 @@ SELECT @ChangeLogID
 
 -- Create new AssignmentObjectType for Apps
 UPDATE       ToSIC_EAV_AssignmentObjectTypes
-SET                Name = N'App', Description = N'App'
+SET                Name = N''App'', Description = N''App''
 WHERE        (AssignmentObjectTypeID = 3)
 
 -- Get App ContentType (which should not exists yet)
 DECLARE @AppAttributeSetID int
 SELECT @AppAttributeSetID = AttributeSetID 
 FROM ToSIC_EAV_AttributeSets
-WHERE StaticName = '2SexyContent-App'
+WHERE StaticName = ''2SexyContent-App''
 AND AppID = 1
 
 -- Create new AttributeSet for Apps (if it does not exist yet)
 IF @AppAttributeSetID IS NULL
 BEGIN
 	INSERT INTO ToSIC_EAV_AttributeSets (StaticName, Name, Scope, Description, ChangeLogCreated, ChangeLogDeleted, AppID, UsesConfigurationOfAttributeSet, AlwaysShareConfiguration)
-	VALUES (N'2SexyContent-App', N'2SexyContent-App', N'2SexyContent-App', N'Describes a 2SexyContent app', @ChangeLogID, NULL, 1, NULL, 1)
+	VALUES (N''2SexyContent-App'', N''2SexyContent-App'', N''2SexyContent-App'', N''Describes a 2SexyContent app'', @ChangeLogID, NULL, 1, NULL, 1)
 
-	SELECT @AppAttributeSetID = AttributeSetID FROM ToSIC_EAV_AttributeSets WHERE StaticName = '2SexyContent-App' AND Scope = N'2SexyContent-App'
+	SELECT @AppAttributeSetID = AttributeSetID FROM ToSIC_EAV_AttributeSets WHERE StaticName = ''2SexyContent-App'' AND Scope = N''2SexyContent-App''
 
 	DECLARE @AttributeID int
 
 	-- Insert Attribute DisplayName
 	INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-	VALUES ('DisplayName', 'String', @ChangeLogID)
+	VALUES (''DisplayName'', ''String'', @ChangeLogID)
 	SET @AttributeID = SCOPE_IDENTITY()
 	INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
 	VALUES (@AppAttributeSetID, @AttributeID, 1, 0, 1)
 
 	-- Insert Attribute Description
 	INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-	VALUES ('Description', 'String', @ChangeLogID)
+	VALUES (''Description'', ''String'', @ChangeLogID)
 	SET @AttributeID = SCOPE_IDENTITY()
 	INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
 	VALUES (@AppAttributeSetID, @AttributeID, 0, 1, 1)
 
 	-- Insert Attribute Version
 	INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-	VALUES ('Version', 'String', @ChangeLogID)
+	VALUES (''Version'', ''String'', @ChangeLogID)
 	SET @AttributeID = SCOPE_IDENTITY()
 	INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
 	VALUES (@AppAttributeSetID, @AttributeID, 0, 2, 1)
 
 	-- Insert Attribute Folder
 	INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-	VALUES ('Folder', 'String', @ChangeLogID)
+	VALUES (''Folder'', ''String'', @ChangeLogID)
 	SET @AttributeID = SCOPE_IDENTITY()
 	INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
 	VALUES (@AppAttributeSetID, @AttributeID, 0, 3, 1)
 
 	-- Insert Attribute AllowTokenTemplates
 	INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-	VALUES ('AllowTokenTemplates', 'Boolean', @ChangeLogID)
+	VALUES (''AllowTokenTemplates'', ''Boolean'', @ChangeLogID)
 	SET @AttributeID = SCOPE_IDENTITY()
 	INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
 	VALUES (@AppAttributeSetID, @AttributeID, 0, 4, 1)
 
 	-- Insert Attribute AllowRazorTemplates
 	INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-	VALUES ('AllowRazorTemplates', 'Boolean', @ChangeLogID)
+	VALUES (''AllowRazorTemplates'', ''Boolean'', @ChangeLogID)
 	SET @AttributeID = SCOPE_IDENTITY()
 	INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
 	VALUES (@AppAttributeSetID, @AttributeID, 0, 5, 1)
 
 	-- Insert Attribute Hidden
 	INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
-	VALUES ('Hidden', 'Boolean', @ChangeLogID)
+	VALUES (''Hidden'', ''Boolean'', @ChangeLogID)
 	SET @AttributeID = SCOPE_IDENTITY()	
 	INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
 	VALUES (@AppAttributeSetID, @AttributeID, 0, 6, 1)
@@ -101,7 +110,7 @@ BEGIN
 END
 
 -- Wrapped into an EXEC because Create Procedure has to be the first statement in a query batch
-EXEC(N'
+EXEC(N''
 -- =============================================
 -- Author:		Benjamin Gemperle
 -- Create date: 2014-02-26
@@ -179,19 +188,19 @@ BEGIN
 	DELETE FROM ToSIC_EAV_Apps WHERE AppID = @AppId
 
 
-END')
+END'')
 
 -- Add a new template-app assignment
 ALTER TABLE dbo.ToSIC_SexyContent_Templates ADD	AppID int NULL
 
 -- Assign all templates to an app
-EXEC('UPDATE       ToSIC_SexyContent_Templates
+EXEC(''UPDATE       ToSIC_SexyContent_Templates
 SET                AppID = ToSIC_EAV_AttributeSets.AppID
 FROM            ToSIC_SexyContent_Templates INNER JOIN
-                         ToSIC_EAV_AttributeSets ON ToSIC_SexyContent_Templates.AttributeSetID = ToSIC_EAV_AttributeSets.AttributeSetID')
+                         ToSIC_EAV_AttributeSets ON ToSIC_SexyContent_Templates.AttributeSetID = ToSIC_EAV_AttributeSets.AttributeSetID'')
 
-EXEC('ALTER TABLE dbo.ToSIC_SexyContent_Templates ALTER COLUMN AppID int NOT NULL')
+EXEC(''ALTER TABLE dbo.ToSIC_SexyContent_Templates ALTER COLUMN AppID int NOT NULL'')
 
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
---ROLLBACK TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;')

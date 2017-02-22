@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Hosting;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace ToSic.SexyContent.Installer
 {
@@ -38,6 +40,23 @@ namespace ToSic.SexyContent.Installer
 
         internal string UpgradeModule(string version)
         {
+            // Check if table "ToSIC_SexyContent_Templates" exists. 
+            // If it's gone, then PROBABLY skip all upgrade-codes incl. 8.11!
+            var sql = @"SELECT COUNT(*) FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN(N'U')";
+            var sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString);
+            sqlConnection.Open();
+            var sqlCommand = new SqlCommand(sql, sqlConnection);
+            var runDbChangesUntil811 = (Int32)sqlCommand.ExecuteScalar() == 1; // if there is one result row, this means the templates table still exists, we need to run changes before 08.11
+            sqlConnection.Close();
+
+            // if version is 01.00.00, the upgrade has to run because log files should be cleared
+            if (!runDbChangesUntil811 && version != "01.00.00" && (new Version(version) <= new Version(8,11,0)))
+            {
+                _logger.LogStep(version, "Upgrade skipped because 00.99.00 install detected (installation of everything until and including 08.11 has been done by 00.99.00.SqlDataProvider)", true);
+                _logger.LogVersionCompletedToPreventRerunningTheUpgrade(version);
+                return version;
+            }
+
             _logger.LogStep(version, "UpgradeModule starting", false);
 
             // Configure Unity / eav, etc.
@@ -146,6 +165,9 @@ namespace ToSic.SexyContent.Installer
                         break;
                     case "08.05.05":
                         Helpers.ImportXmlSchemaOfVersion("08.05.05", false);
+                        break;
+                    case "08.11.00":
+                        new V8(version, _logger).Version081100();
                         break;
 
                         // warning!!! when you add a new case, make sure you upgrade the version number on Settings.Installation.LastVersionWithServerChanges!!!

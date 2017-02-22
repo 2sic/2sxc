@@ -1,35 +1,44 @@
+-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- make sure sql rolls back automatically in case of error.
 SET XACT_ABORT ON
 
 BEGIN TRANSACTION SexyContentUpdate;
 
-EXEC ToSIC_EAV_ChangeLogAdd 'System'
+EXEC ToSIC_EAV_ChangeLogAdd ''System''
 DECLARE @ChangeLogID int
 -- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-IF SERVERPROPERTY('edition') <> 'SQL Azure' OR CAST(SERVERPROPERTY('ProductVersion') AS CHAR(2)) >= '12'
+IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
 ELSE
 	SET @ChangeLogID = 1
 
 -- Extend Entities with ChangeLogModified
-EXEC('ALTER TABLE dbo.ToSIC_EAV_Entities ADD
-	ChangeLogModified int NULL')
+EXEC(''ALTER TABLE dbo.ToSIC_EAV_Entities ADD
+	ChangeLogModified int NULL'')
 
 -- Update all Entites with ChangeLogModified
-EXEC('UPDATE       ToSIC_EAV_Entities
+EXEC(''UPDATE       ToSIC_EAV_Entities
 SET                ChangeLogModified = CASE WHEN ToSIC_EAV_Entities.ChangeLogDeleted IS NOT NULL 
                          THEN ToSIC_EAV_Entities.ChangeLogDeleted WHEN ToSIC_EAV_Values.ChangeLogDeleted IS NOT NULL 
                          THEN ToSIC_EAV_Values.ChangeLogDeleted WHEN ToSIC_EAV_Values.ChangeLogModified IS NOT NULL 
                          THEN ToSIC_EAV_Values.ChangeLogModified WHEN ToSIC_EAV_Values.ChangeLogCreated IS NOT NULL 
                          THEN ToSIC_EAV_Values.ChangeLogCreated WHEN ToSIC_EAV_Entities.ChangeLogCreated IS NOT NULL THEN ToSIC_EAV_Entities.ChangeLogCreated END
 FROM            ToSIC_EAV_Entities LEFT OUTER JOIN
-                         ToSIC_EAV_Values ON ToSIC_EAV_Entities.EntityID = ToSIC_EAV_Values.EntityID')
+                         ToSIC_EAV_Values ON ToSIC_EAV_Entities.EntityID = ToSIC_EAV_Values.EntityID'')
 
 -- Make ChangeLogModified Not Nullable
-EXEC('ALTER TABLE dbo.ToSIC_EAV_Entities ALTER COLUMN ChangeLogModified int NOT NULL')
+EXEC(''ALTER TABLE dbo.ToSIC_EAV_Entities ALTER COLUMN ChangeLogModified int NOT NULL'')
 
 -- Add FOREIGN KEY CONSTRAINT
-EXEC('ALTER TABLE dbo.ToSIC_EAV_Entities ADD CONSTRAINT
+EXEC(''ALTER TABLE dbo.ToSIC_EAV_Entities ADD CONSTRAINT
 	FK_ToSIC_EAV_Entities_ToSIC_EAV_ChangeLog_Modified FOREIGN KEY
 	(
 	ChangeLogModified
@@ -37,9 +46,9 @@ EXEC('ALTER TABLE dbo.ToSIC_EAV_Entities ADD CONSTRAINT
 	(
 	ChangeID
 	) ON UPDATE  NO ACTION 
-	 ON DELETE  NO ACTION')
+	 ON DELETE  NO ACTION'')
 
 
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
---ROLLBACK TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;')

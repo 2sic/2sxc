@@ -1,11 +1,20 @@
-﻿-- make sure sql rolls back automatically in case of error.
+﻿-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
+-- make sure sql rolls back automatically in case of error.
 SET XACT_ABORT ON
 
 BEGIN TRANSACTION SexyContentUpdate;
 
-IF NOT EXISTS(SELECT * FROM ToSIC_EAV_AttributeTypes WHERE [Type] = 'Custom')
-	INSERT INTO ToSIC_EAV_AttributeTypes ([Type]) VALUES ('Custom')
+IF NOT EXISTS(SELECT * FROM ToSIC_EAV_AttributeTypes WHERE [Type] = ''Custom'')
+	INSERT INTO ToSIC_EAV_AttributeTypes ([Type]) VALUES (''Custom'')
 
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
---ROLLBACK TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;')

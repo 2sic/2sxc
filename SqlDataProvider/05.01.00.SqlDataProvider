@@ -1,4 +1,12 @@
-﻿
+﻿-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- Script Block for 2SexyContent 05.05.00 Update
 -- ---------------------------------------------
 -- This SQL Script Block must be included in every .SqlDataProvider file
@@ -9,15 +17,15 @@
 -- the installation works.
 
 DECLARE @IsUpgradeFromPreviousVersion int
-SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N'2SexyContent') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N''2SexyContent'') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
 
 If @IsUpgradeFromPreviousVersion = 1
 BEGIN
 	UPDATE       DesktopModules
-	SET                ModuleName = N'2sxc'
-	WHERE        (ModuleName = N'2SexyContent')
+	SET                ModuleName = N''2sxc''
+	WHERE        (ModuleName = N''2SexyContent'')
 
-	RAISERROR(N'Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************', 16, 1)
+	RAISERROR(N''Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************'', 16, 1)
 	RETURN
 END
 
@@ -29,11 +37,11 @@ SET XACT_ABORT ON
 BEGIN TRANSACTION SexyContentUpdate;
 
 /****** Object:  Table [dbo].[ToSIC_EAV_DataTimeline]    Script Date: 29.04.2013 14:20:29 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
-EXEC('CREATE TABLE [dbo].[ToSIC_EAV_DataTimeline](
+EXEC(''CREATE TABLE [dbo].[ToSIC_EAV_DataTimeline](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[SourceTable] [nvarchar](250) NOT NULL,
 	[SourceID] [int] NULL,
@@ -47,26 +55,26 @@ EXEC('CREATE TABLE [dbo].[ToSIC_EAV_DataTimeline](
 (
 	[ID] ASC
 )
-) TEXTIMAGE_ON [PRIMARY]');
+) TEXTIMAGE_ON [PRIMARY]'');
 
 
 
-EXEC('ALTER TABLE [dbo].[ToSIC_EAV_DataTimeline] ADD  CONSTRAINT [DF_DataTimeline_Operation]  DEFAULT (N''I'') FOR [Operation]');
+EXEC(''ALTER TABLE [dbo].[ToSIC_EAV_DataTimeline] ADD  CONSTRAINT [DF_DataTimeline_Operation]  DEFAULT (N''''I'''') FOR [Operation]'');
 
 
 /****** Object:  StoredProcedure [dbo].[ToSIC_EAV_LogToTimeline]    Script Date: 29.04.2013 14:20:44 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Logs a record change (Insert/Update/Delete) to the DataTimeline
 -- =============================================
-EXEC('CREATE PROCEDURE [dbo].[ToSIC_EAV_LogToTimeline] 
+EXEC(''CREATE PROCEDURE [dbo].[ToSIC_EAV_LogToTimeline] 
 	-- Add the parameters for the stored procedure here
-	@table nvarchar(250) = '''', 
+	@table nvarchar(250) = '''''''', 
 	@sourceID int = null,
 	@sourceGuid uniqueidentifier = null,
 	@sourceTextKey nvarchar(250) = null,
@@ -82,9 +90,9 @@ BEGIN
 	SET NOCOUNT ON;
 	Set @operation = Lower(@operation)	-- convert D-->d, U-->u, I-->i
 
-	if @operation = ''d''
+	if @operation = ''''d''''
 		Begin
-			Select @newData = ''<d/>''
+			Select @newData = ''''<d/>''''
 		End
 
     -- Insert statements for procedure here
@@ -106,19 +114,19 @@ BEGIN
            ,@sysCreated
            ,@sysChangeLogId
            ,@newData)
-END');
+END'');
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_Values]    Script Date: 29.04.2013 14:21:13 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
 -- =============================================
-EXEC('CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_Values] 
+EXEC(''CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_Values] 
    ON  [dbo].[ToSIC_EAV_Values]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -138,11 +146,11 @@ BEGIN
 		,@newData xml
 	
 	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
-				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
 				RETURN
 			END
 		ELSE
@@ -160,40 +168,40 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = ValueID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = ValueID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
 
 
-END');
+END'');
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_Entities]    Script Date: 29.04.2013 14:24:57 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
 -- =============================================
-EXEC('CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_Entities]
+EXEC(''CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_Entities]
    ON  [dbo].[ToSIC_EAV_Entities]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -213,11 +221,11 @@ BEGIN
 		,@newData xml
 	
 	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
-				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
 				RETURN
 			END
 		ELSE
@@ -235,41 +243,41 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = EntityID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = EntityID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
 
 
-END');
+END'');
 
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_Apps]    Script Date: 29.04.2013 14:24:57 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
 -- =============================================
-EXEC('CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_Apps]
+EXEC(''CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_Apps]
    ON  [dbo].[ToSIC_EAV_Apps]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -289,11 +297,11 @@ BEGIN
 		,@newData xml
 	
 	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
-				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
 				RETURN
 			END
 		ELSE
@@ -311,34 +319,34 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = AppID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = AppID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
 
 
-END');
+END'');
 
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_AssignmentObjectTypes]    Script Date: 29.04.2013 14:24:57 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 
 -- =============================================
@@ -346,7 +354,7 @@ EXEC('SET QUOTED_IDENTIFIER ON');
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
 -- =============================================
-EXEC('CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_AssignmentObjectTypes]
+EXEC(''CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_AssignmentObjectTypes]
    ON  [dbo].[ToSIC_EAV_AssignmentObjectTypes]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -366,11 +374,11 @@ BEGIN
 		,@newData xml
 	
 	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
-				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
 				RETURN
 			END
 		ELSE
@@ -388,41 +396,41 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = AssignmentObjectTypeID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = AssignmentObjectTypeID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
 
 
-END');
+END'');
 
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_AttributeGroups]    Script Date: 29.04.2013 14:24:57 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
 -- =============================================
-EXEC('CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_AttributeGroups]
+EXEC(''CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_AttributeGroups]
    ON  [dbo].[ToSIC_EAV_AttributeGroups]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -442,11 +450,11 @@ BEGIN
 		,@newData xml
 	
 	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
-				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
 				RETURN
 			END
 		ELSE
@@ -464,41 +472,41 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = AttributeGroupID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = AttributeGroupID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
 
 
-END');
+END'');
 
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_Attributes]    Script Date: 29.04.2013 14:24:57 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
 -- =============================================
-EXEC('CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_Attributes]
+EXEC(''CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_Attributes]
    ON  [dbo].[ToSIC_EAV_Attributes]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -518,11 +526,11 @@ BEGIN
 		,@newData xml
 	
 	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
-				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
 				RETURN
 			END
 		ELSE
@@ -540,41 +548,41 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = AttributeID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = AttributeID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
 
 
-END');
+END'');
 
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_AttributeSets]    Script Date: 29.04.2013 14:24:57 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
 -- =============================================
-EXEC('CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_AttributeSets]
+EXEC(''CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_AttributeSets]
    ON  [dbo].[ToSIC_EAV_AttributeSets]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -594,11 +602,11 @@ BEGIN
 		,@newData xml
 
 	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
-				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
 				RETURN
 			END
 		ELSE
@@ -616,41 +624,41 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = AttributeSetID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = AttributeSetID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
 
 
-END');
+END'');
 
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_Dimensions]    Script Date: 29.04.2013 14:24:57 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
 -- =============================================
-EXEC('CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_Dimensions]
+EXEC(''CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_Dimensions]
    ON  [dbo].[ToSIC_EAV_Dimensions]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -670,11 +678,11 @@ BEGIN
 		,@newData xml
 
 	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
-				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
 				RETURN
 			END
 		ELSE
@@ -692,41 +700,41 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = DimensionID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = DimensionID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
 
 
-END');
+END'');
 
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_Zones]    Script Date: 29.04.2013 14:24:57 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
 -- =============================================
-EXEC('CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_Zones]
+EXEC(''CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_Zones]
    ON  [dbo].[ToSIC_EAV_Zones]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -746,11 +754,11 @@ BEGIN
 		,@newData xml
 	
 	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
-				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
 				RETURN
 			END
 		ELSE
@@ -768,41 +776,41 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = ZoneID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = ZoneID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
 
 
-END');
+END'');
 
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_ValuesDimensions]    Script Date: 29.04.2013 14:24:57 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
 -- =============================================
-EXEC('CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_ValuesDimensions]
+EXEC(''CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_ValuesDimensions]
    ON  [dbo].[ToSIC_EAV_ValuesDimensions]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -822,11 +830,11 @@ BEGIN
 		,@newData xml
 
 	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
-				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
 				RETURN
 			END
 		ELSE
@@ -844,41 +852,41 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = ValueID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = ValueID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
 
 
-END');
+END'');
 
 
 /****** Object:  Trigger [dbo].[AutoLogAllChangesToTimeline_AttributesInSets]    Script Date: 29.04.2013 14:24:57 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Daniel Mettler
 -- Create date: 2013-01-28
 -- Description:	Automatically log all changes to the DataTimeline
 -- =============================================
-EXEC('CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_AttributesInSets]
+EXEC(''CREATE TRIGGER [dbo].[AutoLogAllChangesToTimeline_AttributesInSets]
    ON  [dbo].[ToSIC_EAV_AttributesInSets]
    AFTER INSERT,DELETE,UPDATE
 AS 
@@ -898,11 +906,11 @@ BEGIN
 		,@newData xml
 	
 	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
-				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
 				RETURN
 			END
 		ELSE
@@ -920,41 +928,41 @@ BEGIN
 	-- 1. Ensure you use a valid field in both IF EXISTS queries (the SysCreated might not exist everywhere)
 	-- 2. Ensure you get the right keys (this example uses @rowID, but you could also use @rowGuid, @rowTextKey)
 	-- 3. if you have a logid, also set the @sysLogId
-	-- Note: don''t know how to get the LogID in there when deleting...
+	-- Note: don''''t know how to get the LogID in there when deleting...
 	IF EXISTS (SELECT * FROM Inserted)
 		BEGIN
 			Select @rowID = AttributeSetID From inserted
 			Select @newData = (Select * From Inserted For XML Auto)
-			Set @operation = ''I''
+			Set @operation = ''''I''''
 			IF EXISTS (SELECT * FROM deleted)
 				Begin
-					SET @operation = ''U''
+					SET @operation = ''''U''''
 				End
 		END
 	ELSE
 		BEGIN
 			Select @rowID = AttributeSetID From deleted
-			SET @operation = ''D''
+			SET @operation = ''''D''''
 		END
 
 	-- Add the stuff...
 	Exec dbo.ToSIC_EAV_LogToTimeline @table, @rowID, @rowGuid, @rowTextKey, @operation, @sysCreated, @sysLogId, @newData
 
 
-END');
+END'');
 
 
 /****** Object:  StoredProcedure [dbo].[ToSIC_EAV_ChangeLogAdd]    Script Date: 14.06.2013 11:27:47 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Benjamin Gemperle
 -- Create date: 2013-04-29
 -- Description:	Add EAV ChangeLog
 -- =============================================
-EXEC('CREATE PROCEDURE [dbo].[ToSIC_EAV_ChangeLogAdd] 
+EXEC(''CREATE PROCEDURE [dbo].[ToSIC_EAV_ChangeLogAdd] 
 	-- Add the parameters for the stored procedure here
 	@User nvarchar(255) = null
 AS
@@ -974,14 +982,14 @@ BEGIN
 	SELECT *
 	FROM [dbo].[ToSIC_EAV_ChangeLog]
 	WHERE [ChangeID] = @ChangeID
-END');
+END'');
 
 
 
 /****** Object:  StoredProcedure [dbo].[ToSIC_EAV_ChangeLogSet]    Script Date: 14.06.2013 12:08:14 ******/
-EXEC('SET ANSI_NULLS ON');
+EXEC(''SET ANSI_NULLS ON'');
 
-EXEC('SET QUOTED_IDENTIFIER ON');
+EXEC(''SET QUOTED_IDENTIFIER ON'');
 
 -- =============================================
 -- Author:		Benjamin Gemperle
@@ -992,25 +1000,25 @@ EXEC('SET QUOTED_IDENTIFIER ON');
 -- changed the server-type detection from SQL-Azr to SQL-Azr-V12
 -- because only that old version needs this special code
 -- =============================================
-EXEC('CREATE PROCEDURE [dbo].[ToSIC_EAV_ChangeLogSet] 
+EXEC(''CREATE PROCEDURE [dbo].[ToSIC_EAV_ChangeLogSet] 
 	-- Add the parameters for the stored procedure here
 	@ChangeID int
 AS
 BEGIN
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	IF SERVERPROPERTY(''''edition'''') <> ''''SQL Azure'''' OR CAST(SERVERPROPERTY(''''ProductVersion'''') AS CHAR(2)) >= ''''12''''
 	BEGIN
-		EXEC(''IF CONTEXT_INFO() IS NOT NULL
+		EXEC(''''IF CONTEXT_INFO() IS NOT NULL
 		BEGIN
-			RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
+			RAISERROR (''''''''CONTEXT_INFO must contain ChangeLogID'''''''', 0, 1)
 			RETURN
 		END
 
-		SET CONTEXT_INFO '' + @ChangeID)
+		SET CONTEXT_INFO '''' + @ChangeID)
 	END
-END');
+END'');
 
 
 
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
---ROLLBACK TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;')

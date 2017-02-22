@@ -1,15 +1,25 @@
+-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- make sure sql rolls back automatically in case of error.
 SET XACT_ABORT ON
 
 BEGIN TRANSACTION SexyContentUpdate;
 
-EXEC ToSIC_EAV_ChangeLogAdd 'System'
+EXEC ToSIC_EAV_ChangeLogAdd ''System''
 
 -- Create new AssignmentObjectType for Entities
 UPDATE       ToSIC_EAV_AssignmentObjectTypes
-SET                Name = N'Entity', Description = N'For Permissions, Data Pipelines with Pipeline Parts and Configurations'
+SET                Name = N''Entity'', Description = N''For Permissions, Data Pipelines with Pipeline Parts and Configurations''
 WHERE        (AssignmentObjectTypeID = 4)
 
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
 --ROLLBACK TRANSACTION SexyContentUpdate;
+')

@@ -1,4 +1,12 @@
-﻿
+﻿-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
 -- Script Block for 2SexyContent 05.05.00 Update
 -- ---------------------------------------------
 -- This SQL Script Block must be included in every .SqlDataProvider file
@@ -9,15 +17,15 @@
 -- the installation works.
 
 DECLARE @IsUpgradeFromPreviousVersion int
-SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N'2SexyContent') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N''2SexyContent'') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
 
 If @IsUpgradeFromPreviousVersion = 1
 BEGIN
 	UPDATE       DesktopModules
-	SET                ModuleName = N'2sxc'
-	WHERE        (ModuleName = N'2SexyContent')
+	SET                ModuleName = N''2sxc''
+	WHERE        (ModuleName = N''2SexyContent'')
 
-	RAISERROR(N'Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************', 16, 1)
+	RAISERROR(N''Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************'', 16, 1)
 	RETURN
 END
 
@@ -38,12 +46,12 @@ ALTER TABLE dbo.ToSIC_SexyContent_ContentGroupItems
 	DROP CONSTRAINT FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates
 ALTER TABLE dbo.ToSIC_SexyContent_Templates SET (LOCK_ESCALATION = TABLE)
 COMMIT
-select Has_Perms_By_Name(N'dbo.ToSIC_SexyContent_Templates', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.ToSIC_SexyContent_Templates', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.ToSIC_SexyContent_Templates', 'Object', 'CONTROL') as Contr_Per BEGIN TRANSACTION
+select Has_Perms_By_Name(N''dbo.ToSIC_SexyContent_Templates'', ''Object'', ''ALTER'') as ALT_Per, Has_Perms_By_Name(N''dbo.ToSIC_SexyContent_Templates'', ''Object'', ''VIEW DEFINITION'') as View_def_Per, Has_Perms_By_Name(N''dbo.ToSIC_SexyContent_Templates'', ''Object'', ''CONTROL'') as Contr_Per BEGIN TRANSACTION
 ALTER TABLE dbo.ToSIC_SexyContent_ContentGroupItems
 	DROP CONSTRAINT FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_EAV_Entities
 ALTER TABLE dbo.ToSIC_EAV_Entities SET (LOCK_ESCALATION = TABLE)
 COMMIT
-select Has_Perms_By_Name(N'dbo.ToSIC_EAV_Entities', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.ToSIC_EAV_Entities', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.ToSIC_EAV_Entities', 'Object', 'CONTROL') as Contr_Per BEGIN TRANSACTION
+select Has_Perms_By_Name(N''dbo.ToSIC_EAV_Entities'', ''Object'', ''ALTER'') as ALT_Per, Has_Perms_By_Name(N''dbo.ToSIC_EAV_Entities'', ''Object'', ''VIEW DEFINITION'') as View_def_Per, Has_Perms_By_Name(N''dbo.ToSIC_EAV_Entities'', ''Object'', ''CONTROL'') as Contr_Per BEGIN TRANSACTION
 CREATE TABLE dbo.Tmp_ToSIC_SexyContent_ContentGroupItems
 	(
 	ContentGroupItemID int NOT NULL IDENTITY (1, 1),
@@ -61,14 +69,14 @@ CREATE TABLE dbo.Tmp_ToSIC_SexyContent_ContentGroupItems
 	) 
 ALTER TABLE dbo.Tmp_ToSIC_SexyContent_ContentGroupItems SET (LOCK_ESCALATION = TABLE)
 ALTER TABLE dbo.Tmp_ToSIC_SexyContent_ContentGroupItems ADD CONSTRAINT
-	DF_ToSIC_SexyContent_ContentGroupItems_Type DEFAULT N'Content' FOR Type
+	DF_ToSIC_SexyContent_ContentGroupItems_Type DEFAULT N''Content'' FOR Type
 SET IDENTITY_INSERT dbo.Tmp_ToSIC_SexyContent_ContentGroupItems ON
 IF EXISTS(SELECT * FROM dbo.ToSIC_SexyContent_ContentGroupItems)
-	 EXEC('INSERT INTO dbo.Tmp_ToSIC_SexyContent_ContentGroupItems (ContentGroupItemID, ContentGroupID, EntityID, TemplateID, SortOrder, SysCreated, SysCreatedBy, SysModified, SysModifiedBy, SysDeleted, SysDeletedBy)
-		SELECT ContentGroupItemID, ContentGroupID, EntityID, TemplateID, SortOrder, SysCreated, SysCreatedBy, SysModified, SysModifiedBy, SysDeleted, SysDeletedBy FROM dbo.ToSIC_SexyContent_ContentGroupItems')
+	 EXEC(''INSERT INTO dbo.Tmp_ToSIC_SexyContent_ContentGroupItems (ContentGroupItemID, ContentGroupID, EntityID, TemplateID, SortOrder, SysCreated, SysCreatedBy, SysModified, SysModifiedBy, SysDeleted, SysDeletedBy)
+		SELECT ContentGroupItemID, ContentGroupID, EntityID, TemplateID, SortOrder, SysCreated, SysCreatedBy, SysModified, SysModifiedBy, SysDeleted, SysDeletedBy FROM dbo.ToSIC_SexyContent_ContentGroupItems'')
 SET IDENTITY_INSERT dbo.Tmp_ToSIC_SexyContent_ContentGroupItems OFF
 DROP TABLE dbo.ToSIC_SexyContent_ContentGroupItems
-EXECUTE sp_rename N'dbo.Tmp_ToSIC_SexyContent_ContentGroupItems', N'ToSIC_SexyContent_ContentGroupItems', 'OBJECT' 
+EXECUTE sp_rename N''dbo.Tmp_ToSIC_SexyContent_ContentGroupItems'', N''ToSIC_SexyContent_ContentGroupItems'', ''OBJECT'' 
 ALTER TABLE dbo.ToSIC_SexyContent_ContentGroupItems ADD CONSTRAINT
 	PK_ToSIC_SexyContent_ContentGroupItems PRIMARY KEY CLUSTERED 
 	(
@@ -99,4 +107,4 @@ ALTER TABLE dbo.ToSIC_SexyContent_ContentGroupItems ADD CONSTRAINT
 	 ON DELETE  NO ACTION 
 	
 COMMIT
-select Has_Perms_By_Name(N'dbo.ToSIC_SexyContent_ContentGroupItems', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.ToSIC_SexyContent_ContentGroupItems', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.ToSIC_SexyContent_ContentGroupItems', 'Object', 'CONTROL') as Contr_Per 
+select Has_Perms_By_Name(N''dbo.ToSIC_SexyContent_ContentGroupItems'', ''Object'', ''ALTER'') as ALT_Per, Has_Perms_By_Name(N''dbo.ToSIC_SexyContent_ContentGroupItems'', ''Object'', ''VIEW DEFINITION'') as View_def_Per, Has_Perms_By_Name(N''dbo.ToSIC_SexyContent_ContentGroupItems'', ''Object'', ''CONTROL'') as Contr_Per ')
