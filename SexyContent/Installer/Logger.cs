@@ -41,7 +41,7 @@ namespace ToSic.SexyContent.Installer
         {
             var renamedLockFilePath =
                 HostingEnvironment.MapPath(Settings.Installation.LogDirectory +
-                                           DateTime.UtcNow.ToString(@"yyyy-MM-dd HH-mm-ss-fffffff") + "-" + System.Diagnostics.Process.GetCurrentProcess().Id + ".log.resources");
+                                           DateTime.UtcNow.ToString(@"yyyy-MM-dd HH-mm-ss-fffffff") + "-" + System.Diagnostics.Process.GetCurrentProcess().Id + "-" + AppDomain.CurrentDomain.Id + ".log.resources");
             return renamedLockFilePath;
         }
 
