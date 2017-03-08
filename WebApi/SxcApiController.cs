@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
@@ -170,6 +168,8 @@ namespace ToSic.SexyContent.WebApi
             var zoneId = useContext ? App.ZoneId as int? : null;
             if (useContext) appId = App.AppId;
             if (!useContext) autoAllowAdmin = false; // auto-check not possible when not using context
+
+
 
             if (!appId.HasValue)
                 throw new Exception("app id doesn't have value, and apparently didn't get it from context either");
