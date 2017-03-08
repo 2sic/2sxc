@@ -313,23 +313,16 @@ namespace ToSic.SexyContent.WebApi
                 throw new Exception("type any not allowed with id-only, requires guid");
 
             IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId);
-            contentType = Delete_SharedCode(contentType, itm, appPath == null, appId);
-            _entitiesController.Delete(contentType, id, appId);
+            //var autoAllowAdmin = contentType != "any"; // only auto-allow-admin, if a type is clearly specified (protection from deleting other types)
+            //Delete_SharedCode(itm, appPath == null, appId, autoAllowAdmin);
+            PerformSecurityCheck(itm.Type.Name, PermissionGrant.Delete, true, itm, appPath == null, appId);
+            _entitiesController.Delete(itm.Type.Name, id, appId);
         }
 
-	    private string Delete_SharedCode(string contentType, IEntity itm, bool useContext, int appId)
-	    {
-	        var autoAllowAdmin = true;
-	        // special case: contentType "any" - in this case it looks up the type
-	        if (contentType == "any")
-	        {
-	            autoAllowAdmin = false;
-	            contentType = itm?.Type.Name;
-	        }
-
-	        PerformSecurityCheck(contentType, PermissionGrant.Delete, autoAllowAdmin, itm, useContext, appId);
-	        return contentType;
-	    }
+	    //private void Delete_SharedCode(IEntity itm, bool useContext, int appId, bool autoAllowAdmin)
+	    //{
+	    //    PerformSecurityCheck(itm.Type.Name, PermissionGrant.Delete, true, itm, useContext, appId);
+	    //}
 
 	    [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
@@ -337,10 +330,12 @@ namespace ToSic.SexyContent.WebApi
         {
             // if app-path specified, use that app, otherwise use from context
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
-            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, guid, appId);
+	        IEntity itm = _entitiesController.GetEntityOrThrowError(contentType == "any" ? null : contentType, guid, appId);
 
-            contentType = Delete_SharedCode(contentType, itm, appPath == null, appId);
-            _entitiesController.Delete(contentType, guid, appId);
+            //var autoAllowAdmin = true; // with guid, admins are allowed to delete
+            //   Delete_SharedCode(itm, appPath == null, appId, autoAllowAdmin);
+            PerformSecurityCheck(itm.Type.Name, PermissionGrant.Delete, true, itm, appPath == null, appId);
+            _entitiesController.Delete(itm.Type.Name, guid, appId);
         }
 
         #endregion
