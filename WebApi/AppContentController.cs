@@ -391,78 +391,7 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
-        #region Security Checks 
-        /// <summary>
-        /// Check if a user may do something - and throw an error if the permission is not given
-        /// </summary>
-        /// <param name="contentType"></param>
-        /// <param name="grant"></param>
-        /// <param name="autoAllowAdmin"></param>
-        /// <param name="specificItem"></param>
-        /// <param name="useContext"></param>
-        /// <param name="appId"></param>
-        private void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false, IEntity specificItem = null, bool useContext = true, int? appId = null)
-	    {
-            // make sure we have the right appId, zoneId and module-context
-	        var contextMod = useContext ? Dnn.Module : null;
-            var zoneId = useContext ? App.ZoneId as int? : null;
-	        if(useContext) appId = App.AppId;
-	        if (!useContext) autoAllowAdmin = false; // auto-check not possible when not using context
-
-            if(!appId.HasValue)
-                throw new Exception("app id doesn't have value, and apparently didn't get it from context either");
-
-            // Check if we can find this content-type
-            var ctc = new ContentTypeController();
-            ctc.SetAppIdAndUser(appId.Value);
-
-            var cache = DataSource.GetCache(zoneId, appId);
-            var ct = cache.GetContentType(contentType);
-
-            if (ct == null)
-            {
-                ThrowHttpError(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.",
-                    "content-types");
-                return;
-            }
-
-            // Check if the content-type has a GUID as name - only these can have permission assignments
-            Guid ctGuid;
-            var staticNameIsGuid = Guid.TryParse(ct.StaticName, out ctGuid);
-            if (!staticNameIsGuid)
-                ThrowHttpError(HttpStatusCode.Unauthorized,
-                    "Content Type '" + contentType + "' is not a standard Content Type - no permissions possible.");
-
-            // Check permissions in 2sxc - or check if the user has admin-right (in which case he's always granted access for these types of content)
-            var permissionChecker = new PermissionController(zoneId, appId.Value, ctGuid, specificItem, contextMod);
-            var allowed = permissionChecker.UserMay(grant);
-
-            var isAdmin = autoAllowAdmin &&
-                          DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(contextMod);
-
-            if (!(allowed || isAdmin))
-                ThrowHttpError(HttpStatusCode.Unauthorized,
-                    "Request not allowed. User needs permissions to " + grant + " for Content Type '" + contentType + "'.",
-                    "permissions");
-        }
-
-        /// <summary>
-        /// Throw a correct HTTP error with the right error-numbr. This is important for the JavaScript which changes behavior & error messages based on http status code
-        /// </summary>
-        /// <param name="httpStatusCode"></param>
-        /// <param name="message"></param>
-        /// <param name="tags"></param>
-        private static void ThrowHttpError(HttpStatusCode httpStatusCode, string message, string tags = "")
-        {
-            string helpText = " See http://2sxc.org/help" + (tags == "" ? "" : "?tag=" + tags);
-	        throw new HttpResponseException(new HttpResponseMessage(httpStatusCode)
-	        {
-	            Content = new StringContent(message + helpText),
-	            ReasonPhrase = "Error in 2sxc Content API - not allowed"
-	        });
-	    }
-
-        #endregion
+       
 
     }
 }

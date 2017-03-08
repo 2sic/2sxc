@@ -9,6 +9,7 @@ using ToSic.SexyContent.WebApi;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.SexyContent.Security;
 
 namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 {
@@ -33,10 +34,16 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 	    }
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
+            // todo: try to refactor into the other "GetOne"
+            // note that the culture-code isn't actually used...
             EnsureSerializerHasSxc();
+
+            // check if admin rights, then ok
+            PerformSecurityCheck(contentType, PermissionGrant.Read, true, useContext: true, appId: appId);
+
             return _entitiesController.GetOne(contentType, id, appId, cultureCode);
         }
 
@@ -82,8 +89,8 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                         
                         reqItem.DuplicateEntity =
                             reqItem.Group.Part.ToLower() == Constants.PresentationKeyLower
-                            ? contentGroup.Template.PresentationDemoEntity?.EntityId as int?
-                            : contentGroup.Template.ListPresentationDemoEntity?.EntityId as int?;
+                            ? contentGroup.Template.PresentationDemoEntity?.EntityId
+                            : contentGroup.Template.ListPresentationDemoEntity?.EntityId;
                     }
                 }
                 
@@ -191,11 +198,15 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		}
 
 	    [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
-	        EnsureSerializerHasSxc();
-	        return _entitiesController.GetAllOfTypeForAdmin(appId, contentType);
+            EnsureSerializerHasSxc();
+
+            // check if admin rights, then ok
+            PerformSecurityCheck(contentType, PermissionGrant.Read, true, useContext: true, appId: appId);
+
+            return _entitiesController.GetAllOfTypeForAdmin(appId, contentType);
 	    }
 
 
@@ -213,18 +224,26 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
         [HttpDelete]
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
             EnsureSerializerHasSxc();
+
+            // check if admin rights, then ok
+            PerformSecurityCheck(contentType, PermissionGrant.Delete, true, useContext: true, appId: appId);
+
             _entitiesController.Delete(contentType, id, appId, force);
         }
         [HttpDelete]
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
             EnsureSerializerHasSxc();
+
+            // check if admin rights, then ok
+            PerformSecurityCheck(contentType, PermissionGrant.Delete, true, useContext: true, appId: appId);
+
             _entitiesController.Delete(contentType, guid, appId, force);
         }
 
