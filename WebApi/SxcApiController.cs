@@ -190,22 +190,30 @@ namespace ToSic.SexyContent.WebApi
 
             // Check if the content-type has a GUID as name - only these can have permission assignments
             Guid ctGuid;
+            var allowed = false;
+
+            // only check permissions on type if the type has a GUID as static-id
             var staticNameIsGuid = Guid.TryParse(ct.StaticName, out ctGuid);
+            // Check permissions in 2sxc - or check if the user has admin-right (in which case he's always granted access for these types of content)
+            if (staticNameIsGuid 
+                && new PermissionController(zoneId, appId.Value, ctGuid, specificItem, contextMod)
+                    .UserMay(grant))
+                return;
+
+            // if initial test couldn't be done (non-guid) or failed, test for admin-specifically
+            if (autoAllowAdmin 
+                && DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(contextMod))
+                return;
+
+            // if the cause was not-admin and not testable, report better error
             if (!staticNameIsGuid)
                 ThrowHttpError(HttpStatusCode.Unauthorized,
                     "Content Type '" + contentType + "' is not a standard Content Type - no permissions possible.");
 
-            // Check permissions in 2sxc - or check if the user has admin-right (in which case he's always granted access for these types of content)
-            var permissionChecker = new PermissionController(zoneId, appId.Value, ctGuid, specificItem, contextMod);
-            var allowed = permissionChecker.UserMay(grant);
-
-            var isAdmin = autoAllowAdmin &&
-                          DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(contextMod);
-
-            if (!(allowed || isAdmin))
-                ThrowHttpError(HttpStatusCode.Unauthorized,
-                    "Request not allowed. User needs permissions to " + grant + " for Content Type '" + contentType + "'.",
-                    "permissions");
+            // final case: simply not allowed
+            ThrowHttpError(HttpStatusCode.Unauthorized,
+                "Request not allowed. User needs permissions to " + grant + " for Content Type '" + contentType + "'.",
+                "permissions");
         }
 
         /// <summary>
