@@ -38,21 +38,7 @@ namespace ToSic.SexyContent.WebApi
                 // Workaround for deserializing KeyValuePair -it requires lowercase properties(case sensitive), which seems to be a bug in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
                 var items = Json.Deserialize<List<UpperCaseStringKeyValuePair>>(paramSet);
                 urlParams = items.Select(a => new KeyValuePair<string, string>(a.Key, a.Value)).ToList();
-
-                //urlParams = requestParams
-                //    .Where(keyValuePair => keyValuePair.Key.IndexOf("orig", StringComparison.Ordinal) == 0)
-                //    .Select(pair => new KeyValuePair<string, string>(pair.Key.Substring(4), pair.Value))
-                //    .ToList();
             }
-            // first, check the special overrides
-            //var origparams = requestParams.Select(np => np.Key == "urlparameters").ToList();
-            //if (origparams.Any())
-            //{
-            //    var paramSet = origparams.First();
-            //}
-
-            // then add remaining params
-
 
             IContentBlock contentBlock = new ModuleContentBlock(moduleInfo, urlParams);
 

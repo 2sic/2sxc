@@ -13,7 +13,8 @@ namespace ToSic.SexyContent.Razor.Helpers
         public DnnHelper(ModuleInfo context)
         {
             _context = context;
-            _portalSettings = PortalSettings.Current ?? new PortalSettings(context.PortalID);
+            _portalSettings = PortalSettings.Current ?? 
+                (context != null ? new PortalSettings(context.PortalID): null);
         }
 
         public ModuleInfo Module

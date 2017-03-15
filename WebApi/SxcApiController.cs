@@ -20,8 +20,8 @@ namespace ToSic.SexyContent.WebApi
     [SxcWebApiExceptionHandling]
     public abstract class SxcApiController : DnnApiControllerWithFixes, IAppAndDataHelpers
     {
-
         private AppAndDataHelpers AppAndDataHelpers => _appAndDataHelpers ?? (_appAndDataHelpers = new AppAndDataHelpers(SxcContext));
+
         private AppAndDataHelpers _appAndDataHelpers;
 
 	    // Sexy object should not be accessible for other assemblies - just internal use
@@ -34,9 +34,26 @@ namespace ToSic.SexyContent.WebApi
 
 	    public SxcHelper Sxc => AppAndDataHelpers.Sxc;
 
-	    public App App => AppAndDataHelpers.App;
+        public App App
+        {
+            get
+            {
+                // try already-retrieved
+                if (_app != null)
+                    return _app;
 
-	    public ViewDataSource Data => AppAndDataHelpers.Data;
+                // try "normal" case with instance context
+                if (_instanceContext != null)
+                    return (_app = AppAndDataHelpers.App);
+
+                var routeAppPath = Request.GetRouteData().Values["apppath"]?.ToString();
+                var appId = GetCurrentAppIdFromPath(routeAppPath);
+                return (_app = (App) Environment.Dnn7.Factory.App(appId));
+            }
+        }
+        private App _app;
+
+        public ViewDataSource Data => AppAndDataHelpers.Data;
 
 	    /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
@@ -190,7 +207,6 @@ namespace ToSic.SexyContent.WebApi
 
             // Check if the content-type has a GUID as name - only these can have permission assignments
             Guid ctGuid;
-            var allowed = false;
 
             // only check permissions on type if the type has a GUID as static-id
             var staticNameIsGuid = Guid.TryParse(ct.StaticName, out ctGuid);

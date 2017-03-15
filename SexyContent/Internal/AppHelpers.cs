@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
@@ -32,6 +29,7 @@ namespace ToSic.SexyContent.Internal
         {
             // ToDo: Fix issue in EAV (cache is only ensured when a CacheItem-Property is accessed like LastRefresh)
             var baseCache = ((BaseCache) DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId));
+            // ReSharper disable once UnusedVariable
             var dummy = baseCache.LastRefresh;
 
             if (IsNullOrEmpty(appName))
@@ -59,6 +57,7 @@ namespace ToSic.SexyContent.Internal
             }
             return appId > 0 ? appId : Settings.DataIsMissingInDb;
         }
+
 
         public static void SetAppIdForModule(ModuleInfo module, int? appId)
         {

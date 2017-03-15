@@ -21,21 +21,30 @@ namespace ToSic.SexyContent
     {
         private readonly SxcInstance _sxcInstance;
 
-        public AppAndDataHelpers(SxcInstance sexy)
+        public AppAndDataHelpers(SxcInstance sexy) : this(sexy, sexy.ModuleInfo) {}
+
+        public AppAndDataHelpers(SxcInstance sexy, ModuleInfo module)
         {
-            ModuleInfo module = sexy.ModuleInfo;
+            // ModuleInfo module = sexy.ModuleInfo;
+            // Init things than require module-info or similar, but not 2sxc
+            Dnn = new DnnHelper(module);
+            Link = new DnnLinkHelper(Dnn);
+
+            // todo: maybe init App & App.Data, as they don't really require a working 2sxc
+
+            if (sexy == null)
+                return;
+
             ViewDataSource data = sexy.Data;
             _sxcInstance = sexy;
             App = sexy.App;// app;
             Data = sexy.Data;// data;
-            Dnn = new DnnHelper(module);
-            Link = new DnnLinkHelper(Dnn);
 			Sxc = new SxcHelper(sexy);
             Edit = new InPageEditingHelper(sexy);
 
             // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
-            App.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent /*SecurityHelpers.HasEditPermission(module)*/, data.ConfigurationProvider);
+            App.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent, data.ConfigurationProvider);
 
             #region Assemble the mapping of the data-stream "default"/Presentation to the List object and the "ListContent" too
 	        List = new List<Element>();
