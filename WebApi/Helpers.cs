@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.WebApi
             public string Value{ get; set; }
         }
 
-        internal static SxcInstance GetSxcOfApiRequest(HttpRequestMessage request)
+        internal static SxcInstance GetSxcOfApiRequest(HttpRequestMessage request, bool allowNoContextFound = false)
         {
             string cbidHeader = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();
@@ -39,6 +39,9 @@ namespace ToSic.SexyContent.WebApi
                 var items = Json.Deserialize<List<UpperCaseStringKeyValuePair>>(paramSet);
                 urlParams = items.Select(a => new KeyValuePair<string, string>(a.Key, a.Value)).ToList();
             }
+
+            if (allowNoContextFound & moduleInfo == null)
+                return null;
 
             IContentBlock contentBlock = new ModuleContentBlock(moduleInfo, urlParams);
 

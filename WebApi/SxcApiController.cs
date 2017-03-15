@@ -20,12 +20,12 @@ namespace ToSic.SexyContent.WebApi
     [SxcWebApiExceptionHandling]
     public abstract class SxcApiController : DnnApiControllerWithFixes, IAppAndDataHelpers
     {
-        private AppAndDataHelpers AppAndDataHelpers => _appAndDataHelpers ?? (_appAndDataHelpers = new AppAndDataHelpers(SxcContext));
+        private AppAndDataHelpers AppAndDataHelpers => _appAndDataHelpers ?? (_appAndDataHelpers = new AppAndDataHelpers(SxcContext, SxcContext?.ModuleInfo));
 
         private AppAndDataHelpers _appAndDataHelpers;
 
 	    // Sexy object should not be accessible for other assemblies - just internal use
-        internal SxcInstance SxcContext => _instanceContext ?? (_instanceContext = Helpers.GetSxcOfApiRequest(Request));
+        internal SxcInstance SxcContext => _instanceContext ?? (_instanceContext = Helpers.GetSxcOfApiRequest(Request, true));
         private SxcInstance _instanceContext;
 
         #region AppAndDataHelpers implementation

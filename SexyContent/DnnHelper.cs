@@ -7,48 +7,24 @@ namespace ToSic.SexyContent.Razor.Helpers
 {
     public class DnnHelper
     {
-        private readonly ModuleInfo _context;
-        private readonly PortalSettings _portalSettings;
-
-        public DnnHelper(ModuleInfo context)
+        /// <summary>
+        /// Build DNN Helper
+        /// Note that the context can be null, in which case it will have no module context, and default to the current portal
+        /// </summary>
+        /// <param name="moduleContext"></param>
+        public DnnHelper(ModuleInfo moduleContext)
         {
-            _context = context;
-            _portalSettings = PortalSettings.Current ?? 
-                (context != null ? new PortalSettings(context.PortalID): null);
+            Module = moduleContext;
+            Portal = PortalSettings.Current ?? 
+                (moduleContext != null ? new PortalSettings(moduleContext.PortalID): null);
         }
 
-        public ModuleInfo Module
-        {
-            get
-            {
-                return _context;
-            }
-        }
+        public ModuleInfo Module { get; }
 
-        public TabInfo Tab
-        {
-            get
-            {
-                if (_portalSettings == null)
-                    return null;
-                return _portalSettings.ActiveTab;
-            }
-        }
+        public TabInfo Tab => Portal?.ActiveTab;
 
-        public PortalSettings Portal
-        {
-            get
-            {
-                return _portalSettings;
-            }
-        }
+        public PortalSettings Portal { get; }
 
-        public UserInfo User
-        {
-            get
-            {
-                return _portalSettings.UserInfo;
-            }
-        }
+        public UserInfo User => Portal.UserInfo;
     }
 }
