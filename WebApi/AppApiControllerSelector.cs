@@ -66,7 +66,7 @@ namespace ToSic.SexyContent.WebApi
 
                 if(appFolder == null)
                 {
-                    var sexy = Helpers.GetSxcOfApiRequest(request);
+                    var sexy = Helpers.GetSxcOfApiRequest(request, false);
                     appFolder = sexy.App.Folder;
                 }
 
