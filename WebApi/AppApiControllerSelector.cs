@@ -77,7 +77,7 @@ namespace ToSic.SexyContent.WebApi
                 if (File.Exists(HostingEnvironment.MapPath(controllerPath)))
                 {
                     var assembly = BuildManager.GetCompiledAssembly(controllerPath);
-                    var type = assembly.GetType(controllerTypeName);
+                    var type = assembly.GetType(controllerTypeName, true, true);
                     return new HttpControllerDescriptor(_config, controllerTypeName, type);
                 }
             }
