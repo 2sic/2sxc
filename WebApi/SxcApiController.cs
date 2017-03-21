@@ -43,7 +43,7 @@ namespace ToSic.SexyContent.WebApi
                     return _app;
 
                 // try "normal" case with instance context
-                if (_instanceContext != null)
+                if (SxcContext != null)
                     return (_app = AppAndDataHelpers.App);
 
                 var routeAppPath = Request.GetRouteData().Values["apppath"]?.ToString();
