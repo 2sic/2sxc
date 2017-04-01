@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.WebApi
         //[ValidateAntiForgeryToken]
         public HttpResponseMessage InstallPackage(string packageUrl)
         {
-            var zoneId = ZoneHelpers.GetZoneID(ActiveModule.PortalID).Value;
+            var zoneId = Env.ZoneMapper.GetZoneId(ActiveModule.PortalID);// ZoneHelpers.GetZoneId(ActiveModule.PortalID).Value;
             var appId = AppHelpers.GetAppIdFromModule(ActiveModule, zoneId);
             bool success;
 

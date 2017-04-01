@@ -39,7 +39,10 @@ namespace ToSic.SexyContent.ContentBlocks
             //if (titleItem?.GetBestValue("EntityTitle") != null)
             //    SxcContext.ModuleInfo.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
 
-            var languages = ZoneHelpers.GetCulturesWithActiveState(SxcContext.ModuleInfo.PortalID, SxcContext.ZoneId.Value);
+            // 2017-04-01 2dm before:
+            // var languages =  ZoneHelpers.CulturesWithState(SxcContext.ModuleInfo.PortalID, SxcContext.ZoneId.Value);
+            var languages = new Environment.Environment().ZoneMapper.CulturesWithState(SxcContext.ModuleInfo.PortalID,
+                SxcContext.ZoneId.Value);
 
             // Find Module for default language
             var moduleController = new DotNetNuke.Entities.Modules.ModuleController();

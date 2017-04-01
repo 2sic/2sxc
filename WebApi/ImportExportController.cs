@@ -26,14 +26,16 @@ namespace ToSic.SexyContent.WebApi
                 : new SxcAppWrapper(appId);
 
             var zipExport = new ZipExport(zoneId, appId);
-
+            var cultCount = new Environment.Environment().ZoneMapper
+                .CulturesWithState(appWrapper.App.OwnerPortalSettings.PortalId, appWrapper.App.ZoneId)
+                .Count(c => c.Active);
             return new
             {
                 appWrapper.App.Name,
                 Guid = appWrapper.App.AppGuid,
                 Version = appWrapper.GetVersion(),
                 EntitiesCount = appWrapper.GetEntities().Count,
-                LanguagesCount = appWrapper.GetActiveLanguages().Count(),
+                LanguagesCount = cultCount,// 2017-04-01 2dm from: appWrapper.GetActiveLanguages().Count(),
                 TemplatesCount = appWrapper.GetTemplates().Count(),
                 HasRazorTemplates = appWrapper.GetRazorTemplates().Any(),
                 HasTokenTemplates = appWrapper.GetTokenTemplates().Any(),

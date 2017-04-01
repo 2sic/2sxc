@@ -190,6 +190,11 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Environment\Base\Culture.cs" />
+    <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
+    <Compile Include="Environment\Interfaces\ICulture.cs" />
+    <Compile Include="Environment\Interfaces\IUser.cs" />
+    <Compile Include="Environment\Interfaces\IZoneMapper.cs" />
     <Compile Include="SexyContent\ContentBlocks\Renderers\InTextContentBlocks.cs" />
     <Compile Include="DnnWebForms\FileManager.ascx.cs">
       <DependentUpon>FileManager.ascx</DependentUpon>

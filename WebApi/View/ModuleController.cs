@@ -309,23 +309,12 @@ namespace ToSic.SexyContent.WebApi.View
             // Add Portal ID
             gettingStartedSrc += "&PortalID=" + moduleInfo.PortalID;
             // Add VDB / Zone ID (if set)
-            var ZoneID = ZoneHelpers.GetZoneID(moduleInfo.PortalID);
-            gettingStartedSrc += ZoneID.HasValue ? "&ZoneID=" + ZoneID.Value : "";
-            // Add AppStaticName and Version
-            //if (App.AppId > 0 && !isContent)
-            //{
-            //    //var app =  SexyContent.GetApp(ZoneId.Value, AppId.Value, Sexy.OwnerPS);
+            var zoneId = Env.ZoneMapper.GetZoneId(moduleInfo.PortalID);// ZoneHelpers.GetZoneId(moduleInfo.PortalID);
+            gettingStartedSrc +=  "&ZoneID=" + zoneId;
 
-            //    gettingStartedSrc += "&AppGuid=" + App.AppGuid;
-            //    if (App.Configuration != null)
-            //    {
-            //        gettingStartedSrc += "&AppVersion=" + App.Configuration.Version;
-            //        gettingStartedSrc += "&AppOriginalId=" + App.Configuration.OriginalId;
-            //    }
-            //}
             // Add DNN Guid
-            var HostSettings = HostController.Instance.GetSettingsDictionary();
-            gettingStartedSrc += HostSettings.ContainsKey("GUID") ? "&DnnGUID=" + HostSettings["GUID"] : "";
+            var hostSettings = HostController.Instance.GetSettingsDictionary();
+            gettingStartedSrc += hostSettings.ContainsKey("GUID") ? "&DnnGUID=" + hostSettings["GUID"] : "";
             // Add Portal Default Language
             gettingStartedSrc += "&DefaultLanguage=" + PortalSettings.DefaultLanguage;
             // Add current language

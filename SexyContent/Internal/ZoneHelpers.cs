@@ -1,109 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Services.Localization;
-using ToSic.Eav;
-using ToSic.Eav.BLL;
-
-namespace ToSic.SexyContent.Internal
+﻿namespace ToSic.SexyContent.Internal
 {
     public class ZoneHelpers
     {
-        /// <summary>
-        /// Returns the ZoneID from PortalSettings
-        /// </summary>
-        /// <param name="portalId"></param>
-        /// <returns></returns>
-        public static int? GetZoneID(int portalId)
-        {
-            // additional protection agains invalid portalid which may come from bad dnn configs and execute in search-index mode
-            // see https://github.com/2sic/2sxc/issues/1054
-            if (portalId < 0)
-                throw new Exception("Can't get zone for invalid portal ID: " + portalId);
+        ///// <summary>
+        ///// Returns the ZoneID from PortalSettings
+        ///// </summary>
+        ///// <param name="portalId"></param>
+        ///// <returns></returns>
+        //public static int? GetZoneId(int portalId)
+        //{
+        //    return new Environment.Environment().ZoneMapper.GetZoneId(portalId);
+        //}
 
-            var zoneSettingKey = Settings.PortalSettingsPrefix + "ZoneID";
-            var c = PortalController.GetPortalSettingsDictionary(portalId);
-            var portalSettings = new PortalSettings(portalId);
+        // 2017-04-01 2dm move to environenment.dnn7...
+        ///// <summary>
+        ///// Sets the ZoneID from PortalSettings
+        ///// </summary>
+        ///// <param name="zoneId"></param>
+        ///// <param name="portalId"></param>
+        //public static void SetZoneId(int zoneId, int portalId)
+        //{
+        //    //if (zoneId.HasValue)
+        //        PortalController.UpdatePortalSetting(portalId, Settings.PortalSettingsPrefix + "ZoneID", zoneId/*.Value*/.ToString());
+        //    //else
+        //    //    PortalController.DeletePortalSetting(portalId, Settings.PortalSettingsPrefix + "ZoneID");
+        //}
 
-            int zoneId;
+        // 2017-04-01 2dm removed, unused
+        //public static List<Zone> GetZones()
+        //{
+        //    return EavDataController.Instance(Constants.DefaultZoneId, State.GetDefaultAppId(Constants.DefaultZoneId)).Zone.GetZones();
 
-            // Create new zone automatically
-            if (!c.ContainsKey(zoneSettingKey))
-            {
-                var newZone = AddZone(portalSettings.PortalName + " (Portal " + portalId + ")");
-                SetZoneID(newZone.ZoneID, portalId);
-                zoneId = newZone.ZoneID;
-            }
-            else
-            {
-                zoneId = Int32.Parse(c[zoneSettingKey]);
-            }
+        //    //return new SxcInstance(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).EavAppContext.Zone.GetZones();
+        //}
 
-            return zoneId;
-        }
+        // 2017-04-01 2dm factored away
+        //public static Zone AddZone(string zoneName)
+        //{
+        //    return EavDataController.Instance(null, null).Zone.AddZone(zoneName).Item1;
+        //}
 
-        /// <summary>
-        /// Sets the ZoneID from PortalSettings
-        /// </summary>
-        /// <param name="ZoneID"></param>
-        /// <param name="PortalID"></param>
-        public static void SetZoneID(int? ZoneID, int PortalID)
-        {
-            if (ZoneID.HasValue)
-                PortalController.UpdatePortalSetting(PortalID, Settings.PortalSettingsPrefix + "ZoneID", ZoneID.Value.ToString());
-            else
-                PortalController.DeletePortalSetting(PortalID, Settings.PortalSettingsPrefix + "ZoneID");
-        }
+        ///// <summary>
+        ///// Returns all DNN Cultures with active / inactive state
+        ///// </summary>
+        //public static List<Culture> CulturesWithState(int tennantId, int zoneId)
+        //{
+        //    var availableEavLanguages = EavDataController.Instance(zoneId, State.GetDefaultAppId(zoneId)).Dimensions.GetLanguages();
+        //    var defaultLanguageCode = new PortalSettings(tennantId).DefaultLanguage;
+        //    var defaultLanguage = availableEavLanguages
+        //        .FirstOrDefault(p => p.ExternalKey == defaultLanguageCode);
+        //    var defaultLanguageIsActive = defaultLanguage != null && defaultLanguage.Active;
 
-        public static List<Zone> GetZones()
-        {
-            return EavDataController.Instance(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).Zone.GetZones();
+        //    return (from c in LocaleController.Instance.GetLocales(tennantId)
+        //        select new Culture(
+        //            c.Value.Code, 
+        //            c.Value.Text, 
+        //            availableEavLanguages.Any(a => a.Active && a.ExternalKey == c.Value.Code && a.ZoneID == zoneId),
+        //            c.Value.Code == defaultLanguageCode && !defaultLanguageIsActive || (defaultLanguageIsActive && c.Value.Code != defaultLanguageCode)) 
+        //        //{
+        //        //    Code = c.Value.Code,
+        //        //    Text = c.Value.Text,
+        //        //    Active = availableEavLanguages.Any(a => a.Active && a.ExternalKey == c.Value.Code && a.ZoneID == zoneId),
+        //        //    // Allow State Change only if
+        //        //    // 1. This is the default language and default language is not active or
+        //        //    // 2. This is NOT the default language and default language is active
+        //        //    AllowStateChange = (c.Value.Code == defaultLanguageCode && !defaultLanguageIsActive) || (defaultLanguageIsActive && c.Value.Code != defaultLanguageCode)
+        //        //}
+        //        ).OrderByDescending(c => c.Code == defaultLanguageCode).ThenBy(c => c.Code).ToList();
 
-            //return new SxcInstance(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).EavAppContext.Zone.GetZones();
-        }
+        //}
 
-        public static Zone AddZone(string zoneName)
-        {
-            return EavDataController.Instance(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).Zone
-                    .AddZone(zoneName).Item1;
-            //return
-            //    new SxcInstance(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).EavAppContext.Zone
-            //        .AddZone(zoneName).Item1;
-        }
-
-        /// <summary>
-        /// Returns all DNN Cultures with active / inactive state
-        /// </summary>
-        public static List<CulturesWithActiveState> GetCulturesWithActiveState(int portalId, int zoneId)
-        {
-            //var DefaultLanguageID = ContentContext.GetLanguageId();
-            var AvailableEAVLanguages = EavDataController.Instance(zoneId, AppHelpers.GetDefaultAppId(zoneId)).Dimensions.GetLanguages();
-            // var AvailableEAVLanguages = new SxcInstance(zoneId, AppHelpers.GetDefaultAppId(zoneId)).EavAppContext.Dimensions.GetLanguages();
-            var DefaultLanguageCode = new PortalSettings(portalId).DefaultLanguage;
-            var DefaultLanguage = AvailableEAVLanguages.Where(p => p.ExternalKey == DefaultLanguageCode).FirstOrDefault();
-            var DefaultLanguageIsActive = DefaultLanguage != null && DefaultLanguage.Active;
-
-            return (from c in LocaleController.Instance.GetLocales(portalId)
-                select new CulturesWithActiveState
-                {
-                    Code = c.Value.Code,
-                    Text = c.Value.Text,
-                    Active = AvailableEAVLanguages.Any(a => a.Active && a.ExternalKey == c.Value.Code && a.ZoneID == zoneId),
-                    // Allow State Change only if
-                    // 1. This is the default language and default language is not active or
-                    // 2. This is NOT the default language and default language is active
-                    AllowStateChange = (c.Value.Code == DefaultLanguageCode && !DefaultLanguageIsActive) || (DefaultLanguageIsActive && c.Value.Code != DefaultLanguageCode)
-                }).OrderByDescending(c => c.Code == DefaultLanguageCode).ThenBy(c => c.Code).ToList();
-
-        }
-
-        public class CulturesWithActiveState
-        {
-            public string Code { get; set; }
-            public string Text { get; set; }
-            public bool Active { get; set; }
-            public bool AllowStateChange { get; set; }
-        }
+        //public class CulturesWithActiveState: Culture
+        //{
+        //    public string Code { get; set; }
+        //    public string Text { get; set; }
+        //    public bool Active { get; set; }
+        //    public bool AllowStateChange { get; set; }
+        //}
     }
 }

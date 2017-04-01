@@ -96,9 +96,9 @@ namespace ToSic.SexyContent.ContentBlocks
         {
             try
             {
-                var zoneId = ZoneHelpers.GetZoneID(SxcContext.ContentBlock.PortalSettings.PortalId); // note: 2016-03-30 2dm changed this, before it was 2sxcContext.PortalId (so th runtime portal)
+                var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.PortalSettings.PortalId);// ZoneHelpers.GetZoneId(SxcContext.ContentBlock.PortalSettings.PortalId); 
                 return
-                    AppManagement.GetApps(zoneId.Value, false, SxcContext.ContentBlock.PortalSettings)
+                    AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.PortalSettings)
                         .Where(a => !a.Hidden)
                         .Select(a => new { a.Name, a.AppId, SupportsAjaxReload = a.Configuration.SupportsAjaxReload ?? false });
             }

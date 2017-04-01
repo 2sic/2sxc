@@ -39,7 +39,7 @@ namespace ToSic.SexyContent.WebApi
 
 	    private TemplateManager TemplateManager(int appId)
 	    {
-	        var zoneId = ZoneHelpers.GetZoneID(PortalSettings.PortalId).Value;
+	        var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);// ZoneHelpers.GetZoneId(PortalSettings.PortalId).Value;
 	        var tm = new TemplateManager(zoneId, appId);
 	        return tm;
 	    }

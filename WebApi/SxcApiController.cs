@@ -9,6 +9,7 @@ using ToSic.Eav.ValueProvider;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Security;
@@ -28,6 +29,8 @@ namespace ToSic.SexyContent.WebApi
         internal SxcInstance SxcContext => _instanceContext ?? (_instanceContext = Helpers.GetSxcOfApiRequest(Request, true));
         private SxcInstance _instanceContext;
 
+        protected IEnvironment Env = new Environment.Environment();
+
         #region AppAndDataHelpers implementation
 
         public DnnHelper Dnn => AppAndDataHelpers.Dnn;
@@ -44,11 +47,11 @@ namespace ToSic.SexyContent.WebApi
 
                 // try "normal" case with instance context
                 if (SxcContext != null)
-                    return (_app = AppAndDataHelpers.App);
+                    return _app = AppAndDataHelpers.App;
 
                 var routeAppPath = Request.GetRouteData().Values["apppath"]?.ToString();
                 var appId = GetCurrentAppIdFromPath(routeAppPath);
-                return (_app = (App) Environment.Dnn7.Factory.App(appId));
+                return _app = (App) Environment.Dnn7.Factory.App(appId);
             }
         }
         private App _app;
@@ -158,12 +161,12 @@ namespace ToSic.SexyContent.WebApi
         internal int GetCurrentAppIdFromPath(string appPath)
         {
             // check zone
-            var zid = ZoneHelpers.GetZoneID(PortalSettings.PortalId);
-            if (zid == null)
-                throw new Exception("zone not found");
+            var zid = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId); // ZoneHelpers.GetZoneId(PortalSettings.PortalId);
+            //if (zid == null)
+            //    throw new Exception("zone not found");
 
             // get app from appname
-            var aid = AppHelpers.GetAppIdFromGuidName(zid.Value, appPath, true);
+            var aid = AppHelpers.GetAppIdFromGuidName(zid, appPath, true);
             return aid;
         }
         #endregion

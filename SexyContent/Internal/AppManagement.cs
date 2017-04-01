@@ -4,11 +4,12 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.SexyContent.Environment.Interfaces;
+using static System.String;
 
 namespace ToSic.SexyContent.Internal
 {
@@ -55,8 +56,8 @@ namespace ToSic.SexyContent.Internal
                 var appAttributeSet = EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameApps).AttributeSetID;
                 var values = new OrderedDictionary
                 {
-                    {"DisplayName", String.IsNullOrEmpty(appName) ? eavAppName : appName },
-                    {"Folder", String.IsNullOrEmpty(appName) ? eavAppName : RemoveIllegalCharsFromPath(appName) },
+                    {"DisplayName", IsNullOrEmpty(appName) ? eavAppName : appName },
+                    {"Folder", IsNullOrEmpty(appName) ? eavAppName : RemoveIllegalCharsFromPath(appName) },
                     {"AllowTokenTemplates", "False"},
                     {"AllowRazorTemplates", "False"},
                     {"Version", "00.00.01"},
@@ -110,48 +111,51 @@ namespace ToSic.SexyContent.Internal
         /// <returns></returns>
         internal static App AddBrandNewApp(int zoneId, string appName, PortalSettings ownerPS)
         {
-            if (appName == Constants.ContentAppName || appName == "Default" || String.IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
+            var defAppIdForZone = State.GetDefaultAppId(zoneId);
+            // check if invalid app-name
+            if (appName == Constants.ContentAppName || appName == Constants.DefaultAppName || IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
                 throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
 
             // Adding app to EAV
-            var eavContext = EavDataController.Instance(zoneId, AppHelpers.GetDefaultAppId(zoneId));
+            var eavContext = EavDataController.Instance(zoneId, defAppIdForZone);
             var app = eavContext.App.AddApp(Guid.NewGuid().ToString());
             eavContext.SqlDb.SaveChanges();
 
             EnsureAppIsConfigured(zoneId, app.AppID, appName);
 
-            return new App(zoneId, app.AppID, ownerPS );
+            return new App(zoneId, app.AppID, ownerPS);
         }
 
         internal static void RemoveApp(int zoneId, int appId, PortalSettings ps, int userId)
         {
-            if (zoneId != ZoneHelpers.GetZoneID(ps.PortalId))
+            // check portal assignment and that it's not the default app
+            if (zoneId != new Environment.Environment().ZoneMapper.GetZoneId(ps.PortalId))//  ZoneHelpers.GetZoneId(ps.PortalId) )
                 throw new Exception("This app does not belong to portal " + ps.PortalId);
 
-            //var sexy = new SxcInstance(zoneId, appId);// 2016-03-26 2dm this used to have a third parameter false = don't enable caching, which hasn't been respected for a while; removed it
-            var eavContext = EavDataController.Instance(zoneId, appId);
-
-            if (appId != eavContext.AppId)  // this only happens if there is some kind of id-fallback
-                throw new Exception("An app can only be removed inside of it's own context.");
-
-            if (appId == AppHelpers.GetDefaultAppId(zoneId))
+            if (appId == State.GetDefaultAppId(zoneId))
                 throw new Exception("The default app of a zone cannot be removed.");
 
-            var sexyApp = new App(zoneId, appId, ps);
 
-            // Delete folder
-            if (!String.IsNullOrEmpty(sexyApp.Folder) && Directory.Exists(sexyApp.PhysicalPath))
+            // Delete folder in dnn
+            var sexyApp = new App(zoneId, appId, ps);
+            if (!IsNullOrEmpty(sexyApp.Folder) && Directory.Exists(sexyApp.PhysicalPath))
                 Directory.Delete(sexyApp.PhysicalPath, true);
 
-            // Delete the app
-            eavContext.App.DeleteApp(appId);
+            // 2017-04-01 2dm moved to eav
+            EavDataController.Instance(zoneId, appId).App.DeleteApp(appId);
+            // 2017-04-01 2dm: old
+            // delete app in eav
+            // var eavContext = EavDataController.Instance(zoneId, appId);
+            //if (appId != eavContext.AppId)  // this only happens if there is some kind of id-fallback
+            //    throw new Exception("An app can only be removed inside of it's own context.");
+            // eavContext.App.DeleteApp(appId);
         }
 
 
         internal static string RemoveIllegalCharsFromPath(string path)
         {
             var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            var r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            var r = new Regex($"[{Regex.Escape(regexSearch)}]");
             return r.Replace(path, "");
         }
     }

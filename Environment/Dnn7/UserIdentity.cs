@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using DotNetNuke.Entities.Portals;
-using Telerik.Web.UI.PivotGrid.Core.Fields;
+﻿using DotNetNuke.Entities.Portals;
+using ToSic.SexyContent.Environment.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class UserIdentity
+    public class UserIdentity: IUser
     {
         public static string CurrentUserIdentityToken
         {
@@ -16,9 +12,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 var userId = PortalSettings.Current?.UserId;
                 var token = ((userId ?? -1) == -1) ? "anonymous" : "dnn:userid=" + userId;
                 return token;
-
-
             }
         }
+
+        string IUser.CurrentUserIdentityToken => CurrentUserIdentityToken;
     }
 }

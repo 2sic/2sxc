@@ -29,16 +29,16 @@ namespace ToSic.SexyContent.Search
             var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
 
             // New Context because PortalSettings.Current is null
-            var zoneId = ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID);
+            var zoneId = new Environment.Environment().ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);// ZoneHelpers.GetZoneId(moduleInfo.OwnerPortalID);
 
-            if (!zoneId.HasValue)
-                return searchDocuments;
+            //if (!zoneId.HasValue)
+            //    return searchDocuments;
 
-            int? appId = AppHelpers.GetDefaultAppId(zoneId.Value);
+            int? appId = State.GetDefaultAppId(zoneId);
 
             if (!isContentModule)
             {
-	            appId = AppHelpers.GetAppIdFromModule(moduleInfo, zoneId.Value);
+	            appId = AppHelpers.GetAppIdFromModule(moduleInfo, zoneId);
 				if (!appId.HasValue)
 		            return searchDocuments;
             }

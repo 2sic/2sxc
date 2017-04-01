@@ -27,9 +27,11 @@ namespace ToSic.SexyContent.WebApi
 	    public dynamic GetLanguages()
 	    {
 	        var portalId = PortalSettings.PortalId;
-            var zoneId = ZoneHelpers.GetZoneID(portalId);
+	        var zoneId = Env.ZoneMapper.GetZoneId(portalId);// ZoneHelpers.GetZoneId(portalId);
+	        var env = new Environment.Environment();
 	        // ReSharper disable once PossibleInvalidOperationException
-            var cultures = ZoneHelpers.GetCulturesWithActiveState(portalId, zoneId.Value).Select(c => new
+            var cultures = env.ZoneMapper.CulturesWithState(portalId, zoneId)// 2017-04-01 2dm ZoneHelpers.CulturesWithState(portalId, zoneId.Value)
+                .Select(c => new
             {
                 c.Code,
                 Culture = c.Text,
@@ -47,11 +49,11 @@ namespace ToSic.SexyContent.WebApi
 	    {
             // Activate or Deactivate the Culture
             var portalId = PortalSettings.PortalId;
-            var zoneId = ZoneHelpers.GetZoneID(portalId);
+	        var zoneId = Env.ZoneMapper.GetZoneId(portalId);// ZoneHelpers.GetZoneId(portalId);
             // ReSharper disable once PossibleInvalidOperationException
-	        var cache = DataSource.GetCache(zoneId.Value);
+	        var cache = DataSource.GetCache(zoneId);
             //var sexy = new SxcInstance(zoneId.Value, cache.AppId);
-            var app = new App(zoneId.Value, cache.AppId, PortalSettings, false);
+            var app = new App(zoneId, cache.AppId, PortalSettings, false);
             var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
 
             app.EavContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, enable, PortalSettings.PortalId);

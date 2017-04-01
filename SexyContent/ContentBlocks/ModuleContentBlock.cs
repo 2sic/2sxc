@@ -39,7 +39,7 @@ namespace ToSic.SexyContent.ContentBlocks
                 ? new PortalSettings(moduleInfo.OwnerPortalID)
                 : PortalSettings.Current;
 
-            ZoneId = ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID) ?? 0; // new
+            ZoneId = SxcInstance.Environment.ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);// ZoneHelpers.GetZoneId(moduleInfo.OwnerPortalID) ?? 0; // new
             
             AppId = AppHelpers.GetAppIdFromModule(moduleInfo, ZoneId) ?? 0;// fallback/undefined YET
 

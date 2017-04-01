@@ -5,18 +5,19 @@ using System.Text.RegularExpressions;
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
+using ToSic.SexyContent.Environment.Base;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.WebApi
 {
     public class SxcAppWrapper
     {
-        public App App { get; private set; }
+        public App App { get; }
 
 
         public SxcAppWrapper(int appId)
         {
-            this.App = Environment.Dnn7.Factory.App(appId) as App;
+            App = Environment.Dnn7.Factory.App(appId) as App;
         }
 
         public SxcAppWrapper(int zoneId, int appId)
@@ -25,54 +26,24 @@ namespace ToSic.SexyContent.WebApi
         }
 
 
-        public IDictionary<int, IEntity> GetEntities()
-        {
-            return DataSource.GetInitialDataSource(App.ZoneId, App.AppId).List;
-        }
+        public IDictionary<int, IEntity> GetEntities() => DataSource.GetInitialDataSource(App.ZoneId, App.AppId).List;
 
-        public IEnumerable<ZoneHelpers.CulturesWithActiveState> GetLanguages()
-        {
-            return ZoneHelpers.GetCulturesWithActiveState(App.OwnerPortalSettings.PortalId, App.ZoneId);
-        }
+        //public IEnumerable<Culture> GetLanguages() => ZoneHelpers.CulturesWithState(App.OwnerPortalSettings.PortalId, App.ZoneId);
 
-        public IEnumerable<ZoneHelpers.CulturesWithActiveState> GetActiveLanguages()
-        {
-            return GetLanguages().Where(c => c.Active);
-        }
+        //public IEnumerable<Culture> GetActiveLanguages() => GetLanguages().Where(c => c.Active);
 
-        public IEnumerable<IContentType> GetContentTypes(string scope = "2SexyContent")
-        {
-            return App.TemplateManager.GetAvailableContentTypes(scope, true);
-        }
+        public IEnumerable<IContentType> GetContentTypes(string scope = "2SexyContent") => App.TemplateManager.GetAvailableContentTypes(scope, true);
 
-        public IEnumerable<Template> GetTemplates()
-        {
-            return App.TemplateManager.GetAllTemplates();
-        }
+        public IEnumerable<Template> GetTemplates() => App.TemplateManager.GetAllTemplates();
 
-        public IEnumerable<Template> GetRazorTemplates()
-        {
-            return GetTemplates().Where(t => t.IsRazor);
-        }
+        public IEnumerable<Template> GetRazorTemplates() => GetTemplates().Where(t => t.IsRazor);
 
-        public IEnumerable<Template> GetTokenTemplates()
-        {
-            return GetTemplates().Where(t => !t.IsRazor);
-        }
+        public IEnumerable<Template> GetTokenTemplates() => GetTemplates().Where(t => !t.IsRazor);
 
-        public string GetVersion()
-        {
-            return App.Configuration == null ? "" : App.Configuration.Version;
-        }
+        public string GetVersion() => App.Configuration == null ? "" : App.Configuration.Version;
 
-        public string GetNameWithoutSpecialChars()
-        {
-            return Regex.Replace(App.Name, "[^a-zA-Z0-9-_]", "");
-        }
+        public string GetNameWithoutSpecialChars() => Regex.Replace(App.Name, "[^a-zA-Z0-9-_]", "");
 
-        public string GetCultureCode()
-        {
-            return App.OwnerPortalSettings.CultureCode;
-        }
+        public string GetCultureCode() => App.OwnerPortalSettings.CultureCode;
     }
 }

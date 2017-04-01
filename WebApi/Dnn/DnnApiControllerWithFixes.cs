@@ -1,9 +1,12 @@
 ﻿using DotNetNuke.Web.Api;
+using ToSic.SexyContent.Environment.Interfaces;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
 	public class DnnApiControllerWithFixes: DnnApiController
 	{
+        protected IEnvironment Env = new Environment.Environment();
+
 	    public DnnApiControllerWithFixes()
 	    {
             // ensure that the sql connection string is correct

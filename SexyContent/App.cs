@@ -10,6 +10,7 @@ using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.ValueProvider;
+using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 
@@ -24,6 +25,8 @@ namespace ToSic.SexyContent
 
         private const string ContentAppName = Constants.ContentAppName;
         #endregion
+
+        #region Simple Properties
         public int AppId { get; internal set; }
         public int ZoneId { get; internal set; }
         public string Name { get; internal set; } 
@@ -34,6 +37,7 @@ namespace ToSic.SexyContent
         public dynamic Resources { get; internal set; } 
         private IValueCollectionProvider ConfigurationProvider { get; set; }
         private bool ShowDraftsInData { get; set; }
+        #endregion
 
         #region App-Level TemplateManager, ContentGroupManager, EavContext
         private TemplateManager _templateManager;
@@ -53,7 +57,7 @@ namespace ToSic.SexyContent
                 if (_eavContext == null)
                 {
                     _eavContext = EavDataController.Instance(ZoneId, AppId);
-                    _eavContext.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+                    _eavContext.UserName = env.User.CurrentUserIdentityToken;// Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
                 }
                 return _eavContext;
             }
@@ -64,6 +68,8 @@ namespace ToSic.SexyContent
         internal PortalSettings OwnerPortalSettings { get; set; }
 
         public string AppGuid { get; set; }
+
+        private IEnvironment env = new Environment.Environment();
 
         public App(PortalSettings ownerPortalSettings, int appId) : this(-1, appId, ownerPortalSettings)
         {
@@ -82,7 +88,7 @@ namespace ToSic.SexyContent
                 throw new Exception("no portal settings received");
 
             // if zone is missing, try to find it; if still missing, throw error
-            if (zoneId == -1) zoneId = ZoneHelpers.GetZoneID(ownerPortalSettings.PortalId) ?? -1;
+            if (zoneId == -1) zoneId = env.ZoneMapper.GetZoneId(ownerPortalSettings.PortalId); // ZoneHelpers.GetZoneId(ownerPortalSettings.PortalId)  ?? -1;
             if (zoneId == -1) throw new Exception("Cannot find zone-id for portal specified");
 
             // Save basic values
@@ -169,13 +175,14 @@ namespace ToSic.SexyContent
                 _data = DataSource.GetDataSource<DataSources.App>(initialSource.ZoneId,
                     initialSource.AppId, initialSource, initialSource.ConfigurationProvider);
                 var defaultLanguage = "";
-                var languagesActive =
-                    ZoneHelpers.GetCulturesWithActiveState(OwnerPortalSettings.PortalId, ZoneId).Any(c => c.Active);
+                var languagesActive = env.ZoneMapper.CulturesWithState(OwnerPortalSettings.PortalId, ZoneId)
+                    /* 2017-04-01 2dm: from this: ZoneHelpers.CulturesWithState(OwnerPortalSettings.PortalId, ZoneId)*/
+                    .Any(c => c.Active);
                 if (languagesActive)
                     defaultLanguage = OwnerPortalSettings.DefaultLanguage;
                 var xData = (DataSources.App) Data;
                 xData.DefaultLanguage = defaultLanguage;
-                xData.CurrentUserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*OwnerPS.UserInfo.Username*/;
+                xData.CurrentUserName = env.User.CurrentUserIdentityToken;// Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*OwnerPS.UserInfo.Username*/;
             }
         }
 

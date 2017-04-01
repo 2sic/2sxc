@@ -169,7 +169,7 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var initialSource = DataSource.GetInitialDataSource(ZoneHelpers.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, _sxcInstance.Environment.Permissions.UserMayEditContent/* SecurityHelpers.HasEditPermission(Dnn.Module)*/);
+            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(Dnn.Portal.PortalId) /* ZoneHelpers.GetZoneId(Dnn.Portal.PortalId).Value*/, App.AppId, _sxcInstance.Environment.Permissions.UserMayEditContent/* SecurityHelpers.HasEditPermission(Dnn.Module)*/);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
@@ -181,7 +181,7 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var initialSource = DataSource.GetInitialDataSource(ZoneHelpers.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, _sxcInstance.Environment.Permissions.UserMayEditContent /*SecurityHelpers.HasEditPermission(Dnn.Module)*/);
+            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(Dnn.Portal.PortalId) /* ZoneHelpers.GetZoneId(Dnn.Portal.PortalId).Value */, App.AppId, _sxcInstance.Environment.Permissions.UserMayEditContent /*SecurityHelpers.HasEditPermission(Dnn.Module)*/);
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
         }
 

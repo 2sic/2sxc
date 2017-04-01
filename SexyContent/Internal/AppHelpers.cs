@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.Internal
         public static int? GetAppIdFromModule(ModuleInfo module, int zoneId)
         {
             if (module.DesktopModule.ModuleName == "2sxc")
-                return GetDefaultAppId(zoneId);// : new int?();
+                return State.GetDefaultAppId(zoneId);
 
             var appName = DnnStuffToRefactor.TryToGetReliableSetting(module, Settings.AppNameString);
 
@@ -33,7 +33,7 @@ namespace ToSic.SexyContent.Internal
             var dummy = baseCache.LastRefresh;
 
             if (IsNullOrEmpty(appName))
-                return 0; // 2016-04-05 2rm changed behaviour to return 0 if appName is blank. Previous code: appName = Constants.DefaultAppName;
+                return 0; 
 
             var appId = baseCache.ZoneApps[zoneId].Apps
                     .Where(p => p.Value == appName).Select(p => p.Key).FirstOrDefault();
@@ -66,20 +66,20 @@ namespace ToSic.SexyContent.Internal
 
             // ToDo: Should throw exception if a real ContentGroup exists
 
-            var zoneId = ZoneHelpers.GetZoneID(module.OwnerPortalID);
+            var zoneId = new Environment.Environment().ZoneMapper.GetZoneId(module.OwnerPortalID);// ZoneHelpers.GetZoneId(module.OwnerPortalID);
 
             if (appId == 0 || !appId.HasValue)
                 DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, Settings.AppNameString, null);
             else
             {
-                var appName = ((BaseCache)DataSource.GetCache(0, 0)).ZoneApps[zoneId.Value].Apps[appId.Value];
+                var appName = ((BaseCache)DataSource.GetCache(0, 0)).ZoneApps[zoneId].Apps[appId.Value];
                 DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, Settings.AppNameString, appName);
             }
 
             // Change to 1. available template if app has been set
             if (appId.HasValue)
             {
-                var app = new App(zoneId.Value, appId.Value, PortalSettings.Current);
+                var app = new App(zoneId, appId.Value, PortalSettings.Current);
                 var templates = app.TemplateManager.GetAvailableTemplatesForSelector(module.ModuleID, app.ContentGroupManager).ToList();
                 if (templates.Any())
                     app.ContentGroupManager.SetModulePreviewTemplateId(module.ModuleID, templates.First().Guid /* .TemplateId */);
@@ -87,15 +87,11 @@ namespace ToSic.SexyContent.Internal
         }
 
 
-        public static int GetDefaultAppId(int zoneId)
-        {
-            return ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].DefaultAppId;
-        }
+        //public static int GetDefaultAppId(int zoneId)
+        //    => State.GetDefaultAppId(zoneId);// ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].DefaultAppId;
 
 
-        public static string AppBasePath(PortalSettings ownerPS)
-        {
-            return Path.Combine(ownerPS.HomeDirectory, Settings.TemplateFolder);
-        }
+        public static string AppBasePath(PortalSettings ownerPS) 
+            => Path.Combine(ownerPS.HomeDirectory, Settings.TemplateFolder);
     }
 }
