@@ -8,7 +8,6 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources.Caches;
-using ToSic.SexyContent.Environment.Interfaces;
 using static System.String;
 
 namespace ToSic.SexyContent.Internal
@@ -18,12 +17,14 @@ namespace ToSic.SexyContent.Internal
         /// <summary>
         /// Returns all Apps for the current zone
         /// </summary>
+        /// <param name="zoneId"></param>
         /// <param name="includeDefaultApp"></param>
+        /// <param name="ownerPs"></param>
         /// <returns></returns>
-        public static List<App> GetApps(int zoneId, bool includeDefaultApp, PortalSettings ownerPS)
+        public static List<App> GetApps(int zoneId, bool includeDefaultApp, PortalSettings ownerPs)
         {
             var eavApps = ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps;
-            var sexyApps = eavApps.Select<KeyValuePair<int, string>, App>(eavApp => new App(zoneId, eavApp.Key, ownerPS));
+            var sexyApps = eavApps.Select(eavApp => new App(zoneId, eavApp.Key, ownerPs));
 
             if (!includeDefaultApp)
                 sexyApps = sexyApps.Where(a => a.Name != Constants.ContentAppName);
@@ -36,15 +37,19 @@ namespace ToSic.SexyContent.Internal
         /// </summary>
         /// <param name="zoneId"></param>
         /// <param name="appId"></param>
+        /// <param name="appName"></param>
         internal static void EnsureAppIsConfigured(int zoneId, int appId, string appName = null)
         {
             var appAssignment = State.GetAssignmentTypeId(Constants.AppAssignmentName);
-            var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
-            var appResources = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
-            var appSettings = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
+            var mds = DataSource.GetMetaDataSource(zoneId, appId);
+            var appMetaData = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
+            var appResources = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
+            var appSettings = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
 
             // Get appName from cache
-            var eavAppName = ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
+            var eavAppName = ((BaseCache)DataSource
+                .GetCache(zoneId, null))
+                .ZoneApps[zoneId].Apps[appId];
 
             if (eavAppName == Constants.DefaultAppName)
                 return;
@@ -78,7 +83,8 @@ namespace ToSic.SexyContent.Internal
                 else
                     settingsAttributeSet = EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppSettings);
 
-                DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
+                State.Purge(zoneId, appId);
+                // DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
                 EavContext.Entities.AddEntity(settingsAttributeSet, new OrderedDictionary(), null, appId, appAssignment);
             }
 
@@ -94,12 +100,14 @@ namespace ToSic.SexyContent.Internal
                 else
                     resourcesAttributeSet = EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppResources);
 
-                DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
+                State.Purge(zoneId, appId);
+                // DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
                 EavContext.Entities.AddEntity(resourcesAttributeSet, new OrderedDictionary(), null, appId, appAssignment);
             }
 
             if (appMetaData == null || appSettings == null || appResources == null)
-                DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
+                State.Purge(zoneId, appId);
+                // DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
         }
 
         /// <summary>

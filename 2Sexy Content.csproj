@@ -304,7 +304,6 @@
     <Compile Include="SexyContent\ISxcInstance.cs" />
     <Compile Include="SexyContent\Settings.cs" />
     <Compile Include="SexyContent\Internal\AppHelpers.cs" />
-    <Compile Include="SexyContent\Internal\ContentTypeHelpers.cs" />
     <Compile Include="SexyContent\Internal\DnnStuffToRefactor.cs" />
     <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
     <Compile Include="SexyContent\Internal\TemplateManager.cs" />

@@ -11,21 +11,16 @@ namespace ToSic.SexyContent.Internal
         /// <param name="portalId"></param>
         /// <returns></returns>
         public static bool SexyContentDesignersGroupConfigured(int portalId)
-        {
-            var roleControl = new RoleController();
-            var role = roleControl.GetRoleByName(portalId, Settings.SexyContentGroupName);
-            return role != null;
-        }
+            => new RoleController()
+                   .GetRoleByName(portalId, Settings.SexyContentGroupName)
+               != null;
 
         /// <summary>
         /// Returns true if a user is in the SexyContent Designers group
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static bool IsInSexyContentDesignersGroup(UserInfo user)
-        {
-            return user.IsInRole(Settings.SexyContentGroupName);
-        }
-
+        public static bool IsInSexyContentDesignersGroup(UserInfo user) 
+            => user.IsInRole(Settings.SexyContentGroupName);
     }
 }
