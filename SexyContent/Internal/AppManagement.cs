@@ -46,17 +46,13 @@ namespace ToSic.SexyContent.Internal
             var appSettings = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
 
             // Get appName from cache - stop if it's a "Default" app
-            var eavAppName = State.GetAppName(zoneId, appId); // ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
+            var eavAppName = State.GetAppName(zoneId, appId); 
 
             if (eavAppName == Eav.Constants.DefaultAppName)
                 return;
 
-            //var eavContext = EavDataController.Instance(zoneId, appId);
-
             if (appMetaData == null)
-            //{
-                State.
-                MetadataEnsureTypeAndSingleEntity(zoneId, appId, scope,
+                State.MetadataEnsureTypeAndSingleEntity(zoneId, appId, scope,
                     Settings.AttributeSetStaticNameApps,
                     "App Metadata",
                     appAssignment,
@@ -70,20 +66,6 @@ namespace ToSic.SexyContent.Internal
                         {"OriginalId", ""}
                     });
 
-                
-                //// Add app-describing entity
-                //var appAttributeSet = eavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameApps).AttributeSetID;
-                //var values = new OrderedDictionary
-                //{
-                //    {"DisplayName", IsNullOrEmpty(appName) ? eavAppName : appName },
-                //    {"Folder", IsNullOrEmpty(appName) ? eavAppName : RemoveIllegalCharsFromPath(appName) },
-                //    {"AllowTokenTemplates", "False"},
-                //    {"AllowRazorTemplates", "False"},
-                //    {"Version", "00.00.01"},
-                //    {"OriginalId", ""}
-                //};
-                //eavContext.Entities.AddEntity(appAttributeSet, values, null, appId, appAssignment);
-            //}
 
             // Add new (empty) ContentType for Settings
             if (appSettings == null)
@@ -105,22 +87,6 @@ namespace ToSic.SexyContent.Internal
                 State.Purge(zoneId, appId);
         }
 
-        //private static void MetadataEnsureTypeAndSingleEntity(int zoneId, int appId, string setName,
-        //    string label, int appAssignment, OrderedDictionary values)
-        //{
-        //    var eavContext = EavDataController.Instance(zoneId, appId);
-
-        //    var contentType = !eavContext.AttribSet.AttributeSetExists(setName, eavContext.AppId)
-        //        ? eavContext.AttribSet.AddAttributeSet(setName, label, setName,
-        //            Settings.AttributeSetScopeApps)
-        //        : eavContext.AttribSet.GetAttributeSet(setName);
-
-        //    if(values == null)
-        //        values = new OrderedDictionary();
-        //    State.Purge(eavContext.ZoneId, eavContext.ZoneId); // important to ensure the type is created before we add data
-        //    eavContext.Entities.AddEntity(contentType, values, null, eavContext.AppId, appAssignment);
-        //}
-
         /// <summary>
         /// Will create a new app in the system and initialize the basic settings incl. the 
         /// app-definition
@@ -129,26 +95,15 @@ namespace ToSic.SexyContent.Internal
         /// <param name="appName"></param>
         /// <param name="ownerPs"></param>
         /// <returns></returns>
-        internal static App AddBrandNewApp(int zoneId, string appName, PortalSettings ownerPs)
+        internal static void AddBrandNewApp(int zoneId, string appName, PortalSettings ownerPs)
         {
             // check if invalid app-name
             if (appName == Constants.ContentAppName || appName == Eav.Constants.DefaultAppName || IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
                 throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
 
-            // var defAppIdForZone = State.GetDefaultAppId(zoneId);
-
-            // todo: test create app - with removed defAppId...
-            // todo: move to eav!
-            // Adding app to EAV
-            //var eavContext = EavDataController.Instance(zoneId, null);
-            //var app = eavContext.App.AddApp(null, Guid.NewGuid().ToString());
-
-            //State.Purge(zoneId, app.AppID);
             var appId = State.AppCreate(zoneId);
 
             EnsureAppIsConfigured(zoneId, appId, appName);
-
-            return new App(zoneId, appId, ownerPs);
         }
 
         internal static void RemoveAppInDnnAndEav(int zoneId, int appId, PortalSettings ps, int userId)
@@ -166,8 +121,6 @@ namespace ToSic.SexyContent.Internal
                 Directory.Delete(sexyApp.PhysicalPath, true);
 
             State.AppDelete(zoneId, appId);
-            //EavDataController.Instance(zoneId, appId).App.DeleteApp(appId);
-            //State.Purge(zoneId, appId);
         }
 
 
