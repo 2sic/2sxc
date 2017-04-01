@@ -38,8 +38,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     EavDataController.Instance(null, null)
                         .Zone.AddZone(portalSettings.PortalName + " (Portal " + tennantId + ")")
                         .Item1;
-                SetZoneId(newZone.ZoneID, tennantId);
+                SetTennantZoneId(newZone.ZoneID, tennantId);
                 zoneId = newZone.ZoneID;
+
+                // clear cache probably not important, as the zone was never before accessed?
+                State.Purge(zoneId, State.GetDefaultAppId(zoneId));
             }
             else
             {
@@ -49,14 +52,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return zoneId;
         }
 
-        private void SetZoneId(int tennantId, int zoneId)
-        {
-            //if (zoneId.HasValue)
-            PortalController.UpdatePortalSetting(tennantId, Settings.PortalSettingsPrefix + "ZoneID",
-                zoneId /*.Value*/.ToString());
-            //else
-            //    PortalController.DeletePortalSetting(portalId, Settings.PortalSettingsPrefix + "ZoneID");
-        }
+        private void SetTennantZoneId(int tennantId, int zoneId)
+            => PortalController.UpdatePortalSetting(tennantId,
+                Settings.PortalSettingZoneId, zoneId.ToString());
+        
 
         /// <summary>
         /// Returns all DNN Cultures with active / inactive state

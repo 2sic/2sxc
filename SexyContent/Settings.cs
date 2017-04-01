@@ -21,7 +21,8 @@ namespace ToSic.SexyContent
 
         public static readonly string PortalHostDirectory = "~/Portals/_default/";
         public static readonly string TemplateFolder = "2sxc";
-        public static readonly string PortalSettingsPrefix = "ToSIC_SexyContent_";
+        public const string PortalSettingsPrefix = "ToSIC_SexyContent_";
+        public const string PortalSettingZoneId = PortalSettingsPrefix + "ZoneID";
         public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
 
         public static readonly string ModuleVersion = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("00") + "."

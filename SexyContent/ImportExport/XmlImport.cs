@@ -11,7 +11,6 @@ using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.Import;
-using ToSic.SexyContent.Internal;
 using static System.Boolean;
 using static System.String;
 
@@ -192,7 +191,7 @@ namespace ToSic.SexyContent.ImportExport
 
 				// Adding app to EAV
                 var eavDc = EavDataController.Instance(zoneId, null);
-			    var app = eavDc.App.AddApp(appGuid);
+			    var app = eavDc.App.AddApp(null, appGuid);
 				eavDc.SqlDb.SaveChanges();
 
 				appId = app.AppID;

@@ -93,7 +93,7 @@ namespace ToSic.SexyContent.WebApi
         {
             var userId = PortalSettings.Current.UserId;
             //var portalId = this.PortalSettings.PortalId;
-            AppManagement.RemoveApp(zoneId, appId, PortalSettings, userId);
+            AppManagement.RemoveAppInDnnAndEav(zoneId, appId, PortalSettings, userId);
         }
 
         [HttpPost]

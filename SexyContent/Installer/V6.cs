@@ -31,10 +31,10 @@ namespace ToSic.SexyContent.Installer
             {
                 dsrcSqlDataSource
             };
-            var import = new Import(Constants.DefaultZoneId, Constants.MetaDataAppId, Settings.InternalUserName);
+            var import = new Import(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId, Settings.InternalUserName);
             import.RunImport(attributeSets, null);
 
-            var metaDataCtx = EavDataController.Instance(Constants.DefaultZoneId, Constants.MetaDataAppId);
+            var metaDataCtx = EavDataController.Instance(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId);
             metaDataCtx.AttribSet.GetAttributeSet(dsrcSqlDataSource.StaticName).AlwaysShareConfiguration = true;
             metaDataCtx.SqlDb.SaveChanges();
 

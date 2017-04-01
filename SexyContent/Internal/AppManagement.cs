@@ -6,8 +6,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
-using ToSic.Eav.BLL;
-using ToSic.Eav.DataSources.Caches;
 using static System.String;
 
 namespace ToSic.SexyContent.Internal
@@ -23,8 +21,8 @@ namespace ToSic.SexyContent.Internal
         /// <returns></returns>
         public static List<App> GetApps(int zoneId, bool includeDefaultApp, PortalSettings ownerPs)
         {
-            var eavApps = ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps;
-            var sexyApps = eavApps.Select(eavApp => new App(zoneId, eavApp.Key, ownerPs));
+            var appIds = State.GetAppList(zoneId);
+            var sexyApps = appIds.Select(eavApp => new App(zoneId, eavApp.Key, ownerPs));
 
             if (!includeDefaultApp)
                 sexyApps = sexyApps.Where(a => a.Name != Constants.ContentAppName);
@@ -41,74 +39,87 @@ namespace ToSic.SexyContent.Internal
         internal static void EnsureAppIsConfigured(int zoneId, int appId, string appName = null)
         {
             var appAssignment = State.GetAssignmentTypeId(Constants.AppAssignmentName);
+            var scope = Settings.AttributeSetScopeApps;
             var mds = DataSource.GetMetaDataSource(zoneId, appId);
             var appMetaData = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
             var appResources = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
             var appSettings = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
 
-            // Get appName from cache
-            var eavAppName = ((BaseCache)DataSource
-                .GetCache(zoneId, null))
-                .ZoneApps[zoneId].Apps[appId];
+            // Get appName from cache - stop if it's a "Default" app
+            var eavAppName = State.GetAppName(zoneId, appId); // ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
 
-            if (eavAppName == Constants.DefaultAppName)
+            if (eavAppName == Eav.Constants.DefaultAppName)
                 return;
 
-            var EavContext = EavDataController.Instance(zoneId, appId);
+            //var eavContext = EavDataController.Instance(zoneId, appId);
 
             if (appMetaData == null)
-            {
-                // Add app-describing entity
-                var appAttributeSet = EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameApps).AttributeSetID;
-                var values = new OrderedDictionary
-                {
-                    {"DisplayName", IsNullOrEmpty(appName) ? eavAppName : appName },
-                    {"Folder", IsNullOrEmpty(appName) ? eavAppName : RemoveIllegalCharsFromPath(appName) },
-                    {"AllowTokenTemplates", "False"},
-                    {"AllowRazorTemplates", "False"},
-                    {"Version", "00.00.01"},
-                    {"OriginalId", ""}
-                };
-                EavContext.Entities.AddEntity(appAttributeSet, values, null, appId, appAssignment);
-            }
+            //{
+                State.
+                MetadataEnsureTypeAndSingleEntity(zoneId, appId, scope,
+                    Settings.AttributeSetStaticNameApps,
+                    "App Metadata",
+                    appAssignment,
+                    new OrderedDictionary
+                    {
+                        {"DisplayName", IsNullOrEmpty(appName) ? eavAppName : appName},
+                        {"Folder", IsNullOrEmpty(appName) ? eavAppName : RemoveIllegalCharsFromPath(appName)},
+                        {"AllowTokenTemplates", "False"},
+                        {"AllowRazorTemplates", "False"},
+                        {"Version", "00.00.01"},
+                        {"OriginalId", ""}
+                    });
 
+                
+                //// Add app-describing entity
+                //var appAttributeSet = eavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameApps).AttributeSetID;
+                //var values = new OrderedDictionary
+                //{
+                //    {"DisplayName", IsNullOrEmpty(appName) ? eavAppName : appName },
+                //    {"Folder", IsNullOrEmpty(appName) ? eavAppName : RemoveIllegalCharsFromPath(appName) },
+                //    {"AllowTokenTemplates", "False"},
+                //    {"AllowRazorTemplates", "False"},
+                //    {"Version", "00.00.01"},
+                //    {"OriginalId", ""}
+                //};
+                //eavContext.Entities.AddEntity(appAttributeSet, values, null, appId, appAssignment);
+            //}
+
+            // Add new (empty) ContentType for Settings
             if (appSettings == null)
-            {
-
-                AttributeSet settingsAttributeSet;
-                // Add new (empty) ContentType for Settings
-                if (!EavContext.AttribSet.AttributeSetExists(Settings.AttributeSetStaticNameAppSettings, appId))
-                    settingsAttributeSet = EavContext.AttribSet.AddAttributeSet(Settings.AttributeSetStaticNameAppSettings,
-                        "Stores settings for an app", Settings.AttributeSetStaticNameAppSettings, Settings.AttributeSetScopeApps);
-                else
-                    settingsAttributeSet = EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppSettings);
-
-                State.Purge(zoneId, appId);
-                // DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
-                EavContext.Entities.AddEntity(settingsAttributeSet, new OrderedDictionary(), null, appId, appAssignment);
-            }
-
+                State.MetadataEnsureTypeAndSingleEntity(zoneId, appId, scope,
+                    Settings.AttributeSetStaticNameAppSettings,
+                    "Stores settings for an app",
+                    appAssignment, 
+                    null);
+            
+            // add new (empty) ContentType for Resources
             if (appResources == null)
-            {
-                AttributeSet resourcesAttributeSet;
-
-                // Add new (empty) ContentType for Resources
-                if (!EavContext.AttribSet.AttributeSetExists(Settings.AttributeSetStaticNameAppResources, appId))
-                    resourcesAttributeSet = EavContext.AttribSet.AddAttributeSet(
-                        Settings.AttributeSetStaticNameAppResources, "Stores resources like translations for an app",
-                        Settings.AttributeSetStaticNameAppResources, Settings.AttributeSetScopeApps);
-                else
-                    resourcesAttributeSet = EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppResources);
-
-                State.Purge(zoneId, appId);
-                // DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
-                EavContext.Entities.AddEntity(resourcesAttributeSet, new OrderedDictionary(), null, appId, appAssignment);
-            }
+                State.MetadataEnsureTypeAndSingleEntity(zoneId, appId, scope,
+                    Settings.AttributeSetStaticNameAppResources,
+                    "Stores resources like translations for an app", 
+                    appAssignment, 
+                    null);
 
             if (appMetaData == null || appSettings == null || appResources == null)
                 State.Purge(zoneId, appId);
-                // DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
         }
+
+        //private static void MetadataEnsureTypeAndSingleEntity(int zoneId, int appId, string setName,
+        //    string label, int appAssignment, OrderedDictionary values)
+        //{
+        //    var eavContext = EavDataController.Instance(zoneId, appId);
+
+        //    var contentType = !eavContext.AttribSet.AttributeSetExists(setName, eavContext.AppId)
+        //        ? eavContext.AttribSet.AddAttributeSet(setName, label, setName,
+        //            Settings.AttributeSetScopeApps)
+        //        : eavContext.AttribSet.GetAttributeSet(setName);
+
+        //    if(values == null)
+        //        values = new OrderedDictionary();
+        //    State.Purge(eavContext.ZoneId, eavContext.ZoneId); // important to ensure the type is created before we add data
+        //    eavContext.Entities.AddEntity(contentType, values, null, eavContext.AppId, appAssignment);
+        //}
 
         /// <summary>
         /// Will create a new app in the system and initialize the basic settings incl. the 
@@ -116,26 +127,31 @@ namespace ToSic.SexyContent.Internal
         /// </summary>
         /// <param name="zoneId"></param>
         /// <param name="appName"></param>
-        /// <param name="ownerPS"></param>
+        /// <param name="ownerPs"></param>
         /// <returns></returns>
-        internal static App AddBrandNewApp(int zoneId, string appName, PortalSettings ownerPS)
+        internal static App AddBrandNewApp(int zoneId, string appName, PortalSettings ownerPs)
         {
-            var defAppIdForZone = State.GetDefaultAppId(zoneId);
             // check if invalid app-name
-            if (appName == Constants.ContentAppName || appName == Constants.DefaultAppName || IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
+            if (appName == Constants.ContentAppName || appName == Eav.Constants.DefaultAppName || IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
                 throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
 
+            // var defAppIdForZone = State.GetDefaultAppId(zoneId);
+
+            // todo: test create app - with removed defAppId...
+            // todo: move to eav!
             // Adding app to EAV
-            var eavContext = EavDataController.Instance(zoneId, defAppIdForZone);
-            var app = eavContext.App.AddApp(Guid.NewGuid().ToString());
-            eavContext.SqlDb.SaveChanges();
+            //var eavContext = EavDataController.Instance(zoneId, null);
+            //var app = eavContext.App.AddApp(null, Guid.NewGuid().ToString());
 
-            EnsureAppIsConfigured(zoneId, app.AppID, appName);
+            //State.Purge(zoneId, app.AppID);
+            var appId = State.AppCreate(zoneId);
 
-            return new App(zoneId, app.AppID, ownerPS);
+            EnsureAppIsConfigured(zoneId, appId, appName);
+
+            return new App(zoneId, appId, ownerPs);
         }
 
-        internal static void RemoveApp(int zoneId, int appId, PortalSettings ps, int userId)
+        internal static void RemoveAppInDnnAndEav(int zoneId, int appId, PortalSettings ps, int userId)
         {
             // check portal assignment and that it's not the default app
             if (zoneId != new Environment.Environment().ZoneMapper.GetZoneId(ps.PortalId))//  ZoneHelpers.GetZoneId(ps.PortalId) )
@@ -144,24 +160,18 @@ namespace ToSic.SexyContent.Internal
             if (appId == State.GetDefaultAppId(zoneId))
                 throw new Exception("The default app of a zone cannot be removed.");
 
-
             // Delete folder in dnn
             var sexyApp = new App(zoneId, appId, ps);
             if (!IsNullOrEmpty(sexyApp.Folder) && Directory.Exists(sexyApp.PhysicalPath))
                 Directory.Delete(sexyApp.PhysicalPath, true);
 
-            // 2017-04-01 2dm moved to eav
-            EavDataController.Instance(zoneId, appId).App.DeleteApp(appId);
-            // 2017-04-01 2dm: old
-            // delete app in eav
-            // var eavContext = EavDataController.Instance(zoneId, appId);
-            //if (appId != eavContext.AppId)  // this only happens if there is some kind of id-fallback
-            //    throw new Exception("An app can only be removed inside of it's own context.");
-            // eavContext.App.DeleteApp(appId);
+            State.AppDelete(zoneId, appId);
+            //EavDataController.Instance(zoneId, appId).App.DeleteApp(appId);
+            //State.Purge(zoneId, appId);
         }
 
 
-        internal static string RemoveIllegalCharsFromPath(string path)
+        private static string RemoveIllegalCharsFromPath(string path)
         {
             var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
             var r = new Regex($"[{Regex.Escape(regexSearch)}]");
