@@ -25,24 +25,24 @@ namespace ToSic.SexyContent.Internal
         /// </summary>
         public string CreateTemplateFileIfNotExists(string name, string type, string location, HttpServerUtility server, string contents = "")
         {
-            if (type == RazorC)
+            switch (type)
             {
-                if (!name.StartsWith("_"))
-                    name = "_" + name;
-                if (Path.GetExtension(name) != ".cshtml")
-                    name += ".cshtml";
-            }
-            else if (type == RazorVb)
-            {
-                if (!name.StartsWith("_"))
-                    name = "_" + name;
-                if (Path.GetExtension(name) != ".vbhtml")
-                    name += ".vbhtml";
-            }
-            else if (type == TokenReplace)
-            {
-                if (Path.GetExtension(name) != ".html")
-                    name += ".html";
+                case RazorC:
+                    if (!name.StartsWith("_"))
+                        name = "_" + name;
+                    if (Path.GetExtension(name) != ".cshtml")
+                        name += ".cshtml";
+                    break;
+                case RazorVb:
+                    if (!name.StartsWith("_"))
+                        name = "_" + name;
+                    if (Path.GetExtension(name) != ".vbhtml")
+                        name += ".vbhtml";
+                    break;
+                case TokenReplace:
+                    if (Path.GetExtension(name) != ".html")
+                        name += ".html";
+                    break;
             }
 
             var templatePath = Regex.Replace(name, @"[?:\/*""<>|]", "");
@@ -119,7 +119,7 @@ namespace ToSic.SexyContent.Internal
             }
 
             var files = directory.GetFiles(fileFilter, SearchOption.AllDirectories);
-            return (from d in files where d.Name != Settings.WebConfigFileName select (d.FullName).Replace(templatePathRootMapPath + "\\", "").Replace('\\', '/'));
+            return from d in files where d.Name != Settings.WebConfigFileName select d.FullName.Replace(templatePathRootMapPath + "\\", "").Replace('\\', '/');
         }
 
         /// <summary>

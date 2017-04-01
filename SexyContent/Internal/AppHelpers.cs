@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.Internal
                 {
                         var mds = DataSource.GetMetaDataSource(zoneId, p.Key);
                         var appMetaData = mds
-                            .GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, p.Key,
+                            .GetAssignedEntities(State.GetAssignmentTypeId(Constants.AppAssignmentName), p.Key,
                                 Settings.AttributeSetStaticNameApps)
                             .FirstOrDefault();
                         string folder = appMetaData?.GetBestValue("Folder").ToString();

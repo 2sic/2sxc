@@ -38,9 +38,10 @@ namespace ToSic.SexyContent.Internal
         /// <param name="appId"></param>
         internal static void EnsureAppIsConfigured(int zoneId, int appId, string appName = null)
         {
-            var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
-            var appResources = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
-            var appSettings = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
+            var appAssignment = State.GetAssignmentTypeId(Constants.AppAssignmentName);
+            var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
+            var appResources = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
+            var appSettings = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
 
             // Get appName from cache
             var eavAppName = ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
@@ -63,7 +64,7 @@ namespace ToSic.SexyContent.Internal
                     {"Version", "00.00.01"},
                     {"OriginalId", ""}
                 };
-                EavContext.Entities.AddEntity(appAttributeSet, values, null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
+                EavContext.Entities.AddEntity(appAttributeSet, values, null, appId, appAssignment);
             }
 
             if (appSettings == null)
@@ -78,7 +79,7 @@ namespace ToSic.SexyContent.Internal
                     settingsAttributeSet = EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppSettings);
 
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
-                EavContext.Entities.AddEntity(settingsAttributeSet, new OrderedDictionary(), null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
+                EavContext.Entities.AddEntity(settingsAttributeSet, new OrderedDictionary(), null, appId, appAssignment);
             }
 
             if (appResources == null)
@@ -94,7 +95,7 @@ namespace ToSic.SexyContent.Internal
                     resourcesAttributeSet = EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppResources);
 
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
-                EavContext.Entities.AddEntity(resourcesAttributeSet, new OrderedDictionary(), null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
+                EavContext.Entities.AddEntity(resourcesAttributeSet, new OrderedDictionary(), null, appId, appAssignment);
             }
 
             if (appMetaData == null || appSettings == null || appResources == null)

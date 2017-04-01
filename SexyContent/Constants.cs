@@ -29,6 +29,8 @@ namespace ToSic.SexyContent
 
         // special uses of Apps
         public const string ContentAppName = "Content";
+        public const string TemplateContentType = "2SexyContent-Template";
+        public const string AppAssignmentName = "App";
 
         // Special constant to protect functions which should use named parameters
         internal const string RandomProtectionParameter = "random-y023n";

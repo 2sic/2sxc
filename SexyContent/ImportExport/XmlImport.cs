@@ -275,7 +275,7 @@ namespace ToSic.SexyContent.ImportExport
 		    var entNodes = xmlSource.Elements(XmlConstants.Entities).Elements(XmlConstants.Entity);
 
             var importAttributeSets = GetImportAttributeSets(atsNodes);
-			var importEntities = GetImportEntities(entNodes, ContentTypeHelpers.AssignmentObjectTypeIDDefault);
+			var importEntities = GetImportEntities(entNodes, Configuration.AssignmentObjectTypeIdDefault);
 
 			var import = new Import(_zoneId, _appId, UserName, leaveExistingValuesUntouched);
 			import.RunImport(importAttributeSets, importEntities);
@@ -572,7 +572,7 @@ namespace ToSic.SexyContent.ImportExport
 				// Special case: App AttributeSets must be assigned to the current app
 				case XmlConstants.App:
 					keyNumber = _appId;
-					assignmentObjectTypeId = ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp;
+					assignmentObjectTypeId = State.GetAssignmentTypeId(Constants.AppAssignmentName);// ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp;
 					break;
                 case XmlConstants.Entity:
                 case "Data Pipeline": // this one is an old key, remove some time in the future; was probably almost never used...

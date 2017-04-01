@@ -1,8 +1,4 @@
-﻿using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Users;
-using DotNetNuke.Security;
-using DotNetNuke.Security.Permissions;
+﻿using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Roles;
 
 namespace ToSic.SexyContent.Internal
@@ -31,18 +27,5 @@ namespace ToSic.SexyContent.Internal
             return user.IsInRole(Settings.SexyContentGroupName);
         }
 
-        //// todo: probably same functionality as Environment.Permissions.UserMayEditContent ??? 
-        ///// <summary>
-        ///// Returns true if the user is able to edit this module
-        ///// </summary>
-        ///// <param name="module"></param>
-        ///// <returns></returns>
-        //public static bool HasEditPermission(ModuleInfo module)
-        //{
-        //    // Make sure that HasEditPermission still works while search indexing
-        //    if (PortalSettings.Current == null)
-        //        return false;
-        //    return ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "CONTENT", module);
-        //}
     }
 }

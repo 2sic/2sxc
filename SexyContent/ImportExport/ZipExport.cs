@@ -126,9 +126,10 @@ namespace ToSic.SexyContent.ImportExport
             attributeSets = attributeSets.Where(a => !a.ConfigurationIsOmnipresent);
 
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
+            var templateTypeId = State.GetAssignmentTypeId(Constants.TemplateContentType);
             var entities =
                 DataSource.GetInitialDataSource(_zoneId, _appId).Out["Default"].List.Where(
-                    e => e.Value.AssignmentObjectTypeId != ContentTypeHelpers.AssignmentObjectTypeIDSexyContentTemplate
+                    e => e.Value.AssignmentObjectTypeId != templateTypeId
                          && e.Value.AssignmentObjectTypeId != Constants.AssignmentObjectTypeIdFieldProperties).ToList();
 
             if (!includeContentGroups)

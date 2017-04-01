@@ -119,17 +119,18 @@ namespace ToSic.SexyContent
                 AppManagement.EnsureAppIsConfigured(ZoneId, AppId); // make sure additional settings etc. exist
 
             // Get app-describing entity
+            var appAssignmentId = State.GetAssignmentTypeId(Constants.AppAssignmentName);
             var mds = DataSource.GetMetaDataSource(ZoneId, AppId);
             var appMetaData = mds
-                    .GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, AppId,
+                    .GetAssignedEntities(appAssignmentId, AppId,
                         SexyContent.Settings.AttributeSetStaticNameApps)
                     .FirstOrDefault();
             var appResources = mds
-                    .GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, AppId,
+                    .GetAssignedEntities(appAssignmentId, AppId,
                         SexyContent.Settings.AttributeSetStaticNameAppResources)
                     .FirstOrDefault();
             var appSettings = mds 
-                    .GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, AppId,
+                    .GetAssignedEntities(appAssignmentId, AppId,
                         SexyContent.Settings.AttributeSetStaticNameAppSettings)
                     .FirstOrDefault();
 
