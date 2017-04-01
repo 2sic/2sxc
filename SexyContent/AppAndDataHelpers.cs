@@ -12,7 +12,6 @@ using ToSic.SexyContent.DnnWebForms.Helpers;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Interfaces;
-using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent

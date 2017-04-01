@@ -7,6 +7,7 @@ using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.SexyContent.Environment.Base;
 using ToSic.SexyContent.Environment.Interfaces;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -34,12 +35,14 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // Create new zone automatically
             if (!c.ContainsKey(zoneSettingKey))
             {
-                var newZone =
-                    EavDataController.Instance(null, null)
-                        .Zone.AddZone(portalSettings.PortalName + " (Portal " + tennantId + ")")
-                        .Item1;
-                SetTennantZoneId(newZone.ZoneID, tennantId);
-                zoneId = newZone.ZoneID;
+                // 2017-04-01 2dm centralize eav access
+                zoneId = EavBridge.ZoneCreate(portalSettings.PortalName + " (Portal " + tennantId + ")");
+                //var newZone =
+                //    EavDataController.Instance(null, null)
+                //        .Zone.AddZone(portalSettings.PortalName + " (Portal " + tennantId + ")")
+                //        .Item1;
+                //zoneId = newZone.ZoneID;
+                SetTennantZoneId(zoneId, tennantId);
 
                 // clear cache probably not important, as the zone was never before accessed?
                 State.Purge(zoneId, State.GetDefaultAppId(zoneId));
@@ -62,17 +65,19 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// </summary>
         public List<Culture> CulturesWithState(int tennantId, int zoneId)
         {
-            var availableEavLanguages = EavDataController.Instance(zoneId, State.GetDefaultAppId(zoneId)).Dimensions.GetLanguages();
+            var availableEavLanguages = new EavBridge(zoneId, State.GetDefaultAppId(zoneId))
+                .ZoneLanguages();
+                // EavDataController.Instance(zoneId, State.GetDefaultAppId(zoneId)).Dimensions.GetLanguages();
             var defaultLanguageCode = new PortalSettings(tennantId).DefaultLanguage;
             var defaultLanguage = availableEavLanguages
-                .FirstOrDefault(p => p.ExternalKey == defaultLanguageCode);
-            var defaultLanguageIsActive = defaultLanguage != null && defaultLanguage.Active;
+                .FirstOrDefault(p => p.TennantKey /*.ExternalKey */ == defaultLanguageCode);
+            var defaultLanguageIsActive = defaultLanguage?.Active == true;
 
             return (from c in LocaleController.Instance.GetLocales(tennantId)
                     select new Culture(
                         c.Value.Code,
                         c.Value.Text,
-                        availableEavLanguages.Any(a => a.Active && a.ExternalKey == c.Value.Code && a.ZoneID == zoneId),
+                        availableEavLanguages.Any(a => a.Active && a.TennantKey /*.ExternalKey */ == c.Value.Code),// && a.ZoneID == zoneId),
                         c.Value.Code == defaultLanguageCode && !defaultLanguageIsActive ||
                         (defaultLanguageIsActive && c.Value.Code != defaultLanguageCode))
                 )

@@ -4,6 +4,7 @@ using System.Linq;
 using Telerik.Web.UI;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
+using ToSic.SexyContent.Internal;
 using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
@@ -91,8 +92,11 @@ namespace ToSic.SexyContent
                 {"Template", templateId.HasValue ? new[] {templateId.Value} : new int[] {}}
             };
 
-            var context = EavDataController.Instance(_zoneId, _appId).Entities; // EavContext.Instance(_zoneId, _appId);
-            context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
+            // 2017-04-01 2dm centralizing eav access
+            new EavBridge(_zoneId, _appId)
+                .EntityUpdate(_contentGroupEntity.EntityId, values);
+            //var context = EavDataController.Instance(_zoneId, _appId).Entities; // EavContext.Instance(_zoneId, _appId);
+            //context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
         }
 
         #endregion
@@ -198,8 +202,13 @@ namespace ToSic.SexyContent
                     throw new Exception("Presentation may not contain more items than Content.");
             }
 
-            var context = EavDataController.Instance(_zoneId, _appId).Entities; // EavContext.Instance(_zoneId, _appId);
-            context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
+            // 2017-04-01 2dm centralizing eav access
+            var dicObj = values.ToDictionary(x => x.Key, x => x.Value as object);// as Dictionary<string, object>;
+            new EavBridge(_zoneId, _appId)
+                .EntityUpdate(_contentGroupEntity.EntityId, dicObj);
+
+            //var context = EavDataController.Instance(_zoneId, _appId).Entities; // EavContext.Instance(_zoneId, _appId);
+            //context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
 
             // Refresh content group entity (ensures contentgroup is up to date)
             _contentGroupEntity =

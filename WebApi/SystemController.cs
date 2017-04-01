@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.WebApi
 	[SupportedModules("2sxc,2sxc-app")]
     [SxcWebApiExceptionHandling]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class SystemController : DnnApiControllerWithFixes//DnnApiController
+    public class SystemController : DnnApiControllerWithFixes
     {
 
 	    [HttpGet]
@@ -30,13 +30,13 @@ namespace ToSic.SexyContent.WebApi
 	        var zoneId = Env.ZoneMapper.GetZoneId(portalId);// ZoneHelpers.GetZoneId(portalId);
 	        var env = new Environment.Environment();
 	        // ReSharper disable once PossibleInvalidOperationException
-            var cultures = env.ZoneMapper.CulturesWithState(portalId, zoneId)// 2017-04-01 2dm ZoneHelpers.CulturesWithState(portalId, zoneId.Value)
-                .Select(c => new
-            {
-                c.Code,
-                Culture = c.Text,
-                IsEnabled = c.Active
-            });
+	        var cultures = env.ZoneMapper.CulturesWithState(portalId, zoneId) // 2017-04-01 2dm ZoneHelpers.CulturesWithState(portalId, zoneId.Value)
+	            .Select(c => new
+	            {
+	                c.Code,
+	                Culture = c.Text,
+	                IsEnabled = c.Active
+	            });
 	        return cultures;
 	    }
 
@@ -56,7 +56,8 @@ namespace ToSic.SexyContent.WebApi
             var app = new App(zoneId, cache.AppId, PortalSettings, false);
             var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
 
-            app.EavContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, enable, PortalSettings.PortalId);
+            new EavBridge(app).AddOrUpdateLanguage(cultureCode, cultureText, enable);
+            // app.EavContext.Dimensions.AddOrUpdateLanguage();
 	    }
 
 
@@ -69,7 +70,7 @@ namespace ToSic.SexyContent.WebApi
             return list.Select(a => new
             {
                 Id = a.AppId,
-                IsApp = a.AppGuid != Constants.DefaultAppName,
+                IsApp = a.AppGuid != Eav.Constants.DefaultAppName,
                 Guid = a.AppGuid,
                 a.Name,
                 a.Folder,

@@ -11,6 +11,7 @@ using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.SexyContent.Adam;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -47,7 +48,7 @@ namespace ToSic.SexyContent.ImportExport
             _isAppExport = appExport;
             //Sexy = new SxcInstance(_zoneId, _appId);
             _app = new App(zoneId, appId, PortalSettings.Current);
-            _eavAppContext = _app.EavContext;
+            _eavAppContext = new EavBridge(_app).FullController;// _app.EavContext;
             AttributeSetIDs = attrSetIds;
             EntityIDs = entityIds;
 

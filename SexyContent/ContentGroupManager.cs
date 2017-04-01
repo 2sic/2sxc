@@ -53,9 +53,6 @@ namespace ToSic.SexyContent
 
 		public Guid CreateNewContentGroup(int? templateId)
 		{
-		    var context = EavDataController.Instance(_zoneId, _appId).Entities;
-			var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(ContentGroupTypeName);
-
 			var values = new Dictionary<string, object>
 			{
 				{"Template", templateId.HasValue ? new [] { templateId.Value } : new int[] {}},
@@ -65,9 +62,13 @@ namespace ToSic.SexyContent
 				{"ListPresentation", new int[] {}}
 			};
 
-			var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);
-
-            return entity.EntityGUID;
+            // 2017-04-01 2dm centralizing eav-access
+            return new EavBridge(_zoneId, _appId).EntityCreate(ContentGroupTypeName, values)
+                .Item2;
+		 //   var context = EavDataController.Instance(_zoneId, _appId).Entities;
+			//var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(ContentGroupTypeName);
+			//var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);
+            // return entity.EntityGUID;
 		}
         
 

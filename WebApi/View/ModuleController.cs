@@ -92,33 +92,35 @@ namespace ToSic.SexyContent.WebApi.View
             Dictionary<string, object> values, Guid? newGuid)
         {
             var cgApp = SxcContext.App;
-            var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
-            eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+            // 2017-04-01 2dm centralizing eav access
+            var bridge = new EavBridge(cgApp);
+            //var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
+            //eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
 
             #region create the new entity --> note that it's the sql-type entity, not a standard ientity
 
-            var contentType =
-                DataSource.GetCache(cgApp.ZoneId, cgApp.AppId)
-                    .GetContentType(contentTypeName);
+            //var contentType =
+            //    DataSource.GetCache(cgApp.ZoneId, cgApp.AppId)
+            //        .GetContentType(contentTypeName);
 
             int entityId;
             // check that it doesn't exist yet...
-            if (newGuid.HasValue && eavDc.Entities.EntityExists(newGuid.Value))
-            {
-                // check if it's deleted - if yes, resurrect
-                var existingEnt = eavDc.Entities.GetEntitiesByGuid(newGuid.Value).First();
-                if (existingEnt.ChangeLogDeleted != null)
-                    existingEnt.ChangeLogDeleted = null;
+            if (newGuid.HasValue && bridge.EntityExists(newGuid.Value)) // eavDc.Entities.EntityExists(newGuid.Value))
+                entityId = bridge.EntityGetOrResurect(newGuid.Value);
+            //{
+            //    // check if it's deleted - if yes, resurrect
+            //    var existingEnt = eavDc.Entities.GetEntitiesByGuid(newGuid.Value).First();
+            //    if (existingEnt.ChangeLogDeleted != null)
+            //        existingEnt.ChangeLogDeleted = null;
 
-                entityId = existingEnt.EntityID;
-                // todo: check if it exists on this list, or elsewhere. if it's elsewhere, then map it
-                // throw new Exception("can't create this - already exists");
-            }
+            //    entityId = existingEnt.EntityID;
+            //}
             else
-            {
-                var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null, entityGuid: newGuid);
-                entityId = entity.EntityID;
-            }
+                entityId = bridge.EntityCreate(contentTypeName, values, entityGuid: newGuid).Item1;
+            //{
+            //    var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null, entityGuid: newGuid);
+            //    entityId = entity.EntityID;
+            //}
 
             #endregion
 
@@ -135,8 +137,9 @@ namespace ToSic.SexyContent.WebApi.View
                 if (sortOrder > intList.Count) sortOrder = intList.Count;
                 intList.Insert(sortOrder, entityId);
             }
-            var updateDic = new Dictionary<string, int[]> {{field, intList.ToArray()}};
-            eavDc.Entities.UpdateEntity(cbEnt.EntityGuid, updateDic);
+            var updateDic = new Dictionary<string, object> {{field, intList.ToArray()}};
+            bridge.EntityUpdate(cbEnt.EntityId, updateDic);
+            //eavDc.Entities.UpdateEntity(cbEnt.EntityGuid, updateDic);
 
             #endregion
 
@@ -191,11 +194,13 @@ namespace ToSic.SexyContent.WebApi.View
 
             // save
             var values = new Dictionary<string, object> {{field, ids.ToArray()}};
-            var cgApp = SxcContext.App;
-            var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
-            eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
-
-            eavDc.Entities.UpdateEntity(parentEntity.EntityGuid, values);
+            // 2017-04-01 2dm centralizing eav access
+            new EavBridge(SxcContext.App)
+                .EntityUpdate(parentEntity.EntityId, values);
+            //var cgApp = SxcContext.App;
+            //var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
+            //eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+            //eavDc.Entities.UpdateEntity(parentEntity.EntityGuid, values);
         }
 
         [HttpGet]
@@ -253,7 +258,7 @@ namespace ToSic.SexyContent.WebApi.View
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Publish(int id)
-            => ContentGroupReferenceManager.Publish(id);
+            => ContentGroupReferenceManager.Publish(id, true);
     
 
         [HttpGet]

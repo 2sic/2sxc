@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
-using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Serializers;
 using ToSic.Eav.WebApi;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {
@@ -35,16 +35,8 @@ namespace ToSic.SexyContent
 			return dataSource;
 		}
 
-		public IEnumerable<Template> GetAllTemplates()
-		{
-            return TemplateDataSource().List.Select(p => new Template(p.Value)).OrderBy(p => p.Name);
-        }
-
-        // 2016-09-08 2dm disabled this, because we actually need all templates to be sent, and have the UI hide the hidden ones - part of https://github.com/2sic/2sxc/issues/831
-  //      public IEnumerable<Template> GetVisibleTemplates()
-		//{
-		//	return GetAllTemplates().Where(t => !t.IsHidden);
-		//}
+		public IEnumerable<Template> GetAllTemplates() 
+            => TemplateDataSource().List.Select(p => new Template(p.Value)).OrderBy(p => p.Name);
 
 		public Template GetTemplate(int templateId)
 		{
@@ -59,24 +51,17 @@ namespace ToSic.SexyContent
 			return new Template(templateEntity);
 		}
 
-        // 2016-09-24 2dm seems unused now
-        //public Template GetTemplate(Guid templateGuid)
-        //{
-        //    return
-        //        TemplateDataSource()
-        //            .List.Where(t => t.Value.EntityGuid == templateGuid)
-        //            .Select(t => new Template(t.Value))
-        //            .FirstOrDefault();
-        //}
-
         public bool DeleteTemplate(int templateId)
 		{
+            // really get template first, to be sure it is a template
 			var template = GetTemplate(templateId);
-            var eavContext = EavDataController.Instance(_zoneId, _appId).Entities; //EavContext.Instance(_zoneId, _appId);
-			var canDelete = eavContext.CanDeleteEntity(template.TemplateId);
-			if(!canDelete.Item1)
-				throw new Exception(canDelete.Item2);
-			return eavContext.DeleteEntity(template.TemplateId);
+            // 2017-04-01 2dm centralizing eav access
+		    return new EavBridge(_zoneId, _appId).EntityDelete(template.TemplateId);
+		    //         var eavContext = EavDataController.Instance(_zoneId, _appId).Entities; //EavContext.Instance(_zoneId, _appId);
+		    //var canDelete = eavContext.CanDeleteEntity(template.TemplateId);
+		    //if(!canDelete.Item1)
+		    //	throw new Exception(canDelete.Item2);
+		    //return eavContext.DeleteEntity(template.TemplateId);
 		}
 
 		/// <summary>
@@ -110,15 +95,19 @@ namespace ToSic.SexyContent
 				{ "ViewNameInUrl", viewNameInUrl }
 			};
 
-            var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
+            // 2017-04-01 2dm centralizing eav access code
+            var bridge = new EavBridge(_zoneId, _appId);
+            //var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
 
 			if(templateId.HasValue)
-				context.UpdateEntity(templateId.Value, values);
+                bridge.EntityUpdate(templateId.Value, values);
+				// context.UpdateEntity(templateId.Value, values);
 			else
-			{
-				var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(TemplateTypeName);
-				context.AddEntity(contentType.AttributeSetId, values, null, null);
-			}
+                bridge.EntityCreate(TemplateTypeName, values);
+			//{
+			//	var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(TemplateTypeName);
+			//	context.AddEntity(contentType.AttributeSetId, values, null, null);
+			//}
 			
 		}
 

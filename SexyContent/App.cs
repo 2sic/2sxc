@@ -48,20 +48,20 @@ namespace ToSic.SexyContent
         public ContentGroupManager ContentGroupManager => _contentGroupManager 
             ?? (_contentGroupManager = new ContentGroupManager(ZoneId, AppId));
 
-        private EavDataController _eavContext;
-
-        public EavDataController EavContext
-        {
-            get
-            {
-                if (_eavContext == null)
-                {
-                    _eavContext = EavDataController.Instance(ZoneId, AppId);
-                    _eavContext.UserName = env.User.CurrentUserIdentityToken;// Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
-                }
-                return _eavContext;
-            }
-        }
+        // 2017-04-01 2dm disabling deep eav-binding
+        //private EavDataController _eavContext;
+        //public EavDataController EavContext
+        //{
+        //    get
+        //    {
+        //        if (_eavContext == null)
+        //        {
+        //            _eavContext = EavDataController.Instance(ZoneId, AppId);
+        //            _eavContext.UserName = env.User.CurrentUserIdentityToken;// Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+        //        }
+        //        return _eavContext;
+        //    }
+        //}
 
         #endregion
 

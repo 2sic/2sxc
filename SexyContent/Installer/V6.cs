@@ -2,6 +2,7 @@
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.Import;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Installer
 {
@@ -34,9 +35,11 @@ namespace ToSic.SexyContent.Installer
             var import = new Import(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId, Settings.InternalUserName);
             import.RunImport(attributeSets, null);
 
-            var metaDataCtx = EavDataController.Instance(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId);
-            metaDataCtx.AttribSet.GetAttributeSet(dsrcSqlDataSource.StaticName).AlwaysShareConfiguration = true;
-            metaDataCtx.SqlDb.SaveChanges();
+            // 2017-04-01 2dm centralizing eav access
+            EavBridge.ForceShareOnGlobalContentType(dsrcSqlDataSource.StaticName);
+            //var metaDataCtx = EavDataController.Instance(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId);
+            //metaDataCtx.AttribSet.GetAttributeSet(dsrcSqlDataSource.StaticName).AlwaysShareConfiguration = true;
+            //metaDataCtx.SqlDb.SaveChanges();
 
             // Run EAV Version Upgrade (also ensures Content Type sharing)
             var eavVersionUpgrade = new VersionUpgrade(Settings.InternalUserName);

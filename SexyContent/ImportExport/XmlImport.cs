@@ -11,6 +11,7 @@ using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.Import;
+using ToSic.SexyContent.Internal;
 using static System.Boolean;
 using static System.String;
 
@@ -217,7 +218,7 @@ namespace ToSic.SexyContent.ImportExport
 		{
 			//_sexy = new SxcInstance(zoneId, appId); // 2016-03-26 2dm this used to have a third parameter false = don't enable caching, which hasn't been respected for a while; removed it
             // App = new App(zoneId, appId, PortalSettings.Current); // 2016-04-07 2dm refactored this out of this, as using App had side-effects
-		    _eavContext = EavDataController.Instance(zoneId, appId);
+		    _eavContext = new EavBridge(zoneId, appId).FullController;// EavDataController.Instance(zoneId, appId);
             
 			_appId = appId;
 			_zoneId = zoneId;
