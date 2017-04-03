@@ -73,14 +73,7 @@ namespace ToSic.SexyContent.ImportExport
         /// Get all files from a folder, not caring if it will be exported or not
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> AllFiles
-        {
-            get
-            {
-                if (_allFiles == null)
-                    _allFiles = Directory.EnumerateFiles(_sourceFolder, "*.*", SearchOption.AllDirectories);
-                return _allFiles;
-            }
-        }
+        public IEnumerable<string> AllFiles => _allFiles ??
+                                               (_allFiles = Directory.EnumerateFiles(_sourceFolder, "*.*", SearchOption.AllDirectories));
     }
 }

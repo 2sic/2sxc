@@ -14,13 +14,13 @@ namespace ToSic.SexyContent
 	{
 		private const string TemplateTypeName = "2SexyContent-Template";
 
-		private readonly int _zoneId;
-		private readonly int _appId;
+		public readonly int ZoneId;
+		public readonly int AppId;
 
 		public TemplateManager(int zoneId, int appId)
 		{
-			_zoneId = zoneId;
-			_appId = appId;
+			ZoneId = zoneId;
+			AppId = appId;
 		}
 
 	    private IDataSource _templateDs;
@@ -28,8 +28,8 @@ namespace ToSic.SexyContent
 		{
             if(_templateDs!= null)return _templateDs;
 		    // ReSharper disable once RedundantArgumentDefaultValue
-			var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId, false);
-			dataSource = DataSource.GetDataSource<EntityTypeFilter>(_zoneId, _appId, dataSource);
+			var dataSource = DataSource.GetInitialDataSource(ZoneId, AppId, false);
+			dataSource = DataSource.GetDataSource<EntityTypeFilter>(ZoneId, AppId, dataSource);
 			((EntityTypeFilter)dataSource).TypeName = TemplateTypeName;
 		    _templateDs = dataSource;
 			return dataSource;
@@ -41,7 +41,7 @@ namespace ToSic.SexyContent
 		public Template GetTemplate(int templateId)
 		{
 			var dataSource = TemplateDataSource();
-			dataSource = DataSource.GetDataSource<EntityIdFilter>(_zoneId, _appId, dataSource);
+			dataSource = DataSource.GetDataSource<EntityIdFilter>(ZoneId, AppId, dataSource);
 			((EntityIdFilter)dataSource).EntityIds = templateId.ToString();
 			var templateEntity = dataSource.List.FirstOrDefault().Value;
 
@@ -56,7 +56,7 @@ namespace ToSic.SexyContent
             // really get template first, to be sure it is a template
 			var template = GetTemplate(templateId);
             // 2017-04-01 2dm centralizing eav access
-		    return new EavBridge(_zoneId, _appId).EntityDelete(template.TemplateId);
+		    return new EavBridge(ZoneId, AppId).EntityDelete(template.TemplateId);
 		    //         var eavContext = EavDataController.Instance(_zoneId, _appId).Entities; //EavContext.Instance(_zoneId, _appId);
 		    //var canDelete = eavContext.CanDeleteEntity(template.TemplateId);
 		    //if(!canDelete.Item1)
@@ -96,7 +96,7 @@ namespace ToSic.SexyContent
 			};
 
             // 2017-04-01 2dm centralizing eav access code
-            var bridge = new EavBridge(_zoneId, _appId);
+            var bridge = new EavBridge(ZoneId, AppId);
             //var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
 
 			if(templateId.HasValue)
@@ -163,7 +163,7 @@ namespace ToSic.SexyContent
             var ctc = new ContentTypeController();
             var ser = new Serializer();
 
-            return GetAvailableContentTypes(Settings.AttributeSetScope)
+            return State.ContentTypes(ZoneId, AppId, Settings.AttributeSetScope) //  GetAvailableContentTypes(Settings.AttributeSetScope)
                 .Where(p => availableTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)) // must exist in at least 1 template
                 .OrderBy(p => p.Name)
                 .Select(p => new
@@ -176,17 +176,15 @@ namespace ToSic.SexyContent
         }
 
 
+        //2017-04-03 2dm - moved to State...
+        //public IEnumerable<IContentType> GetAvailableContentTypes(string scope, bool includeAttributeTypes = false) 
+        //    => GetAvailableContentTypes(includeAttributeTypes).Where(p => p.Scope == scope);
 
-        public IEnumerable<IContentType> GetAvailableContentTypes(string scope, bool includeAttributeTypes = false)
-        {
-            return GetAvailableContentTypes(includeAttributeTypes).Where(p => p.Scope == scope);
-        }
-
-        public IEnumerable<IContentType> GetAvailableContentTypes(bool includeAttributeTypes = false)
-        {
-            var contentTypes = ((BaseCache)DataSource.GetCache(_zoneId, _appId)).GetContentTypes();
-            return contentTypes.Select(c => c.Value).Where(c => includeAttributeTypes || !c.Name.StartsWith("@")).OrderBy(c => c.Name);
-        }
+	    //public IEnumerable<IContentType> GetAvailableContentTypes(bool includeAttributeTypes = false)
+     //   {
+     //       var contentTypes = ((BaseCache)DataSource.GetCache(ZoneId, AppId)).GetContentTypes();
+     //       return contentTypes.Select(c => c.Value).Where(c => includeAttributeTypes || !c.Name.StartsWith("@")).OrderBy(c => c.Name);
+     //   }
 
 
 

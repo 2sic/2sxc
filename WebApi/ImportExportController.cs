@@ -25,7 +25,7 @@ namespace ToSic.SexyContent.WebApi
                 ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
                 : new SxcAppWrapper(appId);
 
-            var zipExport = new ZipExport(zoneId, appId);
+            var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
             var cultCount = new Environment.Environment().ZoneMapper
                 .CulturesWithState(appWrapper.App.OwnerPortalSettings.PortalId, appWrapper.App.ZoneId)
                 .Count(c => c.Active);
@@ -52,7 +52,7 @@ namespace ToSic.SexyContent.WebApi
                 ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
                 : new SxcAppWrapper(appId);
 
-            var contentTypes = appWrapper.GetContentTypes(scope);
+            var contentTypes = ToSic.Eav.State.ContentTypes(appWrapper.App.ZoneId, appWrapper.App.AppId, scope);//  appWrapper.GetContentTypes(scope);
             var entities = appWrapper.GetEntities();
             var templates = appWrapper.GetTemplates();
             //var dimensions = new[] { appWrapper.GetCultureCode() };
@@ -95,7 +95,7 @@ namespace ToSic.SexyContent.WebApi
                 ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
                 : new SxcAppWrapper(appId);
 
-            var zipExport = new ZipExport(zoneId, appId);
+            var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
             var fileName =
@@ -117,7 +117,7 @@ namespace ToSic.SexyContent.WebApi
                 ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
                 : new SxcAppWrapper(appId);
 
-            var zipExport = new ZipExport(zoneId, appId);
+            var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
 
             return true;

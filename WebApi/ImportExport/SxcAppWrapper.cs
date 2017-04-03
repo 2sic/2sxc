@@ -32,7 +32,8 @@ namespace ToSic.SexyContent.WebApi
 
         //public IEnumerable<Culture> GetActiveLanguages() => GetLanguages().Where(c => c.Active);
 
-        public IEnumerable<IContentType> GetContentTypes(string scope = "2SexyContent") => App.TemplateManager.GetAvailableContentTypes(scope, true);
+            // 2017-04-03 2dm refactored - don't need
+        //public IEnumerable<IContentType> GetContentTypes(string scope = "2SexyContent") => App.TemplateManager.GetAvailableContentTypes(scope, true);
 
         public IEnumerable<Template> GetTemplates() => App.TemplateManager.GetAllTemplates();
 

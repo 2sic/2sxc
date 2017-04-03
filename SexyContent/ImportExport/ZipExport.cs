@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Xml.XPath;
-using DotNetNuke.Entities.Portals;
 using ICSharpCode.SharpZipLib.Zip;
 using ToSic.Eav;
 
@@ -14,7 +13,7 @@ namespace ToSic.SexyContent.ImportExport
     {
         private readonly int _appId;
         private readonly int _zoneId;
-        private readonly App _app;
+        //private readonly App _app;
         private string _sexycontentContentgroupName = "2SexyContent-ContentGroup";
         private string _sourceControlDataFolder = ".data";
         private string _sourceControlDataFile = "app.xml"; // lower case
@@ -24,19 +23,22 @@ namespace ToSic.SexyContent.ImportExport
         private string _AppXmlFileName = "App.xml";
 
         public FileManager FileManager;
+        private readonly string _physicalAppPath;
+        private readonly string _appFolder;
 
-        public ZipExport(int zoneId, int appId)
+        public ZipExport(int zoneId, int appId, string appFolder, string physicalAppPath)
         {
             _appId = appId;
             _zoneId = zoneId;
-            //_sexy = new SxcInstance(_zoneId, _appId);
-            _app = new App(zoneId, appId, PortalSettings.Current);
-            FileManager = new FileManager(_app.PhysicalPath);
+            _appFolder = appFolder;
+            _physicalAppPath = physicalAppPath;
+
+            FileManager = new FileManager(_physicalAppPath);
         }
 
         public void ExportForSourceControl(bool includeContentGroups = false, bool resetAppGuid = false)
         {
-            var path = _app.PhysicalPath + "\\" + _sourceControlDataFolder;
+            var path = _physicalAppPath + "\\" + _sourceControlDataFolder;
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
@@ -65,14 +67,14 @@ namespace ToSic.SexyContent.ImportExport
             AddInstructionsToPackageFolder(temporaryDirectoryPath);
 
             var tempDirectory = new DirectoryInfo(temporaryDirectoryPath);
-            var appDirectory = tempDirectory.CreateSubdirectory("Apps/" + _app.Folder + "/");
+            var appDirectory = tempDirectory.CreateSubdirectory("Apps/" + _appFolder + "/");
             
             var sexyDirectory = appDirectory.CreateSubdirectory(_zipFolderForAppStuff);
             
             var portalFilesDirectory = appDirectory.CreateSubdirectory(_zipFolderForPortalFiles);
 
             // Copy app folder
-            if (Directory.Exists(_app.PhysicalPath))
+            if (Directory.Exists(_physicalAppPath))
             {
                 FileManager.CopyAllFiles(sexyDirectory.FullName, false, messages);
             }
@@ -121,7 +123,7 @@ namespace ToSic.SexyContent.ImportExport
         private XmlExporter GenerateExportXml(bool includeContentGroups, bool resetAppGuid)
         {
 // Get Export XML
-            var attributeSets = _app.TemplateManager.GetAvailableContentTypes(true);
+            var attributeSets = State.ContentTypes(_zoneId, _appId, includeAttributeTypes: true);//  _app.TemplateManager.GetAvailableContentTypes(true);
             attributeSets = attributeSets.Where(a => !a.ConfigurationIsOmnipresent);
 
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
