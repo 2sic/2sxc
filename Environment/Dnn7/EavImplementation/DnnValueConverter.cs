@@ -4,17 +4,15 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Portals.Internal;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
-using ToSic.Eav;
 using ToSic.Eav.Implementations.ValueConverter;
 
-namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
+namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
 {
-    public class SexyContentValueConverter : IEavValueConverter
+    public class DnnValueConverter : IEavValueConverter
     {
         private string hlnkType = "Hyperlink";
 

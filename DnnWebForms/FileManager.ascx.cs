@@ -9,7 +9,7 @@ using Telerik.Web.UI;
 using Telerik.Web.UI.Editor.DialogControls;
 using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.SexyContent.EAV.FieldTemplates;
-using ToSic.SexyContent.EAV.Implementation.ValueConverter;
+using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
 
 namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 {
@@ -82,7 +82,7 @@ namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 
 		    if (!String.IsNullOrWhiteSpace(CurrentValue) && CurrentValue.StartsWith("file:", StringComparison.InvariantCultureIgnoreCase))
 		    {
-                var conv = new SexyContentValueConverter();
+                var conv = new DnnValueConverter();
 		        var realPath = conv.Convert(ConversionScenario.GetFriendlyValue, "Hyperlink", CurrentValue);
 
 		        DialogOpener1.AdditionalQueryString = "&PreselectedItemUrl=" +

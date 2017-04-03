@@ -4,7 +4,7 @@ using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Implementations.ValueConverter;
-using ToSic.SexyContent.EAV.Implementation.ValueConverter;
+using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 		public string ResolveHyperlink(string hyperlink)
 		{
-            var conv = new SexyContentValueConverter();
+            var conv = new DnnValueConverter();
 		    return conv.Convert(ConversionScenario.GetFriendlyValue, "Hyperlink", hyperlink);
             // return SexyContent.ResolveHyperlinkValues(hyperlink, Dnn.Portal);
 		}

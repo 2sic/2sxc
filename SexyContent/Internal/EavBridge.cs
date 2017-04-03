@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.Internal
     internal class EavBridge
     {
         private readonly EavDataController _eavContext;
-        private readonly Environment.Environment _env = new Environment.Environment();
+        //private readonly Environment.Environment _env = new Environment.Environment();
 
         #region constructors
         public EavBridge(IApp app) : this(app.ZoneId, app.AppId)
@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.Internal
         public EavBridge(int zoneId, int appId)
         {
             _eavContext = EavDataController.Instance(zoneId, appId);
-            _eavContext.UserName = _env.User.CurrentUserIdentityToken;// Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+            //_eavContext.UserName = _env.User.CurrentUserIdentityToken;// Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
         }
         #endregion
 

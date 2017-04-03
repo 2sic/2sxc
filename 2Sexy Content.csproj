@@ -160,9 +160,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.ImportExport.dll</HintPath>
     </Reference>
-    <Reference Include="ToSic.Eav.Persistence.EF4, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ToSic.Eav.Persistence.EF4, Version=4.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.Persistence.EF4.dll</HintPath>
+      <HintPath>..\..\bin\ToSic.Eav.Persistence.EF4.dll</HintPath>
     </Reference>
     <Reference Include="ToSic.Eav.Tokens, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -267,6 +267,7 @@
     <Compile Include="SexyContent\ContentBlocks\Renderers\Simple.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
+    <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
     <Compile Include="SexyContent\ImportExport\Const2.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExportEnvironment.cs" />
     <Compile Include="SexyContent\ImportExport\ToSxcXmlExporter.cs" />
@@ -321,7 +322,7 @@
     <Compile Include="WebApi\ContentGroupController.cs" />
     <Compile Include="WebApi\EavApiProxies\ContentTypeController.cs" />
     <Compile Include="WebApi\Dnn\HyperlinkController.cs" />
-    <Compile Include="SexyContent\EAV\Implementation\ValueConverter\SexyContentValueConverter.cs" />
+    <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEav.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
     <Compile Include="SexyContent\Security\PermissionController.cs" />
