@@ -11,13 +11,11 @@ namespace ToSic.SexyContent.ImportExport
 {
     public class ImportExportEnvironment
     {
-        private PortalSettings _ps = PortalSettings.Current;
-
         public List<ExportImportMessage> Messages = new List<ExportImportMessage>();
 
-        private DotNetNuke.Services.FileSystem.IFileManager DnnFileManager;
-        private DotNetNuke.Services.FileSystem.IFolderManager DnnFolderManager;
-        private int PortalId;
+        //private IFileManager _dnnFileManager;
+        //private IFolderManager _dnnFolderManager;
+        //private int _portalId;
 
         /// <summary>
         /// Copy all files from SourceFolder to DestinationFolder
@@ -27,29 +25,29 @@ namespace ToSic.SexyContent.ImportExport
         ///// <param name="overwriteFiles"></param>
         ///// <param name="messages"></param>
         ///// <param name="fileIdMapping">The fileIdMapping is needed to re-assign the existing "File:" parameters while importing the content</param>
-        internal void TransferFilesToTennant(string sourceFolder, string destinationFolder)//, Boolean overwriteFiles, List<ExportImportMessage> messages)
+        public void TransferFilesToTennant(string sourceFolder, string destinationFolder)//, Boolean overwriteFiles, List<ExportImportMessage> messages)
         {
             var messages = Messages;
             var files = Directory.GetFiles(sourceFolder, "*.*");
 
-            DnnFileManager = DotNetNuke.Services.FileSystem.FileManager.Instance;
-            DnnFolderManager = FolderManager.Instance;
-            PortalId = PortalSettings.Current.PortalId;
+            var dnnFileManager = DotNetNuke.Services.FileSystem.FileManager.Instance;
+            var dnnFolderManager = FolderManager.Instance;
+            var portalId = PortalSettings.Current.PortalId;
 
-            if (!DnnFolderManager.FolderExists(PortalId, destinationFolder))
-                DnnFolderManager.AddFolder(PortalId, destinationFolder);
-            var folderInfo = DnnFolderManager.GetFolder(PortalId, destinationFolder);
+            if (!dnnFolderManager.FolderExists(portalId, destinationFolder))
+                dnnFolderManager.AddFolder(portalId, destinationFolder);
+            var folderInfo = dnnFolderManager.GetFolder(portalId, destinationFolder);
 
             foreach (var sourceFilePath in files)
             {
                 var destinationFileName = Path.GetFileName(sourceFilePath);
 
-                if (!DnnFileManager.FileExists(folderInfo, destinationFileName))
+                if (!dnnFileManager.FileExists(folderInfo, destinationFileName))
                 {
                     try
                     {
                         using (var stream = File.OpenRead(sourceFilePath))
-                            DnnFileManager.AddFile(folderInfo, destinationFileName, stream, false);
+                            dnnFileManager.AddFile(folderInfo, destinationFileName, stream, false);
                     }
                     catch (InvalidFileExtensionException e)
                     {
@@ -79,11 +77,11 @@ namespace ToSic.SexyContent.ImportExport
         }
 
 
-        internal Version Version => typeof(PortalSettings).Assembly.GetName().Version;
+        public Version Version => typeof(PortalSettings).Assembly.GetName().Version;
 
-        internal string DefaultLanguage => PortalSettings.Current.DefaultLanguage;
+        public string DefaultLanguage => PortalSettings.Current.DefaultLanguage;
 
-        internal string TemplateRoot(int zoneId, int appId)
+        public string TemplatesRoot(int zoneId, int appId)
         {
             var app = new App(zoneId, appId, PortalSettings.Current, false);
 
@@ -92,7 +90,7 @@ namespace ToSic.SexyContent.ImportExport
             return templateRoot;
         }
 
-        internal string TargetPath(string folder)
+        public string TargetPath(string folder)
         {
             var appPath = Path.Combine(AppHelpers.AppBasePath(null), folder);
 

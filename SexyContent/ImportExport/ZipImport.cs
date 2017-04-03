@@ -152,7 +152,7 @@ namespace ToSic.SexyContent.ImportExport
                                 // var app = new App(_zoneId, appId.Value,  PortalSettings.Current, false);
 
                                 // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-                                var templateRoot = _environment.TemplateRoot(_zoneId, appId.Value);// server.MapPath(Internal.TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
+                                var templateRoot = _environment.TemplatesRoot(_zoneId, appId.Value);// server.MapPath(Internal.TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
                                 var appTemplateRoot = Path.Combine(appDirectory, "2sexy");
                                 if (Directory.Exists(appTemplateRoot))
                                     new FileManager(appTemplateRoot).CopyAllFiles(templateRoot, false, messages);
