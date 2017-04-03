@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Web;
 using System.Xml.Linq;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Services.Exceptions;
-using DotNetNuke.Services.FileSystem;
 using ICSharpCode.SharpZipLib.Zip;
 using ToSic.Eav;
-using ToSic.Eav.DataSources.Caches;
-using ToSic.SexyContent.Internal;
+//using ToSic.Eav.DataSources.Caches;
+//using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -21,31 +17,34 @@ namespace ToSic.SexyContent.ImportExport
         private int? _appId;
         private readonly int _zoneId;
         private bool _allowRazor;
-        
-        public ZipImport(int zoneId, int? appId, bool allowRazor)
+        private readonly ImportExportEnvironment _environment;
+        public ZipImport(ImportExportEnvironment environment, int zoneId, int? appId, bool allowRazor)
         {
             _appId = appId;
             _zoneId = zoneId;
             _allowRazor = allowRazor;
+            _environment = environment;
+
         }
 
-        public bool ImportApp(Stream zipStream, HttpServerUtility server, PortalSettings portalSettings, List<ExportImportMessage> messages)
-        {
-			return ImportZip(zipStream, server, portalSettings, messages);
-        }
+   //     public bool ImportApp(Stream zipStream, HttpServerUtility server, PortalSettings portalSettings, List<ExportImportMessage> messages)
+   //     {
+			//return ImportZip(zipStream, server, portalSettings, messages);
+   //     }
 
         /// <summary>
         /// Imports a ZIP file (from stream)
         /// </summary>
         /// <param name="zipStream"></param>
         /// <param name="server"></param>
-        /// <param name="portalSettings"></param>
+        ///// <param name="portalSettings"></param>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public bool ImportZip(Stream zipStream, HttpServerUtility server, PortalSettings portalSettings, List<ExportImportMessage> messages)
+        public bool ImportZip(Stream zipStream, HttpServerUtility server/*, PortalSettings portalSettings, List<ExportImportMessage> messages*/)
         {
-            if (messages == null)
-                messages = new List<ExportImportMessage>();
+            List<ExportImportMessage> messages = _environment.Messages;
+            //if (messages == null)
+            //    messages = _environment.Messages;// new List<ExportImportMessage>();
 
             var temporaryDirectory = server.MapPath(Path.Combine(Settings.TemporaryDirectory, Guid.NewGuid().ToString()));
             var success = true;
@@ -84,15 +83,15 @@ namespace ToSic.SexyContent.ImportExport
                                 {
                                     var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
 	                                var doc = XDocument.Parse(fileContents);
-									var import = new XmlImport(PortalSettings.Current.DefaultLanguage, Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*PortalSettings.Current.UserInfo.Username*/);
+									var import = new XmlImport(_environment.DefaultLanguage, Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*PortalSettings.Current.UserInfo.Username*/);
 
 									if (!import.IsCompatible(doc))
 										throw new Exception("The app / package is not compatible with this version of 2sxc.");
 
 									var isAppImport = doc.Element("SexyContent").Element("Header").Elements("App").Any() && doc.Element("SexyContent").Element("Header").Element("App").Attribute("Guid").Value != "Default";
 
-	                                if (!isAppImport && !_appId.HasValue)
-		                                _appId = ((BaseCache) DataSource.GetCache(_zoneId)).ZoneApps[_zoneId].DefaultAppId;
+                                    if (!isAppImport && !_appId.HasValue)
+                                        _appId = State.GetDefaultAppId(_zoneId);// ((BaseCache) DataSource.GetCache(_zoneId)).ZoneApps[_zoneId].DefaultAppId;
 
                                     if (isAppImport)
                                     {
@@ -110,10 +109,11 @@ namespace ToSic.SexyContent.ImportExport
                                         #endregion
                                         var folder = appConfig.Elements("Value").First(v => v.Attribute("Key").Value == "Folder").Attribute("Value").Value;
 
-                                        var appPath = Path.Combine(AppHelpers.AppBasePath(PortalSettings.Current), folder);
+                                        //var appPath = Path.Combine(AppHelpers.AppBasePath(null), folder);
 
                                         // Do not import (throw error) if the app directory already exists
-                                        if(Directory.Exists(HttpContext.Current.Server.MapPath(appPath)))
+                                        var appPath = _environment.TargetPath(folder);
+                                        if (Directory.Exists(appPath))
                                         {
                                             throw new Exception("The app could not be installed because the app-folder '" + appPath + "' already exists. Please remove or rename the folder and install the app again.");
                                         }
@@ -123,7 +123,7 @@ namespace ToSic.SexyContent.ImportExport
                                             // Handle PortalFiles folder
                                             var portalTempRoot = Path.Combine(appDirectory, "PortalFiles");
                                             if (Directory.Exists(portalTempRoot))
-                                                CopyAllFilesDnnPortal(portalTempRoot, "", false, messages);
+                                                _environment.TransferFilesToTennant(portalTempRoot, "");//, false, messages);
                                         }
 
                                         import.ImportApp(_zoneId, doc, out appId);
@@ -136,7 +136,7 @@ namespace ToSic.SexyContent.ImportExport
                                             // Handle PortalFiles folder
                                             var portalTempRoot = Path.Combine(appDirectory, "PortalFiles");
                                             if (Directory.Exists(portalTempRoot))
-                                                CopyAllFilesDnnPortal(portalTempRoot, "", false, messages);
+                                                _environment.TransferFilesToTennant(portalTempRoot, "");//, false, messages);
                                         }
 
                                         import.ImportXml(_zoneId, appId.Value, doc);
@@ -149,13 +149,13 @@ namespace ToSic.SexyContent.ImportExport
                                 }
 
                                 //var sexy = new SxcInstance(_zoneId, appId.Value);
-                                var app = new App(_zoneId, appId.Value,  PortalSettings.Current, false);
+                                // var app = new App(_zoneId, appId.Value,  PortalSettings.Current, false);
 
                                 // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-                                var templateRoot = server.MapPath(Internal.TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
+                                var templateRoot = _environment.TemplateRoot(_zoneId, appId.Value);// server.MapPath(Internal.TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
                                 var appTemplateRoot = Path.Combine(appDirectory, "2sexy");
                                 if (Directory.Exists(appTemplateRoot))
-                                    (new FileManager(appTemplateRoot)).CopyAllFiles(templateRoot, false, messages);
+                                    new FileManager(appTemplateRoot).CopyAllFiles(templateRoot, false, messages);
 
                             }
 
@@ -169,7 +169,7 @@ namespace ToSic.SexyContent.ImportExport
             {
                 // Add error message and return false
                 messages.Add(new ExportImportMessage("Could not import the app / package: " + e.Message, ExportImportMessage.MessageTypes.Error));
-                Exceptions.LogException(e);
+                // Exceptions.LogException(e);
                 success = false;
             }
             finally
@@ -190,7 +190,7 @@ namespace ToSic.SexyContent.ImportExport
             return success;
         }
 
-        private static void CheckRequiredEnvironmentVersions(string reqVersionNode, string reqVersionNodeDnn)
+        private void CheckRequiredEnvironmentVersions(string reqVersionNode, string reqVersionNodeDnn)
         {
             if (reqVersionNode != null)
             {
@@ -203,7 +203,7 @@ namespace ToSic.SexyContent.ImportExport
 
             if (reqVersionNodeDnn != null)
             {
-                var vDnn = typeof(PortalSettings).Assembly.GetName().Version;
+                var vDnn = _environment.Version;
                 var reqDnnV = Version.Parse(reqVersionNodeDnn);
                 if (reqDnnV.CompareTo(vDnn) == 1) // required is bigger
                     throw new Exception("this app requires dnn version " + reqVersionNodeDnn +
@@ -211,7 +211,7 @@ namespace ToSic.SexyContent.ImportExport
             }
         }
 
-        public bool ImportZipFromUrl(string packageUrl, List<ExportImportMessage> messages, bool isAppImport)
+        public bool ImportZipFromUrl(string packageUrl, bool isAppImport)
         {
             var tempDirectory = new DirectoryInfo(HttpContext.Current.Server.MapPath(Settings.TemporaryDirectory));
             if (!tempDirectory.Exists)
@@ -231,7 +231,7 @@ namespace ToSic.SexyContent.ImportExport
             }
 
             using (var file = File.OpenRead(destinationPath))
-                success = ImportZip(file, HttpContext.Current.Server, PortalSettings.Current, messages);
+                success = ImportZip(file, HttpContext.Current.Server/*, PortalSettings.Current, _environment.Messages*/);
 
             File.Delete(destinationPath);
 
@@ -240,63 +240,7 @@ namespace ToSic.SexyContent.ImportExport
 
         #region Zip Import Helpers
 
-        /// <summary>
-        /// Copy all files from SourceFolder to DestinationFolder
-        /// </summary>
-        /// <param name="sourceFolder"></param>
-        /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
-        /// <param name="overwriteFiles"></param>
-        /// <param name="messages"></param>
-        /// <param name="fileIdMapping">The fileIdMapping is needed to re-assign the existing "File:" parameters while importing the content</param>
-        private void CopyAllFilesDnnPortal(string sourceFolder, string destinationFolder, Boolean overwriteFiles, List<ExportImportMessage> messages)
-        {
-            var files = Directory.GetFiles(sourceFolder, "*.*");
 
-            var fileManager = DotNetNuke.Services.FileSystem.FileManager.Instance;
-            var folderManager = FolderManager.Instance;
-            var portalId = PortalSettings.Current.PortalId;
-
-            if (!folderManager.FolderExists(portalId, destinationFolder))
-                folderManager.AddFolder(portalId, destinationFolder);
-            var folderInfo = folderManager.GetFolder(portalId, destinationFolder);
-
-            foreach (var sourceFilePath in files)
-            {
-                var destinationFileName = Path.GetFileName(sourceFilePath);
-
-                if (!fileManager.FileExists(folderInfo, destinationFileName))
-                {
-                    try
-                    {
-                        using (var stream = File.OpenRead(sourceFilePath))
-                            fileManager.AddFile(folderInfo, destinationFileName, stream, false);
-                    }
-                    catch (InvalidFileExtensionException e)
-                    {
-                        messages.Add(
-                            new ExportImportMessage(
-                                "File '" + destinationFileName +
-                                "' not copied because the file extension is not allowed.",
-                                ExportImportMessage.MessageTypes.Error));
-                        Exceptions.LogException(e);
-                    }
-                    catch (Exception e)
-                    {
-                        messages.Add(new ExportImportMessage("Can't copy file '" + destinationFileName + "' because of an unkown error. It's likely that your files and folders are not in sync with DNN, usually re-syncing will fix the issue.", ExportImportMessage.MessageTypes.Warning));
-                        Exceptions.LogException(e);
-                    }
-                }
-                else
-                    messages.Add(new ExportImportMessage("File '" + destinationFileName + "' not copied because it already exists", ExportImportMessage.MessageTypes.Warning));
-            }
-
-            // Call the method recursively to handle subdirectories
-            foreach (var sourceFolderPath in Directory.GetDirectories(sourceFolder))
-            {
-                var newDestinationFolder = Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "").TrimStart('\\')).Replace('\\', '/');
-                CopyAllFilesDnnPortal(sourceFolderPath, newDestinationFolder, overwriteFiles, messages);
-            }
-        }
 
         /// <summary>
         /// Extracts a Zip (as Stream) to the given OutFolder directory.

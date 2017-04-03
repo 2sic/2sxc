@@ -27,11 +27,12 @@ namespace ToSic.SexyContent.WebApi
             bool success;
 
             // Install package
-            var messages = new List<ExportImportMessage>();
+            // var messages = new List<ExportImportMessage>();
+            var helper = new ImportExportEnvironment();
             try
             {
-                success = new ZipImport(zoneId, appId, PortalSettings.UserInfo.IsSuperUser)
-                    .ImportZipFromUrl(packageUrl, messages, ActiveModule.DesktopModule.ModuleName == "2sxc-app");
+                success = new ZipImport(helper, zoneId, appId, PortalSettings.UserInfo.IsSuperUser)
+                    .ImportZipFromUrl(packageUrl, ActiveModule.DesktopModule.ModuleName == "2sxc-app");
             }
             catch (Exception ex)
             {
@@ -39,7 +40,7 @@ namespace ToSic.SexyContent.WebApi
                 throw new Exception("An error occurred while installing the app: " + ex.Message, ex);
             }
             
-            return Request.CreateResponse(success ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { success, messages });
+            return Request.CreateResponse(success ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { success, helper.Messages });
         }
 
     }

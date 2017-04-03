@@ -91,7 +91,13 @@ namespace ToSic.SexyContent.Internal
         //    => State.GetDefaultAppId(zoneId);// ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].DefaultAppId;
 
 
-        public static string AppBasePath(PortalSettings ownerPS) 
-            => Path.Combine(ownerPS.HomeDirectory, Settings.TemplateFolder);
+        public static string AppBasePath(PortalSettings ownerPS )
+
+
+        {
+            if (ownerPS == null)
+                ownerPS = PortalSettings.Current;
+            return Path.Combine(ownerPS.HomeDirectory, Settings.TemplateFolder);
+        }
     }
 }

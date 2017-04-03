@@ -8,6 +8,7 @@ using System.Security.Authentication;
 using System.Web;
 using System.Web.Http;
 using System.Xml.Linq;
+using DotNetNuke.Services.Exceptions;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.WebApi.Dnn;
@@ -159,8 +160,17 @@ namespace ToSic.SexyContent.WebApi
             var zoneId  = int.Parse(request["ZoneId"]);
             if (request.Files.Count > 0)
             {
-                var zipImport = new ZipImport(zoneId, null, PortalSettings.UserInfo.IsSuperUser);
-                result.Succeeded = zipImport.ImportApp(request.Files[0].InputStream, HttpContext.Current.Server, PortalSettings, result.Messages);
+                try
+                {
+                    var helper = new ImportExportEnvironment(); ;
+                    var zipImport = new ZipImport(helper, zoneId, null, PortalSettings.UserInfo.IsSuperUser);
+                    result.Succeeded = zipImport.ImportZip(request.Files[0].InputStream, HttpContext.Current.Server);// , /*PortalSettings, helper.Messages*/);
+                    result.Messages = helper.Messages;
+                }
+                catch (Exception ex)
+                {
+                    Exceptions.LogException(ex);
+                }
             }
             return result;
         }
@@ -182,8 +192,17 @@ namespace ToSic.SexyContent.WebApi
                 var file = request.Files[0];
                 if (file.FileName.EndsWith(".zip"))
                 {   // ZIP
-                    var zipImport = new ZipImport(zoneId, appId, PortalSettings.UserInfo.IsSuperUser);
-                    result.Succeeded = zipImport.ImportZip(file.InputStream, HttpContext.Current.Server, PortalSettings, result.Messages);
+                    try
+                    {
+                        var env = new ImportExportEnvironment(); ;
+                        var zipImport = new ZipImport(env, zoneId, appId, PortalSettings.UserInfo.IsSuperUser);
+                        result.Succeeded = zipImport.ImportZip(file.InputStream, HttpContext.Current.Server); // , /*PortalSettings,*/ env.Messages);
+                        result.Messages = env.Messages;
+                    }
+                    catch (Exception ex)
+                    {
+                        Exceptions.LogException(ex);
+                    }
                 }
                 else
                 {   // XML

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent.WebApi
@@ -12,10 +9,10 @@ namespace ToSic.SexyContent.WebApi
 
         public List<ExportImportMessage> Messages;
 
-        public ImportResult()
-        {
-            Messages = new List<ExportImportMessage>();
-        }
+        //public ImportResult()
+        //{
+        //    Messages = new List<ExportImportMessage>();
+        //}
     }
 
 }
