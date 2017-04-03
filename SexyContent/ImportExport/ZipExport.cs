@@ -7,7 +7,6 @@ using System.Xml.XPath;
 using DotNetNuke.Entities.Portals;
 using ICSharpCode.SharpZipLib.Zip;
 using ToSic.Eav;
-using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -81,17 +80,17 @@ namespace ToSic.SexyContent.ImportExport
             // Copy PortalFiles
             foreach (var file in xmlExport.ReferencedFiles)
             {
-                var portalFilePath = Path.Combine(portalFilesDirectory.FullName, Path.GetDirectoryName(file.RelativePath.Replace('/','\\')));
+                var portalFilePath = Path.Combine(portalFilesDirectory.FullName, Path.GetDirectoryName(file.RelativePath));
 
                 if (!Directory.Exists(portalFilePath))
                     Directory.CreateDirectory(portalFilePath);
 
-                if (File.Exists(file.PhysicalPath))
+                if (File.Exists(file.Path))
                 {
-                    var fullPath = Path.Combine(portalFilesDirectory.FullName, file.RelativePath.Replace('/', '\\'));
+                    var fullPath = Path.Combine(portalFilesDirectory.FullName, file.RelativePath);
                     try
                     {
-                        File.Copy(file.PhysicalPath, fullPath);
+                        File.Copy(file.Path, fullPath);
                     }
                     catch (Exception e)
                     {
