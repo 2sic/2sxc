@@ -5,13 +5,12 @@ using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ImportExport
 {
-    public class XmlExporter: EavXmlExporter
+    public class ToSxcXmlExporter: EavXmlExporter
     {
-        // private IFolderManager DnnFolders = DotNetNuke.Services.FileSystem.FolderManager.Instance;
         private readonly IFileManager _dnnFiles = DotNetNuke.Services.FileSystem.FileManager.Instance;
         internal AdamManager AdamManager;
 
-        public XmlExporter(int zoneId, int appId, bool appExport, string[] attrSetIds, string[] entityIds):base()
+        public ToSxcXmlExporter(int zoneId, int appId, bool appExport, string[] attrSetIds, string[] entityIds):base()
         {
             // do things first
 

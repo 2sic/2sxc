@@ -120,7 +120,7 @@ namespace ToSic.SexyContent.ImportExport
             return stream;
         }
 
-        private XmlExporter GenerateExportXml(bool includeContentGroups, bool resetAppGuid)
+        private ToSxcXmlExporter GenerateExportXml(bool includeContentGroups, bool resetAppGuid)
         {
 // Get Export XML
             var attributeSets = State.ContentTypes(_zoneId, _appId, includeAttributeTypes: true);//  _app.TemplateManager.GetAvailableContentTypes(true);
@@ -139,7 +139,7 @@ namespace ToSic.SexyContent.ImportExport
             var entityIds = entities
                 .Select(e => e.Value.EntityId.ToString()).ToArray();
 
-            var xmlExport = new XmlExporter(_zoneId, _appId, true, attributeSetIds, entityIds);
+            var xmlExport = new ToSxcXmlExporter(_zoneId, _appId, true, attributeSetIds, entityIds);
 
             #region reset App Guid if necessary
 

@@ -269,7 +269,7 @@
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
     <Compile Include="SexyContent\ImportExport\Const2.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExportEnvironment.cs" />
-    <Compile Include="SexyContent\ImportExport\XmlExporter.cs" />
+    <Compile Include="SexyContent\ImportExport\ToSxcXmlExporter.cs" />
     <Compile Include="SexyContent\Installer\Helpers.cs" />
     <Compile Include="SexyContent\Installer\Lock.cs" />
     <Compile Include="SexyContent\Installer\Logger.cs" />

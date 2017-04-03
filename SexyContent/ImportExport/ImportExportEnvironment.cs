@@ -81,7 +81,7 @@ namespace ToSic.SexyContent.ImportExport
 
         internal Version Version => typeof(PortalSettings).Assembly.GetName().Version;
 
-        internal String DefaultLanguage => PortalSettings.Current.DefaultLanguage;
+        internal string DefaultLanguage => PortalSettings.Current.DefaultLanguage;
 
         internal string TemplateRoot(int zoneId, int appId)
         {
