@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using DotNetNuke.Entities.Portals;
+﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.Internal;
@@ -19,10 +15,10 @@ namespace ToSic.SexyContent.ImportExport
         {
             // do things first
 
-            _app = new App(zoneId, appId, PortalSettings.Current);
-            EavAppContext = new EavBridge(_app).FullController;
-            AdamManager = new AdamManager(PortalSettings.Current.PortalId, _app);
-            Constructor(appExport, attrSetIds, entityIds);
+            var app = new App(zoneId, appId, PortalSettings.Current);
+            EavAppContext = new EavBridge(app).FullController;
+            AdamManager = new AdamManager(PortalSettings.Current.PortalId, app);
+            Constructor(app.AppGuid, appExport, attrSetIds, entityIds);
 
             // do following things
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
@@ -30,19 +26,15 @@ namespace ToSic.SexyContent.ImportExport
 
         }
 
-        private void AddAdamFilesToExportQueue()
+        public override void AddFilesToExportQueue()
         {
+            // Add Adam Files To Export Queue
             var adamIds = AdamManager.Export.AppFiles;
             adamIds.ForEach(AddFileAndFolderToQueue);
 
             // also add folders in adam - because empty folders may also have metadata assigned
             var adamFolders = AdamManager.Export.AppFolders;
-            adamFolders.ForEach(AddFolderToQueue);
-        }
-
-        public override void AddFilesToExportQueue()
-        {
-            AddAdamFilesToExportQueue();
+            adamFolders.ForEach(ReferencedFolderIds.Add);
         }
 
         internal override void AddFileAndFolderToQueue(int fileNum)
@@ -55,7 +47,7 @@ namespace ToSic.SexyContent.ImportExport
                 try
                 {
                     var file = _dnnFiles.GetFile(fileNum);
-                    AddFolderToQueue(file.FolderId);
+                    ReferencedFolderIds.Add(file.FolderId);
                 }
                 catch
                 {
@@ -68,11 +60,6 @@ namespace ToSic.SexyContent.ImportExport
             }
         }
 
-        private void AddFolderToQueue(int folderId)
-        {
-            ReferencedFolderIds.Add(folderId);
-        }
-
         internal override string ResolveFolderId(int folderId)
         {
             var folderController = FolderManager.Instance;
@@ -80,7 +67,7 @@ namespace ToSic.SexyContent.ImportExport
             return folder?.FolderPath;
         }
 
-        internal ImpExpFileItem ResolveFile(int fileId)
+        internal override ImpExpFileItem ResolveFile(int fileId)
         {
             var fileController = DotNetNuke.Services.FileSystem.FileManager.Instance;
             var file = fileController.GetFile(fileId);

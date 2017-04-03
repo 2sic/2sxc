@@ -27,7 +27,6 @@ namespace ToSic.SexyContent.ImportExport
     public abstract class EavXmlExporter
     {
         // initialize data context
-        internal App _app;
         internal EavDataController EavAppContext;
         internal readonly List<int> ReferencedFileIds = new List<int>();
         internal readonly List<int> ReferencedFolderIds = new List<int>();
@@ -50,8 +49,10 @@ namespace ToSic.SexyContent.ImportExport
             
         }
 
-        internal void Constructor(bool appExport, string[] attrSetIds, string[] entityIds)
+        private string _appStaticName = "";
+        internal void Constructor(string appStaticName, bool appExport, string[] attrSetIds, string[] entityIds)
         {
+            _appStaticName = appStaticName;
             _isAppExport = appExport;
             AttributeSetIDs = attrSetIds;
             EntityIDs = entityIds;
@@ -98,9 +99,9 @@ namespace ToSic.SexyContent.ImportExport
 
             var dimensions = EavAppContext.Dimensions.GetDimensionChildren("Culture");
             var header = new XElement(XmlConstants.Header,
-                _isAppExport && _app.AppGuid != "Default"
+                _isAppExport && _appStaticName != "Default"
                     ? new XElement(XmlConstants.App,
-                        new XAttribute(XmlConstants.Guid, _app.AppGuid)
+                        new XAttribute(XmlConstants.Guid, _appStaticName)
                         )
                     : null,
                 new XElement("Language", new XAttribute("Default", defaultLanguage)),
@@ -319,12 +320,9 @@ namespace ToSic.SexyContent.ImportExport
 
         #region Files & Pages
 
-        private XElement GetFilesXElements()
-        {
-            return  new XElement("PortalFiles",
-                    ReferencedFileIds.Distinct().Select(GetFileXElement)
-                );
-        }
+        private XElement GetFilesXElements() => new XElement("PortalFiles",
+            ReferencedFileIds.Distinct().Select(GetFileXElement)
+        );
 
 
         private XElement GetFoldersXElements()
