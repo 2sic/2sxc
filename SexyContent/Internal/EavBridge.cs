@@ -26,11 +26,11 @@ namespace ToSic.SexyContent.Internal
         }
         #endregion
 
-        public static bool EntityPublish(int zoneId, int appId, int repositoryId, bool state)
-        {
-            EavDataController.Instance(zoneId, appId).Publishing.PublishDraftInDbEntity(repositoryId, state);
-            return state;
-        }
+        //public static bool EntityPublish(int zoneId, int appId, int repositoryId, bool state)
+        //{
+        //    EavDataController.Instance(zoneId, appId).Publishing.PublishDraftInDbEntity(repositoryId, state);
+        //    return state;
+        //}
 
 
         public EavDataController FullController => _eavContext;

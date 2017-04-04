@@ -160,10 +160,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.ImportExport.dll</HintPath>
     </Reference>
-    <Reference Include="ToSic.Eav.Persistence.EF4, Version=4.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ToSic.Eav.Persistence.EF4.dll</HintPath>
-    </Reference>
     <Reference Include="ToSic.Eav.Tokens, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.Tokens.dll</HintPath>

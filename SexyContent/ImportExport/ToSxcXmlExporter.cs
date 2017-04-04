@@ -3,7 +3,6 @@ using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.SexyContent.Adam;
 using ToSic.Eav.ImportExport;
-using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -12,12 +11,11 @@ namespace ToSic.SexyContent.ImportExport
         private readonly IFileManager _dnnFiles = DotNetNuke.Services.FileSystem.FileManager.Instance;
         internal AdamManager AdamManager;
 
-        public ToSxcXmlExporter(int zoneId, int appId, bool appExport, string[] contentTypeIds, string[] entityIds):base()
+        public ToSxcXmlExporter(int zoneId, int appId, bool appExport, string[] contentTypeIds, string[] entityIds):base(zoneId, appId)
         {
             // do things first
 
             var app = new App(zoneId, appId, PortalSettings.Current);
-            EavAppContext = new EavBridge(app).FullController;
             AdamManager = new AdamManager(PortalSettings.Current.PortalId, app);
             Constructor(app.AppGuid, appExport, contentTypeIds, entityIds);
 

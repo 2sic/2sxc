@@ -129,8 +129,8 @@ namespace ToSic.SexyContent.ContentBlocks
             }
         }
 
-        public bool Publish(int repositoryId, bool state) 
-            => EavBridge.EntityPublish(SxcContext.App.ZoneId, SxcContext.App.AppId, repositoryId, state);
+        public bool Publish(int repositoryId, bool state)
+            => new AppManager(SxcContext.App.ZoneId, SxcContext.App.AppId).Entities.Publish(repositoryId, state);
 
         public bool Publish(string part, int sortOrder)
         {
