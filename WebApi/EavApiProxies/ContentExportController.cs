@@ -1,6 +1,5 @@
 ﻿using System.Net.Http;
 using System.Web.Http;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.ImportExport.Refactoring.Options;
 using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.Dnn;

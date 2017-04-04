@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Http;
-using DotNetNuke.Entities.Content;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav;
 using ToSic.SexyContent.WebApi;
 
 namespace ToSic.SexyContent.EAVExtensions.EavApiProxies

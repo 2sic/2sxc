@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Framework;
 using DotNetNuke.Framework.JavaScriptLibraries;

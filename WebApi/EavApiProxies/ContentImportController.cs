@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Web.Http;
-using DotNetNuke.Entities.Content;
+﻿using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav;
 using ToSic.SexyContent.WebApi;
 using static ToSic.Eav.WebApi.ContentImportController;
 

@@ -5,11 +5,9 @@ using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav;
-using ToSic.SexyContent.ImportExport;
 using System.Data.SqlClient;
 using System.Configuration;
-using ToSic.Eav.ImportExport;
+using ToSic.Eav.Apps.ImportExport;
 
 namespace ToSic.SexyContent.Installer
 {

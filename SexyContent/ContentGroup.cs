@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Telerik.Web.UI;
 using ToSic.Eav;
-using ToSic.Eav.AppEngine;
-using ToSic.Eav.BLL;
-using ToSic.SexyContent.Internal;
+using ToSic.Eav.Apps;
 using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
@@ -94,7 +91,7 @@ namespace ToSic.SexyContent
             };
 
             // 2017-04-01 2dm centralizing eav access
-            State.EntityUpdate(_zoneId, _appId, _contentGroupEntity.EntityId, values);
+            new AppManager(_zoneId, _appId).Entities.Update(_contentGroupEntity.EntityId, values);
             //var context = EavDataController.Instance(_zoneId, _appId).Entities; // EavContext.Instance(_zoneId, _appId);
             //context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
         }
@@ -204,7 +201,7 @@ namespace ToSic.SexyContent
 
             // 2017-04-01 2dm centralizing eav access
             var dicObj = values.ToDictionary(x => x.Key, x => x.Value as object);// as Dictionary<string, object>;
-            State.EntityUpdate(_zoneId, _appId, _contentGroupEntity.EntityId, dicObj);
+            new AppManager(_zoneId, _appId).Entities.Update(_contentGroupEntity.EntityId, dicObj);
 
             //var context = EavDataController.Instance(_zoneId, _appId).Entities; // EavContext.Instance(_zoneId, _appId);
             //context.UpdateEntity(_contentGroupEntity.EntityGuid, values);

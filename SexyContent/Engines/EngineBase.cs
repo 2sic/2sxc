@@ -8,10 +8,10 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 //using DotNetNuke.Modules.UserDefinedTable;
 using Newtonsoft.Json;
+using ToSic.Eav.Apps;
 using ToSic.SexyContent.Search;
 using ToSic.SexyContent.Security;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
-using ToSic.Eav.AppEngine;
 
 namespace ToSic.SexyContent.Engines
 {

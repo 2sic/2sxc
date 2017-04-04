@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading;
-using System.Web.Http;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
-using DotNetNuke.Web.Razor.Helpers;
 using ToSic.Eav;
 
 namespace ToSic.SexyContent.Adam

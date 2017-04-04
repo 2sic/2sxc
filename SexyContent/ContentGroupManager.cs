@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
-using ToSic.Eav.AppEngine;
-using ToSic.Eav.BLL;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.Internal;
 
@@ -64,7 +63,7 @@ namespace ToSic.SexyContent
 			};
 
             // 2017-04-01 2dm centralizing eav-access
-            return State.EntityCreate(_zoneId, _appId, ContentGroupTypeName, values).Item2;
+            return new AppManager(_zoneId, _appId).Entities.Create(ContentGroupTypeName, values).Item2;
 		 //   var context = EavDataController.Instance(_zoneId, _appId).Entities;
 			//var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(ContentGroupTypeName);
 			//var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);

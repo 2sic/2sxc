@@ -8,11 +8,11 @@ using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Import;
-using ToSic.Eav.ImportExport;
-using ToSic.SexyContent.ImportExport;
-using ToSic.SexyContent.Internal;
+using ToSic.Eav.ImportExport.Interfaces;
+using ToSic.Eav.ImportExport.Models;
 using Configuration = ToSic.Eav.Configuration;
 
 namespace ToSic.SexyContent.Installer
@@ -212,11 +212,11 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 logger.LogStep("07.00.00", "Starting to migrate data for app " + app + "...");
 
                 var currentApp = app;
-                var entitiesToImport = new List<ImportEntity>();
+                var entitiesToImport = new List<ImpEntity>();
 
                 foreach (var t in existingTemplates.Where(t => t.AppId == currentApp))
                 {
-                    var entity = new ImportEntity
+                    var entity = new ImpEntity
                     {
                         AttributeSetStaticName = "2SexyContent-Template",
                         EntityGuid = t.NewEntityGuid,
@@ -249,7 +249,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
                 foreach (var t in existingContentGroups.Where(t => t.AppId == app))
                 {
-                    var entity = new ImportEntity
+                    var entity = new ImpEntity
                     {
                         AttributeSetStaticName = "2SexyContent-ContentGroup",
                         EntityGuid = t.NewEntityGuid,

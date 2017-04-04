@@ -1,5 +1,5 @@
 ﻿using DotNetNuke.Entities.Portals;
-using ToSic.Eav.AppEngine;
+using ToSic.Eav.Apps;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 

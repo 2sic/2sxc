@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using ToSic.Eav.AppEngine;
+using ToSic.Eav.Apps;
 
 namespace ToSic.SexyContent.Engines
 {

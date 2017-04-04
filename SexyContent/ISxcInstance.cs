@@ -1,7 +1,6 @@
 ﻿using System.Web;
-using ToSic.Eav.AppEngine;
+using ToSic.Eav.Apps;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Engines;
 
 namespace ToSic.SexyContent
 {

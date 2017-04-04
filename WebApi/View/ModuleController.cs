@@ -11,10 +11,9 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
-using ToSic.Eav.BLL;
+using ToSic.Eav.Apps;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Installer;
-using ToSic.SexyContent.Internal;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi.View
@@ -92,35 +91,10 @@ namespace ToSic.SexyContent.WebApi.View
             Dictionary<string, object> values, Guid? newGuid)
         {
             var cgApp = SxcContext.App;
-            // 2017-04-01 2dm centralizing eav access
-            var bridge = new EavBridge(cgApp);
-            //var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
-            //eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
 
             #region create the new entity --> note that it's the sql-type entity, not a standard ientity
 
-            //var contentType =
-            //    DataSource.GetCache(cgApp.ZoneId, cgApp.AppId)
-            //        .GetContentType(contentTypeName);
-
-            int entityId = State.EntityGetOrCreate(cgApp.ZoneId, cgApp.AppId, newGuid, contentTypeName, values);
-            //// check that it doesn't exist yet...
-            //if (newGuid.HasValue && bridge.EntityExists(newGuid.Value)) // eavDc.Entities.EntityExists(newGuid.Value))
-            //    entityId = bridge.EntityGetOrResurrect(newGuid.Value);
-            ////{
-            ////    // check if it's deleted - if yes, resurrect
-            ////    var existingEnt = eavDc.Entities.GetEntitiesByGuid(newGuid.Value).First();
-            ////    if (existingEnt.ChangeLogDeleted != null)
-            ////        existingEnt.ChangeLogDeleted = null;
-
-            ////    entityId = existingEnt.EntityID;
-            ////}
-            //else
-            //    entityId = bridge.EntityCreate(contentTypeName, values, entityGuid: newGuid).Item1;
-            ////{
-            ////    var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null, entityGuid: newGuid);
-            ////    entityId = entity.EntityID;
-            ////}
+            var entityId = new AppManager(cgApp).Entities.GetOrCreate(newGuid, contentTypeName, values);
 
             #endregion
 
@@ -138,20 +112,12 @@ namespace ToSic.SexyContent.WebApi.View
                 intList.Insert(sortOrder, entityId);
             }
             var updateDic = new Dictionary<string, object> {{field, intList.ToArray()}};
-            State.EntityUpdate(cgApp.ZoneId, cgApp.AppId, cbEnt.EntityId, updateDic);
-            //eavDc.Entities.UpdateEntity(cbEnt.EntityGuid, updateDic);
+            new AppManager(cgApp).Entities.Update(cbEnt.EntityId, updateDic);
 
             #endregion
 
             return entityId;
         }
-
-        //public bool MoveContentBlock(int parentId, string field, int indexFrom, int indexTo)
-        //{
-        //    MoveItemInList(parentId, field, indexFrom, indexTo);
-
-        //    return true;
-        //}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -195,7 +161,7 @@ namespace ToSic.SexyContent.WebApi.View
             // save
             var values = new Dictionary<string, object> {{field, ids.ToArray()}};
             // 2017-04-01 2dm centralizing eav access
-            State.EntityUpdate(SxcContext.App.ZoneId, SxcContext.App.AppId, parentEntity.EntityId, values);
+            new AppManager(SxcContext.App).Entities.Update(parentEntity.EntityId, values);
             //var cgApp = SxcContext.App;
             //var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
             //eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;

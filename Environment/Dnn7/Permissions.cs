@@ -1,5 +1,4 @@
 ﻿using DotNetNuke.Entities.Modules;
-using DotNetNuke.UI.Modules;
 using ToSic.SexyContent.Environment.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.AppAssets;

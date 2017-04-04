@@ -1,4 +1,5 @@
 ﻿using Microsoft.Practices.Unity;
+using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Implementations.UserInformation;
 using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.Eav.ImportExport;
@@ -30,7 +31,7 @@ namespace ToSic.SexyContent
             cont.RegisterType(typeof(IEavValueConverter), typeof(DnnValueConverter), new InjectionConstructor());
             cont.RegisterType(typeof(IEavUserInformation), typeof(DnnUserInformation), new InjectionConstructor());
 
-            cont.RegisterType(typeof(XmlExporter), typeof(ToSxcXmlExporter), new InjectionConstructor());
+            cont.RegisterType(typeof(XmlExporter), typeof(ToSxcXmlExporter), new InjectionConstructor(0, 0, true, new string[0], new string[0]));
             cont.RegisterType(typeof(IImportExportEnvironment), typeof(ImportExportEnvironment), new InjectionConstructor());
 
             _alreadyConfigured = true;

@@ -5,7 +5,6 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.DataSources;
-using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Security;
 using ToSic.SexyContent.Serializers;
 

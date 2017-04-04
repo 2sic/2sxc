@@ -1,8 +1,8 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
+using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.SexyContent.Adam;
-using ToSic.Eav.ImportExport;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.ImportExport
             adamFolders.ForEach(ReferencedFolderIds.Add);
         }
 
-        internal override void AddFileAndFolderToQueue(int fileNum)
+        protected override void AddFileAndFolderToQueue(int fileNum)
         {
             try
             {
@@ -59,14 +59,14 @@ namespace ToSic.SexyContent.ImportExport
             }
         }
 
-        internal override string ResolveFolderId(int folderId)
+        protected override string ResolveFolderId(int folderId)
         {
             var folderController = FolderManager.Instance;
             var folder = folderController.GetFolder(folderId);
             return folder?.FolderPath;
         }
 
-        internal override TennantFileItem ResolveFile(int fileId)
+        protected override TennantFileItem ResolveFile(int fileId)
         {
             var fileController = DotNetNuke.Services.FileSystem.FileManager.Instance;
             var file = fileController.GetFile(fileId);

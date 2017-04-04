@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Serializers;
 using ToSic.Eav.WebApi;
-using ToSic.SexyContent;
+using ToSic.SexyContent; // mostly because of content-groups
 
 namespace ToSic.Eav.AppEngine
 {
@@ -27,7 +27,7 @@ namespace ToSic.Eav.AppEngine
 		    // ReSharper disable once RedundantArgumentDefaultValue
 			var dataSource = DataSource.GetInitialDataSource(ZoneId, AppId, false);
 			dataSource = DataSource.GetDataSource<EntityTypeFilter>(ZoneId, AppId, dataSource);
-		    ((EntityTypeFilter) dataSource).TypeName = AppConfiguration.TemplateContentType;// TemplateTypeName;
+		    ((EntityTypeFilter) dataSource).TypeName = Apps.Configuration.TemplateContentType;// TemplateTypeName;
 		    _templateDs = dataSource;
 			return dataSource;
 		}
@@ -52,62 +52,9 @@ namespace ToSic.Eav.AppEngine
 		{
             // really get template first, to be sure it is a template
 			var template = GetTemplate(templateId);
-            // 2017-04-01 2dm centralizing eav access
-            return State.EntityDelete(ZoneId, AppId, template.TemplateId);
-            // return new EavBridge(ZoneId, AppId).EntityDelete(template.TemplateId);
-		    //         var eavContext = EavDataController.Instance(_zoneId, _appId).Entities; //EavContext.Instance(_zoneId, _appId);
-		    //var canDelete = eavContext.CanDeleteEntity(template.TemplateId);
-		    //if(!canDelete.Item1)
-		    //	throw new Exception(canDelete.Item2);
-		    //return eavContext.DeleteEntity(template.TemplateId);
+            return new AppManager(ZoneId, AppId).Entities.Delete(template.TemplateId);
 		}
-
-		///// <summary>
-		///// Adds or updates a template - will create a new template if templateId is not specified
-		///// </summary>
-		//public void UpdateTemplate(int? templateId, string name, string path, string contentTypeStaticName,
-		//	int? contentDemoEntity, string presentationTypeStaticName, int? presentationDemoEntity,
-		//	string listContentTypeStaticName, int? listContentDemoEntity, string listPresentationTypeStaticName,
-		//	int? listPresentationDemoEntity, string templateType, bool isHidden, string location, bool useForList,
-		//	bool publishData, string streamsToPublish, int? pipelineEntity, string viewNameInUrl)
-		//{
-		//	var values = new Dictionary<string,object>
-		//	{
-		//		{ "Name", name },
-		//		{ "Path", path },
-		//		{ "ContentTypeStaticName", contentTypeStaticName },
-		//		{ "ContentDemoEntity", contentDemoEntity.HasValue ? new[] { contentDemoEntity.Value } : new int[]{} },
-		//		{ "PresentationTypeStaticName", presentationTypeStaticName },
-		//		{ "PresentationDemoEntity", presentationDemoEntity.HasValue ? new[] { presentationDemoEntity.Value } : new int[]{} },
-		//		{ "ListContentTypeStaticName", listContentTypeStaticName },
-		//		{ "ListContentDemoEntity", listContentDemoEntity.HasValue ? new[] { listContentDemoEntity.Value } : new int[]{} },
-		//		{ "ListPresentationTypeStaticName", listPresentationTypeStaticName },
-		//		{ "ListPresentationDemoEntity", listPresentationDemoEntity.HasValue ? new[] { listPresentationDemoEntity.Value } : new int[]{} },
-		//		{ "Type", templateType },
-		//		{ "IsHidden", isHidden },
-		//		{ "Location", location },
-		//		{ "UseForList", useForList },
-		//		{ "PublishData", publishData },
-		//		{ "StreamsToPublish", streamsToPublish },
-		//		{ "Pipeline", pipelineEntity.HasValue ? new[] { pipelineEntity } : new int?[]{} },
-		//		{ "ViewNameInUrl", viewNameInUrl }
-		//	};
-
-  //          // 2017-04-01 2dm centralizing eav access code
-  //          //var bridge = new EavBridge(ZoneId, AppId);
-  //          //var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
-
-		//    if (templateId.HasValue)
-  //              State.EntityUpdate(ZoneId, AppId, templateId.Value, values);
-		//    // context.UpdateEntity(templateId.Value, values);
-		//    else
-		//        State.EntityCreate(ZoneId, AppId, TemplateTypeName, values);
-		//    //{
-		//    //	var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(TemplateTypeName);
-		//    //	context.AddEntity(contentType.AttributeSetId, values, null, null);
-		//    //}
-
-		//}
+        
 
 
 	    /// <summary>
@@ -116,7 +63,6 @@ namespace ToSic.Eav.AppEngine
 	    /// <returns></returns>
 	    public IEnumerable<Template> GetAvailableTemplatesForSelector(int modId, ContentGroupManager cgContentGroups)
         {
-            // IEnumerable<Template> availableTemplates;
             var contentGroup = cgContentGroups.GetContentGroupForModule(modId);
             return GetAvailableTemplates(contentGroup);
         }
@@ -172,17 +118,6 @@ namespace ToSic.Eav.AppEngine
                     Metadata = ser.Prepare(ctc.GetMetadata(p, mdCache))
                 });
         }
-
-
-        //2017-04-03 2dm - moved to State...
-        //public IEnumerable<IContentType> GetAvailableContentTypes(string scope, bool includeAttributeTypes = false) 
-        //    => GetAvailableContentTypes(includeAttributeTypes).Where(p => p.Scope == scope);
-
-	    //public IEnumerable<IContentType> GetAvailableContentTypes(bool includeAttributeTypes = false)
-     //   {
-     //       var contentTypes = ((BaseCache)DataSource.GetCache(ZoneId, AppId)).GetContentTypes();
-     //       return contentTypes.Select(c => c.Value).Where(c => includeAttributeTypes || !c.Name.StartsWith("@")).OrderBy(c => c.Name);
-     //   }
 
 
 

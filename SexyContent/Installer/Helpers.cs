@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Xml.Linq;
-using ToSic.Eav.ImportExport;
+using ToSic.Eav.Apps.ImportExport;
 
 namespace ToSic.SexyContent.Installer
 {

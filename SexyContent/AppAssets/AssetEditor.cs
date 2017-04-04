@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
-using ToSic.Eav.AppEngine;
+using ToSic.Eav.Apps;
 
 namespace ToSic.SexyContent.AppAssets
 {

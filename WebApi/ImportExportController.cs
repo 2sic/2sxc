@@ -9,7 +9,7 @@ using System.Web;
 using System.Web.Http;
 using System.Xml.Linq;
 using DotNetNuke.Services.Exceptions;
-using ToSic.Eav.ImportExport;
+using ToSic.Eav.Apps.ImportExport;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.WebApi.Dnn;

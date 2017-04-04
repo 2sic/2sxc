@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Api.Api01;
-using ToSic.Eav.Data;
 using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.DataSources

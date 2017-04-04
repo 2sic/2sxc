@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.BLL;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources.Caches;
-using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
@@ -67,7 +66,7 @@ namespace ToSic.SexyContent.ContentBlocks
         {
             // 2017-04-01 2dm centralizing eav access
             var app = ((ContentBlockBase)SxcContext.ContentBlock).Parent.App;
-            State.EntityUpdate(app.ZoneId, app.AppId, Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);
+            new AppManager(app.ZoneId, app.AppId).Entities.Update(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);
             //var cgApp = ((ContentBlockBase)SxcContext.ContentBlock).Parent.App;
             //var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
             //eavDc.Entities.UpdateEntity(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);

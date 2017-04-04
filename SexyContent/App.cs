@@ -7,20 +7,20 @@ using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.AppEngine;
-using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
+using IApp = ToSic.SexyContent.Interfaces.IApp;
 
 namespace ToSic.SexyContent
 {
     /// <summary>
     /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
     /// </summary>
-    public class App : IApp
+    public class App : IApp, Eav.Apps.Interfaces.IApp
     {
         #region Constants
 
@@ -48,21 +48,6 @@ namespace ToSic.SexyContent
         private ContentGroupManager _contentGroupManager;
         public ContentGroupManager ContentGroupManager => _contentGroupManager 
             ?? (_contentGroupManager = new ContentGroupManager(ZoneId, AppId));
-
-        // 2017-04-01 2dm disabling deep eav-binding
-        //private EavDataController _eavContext;
-        //public EavDataController EavContext
-        //{
-        //    get
-        //    {
-        //        if (_eavContext == null)
-        //        {
-        //            _eavContext = EavDataController.Instance(ZoneId, AppId);
-        //            _eavContext.UserName = env.User.CurrentUserIdentityToken;// Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
-        //        }
-        //        return _eavContext;
-        //    }
-        //}
 
         #endregion
 

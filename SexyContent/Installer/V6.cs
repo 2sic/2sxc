@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.BLL;
 using ToSic.Eav.Import;
-using ToSic.SexyContent.Internal;
+using ToSic.Eav.ImportExport.Models;
 
 namespace ToSic.SexyContent.Installer
 {
@@ -20,15 +19,15 @@ namespace ToSic.SexyContent.Installer
             logger.LogStep("06.00.00", "EnsurePipelineDesignerAttributeSets start", false);
 
             // Ensure DnnSqlDataSource Configuration
-            var dsrcSqlDataSource = ImportAttributeSet.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
-                new List<ImportAttribute>
+            var dsrcSqlDataSource = ImpAttrSet.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
+                new List<ImpAttribute>
                 {
-                    ImportAttribute.StringAttribute("ContentType", "ContentType", null, true),
-                    ImportAttribute.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
+                    ImpAttribute.StringAttribute("ContentType", "ContentType", null, true),
+                    ImpAttribute.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
                 }, alwaysShareConfiguration:true);
 
             // Collect AttributeSets for use in Import
-            var attributeSets = new List<ImportAttributeSet>
+            var attributeSets = new List<ImpAttrSet>
             {
                 dsrcSqlDataSource
             };
