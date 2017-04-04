@@ -7,9 +7,8 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.ImportExport;
 using ToSic.SexyContent.Internal;
-using static System.String;
 
-namespace ToSic.SexyContent.ImportExport
+namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class ImportExportEnvironment : IImportExportEnvironment
     {
@@ -150,7 +149,7 @@ namespace ToSic.SexyContent.ImportExport
                 //var relativePath = portalFile.Attribute(XmlConstants.FolderNodePath).Value;
                 try
                 {
-                    if (IsNullOrEmpty(file.Value)) continue;
+                    if (String.IsNullOrEmpty(file.Value)) continue;
                     var directory = Path.GetDirectoryName(file.Value)?.Replace('\\', '/');
                     if (directory == null) continue;
                     // if not exist, create - important because we need for metadata assignment

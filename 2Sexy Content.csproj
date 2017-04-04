@@ -268,7 +268,7 @@
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
-    <Compile Include="SexyContent\ImportExport\ImportExportEnvironment.cs" />
+    <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
     <Compile Include="SexyContent\ImportExport\ToSxcXmlExporter.cs" />
     <Compile Include="SexyContent\Installer\Helpers.cs" />
     <Compile Include="SexyContent\Installer\Lock.cs" />
@@ -354,8 +354,6 @@
     <Compile Include="SexyContent\EAV\Extensions\IHasEditingData.cs" />
     <Compile Include="WebApi\InstallerController.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
-    <Compile Include="SexyContent\ImportExport\XmlImportWithFiles.cs" />
-    <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
     <Compile Include="SexyContent\TemplateManager.cs" />
     <Compile Include="WebApi\AppQueryController.cs" />
     <Compile Include="WebApi\AppContentController.cs" />
