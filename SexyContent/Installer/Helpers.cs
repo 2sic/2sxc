@@ -52,11 +52,11 @@ namespace ToSic.SexyContent.Installer
 
         internal static void ImportXmlSchemaOfVersion(string version, bool leaveOriginalsUntouched)
         {
-            var userName = "System-ModuleUpgrade-" + version;
+            //var userName = "System-ModuleUpgrade-" + version;
             var xmlToImport =
                 File.ReadAllText(
                     HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/" + version + ".xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", userName, true);
+            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport),
                 leaveOriginalsUntouched);
 

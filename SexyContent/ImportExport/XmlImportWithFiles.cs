@@ -1,24 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-// using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml.Linq;
-//using DotNetNuke.Entities.Portals;
-//using DotNetNuke.Services.FileSystem;
-using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.Import;
-using ToSic.Eav.ImportExport;
-// using ToSic.SexyContent.Internal; // ATM only used for the EAV bridge
 using static System.Boolean;
 using static System.String;
-using Microsoft.Practices.Unity;
-using ToSic.SexyContent;
-// needed for the static Resolve<...>
-using ToSic.SexyContent.ImportExport;
+using Microsoft.Practices.Unity;// needed for the static Resolve<...>
+using ToSic.Eav.AppEngine;
 
 namespace ToSic.Eav.ImportExport
 {
@@ -65,7 +57,7 @@ namespace ToSic.Eav.ImportExport
 		/// <param name="defaultLanguage">The portals default language / culture - example: de-DE</param>
 		/// <param name="userName"></param>
 		/// <param name="allowSystemChanges">Specify if the import should be able to change system-wide things like shared attributesets</param>
-		public XmlImportWithFiles(string defaultLanguage, string userName, bool allowSystemChanges = false)
+		public XmlImportWithFiles(string defaultLanguage, /*string userName,*/ bool allowSystemChanges = false)
 		{
 		    _environment = Factory.Container.Resolve<IImportExportEnvironment>();// new ImportExportEnvironment(); // todo: depedency injection
 			// Prepare
@@ -486,8 +478,10 @@ namespace ToSic.Eav.ImportExport
                         listPresentationDemoEntityId = listPresentationDefault.DemoEntityId;
                     }
 
-                    var tm = new TemplateManager(_eavContext.ZoneId, _eavContext.AppId);
-                    tm.UpdateTemplate(null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName,
+                    //var tm = new TemplateManager(_eavContext.ZoneId, _eavContext.AppId);
+                    //tm.UpdateTemplate(
+                    new AppManager(_eavContext.ZoneId, _eavContext.AppId).Templates.CreateOrUpdate(
+                        null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName,
                         presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId,
                         listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location,
                         useForList, publishData, streamsToPublish, pipelineEntityId, viewNameInUrl);

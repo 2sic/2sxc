@@ -209,7 +209,7 @@ namespace ToSic.SexyContent.WebApi
                 {   // XML
                     using (var fileStreamReader = new StreamReader(file.InputStream))
                     {
-                        var xmlImport = new XmlImportWithFiles(PortalSettings.DefaultLanguage, UserIdentity.CurrentUserIdentityToken, allowSystemChanges);
+                        var xmlImport = new XmlImportWithFiles(PortalSettings.DefaultLanguage, /*UserIdentity.CurrentUserIdentityToken,*/ allowSystemChanges);
                         var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
                         result.Succeeded = xmlImport.ImportXml(zoneId, appId, xmlDocument);
                         result.Messages = xmlImport.ImportLog;

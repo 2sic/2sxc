@@ -23,12 +23,12 @@ namespace ToSic.SexyContent.Installer
         {
             logger.LogStep("08.00.02", "Start", false);
 
-            var userName = "System-ModuleUpgrade-080002";
+            //var userName = "System-ModuleUpgrade-080002";
 
             // Fix AddressMask field in GPS settings content type
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.00.02.xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", userName, true);
+            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
 
             if (!success)
@@ -45,12 +45,12 @@ namespace ToSic.SexyContent.Installer
         {
             logger.LogStep("08.00.04", "Start", false);
 
-            var userName = "System-ModuleUpgrade-080004";
+            //var userName = "System-ModuleUpgrade-080004";
 
             // Fix AddressMask field in GPS settings content type
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.00.04.xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", userName, true);
+            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
 
             if (!success)
@@ -75,12 +75,12 @@ namespace ToSic.SexyContent.Installer
         {
             logger.LogStep("08.01.00", "Start", false);
 
-            var userName = "System-ModuleUpgrade-080100";
+            //var userName = "System-ModuleUpgrade-080100";
 
             // Add new content types and entities
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.01.00.xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", userName, true);
+            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
 
             if (!success)
@@ -97,12 +97,12 @@ namespace ToSic.SexyContent.Installer
         {
             logger.LogStep("08.03.02", "Start", false);
 
-            var userName = "System-ModuleUpgrade-080302";
+            //var userName = "System-ModuleUpgrade-080302";
 
             // Add new content types and entities
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.03.02.xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", userName, true);
+            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), true);
 
             if (!success)
@@ -127,12 +127,12 @@ namespace ToSic.SexyContent.Installer
         {
             logger.LogStep("08.03.03", "Start", false);
 
-            var userName = "System-ModuleUpgrade-080303";
+            //var userName = "System-ModuleUpgrade-080303";
 
             // Change "Author" to "Owner" (permissions content type)
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.03.03.xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", userName, true);
+            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // Overwrite existing values
 
             if (!success)

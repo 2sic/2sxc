@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
+using ToSic.Eav.AppEngine;
 using ToSic.SexyContent.Environment.Base;
 using ToSic.SexyContent.Internal;
 

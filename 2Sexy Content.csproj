@@ -268,7 +268,6 @@
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
-    <Compile Include="Eav\ImportExport\IImportExportEnvironment.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExportEnvironment.cs" />
     <Compile Include="SexyContent\ImportExport\ToSxcXmlExporter.cs" />
     <Compile Include="SexyContent\Installer\Helpers.cs" />
@@ -334,7 +333,6 @@
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
     <Compile Include="SexyContent\AppAndDataHelpers.cs" />
     <Compile Include="SexyContent\SxcHelper.cs" />
-    <Compile Include="SexyContent\Template.cs" />
     <Compile Include="SexyContent\App.cs" />
     <Compile Include="SexyContent\DataPublishing.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
@@ -477,6 +475,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Beta\" />
+    <Folder Include="Eav\ImportExport\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

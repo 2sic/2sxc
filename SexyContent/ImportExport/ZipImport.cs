@@ -8,19 +8,19 @@ using System.Xml.Linq;
 using ICSharpCode.SharpZipLib.Zip;
 using ToSic.Eav;
 using ToSic.Eav.ImportExport;
-
+using ToSic.SexyContent;
 //using ToSic.Eav.DataSources.Caches;
 //using ToSic.SexyContent.Internal;
 
-namespace ToSic.SexyContent.ImportExport
+namespace ToSic.Eav.ImportExport
 {
     public class ZipImport
     {
         private int? _appId;
         private readonly int _zoneId;
         private bool _allowRazor;
-        private readonly ImportExportEnvironment _environment;
-        public ZipImport(ImportExportEnvironment environment, int zoneId, int? appId, bool allowRazor)
+        private readonly IImportExportEnvironment _environment;
+        public ZipImport(IImportExportEnvironment environment, int zoneId, int? appId, bool allowRazor)
         {
             _appId = appId;
             _zoneId = zoneId;
@@ -85,7 +85,7 @@ namespace ToSic.SexyContent.ImportExport
                                 {
                                     var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
 	                                var doc = XDocument.Parse(fileContents);
-									var import = new XmlImportWithFiles(_environment.DefaultLanguage, Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*PortalSettings.Current.UserInfo.Username*/);
+									var import = new XmlImportWithFiles(_environment.DefaultLanguage/*, Environment.Dnn7.UserIdentity.CurrentUserIdentityToken*/ /*PortalSettings.Current.UserInfo.Username*/);
 
 									if (!import.IsCompatible(doc))
 										throw new Exception("The app / package is not compatible with this version of 2sxc.");
@@ -196,7 +196,7 @@ namespace ToSic.SexyContent.ImportExport
         {
             if (reqVersionNode != null)
             {
-                var vSxc = Settings.Version;
+                var vSxc = _environment.ModuleVersion;// Settings.Version;
                 var reqSxcV = Version.Parse(reqVersionNode);
                 if (reqSxcV.CompareTo(vSxc) == 1) // required is bigger
                     throw new Exception("this app requires 2sxc version " + reqVersionNode +

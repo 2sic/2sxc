@@ -6,6 +6,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.ImportExport;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Dnn;

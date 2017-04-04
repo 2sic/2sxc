@@ -28,7 +28,7 @@ namespace ToSic.SexyContent.Installer
         {
             logger.LogStep("07.00.00", "Start", false);
 
-            var userName = "System-ModuleUpgrade-070000";
+            //var userName = "System-ModuleUpgrade-070000";
 
             #region 1. Import new ContentTypes for ContentGroups and Templates
 
@@ -39,7 +39,7 @@ namespace ToSic.SexyContent.Installer
                 var xmlToImport =
                     File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.00.xml"));
                 //var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
-                var xmlImport = new XmlImportWithFiles("en-US", userName, true);
+                var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
                 var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
                 if (!success)
@@ -279,7 +279,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
         {
             logger.LogStep("07.00.03", "Start", false);
 
-            var userName = "System-ModuleUpgrade-070003";
+            //var userName = "System-ModuleUpgrade-070003";
 
             // Import new ContentType for permissions
             if (DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId).GetContentType("PermissionConfiguration") == null)
@@ -288,7 +288,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 var xmlToImport =
                     File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.03.xml"));
                 //var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
-                var xmlImport = new XmlImportWithFiles("en-US", userName, true);
+                var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
                 var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
                 if (!success)
@@ -306,7 +306,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
         {
             logger.LogStep("07.02.00", "Start", false);
 
-            var userName = "System-ModuleUpgrade-070200";
+            //var userName = "System-ModuleUpgrade-070200";
 
             // Import new ContentType for permissions
             if (DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId).GetContentType("|Config ToSic.Eav.DataSources.Paging") == null)
@@ -315,7 +315,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 var xmlToImport =
                     File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.02.00.xml"));
                 //var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
-                var xmlImport = new XmlImportWithFiles("en-US", userName, true);
+                var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
                 var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
                 if (!success)
@@ -332,12 +332,12 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
         {
             logger.LogStep("07.03.03", "Start", false);
 
-            var userName = "System-ModuleUpgrade-070303";
+            //var userName = "System-ModuleUpgrade-070303";
 
             // 1. Import new Attributes for @All content type
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-01.xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", userName, true);
+            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
             if (!success)
@@ -349,7 +349,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             // 2. Import ContentType-InputType and entities for it
             xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-02.xml"));
-            xmlImport = new XmlImportWithFiles("en-US", userName, true);
+            xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
             success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
             if (!success)
@@ -361,7 +361,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             // 3. Hide all unneeded fields - all fields for string, number: all but "Number of Decimals", Minimum and Maximum
             xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-03.xml"));
-            xmlImport = new XmlImportWithFiles("en-US", userName, true);
+            xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
             success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
 
             if (!success)

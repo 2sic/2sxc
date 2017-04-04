@@ -4,6 +4,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
+using ToSic.Eav.AppEngine;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.WebApi

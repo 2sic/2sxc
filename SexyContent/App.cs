@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
+using ToSic.Eav.AppEngine;
 using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;

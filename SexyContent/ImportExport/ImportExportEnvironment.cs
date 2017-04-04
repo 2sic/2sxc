@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.ImportExport
 {
     public class ImportExportEnvironment : IImportExportEnvironment
     {
-        public List<ExportImportMessage> Messages = new List<ExportImportMessage>();
+        public List<ExportImportMessage> Messages { get; } = new List<ExportImportMessage>();
 
         //private IFileManager _dnnFileManager;
         //private IFolderManager _dnnFolderManager;

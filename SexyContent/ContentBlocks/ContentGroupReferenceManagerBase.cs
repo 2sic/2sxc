@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav;
+using ToSic.Eav.AppEngine;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks

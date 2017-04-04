@@ -5,13 +5,12 @@ using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Serializers;
 using ToSic.Eav.WebApi;
+using ToSic.SexyContent;
 
-namespace ToSic.SexyContent
+namespace ToSic.Eav.AppEngine
 {
 	public class TemplateManager
 	{
-		private const string TemplateTypeName = "2SexyContent-Template";
-
 		public readonly int ZoneId;
 		public readonly int AppId;
 
@@ -28,7 +27,7 @@ namespace ToSic.SexyContent
 		    // ReSharper disable once RedundantArgumentDefaultValue
 			var dataSource = DataSource.GetInitialDataSource(ZoneId, AppId, false);
 			dataSource = DataSource.GetDataSource<EntityTypeFilter>(ZoneId, AppId, dataSource);
-			((EntityTypeFilter)dataSource).TypeName = TemplateTypeName;
+		    ((EntityTypeFilter) dataSource).TypeName = AppConfiguration.TemplateContentType;// TemplateTypeName;
 		    _templateDs = dataSource;
 			return dataSource;
 		}
@@ -63,52 +62,52 @@ namespace ToSic.SexyContent
 		    //return eavContext.DeleteEntity(template.TemplateId);
 		}
 
-		/// <summary>
-		/// Adds or updates a template - will create a new template if templateId is not specified
-		/// </summary>
-		public void UpdateTemplate(int? templateId, string name, string path, string contentTypeStaticName,
-			int? contentDemoEntity, string presentationTypeStaticName, int? presentationDemoEntity,
-			string listContentTypeStaticName, int? listContentDemoEntity, string listPresentationTypeStaticName,
-			int? listPresentationDemoEntity, string templateType, bool isHidden, string location, bool useForList,
-			bool publishData, string streamsToPublish, int? pipelineEntity, string viewNameInUrl)
-		{
-			var values = new Dictionary<string,object>
-			{
-				{ "Name", name },
-				{ "Path", path },
-				{ "ContentTypeStaticName", contentTypeStaticName },
-				{ "ContentDemoEntity", contentDemoEntity.HasValue ? new[] { contentDemoEntity.Value } : new int[]{} },
-				{ "PresentationTypeStaticName", presentationTypeStaticName },
-				{ "PresentationDemoEntity", presentationDemoEntity.HasValue ? new[] { presentationDemoEntity.Value } : new int[]{} },
-				{ "ListContentTypeStaticName", listContentTypeStaticName },
-				{ "ListContentDemoEntity", listContentDemoEntity.HasValue ? new[] { listContentDemoEntity.Value } : new int[]{} },
-				{ "ListPresentationTypeStaticName", listPresentationTypeStaticName },
-				{ "ListPresentationDemoEntity", listPresentationDemoEntity.HasValue ? new[] { listPresentationDemoEntity.Value } : new int[]{} },
-				{ "Type", templateType },
-				{ "IsHidden", isHidden },
-				{ "Location", location },
-				{ "UseForList", useForList },
-				{ "PublishData", publishData },
-				{ "StreamsToPublish", streamsToPublish },
-				{ "Pipeline", pipelineEntity.HasValue ? new[] { pipelineEntity } : new int?[]{} },
-				{ "ViewNameInUrl", viewNameInUrl }
-			};
+		///// <summary>
+		///// Adds or updates a template - will create a new template if templateId is not specified
+		///// </summary>
+		//public void UpdateTemplate(int? templateId, string name, string path, string contentTypeStaticName,
+		//	int? contentDemoEntity, string presentationTypeStaticName, int? presentationDemoEntity,
+		//	string listContentTypeStaticName, int? listContentDemoEntity, string listPresentationTypeStaticName,
+		//	int? listPresentationDemoEntity, string templateType, bool isHidden, string location, bool useForList,
+		//	bool publishData, string streamsToPublish, int? pipelineEntity, string viewNameInUrl)
+		//{
+		//	var values = new Dictionary<string,object>
+		//	{
+		//		{ "Name", name },
+		//		{ "Path", path },
+		//		{ "ContentTypeStaticName", contentTypeStaticName },
+		//		{ "ContentDemoEntity", contentDemoEntity.HasValue ? new[] { contentDemoEntity.Value } : new int[]{} },
+		//		{ "PresentationTypeStaticName", presentationTypeStaticName },
+		//		{ "PresentationDemoEntity", presentationDemoEntity.HasValue ? new[] { presentationDemoEntity.Value } : new int[]{} },
+		//		{ "ListContentTypeStaticName", listContentTypeStaticName },
+		//		{ "ListContentDemoEntity", listContentDemoEntity.HasValue ? new[] { listContentDemoEntity.Value } : new int[]{} },
+		//		{ "ListPresentationTypeStaticName", listPresentationTypeStaticName },
+		//		{ "ListPresentationDemoEntity", listPresentationDemoEntity.HasValue ? new[] { listPresentationDemoEntity.Value } : new int[]{} },
+		//		{ "Type", templateType },
+		//		{ "IsHidden", isHidden },
+		//		{ "Location", location },
+		//		{ "UseForList", useForList },
+		//		{ "PublishData", publishData },
+		//		{ "StreamsToPublish", streamsToPublish },
+		//		{ "Pipeline", pipelineEntity.HasValue ? new[] { pipelineEntity } : new int?[]{} },
+		//		{ "ViewNameInUrl", viewNameInUrl }
+		//	};
 
-            // 2017-04-01 2dm centralizing eav access code
-            //var bridge = new EavBridge(ZoneId, AppId);
-            //var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
+  //          // 2017-04-01 2dm centralizing eav access code
+  //          //var bridge = new EavBridge(ZoneId, AppId);
+  //          //var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
 
-		    if (templateId.HasValue)
-                State.EntityUpdate(ZoneId, AppId, templateId.Value, values);
-		    // context.UpdateEntity(templateId.Value, values);
-		    else
-		        State.EntityCreate(ZoneId, AppId, TemplateTypeName, values);
-		    //{
-		    //	var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(TemplateTypeName);
-		    //	context.AddEntity(contentType.AttributeSetId, values, null, null);
-		    //}
+		//    if (templateId.HasValue)
+  //              State.EntityUpdate(ZoneId, AppId, templateId.Value, values);
+		//    // context.UpdateEntity(templateId.Value, values);
+		//    else
+		//        State.EntityCreate(ZoneId, AppId, TemplateTypeName, values);
+		//    //{
+		//    //	var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(TemplateTypeName);
+		//    //	context.AddEntity(contentType.AttributeSetId, values, null, null);
+		//    //}
 
-		}
+		//}
 
 
 	    /// <summary>
