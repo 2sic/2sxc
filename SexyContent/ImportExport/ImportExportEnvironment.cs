@@ -7,6 +7,7 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.ImportExport;
 using ToSic.SexyContent.Internal;
+using static System.String;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -77,7 +78,6 @@ namespace ToSic.SexyContent.ImportExport
             }
         }
 
-
         public Version Version => typeof(PortalSettings).Assembly.GetName().Version;
 
         public string DefaultLanguage => PortalSettings.Current.DefaultLanguage;
@@ -97,5 +97,80 @@ namespace ToSic.SexyContent.ImportExport
 
             return HttpContext.Current.Server.MapPath(appPath);
         }
+
+        #region stuff we need for Import
+
+        public void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
+        {
+            var maybePortalId = PortalSettings.Current?.PortalId;
+
+            if (!maybePortalId.HasValue)
+                return;
+
+            var portalId = maybePortalId.Value;
+            var fileManager = DotNetNuke.Services.FileSystem.FileManager.Instance;
+            var folderManager = FolderManager.Instance;
+
+            foreach (var file in filesAndPaths)
+            {
+                //var fileId = int.Parse(portalFile.Attribute("Id").Value);
+                //var relativePath = portalFile.Attribute("RelativePath").Value;
+                var fileId = file.Key;
+                var relativePath = file.Value;
+
+                var fileName = Path.GetFileName(relativePath);
+                var directory = Path.GetDirectoryName(relativePath)?.Replace('\\', '/');
+                if (directory == null) continue;
+
+                if (!folderManager.FolderExists(portalId, directory))
+                    continue;
+
+                var folderInfo = folderManager.GetFolder(portalId, directory);
+
+                if (!fileManager.FileExists(folderInfo, fileName))
+                    continue;
+
+                var fileInfo = fileManager.GetFile(folderInfo, fileName);
+                fileIdMap.Add(fileId, fileInfo.FileId);
+            }
+        }
+
+        public void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<ExportImportMessage> importLog)
+        {
+            var maybePortalId = PortalSettings.Current?.PortalId;
+
+            if (!maybePortalId.HasValue)
+                return;
+            var portalId = maybePortalId.Value;
+            var folderManager = FolderManager.Instance;
+
+            foreach (var file in foldersAndPath) // portalFiles)
+            {
+                //var origId = int.Parse(portalFile.Attribute(XmlConstants.FolderNodeId).Value);
+                //var relativePath = portalFile.Attribute(XmlConstants.FolderNodePath).Value;
+                try
+                {
+                    if (IsNullOrEmpty(file.Value)) continue;
+                    var directory = Path.GetDirectoryName(file.Value)?.Replace('\\', '/');
+                    if (directory == null) continue;
+                    // if not exist, create - important because we need for metadata assignment
+                    var folderInfo = (!folderManager.FolderExists(portalId, directory))
+                        ? folderManager.AddFolder(portalId, directory)
+                        : folderManager.GetFolder(portalId, directory);
+
+                    folderIdCorrectionList.Add(file.Key, folderInfo.FolderID);
+                }
+                catch (Exception)
+                {
+                    importLog.Add(
+                        new ExportImportMessage(
+                            "Had a problem with folder id '" + file.Key + "' path '" + file.Value +
+                            "' - you'll have to figure out yourself it this is a problem",
+                            ExportImportMessage.MessageTypes.Warning));
+                }
+            }
+        }
+
+        #endregion
     }
 }

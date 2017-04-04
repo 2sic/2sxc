@@ -164,7 +164,7 @@ namespace ToSic.SexyContent.WebApi
             {
                 try
                 {
-                    var helper = new ImportExportEnvironment(); ;
+                    var helper = new ImportExportEnvironment();
                     var zipImport = new ZipImport(helper, zoneId, null, PortalSettings.UserInfo.IsSuperUser);
                     result.Succeeded = zipImport.ImportZip(request.Files[0].InputStream, HttpContext.Current.Server);// , /*PortalSettings, helper.Messages*/);
                     result.Messages = helper.Messages;

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
+// using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml.Linq;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Services.FileSystem;
+//using DotNetNuke.Entities.Portals;
+//using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.Import;
@@ -33,12 +33,14 @@ namespace ToSic.SexyContent.ImportExport
 		private int _appId;
 		private int _zoneId;
 		private readonly Dictionary<int, int> _fileIdCorrectionList = new Dictionary<int, int>();
-	    private readonly Dictionary<int, int> _folderIdCorrectionList = new Dictionary<int, int>(); 
+	    private readonly Dictionary<int, int> _folderIdCorrectionList = new Dictionary<int, int>();
 
-		/// <summary>
-		/// The default language / culture - example: de-DE
-		/// </summary>
-		private string DefaultLanguage { get; }
+        private readonly ImportExportEnvironment _environment;
+
+        /// <summary>
+        /// The default language / culture - example: de-DE
+        /// </summary>
+        private string DefaultLanguage { get; }
 
 		/// <summary>
 		/// The username used for logging (history etc.)
@@ -48,7 +50,7 @@ namespace ToSic.SexyContent.ImportExport
 		/// <summary>
 		/// The id of the current portal
 		/// </summary>
-		private int? PortalId => PortalSettings.Current != null ? PortalSettings.Current.PortalId : new int?();
+		// private int? PortalId => PortalSettings.Current != null ? PortalSettings.Current.PortalId : new int?();
 
         private bool AllowSystemChanges { get; }
 
@@ -67,7 +69,9 @@ namespace ToSic.SexyContent.ImportExport
 			DefaultLanguage = defaultLanguage;
 			AllowSystemChanges = allowSystemChanges;
 		    UserName = userName;
-		}
+
+            _environment = new ImportExportEnvironment(); // todo: depedency injection
+        }
 
 		public bool IsCompatible(XDocument doc)
 		{
@@ -91,70 +95,35 @@ namespace ToSic.SexyContent.ImportExport
 
 		private void PrepareFileIdCorrectionList(XElement sexyContentNode)
 		{
-			if (!sexyContentNode.Elements(XmlConstants.PortalFiles).Any() || !PortalId.HasValue)
+			if (!sexyContentNode.Elements(XmlConstants.PortalFiles).Any())
 				return;
-
-			var portalId = PortalId.Value;
-			var fileManager = DotNetNuke.Services.FileSystem.FileManager.Instance;
-			var folderManager = FolderManager.Instance;
 
 			var portalFiles = sexyContentNode.Element(XmlConstants.PortalFiles)?.Elements("File");
 		    if (portalFiles == null) return;
-			foreach (var portalFile in portalFiles)
-			{
-				var fileId = int.Parse(portalFile.Attribute("Id").Value);
-				var relativePath = portalFile.Attribute("RelativePath").Value;
-				var fileName = Path.GetFileName(relativePath);
-				var directory = Path.GetDirectoryName(relativePath)?.Replace('\\', '/');
-                if(directory == null) continue;
-			    
-				if (!folderManager.FolderExists(portalId, directory))
-					continue;
-
-				var folderInfo = folderManager.GetFolder(portalId, directory);
-
-				if (!fileManager.FileExists(folderInfo, fileName))
-					continue;
-
-				var fileInfo = fileManager.GetFile(folderInfo, fileName);
-				_fileIdCorrectionList.Add(fileId, fileInfo.FileId);
-			}
+		    var filesAndPaths = portalFiles.ToDictionary(
+		        p => int.Parse(p.Attribute("Id").Value),
+		        v => v.Attribute("RelativePath").Value
+		    );
+            _environment.MapExistingFilesToImportSet(filesAndPaths, _fileIdCorrectionList);
 
 		}
-        private void PrepareFolderIdCorrectionListAndCreateMissingFolders(XElement sexyContentNode)
-        {
-            if (!sexyContentNode.Elements(XmlConstants.FolderGroup).Any() || !PortalId.HasValue) 
-                return;
 
-            var portalId = PortalId.Value;
-            var folderManager = FolderManager.Instance;
+
+	    private void PrepareFolderIdCorrectionListAndCreateMissingFolders(XElement sexyContentNode)
+        {
+            if (!sexyContentNode.Elements(XmlConstants.FolderGroup).Any()) 
+                return;
 
             var portalFiles = sexyContentNode.Element(XmlConstants.FolderGroup)?.Elements(XmlConstants.Folder);
             if (portalFiles == null) return;
-            foreach (var portalFile in portalFiles)
-            {
-                var origId = int.Parse(portalFile.Attribute(XmlConstants.FolderNodeId).Value);
-                var relativePath = portalFile.Attribute(XmlConstants.FolderNodePath).Value;
-                try
-                {
-                    if (IsNullOrEmpty(relativePath)) continue;
-                    var directory = Path.GetDirectoryName(relativePath)?.Replace('\\', '/');
-                    if (directory == null) continue;
-                    // if not exist, create - important because we need for metadata assignment
-                    var folderInfo = (!folderManager.FolderExists(portalId, directory))
-                        ? folderManager.AddFolder(portalId, directory)
-                        : folderManager.GetFolder(portalId, directory);
 
-                    _folderIdCorrectionList.Add(origId, folderInfo.FolderID);                }
-                catch (Exception)
-                {
-                    ImportLog.Add(new ExportImportMessage("Had a problem with folder id '" + origId + "' path '" + relativePath + "' - you'll have to figure out yourself it this is a problem", ExportImportMessage.MessageTypes.Warning));
-                }
-
-            }
-
+            var foldersAndPath = portalFiles.ToDictionary(
+                p => int.Parse(p.Attribute(XmlConstants.FolderNodeId).Value),
+                v => v.Attribute(XmlConstants.FolderNodePath).Value
+            );
+            _environment.CreateFoldersAndMapToImportIds(foldersAndPath, _folderIdCorrectionList, ImportLog);
         }
-        #endregion
+	    #endregion
 
         /// <summary>
         /// Creates an app and then imports the xml
