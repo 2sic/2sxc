@@ -14,7 +14,6 @@ namespace ToSic.SexyContent.Internal
     internal class EavBridge
     {
         private readonly EavDataController _eavContext;
-        //private readonly Environment.Environment _env = new Environment.Environment();
 
         #region constructors
         public EavBridge(IApp app) : this(app.ZoneId, app.AppId)
@@ -24,18 +23,15 @@ namespace ToSic.SexyContent.Internal
         public EavBridge(int zoneId, int appId)
         {
             _eavContext = EavDataController.Instance(zoneId, appId);
-            //_eavContext.UserName = _env.User.CurrentUserIdentityToken;// Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
         }
         #endregion
 
-        public bool Publish(int repositoryId, bool state)
+        public static bool EntityPublish(int zoneId, int appId, int repositoryId, bool state)
         {
-            _eavContext.Publishing.PublishDraftInDbEntity(repositoryId, state);
+            EavDataController.Instance(zoneId, appId).Publishing.PublishDraftInDbEntity(repositoryId, state);
             return state;
         }
 
-        public void AddOrUpdateLanguage(string cultureCode, string cultureText, bool active)
-            => _eavContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, active);
 
         public EavDataController FullController => _eavContext;
 
@@ -54,61 +50,85 @@ namespace ToSic.SexyContent.Internal
         }
         #endregion
 
-        #region Data-level entity actions
+        //#region Data-level entity actions
 
-        public void EntityUpdate(int id, Dictionary<string, object> values)
-            => _eavContext.Entities.UpdateEntity(id, values);
+        //public static void EntityUpdate(int zoneId, int appId, int id, Dictionary<string, object> values)
+        //    => EavDataController.Instance(zoneId, appId).Entities.UpdateEntity(id, values);
 
-        public Tuple<int, Guid> EntityCreate(string typeName, Dictionary<string, object> values, Guid? entityGuid = null)
-        {
-            var contentType = DataSource.GetCache(_eavContext.ZoneId, _eavContext.AppId).GetContentType(typeName);
-            var ent = _eavContext.Entities.AddEntity(contentType.AttributeSetId, values, null, null, entityGuid: entityGuid);
-            return new Tuple<int, Guid>(ent.EntityID, ent.EntityGUID);
-        }
+        //public static Tuple<int, Guid> EntityCreate(int zoneId, int appId, string typeName, Dictionary<string, object> values, Guid? entityGuid = null)
+        //{
+        //    var contentType = DataSource.GetCache(zoneId, appId).GetContentType(typeName);
+        //    var ent = EavDataController.Instance(zoneId, appId).Entities.AddEntity(contentType.AttributeSetId, values, null, null, entityGuid: entityGuid);
+        //    return new Tuple<int, Guid>(ent.EntityID, ent.EntityGUID);
+        //}
 
-        public bool EntityDelete(int id)
-        {
-            var canDelete = _eavContext.Entities.CanDeleteEntity(id);
-            if (!canDelete.Item1)
-                throw new Exception(canDelete.Item2);
-            return _eavContext.Entities.DeleteEntity(id);
-        }
+        //public static bool EntityDelete(int zoneId, int appId, int id)
+        //{
+        //    var eavContext = EavDataController.Instance(zoneId, appId);
+        //    var canDelete = eavContext.Entities.CanDeleteEntity(id);
+        //    if (!canDelete.Item1)
+        //        throw new Exception(canDelete.Item2);
+        //    return eavContext.Entities.DeleteEntity(id);
+        //}
 
-        public bool EntityExists(Guid guid) 
-            => _eavContext.Entities.EntityExists(guid);
+        //public static int EntityGetOrCreate(int zoneId, int appId, Guid? newGuid, string contentTypeName, Dictionary<string, object> values)
+        //{
+        //    var ctl = EavDataController.Instance(zoneId, appId);
+        //    if (newGuid.HasValue && ctl.Entities.EntityExists(newGuid.Value)) // eavDc.Entities.EntityExists(newGuid.Value))
+        //    {
+        //        // check if it's deleted - if yes, resurrect
+        //        var existingEnt = ctl.Entities.GetEntitiesByGuid(newGuid.Value).First();
+        //        if (existingEnt.ChangeLogDeleted != null)
+        //            existingEnt.ChangeLogDeleted = null;
 
-        public int EntityGetOrResurect(Guid guid)
-        {
-            var existingEnt = _eavContext.Entities.GetEntitiesByGuid(guid).First();
-            if (existingEnt.ChangeLogDeleted != null)
-                existingEnt.ChangeLogDeleted = null;
-            return existingEnt.EntityID;
-        }
+        //        return existingEnt.EntityID;
+        //    }
+            
+        //    return EntityCreate(zoneId, appId, contentTypeName, values, entityGuid: newGuid).Item1;
+        //}
 
-        #endregion
+        ////public static bool EntityExists(int zoneId, int appId, Guid guid) 
+        ////    => EavDataController.Instance(zoneId, appId).Entities.EntityExists(guid);
 
-        public static int ZoneCreate(string name)
-        {
-            return EavDataController.Instance(null, null)
-                .Zone.AddZone(name).Item1.ZoneID;
-        }
+        ////public static int EntityGetOrResurrect(int zoneId, int appId, Guid guid)
+        ////{
+        ////    var existingEnt = EavDataController.Instance(zoneId, appId).Entities.GetEntitiesByGuid(guid).First();
+        ////    if (existingEnt.ChangeLogDeleted != null)
+        ////        existingEnt.ChangeLogDeleted = null;
+        ////    return existingEnt.EntityID;
+        ////}
 
-        public List<LanguageInfo> ZoneLanguages()
-        {
-            var dims = _eavContext.Dimensions.GetLanguages();
-            var mapped = dims.Select(d => new LanguageInfo
-            {
-                Active = d.Active,
-                TennantKey = d.ExternalKey
-            }).ToList();
-            return mapped;
-        }
+        //#endregion
 
+        //public static int ZoneCreate(string name)
+        //{
+        //    return EavDataController.Instance(null, null)
+        //        .Zone.AddZone(name).Item1.ZoneID;
+        //}
+
+        //public List<LanguageInfo> ZoneLanguages()
+        //{
+        //    var dims = _eavContext.Dimensions.GetLanguages();
+        //    var mapped = dims.Select(d => new LanguageInfo
+        //    {
+        //        Active = d.Active,
+        //        TennantKey = d.ExternalKey
+        //    }).ToList();
+        //    return mapped;
+        //}
+        //public List<Tuple<bool, string>> ZoneLanguages()
+        //{
+        //    return _eavContext.Dimensions.GetLanguages()
+        //        .Select(d => new Tuple<bool, string>(d.Active, d.ExternalKey))
+        //        .ToList();
+        //}
+        //public void ZoneAddOrUpdateLanguage(string cultureCode, string cultureText, bool active)
+        //    => _eavContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, active);
 
     }
-    public class LanguageInfo
-    {
-        public bool Active;
-        public string TennantKey;
-    }
+    //public class LanguageInfo
+    //{
+    //    public bool Active;
+    //    public string TennantKey;
+    //}
 }

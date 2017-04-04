@@ -66,8 +66,8 @@ namespace ToSic.SexyContent.ContentBlocks
         private void Update(Dictionary<string, object> newValues)
         {
             // 2017-04-01 2dm centralizing eav access
-            new EavBridge(((ContentBlockBase)SxcContext.ContentBlock).Parent.App)
-                .EntityUpdate(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);
+            var app = ((ContentBlockBase)SxcContext.ContentBlock).Parent.App;
+            State.EntityUpdate(app.ZoneId, app.AppId, Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);
             //var cgApp = ((ContentBlockBase)SxcContext.ContentBlock).Parent.App;
             //var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
             //eavDc.Entities.UpdateEntity(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);

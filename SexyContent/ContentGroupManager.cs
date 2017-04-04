@@ -63,8 +63,7 @@ namespace ToSic.SexyContent
 			};
 
             // 2017-04-01 2dm centralizing eav-access
-            return new EavBridge(_zoneId, _appId).EntityCreate(ContentGroupTypeName, values)
-                .Item2;
+            return State.EntityCreate(_zoneId, _appId, ContentGroupTypeName, values).Item2;
 		 //   var context = EavDataController.Instance(_zoneId, _appId).Entities;
 			//var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(ContentGroupTypeName);
 			//var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);

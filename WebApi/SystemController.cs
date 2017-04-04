@@ -48,15 +48,16 @@ namespace ToSic.SexyContent.WebApi
         public void SwitchLanguage(string cultureCode, bool enable)
 	    {
             // Activate or Deactivate the Culture
-            var portalId = PortalSettings.PortalId;
-	        var zoneId = Env.ZoneMapper.GetZoneId(portalId);// ZoneHelpers.GetZoneId(portalId);
+            //var portalId = PortalSettings.PortalId;
+	        var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);// ZoneHelpers.GetZoneId(portalId);
             // ReSharper disable once PossibleInvalidOperationException
-	        var cache = DataSource.GetCache(zoneId);
+	        //var cache = DataSource.GetCache(zoneId);
             //var sexy = new SxcInstance(zoneId.Value, cache.AppId);
-            var app = new App(zoneId, cache.AppId, PortalSettings, false);
+            //var app = new App(zoneId, cache.AppId, PortalSettings, false);
             var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
 
-            new EavBridge(app).AddOrUpdateLanguage(cultureCode, cultureText, enable);
+            State.ZoneLanguageAddOrUpdate(zoneId, cultureCode, cultureText, enable);
+            //new EavBridge(app).ZoneAddOrUpdateLanguage(cultureCode, cultureText, enable);
             // app.EavContext.Dimensions.AddOrUpdateLanguage();
 	    }
 

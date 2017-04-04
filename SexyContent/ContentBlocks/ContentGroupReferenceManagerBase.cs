@@ -105,7 +105,7 @@ namespace ToSic.SexyContent.ContentBlocks
             catch (Exception e)
             {
                 Exceptions.LogException(e);
-                throw e;
+                throw;
             }
         }
 
@@ -129,7 +129,7 @@ namespace ToSic.SexyContent.ContentBlocks
         }
 
         public bool Publish(int repositoryId, bool state) 
-            => new EavBridge(SxcContext.App).Publish(repositoryId, state);
+            => EavBridge.EntityPublish(SxcContext.App.ZoneId, SxcContext.App.AppId, repositoryId, state);
 
         public bool Publish(string part, int sortOrder)
         {

@@ -93,8 +93,7 @@ namespace ToSic.SexyContent
             };
 
             // 2017-04-01 2dm centralizing eav access
-            new EavBridge(_zoneId, _appId)
-                .EntityUpdate(_contentGroupEntity.EntityId, values);
+            State.EntityUpdate(_zoneId, _appId, _contentGroupEntity.EntityId, values);
             //var context = EavDataController.Instance(_zoneId, _appId).Entities; // EavContext.Instance(_zoneId, _appId);
             //context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
         }
@@ -204,8 +203,7 @@ namespace ToSic.SexyContent
 
             // 2017-04-01 2dm centralizing eav access
             var dicObj = values.ToDictionary(x => x.Key, x => x.Value as object);// as Dictionary<string, object>;
-            new EavBridge(_zoneId, _appId)
-                .EntityUpdate(_contentGroupEntity.EntityId, dicObj);
+            State.EntityUpdate(_zoneId, _appId, _contentGroupEntity.EntityId, dicObj);
 
             //var context = EavDataController.Instance(_zoneId, _appId).Entities; // EavContext.Instance(_zoneId, _appId);
             //context.UpdateEntity(_contentGroupEntity.EntityGuid, values);

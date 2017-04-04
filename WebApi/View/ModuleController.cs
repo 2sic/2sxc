@@ -103,24 +103,24 @@ namespace ToSic.SexyContent.WebApi.View
             //    DataSource.GetCache(cgApp.ZoneId, cgApp.AppId)
             //        .GetContentType(contentTypeName);
 
-            int entityId;
-            // check that it doesn't exist yet...
-            if (newGuid.HasValue && bridge.EntityExists(newGuid.Value)) // eavDc.Entities.EntityExists(newGuid.Value))
-                entityId = bridge.EntityGetOrResurect(newGuid.Value);
-            //{
-            //    // check if it's deleted - if yes, resurrect
-            //    var existingEnt = eavDc.Entities.GetEntitiesByGuid(newGuid.Value).First();
-            //    if (existingEnt.ChangeLogDeleted != null)
-            //        existingEnt.ChangeLogDeleted = null;
+            int entityId = State.EntityGetOrCreate(cgApp.ZoneId, cgApp.AppId, newGuid, contentTypeName, values);
+            //// check that it doesn't exist yet...
+            //if (newGuid.HasValue && bridge.EntityExists(newGuid.Value)) // eavDc.Entities.EntityExists(newGuid.Value))
+            //    entityId = bridge.EntityGetOrResurrect(newGuid.Value);
+            ////{
+            ////    // check if it's deleted - if yes, resurrect
+            ////    var existingEnt = eavDc.Entities.GetEntitiesByGuid(newGuid.Value).First();
+            ////    if (existingEnt.ChangeLogDeleted != null)
+            ////        existingEnt.ChangeLogDeleted = null;
 
-            //    entityId = existingEnt.EntityID;
-            //}
-            else
-                entityId = bridge.EntityCreate(contentTypeName, values, entityGuid: newGuid).Item1;
-            //{
-            //    var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null, entityGuid: newGuid);
-            //    entityId = entity.EntityID;
-            //}
+            ////    entityId = existingEnt.EntityID;
+            ////}
+            //else
+            //    entityId = bridge.EntityCreate(contentTypeName, values, entityGuid: newGuid).Item1;
+            ////{
+            ////    var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null, entityGuid: newGuid);
+            ////    entityId = entity.EntityID;
+            ////}
 
             #endregion
 
@@ -138,7 +138,7 @@ namespace ToSic.SexyContent.WebApi.View
                 intList.Insert(sortOrder, entityId);
             }
             var updateDic = new Dictionary<string, object> {{field, intList.ToArray()}};
-            bridge.EntityUpdate(cbEnt.EntityId, updateDic);
+            State.EntityUpdate(cgApp.ZoneId, cgApp.AppId, cbEnt.EntityId, updateDic);
             //eavDc.Entities.UpdateEntity(cbEnt.EntityGuid, updateDic);
 
             #endregion
@@ -195,8 +195,7 @@ namespace ToSic.SexyContent.WebApi.View
             // save
             var values = new Dictionary<string, object> {{field, ids.ToArray()}};
             // 2017-04-01 2dm centralizing eav access
-            new EavBridge(SxcContext.App)
-                .EntityUpdate(parentEntity.EntityId, values);
+            State.EntityUpdate(SxcContext.App.ZoneId, SxcContext.App.AppId, parentEntity.EntityId, values);
             //var cgApp = SxcContext.App;
             //var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
             //eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;

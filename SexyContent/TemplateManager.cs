@@ -56,7 +56,8 @@ namespace ToSic.SexyContent
             // really get template first, to be sure it is a template
 			var template = GetTemplate(templateId);
             // 2017-04-01 2dm centralizing eav access
-		    return new EavBridge(ZoneId, AppId).EntityDelete(template.TemplateId);
+            return State.EntityDelete(ZoneId, AppId, template.TemplateId);
+            // return new EavBridge(ZoneId, AppId).EntityDelete(template.TemplateId);
 		    //         var eavContext = EavDataController.Instance(_zoneId, _appId).Entities; //EavContext.Instance(_zoneId, _appId);
 		    //var canDelete = eavContext.CanDeleteEntity(template.TemplateId);
 		    //if(!canDelete.Item1)
@@ -96,19 +97,19 @@ namespace ToSic.SexyContent
 			};
 
             // 2017-04-01 2dm centralizing eav access code
-            var bridge = new EavBridge(ZoneId, AppId);
+            //var bridge = new EavBridge(ZoneId, AppId);
             //var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
 
-			if(templateId.HasValue)
-                bridge.EntityUpdate(templateId.Value, values);
-				// context.UpdateEntity(templateId.Value, values);
-			else
-                bridge.EntityCreate(TemplateTypeName, values);
-			//{
-			//	var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(TemplateTypeName);
-			//	context.AddEntity(contentType.AttributeSetId, values, null, null);
-			//}
-			
+		    if (templateId.HasValue)
+                State.EntityUpdate(ZoneId, AppId, templateId.Value, values);
+		    // context.UpdateEntity(templateId.Value, values);
+		    else
+		        State.EntityCreate(ZoneId, AppId, TemplateTypeName, values);
+		    //{
+		    //	var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(TemplateTypeName);
+		    //	context.AddEntity(contentType.AttributeSetId, values, null, null);
+		    //}
+
 		}
 
 
