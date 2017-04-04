@@ -7,6 +7,8 @@ using System.Web;
 using System.Xml.Linq;
 using ICSharpCode.SharpZipLib.Zip;
 using ToSic.Eav;
+using ToSic.Eav.ImportExport;
+
 //using ToSic.Eav.DataSources.Caches;
 //using ToSic.SexyContent.Internal;
 
@@ -46,7 +48,7 @@ namespace ToSic.SexyContent.ImportExport
             //if (messages == null)
             //    messages = _environment.Messages;// new List<ExportImportMessage>();
 
-            var temporaryDirectory = server.MapPath(Path.Combine(Settings.TemporaryDirectory, Guid.NewGuid().ToString()));
+            var temporaryDirectory = server.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory, Guid.NewGuid().ToString()));
             var success = true;
 
             try
@@ -213,7 +215,7 @@ namespace ToSic.SexyContent.ImportExport
 
         public bool ImportZipFromUrl(string packageUrl, bool isAppImport)
         {
-            var tempDirectory = new DirectoryInfo(HttpContext.Current.Server.MapPath(Settings.TemporaryDirectory));
+            var tempDirectory = new DirectoryInfo(HttpContext.Current.Server.MapPath(Eav.ImportExport.Settings.TemporaryDirectory));
             if (!tempDirectory.Exists)
                 Directory.CreateDirectory(tempDirectory.FullName);
 

@@ -11,6 +11,7 @@ using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.Import;
+using ToSic.Eav.ImportExport;
 using ToSic.SexyContent.Internal; // ATM only used for the EAV bridge
 using static System.Boolean;
 using static System.String;

@@ -106,7 +106,7 @@ namespace ToSic.SexyContent.WebApi
             {
                 try
                 {
-                    if (!Constants.ExcludeFolders.Contains(d.Name))
+                    if (!Eav.ImportExport.Settings.ExcludeFolders.Contains(d.Name))
                     {
                         folders.Add(d);
                         FullDirList(d, searchPattern, folders, files, opt);

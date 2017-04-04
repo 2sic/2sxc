@@ -35,20 +35,20 @@ namespace ToSic.SexyContent.Internal
 
         public EavDataController FullController => _eavContext;
 
-        #region Special upgrade one-time helper
-        /// <summary>
-        /// Special method used in the V6 upgrade
-        /// shouldn't be used after that, as a shared-attribute was added later on
-        /// note: could be removed, if the v6 upgrade would receive the now supported attribute
-        /// </summary>
-        /// <param name="name"></param>
-        internal static void ForceShareOnGlobalContentType(string name)
-        {
-            var metaDataCtx = new EavBridge(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId).FullController;
-            metaDataCtx.AttribSet.GetAttributeSet(name).AlwaysShareConfiguration = true;
-            metaDataCtx.SqlDb.SaveChanges();
-        }
-        #endregion
+        //#region Special upgrade one-time helper
+        ///// <summary>
+        ///// Special method used in the V6 upgrade
+        ///// shouldn't be used after that, as a shared-attribute was added later on
+        ///// note: could be removed, if the v6 upgrade would receive the now supported attribute
+        ///// </summary>
+        ///// <param name="name"></param>
+        //internal static void ForceShareOnGlobalContentType(string name)
+        //{
+        //    var metaDataCtx = new EavBridge(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId).FullController;
+        //    metaDataCtx.AttribSet.GetAttributeSet(name).AlwaysShareConfiguration = true;
+        //    metaDataCtx.SqlDb.SaveChanges();
+        //}
+        //#endregion
 
         //#region Data-level entity actions
 

@@ -3,17 +3,8 @@ using System.Configuration;
 
 namespace ToSic.SexyContent
 {
-    internal class Constants : Eav.Constants // inherit from EAV constants to make coding easier
+    internal class Constants : ToSic.Eav.Constants // inherit from EAV constants to make coding easier
     {
-        public static string[] ExcludeFolders =
-        {
-            ".git",
-            "node_modules",
-            "bower_components",
-            ".vs",
-            ".data"
-        };
-
         // additional json-node for metadata in serialized entities, if user has edit rights
         public const string JsonEntityEditNodeName = "_2sxcEditInformation";
         public const string JsonModifiedNodeName = "Modified";
@@ -29,7 +20,6 @@ namespace ToSic.SexyContent
 
         // special uses of Apps
         public const string ContentAppName = "Content";
-        public const string TemplateContentType = "2SexyContent-Template";
         public const string AppAssignmentName = "App";
 
         // Special constant to protect functions which should use named parameters

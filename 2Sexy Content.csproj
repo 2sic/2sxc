@@ -268,7 +268,6 @@
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
-    <Compile Include="SexyContent\ImportExport\Const2.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExportEnvironment.cs" />
     <Compile Include="SexyContent\ImportExport\ToSxcXmlExporter.cs" />
     <Compile Include="SexyContent\Installer\Helpers.cs" />
@@ -303,7 +302,6 @@
     </Compile>
     <Compile Include="SexyContent\Engines\RenderingException.cs" />
     <Compile Include="SexyContent\Engines\RenderStatusType.cs" />
-    <Compile Include="SexyContent\ImportExport\XmlConstants.cs" />
     <Compile Include="Environment\Dnn7\Permissions.cs" />
     <Compile Include="SexyContent\ISxcInstance.cs" />
     <Compile Include="SexyContent\Settings.cs" />
@@ -357,13 +355,7 @@
     <Compile Include="SexyContent\EAV\Extensions\IHasEditingData.cs" />
     <Compile Include="WebApi\InstallerController.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
-    <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
-    <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
-    <Compile Include="SexyContent\ImportExport\FileManager.cs" />
-    <Compile Include="SexyContent\ImportExport\ImportValue.cs" />
-    <Compile Include="SexyContent\ImportExport\EavXmlExporter.cs" />
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
-    <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
     <Compile Include="SexyContent\TemplateManager.cs" />
     <Compile Include="WebApi\AppQueryController.cs" />
@@ -406,6 +398,7 @@
     <Content Include="icon-app-black.png" />
     <Content Include="icon-black.png" />
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
+    <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
     <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.03.03.SqlDataProvider" />
@@ -425,6 +418,8 @@
     </Content>
     <Content Include="package.json" />
     <Content Include="SqlDataProvider\00.99.00.SqlDataProvider" />
+    <Content Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
+    <Content Include="SexyContent\ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
@@ -481,6 +476,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Beta\" />
+    <Folder Include="Eav\ImportExport\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

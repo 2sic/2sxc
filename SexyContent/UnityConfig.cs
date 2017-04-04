@@ -1,7 +1,9 @@
 ﻿using Microsoft.Practices.Unity;
 using ToSic.Eav.Implementations.UserInformation;
 using ToSic.Eav.Implementations.ValueConverter;
+using ToSic.Eav.ImportExport;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
+using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent
 {
@@ -26,6 +28,9 @@ namespace ToSic.SexyContent
             cont.RegisterType(typeof(Eav.Serializers.Serializer), typeof(Serializers.Serializer), new InjectionConstructor());//, null, null, null);
             cont.RegisterType(typeof(IEavValueConverter), typeof(DnnValueConverter), new InjectionConstructor());
             cont.RegisterType(typeof(IEavUserInformation), typeof(DnnUserInformation), new InjectionConstructor());
+
+            cont.RegisterType(typeof(XmlExporter), typeof(ToSxcXmlExporter), new InjectionConstructor());
+
             _alreadyConfigured = true;
         }
     }

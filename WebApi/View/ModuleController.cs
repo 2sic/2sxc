@@ -128,7 +128,7 @@ namespace ToSic.SexyContent.WebApi.View
 
             var cbEnt = SxcContext.App.Data["Default"].List[parentId];
             // ((EntityContentBlock) SxcContext.ContentBlock).ContentBlockEntity;
-            var blockList = ((Eav.Data.EntityRelationship) cbEnt.GetBestValue(field)).ToList() ?? new List<IEntity>();
+            var blockList = ((ToSic.Eav.Data.EntityRelationship) cbEnt.GetBestValue(field)).ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
             // add only if it's not already in the list (could happen if http requests are run again)

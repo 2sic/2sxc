@@ -25,7 +25,7 @@ namespace ToSic.SexyContent.Installer
                 {
                     ImportAttribute.StringAttribute("ContentType", "ContentType", null, true),
                     ImportAttribute.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
-                });
+                }, alwaysShareConfiguration:true);
 
             // Collect AttributeSets for use in Import
             var attributeSets = new List<ImportAttributeSet>
@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.Installer
             import.RunImport(attributeSets, null);
 
             // 2017-04-01 2dm centralizing eav access
-            EavBridge.ForceShareOnGlobalContentType(dsrcSqlDataSource.StaticName);
+            //EavBridge.ForceShareOnGlobalContentType(dsrcSqlDataSource.StaticName);
             //var metaDataCtx = EavDataController.Instance(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId);
             //metaDataCtx.AttribSet.GetAttributeSet(dsrcSqlDataSource.StaticName).AlwaysShareConfiguration = true;
             //metaDataCtx.SqlDb.SaveChanges();
