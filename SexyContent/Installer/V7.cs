@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Import;
+using ToSic.Eav.ImportExport;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.Internal;
 using Configuration = ToSic.Eav.Configuration;
@@ -38,7 +39,7 @@ namespace ToSic.SexyContent.Installer
                 var xmlToImport =
                     File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.00.xml"));
                 //var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
-                var xmlImport = new XmlImport("en-US", userName, true);
+                var xmlImport = new XmlImportWithFiles("en-US", userName, true);
                 var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
                 if (!success)
@@ -266,7 +267,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                     entitiesToImport.Add(entity);
                 }
 
-                var import = new Eav.Import.Import(null, app, userName);
+                var import = new Eav.Import.Import(null, app/*, userName*/);
                 import.RunImport(null, entitiesToImport);
 
                 logger.LogStep("07.00.00", "Migrated data for app " + app);
@@ -287,7 +288,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 var xmlToImport =
                     File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.03.xml"));
                 //var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
-                var xmlImport = new XmlImport("en-US", userName, true);
+                var xmlImport = new XmlImportWithFiles("en-US", userName, true);
                 var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
                 if (!success)
@@ -314,7 +315,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 var xmlToImport =
                     File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.02.00.xml"));
                 //var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
-                var xmlImport = new XmlImport("en-US", userName, true);
+                var xmlImport = new XmlImportWithFiles("en-US", userName, true);
                 var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
                 if (!success)
@@ -336,7 +337,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             // 1. Import new Attributes for @All content type
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-01.xml"));
-            var xmlImport = new XmlImport("en-US", userName, true);
+            var xmlImport = new XmlImportWithFiles("en-US", userName, true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
             if (!success)
@@ -348,7 +349,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             // 2. Import ContentType-InputType and entities for it
             xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-02.xml"));
-            xmlImport = new XmlImport("en-US", userName, true);
+            xmlImport = new XmlImportWithFiles("en-US", userName, true);
             success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
             if (!success)
@@ -360,7 +361,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             // 3. Hide all unneeded fields - all fields for string, number: all but "Number of Decimals", Minimum and Maximum
             xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-03.xml"));
-            xmlImport = new XmlImport("en-US", userName, true);
+            xmlImport = new XmlImportWithFiles("en-US", userName, true);
             success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
 
             if (!success)

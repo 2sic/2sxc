@@ -8,14 +8,14 @@ using System.Web.Hosting;
 
 namespace ToSic.SexyContent.Internal
 {
-    public class TemplateManager
+    public class TemplateHelpers
     {
         public const string RazorC = "C# Razor";
         public const string RazorVb = "VB Razor";
         public const string TokenReplace = "Token";
 
         public App App;
-        public TemplateManager(App app)
+        public TemplateHelpers(App app)
         {
             App = app;
         }

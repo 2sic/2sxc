@@ -98,7 +98,7 @@ namespace ToSic.SexyContent.AppAssets
 
         public string InternalPath => HttpContext.Current.Server.MapPath(
             Path.Combine(
-                Internal.TemplateManager.GetTemplatePathRoot(EditInfo.LocationScope, _app),
+                Internal.TemplateHelpers.GetTemplatePathRoot(EditInfo.LocationScope, _app),
                 EditInfo.FileName));
 
 
@@ -145,7 +145,7 @@ namespace ToSic.SexyContent.AppAssets
             if (File.Exists(absolutePath)) return false;
 
             // ensure the web.config exists (usually missing in the global area)
-            new Internal.TemplateManager(_app).EnsureTemplateFolderExists(EditInfo.LocationScope);
+            new Internal.TemplateHelpers(_app).EnsureTemplateFolderExists(EditInfo.LocationScope);
 
             // check if the folder to it already exists, or create it...
             var foundFolder = absolutePath.LastIndexOf("\\", StringComparison.InvariantCulture);
@@ -168,7 +168,7 @@ namespace ToSic.SexyContent.AppAssets
 
         private void EnsureWebConfigExists(App app, string scope)
         {
-            new Internal.TemplateManager(app).EnsureTemplateFolderExists(scope);
+            new Internal.TemplateHelpers(app).EnsureTemplateFolderExists(scope);
 
             return;
         }

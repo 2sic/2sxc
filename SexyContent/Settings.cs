@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using Telerik.Charting.Styles;
 using ToSic.Eav;
 
 namespace ToSic.SexyContent

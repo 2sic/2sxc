@@ -30,6 +30,7 @@ namespace ToSic.SexyContent
             cont.RegisterType(typeof(IEavUserInformation), typeof(DnnUserInformation), new InjectionConstructor());
 
             cont.RegisterType(typeof(XmlExporter), typeof(ToSxcXmlExporter), new InjectionConstructor());
+            cont.RegisterType(typeof(IImportExportEnvironment), typeof(ImportExportEnvironment), new InjectionConstructor());
 
             _alreadyConfigured = true;
         }

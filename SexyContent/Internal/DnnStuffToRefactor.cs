@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.Internal
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
-                var tm = new TemplateManager(sxc.App);
+                var tm = new TemplateHelpers(sxc.App);
                 tm.EnsureTemplateFolderExists(Settings.TemplateLocations.PortalFileSystem);
             };
         }

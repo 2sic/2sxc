@@ -11,7 +11,7 @@ using static System.String;
 
 namespace ToSic.SexyContent.ImportExport
 {
-    public class ImportExportEnvironment
+    public class ImportExportEnvironment : IImportExportEnvironment
     {
         public List<ExportImportMessage> Messages = new List<ExportImportMessage>();
 
@@ -78,7 +78,7 @@ namespace ToSic.SexyContent.ImportExport
             }
         }
 
-        public Version Version => typeof(PortalSettings).Assembly.GetName().Version;
+        public Version TennantVersion => typeof(PortalSettings).Assembly.GetName().Version;
 
         public string DefaultLanguage => PortalSettings.Current.DefaultLanguage;
 
@@ -87,7 +87,7 @@ namespace ToSic.SexyContent.ImportExport
             var app = new App(zoneId, appId, PortalSettings.Current, false);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-            var templateRoot =  HttpContext.Current.Server.MapPath(Internal.TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
+            var templateRoot =  HttpContext.Current.Server.MapPath(Internal.TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
             return templateRoot;
         }
 
@@ -170,6 +170,10 @@ namespace ToSic.SexyContent.ImportExport
                 }
             }
         }
+
+        public string ModuleVersion => Settings.ModuleVersion;
+
+        public string FallbackContentTypeScope => Settings.AttributeSetScope;
 
         #endregion
     }

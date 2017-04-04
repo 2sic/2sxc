@@ -127,7 +127,7 @@ namespace ToSic.SexyContent.WebApi
             if (global && !allowFullAccess)
                 throw new NotSupportedException("only host user may access global files");
 
-            var appPath = Internal.TemplateManager.GetTemplatePathRoot(global
+            var appPath = Internal.TemplateHelpers.GetTemplatePathRoot(global
                 ? Settings.TemplateLocations.HostFileSystem
                 : Settings.TemplateLocations.PortalFileSystem
                 , thisApp); // get root in global system

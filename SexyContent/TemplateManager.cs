@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Serializers;
 using ToSic.Eav.WebApi;
-using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {

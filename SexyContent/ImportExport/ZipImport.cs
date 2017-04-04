@@ -85,7 +85,7 @@ namespace ToSic.SexyContent.ImportExport
                                 {
                                     var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
 	                                var doc = XDocument.Parse(fileContents);
-									var import = new XmlImport(_environment.DefaultLanguage, Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*PortalSettings.Current.UserInfo.Username*/);
+									var import = new XmlImportWithFiles(_environment.DefaultLanguage, Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*PortalSettings.Current.UserInfo.Username*/);
 
 									if (!import.IsCompatible(doc))
 										throw new Exception("The app / package is not compatible with this version of 2sxc.");
@@ -205,7 +205,7 @@ namespace ToSic.SexyContent.ImportExport
 
             if (reqVersionNodeDnn != null)
             {
-                var vDnn = _environment.Version;
+                var vDnn = _environment.TennantVersion;
                 var reqDnnV = Version.Parse(reqVersionNodeDnn);
                 if (reqDnnV.CompareTo(vDnn) == 1) // required is bigger
                     throw new Exception("this app requires dnn version " + reqVersionNodeDnn +

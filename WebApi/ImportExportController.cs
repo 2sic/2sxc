@@ -13,7 +13,6 @@ using ToSic.Eav.ImportExport;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.WebApi.Dnn;
-using XmlImport = ToSic.SexyContent.ImportExport.XmlImport;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -210,7 +209,7 @@ namespace ToSic.SexyContent.WebApi
                 {   // XML
                     using (var fileStreamReader = new StreamReader(file.InputStream))
                     {
-                        var xmlImport = new XmlImport(PortalSettings.DefaultLanguage, UserIdentity.CurrentUserIdentityToken, allowSystemChanges);
+                        var xmlImport = new XmlImportWithFiles(PortalSettings.DefaultLanguage, UserIdentity.CurrentUserIdentityToken, allowSystemChanges);
                         var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
                         result.Succeeded = xmlImport.ImportXml(zoneId, appId, xmlDocument);
                         result.Messages = xmlImport.ImportLog;

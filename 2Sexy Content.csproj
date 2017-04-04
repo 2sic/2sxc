@@ -268,6 +268,7 @@
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
+    <Compile Include="Eav\ImportExport\IImportExportEnvironment.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExportEnvironment.cs" />
     <Compile Include="SexyContent\ImportExport\ToSxcXmlExporter.cs" />
     <Compile Include="SexyContent\Installer\Helpers.cs" />
@@ -308,7 +309,7 @@
     <Compile Include="SexyContent\Internal\AppHelpers.cs" />
     <Compile Include="SexyContent\Internal\DnnStuffToRefactor.cs" />
     <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
-    <Compile Include="SexyContent\Internal\TemplateManager.cs" />
+    <Compile Include="SexyContent\Internal\TemplateHelpers.cs" />
     <Compile Include="WebApi\ImportExportController.cs" />
     <Compile Include="WebApi\SxcWebApiExceptionHandling.cs" />
     <Compile Include="WebApi\AppAssetsController.cs" />
@@ -355,7 +356,7 @@
     <Compile Include="SexyContent\EAV\Extensions\IHasEditingData.cs" />
     <Compile Include="WebApi\InstallerController.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
-    <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
+    <Compile Include="SexyContent\ImportExport\XmlImportWithFiles.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
     <Compile Include="SexyContent\TemplateManager.cs" />
     <Compile Include="WebApi\AppQueryController.cs" />
@@ -476,7 +477,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Beta\" />
-    <Folder Include="Eav\ImportExport\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
