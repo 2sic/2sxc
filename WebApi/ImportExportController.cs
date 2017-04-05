@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Http;
 using System.Xml.Linq;
 using DotNetNuke.Services.Exceptions;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.ImportExport;
@@ -54,7 +55,7 @@ namespace ToSic.SexyContent.WebApi
                 ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
                 : new SxcAppWrapper(appId);
 
-            var contentTypes = ToSic.Eav.State.ContentTypes(appWrapper.App.ZoneId, appWrapper.App.AppId, scope);//  appWrapper.GetContentTypes(scope);
+            var contentTypes = new AppRuntime(appWrapper.App).ContentTypes.FromScope(scope);//  appWrapper.GetContentTypes(scope);
             var entities = appWrapper.GetEntities();
             var templates = appWrapper.GetTemplates();
             //var dimensions = new[] { appWrapper.GetCultureCode() };

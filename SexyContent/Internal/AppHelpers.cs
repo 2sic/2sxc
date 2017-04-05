@@ -3,6 +3,7 @@ using System.Linq;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources.Caches;
 using static System.String;
 
@@ -13,7 +14,7 @@ namespace ToSic.SexyContent.Internal
         public static int? GetAppIdFromModule(ModuleInfo module, int zoneId)
         {
             if (module.DesktopModule.ModuleName == "2sxc")
-                return State.GetDefaultAppId(zoneId);
+                return new ZoneRuntime(zoneId).DefaultAppId;// State.GetDefaultAppId(zoneId);
 
             var appName = DnnStuffToRefactor.TryToGetReliableSetting(module, Settings.AppNameString);
 
@@ -46,7 +47,7 @@ namespace ToSic.SexyContent.Internal
                 {
                         var mds = DataSource.GetMetaDataSource(zoneId, p.Key);
                         var appMetaData = mds
-                            .GetAssignedEntities(State.GetAssignmentTypeId(Constants.AppAssignmentName), p.Key,
+                            .GetAssignedEntities(SystemRuntime.GetKeyTypeId(Constants.AppAssignmentName), p.Key,
                                 Settings.AttributeSetStaticNameApps)
                             .FirstOrDefault();
                         string folder = appMetaData?.GetBestValue("Folder").ToString();
@@ -87,13 +88,7 @@ namespace ToSic.SexyContent.Internal
         }
 
 
-        //public static int GetDefaultAppId(int zoneId)
-        //    => State.GetDefaultAppId(zoneId);// ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].DefaultAppId;
-
-
         public static string AppBasePath(PortalSettings ownerPS )
-
-
         {
             if (ownerPS == null)
                 ownerPS = PortalSettings.Current;

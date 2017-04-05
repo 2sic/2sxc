@@ -4,6 +4,7 @@ using System.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 //using ToSic.Eav.BLL;
 using ToSic.SexyContent.Environment.Base;
 using ToSic.SexyContent.Environment.Interfaces;
@@ -35,7 +36,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // Create new zone automatically
             if (!c.ContainsKey(zoneSettingKey))
             {
-                zoneId = State.ZoneCreate(portalSettings.PortalName + " (Portal " + tennantId + ")");
+                zoneId = ZoneManager.CreateZone(portalSettings.PortalName + " (Portal " + tennantId + ")");
                 PortalController.UpdatePortalSetting(tennantId, Settings.PortalSettingZoneId, zoneId.ToString());
             }
             else zoneId = Int32.Parse(c[zoneSettingKey]);
@@ -53,19 +54,19 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// </summary>
         public List<Culture> CulturesWithState(int tennantId, int zoneId)
         {
-            // note: get tupples, item1 is active (bool), item2 is TennantKey (string)
-            var availableEavLanguages = State.ZoneLanguages(zoneId);// new EavBridge(zoneId, State.GetDefaultAppId(zoneId)).ZoneLanguages();
+            // note: 
+            var availableEavLanguages = new ZoneManager(zoneId).Languages; // State.ZoneLanguages(zoneId);// new EavBridge(zoneId, State.GetDefaultAppId(zoneId)).ZoneLanguages();
                 // EavDataController.Instance(zoneId, State.GetDefaultAppId(zoneId)).Dimensions.GetLanguages();
             var defaultLanguageCode = new PortalSettings(tennantId).DefaultLanguage;
             var defaultLanguage = availableEavLanguages
-                .FirstOrDefault(p => p.Item2 /*.ExternalKey */ == defaultLanguageCode);
-            var defaultLanguageIsActive = defaultLanguage?.Item1 == true;
+                .FirstOrDefault(p => p.TennantKey  == defaultLanguageCode);
+            var defaultLanguageIsActive = defaultLanguage?.Active == true;
 
             return (from c in LocaleController.Instance.GetLocales(tennantId)
                     select new Culture(
                         c.Value.Code,
                         c.Value.Text,
-                        availableEavLanguages.Any(a => a.Item1 && a.Item2 /*.ExternalKey */ == c.Value.Code),// && a.ZoneID == zoneId),
+                        availableEavLanguages.Any(a => a.Active && a.TennantKey == c.Value.Code),
                         c.Value.Code == defaultLanguageCode && !defaultLanguageIsActive ||
                         (defaultLanguageIsActive && c.Value.Code != defaultLanguageCode))
                 )

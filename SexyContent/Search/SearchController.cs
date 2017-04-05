@@ -7,6 +7,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
@@ -34,7 +35,7 @@ namespace ToSic.SexyContent.Search
             //if (!zoneId.HasValue)
             //    return searchDocuments;
 
-            int? appId = State.GetDefaultAppId(zoneId);
+            int? appId = new ZoneRuntime(zoneId).DefaultAppId;// State.GetDefaultAppId(zoneId);
 
             if (!isContentModule)
             {

@@ -8,6 +8,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Dnn;
 using Assembly = System.Reflection.Assembly;
@@ -55,8 +56,8 @@ namespace ToSic.SexyContent.WebApi
             //var sexy = new SxcInstance(zoneId.Value, cache.AppId);
             //var app = new App(zoneId, cache.AppId, PortalSettings, false);
             var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
-
-            State.ZoneLanguageAddOrUpdate(zoneId, cultureCode, cultureText, enable);
+            new ZoneManager(zoneId).SaveLanguage(cultureCode, cultureText, enable);
+            // State.ZoneLanguageAddOrUpdate(zoneId, cultureCode, cultureText, enable);
             //new EavBridge(app).ZoneAddOrUpdateLanguage(cultureCode, cultureText, enable);
             // app.EavContext.Dimensions.AddOrUpdateLanguage();
 	    }

@@ -107,7 +107,7 @@ namespace ToSic.Eav.AppEngine
             var ctc = new ContentTypeController();
             var ser = new Serializer();
 
-            return State.ContentTypes(ZoneId, AppId, Settings.AttributeSetScope) //  GetAvailableContentTypes(Settings.AttributeSetScope)
+            return new AppRuntime(ZoneId, AppId).ContentTypes.FromScope(Settings.AttributeSetScope) //  GetAvailableContentTypes(Settings.AttributeSetScope)
                 .Where(p => availableTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)) // must exist in at least 1 template
                 .OrderBy(p => p.Name)
                 .Select(p => new

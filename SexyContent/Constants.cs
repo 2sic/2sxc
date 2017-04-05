@@ -9,18 +9,6 @@ namespace ToSic.SexyContent
         public const string JsonModifiedNodeName = "Modified";
         public const string JsonEntityIdNodeName = "EntityId";
 
-        //// Special use cases of entities
-        //public const string ContentKey = "Content";
-        //public const string ContentKeyLower = "content";
-
-        //public const string PresentationKey = "Presentation";
-        //public const string PresentationKeyLower = "presentation";
-
-
-        //// special uses of Apps
-        //public const string ContentAppName = "Content";
-        //public const string AppAssignmentName = "App";
-
         // Special constant to protect functions which should use named parameters
         internal const string RandomProtectionParameter = "random-y023n";
 

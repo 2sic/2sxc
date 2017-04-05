@@ -339,7 +339,7 @@
     <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
     <Compile Include="WebApi\EavApiProxies\EntityPickerController.cs" />
-    <Compile Include="SexyContent\Element.cs" />
+    <Compile Include="Deprecated\RemoveInV10\Element.cs" />
     <Compile Include="SexyContent\DynamicEntity.cs" />
     <Compile Include="SexyContent\Engines\EngineBase.cs" />
     <Compile Include="SexyContent\Engines\EngineFactory.cs" />
@@ -362,7 +362,6 @@
     <Compile Include="SexyContent\Search\SearchIndexException.cs" />
     <Compile Include="SexyContent\Search\SearchInfo.cs" />
     <Compile Include="SexyContent\SexyContentException.cs" />
-    <Compile Include="SexyContent\TemplateDefault.cs" />
     <Compile Include="WebApi\View\ModuleController.cs" />
     <Compile Include="WebApi\Helpers.cs" />
     <Compile Include="WebApi\SxcApiController.cs" />

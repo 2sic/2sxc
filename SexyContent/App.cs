@@ -7,6 +7,7 @@ using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.AppEngine;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.ValueProvider;
@@ -105,7 +106,7 @@ namespace ToSic.SexyContent
                 AppManagement.EnsureAppIsConfigured(ZoneId, AppId); // make sure additional settings etc. exist
 
             // Get app-describing entity
-            var appAssignmentId = State.GetAssignmentTypeId(Constants.AppAssignmentName);
+            var appAssignmentId = SystemRuntime.GetKeyTypeId(Constants.AppAssignmentName);
             var mds = DataSource.GetMetaDataSource(ZoneId, AppId);
             var appMetaData = mds
                     .GetAssignedEntities(appAssignmentId, AppId,

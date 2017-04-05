@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using static System.String;
 
 namespace ToSic.SexyContent.Internal
@@ -21,7 +22,7 @@ namespace ToSic.SexyContent.Internal
         /// <returns></returns>
         public static List<App> GetApps(int zoneId, bool includeDefaultApp, PortalSettings ownerPs)
         {
-            var appIds = State.GetAppList(zoneId);
+            var appIds = new ZoneRuntime(zoneId).Apps;// State.GetAppList(zoneId);
             var sexyApps = appIds.Select(eavApp => new App(zoneId, eavApp.Key, ownerPs));
 
             if (!includeDefaultApp)
@@ -38,7 +39,7 @@ namespace ToSic.SexyContent.Internal
         /// <param name="appName"></param>
         internal static void EnsureAppIsConfigured(int zoneId, int appId, string appName = null)
         {
-            var appAssignment = State.GetAssignmentTypeId(Constants.AppAssignmentName);
+            var appAssignment = SystemRuntime.GetKeyTypeId(Constants.AppAssignmentName);
             var scope = Settings.AttributeSetScopeApps;
             var mds = DataSource.GetMetaDataSource(zoneId, appId);
             var appMetaData = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
@@ -46,13 +47,14 @@ namespace ToSic.SexyContent.Internal
             var appSettings = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
 
             // Get appName from cache - stop if it's a "Default" app
-            var eavAppName = State.GetAppName(zoneId, appId); 
+            var eavAppName = new ZoneRuntime(zoneId).GetName(appId);// State.GetAppName(zoneId, appId); 
 
             if (eavAppName == Eav.Constants.DefaultAppName)
                 return;
 
+            var appMan = new AppManager(zoneId, appId);
             if (appMetaData == null)
-                State.MetadataEnsureTypeAndSingleEntity(zoneId, appId, scope,
+                appMan.MetadataEnsureTypeAndSingleEntity(scope,
                     Settings.AttributeSetStaticNameApps,
                     "App Metadata",
                     appAssignment,
@@ -69,7 +71,7 @@ namespace ToSic.SexyContent.Internal
 
             // Add new (empty) ContentType for Settings
             if (appSettings == null)
-                State.MetadataEnsureTypeAndSingleEntity(zoneId, appId, scope,
+                appMan.MetadataEnsureTypeAndSingleEntity(scope,
                     Settings.AttributeSetStaticNameAppSettings,
                     "Stores settings for an app",
                     appAssignment, 
@@ -77,14 +79,14 @@ namespace ToSic.SexyContent.Internal
             
             // add new (empty) ContentType for Resources
             if (appResources == null)
-                State.MetadataEnsureTypeAndSingleEntity(zoneId, appId, scope,
+                appMan.MetadataEnsureTypeAndSingleEntity(scope,
                     Settings.AttributeSetStaticNameAppResources,
                     "Stores resources like translations for an app", 
                     appAssignment, 
                     null);
 
             if (appMetaData == null || appSettings == null || appResources == null)
-                State.Purge(zoneId, appId);
+                SystemManager.Purge(zoneId, appId);
         }
 
         /// <summary>
@@ -101,7 +103,7 @@ namespace ToSic.SexyContent.Internal
             if (appName == Constants.ContentAppName || appName == Eav.Constants.DefaultAppName || IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
                 throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
 
-            var appId = State.AppCreate(zoneId);
+            var appId = new ZoneManager(zoneId).CreateApp();// State.AppCreate(zoneId);
 
             EnsureAppIsConfigured(zoneId, appId, appName);
         }
@@ -112,7 +114,7 @@ namespace ToSic.SexyContent.Internal
             if (zoneId != new Environment.Environment().ZoneMapper.GetZoneId(ps.PortalId))//  ZoneHelpers.GetZoneId(ps.PortalId) )
                 throw new Exception("This app does not belong to portal " + ps.PortalId);
 
-            if (appId == State.GetDefaultAppId(zoneId))
+            if (appId == new ZoneRuntime(zoneId).DefaultAppId)// State.GetDefaultAppId(zoneId))
                 throw new Exception("The default app of a zone cannot be removed.");
 
             // Delete folder in dnn
@@ -120,7 +122,7 @@ namespace ToSic.SexyContent.Internal
             if (!IsNullOrEmpty(sexyApp.Folder) && Directory.Exists(sexyApp.PhysicalPath))
                 Directory.Delete(sexyApp.PhysicalPath, true);
 
-            State.AppDelete(zoneId, appId);
+            new ZoneManager(zoneId).DeleteApp(appId); //State.AppDelete(zoneId, appId);
         }
 
 

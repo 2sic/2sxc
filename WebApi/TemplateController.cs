@@ -5,6 +5,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.AppEngine;
+using ToSic.Eav.Apps;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -18,7 +19,7 @@ namespace ToSic.SexyContent.WebApi
 	    {
             var tm = TemplateManager(appId);
 
-	        var attributeSetList = State.ContentTypes(tm.ZoneId, tm.AppId, Settings.AttributeSetScope).ToList();// tm.GetAvailableContentTypes(Settings.AttributeSetScope).ToList();
+	        var attributeSetList = new AppRuntime(tm.ZoneId, tm.AppId).ContentTypes.FromScope(Settings.AttributeSetScope).ToList();// tm.GetAvailableContentTypes(Settings.AttributeSetScope).ToList();
             var templateList = tm.GetAllTemplates();
             var templates = from c in templateList
                             select new
