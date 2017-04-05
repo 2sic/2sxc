@@ -18,17 +18,10 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
 
         public string Convert(ConversionScenario scenario, string type, string originalValue/*, PortalSettings portalInfo*/)
         {
-            switch (scenario)
-            {
-                case ConversionScenario.GetFriendlyValue:
-                    if (type == hlnkType)
-                        return TryToResolveDnnCodeToLink(originalValue);
-                    break;
-                case ConversionScenario.ConvertFriendlyToData:
-                    if (type == hlnkType)
-                        return TryToResolveOneLinkToInternalDnnCode(originalValue);
-                    break;
-            }
+            if (type == hlnkType)
+                return scenario == ConversionScenario.GetFriendlyValue
+                    ? TryToResolveDnnCodeToLink(originalValue)
+                    : TryToResolveOneLinkToInternalDnnCode(originalValue);
 
             return originalValue;
         }
@@ -43,7 +36,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
         {
             // note: this can always use the current context, because this should happen
             // when saving etc. - which is always expected to happen in the owning portal
-	        var portalInfo = PortalSettings.Current; //PortalController.Instance.GetCurrentPortalSettings();
+            var portalInfo = PortalSettings.Current; //PortalController.Instance.GetCurrentPortalSettings();
 
             // Try file reference
             var fileInfo = FileManager.Instance.GetFile(portalInfo.PortalId, potentialFilePath);
@@ -78,20 +71,10 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
             if (!regularExpression.Success)
                 return value;
 
-            //var fileManager = FileManager.Instance;
-            //var tabController = new TabController();
             var linkType = regularExpression.Groups["type"].Value.ToLower();
             var linkId = int.Parse(regularExpression.Groups["id"].Value);
             var urlParams = regularExpression.Groups["params"].Value ?? "";
 
-            // old
-
-            //var match = Regex.Match(value, @"(?<type>.+)\:(?<id>\d+)");
-            //if (!match.Success)
-            //    return value;
-
-            //var linkId = int.Parse(match.Groups["id"].Value);
-            //var linkType = match.Groups["type"].Value;
             try
             {
                 var result = linkType == "page"
@@ -132,13 +115,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
         private string ResolvePageLink(int id, string defaultValue)
         {
             var tabController = new TabController();
-            // 2016-03-03 before issue #710
-            //var tabInfo = tabController.GetTab(linkId);
-            //if (tabInfo == null)
-            //    return defaultValue;
 
-            //return tabInfo.TabPath;
-            //ownerPortalSettings = SxcInstance.
             var tabInfo = tabController.GetTab(id);
             if (tabInfo == null) return defaultValue;
 
@@ -146,15 +123,10 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
 
             // Get full PortalSettings (with portal alias) if module sharing is active
             if (PortalSettings.Current != null && PortalSettings.Current.PortalId != tabInfo.PortalID)
-            //{
-                portalSettings = new PortalSettings(tabInfo.PortalID); 
-                //var portalAlias = ownerPortalSettings.PrimaryAlias ?? TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(tabInfo.PortalID).First();
-                //portalSettings = new PortalSettings(id, portalAlias);
-            //}
-            if(portalSettings == null) return defaultValue;
+                portalSettings = new PortalSettings(tabInfo.PortalID);
 
-            // var tabInfo = tabController.GetTab(id, portalSettings.PortalId, false);
-            // if (tabInfo == null) return defaultValue;
+            if (portalSettings == null) return defaultValue;
+
             if (tabInfo.CultureCode != "" && tabInfo.CultureCode != PortalSettings.Current.CultureCode)
             {
                 var cultureTabInfo = tabController.GetTabByCulture(tabInfo.TabID, tabInfo.PortalID, LocaleController.Instance.GetLocale(PortalSettings.Current.CultureCode));
@@ -164,7 +136,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
             }
 
             // Exception in AdvancedURLProvider because ownerPortalSettings.PortalAlias is null
-            return Globals.NavigateURL(tabInfo.TabID, portalSettings, "", new string[] {});// + urlParams;
+            return Globals.NavigateURL(tabInfo.TabID, portalSettings, "", new string[] { });// + urlParams;
         }
     }
 

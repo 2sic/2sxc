@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.ImportExport;
+using ToSic.Eav.ImportExport.Logging;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -8,11 +8,6 @@ namespace ToSic.SexyContent.WebApi
         public bool Succeeded;
 
         public List<ExportImportMessage> Messages;
-
-        //public ImportResult()
-        //{
-        //    Messages = new List<ExportImportMessage>();
-        //}
     }
 
 }

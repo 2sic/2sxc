@@ -11,6 +11,7 @@ using ToSic.Eav;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Import;
+using ToSic.Eav.ImportExport;
 using ToSic.Eav.ImportExport.Interfaces;
 using ToSic.Eav.ImportExport.Models;
 using Configuration = ToSic.Eav.Configuration;
@@ -221,28 +222,28 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                         AttributeSetStaticName = "2SexyContent-Template",
                         EntityGuid = t.NewEntityGuid,
                         IsPublished = true,
-                        AssignmentObjectTypeId = Configuration.AssignmentObjectTypeIdDefault
+                        KeyTypeId = Configuration.AssignmentObjectTypeIdDefault
                     };
-                    entity.Values = new Dictionary<string, List<IValueImportModel>>
+                    entity.Values = new Dictionary<string, List<IImpValue>>
                     {
-                        {"Name", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.Name }}},
-                        {"Path", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.Path }}},
-                        {"ContentTypeStaticName", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ContentTypeId }}},
-                        {"ContentDemoEntity", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.ContentDemoEntityGuids }}},
-                        {"PresentationTypeStaticName", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.PresentationTypeId }}},
-                        {"PresentationDemoEntity", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.PresentationDemoEntityGuids }}},
-                        {"ListContentTypeStaticName", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ListContentTypeId }}},
-                        {"ListContentDemoEntity", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.ListContentDemoEntityGuids }}},
-                        {"ListPresentationTypeStaticName", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ListPresentationTypeId }}},
-                        {"ListPresentationDemoEntity", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.ListPresentationDemoEntityGuids }}},
-                        {"Type", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.Type }}},
-                        {"IsHidden", new List<IValueImportModel> {new ValueImportModel<bool?>(entity) { Value = t.IsHidden }}},
-                        {"Location", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.Location }}},
-                        {"UseForList", new List<IValueImportModel> {new ValueImportModel<bool?>(entity) { Value = t.UseForList }}},
-                        {"PublishData", new List<IValueImportModel> {new ValueImportModel<bool?>(entity) { Value = t.PublishData }}},
-                        {"StreamsToPublish", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.StreamsToPublish }}},
-                        {"Pipeline", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.PipelineEntityGuids }}},
-                        {"ViewNameInUrl", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ViewNameInUrl }}}
+                        {"Name", new List<IImpValue> {new ImpValue<string>(entity, t.Name )}},
+                        {"Path", new List<IImpValue> {new ImpValue<string>(entity, t.Path)}},
+                        {"ContentTypeStaticName", new List<IImpValue> {new ImpValue<string>(entity, t.ContentTypeId)}},
+                        {"ContentDemoEntity", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.ContentDemoEntityGuids)}},
+                        {"PresentationTypeStaticName", new List<IImpValue> {new ImpValue<string>(entity, t.PresentationTypeId)}},
+                        {"PresentationDemoEntity", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.PresentationDemoEntityGuids)}},
+                        {"ListContentTypeStaticName", new List<IImpValue> {new ImpValue<string>(entity, t.ListContentTypeId)}},
+                        {"ListContentDemoEntity", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.ListContentDemoEntityGuids)}},
+                        {"ListPresentationTypeStaticName", new List<IImpValue> {new ImpValue<string>(entity, t.ListPresentationTypeId)}},
+                        {"ListPresentationDemoEntity", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.ListPresentationDemoEntityGuids)}},
+                        {"Type", new List<IImpValue> {new ImpValue<string>(entity, t.Type)}},
+                        {"IsHidden", new List<IImpValue> {new ImpValue<bool?>(entity, t.IsHidden)}},
+                        {"Location", new List<IImpValue> {new ImpValue<string>(entity, t.Location)}},
+                        {"UseForList", new List<IImpValue> {new ImpValue<bool?>(entity, t.UseForList)}},
+                        {"PublishData", new List<IImpValue> {new ImpValue<bool?>(entity, t.PublishData)}},
+                        {"StreamsToPublish", new List<IImpValue> {new ImpValue<string>(entity, t.StreamsToPublish)}},
+                        {"Pipeline", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.PipelineEntityGuids)}},
+                        {"ViewNameInUrl", new List<IImpValue> {new ImpValue<string>(entity, t.ViewNameInUrl)}}
                     };
                     entitiesToImport.Add(entity);
                 }
@@ -254,15 +255,15 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                         AttributeSetStaticName = "2SexyContent-ContentGroup",
                         EntityGuid = t.NewEntityGuid,
                         IsPublished = true,
-                        AssignmentObjectTypeId = Configuration.AssignmentObjectTypeIdDefault
+                        KeyTypeId = Configuration.AssignmentObjectTypeIdDefault
                     };
-                    entity.Values = new Dictionary<string, List<IValueImportModel>>
+                    entity.Values = new Dictionary<string, List<IImpValue>>
                     {
-                        {"Template", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.TemplateGuids }}},
-                        {Constants.ContentKey, new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ContentGuids }}},
-                        {Constants.PresentationKey, new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.PresentationGuids }}},
-                        {"ListContent", new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListContentGuids }}},
-                        {"ListPresentation", new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListPresentationGuids }}}
+                        {"Template", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.TemplateGuids)}},
+                        {Constants.ContentKey, new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ContentGuids)}},
+                        {Constants.PresentationKey, new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.PresentationGuids)}},
+                        {"ListContent", new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ListContentGuids)}},
+                        {"ListPresentation", new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ListPresentationGuids)}}
                     };
                     entitiesToImport.Add(entity);
                 }

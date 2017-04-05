@@ -6,6 +6,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.ImportExport;
+using ToSic.Eav.ImportExport.Logging;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Environment.Dnn7
