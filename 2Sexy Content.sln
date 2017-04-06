@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2Sexy Content", "2Sexy Cont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2sxc-ui", "..\..\..\..\2sxc-ui\2sxc-ui.csproj", "{49FD2D87-9DC5-45BD-B683-955359A8C543}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sxc WebApi", "Sxc WebApi\Sxc WebApi.csproj", "{2F0610DE-2518-4FC8-823E-7228DD17C04F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{D4250011-B9BE-4326-9736-4F0122C79802}.Release|Any CPU.Build.0 = Release|Any CPU
 		{49FD2D87-9DC5-45BD-B683-955359A8C543}.Debug|Any CPU.ActiveCfg = Release|Any CPU
 		{49FD2D87-9DC5-45BD-B683-955359A8C543}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F0610DE-2518-4FC8-823E-7228DD17C04F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F0610DE-2518-4FC8-823E-7228DD17C04F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F0610DE-2518-4FC8-823E-7228DD17C04F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F0610DE-2518-4FC8-823E-7228DD17C04F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

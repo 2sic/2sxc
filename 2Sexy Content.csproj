@@ -65,10 +65,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\dotnetnuke.modules.userdefinedtable.dll</HintPath>
     </Reference>
-    <Reference Include="DotNetNuke.RadEditorProvider, Version=6.1.0.1171, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\DotNetNuke.RadEditorProvider.dll</HintPath>
-    </Reference>
     <Reference Include="DotNetNuke.Web, Version=6.1.0.1171, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.Web.dll</HintPath>
@@ -76,10 +72,6 @@
     <Reference Include="DotNetNuke.Web.Client, Version=6.1.0.272, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.Web.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetNuke.Web.Razor, Version=7.2.0.607, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\DotNetNuke.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="DotNetNuke.WebUtility, Version=4.2.1.783, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -119,12 +111,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -132,10 +120,6 @@
       <HintPath>..\..\bin\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Services" />
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\System.Web.WebPages.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.EnterpriseServices" />
@@ -174,7 +158,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adam\AdamController.cs" />
     <Compile Include="Adam\AdamFile.cs" />
     <Compile Include="Adam\AdamFolder.cs" />
     <Compile Include="Adam\AdamItem.cs" />
@@ -287,15 +270,6 @@
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="Environment\Dnn7\DataSources\DnnFormAndList.cs" />
-    <Compile Include="WebApi\Dnn\DnnApiControllerWithFixes.cs" />
-    <Compile Include="WebApi\Dnn\ModuleController.cs" />
-    <Compile Include="WebApi\ImportExport\HttpResponseMessageHelper.cs" />
-    <Compile Include="WebApi\ImportExport\ImportResult.cs" />
-    <Compile Include="WebApi\ImportExport\SxcAppWrapper.cs" />
-    <Compile Include="WebApi\EavApiProxies\ContentExportController.cs" />
-    <Compile Include="WebApi\EavApiProxies\ContentImportController.cs" />
-    <Compile Include="WebApi\EavApiProxies\MetadataController.cs" />
-    <Compile Include="WebApi\EavApiProxies\EntitiesController.cs" />
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -308,17 +282,8 @@
     <Compile Include="SexyContent\Internal\DnnStuffToRefactor.cs" />
     <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
     <Compile Include="SexyContent\Internal\TemplateHelpers.cs" />
-    <Compile Include="WebApi\ImportExportController.cs" />
-    <Compile Include="WebApi\SxcWebApiExceptionHandling.cs" />
-    <Compile Include="WebApi\AppAssetsController.cs" />
-    <Compile Include="WebApi\TemplateController.cs" />
-    <Compile Include="WebApi\ToRefactorDeliverCBDataLight\GetContentBlockDataLight.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />
-    <Compile Include="WebApi\SystemController.cs" />
-    <Compile Include="WebApi\ContentGroupController.cs" />
-    <Compile Include="WebApi\EavApiProxies\ContentTypeController.cs" />
-    <Compile Include="WebApi\Dnn\HyperlinkController.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEav.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
@@ -326,7 +291,6 @@
     <Compile Include="SexyContent\Security\PermissionGrant.cs" />
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\Installer\InstallationController.cs" />
-    <Compile Include="WebApi\EavApiProxies\PipelineDesignerController.cs" />
     <Compile Include="SexyContent\DataSources\App.cs" />
     <Compile Include="SexyContent\DnnHelper.cs" />
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
@@ -338,7 +302,6 @@
     <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
-    <Compile Include="WebApi\EavApiProxies\EntityPickerController.cs" />
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
     <Compile Include="SexyContent\DynamicEntity.cs" />
     <Compile Include="SexyContent\Engines\EngineBase.cs" />
@@ -351,21 +314,13 @@
     <Compile Include="SexyContent\EAV\Extensions\EntityDecorator.cs" />
     <Compile Include="SexyContent\EAV\Extensions\EntityInContentGroup.cs" />
     <Compile Include="SexyContent\EAV\Extensions\IHasEditingData.cs" />
-    <Compile Include="WebApi\InstallerController.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
     <Compile Include="SexyContent\TemplateManager.cs" />
-    <Compile Include="WebApi\AppQueryController.cs" />
-    <Compile Include="WebApi\AppContentController.cs" />
-    <Compile Include="WebApi\RouteMapper.cs" />
     <Compile Include="SexyContent\Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\Search\SearchController.cs" />
     <Compile Include="SexyContent\Search\SearchIndexException.cs" />
     <Compile Include="SexyContent\Search\SearchInfo.cs" />
     <Compile Include="SexyContent\SexyContentException.cs" />
-    <Compile Include="WebApi\View\ModuleController.cs" />
-    <Compile Include="WebApi\Helpers.cs" />
-    <Compile Include="WebApi\SxcApiController.cs" />
-    <Compile Include="WebApi\AppApiControllerSelector.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
