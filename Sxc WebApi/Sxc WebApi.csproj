@@ -7,8 +7,8 @@
     <ProjectGuid>{2F0610DE-2518-4FC8-823E-7228DD17C04F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ToSic.Sxc.WebApi</RootNamespace>
-    <AssemblyName>ToSic.Sxc.WebApi</AssemblyName>
+    <RootNamespace>ToSic.SexyContent.WebApi</RootNamespace>
+    <AssemblyName>ToSic.SexyContent.WebApi</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -75,10 +75,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\bin\ToSic.Eav.ImportExport.dll</HintPath>
     </Reference>
-    <Reference Include="ToSic.Eav.Persistence.EF4, Version=4.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\ToSic.Eav.Persistence.EF4.dll</HintPath>
-    </Reference>
     <Reference Include="ToSic.Eav.Tokens, Version=4.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\bin\ToSic.Eav.Tokens.dll</HintPath>
@@ -125,6 +121,9 @@
       <Project>{d4250011-b9be-4326-9736-4f0122c79802}</Project>
       <Name>2Sexy Content</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
