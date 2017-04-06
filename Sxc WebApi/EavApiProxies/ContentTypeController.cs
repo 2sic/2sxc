@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public ContentTypeController()
         {
             eavCtc = new Eav.WebApi.ContentTypeController();
-            eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+            //eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
 
         }
 

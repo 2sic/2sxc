@@ -399,7 +399,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Beta\" />
-    <Folder Include="Eav\ImportExport\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
