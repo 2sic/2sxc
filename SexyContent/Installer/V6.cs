@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Import;
 using ToSic.Eav.ImportExport.Models;
 
@@ -32,7 +33,7 @@ namespace ToSic.SexyContent.Installer
                 dsrcSqlDataSource
             };
             var import = new Import(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId/*, Settings.InternalUserName*/);
-            import.RunImport(attributeSets, null);
+            import.ImportIntoDB(attributeSets, null);
 
             // 2017-04-01 2dm centralizing eav access
             //EavBridge.ForceShareOnGlobalContentType(dsrcSqlDataSource.StaticName);
@@ -42,7 +43,9 @@ namespace ToSic.SexyContent.Installer
 
             // Run EAV Version Upgrade (also ensures Content Type sharing)
             var eavVersionUpgrade = new VersionUpgrade(Settings.InternalUserName);
+
             eavVersionUpgrade.EnsurePipelineDesignerAttributeSets();
+            SystemManager.PurgeEverything();
 
             logger.LogStep("06.00.00", "EnsurePipelineDesignerAttributeSets done", false);
         }

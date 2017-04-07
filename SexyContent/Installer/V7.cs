@@ -269,7 +269,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 }
 
                 var import = new Eav.Import.Import(null, app/*, userName*/);
-                import.RunImport(null, entitiesToImport);
+                import.ImportIntoDB(null, entitiesToImport);
 
                 logger.LogStep("07.00.00", "Migrated data for app " + app);
             }

@@ -445,7 +445,13 @@
               <name>ToSic.SexyContent.Razor.dll</name>
             </assembly>
             <assembly>
+              <name>ToSic.SexyContent.WebApi.dll</name>
+            </assembly>
+            <assembly>
               <name>ToSic.Eav.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Apps.dll</name>
             </assembly>
             <assembly>
               <name>ToSic.Eav.Core.dll</name>

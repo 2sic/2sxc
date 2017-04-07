@@ -71,11 +71,15 @@
     <ItemGroup>
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.Razor.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.Razor.pdb" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.WebApi.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.WebApi.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.pdb" />
       
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.pdb" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Apps.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Apps.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Core.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Core.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.DataSources.dll" />
