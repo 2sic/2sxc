@@ -5,6 +5,7 @@
 			"Refresh": "Rafraichir",
 			"System": "fonctions système avancées",
 			"Save": "Enregistrer",
+			"NotSave": "Annuler",
 			"Cancel": "Annuler",
 			"Permissions": "permissions",
 			"Edit": "Modifier",
@@ -20,7 +21,9 @@
 		"Questions": {
 			"Delete": "voulez-vous supprimer {{target}}?",
 			"DeleteEntity": "supprimer '{{title}}' ({{id}}?",
-			"SystemInput": "Réservé aux opérations avancée. A utiliser en connaissance de cause \n\n Entre les commandes d'admin:"
+			"Rename": "Par quel nom voulez-vous remplacer {{target}}?",
+			"SystemInput": "Réservé aux opérations avancée. A utiliser en connaissance de cause \n\n Entre les commandes d'admin:",
+			"ForceDelete": "Voulez-vous forcer la suppression '{{title}}' ({{id}})?"
 		},
 		"Terms": {
 			"Title": "titre"
