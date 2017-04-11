@@ -1,10 +1,10 @@
 ﻿using System.Net.Http;
 using System.Web.Http;
-using ToSic.Eav.ImportExport.Refactoring.Options;
+using ToSic.Eav.ImportExport.Options;
 using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.Dnn;
 
-namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
+namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
     /// <summary>
     /// Web API Controller for the Pipeline Designer UI
@@ -28,8 +28,8 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         [HttpGet]
         [AllowAnonymous]
         public HttpResponseMessage ExportContent(int appId, string language, string defaultLanguage, string contentType,
-            RecordExport recordExport, ResourceReferenceExport resourcesReferences,
-            LanguageReferenceExport languageReferences, string selectedIds = null)
+            ExportSelection recordExport, ExportResourceReferenceMode resourcesReferences,
+            ExportLanguageResolution languageReferences, string selectedIds = null)
         {
             // do security check
             if(!PortalSettings.UserInfo.IsInRole(PortalSettings.AdministratorRoleName))// todo: copy to 8.5 "Administrators")) // note: user.isinrole didn't work

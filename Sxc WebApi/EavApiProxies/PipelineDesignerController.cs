@@ -8,7 +8,7 @@ using DotNetNuke.Web.Api;
 using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.Dnn;
 
-namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
+namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
 	/// <summary>
 	/// Proxy Class to the EAV PipelineDesignerController (Web API Controller)

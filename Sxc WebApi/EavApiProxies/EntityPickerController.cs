@@ -4,7 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.WebApi;
 
-namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
+namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
     [SupportedModules("2sxc,2sxc-app")]
     public class EntityPickerController : SxcApiController

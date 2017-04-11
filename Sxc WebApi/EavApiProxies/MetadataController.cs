@@ -4,7 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.WebApi;
 
-namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
+namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
     /// <summary>
     /// Web API Controller for the Pipeline Designer UI

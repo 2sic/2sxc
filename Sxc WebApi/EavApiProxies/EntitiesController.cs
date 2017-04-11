@@ -11,7 +11,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Security;
 
-namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
+namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
 	/// <summary>
 	/// Proxy Class to the EAV EntitiesController (Web API Controller)
