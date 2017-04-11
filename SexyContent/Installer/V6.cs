@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Import;
+using ToSic.Eav.BLL.Parts;
 using ToSic.Eav.ImportExport.Models;
 
 namespace ToSic.SexyContent.Installer
@@ -32,8 +32,8 @@ namespace ToSic.SexyContent.Installer
             {
                 dsrcSqlDataSource
             };
-            var import = new Import(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId/*, Settings.InternalUserName*/);
-            import.ImportIntoDB(attributeSets, null);
+            var import = new DbImport(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId/*, Settings.InternalUserName*/);
+            import.ImportIntoDb(attributeSets, null);
 
             // 2017-04-01 2dm centralizing eav access
             //EavBridge.ForceShareOnGlobalContentType(dsrcSqlDataSource.StaticName);

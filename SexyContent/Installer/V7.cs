@@ -10,7 +10,7 @@ using System.Xml.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.DataSources.Caches;
-using ToSic.Eav.Import;
+using ToSic.Eav.BLL.Parts;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.ImportExport.Interfaces;
 using ToSic.Eav.ImportExport.Models;
@@ -268,8 +268,8 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                     entitiesToImport.Add(entity);
                 }
 
-                var import = new Eav.Import.Import(null, app/*, userName*/);
-                import.ImportIntoDB(null, entitiesToImport);
+                var import = new DbImport(null, app/*, userName*/);
+                import.ImportIntoDb(null, entitiesToImport);
 
                 logger.LogStep("07.00.00", "Migrated data for app " + app);
             }
