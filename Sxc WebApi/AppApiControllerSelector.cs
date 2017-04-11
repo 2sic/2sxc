@@ -30,10 +30,7 @@ namespace ToSic.SexyContent.WebApi
             _config = configuration;
         }
 
-        public IDictionary<string, HttpControllerDescriptor> GetControllerMapping()
-        {
-            return PreviousSelector.GetControllerMapping();
-        }
+        public IDictionary<string, HttpControllerDescriptor> GetControllerMapping() => PreviousSelector.GetControllerMapping();
 
         private static readonly string[] AllowedRoutes = {"desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/"}; // old routes, dnn 7/8 & dnn 9 
 

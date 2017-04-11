@@ -1,7 +1,6 @@
 ﻿using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.WebApi;
 using static ToSic.Eav.WebApi.ContentImportController;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -13,29 +12,20 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class ContentImportController : SxcApiController
 	{
-        private readonly Eav.WebApi.ContentImportController eavCtc;
+        private readonly Eav.WebApi.ContentImportController _eavCtc;
         public ContentImportController()
         {
-            eavCtc = new Eav.WebApi.ContentImportController();
-            eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+            _eavCtc = new Eav.WebApi.ContentImportController();
+            _eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
 
         }
 
 
         [HttpPost]
-        public ContentImportResult EvaluateContent(ContentImportArgs args)
-        {
-            return eavCtc.EvaluateContent(args);
-        }
+        public ContentImportResult EvaluateContent(ContentImportArgs args) => _eavCtc.EvaluateContent(args);
 
 
-        [HttpPost]
-        public ContentImportResult ImportContent(ContentImportArgs args)
-        {
-            return eavCtc.ImportContent(args);
-
-        }
-
-
-    }
+	    [HttpPost]
+        public ContentImportResult ImportContent(ContentImportArgs args) => _eavCtc.ImportContent(args);
+	}
 }

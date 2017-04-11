@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.ImportExport.Logging;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.SexyContent.WebApi.ImportExport
 {
     public class ImportResult
     {

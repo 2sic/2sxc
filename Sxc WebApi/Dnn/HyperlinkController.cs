@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
 			if (CanUserViewFile(file))
 				return new
 				{
-					FileId= file.FileId
+				    file.FileId
 				};
 
 			return null;
@@ -33,19 +33,13 @@ namespace ToSic.SexyContent.WebApi.Dnn
 		{
             var conv = new DnnValueConverter();
 		    return conv.Convert(ConversionScenario.GetFriendlyValue, "Hyperlink", hyperlink);
-            // return SexyContent.ResolveHyperlinkValues(hyperlink, Dnn.Portal);
 		}
 
 		private bool CanUserViewFile(IFileInfo file)
 		{
-			if (file != null)
-			{
-				var folder = (FolderInfo)FolderManager.Instance.GetFolder(file.FolderId);
-				if (FolderPermissionController.CanViewFolder(folder))
-					return true;
-			}
-
-			return false;
+		    if (file == null) return false;
+		    var folder = (FolderInfo)FolderManager.Instance.GetFolder(file.FolderId);
+		    return FolderPermissionController.CanViewFolder(folder);
 		}
 
 	}

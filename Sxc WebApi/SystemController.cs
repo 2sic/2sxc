@@ -7,7 +7,6 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Dnn;

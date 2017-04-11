@@ -33,21 +33,12 @@ namespace ToSic.SexyContent.Adam
             EntityBase = new EntityBase(SxcContext, App, Dnn.Portal, entityGuid, fieldName);
         }
 
-        public int MaxFileSizeKb
-        {
-            get
-            {
-                return (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection).MaxRequestLength;
-            }
-        }
+        public int MaxFileSizeKb => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection).MaxRequestLength;
 
 
         [HttpPost]
         [HttpPut]
-        public UploadResult Upload(string contentType, Guid guid, string field, [FromUri] string subFolder = "")
-        {
-            return UploadOne(contentType, guid, field, subFolder);
-        }
+        public UploadResult Upload(string contentType, Guid guid, string field, [FromUri] string subFolder = "") => UploadOne(contentType, guid, field, subFolder);
 
         private UploadResult UploadOne(string contentTypeName, Guid guid, string field, string subFolder)
         {
@@ -201,12 +192,8 @@ namespace ToSic.SexyContent.Adam
         /// </summary>
         private void ExplicitlyRecheckEditPermissions()
         {
-            // 2016-03-30 2rm: Changed code below to work with the Environment permission controller
             if(!SxcContext.Environment.Permissions.UserMayEditContent)
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
-
-            //if (!DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(Dnn.Module))
-            //    throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
         [HttpPost]

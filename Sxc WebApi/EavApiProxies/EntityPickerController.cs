@@ -2,7 +2,6 @@
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.WebApi;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -12,9 +11,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [HttpGet]
         [HttpPost]
  		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<dynamic> GetAvailableEntities([FromUri]int appId, [FromBody] string[] items, [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
-        {
-            return new Eav.WebApi.EntityPickerController().GetAvailableEntities(appId, items, contentTypeName, dimensionId);
-        }
+        public IEnumerable<dynamic> GetAvailableEntities([FromUri]int appId, [FromBody] string[] items, [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null) => new Eav.WebApi.EntityPickerController().GetAvailableEntities(appId, items, contentTypeName, dimensionId);
     }
 }

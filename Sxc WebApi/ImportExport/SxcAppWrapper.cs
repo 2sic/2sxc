@@ -5,7 +5,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.SexyContent.WebApi.ImportExport
 {
     public class SxcAppWrapper
     {
@@ -24,13 +24,6 @@ namespace ToSic.SexyContent.WebApi
 
 
         public IDictionary<int, IEntity> GetEntities() => DataSource.GetInitialDataSource(App.ZoneId, App.AppId).List;
-
-        //public IEnumerable<Culture> GetLanguages() => ZoneHelpers.CulturesWithState(App.OwnerPortalSettings.PortalId, App.ZoneId);
-
-        //public IEnumerable<Culture> GetActiveLanguages() => GetLanguages().Where(c => c.Active);
-
-            // 2017-04-03 2dm refactored - don't need
-        //public IEnumerable<IContentType> GetContentTypes(string scope = "2SexyContent") => App.TemplateManager.GetAvailableContentTypes(scope, true);
 
         public IEnumerable<Template> GetTemplates() => App.TemplateManager.GetAllTemplates();
 

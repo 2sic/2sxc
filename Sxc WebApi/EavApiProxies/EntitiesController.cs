@@ -5,7 +5,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.SexyContent.Serializers;
-using ToSic.SexyContent.WebApi;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.WebApi.Formats;
@@ -17,11 +16,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	/// Proxy Class to the EAV EntitiesController (Web API Controller)
 	/// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
-	public class EntitiesController : SxcApiController // DnnApiController
+	public class EntitiesController : SxcApiController 
 	{
 	    private readonly Eav.WebApi.EntitiesController _entitiesController = new Eav.WebApi.EntitiesController();
 
-		public EntitiesController(): base()
+		public EntitiesController()
 		{
             //2016-10-4 disabled this, as I moved the eav.configuration...to the DnnApi...fixes class
             //Eav.Configuration.SetConnectionString("SiteSqlServer");
@@ -210,18 +209,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    }
 
 
-        //2015-09-12 deprecated this - should use the metadata-controller
-        /// <summary>
-        /// Get Entities with specified AssignmentObjectTypeId and Key
-        /// </summary>
-        //[HttpGet]
-		//public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, int appId)
-		//{
-		//    var metadataController = new ToSic.Eav.WebApi.MetadataController();
-  //          EnsureSerializerHasSxc();
-  //          return metadataController.GetAssignedEntities(assignmentObjectTypeId, keyGuid, contentType, appId);
-		//}
-
         [HttpDelete]
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -264,7 +251,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public IContentType GetContentType(string contentType, int appId)
 		{
             EnsureSerializerHasSxc();
-            // todo refactor-verify
+
             return new Eav.WebApi.ContentTypeController().GetSingle(appId, contentType, null);
             // return entitesController.GetContentType(contentType, appId);
 		}

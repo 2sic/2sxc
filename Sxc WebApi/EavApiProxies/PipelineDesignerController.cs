@@ -5,7 +5,6 @@ using System.Web.Http;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -16,33 +15,26 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	[SupportedModules("2sxc,2sxc-app")]
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [SxcWebApiExceptionHandling]
-	public class PipelineDesignerController : DnnApiControllerWithFixes// DnnApiController
+	public class PipelineDesignerController : DnnApiControllerWithFixes
 	{
 		private readonly Eav.WebApi.PipelineDesignerController _controller;
 
 		public PipelineDesignerController()
 		{
-			var userName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken/* PortalSettings.UserInfo.Username*/;
-			_controller = new Eav.WebApi.PipelineDesignerController(/*userName, */"SiteSqlServer");
+			_controller = new Eav.WebApi.PipelineDesignerController(/*Environment.Dnn7.UserIdentity.CurrentUserIdentityToken, */"SiteSqlServer");
 		}
 
 		/// <summary>
 		/// Get a Pipeline with DataSources
 		/// </summary>
 		[HttpGet]
-		public Dictionary<string, object> GetPipeline(int appId, int? id = null)
-		{
-			return _controller.GetPipeline(appId, id);
-		}
+		public Dictionary<string, object> GetPipeline(int appId, int? id = null) => _controller.GetPipeline(appId, id);
 
-		/// <summary>
+	    /// <summary>
 		/// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
 		/// </summary>
 		[HttpGet]
-		public IEnumerable<object> GetInstalledDataSources()
-		{
-			return _controller.GetInstalledDataSources();
-		}
+		public IEnumerable<object> GetInstalledDataSources() => _controller.GetInstalledDataSources();
 
 	    /// <summary>
 	    /// Save Pipeline
@@ -81,7 +73,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var app = new App(PortalSettings.Current, appId);
 			var templatesUsingPipeline = app.TemplateManager.GetAllTemplates().Where(t => t.Pipeline != null && t.Pipeline.EntityId == id).Select(t => t.TemplateId).ToArray();
 			if (templatesUsingPipeline.Any())
-				throw new Exception(string.Format("Pipeline is used by Templates and cant be deleted. Pipeline EntityId: {0}. TemplateIds: {1}", id, string.Join(", ", templatesUsingPipeline)));
+				throw new Exception(
+				        $"Pipeline is used by Templates and cant be deleted. Pipeline EntityId: {id}. TemplateIds: {string.Join(", ", templatesUsingPipeline)}");
 
 			return _controller.DeletePipeline(appId, id);
 		}

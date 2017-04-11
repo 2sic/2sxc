@@ -2,7 +2,6 @@
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.WebApi;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -12,10 +11,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     [SupportedModules("2sxc,2sxc-app")]
     public class ContentTypeController : SxcApiController
 	{
-        private readonly Eav.WebApi.ContentTypeController eavCtc;
+        private readonly Eav.WebApi.ContentTypeController _eavCtc;
         public ContentTypeController()
         {
-            eavCtc = new Eav.WebApi.ContentTypeController();
+            _eavCtc = new Eav.WebApi.ContentTypeController();
             //eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
 
         }
@@ -23,48 +22,36 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         #region Content-Type Get, Delete, Save
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<dynamic> Get(int appId, string scope = null, bool withStatistics = false)
-        {
-            return eavCtc.Get(appId, scope, withStatistics);
-        }
+        public IEnumerable<dynamic> Get(int appId, string scope = null, bool withStatistics = false) 
+            => _eavCtc.Get(appId, scope, withStatistics);
 
-        [HttpGet]
+	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public dynamic Get(int appId, string contentTypeId, string scope = null)
-        {
-            return eavCtc.GetSingle(appId, contentTypeId, scope);
-        }
+        public dynamic Get(int appId, string contentTypeId, string scope = null) 
+            => _eavCtc.GetSingle(appId, contentTypeId, scope);
 
-        [HttpGet]
+	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
-        {
-            return eavCtc.GetSingle(appId, contentTypeStaticName, scope);
-        }
+        public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null) 
+            => _eavCtc.GetSingle(appId, contentTypeStaticName, scope);
 
-        [HttpGet]
+	    [HttpGet]
         [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool Delete(int appId, string staticName)
-        {
-            return eavCtc.Delete(appId, staticName);
-        }
+        public bool Delete(int appId, string staticName) 
+            => _eavCtc.Delete(appId, staticName);
 
-        [HttpPost]
+	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool Save(int appId, Dictionary<string, string> item)
-        {
-            return eavCtc.Save(appId, item);
-        }
+        public bool Save(int appId, Dictionary<string, string> item) 
+            => _eavCtc.Save(appId, item);
 
-        [HttpGet]
+	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public bool CreateGhost(int appId, string sourceStaticName)
-        {
-            return eavCtc.CreateGhost(appId, sourceStaticName);
-        }
+        public bool CreateGhost(int appId, string sourceStaticName) 
+            => _eavCtc.CreateGhost(appId, sourceStaticName);
 
-        #endregion
+	    #endregion
 
 
         #region Fields - Get, Reorder, Data-Types (for dropdown), etc.
@@ -74,67 +61,49 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         /// </summary>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<dynamic> GetFields(int appId, string staticName)
-        {
-			return eavCtc.GetFields(appId, staticName);
-        }
+        public IEnumerable<dynamic> GetFields(int appId, string staticName) 
+            => _eavCtc.GetFields(appId, staticName);
 
-        [HttpGet]
+	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public string[] DataTypes(int appId)
-        {
-            return eavCtc.DataTypes(appId);
-        }
+        public string[] DataTypes(int appId) 
+            => _eavCtc.DataTypes(appId);
 
-        [HttpGet]
+	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<Dictionary<string, object>> InputTypes(int appId)
-        {
-            return eavCtc.InputTypes(appId);
-        }
+        public IEnumerable<Dictionary<string, object>> InputTypes(int appId) 
+            => _eavCtc.InputTypes(appId);
 
-        [HttpGet]
+	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public int AddField(int appId, int contentTypeId, string staticName, string type, string inputType, int sortOrder)
-        {
-            return eavCtc.AddField(appId, contentTypeId, staticName, type, inputType, sortOrder);
-        }
+        public int AddField(int appId, int contentTypeId, string staticName, string type, string inputType, int sortOrder) 
+            => _eavCtc.AddField(appId, contentTypeId, staticName, type, inputType, sortOrder);
 
-        [HttpGet]
+	    [HttpGet]
         [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool DeleteField(int appId, int contentTypeId, int attributeId)
-        {
-            return eavCtc.DeleteField(appId, contentTypeId, attributeId);
-        }
+        public bool DeleteField(int appId, int contentTypeId, int attributeId) => _eavCtc.DeleteField(appId, contentTypeId, attributeId);
+
+	    [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public bool Reorder(int appId, int contentTypeId, string newSortOrder) => _eavCtc.Reorder(appId, contentTypeId, newSortOrder);
+
+	    [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public void SetTitle(int appId, int contentTypeId, int attributeId) => _eavCtc.SetTitle(appId, contentTypeId, attributeId);
+        
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool Reorder(int appId, int contentTypeId, string newSortOrder)
-        {
-            return eavCtc.Reorder(appId, contentTypeId, newSortOrder);
-        }
+        public bool UpdateInputType(int appId, int attributeId, string inputType) => _eavCtc.UpdateInputType(appId, attributeId, inputType);
 
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void SetTitle(int appId, int contentTypeId, int attributeId)
-        {
-            eavCtc.SetTitle(appId, contentTypeId, attributeId);
-        }
-
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool UpdateInputType(int appId, int attributeId, string inputType)
-        {
-            return eavCtc.UpdateInputType(appId, attributeId, inputType);
-        }
-        #endregion
+	    #endregion
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void Rename(int appId, int contentTypeId, int attributeId, string newName)
         {
-            eavCtc.Rename(appId, contentTypeId, attributeId, newName);
+            _eavCtc.Rename(appId, contentTypeId, attributeId, newName);
         }
 
     }

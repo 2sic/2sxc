@@ -14,10 +14,11 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.WebApi.Dnn;
+using ToSic.SexyContent.WebApi.ImportExport;
 
 namespace ToSic.SexyContent.WebApi
 {
-    public class ImportExportController : DnnApiControllerWithFixes//DnnApiController
+    public class ImportExportController : DnnApiControllerWithFixes
     {
 
         [HttpGet]

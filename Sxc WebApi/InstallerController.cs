@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.WebApi
 {
     [SupportedModules("2sxc,2sxc-app")]
     [SxcWebApiExceptionHandling]
-    public class InstallerController : DnnApiControllerWithFixes// DnnApiController
+    public class InstallerController : DnnApiControllerWithFixes
     {
 
         [HttpGet]

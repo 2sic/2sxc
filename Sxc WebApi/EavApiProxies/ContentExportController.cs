@@ -1,7 +1,6 @@
 ﻿using System.Net.Http;
 using System.Web.Http;
 using ToSic.Eav.ImportExport.Options;
-using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -16,11 +15,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     [SxcWebApiExceptionHandling]
     public class ContentExportController : DnnApiControllerWithFixes // DnnApiController // SxcApiController
 	{
-        private readonly Eav.WebApi.ContentExportController eavCtc;
+        private readonly Eav.WebApi.ContentExportController _eavCtc;
         public ContentExportController()
         {
-            eavCtc = new Eav.WebApi.ContentExportController();
-            eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+            _eavCtc = new Eav.WebApi.ContentExportController();
+            _eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
 
         }
 
@@ -34,7 +33,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // do security check
             if(!PortalSettings.UserInfo.IsInRole(PortalSettings.AdministratorRoleName))// todo: copy to 8.5 "Administrators")) // note: user.isinrole didn't work
                 throw new HttpRequestException("Needs admin permissions to do this");
-            return eavCtc.ExportContent(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
+            return _eavCtc.ExportContent(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
                 languageReferences, selectedIds);
         }
 
