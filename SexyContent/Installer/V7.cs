@@ -10,11 +10,11 @@ using System.Xml.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.DataSources.Caches;
-using ToSic.Eav.BLL.Parts;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.ImportExport.Interfaces;
 using ToSic.Eav.ImportExport.Models;
 using Configuration = ToSic.Eav.Configuration;
+using Microsoft.Practices.Unity;
 
 namespace ToSic.SexyContent.Installer
 {
@@ -268,8 +268,12 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                     entitiesToImport.Add(entity);
                 }
 
-                var import = new DbImport(null, app/*, userName*/);
-                import.ImportIntoDb(null, entitiesToImport);
+                // 2017-04-11 2dm remove dependencies on BLL
+                var importer = Factory.Container.Resolve<IRepositoryImporter>();
+                importer.Import(null, app, null, entitiesToImport);
+
+                //var import = new DbImport(null, app/*, userName*/);
+                //import.ImportIntoDb(null, entitiesToImport);
 
                 logger.LogStep("07.00.00", "Migrated data for app " + app);
             }

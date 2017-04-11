@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.BLL.Parts;
 using ToSic.Eav.ImportExport.Models;
+using Microsoft.Practices.Unity;
+using ToSic.Eav.ImportExport.Interfaces;
 
 namespace ToSic.SexyContent.Installer
 {
@@ -32,8 +33,11 @@ namespace ToSic.SexyContent.Installer
             {
                 dsrcSqlDataSource
             };
-            var import = new DbImport(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId/*, Settings.InternalUserName*/);
-            import.ImportIntoDb(attributeSets, null);
+            // 2017-04-11 2dm remove dependencies on BLL
+            var importer = Factory.Container.Resolve<IRepositoryImporter>();
+            importer.Import(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId, attributeSets, null);
+            //var import = new DbImport(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId/*, Settings.InternalUserName*/);
+            //import.ImportIntoDb(attributeSets, null);
 
             // 2017-04-01 2dm centralizing eav access
             //EavBridge.ForceShareOnGlobalContentType(dsrcSqlDataSource.StaticName);

@@ -26,7 +26,7 @@ namespace ToSic.SexyContent
                 return;
 
             var cont = Eav.Factory.Container;
-            new Eav.Configuration().ConfigureDefaultMappings(cont);
+            new Eav.DependencyInjection().ConfigureDefaultMappings(cont);
             cont.RegisterType(typeof(Eav.Serializers.Serializer), typeof(Serializers.Serializer), new InjectionConstructor());//, null, null, null);
             cont.RegisterType(typeof(IEavValueConverter), typeof(DnnValueConverter), new InjectionConstructor());
             cont.RegisterType(typeof(IEavUserInformation), typeof(DnnUserInformation), new InjectionConstructor());

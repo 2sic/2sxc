@@ -88,6 +88,8 @@
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.ImportExport.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Persistence.EF4.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Persistence.EF4.pdb" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Repository.EF4.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Repository.EF4.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Tokens.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Tokens.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.WebApi.dll" />

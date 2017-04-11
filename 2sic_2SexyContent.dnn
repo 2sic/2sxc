@@ -466,6 +466,9 @@
               <name>ToSic.Eav.Persistence.EF4.dll</name>
             </assembly>
             <assembly>
+              <name>ToSic.Eav.Repository.EF4.dll</name>
+            </assembly>
+            <assembly>
               <name>ToSic.Eav.Tokens.dll</name>
             </assembly>
             <assembly>
