@@ -37,13 +37,13 @@ namespace ToSic.SexyContent.Adam
             {
                 folderManager.AddFolder(_portalId, path);
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
                 // don't do anything - this happens when multiple processes try to add the folder at the same time
                 // like when two fields in a dialog cause the web-api to create the folders in parallel calls
                 // see also https://github.com/2sic/2sxc/issues/811
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 // also catch this, as it's an additional exception which also happens in the AddFolder when a folder already existed
             }

@@ -13,7 +13,6 @@ using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.ImportExport.Interfaces;
 using ToSic.Eav.ImportExport.Models;
-using Configuration = ToSic.Eav.Configuration;
 using Microsoft.Practices.Unity;
 
 namespace ToSic.SexyContent.Installer
@@ -221,8 +220,8 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                     {
                         AttributeSetStaticName = "2SexyContent-Template",
                         EntityGuid = t.NewEntityGuid,
-                        IsPublished = true,
-                        KeyTypeId = Configuration.AssignmentObjectTypeIdDefault
+                        IsPublished = true
+                        // , KeyTypeId = Constants.NotMetadata// Configuration.AssignmentObjectTypeIdDefault
                     };
                     entity.Values = new Dictionary<string, List<IImpValue>>
                     {
@@ -254,8 +253,8 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                     {
                         AttributeSetStaticName = "2SexyContent-ContentGroup",
                         EntityGuid = t.NewEntityGuid,
-                        IsPublished = true,
-                        KeyTypeId = Configuration.AssignmentObjectTypeIdDefault
+                        IsPublished = true
+                        // , KeyTypeId = Constants.NotMetadata // Configuration.AssignmentObjectTypeIdDefault
                     };
                     entity.Values = new Dictionary<string, List<IImpValue>>
                     {
