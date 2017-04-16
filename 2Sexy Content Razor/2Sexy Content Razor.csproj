@@ -91,6 +91,10 @@
       <Project>{d4250011-b9be-4326-9736-4f0122c79802}</Project>
       <Name>2Sexy Content</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Sxc WebApi\2SexyContent WebApi.csproj">
+      <Project>{2f0610de-2518-4fc8-823e-7228dd17c04f}</Project>
+      <Name>2SexyContent WebApi</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

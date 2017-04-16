@@ -90,11 +90,11 @@ namespace ToSic.SexyContent
         /// </summary>
         static Settings()
         {
-            new UnityConfig().Configure();
             SetEavConnectionString();
+            new UnityConfig().Configure();
         }
 
-        public static void SetEavConnectionString()
+        private static void SetEavConnectionString()
         {
             Configuration.SetConnectionString("SiteSqlServer");
         }
