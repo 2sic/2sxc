@@ -9,7 +9,6 @@
 		"MoveDown": "Bas",
 		"Sort": "tri/config liste",
 		"Remove": "Supprimer",
-		"MoreActions": "Autres",
 		"ChangeLayout": "Changer le layout",
 		"App": "Configurer",
 		"Develop": "Éditer le template",

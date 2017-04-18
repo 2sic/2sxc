@@ -34,7 +34,6 @@
 		"DefLangNotFound": "Pas trouvé de langue par défaut, mais plusieurs - mise à jour impossible",
 		"AdamUploadError": "Le téléchargement a échoué. La cause la plus probable est que le fichier que vous essayez de télécharger est supérieur à la taille de téléchargement maximale."
 	},
-	},
 	"General": {},
 	"EditEntity": {
 		"DefaultTitle": "Mise à jour d'item",
@@ -74,6 +73,8 @@
 		"CloseButton": "Fait",
 		"CurrentButton": "Aujourd'hui"
 	},
+	"Dialog1": {},
+	"dialog2": {},
 	"Extension.TinyMce": {
 		"Link.AdamFile": "Lien via ADAM-fichier (recommandé)",
 		"Link.AdamFile.Tooltip": "Lien utilisant ADAM - déposez simplement les fichiers à l'aide du gestionnaire automatique des actifs numériques",
@@ -93,7 +94,5 @@
 		"H3": "H3",
 		"Remove": "Supprimer",
 		"ContentBlock.Add": "Ajouter une application ou un content-type"
-	},
-	"Dialog1": {},
-	"dialog2": {}
+	}
 }

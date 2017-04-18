@@ -59,33 +59,6 @@
 		"QuickStart": "Pour démarrer vite, nous vous conseillons d'installer l'App WebApi de démo. Elle contient des controleurs WebAPI avec plusieurs actions et des dexemples de vues pour les utiliser. Télécharger <a href='http://2sxc.org/en/Apps/tag/WebApi' target='_blank'>WebApi demos in the App-Catalog</a> ou pour en savoir plus : <a href='http://2sxc.org/en/help?tag=webapi' target='_blank'>aide</a>",
 		"AddDoesntExist": "Il n'y a pas encore d'option de création - veuillez le faire manuellement dans le dossier 'api'. Pour démarrer, en recopier d'un projet existant."
 	},
-	"ImportExport": {
-		"Title": "Exporter ou Importer <em>des éléments</em> de cette App/Contenu",
-		"Intro": "Créer un fichier xml ou zip contenant <em>des éléments</em> de cette app. Ou les réimporter dans une autre app.",
-		"FurtherHelp": "Voir : <a href='http://2sxc.org/en/help?tag=import' target='_blank'>2sxc Help</a>.",
-		"Buttons": {
-			"Import": "import",
-			"Export": "export"
-		},
-		"Import": {
-			"Title": "Importation complète (.zip) ou partielle (.xml)",
-			"Explanation": "Ajoute des Content-Types, templates et Content-Items à l'App ou au Contenu actuel.",
-			"Select": "fichier d'import",
-			"Choose": "sélectionner un fichier"
-		},
-		"Export": {
-			"Title": "Exportation partielle de Content Types, templates et contenus",
-			"Intro": "Fonction d'export partielle avancée. Crée un fichier XML réutilisable dans un autre site ou une autre App",
-			"FurtherHelp": "Voir : <a href='http://2sxc.org/en/help?tag=export' target='_blank'>2sxc Help</a>.",
-			"Data": {
-				"GroupHeading": "Content Type: {{name}} ({{id}}",
-				"Templates": "Templates",
-				"Items": "Content Items",
-				"SimpleTemplates": "Templates sans content type"
-			},
-			"ButtonExport": "Export"
-		}
-	},
 	"Portal": {
 		"Title": "Database virtuelle (VDB)",
 		"VdbLabel": "Database virtuelle pour ce site",
