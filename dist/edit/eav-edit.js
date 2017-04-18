@@ -343,7 +343,7 @@ angular.module("eavFieldTemplates")
         };
 
         function setDirty() {
-            $scope.form.$setDirty()
+            $scope.form.$setDirty();
         }
 
         activate();
