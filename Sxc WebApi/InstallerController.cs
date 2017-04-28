@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
@@ -31,6 +32,9 @@ namespace ToSic.SexyContent.WebApi
             var helper = new ImportExportEnvironment();
             try
             {
+                // Increase script timeout to prevent timeouts
+                HttpContext.Current.Server.ScriptTimeout = 300;
+
                 success = new ZipImport(helper, zoneId, appId, PortalSettings.UserInfo.IsSuperUser)
                     .ImportZipFromUrl(packageUrl, ActiveModule.DesktopModule.ModuleName == "2sxc-app");
             }

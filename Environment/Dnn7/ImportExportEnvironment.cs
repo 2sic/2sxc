@@ -5,7 +5,7 @@ using System.Web;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Eav.ImportExport;
+using ToSic.Eav.ImportExport.Interfaces;
 using ToSic.Eav.ImportExport.Logging;
 using ToSic.SexyContent.Internal;
 

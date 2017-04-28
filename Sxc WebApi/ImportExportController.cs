@@ -159,21 +159,25 @@ namespace ToSic.SexyContent.WebApi
 
             var request = HttpContext.Current.Request;
 
-            //var appId   = int.Parse(request["AppId"]);
             var zoneId  = int.Parse(request["ZoneId"]);
-            if (request.Files.Count > 0)
+            if (request.Files.Count <= 0) return result;
+
+            var helper = new ImportExportEnvironment();
+            try
             {
-                try
-                {
-                    var helper = new ImportExportEnvironment();
-                    var zipImport = new ZipImport(helper, zoneId, null, PortalSettings.UserInfo.IsSuperUser);
-                    result.Succeeded = zipImport.ImportZip(request.Files[0].InputStream, HttpContext.Current.Server);// , /*PortalSettings, helper.Messages*/);
-                    result.Messages = helper.Messages;
-                }
-                catch (Exception ex)
-                {
-                    Exceptions.LogException(ex);
-                }
+                var zipImport = new ZipImport(helper, zoneId, null, PortalSettings.UserInfo.IsSuperUser);
+                var temporaryDirectory = HttpContext.Current.Server.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory, Guid.NewGuid().ToString().Substring(0, 8)));
+
+                // Increase script timeout to prevent timeouts
+                HttpContext.Current.Server.ScriptTimeout = 300;
+                result.Succeeded = zipImport.ImportZip(request.Files[0].InputStream, temporaryDirectory);// HttpContext.Current.Server);
+                result.Messages = helper.Messages;
+            }
+            catch (Exception ex)
+            {
+                Exceptions.LogException(ex);
+                result.Succeeded = false;
+                result.Messages = helper.Messages;
             }
             return result;
         }
@@ -199,7 +203,10 @@ namespace ToSic.SexyContent.WebApi
                     {
                         var env = new ImportExportEnvironment(); ;
                         var zipImport = new ZipImport(env, zoneId, appId, PortalSettings.UserInfo.IsSuperUser);
-                        result.Succeeded = zipImport.ImportZip(file.InputStream, HttpContext.Current.Server); // , /*PortalSettings,*/ env.Messages);
+                        // Increase script timeout to prevent timeouts
+                        HttpContext.Current.Server.ScriptTimeout = 300;
+                        var temporaryDirectory = HttpContext.Current.Server.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory, Guid.NewGuid().ToString()));
+                        result.Succeeded = zipImport.ImportZip(file.InputStream, temporaryDirectory);// HttpContext.Current.Server); // , /*PortalSettings,*/ env.Messages);
                         result.Messages = env.Messages;
                     }
                     catch (Exception ex)

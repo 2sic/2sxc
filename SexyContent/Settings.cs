@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Configuration;
 using System.Reflection;
-using ToSic.Eav;
+using Configuration = ToSic.Eav.Configuration;
 
 namespace ToSic.SexyContent
 {
@@ -90,7 +91,8 @@ namespace ToSic.SexyContent
         /// </summary>
         static Settings()
         {
-            Configuration.SetConnectionString("SiteSqlServer");
+            var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+            Configuration.SetConnectionString(connectionString);
             new UnityConfig().Configure();
         }
 
