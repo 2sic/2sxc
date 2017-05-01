@@ -61,9 +61,9 @@ namespace ToSic.Eav.AppEngine
 	    /// Returns all templates that should be available in the template selector
 	    /// </summary>
 	    /// <returns></returns>
-	    public IEnumerable<Template> GetAvailableTemplatesForSelector(int modId, ContentGroupManager cgContentGroups)
+	    public IEnumerable<Template> GetAvailableTemplatesForSelector(int modId, int tabId, ContentGroupManager cgContentGroups)
         {
-            var contentGroup = cgContentGroups.GetContentGroupForModule(modId);
+            var contentGroup = cgContentGroups.GetContentGroupForModule(modId, tabId);
             return GetAvailableTemplates(contentGroup);
         }
 

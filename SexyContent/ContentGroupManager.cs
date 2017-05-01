@@ -120,10 +120,10 @@ namespace ToSic.SexyContent
 	    }
 
 	    // todo: this doesn't look right, will have to mostly move to the new content-block
-		public ContentGroup GetContentGroupForModule(int moduleId)
+		public ContentGroup GetContentGroupForModule(int moduleId, int tabId)
 		{
-			var moduleControl = new ModuleController();
-			var settings = moduleControl.GetModuleSettings(moduleId);
+			var settings = ((ModuleInfo)ModuleController.Instance.GetModule(moduleId, tabId, false)).ModuleSettings;
+			//var settings = moduleControl.GetModule(moduleId,).ModuleSettings;
 		    var maybeGuid = settings[Settings.ContentGroupGuidString];
 		    Guid groupGuid;
 		    Guid.TryParse(maybeGuid?.ToString(), out groupGuid);

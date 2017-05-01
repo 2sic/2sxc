@@ -54,7 +54,7 @@ namespace ToSic.SexyContent.ContentBlocks
             {
                 // try to load the app - if possible
                 App = new App(ZoneId, AppId, PortalSettings);
-                ContentGroup = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID);
+                ContentGroup = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
 
                 if (ContentGroup.DataIsMissing)
                 {

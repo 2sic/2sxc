@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNetNuke.Entities.Modules;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
@@ -41,7 +42,8 @@ namespace ToSic.SexyContent.DataSources
                     {
                         if (!ModuleId.HasValue)
                             throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
-                        _contentGroup = new ContentGroupManager(ZoneId, AppId).GetContentGroupForModule(ModuleId.Value);
+                        var tabId = ((ModuleInfo)ModuleController.Instance.GetTabModulesByModule(ModuleId.Value)[0]).TabID;
+                        _contentGroup = new ContentGroupManager(ZoneId, AppId).GetContentGroupForModule(ModuleId.Value, tabId);
                     }
                 }
                 return _contentGroup;

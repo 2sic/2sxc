@@ -81,7 +81,7 @@ namespace ToSic.SexyContent.Internal
             if (appId.HasValue)
             {
                 var app = new App(zoneId, appId.Value, PortalSettings.Current);
-                var templates = app.TemplateManager.GetAvailableTemplatesForSelector(module.ModuleID, app.ContentGroupManager).ToList();
+                var templates = app.TemplateManager.GetAvailableTemplatesForSelector(module.ModuleID, module.TabID, app.ContentGroupManager).ToList();
                 if (templates.Any())
                     app.ContentGroupManager.SetModulePreviewTemplateId(module.ModuleID, templates.First().Guid /* .TemplateId */);
             }
