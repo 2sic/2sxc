@@ -8,21 +8,35 @@ namespace ToSic.SexyContent.ImportExport
 {
     public class ToSxcXmlExporter: XmlExporter
     {
-        private readonly IFileManager _dnnFiles = DotNetNuke.Services.FileSystem.FileManager.Instance;
+        private readonly IFileManager _dnnFiles = FileManager.Instance;
         internal AdamManager AdamManager;
 
-        public ToSxcXmlExporter(int zoneId, int appId, bool appExport, string[] contentTypeIds, string[] entityIds):base(zoneId, appId)
-        {
-            // do things first
+        //public ToSxcXmlExporter(int zoneId, int appId, bool appExport, string[] contentTypeIds, string[] entityIds)// :base(zoneId, appId)
+        //{
+        //    // do things first
 
+        //    var app = new App(zoneId, appId, PortalSettings.Current);
+        //    AdamManager = new AdamManager(PortalSettings.Current.PortalId, app);
+        //    Constructor(app.AppGuid, appExport, contentTypeIds, entityIds);
+
+        //    // do following things
+        //    // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
+        //    InitExportXDocument(PortalSettings.Current.DefaultLanguage, Settings.ModuleVersion);
+
+        //}
+
+        public override XmlExporter Init(int zoneId, int appId, bool appExport, string[] attrSetIds, string[] entityIds)
+        {
+ 
             var app = new App(zoneId, appId, PortalSettings.Current);
             AdamManager = new AdamManager(PortalSettings.Current.PortalId, app);
-            Constructor(app.AppGuid, appExport, contentTypeIds, entityIds);
+            Constructor(app.AppGuid, appExport, attrSetIds, entityIds);
 
             // do following things
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
             InitExportXDocument(PortalSettings.Current.DefaultLanguage, Settings.ModuleVersion);
 
+            return this;
         }
 
         public override void AddFilesToExportQueue()
@@ -68,7 +82,7 @@ namespace ToSic.SexyContent.ImportExport
 
         protected override TennantFileItem ResolveFile(int fileId)
         {
-            var fileController = DotNetNuke.Services.FileSystem.FileManager.Instance;
+            var fileController = FileManager.Instance;
             var file = fileController.GetFile(fileId);
             return new TennantFileItem
             {

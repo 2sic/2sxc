@@ -16,14 +16,16 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public MetadataController()
         {
             _eavMeta = new Eav.WebApi.MetadataController();
-            _eavMeta.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+            // now using dependency injection
+            //_eavMeta.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
 
             // eavMeta.GetAssignedEntities();
         }
 
         #region Content-Type Get, Delete, Save
         [HttpGet]
-        public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, string keyType, string key, string contentType, int? appId = null) => _eavMeta.GetAssignedEntities(assignmentObjectTypeId, keyType, key, contentType, appId);
+        public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, string keyType, string key, string contentType, int? appId = null) 
+            => _eavMeta.GetAssignedEntities(assignmentObjectTypeId, keyType, key, contentType, appId);
 
 	    #endregion
 

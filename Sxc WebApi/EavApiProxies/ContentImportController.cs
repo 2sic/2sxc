@@ -12,13 +12,14 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class ContentImportController : SxcApiController
 	{
-        private readonly Eav.WebApi.ContentImportController _eavCtc;
-        public ContentImportController()
-        {
-            _eavCtc = new Eav.WebApi.ContentImportController();
-            _eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+        private readonly Eav.WebApi.ContentImportController _eavCtc = new Eav.WebApi.ContentImportController();
+        //public ContentImportController()
+        //{
+        //    // now uses dependency injection
+        //    //_eavCtc = new Eav.WebApi.ContentImportController();
+        //    //_eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
 
-        }
+        //}
 
 
         [HttpPost]

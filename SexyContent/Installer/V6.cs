@@ -2,7 +2,7 @@
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport.Models;
-using Microsoft.Practices.Unity;
+//using Microsoft.Practices.Unity;
 using ToSic.Eav.ImportExport.Interfaces;
 
 namespace ToSic.SexyContent.Installer
@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.Installer
                 dsrcSqlDataSource
             };
             // 2017-04-11 2dm remove dependencies on BLL
-            var importer = Factory.Container.Resolve<IRepositoryImporter>();
+            var importer = Factory.Resolve<IRepositoryImporter>();
             importer.Import(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId, attributeSets, null);
             //var import = new DbImport(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId/*, Settings.InternalUserName*/);
             //import.ImportIntoDb(attributeSets, null);

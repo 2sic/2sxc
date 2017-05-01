@@ -13,7 +13,7 @@ using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.ImportExport.Interfaces;
 using ToSic.Eav.ImportExport.Models;
-using Microsoft.Practices.Unity;
+//using Microsoft.Practices.Unity;
 
 namespace ToSic.SexyContent.Installer
 {
@@ -268,7 +268,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 }
 
                 // 2017-04-11 2dm remove dependencies on BLL
-                var importer = Factory.Container.Resolve<IRepositoryImporter>();
+                var importer = Factory.Resolve<IRepositoryImporter>();
                 importer.Import(null, app, null, entitiesToImport);
 
                 //var import = new DbImport(null, app/*, userName*/);

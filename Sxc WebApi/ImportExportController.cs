@@ -138,11 +138,7 @@ namespace ToSic.SexyContent.WebApi
                 : new SxcAppWrapper(appId);
 
             var fileName = $"2sxcContentExport_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}.xml";
-            var fileXml = new ToSxcXmlExporter
-            (
-                zoneId,
-                appId,
-                false,
+            var fileXml = new ToSxcXmlExporter().Init(zoneId, appId, false,
                 contentTypeIdsString?.Split(';') ?? new string[0],
                 entityIdsString?.Split(';') ?? new string[0]
             ).GenerateNiceXml();

@@ -15,13 +15,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     [SxcWebApiExceptionHandling]
     public class ContentExportController : DnnApiControllerWithFixes // DnnApiController // SxcApiController
 	{
-        private readonly Eav.WebApi.ContentExportController _eavCtc;
-        public ContentExportController()
-        {
-            _eavCtc = new Eav.WebApi.ContentExportController();
-            _eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
-
-        }
+        private readonly Eav.WebApi.ContentExportController _eavCtc = new Eav.WebApi.ContentExportController();
+        //public ContentExportController()
+        //{
+        //    // now using dependency injection
+        //    //_eavCtc = new Eav.WebApi.ContentExportController();
+        //    //_eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+        //}
 
 
         [HttpGet]

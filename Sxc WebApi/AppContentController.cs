@@ -361,7 +361,7 @@ namespace ToSic.SexyContent.WebApi
 	    {
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             _entitiesController = new EntitiesController(appId ?? App.AppId);
-            _entitiesController.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+            //_entitiesController.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
 
             // only do this if we have a real context - otherwise don't do this
 	        if (!appId.HasValue)

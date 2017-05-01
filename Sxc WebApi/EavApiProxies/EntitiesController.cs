@@ -20,12 +20,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	{
 	    private readonly Eav.WebApi.EntitiesController _entitiesController = new Eav.WebApi.EntitiesController();
 
-		public EntitiesController()
-		{
-            //2016-10-4 disabled this, as I moved the eav.configuration...to the DnnApi...fixes class
-            //Eav.Configuration.SetConnectionString("SiteSqlServer");
-            _entitiesController.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
-		}
+		//public EntitiesController()
+		//{
+  //          //2016-10-4 disabled this, as I moved the eav.configuration...to the DnnApi...fixes class
+  //          //Eav.Configuration.SetConnectionString("SiteSqlServer");
+  //          // user now with dependency injection
+  //          //_entitiesController.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+		//}
 
 	    private void EnsureSerializerHasSxc()
 	    {
