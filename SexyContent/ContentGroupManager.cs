@@ -122,7 +122,7 @@ namespace ToSic.SexyContent
 	    // todo: this doesn't look right, will have to mostly move to the new content-block
 		public ContentGroup GetContentGroupForModule(int moduleId, int tabId)
 		{
-			var settings = ((ModuleInfo)ModuleController.Instance.GetModule(moduleId, tabId, false)).ModuleSettings;
+			var settings = ModuleController.Instance.GetModule(moduleId, tabId, false).ModuleSettings;
 			//var settings = moduleControl.GetModule(moduleId,).ModuleSettings;
 		    var maybeGuid = settings[Settings.ContentGroupGuidString];
 		    Guid groupGuid;

@@ -14,13 +14,11 @@ namespace ToSic.SexyContent.Internal
         public static int? GetAppIdFromModule(ModuleInfo module, int zoneId)
         {
             if (module.DesktopModule.ModuleName == "2sxc")
-                return new ZoneRuntime(zoneId).DefaultAppId;// State.GetDefaultAppId(zoneId);
+                return new ZoneRuntime(zoneId).DefaultAppId;
 
-            var appName = DnnStuffToRefactor.TryToGetReliableSetting(module, Settings.AppNameString);
-
-            if (appName != null)
-                return GetAppIdFromGuidName(zoneId, appName);
-
+            if(module.ModuleSettings.ContainsKey(Settings.AppNameString))
+                return GetAppIdFromGuidName(zoneId, module.ModuleSettings[Settings.AppNameString].ToString());
+            
             return null;
         }
 
