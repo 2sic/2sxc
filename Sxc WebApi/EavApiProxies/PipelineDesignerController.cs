@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
 		public PipelineDesignerController()
 		{
-			_controller = new Eav.WebApi.PipelineDesignerController(/*Environment.Dnn7.UserIdentity.CurrentUserIdentityToken, */"SiteSqlServer");
+			_controller = new Eav.WebApi.PipelineDesignerController("SiteSqlServer");
 		}
 
 		/// <summary>
@@ -69,7 +69,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		public object DeletePipeline(int appId, int id)
 		{
 			// Stop if a Template uses this Pipeline
-			//var sexy = new SxcInstance(0, appId);
             var app = new App(PortalSettings.Current, appId);
 			var templatesUsingPipeline = app.TemplateManager.GetAllTemplates().Where(t => t.Pipeline != null && t.Pipeline.EntityId == id).Select(t => t.TemplateId).ToArray();
 			if (templatesUsingPipeline.Any())
