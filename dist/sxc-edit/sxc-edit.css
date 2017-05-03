@@ -205,9 +205,9 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .icon-eav-app:before { content: '\e9bf'; } /* '' */
 @font-face {
   font-family: 'app-icons';
-    src: url('../lib/fonts/app-icons.woff?08.12.00') format('woff'),
-     url('../lib/fonts/app-icons.eot?08.12.00#iefix') format('embedded-opentype'),
-     url('../lib/fonts/app-icons.ttf?08.12.00') format('truetype');
+    src: url('../lib/fonts/app-icons.woff?09.00.00') format('woff'),
+     url('../lib/fonts/app-icons.eot?09.00.00#iefix') format('embedded-opentype'),
+     url('../lib/fonts/app-icons.ttf?09.00.00') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

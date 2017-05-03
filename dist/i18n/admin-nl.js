@@ -2,33 +2,34 @@
 	"General": {
 		"Note2Translator": "these are the main keys for buttons and short messages, used in various dialogs",
 		"Buttons": {
-			"Add": "Toevoegen",
-			"Cancel": "Annuleren",
-			"Copy": "Kopiëren",
-			"Delete": "Verwijder",
-			"Edit": "Bewerken",
-			"ForceDelete": "Geforceerd verwijderen",
-			"NotSave": "Niet opslaan",
-			"Permissions": "Rechten",
-			"Refresh": "Verversen",
-			"Rename": "Naam veranderen",
-			"Save": "Opslaan",
-			"System": "Geavanceerde systeem functies"
+			"Add": "toevoegen",
+			"Cancel": "annuleren",
+			"Copy": "kopieren",
+			"Delete": "verwijderen",
+			"Edit": "bewerken",
+			"ForceDelete": "forceer verwijderen",
+			"NotSave": "niet opslaan",
+			"Permissions": "permissies",
+			"Refresh": "ververs",
+			"Rename": "hernoemen",
+			"Save": "opslaan",
+			"System": "geavanceerde systeem functies",
+			"Metadata": "metadata"
 		},
 		"Messages": {
-			"Loading": "Laden...",
+			"Loading": "laden...",
 			"NothingFound": "geen items gevonden",
 			"CantDelete": "kan {{target}} niet verwijderen"
 		},
 		"Questions": {
-			"Delete": "Weet je zeker dat je {{target}} wilt verwijderen?",
-			"DeleteEntity": "Verwijder '{{title}}' ({{id}})?",
-			"Rename": "Welke nieuwe naam wil je voor {{target}} instellen?",
-			"SystemInput": "Dit is voor zeer geavanceerd gebruik. Gebruik deze functionaliteit alleen indien je weet wat je doet! . \n\n Geef admin commando's:",
-			"ForceDelete": "Wil je  '{{title}}' ({{id}}) geforceerd verwijderen?"
+			"Delete": "weet u zeker dat u {{target}} wilt verwijderen?",
+			"DeleteEntity": "verwijder '{{title}}' ({{id}})?",
+			"Rename": "welke nieuwe naam wenst u voor {{target}}?",
+			"SystemInput": "Dit is voor erg geavanceerde bewerkingen. Gebruik dit alleen wanneer u weet wat u doet. \n\n Enter admin commandos:",
+			"ForceDelete": "wilt u '{{title}}' ({{id}}) gefoceerd verwijderen?"
 		},
 		"Terms": {
-			"Title": "Titel"
+			"Title": "titel"
 		}
 	}
 }

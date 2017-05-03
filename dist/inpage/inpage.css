@@ -97,9 +97,9 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 /* only use the WOFF, as all modern browsers support that */
 @font-face {
   font-family: 'inpage-icons';
-  src: url('../lib/fonts/inpage-icons.woff?08.12.00') format('woff'),
-       url('../lib/fonts/inpage-icons.eot?08.12.00#iefix') format('embedded-opentype'),
-       url('../lib/fonts/inpage-icons.ttf?08.12.00') format('truetype');
+  src: url('../lib/fonts/inpage-icons.woff?09.00.00') format('woff'),
+       url('../lib/fonts/inpage-icons.eot?09.00.00#iefix') format('embedded-opentype'),
+       url('../lib/fonts/inpage-icons.ttf?09.00.00') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -140,6 +140,68 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
+.inpage-frame-wrapper .inpage-frame {
+    width: 100%;
+    z-index: 10000001;
+    text-align: center;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: rgba(255, 255, 255, .8);
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+}
+
+.inpage-frame-wrapper .inpage-frame iframe {
+    background: transparent;
+    max-width: 1200px;
+    vertical-align: top;
+    padding: 8px 0;
+    box-sizing: content-box;
+}
+
+.inpage-frame-wrapper {
+    transform: translate3d(0, -100%, 0);
+    transition: transform .2s ease-out;
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+}
+
+.DNNModuleContent .glasses {
+    margin: 4px;
+    font-size: 15px;
+    color: #fff;
+    background: rgb(2, 139, 255);
+    display: inline-block;
+    height: 28px;
+    line-height: 28px;
+    width: 28px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.DNNModuleContent.dia-select .inpage-frame-wrapper {
+    transform: translate3d(0, 0, 0);
+}
+
+.DNNModuleContent.dia-select {
+    min-height: 16px;
+}
+
+.DNNModuleContent.dia-select.dia-mouseover {
+    outline: rgb(13, 71, 161);
+    outline-style: solid;
+    outline-width: 1px;
+}
+
+.dnnEditState .DnnModule {
+    opacity: 1 !important;
+}
 
 .icon-sxc-list-numbered:before { content: '\e800'; } /* '' */
 .icon-sxc-ok:before { content: '\e801'; } /* '' */

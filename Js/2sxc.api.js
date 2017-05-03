@@ -254,7 +254,7 @@
 
     $2sxc._controllers = {};
     $2sxc.sysinfo = {
-        version: "08.12.00",
+        version: "09.00.00",
         description: "The 2sxc Controller object"
     };
 
@@ -266,7 +266,7 @@
     $2sxc.totalPopup = {
         open: function openTotalPopup(url, callback) {
             // count parents to see how high the z-index needs to be
-            var z = 10000000, p = window; // Needs at least 10000000 to be on top of the DNN9 bar
+            var z = 10000010, p = window; // Needs at least 10000000 to be on top of the DNN9 bar
             while (p !== window.top && z < 10000100) {
                 z++;
                 p = p.parent;

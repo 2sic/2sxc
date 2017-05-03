@@ -19,7 +19,6 @@
             }
         };
         //#endregion
-
     }
 })();
 // this enhances the $2sxc client controller with stuff only needed when logged in
@@ -125,7 +124,7 @@
 
             // add brings no dialog, just add an empty item
             'add': makeDef("add", "AddDemo", "plus-circled", false, {
-                showCondition: function(settings, modConfig) {
+                showCondition: function (settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
                 code: function (settings, event, sxc) {
@@ -143,7 +142,7 @@
                     return settings.entityId ? "" : "empty";
                     // return settings.items && settings.items[0].entityId ? "" : "empty";
                 },
-                showCondition: function(settings) {
+                showCondition: function (settings) {
                     return !!settings.metadata;
                 }, // only add a metadata-button if it has metadata-infos
                 configureCommand: function (cmd) {
@@ -157,7 +156,7 @@
 
             // remove an item from the placeholder (usually for lists)
             'remove': makeDef("remove", "Remove", "minus-circled", false, {
-                showCondition: function(settings, modConfig) {
+                showCondition: function (settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
                 code: function (settings, event, sxc) {
@@ -185,7 +184,7 @@
             }),
 
             'moveup': makeDef("moveup", "MoveUp", "move-up", false, {
-                showCondition: function(settings, modConfig) {
+                showCondition: function (settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0;
                 },
                 code: function (settings, event, sxc) {
@@ -194,7 +193,7 @@
                 }
             }),
             'movedown': makeDef("movedown", "MoveDown", "move-down", false, {
-                showCondition: function(settings, modConfig) {
+                showCondition: function (settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
                 code: function (settings, event, sxc) {
@@ -211,7 +210,7 @@
                     return settings.isPublished === false;
                 },
                 code: function (settings, event, sxc) {
-                    if (settings.isPublished) 
+                    if (settings.isPublished)
                         return alert($2sxc.translate("Toolbar.AlreadyPublished"));
 
                     // if we have an entity-id, publish based on that
@@ -236,7 +235,7 @@
                 dialog: "edit",
                 disabled: editContext.appSettingsId === null,
                 title: "Toolbar.AppSettings" + (editContext.appSettingsId === null ? "Disabled" : ""),
-                showCondition: function(settings, modConfig) {
+                showCondition: function (settings, modConfig) {
                     return enableTools && !isContent /*&& editContext.appSettingsId !== null*/; // only if settings exist, or are 0 (to be created)
                 },
                 configureCommand: function (cmd) {
@@ -287,10 +286,10 @@
 
         addDef(makeDef("contentitems", "ContentItems", "table", true, {
             params: { contentTypeName: editContext.contentTypeId },
-            showCondition: function(settings, modConfig) {
+            showCondition: function (settings, modConfig) {
                 return enableTools && (settings.contentType || editContext.contentTypeId);
             },
-            configureCommand: function(cmd) {
+            configureCommand: function (cmd) {
                 if (cmd.settings.contentType) // optionally override with custom type
                     cmd.params.contentTypeName = cmd.settings.contentType;
                 // maybe: if item doesn't have a type, use that of template
@@ -314,7 +313,7 @@
             newWindow: true,
             dialog: "develop",
             showCondition: enableTools,
-            configureCommand: function(cmd) {
+            configureCommand: function (cmd) {
                 cmd.items = [{ EntityId: editContext.templateId }];
             }
         }));
@@ -325,10 +324,10 @@
             newWindow: true,
             disabled: editContext.appSettingsId === null,
             title: "Toolbar.QueryEdit" + (editContext.queryId === null ? "Disabled" : ""),
-            showCondition: function(settings, modConfig) {
+            showCondition: function (settings, modConfig) {
                 return enableTools && !isContent;
             },
-            dynamicClasses: function(settings) {
+            dynamicClasses: function (settings) {
                 return editContext.queryId ? "" : "empty"; // if it doesn't have a query, make it less strong
             }
             //configureCommand: function (cmd) {
@@ -339,7 +338,7 @@
         addDef(makeDef("template-settings", "TemplateSettings", "sliders", true, {
             dialog: "edit",
             showCondition: enableTools,
-            configureCommand: function(cmd) {
+            configureCommand: function (cmd) {
                 cmd.items = [{ EntityId: editContext.templateId }];
             }
 
@@ -348,7 +347,7 @@
 
         //#region custom code buttons
         addDef(makeDef("custom", "Custom", "bomb", true, {
-            code: function(settings, event, sxc) {
+            code: function (settings, event, sxc) {
                 console.log("custom action with code - BETA feature, may change");
                 if (!settings.customCode) {
                     console.warn("custom code action, but no onclick found to run", settings);
@@ -366,13 +365,13 @@
 
         //#region UI actions: layout, more
         addDef(makeDef("layout", "ChangeLayout", "glasses", true, {
-            code: function(settings, event, sxc) {
+            code: function (settings, event, sxc) {
                 sxc.manage.contentBlock.dialogToggle();
             }
         }));
 
         addDef(makeDef("more", "MoreActions", "options btn-mode", true, {
-            code: function(settings, event) {
+            code: function (settings, event) {
                 var btn = $(event.target),
                     fullMenu = btn.closest("ul.sc-menu"),
                     oldState = Number(fullMenu.attr("data-state") || 0),
@@ -386,23 +385,22 @@
         }));
 
         //#endregion
-
         return act;
     };
 
 })();
 
 
-(function() {
-    $2sxc._commands.engine = function(sxc, targetTag) {
+(function () {
+    $2sxc._commands.engine = function (sxc, targetTag) {
         var cmc = {
             manage: "must-be-added-after-initialization",
-            init: function(manage) {
+            init: function (manage) {
                 cmc.manage = manage;
             },
 
             // assemble an object which will store the configuration and execute it
-            create: function(specialSettings) {
+            create: function (specialSettings) {
                 var settings = $2sxc._lib.extend({}, cmc.manage._toolbarConfig, specialSettings); // merge button with general toolbar-settings
                 var ngDialogUrl = cmc.manage._editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?sxcver="
                     + cmc.manage._editContext.Environment.SxcVersion;
@@ -415,7 +413,7 @@
                         dialog: settings.dialog || settings.action // the variable used to name the dialog changed in the history of 2sxc from action to dialog
                     }, settings.params),
 
-                    addSimpleItem: function() {
+                    addSimpleItem: function () {
                         var itm = {}, ct = cmd.settings.contentType || cmd.settings.attributeSetName; // two ways to name the content-type-name this, v 7.2+ and older
                         if (cmd.settings.entityId) itm.EntityId = cmd.settings.entityId;
                         if (ct) itm.ContentTypeName = ct;
@@ -424,7 +422,7 @@
                     },
 
                     // this adds an item of the content-group, based on the group GUID and the sequence number
-                    addContentGroupItem: function(guid, index, part, isAdd, isEntity, cbid, sectionLanguageKey) {
+                    addContentGroupItem: function (guid, index, part, isAdd, isEntity, cbid, sectionLanguageKey) {
                         cmd.items.push({
                             Group: { Guid: guid, Index: index, Part: part, Add: isAdd },
                             Title: $2sxc.translate(sectionLanguageKey)
@@ -432,7 +430,7 @@
                     },
 
                     // this will tell the command to edit a item from the sorted list in the group, optionally together with the presentation item
-                    addContentGroupItemSetsToEditList: function(withPresentation) {
+                    addContentGroupItemSetsToEditList: function (withPresentation) {
                         var isContentAndNotHeader = (cmd.settings.sortOrder !== -1);
                         var index = isContentAndNotHeader ? cmd.settings.sortOrder : 0;
                         var prefix = isContentAndNotHeader ? "" : "List";
@@ -447,7 +445,7 @@
 
                     },
 
-                    generateLink: function() {
+                    generateLink: function () {
                         // if there is no items-array, create an empty one (it's required later on)
                         if (!cmd.settings.items) cmd.settings.items = [];
                         //#region steps for all actions: prefill, serialize, open-dialog
@@ -469,7 +467,7 @@
             },
 
             // create a dialog link
-            _linkToNgDialog: function(specialSettings) {
+            _linkToNgDialog: function (specialSettings) {
                 var cmd = cmc.manage._commands.create(specialSettings);
 
                 if (cmd.settings.useModuleList)
@@ -483,10 +481,14 @@
 
                 return cmd.generateLink();
             },
-            // open a new dialog of the angular-ui
-            _openNgDialog: function(settings, event, closeCallback) {
 
-                var callback = function() {
+            _linkToNg4Dialog: function ( ){
+                return cmc._linkToNgDialog.apply(null, arguments).replace('ui.html', 'ui-a4');
+            },
+
+            // open a new dialog of the angular-ui
+            _openNgDialog: function (settings, event, closeCallback) {
+                var callback = function () {
                     cmc.manage.contentBlock.reloadAndReInitialize();
                     closeCallback();
                 };
@@ -496,7 +498,7 @@
                     return window.open(link);
                 else {
                     if (settings.inlineWindow)
-                        return $2sxc._dialog.create(sxc, targetTag, link, callback);
+                        return $2sxc._dialog(sxc, targetTag, link, callback);
                     else
                         return $2sxc.totalPopup.open(link, callback);
                 }
@@ -508,22 +510,24 @@
                     event = settings;   // move it to the correct variable
                     settings = {};      // clear the settings variable
                 }
-                settings = (typeof (nameOrSettings) === "string") 
+                settings = (typeof nameOrSettings === "string")
                     ? $2sxc._lib.extend(settings || {}, { "action": nameOrSettings }) // place the name as an action-name into a command-object
                     : nameOrSettings;
 
                 var conf = cmc.manage._toolbar.actions[settings.action];
                 settings = $2sxc._lib.extend({}, conf, settings); // merge conf & settings, but settings has higher priority
+
                 if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb ? dialog
                 if (!settings.code) settings.code = cmc._openNgDialog; // decide what action to perform
 
                 var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
+
                 if (conf.uiActionOnly)
                     return settings.code(settings, origEvent, sxc);// 2016-11-03 cmc.manage);
 
                 // if more than just a UI-action, then it needs to be sure the content-group is created first
                 cmc.manage.contentBlock.prepareToAddContent()
-                    .then(function() {
+                    .then(function () {
                         return settings.code(settings, origEvent, sxc);// 2016-11-03 cmc.manage);
                     });
             }
@@ -605,12 +609,14 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                         cb.sxc = cb.sxc.recreate();
                         cb.sxc.manage._toolbar._processToolbars(); // sub-optimal deep dependency
                         cb.buttonsAreLoaded = true;
+                    }, function () {
+                        // nothing to load
                     });
             else
                 return window.location.reload();
 
         },
-
+        
         // retrieve new preview-content with alternate template and then show the result
         reload: function (templateId) {
             // if nothing specified, use stored id
@@ -619,7 +625,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
 
             // if nothing specified / stored, cancel
             if (!templateId)
-                return null;
+                return $.Deferred().reject();
 
             // if reloading a non-content-app, re-load the page
             if (!manage._reloadWithAjax) // special code to force ajax-app-change
@@ -684,7 +690,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                     cbisentity: editContext.ContentBlock.IsEntity,
                     cbid: editContext.ContentBlock.Id,
                     originalparameters: JSON.stringify(editContext.Environment.parameters)
-        },
+                },
                 dataType: "html"
             });
         },
@@ -730,18 +736,16 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
             if (!diag) {
                 // still not found, create it
                 diag = manage.dialog = manage.run("dash-view"); // not ideal, must improve
-
             } else {
                 diag.toggle();
             }
 
             var isVisible = diag.isVisible();
-            if (manage._editContext.ContentBlock.ShowTemplatePicker !== isVisible)
-                cb._setTemplateChooserState(isVisible)
-                    .then(function () {
-                        manage._editContext.ContentBlock.ShowTemplatePicker = isVisible;
-                    });
-
+            if (manage._editContext.ContentBlock.ShowTemplatePicker === isVisible) return;
+            cb._setTemplateChooserState(isVisible)
+                .then(function () {
+                    manage._editContext.ContentBlock.ShowTemplatePicker = isVisible;
+                });
         },
 
 
@@ -905,71 +909,162 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
 // known issues
 // - we never got around to making the height adjust automatically
 (function () {
-    var diag = $2sxc._dialog = {
-        mode: "iframe",
-        template: "<iframe width='100%' height='100px' src='{{url}}' onresize=\"console.log('resize')\"></iframe>"
-    };
+    $2sxc._dialog = Dialog;
 
-    diag.create = function (sxc, wrapperTag, url, closeCallback) {
-        var iframe = $(diag.template.replace("{{url}}", url))[0];    // build iframe tag
+    var RESIZE_INTERVAL = 200,
+        SHOW_DELAY = 400,
+        activeDialog;
 
-        iframe.closeCallback = closeCallback;
-        iframe.sxc = sxc;
-        // iframe.attr("data-for-manual-debug", "app: " + sxc.manage.ContentGroup.AppUrl);
+    $('body').on('mouseover', '.inpage-frame-wrapper', function () {
+        $(this).parents('.DNNModuleContent').eq(0).toggleClass('dia-mouseover', true);
+    });
 
-        //#region data bridge both ways
-        iframe.getManageInfo = function() {
-            return iframe.sxc.manage._dialogParameters;
-        };
+    $('body').on('mouseout', '.inpage-frame-wrapper', function () {
+        $(this).parents('.DNNModuleContent').eq(0).toggleClass('dia-mouseover', false);
+    });
 
-        iframe.getAdditionalDashboardConfig = function () {
-            return iframe.sxc.manage._dashboardConfig;
-        };
+    function Dialog(sxc, wrapperTag, url, closeCallback) {
+        var container, // the dialog (jQuery object)
+            iframe, // frame inside the dialog (HTMLElement)
+            resizeInterval;
 
-        iframe.getCommands = function() {
+        init();
+
+        $(wrapperTag).before(container);
+
+        /**
+         * Assign properties to the iframe for later use.
+         */
+        return Object.assign(iframe, {
+            closeCallback: closeCallback,
+            sxc: sxc,
+            destroy: function () {
+                // TODO: evaluate what to do here
+            },
+            getManageInfo: getManageInfo,
+            getAdditionalDashboardConfig: getAdditionalDashboardConfig,
+            getCommands: getCommands,
+            syncHeight: syncHeight,
+            toggle: function () {
+                return toggle();
+            },
+            justHide: function () {
+                return toggle(false);
+            },
+            isVisible: function () {
+                return !container.hasClass('hidden');
+            }
+        });
+
+        function init() {
+            var res = $(wrapperTag).parent().find('.inpage-frame-wrapper');
+
+            // the dialog has already been initialized
+            if (res.length > 0) {
+                container = res.eq(0);
+                iframe = container.find('iframe')[0];
+                load();
+                return res.eq(0);
+            }
+            
+            // REMOVE THIS
+            url = url
+                .replace('/dist/dnn/ui.html', '/dist/ng/')
+                .replace('#', '&');
+            
+            container = $('<div class="inpage-frame-wrapper">'
+                + '<div class="inpage-frame"><iframe width="100%" height="100px" src="' + url + '"></iframe></div>'
+                + '</div>');
+            iframe = container.find('iframe')[0];
+
+            $(iframe).on('load', load);
+
+            function load() {
+                var interval;
+                if (activeDialog == iframe) {
+                    console.log('this dialog is already open');
+                    return false;
+                }
+                syncHeight();
+                interval = setInterval(function () {
+                    try {
+                        syncHeight();
+                    } catch (e) {
+                        clearInterval(interval);
+                    }
+                }, RESIZE_INTERVAL);
+                setTimeout(function () {
+                    toggle(true);
+                }, SHOW_DELAY);
+            }
+        }
+
+        function toggle(show) {
+            var moduleContent = container.parents('.DNNModuleContent').eq(0),
+                action = show === undefined ? !moduleContent.hasClass('dia-select') : show,
+                dirty;
+
+            if (action) {
+                if (activeDialog !== undefined) {
+                    if (activeDialog == iframe) return false;
+                    dirty = false; // activeDialog.vm.isDirty();
+                    // TODO: i18n
+                    if (dirty && !window.confirm('Unsaved changes detected. Would you like to continue?')) return false;
+                    $(activeDialog).eq(0).parents('.DNNModuleContent').eq(0).toggleClass('dia-select', false);
+                }
+                activeDialog = iframe;
+            } else {
+                activeDialog = undefined;
+            }
+            
+            moduleContent.toggleClass('dia-select', action);
+        }
+
+        function getManageInfo() {
+            return sxc.manage._dialogParameters;
+        }
+
+        function getAdditionalDashboardConfig() {
+            return sxc.manage._dashboardConfig;
+        }
+
+        function getCommands() {
             return iframe.vm;
-        };
-        //#endregion
+        }
 
-        //#region sync size
-        iframe.syncHeight = function () {
+        function syncHeight() {
             var height = iframe.contentDocument.body.offsetHeight;
-            if (iframe.previousHeight === height)
-                return;
+            if (iframe.previousHeight === height) return;
             window.diagBox = iframe;
             iframe.height = height + 'px';
             iframe.previousHeight = height;
-        };
-
-        function loadEventListener()  {
-            iframe.syncHeight();
-            iframe.resizeInterval = window.setInterval(iframe.syncHeight, 200); // Not ideal - polling the document height may cause performance issues
-            //diagBox.contentDocument.body.addEventListener('resize', function () { diagBox.syncHeight(); }, true); // The resize event is not called reliable when the iframe content changes
         }
-        iframe.addEventListener('load', loadEventListener);
-
-        //#endregion
-
-        //#region Visibility toggle & status
-
-        iframe.isVisible = function() { return iframe.style.display !== "none";   };
-        iframe.toggle = function () { iframe.style.display = iframe.style.display === "none" ? "" : "none"; };
-        iframe.justHide = function () { iframe.style.display = "none"; };
-        //#endregion
-
-        // remove the diagBox - important when replacing the app with ajax, and the diag needs to be re-initialized
-        iframe.destroy = function () {
-            window.clearInterval(iframe.resizeInterval);   // clear this first, to prevent errors
-            iframe.remove(); // use the jquery remove for this
-        };
-
-        $(wrapperTag).before(iframe);
-
-        return iframe;
-    };
-
+    }
 })();
+if (typeof Object.assign != 'function') {
+    Object.assign = function (target, varArgs) { // .length of function is 2
+        'use strict';
+        if (target === null) { // TypeError if undefined or null
+            throw new TypeError('Cannot convert undefined or null to object');
+        }
 
+        var to = Object(target);
+
+        for (var index = 1; index < arguments.length; index++) {
+            var nextSource = arguments[index];
+
+            if (nextSource !== null) { // Skip over if undefined or null
+                for (var nextKey in nextSource) {
+                    // Avoid bugs when hasOwnProperty is shadowed
+                    if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                        to[nextKey] = nextSource[nextKey];
+                    }
+                }
+            }
+        }
+        return to;
+    };
+}
 
 (function () {
 	$2sxc._lib = {
@@ -1043,23 +1138,6 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
 
             //#endregion official, public properties - everything below this can change at any time
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             // internal method to find out if it's in edit-mode
             _isEditMode: function () { return editContext.Environment.IsEditable; },
 
@@ -1078,6 +1156,7 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
 
             // init this object 
             init: function init() {
+
                 // enhance UI in case there are known errors / issues
                 if (editContext.error.type)
                     editManager._handleErrors(editContext.error.type, contentBlockTag);
@@ -1086,10 +1165,22 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
                 editManager._commands.init(editManager);
                 editManager.contentBlock = $2sxc._contentBlock.create(sxc, editManager, contentBlockTag);
 
-                // attach & open the mini-dashboard iframe
-                if (!editContext.error.type && editContext.ContentBlock.ShowTemplatePicker)
-                    editManager.run("layout");
+                if ($(contentBlockTag).html().replace(/ /g, '').replace(/\n/g, '') === '') ensureInlineGlassesButton();
 
+                // display the dialog
+                if (!editContext.error.type && editContext.ContentBlock.ShowTemplatePicker) {
+                    editManager.run("layout");
+                }
+
+                function ensureInlineGlassesButton() {
+                    var btn;
+                    if ($(contentBlockTag).parent().find('.glasses').length !== 0) return;
+                    btn = $('<div class="glasses"><i class="icon-sxc-glasses" aria-hidden="true"></i></div>');
+                    btn.on('click', function() {
+                        editManager.run("layout");
+                    });
+                    $(contentBlockTag).before(btn);
+                }
             },
 
             // private: show error when the app-data hasn't been installed yet for this imported-module
@@ -1109,16 +1200,16 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
             // change config by replacing the guid, and refreshing dependend sub-objects
             _updateContentGroupGuid: function (newGuid) {
                 editContext.ContentGroup.Guid = newGuid;
-                toolsAndButtons.refreshConfig(); 
+                toolsAndButtons.refreshConfig();
                 editManager._toolbarConfig = toolsAndButtons.config;
             },
 
-            _getCbManipulator: function() {
+            _getCbManipulator: function () {
                 return $2sxc._contentBlock.manipulator(sxc);
             },
 
             //#region deprecated properties - these all should have been undocumented/ private till now
-            
+
             // 2016-11-03 v.08.06 deprecated command "action", it was only for internal use till now
             action: function () {
                 console.error("Obsolete: you are using a deprecated method 'action' which will be removed in 2sxc v9. you must change it to 'run'");
@@ -1132,7 +1223,7 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
 
             //#endregion
 
-            };
+        };
 
         editManager.init();
         return editManager;
@@ -1140,7 +1231,7 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
 
     //#region helper functions
     function getContentBlockTag(sxci) {
-         return $("div[data-cb-id='" + sxci.cbid + "']")[0];
+        return $("div[data-cb-id='" + sxci.cbid + "']")[0];
     }
 
     function getContextInfo(cb) {
@@ -1980,7 +2071,6 @@ $(document).ready(function () {
     myShakeEvent.start();
 
 });
-
 // the toolbar manager is an internal helper
 // taking care of toolbars, buttons etc.
 
@@ -2056,9 +2146,6 @@ $(document).ready(function () {
                     box = $("<div/>"),
                     symbol = $("<i class=\"" + actDef.icon + "\" aria-hidden=\"true\"></i>"),
                     onclick = actDef.disabled ? "" : "$2sxc(" + id + ", " + cbid + ").manage.run(" + JSON.stringify(actDef.command /*, tb._jsonifyFilterGroup*/) + ", event);";
-
-                //if ($2sxc.debug.load)
-                //  console.log("onclick: " + onclick);
 
                 for (var c = 0; c < classesList.length; c++)
                     showClasses += " " + classesList[c];

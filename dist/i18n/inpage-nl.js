@@ -1,40 +1,56 @@
 {
 	"Toolbar": {
-		"Edit": "Bewerk",
+		"Edit": "bewerken",
 		"New": "nieuw",
 		"AddDemo": "demo toevoegen",
-		"Replace": "vervang",
+		"Replace": "vervangen",
 		"Published": "gepubliceerd",
-		"Unpublished": "niet gepubliceerd",
+		"Unpublished": "nog niet gepubliceerd",
 		"AlreadyPublished": "reeds gepubliceerd",
 		"MoveUp": "omhoog",
 		"MoveDown": "omlaag",
-		"Sort": "sorteer / bewerk lijst",
+		"Sort": "sorteer / beheer lijst",
 		"Remove": "verwijder",
 		"ChangeLayout": "wijzig layout",
-		"App": "configureer",
+		"App": "configureren",
 		"Develop": "bewerk template",
-		"ContentType": "velden van dit content type",
-		"Zone": "beheer apps",
+		"ContentType": "velden van dit content-type",
+		"ContentItems": "inhoud items",
+		"Zone": "apps onderhouden",
 		"MoreActions": "meer acties",
-		"ConfirmRemove": "Dit verwijdert dit content item van de lijst, maar verwijdert deze niet helemaal (zodat je deze later weer kunt toevoegen). \nSee 2sxc.org/help for more. \n\nOk to remove?"
+		"QueryEdit": "bewerk data query",
+		"QueryEditDisabled": "deze weergave gebruikt geen query",
+		"TemplateSettings": "template instellingen",
+		"AppSettings": "app instellingen",
+		"AppSettingsDisabled": "geen app instellinen om te configureren",
+		"AppResources": "app resources in alle talen",
+		"AppResourcesDisabled": "geen app-resources om te vertalen",
+		"ConfirmRemove": "Deze actie zal dit inhoud-item weghalen van deze lijst, maar niet verwijderen (zodat u het later weer kunt toevoegen). \nSee 2sxc.org/help voor meer info. \n\nOk om weg te halen?",
+		"Delete": "verwijder item"
+	},
+	"Delete": {
+		"Confirm": "Dit zal item {id} definitief verwijderen \"{title}\". \n\nDit kan niet hersteld worden. Weet u het zeker?",
+		"ErrPermission": "Kan niet verwijderen - rechten ontbreken.",
+		"ErrInUse": "Kan niet verwijderen - item is waarschijnlijk nog ergens in gebruik.",
+		"ErrCheckConsole": "\n\nControleer javascript console voor meer information."
 	},
 	"EditFormTitle": {
 		"Content": "Inhoud",
-		"Presentation": "Opmaak instellingen",
-		"ListContent": "Lijst basis inhoud",
-		"ListPresentation": "Lijst opmaak instellingen",
-		"Metadata": "Toevoegen / Bewerken Metadata"
+		"Presentation": "Presentatie instellingen",
+		"ListContent": "Lijstkop inhoud",
+		"ListPresentation": "Lijst weergave instellingen",
+		"Metadata": "Metadata toevoegen / bewerken"
 	},
 	"QuickInsertMenu": {
-		"AddBlockContent": "voeg content block toe",
-		"AddBlockApp": "Voeg app block toe",
-		"AddModuleContent": "Voeg content toe aan {0}",
-		"AddModuleApp": "Voeg app toe aan {0}",
+		"AddBlockContent": "inhoudsblok toevoegen",
+		"AddBlockApp": "app blok toevoegen",
+		"AddModuleContent": "inhoud toevoegen aan {0}",
+		"AddModuleApp": "app toevoegen aan {0}",
 		"Select": "selecteer",
 		"Paste": "plakken",
 		"Delete": "verwijderen",
 		"More": "meer",
-		"ConfirmDelete": "verwijderen?"
+		"ConfirmDelete": "verwijderen?",
+		"Move": "verplaatsen"
 	}
 }
