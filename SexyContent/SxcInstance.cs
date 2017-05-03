@@ -5,7 +5,7 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using Newtonsoft.Json;
-using ToSic.Eav.BLL;
+using ToSic.Eav.Apps;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -26,10 +26,11 @@ namespace ToSic.SexyContent
     {
         #region App-level information
 
-        /// <summary>
-        /// The Content Data Context pointing to a full EAV, pre-configured for this specific App
-        /// </summary>
-        public EavDataController EavAppContext => App.EavContext;
+        // 2017-04-01 2dm - disabled, to remove deep dependencies
+        ///// <summary>
+        ///// The Content Data Context pointing to a full EAV, pre-configured for this specific App
+        ///// </summary>
+        //public EavDataController EavAppContext => App.EavContext;
 
         internal int? ZoneId => ContentBlock.ZoneId;
 

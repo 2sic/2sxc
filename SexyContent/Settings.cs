@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Configuration;
 using System.Reflection;
-using Telerik.Charting.Styles;
-using ToSic.Eav;
+using Configuration = ToSic.Eav.Configuration;
 
 namespace ToSic.SexyContent
 {
@@ -21,7 +21,8 @@ namespace ToSic.SexyContent
 
         public static readonly string PortalHostDirectory = "~/Portals/_default/";
         public static readonly string TemplateFolder = "2sxc";
-        public static readonly string PortalSettingsPrefix = "ToSIC_SexyContent_";
+        public const string PortalSettingsPrefix = "ToSIC_SexyContent_";
+        public const string PortalSettingZoneId = PortalSettingsPrefix + "ZoneID";
         public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
 
         public static readonly string ModuleVersion = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("00") + "."
@@ -38,8 +39,6 @@ namespace ToSic.SexyContent
         public static readonly string AttributeSetStaticNameAppResources = "App-Resources";
         public static readonly string AttributeSetStaticNameAppSettings = "App-Settings";
         internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
-        public static readonly string ToSexyDirectory = "~/DesktopModules/ToSIC_SexyContent";
-        public static readonly string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/_";
 
         internal static readonly int DataIsMissingInDb = -100;
 
@@ -65,7 +64,7 @@ namespace ToSic.SexyContent
                 "08.03.00", "08.03.01", "08.03.02", "08.03.03", "08.03.04", "08.03.05", "08.03.06", "08.03.07", "08.04.00", "08.04.01", "08.04.02", "08.04.03", "08.04.04", "08.04.05", "08.04.06", "08.04.07", "08.04.08",
                 "08.05.00", "08.05.01", "08.05.02", "08.05.03", "08.05.04", "08.05.05", "08.05.06", "08.06.00", "08.07.00", "08.08.00", "08.08.01", "08.08.02","08.09.00","08.09.01","08.10.00","08.10.01",
                 // new installer starting in 08.11.00!
-                "08.11.00", "08.12.00"
+                "08.11.00", "08.12.00", "09.00.00"
             };
 
             internal const string LastVersionWithServerChanges = "08.11.00";
@@ -92,13 +91,9 @@ namespace ToSic.SexyContent
         /// </summary>
         static Settings()
         {
+            var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+            Configuration.SetConnectionString(connectionString);
             new UnityConfig().Configure();
-            SetEavConnectionString();
-        }
-
-        public static void SetEavConnectionString()
-        {
-            Configuration.SetConnectionString("SiteSqlServer");
         }
 
         #endregion

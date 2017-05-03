@@ -29,7 +29,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TypeScriptToolsVersion>2.0</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -65,10 +65,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\dotnetnuke.modules.userdefinedtable.dll</HintPath>
     </Reference>
-    <Reference Include="DotNetNuke.RadEditorProvider, Version=6.1.0.1171, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\DotNetNuke.RadEditorProvider.dll</HintPath>
-    </Reference>
     <Reference Include="DotNetNuke.Web, Version=6.1.0.1171, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.Web.dll</HintPath>
@@ -77,108 +73,47 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.Web.Client.dll</HintPath>
     </Reference>
-    <Reference Include="DotNetNuke.Web.Razor, Version=7.2.0.607, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\DotNetNuke.Web.Razor.dll</HintPath>
-    </Reference>
     <Reference Include="DotNetNuke.WebUtility, Version=4.2.1.783, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.WebUtility.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationBlocks.Data, Version=2.0.0.0, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\Microsoft.ApplicationBlocks.Data.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\eav-server\packages\Microsoft.Extensions.DependencyInjection.1.1.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\eav-server\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SharpZipLib, Version=0.81.0.1407, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\SharpZipLib.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\eav-server\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\System.Web.Http.WebHost.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.Services" />
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\System.Web.WebPages.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Telerik.Web.UI, Version=2011.2.915.35, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Telerik.Web.UI.dll</HintPath>
     </Reference>
-    <Reference Include="ToSic.Eav, Version=4.1.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.dll</HintPath>
-    </Reference>
-    <Reference Include="ToSic.Eav.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="ToSic.Eav.DataSources, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.DataSources.dll</HintPath>
-    </Reference>
-    <Reference Include="ToSic.Eav.ImportExport, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.ImportExport.dll</HintPath>
-    </Reference>
-    <Reference Include="ToSic.Eav.Persistence.EF4, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.Persistence.EF4.dll</HintPath>
-    </Reference>
-    <Reference Include="ToSic.Eav.Tokens, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.Tokens.dll</HintPath>
-    </Reference>
-    <Reference Include="ToSic.Eav.WebApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.WebApi.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adam\AdamController.cs" />
     <Compile Include="Adam\AdamFile.cs" />
     <Compile Include="Adam\AdamFolder.cs" />
     <Compile Include="Adam\AdamItem.cs" />
@@ -194,6 +129,11 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Environment\Base\Culture.cs" />
+    <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
+    <Compile Include="Environment\Interfaces\ICulture.cs" />
+    <Compile Include="Environment\Interfaces\IUser.cs" />
+    <Compile Include="Environment\Interfaces\IZoneMapper.cs" />
     <Compile Include="SexyContent\ContentBlocks\Renderers\InTextContentBlocks.cs" />
     <Compile Include="DnnWebForms\FileManager.ascx.cs">
       <DependentUpon>FileManager.ascx</DependentUpon>
@@ -266,7 +206,9 @@
     <Compile Include="SexyContent\ContentBlocks\Renderers\Simple.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
-    <Compile Include="SexyContent\ImportExport\Const2.cs" />
+    <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
+    <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
+    <Compile Include="SexyContent\ImportExport\ToSxcXmlExporter.cs" />
     <Compile Include="SexyContent\Installer\Helpers.cs" />
     <Compile Include="SexyContent\Installer\Lock.cs" />
     <Compile Include="SexyContent\Installer\Logger.cs" />
@@ -284,63 +226,39 @@
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="Environment\Dnn7\DataSources\DnnFormAndList.cs" />
-    <Compile Include="WebApi\Dnn\DnnApiControllerWithFixes.cs" />
-    <Compile Include="WebApi\Dnn\ModuleController.cs" />
-    <Compile Include="WebApi\ImportExport\HttpResponseMessageHelper.cs" />
-    <Compile Include="WebApi\ImportExport\ImportResult.cs" />
-    <Compile Include="WebApi\ImportExport\SxcAppWrapper.cs" />
-    <Compile Include="WebApi\EavApiProxies\ContentExportController.cs" />
-    <Compile Include="WebApi\EavApiProxies\ContentImportController.cs" />
-    <Compile Include="WebApi\EavApiProxies\MetadataController.cs" />
-    <Compile Include="WebApi\EavApiProxies\EntitiesController.cs" />
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\Engines\RenderingException.cs" />
     <Compile Include="SexyContent\Engines\RenderStatusType.cs" />
-    <Compile Include="SexyContent\ImportExport\XmlConstants.cs" />
     <Compile Include="Environment\Dnn7\Permissions.cs" />
     <Compile Include="SexyContent\ISxcInstance.cs" />
     <Compile Include="SexyContent\Settings.cs" />
     <Compile Include="SexyContent\Internal\AppHelpers.cs" />
-    <Compile Include="SexyContent\Internal\ContentTypeHelpers.cs" />
     <Compile Include="SexyContent\Internal\DnnStuffToRefactor.cs" />
     <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
-    <Compile Include="SexyContent\Internal\TemplateManager.cs" />
-    <Compile Include="SexyContent\Internal\ZoneHelpers.cs" />
-    <Compile Include="WebApi\ImportExportController.cs" />
-    <Compile Include="WebApi\SxcWebApiExceptionHandling.cs" />
-    <Compile Include="WebApi\AppAssetsController.cs" />
-    <Compile Include="WebApi\TemplateController.cs" />
-    <Compile Include="WebApi\ToRefactorDeliverCBDataLight\GetContentBlockDataLight.cs" />
+    <Compile Include="SexyContent\Internal\TemplateHelpers.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />
-    <Compile Include="WebApi\SystemController.cs" />
-    <Compile Include="WebApi\ContentGroupController.cs" />
-    <Compile Include="WebApi\EavApiProxies\ContentTypeController.cs" />
-    <Compile Include="WebApi\Dnn\HyperlinkController.cs" />
-    <Compile Include="SexyContent\EAV\Implementation\ValueConverter\SexyContentValueConverter.cs" />
+    <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEav.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
     <Compile Include="SexyContent\Security\PermissionController.cs" />
     <Compile Include="SexyContent\Security\PermissionGrant.cs" />
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\Installer\InstallationController.cs" />
-    <Compile Include="WebApi\EavApiProxies\PipelineDesignerController.cs" />
     <Compile Include="SexyContent\DataSources\App.cs" />
     <Compile Include="SexyContent\DnnHelper.cs" />
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
     <Compile Include="SexyContent\AppAndDataHelpers.cs" />
     <Compile Include="SexyContent\SxcHelper.cs" />
-    <Compile Include="SexyContent\Template.cs" />
     <Compile Include="SexyContent\App.cs" />
     <Compile Include="SexyContent\DataPublishing.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
-    <Compile Include="WebApi\EavApiProxies\EntityPickerController.cs" />
-    <Compile Include="SexyContent\Element.cs" />
+    <Compile Include="Deprecated\RemoveInV10\Element.cs" />
     <Compile Include="SexyContent\DynamicEntity.cs" />
     <Compile Include="SexyContent\Engines\EngineBase.cs" />
     <Compile Include="SexyContent\Engines\EngineFactory.cs" />
@@ -352,30 +270,13 @@
     <Compile Include="SexyContent\EAV\Extensions\EntityDecorator.cs" />
     <Compile Include="SexyContent\EAV\Extensions\EntityInContentGroup.cs" />
     <Compile Include="SexyContent\EAV\Extensions\IHasEditingData.cs" />
-    <Compile Include="WebApi\InstallerController.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
-    <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
-    <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
-    <Compile Include="SexyContent\ImportExport\FileManager.cs" />
-    <Compile Include="SexyContent\ImportExport\ImportValue.cs" />
-    <Compile Include="SexyContent\ImportExport\XmlExporter.cs" />
-    <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
-    <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
-    <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
     <Compile Include="SexyContent\TemplateManager.cs" />
-    <Compile Include="WebApi\AppQueryController.cs" />
-    <Compile Include="WebApi\AppContentController.cs" />
-    <Compile Include="WebApi\RouteMapper.cs" />
     <Compile Include="SexyContent\Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\Search\SearchController.cs" />
     <Compile Include="SexyContent\Search\SearchIndexException.cs" />
     <Compile Include="SexyContent\Search\SearchInfo.cs" />
     <Compile Include="SexyContent\SexyContentException.cs" />
-    <Compile Include="SexyContent\TemplateDefault.cs" />
-    <Compile Include="WebApi\View\ModuleController.cs" />
-    <Compile Include="WebApi\Helpers.cs" />
-    <Compile Include="WebApi\SxcApiController.cs" />
-    <Compile Include="WebApi\AppApiControllerSelector.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -403,6 +304,7 @@
     <Content Include="icon-app-black.png" />
     <Content Include="icon-black.png" />
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
+    <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
     <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.03.03.SqlDataProvider" />
@@ -417,11 +319,11 @@
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <Content Include="README.md" />
-    <Content Include="packages.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="package.json" />
     <Content Include="SqlDataProvider\00.99.00.SqlDataProvider" />
+    <Content Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
+    <Content Include="SexyContent\ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
+    <Content Include="packages.config" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
@@ -461,9 +363,7 @@
     <Content Include="SqlDataProvider\07.02.02.SqlDataProvider" />
     <Content Include="SqlDataProvider\08.05.02.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
-    <Content Include="web.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\View.ascx.resx" />
@@ -482,11 +382,60 @@
     <Folder Include="Beta\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_LocalResources\View.ascx.fr-FR.resx" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">
+      <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
+      <Name>ToSic.Eav.Apps</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
+      <Project>{82f94588-269b-4cdd-98d1-d5cb14c39090}</Project>
+      <Name>ToSic.Eav.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj">
+      <Project>{daae8e21-ca5f-400b-9f5a-5e4e1196b21b}</Project>
+      <Name>ToSic.Eav.DataSources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj">
+      <Project>{5a75cd35-99f4-4cf0-944a-dc0f5d68b430}</Project>
+      <Name>ToSic.Eav.ImportExport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Tokens\ToSic.Eav.TokenEngine.csproj">
+      <Project>{2a81f269-8cca-4afd-a85f-82b1c2343965}</Project>
+      <Name>ToSic.Eav.TokenEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj">
+      <Project>{f93f5fb1-95a6-4c4b-bdcf-b001e82f766f}</Project>
+      <Name>ToSic.Eav.WebApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj">
+      <Project>{cf3b9349-8c66-4901-8edb-a4ec1d75326b}</Project>
+      <Name>ToSic.Eav</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'efc and WebApi|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DocumentationFile>..\..\bin\ToSic.SexyContent.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'debug eav only|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DocumentationFile>..\..\bin\ToSic.SexyContent.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
@@ -518,7 +467,8 @@
     <PackageName>2sic_2SexyContent</PackageName>
     <MSBuildCommunityTasksPath>$(SolutionDir)\BuildScripts</MSBuildCommunityTasksPath>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\BuildScripts\ModulePackage.Targets" />
+  <!-- <Import Project="$(SolutionDir)\BuildScripts\ModulePackage.Targets" /> -->
+  <Import Project="$(ProjectDir)\BuildScripts\ModulePackage.Targets" />
   <Target Name="AfterBuild" DependsOnTargets="PackageModule">
   </Target>
   <PropertyGroup>

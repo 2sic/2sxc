@@ -7,6 +7,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
@@ -29,16 +30,16 @@ namespace ToSic.SexyContent.Search
             var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
 
             // New Context because PortalSettings.Current is null
-            var zoneId = ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID);
+            var zoneId = new Environment.Environment().ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);// ZoneHelpers.GetZoneId(moduleInfo.OwnerPortalID);
 
-            if (!zoneId.HasValue)
-                return searchDocuments;
+            //if (!zoneId.HasValue)
+            //    return searchDocuments;
 
-            int? appId = AppHelpers.GetDefaultAppId(zoneId.Value);
+            int? appId = new ZoneRuntime(zoneId).DefaultAppId;// State.GetDefaultAppId(zoneId);
 
             if (!isContentModule)
             {
-	            appId = AppHelpers.GetAppIdFromModule(moduleInfo, zoneId.Value);
+	            appId = AppHelpers.GetAppIdFromModule(moduleInfo, zoneId);
 				if (!appId.HasValue)
 		            return searchDocuments;
             }
@@ -49,7 +50,7 @@ namespace ToSic.SexyContent.Search
 
             // old 2016-03-27
             var language = moduleInfo.CultureCode;
-	        var contentGroup = sexy.App.ContentGroupManager./*AppContentGroups.*/GetContentGroupForModule(moduleInfo.ModuleID);
+	        var contentGroup = sexy.App.ContentGroupManager./*AppContentGroups.*/GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
             var template = contentGroup.Template;
 
             // This list will hold all EAV entities to be indexed

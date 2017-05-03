@@ -1,6 +1,11 @@
-﻿using Microsoft.Practices.Unity;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Implementations.UserInformation;
 using ToSic.Eav.Implementations.ValueConverter;
-using ToSic.SexyContent.EAV.Implementation.ValueConverter;
+using ToSic.Eav.ImportExport.Interfaces;
+using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
+using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent
 {
@@ -20,10 +25,18 @@ namespace ToSic.SexyContent
             if (_alreadyConfigured)
                 return;
 
-            var cont = Eav.Factory.Container;
-            new Eav.Configuration().ConfigureDefaultMappings(cont);
-            cont.RegisterType(typeof(Eav.Serializers.Serializer), typeof(Serializers.Serializer), new InjectionConstructor());//, null, null, null);
-            cont.RegisterType(typeof(IEavValueConverter), typeof(SexyContentValueConverter), new InjectionConstructor());
+            Eav.Factory.ActivateNetCoreDi(sc =>
+            {
+                sc.AddTransient<Eav.Serializers.Serializer, Serializers.Serializer>();//new InjectionConstructor());//, null, null, null);
+                sc.AddTransient<IEavValueConverter, DnnValueConverter>();//new InjectionConstructor());
+                sc.AddTransient<IEavUserInformation, DnnUserInformation>();//new InjectionConstructor());
+
+                sc.AddTransient<XmlExporter, ToSxcXmlExporter>();//(new InjectionConstructor(0, 0, true, new string[0], new string[0]));
+                sc.AddTransient<IImportExportEnvironment, ImportExportEnvironment>();//new InjectionConstructor());
+
+                new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);
+            });
+
             _alreadyConfigured = true;
         }
     }

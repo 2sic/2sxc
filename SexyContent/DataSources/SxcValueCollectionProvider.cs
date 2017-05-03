@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using ToSic.Eav.ValueProvider;
+﻿using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.DataSources
 {

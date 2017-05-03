@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks
@@ -96,16 +97,16 @@ namespace ToSic.SexyContent.ContentBlocks
         {
             try
             {
-                var zoneId = ZoneHelpers.GetZoneID(SxcContext.ContentBlock.PortalSettings.PortalId); // note: 2016-03-30 2dm changed this, before it was 2sxcContext.PortalId (so th runtime portal)
+                var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.PortalSettings.PortalId);// ZoneHelpers.GetZoneId(SxcContext.ContentBlock.PortalSettings.PortalId); 
                 return
-                    AppManagement.GetApps(zoneId.Value, false, SxcContext.ContentBlock.PortalSettings)
+                    AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.PortalSettings)
                         .Where(a => !a.Hidden)
                         .Select(a => new { a.Name, a.AppId, SupportsAjaxReload = a.Configuration.SupportsAjaxReload ?? false });
             }
             catch (Exception e)
             {
                 Exceptions.LogException(e);
-                throw e;
+                throw;
             }
         }
 
@@ -128,11 +129,8 @@ namespace ToSic.SexyContent.ContentBlocks
             }
         }
 
-        public bool Publish(int repositoryId)
-        {
-            SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(repositoryId, true);
-            return true;
-        }
+        public bool Publish(int repositoryId, bool state)
+            => new AppManager(SxcContext.App.ZoneId, SxcContext.App.AppId).Entities.Publish(repositoryId, state);
 
         public bool Publish(string part, int sortOrder)
         {
@@ -148,13 +146,15 @@ namespace ToSic.SexyContent.ContentBlocks
                 // make sure we really have the draft item an not the live one
                 var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
                 if (contEntity != null && !contDraft.IsPublished)
-                    SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
+                    Publish(contDraft.RepositoryId, !hasPresentation);
+                    // SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
 
                 if (hasPresentation)
                 {
                     var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
                     if (!presDraft.IsPublished)
-                        SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(presDraft.RepositoryId, true);
+                        Publish(presDraft.RepositoryId, true);
+                        // SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(presDraft.RepositoryId, true);
                 }
 
                 return true;

@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
-using ToSic.Eav.BLL;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Serializers;
 using ToSic.Eav.WebApi;
+using ToSic.SexyContent; // mostly because of content-groups
 
-namespace ToSic.SexyContent
+namespace ToSic.Eav.AppEngine
 {
 	public class TemplateManager
 	{
-		private const string TemplateTypeName = "2SexyContent-Template";
-
-		private readonly int _zoneId;
-		private readonly int _appId;
+		public readonly int ZoneId;
+		public readonly int AppId;
 
 		public TemplateManager(int zoneId, int appId)
 		{
-			_zoneId = zoneId;
-			_appId = appId;
+			ZoneId = zoneId;
+			AppId = appId;
 		}
 
 	    private IDataSource _templateDs;
@@ -28,28 +25,20 @@ namespace ToSic.SexyContent
 		{
             if(_templateDs!= null)return _templateDs;
 		    // ReSharper disable once RedundantArgumentDefaultValue
-			var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId, false);
-			dataSource = DataSource.GetDataSource<EntityTypeFilter>(_zoneId, _appId, dataSource);
-			((EntityTypeFilter)dataSource).TypeName = TemplateTypeName;
+			var dataSource = DataSource.GetInitialDataSource(ZoneId, AppId, false);
+			dataSource = DataSource.GetDataSource<EntityTypeFilter>(ZoneId, AppId, dataSource);
+		    ((EntityTypeFilter) dataSource).TypeName = Apps.Configuration.TemplateContentType;// TemplateTypeName;
 		    _templateDs = dataSource;
 			return dataSource;
 		}
 
-		public IEnumerable<Template> GetAllTemplates()
-		{
-            return TemplateDataSource().List.Select(p => new Template(p.Value)).OrderBy(p => p.Name);
-        }
-
-        // 2016-09-08 2dm disabled this, because we actually need all templates to be sent, and have the UI hide the hidden ones - part of https://github.com/2sic/2sxc/issues/831
-  //      public IEnumerable<Template> GetVisibleTemplates()
-		//{
-		//	return GetAllTemplates().Where(t => !t.IsHidden);
-		//}
+		public IEnumerable<Template> GetAllTemplates() 
+            => TemplateDataSource().List.Select(p => new Template(p.Value)).OrderBy(p => p.Name);
 
 		public Template GetTemplate(int templateId)
 		{
 			var dataSource = TemplateDataSource();
-			dataSource = DataSource.GetDataSource<EntityIdFilter>(_zoneId, _appId, dataSource);
+			dataSource = DataSource.GetDataSource<EntityIdFilter>(ZoneId, AppId, dataSource);
 			((EntityIdFilter)dataSource).EntityIds = templateId.ToString();
 			var templateEntity = dataSource.List.FirstOrDefault().Value;
 
@@ -59,78 +48,22 @@ namespace ToSic.SexyContent
 			return new Template(templateEntity);
 		}
 
-        // 2016-09-24 2dm seems unused now
-        //public Template GetTemplate(Guid templateGuid)
-        //{
-        //    return
-        //        TemplateDataSource()
-        //            .List.Where(t => t.Value.EntityGuid == templateGuid)
-        //            .Select(t => new Template(t.Value))
-        //            .FirstOrDefault();
-        //}
-
         public bool DeleteTemplate(int templateId)
 		{
+            // really get template first, to be sure it is a template
 			var template = GetTemplate(templateId);
-            var eavContext = EavDataController.Instance(_zoneId, _appId).Entities; //EavContext.Instance(_zoneId, _appId);
-			var canDelete = eavContext.CanDeleteEntity(template.TemplateId);
-			if(!canDelete.Item1)
-				throw new Exception(canDelete.Item2);
-			return eavContext.DeleteEntity(template.TemplateId);
+            return new AppManager(ZoneId, AppId).Entities.Delete(template.TemplateId);
 		}
-
-		/// <summary>
-		/// Adds or updates a template - will create a new template if templateId is not specified
-		/// </summary>
-		public void UpdateTemplate(int? templateId, string name, string path, string contentTypeStaticName,
-			int? contentDemoEntity, string presentationTypeStaticName, int? presentationDemoEntity,
-			string listContentTypeStaticName, int? listContentDemoEntity, string listPresentationTypeStaticName,
-			int? listPresentationDemoEntity, string templateType, bool isHidden, string location, bool useForList,
-			bool publishData, string streamsToPublish, int? pipelineEntity, string viewNameInUrl)
-		{
-			var values = new Dictionary<string,object>
-			{
-				{ "Name", name },
-				{ "Path", path },
-				{ "ContentTypeStaticName", contentTypeStaticName },
-				{ "ContentDemoEntity", contentDemoEntity.HasValue ? new[] { contentDemoEntity.Value } : new int[]{} },
-				{ "PresentationTypeStaticName", presentationTypeStaticName },
-				{ "PresentationDemoEntity", presentationDemoEntity.HasValue ? new[] { presentationDemoEntity.Value } : new int[]{} },
-				{ "ListContentTypeStaticName", listContentTypeStaticName },
-				{ "ListContentDemoEntity", listContentDemoEntity.HasValue ? new[] { listContentDemoEntity.Value } : new int[]{} },
-				{ "ListPresentationTypeStaticName", listPresentationTypeStaticName },
-				{ "ListPresentationDemoEntity", listPresentationDemoEntity.HasValue ? new[] { listPresentationDemoEntity.Value } : new int[]{} },
-				{ "Type", templateType },
-				{ "IsHidden", isHidden },
-				{ "Location", location },
-				{ "UseForList", useForList },
-				{ "PublishData", publishData },
-				{ "StreamsToPublish", streamsToPublish },
-				{ "Pipeline", pipelineEntity.HasValue ? new[] { pipelineEntity } : new int?[]{} },
-				{ "ViewNameInUrl", viewNameInUrl }
-			};
-
-            var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
-
-			if(templateId.HasValue)
-				context.UpdateEntity(templateId.Value, values);
-			else
-			{
-				var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(TemplateTypeName);
-				context.AddEntity(contentType.AttributeSetId, values, null, null);
-			}
-			
-		}
+        
 
 
 	    /// <summary>
 	    /// Returns all templates that should be available in the template selector
 	    /// </summary>
 	    /// <returns></returns>
-	    public IEnumerable<Template> GetAvailableTemplatesForSelector(int modId, ContentGroupManager cgContentGroups)
+	    public IEnumerable<Template> GetAvailableTemplatesForSelector(int modId, int tabId, ContentGroupManager cgContentGroups)
         {
-            // IEnumerable<Template> availableTemplates;
-            var contentGroup = cgContentGroups.GetContentGroupForModule(modId);
+            var contentGroup = cgContentGroups.GetContentGroupForModule(modId, tabId);
             return GetAvailableTemplates(contentGroup);
         }
 
@@ -174,7 +107,7 @@ namespace ToSic.SexyContent
             var ctc = new ContentTypeController();
             var ser = new Serializer();
 
-            return GetAvailableContentTypes(Settings.AttributeSetScope)
+            return new AppRuntime(ZoneId, AppId).ContentTypes.FromScope(Settings.AttributeSetScope) //  GetAvailableContentTypes(Settings.AttributeSetScope)
                 .Where(p => availableTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)) // must exist in at least 1 template
                 .OrderBy(p => p.Name)
                 .Select(p => new
@@ -184,19 +117,6 @@ namespace ToSic.SexyContent
                     IsHidden = !(visTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)), // must check if *any* template is visible, otherise tell the UI that it's hidden
                     Metadata = ser.Prepare(ctc.GetMetadata(p, mdCache))
                 });
-        }
-
-
-
-        public IEnumerable<IContentType> GetAvailableContentTypes(string scope, bool includeAttributeTypes = false)
-        {
-            return GetAvailableContentTypes(includeAttributeTypes).Where(p => p.Scope == scope);
-        }
-
-        public IEnumerable<IContentType> GetAvailableContentTypes(bool includeAttributeTypes = false)
-        {
-            var contentTypes = ((BaseCache)DataSource.GetCache(_zoneId, _appId)).GetContentTypes();
-            return contentTypes.Select(c => c.Value).Where(c => includeAttributeTypes || !c.Name.StartsWith("@")).OrderBy(c => c.Name);
         }
 
 

@@ -8,10 +8,12 @@ using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.DataSources.Caches;
-using ToSic.Eav.Import;
-using ToSic.SexyContent.ImportExport;
-using ToSic.SexyContent.Internal;
+using ToSic.Eav.ImportExport;
+using ToSic.Eav.ImportExport.Interfaces;
+using ToSic.Eav.ImportExport.Models;
+//using Microsoft.Practices.Unity;
 
 namespace ToSic.SexyContent.Installer
 {
@@ -26,7 +28,7 @@ namespace ToSic.SexyContent.Installer
         {
             logger.LogStep("07.00.00", "Start", false);
 
-            var userName = "System-ModuleUpgrade-070000";
+            //var userName = "System-ModuleUpgrade-070000";
 
             #region 1. Import new ContentTypes for ContentGroups and Templates
 
@@ -37,7 +39,7 @@ namespace ToSic.SexyContent.Installer
                 var xmlToImport =
                     File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.00.xml"));
                 //var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
-                var xmlImport = new XmlImport("en-US", userName, true);
+                var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
                 var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
                 if (!success)
@@ -210,63 +212,67 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 logger.LogStep("07.00.00", "Starting to migrate data for app " + app + "...");
 
                 var currentApp = app;
-                var entitiesToImport = new List<ImportEntity>();
+                var entitiesToImport = new List<ImpEntity>();
 
                 foreach (var t in existingTemplates.Where(t => t.AppId == currentApp))
                 {
-                    var entity = new ImportEntity
+                    var entity = new ImpEntity
                     {
                         AttributeSetStaticName = "2SexyContent-Template",
                         EntityGuid = t.NewEntityGuid,
-                        IsPublished = true,
-                        AssignmentObjectTypeId = ContentTypeHelpers.AssignmentObjectTypeIDDefault
+                        IsPublished = true
+                        // , KeyTypeId = Constants.NotMetadata// Configuration.AssignmentObjectTypeIdDefault
                     };
-                    entity.Values = new Dictionary<string, List<IValueImportModel>>
+                    entity.Values = new Dictionary<string, List<IImpValue>>
                     {
-                        {"Name", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.Name }}},
-                        {"Path", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.Path }}},
-                        {"ContentTypeStaticName", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ContentTypeId }}},
-                        {"ContentDemoEntity", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.ContentDemoEntityGuids }}},
-                        {"PresentationTypeStaticName", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.PresentationTypeId }}},
-                        {"PresentationDemoEntity", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.PresentationDemoEntityGuids }}},
-                        {"ListContentTypeStaticName", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ListContentTypeId }}},
-                        {"ListContentDemoEntity", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.ListContentDemoEntityGuids }}},
-                        {"ListPresentationTypeStaticName", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ListPresentationTypeId }}},
-                        {"ListPresentationDemoEntity", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.ListPresentationDemoEntityGuids }}},
-                        {"Type", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.Type }}},
-                        {"IsHidden", new List<IValueImportModel> {new ValueImportModel<bool?>(entity) { Value = t.IsHidden }}},
-                        {"Location", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.Location }}},
-                        {"UseForList", new List<IValueImportModel> {new ValueImportModel<bool?>(entity) { Value = t.UseForList }}},
-                        {"PublishData", new List<IValueImportModel> {new ValueImportModel<bool?>(entity) { Value = t.PublishData }}},
-                        {"StreamsToPublish", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.StreamsToPublish }}},
-                        {"Pipeline", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.PipelineEntityGuids }}},
-                        {"ViewNameInUrl", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ViewNameInUrl }}}
+                        {"Name", new List<IImpValue> {new ImpValue<string>(entity, t.Name )}},
+                        {"Path", new List<IImpValue> {new ImpValue<string>(entity, t.Path)}},
+                        {"ContentTypeStaticName", new List<IImpValue> {new ImpValue<string>(entity, t.ContentTypeId)}},
+                        {"ContentDemoEntity", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.ContentDemoEntityGuids)}},
+                        {"PresentationTypeStaticName", new List<IImpValue> {new ImpValue<string>(entity, t.PresentationTypeId)}},
+                        {"PresentationDemoEntity", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.PresentationDemoEntityGuids)}},
+                        {"ListContentTypeStaticName", new List<IImpValue> {new ImpValue<string>(entity, t.ListContentTypeId)}},
+                        {"ListContentDemoEntity", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.ListContentDemoEntityGuids)}},
+                        {"ListPresentationTypeStaticName", new List<IImpValue> {new ImpValue<string>(entity, t.ListPresentationTypeId)}},
+                        {"ListPresentationDemoEntity", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.ListPresentationDemoEntityGuids)}},
+                        {"Type", new List<IImpValue> {new ImpValue<string>(entity, t.Type)}},
+                        {"IsHidden", new List<IImpValue> {new ImpValue<bool?>(entity, t.IsHidden)}},
+                        {"Location", new List<IImpValue> {new ImpValue<string>(entity, t.Location)}},
+                        {"UseForList", new List<IImpValue> {new ImpValue<bool?>(entity, t.UseForList)}},
+                        {"PublishData", new List<IImpValue> {new ImpValue<bool?>(entity, t.PublishData)}},
+                        {"StreamsToPublish", new List<IImpValue> {new ImpValue<string>(entity, t.StreamsToPublish)}},
+                        {"Pipeline", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.PipelineEntityGuids)}},
+                        {"ViewNameInUrl", new List<IImpValue> {new ImpValue<string>(entity, t.ViewNameInUrl)}}
                     };
                     entitiesToImport.Add(entity);
                 }
 
                 foreach (var t in existingContentGroups.Where(t => t.AppId == app))
                 {
-                    var entity = new ImportEntity
+                    var entity = new ImpEntity
                     {
                         AttributeSetStaticName = "2SexyContent-ContentGroup",
                         EntityGuid = t.NewEntityGuid,
-                        IsPublished = true,
-                        AssignmentObjectTypeId = ContentTypeHelpers.AssignmentObjectTypeIDDefault
+                        IsPublished = true
+                        // , KeyTypeId = Constants.NotMetadata // Configuration.AssignmentObjectTypeIdDefault
                     };
-                    entity.Values = new Dictionary<string, List<IValueImportModel>>
+                    entity.Values = new Dictionary<string, List<IImpValue>>
                     {
-                        {"Template", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.TemplateGuids }}},
-                        {Constants.ContentKey, new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ContentGuids }}},
-                        {Constants.PresentationKey, new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.PresentationGuids }}},
-                        {"ListContent", new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListContentGuids }}},
-                        {"ListPresentation", new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListPresentationGuids }}}
+                        {"Template", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.TemplateGuids)}},
+                        {Constants.ContentKey, new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ContentGuids)}},
+                        {Constants.PresentationKey, new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.PresentationGuids)}},
+                        {"ListContent", new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ListContentGuids)}},
+                        {"ListPresentation", new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ListPresentationGuids)}}
                     };
                     entitiesToImport.Add(entity);
                 }
 
-                var import = new Eav.Import.Import(null, app, userName);
-                import.RunImport(null, entitiesToImport);
+                // 2017-04-11 2dm remove dependencies on BLL
+                var importer = Factory.Resolve<IRepositoryImporter>();
+                importer.Import(null, app, null, entitiesToImport);
+
+                //var import = new DbImport(null, app/*, userName*/);
+                //import.ImportIntoDb(null, entitiesToImport);
 
                 logger.LogStep("07.00.00", "Migrated data for app " + app);
             }
@@ -277,7 +283,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
         {
             logger.LogStep("07.00.03", "Start", false);
 
-            var userName = "System-ModuleUpgrade-070003";
+            //var userName = "System-ModuleUpgrade-070003";
 
             // Import new ContentType for permissions
             if (DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId).GetContentType("PermissionConfiguration") == null)
@@ -286,7 +292,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 var xmlToImport =
                     File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.03.xml"));
                 //var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
-                var xmlImport = new XmlImport("en-US", userName, true);
+                var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
                 var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
                 if (!success)
@@ -304,7 +310,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
         {
             logger.LogStep("07.02.00", "Start", false);
 
-            var userName = "System-ModuleUpgrade-070200";
+            //var userName = "System-ModuleUpgrade-070200";
 
             // Import new ContentType for permissions
             if (DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId).GetContentType("|Config ToSic.Eav.DataSources.Paging") == null)
@@ -313,7 +319,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 var xmlToImport =
                     File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.02.00.xml"));
                 //var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
-                var xmlImport = new XmlImport("en-US", userName, true);
+                var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
                 var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
                 if (!success)
@@ -330,12 +336,12 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
         {
             logger.LogStep("07.03.03", "Start", false);
 
-            var userName = "System-ModuleUpgrade-070303";
+            //var userName = "System-ModuleUpgrade-070303";
 
             // 1. Import new Attributes for @All content type
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-01.xml"));
-            var xmlImport = new XmlImport("en-US", userName, true);
+            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
             if (!success)
@@ -347,7 +353,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             // 2. Import ContentType-InputType and entities for it
             xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-02.xml"));
-            xmlImport = new XmlImport("en-US", userName, true);
+            xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
             success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
             if (!success)
@@ -359,7 +365,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             // 3. Hide all unneeded fields - all fields for string, number: all but "Number of Decimals", Minimum and Maximum
             xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-03.xml"));
-            xmlImport = new XmlImport("en-US", userName, true);
+            xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
             success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
 
             if (!success)

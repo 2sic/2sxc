@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
-using ToSic.Eav.BLL;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.Internal;
 
@@ -53,9 +53,6 @@ namespace ToSic.SexyContent
 
 		public Guid CreateNewContentGroup(int? templateId)
 		{
-		    var context = EavDataController.Instance(_zoneId, _appId).Entities;
-			var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(ContentGroupTypeName);
-
 			var values = new Dictionary<string, object>
 			{
 				{"Template", templateId.HasValue ? new [] { templateId.Value } : new int[] {}},
@@ -65,9 +62,12 @@ namespace ToSic.SexyContent
 				{"ListPresentation", new int[] {}}
 			};
 
-			var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);
-
-            return entity.EntityGUID;
+            // 2017-04-01 2dm centralizing eav-access
+            return new AppManager(_zoneId, _appId).Entities.Create(ContentGroupTypeName, values).Item2;
+		 //   var context = EavDataController.Instance(_zoneId, _appId).Entities;
+			//var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(ContentGroupTypeName);
+			//var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);
+            // return entity.EntityGUID;
 		}
         
 
@@ -120,10 +120,10 @@ namespace ToSic.SexyContent
 	    }
 
 	    // todo: this doesn't look right, will have to mostly move to the new content-block
-		public ContentGroup GetContentGroupForModule(int moduleId)
+		public ContentGroup GetContentGroupForModule(int moduleId, int tabId)
 		{
-			var moduleControl = new ModuleController();
-			var settings = moduleControl.GetModuleSettings(moduleId);
+			var settings = ModuleController.Instance.GetModule(moduleId, tabId, false).ModuleSettings;
+			//var settings = moduleControl.GetModule(moduleId,).ModuleSettings;
 		    var maybeGuid = settings[Settings.ContentGroupGuidString];
 		    Guid groupGuid;
 		    Guid.TryParse(maybeGuid?.ToString(), out groupGuid);

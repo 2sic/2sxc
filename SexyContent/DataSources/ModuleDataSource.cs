@@ -1,7 +1,9 @@
-﻿using System;
+﻿using DotNetNuke.Entities.Modules;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 
@@ -40,7 +42,8 @@ namespace ToSic.SexyContent.DataSources
                     {
                         if (!ModuleId.HasValue)
                             throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
-                        _contentGroup = new ContentGroupManager(ZoneId, AppId).GetContentGroupForModule(ModuleId.Value);
+                        var tabId = ((ModuleInfo)ModuleController.Instance.GetTabModulesByModule(ModuleId.Value)[0]).TabID;
+                        _contentGroup = new ContentGroupManager(ZoneId, AppId).GetContentGroupForModule(ModuleId.Value, tabId);
                     }
                 }
                 return _contentGroup;
@@ -59,22 +62,38 @@ namespace ToSic.SexyContent.DataSources
         private IDictionary<int, IEntity> _content;
         private IDictionary<int, IEntity> GetContent()
         {
-            return _content ??
-                   (_content =
-                       GetStream(ContentGroup.Content, Template.ContentDemoEntity, ContentGroup.Presentation,
-                           Template.PresentationDemoEntity));
+            try
+            {
+                return _content ??
+                       (_content =
+                           GetStream(ContentGroup.Content, Template.ContentDemoEntity, ContentGroup.Presentation,
+                               Template.PresentationDemoEntity));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error loading items of a module - probably the module-id is incorrect - happens a lot with test-values on visual queries.", ex);
+            }
         }
 
-	    private IDictionary<int, IEntity> _listContent;
+        private IDictionary<int, IEntity> _listContent;
         private IDictionary<int, IEntity> GetListContent()
         {
-            return _listContent ??
+            try
+            {
+
+                return _listContent ??
                    (_listContent =
                        GetStream(ContentGroup.ListContent, Template.ListContentDemoEntity, ContentGroup.ListPresentation,
                            Template.ListPresentationDemoEntity, true));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error loading items of a module - probably the module-id is incorrect - happens a lot with test-values on visual queries.", ex);
+            }
+
         }
 
-	    #endregion
+        #endregion
 
         private Template _template;
 		private Template Template => _template ?? (_template = OverrideTemplate ?? ContentGroup.Template);

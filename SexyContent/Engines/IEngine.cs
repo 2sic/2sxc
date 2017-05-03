@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.Search;
 

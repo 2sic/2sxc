@@ -21,24 +21,13 @@ namespace ToSic.SexyContent.Internal
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
-                var tm = new TemplateManager(sxc.App);
+                var tm = new TemplateHelpers(sxc.App);
                 tm.EnsureTemplateFolderExists(Settings.TemplateLocations.PortalFileSystem);
             };
         }
 
 
-        #region Settings (because DNN doesn't do it reliably)
-
-        public static string TryToGetReliableSetting(ModuleInfo module, string settingName)
-        {
-            if (module.ModuleSettings.ContainsKey(settingName))
-                return module.ModuleSettings[settingName].ToString();
-
-            // if not found, it could be a caching issue
-            var settings = new ModuleController().GetModuleSettings(module.ModuleID);
-            return settings.ContainsKey(settingName) ? settings[settingName].ToString() : null;
-        }
-
+        #region Settings
 
         /// <summary>
         /// Update a setting for all language-versions of a module

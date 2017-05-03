@@ -39,7 +39,8 @@ namespace ToSic.SexyContent.ContentBlocks
                 ? new PortalSettings(moduleInfo.OwnerPortalID)
                 : PortalSettings.Current;
 
-            ZoneId = ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID) ?? 0; // new
+            // important: don't use the SxcInstance.Environment, as it would try to init the Sxc-object before the app is known, causing various side-effects
+            ZoneId = new Environment.Environment().ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);// ZoneHelpers.GetZoneId(moduleInfo.OwnerPortalID) ?? 0; // new
             
             AppId = AppHelpers.GetAppIdFromModule(moduleInfo, ZoneId) ?? 0;// fallback/undefined YET
 
@@ -53,7 +54,7 @@ namespace ToSic.SexyContent.ContentBlocks
             {
                 // try to load the app - if possible
                 App = new App(ZoneId, AppId, PortalSettings);
-                ContentGroup = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID);
+                ContentGroup = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
 
                 if (ContentGroup.DataIsMissing)
                 {

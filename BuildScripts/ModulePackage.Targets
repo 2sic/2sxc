@@ -71,27 +71,52 @@
     <ItemGroup>
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.Razor.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.Razor.pdb" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.WebApi.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.WebApi.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.pdb" />
       
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.pdb" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Apps.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Apps.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Core.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Core.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.DataSources.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.DataSources.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.ImportExport.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.ImportExport.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Persistence.EF4.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Persistence.EF4.pdb" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Persistence.Efc.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Persistence.Efc.pdb" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Repository.Efc.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Repository.Efc.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Tokens.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Tokens.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.WebApi.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.WebApi.pdb" />
 
+      <!-- New assemblies for entity framework core etc. -->
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.EntityFrameworkCore.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.EntityFrameworkCore.Relational.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.EntityFrameworkCore.SqlServer.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Extensions.Caching.Abstractions.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Extensions.Caching.Memory.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Extensions.DependencyInjection.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Extensions.Logging.Abstractions.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Extensions.Logging.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Extensions.Options.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Extensions.Primitives.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Remotion.Linq.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\System.Collections.Immutable.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\System.Diagnostics.DiagnosticSource.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\System.Interactive.Async.dll" />
+      <!-- Must be included as assembly helper because it can't be added as DNN assembly (Cannot load a reference assembly for execution) -->
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\System.Runtime.dll" />
+
       <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\protobuf-net.dll" />-->
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.dll" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.Configuration.dll" />
+      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.Configuration.dll" />-->
       
       <AssemblyInclude Include="$(ProjectDir)BuildScripts\Binary Dependencies\ImageResizer.dll" />
       <AssemblyInclude Include="$(ProjectDir)BuildScripts\Binary Dependencies\ImageResizer.Plugins.DiskCache.dll" />

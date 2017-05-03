@@ -3,6 +3,7 @@ using System.Linq;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources.Caches;
 using static System.String;
 
@@ -13,13 +14,11 @@ namespace ToSic.SexyContent.Internal
         public static int? GetAppIdFromModule(ModuleInfo module, int zoneId)
         {
             if (module.DesktopModule.ModuleName == "2sxc")
-                return GetDefaultAppId(zoneId);// : new int?();
+                return new ZoneRuntime(zoneId).DefaultAppId;
 
-            var appName = DnnStuffToRefactor.TryToGetReliableSetting(module, Settings.AppNameString);
-
-            if (appName != null)
-                return GetAppIdFromGuidName(zoneId, appName);
-
+            if(module.ModuleSettings.ContainsKey(Settings.AppNameString))
+                return GetAppIdFromGuidName(zoneId, module.ModuleSettings[Settings.AppNameString].ToString());
+            
             return null;
         }
 
@@ -33,7 +32,7 @@ namespace ToSic.SexyContent.Internal
             var dummy = baseCache.LastRefresh;
 
             if (IsNullOrEmpty(appName))
-                return 0; // 2016-04-05 2rm changed behaviour to return 0 if appName is blank. Previous code: appName = Constants.DefaultAppName;
+                return 0; 
 
             var appId = baseCache.ZoneApps[zoneId].Apps
                     .Where(p => p.Value == appName).Select(p => p.Key).FirstOrDefault();
@@ -46,7 +45,7 @@ namespace ToSic.SexyContent.Internal
                 {
                         var mds = DataSource.GetMetaDataSource(zoneId, p.Key);
                         var appMetaData = mds
-                            .GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, p.Key,
+                            .GetAssignedEntities(SystemRuntime.GetKeyTypeId(Constants.AppAssignmentName), p.Key,
                                 Settings.AttributeSetStaticNameApps)
                             .FirstOrDefault();
                         string folder = appMetaData?.GetBestValue("Folder").ToString();
@@ -66,35 +65,31 @@ namespace ToSic.SexyContent.Internal
 
             // ToDo: Should throw exception if a real ContentGroup exists
 
-            var zoneId = ZoneHelpers.GetZoneID(module.OwnerPortalID);
+            var zoneId = new Environment.Environment().ZoneMapper.GetZoneId(module.OwnerPortalID);// ZoneHelpers.GetZoneId(module.OwnerPortalID);
 
             if (appId == 0 || !appId.HasValue)
                 DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, Settings.AppNameString, null);
             else
             {
-                var appName = ((BaseCache)DataSource.GetCache(0, 0)).ZoneApps[zoneId.Value].Apps[appId.Value];
+                var appName = ((BaseCache)DataSource.GetCache(0, 0)).ZoneApps[zoneId].Apps[appId.Value];
                 DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, Settings.AppNameString, appName);
             }
 
             // Change to 1. available template if app has been set
             if (appId.HasValue)
             {
-                var app = new App(zoneId.Value, appId.Value, PortalSettings.Current);
-                var templates = app.TemplateManager.GetAvailableTemplatesForSelector(module.ModuleID, app.ContentGroupManager).ToList();
+                var app = new App(zoneId, appId.Value, PortalSettings.Current);
+                var templates = app.TemplateManager.GetAvailableTemplatesForSelector(module.ModuleID, module.TabID, app.ContentGroupManager).ToList();
                 if (templates.Any())
                     app.ContentGroupManager.SetModulePreviewTemplateId(module.ModuleID, templates.First().Guid /* .TemplateId */);
             }
         }
 
 
-        public static int GetDefaultAppId(int zoneId)
+        public static string AppBasePath(PortalSettings ownerPS )
         {
-            return ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].DefaultAppId;
-        }
-
-
-        public static string AppBasePath(PortalSettings ownerPS)
-        {
+            if (ownerPS == null)
+                ownerPS = PortalSettings.Current;
             return Path.Combine(ownerPS.HomeDirectory, Settings.TemplateFolder);
         }
     }

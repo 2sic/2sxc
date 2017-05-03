@@ -6,7 +6,9 @@ using System.Web;
 using System.Web.Hosting;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+//using DotNetNuke.Modules.UserDefinedTable;
 using Newtonsoft.Json;
+using ToSic.Eav.Apps;
 using ToSic.SexyContent.Search;
 using ToSic.SexyContent.Security;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
@@ -28,7 +30,7 @@ namespace ToSic.SexyContent.Engines
 
         public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sexy)
         {
-            var templatePath = VirtualPathUtility.Combine(Internal.TemplateManager.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
+            var templatePath = VirtualPathUtility.Combine(Internal.TemplateHelpers.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
 
             // Throw Exception if Template does not exist
             if (!File.Exists(HostingEnvironment.MapPath(templatePath)))

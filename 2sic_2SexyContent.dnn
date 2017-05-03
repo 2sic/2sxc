@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="08.12.00">
+    <package name="2SexyContent" type="Module" version="09.00.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -15,7 +15,7 @@
       <azureCompatible>true</azureCompatible>
       <dependencies>
         <dependency type="type">System.Dynamic.ExpandoObject</dependency>
-        <dependency type="CoreVersion">07.02.00</dependency>
+        <dependency type="CoreVersion">07.04.02</dependency>
       </dependencies>
       <components>
         <component type="Script">
@@ -209,7 +209,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>08.12.00</version>
+              <version>09.00.00</version>
             </script>
           </scripts>
         </component>
@@ -426,7 +426,7 @@
             <attributes>
               <businessControllerClass>ToSic.SexyContent.Environment.Dnn7.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00,07.03.01,07.03.02,07.03.03,07.03.04,08.00.00,08.00.01,08.00.02,08.00.03,08.00.04,08.00.05,08.00.06,08.00.07,08.00.08,08.00.09,08.00.10,08.00.11,08.00.12,08.01.00,08.01.01,08.01.02,08.01.03,08.02.00,08.02.01,08.02.02,08.02.03,08.03.00,08.03.01,08.03.02,08.03.03,08.03.04,08.03.05,08.03.06,08.03.07,08.04.00,08.04.01,08.04.02,08.04.03,08.04.04,08.04.05,08.04.06,08.04.07,08.04.08,08.05.00,08.05.01,08.05.02,08.05.03,08.05.04,08.05.05,08.05.06,08.06.00,08.07.00,08.08.00,08.08.01,08.08.02,08.09.00,08.09.01,08.10.00,08.10.01,08.11.00,08.12.00</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00,07.03.01,07.03.02,07.03.03,07.03.04,08.00.00,08.00.01,08.00.02,08.00.03,08.00.04,08.00.05,08.00.06,08.00.07,08.00.08,08.00.09,08.00.10,08.00.11,08.00.12,08.01.00,08.01.01,08.01.02,08.01.03,08.02.00,08.02.01,08.02.02,08.02.03,08.03.00,08.03.01,08.03.02,08.03.03,08.03.04,08.03.05,08.03.06,08.03.07,08.04.00,08.04.01,08.04.02,08.04.03,08.04.04,08.04.05,08.04.06,08.04.07,08.04.08,08.05.00,08.05.01,08.05.02,08.05.03,08.05.04,08.05.05,08.05.06,08.06.00,08.07.00,08.08.00,08.08.01,08.08.02,08.09.00,08.09.01,08.10.00,08.10.01,08.11.00,08.12.00,09.00.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -445,7 +445,13 @@
               <name>ToSic.SexyContent.Razor.dll</name>
             </assembly>
             <assembly>
+              <name>ToSic.SexyContent.WebApi.dll</name>
+            </assembly>
+            <assembly>
               <name>ToSic.Eav.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Apps.dll</name>
             </assembly>
             <assembly>
               <name>ToSic.Eav.Core.dll</name>
@@ -457,7 +463,10 @@
               <name>ToSic.Eav.ImportExport.dll</name>
             </assembly>
             <assembly>
-              <name>ToSic.Eav.Persistence.EF4.dll</name>
+              <name>ToSic.Eav.Persistence.Efc.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Repository.Efc.dll</name>
             </assembly>
             <assembly>
               <name>ToSic.Eav.Tokens.dll</name>
@@ -465,12 +474,12 @@
             <assembly>
               <name>ToSic.Eav.WebApi.dll</name>
             </assembly>
-            <assembly>
+            <!--<assembly>
               <name>Microsoft.Practices.Unity.dll</name>
             </assembly>
             <assembly>
               <name>Microsoft.Practices.Unity.Configuration.dll</name>
-            </assembly>
+            </assembly>-->
             <assembly>
               <name>ImageResizer.dll</name>
             </assembly>
@@ -494,6 +503,55 @@
               <name>CsvHelper.dll</name>
             </assembly>
             
+            <!-- New assemblies for EntityFramework core and dependency injection -->
+            <assembly>
+              <name>Microsoft.EntityFrameworkCore.dll</name>
+            </assembly>
+            <assembly>
+              <name>Microsoft.EntityFrameworkCore.Relational.dll</name>
+            </assembly>
+            <assembly>
+              <name>Microsoft.EntityFrameworkCore.SqlServer.dll</name>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.Caching.Abstractions.dll</name>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.Caching.Memory.dll</name>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.DependencyInjection.dll</name>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.Logging.dll</name>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.Options.dll</name>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.Primitives.dll</name>
+            </assembly>
+            <assembly>
+              <name>Remotion.Linq.dll</name>
+            </assembly>
+            <assembly>
+              <name>System.Collections.Immutable.dll</name>
+            </assembly>
+            <assembly>
+              <name>System.Diagnostics.DiagnosticSource.dll</name>
+            </assembly>
+            <assembly>
+              <name>System.Interactive.Async.dll</name>
+            </assembly>
+            <!--<assembly>
+              <name>System.Runtime.dll</name>
+            </assembly>-->
           </assemblies>
         </component>
 
@@ -718,7 +776,7 @@
         </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="08.12.00">
+    <package name="2SexyContent-App" type="Module" version="09.00.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
@@ -1086,6 +1144,7 @@
                   <node path="/configuration/system.webServer/modules" action="update" key="name" collision="ignore">
                     <add name="ImageResizingModule" type="ImageResizer.InterceptModule"/>
                   </node>
+                
                 </nodes>
               </configuration>
             </install>
@@ -1096,6 +1155,7 @@
                   <node path="/configuration/resizer" action="remove" />
                   <node path="/configuration/system.web/httpModules/add[@name='ImageResizingModule']" action="remove" />
                   <node path="/configuration/system.webServer/modules/add[@name='ImageResizingModule']" action="remove" />
+                  <!--<node path="/configuration/system.web/compilation/assemblies/add[@assembly='System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a']" action="remove" />-->
                 </nodes>
               </configuration>
             </uninstall>

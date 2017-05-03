@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.BLL;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources.Caches;
 
 namespace ToSic.SexyContent.ContentBlocks
@@ -64,10 +64,12 @@ namespace ToSic.SexyContent.ContentBlocks
 
         private void Update(Dictionary<string, object> newValues)
         {
-            var cgApp = ((ContentBlockBase)SxcContext.ContentBlock).Parent.App;
-            var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
-
-            eavDc.Entities.UpdateEntity(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);
+            // 2017-04-01 2dm centralizing eav access
+            var app = ((ContentBlockBase)SxcContext.ContentBlock).Parent.App;
+            new AppManager(app.ZoneId, app.AppId).Entities.Update(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);
+            //var cgApp = ((ContentBlockBase)SxcContext.ContentBlock).Parent.App;
+            //var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
+            //eavDc.Entities.UpdateEntity(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);
 
             //((ContentBlockBase)SxcContext.ContentBlock).Parent.App
             //    .Data.Update(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues); 
