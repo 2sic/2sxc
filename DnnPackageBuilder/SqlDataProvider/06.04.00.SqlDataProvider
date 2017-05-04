@@ -1,0 +1,22 @@
+﻿-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+-- Add stream publishing informations to the templates table
+ALTER TABLE dbo.ToSIC_SexyContent_Templates ADD
+	PublishData bit NOT NULL CONSTRAINT DF_ToSIC_SexyContent_Templates_PublishData DEFAULT 0,
+	StreamsToPublish nvarchar(200) NOT NULL CONSTRAINT DF_ToSIC_SexyContent_Templates_StreamsToPublish DEFAULT N''''
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;')

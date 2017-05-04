@@ -1,0 +1,85 @@
+﻿-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
+-- Script Block for 2SexyContent 05.05.00 Update
+-- ---------------------------------------------
+-- This SQL Script Block must be included in every .SqlDataProvider file
+-- for 2SexyContent <= 05.05.00 because of the rename of the internal
+-- module name. It does not have to be included for newer SQL scripts.
+-- This script changes the module name and the breaks the installation
+-- so the DNN cache is refreshed. After the upgrade is triggered again,
+-- the installation works.
+
+DECLARE @IsUpgradeFromPreviousVersion int
+SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N''2SexyContent'') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+
+If @IsUpgradeFromPreviousVersion = 1
+BEGIN
+	UPDATE       DesktopModules
+	SET                ModuleName = N''2sxc''
+	WHERE        (ModuleName = N''2SexyContent'')
+
+	RAISERROR(N''Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************'', 16, 1)
+	RETURN
+END
+
+-- End of the Script Block for 2SexyContent 05.05.00 Update
+
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+EXEC ToSIC_EAV_ChangeLogAdd ''System''
+DECLARE @ChangeLogID int
+-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+ELSE
+	SET @ChangeLogID = 1
+SELECT @ChangeLogID
+
+-- Get @Entity AttributeSetID
+DECLARE @EntityAttributeSetID int
+SELECT @EntityAttributeSetID = AttributeSetID 
+FROM ToSIC_EAV_AttributeSets
+WHERE StaticName = ''@Entity''
+
+-- Remove ListId field for @Entity again
+IF @EntityAttributeSetID IS NOT NULL
+BEGIN
+	
+	DECLARE @ListIdAttributeID int
+	Select @ListIdAttributeID = ToSIC_EAV_Attributes.AttributeID
+	From ToSIC_EAV_Attributes INNER JOIN ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
+	Where ToSIC_EAV_Attributes.StaticName = ''ModuleId'' And ToSIC_EAV_AttributesInSets.AttributeSetID = @EntityAttributeSetID
+	
+	IF @ListIdAttributeID IS NOT NULL
+	BEGIN
+		
+		-- Delete AttributeInSet
+		DELETE FROM ToSIC_EAV_AttributesInSets WHERE AttributeSetID = @EntityAttributeSetID AND AttributeID = @ListIdAttributeID
+
+		-- Delete ValuesDimensions
+		DELETE FROM ToSIC_EAV_ValuesDimensions WHERE ValueID IN (
+			SELECT ValueID FROM ToSIC_EAV_Values v INNER JOIN ToSIC_EAV_Entities e ON v.EntityID = e.EntityID
+			WHERE e.AttributeSetID = @EntityAttributeSetID AND v.AttributeID = @ListIdAttributeID
+		)
+
+		-- Delete Values
+		DELETE v FROM ToSIC_EAV_Values v INNER JOIN ToSIC_EAV_Entities e ON v.EntityID = e.EntityID
+		WHERE e.AttributeSetID = @EntityAttributeSetID AND v.AttributeID = @ListIdAttributeID
+
+	END
+	
+END
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;')

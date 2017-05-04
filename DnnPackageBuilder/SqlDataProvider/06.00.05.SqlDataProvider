@@ -1,0 +1,52 @@
+-- Skip update in case installation has been done by 00.99.00.SqlDataProvider (installs everything until and including 08.11.00)
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U')) AND
+EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Apps]') AND TYPE IN (N'U'))
+BEGIN
+	RETURN
+END
+
+-- Because this SQL should not be validated if the condition above is met (return is called), it's wrapped in an EXEC
+EXEC('
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+EXEC ToSIC_EAV_ChangeLogAdd ''System''
+
+DECLARE @ChangeLogID int
+-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
+	SET @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+ELSE
+	SET @ChangeLogID = 1
+SELECT @ChangeLogID
+
+
+ALTER TABLE dbo.ToSIC_EAV_Entities ADD
+	IsPublished bit NOT NULL CONSTRAINT DF_ToSIC_EAV_Entities_IsPublished DEFAULT 1,
+	PublishedEntityId int NULL
+
+
+-- 2014-04-22 2bg Really delete Values, Value-Dimensions and EntityRelationships of deleted Entities
+DELETE FROM ToSIC_EAV_EntityRelationships
+FROM            ToSIC_EAV_EntityRelationships INNER JOIN
+                         ToSIC_EAV_Entities ON ToSIC_EAV_EntityRelationships.ChildEntityID = ToSIC_EAV_Entities.EntityID INNER JOIN
+                         ToSIC_EAV_Entities AS ToSIC_EAV_Entities_1 ON ToSIC_EAV_EntityRelationships.ParentEntityID = ToSIC_EAV_Entities_1.EntityID
+WHERE        (NOT (ToSIC_EAV_Entities.ChangeLogDeleted IS NULL)) OR
+                         (NOT (ToSIC_EAV_Entities_1.ChangeLogDeleted IS NULL))
+
+DELETE FROM ToSIC_EAV_ValuesDimensions
+FROM            ToSIC_EAV_ValuesDimensions INNER JOIN
+                         ToSIC_EAV_Values ON ToSIC_EAV_ValuesDimensions.ValueID = ToSIC_EAV_Values.ValueID INNER JOIN
+                         ToSIC_EAV_Entities ON ToSIC_EAV_Values.EntityID = ToSIC_EAV_Entities.EntityID
+WHERE        (NOT (ToSIC_EAV_Entities.ChangeLogDeleted IS NULL))
+
+DELETE FROM ToSIC_EAV_Values
+FROM            ToSIC_EAV_Values INNER JOIN
+                         ToSIC_EAV_Entities ON ToSIC_EAV_Values.EntityID = ToSIC_EAV_Entities.EntityID
+WHERE        (NOT (ToSIC_EAV_Entities.ChangeLogDeleted IS NULL))
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;')
