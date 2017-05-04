@@ -482,10 +482,6 @@
                 return cmd.generateLink();
             },
 
-            _linkToNg4Dialog: function ( ){
-                return cmc._linkToNgDialog.apply(null, arguments).replace('ui.html', 'ui-a4');
-            },
-
             // open a new dialog of the angular-ui
             _openNgDialog: function (settings, event, closeCallback) {
                 var callback = function () {
@@ -498,7 +494,7 @@
                     return window.open(link);
                 else {
                     if (settings.inlineWindow)
-                        return $2sxc._dialog(sxc, targetTag, link, callback);
+                        return $2sxc._dialog(sxc, targetTag, link.replace('dist/dnn/ui.html?', 'dist/ng/?'), callback);
                     else
                         return $2sxc.totalPopup.open(link, callback);
                 }
@@ -966,12 +962,12 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
                 load();
                 return res.eq(0);
             }
-            
+
             // REMOVE THIS
             url = url
-                .replace('/dist/dnn/ui.html', '/dist/ng/')
+                // .replace('/desktopmodules/tosic_sexycontent/dist/dnn/ui.html', 'http://localhost:4200')
                 .replace('#', '&');
-            
+
             container = $('<div class="inpage-frame-wrapper">'
                 + '<div class="inpage-frame"><iframe width="100%" height="100px" src="' + url + '"></iframe></div>'
                 + '</div>');
@@ -1016,7 +1012,7 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
             } else {
                 activeDialog = undefined;
             }
-            
+
             moduleContent.toggleClass('dia-select', action);
         }
 

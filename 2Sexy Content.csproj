@@ -30,6 +30,8 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -293,7 +295,6 @@
     <Content Include=".gitignore" />
     <Content Include="Administration\Export.js" />
     <Content Include="API\Services.asmx" />
-    <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
     <Content Include="DnnWebForms\FileManager.ascx" />
     <Content Include="DnnWebForms\PagePicker.ascx" />
     <Content Include="DnnWebForms\WebFormsBridge.ascx" />
@@ -306,63 +307,18 @@
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
     <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
-    <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
-    <Content Include="SqlDataProvider\07.03.03.SqlDataProvider" />
-    <Content Include="SqlDataProvider\08.00.06.SqlDataProvider" />
-    <Content Include="SqlDataProvider\08.01.00.SqlDataProvider" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
-    <Content Include="license.txt" />
-    <Content Include="ReleaseNotes.txt" />
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
-    <Content Include="BuildScripts\ModulePackage.Targets" />
-    <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <Content Include="README.md" />
     <Content Include="package.json" />
-    <Content Include="SqlDataProvider\00.99.00.SqlDataProvider" />
     <Content Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
     <Content Include="SexyContent\ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
     <Content Include="packages.config" />
-    <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
-    <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
-    <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
-    <None Include="SqlDataProvider\02.00.00.SqlDataProvider" />
-    <None Include="SqlDataProvider\03.00.00.SqlDataProvider" />
     <Content Include="web-Deploy.config" />
-    <None Include="SqlDataProvider\03.03.00.SqlDataProvider" />
-    <None Include="SqlDataProvider\03.04.03.SqlDataProvider" />
-    <None Include="SqlDataProvider\04.00.00.SqlDataProvider" />
-    <None Include="2sic_2SexyContent.dnn">
-      <SubType>Designer</SubType>
-    </None>
-    <Content Include="SqlDataProvider\04.00.02.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.01.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.03.01.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.03.02.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.03.03.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.03.04.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.03.05.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.05.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.05.03.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.06.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.00.05.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.00.09.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.02.01.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.03.07.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.04.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.06.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.06.01.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.06.04.SqlDataProvider" />
-    <Content Include="SqlDataProvider\07.00.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\07.00.03.SqlDataProvider" />
-    <Content Include="SqlDataProvider\07.02.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\07.02.02.SqlDataProvider" />
-    <Content Include="SqlDataProvider\08.05.02.SqlDataProvider" />
-    <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -469,10 +425,19 @@
   </PropertyGroup>
   <!-- <Import Project="$(SolutionDir)\BuildScripts\ModulePackage.Targets" /> -->
   <Import Project="$(ProjectDir)\BuildScripts\ModulePackage.Targets" />
+  <!-- 2017-05-04 2dm - trying to get packaging in another project -->
   <Target Name="AfterBuild" DependsOnTargets="PackageModule">
   </Target>
+  
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <Import Project="..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets'))" />
+  </Target>
 </Project>

@@ -32,7 +32,8 @@
       <DefaultExclude Include="Js\EditDataSource\**" />
       <DefaultExclude Include="Styles\EditDataSource\**" />
       <DefaultExclude Include="ModulePackages\**" />
-			<DefaultExclude Include="2Sexy Content Testing\**" />
+      <DefaultExclude Include="DnnPackageBuilder\**" />
+      <DefaultExclude Include="2Sexy Content Testing\**" />
 			<DefaultExclude Include=".git\**" />
       <DefaultExclude Include="**\node_modules\**" />
       <DefaultExclude Include="**\bower_components\**" />
@@ -145,7 +146,7 @@
       <Output TaskParameter="Include" ItemName="PackageModuleIcon" />
     </CreateItem>
 
-    <CreateItem Include="**\*.sqldataprovider">
+    <CreateItem Include="**\*.sqldataprovider" Exclude="@(DefaultExclude)">
       <Output TaskParameter="Include" ItemName="SqlDataProviderFiles" />
     </CreateItem>
     
