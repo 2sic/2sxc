@@ -27,10 +27,10 @@ namespace ToSic.SexyContent.WebApi
 	    public dynamic GetLanguages()
 	    {
 	        var portalId = PortalSettings.PortalId;
-	        var zoneId = Env.ZoneMapper.GetZoneId(portalId);// ZoneHelpers.GetZoneId(portalId);
+	        var zoneId = Env.ZoneMapper.GetZoneId(portalId);
 	        var env = new Environment.Environment();
 	        // ReSharper disable once PossibleInvalidOperationException
-	        var cultures = env.ZoneMapper.CulturesWithState(portalId, zoneId) // 2017-04-01 2dm ZoneHelpers.CulturesWithState(portalId, zoneId.Value)
+	        var cultures = env.ZoneMapper.CulturesWithState(portalId, zoneId) 
 	            .Select(c => new
 	            {
 	                c.Code,

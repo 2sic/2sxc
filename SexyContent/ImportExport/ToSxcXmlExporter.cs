@@ -30,7 +30,7 @@ namespace ToSic.SexyContent.ImportExport
  
             var app = new App(zoneId, appId, PortalSettings.Current);
             AdamManager = new AdamManager(PortalSettings.Current.PortalId, app);
-            Constructor(app.AppGuid, appExport, attrSetIds, entityIds);
+            Constructor(zoneId, appId, app.AppGuid, appExport, attrSetIds, entityIds);
 
             // do following things
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally

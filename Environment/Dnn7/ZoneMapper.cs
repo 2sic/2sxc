@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
-//using ToSic.Eav.BLL;
 using ToSic.SexyContent.Environment.Base;
 using ToSic.SexyContent.Environment.Interfaces;
-//using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -44,10 +41,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return zoneId;
         }
 
-        //private void SetTennantZoneId(int tennantId, int zoneId)
-        //    => PortalController.UpdatePortalSetting(tennantId,
-        //        Settings.PortalSettingZoneId, zoneId.ToString());
-        
 
         /// <summary>
         /// Returns all DNN Cultures with active / inactive state
@@ -55,8 +48,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public List<Culture> CulturesWithState(int tennantId, int zoneId)
         {
             // note: 
-            var availableEavLanguages = new ZoneManager(zoneId).Languages; // State.ZoneLanguages(zoneId);// new EavBridge(zoneId, State.GetDefaultAppId(zoneId)).ZoneLanguages();
-                // EavDataController.Instance(zoneId, State.GetDefaultAppId(zoneId)).Dimensions.GetLanguages();
+            var availableEavLanguages = new ZoneManager(zoneId).Languages; 
             var defaultLanguageCode = new PortalSettings(tennantId).DefaultLanguage;
             var defaultLanguage = availableEavLanguages
                 .FirstOrDefault(p => p.TennantKey  == defaultLanguageCode);
