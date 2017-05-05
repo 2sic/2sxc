@@ -494,7 +494,7 @@
                     return window.open(link);
                 else {
                     if (settings.inlineWindow)
-                        return $2sxc._dialog(sxc, targetTag, link.replace('dist/dnn/ui.html?', 'dist/ng/?'), callback);
+                        return $2sxc._dialog(sxc, targetTag, link.replace('dist/dnn/ui.html?', 'dist/ng?'), callback);
                     else
                         return $2sxc.totalPopup.open(link, callback);
                 }
@@ -547,7 +547,7 @@
 $2sxc._contentBlock = {};
 $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
     //#region loads of old stuff, should be cleaned, mostly just copied from the angulare code
-
+    
     var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
     var editContext = manage._editContext;
     var ctid = (editContext.ContentGroup.ContentTypeName === "" && editContext.ContentGroup.TemplateId !== null)
@@ -927,7 +927,7 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
         init();
 
         $(wrapperTag).before(container);
-
+        
         /**
          * Assign properties to the iframe for later use.
          */

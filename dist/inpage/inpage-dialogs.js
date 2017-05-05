@@ -11,7 +11,7 @@ function processInstallMessage(event, modId, progressIndicator, $http) {
 
     // Data is sent as text because IE8 and 9 cannot send objects through postMessage
     var data = JSON.parse(event.data);
-
+    
     modId = Number(modId);
     // If message does not belong to this module, return
     if (data.moduleId !== modId)
@@ -54,7 +54,6 @@ function runOneInstallJob(packages, i, progressIndicator, $http) {
     progressIndicator.label = currentPackage.displayName;
     return $http.get("app-sys/installer/installpackage",
         { params: { "packageUrl": currentPackage.url } })
-
 
     .then(function (response) {
         console.log(currentPackage.displayName + "(" + i + ") completed");
@@ -245,7 +244,7 @@ function runOneInstallJob(packages, i, progressIndicator, $http) {
             // filters for "normal" content - applies to everything
             // note that if a template is hidden by config but is curretly used here, the UI thinks it's not hidden, so the filter won't break anything
             var condition = { IsHidden: false };
-
+            
             // 2016-11-09 disable don't filter on app, because even in this case there may already be data stored which is viewspecific
             // so it should only allow switching to views which have the same data-type
             // Don't filter on App - so just return all

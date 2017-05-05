@@ -1,6 +1,6 @@
 webpackJsonp([2,4],{
 
-/***/ 178:
+/***/ 180:
 /***/ (function(module, exports) {
 
 /*
@@ -253,16 +253,16 @@ function updateLink(linkElement, obj) {
 
 /***/ }),
 
-/***/ 182:
+/***/ 184:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(263);
+var content = __webpack_require__(265);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(178)(content, {});
+var update = __webpack_require__(180)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -280,16 +280,16 @@ if(false) {
 
 /***/ }),
 
-/***/ 183:
+/***/ 185:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(264);
+var content = __webpack_require__(266);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(178)(content, {});
+var update = __webpack_require__(180)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -307,10 +307,10 @@ if(false) {
 
 /***/ }),
 
-/***/ 263:
+/***/ 265:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(44)();
+exports = module.exports = __webpack_require__(45)();
 // imports
 
 
@@ -322,22 +322,22 @@ exports.push([module.i, "/**\n * Applies styles for users in high contrast mode.
 
 /***/ }),
 
-/***/ 264:
+/***/ 266:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(44)();
+exports = module.exports = __webpack_require__(45)();
 // imports
 
 
 // module
-exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\nbody {\n    margin: 0;\n}", ""]);
+exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\r\nbody {\r\n    margin: 0;\r\n}", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 44:
+/***/ 45:
 /***/ (function(module, exports) {
 
 /*
@@ -394,14 +394,14 @@ module.exports = function() {
 
 /***/ }),
 
-/***/ 521:
+/***/ 522:
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(183);
-module.exports = __webpack_require__(182);
+__webpack_require__(185);
+module.exports = __webpack_require__(184);
 
 
 /***/ })
 
-},[521]);
+},[522]);
 //# sourceMappingURL=styles.bundle.js.map
