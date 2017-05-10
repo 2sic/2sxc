@@ -103,9 +103,9 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 /* only use the WOFF, as all modern browsers support that */
 @font-face {
   font-family: 'inpage-icons';
-  src: url('../lib/fonts/inpage-icons.woff?09.00.00') format('woff'),
-       url('../lib/fonts/inpage-icons.eot?09.00.00#iefix') format('embedded-opentype'),
-       url('../lib/fonts/inpage-icons.ttf?09.00.00') format('truetype');
+  src: url('../lib/fonts/inpage-icons.woff?09.00.01') format('woff'),
+       url('../lib/fonts/inpage-icons.eot?09.00.01#iefix') format('embedded-opentype'),
+       url('../lib/fonts/inpage-icons.ttf?09.00.01') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -178,17 +178,32 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
     z-index: 9999;
 }
 
-.DNNModuleContent .glasses {
-    margin: 4px;
+.DNNModuleContent .sc-uninitialized {
+    /*
     font-size: 15px;
+    margin: 4px;
+    width: 100%;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 5px 0 5px 0;*/
+    cursor: pointer;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+}
+.DNNModuleContent .sc-uninitialized div {
+    margin: 5px auto;
     color: #fff;
     background: rgb(2, 139, 255);
+    font-size: 48px;
+    margin: 5px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 95px;
     display: inline-block;
-    height: 28px;
-    line-height: 28px;
-    width: 28px;
-    border-radius: 3px;
-    cursor: pointer;
 }
 
 .DNNModuleContent.dia-select .inpage-frame-wrapper {

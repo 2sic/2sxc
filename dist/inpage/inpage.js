@@ -1167,7 +1167,7 @@ if (typeof Object.assign != 'function') {
                 editManager._commands.init(editManager);
                 editManager.contentBlock = $2sxc._contentBlock.create(sxc, editManager, contentBlockTag);
 
-                if ($(contentBlockTag).html().replace(/ /g, '').replace(/\n/g, '') === '') ensureInlineGlassesButton();
+                if ($(contentBlockTag).html().replace(/ /g, "").replace(/\n/g, "") === "") ensureInlineGlassesButton();
 
                 // display the dialog
                 if (!editContext.error.type && editContext.ContentBlock.ShowTemplatePicker) {
@@ -1175,10 +1175,10 @@ if (typeof Object.assign != 'function') {
                 }
 
                 function ensureInlineGlassesButton() {
-                    var btn;
-                    if ($(contentBlockTag).parent().find('.glasses').length !== 0) return;
-                    btn = $('<div class="glasses"><i class="icon-sxc-glasses" aria-hidden="true"></i></div>');
-                    btn.on('click', function() {
+                    if ($(contentBlockTag).parent().find(".sc-uninitialized").length !== 0) return;
+                    var placeholder = '<div class="sc-uninitialized" title="' + $2sxc.translate("InPage.NewElement") + '"><div>+</div></div>';
+                    var btn = $(placeholder);
+                    btn.on("click", function() {
                         editManager.run("layout");
                     });
                     $(contentBlockTag).before(btn);

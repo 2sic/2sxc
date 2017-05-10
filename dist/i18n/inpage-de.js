@@ -42,5 +42,8 @@
 		"Delete": "löschen",
 		"More": "mehr",
 		"ConfirmDelete": "löschen?"
+	},
+	"InPage": {
+		"NewElement": "neues Element"
 	}
 }
