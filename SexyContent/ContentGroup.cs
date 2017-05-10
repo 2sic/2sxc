@@ -282,7 +282,13 @@ namespace ToSic.SexyContent
             var difference = Content.Count - Presentation.Count;
 
             if (difference < 0)
-                throw new Exception("There are more Presentation elements than Content elements.");
+            {
+                // 2017-05-10 - testing, but hard to reproduce...
+                // this should fix https://github.com/2sic/2sxc/issues/1178 and https://github.com/2sic/2sxc/issues/1158
+                // goal is to simply remove the last presentation items, if there is a missmatch. Usually they will simply be nulls anyhow
+                Presentation.RemoveRange(Content.Count, difference);
+                // throw new Exception("There are more Presentation elements than Content elements.");
+            }
 
             var entityIds = ListWithNulls(cPresentation); // Presentation.Select(p => p?.EntityId).ToList();
 
