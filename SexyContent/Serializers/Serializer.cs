@@ -93,7 +93,9 @@ namespace ToSic.SexyContent.Serializers
 	        if (DotNetNuke.Common.Globals.IsEditMode() || (Sxc?.Environment?.Permissions?.UserMayEditContent ?? false))
 	        {
 	            dictionary.Add(Constants.JsonModifiedNodeName, entity.Modified);
-
+	            var title = entity.GetBestTitle(Languages);
+	            if (string.IsNullOrEmpty(title))
+	                title = "(no title)";
 	            //if (entity is IHasEditingData)
 	            dictionary.Add(Constants.JsonEntityEditNodeName, entity is IHasEditingData
 	                ? (object) new
@@ -103,7 +105,7 @@ namespace ToSic.SexyContent.Serializers
 	                }
 	                : new {
 	                    entityId = entity.EntityId,
-	                    title = entity.Title != null ? entity.Title[Languages[0]] : "(no title)",
+	                    title = title, // entity.Title?[Languages[0]].ToString() ?? "(no title)",
                         isPublished = entity.IsPublished,
                     });
 	        }

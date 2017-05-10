@@ -52,8 +52,10 @@ namespace ToSic.SexyContent.EAVExtensions
 
 
         public object GetBestValue(string attributeName, string[] dimensions, bool resolveHyperlinks = false)
-            => _baseEntity.GetBestValue(attributeName, dimensions, resolveHyperlinks); 
+            => _baseEntity.GetBestValue(attributeName, dimensions, resolveHyperlinks);
 
+        public string GetBestTitle(string[] dimensions)
+            => _baseEntity.GetBestTitle(dimensions);
 
         #endregion
     }
