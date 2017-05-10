@@ -149,7 +149,7 @@
       <Output TaskParameter="Include" ItemName="PackageModuleIcon" />
     </CreateItem>
 
-    <CreateItem Include="**\*.sqldataprovider" Exclude="@(DefaultExclude)">
+    <CreateItem Include="**\*.sqldataprovider">
       <Output TaskParameter="Include" ItemName="SqlDataProviderFiles" />
     </CreateItem>
     

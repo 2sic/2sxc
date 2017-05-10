@@ -4,21 +4,23 @@
 <head>
   <script>
     var
-      isDevMode = false,
       path = window.location.pathname,
+      isDevMode = window.location.hostname === 'localhost',
       apiUrl;
-    
-    // window['_app_base'] = path;
-    document.write('<base href="' + path + '">');
 
+    document.write('<base href="' + path + '">');
+    
     var
       jsVersionCacheId = window.location.search,
       devPath = 'http://2sxc.dev/desktopmodules/tosic_sexycontent/dist/a4/';
-    document.write('<script src="' + (isDevMode ? devPath : '') + '../../js/2sxc.api.js' + jsVersionCacheId + '"></scr' + 'ipt>');
+      // jsVersionCacheId = jsVersionCacheId.substr(0, jsVersionCacheId.indexOf("&")); // temp fix, till all params are moved to hash
+      document.write('<script src="' + (isDevMode ? devPath : '') + '../../js/2sxc.api.js' + jsVersionCacheId + '"></scr' + 'ipt>');
   </script>
   <script>
     apiUrl = $2sxc.urlParams.require("portalroot") + "desktopmodules/2sxc/api/";
     createFakeSf(apiUrl);
+
+    // Create a fake DNN Service-Framework, required by $2sxc to work properly
     function createFakeSf(apiUrl) {
       if ($2sxc.urlParams.require("mid") === "") alert("ModuleId (mid) missing - cannot continue"); if (window.$ === undefined)
         window.$ = {}; window.$.ServicesFramework = function (id) {
@@ -30,17 +32,47 @@
           }
         }
     };
+
+    // add a script right then and there to the document, correctly cache-busting 
+    function addScript(src) {
+        var async = src.async || false;
+        src = typeof src === "string" ? src : src.url;
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = src + jsVersionCacheId;
+        if (async)
+            document.getElementsByTagName("head")[0].appendChild(script);
+        else
+            document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
+    }
+
+    var scripts = [
+        'inline.bundle.js',     // ? purpose unknown yet    
+        // todo: i18n probably...
+        // '../i18n/lib/angular-i18n/angular-locale_' + langTwoLetter + '.js',
+        'polyfills.bundle.js',  // js polyfills for older browsers
+        'vendor.bundle.js',     // default set needed for all UIs like angular, animate, translate
+        'main.bundle.js'        // our app, with everything
+    ];
+
   </script>
   <meta charset="utf-8">
-  <title>ui-a4</title>
+  <title>Quick Dialog</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
+  <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="styles.bundle.css" rel="stylesheet"/></head>
 
 <body>
   <app-root>Loading...</app-root>
-<script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="styles.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body>
+    <script type="text/javascript">
+        // now add the scripts as needed
+        for (var s = 0; s < scripts.length; s++)
+            addScript(scripts[s]);
+    </script>
+
+    <!--script-tag generator trap <script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body> -->
+</body>
 
 </html>

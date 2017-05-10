@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Content Editing UI</title>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <script>
         var jsVersionCacheId = window.location.search;    // use this to prevent
-        document.write('<script src="../../js/2sxc.api.min.js' + jsVersionCacheId +'"></scr' + 'ipt>');
+        document.write('<script src="../../js/2sxc.api.min.js' + jsVersionCacheId + '"></scr' + 'ipt>');
     </script>
     <!-- first load the main 2sxc because it contains some url-param methods -->
     <script>
@@ -18,7 +19,7 @@
         function createFakeSf(apiUrl) {
             if ($2sxc.urlParams.require("mid") === "")
                 alert("ModuleId (mid) missing - cannot continue");
-            if (window.$ === undefined) 
+            if (window.$ === undefined)
                 window.$ = {};
             window.$.ServicesFramework = function (id) {
                 return {
@@ -43,7 +44,7 @@
             else
                 document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
         }
-
+        
         // add a style to the document header
         function addStyle(src) {
             var style = document.createElement("link");
@@ -56,7 +57,6 @@
         function toMinOrNotToMin(url) {
             return $2sxc.parts.getUrl(url, (url.indexOf("lib") > -1)); // never unmin the lib-stuff, as it doesn't have the unminified included
         }
-
     </script>
 
     <script>
@@ -69,7 +69,6 @@
     </script>
 
     <script>
-
         var langTwoLetter = $2sxc.urlParams.get("lang") ? $2sxc.urlParams.get("lang").split('-')[0] : "en";
         var availableLanguages = ['en', 'de', 'es', 'fr', 'it', 'nl', 'uk'];
         if (availableLanguages.indexOf(langTwoLetter) === -1)
@@ -135,12 +134,11 @@
             addScript("../lib/angular-ui-ace/ui-ace.min.js");
             addScript("../sxc-develop/sxc-develop.min.js");
         }
-
     </script>
-    
+
 </head>
+
 <body style="background-color:transparent">
-    
     <script>
         // note: the pipeline designer is special - it doesn't open a modal-dialog but should be shown directly
         // all others will be modal-opened by the DialogHost App
@@ -152,6 +150,6 @@
             document.write('<div sxc-app="DialogHost" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,DialogHost" ng-controller="DialogHost as vm"></div>');
         }
     </script>
+</body> 
 
-</body>
 </html>

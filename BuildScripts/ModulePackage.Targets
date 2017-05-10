@@ -13,7 +13,7 @@
     <XmlRead Prefix="n"
                     Namespace="http://schemas.microsoft.com/developer/msbuild/2003"
                     XPath="dotnetnuke/packages/package[1]/@version"
-                    XmlFileName="$(DNNFileName).dnn">
+                    XmlFileName="DnnPackageBuilder/$(DNNFileName).dnn">
       <Output TaskParameter="Value" PropertyName="Version" />
     </XmlRead>
 
@@ -33,6 +33,7 @@
       <DefaultExclude Include="Styles\EditDataSource\**" />
       <DefaultExclude Include="ModulePackages\**" />
       <DefaultExclude Include="DnnPackageBuilder\**" />
+      <DefaultExclude Include="xSqlDataProvider\**" />
       <DefaultExclude Include="2Sexy Content Testing\**" />
 			<DefaultExclude Include=".git\**" />
       <DefaultExclude Include="**\node_modules\**" />
@@ -130,23 +131,24 @@
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\CsvHelper.dll" />
     </ItemGroup>
     
-    <CreateItem Include="$(DNNFileName).dnn">
+    <CreateItem Include="DnnPackageBuilder/$(DNNFileName).dnn">
       <Output TaskParameter="Include" ItemName="PackageManifestFiles" />
     </CreateItem>
 
-    <CreateItem Include="License.txt">
+    <CreateItem Include="DnnPackageBuilder/License.txt">
       <Output TaskParameter="Include" ItemName="PackageTxtFiles" />
     </CreateItem>
 
-    <CreateItem Include="ReleaseNotes.txt">
+    <CreateItem Include="DnnPackageBuilder/ReleaseNotes.txt">
       <Output TaskParameter="Include" ItemName="PackageTxtFiles" />
     </CreateItem>
 
-    <CreateItem Include="icon.png;icon-app.png">
+    <CreateItem Include="DnnPackageBuilder/icon.png;DnnPackageBuilder/icon-app.png">
       <Output TaskParameter="Include" ItemName="PackageModuleIcon" />
     </CreateItem>
 
-    <CreateItem Include="**\*.sqldataprovider" Exclude="@(DefaultExclude)">
+    <CreateItem Include="DnnPackageBuilder/**\*.sqldataprovider">
+    <!--<CreateItem Include="**\*.sqldataprovider" Exclude="@(DefaultExclude)">-->
       <Output TaskParameter="Include" ItemName="SqlDataProviderFiles" />
     </CreateItem>
     
