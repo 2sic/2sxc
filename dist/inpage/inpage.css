@@ -103,9 +103,9 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 /* only use the WOFF, as all modern browsers support that */
 @font-face {
   font-family: 'inpage-icons';
-  src: url('../lib/fonts/inpage-icons.woff?09.00.01') format('woff'),
-       url('../lib/fonts/inpage-icons.eot?09.00.01#iefix') format('embedded-opentype'),
-       url('../lib/fonts/inpage-icons.ttf?09.00.01') format('truetype');
+  src: url('../lib/fonts/inpage-icons.woff?09.00.02') format('woff'),
+       url('../lib/fonts/inpage-icons.eot?09.00.02#iefix') format('embedded-opentype'),
+       url('../lib/fonts/inpage-icons.ttf?09.00.02') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -156,7 +156,7 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
     -ms-user-select: none;
     user-select: none;
     background: rgba(255, 255, 255, .8);
-    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    border-top: 1px solid rgba(0, 0, 0, .2);
 }
 
 .inpage-frame-wrapper .inpage-frame iframe {
@@ -168,12 +168,12 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 }
 
 .inpage-frame-wrapper {
-    transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, 100%, 0);
     transition: transform .2s ease-out;
     display: block;
     position: fixed;
     left: 0;
-    top: 0;
+    bottom: 0;
     width: 100%;
     z-index: 9999;
 }
