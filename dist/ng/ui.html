@@ -37,18 +37,44 @@
       };
     };
 
+    // add a script right then and there to the document, correctly cache-busting 
+    function addScript(src) {
+      var async = src.async || false;
+      src = typeof src === "string" ? src : src.url;
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = src + jsVersionCacheId;
+      if (async)
+        document.getElementsByTagName("head")[0].appendChild(script);
+      else
+        document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
+    }
+
+    var scripts = [
+      'inline.bundle.js',     // ? purpose unknown yet    
+      // todo: i18n probably...
+      // '../i18n/lib/angular-i18n/angular-locale_' + langTwoLetter + '.js',
+      'polyfills.bundle.js',  // js polyfills for older browsers
+      'vendor.bundle.js',     // default set needed for all UIs like angular, animate, translate
+      'main.bundle.js'        // our app, with everything
+    ];
   </script>
   <meta charset="utf-8">
-  <title>Quick Dialog - DEV mode!</title>
+  <title>Quick Dialog</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link href="styles.bundle.css" rel="stylesheet"/></head>
+</head>
 
-<body style="background: rgba(100,200,200,0.1)">
+<body>
   <app-root>Loading...</app-root>
-
-<script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body>
+  <script type="text/javascript">
+    if (!isDevMode) {
+      // now add the scripts as needed
+      for (var s = 0; s < scripts.length; s++) addScript(scripts[s]);
+    }
+  </script>
+</body>
 
 </html>
