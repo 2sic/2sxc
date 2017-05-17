@@ -160,11 +160,12 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 }
 
 .inpage-frame-wrapper .inpage-frame iframe {
+    width: 100%;
     background: transparent;
     max-width: 1200px;
     vertical-align: top;
     box-sizing: content-box;
-    height: 160px;
+    min-height: 280px;
 }
 
 .inpage-frame-wrapper {
@@ -200,15 +201,15 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
     display: inline-block;
 }
 
-.DNNModuleContent.dia-select .inpage-frame-wrapper {
+.inpage-frame-wrapper.dia-select {
     transform: translate3d(0, 0, 0);
 }
 
-.DNNModuleContent.dia-select {
+.inpage-frame-wrapper.dia-select {
     min-height: 16px;
 }
 
-.DNNModuleContent.dia-select.dia-mouseover {
+.inpage-frame-wrapper.dia-select.dia-mouseover {
     outline: rgb(13, 71, 161);
     outline-style: solid;
     outline-width: 1px;

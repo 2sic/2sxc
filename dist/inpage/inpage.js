@@ -908,25 +908,38 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
 
     var RESIZE_INTERVAL = 200,
         SHOW_DELAY = 400,
-        activeDialog;
-    
+        activeDialog,
+        container = $('<div class="inpage-frame-wrapper"><div class="inpage-frame"></div></div>'),
+        inpageFrame = container.find('.inpage-frame');
+
+    $('body').append(container);
+
     $("body").on("mouseover", ".inpage-frame-wrapper", function () {
-        $(this).parents(".DNNModuleContent").eq(0).toggleClass("dia-mouseover", true);
+        $(this).toggleClass("dia-mouseover", true);
     });
 
     $("body").on("mouseout", ".inpage-frame-wrapper", function () {
-        $(this).parents(".DNNModuleContent").eq(0).toggleClass("dia-mouseover", false);
+        $(this).toggleClass("dia-mouseover", false);
     });
-    
-    function Dialog(sxc, wrapperTag, url, closeCallback) {
-        var container, // the dialog (jQuery object)
-            iframe, // frame inside the dialog (HTMLElement)
-            resizeInterval;
-        
-        init();
-        
-        $(wrapperTag).before(container);
 
+    setInterval(function () {
+        try {
+            var iframe = inpageFrame.find('iframe')[0], height;
+            if (!iframe) return;
+            height = iframe.contentDocument.body.offsetHeight + 10;
+            if (iframe.previousHeight === height) return;
+            window.diagBox = iframe;
+            iframe.height = height + "px";
+            iframe.previousHeight = height;
+        } catch (e) {
+        }
+    }, RESIZE_INTERVAL);
+
+    function Dialog(sxc, wrapperTag, url, closeCallback) {
+        var iframe, // frame inside the dialog (HTMLElement)
+            resizeInterval;
+
+        init();
         /**
          * Assign properties to the iframe for later use.
          */
@@ -939,7 +952,6 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
             getManageInfo: getManageInfo,
             getAdditionalDashboardConfig: getAdditionalDashboardConfig,
             getCommands: getCommands,
-            syncHeight: syncHeight,
             toggle: function () {
                 return toggle();
             },
@@ -952,73 +964,42 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
         });
 
         function init() {
-            var res = $(wrapperTag).parent().find(".inpage-frame-wrapper");
-
-            // the dialog has already been initialized
-            if (res.length > 0) {
-                container = res.eq(0);
-                iframe = container.find("iframe")[0];
-                load();
-                return res.eq(0);
-            }
-            
             // REMOVE THIS
-            url = url
-               .replace('#', '&');
+            /*url = url
+               .replace('#', '&');*/
             url = url.replace("dist/dnn/ui.html?", "dist/ng/ui.html?");
-            
+
             try {
                 var devMode = localStorage.getItem("devMode");
-                if (devMode && ~~devMode)
+                if (devMode && ~~devMode) {
                     url = url.replace("/desktopmodules/tosic_sexycontent/dist/ng", "http://localhost:4200");
-            } catch (e) { }
-            
-            container = $('<div class="inpage-frame-wrapper">'
-                + '<div class="inpage-frame"><iframe width="100%" height="100px" src="' + url + '"></iframe></div>'
-                + "</div>");
-            iframe = container.find("iframe")[0];
-
-            $(iframe).on("load", load);
-
-            function load() {
-                var interval;
-                if (activeDialog == iframe) {
-                    console.log("this dialog is already open");
-                    return false;
+                    url = url.replace("dist/ng/ui.html?", "dist/ng/index.html?");
                 }
-                syncHeight();
-                interval = setInterval(function () {
-                    try {
-                        syncHeight();
-                    } catch (e) {
-                        clearInterval(interval);
-                    }
-                }, RESIZE_INTERVAL);
-                setTimeout(function () {
-                    toggle(true);
-                }, SHOW_DELAY);
-            }
+            } catch (e) { }
+
+            iframe = document.createElement('iframe');
+            toggle(true);
         }
 
         function toggle(show) {
-            var moduleContent = container.parents(".DNNModuleContent").eq(0),
-                action = show === undefined ? !moduleContent.hasClass("dia-select") : show,
+            var action = show === undefined ? (activeDialog != iframe) : show,
                 dirty;
 
             if (action) {
+                if (activeDialog == iframe) return false;
                 if (activeDialog !== undefined) {
-                    if (activeDialog == iframe) return false;
                     dirty = false; // activeDialog.vm.isDirty();
                     // TODO: i18n
                     if (dirty && !window.confirm("Unsaved changes detected. Would you like to continue?")) return false;
-                    $(activeDialog).eq(0).parents(".DNNModuleContent").eq(0).toggleClass("dia-select", false);
                 }
+                iframe.setAttribute('src', url);
+                $(inpageFrame).html(iframe);
                 activeDialog = iframe;
             } else {
                 activeDialog = undefined;
             }
 
-            moduleContent.toggleClass("dia-select", action);
+            container.toggleClass("dia-select", action);
         }
 
         function getManageInfo() {
@@ -1031,14 +1012,6 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
 
         function getCommands() {
             return iframe.vm;
-        }
-
-        function syncHeight() {
-            var height = iframe.contentDocument.body.offsetHeight;
-            if (iframe.previousHeight === height) return;
-            window.diagBox = iframe;
-            iframe.height = height + "px";
-            iframe.previousHeight = height;
         }
     }
 })();
@@ -1167,7 +1140,7 @@ if (typeof Object.assign != 'function') {
                 editManager.contentBlock = $2sxc._contentBlock.create(sxc, editManager, contentBlockTag);
                 
                 if (editManager.contentBlock.templateId === 0) ensureInlineGlassesButton();
-                
+
                 // display the dialog
                 if (!editContext.error.type && editContext.ContentBlock.ShowTemplatePicker) {
                     editManager.run("layout");
@@ -1184,7 +1157,7 @@ if (typeof Object.assign != 'function') {
                     $(contentBlockTag).append(btn);
                 }
             },
-
+            
             // private: show error when the app-data hasn't been installed yet for this imported-module
             _handleErrors: function (errType, cbTag) {
                 var errWrapper = $("<div class=\"dnnFormMessage dnnFormWarning sc-element\"></div>");

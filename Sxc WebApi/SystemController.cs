@@ -127,7 +127,7 @@ namespace ToSic.SexyContent.WebApi
                 IsContent = app?.AppGuid == "Default",
                 Language = PortalSettings.Current.CultureCode,
                 LanguageDefault = PortalSettings.Current.DefaultLanguage,
-                GettingStartedUrl = app == null ? "" : GettingStartedUrl(app)
+                GettingStartedUrl = app == null ? "" : IntroductionToAppUrl(app)
             };
         }
 
@@ -135,7 +135,7 @@ namespace ToSic.SexyContent.WebApi
         // warnings related to his dnn or 2sxc version
         // infos based on his languages
         // redirects based on the app he's looking at, etc.
-        private string GettingStartedUrl(App app)
+        private string IntroductionToAppUrl(App app)
         {
             var dnn = PortalSettings.Current;
             var mod = Request.FindModuleInfo();

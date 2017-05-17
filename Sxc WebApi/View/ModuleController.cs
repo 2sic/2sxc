@@ -235,7 +235,7 @@ namespace ToSic.SexyContent.WebApi.View
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public string RemoteInstallDialogUrl(string dialog)
+        public string RemoteInstallDialogUrl(string dialog, bool isContentApp)
         {
             // note / warning: some duplicate code with SystemController.cs
 
@@ -246,12 +246,12 @@ namespace ToSic.SexyContent.WebApi.View
             var moduleInfo = Request.FindModuleInfo();
             var modName = moduleInfo.DesktopModule.ModuleName;
 
-            var isContent = modName == "2sxc";
+            // var isContent = modName == "2sxc";
             // new: check if it should allow this
             // it should only be allowed, if the current situation is either
             // Content - and no views exist (even invisible ones)
             // App - and no apps exist - this is already checked on client side, so I won't include a check here
-            if (isContent)
+            if (isContentApp)
             {
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 try
@@ -266,7 +266,7 @@ namespace ToSic.SexyContent.WebApi.View
             var gettingStartedSrc = "//gettingstarted.2sxc.org/router.aspx?";
 
             // Add desired destination
-            gettingStartedSrc += "destination=autoconfigure" + (isContent ? Constants.ContentAppName.ToLower() : "app");
+            gettingStartedSrc += "destination=autoconfigure" + (isContentApp ? Constants.ContentAppName.ToLower() : "app");
 
             // Add DNN Version
             gettingStartedSrc += "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4);
