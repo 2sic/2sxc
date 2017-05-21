@@ -12,8 +12,10 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Installer;
+using ToSic.Eav.Apps.ItemListActions;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi.View
@@ -23,14 +25,12 @@ namespace ToSic.SexyContent.WebApi.View
     {
         private ContentGroupReferenceManagerBase _cbm;
 
-        private ContentGroupReferenceManagerBase ContentGroupReferenceManager
-            => _cbm ?? (_cbm = SxcContext.ContentBlock.Manager);
+        private ContentGroupReferenceManagerBase ContentGroupReferenceManager => _cbm ?? (_cbm = SxcContext.ContentBlock.Manager);
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void AddItem([FromUri] int? sortOrder = null)
-            => ContentGroupReferenceManager.AddItem(sortOrder);
+        public void AddItem([FromUri] int? sortOrder = null) => ContentGroupReferenceManager.AddItem(sortOrder);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -40,32 +40,27 @@ namespace ToSic.SexyContent.WebApi.View
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void SetTemplateChooserState([FromUri] bool state)
-            => ContentGroupReferenceManager.SetTemplateChooserState(state);
+        public void SetTemplateChooserState([FromUri] bool state) => ContentGroupReferenceManager.SetTemplateChooserState(state);
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<object> GetSelectableApps()
-            => ContentGroupReferenceManager.GetSelectableApps();
+        public IEnumerable<object> GetSelectableApps() => ContentGroupReferenceManager.GetSelectableApps();
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void SetAppId(int? appId)
-            => ContentGroupReferenceManager.SetAppId(appId);
+        public void SetAppId(int? appId) => ContentGroupReferenceManager.SetAppId(appId);
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<object> GetSelectableContentTypes()
-            => ContentGroupReferenceManager.GetSelectableContentTypes();
+        public IEnumerable<object> GetSelectableContentTypes() => ContentGroupReferenceManager.GetSelectableContentTypes();
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<object> GetSelectableTemplates()
-            => ContentGroupReferenceManager.GetSelectableTemplates();
+        public IEnumerable<object> GetSelectableTemplates() => ContentGroupReferenceManager.GetSelectableTemplates();
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -92,17 +87,13 @@ namespace ToSic.SexyContent.WebApi.View
         {
             var cgApp = SxcContext.App;
 
-            #region create the new entity --> note that it's the sql-type entity, not a standard ientity
-
+            // create the new entity --> note that it's the sql-type entity, not a standard ientity
             var entityId = new AppManager(cgApp).Entities.GetOrCreate(newGuid, contentTypeName, values);
-
-            #endregion
 
             #region attach to the current list of items
 
             var cbEnt = SxcContext.App.Data["Default"].List[parentId];
-            // ((EntityContentBlock) SxcContext.ContentBlock).ContentBlockEntity;
-            var blockList = ((ToSic.Eav.Data.EntityRelationship) cbEnt.GetBestValue(field)).ToList() ?? new List<IEntity>();
+            var blockList = ((Eav.Data.EntityRelationship) cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
             // add only if it's not already in the list (could happen if http requests are run again)
@@ -121,12 +112,7 @@ namespace ToSic.SexyContent.WebApi.View
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool MoveItemInList(int parentId, string field, int indexFrom, int indexTo)
-        {
-            var action = new MoveItem(indexFrom, indexTo);
-            ModifyItemList(parentId, field, action);
-            return true;
-        }
+        public bool MoveItemInList(int parentId, string field, int indexFrom, int indexTo) => ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
 
         /// <summary>
         /// 2016-04-07 2dm: note: remove was never tested! UI not clear yet
@@ -136,15 +122,10 @@ namespace ToSic.SexyContent.WebApi.View
         /// <param name="index"></param>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool RemoveItemInList(int parentId, string field, int index)
-        {
-            var action = new RemoveItem(index);
-            ModifyItemList(parentId, field, action);
-            return true;
-        }
+        public bool RemoveItemInList(int parentId, string field, int index) => ModifyItemList(parentId, field, new Remove(index));
 
 
-        private void ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
+        private bool ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
         {
             var parentEntity = SxcContext.App.Data["Default"].List[parentId];
 
@@ -156,16 +137,12 @@ namespace ToSic.SexyContent.WebApi.View
 
             var ids = fieldList.EntityIds.ToList();
 
-            if (!actionToPerform.Change(ids)) return;
+            if (!actionToPerform.Change(ids)) return false;
 
             // save
             var values = new Dictionary<string, object> {{field, ids.ToArray()}};
-            // 2017-04-01 2dm centralizing eav access
             new AppManager(SxcContext.App).Entities.Update(parentEntity.EntityId, values);
-            //var cgApp = SxcContext.App;
-            //var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
-            //eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
-            //eavDc.Entities.UpdateEntity(parentEntity.EntityGuid, values);
+            return true;
         }
 
         [HttpGet]
@@ -175,7 +152,7 @@ namespace ToSic.SexyContent.WebApi.View
             try
             {
                 // Try setting thread language to enable 2sxc to render the template in this language
-                if (!String.IsNullOrEmpty(lang))
+                if (!string.IsNullOrEmpty(lang))
                     try
                     {
                         var culture = System.Globalization.CultureInfo.GetCultureInfo(lang);
@@ -204,34 +181,26 @@ namespace ToSic.SexyContent.WebApi.View
             catch (Exception e)
             {
 				Exceptions.LogException(e);
-                throw e;
+                throw;
             }
         }
 
-		[HttpGet]
-		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
-		{
-            ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
-        }
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder) => ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool Publish(string part, int sortOrder)
-            => ContentGroupReferenceManager.Publish(part, sortOrder);
+        public bool Publish(string part, int sortOrder) => ContentGroupReferenceManager.Publish(part, sortOrder);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool Publish(int id)
-            => ContentGroupReferenceManager.Publish(id, true);
+        public bool Publish(int id) => ContentGroupReferenceManager.Publish(id, true);
     
 
         [HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void RemoveFromList([FromUri] int sortOrder)
-		{
-            ContentGroupReferenceManager.RemoveFromList(sortOrder);
-		}
+        public void RemoveFromList([FromUri] int sortOrder) => ContentGroupReferenceManager.RemoveFromList(sortOrder);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
@@ -246,7 +215,6 @@ namespace ToSic.SexyContent.WebApi.View
             var moduleInfo = Request.FindModuleInfo();
             var modName = moduleInfo.DesktopModule.ModuleName;
 
-            // var isContent = modName == "2sxc";
             // new: check if it should allow this
             // it should only be allowed, if the current situation is either
             // Content - and no views exist (even invisible ones)
@@ -260,35 +228,30 @@ namespace ToSic.SexyContent.WebApi.View
                     if (all.Any())
                         return null;
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
             }
 
-            var gettingStartedSrc = "//gettingstarted.2sxc.org/router.aspx?";
-
             // Add desired destination
-            gettingStartedSrc += "destination=autoconfigure" + (isContentApp ? Constants.ContentAppName.ToLower() : "app");
-
-            // Add DNN Version
-            gettingStartedSrc += "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4);
-            // Add 2SexyContent Version
-            gettingStartedSrc += "&2SexyContentVersion=" + Settings.ModuleVersion;
-            // Add module type
-            gettingStartedSrc += "&ModuleName=" + modName;
-            // Add module id
-            gettingStartedSrc += "&ModuleId=" + moduleInfo.ModuleID;
-            // Add Portal ID
-            gettingStartedSrc += "&PortalID=" + moduleInfo.PortalID;
+            // Add DNN Version, 2SexyContent Version, module type, module id, Portal ID
+            var gettingStartedSrc = "//gettingstarted.2sxc.org/router.aspx?"
+                + "destination=autoconfigure" + (isContentApp ? Eav.Constants.ContentAppName.ToLower() : "app")
+                + "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)
+                + "&2SexyContentVersion=" + Settings.ModuleVersion
+                + "&ModuleName=" + modName + "&ModuleId=" + moduleInfo.ModuleID
+                + "&PortalID=" + moduleInfo.PortalID;
             // Add VDB / Zone ID (if set)
-            var zoneId = Env.ZoneMapper.GetZoneId(moduleInfo.PortalID);// ZoneHelpers.GetZoneId(moduleInfo.PortalID);
+            var zoneId = Env.ZoneMapper.GetZoneId(moduleInfo.PortalID);
             gettingStartedSrc +=  "&ZoneID=" + zoneId;
 
             // Add DNN Guid
             var hostSettings = HostController.Instance.GetSettingsDictionary();
             gettingStartedSrc += hostSettings.ContainsKey("GUID") ? "&DnnGUID=" + hostSettings["GUID"] : "";
-            // Add Portal Default Language
-            gettingStartedSrc += "&DefaultLanguage=" + PortalSettings.DefaultLanguage;
-            // Add current language
-            gettingStartedSrc += "&CurrentLanguage=" + PortalSettings.CultureCode;
+            // Add Portal Default Language & current language
+            gettingStartedSrc += "&DefaultLanguage=" + PortalSettings.DefaultLanguage
+                + "&CurrentLanguage=" + PortalSettings.CultureCode;
 
             // Set src to iframe
             return gettingStartedSrc;
@@ -312,59 +275,7 @@ namespace ToSic.SexyContent.WebApi.View
             return true;
         }
     }
-
-    internal interface IItemListAction
-    {
-        bool Change(List<int?> ids);
-    }
-
-    internal class MoveItem : IItemListAction
-    {
-        private int _indexFrom, _indexTo;
-        public MoveItem(int from, int to)
-        {
-            _indexFrom = from;
-            _indexTo = to;
-        }
-        public bool Change(List<int?> ids)
-        {
-            if (_indexFrom >= ids.Count) // this is if you set cut after the last item
-                _indexFrom = ids.Count - 1;
-            if (_indexTo >= ids.Count)
-                _indexTo = ids.Count;
-            if (_indexFrom == _indexTo)
-                return false;
-
-            // do actualy re-ordering
-            var oldId = ids[_indexFrom];
-            ids.RemoveAt(_indexFrom);
-            if (_indexTo > _indexFrom) _indexTo--; // the actual index could have shifted due to the removal
-            ids.Insert(_indexTo, oldId);
-            return true;
-
-        }
-    }
-
-    internal class RemoveItem : IItemListAction
-    {
-        private int _index;
-        public RemoveItem(int index)
-        {
-            _index = index;
-        }
-        public bool Change(List<int?> ids)
-        {
-            // don't allow rmove outside of index
-            if (_index < 0 || _index >= ids.Count) 
-                return false;
-
-            // do actualy re-ordering
-            ids.RemoveAt(_index);
-            return true;
-
-        }
-    }
-
+    
 
 
 }
