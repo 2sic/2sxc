@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Ui;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks
@@ -42,11 +44,8 @@ namespace ToSic.SexyContent.ContentBlocks
         protected ContentGroup ContentGroup
             => CGroup ?? (CGroup = SxcContext.ContentGroup);
 
-        protected IEnumerable<Template> GetSelectableTemplatesForWebApi()
-            => SxcContext.App.TemplateManager/*.AppTemplates*/.GetAvailableTemplates(ContentGroup);
-
         public void AddItem(int? sortOrder = null)
-            => ContentGroup.AddContentAndPresentationEntity(Constants.ContentKeyLower, sortOrder, null, null);
+            => ContentGroup.AddContentAndPresentationEntity(Eav.Constants.ContentKeyLower, sortOrder, null, null);
         
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
@@ -79,29 +78,37 @@ namespace ToSic.SexyContent.ContentBlocks
                 result = null; // send null back
             }
 
-
-
-
             return result;
         }
 
 
-        public IEnumerable<object> GetSelectableTemplates()
-        {
-            if (SxcContext.App == null) return null; // no app yet, so we also can't give a list of the app
-            return GetSelectableTemplatesForWebApi().Select(t => new { t.TemplateId, t.Name, t.ContentTypeStaticName, t.IsHidden });
-        }
+        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() 
+            => SxcContext.App?.TemplateManager.GetCompatibleTemplates(SxcContext.App, ContentGroup);
+        //.Select(t => new TemplateUiInfo
+        //{
+        //    TemplateId = t.TemplateId,
+        //    Name = t.Name,
+        //    ContentTypeStaticName = t.ContentTypeStaticName,
+        //    IsHidden = t.IsHidden,
+        //    Thumbnail = t.GetThumbnail
+        //});
+        
 
 
-        public IEnumerable<object> GetSelectableApps()
+        public IEnumerable<AppUiInfo> GetSelectableApps()
         {
             try
             {
-                var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.PortalSettings.PortalId);// ZoneHelpers.GetZoneId(SxcContext.ContentBlock.PortalSettings.PortalId); 
+                var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.PortalSettings.PortalId);
                 return
                     AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.PortalSettings)
                         .Where(a => !a.Hidden)
-                        .Select(a => new { a.Name, a.AppId, SupportsAjaxReload = a.Configuration.SupportsAjaxReload ?? false });
+                        .Select(a => new AppUiInfo {
+                            Name = a.Name,
+                            AppId = a.AppId,
+                            SupportsAjaxReload = a.Configuration.SupportsAjaxReload ?? false,
+                            Thumbnail = a.Thumbnail
+                        });
             }
             catch (Exception e)
             {
@@ -111,8 +118,9 @@ namespace ToSic.SexyContent.ContentBlocks
         }
 
 
-        public IEnumerable<object> GetSelectableContentTypes()
-            => SxcContext.App?.TemplateManager./*AppTemplates.*/GetContentTypesWithStatus();
+
+        public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes()
+            => SxcContext.App?.TemplateManager.GetContentTypesWithStatus();
         
 
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
@@ -138,14 +146,14 @@ namespace ToSic.SexyContent.ContentBlocks
             {
                 var contentGroup = ContentGroup;// SxcContext.AppContentGroups.GetContentGroupForModule(ModuleID);
                 var contEntity = contentGroup[part][sortOrder];
-                var presKey = part.ToLower() == Constants.ContentKeyLower ? Constants.PresentationKeyLower : "listpresentation";
+                var presKey = part.ToLower() == Eav.Constants.ContentKeyLower ? Eav.Constants.PresentationKeyLower : "listpresentation";
                 var presEntity = contentGroup[presKey][sortOrder];
 
                 var hasPresentation = presEntity != null;
 
                 // make sure we really have the draft item an not the live one
                 var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
-                if (contEntity != null && !contDraft.IsPublished)
+                if (!contDraft.IsPublished)
                     Publish(contDraft.RepositoryId, !hasPresentation);
                     // SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
 
@@ -171,7 +179,7 @@ namespace ToSic.SexyContent.ContentBlocks
             try
             {
                 var contentGroup = ContentGroup;// SxcContext.AppContentGroups.GetContentGroupForModule(ModuleID);
-                contentGroup.RemoveContentAndPresentationEntities(Constants.ContentKeyLower, sortOrder);
+                contentGroup.RemoveContentAndPresentationEntities(Eav.Constants.ContentKeyLower, sortOrder);
             }
             catch (Exception e)
             {

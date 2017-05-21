@@ -3,10 +3,8 @@ using ToSic.Eav.DataSources;
 
 namespace ToSic.SexyContent.Interfaces
 {
-    public interface IApp
+    public interface IApp: Eav.Apps.Interfaces.IApp
     {
-         int AppId { get;  }
-         int ZoneId { get; }
          string Name { get; }
          string Folder { get; }
          bool Hidden { get; }
@@ -26,6 +24,6 @@ namespace ToSic.SexyContent.Interfaces
 
         IDictionary<string, IDataSource> Query { get; }
 
-
+        string Thumbnail { get; }
     }
 }

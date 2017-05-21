@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Serializers;
 using ToSic.Eav.WebApi;
-using ToSic.SexyContent; // mostly because of content-groups
+using ToSic.SexyContent;
+using ToSic.SexyContent.Interfaces;
+using ToSic.SexyContent.Internal;
+
+// mostly because of content-groups, cannot refactor out yet :(
 
 namespace ToSic.Eav.AppEngine
 {
@@ -57,33 +63,54 @@ namespace ToSic.Eav.AppEngine
         
 
 
-	    /// <summary>
-	    /// Returns all templates that should be available in the template selector
-	    /// </summary>
-	    /// <returns></returns>
-	    public IEnumerable<Template> GetAvailableTemplatesForSelector(int modId, int tabId, ContentGroupManager cgContentGroups)
-        {
-            var contentGroup = cgContentGroups.GetContentGroupForModule(modId, tabId);
-            return GetAvailableTemplates(contentGroup);
-        }
+	    //public Guid? GetFirstTemplateGuid(int modId, int tabId, ContentGroupManager cgContentGroups)
+     //   {
+     //       var contentGroup = cgContentGroups.GetContentGroupForModule(modId, tabId);
+     //       return GetCompatibleTemplates(contentGroup).FirstOrDefault()?.Guid;
+     //   }
 
-        // 2016-09-08 2dm - changed to deliver hidden as well, because of https://github.com/2sic/2sxc/issues/831
-        internal IEnumerable<Template> GetAvailableTemplates(ContentGroup contentGroup)
+        internal IEnumerable<TemplateUiInfo> GetCompatibleTemplates(SexyContent.App app, ContentGroup contentGroup)
 	    {
 	        IEnumerable<Template> availableTemplates;
 	        var items = contentGroup.Content;
 
+            // if any items were already initialized...
 	        if (items.Any(e => e != null))
-	            availableTemplates = GetCompatibleTemplates(contentGroup); //.Where(p => !p.IsHidden);
-	        else if (items.Count <= 1)
-	            availableTemplates = GetAllTemplates(); // GetVisibleTemplates();
-	        else
-	            availableTemplates = GetAllTemplates() /* GetVisibleTemplates() */.Where(p => p.UseForList);
+	            availableTemplates = GetFullyCompatibleTemplates(contentGroup);
 
-	        return availableTemplates;
+            // if it's only nulls, and only one (no list yet)
+	        else if (items.Count <= 1)
+	            availableTemplates = GetAllTemplates(); 
+
+            // if it's a list of nulls, only allow lists
+	        else
+	            availableTemplates = GetAllTemplates().Where(p => p.UseForList);
+
+	        return availableTemplates.Select(t => new TemplateUiInfo {
+                TemplateId = t.TemplateId,
+                Name = t.Name,
+                ContentTypeStaticName = t.ContentTypeStaticName,
+                IsHidden = t.IsHidden,
+                Thumbnail = TemplateHelpers.GetTemplateThumbnail(app, t.Location, t.Path)
+        });
 	    }
 
-	    private IEnumerable<Template> GetCompatibleTemplates(ContentGroup contentGroup)
+        //private string GetThumbnail(SexyContent.App app, Template template)
+        //{
+        //    return TemplateHelpers.GetTemplateThumbnail(app, template.Location, template.Path);
+        //    return x;
+        //    //    .GetTemplatePathRoot(template.Location, app) + "/", template.Path);
+        //    //string iconFile = "/" + AppConstants.AppIconFile;
+        //    //return System.IO.File.Exists(PhysicalPath + iconFile) ? Path + iconFile : null;
+        //}
+
+
+        /// <summary>
+        /// Get templates which match the signature of possible content-items, presentation etc. of the current template
+        /// </summary>
+        /// <param name="contentGroup"></param>
+        /// <returns></returns>
+	    private IEnumerable<Template> GetFullyCompatibleTemplates(ContentGroup contentGroup)
         {
             var isList = contentGroup.Content.Count > 1;
 
@@ -98,24 +125,27 @@ namespace ToSic.Eav.AppEngine
         }
 
         // todo: check if this call could be replaced with the normal ContentTypeController.Get to prevent redundant code
-        public IEnumerable<object> GetContentTypesWithStatus()
+        public IEnumerable<ContentTypeUiInfo> GetContentTypesWithStatus()
         {
-            // 2016-09-08 2dm - changed to use all templates, because of https://github.com/2sic/2sxc/issues/831
-            var availableTemplates = GetAllTemplates().ToList();// GetVisibleTemplates();
-            var visTemplates = availableTemplates.Where(t => !t.IsHidden).ToList();
+            var templates = GetAllTemplates().ToList();
+            var visible = templates.Where(t => !t.IsHidden).ToList();
             var mdCache = TemplateDataSource().Cache;
             var ctc = new ContentTypeController();
-            var ser = new Serializer();
+            var serializer = new Serializer();
 
-            return new AppRuntime(ZoneId, AppId).ContentTypes.FromScope(Settings.AttributeSetScope) //  GetAvailableContentTypes(Settings.AttributeSetScope)
-                .Where(p => availableTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)) // must exist in at least 1 template
-                .OrderBy(p => p.Name)
-                .Select(p => new
+            return new AppRuntime(ZoneId, AppId).ContentTypes.FromScope(Settings.AttributeSetScope) 
+                .Where(ct => templates.Any(t => t.ContentTypeStaticName == ct.StaticName)) // must exist in at least 1 template
+                .OrderBy(ct => ct.Name)
+                .Select(ct =>
                 {
-                    p.StaticName,
-                    p.Name,
-                    IsHidden = !(visTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)), // must check if *any* template is visible, otherise tell the UI that it's hidden
-                    Metadata = ser.Prepare(ctc.GetMetadata(p, mdCache))
+                    var metadata = ctc.GetMetadata(ct, mdCache);
+                    return new ContentTypeUiInfo {
+                        StaticName = ct.StaticName,
+                        Name = ct.Name,
+                        IsHidden = visible.All(t => t.ContentTypeStaticName != ct.StaticName),   // must check if *any* template is visible, otherise tell the UI that it's hidden
+                        Thumbnail = metadata?.GetBestValue(AppConstants.TemplateIconField, true)?.ToString(),
+                        Metadata = serializer.Prepare(metadata)
+                    };
                 });
         }
 

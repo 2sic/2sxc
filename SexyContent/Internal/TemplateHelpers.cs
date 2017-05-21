@@ -11,7 +11,7 @@ namespace ToSic.SexyContent.Internal
     public class TemplateHelpers
     {
         public const string RazorC = "C# Razor";
-        public const string RazorVb = "VB Razor";
+        //public const string RazorVb = "VB Razor";
         public const string TokenReplace = "Token";
 
         public App App;
@@ -20,44 +20,45 @@ namespace ToSic.SexyContent.Internal
             App = app;
         }
 
-        /// <summary>
-        /// Creates a template file if it does not already exists, and uses a default text to insert. Returns the new path
-        /// </summary>
-        public string CreateTemplateFileIfNotExists(string name, string type, string location, HttpServerUtility server, string contents = "")
-        {
-            switch (type)
-            {
-                case RazorC:
-                    if (!name.StartsWith("_"))
-                        name = "_" + name;
-                    if (Path.GetExtension(name) != ".cshtml")
-                        name += ".cshtml";
-                    break;
-                case RazorVb:
-                    if (!name.StartsWith("_"))
-                        name = "_" + name;
-                    if (Path.GetExtension(name) != ".vbhtml")
-                        name += ".vbhtml";
-                    break;
-                case TokenReplace:
-                    if (Path.GetExtension(name) != ".html")
-                        name += ".html";
-                    break;
-            }
+        // 2017-05-21 seems unused...
+        ///// <summary>
+        ///// Creates a template file if it does not already exists, and uses a default text to insert. Returns the new path
+        ///// </summary>
+        //public string CreateTemplateFileIfNotExists(string name, string type, string location, HttpServerUtility server, string contents = "")
+        //{
+        //    switch (type)
+        //    {
+        //        case RazorC:
+        //            if (!name.StartsWith("_"))
+        //                name = "_" + name;
+        //            if (Path.GetExtension(name) != ".cshtml")
+        //                name += ".cshtml";
+        //            break;
+        //        //case RazorVb:
+        //        //    if (!name.StartsWith("_"))
+        //        //        name = "_" + name;
+        //        //    if (Path.GetExtension(name) != ".vbhtml")
+        //        //        name += ".vbhtml";
+        //        //    break;
+        //        case TokenReplace:
+        //            if (Path.GetExtension(name) != ".html")
+        //                name += ".html";
+        //            break;
+        //    }
 
-            var templatePath = Regex.Replace(name, @"[?:\/*""<>|]", "");
-            var absolutePath = server.MapPath(Path.Combine(GetTemplatePathRoot(location, App), templatePath));
+        //    var templatePath = Regex.Replace(name, @"[?:\/*""<>|]", "");
+        //    var absolutePath = server.MapPath(Path.Combine(GetTemplatePathRoot(location, App), templatePath));
 
-            if (!File.Exists(absolutePath))
-            {
-                var stream = new StreamWriter(File.Create(absolutePath));
-                stream.Write(contents);
-                stream.Flush();
-                stream.Close();
-            }
+        //    if (!File.Exists(absolutePath))
+        //    {
+        //        var stream = new StreamWriter(File.Create(absolutePath));
+        //        stream.Write(contents);
+        //        stream.Flush();
+        //        stream.Close();
+        //    }
 
-            return templatePath;
-        }
+        //    return templatePath;
+        //}
 
 
         /// <summary>
@@ -93,34 +94,35 @@ namespace ToSic.SexyContent.Internal
 
         }
 
-        /// <summary>
-        /// Returns all template files in the template folder.
-        /// </summary>
-        public IEnumerable<string> GetTemplateFiles(HttpServerUtility server, string templateType, string templateLocation)
-        {
-            var templatePathRootMapPath = server.MapPath(GetTemplatePathRoot(templateLocation, App));
-            var directory = new DirectoryInfo(templatePathRootMapPath);
+        // 2017-05-21 seems unused
+        ///// <summary>
+        ///// Returns all template files in the template folder.
+        ///// </summary>
+        //public IEnumerable<string> GetTemplateFiles(HttpServerUtility server, string templateType, string templateLocation)
+        //{
+        //    var templatePathRootMapPath = server.MapPath(GetTemplatePathRoot(templateLocation, App));
+        //    var directory = new DirectoryInfo(templatePathRootMapPath);
 
-            EnsureTemplateFolderExists(templateLocation);
+        //    EnsureTemplateFolderExists(templateLocation);
 
-            // Filter the files according to type
-            var fileFilter = "*.html";
-            switch (templateType)
-            {
-                case RazorC:
-                    fileFilter = "*.cshtml";
-                    break;
-                case RazorVb:
-                    fileFilter = "*.vbhtml";
-                    break;
-                case TokenReplace:
-                    fileFilter = "*.html";
-                    break;
-            }
+        //    // Filter the files according to type
+        //    var fileFilter = "*.html";
+        //    switch (templateType)
+        //    {
+        //        case RazorC:
+        //            fileFilter = "*.cshtml";
+        //            break;
+        //        //case RazorVb:
+        //        //    fileFilter = "*.vbhtml";
+        //        //    break;
+        //        case TokenReplace:
+        //            fileFilter = "*.html";
+        //            break;
+        //    }
 
-            var files = directory.GetFiles(fileFilter, SearchOption.AllDirectories);
-            return from d in files where d.Name != Settings.WebConfigFileName select d.FullName.Replace(templatePathRootMapPath + "\\", "").Replace('\\', '/');
-        }
+        //    var files = directory.GetFiles(fileFilter, SearchOption.AllDirectories);
+        //    return from d in files where d.Name != Settings.WebConfigFileName select d.FullName.Replace(templatePathRootMapPath + "\\", "").Replace('\\', '/');
+        //}
 
         /// <summary>
         /// Returns the location where Templates are stored for the current app
@@ -132,6 +134,16 @@ namespace ToSic.SexyContent.Internal
                 : app.OwnerPortalSettings.HomeDirectory;
             rootFolder += Settings.TemplateFolder + "/" + app.Folder;
             return rootFolder;
+        }
+
+        public static string GetTemplateThumbnail(App app, string locationId, string templatePath)
+        {
+            var iconFile = GetTemplatePathRoot(locationId, app) + "/" + templatePath;
+            iconFile = iconFile.Substring(0, iconFile.LastIndexOf(".")) + ".png";
+            var exists = File.Exists(HostingEnvironment.MapPath(iconFile));
+
+            return exists ? iconFile : null;
+
         }
     }
 }

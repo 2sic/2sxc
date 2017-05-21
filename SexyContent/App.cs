@@ -14,14 +14,13 @@ using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
-using IApp = ToSic.SexyContent.Interfaces.IApp;
 
 namespace ToSic.SexyContent
 {
     /// <summary>
     /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
     /// </summary>
-    public class App : IApp, Eav.Apps.Interfaces.IApp
+    public class App : IApp
     {
         #region Constants
 
@@ -227,6 +226,16 @@ namespace ToSic.SexyContent
                 return _queries;
             }
         }
+
+        public string Thumbnail
+        {
+            get
+            {
+                const string iconFile = "/" + AppConstants.AppIconFile;
+                return System.IO.File.Exists(PhysicalPath + iconFile) ? Path + iconFile : null;
+            }
+        }
+
         #endregion
     }
 }

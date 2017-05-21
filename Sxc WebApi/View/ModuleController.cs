@@ -16,6 +16,7 @@ using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Installer;
 using ToSic.Eav.Apps.ItemListActions;
+using ToSic.Eav.Apps.Ui;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi.View
@@ -43,24 +44,28 @@ namespace ToSic.SexyContent.WebApi.View
         public void SetTemplateChooserState([FromUri] bool state) => ContentGroupReferenceManager.SetTemplateChooserState(state);
 
 
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<object> GetSelectableApps() => ContentGroupReferenceManager.GetSelectableApps();
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void SetAppId(int? appId) => ContentGroupReferenceManager.SetAppId(appId);
 
+        #region Get Apps, ContentTypes and Templates for UI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<object> GetSelectableContentTypes() => ContentGroupReferenceManager.GetSelectableContentTypes();
+        public IEnumerable<AppUiInfo> GetSelectableApps() => ContentGroupReferenceManager.GetSelectableApps();
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes() => ContentGroupReferenceManager.GetSelectableContentTypes();
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<object> GetSelectableTemplates() => ContentGroupReferenceManager.GetSelectableTemplates();
+        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => ContentGroupReferenceManager.GetSelectableTemplates();
+
+        #endregion
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -124,26 +129,6 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool RemoveItemInList(int parentId, string field, int index) => ModifyItemList(parentId, field, new Remove(index));
 
-
-        private bool ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
-        {
-            var parentEntity = SxcContext.App.Data["Default"].List[parentId];
-
-            var parentField = parentEntity.GetBestValue(field);
-            var fieldList = parentField as Eav.Data.EntityRelationship;
-
-            if (fieldList == null)
-                throw new Exception("field " + field + " doesn't seem to be a list of content-items, must abort");
-
-            var ids = fieldList.EntityIds.ToList();
-
-            if (!actionToPerform.Change(ids)) return false;
-
-            // save
-            var values = new Dictionary<string, object> {{field, ids.ToArray()}};
-            new AppManager(SxcContext.App).Entities.Update(parentEntity.EntityId, values);
-            return true;
-        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -274,8 +259,34 @@ namespace ToSic.SexyContent.WebApi.View
 
             return true;
         }
+
+
+
+        #region Helpers to get things done
+        // todo: probably should move to the new Eav.Apps section, but for that we must
+        // change the access to use the DB, not the cache...
+        private bool ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
+        {
+            var parentEntity = SxcContext.App.Data["Default"].List[parentId];
+
+            var parentField = parentEntity.GetBestValue(field);
+            var fieldList = parentField as Eav.Data.EntityRelationship;
+
+            if (fieldList == null)
+                throw new Exception("field " + field + " doesn't seem to be a list of content-items, must abort");
+
+            var ids = fieldList.EntityIds.ToList();
+
+            if (!actionToPerform.Change(ids)) return false;
+
+            // save
+            var values = new Dictionary<string, object> { { field, ids.ToArray() } };
+            new AppManager(SxcContext.App).Entities.Update(parentEntity.EntityId, values);
+            return true;
+        }
+        #endregion
     }
-    
+
 
 
 }
