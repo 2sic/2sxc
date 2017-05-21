@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
@@ -8,7 +7,6 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Serializers;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent;
-using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 
 // mostly because of content-groups, cannot refactor out yet :(
@@ -62,13 +60,6 @@ namespace ToSic.Eav.AppEngine
 		}
         
 
-
-	    //public Guid? GetFirstTemplateGuid(int modId, int tabId, ContentGroupManager cgContentGroups)
-     //   {
-     //       var contentGroup = cgContentGroups.GetContentGroupForModule(modId, tabId);
-     //       return GetCompatibleTemplates(contentGroup).FirstOrDefault()?.Guid;
-     //   }
-
         internal IEnumerable<TemplateUiInfo> GetCompatibleTemplates(SexyContent.App app, ContentGroup contentGroup)
 	    {
 	        IEnumerable<Template> availableTemplates;
@@ -86,23 +77,15 @@ namespace ToSic.Eav.AppEngine
 	        else
 	            availableTemplates = GetAllTemplates().Where(p => p.UseForList);
 
-	        return availableTemplates.Select(t => new TemplateUiInfo {
-                TemplateId = t.TemplateId,
-                Name = t.Name,
-                ContentTypeStaticName = t.ContentTypeStaticName,
-                IsHidden = t.IsHidden,
-                Thumbnail = TemplateHelpers.GetTemplateThumbnail(app, t.Location, t.Path)
-        });
+	        return availableTemplates.Select(t => new TemplateUiInfo
+	        {
+	            TemplateId = t.TemplateId,
+	            Name = t.Name,
+	            ContentTypeStaticName = t.ContentTypeStaticName,
+	            IsHidden = t.IsHidden,
+	            Thumbnail = TemplateHelpers.GetTemplateThumbnail(app, t.Location, t.Path)
+	        });
 	    }
-
-        //private string GetThumbnail(SexyContent.App app, Template template)
-        //{
-        //    return TemplateHelpers.GetTemplateThumbnail(app, template.Location, template.Path);
-        //    return x;
-        //    //    .GetTemplatePathRoot(template.Location, app) + "/", template.Path);
-        //    //string iconFile = "/" + AppConstants.AppIconFile;
-        //    //return System.IO.File.Exists(PhysicalPath + iconFile) ? Path + iconFile : null;
-        //}
 
 
         /// <summary>
@@ -143,7 +126,7 @@ namespace ToSic.Eav.AppEngine
                         StaticName = ct.StaticName,
                         Name = ct.Name,
                         IsHidden = visible.All(t => t.ContentTypeStaticName != ct.StaticName),   // must check if *any* template is visible, otherise tell the UI that it's hidden
-                        Thumbnail = metadata?.GetBestValue(AppConstants.TemplateIconField, true)?.ToString(),
+                        Thumbnail = metadata?.GetBestValue(AppConstants.TemplateIcon, true)?.ToString(),
                         Metadata = serializer.Prepare(metadata)
                     };
                 });

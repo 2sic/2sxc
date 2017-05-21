@@ -74,7 +74,7 @@ namespace ToSic.SexyContent
                 throw new Exception("no portal settings received");
 
             // if zone is missing, try to find it; if still missing, throw error
-            if (zoneId == -1) zoneId = env.ZoneMapper.GetZoneId(ownerPortalSettings.PortalId); // ZoneHelpers.GetZoneId(ownerPortalSettings.PortalId)  ?? -1;
+            if (zoneId == -1) zoneId = env.ZoneMapper.GetZoneId(ownerPortalSettings.PortalId);
             if (zoneId == -1) throw new Exception("Cannot find zone-id for portal specified");
 
             // Save basic values

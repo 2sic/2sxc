@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Services.Exceptions;
@@ -83,16 +82,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
         public IEnumerable<TemplateUiInfo> GetSelectableTemplates() 
-            => SxcContext.App?.TemplateManager.GetCompatibleTemplates(SxcContext.App, ContentGroup);
-        //.Select(t => new TemplateUiInfo
-        //{
-        //    TemplateId = t.TemplateId,
-        //    Name = t.Name,
-        //    ContentTypeStaticName = t.ContentTypeStaticName,
-        //    IsHidden = t.IsHidden,
-        //    Thumbnail = t.GetThumbnail
-        //});
-        
+            => SxcContext.App?.TemplateManager.GetCompatibleTemplates(SxcContext.App, ContentGroup);        
 
 
         public IEnumerable<AppUiInfo> GetSelectableApps()
@@ -127,7 +117,6 @@ namespace ToSic.SexyContent.ContentBlocks
         {
             try
             {
-                // var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ModuleID);
                 ContentGroup.ReorderEntities(sortOrder, destinationSortOrder);
             }
             catch (Exception e)
@@ -144,7 +133,7 @@ namespace ToSic.SexyContent.ContentBlocks
         {
             try
             {
-                var contentGroup = ContentGroup;// SxcContext.AppContentGroups.GetContentGroupForModule(ModuleID);
+                var contentGroup = ContentGroup;
                 var contEntity = contentGroup[part][sortOrder];
                 var presKey = part.ToLower() == Eav.Constants.ContentKeyLower ? Eav.Constants.PresentationKeyLower : "listpresentation";
                 var presEntity = contentGroup[presKey][sortOrder];
@@ -155,14 +144,12 @@ namespace ToSic.SexyContent.ContentBlocks
                 var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
                 if (!contDraft.IsPublished)
                     Publish(contDraft.RepositoryId, !hasPresentation);
-                    // SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
 
                 if (hasPresentation)
                 {
                     var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
                     if (!presDraft.IsPublished)
                         Publish(presDraft.RepositoryId, true);
-                        // SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(presDraft.RepositoryId, true);
                 }
 
                 return true;
@@ -178,7 +165,7 @@ namespace ToSic.SexyContent.ContentBlocks
         {
             try
             {
-                var contentGroup = ContentGroup;// SxcContext.AppContentGroups.GetContentGroupForModule(ModuleID);
+                var contentGroup = ContentGroup;
                 contentGroup.RemoveContentAndPresentationEntities(Eav.Constants.ContentKeyLower, sortOrder);
             }
             catch (Exception e)
