@@ -1072,6 +1072,31 @@
             </file>
           </files>
         </component>
+
+        <component type="Config">
+          <config>
+            <configFile>web.config</configFile>
+            <install>
+              <configuration>
+                <nodes>
+
+                  <!-- register components needed at least for System.Collections.Immutable (more: http://stackoverflow.com/questions/16675171/what-does-the-web-config-compilation-assemblies-element-do/19942274#19942274) -->
+                  <node path="/configuration/system.web/compilation/assemblies" action="update" key="assembly" collision="ignore">
+                    <add assembly="System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                    <add assembly="System.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                  </node>
+
+                </nodes>
+              </configuration>
+            </install>
+            <uninstall>
+              <configuration>
+                <nodes>
+                </nodes>
+              </configuration>
+            </uninstall>
+          </config>
+        </component>
       </components>
     </package>
 
@@ -1151,12 +1176,6 @@
                   </node>
                   <node path="/configuration/system.webServer/modules" action="update" key="name" collision="ignore">
                     <add name="ImageResizingModule" type="ImageResizer.InterceptModule"/>
-                  </node>
-
-                  <!-- register components needed at least for System.Collections.Immutable (more: http://stackoverflow.com/questions/16675171/what-does-the-web-config-compilation-assemblies-element-do/19942274#19942274) -->
-                  <node path="/configuration/system.web/compilation/assemblies" action="update" key="assembly" collision="ignore">
-                    <add assembly="System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                    <add assembly="System.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
                   </node>
                 
                 </nodes>
