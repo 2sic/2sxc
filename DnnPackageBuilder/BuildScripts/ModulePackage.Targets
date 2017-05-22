@@ -116,7 +116,8 @@
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\System.Diagnostics.DiagnosticSource.dll" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\System.Interactive.Async.dll" />
       <!-- Must be included as assembly helper because it can't be added as DNN assembly (Cannot load a reference assembly for execution) -->
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\System.Runtime.dll" />
+      <!-- 2017-05-22 2rm removed because we add a web.config assembly entry now that references the GAC dll -->
+      <!--<AssemblyHelper Include="$(MSBuildDnnBinPath)\System.Runtime.dll" />-->
 
       <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\protobuf-net.dll" />-->
       <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.dll" />
