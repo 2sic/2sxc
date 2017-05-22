@@ -772,7 +772,7 @@
             </file>
           </files>
         </component>
-        <component type="Cleanup" version="09.01.01">
+        <component type="Cleanup" version="09.01.00">
           <files>
             <file>
               <path>bin</path>
