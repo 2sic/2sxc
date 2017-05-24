@@ -589,35 +589,31 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
         },
 
         // this one assumes a replace / change has already happened, but now must be finalized...
-        reloadAndReInitialize: function (forceAjax) {
+        reloadAndReInitialize: function (forceAjax, preview) {
             // force ajax is set when a new app was chosen, and the new app supports ajax
             // this value can only be true, or not exist at all
-            if (forceAjax)
-                manage._reloadWithAjax = true;
+            if (forceAjax) manage._reloadWithAjax = true;
 
-            if (manage._reloadWithAjax) // necessary to show the original template again
-                return (forceAjax
-                    ? cb.reload(-1) // -1 is important to it doesn't try to use the old templateid
-                    : cb.reload())
-                    .then(function () {
-                        if (manage._reloadWithAjax && sxc.manage.dialog) sxc.manage.dialog.destroy(); // only remove on force, which is an app-change
-                        // create new sxc-object
-                        cb.sxc = cb.sxc.recreate();
-                        cb.sxc.manage._toolbar._processToolbars(); // sub-optimal deep dependency
-                        cb.buttonsAreLoaded = true;
-                    }, function () {
-                        // nothing to load
-                    });
-            else
-                return window.location.reload();
-
+            // necessary to show the original template again
+            if (manage._reloadWithAjax) return (forceAjax
+                ? cb.reload(-1) // -1 is important to it doesn't try to use the old templateid
+                : cb.reload())
+                .then(function () {
+                    if (manage._reloadWithAjax && sxc.manage.dialog) sxc.manage.dialog.destroy(); // only remove on force, which is an app-change
+                    if (preview) return;
+                    cb.sxc = cb.sxc.recreate(); // create new sxc-object
+                    cb.sxc.manage._toolbar._processToolbars(); // sub-optimal deep dependency
+                    cb.buttonsAreLoaded = true;
+                }, function () {
+                    // nothing to load
+                });
+            return window.location.reload();
         },
 
         // retrieve new preview-content with alternate template and then show the result
         reload: function (templateId) {
             // if nothing specified, use stored id
-            if (!templateId)
-                templateId = cb.templateId;
+            if (!templateId) templateId = cb.templateId;
 
             // if nothing specified / stored, cancel
             if (!templateId)
@@ -634,6 +630,11 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
             return cb._getPreviewWithTemplate(templateId)
                 .then(cb.replace)
                 .then($quickE.reset);   // reset quick-edit, because the config could have changed
+        },
+
+        reloadNoLivePreview: function (msg) {
+            cb.replace(msg);
+            return $.when();
         },
 
         //#region simple item commands like publish, remove, add, re-order
@@ -743,7 +744,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                     manage._editContext.ContentBlock.ShowTemplatePicker = isVisible;
                 });
         },
-        
+
         prepareToAddContent: function () {
             return cb.persistTemplate(true, false);
         },
@@ -908,14 +909,16 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
 
     var RESIZE_INTERVAL = 200,
         SHOW_DELAY = 400,
+        SCROLL_TOP_OFFSET = 80,
         activeDialog,
+        activeWrapper,
         container = $('<div class="inpage-frame-wrapper"><div class="inpage-frame"></div></div>'),
         inpageFrame = container.find('.inpage-frame');
 
     $('body').append(container);
 
     $("body").on("mouseover", ".inpage-frame-wrapper", function () {
-        $(this).toggleClass("dia-mouseover", true);
+        $('body').animate({ scrollTop: $(activeWrapper).offset().top - SCROLL_TOP_OFFSET });
     });
 
     $("body").on("mouseout", ".inpage-frame-wrapper", function () {
@@ -926,18 +929,18 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
         try {
             var iframe = inpageFrame.find('iframe')[0], height;
             if (!iframe) return;
-            height = iframe.contentDocument.body.offsetHeight + 10;
+            height = iframe.contentDocument.body.offsetHeight;
             if (iframe.previousHeight === height) return;
             window.diagBox = iframe;
             iframe.height = height + "px";
             iframe.previousHeight = height;
-        } catch (e) {
-        }
+        } catch (e) { }
     }, RESIZE_INTERVAL);
 
     function Dialog(sxc, wrapperTag, url, closeCallback) {
         var iframe, // frame inside the dialog (HTMLElement)
-            resizeInterval;
+            resizeInterval,
+            wrapperParent = $(wrapperTag).parent().eq(0);
 
         init();
         /**
@@ -952,6 +955,9 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
             getManageInfo: getManageInfo,
             getAdditionalDashboardConfig: getAdditionalDashboardConfig,
             getCommands: getCommands,
+            scrollToTarget: function() {
+                $('body').animate({ scrollTop: $(activeWrapper).offset().top - SCROLL_TOP_OFFSET });
+            },
             toggle: function () {
                 return toggle();
             },
@@ -964,17 +970,11 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
         });
 
         function init() {
-            // REMOVE THIS
-            /*url = url
-               .replace('#', '&');*/
             url = url.replace("dist/dnn/ui.html?", "dist/ng/ui.html?");
 
             try {
                 var devMode = localStorage.getItem("devMode");
-                if (devMode && ~~devMode) {
-                    url = url.replace("/desktopmodules/tosic_sexycontent/dist/ng", "http://localhost:4200");
-                    url = url.replace("dist/ng/ui.html?", "dist/ng/index.html?");
-                }
+                if (devMode && ~~devMode) url = url.replace("/desktopmodules/tosic_sexycontent/dist/ng/ui.html", "http://localhost:4200");
             } catch (e) { }
 
             iframe = document.createElement('iframe');
@@ -984,7 +984,7 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
         function toggle(show) {
             var action = show === undefined ? (activeDialog != iframe) : show,
                 dirty;
-
+            
             if (action) {
                 if (activeDialog == iframe) return false;
                 if (activeDialog !== undefined) {
@@ -995,8 +995,10 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
                 iframe.setAttribute('src', url);
                 $(inpageFrame).html(iframe);
                 activeDialog = iframe;
+                activeWrapper = wrapperParent;
             } else {
                 activeDialog = undefined;
+                activeWrapper = undefined;
             }
 
             container.toggleClass("dia-select", action);
