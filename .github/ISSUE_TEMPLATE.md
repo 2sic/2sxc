@@ -4,9 +4,9 @@ IF YOU DON'T FILL OUT THE FOLLOWING INFORMATION WE MIGHT CLOSE YOUR ISSUE WITHOU
 
 **I'm submitting a ...**  <!-- check one with "x" -->
 ```
-- [ ] bug report => search github for a similar issue or PR before submitting
+- [ ] bug report => search github for a similar issue before submitting 
 - [ ] feature request
-- [ ] support request => Please do not submit support request here, instead see https://2sxc.org/en/blog/post/moving-discussions-from-codeplex-to-stack-overflow
+- [ ] support request => do not submit support request here, see https://2sxc.org/en/blog/post/moving-discussions-from-codeplex-to-stack-overflow
 - [ ] not sure
 ```
 
@@ -31,7 +31,7 @@ IF YOU DON'T FILL OUT THE FOLLOWING INFORMATION WE MIGHT CLOSE YOUR ISSUE WITHOU
 **Minimal reproduction of the problem with instructions**
 <!--
 If the current behavior is a bug or you can illustrate your feature request better with an example, 
-please provide the *STEPS TO REPRODUCE* and if possible a *MINIMAL DEMO* like a screenshot or video
+please provide the *STEPS TO REPRODUCE* and/or a *MINIMAL DEMO* like a screenshot or screencast
 -->
 
 **What is the motivation / use case for changing the behavior?**
