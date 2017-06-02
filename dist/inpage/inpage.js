@@ -1,7 +1,7 @@
 // this enhances the $2sxc client controller with stuff only needed when logged in
 (function() {
-    if ($2sxc) {
-
+    if (window.$2sxc) {
+        
         //#region System Commands - at the moment only finishUpgrade
         $2sxc.system = {
             // upgrade command - started when an error contains a link to start this
@@ -23,8 +23,8 @@
 })();
 // this enhances the $2sxc client controller with stuff only needed when logged in
 (function() {
-    if ($2sxc) {
-
+    if (window.$2sxc) {
+        
         //#region contentItem Commands - at the moment only finishUpgrade
         $2sxc.contentItems = {
             // delete command - try to really delete a content-item
@@ -481,23 +481,17 @@
 
                 return cmd.generateLink();
             },
-
+            
             // open a new dialog of the angular-ui
             _openNgDialog: function (settings, event, closeCallback) {
                 var callback = function () {
                     cmc.manage.contentBlock.reloadAndReInitialize();
                     closeCallback();
-                };
-                var link = cmc._linkToNgDialog(settings);
-
-                if (settings.newWindow || (event && event.shiftKey))
-                    return window.open(link);
-                else {
-                    if (settings.inlineWindow)
-                        return $2sxc._dialog(sxc, targetTag, link, callback);
-                    else
-                        return $2sxc.totalPopup.open(link, callback);
-                }
+                }, link = cmc._linkToNgDialog(settings);
+                
+                if (settings.newWindow || (event && event.shiftKey)) return window.open(link);
+                if (settings.inlineWindow) return $2sxc._dialog(sxc, targetTag, link, callback);
+                return $2sxc.totalPopup.open(link, callback);
             },
 
             executeAction: function (nameOrSettings, settings, event) {
@@ -531,8 +525,6 @@
 
         return cmc;
     };
-
-
 })();
 /* 
  * this is a content block in the browser
@@ -739,6 +731,8 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
 
             var isVisible = diag.isVisible();
             if (manage._editContext.ContentBlock.ShowTemplatePicker === isVisible) return;
+
+            // 2017-06-01 change to not send to server, as not used any more
             cb._setTemplateChooserState(isVisible)
                 .then(function () {
                     manage._editContext.ContentBlock.ShowTemplatePicker = isVisible;
@@ -779,8 +773,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
 
                 cb.editContext.ContentBlock.ShowTemplatePicker = false; // cb.minfo.templateChooserVisible = false;
 
-                if (manage.dialog)
-                    manage.dialog.justHide();
+                if (manage.dialog) manage.dialog.justHide();
 
                 if (!cb.editContext.ContentGroup.HasContent) // if it didn't have content, then it only has now...
                     cb.editContext.ContentGroup.HasContent = forceCreate;
@@ -883,7 +876,6 @@ var $2sxcActionMenuMapper = function (moduleId) {
         develop: function () {                  run("template-develop"); }
     };
 };
-
 // The following script fixes a bug in DNN 08.00.04
 // the bug tries to detect a module-ID based on classes in a tag, 
 // but uses a bad regex and captures the number 2 on all 2sxc-modules 
@@ -892,11 +884,17 @@ var $2sxcActionMenuMapper = function (moduleId) {
 // documented here https://github.com/2sic/2sxc/issues/986
 
 /*jshint ignore:start*/
-// fix bug in dnn 08.00.04 drag-drop functionality - it has an incorrect regex
-if($ && $.fn && $.fn.dnnModuleDragDrop)
-    eval("$.fn.dnnModuleDragDrop = "
-        + $.fn.dnnModuleDragDrop.toString()
-            .replace(".match(/DnnModule-([0-9]+)/)", ".match(/DnnModule-([0-9]+)(?:\W|$)/)"));
+(function () {
+    replaceModuleDragDrop();
+
+    // fix bug in dnn 08.00.04 drag-drop functionality - it has an incorrect regex
+    function replaceModuleDragDrop() {
+        if (!$ || !$.fn || !$.fn.dnnModuleDragDrop) return setTimeout(replaceModuleDragDrop, 1000);
+        eval("$.fn.dnnModuleDragDrop = "
+            + $.fn.dnnModuleDragDrop.toString()
+                .replace(".match(/DnnModule-([0-9]+)/)", ".match(/DnnModule-([0-9]+)(?:\\W|$)/)"));
+    }
+})();
 /*jshint ignore:end*/
 // this is a dialog handler which will create in-page dialogs for 
 // - the template / view picker
@@ -916,14 +914,6 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
         inpageFrame = container.find('.inpage-frame');
 
     $('body').append(container);
-
-    $("body").on("mouseover", ".inpage-frame-wrapper", function () {
-        $('body').animate({ scrollTop: $(activeWrapper).offset().top - SCROLL_TOP_OFFSET });
-    });
-
-    $("body").on("mouseout", ".inpage-frame-wrapper", function () {
-        $(this).toggleClass("dia-mouseover", false);
-    });
 
     setInterval(function () {
         try {
@@ -955,7 +945,7 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
             getManageInfo: getManageInfo,
             getAdditionalDashboardConfig: getAdditionalDashboardConfig,
             getCommands: getCommands,
-            scrollToTarget: function() {
+            scrollToTarget: function () {
                 $('body').animate({ scrollTop: $(activeWrapper).offset().top - SCROLL_TOP_OFFSET });
             },
             toggle: function () {
@@ -966,7 +956,8 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
             },
             isVisible: function () {
                 return !container.hasClass("hidden");
-            }
+            },
+            persistDia: persistDia
         });
 
         function init() {
@@ -981,10 +972,14 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
             toggle(true);
         }
 
+        function persistDia() {
+            sessionStorage.setItem('dia-cbid', sxc.cbid);
+        }
+
         function toggle(show) {
             var action = show === undefined ? (activeDialog != iframe) : show,
                 dirty;
-            
+
             if (action) {
                 if (activeDialog == iframe) return false;
                 if (activeDialog !== undefined) {
@@ -1085,9 +1080,7 @@ if (typeof Object.assign != 'function') {
             // todo: probably move the user into the dashboard info
             user: { canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign },
             approot: editContext.ContentGroup.AppUrl || null // this is the only value which doesn't have a slash by default.  note that the app-root doesn't exist when opening "manage-app"
-        };
-
-        var dashConfig = {
+        }, dashConfig = {
             appId: editContext.ContentGroup.AppId,
             isContent: editContext.ContentGroup.IsContent,
             hasContent: editContext.ContentGroup.HasContent,
@@ -1104,24 +1097,19 @@ if (typeof Object.assign != 'function') {
 
         var editManager = sxc.manage = {
             //#region Official, public properties and commands, which are stable for use from the outside
-
             // run a command - often used in toolbars and custom buttons
             run: cmds.executeAction,
 
             // get a button or a toolbar for something
             getButton: toolsAndButtons.getButton,
             getToolbar: toolsAndButtons.getToolbar,
-
             //#endregion official, public properties - everything below this can change at any time
 
             // internal method to find out if it's in edit-mode
             _isEditMode: function () { return editContext.Environment.IsEditable; },
-
             _reloadWithAjax: editContext.ContentGroup.SupportsAjax,
-            
             _dialogParameters: ngDialogParams,      // used for various dialogs
             _toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
-
             _editContext: editContext,              // metadata necessary to know what/how to edit
             _dashboardConfig: dashConfig,           // used for in-page dialogs
             _commands: cmds,                        // used to handle the commands for this content-block
@@ -1136,30 +1124,39 @@ if (typeof Object.assign != 'function') {
                 // enhance UI in case there are known errors / issues
                 if (editContext.error.type)
                     editManager._handleErrors(editContext.error.type, contentBlockTag);
-                
+
                 // finish init of sub-objects
                 editManager._commands.init(editManager);
                 editManager.contentBlock = $2sxc._contentBlock.create(sxc, editManager, contentBlockTag);
-                
-                if (editManager.contentBlock.templateId === 0) ensureInlineGlassesButton();
 
                 // display the dialog
-                if (!editContext.error.type && editContext.ContentBlock.ShowTemplatePicker) {
-                    editManager.run("layout");
-                }
-                
-                function ensureInlineGlassesButton() {
-                    if ($(contentBlockTag).find(".sc-uninitialized").length !== 0) return;
-                    // note: title is added on mouseover, as the translation isn't ready at page-load
-                    var placeholder = '<div class="sc-uninitialized" onmouseover="this.title = $2sxc.translate(this.title)" title="InPage.NewElement"><div class="icon-sxc-glasses"></div></div>';
-                    var btn = $(placeholder);
-                    btn.on("click", function() {
-                        editManager.run("layout");
-                    });
-                    $(contentBlockTag).append(btn);
-                }
+                var openDialogId = sessionStorage.getItem('dia-cbid');
+                if (editContext.error.type || !openDialogId || openDialogId !== sxc.cbid) return false;
+                sessionStorage.removeItem('dia-cbid');
+                editManager.run("layout");
             },
-            
+
+            reloadContentBlockTag: function() {
+                contentBlockTag = getContentBlockTag(sxc);
+            },
+
+            initGlassesButton: function () {
+
+                // already initialized
+                if (editManager.contentBlock.templateId !== 0) return false;
+
+                // has already a glasses button
+                if ($(contentBlockTag).find(".sc-uninitialized").length !== 0) return false;
+
+                // note: title is added on mouseover, as the translation isn't ready at page-load
+                var btn = $('<div class="sc-uninitialized" onmouseover="this.title = $2sxc.translate(this.title)" title="InPage.NewElement"><div class="icon-sxc-glasses"></div></div>');
+                btn.on("click", function () {
+                    editManager.run("layout");
+                });
+
+                $(contentBlockTag).append(btn);
+            },
+
             // private: show error when the app-data hasn't been installed yet for this imported-module
             _handleErrors: function (errType, cbTag) {
                 var errWrapper = $("<div class=\"dnnFormMessage dnnFormWarning sc-element\"></div>");
@@ -1173,20 +1170,16 @@ if (typeof Object.assign != 'function') {
                 errWrapper.append(toolbar);
                 $(cbTag).append(errWrapper);
             },
-
             // change config by replacing the guid, and refreshing dependend sub-objects
             _updateContentGroupGuid: function (newGuid) {
                 editContext.ContentGroup.Guid = newGuid;
                 toolsAndButtons.refreshConfig();
                 editManager._toolbarConfig = toolsAndButtons.config;
             },
-
             _getCbManipulator: function () {
                 return $2sxc._contentBlock.manipulator(sxc);
             },
-
             //#region deprecated properties - these all should have been undocumented/ private till now
-
             // 2016-11-03 v.08.06 deprecated command "action", it was only for internal use till now
             action: function () {
                 console.error("Obsolete: you are using a deprecated method 'action' which will be removed in 2sxc v9. you must change it to 'run'");
@@ -1197,9 +1190,7 @@ if (typeof Object.assign != 'function') {
                 console.error("Obsolete: you are using a deprecated method 'createDefaultToolbar' which will be removed in 2sxc v9. you must change it to 'getToolbar'");
                 return toolsAndButtons.defaultButtonList.apply(undefined, arguments);
             }
-
             //#endregion
-
         };
 
         editManager.init();
@@ -2010,33 +2001,42 @@ $(function () {
     return Shake;
 }));
 
+// toolbar bootstrapping (initialize all toolbars after loading page)
+$(function () {
+    var modules = [];
 
-// Toolbar bootstrapping (initialize all toolbars after loading page)
-$(document).ready(function () {
-    // Prevent propagation of the click (if menu was clicked)
+    // prevent propagation of the click (if menu was clicked)
     $(".sc-menu").click(function (e) {
         e.stopPropagation();
     });
 
-    var modules = $("div[data-edit-context]");
+    initModules(true);
+    document.body.addEventListener('DOMSubtreeModified', initModules, false);
 
-    if ($2sxc.debug.load && console) console.log("found " + modules.length + " content blocks");
-
-    // Ensure the _processToolbar is called after the next event cycle to make sure that the Angular app (template selector) is loaded first
-    window.setTimeout(function () {
-        modules.each(function () {
-            // 2016-10-09 2dm disabled try, as it only makes debugging harder...
-            // not sure if we really need it
-            //try {
-            var ctl = $2sxc(this);
-            if(ctl.manage)
-                ctl.manage._toolbar._processToolbars(this);
-            //} catch (e) { // Make sure that if one app breaks, others continue to work
-            //    if (console && console.error) console.error(e);
-            //}
+    function initModules(initial) {
+        $("div[data-edit-context]").each(function () {
+            processToolbar(this, initial);
         });
-    }, 0);
+    }
 
+    function processToolbar(module, initial) {
+        var ctl;
+        
+        // check if module is already initialized
+        if (modules.find(function (m) {
+            return m === module;
+        })) return false;
+
+        // new element or moved
+        modules.push(module);
+        ctl = $2sxc(module);
+        
+        // the tag might have changed
+        ctl.manage.reloadContentBlockTag();
+        ctl.manage.initGlassesButton();
+
+        if (initial) ctl.manage._toolbar._processToolbars(module);
+    }
 
     // this will add a css-class to auto-show all toolbars (or remove it again)
     function toggleAllToolbars() {
@@ -2044,9 +2044,8 @@ $(document).ready(function () {
     }
 
     // start shake-event monitoring, which will then generate a window-event
-    var myShakeEvent = new Shake({ callback: toggleAllToolbars});
+    var myShakeEvent = new Shake({ callback: toggleAllToolbars });
     myShakeEvent.start();
-
 });
 // the toolbar manager is an internal helper
 // taking care of toolbars, buttons etc.
@@ -2069,7 +2068,7 @@ $(document).ready(function () {
                 queryId: cg.QueryId,
                 appResourcesId: cg.AppResourcesId,
                 appSettingsId: cg.AppSettingsId
-    });
+            });
 
         // #region helper functions
         function createToolbarConfig(context) {
@@ -2080,7 +2079,7 @@ $(document).ready(function () {
                 moduleId: ce.InstanceId,
                 version: ce.SxcVersion,
 
-                contentGroupId: cg.Guid, 
+                contentGroupId: cg.Guid,
                 cbIsEntity: cb.IsEntity,
                 cbId: cb.Id,
                 appPath: cg.AppUrl,
@@ -2111,9 +2110,11 @@ $(document).ready(function () {
             config: createToolbarConfig(editContext),
             refreshConfig: function () { tb.config = createToolbarConfig(editContext); },
             actions: allActions,
+
             // Generate a button (an <a>-tag) for one specific toolbar-action. 
             // Expects: settings, an object containing the specs for the expected buton
             getButton: function (actDef, groupIndex) {
+
                 // if the button belongs to a content-item, move the specs up to the item into the settings-object
                 flattenActionDefinition(actDef);
 
@@ -2138,18 +2139,13 @@ $(document).ready(function () {
                 return button[0].outerHTML;
             },
 
-
             // Builds the toolbar and returns it as HTML
             // expects settings - either for 1 button or for an array of buttons
             getToolbar: function (tbConfig, moreSettings) {
-                //if ($2sxc.debug.load) {
-                //    console.log("creating toolbar");
-                //    console.log(settings);
-                //}
 
                 // if it has an action or is an array, keep that. Otherwise get standard buttons
                 tbConfig = tbConfig || {};// if null/undefined, use empty object
-                var btnList = tbConfig; 
+                var btnList = tbConfig;
                 if (!tbConfig.action && !tbConfig.groups && !tbConfig.buttons && !Array.isArray(tbConfig))
                     btnList = tbManager.standardButtons(editContext.User.CanDesign, tbConfig);
 
@@ -2168,7 +2164,7 @@ $(document).ready(function () {
                 var tbClasses = "sc-menu group-0 "
                     + behaviourClasses + " "
                     + ((tbConfig.sortOrder === -1) ? " listContent" : "")
-                    + (tlbDef.settings.classes ? " " + tlbDef.settings.classes: "");
+                    + (tlbDef.settings.classes ? " " + tlbDef.settings.classes : "");
                 var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "var e = arguments[0] || window.event; e.stopPropagation();" });
 
                 for (var g = 0; g < btnGroups.length; g++) {
@@ -2184,39 +2180,46 @@ $(document).ready(function () {
 
             // find all toolbar-info-attributes in the HTML, convert to <ul><li> toolbar
             _processToolbars: function (parentTag) {
-                parentTag = parentTag ? $(parentTag) : $(".DnnModule-" + id);
-                // find current toolbars on this tag
-                function getToolbars() { return $(".sc-menu[toolbar],.sc-menu[data-toolbar]", parentTag); }
+                var disableAutoAdd, toolbars, settingsForEmptyToolbar = {
+                    hover: "left",
+                    autoAddMore: "left"
+                };
+                parentTag = $(parentTag || '.DnnModule-' + id);
 
                 // don't add, if it is has un-initialized content
-                var disableAutoAdd = $(".sc-uninitialized", parentTag).length !== 0;
+                disableAutoAdd = $(".sc-uninitialized", parentTag).length !== 0;
 
-                var toolbars = getToolbars(),
-                    settingsForEmptyToolbar = {
-                        hover: "left",
-                        autoAddMore: "left"
-                    };
-                if (toolbars.length === 0 && !disableAutoAdd) // no toolbars found, must help a bit because otherwise editing is hard
-                {
-                    //console.log("didn't find a toolbar, so will create an automatic one to help for the block", parentTag);
+                toolbars = getToolbars();
+
+                // no toolbars found, must help a bit because otherwise editing is hard
+                if (toolbars.length === 0 && !disableAutoAdd) {
+
+                    // console.log("didn't find a toolbar, so will create an automatic one to help for the block", parentTag);
                     var outsideCb = !parentTag.hasClass('sc-content-block');
                     var contentTag = outsideCb ? parentTag.find("div.sc-content-block") : parentTag;
                     contentTag.addClass("sc-element");
+
                     // todo: make the empty-toolbar-default-settings used below as well...
-                    var  settingsString = JSON.stringify(settingsForEmptyToolbar);
+                    var settingsString = JSON.stringify(settingsForEmptyToolbar);
                     contentTag.prepend($("<ul class='sc-menu' toolbar='' settings='" + settingsString + "'/>"));
                     toolbars = getToolbars();
                 }
 
-                function initToolbar() {
-                    try {
-                        var tag = $(this), data, toolbarConfig, toolbarSettings;
+                toolbars.each(initToolbar);
 
+                // find current toolbars on this tag
+                function getToolbars() {
+                    return $(".sc-menu[toolbar],.sc-menu[data-toolbar]", parentTag);
+                }
+
+                function initToolbar() {
+                    var tag = $(this), data, toolbarConfig, toolbarSettings;
+
+                    try {
                         try {
                             data = tag.attr("toolbar") || tag.attr("data-toolbar");
                             toolbarConfig = data ? JSON.parse(data) : {};
-                        }
-                        catch(err) {
+                        } catch (err) {
                             console.error("error on toolbar JSON - probably invalid - make sure you also quote your properties like \"name\": ...", data, err);
                             return;
                         }
@@ -2226,21 +2229,17 @@ $(document).ready(function () {
                             toolbarSettings = data ? JSON.parse(data) : {};
                             if (toolbarConfig === {} && toolbarSettings === {})
                                 toolbarSettings = settingsForEmptyToolbar;
-                        }
-                        catch (err) {
+                        } catch (err) {
                             console.error("error on settings JSON - probably invalid - make sure you also quote your properties like \"name\": ...", data, err);
                             return;
                         }
 
-                        var newTb = $2sxc(tag).manage.getToolbar(toolbarConfig, toolbarSettings);
-                        tag.replaceWith(newTb);
+                        tag.replaceWith($2sxc(tag).manage.getToolbar(toolbarConfig, toolbarSettings));
                     } catch (err) {
                         // note: errors can happen a lot on custom toolbars, must be sure the others are still rendered
                         console.error("error creating toolbar - will skip this one", err);
                     }
                 }
-
-                toolbars.each(initToolbar);
             }
 
         };

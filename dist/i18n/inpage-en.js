@@ -52,8 +52,5 @@
 		"More": "more",
 		"ConfirmDelete": "delete?",
 		"Move": "move"
-	},
-	"InPage": {
-		"NewElement": "new element"
 	}
 }

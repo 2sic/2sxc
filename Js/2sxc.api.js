@@ -6,20 +6,18 @@
     if (window.$2sxc) return;   // prevent double execution
 
     window.$2sxc = function (id, cbid) {
+
         // if it's a dom-element, use auto-find
-        if ("object" === typeof id)
-            return window.$2sxc.autoFind(id);
+        if (typeof id === 'object') return window.$2sxc.autoFind(id);
 
         if (!cbid) cbid = id;           // if content-block is unknown, use id of module
         var cacheKey = id + ":" + cbid; // neutralize the id from old "34" format to the new "35:353" format
 
         // either get the cached controller from previous calls, or create a new one
-        if ($2sxc._controllers[cacheKey])
-            return $2sxc._controllers[cacheKey];
+        if ($2sxc._controllers[cacheKey]) return $2sxc._controllers[cacheKey];
 
         // also init the data-cache in case it's ever needed
-        if (!$2sxc._data[cacheKey])
-            $2sxc._data[cacheKey] = {};
+        if (!$2sxc._data[cacheKey]) $2sxc._data[cacheKey] = {};
 
         var controller = $2sxc._controllers[cacheKey] = {
             serviceScopes: ["app", "app-sys", "app-api", "app-query", "app-content", "eav", "view", "dnn"],
@@ -51,7 +49,7 @@
                 controller: null,
 
                 // Load data via ajax
-                load: function(source) {
+                load: function (source) {
                     // If source is already the data, set it
                     if (source && source.List) {
                         controller.data.setData(source);
@@ -62,10 +60,10 @@
                         if (!source.url)
                             source.url = controller.data.sourceUrl();
                         source.origSuccess = source.success;
-                        source.success = function(data) {
+                        source.success = function (data) {
 
                             for (var dataSetName in data) {
-                                if (data.hasOwnProperty(dataSetName)) 
+                                if (data.hasOwnProperty(dataSetName))
                                     if (data[dataSetName].List !== null) {
                                         controller.data["in"][dataSetName] = data[dataSetName];
                                         controller.data["in"][dataSetName].name = dataSetName;
@@ -82,29 +80,29 @@
                             controller.lastRefresh = new Date();
                             controller.data._triggerLoaded();
                         };
-                        source.error = function(request) {  alert(request.statusText); };
+                        source.error = function (request) { alert(request.statusText); };
                         source.preventAutoFail = true; // use our fail message
                         controller.data.source = source;
                         return controller.data.reload();
                     }
                 },
 
-                reload: function() {
+                reload: function () {
                     controller.webApi.get(controller.data.source)
                         .then(controller.data.source.success, controller.data.source.error);
                     return controller.data;
 
                 },
 
-                on: function(events, callback) {
+                on: function (events, callback) {
                     return $(controller.data).bind("2scLoad", callback)[0]._triggerLoaded();
                 },
 
-                _triggerLoaded: function() {
+                _triggerLoaded: function () {
                     return controller.isLoaded ? $(controller.data).trigger("2scLoad", [controller.data])[0] : controller.data;
                 },
 
-                one: function(events, callback) {
+                one: function (events, callback) {
                     if (!controller.isLoaded)
                         return $(controller.data).one("2scLoad", callback)[0];
                     callback({}, controller.data);
@@ -122,7 +120,7 @@
             isEditMode: function () {
                 return controller.manage && controller.manage._isEditMode();
             },
-            recreate: function() {
+            recreate: function () {
                 delete $2sxc._controllers[cacheKey];    // clear cache
                 return $2sxc(controller.id, controller.cbid);   // generate new
             },
@@ -224,7 +222,7 @@
                             infoText += "\n\nTip from 2sxc: you probably got the action-name wrong in your JS.";
                         else if (msgDet.indexOf("that matches the request.") > 0)
                             infoText += "\n\nTip from 2sxc: Seems like the parameters are the wrong amount or type.";
-                                
+
                     if (msg && msg.indexOf("Controller") === 0 && msg.indexOf("not found") > 0)
                         infoText += "\n\nTip from 2sxc: you probably spelled the controller name wrong or forgot to remove the word 'controller' from the call in JS. To call a controller called 'DemoController' only use 'Demo'.";
 
@@ -237,11 +235,12 @@
         };
 
         // add manage property, but not within initializer, because inside the manage-initializer it may reference 2sxc again
-        try { // sometimes the manage can't be build, like before installing
+        try { // sometimes the manage can't be built, like before installing
             controller.manage = null;
             if ($2sxc._manage) $2sxc._manage.attach(controller);
         } catch (e) {
-            throw e; }
+            throw e;
+        }
 
         // this only works when manage exists (not installing) and translator exists too
         if ($2sxc._translateInit && controller.manage) $2sxc._translateInit(controller.manage);    // init translate, not really nice, but ok for now
@@ -254,13 +253,13 @@
 
     $2sxc._controllers = {};
     $2sxc.sysinfo = {
-        version: "09.01.00",
+        version: "09.01.03",
         description: "The 2sxc Controller object"
     };
 
     $2sxc.beta = {};
     $2sxc._data = {};
-    
+
 
     // this creates a full-screen iframe-popup and provides a close-command to finish the dialog as needed
     $2sxc.totalPopup = {
@@ -337,16 +336,13 @@
     };
 
     // will find the controller based on the dom-element
-    $2sxc.autoFind = function(domElement) {
+    $2sxc.autoFind = function (domElement) {
         var containerTag = $(domElement).closest(".sc-content-block")[0];
         if (!containerTag) return null;
         var iid = containerTag.getAttribute("data-cb-instance"), cbid = containerTag.getAttribute("data-cb-id");
         if (!iid || !cbid) return null;
         return $2sxc(iid, cbid);
     };
-
-
-
 
     // note: I would like to remove this from $2sxc, but it's currently used both in the inpage-edit and in the dialogs
     // debug state which is needed in various places

@@ -60,7 +60,8 @@ angular.module("eavFieldTemplates",
         "disablevisually",
         "eavLocalization",
         "responsive",
-        "collapsible"
+        "collapsible",
+        "hiddenIfNeeded"
     ])
 
     .constant("fieldWrappersWithPreview", [
@@ -71,7 +72,8 @@ angular.module("eavFieldTemplates",
         "eavLocalization",
         "preview-default",
         "responsive",
-        "collapsible"
+        "collapsible",
+        "hiddenIfNeeded"
     ])
 
     .constant("defaultFieldWrappersNoFloat", [
@@ -82,7 +84,8 @@ angular.module("eavFieldTemplates",
         "eavLocalization",
         //"preview-default",
         "responsive",
-        "collapsible"
+        "collapsible",
+        "hiddenIfNeeded"
     ])
 
     .constant("fieldWrappersNoLabel", [
@@ -94,7 +97,8 @@ angular.module("eavFieldTemplates",
         //"preview-default",
         "responsive",
         "no-label-space",
-        "collapsible"
+        "collapsible",
+        "hiddenIfNeeded"
     ])
 ;
 /* 
@@ -1045,10 +1049,11 @@ angular.module("eavFieldTemplates")
                         // test to discover focused for floating labels
 	                    onBlur: 'to.focused=false',
 	                    onFocus: 'to.focused=true',
-	                    focused: false
+                        focused: false,
+                        debug: debugState.on
 	                },
 	                className: "type-" + e.Type.toLowerCase() + " input-" + fieldType + " field-" + e.StaticName.toLowerCase(),
-	                hide: (e.Metadata.All.VisibleInEditUI === false ? !debugState.on : false),
+	                //hide: (e.Metadata.All.VisibleInEditUI === false ? !debugState.on : false),
 	                expressionProperties: {
 	                    // Needed for dynamic update of the disabled property
 	                    'templateOptions.disabled': 'options.templateOptions.disabled' // doesn't set anything, just here to ensure formly causes update-binding
@@ -1928,7 +1933,7 @@ $templateCache.put("form/edit-many-entities.html","<div ng-if=\"vm.items != null
 $templateCache.put("form/edit-single-entity.html","<div ng-show=\"vm.editInDefaultLanguageFirst()\" translate=\"Message.PleaseCreateDefLang\">\r\n	\r\n</div>\r\n<div ng-show=\"!vm.editInDefaultLanguageFirst()\">\r\n    <formly-form ng-if=\"vm.formFields && vm.formFields.length\" ng-submit=\"vm.onSubmit()\" form=\"vm.form\" model=\"vm.entity.Attributes\" fields=\"vm.formFields\"></formly-form>\r\n</div>\r\n");
 $templateCache.put("form/main-form.html","<div class=\"modal-body-disabled\">\r\n    <span class=\"pull-right\">\r\n        <span style=\"display: inline-block; position: relative; left:0px\">\r\n            <button class=\"btn btn-default btn-icon-square btn-subtle\" type=\"button\" ng-click=\"vm.close()\">\r\n                <i class=\"eav-icon-cancel\"></i>\r\n            </button>\r\n        </span>\r\n    </span>\r\n    <eav-edit-entities item-list=\"vm.itemList\" after-save-event=\"vm.afterSave\" state=\"vm.state\" close=\"vm.close\"></eav-edit-entities>\r\n</div>");
 $templateCache.put("localization/formly-localization-wrapper.html","<eav-localization-scope-control></eav-localization-scope-control>\r\n<div ng-if=\"!!value\">\r\n    <formly-transclude></formly-transclude>\r\n    <eav-localization-menu form-model=\"model\" field-model=\"model[options.key]\" options=\"options\" value=\"value\" index=\"index\"></eav-localization-menu>\r\n</div>\r\n<p class=\"bg-info\" style=\"padding:12px;\" ng-if=\"!value\" translate=\"LangWrapper.CreateValueInDefFirst\" translate-values=\"{ fieldname: \'{{to.label}}\' }\">Please... <i>\'{{to.label}}\'</i> in the def...</p>");
-$templateCache.put("localization/language-switcher.html","<uib-tabset>\r\n    <uib-tab ng-repeat=\"l in languages.languages\" heading=\"{{ l.name.substring(0, l.name.indexOf(\'(\') > 0 ? l.name.indexOf(\'(\') - 1 : 100 ) }}\" ng-click=\"!isDisabled ? languages.currentLanguage = l.key : false;\" disable=\"isDisabled\" uib-tooltip=\"{{l.name}}\"></uib-tab><!-- active=\"languages.currentLanguage == l.key\" -->\r\n</uib-tabset>");
+$templateCache.put("localization/language-switcher.html","<uib-tabset ng-init=\"activeLang = languages.currentLanguage;\" active=\"activeLang\">\r\n    <uib-tab ng-repeat=\"l in languages.languages\" index=\"l.key\" heading=\"{{ l.name.substring(0, l.name.indexOf(\'(\') > 0 ? l.name.indexOf(\'(\') - 1 : 100 ) }}\" ng-click=\"!isDisabled ? languages.currentLanguage = l.key : false;\" disable=\"isDisabled\" uib-tooltip=\"{{l.name}}\"></uib-tab><!-- -->\r\n</uib-tabset>");
 $templateCache.put("localization/localization-menu.html","<div uib-dropdown is-open=\"status.isopen\" class=\"eav-localization\"> <!--style=\"z-index:{{1000 - index}};\"-->\r\n	<a class=\"eav-localization-lock\" ng-click=\"vm.actions.toggleTranslate();\" ng-if=\"vm.isDefaultLanguage()\" title=\"{{vm.tooltip()}}\" ng-class=\"{ \'eav-localization-lock-open\': !options.templateOptions.disabled }\" uib-dropdown-toggle>\r\n        {{vm.infoMessage()}} <i class=\"glyphicon glyphicon-globe\"></i>\r\n	</a>\r\n    <ul class=\"dropdown-menu multi-level pull-right eav-localization-dropdown\" role=\"menu\" aria-labelledby=\"single-button\">\r\n        <li role=\"menuitem\"><a ng-click=\"vm.actions.translate()\" translate=\"LangMenu.Unlink\"></a></li>\r\n        <li role=\"menuitem\"><a ng-click=\"vm.actions.linkDefault()\" translate=\"LangMenu.LinkDefault\"></a></li>\r\n        <!-- Google translate is disabled because there is no longer a free version\r\n            <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.GoogleTranslate\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.autoTranslate(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>-->\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.Copy\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: options.templateOptions.disabled || !vm.hasLanguage(language.key) }\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.copyFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.Use\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.useFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.Share\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.shareFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n        <!-- All fields -->\r\n        <li class=\"divider\"></li>\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.AllFields\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li role=\"menuitem\"><a ng-click=\"vm.actions.all.translate()\" translate=\"LangMenu.Unlink\"></a></li>\r\n                <li role=\"menuitem\"><a ng-click=\"vm.actions.all.linkDefault()\" translate=\"LangMenu.LinkDefault\"></a></li>\r\n                <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n                    <a href=\"#\" translate=\"LangMenu.Copy\"></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                            <a ng-click=\"vm.actions.all.copyFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                        </li>\r\n                    </ul>\r\n                </li>\r\n                <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n                    <a href=\"#\" translate=\"LangMenu.Use\"></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                            <a ng-click=\"vm.actions.all.useFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                        </li>\r\n                    </ul>\r\n                </li>\r\n                <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n                    <a href=\"#\" translate=\"LangMenu.Share\"></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                            <a ng-click=\"vm.actions.all.shareFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                        </li>\r\n                    </ul>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n    </ul>\r\n</div>");
 $templateCache.put("ml-entities/tests/SpecRunner.html","<!DOCTYPE html>\r\n<html>\r\n<head>\r\n  <meta charset=\"utf-8\">\r\n  <title>Jasmine Spec Runner v2.3.4</title>\r\n    <!--\r\n  <link rel=\"shortcut icon\" type=\"image/png\" href=\"lib/jasmine-2.3.4/jasmine_favicon.png\">\r\n  <link rel=\"stylesheet\" href=\"lib/jasmine-2.3.4/jasmine.css\">\r\n\r\n  <script src=\"lib/jasmine-2.3.4/jasmine.js\"></script>\r\n  <script src=\"lib/jasmine-2.3.4/jasmine-html.js\"></script>\r\n  <script src=\"lib/jasmine-2.3.4/boot.js\"></script>\r\n        -->\r\n\r\n    <link rel=\"stylesheet\" href=\"../../../../node_modules\\grunt-contrib-jasmine\\node_modules\\jasmine-core/lib/jasmine-core/jasmine.css\">\r\n    <script src=\"../../../../node_modules\\grunt-contrib-jasmine\\node_modules\\jasmine-core/lib/jasmine-core/jasmine.js\"></script>\r\n    <script src=\"../../../../node_modules\\grunt-contrib-jasmine\\node_modules\\jasmine-core/lib/jasmine-core/jasmine-html.js\"></script>\r\n    <script src=\"../../../../node_modules\\grunt-contrib-jasmine\\node_modules\\jasmine-core/lib/jasmine-core/boot.js\"></script>\r\n  <!-- include source files here... -->\r\n    <!--\r\n  <script src=\"src/Player.js\"></script>\r\n  <script src=\"src/Song.js\"></script>\r\n    -->\r\n    <script src=\"../entity-enhancer.js\"></script>\r\n\r\n\r\n  <!-- include spec files here... -->\r\n    <!--\r\n  <script src=\"spec/SpecHelper.js\"></script>\r\n  <script src=\"spec/PlayerSpec.js\"></script>\r\n        -->\r\n    <script src=\"../specs/eav-content-ml.spec.js\"></script>\r\n\r\n</head>\r\n\r\n<body>\r\n</body>\r\n</html>\r\n");
 $templateCache.put("wrappers/collapsible.html","<!-- hide entire field if necessary-->\r\n<div ng-show=\"!to.collapse\" class=\"group-field-set form-field-grid-keeper\">\r\n    <formly-transclude></formly-transclude>\r\n</div>");
@@ -1937,6 +1942,7 @@ $templateCache.put("wrappers/eav-label-inside.html","<label for=\"{{id}}\" class
 $templateCache.put("wrappers/eav-label.html","<div>\r\n    <!-- just fyi: the ng-class adds a \"float-away\" if the notes are shown or if the field has content -->\r\n    <div>\r\n        <div class=\"inside\" ng-include=\"\'wrappers/eav-label-inside.html\'\"></div>\r\n        <div ng-if=\"to.showDescription\" class=\"info-wrapper\">\r\n            <p class=\"bg-info\" style=\"padding: 5px;\" ng-bind-html=\"to.description\">\r\n            </p>\r\n        </div>\r\n\r\n        <div ng-show=\"!(to.collapseField && to.enableCollapseField)\">\r\n            <formly-transclude></formly-transclude>\r\n        </div>\r\n\r\n        <div ng-if=\"debug.on\">\r\n            Field-Debug: {{fc}}\r\n        </div>\r\n    </div>\r\n</div>");
 $templateCache.put("wrappers/field-group.html","<div>\r\n    <div class=\"form-ci-subtitle unhide-area\" ng-click=\"toggle()\">\r\n        <span style=\"position: relative\">\r\n            <i class=\"eav-icon-side-marker decoration\"></i>\r\n            <span ng-if=\"to.collapseGroup\" class=\"decoration state eav-icon-plus-circled low-priority collapse-fieldgroup-button\"></span>\r\n            <span ng-if=\"!to.collapseGroup\" class=\"decoration state eav-icon-minus-circled low-priority collapse-fieldgroup-button hide-till-mouseover\"></span>\r\n        </span>\r\n        {{to.label}}\r\n    </div>\r\n    <div ng-if=\"!to.collapseGroup\" style=\"padding: 5px;\" ng-bind-html=\"to.description\">\r\n    </div>\r\n    <formly-transclude></formly-transclude>\r\n</div>");
 $templateCache.put("wrappers/float-label.html","<div class=\"wrap-float-label\"\r\n     ng-class=\"[\r\n     {\'float-disabled\': value.Value || (fc[0] || fc).$modelValue || to.showDescription || to.focused || ( (fc[0] || fc).$invalid && (fc[0] || fc).$touched ) },\r\n     {focused: to.focused},\r\n     {\'ng-touched\': (fc[0] || fc).$touched},\r\n     {\'ng-invalid\' : (fc[0] || fc).$invalid}\r\n     ]\">\r\n    <formly-transclude></formly-transclude>\r\n</div>");
+$templateCache.put("wrappers/hidden.html","<div ng-show=\"{{to.settings.All.VisibleInEditUI || to.debug}}\">\r\n    <formly-transclude></formly-transclude>\r\n</div>");
 $templateCache.put("wrappers/no-label-space.html","<div class=\"no-label-space\">\r\n    <formly-transclude></formly-transclude>\r\n</div>");
 $templateCache.put("wrappers/preview-default.html","<div class=\"preview-default\">\r\n    <div class=\"preview-area\"></div>\r\n    <div>\r\n        <formly-transclude></formly-transclude>\r\n    </div>\r\n</div>");
 $templateCache.put("wrappers/responsive.html","<div class=\"clearfix\">\r\n    <div class=\"responsive-optional\" >\r\n        <div ng-include=\"\'wrappers/eav-label-inside.html\'\"></div>\r\n    </div>\r\n    <div class=\"responsive-priority\">\r\n        <formly-transclude></formly-transclude>\r\n    </div>\r\n</div>");}]);
@@ -2006,6 +2012,18 @@ $templateCache.put("wrappers/responsive.html","<div class=\"clearfix\">\r\n    <
             formlyConfigProvider.setWrapper({
                 name: 'float-label',
                 templateUrl: "wrappers/float-label.html"
+            });
+        }]);
+})();
+
+(function() {
+	"use strict";
+
+    angular.module("eavFieldTemplates")
+        .config(["formlyConfigProvider", function(formlyConfigProvider) {
+            formlyConfigProvider.setWrapper({
+                name: 'hiddenIfNeeded',
+                templateUrl: "wrappers/hidden.html"
             });
         }]);
 })();
