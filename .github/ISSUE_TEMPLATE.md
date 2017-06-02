@@ -6,7 +6,7 @@ IF YOU DON'T FILL OUT THE FOLLOWING INFORMATION WE MIGHT CLOSE YOUR ISSUE WITHOU
 ```
 - [ ] bug report => search github for a similar issue before submitting 
 - [ ] feature request
-- [ ] support request => do not submit support request here, see https://2sxc.org/en/blog/post/moving-discussions-from-codeplex-to-stack-overflow
+- [ ] support request => do not submit here, see https://2sxc.org/en/blog/post/moving-discussions-from-codeplex-to-stack-overflow
 - [ ] not sure
 ```
 
