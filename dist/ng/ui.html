@@ -9,7 +9,7 @@
       apiUrl;
 
     document.write('<base href="' + path + '">');
-    
+
     var
       jsVersionCacheId = window.location.search,
       devPath = 'http://2sxc.dev/desktopmodules/tosic_sexycontent/dist/a4/';
@@ -42,12 +42,19 @@
       var async = src.async || false;
       src = typeof src === "string" ? src : src.url;
       var script = document.createElement('script');
-      script.type = 'text/javascript';
       script.src = src + jsVersionCacheId;
       if (async)
         document.getElementsByTagName("head")[0].appendChild(script);
       else
         document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
+    }
+
+    function addStyle(src) {
+      var style = document.createElement("link");
+      style.setAttribute("rel", "stylesheet");
+      style.setAttribute("type", "text/css");
+      style.setAttribute("href", src);// + "?" + sxcVersionParam);
+      document.getElementsByTagName("head")[0].appendChild(style);
     }
 
     var scripts = [
@@ -56,8 +63,9 @@
       // '../i18n/lib/angular-i18n/angular-locale_' + langTwoLetter + '.js',
       'polyfills.bundle.js',  // js polyfills for older browsers
       'vendor.bundle.js',     // default set needed for all UIs like angular, animate, translate
-      'main.bundle.js'        // our app, with everything
-    ];
+      'main.bundle.js',        // our app, with everything
+      'styles.bundle.js'
+    ], styles = [];
   </script>
   <meta charset="utf-8">
   <title>Quick Dialog</title>
@@ -68,11 +76,13 @@
 </head>
 
 <body>
-  <app-root>Loading...</app-root>
-  <script type="text/javascript">
+  <app-root></app-root>
+  <script>
     if (!isDevMode) {
+      var s;
       // now add the scripts as needed
-      for (var s = 0; s < scripts.length; s++) addScript(scripts[s]);
+      for (s = 0; s < scripts.length; s++) addScript(scripts[s]);
+      for (s = 0; s < styles.length; s++) addStyle(styles[s]);
     }
   </script>
 </body>
