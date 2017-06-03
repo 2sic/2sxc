@@ -59,33 +59,6 @@
 		"QuickStart": "Pour démarrer vite, nous vous conseillons d'installer l'App WebApi de démo. Elle contient des controleurs WebAPI avec plusieurs actions et des dexemples de vues pour les utiliser. Télécharger <a href='http://2sxc.org/en/Apps/tag/WebApi' target='_blank'>WebApi demos in the App-Catalog</a> ou pour en savoir plus : <a href='http://2sxc.org/en/help?tag=webapi' target='_blank'>aide</a>",
 		"AddDoesntExist": "Il n'y a pas encore d'option de création - veuillez le faire manuellement dans le dossier 'api'. Pour démarrer, en recopier d'un projet existant."
 	},
-	"ImportExport": {
-		"Title": "Exporter ou Importer <em>des éléments</em> de cette App/Contenu",
-		"Intro": "Créer un fichier xml ou zip contenant <em>des éléments</em> de cette app. Ou les réimporter dans une autre app.",
-		"FurtherHelp": "Voir : <a href='http://2sxc.org/en/help?tag=import' target='_blank'>2sxc Help</a>.",
-		"Buttons": {
-			"Import": "import",
-			"Export": "export"
-		},
-		"Import": {
-			"Title": "Importation complète (.zip) ou partielle (.xml)",
-			"Explanation": "Ajoute des Content-Types, templates et Content-Items à l'App ou au Contenu actuel.",
-			"Select": "fichier d'import",
-			"Choose": "sélectionner un fichier"
-		},
-		"Export": {
-			"Title": "Exportation partielle de Content Types, templates et contenus",
-			"Intro": "Fonction d'export partielle avancée. Crée un fichier XML réutilisable dans un autre site ou une autre App",
-			"FurtherHelp": "Voir : <a href='http://2sxc.org/en/help?tag=export' target='_blank'>2sxc Help</a>.",
-			"Data": {
-				"GroupHeading": "Content Type: {{name}} ({{id}}",
-				"Templates": "Templates",
-				"Items": "Content Items",
-				"SimpleTemplates": "Templates sans content type"
-			},
-			"ButtonExport": "Export"
-		}
-	},
 	"Portal": {
 		"Title": "Database virtuelle (VDB)",
 		"VdbLabel": "Database virtuelle pour ce site",
@@ -179,11 +152,103 @@
 			}
 		}
 	},
+	"SourceEditor": {
+		"Title": "Source Editeur",
+		"SnippetsSection": {
+			"Title": "Extraits de code",
+			"Intro": "Cliquez sur un extrait de code pour l'insérer"
+		}
+	},
 	"TemplatePicker": {
 		"AppPickerDefault": "&lt;Choisir une App&gt;",
 		"ContentTypePickerDefault": "&lt;Choisir un Content-type&gt;",
 		"Save": "Enregistrer et fermer",
 		"Cancel": "Annuler",
-		"Close": "Fermer"
+		"Close": "Fermer",
+		"Install": "Installer plus d'applications...",
+		"Catalog": "Parcourir le catalogue d'applications",
+		"App": "Configurer l'application",
+		"Zone": "Gérer toutes les applications"
+	},
+	"ImportExport": {
+		"Title": "Exporter ou importer <em> les parties </em> de cette application",
+		"Intro": "Créez un xml contenant des parties de l'application, par exemple le contenu et les templates. <br/> Importez des parties de ce même xml dans cette application.",
+		"Buttons": {
+			"Export": "Exporter les parties",
+			"Import": "Importer les parties"
+		},
+		"ImportContent": {
+			"Title": "Importer le contenu et des templates dans cette application",
+			"Intro": "Importez le contenu et les templates à partir d'une exportation de contenu (zip) ou d'une exportation partielle (xml) vers cette application. L'intégralité du contenu du fichier sélectionné sera importé. Si vous souhaitez importer une application entière, accédez à <em> App-Management </em>",
+			"FurtherHelp": "Pour plus d'informations, aller voir sur <a href='http://2sxc.org/en/help?tag=import' target='_blank'>2sxc Help</a>.",
+			"Messages": {
+				"ImportSucceeded": "L'importation a été effectuée. Consultez les messages ci-dessous pour plus d'informations.",
+				"ImportFailed": "L'importation a échoué. Consultez les messages ci-dessous pour plus d'informations."
+			},
+			"Commands": {
+				"SelectFile": "Sélectionner un ficher",
+				"ToggleSuccessMessages": "Ouvrir/fermer les messages de réussite",
+				"Import": "Importer"
+			}
+		},
+		"ImportApp": {
+			"Title": "Importer l'application",
+			"Intro": "Sélectionner un package d'application (zip) de votre ordinateur pour importer une application. Les nouvelles applications peuvent être téléchargées sur <a href='http://2sxc.org/apps'> http://2sxc.org/apps </a>.",
+			"FurtherHelp": "Pour plus d'informations, consulter <a href='http://2sxc.org/en/help?tag=import-app' target='_blank'>2sxc Help</a>.",
+			"Messages": {
+				"ImportSucceeded": "L'importation a été effectuée. Consulter les messages ci-dessous pour plus d'informations",
+				"ImportFailed": "L'importation a échoué. Consulter les messages ci-dessous pour plus d'informations."
+			},
+			"Commands": {
+				"SelectFile": "Sélectionner un ficher",
+				"ToggleSuccessMessages": "Ouvrir/fermer les messages de réussite",
+				"Import": "Importer"
+			}
+		},
+		"ExportContent": {
+			"Title": "Exporter le contenu et les modèles de cette application",
+			"Intro": "Il s'agit d'une fonctionnalité avancée pour exporter des parties de l'application. L'exportation créera un fichier <em>xml</em> qui peut être importé dans un autre site ou une application. Pour exporter l'intégralité du contenu de l'application (par exemple, lors de la duplication de l'intégralité du site), accédez au gestionnaire d'exportation de l'application.",
+			"FurtherHelp": "Pour plus d'informations, consulter <a href='http://2sxc.org/en/help?tag=export' target='_blank'>2sxc Help</a>.",
+			"ContentTypes": {
+				"Title": "Content Types",
+				"Templates": "Templates",
+				"Entities": "Entités"
+			},
+			"TemplatesWithoutContentTypes": {
+				"Title": "Templates avec Content Types"
+			},
+			"Commands": {
+				"Export": "Exporter"
+			}
+		},
+		"ExportApp": {
+			"Title": "Exporter l'application",
+			"Intro": "Packager l'application entière dans un dossier <em>zip</em> qui peut être importé à nouveau sur un autre site.",
+			"FurtherHelp": "Pour plus d'informations, consulter <a href='http://2sxc.org/en/help?tag=export-app' target='_blank'>2sxc Help</a>.",
+			"Specifications": {
+				"Title": "Specs",
+				"AppName": "Name:",
+				"AppGuid": "Guid:",
+				"AppVersion": "Version:"
+			},
+			"Content": {
+				"Title": "Contient",
+				"EntitiesCount": "entités",
+				"LanguagesCount": "langues",
+				"TemplatesCount": "templates",
+				"TokenTemplates": "Token:",
+				"RazorTemplates": "Razor:",
+				"TransferableFilesCount": "fichiers à exporter",
+				"FilesCount": "Les fichiers dans le dossier de l'application complètement"
+			},
+			"Options": {
+				"IncludeContentGroups": "Inclure tous les groupes de contenu pour réimporter l'application dans une copie exacte de ce site. Sélectionnez uniquement cette option lorsque vous copier un site complet de DNN.",
+				"ResetAppGuid": "Réinitialiser le GUID de l'application à zéro. Vous n'avez besoin que de cette option pour les applications spéciales, et ne doit généralement pas être sélectionné."
+			},
+			"Commands": {
+				"Export": "Exporter l'application",
+				"ExportForVersionControl": "Exporter des données pour la version de version de Github"
+			}
+		}
 	}
 }
