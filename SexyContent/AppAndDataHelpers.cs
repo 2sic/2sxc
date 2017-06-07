@@ -4,6 +4,7 @@ using System.Threading;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
@@ -62,9 +63,9 @@ namespace ToSic.SexyContent
 					}
 		        }
 
-		        if (data.Out.ContainsKey("ListContent"))
+		        if (data.Out.ContainsKey(AppConstants.ListContent))
 		        {
-			        var listEntity = data["ListContent"].List.Select(e => e.Value).FirstOrDefault();
+			        var listEntity = data[AppConstants.ListContent].List.Select(e => e.Value).FirstOrDefault();
 					var listElement = listEntity != null ? GetElementFromEntity(listEntity) : null;
 
 					if (listElement != null)

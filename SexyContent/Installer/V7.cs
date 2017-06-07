@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.ImportExport;
@@ -261,8 +262,8 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                         {"Template", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.TemplateGuids)}},
                         {Constants.ContentKey, new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ContentGuids)}},
                         {Constants.PresentationKey, new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.PresentationGuids)}},
-                        {"ListContent", new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ListContentGuids)}},
-                        {"ListPresentation", new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ListPresentationGuids)}}
+                        {AppConstants.ListContent, new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ListContentGuids)}},
+                        {AppConstants.ListPresentation, new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ListPresentationGuids)}}
                     };
                     entitiesToImport.Add(entity);
                 }

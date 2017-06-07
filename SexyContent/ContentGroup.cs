@@ -13,8 +13,8 @@ namespace ToSic.SexyContent
 
         public const string cContent = Constants.ContentKey;
         public const string cPresentation = Constants.PresentationKey;
-        public const string cListC = "ListContent";
-        public const string cListP = "ListPresentation";
+        public const string cListC = AppConstants.ListContent;//"ListContent";
+        public const string cListP = AppConstants.ListPresentation;//"ListPresentation";
 
         #endregion
 

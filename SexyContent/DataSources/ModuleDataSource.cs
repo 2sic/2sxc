@@ -53,7 +53,7 @@ namespace ToSic.SexyContent.DataSources
         public ModuleDataSource()
         {
             Out.Add("Default", new DataStream(this, "Default", GetContent));
-            Out.Add("ListContent", new DataStream(this, "Default", GetListContent));
+            Out.Add(AppConstants.ListContent, new DataStream(this, "Default", GetListContent));
 
 			Configuration.Add("ModuleId", "[Module:ModuleID||[Module:ModuleId]]");	// Look for ModuleID and ModuleId
         }

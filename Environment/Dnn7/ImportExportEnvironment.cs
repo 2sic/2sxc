@@ -108,13 +108,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 return;
 
             var portalId = maybePortalId.Value;
-            var fileManager = DotNetNuke.Services.FileSystem.FileManager.Instance;
+            var fileManager = FileManager.Instance;
             var folderManager = FolderManager.Instance;
 
             foreach (var file in filesAndPaths)
             {
-                //var fileId = int.Parse(portalFile.Attribute("Id").Value);
-                //var relativePath = portalFile.Attribute("RelativePath").Value;
                 var fileId = file.Key;
                 var relativePath = file.Value;
 

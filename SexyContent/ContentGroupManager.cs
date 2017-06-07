@@ -58,8 +58,8 @@ namespace ToSic.SexyContent
 				{"Template", templateId.HasValue ? new [] { templateId.Value } : new int[] {}},
 				{ Constants.ContentKey, new int[] {}},
 				{ Constants.PresentationKey, new int[] {}},
-				{"ListContent", new int[] {}},
-				{"ListPresentation", new int[] {}}
+				{AppConstants.ListContent, new int[] {}},
+				{AppConstants.ListPresentation, new int[] {}}
 			};
 
             // 2017-04-01 2dm centralizing eav-access
