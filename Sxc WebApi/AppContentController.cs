@@ -53,7 +53,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
             => GetAndSerializeOneAfterSecurityChecks(contentType,
-                appId => _entitiesController.GetEntityOrThrowError(contentType, id, appId),
+                appId => _entitiesController.GetEntityOrThrowError(contentType, id/*, appId*/),
                 appPath);
 
 
@@ -139,7 +139,7 @@ namespace ToSic.SexyContent.WebApi
             // this throws an error if it's not the correct type
             var itm = id == null 
                 ? null 
-                : _entitiesController.GetEntityOrThrowError(contentType, id.Value, appId);
+                : _entitiesController.GetEntityOrThrowError(contentType, id.Value/*, appId*/);
 
             var perm = id == null 
                 ? PermissionGrant.Create 
@@ -312,7 +312,7 @@ namespace ToSic.SexyContent.WebApi
             if (contentType == "any")
                 throw new Exception("type any not allowed with id-only, requires guid");
 
-            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId);
+            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id/*, appId*/);
             //var autoAllowAdmin = contentType != "any"; // only auto-allow-admin, if a type is clearly specified (protection from deleting other types)
             //Delete_SharedCode(itm, appPath == null, appId, autoAllowAdmin);
             PerformSecurityCheck(itm.Type.Name, PermissionGrant.Delete, true, itm, appPath == null, appId);

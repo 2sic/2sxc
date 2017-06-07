@@ -74,6 +74,30 @@ namespace ToSic.SexyContent.Serializers
 
             return dicToSerialize;
         }
+
+        internal Dictionary<string, object> ConvertNewSerRelToOldSerRel(Dictionary<string, object> dicNew)
+        {
+            // find all items which are of type List<SerializableRelationship>
+            // then convert to EntityId and EntityTitle to conform to "old" format
+            var dicToSerialize = new Dictionary<string, object>();
+            foreach (string key in dicNew.Keys)
+            {
+                var list = dicNew[key] as List<SerializableRelationship>;
+                dicToSerialize.Add(key,
+                    list?.Select(p => new SerializableRelationshipOld() { EntityId = p.Id, EntityTitle = p.Title }).ToList() ??
+                    dicNew[key]);
+            }
+            return dicToSerialize;
+        }
+
+        // Helper to provide old interface with "EntityId" and "EntityTitle" instead of 
+        // "Id" and "Title"
+        public class SerializableRelationshipOld
+        {
+            public int? EntityId;
+            public object EntityTitle;
+        }
+
         #endregion
 
         internal void AddPresentation(IEntity entity, Dictionary<string, object> dictionary)
@@ -111,31 +135,11 @@ namespace ToSic.SexyContent.Serializers
 	        }
 	    }
 
-        internal Dictionary<string, object> ConvertNewSerRelToOldSerRel(Dictionary<string, object> dicNew)
-        {
-            // find all items which are of type List<SerializableRelationship>
-            // then convert to EntityId and EntityTitle to conform to "old" format
-            var dicToSerialize = new Dictionary<string, object>();
-            foreach (string key in dicNew.Keys)
-            {
-                var list = dicNew[key] as List<SerializableRelationship>;
-                dicToSerialize.Add(key,
-                    list?.Select(p => new SerializableRelationshipOld() { EntityId = p.Id, EntityTitle = p.Title }).ToList() ??
-                    dicNew[key]);
-            }
-            return dicToSerialize;
-        }
+
 
         #endregion
     }
 
 
-    // Helper to provide old interface with "EntityId" and "EntityTitle" instead of 
-    // "Id" and "Title"
-    public class SerializableRelationshipOld
-    {
-        public int? EntityId;
-        public object EntityTitle;
-    }
 
 }
