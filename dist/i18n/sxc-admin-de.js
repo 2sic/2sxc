@@ -180,13 +180,14 @@
 		}
 	},
 	"TemplatePicker": {
-		"AppPickerDefault": "<App auswählen>",
-		"ContentTypePickerDefault": "<Typ des Inhalts auswählen>",
+		"AppPickerDefault": "App auswählen",
+		"ContentTypePickerDefault": "Inhaltstyp auswählen",
 		"LayoutElement": "Design-Element",
+		"ChangeView": "Darstellung anpassen",
 		"Save": "Speichern",
 		"Cancel": "Abbrechen",
 		"Close": "Schliessen",
-		"Install": "weitere Apps installieren...",
+		"Install": "Apps installieren",
 		"Catalog": "App Katalog durchsuchen",
 		"App": "App Konfigurieren",
 		"Zone": "Apps verwalten"

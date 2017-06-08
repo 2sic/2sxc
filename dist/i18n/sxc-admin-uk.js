@@ -178,8 +178,8 @@
 		}
 	},
 	"TemplatePicker": {
-		"AppPickerDefault": "&lt;Вибрати App&gt;",
-		"ContentTypePickerDefault": "&lt;Вибрати Тип Контенту&gt;",
+		"AppPickerDefault": "Вибрати App",
+		"ContentTypePickerDefault": "Вибрати Тип Контенту",
 		"Save": "Зберегти та закрити",
 		"Cancel": "Відмінити зміни",
 		"Close": "Закрити"

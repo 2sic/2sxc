@@ -7,6 +7,7 @@ using ToSic.Eav;
 using ToSic.SexyContent.Serializers;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.ImportExport.Versioning;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Security;
 
@@ -19,14 +20,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	public class EntitiesController : SxcApiController 
 	{
 	    private readonly Eav.WebApi.EntitiesController _entitiesController = new Eav.WebApi.EntitiesController();
-
-		//public EntitiesController()
-		//{
-  //          //2016-10-4 disabled this, as I moved the eav.configuration...to the DnnApi...fixes class
-  //          //Eav.Configuration.SetConnectionString("SiteSqlServer");
-  //          // user now with dependency injection
-  //          //_entitiesController.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
-		//}
 
 	    private void EnsureSerializerHasSxc()
 	    {
@@ -256,6 +249,18 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             return new Eav.WebApi.ContentTypeController().GetSingle(appId, contentType, null);
             // return entitesController.GetContentType(contentType, appId);
 		}
+
+        #endregion
+
+        #region versioning
+
+	    [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public List<ItemHistory> History(int appId, int entityId)
+	    {
+            EnsureSerializerHasSxc();
+	        return _entitiesController.History(appId, entityId);
+	    }
 
         #endregion
     }

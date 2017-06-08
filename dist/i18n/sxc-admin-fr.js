@@ -160,8 +160,8 @@
 		}
 	},
 	"TemplatePicker": {
-		"AppPickerDefault": "&lt;Choisir une App&gt;",
-		"ContentTypePickerDefault": "&lt;Choisir un Content-type&gt;",
+		"AppPickerDefault": "Choisir une App",
+		"ContentTypePickerDefault": "Choisir un Content-type",
 		"Save": "Enregistrer et fermer",
 		"Cancel": "Annuler",
 		"Close": "Fermer",
