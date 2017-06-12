@@ -10,10 +10,12 @@ using System.Xml.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
-using ToSic.Eav.ImportExport;
 using ToSic.Eav.ImportExport.Interfaces;
 using ToSic.Eav.ImportExport.Models;
+using IValue = ToSic.Eav.Interfaces.IValue;
+
 //using Microsoft.Practices.Unity;
 
 namespace ToSic.SexyContent.Installer
@@ -101,7 +103,7 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL) AND ((SELECT COUNT
                 {
                     if (!contentTypeId.HasValue || contentTypeId == 0)
                         return "";
-                    if (cache.Any(c => c.Value.AttributeSetId == contentTypeId))
+                    if (cache.Any(c => c.Value.ContentTypeId == contentTypeId))
                         return cache[contentTypeId.Value].StaticName;
                     return "";
                 };
@@ -217,53 +219,53 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
                 foreach (var t in existingTemplates.Where(t => t.AppId == currentApp))
                 {
-                    var entity = new ImpEntity
+                    var entity = new ImpEntity("2SexyContent-Template")
                     {
-                        AttributeSetStaticName = "2SexyContent-Template",
+                        //AttributeSetStaticName = "2SexyContent-Template",
                         EntityGuid = t.NewEntityGuid,
                         IsPublished = true
                         // , KeyTypeId = Constants.NotMetadata// Configuration.AssignmentObjectTypeIdDefault
                     };
-                    entity.Values = new Dictionary<string, List<IImpValue>>
+                    entity.Values = new Dictionary<string, List<IValue>>
                     {
-                        {"Name", new List<IImpValue> {new ImpValue<string>(entity, t.Name )}},
-                        {"Path", new List<IImpValue> {new ImpValue<string>(entity, t.Path)}},
-                        {"ContentTypeStaticName", new List<IImpValue> {new ImpValue<string>(entity, t.ContentTypeId)}},
-                        {"ContentDemoEntity", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.ContentDemoEntityGuids)}},
-                        {"PresentationTypeStaticName", new List<IImpValue> {new ImpValue<string>(entity, t.PresentationTypeId)}},
-                        {"PresentationDemoEntity", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.PresentationDemoEntityGuids)}},
-                        {"ListContentTypeStaticName", new List<IImpValue> {new ImpValue<string>(entity, t.ListContentTypeId)}},
-                        {"ListContentDemoEntity", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.ListContentDemoEntityGuids)}},
-                        {"ListPresentationTypeStaticName", new List<IImpValue> {new ImpValue<string>(entity, t.ListPresentationTypeId)}},
-                        {"ListPresentationDemoEntity", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.ListPresentationDemoEntityGuids)}},
-                        {"Type", new List<IImpValue> {new ImpValue<string>(entity, t.Type)}},
-                        {"IsHidden", new List<IImpValue> {new ImpValue<bool?>(entity, t.IsHidden)}},
-                        {"Location", new List<IImpValue> {new ImpValue<string>(entity, t.Location)}},
-                        {"UseForList", new List<IImpValue> {new ImpValue<bool?>(entity, t.UseForList)}},
-                        {"PublishData", new List<IImpValue> {new ImpValue<bool?>(entity, t.PublishData)}},
-                        {"StreamsToPublish", new List<IImpValue> {new ImpValue<string>(entity, t.StreamsToPublish)}},
-                        {"Pipeline", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.PipelineEntityGuids)}},
-                        {"ViewNameInUrl", new List<IImpValue> {new ImpValue<string>(entity, t.ViewNameInUrl)}}
+                        {"Name", new List<IValue> {new Value<string>(/*entity,*/ t.Name )}},
+                        {"Path", new List<IValue> {new Value<string>(/*entity,*/ t.Path)}},
+                        {"ContentTypeStaticName", new List<IValue> {new Value<string>(/*entity,*/ t.ContentTypeId)}},
+                        {"ContentDemoEntity", new List<IValue> {new Value<List<Guid>>(/*entity,*/ t.ContentDemoEntityGuids)}},
+                        {"PresentationTypeStaticName", new List<IValue> {new Value<string>(/*entity,*/ t.PresentationTypeId)}},
+                        {"PresentationDemoEntity", new List<IValue> {new Value<List<Guid>>(/*entity,*/ t.PresentationDemoEntityGuids)}},
+                        {"ListContentTypeStaticName", new List<IValue> {new Value<string>(/*entity,*/ t.ListContentTypeId)}},
+                        {"ListContentDemoEntity", new List<IValue> {new Value<List<Guid>>(/*entity,*/ t.ListContentDemoEntityGuids)}},
+                        {"ListPresentationTypeStaticName", new List<IValue> {new Value<string>(/*entity,*/ t.ListPresentationTypeId)}},
+                        {"ListPresentationDemoEntity", new List<IValue> {new Value<List<Guid>>(/*entity,*/ t.ListPresentationDemoEntityGuids)}},
+                        {"Type", new List<IValue> {new Value<string>(/*entity,*/ t.Type)}},
+                        {"IsHidden", new List<IValue> {new Value<bool?>(/*entity,*/ t.IsHidden)}},
+                        {"Location", new List<IValue> {new Value<string>(/*entity,*/ t.Location)}},
+                        {"UseForList", new List<IValue> {new Value<bool?>(/*entity,*/ t.UseForList)}},
+                        {"PublishData", new List<IValue> {new Value<bool?>(/*entity,*/ t.PublishData)}},
+                        {"StreamsToPublish", new List<IValue> {new Value<string>(/*entity,*/ t.StreamsToPublish)}},
+                        {"Pipeline", new List<IValue> {new Value<List<Guid>>(/*entity,*/ t.PipelineEntityGuids)}},
+                        {"ViewNameInUrl", new List<IValue> {new Value<string>(/*entity,*/ t.ViewNameInUrl)}}
                     };
                     entitiesToImport.Add(entity);
                 }
 
                 foreach (var t in existingContentGroups.Where(t => t.AppId == app))
                 {
-                    var entity = new ImpEntity
+                    var entity = new ImpEntity("2SexyContent-ContentGroup")
                     {
-                        AttributeSetStaticName = "2SexyContent-ContentGroup",
+                        //AttributeSetStaticName = "2SexyContent-ContentGroup",
                         EntityGuid = t.NewEntityGuid,
                         IsPublished = true
                         // , KeyTypeId = Constants.NotMetadata // Configuration.AssignmentObjectTypeIdDefault
                     };
-                    entity.Values = new Dictionary<string, List<IImpValue>>
+                    entity.Values = new Dictionary<string, List<IValue>>
                     {
-                        {"Template", new List<IImpValue> {new ImpValue<List<Guid>>(entity, t.TemplateGuids)}},
-                        {Constants.ContentKey, new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ContentGuids)}},
-                        {Constants.PresentationKey, new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.PresentationGuids)}},
-                        {AppConstants.ListContent, new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ListContentGuids)}},
-                        {AppConstants.ListPresentation, new List<IImpValue> {new ImpValue<List<Guid?>>(entity, t.ListPresentationGuids)}}
+                        {"Template", new List<IValue> {new Value<List<Guid>>(/*entity,*/ t.TemplateGuids)}},
+                        {Constants.ContentKey, new List<IValue> {new Value<List<Guid?>>(/*entity,*/ t.ContentGuids)}},
+                        {Constants.PresentationKey, new List<IValue> {new Value<List<Guid?>>(/*entity,*/ t.PresentationGuids)}},
+                        {AppConstants.ListContent, new List<IValue> {new Value<List<Guid?>>(/*entity,*/ t.ListContentGuids)}},
+                        {AppConstants.ListPresentation, new List<IValue> {new Value<List<Guid?>>(/*entity,*/ t.ListPresentationGuids)}}
                     };
                     entitiesToImport.Add(entity);
                 }

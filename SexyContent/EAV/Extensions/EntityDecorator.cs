@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav;
 using ToSic.Eav.Interfaces;
 
 // ReSharper disable once CheckNamespace
@@ -28,7 +27,7 @@ namespace ToSic.SexyContent.EAVExtensions
         public int EntityId => _baseEntity.EntityId;
         public int RepositoryId => _baseEntity.RepositoryId;
         public Guid EntityGuid => _baseEntity.EntityGuid;
-        public int AssignmentObjectTypeId => _baseEntity.AssignmentObjectTypeId;
+        public int AssignmentObjectTypeId => _baseEntity.Metadata.TargetType;
 
         public IMetadata Metadata => _baseEntity.Metadata;
 

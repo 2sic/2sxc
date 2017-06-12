@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Services.Exceptions;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
 using ToSic.SexyContent.Internal;
@@ -35,7 +34,7 @@ namespace ToSic.SexyContent.ContentBlocks
         internal abstract void SetAppId(int? appId);
 
         internal abstract void EnsureLinkToContentGroup(Guid cgGuid);
-        internal abstract void UpdateTitle(IEntity titleItem);
+        internal abstract void UpdateTitle(ToSic.Eav.Interfaces.IEntity titleItem);
         #endregion
 
         #region methods which are fairly stable / the same across content-block implementations
@@ -188,7 +187,7 @@ namespace ToSic.SexyContent.ContentBlocks
             var app = SxcContext.App;
             var contentGroup = app.ContentGroupManager.GetContentGroup(ContentGroup.ContentGroupGuid);// .GetContentGroupForModule(SxcContext.ModuleInfo.ModuleID);
 
-            IEntity titleItem = contentGroup.ListContent.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
+            var titleItem = contentGroup.ListContent.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
 
             UpdateTitle(titleItem);
         }

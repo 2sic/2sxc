@@ -25,11 +25,11 @@ namespace ToSic.SexyContent.Security
         private int? ZoneId { get; }
         private Guid TypeGuid { get; }
 
-        public IEntity TargetItem { get; set; }
+        public ToSic.Eav.Interfaces.IEntity TargetItem { get; set; }
 
-        private IEnumerable<IEntity> _permissionList;
+        private IEnumerable<ToSic.Eav.Interfaces.IEntity> _permissionList;
 
-        public IEnumerable<IEntity> PermissionList
+        public IEnumerable<ToSic.Eav.Interfaces.IEntity> PermissionList
         {
             get
             {
@@ -60,7 +60,7 @@ namespace ToSic.SexyContent.Security
             Module = module;
         }
 
-        public PermissionController(int? zoneId, int appId, Guid typeGuid, IEntity targetItem, ModuleInfo module = null)
+        public PermissionController(int? zoneId, int appId, Guid typeGuid, ToSic.Eav.Interfaces.IEntity targetItem, ModuleInfo module = null)
         {
             ZoneId = zoneId;
             AppId = appId;
@@ -109,7 +109,7 @@ namespace ToSic.SexyContent.Security
         /// <param name="permissionEntity">The entity describing a permission</param>
         /// <param name="desiredActionCode">A key like r (for read), u (for update) etc. which is the level you want to check</param>
         /// <returns></returns>
-        private bool DoesPermissionAllow(IEntity permissionEntity, char desiredActionCode)
+        private bool DoesPermissionAllow(ToSic.Eav.Interfaces.IEntity permissionEntity, char desiredActionCode)
         {
 
             // Check if it's a grant-read permission - otherwise stop here

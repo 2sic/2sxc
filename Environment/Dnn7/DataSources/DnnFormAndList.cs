@@ -92,7 +92,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
         /// Internal helper that returns the entities - actually just retrieving them from the attached Data-Source
         /// </summary>
         /// <returns></returns>
-        private IDictionary<int, IEntity> GetEntities()
+        private IDictionary<int, ToSic.Eav.Interfaces.IEntity> GetEntities()
         {
             // if not initialized, do that first
             if (DtDs == null)
@@ -105,7 +105,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
         /// Internal helper that returns the entities - actually just retrieving them from the attached Data-Source
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<IEntity> GetList()
+        private IEnumerable<ToSic.Eav.Interfaces.IEntity> GetList()
         {
             // if not initialized, do that first
             if (DtDs == null)

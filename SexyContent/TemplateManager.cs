@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Serializers;
 using ToSic.Eav.WebApi;
@@ -121,7 +122,7 @@ namespace ToSic.Eav.AppEngine
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
                 {
-                    var metadata = ctc.GetMetadata(ct, mdCache);
+                    var metadata = ctc.GetMetadata((ContentType)ct, mdCache);
                     return new ContentTypeUiInfo {
                         StaticName = ct.StaticName,
                         Name = ct.Name,

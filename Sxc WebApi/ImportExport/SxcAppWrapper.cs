@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Interfaces;
 
 namespace ToSic.SexyContent.WebApi.ImportExport
 {

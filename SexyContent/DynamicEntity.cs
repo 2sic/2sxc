@@ -3,7 +3,6 @@ using System.Dynamic;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.Toolbar;
 using ToSic.SexyContent.Interfaces;
@@ -15,7 +14,7 @@ namespace ToSic.SexyContent
     public class DynamicEntity : DynamicObject, IDynamicEntity
     {
         public ContentConfiguration Configuration = new ContentConfiguration();
-        public IEntity Entity { get; set; }
+        public ToSic.Eav.Interfaces.IEntity Entity { get; set; }
         public HtmlString Toolbar {
             get
             {
@@ -56,7 +55,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
-        public DynamicEntity(IEntity entityModel, string[] dimensions, SxcInstance sexy)
+        public DynamicEntity(ToSic.Eav.Interfaces.IEntity entityModel, string[] dimensions, SxcInstance sexy)
         {
             Entity = entityModel;
             _dimensions = dimensions;

@@ -21,15 +21,15 @@ namespace ToSic.SexyContent.Installer
             logger.LogStep("06.00.00", "EnsurePipelineDesignerAttributeSets start", false);
 
             // Ensure DnnSqlDataSource Configuration
-            var dsrcSqlDataSource = ImpAttrSet.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
-                new List<ImpAttribute>
+            var dsrcSqlDataSource = ImpContentType.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
+                new List<ImpAttribDefinition>
                 {
-                    ImpAttribute.StringAttribute("ContentType", "ContentType", null, true),
-                    ImpAttribute.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
+                    ImpAttribDefinition.StringAttribute("ContentType", "ContentType", null, true),
+                    ImpAttribDefinition.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
                 }, alwaysShareConfiguration:true);
 
             // Collect AttributeSets for use in Import
-            var attributeSets = new List<ImpAttrSet>
+            var attributeSets = new List<ImpContentType>
             {
                 dsrcSqlDataSource
             };

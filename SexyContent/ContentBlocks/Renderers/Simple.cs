@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Web;
-using ToSic.Eav;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Interfaces;
 
@@ -12,7 +11,7 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
     {
         private static string EmptyMessage = "<!-- auto-render of item {0} -->";
 
-        internal static IHtmlString Render(IContentBlock parentCb, IEntity entity)
+        internal static IHtmlString Render(IContentBlock parentCb, ToSic.Eav.Interfaces.IEntity entity)
         {
             
             // if not the expected content-type, just output a hidden html placeholder

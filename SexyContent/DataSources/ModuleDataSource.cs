@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.EAVExtensions;
@@ -59,8 +58,8 @@ namespace ToSic.SexyContent.DataSources
         }
 
         #region Cached properties for Content, Presentation etc. --> not necessary, as each stream auto-caches
-        private IDictionary<int, IEntity> _content;
-        private IDictionary<int, IEntity> GetContent()
+        private IDictionary<int, ToSic.Eav.Interfaces.IEntity> _content;
+        private IDictionary<int, ToSic.Eav.Interfaces.IEntity> GetContent()
         {
             try
             {
@@ -75,8 +74,8 @@ namespace ToSic.SexyContent.DataSources
             }
         }
 
-        private IDictionary<int, IEntity> _listContent;
-        private IDictionary<int, IEntity> GetListContent()
+        private IDictionary<int, ToSic.Eav.Interfaces.IEntity> _listContent;
+        private IDictionary<int, ToSic.Eav.Interfaces.IEntity> GetListContent()
         {
             try
             {
@@ -98,9 +97,9 @@ namespace ToSic.SexyContent.DataSources
         private Template _template;
 		private Template Template => _template ?? (_template = OverrideTemplate ?? ContentGroup.Template);
 
-	    private IDictionary<int, IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity, bool isListHeader = false)
+	    private IDictionary<int, ToSic.Eav.Interfaces.IEntity> GetStream(List<ToSic.Eav.Interfaces.IEntity> content, ToSic.Eav.Interfaces.IEntity contentDemoEntity, List<ToSic.Eav.Interfaces.IEntity> presentation, ToSic.Eav.Interfaces.IEntity presentationDemoEntity, bool isListHeader = false)
         {
-			var entitiesToDeliver = new Dictionary<int, IEntity>();
+			var entitiesToDeliver = new Dictionary<int, ToSic.Eav.Interfaces.IEntity>();
             // if no template is defined, return empty list
 			if (ContentGroup.Template == null && OverrideTemplate == null /*!OverrideTemplateId.HasValue*/) return entitiesToDeliver;
 
@@ -130,7 +129,7 @@ namespace ToSic.SexyContent.DataSources
                 // use demo-entites where available
                 var entityId = contentEntity.EntityId;
 
-                IEntity presentationEntity = null;
+                ToSic.Eav.Interfaces.IEntity presentationEntity = null;
 
 	            if (presentation != null)
 	            {

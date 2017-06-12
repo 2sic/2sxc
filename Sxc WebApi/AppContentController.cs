@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -10,6 +9,7 @@ using DotNetNuke.Web.Api;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Engines;
@@ -183,11 +183,11 @@ namespace ToSic.SexyContent.WebApi
             // Retrieve content-type definition and check all the fields that this content-type has
 	        var cache = (BaseCache) DataSource.GetCache(null, appId);
 	        var listOfTypes = cache.GetContentType(contentType);// as ContentType;
-	        var attribs = listOfTypes.AttributeDefinitions;
+	        var attribs = listOfTypes.Attributes;
 
 
 	        var cleanedNewItem = new Dictionary<string, object>();
-	        foreach (var attrDef in attribs.Select(a => a.Value))
+	        foreach (var attrDef in attribs)
 	        {
 	            // var attrDef = attr.Value;// ats.GetAttribute(attr);
 	            var attrName = attrDef.Name;

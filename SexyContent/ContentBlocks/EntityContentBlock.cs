@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
@@ -22,12 +21,12 @@ namespace ToSic.SexyContent.ContentBlocks
 
         #region ContentBlock Definition Entity
 
-        internal IEntity ContentBlockEntity;
+        internal ToSic.Eav.Interfaces.IEntity ContentBlockEntity;
         private string _appName;
         private Guid _contentGroupGuid;
         private Guid _previewTemplateGuid;
 
-        private void ParseContentBlockDefinition(IEntity cbDefinition)
+        private void ParseContentBlockDefinition(ToSic.Eav.Interfaces.IEntity cbDefinition)
         {
             ContentBlockEntity = cbDefinition;
             _appName = ContentBlockEntity.GetBestValue(CbPropertyApp)?.ToString() ?? "";
@@ -46,12 +45,12 @@ namespace ToSic.SexyContent.ContentBlocks
         }
         #endregion
 
-        public EntityContentBlock(IContentBlock parent, IEntity cbDefinition)
+        public EntityContentBlock(IContentBlock parent, ToSic.Eav.Interfaces.IEntity cbDefinition)
         {
             _constructor(parent, cbDefinition);
         }
 
-        private void _constructor(IContentBlock parent, IEntity cbDefinition)
+        private void _constructor(IContentBlock parent, ToSic.Eav.Interfaces.IEntity cbDefinition)
         {
             Parent = parent;
             ParseContentBlockDefinition(cbDefinition);

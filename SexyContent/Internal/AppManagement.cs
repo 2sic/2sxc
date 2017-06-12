@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -58,7 +57,7 @@ namespace ToSic.SexyContent.Internal
                     Settings.AttributeSetStaticNameApps,
                     "App Metadata",
                     appAssignment,
-                    new OrderedDictionary
+                    new Dictionary<string, object>()
                     {
                         {"DisplayName", IsNullOrEmpty(appName) ? eavAppName : appName},
                         {"Folder", IsNullOrEmpty(appName) ? eavAppName : RemoveIllegalCharsFromPath(appName)},

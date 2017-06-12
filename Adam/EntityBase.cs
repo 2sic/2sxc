@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Eav;
 
 namespace ToSic.SexyContent.Adam
 {
@@ -91,7 +90,7 @@ namespace ToSic.SexyContent.Adam
             return items?.EntityId ?? 0;
         }
 
-        public IEntity GetFirstMetadataEntity(int id, bool isFolder)
+        public ToSic.Eav.Interfaces.IEntity GetFirstMetadataEntity(int id, bool isFolder)
         {
             return App.Data.Metadata.GetAssignedEntities(Constants.MetadataForCmsObject, 
                 (isFolder ? "folder:" : "file:") + id)

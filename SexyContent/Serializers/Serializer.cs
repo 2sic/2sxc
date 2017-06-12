@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent.EAVExtensions;
 
@@ -50,7 +49,7 @@ namespace ToSic.SexyContent.Serializers
 
 
 
-        public override Dictionary<string, object> GetDictionaryFromEntity(IEntity entity)
+        public override Dictionary<string, object> GetDictionaryFromEntity(ToSic.Eav.Interfaces.IEntity entity)
 		{
             // Do groundwork
             var dictionary = base.GetDictionaryFromEntity(entity);
@@ -64,7 +63,7 @@ namespace ToSic.SexyContent.Serializers
         #region to enhance serializable IEntities with 2sxc specific infos
 
         #region special "old" serializer which provides data in the older format
-        internal Dictionary<string, object> PrepareOldFormat(IEntity entity)
+        internal Dictionary<string, object> PrepareOldFormat(ToSic.Eav.Interfaces.IEntity entity)
         {
             // var ser = new Serializer(SxcInstance, _dimensions);
             var dicNew = GetDictionaryFromEntity(entity);
@@ -100,7 +99,7 @@ namespace ToSic.SexyContent.Serializers
 
         #endregion
 
-        internal void AddPresentation(IEntity entity, Dictionary<string, object> dictionary)
+        internal void AddPresentation(ToSic.Eav.Interfaces.IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add full presentation object if it has one...because there we need more than just id/title
 	        if (entity is EntityInContentGroup && !dictionary.ContainsKey(Constants.PresentationKey))
@@ -111,7 +110,7 @@ namespace ToSic.SexyContent.Serializers
 	        }
 	    }
 
-	    internal void AddEditInfo(IEntity entity, Dictionary<string, object> dictionary)
+	    internal void AddEditInfo(ToSic.Eav.Interfaces.IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add additional information in case we're in edit mode
 	        if (DotNetNuke.Common.Globals.IsEditMode() || (Sxc?.Environment?.Permissions?.UserMayEditContent ?? false))

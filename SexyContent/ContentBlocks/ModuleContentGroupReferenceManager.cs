@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks
@@ -31,7 +30,7 @@ namespace ToSic.SexyContent.ContentBlocks
             => SxcContext.ContentBlock.App.ContentGroupManager.PersistContentGroupAndBlankTemplateToModule(ModuleId,
                 true, cgGuid);
 
-        internal override void UpdateTitle(IEntity titleItem)
+        internal override void UpdateTitle(ToSic.Eav.Interfaces.IEntity titleItem)
         {
             // todo: this should probably do the more complex stuff
             // to ensure that it happens on all versions of this module (all languages)

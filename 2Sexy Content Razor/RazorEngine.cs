@@ -8,7 +8,6 @@ using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
-using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;

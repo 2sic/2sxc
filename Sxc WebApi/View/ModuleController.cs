@@ -10,13 +10,13 @@ using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Installer;
 using ToSic.Eav.Apps.ItemListActions;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Interfaces;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi.View

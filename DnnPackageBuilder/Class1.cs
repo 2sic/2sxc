@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DnnPackageBuilder
+﻿namespace DnnPackageBuilder
 {
     public class Class1
     {

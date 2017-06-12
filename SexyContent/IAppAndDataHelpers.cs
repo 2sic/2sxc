@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
@@ -23,7 +22,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        dynamic AsDynamic(IEntity entity);
+        dynamic AsDynamic(Eav.Interfaces.IEntity entity);
 
         /// <summary>
         /// Makes sure a dynamicEntity could be wrapped in AsDynamic()
@@ -37,7 +36,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entityKeyValuePair"></param>
         /// <returns></returns>
-        dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair);
+        dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair);
 
         /// <summary>
         /// In case AsDynamic is used with Data["name"]
@@ -50,21 +49,21 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        IEnumerable<dynamic> AsDynamic(IDictionary<int, IEntity> list);
+        IEnumerable<dynamic> AsDynamic(IDictionary<int, Eav.Interfaces.IEntity> list);
 
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
-        IEntity AsEntity(dynamic dynamicEntity);
+        Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity);
 
         /// <summary>
         /// Returns a list of DynamicEntities
         /// </summary>
         /// <param name="entities">List of entities</param>
         /// <returns></returns>
-        IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities);
+        IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities);
 
         /// <summary>
         /// Create a source with initial stream to attach...

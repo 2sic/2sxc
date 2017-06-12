@@ -65,7 +65,7 @@ namespace ToSic.SexyContent.WebApi
             {
                 ContentTypes = contentTypes.Select(c => new
                 {
-                    Id = c.AttributeSetId,
+                    Id = c.ContentTypeId,
                     c.Name,
                     c.StaticName,
                     Templates = templates.Where(t => t.ContentTypeStaticName == c.StaticName).Select(t => new
@@ -74,7 +74,7 @@ namespace ToSic.SexyContent.WebApi
                         t.Name
                     }),
                     Entities = entities
-                        .Where(e => e.Value.Type.AttributeSetId == c.AttributeSetId)
+                        .Where(e => e.Value.Type.ContentTypeId == c.ContentTypeId)
                         .Select(e => new
                         {
                             Title = e.Value.GetBestTitle(),

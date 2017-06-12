@@ -6,7 +6,6 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.EAVExtensions;
@@ -146,7 +145,7 @@ namespace ToSic.SexyContent.Search
         /// <param name="entity"></param>
         /// <param name="language"></param>
         /// <returns></returns>
-        private string GetJoinedAttributes(IEntity entity, string language)
+        private string GetJoinedAttributes(ToSic.Eav.Interfaces.IEntity entity, string language)
         {
             return String.Join(", ",
                 entity.Attributes.Where(x => x.Value.Type == "String" || x.Value.Type == "Number").Select(x => x.Value[language])

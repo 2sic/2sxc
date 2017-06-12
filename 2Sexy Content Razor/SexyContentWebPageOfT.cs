@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ToSic.SexyContent.Razor
+﻿namespace ToSic.SexyContent.Razor
 {
     /// <summary>
     /// this is just a generic variation of SexyContentWebPage

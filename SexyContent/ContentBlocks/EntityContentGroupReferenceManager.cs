@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.ContentBlocks
             => UpdateValue(EntityContentBlock.CbPropertyContentGroup, cgGuid);
 
 
-        internal override void UpdateTitle(IEntity titleItem)
+        internal override void UpdateTitle(ToSic.Eav.Interfaces.IEntity titleItem)
         {
             if (titleItem?.GetBestTitle() == null) return;
 

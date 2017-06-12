@@ -80,7 +80,7 @@ namespace ToSic.SexyContent
 
         }
 
-	    private Element GetElementFromEntity(IEntity e)
+	    private Element GetElementFromEntity(ToSic.Eav.Interfaces.IEntity e)
 	    {
 			var el = new Element
 			{
@@ -112,7 +112,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, _sxcInstance);
+        public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, _sxcInstance);
         
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entityKeyValuePair"></param>
         /// <returns></returns>
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
 
         /// <summary>
         /// In case AsDynamic is used with Data["name"]
@@ -140,21 +140,21 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IDictionary<int, IEntity> list) => list.Select(e => AsDynamic(e.Value));
+        public IEnumerable<dynamic> AsDynamic(IDictionary<int, ToSic.Eav.Interfaces.IEntity> list) => list.Select(e => AsDynamic(e.Value));
 
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
-        public IEntity AsEntity(dynamic dynamicEntity) => ((DynamicEntity) dynamicEntity).Entity;
+        public ToSic.Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity) => ((DynamicEntity) dynamicEntity).Entity;
 
         /// <summary>
         /// Returns a list of DynamicEntities
         /// </summary>
         /// <param name="entities">List of entities</param>
         /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => entities.Select(e => AsDynamic(e));
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities) => entities.Select(e => AsDynamic(e));
         #endregion
 
         private IValueCollectionProvider _configurationProvider;
@@ -229,7 +229,7 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AdamNavigator AsAdam(IEntity entity, string fieldName)
+        public AdamNavigator AsAdam(ToSic.Eav.Interfaces.IEntity entity, string fieldName)
             => new AdamNavigator(_sxcInstance, App, Dnn.Portal, entity.EntityGuid, fieldName);
         #endregion
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav;
 
 namespace ToSic.SexyContent.Search
 {
@@ -14,6 +13,6 @@ namespace ToSic.SexyContent.Search
         bool IsActive { get; set; }
         string QueryString { get; set; }
         string CultureCode { get; set; }
-        IEntity Entity { get; set; }
+        ToSic.Eav.Interfaces.IEntity Entity { get; set; }
     }
 }

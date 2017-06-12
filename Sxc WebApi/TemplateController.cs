@@ -3,9 +3,9 @@ using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav;
 using ToSic.Eav.AppEngine;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Interfaces;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -58,7 +58,7 @@ namespace ToSic.SexyContent.WebApi
 	        return new
 	        {
 	            StaticName = staticName,
-	            Id = found?.AttributeSetId ?? 0,
+	            Id = found?.ContentTypeId ?? 0,
 	            Name = (found == null)? "no content type":  found.Name,
                 DemoId = maybeEntity?.EntityId ?? 0,
                 DemoTitle = maybeEntity?.GetBestValue("Title") ?? ""

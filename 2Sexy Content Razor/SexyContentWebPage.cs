@@ -4,7 +4,6 @@ using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
@@ -83,7 +82,7 @@ namespace ToSic.SexyContent.Razor
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public dynamic AsDynamic(IEntity entity) => AppAndDataHelpers.AsDynamic(entity);
+        public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity) => AppAndDataHelpers.AsDynamic(entity);
         
 
         /// <summary>
@@ -99,7 +98,7 @@ namespace ToSic.SexyContent.Razor
         /// </summary>
         /// <param name="entityKeyValuePair"></param>
         /// <returns></returns>
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  AppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair) =>  AppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
         
 
         /// <summary>
@@ -115,14 +114,14 @@ namespace ToSic.SexyContent.Razor
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IDictionary<int, IEntity> list) =>  AppAndDataHelpers.AsDynamic(list);
+        public IEnumerable<dynamic> AsDynamic(IDictionary<int, ToSic.Eav.Interfaces.IEntity> list) =>  AppAndDataHelpers.AsDynamic(list);
 
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
-        public IEntity AsEntity(dynamic dynamicEntity) => AppAndDataHelpers.AsEntity(dynamicEntity);
+        public ToSic.Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity) => AppAndDataHelpers.AsEntity(dynamicEntity);
         
 
         /// <summary>
@@ -130,7 +129,7 @@ namespace ToSic.SexyContent.Razor
         /// </summary>
         /// <param name="entities">List of entities</param>
         /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => AppAndDataHelpers.AsDynamic(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities) => AppAndDataHelpers.AsDynamic(entities);
 
         #endregion
 
@@ -239,7 +238,7 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AdamNavigator AsAdam(IEntity entity, string fieldName) =>  AppAndDataHelpers.AsAdam(entity, fieldName);
+        public AdamNavigator AsAdam(ToSic.Eav.Interfaces.IEntity entity, string fieldName) =>  AppAndDataHelpers.AsAdam(entity, fieldName);
 
         #endregion
 
