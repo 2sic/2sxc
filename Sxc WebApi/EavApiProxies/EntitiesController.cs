@@ -261,6 +261,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	        return _entitiesController.History(appId, entityId);
 	    }
 
+	    [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public bool Restore(int appId, int entityId, int changeId)
+	    {
+            EnsureSerializerHasSxc();
+	        return _entitiesController.Restore(appId, entityId, changeId);
+	    }
         #endregion
     }
 }
