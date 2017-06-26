@@ -89,6 +89,7 @@
     <Compile Include="RazorEngine.cs" />
     <Compile Include="SexyContentWebPage.cs" />
     <Compile Include="SexyContentWebPageOfT.cs" />
+    <Compile Include="TempBackwardCompatibility\InterfacesForBackwardCompatibility.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">

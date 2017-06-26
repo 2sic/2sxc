@@ -30,9 +30,6 @@
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.Tokens\ToSic.Eav.TokenEngine.csproj" />
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj" />
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
-    <ProjectReference Include="..\2Sexy Content Razor\2Sexy Content Razor.csproj" />
-    <ProjectReference Include="..\2Sexy Content.csproj" />
-    <ProjectReference Include="..\Sxc WebApi\2SexyContent WebApi.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="2sic_2SexyContent.dnn">

@@ -6,6 +6,7 @@ using DotNetNuke.Web.Api;
 using ToSic.SexyContent.Serializers;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport.Versioning;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.WebApi.Formats;
@@ -74,14 +75,14 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                     reqItem.EntityId = part[reqItem.Group.Index].EntityId;
 
                 // tell the UI that it should not actually use this data yet, keep it locked
-                if (reqItem.Group.Part.ToLower().Contains(Constants.PresentationKeyLower)) {
+                if (reqItem.Group.Part.ToLower().Contains(AppConstants.PresentationLower)) {
                     reqItem.Group.SlotCanBeEmpty = true;  // all presentations can always be locked
                     if (reqItem.EntityId == 0)
                     {
                         reqItem.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
                         
                         reqItem.DuplicateEntity =
-                            reqItem.Group.Part.ToLower() == Constants.PresentationKeyLower
+                            reqItem.Group.Part.ToLower() == AppConstants.PresentationLower
                             ? contentGroup.Template.PresentationDemoEntity?.EntityId
                             : contentGroup.Template.ListPresentationDemoEntity?.EntityId;
                     }
@@ -111,7 +112,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
-            var postSaveIds = _entitiesController.SaveMany(appId, items.Select(i => new EntityWithHeader { Header = i.Header, Entity = i.Entity }).ToList());
+            var postSaveIds = _entitiesController.SaveMany(appId, items);
 
             // now assign all content-groups as needed
             var groupItems = items
@@ -131,13 +132,15 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             foreach (var entitySets in groupItems)
             {
-                var contItem = entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == Constants.ContentKeyLower) ??
-                              entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "listcontent");
+                var contItem =
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ContentLower) ??
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ListContentLower);// "listcontent");
                 if (contItem == null)
                     throw new Exception("unexpected group-entity assigment, cannot figure it out");
 
-                var presItem = entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == Constants.PresentationKeyLower) ??
-                              entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "listpresentation");
+                var presItem =
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.PresentationLower) ??
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ListPresentationLower);// "listpresentation");
 
                 // Get group to assign to and parameters
                 var contentGroup = app.ContentGroupManager.GetContentGroup(contItem.Header.Group.Guid);
@@ -166,13 +169,9 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                 // add or update slots
                 var reallyAddGroup = contItem.Entity.Id == 0; // only really add if it's really new
                 if (contItem.Header.Group.Add && reallyAddGroup) // this cannot be auto-detected, it must be specified
-                {
                     contentGroup.AddContentAndPresentationEntity(partName, index, postSaveId, presentationId);
-                }
-                // otherwise it's an update 
                 else // if (part.Count <= index || part[index] == null)
                     contentGroup.UpdateEntityIfChanged(partName, index, postSaveId, true, presentationId);
-
             }
 
             // update-module-title

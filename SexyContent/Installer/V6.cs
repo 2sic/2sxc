@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.ImportExport.Models;
-//using Microsoft.Practices.Unity;
-using ToSic.Eav.ImportExport.Interfaces;
+using ToSic.Eav.Data.Builder;
+using ToSic.Eav.Interfaces;
 
 namespace ToSic.SexyContent.Installer
 {
@@ -21,35 +20,27 @@ namespace ToSic.SexyContent.Installer
             logger.LogStep("06.00.00", "EnsurePipelineDesignerAttributeSets start", false);
 
             // Ensure DnnSqlDataSource Configuration
-            var dsrcSqlDataSource = ImpContentType.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
-                new List<ImpAttribDefinition>
+            var dsrcSqlDataSource = ContentTypeBuilder.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
+                new List<IAttributeDefinition>
                 {
-                    ImpAttribDefinition.StringAttribute("ContentType", "ContentType", null, true),
-                    ImpAttribDefinition.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
+                    AttDefBuilder.StringAttribute("ContentType", "ContentType", null, true),
+                    AttDefBuilder.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
                 }, alwaysShareConfiguration:true);
 
             // Collect AttributeSets for use in Import
-            var attributeSets = new List<ImpContentType>
+            var attributeSets = new List<Eav.Data.ContentType>
             {
                 dsrcSqlDataSource
             };
-            // 2017-04-11 2dm remove dependencies on BLL
+
             var importer = Factory.Resolve<IRepositoryImporter>();
             importer.Import(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId, attributeSets, null);
-            //var import = new DbImport(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId/*, Settings.InternalUserName*/);
-            //import.ImportIntoDb(attributeSets, null);
-
-            // 2017-04-01 2dm centralizing eav access
-            //EavBridge.ForceShareOnGlobalContentType(dsrcSqlDataSource.StaticName);
-            //var metaDataCtx = EavDataController.Instance(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId);
-            //metaDataCtx.AttribSet.GetAttributeSet(dsrcSqlDataSource.StaticName).AlwaysShareConfiguration = true;
-            //metaDataCtx.SqlDb.SaveChanges();
 
             // Run EAV Version Upgrade (also ensures Content Type sharing)
             var eavVersionUpgrade = new VersionUpgrade(Settings.InternalUserName);
 
             eavVersionUpgrade.EnsurePipelineDesignerAttributeSets();
-            SystemManager.PurgeEverything();
+            SystemManager.PurgeZoneList();
 
             logger.LogStep("06.00.00", "EnsurePipelineDesignerAttributeSets done", false);
         }

@@ -428,7 +428,6 @@
   <!-- 2017-05-04 2dm - trying to get packaging in another project -->
   <Target Name="AfterBuild" DependsOnTargets="PackageModule">
   </Target>
-  
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>

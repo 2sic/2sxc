@@ -3,21 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
+using ToSic.Eav.Persistence;
 using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
 {
     public class ContentGroup
     {
-        #region NamingConstants
-
-        public const string cContent = Eav.Constants.ContentKey;
-        public const string cPresentation = Eav.Constants.PresentationKey;
-        public const string cListC = AppConstants.ListContent;//"ListContent";
-        public const string cListP = AppConstants.ListPresentation;//"ListPresentation";
-
-        #endregion
-
         private Eav.Interfaces.IEntity _contentGroupEntity;
         private readonly int _zoneId;
         private readonly int _appId;
@@ -60,24 +53,22 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (_template == null)
+                if (_template != null) return _template;
+
+                Eav.Interfaces.IEntity templateEntity = null;
+
+                if (_previewTemplateId.HasValue)
                 {
-
-                    Eav.Interfaces.IEntity templateEntity = null;
-
-                    if (_previewTemplateId.HasValue)
-                    {
-                        var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId);
-                        // ToDo: Should use an indexed Guid filter
-                        templateEntity =
-                            dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == _previewTemplateId).Value;
-                    }
-                    else if (_contentGroupEntity != null)
-                        templateEntity =
-                            ((EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
-
-                    _template = templateEntity == null ? null : new Template(templateEntity);
+                    var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId);
+                    // ToDo: Should use an indexed Guid filter
+                    templateEntity =
+                        dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == _previewTemplateId).Value;
                 }
+                else if (_contentGroupEntity != null)
+                    templateEntity =
+                        ((EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
+
+                _template = templateEntity == null ? null : new Template(templateEntity);
 
                 return _template;
             }
@@ -87,11 +78,11 @@ namespace ToSic.SexyContent
         {
             var values = new Dictionary<string, object>
             {
-                {"Template", templateId.HasValue ? new[] {templateId.Value} : new int[] {}}
+                {"Template", templateId.HasValue ? new List<int?> {templateId.Value} : new List<int?>()}
             };
 
             // 2017-04-01 2dm centralizing eav access
-            new AppManager(_zoneId, _appId).Entities.Update(_contentGroupEntity.EntityId, values);
+            new AppManager(_zoneId, _appId).Entities.UpdateParts(_contentGroupEntity.EntityId, values);
             //var context = EavDataController.Instance(_zoneId, _appId).Entities; // EavContext.Instance(_zoneId, _appId);
             //context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
         }
@@ -110,16 +101,16 @@ namespace ToSic.SexyContent
             get
             {
                 if (_contentGroupEntity == null) return new List<Eav.Interfaces.IEntity> {null};
-                var list = ((EntityRelationship) _contentGroupEntity.GetBestValue(cContent)).ToList();
+                var list = ((EntityRelationship) _contentGroupEntity.GetBestValue(AppConstants.Content)).ToList();
                 return list.Count > 0 ? list : new List<Eav.Interfaces.IEntity> {null};
             }
         }
 
-        public List<Eav.Interfaces.IEntity> Presentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(cPresentation))?.ToList() ?? new List<Eav.Interfaces.IEntity>();
+        public List<Eav.Interfaces.IEntity> Presentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(AppConstants.Presentation))?.ToList() ?? new List<Eav.Interfaces.IEntity>();
 
-        public List<Eav.Interfaces.IEntity> ListContent => ((EntityRelationship) _contentGroupEntity?.GetBestValue(cListC))?.ToList() ?? new List<Eav.Interfaces.IEntity>();
+        public List<Eav.Interfaces.IEntity> ListContent => ((EntityRelationship) _contentGroupEntity?.GetBestValue(AppConstants.ListContent/*cListC*/))?.ToList() ?? new List<Eav.Interfaces.IEntity>();
 
-        public List<Eav.Interfaces.IEntity> ListPresentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(cListP))?.ToList() ?? new List<Eav.Interfaces.IEntity>();
+        public List<Eav.Interfaces.IEntity> ListPresentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(AppConstants.ListPresentation/* cListP*/))?.ToList() ?? new List<Eav.Interfaces.IEntity>();
 
         public List<Eav.Interfaces.IEntity> this[string type]
         {
@@ -127,13 +118,13 @@ namespace ToSic.SexyContent
             {
                 switch (type.ToLower())
                 {
-                    case Eav.Constants.ContentKeyLower:
+                    case AppConstants.ContentLower:
                         return Content;
-                    case Eav.Constants.PresentationKeyLower: 
+                    case AppConstants.PresentationLower: 
                         return Presentation;
-                    case "listcontent":
+                    case AppConstants.ListContentLower:
                         return ListContent;
-                    case "listpresentation":
+                    case AppConstants.ListPresentationLower:
                         return ListPresentation;
                     default:
                         throw new Exception("Type " + type + " not allowed");
@@ -171,7 +162,7 @@ namespace ToSic.SexyContent
 
             if (updatePresentation)
             {
-                var type2 = ReCapitalizePartName(type).Replace(cContent, cPresentation);
+                var type2 = ReCapitalizePartName(type).Replace(AppConstants.Content, AppConstants.Presentation);
                 var listPres = ListWithNulls(type2);
                 if (listPres.Count < sortOrder + 1)
                     listPres.AddRange(Enumerable.Repeat(new int?(), (sortOrder + 1) - listPres.Count));
@@ -187,36 +178,37 @@ namespace ToSic.SexyContent
                 SaveChangedLists(package);
         }
 
-        private void SaveChangedLists(Dictionary<string, int?[]> values)
+        private void SaveChangedLists(Dictionary<string, List<int?>> values)
         {
             // ensure that there are never more presentations than values
-            if (values.ContainsKey(cPresentation))
+            if (values.ContainsKey(AppConstants.Presentation))
             {
                 var contentCount = Content.Count;
-                if (values.ContainsKey(cContent))
-                    contentCount = values[cContent].Length;
-                if (values[cPresentation].Length > contentCount)
+                if (values.ContainsKey(AppConstants.Content))
+                    contentCount = values[AppConstants.Content].Count;
+                if (values[AppConstants.Presentation].Count > contentCount)
                     throw new Exception("Presentation may not contain more items than Content.");
             }
 
             // 2017-04-01 2dm centralizing eav access
-            var dicObj = values.ToDictionary(x => x.Key, x => x.Value as object);// as Dictionary<string, object>;
-            new AppManager(_zoneId, _appId).Entities.Update(_contentGroupEntity.EntityId, dicObj);
+            var dicObj = values.ToDictionary(x => x.Key, x => x.Value as object);
+            var newEnt = new Entity(0, "", dicObj);
+            var saveOpts = SaveOptions.Build(_zoneId);
+            saveOpts.PreserveUntouchedAttributes = true;
 
-            //var context = EavDataController.Instance(_zoneId, _appId).Entities; // EavContext.Instance(_zoneId, _appId);
-            //context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
+            var saveEnt = EntitySaver.CreateMergedForSaving(_contentGroupEntity, newEnt, saveOpts);
+            new AppManager(_zoneId, _appId).Entities.Save(saveEnt, saveOpts);
 
             // Refresh content group entity (ensures contentgroup is up to date)
-            _contentGroupEntity =
-                new ContentGroupManager(_zoneId, _appId).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
+            _contentGroupEntity = new ContentGroupManager(_zoneId, _appId).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
         }
 
-        private Dictionary<string, int?[]> PrepareSavePackage(string type, IEnumerable<int?> entityIds,
-            Dictionary<string, int?[]> alreadyInitializedDictionary = null)
+        private Dictionary<string, List<int?>> PrepareSavePackage(string type, List<int?> entityIds,
+            Dictionary<string, List<int?>> alreadyInitializedDictionary = null)
         {
             type = ReCapitalizePartName(type);
-            if (alreadyInitializedDictionary == null) alreadyInitializedDictionary = new Dictionary<string, int?[]>();
-            alreadyInitializedDictionary.Add(type, entityIds.ToArray());
+            if (alreadyInitializedDictionary == null) alreadyInitializedDictionary = new Dictionary<string, List<int?>>();
+            alreadyInitializedDictionary.Add(type, entityIds.ToList());
             return alreadyInitializedDictionary;
         }
 
@@ -224,10 +216,10 @@ namespace ToSic.SexyContent
         private string ReCapitalizePartName(string partName)
         {
             partName = partName.ToLower();
-            if (partName == cContent.ToLower()) partName = cContent;
-            else if (partName == cPresentation.ToLower()) partName = cPresentation;
-            else if (partName == cListC.ToLower()) partName = cListC;
-            else if (partName == cListP.ToLower()) partName = cListP;
+            if (partName == AppConstants.ContentLower) partName = AppConstants.Content;
+            else if (partName == AppConstants.PresentationLower) partName = AppConstants.Presentation;
+            else if (partName == AppConstants.ListContentLower) partName = AppConstants.ListContent;// cListC;
+            else if (partName == AppConstants.ListPresentationLower) partName = AppConstants.ListPresentation;// cListP;
             else throw new Exception("Wanted to capitalize part name - but part name unknown: " + partName);
             return partName;
         }
@@ -235,7 +227,6 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Removes entities from a group. This will also remove the corresponding presentation entities.
         /// </summary>
-        /// <param name="contentGroupGuid"></param>
         /// <param name="type">Should be 'Content' or "ListContent"</param>
         /// <param name="sortOrder"></param>
         public void RemoveContentAndPresentationEntities(string type, int sortOrder)
@@ -243,7 +234,7 @@ namespace ToSic.SexyContent
 
             var list1 = ListWithNulls(type);
             list1.RemoveAt(sortOrder);
-            var type2 = ReCapitalizePartName(type).Replace(cContent, cPresentation);
+            var type2 = ReCapitalizePartName(type).Replace(AppConstants.Content, AppConstants.Presentation);
             var list2 = ListWithNulls(type2);
             if (list2.Count > sortOrder)    // in many cases the presentation-list is empty, then there is nothing to remove
                 list2.RemoveAt(sortOrder);
@@ -260,7 +251,7 @@ namespace ToSic.SexyContent
         /// <param name="presentationId"></param>
         public void AddContentAndPresentationEntity(string type, int? sortOrder, int? contentId, int? presentationId)
         {
-            if (type.ToLower() != cContent.ToLower())
+            if (type.ToLower() != AppConstants.ContentLower)
                 throw new Exception("This is only meant to work for content, not for list-content");
 
             if (!sortOrder.HasValue)
@@ -272,7 +263,7 @@ namespace ToSic.SexyContent
             var list2 = GetPresentationIdWithSameLengthAsContent();
             list2.Insert(sortOrder.Value, presentationId);
 
-            SaveChangedLists(PrepareSavePackage(cContent, list1, PrepareSavePackage(cPresentation, list2)));
+            SaveChangedLists(PrepareSavePackage(AppConstants.Content, list1, PrepareSavePackage(AppConstants.Presentation, list2)));
 
         }
 
@@ -281,27 +272,23 @@ namespace ToSic.SexyContent
         {
             var difference = Content.Count - Presentation.Count;
 
+            // this should fix https://github.com/2sic/2sxc/issues/1178 and https://github.com/2sic/2sxc/issues/1158
+            // goal is to simply remove the last presentation items, if there is a missmatch. Usually they will simply be nulls anyhow
             if (difference < 0)
-            {
-                // 2017-05-10 - testing, but hard to reproduce...
-                // this should fix https://github.com/2sic/2sxc/issues/1178 and https://github.com/2sic/2sxc/issues/1158
-                // goal is to simply remove the last presentation items, if there is a missmatch. Usually they will simply be nulls anyhow
                 Presentation.RemoveRange(Content.Count, difference);
-                // throw new Exception("There are more Presentation elements than Content elements.");
-            }
 
-            var entityIds = ListWithNulls(cPresentation); // Presentation.Select(p => p?.EntityId).ToList();
+            var entityIds = ListWithNulls(AppConstants.Presentation);
 
             // extend as necessary
             if (difference != 0)
                 entityIds.AddRange(Enumerable.Repeat(new int?(), difference));
 
-            return entityIds; // SaveChangedLists(PrepareSavePackage(cPresentation, entityIds));
+            return entityIds;
         }
 
         public void ReorderEntities(int sortOrder, int destinationSortOrder)
         {
-            var contentIds = ListWithNulls(cContent); 
+            var contentIds = ListWithNulls(AppConstants.Content); 
             var presentationIds = GetPresentationIdWithSameLengthAsContent();
 
             var contentId = contentIds[sortOrder];
@@ -313,14 +300,14 @@ namespace ToSic.SexyContent
             contentIds.Insert(destinationSortOrder, contentId);
             presentationIds.Insert(destinationSortOrder, presentationId);
 
-            var list = PrepareSavePackage(cContent, contentIds);
-            list = PrepareSavePackage(cPresentation, presentationIds, list);
+            var list = PrepareSavePackage(AppConstants.Content, contentIds);
+            list = PrepareSavePackage(AppConstants.Presentation, presentationIds, list);
             SaveChangedLists(list);
         }
 
         public bool ReorderAll(int[] newSequence)
         {
-            var oldCIds = ListWithNulls(cContent);
+            var oldCIds = ListWithNulls(AppConstants.Content);
             var oldPIds = GetPresentationIdWithSameLengthAsContent();
 
             // some error checks
@@ -339,8 +326,8 @@ namespace ToSic.SexyContent
                 newPresIds.Add(pId);
             }
 
-            var list = PrepareSavePackage(cContent, newContentIds);
-            list = PrepareSavePackage(cPresentation, newPresIds, list);
+            var list = PrepareSavePackage(AppConstants.Content, newContentIds);
+            list = PrepareSavePackage(AppConstants.Presentation, newPresIds, list);
             SaveChangedLists(list);
 
             return true;

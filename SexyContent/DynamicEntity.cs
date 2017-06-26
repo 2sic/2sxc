@@ -3,6 +3,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.Toolbar;
 using ToSic.SexyContent.Interfaces;
@@ -86,7 +87,7 @@ namespace ToSic.SexyContent
             if (attributeName == "Toolbar")
                 return Toolbar.ToString();
 
-            if (attributeName == Constants.PresentationKey)
+            if (attributeName == AppConstants.Presentation)
                 return Presentation;
 
             #endregion

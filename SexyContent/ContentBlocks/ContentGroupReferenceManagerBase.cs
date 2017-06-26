@@ -43,7 +43,7 @@ namespace ToSic.SexyContent.ContentBlocks
             => CGroup ?? (CGroup = SxcContext.ContentGroup);
 
         public void AddItem(int? sortOrder = null)
-            => ContentGroup.AddContentAndPresentationEntity(Eav.Constants.ContentKeyLower, sortOrder, null, null);
+            => ContentGroup.AddContentAndPresentationEntity(AppConstants.ContentLower, sortOrder, null, null);
         
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
@@ -134,7 +134,7 @@ namespace ToSic.SexyContent.ContentBlocks
             {
                 var contentGroup = ContentGroup;
                 var contEntity = contentGroup[part][sortOrder];
-                var presKey = part.ToLower() == Eav.Constants.ContentKeyLower ? Eav.Constants.PresentationKeyLower : "listpresentation";
+                var presKey = part.ToLower() == AppConstants.ContentLower ? AppConstants.PresentationLower : "listpresentation";
                 var presEntity = contentGroup[presKey][sortOrder];
 
                 var hasPresentation = presEntity != null;
@@ -165,7 +165,7 @@ namespace ToSic.SexyContent.ContentBlocks
             try
             {
                 var contentGroup = ContentGroup;
-                contentGroup.RemoveContentAndPresentationEntities(Eav.Constants.ContentKeyLower, sortOrder);
+                contentGroup.RemoveContentAndPresentationEntities(AppConstants.ContentLower, sortOrder);
             }
             catch (Exception e)
             {

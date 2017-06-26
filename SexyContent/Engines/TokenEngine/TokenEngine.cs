@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Hosting;
+using ToSic.Eav.Apps;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
 
@@ -28,7 +29,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         #region Regular Expressions / String Constants
 
         private static readonly dynamic SourcePropertyName =  new {
-            Content     = Constants.ContentKeyLower,
+            Content     = AppConstants.ContentLower,
             ListContent = "listcontent"
         };
 

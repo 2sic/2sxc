@@ -78,8 +78,8 @@ namespace ToSic.SexyContent.WebApi.View
                 {EntityContentBlock.CbPropertyApp, app},
                 {EntityContentBlock.CbPropertyShowChooser, true},
             };
-
-            var entityId = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, guid);
+            var newGuid = guid ?? Guid.NewGuid();
+            var entityId = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, newGuid);
 
             // now return a rendered instance
             var newContentBlock = new EntityContentBlock(SxcContext.ContentBlock, entityId);
@@ -88,11 +88,11 @@ namespace ToSic.SexyContent.WebApi.View
         }
 
         private int CreateItemAndAddToList(int parentId, string field, int sortOrder, string contentTypeName,
-            Dictionary<string, object> values, Guid? newGuid)
+            Dictionary<string, object> values, Guid newGuid)
         {
             var cgApp = SxcContext.App;
 
-            // create the new entity --> note that it's the sql-type entity, not a standard ientity
+            // create the new entity 
             var entityId = new AppManager(cgApp).Entities.GetOrCreate(newGuid, contentTypeName, values);
 
             #region attach to the current list of items
@@ -108,7 +108,7 @@ namespace ToSic.SexyContent.WebApi.View
                 intList.Insert(sortOrder, entityId);
             }
             var updateDic = new Dictionary<string, object> {{field, intList.ToArray()}};
-            new AppManager(cgApp).Entities.Update(cbEnt.EntityId, updateDic);
+            new AppManager(cgApp).Entities.UpdateParts(cbEnt.EntityId, updateDic);
 
             #endregion
 
@@ -281,7 +281,7 @@ namespace ToSic.SexyContent.WebApi.View
 
             // save
             var values = new Dictionary<string, object> { { field, ids.ToArray() } };
-            new AppManager(SxcContext.App).Entities.Update(parentEntity.EntityId, values);
+            new AppManager(SxcContext.App).Entities.UpdateParts(parentEntity.EntityId, values);
             return true;
         }
         #endregion

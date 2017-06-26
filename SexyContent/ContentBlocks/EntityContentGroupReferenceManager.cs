@@ -66,7 +66,7 @@ namespace ToSic.SexyContent.ContentBlocks
         {
             // 2017-04-01 2dm centralizing eav access
             var app = ((ContentBlockBase)SxcContext.ContentBlock).Parent.App;
-            new AppManager(app.ZoneId, app.AppId).Entities.Update(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);
+            new AppManager(app.ZoneId, app.AppId).Entities.UpdateParts(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);
             //var cgApp = ((ContentBlockBase)SxcContext.ContentBlock).Parent.App;
             //var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
             //eavDc.Entities.UpdateEntity(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);

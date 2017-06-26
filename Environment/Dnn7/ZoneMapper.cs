@@ -25,7 +25,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 throw new Exception("Can't get zone for invalid portal ID: " + tennantId);
 
             var zoneSettingKey = Settings.PortalSettingsPrefix + "ZoneID";
-            var c = PortalController.GetPortalSettingsDictionary(tennantId);
+            var c = PortalController.Instance.GetPortalSettings(tennantId);//.GetPortalSettingsDictionary(tennantId);
             var portalSettings = new PortalSettings(tennantId);
 
             int zoneId;
@@ -48,19 +48,20 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public List<Culture> CulturesWithState(int tennantId, int zoneId)
         {
             // note: 
-            var availableEavLanguages = new ZoneManager(zoneId).Languages; 
+            var availableEavLanguages = new ZoneRuntime(zoneId).Languages(true); 
             var defaultLanguageCode = new PortalSettings(tennantId).DefaultLanguage;
             var defaultLanguage = availableEavLanguages
-                .FirstOrDefault(p => p.TennantKey  == defaultLanguageCode);
+                .FirstOrDefault(p => p.Matches(defaultLanguageCode));
             var defaultLanguageIsActive = defaultLanguage?.Active == true;
 
             return (from c in LocaleController.Instance.GetLocales(tennantId)
                     select new Culture(
                         c.Value.Code,
                         c.Value.Text,
-                        availableEavLanguages.Any(a => a.Active && a.TennantKey == c.Value.Code),
-                        c.Value.Code == defaultLanguageCode && !defaultLanguageIsActive ||
-                        (defaultLanguageIsActive && c.Value.Code != defaultLanguageCode))
+                        availableEavLanguages.Any(a => a.Active && a.Matches(c.Value.Code)),
+                        string.Equals(c.Value.Code, defaultLanguageCode, StringComparison.InvariantCultureIgnoreCase) && !defaultLanguageIsActive ||
+                        defaultLanguageIsActive && !string.Equals(c.Value.Code, defaultLanguageCode,
+                            StringComparison.InvariantCultureIgnoreCase))
                 )
                 .OrderByDescending(c => c.Code == defaultLanguageCode)
                 .ThenBy(c => c.Code).ToList();

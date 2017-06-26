@@ -55,19 +55,14 @@ namespace ToSic.SexyContent
 		{
 			var values = new Dictionary<string, object>
 			{
-				{"Template", templateId.HasValue ? new [] { templateId.Value } : new int[] {}},
-				{ Constants.ContentKey, new int[] {}},
-				{ Constants.PresentationKey, new int[] {}},
-				{AppConstants.ListContent, new int[] {}},
-				{AppConstants.ListPresentation, new int[] {}}
+				{"Template", templateId.HasValue ? new List<int> { templateId.Value } : new List<int>()},
+				{ AppConstants.Content, new List<int>()},
+				{ AppConstants.Presentation, new List<int>()},
+				{AppConstants.ListContent, new List<int>()},
+				{AppConstants.ListPresentation, new List<int>()}
 			};
 
-            // 2017-04-01 2dm centralizing eav-access
             return new AppManager(_zoneId, _appId).Entities.Create(ContentGroupTypeName, values).Item2;
-		 //   var context = EavDataController.Instance(_zoneId, _appId).Entities;
-			//var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(ContentGroupTypeName);
-			//var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);
-            // return entity.EntityGUID;
 		}
         
 

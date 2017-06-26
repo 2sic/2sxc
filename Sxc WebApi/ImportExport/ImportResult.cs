@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.ImportExport.Logging;
+using ExportImportMessage = ToSic.Eav.Persistence.Logging.ExportImportMessage;
 
 namespace ToSic.SexyContent.WebApi.ImportExport
 {

@@ -5,9 +5,12 @@ using System.Web;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Eav.ImportExport.Interfaces;
-using ToSic.Eav.ImportExport.Logging;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
+using ToSic.Eav.Persistence;
+using ToSic.Eav.Persistence.Interfaces;
 using ToSic.SexyContent.Internal;
+using ExportImportMessage = ToSic.Eav.Persistence.Logging.ExportImportMessage;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -172,6 +175,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public string ModuleVersion => Settings.ModuleVersion;
 
         public string FallbackContentTypeScope => Settings.AttributeSetScope;
+
+        public SaveOptions SaveOptions(int zoneId) => new SaveOptions(DefaultLanguage, new ZoneRuntime(zoneId).Languages(true));
 
         #endregion
     }
