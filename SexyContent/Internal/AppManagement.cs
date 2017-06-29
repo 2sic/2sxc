@@ -38,7 +38,7 @@ namespace ToSic.SexyContent.Internal
         /// <param name="appName"></param>
         internal static void EnsureAppIsConfigured(int zoneId, int appId, string appName = null)
         {
-            var appAssignment = SystemRuntime.GetKeyTypeId(Constants.AppAssignmentName);
+            var appAssignment = SystemRuntime.GetMetadataType(Constants.AppAssignmentName);
             var scope = Settings.AttributeSetScopeApps;
             var mds = DataSource.GetMetaDataSource(zoneId, appId);
             var appMetaData = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();

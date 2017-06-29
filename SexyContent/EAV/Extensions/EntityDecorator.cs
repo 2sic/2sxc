@@ -22,7 +22,9 @@ namespace ToSic.SexyContent.EAVExtensions
         public IEntity GetPublished() => _baseEntity.GetPublished();
 
         public string GetBestTitle() => _baseEntity.GetBestTitle();
-        
+
+
+        public int AppId => _baseEntity.AppId;
 
         public int EntityId => _baseEntity.EntityId;
         public int RepositoryId => _baseEntity.RepositoryId;
@@ -57,7 +59,7 @@ namespace ToSic.SexyContent.EAVExtensions
         public string GetBestTitle(string[] dimensions)
             => _baseEntity.GetBestTitle(dimensions);
 
-        Dictionary<string, object> IEntityLight.Attributes => ((IEntityLight) _baseEntity).Attributes;
+        //Dictionary<string, object> IEntityLight.Attributes => ((IEntityLight) _baseEntity).Attributes;
 
         object IEntityLight.Title => ((IEntityLight) _baseEntity).Title;
 

@@ -208,11 +208,11 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             apps.AddRange(existingContentGroups.Select(p => p.AppId));
             apps = apps.Distinct().ToList();
 
-            foreach (var app in apps)
+            foreach (var appId in apps)
             {
-                logger.LogStep("07.00.00", "Starting to migrate data for app " + app + "...");
+                logger.LogStep("07.00.00", "Starting to migrate data for app " + appId + "...");
 
-                var currentApp = app;
+                var currentApp = appId;
                 var entitiesToImport = new List<Entity>();
 
                 foreach (var t in existingTemplates.Where(t => t.AppId == currentApp))
@@ -270,12 +270,12 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                         {"Pipeline", t.PipelineEntityGuids},
                         {"ViewNameInUrl", t.ViewNameInUrl}
                     };
-                    var entity = new Entity(t.NewEntityGuid, "2SexyContent-Template", x);
+                    var entity = new Entity(appId, t.NewEntityGuid, "2SexyContent-Template", x);
 
                     entitiesToImport.Add(entity);
                 }
 
-                foreach (var t in existingContentGroups.Where(t => t.AppId == app))
+                foreach (var t in existingContentGroups.Where(t => t.AppId == appId))
                 {
                     // old, before 2017-06-12 using Entities
                     //var entity = new ImpEntity("2SexyContent-ContentGroup")
@@ -301,15 +301,15 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                         {AppConstants.ListContent, t.ListContentGuids},
                         {AppConstants.ListPresentation, t.ListPresentationGuids}
                     };
-                    var entity = new Entity(t.NewEntityGuid, "2SexyContent-ContentGroup", x);
+                    var entity = new Entity(appId, t.NewEntityGuid, "2SexyContent-ContentGroup", x);
 
                     entitiesToImport.Add(entity);
                 }
 
                 var importer = Factory.Resolve<IRepositoryImporter>();
-                importer.Import(null, app, null, entitiesToImport);
+                importer.Import(null, appId, null, entitiesToImport);
 
-                logger.LogStep("07.00.00", "Migrated data for app " + app);
+                logger.LogStep("07.00.00", "Migrated data for app " + appId);
             }
             logger.LogStep("07.00.00", "Done", false);
         }

@@ -104,7 +104,7 @@ namespace ToSic.SexyContent.Adam
             {
                 var emptyMetadata = new Dictionary<string, object>();
                 emptyMetadata.Add("Title", "");
-                meta = new Eav.Data.Entity(0, "", emptyMetadata, "Title");
+                meta = new Eav.Data.Entity(Eav.Constants.TransientAppId, 0, "", emptyMetadata, "Title");
             }
             return new DynamicEntity(meta, new[] {Thread.CurrentThread.CurrentCulture.Name}, Sexy);
 

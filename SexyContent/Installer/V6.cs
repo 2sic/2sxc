@@ -20,11 +20,11 @@ namespace ToSic.SexyContent.Installer
             logger.LogStep("06.00.00", "EnsurePipelineDesignerAttributeSets start", false);
 
             // Ensure DnnSqlDataSource Configuration
-            var dsrcSqlDataSource = ContentTypeBuilder.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
+            var dsrcSqlDataSource = ContentTypeBuilder.SystemAttributeSet(Eav.Constants.MetaDataAppId, "|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
                 new List<IAttributeDefinition>
                 {
-                    AttDefBuilder.StringAttribute("ContentType", "ContentType", null, true),
-                    AttDefBuilder.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
+                    AttDefBuilder.StringAttribute(Eav.Constants.MetaDataAppId, "ContentType", "ContentType", null, true),
+                    AttDefBuilder.StringAttribute(Eav.Constants.MetaDataAppId, "SelectCommand", "SelectCommand", null, true, rowCount: 10)
                 }, alwaysShareConfiguration:true);
 
             // Collect AttributeSets for use in Import

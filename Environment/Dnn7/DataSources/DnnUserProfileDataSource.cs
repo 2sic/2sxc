@@ -117,7 +117,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 				}
 
 				// create Entity and add to result
-				var entity = new Eav.Data.Entity(user.UserID, ContentType, values, TitleField);
+				var entity = new Eav.Data.Entity(Eav.Constants.TransientAppId, user.UserID, ContentType, values, TitleField);
 				result.Add(entity);
 			}
 
