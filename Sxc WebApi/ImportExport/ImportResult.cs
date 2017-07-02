@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ExportImportMessage = ToSic.Eav.Persistence.Logging.ExportImportMessage;
+using ToSic.Eav.Persistence.Logging;
 
 namespace ToSic.SexyContent.WebApi.ImportExport
 {
@@ -7,7 +7,7 @@ namespace ToSic.SexyContent.WebApi.ImportExport
     {
         public bool Succeeded;
 
-        public List<ExportImportMessage> Messages;
+        public List<Message> Messages;
     }
 
 }

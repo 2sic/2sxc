@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ToSic.Eav;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.ValueProvider;
@@ -30,7 +31,7 @@ namespace ToSic.SexyContent.WebApi
         internal SxcInstance SxcContext => _instanceContext ?? (_instanceContext = Helpers.GetSxcOfApiRequest(Request, true));
         private SxcInstance _instanceContext;
 
-        protected IEnvironment Env = new Environment.Environment();
+        protected IEnvironment Env = new Environment.DnnEnvironment();
 
         #region AppAndDataHelpers implementation
 
@@ -132,7 +133,8 @@ namespace ToSic.SexyContent.WebApi
 
 	    public dynamic ListPresentation => AppAndDataHelpers.ListPresentation;
 
-	    public List<Element> List => AppAndDataHelpers.List;
+        [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
+        public List<Element> List => AppAndDataHelpers.List;
 
 	    #endregion
 

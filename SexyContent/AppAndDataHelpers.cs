@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using DotNetNuke.Entities.Modules;
@@ -208,7 +209,8 @@ namespace ToSic.SexyContent
 		public dynamic Presentation { get; private set; }
 		public dynamic ListContent { get; private set; }
 		public dynamic ListPresentation { get; private set; }
-		public List<Element> List { get; private set; }
+        [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
+        public List<Element> List { get; private set; }
         #endregion
 
         #region Adam

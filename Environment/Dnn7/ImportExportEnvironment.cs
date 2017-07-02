@@ -9,14 +9,14 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Persistence;
 using ToSic.Eav.Persistence.Interfaces;
+using ToSic.Eav.Persistence.Logging;
 using ToSic.SexyContent.Internal;
-using ExportImportMessage = ToSic.Eav.Persistence.Logging.ExportImportMessage;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class ImportExportEnvironment : IImportExportEnvironment
     {
-        public List<ExportImportMessage> Messages { get; } = new List<ExportImportMessage>();
+        public List<Message> Messages { get; } = new List<Message>();
 
         //private IFileManager _dnnFileManager;
         //private IFolderManager _dnnFolderManager;
@@ -57,20 +57,20 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     catch (InvalidFileExtensionException e)
                     {
                         messages.Add(
-                            new ExportImportMessage(
+                            new Message(
                                 "File '" + destinationFileName +
                                 "' not copied because the file extension is not allowed.",
-                                ExportImportMessage.MessageTypes.Error));
+                                Message.MessageTypes.Error));
                         Exceptions.LogException(e);
                     }
                     catch (Exception e)
                     {
-                        messages.Add(new ExportImportMessage("Can't copy file '" + destinationFileName + "' because of an unkown error. It's likely that your files and folders are not in sync with DNN, usually re-syncing will fix the issue.", ExportImportMessage.MessageTypes.Warning));
+                        messages.Add(new Message("Can't copy file '" + destinationFileName + "' because of an unkown error. It's likely that your files and folders are not in sync with DNN, usually re-syncing will fix the issue.", Message.MessageTypes.Warning));
                         Exceptions.LogException(e);
                     }
                 }
                 else
-                    messages.Add(new ExportImportMessage("File '" + destinationFileName + "' not copied because it already exists", ExportImportMessage.MessageTypes.Warning));
+                    messages.Add(new Message("File '" + destinationFileName + "' not copied because it already exists", Message.MessageTypes.Warning));
             }
 
             // Call the method recursively to handle subdirectories
@@ -136,7 +136,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             }
         }
 
-        public void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<ExportImportMessage> importLog)
+        public void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog)
         {
             var maybePortalId = PortalSettings.Current?.PortalId;
 
@@ -164,10 +164,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 catch (Exception)
                 {
                     importLog.Add(
-                        new ExportImportMessage(
+                        new Message(
                             "Had a problem with folder id '" + file.Key + "' path '" + file.Value +
                             "' - you'll have to figure out yourself it this is a problem",
-                            ExportImportMessage.MessageTypes.Warning));
+                            Message.MessageTypes.Warning));
                 }
             }
         }

@@ -110,7 +110,7 @@ namespace ToSic.SexyContent.Internal
         internal static void RemoveAppInDnnAndEav(int zoneId, int appId, PortalSettings ps, int userId)
         {
             // check portal assignment and that it's not the default app
-            if (zoneId != new Environment.Environment().ZoneMapper.GetZoneId(ps.PortalId))//  ZoneHelpers.GetZoneId(ps.PortalId) )
+            if (zoneId != new Environment.DnnEnvironment().ZoneMapper.GetZoneId(ps.PortalId))//  ZoneHelpers.GetZoneId(ps.PortalId) )
                 throw new Exception("This app does not belong to portal " + ps.PortalId);
 
             if (appId == new ZoneRuntime(zoneId).DefaultAppId)// State.GetDefaultAppId(zoneId))

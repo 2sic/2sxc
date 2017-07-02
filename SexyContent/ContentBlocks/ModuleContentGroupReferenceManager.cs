@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
             // 2017-04-01 2dm before:
             // var languages =  ZoneHelpers.CulturesWithState(SxcContext.ModuleInfo.PortalID, SxcContext.ZoneId.Value);
-            var languages = new Environment.Environment().ZoneMapper.CulturesWithState(SxcContext.ModuleInfo.PortalID,
+            var languages = new Environment.DnnEnvironment().ZoneMapper.CulturesWithState(SxcContext.ModuleInfo.PortalID,
                 SxcContext.ZoneId.Value);
 
             // Find Module for default language
@@ -59,12 +59,12 @@ namespace ToSic.SexyContent.ContentBlocks
                         return;
 
                     // Get Title value of Entitiy in current language
-                    var titleValue = titleItem.Title[dimension.Code].ToString();
+                    var titleValue = titleItem.Title[dimension.Key].ToString();
 
                     // Find module for given Culture
                     var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
                         originalModule.TabID, SxcContext.ModuleInfo.PortalID,
-                        DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Code));
+                        DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
 
                     // Break if no title module found
                     if (moduleByCulture == null || titleValue == null)

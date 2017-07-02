@@ -30,7 +30,7 @@ namespace ToSic.SexyContent.WebApi
                 : new SxcAppWrapper(appId);
 
             var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
-            var cultCount = new Environment.Environment().ZoneMapper
+            var cultCount = new Environment.DnnEnvironment().ZoneMapper
                 .CulturesWithState(appWrapper.App.OwnerPortalSettings.PortalId, appWrapper.App.ZoneId)
                 .Count(c => c.Active);
             return new

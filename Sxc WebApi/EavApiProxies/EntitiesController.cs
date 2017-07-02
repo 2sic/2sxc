@@ -7,8 +7,8 @@ using ToSic.SexyContent.Serializers;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
-using ToSic.Eav.ImportExport.Versioning;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Security;
 

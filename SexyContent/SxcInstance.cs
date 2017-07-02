@@ -6,6 +6,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using Newtonsoft.Json;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -59,7 +60,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Environment - should be the place to refactor everything into, which is the host around 2sxc
         /// </summary>
-        public Environment.Environment Environment = new Environment.Environment();
+        public Environment.DnnEnvironment Environment = new Environment.DnnEnvironment();
 
         internal ModuleInfo ModuleInfo { get; }
 

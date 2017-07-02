@@ -1,8 +1,9 @@
-﻿using ToSic.SexyContent.Environment.Interfaces;
+﻿using ToSic.Eav.Apps.Interfaces;
+using ToSic.SexyContent.Environment.Interfaces;
 
 namespace ToSic.SexyContent.Environment
 {
-    public class Environment: IEnvironment
+    public class DnnEnvironment: IEnvironment
     {
         public IPermissions Permissions { get; internal set; }
 

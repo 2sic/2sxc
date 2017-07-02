@@ -1,11 +1,12 @@
 ﻿using DotNetNuke.Web.Api;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.Environment.Interfaces;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
 	public class DnnApiControllerWithFixes: DnnApiController
 	{
-        protected IEnvironment Env = new Environment.Environment();
+        protected IEnvironment Env = new Environment.DnnEnvironment();
 
 	    public DnnApiControllerWithFixes()
 	    {

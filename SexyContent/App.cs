@@ -8,12 +8,14 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.AppEngine;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
+using IApp = ToSic.SexyContent.Interfaces.IApp;
 
 namespace ToSic.SexyContent
 {
@@ -55,7 +57,7 @@ namespace ToSic.SexyContent
 
         public string AppGuid { get; set; }
 
-        private IEnvironment env = new Environment.Environment();
+        private IEnvironment env = new Environment.DnnEnvironment();
 
         public App(PortalSettings ownerPortalSettings, int appId) : this(-1, appId, ownerPortalSettings)
         {

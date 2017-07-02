@@ -210,7 +210,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Primary = ps.DefaultLanguage.ToLower();
             All = new ZoneMapper().CulturesWithState(ps.PortalId, zoneId) // ZoneHelpers.CulturesWithState(ps.PortalId, zoneId)
                     .Where(c => c.Active)
-                    .Select(c => new ClientInfoLanguage() { key = c.Code.ToLower(), name = c.Text });
+                    .Select(c => new ClientInfoLanguage() { key = c.Key.ToLower(), name = c.Text });
         }
     }
 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
@@ -163,6 +164,7 @@ namespace ToSic.SexyContent.Razor
 
         public dynamic ListPresentation => AppAndDataHelpers.ListPresentation;
 
+        [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
         public List<Element> List => AppAndDataHelpers.List;
         #endregion
 

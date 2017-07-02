@@ -28,12 +28,12 @@ namespace ToSic.SexyContent.WebApi
 	    {
 	        var portalId = PortalSettings.PortalId;
 	        var zoneId = Env.ZoneMapper.GetZoneId(portalId);
-	        var env = new Environment.Environment();
+	        var env = new Environment.DnnEnvironment();
 	        // ReSharper disable once PossibleInvalidOperationException
 	        var cultures = env.ZoneMapper.CulturesWithState(portalId, zoneId) 
 	            .Select(c => new
 	            {
-	                c.Code,
+	                Code = c.Key,
 	                Culture = c.Text,
 	                IsEnabled = c.Active
 	            });

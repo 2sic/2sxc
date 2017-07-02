@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.Installer
 
             if (!success)
             {
-                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Text).ToArray());
                 throw new Exception("The 2sxc module upgrade to 08.00.02 failed: " + messages);
             }
 
@@ -53,7 +53,7 @@ namespace ToSic.SexyContent.Installer
 
             if (!success)
             {
-                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Text).ToArray());
                 throw new Exception("The 2sxc module upgrade to 08.00.04 failed: " + messages);
             }
 
@@ -83,7 +83,7 @@ namespace ToSic.SexyContent.Installer
 
             if (!success)
             {
-                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Text).ToArray());
                 throw new Exception("The 2sxc module upgrade to 08.01.00 failed: " + messages);
             }
 
@@ -105,7 +105,7 @@ namespace ToSic.SexyContent.Installer
 
             if (!success)
             {
-                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Text).ToArray());
                 throw new Exception("The 2sxc module upgrade to 08.03.02 failed: " + messages);
             }
 
@@ -135,7 +135,7 @@ namespace ToSic.SexyContent.Installer
 
             if (!success)
             {
-                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Text).ToArray());
                 throw new Exception("The 2sxc module upgrade to 08.03.03 failed: " + messages);
             }
         }

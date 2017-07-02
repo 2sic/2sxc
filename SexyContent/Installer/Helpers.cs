@@ -62,7 +62,7 @@ namespace ToSic.SexyContent.Installer
 
             if (!success)
             {
-                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Text).ToArray());
                 throw new Exception("The 2sxc module upgrade to " + version + " failed: " + messages);
             }
         }

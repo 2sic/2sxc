@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.Internal
             // ToDo: Fix issue in EAV (cache is only ensured when a CacheItem-Property is accessed like LastRefresh)
             var baseCache = ((BaseCache) DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId));
             // ReSharper disable once UnusedVariable
-            var dummy = baseCache.LastRefresh;
+            var dummy = baseCache.CacheLastRefresh;
 
             if (IsNullOrEmpty(appName))
                 return 0; 
@@ -65,7 +65,7 @@ namespace ToSic.SexyContent.Internal
 
             // ToDo: Should throw exception if a real ContentGroup exists
 
-            var zoneId = new Environment.Environment().ZoneMapper.GetZoneId(module.OwnerPortalID);// ZoneHelpers.GetZoneId(module.OwnerPortalID);
+            var zoneId = new Environment.DnnEnvironment().ZoneMapper.GetZoneId(module.OwnerPortalID);// ZoneHelpers.GetZoneId(module.OwnerPortalID);
 
             if (appId == 0 || !appId.HasValue)
                 DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, Settings.AppNameString, null);

@@ -4,6 +4,8 @@ using System.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.Environment.Base;
 using ToSic.SexyContent.Environment.Interfaces;
 
@@ -45,26 +47,28 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// <summary>
         /// Returns all DNN Cultures with active / inactive state
         /// </summary>
-        public List<Culture> CulturesWithState(int tennantId, int zoneId)
+        public List<TempTempCulture> CulturesWithState(int tennantId, int zoneId)
         {
             // note: 
             var availableEavLanguages = new ZoneRuntime(zoneId).Languages(true); 
             var defaultLanguageCode = new PortalSettings(tennantId).DefaultLanguage;
             var defaultLanguage = availableEavLanguages
                 .FirstOrDefault(p => p.Matches(defaultLanguageCode));
-            var defaultLanguageIsActive = defaultLanguage?.Active == true;
+            //var defaultLanguageIsActive = defaultLanguage?.Active == true;
 
             return (from c in LocaleController.Instance.GetLocales(tennantId)
-                    select new Culture(
+                    select new TempTempCulture(
                         c.Value.Code,
                         c.Value.Text,
-                        availableEavLanguages.Any(a => a.Active && a.Matches(c.Value.Code)),
-                        string.Equals(c.Value.Code, defaultLanguageCode, StringComparison.InvariantCultureIgnoreCase) && !defaultLanguageIsActive ||
-                        defaultLanguageIsActive && !string.Equals(c.Value.Code, defaultLanguageCode,
-                            StringComparison.InvariantCultureIgnoreCase))
+                        availableEavLanguages.Any(a => a.Active && a.Matches(c.Value.Code))
+                        //,
+                        //string.Equals(c.Value.Code, defaultLanguageCode, StringComparison.InvariantCultureIgnoreCase) && !defaultLanguageIsActive ||
+                        //defaultLanguageIsActive && !string.Equals(c.Value.Code, defaultLanguageCode,
+                        //    StringComparison.InvariantCultureIgnoreCase)
+                            )
                 )
-                .OrderByDescending(c => c.Code == defaultLanguageCode)
-                .ThenBy(c => c.Code).ToList();
+                .OrderByDescending(c => c.Key == defaultLanguageCode)
+                .ThenBy(c => c.Key).ToList();
 
         }
     }
