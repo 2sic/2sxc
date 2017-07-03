@@ -26,136 +26,6 @@
               <name>00.99.00.SqlDataProvider</name>
               <version>00.99.00</version>
             </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>01.00.00.SqlDataProvider</name>
-              <version>01.00.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>01.00.01.SqlDataProvider</name>
-              <version>01.00.01</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>02.00.00.SqlDataProvider</name>
-              <version>02.00.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>03.00.00.SqlDataProvider</name>
-              <version>03.00.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>03.03.00.SqlDataProvider</name>
-              <version>03.03.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>03.04.03.SqlDataProvider</name>
-              <version>03.04.03</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>04.00.00.SqlDataProvider</name>
-              <version>04.00.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>04.00.02.SqlDataProvider</name>
-              <version>04.00.02</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.01.00.SqlDataProvider</name>
-              <version>05.01.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.02.01.SqlDataProvider</name>
-              <version>05.02.01</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.03.01.SqlDataProvider</name>
-              <version>05.03.01</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.03.02.SqlDataProvider</name>
-              <version>05.03.02</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.03.03.SqlDataProvider</name>
-              <version>05.03.03</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.03.04.SqlDataProvider</name>
-              <version>05.03.04</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.03.05.SqlDataProvider</name>
-              <version>05.03.05</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.05.00.SqlDataProvider</name>
-              <version>05.05.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.05.03.SqlDataProvider</name>
-              <version>05.05.03</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.06.00.SqlDataProvider</name>
-              <version>05.06.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.00.05.SqlDataProvider</name>
-              <version>06.00.05</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.00.09.SqlDataProvider</name>
-              <version>06.00.09</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.02.01.SqlDataProvider</name>
-              <version>06.02.01</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.03.07.SqlDataProvider</name>
-              <version>06.03.07</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.04.00.SqlDataProvider</name>
-              <version>06.04.00</version>
-            </script>
-			<script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.06.00.SqlDataProvider</name>
-              <version>06.06.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.06.01.SqlDataProvider</name>
-              <version>06.06.01</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.06.04.SqlDataProvider</name>
-              <version>06.06.04</version>
-            </script>
 						<script type="Install">
 							<path>SqlDataProvider</path>
 							<name>07.00.00.SqlDataProvider</name>
@@ -798,6 +668,18 @@
       <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
       <azureCompatible>true</azureCompatible>
       <components>
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\ToSIC_SexyContent</basePath>
+            <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v9 -->
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>require-2sxc-9.SqlDataProvider</name>
+              <version>99.99.99</version>
+            </script>
+          </scripts>
+        </component>
+          
         <component type="Module">
           <desktopModule>
             <moduleName>2sxc-app</moduleName>
