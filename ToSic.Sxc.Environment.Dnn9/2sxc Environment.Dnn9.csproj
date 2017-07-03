@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net451</TargetFramework>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <RootNamespace>ToSic.Sxc.Environment.Dnn9</RootNamespace>
+    <AssemblyName>ToSic.Sxc.Environment.Dnn9</AssemblyName>
+  </PropertyGroup>
+
+</Project>
