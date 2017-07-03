@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B981A2F7-EA4A-438A-892A-6381CF129917}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ToSic.SexyContent</RootNamespace>
+    <AssemblyName>ToSic.SexyContent</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\ToSic.SexyContent.xml</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>1591</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClientDependency.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\ClientDependency.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetNuke, Version=6.1.0.1171, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DotNetNuke.dll</HintPath>
+    </Reference>
+    <Reference Include="dotnetnuke.modules.userdefinedtable, Version=6.0.0.15391, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\dotnetnuke.modules.userdefinedtable.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetNuke.Web, Version=6.1.0.1171, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DotNetNuke.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetNuke.Web.Client, Version=6.1.0.272, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DotNetNuke.Web.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetNuke.WebUtility, Version=4.2.1.783, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DotNetNuke.WebUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\eav-server\packages\Microsoft.Extensions.DependencyInjection.1.1.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\eav-server\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\eav-server\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Telerik.Web.UI, Version=2011.2.915.35, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Telerik.Web.UI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Adam\AdamFile.cs" />
+    <Compile Include="Adam\AdamFolder.cs" />
+    <Compile Include="Adam\AdamItem.cs" />
+    <Compile Include="Adam\AdamNavigator.cs" />
+    <Compile Include="Adam\EntityBase.cs" />
+    <Compile Include="Adam\Export.cs" />
+    <Compile Include="Adam\GuidHelpers.cs" />
+    <Compile Include="Adam\IAdamItem.cs" />
+    <Compile Include="Adam\AdamManager.cs" />
+    <Compile Include="Adam\UploadResult.cs" />
+    <Compile Include="API\SecurityContext.cs" />
+    <Compile Include="API\Services.asmx.cs">
+      <DependentUpon>Services.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Environment\Dnn7\Versioning.cs" />
+    <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
+    <Compile Include="SexyContent\ContentBlocks\Renderers\InTextContentBlocks.cs" />
+    <Compile Include="DnnWebForms\FileManager.ascx.cs">
+      <DependentUpon>FileManager.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\FileManager.ascx.designer.cs">
+      <DependentUpon>FileManager.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DnnWebForms\Helpers\DnnLinkHelper.cs" />
+    <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
+    <Compile Include="DnnWebForms\PagePicker.ascx.cs">
+      <DependentUpon>PagePicker.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\PagePicker.ascx.designer.cs">
+      <DependentUpon>PagePicker.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DnnWebForms\WebFormsBridge.ascx.cs">
+      <DependentUpon>WebFormsBridge.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\WebFormsBridge.ascx.designer.cs">
+      <DependentUpon>WebFormsBridge.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DnnWebForms\Wysiwyg.ascx.cs">
+      <DependentUpon>Wysiwyg.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\Wysiwyg.ascx.designer.cs">
+      <DependentUpon>Wysiwyg.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Edit\InPageEditingSystem\IInPageEditingSystem.cs" />
+    <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
+    <Compile Include="Edit\InPageEditingSystem\InPageEditingHelperBase.cs" />
+    <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
+    <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
+    <Compile Include="Environment\Base\ClientDepedencyManager.cs" />
+    <Compile Include="Environment\Dnn7\DataSources\DnnSqlDataSource.cs" />
+    <Compile Include="Environment\Dnn7\DataSources\DnnUserProfileDataSource.cs" />
+    <Compile Include="Environment\Dnn7\ClientDependencyManager.cs" />
+    <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
+    <Compile Include="Environment\Dnn7\RenderingHelpers.cs" />
+    <Compile Include="Environment\Dnn7\Factory.cs" />
+    <Compile Include="Environment\Dnn7\UserIdentity.cs" />
+    <Compile Include="Environment\DnnEnvironment.cs" />
+    <Compile Include="Environment\Interfaces\IClientDependencyManager.cs" />
+    <Compile Include="Environment\None\Permissions.cs" />
+    <Compile Include="Interfaces\IApp.cs" />
+    <Compile Include="Interfaces\IAppData.cs" />
+    <Compile Include="Interfaces\IContentBlock.cs" />
+    <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.cs">
+      <DependentUpon>QuickEdit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.designer.cs">
+      <DependentUpon>QuickEdit.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IDynamicEntity.cs" />
+    <Compile Include="Interfaces\ILinkHelper.cs" />
+    <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
+    <Compile Include="SexyContent\Constants.cs" />
+    <Compile Include="SexyContent\ContentBlocks\ContentGroupReferenceManagerBase.cs" />
+    <Compile Include="SexyContent\ContentBlocks\ContentBlockBase.cs" />
+    <Compile Include="SexyContent\ContentBlocks\EntityContentGroupReferenceManager.cs" />
+    <Compile Include="SexyContent\ContentBlocks\Render.cs" />
+    <Compile Include="SexyContent\ContentBlocks\ModuleContentGroupReferenceManager.cs" />
+    <Compile Include="SexyContent\ContentBlocks\Renderers\Simple.cs" />
+    <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
+    <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
+    <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
+    <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
+    <Compile Include="SexyContent\ImportExport\ToSxcXmlExporter.cs" />
+    <Compile Include="SexyContent\Installer\Helpers.cs" />
+    <Compile Include="SexyContent\Installer\Lock.cs" />
+    <Compile Include="SexyContent\Installer\Logger.cs" />
+    <Compile Include="SexyContent\Installer\Status.cs" />
+    <Compile Include="SexyContent\Installer\V5.cs" />
+    <Compile Include="SexyContent\Installer\V6.cs" />
+    <Compile Include="SexyContent\Installer\V7.cs" />
+    <Compile Include="SexyContent\Installer\V8.cs" />
+    <Compile Include="SexyContent\Installer\VersionBase.cs" />
+    <Compile Include="SexyContent\Internal\AppManagement.cs" />
+    <Compile Include="SexyContent\ContentBlocks\EntityContentBlock.cs" />
+    <Compile Include="SexyContent\ContentBlocks\ModuleContentBlock.cs" />
+    <Compile Include="SexyContent\ContentGroup.cs" />
+    <Compile Include="SexyContent\ContentGroupManager.cs" />
+    <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
+    <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
+    <Compile Include="Environment\Dnn7\DataSources\DnnFormAndList.cs" />
+    <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\Engines\RenderingException.cs" />
+    <Compile Include="SexyContent\Engines\RenderStatusType.cs" />
+    <Compile Include="Environment\Dnn7\Permissions.cs" />
+    <Compile Include="SexyContent\ISxcInstance.cs" />
+    <Compile Include="SexyContent\Settings.cs" />
+    <Compile Include="SexyContent\Internal\AppHelpers.cs" />
+    <Compile Include="SexyContent\Internal\DnnStuffToRefactor.cs" />
+    <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
+    <Compile Include="SexyContent\Internal\TemplateHelpers.cs" />
+    <Compile Include="SexyContent\AppAssets\AssetEditor.cs" />
+    <Compile Include="SexyContent\UnityConfig.cs" />
+    <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEav.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
+    <Compile Include="SexyContent\Security\PermissionController.cs" />
+    <Compile Include="SexyContent\Security\PermissionGrant.cs" />
+    <Compile Include="SexyContent\Serializers\Serializer.cs" />
+    <Compile Include="SexyContent\Installer\InstallationController.cs" />
+    <Compile Include="SexyContent\DataSources\App.cs" />
+    <Compile Include="SexyContent\DnnHelper.cs" />
+    <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
+    <Compile Include="SexyContent\AppAndDataHelpers.cs" />
+    <Compile Include="SexyContent\SxcHelper.cs" />
+    <Compile Include="SexyContent\App.cs" />
+    <Compile Include="SexyContent\DataPublishing.cs" />
+    <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
+    <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
+    <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
+    <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
+    <Compile Include="Deprecated\RemoveInV10\Element.cs" />
+    <Compile Include="SexyContent\DynamicEntity.cs" />
+    <Compile Include="SexyContent\Engines\EngineBase.cs" />
+    <Compile Include="SexyContent\Engines\EngineFactory.cs" />
+    <Compile Include="SexyContent\Engines\IEngine.cs" />
+    <Compile Include="SexyContent\Engines\InstancePurposes.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\AppPropertyAccess.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
+    <Compile Include="SexyContent\EAV\Extensions\EntityDecorator.cs" />
+    <Compile Include="SexyContent\EAV\Extensions\EntityInContentGroup.cs" />
+    <Compile Include="SexyContent\EAV\Extensions\IHasEditingData.cs" />
+    <Compile Include="SexyContent\IEditContentControl.cs" />
+    <Compile Include="SexyContent\TemplateManager.cs" />
+    <Compile Include="SexyContent\Search\ISearchInfo.cs" />
+    <Compile Include="SexyContent\Search\SearchController.cs" />
+    <Compile Include="SexyContent\Search\SearchIndexException.cs" />
+    <Compile Include="SexyContent\Search\SearchInfo.cs" />
+    <Compile Include="SexyContent\SexyContentException.cs" />
+    <Compile Include="View.ascx.cs">
+      <DependentUpon>View.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View.ascx.designer.cs">
+      <DependentUpon>View.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\SxcInstance.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".gitignore" />
+    <Content Include="Administration\Export.js" />
+    <Content Include="API\Services.asmx" />
+    <Content Include="DnnWebForms\FileManager.ascx" />
+    <Content Include="DnnWebForms\PagePicker.ascx" />
+    <Content Include="DnnWebForms\WebFormsBridge.ascx" />
+    <Content Include="DnnWebForms\Wysiwyg.ascx" />
+    <Content Include="Extensions\404.png" />
+    <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
+    <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
+    <Content Include="icon-app-black.png" />
+    <Content Include="icon-black.png" />
+    <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
+    <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
+    <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
+    <Content Include="icon-app.png" />
+    <Content Include="icon.png" />
+    <Content Include="Extensions\Thumbnailer.aspx" />
+    <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
+    <Content Include="README.md" />
+    <Content Include="package.json" />
+    <Content Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
+    <Content Include="SexyContent\ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
+    <Content Include="packages.config" />
+    <Content Include="View.ascx" />
+    <Content Include="WebConfigTemplate.config" />
+    <Content Include="web-Deploy.config" />
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\View.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\View.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Beta\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">
+      <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
+      <Name>ToSic.Eav.Apps</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
+      <Project>{82f94588-269b-4cdd-98d1-d5cb14c39090}</Project>
+      <Name>ToSic.Eav.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj">
+      <Project>{daae8e21-ca5f-400b-9f5a-5e4e1196b21b}</Project>
+      <Name>ToSic.Eav.DataSources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj">
+      <Project>{5a75cd35-99f4-4cf0-944a-dc0f5d68b430}</Project>
+      <Name>ToSic.Eav.ImportExport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Tokens\ToSic.Eav.TokenEngine.csproj">
+      <Project>{2a81f269-8cca-4afd-a85f-82b1c2343965}</Project>
+      <Name>ToSic.Eav.TokenEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj">
+      <Project>{f93f5fb1-95a6-4c4b-bdcf-b001e82f766f}</Project>
+      <Name>ToSic.Eav.WebApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj">
+      <Project>{cf3b9349-8c66-4901-8edb-a4ec1d75326b}</Project>
+      <Name>ToSic.Eav</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'efc and WebApi|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DocumentationFile>..\..\bin\ToSic.SexyContent.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'debug eav only|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DocumentationFile>..\..\bin\ToSic.SexyContent.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Extension>zip</Extension>
+    <DNNFileName>2sic_2SexyContent</DNNFileName>
+    <PackageName>2sic_2SexyContent</PackageName>
+    <MSBuildCommunityTasksPath>$(SolutionDir)\BuildScripts</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+  <!-- <Import Project="$(SolutionDir)\BuildScripts\ModulePackage.Targets" /> -->
+  <Import Project="$(ProjectDir)\BuildScripts\ModulePackage.Targets" />
+  <!-- 2017-05-04 2dm - trying to get packaging in another project -->
+  <Target Name="AfterBuild" DependsOnTargets="PackageModule">
+  </Target>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets'))" />
+  </Target>
+</Project>
