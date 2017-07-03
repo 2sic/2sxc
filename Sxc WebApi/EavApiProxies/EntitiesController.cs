@@ -253,20 +253,50 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
         #region versioning
 
+	    //[HttpGet]
+     //   [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+     //   public List<ItemHistory> History(int appId, int entityId)
+	    //{
+     //       EnsureSerializerHasSxc();
+	    //    return _entitiesController.History(appId, entityId);
+	    //}
+
+	    //[HttpGet]
+     //   [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+     //   public bool Restore(int appId, int entityId, int changeId)
+	    //{
+     //       EnsureSerializerHasSxc();
+	    //    return _entitiesController.Restore(appId, entityId, changeId);
+	    //}
+
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public List<ItemHistory> History(int appId, int entityId)
+        public List<ItemHistory> History(int appId, ItemIdentifier item)
 	    {
             EnsureSerializerHasSxc();
-	        return _entitiesController.History(appId, entityId);
+	        ResolveItemIdOfGroup(appId, item);
+            return _entitiesController.History(appId, item.EntityId);
+
+        }
+
+	    private static void ResolveItemIdOfGroup(int appId, ItemIdentifier item)
+	    {
+	        if (item.Group != null)
+	        {
+	            var app = new App(PortalSettings.Current, appId);
+	            var contentGroup = app.ContentGroupManager.GetContentGroup(item.Group.Guid);
+	            var part = contentGroup[item.Group.Part];
+	            item.EntityId = part[item.Group.Index].EntityId;
+	        }
 	    }
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool Restore(int appId, int entityId, int changeId)
+        public bool Restore(int appId, ItemIdentifier item, int changeId)
 	    {
             EnsureSerializerHasSxc();
-	        return _entitiesController.Restore(appId, entityId, changeId);
+            ResolveItemIdOfGroup(appId, item);
+            return _entitiesController.Restore(appId, item.EntityId, changeId);
 	    }
         #endregion
     }

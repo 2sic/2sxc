@@ -1,4 +1,4 @@
-﻿{
+{
   "Content": {
     "Title": "Content and Content-Presentation",
     "Sets": [
