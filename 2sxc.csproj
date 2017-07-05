@@ -209,8 +209,6 @@
     <Compile Include="SexyContent\Installer\Lock.cs" />
     <Compile Include="SexyContent\Installer\Logger.cs" />
     <Compile Include="SexyContent\Installer\Status.cs" />
-    <Compile Include="SexyContent\Installer\V5.cs" />
-    <Compile Include="SexyContent\Installer\V6.cs" />
     <Compile Include="SexyContent\Installer\V7.cs" />
     <Compile Include="SexyContent\Installer\V8.cs" />
     <Compile Include="SexyContent\Installer\VersionBase.cs" />
