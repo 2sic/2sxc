@@ -6,6 +6,6 @@ SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopMod
 
 If @IsUpgradeFromPreviousVersion = 1
 BEGIN
-	RAISERROR(N'The currently installed 2sxc-version is 6 or below. This version does not support this upgrade directly. Please upgrade to a newer version (v8) and then run this upgrade again. ****************************************************************************************************************************************************************************************************************************************************************************************************************************************************', 16, 1)
+	RAISERROR(N'The currently installed 2sxc-version is 6 or below. This version does not support this upgrade directly. Please upgrade to a newer version (v8) and then run this upgrade again. Read more: http://2sxc.org/en/help?tag=upgrade ****************************************************************************************************************************************************************************************************************************************************************************************************************************************************', 16, 1)
 	RETURN
 END
