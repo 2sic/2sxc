@@ -36,7 +36,6 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="SqlDataProvider\00.99.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\07.00.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.00.03.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.02.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.02.02.SqlDataProvider" />

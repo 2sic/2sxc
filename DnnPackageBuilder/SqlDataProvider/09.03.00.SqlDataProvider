@@ -1,4 +1,12 @@
-﻿/* 2017-06-29 2dm: Enhance DataTimeline with new content column */
+﻿-- Make sure code-upgrade to 07.00.03 has finished before continuing upgrade
+-- This is done by checking existence of attribute-set PermissionConfiguration
+IF EXISTS (SELECT * FROM ToSIC_EAV_AttributeSets WHERE StaticName = 'PermissionConfiguration')
+BEGIN
+	RAISERROR(N'It looks like the last upgrade has not finished yet. Please insert 2sxc on a page to check the status. Read more: http://2sxc.org/en/help?tag=upgrade ****************************************************************************************************************************************************************************************************************************************************************************************************************************************************', 16, 1)
+	RETURN
+END
+
+/* 2017-06-29 2dm: Enhance DataTimeline with new content column */
 
 
 /* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
