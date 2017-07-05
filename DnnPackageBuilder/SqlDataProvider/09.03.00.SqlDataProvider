@@ -13,6 +13,12 @@ SET XACT_ABORT ON
 
 BEGIN TRANSACTION SexyContentUpdate;
 
+IF NOT EXISTS (
+  SELECT * 
+  FROM   sys.columns 
+  WHERE  object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_DataTimeline]') 
+         AND name = 'Json'
+)
 ALTER TABLE dbo.ToSIC_EAV_DataTimeline ADD
 	Json nvarchar(MAX) NULL
 
@@ -20,6 +26,12 @@ ALTER TABLE dbo.ToSIC_EAV_DataTimeline SET (LOCK_ESCALATION = TABLE)
 
 TRUNCATE TABLE dbo.ToSIC_EAV_DataTimeline
 
+IF NOT EXISTS (
+  SELECT * 
+  FROM   sys.columns 
+  WHERE  object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_Entities]') 
+         AND name = 'Json'
+)
 ALTER TABLE dbo.ToSIC_EAV_Entities ADD
 	Json nvarchar(MAX) NULL,
 	Version int NULL
@@ -33,19 +45,78 @@ SET Version = 1 WHERE Version IS NULL')
 /* now make sure it's not nullable any more */
 EXEC('ALTER TABLE [dbo].[ToSIC_EAV_Entities] ALTER COLUMN [Version] INTEGER NOT NULL')
 
+IF NOT EXISTS (
+  SELECT * 
+  FROM   sys.columns 
+  WHERE  object_id = OBJECT_ID(N'[dbo].[ToSIC_EAV_AttributeSets]') 
+         AND name = 'Json'
+)
 ALTER TABLE dbo.ToSIC_EAV_AttributeSets ADD Json nvarchar(MAX) NULL
 
 ALTER TABLE dbo.ToSIC_EAV_AttributeSets SET (LOCK_ESCALATION = TABLE)
 
+IF EXISTS (
+    SELECT *
+    FROM sys.objects
+    WHERE [type] = 'TR' AND [name] = 'AutoLogAllChangesToTimeline_Entities'
+    )
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_Entities]
+
+IF EXISTS (
+    SELECT *
+    FROM sys.objects
+    WHERE [type] = 'TR' AND [name] = 'AutoLogAllChangesToTimeline_AttributesInSets'
+    )
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_AttributesInSets]
+
+IF EXISTS (
+    SELECT *
+    FROM sys.objects
+    WHERE [type] = 'TR' AND [name] = 'AutoLogAllChangesToTimeline_AttributeSets'
+    )
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_AttributeSets]
+
+IF EXISTS (
+    SELECT *
+    FROM sys.objects
+    WHERE [type] = 'TR' AND [name] = 'AutoLogAllChangesToTimeline_Attributes'
+    )
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_Attributes]
+
+IF EXISTS (
+    SELECT *
+    FROM sys.objects
+    WHERE [type] = 'TR' AND [name] = 'AutoLogAllChangesToTimeline_AttributeGroups'
+    )
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_AttributeGroups]
+
+IF EXISTS (
+    SELECT *
+    FROM sys.objects
+    WHERE [type] = 'TR' AND [name] = 'AutoLogAllChangesToTimeline_AssignmentObjectTypes'
+    )
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_AssignmentObjectTypes]
+
+IF EXISTS (
+    SELECT *
+    FROM sys.objects
+    WHERE [type] = 'TR' AND [name] = 'AutoLogAllChangesToTimeline_Zones'
+    )
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_Zones]
+
+IF EXISTS (
+    SELECT *
+    FROM sys.objects
+    WHERE [type] = 'TR' AND [name] = 'AutoLogAllChangesToTimeline_Dimensions'
+    )
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_Dimensions]
+
+IF EXISTS (
+    SELECT *
+    FROM sys.objects
+    WHERE [type] = 'TR' AND [name] = 'AutoLogAllChangesToTimeline_Apps'
+    )
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_Apps]
 
---COMMIT TRANSACTION SexyContentUpdate;
-ROLLBACK TRANSACTION SexyContentUpdate;
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;
