@@ -1,6 +1,6 @@
 ﻿-- Make sure code-upgrade to 07.00.03 has finished before continuing upgrade
 -- This is done by checking existence of attribute-set PermissionConfiguration
-IF EXISTS (SELECT * FROM ToSIC_EAV_AttributeSets WHERE StaticName = 'PermissionConfiguration')
+IF NOT EXISTS (SELECT * FROM ToSIC_EAV_AttributeSets WHERE StaticName = 'PermissionConfiguration')
 BEGIN
 	RAISERROR(N'It looks like the last upgrade has not finished yet. Please insert 2sxc on a page to check the status. Read more: http://2sxc.org/en/help?tag=upgrade ****************************************************************************************************************************************************************************************************************************************************************************************************************************************************', 16, 1)
 	RETURN
@@ -8,138 +8,44 @@ END
 
 /* 2017-06-29 2dm: Enhance DataTimeline with new content column */
 
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
 
-/* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
-BEGIN TRANSACTION
-SET QUOTED_IDENTIFIER ON
-SET ARITHABORT ON
-SET NUMERIC_ROUNDABORT OFF
-SET CONCAT_NULL_YIELDS_NULL ON
-SET ANSI_NULLS ON
-SET ANSI_PADDING ON
-SET ANSI_WARNINGS ON
-COMMIT
-BEGIN TRANSACTION
-GO
+BEGIN TRANSACTION SexyContentUpdate;
+
 ALTER TABLE dbo.ToSIC_EAV_DataTimeline ADD
 	Json nvarchar(MAX) NULL
-GO
+
 ALTER TABLE dbo.ToSIC_EAV_DataTimeline SET (LOCK_ESCALATION = TABLE)
-GO
-COMMIT
 
 TRUNCATE TABLE dbo.ToSIC_EAV_DataTimeline
 
-/* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
-BEGIN TRANSACTION
-SET QUOTED_IDENTIFIER ON
-SET ARITHABORT ON
-SET NUMERIC_ROUNDABORT OFF
-SET CONCAT_NULL_YIELDS_NULL ON
-SET ANSI_NULLS ON
-SET ANSI_PADDING ON
-SET ANSI_WARNINGS ON
-COMMIT
-BEGIN TRANSACTION
-GO
 ALTER TABLE dbo.ToSIC_EAV_Entities ADD
 	Json nvarchar(MAX) NULL,
 	Version int NULL
-GO
+
 ALTER TABLE dbo.ToSIC_EAV_Entities SET (LOCK_ESCALATION = TABLE)
-GO
-COMMIT
 
 /* now set all Versions to 1 */
-Update [dbo].[ToSIC_EAV_Entities]
-Set Version = 1 where Version is null
-Go
+EXEC('UPDATE [dbo].[ToSIC_EAV_Entities]
+SET Version = 1 WHERE Version IS NULL')
 
-/* now make sure it's not nullably any more */
-ALTER TABLE [dbo].[ToSIC_EAV_Entities] ALTER COLUMN [Version] INTEGER NOT NULL
-Go
+/* now make sure it's not nullable any more */
+EXEC('ALTER TABLE [dbo].[ToSIC_EAV_Entities] ALTER COLUMN [Version] INTEGER NOT NULL')
 
+ALTER TABLE dbo.ToSIC_EAV_AttributeSets ADD Json nvarchar(MAX) NULL
 
-/* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
-BEGIN TRANSACTION
-SET QUOTED_IDENTIFIER ON
-SET ARITHABORT ON
-SET NUMERIC_ROUNDABORT OFF
-SET CONCAT_NULL_YIELDS_NULL ON
-SET ANSI_NULLS ON
-SET ANSI_PADDING ON
-SET ANSI_WARNINGS ON
-COMMIT
-BEGIN TRANSACTION
-GO
-ALTER TABLE dbo.ToSIC_EAV_AttributeSets ADD
-	Json nvarchar(MAX) NULL
-GO
 ALTER TABLE dbo.ToSIC_EAV_AttributeSets SET (LOCK_ESCALATION = TABLE)
-GO
-COMMIT
 
-
-
-
-/****** Object:  Trigger [AutoLogAllChangesToTimeline_Entities]    Script Date: 29.06.2017 18:00:40 ******/
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_Entities]
-GO
-
-
-GO
-
-/****** Object:  Trigger [AutoLogAllChangesToTimeline_AttributesInSets]    Script Date: 29.06.2017 18:02:32 ******/
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_AttributesInSets]
-GO
-
-
-GO
-
-/****** Object:  Trigger [AutoLogAllChangesToTimeline_AttributeSets]    Script Date: 29.06.2017 18:02:50 ******/
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_AttributeSets]
-GO
-
-
-GO
-
-/****** Object:  Trigger [AutoLogAllChangesToTimeline_Attributes]    Script Date: 29.06.2017 18:03:05 ******/
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_Attributes]
-GO
-
-
-GO
-
-/****** Object:  Trigger [AutoLogAllChangesToTimeline_AttributeGroups]    Script Date: 29.06.2017 18:03:24 ******/
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_AttributeGroups]
-GO
-
-
-GO
-
-/****** Object:  Trigger [AutoLogAllChangesToTimeline_AssignmentObjectTypes]    Script Date: 29.06.2017 18:03:51 ******/
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_AssignmentObjectTypes]
-GO
-
-
-GO
-
-/****** Object:  Trigger [AutoLogAllChangesToTimeline_Zones]    Script Date: 29.06.2017 18:04:35 ******/
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_Zones]
-GO
-
-
-GO
-
-/****** Object:  Trigger [AutoLogAllChangesToTimeline_Dimensions]    Script Date: 29.06.2017 18:04:55 ******/
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_Dimensions]
-GO
-
-
-GO
-
-/****** Object:  Trigger [AutoLogAllChangesToTimeline_Apps]    Script Date: 29.06.2017 18:05:29 ******/
 DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_Apps]
-GO
 
-
+--COMMIT TRANSACTION SexyContentUpdate;
+ROLLBACK TRANSACTION SexyContentUpdate;
