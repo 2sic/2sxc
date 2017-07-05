@@ -65,6 +65,8 @@ namespace ToSic.SexyContent.EAVExtensions
 
         object IEntityLight.this[string attributeName] => ((IEntityLight) _baseEntity)[attributeName];
 
+        public int Version => _baseEntity.Version;
+
         #endregion
     }
 }
