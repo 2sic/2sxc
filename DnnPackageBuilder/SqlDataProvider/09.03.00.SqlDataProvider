@@ -22,10 +22,6 @@ COMMIT
 
 TRUNCATE TABLE dbo.ToSIC_EAV_DataTimeline
 
--- Delete 
---  FROM [2flex 2Sexy Content].[dbo].[ToSIC_EAV_DataTimeline]
---  Where operation = 'i' or operation = 'u' or operation = 'd'
-
 /* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
 BEGIN TRANSACTION
 SET QUOTED_IDENTIFIER ON
@@ -39,11 +35,22 @@ COMMIT
 BEGIN TRANSACTION
 GO
 ALTER TABLE dbo.ToSIC_EAV_Entities ADD
-	Json nvarchar(MAX) NULL
+	Json nvarchar(MAX) NULL,
+	Version int NULL
 GO
 ALTER TABLE dbo.ToSIC_EAV_Entities SET (LOCK_ESCALATION = TABLE)
 GO
 COMMIT
+
+/* now set all Versions to 1 */
+Update [dbo].[ToSIC_EAV_Entities]
+Set Version = 1 where Version is null
+Go
+
+/* now make sure it's not nullably any more */
+ALTER TABLE [dbo].[ToSIC_EAV_Entities] ALTER COLUMN [Version] INTEGER NOT NULL
+Go
+
 
 /* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
 BEGIN TRANSACTION
