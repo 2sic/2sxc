@@ -192,10 +192,12 @@
 		"App": "App Konfigurieren",
 		"Zone": "Apps verwalten"
 	},
-	"EntityHistory": {
+	"ItemHistory": {
 		"Title": "Versionen dieses Elementes",
-		"Version": "Version",
-		"RestoreLive": "Version wiederherstellen",
-		"RestoreDraft": "Als Entwurf wiederherstellen"
+		"Version": "Version {{version}}",
+		"Buttons": {
+			"RestoreLive": "Wiederherstellen",
+			"RestoreDraft": "Als Entwurf wiederherstellen"
+		}
 	}
 }
