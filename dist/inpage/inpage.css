@@ -103,9 +103,9 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 /* only use the WOFF, as all modern browsers support that */
 @font-face {
   font-family: 'inpage-icons';
-  src: url('../lib/fonts/inpage-icons.woff?09.02.00') format('woff'),
-       url('../lib/fonts/inpage-icons.eot?09.02.00#iefix') format('embedded-opentype'),
-       url('../lib/fonts/inpage-icons.ttf?09.02.00') format('truetype');
+  src: url('../lib/fonts/inpage-icons.woff?09.01.03') format('woff'),
+       url('../lib/fonts/inpage-icons.eot?09.01.03#iefix') format('embedded-opentype'),
+       url('../lib/fonts/inpage-icons.ttf?09.01.03') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -148,6 +148,7 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 
 .inpage-frame-wrapper .inpage-frame {
     width: 100%;
+    height: 100%;
     z-index: 10000001;
     text-align: center;
     -moz-user-select: none;
@@ -159,6 +160,7 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 
 .inpage-frame-wrapper .inpage-frame iframe {
     width: 100%;
+    height: 100%;
     vertical-align: top;
     box-sizing: content-box;
 }
@@ -253,6 +255,7 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 .icon-sxc-export:before { content: '\e81e'; } /* '' */
 .icon-sxc-cart-arrow-down:before { content: '\e81f'; } /* '' */
 .icon-sxc-share:before { content: '\e820'; } /* '' */
+.icon-sxc-clock:before { content: '\e821'; } /* '' */
 .icon-sxc-bomb:before { content: '\f1e2'; } /* '' */
 /****** Content block menu */
 

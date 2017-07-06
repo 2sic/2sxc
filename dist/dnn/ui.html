@@ -12,14 +12,15 @@
     <script>
         // the version to append to each asset, to ensure reload after an upgrade
         var sxcVersionParam = "sxcver=" + $2sxc.urlParams.require("sxcver");
- 
+
         // this creates an object on $.ServicesFramework
         // it looks like the DNN object and is necessary so that scripts relying on it will work
         // it basically fakes it, but contains the correct infos like getTabId etc. without needing the full DNN
         function createFakeSf(apiUrl) {
             if ($2sxc.urlParams.require("mid") === "")
                 alert("ModuleId (mid) missing - cannot continue");
-            if (window.$ === undefined) window.$ = {};
+            if (window.$ === undefined)
+                window.$ = {};
             window.$.ServicesFramework = function (id) {
                 return {
                     name: "This is a fake DNN ServicesFramework",
@@ -137,19 +138,20 @@
 </head>
 
 <body style="background-color:transparent">
-
     <script>
         // note: the pipeline designer is special - it doesn't open a modal-dialog but should be shown directly
         // all others will be modal-opened by the DialogHost App
-        if (dialogName === "dash-view") {
-            document.write("<div class=\"contentBlockDashboard\" sxc-app=\"2sxc.view\" ng-controller=\"TemplateSelectorCtrl as vm\" class=\"sc-selector-wrapper\" ng-include=\"'template-selector/template-selector.html'\"> </div>");
-        } else if (dialogName === "pipeline-designer") {
-            document.write('<div sxc-app="PipelineDesigner" ng-include="\'pipelines/pipeline-designer.html\'" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,PipelineDesigner"></div>');
-        } else {
-            document.write('<div sxc-app="DialogHost" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,DialogHost" ng-controller="DialogHost as vm"></div>');
+        switch (dialogName) {
+            case 'dash-view':
+                document.write("<div class=\"contentBlockDashboard\" sxc-app=\"2sxc.view\" ng-controller=\"TemplateSelectorCtrl as vm\" class=\"sc-selector-wrapper\" ng-include=\"'template-selector/template-selector.html'\"> </div>");
+                break;
+            case 'pipeline-designer':
+                document.write('<div sxc-app="PipelineDesigner" ng-include="\'pipelines/pipeline-designer.html\'" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,PipelineDesigner"></div>');
+                break;
+            default:
+                document.write('<div sxc-app="DialogHost" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,DialogHost" ng-controller="DialogHost as vm"></div>');
         }
     </script>
-
 </body>
 
 </html>

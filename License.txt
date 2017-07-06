@@ -1,0 +1,7 @@
+Everything in 2sxc is <em>free open source</em> :)
+
+2sxc itself is released under the MIT license. It also uses many other open source components with different open-source licenses, from AGPL to X11. 
+
+If you want to know more, read our <a href="http://2sxc.org/License" target="_blank">license page</a>. It also contains instructions how to switch from the really cool, copyleft AGPL image resizer to the simpler one with an Apache license.
+
+Be sexy - give back to the community or <a href="https://www.kiva.org/invitedby/ijungleboy" target="_blank">to those less fortunate</a>. Contribute your work, support others - share the love. 
