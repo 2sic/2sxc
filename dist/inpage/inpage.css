@@ -162,7 +162,6 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
     height: 100%;
     vertical-align: top;
     box-sizing: content-box;
-    position: absolute;
     left: 0;
     top: 0;
 }

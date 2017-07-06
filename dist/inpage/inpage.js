@@ -919,7 +919,8 @@ var $2sxcActionMenuMapper = function (moduleId) {
 (function () {
     $2sxc._dialog = Dialog;
 
-    var RESIZE_INTERVAL = 200,
+    var isFullscreen = false,
+        RESIZE_INTERVAL = 200,
         SHOW_DELAY = 400,
         SCROLL_TOP_OFFSET = 80,
         activeDialog,
@@ -939,6 +940,10 @@ var $2sxcActionMenuMapper = function (moduleId) {
             iframe.style.minHeight = container.css('min-height');
             iframe.style.height = height + "px";
             iframe.previousHeight = height;
+            if (isFullscreen) {
+                iframe.style.height = "100%";
+                iframe.style.position = "absolute";
+            }
         } catch (e) { }
     }, RESIZE_INTERVAL);
 
@@ -946,7 +951,9 @@ var $2sxcActionMenuMapper = function (moduleId) {
         var iframe, // frame inside the dialog (HTMLElement)
             resizeInterval,
             wrapperParent = $(wrapperTag).parent().eq(0);
-        
+
+        isFullscreen = fullScreen;
+
         init();
         /**
          * Assign properties to the iframe for later use.
