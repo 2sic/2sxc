@@ -173,6 +173,12 @@
 		"App": "configure app",
 		"Zone": "manage all apps"
 	},
+	"EntityHistory": {
+		"Title": "Versions of this item",
+		"Version": "Version",
+		"RestoreLive": "Restore live",
+		"RestoreDraft": "Restore as draft"
+	},
 	"ImportExport": {
 		"Title": "Export or Import <em>parts</em> of this App",
 		"Intro": "Create an xml containing parts of the app, e.g. content and templates.<br/>Import parts from such an xml into this app.",

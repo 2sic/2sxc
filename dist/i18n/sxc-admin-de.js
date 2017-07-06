@@ -191,5 +191,11 @@
 		"Catalog": "App Katalog durchsuchen",
 		"App": "App Konfigurieren",
 		"Zone": "Apps verwalten"
+	},
+	"EntityHistory": {
+		"Title": "Versionen dieses Elementes",
+		"Version": "Version",
+		"RestoreLive": "Version wiederherstellen",
+		"RestoreDraft": "Als Entwurf wiederherstellen"
 	}
 }
