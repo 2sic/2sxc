@@ -255,8 +255,9 @@
 		"Zone": "manage all apps"
 	},
 	"ItemHistory": {
-		"Title": "Versions of this item",
+		"Title": "History of this item",
 		"Version": "Version {{version}}",
+		"NoHistory": "No previous versions of this item found",
 		"Buttons": {
 			"RestoreLive": "Restore",
 			"RestoreDraft": "Restore as draft"

@@ -103,9 +103,9 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 /* only use the WOFF, as all modern browsers support that */
 @font-face {
   font-family: 'inpage-icons';
-  src: url('../lib/fonts/inpage-icons.woff?09.01.03') format('woff'),
-       url('../lib/fonts/inpage-icons.eot?09.01.03#iefix') format('embedded-opentype'),
-       url('../lib/fonts/inpage-icons.ttf?09.01.03') format('truetype');
+  src: url('../lib/fonts/inpage-icons.woff?09.03.00') format('woff'),
+       url('../lib/fonts/inpage-icons.eot?09.03.00#iefix') format('embedded-opentype'),
+       url('../lib/fonts/inpage-icons.ttf?09.03.00') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

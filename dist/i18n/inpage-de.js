@@ -18,7 +18,8 @@
 		"Zone": "apps verwalten",
 		"MoreActions": "weitere Aktionen",
 		"ConfirmRemove": "Dieses Inhalts-Element von der Liste wird entfernt, aber nicht gelöscht. So kann man es später wieder hinzufügen. \nSiehe auch 2sxc.org/help. \n\nEntfernen ok?",
-		"Delete": "Eintrag löschen"
+		"Delete": "Eintrag löschen",
+		"ItemHistory": "Versionen"
 	},
 	"Delete": {
 		"Confirm": "Dies löscht den Eintrag {id} \"{title}\". \n\nDas kann nicht rückgängig gemacht werden. Bist du sicher?",
