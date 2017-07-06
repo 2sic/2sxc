@@ -269,30 +269,27 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    //    return _entitiesController.Restore(appId, entityId, changeId);
 	    //}
 
-	    [HttpGet]
+	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public List<ItemHistory> History(int appId, ItemIdentifier item)
+        public List<ItemHistory> History(int appId, [FromBody]ItemIdentifier item)
 	    {
             EnsureSerializerHasSxc();
 	        ResolveItemIdOfGroup(appId, item);
             return _entitiesController.History(appId, item.EntityId);
-
         }
 
 	    private static void ResolveItemIdOfGroup(int appId, ItemIdentifier item)
 	    {
-	        if (item.Group != null)
-	        {
-	            var app = new App(PortalSettings.Current, appId);
-	            var contentGroup = app.ContentGroupManager.GetContentGroup(item.Group.Guid);
-	            var part = contentGroup[item.Group.Part];
-	            item.EntityId = part[item.Group.Index].EntityId;
-	        }
+            if (item.Group == null) return;
+	        var app = new App(PortalSettings.Current, appId);
+	        var contentGroup = app.ContentGroupManager.GetContentGroup(item.Group.Guid);
+	        var part = contentGroup[item.Group.Part];
+	        item.EntityId = part[item.Group.Index].EntityId;
 	    }
 
-	    [HttpGet]
+	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool Restore(int appId, ItemIdentifier item, int changeId)
+        public bool Restore(int appId, int changeId, [FromBody]ItemIdentifier item)
 	    {
             EnsureSerializerHasSxc();
             ResolveItemIdOfGroup(appId, item);

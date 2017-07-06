@@ -174,7 +174,7 @@
                     // can never be used for a modulelist item, as it is always in use somewhere
                     if (settings.useModuleList)
                         return false;
-
+                    
                     // check if all data exists required for deleting
                     return settings.entityId && settings.entityGuid && settings.entityTitle;
                 },
@@ -378,24 +378,11 @@
                     .attr("data-state", newState);
             }
         }));
-
-        //addDef(makeDef('version', 'version', 'clock', true, {
-        //    code: function (settings, event, sxc) {
-        //        sxc.manage.contentBlock.showVersionDialog();
-        //    }
-        //}));
-
-        //// show the version dialog
-        //addDef(makeDef("version-dialog", "version-dialog", "clock", true, {
-        //    inlineWindow: true,
-        //    code: function(settings, event, sxc) {
-        //        sxc.manage._commands._openModernDialog(settings, event);
-        //    }
-        //}));
-
+        
         // show the version dialog
         addDef(makeDef("item-history", "ItemHistory", "clock", true, {
-            inlineWindow: true
+            inlineWindow: true,
+            angularDialog: true,
         }));
 
         return act;
@@ -429,7 +416,7 @@
                         var itm = {}, ct = cmd.settings.contentType || cmd.settings.attributeSetName; // two ways to name the content-type-name this, v 7.2+ and older
                         if (cmd.settings.entityId) itm.EntityId = cmd.settings.entityId;
                         if (ct) itm.ContentTypeName = ct;
-                        
+
                         // only add if there was stuff to add
                         if (itm.EntityId || itm.ContentTypeName) cmd.items.push(itm);
                     },
@@ -441,7 +428,7 @@
                             Title: $2sxc.translate(sectionLanguageKey)
                         });
                     },
-                    
+
                     // this will tell the command to edit a item from the sorted list in the group, optionally together with the presentation item
                     addContentGroupItemSetsToEditList: function (withPresentation) {
                         var isContentAndNotHeader = (cmd.settings.sortOrder !== -1),
@@ -479,7 +466,7 @@
             },
 
             // create a dialog link
-            _linkToNgDialog: function (specialSettings, url) {
+            _linkToNgDialog: function (specialSettings) {
                 var cmd = cmc.manage._commands.create(specialSettings);
 
                 if (cmd.settings.useModuleList) cmd.addContentGroupItemSetsToEditList(true);
@@ -488,16 +475,21 @@
                 // if the command has own configuration stuff, do that now
                 if (cmd.settings.configureCommand) cmd.settings.configureCommand(cmd);
 
-                return cmd.generateLink(url);
+                if (specialSettings.angularDialog) {
+                    var modernDialogUrl = cmc.manage._editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/ng/index.html?sxcver="
+                        + cmc.manage._editContext.Environment.SxcVersion;
+                    return cmd.generateLink(modernDialogUrl);
+                }
+                return cmd.generateLink();
             },
 
             _openModernDialog: function (settings) {
-                var modernDialogUrl = cmc.manage._editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/ng/version-dialog/index.html?sxcver="
+                var modernDialogUrl = cmc.manage._editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/ng/index.html?sxcver="
                     + cmc.manage._editContext.Environment.SxcVersion,
                     link = cmc._linkToNgDialog(settings, modernDialogUrl);
-                return $2sxc._modernDialog.create(sxc, link, true);
+                return $2sxc._angularDialog.open(url, settings.name);
             },
-            
+
             // open a new dialog of the angular-ui
             _openNgDialog: function (settings, event, closeCallback) {
                 var callback = function () {
@@ -505,10 +497,7 @@
                     closeCallback();
                 }, link = cmc._linkToNgDialog(settings);
                 if (settings.newWindow || (event && event.shiftKey)) return window.open(link);
-                if (settings.inlineWindow) {
-                    console.log(settings);
-                    return $2sxc._dialog(sxc, targetTag, link, callback);
-                }
+                if (settings.inlineWindow) return $2sxc._dialog(sxc, targetTag, link, callback, settings.dialog === 'item-history');
                 return $2sxc.totalPopup.open(link, callback);
             },
 
@@ -518,7 +507,7 @@
                     // ToDo: review this code
                     // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
                     origEvent = event || window.event;
-                
+
                 // check if name is name (string) or object (settings)
                 if (!event && settings && typeof settings.altKey !== 'undefined') { // no event param, but settings contains the event-object
                     event = settings;   // move it to the correct variable
@@ -528,7 +517,7 @@
                 settings = (typeof nameOrSettings === "string")
                     ? $2sxc._lib.extend(settings || {}, { "action": nameOrSettings }) // place the name as an action-name into a command-object
                     : nameOrSettings;
-                
+
                 conf = cmc.manage._toolbar.actions[settings.action];
                 settings = $2sxc._lib.extend({}, conf, settings); // merge conf & settings, but settings has higher priority
 
@@ -937,7 +926,7 @@ var $2sxcActionMenuMapper = function (moduleId) {
         activeWrapper,
         container = $('<div class="inpage-frame-wrapper"><div class="inpage-frame"></div></div>'),
         inpageFrame = container.find('.inpage-frame');
-    
+
     $('body').append(container);
 
     setInterval(function () {
@@ -947,16 +936,17 @@ var $2sxcActionMenuMapper = function (moduleId) {
             height = iframe.contentDocument.body.offsetHeight;
             if (iframe.previousHeight === height) return;
             window.diagBox = iframe;
-            iframe.height = height + "px";
+            iframe.style.minHeight = container.css('min-height');
+            iframe.style.height = height + "px";
             iframe.previousHeight = height;
         } catch (e) { }
     }, RESIZE_INTERVAL);
 
-    function Dialog(sxc, wrapperTag, url, closeCallback) {
+    function Dialog(sxc, wrapperTag, url, closeCallback, fullScreen) {
         var iframe, // frame inside the dialog (HTMLElement)
             resizeInterval,
             wrapperParent = $(wrapperTag).parent().eq(0);
-
+        
         init();
         /**
          * Assign properties to the iframe for later use.
@@ -994,6 +984,7 @@ var $2sxcActionMenuMapper = function (moduleId) {
             } catch (e) { }
 
             iframe = document.createElement('iframe');
+            container.css('min-height', fullScreen ? '100%' : '230px');
             toggle(true);
         }
 
@@ -1232,46 +1223,6 @@ if (typeof Object.assign != 'function') {
         return JSON.parse(attr || "");
     }
     //#endregion
-})();
-(function () {
-    $2sxc._modernDialog = Dialog();
-
-    function Dialog() {
-        var frame;
-        return {
-            create: create,
-            remove: remove,
-        };
-
-        /**
-         * Creates a new dialog.
-         * @param {*object} sxc sxc instance
-         * @param {*string} url the frame src
-         * @param {*boolean} fullscreen fullscreen flag
-         */
-        function create(sxc, url, fullscreen) {
-            if (frame) remove();
-            frame = document.createElement('iframe');
-            frame.style.zIndex = 999;
-            if (fullscreen) {
-                frame.style.width = frame.style.height = '100%';
-                frame.style.position = 'fixed';
-                frame.style.top = frame.style.left = 0;
-            }
-            frame.setAttribute('src', url);
-            document.body.appendChild(frame);
-            window.addEventListener('message', function (ev) {
-                if (ev.data === 'closeFrame') remove();
-            });
-        }
-
-        /**
-         * Remove the dialog.
-         */
-        function remove() {
-            frame.remove();
-        }
-    }
 })();
 $(function () {
     "use strict";
@@ -2569,10 +2520,10 @@ $(function () {
             //},
             {
                 name: "default",
-                buttons: "edit,new,metadata,publish,layout,item-history"
+                buttons: "edit,new,metadata,publish,layout"
             }, {
                 name: "list",
-                buttons: "add,remove,moveup,movedown,instance-list,replace"
+                buttons: "add,remove,moveup,movedown,instance-list,replace,item-history"
             }, {
                 name: "data",
                 buttons: "delete"
