@@ -201,6 +201,7 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .eav-icon-side-marker:before { content: '\e857'; } /* '' */
 .eav-icon-git-branch:before { content: '\e858'; } /* '' */
 .eav-icon-git-pull-request:before { content: '\e859'; } /* '' */
+.eav-icon-clock:before { content: '\e85a'; } /* '' */
 .eav-icon-content-block:before { content: '\e9bd'; } /* '' */
 .eav-icon-app:before { content: '\e9bf'; } /* '' */
 @font-face {

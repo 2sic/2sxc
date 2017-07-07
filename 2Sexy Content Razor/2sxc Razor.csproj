@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6A6C0480-2216-4A59-BDF3-B53A175E1C9C}</ProjectGuid>
+    <ProjectGuid>{78A558AF-F274-4E3C-95FE-8DE9226E0EBC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToSic.SexyContent.Razor</RootNamespace>

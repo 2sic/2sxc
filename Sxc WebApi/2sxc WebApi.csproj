@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D7C8A4C6-7B0A-44C8-BA89-5E3560A60E96}</ProjectGuid>
+    <ProjectGuid>{2F0610DE-2518-4FC8-823E-7228DD17C04F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToSic.SexyContent.WebApi</RootNamespace>
