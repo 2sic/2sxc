@@ -38,12 +38,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void PublishVersion(int moduleId, int version)
         {
-            versioning.PublishLatestVersion(moduleId);
+            versioning.DoInsidePublishLatestVersion(moduleId, (args) => { });
         }
 
         public void DeleteVersion(int moduleId, int version)
         {
-            versioning.DeleteLatestVersion(moduleId);
+            versioning.DoInsideDeleteLatestVersion(moduleId, (args) => { });
         }
         public int RollBackVersion(int moduleId, int version)
         {

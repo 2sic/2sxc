@@ -54,19 +54,30 @@ namespace ToSic.Sxc.Environment.Dnn9.Environment
         }
 
 
-        public void PublishLatestVersion(int moduleId)
+        public void DoInsidePublishLatestVersion(int moduleId, Action<VersioningActionInfo> action)
         {
-            // TODO2tk: Set all items in content-block from draft to published
-            var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
-            moduleVersionSettings.PublishLatestVersion();
+            if(IsVersioningEnabled(moduleId))
+            {
+                var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
+                moduleVersionSettings.PublishLatestVersion();
+            }
+
+            var versioningActionInfo = new VersioningActionInfo() { };
+            action.Invoke(versioningActionInfo);
         }
 
-        public void DeleteLatestVersion(int moduleId)
+        public void DoInsideDeleteLatestVersion(int moduleId, Action<VersioningActionInfo> action)
         {
-            // NOTE2tk: If we want to support that, rollback any item in draft state of the module-content-block
-            var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
-            moduleVersionSettings.DeleteLatestVersion();
+            if (IsVersioningEnabled(moduleId))
+            {
+                var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
+                moduleVersionSettings.DeleteLatestVersion();
+            }
+
+            var versioningActionInfo = new VersioningActionInfo() { };
+            action.Invoke(versioningActionInfo);
         }
+
 
         public int GetLatestVersion(int moduleId)
         {

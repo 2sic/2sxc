@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Environment.Dnn9.Environment
 
         public int GetLatestVersion()
         {
-            return int.Parse(settingsController.GetModuleSetting(LatestVersionSettingsKey, "-1"));
+            return int.Parse(settingsController.GetModuleSetting(LatestVersionSettingsKey, "0"));
         }
 
         public int IncreaseLatestVersion()
