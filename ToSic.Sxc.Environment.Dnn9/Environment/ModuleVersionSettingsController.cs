@@ -48,6 +48,11 @@ namespace ToSic.Sxc.Environment.Dnn9.Environment
             settingsController.SetModuleSetting(PublishedVersionSettingsKey, GetLatestVersion().ToString());
         }
 
+        public void DeleteLatestVersion()
+        {
+            settingsController.SetModuleSetting(LatestVersionSettingsKey, GetPublishedVersion().ToString());
+        }
+
         public bool IsLatestVersionPublished()
         {
             return GetLatestVersion() == GetPublishedVersion();

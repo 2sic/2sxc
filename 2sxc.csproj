@@ -360,10 +360,6 @@
       <Project>{cf3b9349-8c66-4901-8edb-a4ec1d75326b}</Project>
       <Name>ToSic.Eav</Name>
     </ProjectReference>
-    <ProjectReference Include="ToSic.Sxc.Environment.Dnn9\2sxc Environment.Dnn9.csproj">
-      <Project>{398d901c-8641-46ec-9065-4515bbc11c75}</Project>
-      <Name>2sxc Environment.Dnn9</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

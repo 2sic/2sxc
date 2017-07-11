@@ -12,7 +12,7 @@ using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {
-    public partial class View : PortalModuleBase, IActionable
+    public partial class View : PortalModuleBase, IActionable, IVersionableControl
     {
         private SxcInstance _sxci;
         protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(ModuleConfiguration).SxcInstance);
@@ -168,8 +168,12 @@ namespace ToSic.SexyContent
                         SecurityAccessLevel.Admin, true, false);
             }
         }
-
         #endregion
+
+        public void SetModuleVersion(int version)
+        {
+            // NOTE: We can leave it empty
+        }
 
     }
 }
