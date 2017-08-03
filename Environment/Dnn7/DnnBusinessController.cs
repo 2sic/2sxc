@@ -5,6 +5,8 @@ using DotNetNuke.Services.Search.Entities;
 using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.SexyContent.ContentBlocks;
+using DotNetNuke.Common.Utilities;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -38,13 +40,18 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void PublishVersion(int moduleId, int version)
         {
-            versioning.DoInsidePublishLatestVersion(moduleId, (args) => { });
+            versioning.DoInsidePublishLatestVersion(moduleId, (args) => {
+                // NOTE for 2dm: Set all items of the content-block to published
+            });
         }
 
         public void DeleteVersion(int moduleId, int version)
         {
-            versioning.DoInsideDeleteLatestVersion(moduleId, (args) => { });
+            versioning.DoInsideDeleteLatestVersion(moduleId, (args) => {
+                // NOTE for 2dm: If we want to support delete, reset any item in draft state of the content-block
+            });
         }
+
         public int RollBackVersion(int moduleId, int version)
         {
             throw new NotImplementedException();
