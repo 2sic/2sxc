@@ -232,7 +232,7 @@ namespace ToSic.SexyContent
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
         public AdamNavigator AsAdam(ToSic.Eav.Interfaces.IEntity entity, string fieldName)
-            => new AdamNavigator(_sxcInstance, App, Dnn.Portal, entity.EntityGuid, fieldName);
+            => new AdamNavigator(_sxcInstance, App, Dnn.Portal, entity.EntityGuid, fieldName, false);
         #endregion
 
 

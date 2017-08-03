@@ -22,11 +22,10 @@ namespace ToSic.SexyContent.Adam
         private readonly Guid entityGuid;
         private readonly string fieldName;
         private IFolderManager folderManager = FolderManager.Instance;
-    
+        private bool usePortalRoot;
 
-        public EntityBase(SxcInstance sexy, App app, PortalSettings ps, Guid eGuid, string fName)
+        public EntityBase(SxcInstance sexy, App app, PortalSettings ps, Guid eGuid, string fName, bool usePortalRoot)
         {
-
             _portalSettings = ps;
             _adamManager = new AdamManager(ps.PortalId, app);
             Sexy = sexy;
@@ -54,6 +53,9 @@ namespace ToSic.SexyContent.Adam
 
         public string GeneratePath(string subFolder)
         {
+            // Enable portal browsing if requested
+            if (usePortalRoot)
+                return "";
             var path = AdamFolderMask
                 .Replace("[AdamRoot]", _adamManager.RootPath)
                 //.Replace("[AppFolder]", App.Folder)
