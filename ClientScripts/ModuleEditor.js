@@ -10,6 +10,7 @@
     for (var i = 0; i < scripts.length; i++) head.appendChild(createScriptTag(scripts[i]));
     function createScriptTag(url) {
         var el = document.createElement('script');
+        el.setAttribute('defer', 'defer');
         el.src = url;
         return el;
     }
