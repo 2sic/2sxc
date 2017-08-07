@@ -33,6 +33,7 @@ namespace ToSic.SexyContent.Adam
             //Dnn = dnn;
             entityGuid = eGuid;
             fieldName = fName;
+            this.usePortalRoot = usePortalRoot;
         }
 
 
@@ -55,7 +56,7 @@ namespace ToSic.SexyContent.Adam
         {
             // Enable portal browsing if requested
             if (usePortalRoot)
-                return "";
+                return (subFolder ?? "").Replace("//", "/");
             var path = AdamFolderMask
                 .Replace("[AdamRoot]", _adamManager.RootPath)
                 //.Replace("[AppFolder]", App.Folder)

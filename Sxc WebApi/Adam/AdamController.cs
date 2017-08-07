@@ -38,16 +38,16 @@ namespace ToSic.SexyContent.Adam
 
         [HttpPost]
         [HttpPut]
-        public UploadResult Upload(string contentType, Guid guid, string field, [FromUri] string subFolder = "") => UploadOne(contentType, guid, field, subFolder);
+        public UploadResult Upload(string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) => UploadOne(contentType, guid, field, subFolder, usePortalRoot);
 
-        private UploadResult UploadOne(string contentTypeName, Guid guid, string field, string subFolder)
+        private UploadResult UploadOne(string contentTypeName, Guid guid, string field, string subFolder, bool usePortalRoot)
         {
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
             ExplicitlyRecheckEditPermissions();
-            PrepCore(guid, field, false);
+            PrepCore(guid, field, usePortalRoot);
 
             // Get the content-type definition
             var cache = App.Data.Cache;
@@ -159,7 +159,7 @@ namespace ToSic.SexyContent.Adam
         #region adam-file manager
 
         [HttpGet]
-        public IEnumerable<AdamItem> Items(Guid guid, string field, string subfolder, bool usePortalRoot)
+        public IEnumerable<AdamItem> Items(Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
             ExplicitlyRecheckEditPermissions();
             PrepCore(guid, field, usePortalRoot);
@@ -215,10 +215,10 @@ namespace ToSic.SexyContent.Adam
         }
 
         [HttpGet]
-        public bool Delete(Guid guid, string field, string subfolder, bool isFolder, int id)
+        public bool Delete(Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
         {
             ExplicitlyRecheckEditPermissions();
-            PrepCore(guid, field, false);
+            PrepCore(guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
             var current = EntityBase.Folder(subfolder, false);
