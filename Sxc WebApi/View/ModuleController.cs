@@ -107,7 +107,7 @@ namespace ToSic.SexyContent.WebApi.View
                 if (sortOrder > intList.Count) sortOrder = intList.Count;
                 intList.Insert(sortOrder, entityId);
             }
-            var updateDic = new Dictionary<string, object> {{field, intList.ToArray()}};
+            var updateDic = new Dictionary<string, object> {{field, intList/*.ToArray()*/}};
             new AppManager(cgApp).Entities.UpdateParts(cbEnt.EntityId, updateDic);
 
             #endregion
