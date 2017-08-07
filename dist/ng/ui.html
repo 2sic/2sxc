@@ -1,28 +1,16 @@
-<!doctype html>
-<html>
-
-<head>
-  <script>
-    var
+<!doctype html><html><head><script>var
       path = window.location.pathname,
-      isDevMode = window.location.hostname === 'localhost',
-      apiUrl;
+      jsVersionCacheId = window.location.search;
 
     document.write('<base href="' + path + '">');
-
-    var
-      jsVersionCacheId = window.location.search,
-      devPath = 'http://2sxc.dev/desktopmodules/tosic_sexycontent/dist/a4/';
-    document.write('<script src="' + (isDevMode ? devPath : '') + '../../js/2sxc.api.js' + jsVersionCacheId + '"></scr' + 'ipt>');
-    // must now close the script tag, so that the added tag is parsed before all other code
-  </script>
-  <script>
-    apiUrl = $2sxc.urlParams.require("portalroot") + "desktopmodules/2sxc/api/";
+    document.write('<script src="../../js/2sxc.api.js' + jsVersionCacheId + '"></scr' + 'ipt>');
+    // must now close the script tag, so that the added tag is parsed before all other code</script><script>var apiUrl = $2sxc.urlParams.require('portalroot') + 'desktopmodules/2sxc/api/';
     createFakeSf(apiUrl);
 
     // Create a fake DNN Service-Framework, required by $2sxc to work properly
     function createFakeSf(apiUrl) {
-      if ($2sxc.urlParams.require("mid") === "") alert("ModuleId (mid) missing - cannot continue"); if (window.$ === undefined) window.$ = {};
+      if ($2sxc.urlParams.require('mid') === '') alert('ModuleId (mid) missing - cannot continue');
+      if (window.$ === undefined) window.$ = {};
       window.$.ServicesFramework = function (id) {
         return {
           name: "This is a fake DNN ServicesFramework", description:
@@ -53,39 +41,18 @@
       var style = document.createElement("link");
       style.setAttribute("rel", "stylesheet");
       style.setAttribute("type", "text/css");
-      style.setAttribute("href", src);
+      style.setAttribute("href", src + jsVersionCacheId);
       document.getElementsByTagName("head")[0].appendChild(style);
     }
 
     var scripts = [
-      'inline.bundle.js',     // ? purpose unknown yet    
-      // '../i18n/lib/angular-i18n/angular-locale_' + langTwoLetter + '.js',
+      'inline.bundle.js', // purpose unknown    
       'polyfills.bundle.js', // js polyfills for older browsers
       'vendor.bundle.js', // default set needed for all UIs like angular, animate, translate
-      'main.bundle.js', // our app, with everything
-      'styles.bundle.js'
+      'main.bundle.js' // our app, with everything
     ], styles = [
       'styles.bundle.css'
-    ];
-  </script>
-  <meta charset="utf-8">
-  <title>Quick Dialog</title>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
-
-<body>
-  <app-root></app-root>
-  <script>
-    if (!isDevMode) {
-      var s;
-      // now add the scripts as needed
-      for (s = 0; s < scripts.length; s++) addScript(scripts[s]);
-      for (s = 0; s < styles.length; s++) addStyle(styles[s]);
-    }
-  </script>
-</body>
-
-</html>
+    ];</script><meta charset="utf-8"><title>Quick Dialog</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/x-icon" href="favicon.ico"><link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><!-- <link href="styles.bundle.css" rel="stylesheet"/></head> --></head><body><app-root></app-root><script>var s;
+    // now add the scripts as needed
+    for (s = 0; s < scripts.length; s++) addScript(scripts[s]);
+    for (s = 0; s < styles.length; s++) addStyle(styles[s]);</script><!-- <script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body> --></body></html>

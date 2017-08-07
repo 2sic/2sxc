@@ -476,7 +476,7 @@
                 if (cmd.settings.configureCommand) cmd.settings.configureCommand(cmd);
 
                 if (specialSettings.angularDialog) {
-                    var modernDialogUrl = cmc.manage._editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/ng/index.html?sxcver="
+                    var modernDialogUrl = cmc.manage._editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/ng/ui.html?sxcver="
                         + cmc.manage._editContext.Environment.SxcVersion;
                     return cmd.generateLink(modernDialogUrl);
                 }
@@ -484,9 +484,7 @@
             },
 
             _openModernDialog: function (settings) {
-                var modernDialogUrl = cmc.manage._editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/ng/index.html?sxcver="
-                    + cmc.manage._editContext.Environment.SxcVersion,
-                    link = cmc._linkToNgDialog(settings, modernDialogUrl);
+                var link = cmc._linkToNgDialog(settings);
                 return $2sxc._angularDialog.open(url, settings.name);
             },
 
