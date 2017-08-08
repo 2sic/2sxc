@@ -246,7 +246,37 @@ namespace ToSic.SexyContent.Adam
             return true;
         }
 
+        [HttpGet]
+        public bool Rename(Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
+        {
+            ExplicitlyRecheckEditPermissions();
+            PrepCore(guid, field, usePortalRoot);
 
+            // try to see if we can get into the subfolder - will throw error if missing
+            var current = EntityBase.Folder(subfolder, false);
+
+            var folderManager = FolderManager.Instance;
+            var fileManager = FileManager.Instance;
+
+            if (isFolder)
+            {
+                var fld = folderManager.GetFolder(id);
+                if (fld.ParentID == current.FolderID)
+                    folderManager.RenameFolder(fld, newName);
+                else
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "can't rename folder - not found in folder" });
+            }
+            else
+            {
+                var file = fileManager.GetFile(id);
+                if (file.FolderId == current.FolderID)
+                    fileManager.RenameFile(file, newName);
+                else
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "can't rename file - not found in folder" });
+            }
+
+            return true;
+        }
 
 
 
