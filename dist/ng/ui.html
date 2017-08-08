@@ -30,6 +30,7 @@
       var async = src.async || false;
       src = typeof src === "string" ? src : src.url;
       var script = document.createElement('script');
+	  script.setAttribute('defer', 'defer');
       script.src = src + jsVersionCacheId;
 
       // needs doc.write to ensure in-sync loading of the files
@@ -46,9 +47,9 @@
     }
 
     var scripts = [
-      'inline.bundle.js', // purpose unknown    
-      'polyfills.bundle.js', // js polyfills for older browsers
-      'vendor.bundle.js', // default set needed for all UIs like angular, animate, translate
+      'inline.bundle.js', // purpose unknown
+	  'polyfills.bundle.js', // js polyfills for older browsers
+	  'vendor.bundle.js', // default set needed for all UIs like angular, animate, translate
       'main.bundle.js' // our app, with everything
     ], styles = [
       'styles.bundle.css'
