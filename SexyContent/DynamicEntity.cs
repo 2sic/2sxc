@@ -82,7 +82,7 @@ namespace ToSic.SexyContent
         {
             propertyNotFound = false;   // assume found, as that's usually the case
 
-            #region check the two special cases which the EAV doesn't know
+            #region check the two special cases Toolbar / Presentation which the EAV doesn't know
 
             if (attributeName == "Toolbar")
                 return Toolbar.ToString();
@@ -92,15 +92,19 @@ namespace ToSic.SexyContent
 
             #endregion
 
-
-            var result = Entity.GetBestValue(attributeName, _dimensions, true);
-
-            if (result is Eav.Data.EntityRelationship)
+            object result = null;
+            // check Entity is null (in cases where null-objects are asked for properties)
+            if (Entity != null)
             {
-                var relList = ((Eav.Data.EntityRelationship) result).Select(
-                    p => new DynamicEntity(p, _dimensions, SxcInstance)
+                result = Entity.GetBestValue(attributeName, _dimensions, true);
+
+                if (result is Eav.Data.EntityRelationship)
+                {
+                    var relList = ((Eav.Data.EntityRelationship) result).Select(
+                        p => new DynamicEntity(p, _dimensions, SxcInstance)
                     ).ToList();
-                result = relList;
+                    result = relList;
+                }
             }
 
             //set out-information
