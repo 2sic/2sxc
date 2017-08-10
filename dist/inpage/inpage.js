@@ -908,30 +908,6 @@ var $2sxcActionMenuMapper = function (moduleId) {
         return val.replace('DnnModule-2sxc ', '') + ' DnnModule-2sxc';
     };
 })();
-if (typeof Object.assign != 'function') {
-    Object.assign = function (target, varArgs) { // .length of function is 2
-        'use strict';
-        if (target === null) { // TypeError if undefined or null
-            throw new TypeError('Cannot convert undefined or null to object');
-        }
-
-        var to = Object(target);
-
-        for (var index = 1; index < arguments.length; index++) {
-            var nextSource = arguments[index];
-
-            if (nextSource !== null) { // Skip over if undefined or null
-                for (var nextKey in nextSource) {
-                    // Avoid bugs when hasOwnProperty is shadowed
-                    if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                        to[nextKey] = nextSource[nextKey];
-                    }
-                }
-            }
-        }
-        return to;
-    };
-}
 // this is a dialog handler which will create in-page dialogs for 
 // - the template / view picker
 // - the getting-started / install-templates dialog
@@ -1057,6 +1033,30 @@ if (typeof Object.assign != 'function') {
         }
     }
 })();
+if (typeof Object.assign != 'function') {
+    Object.assign = function (target, varArgs) { // .length of function is 2
+        'use strict';
+        if (target === null) { // TypeError if undefined or null
+            throw new TypeError('Cannot convert undefined or null to object');
+        }
+
+        var to = Object(target);
+
+        for (var index = 1; index < arguments.length; index++) {
+            var nextSource = arguments[index];
+
+            if (nextSource !== null) { // Skip over if undefined or null
+                for (var nextKey in nextSource) {
+                    // Avoid bugs when hasOwnProperty is shadowed
+                    if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                        to[nextKey] = nextSource[nextKey];
+                    }
+                }
+            }
+        }
+        return to;
+    };
+}
 
 (function () {
 	$2sxc._lib = {
