@@ -269,6 +269,8 @@ namespace ToSic.SexyContent.Adam
             else
             {
                 var file = fileManager.GetFile(id);
+                if(file.Extension != newName.Split('.').Last())
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "can't change extension of a file" });
                 if (file.FolderId == current.FolderID)
                     fileManager.RenameFile(file, newName);
                 else
