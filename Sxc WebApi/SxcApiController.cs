@@ -188,8 +188,8 @@ namespace ToSic.SexyContent.WebApi
         {
             // make sure we have the right appId, zoneId and module-context
             var contextMod = useContext ? Dnn.Module : null;
-            var zoneId = useContext ? App.ZoneId as int? : null;
-            if (useContext) appId = App.AppId;
+            var zoneId = useContext ? App?.ZoneId : null;   // App is null, when accessing admin-ui from un-initialized module
+            if (useContext) appId = App?.AppId ?? appId;
             if (!useContext) autoAllowAdmin = false; // auto-check not possible when not using context
 
 
