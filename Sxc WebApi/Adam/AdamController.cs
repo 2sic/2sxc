@@ -28,9 +28,9 @@ namespace ToSic.SexyContent.Adam
     {
         public EntityBase EntityBase;
 
-        private void PrepCore(Guid entityGuid, string fieldName)
+        private void PrepCore(Guid entityGuid, string fieldName, bool usePortalRoot)
         {
-            EntityBase = new EntityBase(SxcContext, App, Dnn.Portal, entityGuid, fieldName);
+            EntityBase = new EntityBase(SxcContext, App, Dnn.Portal, entityGuid, fieldName, usePortalRoot);
         }
 
         public int MaxFileSizeKb => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection).MaxRequestLength;
@@ -38,16 +38,16 @@ namespace ToSic.SexyContent.Adam
 
         [HttpPost]
         [HttpPut]
-        public UploadResult Upload(string contentType, Guid guid, string field, [FromUri] string subFolder = "") => UploadOne(contentType, guid, field, subFolder);
+        public UploadResult Upload(string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) => UploadOne(contentType, guid, field, subFolder, usePortalRoot);
 
-        private UploadResult UploadOne(string contentTypeName, Guid guid, string field, string subFolder)
+        private UploadResult UploadOne(string contentTypeName, Guid guid, string field, string subFolder, bool usePortalRoot)
         {
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
             ExplicitlyRecheckEditPermissions();
-            PrepCore(guid, field);
+            PrepCore(guid, field, usePortalRoot);
 
             // Get the content-type definition
             var cache = App.Data.Cache;
@@ -159,10 +159,10 @@ namespace ToSic.SexyContent.Adam
         #region adam-file manager
 
         [HttpGet]
-        public IEnumerable<AdamItem> Items(Guid guid, string field, string subfolder)
+        public IEnumerable<AdamItem> Items(Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
             ExplicitlyRecheckEditPermissions();
-            PrepCore(guid, field);
+            PrepCore(guid, field, usePortalRoot);
             var folderManager = FolderManager.Instance;
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
@@ -197,10 +197,10 @@ namespace ToSic.SexyContent.Adam
         }
 
         [HttpPost]
-        public IEnumerable<AdamItem> Folder(Guid guid, string field, string subfolder, string newFolder)
+        public IEnumerable<AdamItem> Folder(Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
         {
             ExplicitlyRecheckEditPermissions();
-            PrepCore(guid, field);
+            PrepCore(guid, field, usePortalRoot);
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
             EntityBase.Folder();
@@ -211,14 +211,14 @@ namespace ToSic.SexyContent.Adam
             // now access the subfolder, creating it if missing (which is what we want
             EntityBase.Folder(subfolder + "/" + newFolder, true);
 
-            return Items(guid, field, subfolder);
+            return Items(guid, field, subfolder, usePortalRoot);
         }
 
         [HttpGet]
-        public bool Delete(Guid guid, string field, string subfolder, bool isFolder, int id)
+        public bool Delete(Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
         {
             ExplicitlyRecheckEditPermissions();
-            PrepCore(guid, field);
+            PrepCore(guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
             var current = EntityBase.Folder(subfolder, false);
@@ -246,7 +246,39 @@ namespace ToSic.SexyContent.Adam
             return true;
         }
 
+        [HttpGet]
+        public bool Rename(Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
+        {
+            ExplicitlyRecheckEditPermissions();
+            PrepCore(guid, field, usePortalRoot);
 
+            // try to see if we can get into the subfolder - will throw error if missing
+            var current = EntityBase.Folder(subfolder, false);
+
+            var folderManager = FolderManager.Instance;
+            var fileManager = FileManager.Instance;
+
+            if (isFolder)
+            {
+                var fld = folderManager.GetFolder(id);
+                if (fld.ParentID == current.FolderID)
+                    folderManager.RenameFolder(fld, newName);
+                else
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "can't rename folder - not found in folder" });
+            }
+            else
+            {
+                var file = fileManager.GetFile(id);
+                if(file.Extension != newName.Split('.').Last())
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "can't change extension of a file" });
+                if (file.FolderId == current.FolderID)
+                    fileManager.RenameFile(file, newName);
+                else
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "can't rename file - not found in folder" });
+            }
+
+            return true;
+        }
 
 
 
