@@ -3,24 +3,20 @@ IF YOU DON'T FILL OUT THE FOLLOWING INFORMATION WE MIGHT CLOSE YOUR ISSUE WITHOU
 -->
 
 **I'm submitting a ...**  <!-- remove lines which don't apply  -->
-```
-- [x] bug report => search github for a similar issue before submitting 
-- [x] feature request
-- [x] support request => do not submit here, see https://2sxc.org/en/blog/post/moving-discussions-from-codeplex-to-stack-overflow
-- [x] not sure
-```
+[x] bug report => search github for a similar issue before submitting 
+[x] feature request
+[x] support request => do not submit here, see https://2sxc.org/en/blog/post/moving-discussions-from-codeplex-to-stack-overflow
+[x] not sure
 
 **...about**   <!-- remove lines which don't apply  -->
-```
-- [x] edit experience / UI
-- [x] admin experience UI
-- [x] Razor templating
-- [x] JS development
-- [x] Content Types or data management
-- [x] APIs like REST
-- [x] DNN parts
-- [x] other / unknown
-```
+[x] edit experience / UI
+[x] admin experience UI
+[x] Razor templating
+[x] JS development
+[x] Content Types or data management
+[x] APIs like REST
+[x] DNN parts
+[x] other / unknown
 
 **Current behavior**
 <!-- Describe how the bug manifests. -->
