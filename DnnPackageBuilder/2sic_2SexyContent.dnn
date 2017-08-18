@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="09.02.90">
+    <package name="2SexyContent" type="Module" version="09.03.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -26,141 +26,6 @@
               <name>00.99.00.SqlDataProvider</name>
               <version>00.99.00</version>
             </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>01.00.00.SqlDataProvider</name>
-              <version>01.00.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>01.00.01.SqlDataProvider</name>
-              <version>01.00.01</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>02.00.00.SqlDataProvider</name>
-              <version>02.00.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>03.00.00.SqlDataProvider</name>
-              <version>03.00.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>03.03.00.SqlDataProvider</name>
-              <version>03.03.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>03.04.03.SqlDataProvider</name>
-              <version>03.04.03</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>04.00.00.SqlDataProvider</name>
-              <version>04.00.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>04.00.02.SqlDataProvider</name>
-              <version>04.00.02</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.01.00.SqlDataProvider</name>
-              <version>05.01.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.02.01.SqlDataProvider</name>
-              <version>05.02.01</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.03.01.SqlDataProvider</name>
-              <version>05.03.01</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.03.02.SqlDataProvider</name>
-              <version>05.03.02</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.03.03.SqlDataProvider</name>
-              <version>05.03.03</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.03.04.SqlDataProvider</name>
-              <version>05.03.04</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.03.05.SqlDataProvider</name>
-              <version>05.03.05</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.05.00.SqlDataProvider</name>
-              <version>05.05.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.05.03.SqlDataProvider</name>
-              <version>05.05.03</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>05.06.00.SqlDataProvider</name>
-              <version>05.06.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.00.05.SqlDataProvider</name>
-              <version>06.00.05</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.00.09.SqlDataProvider</name>
-              <version>06.00.09</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.02.01.SqlDataProvider</name>
-              <version>06.02.01</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.03.07.SqlDataProvider</name>
-              <version>06.03.07</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.04.00.SqlDataProvider</name>
-              <version>06.04.00</version>
-            </script>
-			<script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.06.00.SqlDataProvider</name>
-              <version>06.06.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.06.01.SqlDataProvider</name>
-              <version>06.06.01</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>06.06.04.SqlDataProvider</name>
-              <version>06.06.04</version>
-            </script>
-						<script type="Install">
-							<path>SqlDataProvider</path>
-							<name>07.00.00.SqlDataProvider</name>
-							<version>07.00.00</version>
-						</script>
 						<script type="Install">
 							<path>SqlDataProvider</path>
 							<name>07.00.03.SqlDataProvider</name>
@@ -206,10 +71,15 @@
               <name>08.05.02.SqlDataProvider</name>
               <version>08.05.02</version>
             </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>09.03.00.SqlDataProvider</name>
+              <version>09.03.00</version>
+            </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>09.02.90</version>
+              <version>09.03.00</version>
             </script>
           </scripts>
         </component>
@@ -241,174 +111,11 @@
                     <viewOrder>0</viewOrder>
                   </moduleControl>
                   <moduleControl>
-                    <controlKey>eavmanagement</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/EAVManagement.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Manage Content Types</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                    <viewOrder>0</viewOrder>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>editcontentgroup</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditContentGroup.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit Item</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>editdatasource</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditDataSource.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit Datasource</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>editlist</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditList.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit List</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>edittemplate</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/EditTemplate.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit Template</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                    <viewOrder>0</viewOrder>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>edittemplatefile</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditTemplateFile.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit Template File</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>export</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Export.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Export</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>gettingstarted</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/GettingStarted.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Getting Started</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>import</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Import.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Import</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>managetemplates</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/ManageTemplates.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Manage Templates</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                    <viewOrder>0</viewOrder>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>portalconfiguration</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/PortalConfiguration.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Portal Configuration</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>dataExport</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/DataExport.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Data Export</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>dataImport</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/DataImport.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Data Import</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
 										<controlKey>webformsbridge</controlKey>
 										<controlSrc>DesktopModules/ToSIC_SexyContent/DnnWebForms/WebFormsBridge.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
 										<controlTitle>Formly FieldTemplate WebForms Bridge</controlTitle>
 										<controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-										<controlKey>editcontentgroupjs</controlKey>
-										<controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/_EditContentGroup.cshtml</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-										<controlTitle>Edit</controlTitle>
-										<controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>appexport</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppExport.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>App Export</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>appimport</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppImport.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>App Import</controlTitle>
-                    <controlType>Admin</controlType>
                     <iconFile />
                     <helpUrl />
                     <supportsPopUps>True</supportsPopUps>
@@ -426,7 +133,7 @@
             <attributes>
               <businessControllerClass>ToSic.SexyContent.Environment.Dnn7.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00,07.03.01,07.03.02,07.03.03,07.03.04,08.00.00,08.00.01,08.00.02,08.00.03,08.00.04,08.00.05,08.00.06,08.00.07,08.00.08,08.00.09,08.00.10,08.00.11,08.00.12,08.01.00,08.01.01,08.01.02,08.01.03,08.02.00,08.02.01,08.02.02,08.02.03,08.03.00,08.03.01,08.03.02,08.03.03,08.03.04,08.03.05,08.03.06,08.03.07,08.04.00,08.04.01,08.04.02,08.04.03,08.04.04,08.04.05,08.04.06,08.04.07,08.04.08,08.05.00,08.05.01,08.05.02,08.05.03,08.05.04,08.05.05,08.05.06,08.06.00,08.07.00,08.08.00,08.08.01,08.08.02,08.09.00,08.09.01,08.10.00,08.10.01,08.11.00,08.12.00,09.00.00,09.00.01,09.00.02,09.01.00,09.01.02,09.01.03,09.02.00,09.02.90</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00,07.03.01,07.03.02,07.03.03,07.03.04,08.00.00,08.00.01,08.00.02,08.00.03,08.00.04,08.00.05,08.00.06,08.00.07,08.00.08,08.00.09,08.00.10,08.00.11,08.00.12,08.01.00,08.01.01,08.01.02,08.01.03,08.02.00,08.02.01,08.02.02,08.02.03,08.03.00,08.03.01,08.03.02,08.03.03,08.03.04,08.03.05,08.03.06,08.03.07,08.04.00,08.04.01,08.04.02,08.04.03,08.04.04,08.04.05,08.04.06,08.04.07,08.04.08,08.05.00,08.05.01,08.05.02,08.05.03,08.05.04,08.05.05,08.05.06,08.06.00,08.07.00,08.08.00,08.08.01,08.08.02,08.09.00,08.09.01,08.10.00,08.10.01,08.11.00,08.12.00,09.00.00,09.00.01,09.00.02,09.01.00,09.01.02,09.01.03,09.02.00,09.03.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -772,7 +479,7 @@
             </file>
           </files>
         </component>
-        <component type="Cleanup" version="09.02.90">
+        <component type="Cleanup" version="09.03.00">
           <files>
             <file>
               <path>bin</path>
@@ -784,7 +491,7 @@
         </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="09.02.90">
+    <package name="2SexyContent-App" type="Module" version="09.03.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
@@ -798,6 +505,18 @@
       <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
       <azureCompatible>true</azureCompatible>
       <components>
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\ToSIC_SexyContent</basePath>
+            <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v9 -->
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>require-2sxc-9.SqlDataProvider</name>
+              <version>99.99.99</version>
+            </script>
+          </scripts>
+        </component>
+          
         <component type="Module">
           <desktopModule>
             <moduleName>2sxc-app</moduleName>
@@ -825,234 +544,11 @@
                     <supportsPopUps>False</supportsPopUps>
                     <viewOrder>0</viewOrder>
                   </moduleControl>
-                  <moduleControl>
-                    <controlKey>eavmanagement</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/EAVManagement.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Manage Content Types</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                    <viewOrder>0</viewOrder>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>editcontentgroup</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditContentGroup.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit Item</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>editdatasource</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditDataSource.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit Datasource</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>editlist</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditList.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit List</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>edittemplate</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/EditTemplate.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit Template</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                    <viewOrder>0</viewOrder>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>edittemplatefile</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditTemplateFile.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit Template File</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>export</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Export.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Export</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>gettingstarted</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/GettingStarted.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Getting Started</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>import</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Import.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Import</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>managetemplates</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/ManageTemplates.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Manage Templates</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                    <viewOrder>0</viewOrder>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>portalconfiguration</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/PortalConfiguration.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Portal Configuration</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>appmanagement</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppManagement.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>App Management</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>appexport</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppExport.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>App Export</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>appimport</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppImport.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>App Import</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>appconfig</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppConfig.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>App Config</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>dataExport</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/DataExport.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Data Export</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>dataImport</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/DataImport.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Data Import</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                   <moduleControl>
-                    <controlKey>pipelinedesigner</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineDesignerDnnWrapper.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Pipeline Designer</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-					<moduleControl>
-						<controlKey>pipelinemanagement</controlKey>
-						<controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineManagementDnnWrapper.ascx</controlSrc>
-						<supportsPartialRendering>False</supportsPartialRendering>
-						<controlTitle>Pipeline Management</controlTitle>
-						<controlType>Admin</controlType>
-						<iconFile />
-						<helpUrl />
-						<supportsPopUps>True</supportsPopUps>
-					</moduleControl>
-                   <moduleControl>
-                    <controlKey>webapihelp</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/WebApiHelp.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Web API Help</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-									<moduleControl>
-										<controlKey>permissions</controlKey>
-										<controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/Security/PermissionsDnnWrapper.ascx</controlSrc>
-										<supportsPartialRendering>False</supportsPartialRendering>
-										<controlTitle>Permissions</controlTitle>
-										<controlType>Admin</controlType>
-										<iconFile />
-										<helpUrl />
-										<supportsPopUps>True</supportsPopUps>
-									</moduleControl>
 									<moduleControl>
 										<controlKey>webformsbridge</controlKey>
 										<controlSrc>DesktopModules/ToSIC_SexyContent/DnnWebForms/WebFormsBridge.ascx</controlSrc>
 										<supportsPartialRendering>False</supportsPartialRendering>
 										<controlTitle>Formly FieldTemplate WebForms Bridge</controlTitle>
-										<controlType>Edit</controlType>
-										<iconFile />
-										<helpUrl />
-										<supportsPopUps>True</supportsPopUps>
-									</moduleControl>
-									<moduleControl>
-										<controlKey>editcontentgroupjs</controlKey>
-										<controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/_EditContentGroup.cshtml</controlSrc>
-										<supportsPartialRendering>False</supportsPartialRendering>
-										<controlTitle>Edit</controlTitle>
 										<controlType>Edit</controlType>
 										<iconFile />
 										<helpUrl />

@@ -91,19 +91,6 @@ namespace ToSic.SexyContent.Installer
                     case "01.00.00": // Make sure that log folder empty on new installations (could happen if 2sxc was already installed on a system)
                         MaybeResetUpgradeLogsToStartAgainFromV1();
                         break;
-                    case "05.05.00":
-                        new V5(version, _logger).Version050500();
-                        break;
-                    case "06.06.00":
-                    case "06.06.04":
-                        new V6(version, _logger).EnsurePipelineDesignerAttributeSets();
-                        break;
-                    case "07.00.00":
-                        new V7(version, _logger).Version070000();
-                        break;
-                    case "07.00.03":
-                        new V7(version, _logger).Version070003();
-                        break;
                     case "07.02.00":
                         new V7(version, _logger).Version070200();
                         break;
@@ -114,7 +101,7 @@ namespace ToSic.SexyContent.Installer
                         _logger.LogVersionCompletedToPreventRerunningTheUpgrade("07.02.00", false);
                         break;
                     case "07.03.01":
-                        new V6(version, _logger).EnsurePipelineDesignerAttributeSets(); // Need to ensure this again because of upgrade problems
+                        new V7(version, _logger).EnsurePipelineDesignerAttributeSets(); // Need to ensure this again because of upgrade problems
                         break;
                     case "07.03.03":
                         new V7(version, _logger).Version070303();

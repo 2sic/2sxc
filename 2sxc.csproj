@@ -209,8 +209,6 @@
     <Compile Include="SexyContent\Installer\Lock.cs" />
     <Compile Include="SexyContent\Installer\Logger.cs" />
     <Compile Include="SexyContent\Installer\Status.cs" />
-    <Compile Include="SexyContent\Installer\V5.cs" />
-    <Compile Include="SexyContent\Installer\V6.cs" />
     <Compile Include="SexyContent\Installer\V7.cs" />
     <Compile Include="SexyContent\Installer\V8.cs" />
     <Compile Include="SexyContent\Installer\VersionBase.cs" />
@@ -289,6 +287,7 @@
     <Content Include=".gitignore" />
     <Content Include="Administration\Export.js" />
     <Content Include="API\Services.asmx" />
+    <Content Include="ClientScripts\ModuleEditor.js" />
     <Content Include="DnnWebForms\FileManager.ascx" />
     <Content Include="DnnWebForms\PagePicker.ascx" />
     <Content Include="DnnWebForms\WebFormsBridge.ascx" />

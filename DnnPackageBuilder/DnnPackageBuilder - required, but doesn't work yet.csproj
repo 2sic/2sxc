@@ -36,33 +36,6 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="SqlDataProvider\00.99.00.SqlDataProvider" />
-    <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
-    <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
-    <None Include="SqlDataProvider\02.00.00.SqlDataProvider" />
-    <None Include="SqlDataProvider\03.00.00.SqlDataProvider" />
-    <None Include="SqlDataProvider\03.03.00.SqlDataProvider" />
-    <None Include="SqlDataProvider\03.04.03.SqlDataProvider" />
-    <None Include="SqlDataProvider\04.00.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\04.00.02.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.01.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.03.01.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.03.02.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.03.03.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.03.04.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.03.05.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.05.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.05.03.SqlDataProvider" />
-    <Content Include="SqlDataProvider\05.06.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.00.05.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.00.09.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.02.01.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.03.07.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.04.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.06.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.06.01.SqlDataProvider" />
-    <Content Include="SqlDataProvider\06.06.04.SqlDataProvider" />
-    <Content Include="SqlDataProvider\07.00.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.00.03.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.02.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.02.02.SqlDataProvider" />
