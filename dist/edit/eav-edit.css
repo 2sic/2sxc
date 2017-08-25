@@ -1,0 +1,466 @@
+
+/* Include google font - Roboto */
+@import 'https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i';
+
+/* must correct checkbox labels */
+
+.checkbox label, .radio label {
+    padding-left: 15px;
+}
+
+
+.checkbox {
+    height: 34px;
+}
+
+.switch.checked.tosic-green {
+    background: #96d500;
+    background-color: #96D500;
+    border-color: #96d500;
+}
+
+.switch.checked.tosic-blue {
+    background: #0087F4;
+    background-color: #0087F4;
+    border-color: #0087F4;
+}
+
+.save-published-icon {
+    font-size: 24px; 
+}
+.save-published-icon i {
+    position: relative;
+    top: 9px;
+}
+
+.collapse-entity-button {
+    position: relative;
+    top: 0;
+    padding-top: 8px;    
+}
+.hide-till-mouseover {
+    opacity: 0;
+    color: #0087F4;
+}
+
+.unhide-area:hover .hide-till-mouseover {
+    opacity: 1;
+}
+
+.collapse-fieldgroup-button {
+    position: relative;
+    left: 5px;
+}
+
+.angular-google-map-container { height: 400px; }
+
+/* shrink space a bit in input boxes as it's too large by default '*/
+.input-lg {
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 4px;
+}
+
+/* This should make sure the entity-edit dialog is always 100% screen width on small screens, but not lager than 1000px */
+.modal-ent-edit { 
+    max-width: 1000px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+[visually-disabled='true'] { opacity: 0.3; -webkit-filter: grayscale(100%); filter: grayscale(100%); }
+.ng-touched.ng-invalid { border-color:red; }
+
+
+/* the new round buttons on any field */
+button.icon-field-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    padding-right: 10px;
+    padding-left: 8px;
+    border-color: transparent!important;
+    background-color: transparent!important;
+    font-size: 24px;
+    text-indent: -3px;
+}
+button.icon-field-button:hover, button.icon-field-button:focus{
+    border-color: transparent !important;
+    background-color: #0087F4!important;
+    color: white!important;
+}
+
+button.icon-field-button.btn-primary {
+    color: #0087F4;
+}
+
+
+
+
+/* main container around all input-forms */
+.form-container-multi {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+
+.input-hyperlink-default .input-lg { padding-bottom:0px; }
+
+/* Titles and title decorations */
+.form-ci-title {
+    color: #0087F4;
+    font-size: 28px;
+    font-family: Roboto;
+    font-weight:300;
+    height: 40px;
+    cursor: pointer;
+}
+.form-ci-title .decoration {
+    width: 40px;
+    height: 40px;
+    font-size: 32px;
+    color: #0087F4;
+    float: left;
+    position: absolute;
+    left: -55px;
+    top:1px;
+}
+.form-ci-title .decoration.state {
+    color: white; 
+    font-size: 12px; 
+    padding-top: 7px;
+    padding-left: 12px;
+}
+
+.form-ci-subtitle {
+    color: #0087F4;
+    font-family: Roboto;
+    font-weight:300;
+    font-size: 16px;
+    margin-top: 40px;
+    cursor: pointer;
+}
+.form-ci-subtitle .decoration {
+    position: absolute;
+    left: -48px;
+    color: #0087F4;
+    font-size: 16px;
+}
+.form-ci-subtitle .decoration.state {
+    font-size: 12px;
+    left: -23px;
+}
+
+/* grid per field */
+
+.form-field-grid-keeper {
+    min-height: 48px;
+}
+
+/* labels on fields */
+label.eav-label {
+    font-size: 14px;
+    font-family: Roboto;
+    font-weight:300;
+    padding-right:150px;
+    padding-top: 2px;
+    color: #888;
+}
+
+
+/* fields with preview */
+
+.after-preview {
+    height: 64px;
+}
+/* input fields new */ 
+input.material {
+    margin-top:11px;
+    font-size:20px;
+    height:auto;
+}
+
+/* drop-downs */
+select.material {
+    height: 46px;
+    font-size: 18px;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid #ddd;
+    padding-left: 0;
+    padding-top: 14px;
+}
+
+textarea.material {
+    font-size: 20px;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    padding: 0;
+    padding-top: 12px;
+}
+
+/* disabled - try to override the default bootstrap... */
+.form-control[disabled], .form-control[readonly], .fieldset[disabled] .form-control {
+    background: transparent !important;
+    border-bottom: 0;
+}
+
+
+/* Side-by-side on large screens */
+@media only screen and (max-width: 799px) {
+    .responsive-optional {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 800px) {
+    .responsive-priority {
+        /*max-width: 75%;*/
+        float: right;
+        width: 75%;
+    }
+
+    .responsive-optional {
+        display: inline-block;
+        width: 25%;
+    }
+
+
+    .responsive-priority .wrap-float-label .eav-label {
+        top: 12px;
+    }
+
+    .responsive-priority .eav-label {
+        display: none;
+    }
+    .responsive-priority div.wrap-float-label {
+        padding-top: 0;
+    }
+
+    .thumbnail-before-input.icon-preview {
+        top: 0!important;
+    }
+}
+
+.responsive-optional .eav-label {
+    color: #888888;
+    font-size: 20px!important;
+    padding: 0;
+    padding-right: 10px;
+    padding-top: 14px;
+    /*word-break:break-all; - disabled because of https://github.com/2sic/2sxc/issues/960 */
+}
+
+.no-label-space .responsive-optional .eav-label {
+    padding-top: 0;
+}
+
+
+/* debug helper classes */
+.debug {
+    border: 1px black dashed;
+}
+.checkbox.checkbox-labeled input[type='checkbox'] { margin-left:0; }
+.uib-datepicker-popup { background-color:#FFF; }
+.icon-field-button-calendar { padding: 0 !important; text-indent:0!important; }
+.icon-field-button-calendar i { text-indent:0; }
+
+.eav-entityselect { margin-top: 1px; font-size: 20px; padding-top: 12px; }
+.eav-entityselect .btn { font-size:20px; }
+.eav-entityselect-table tr, table.eav-entityselect-table tr td { border: 0; padding-left: 0; }
+.eav-entityselect ol { list-style-type: none; margin: 0; padding: 0; }
+
+.eav-entityselect-item-actions {
+    display: inline-block;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0;
+    list-style-type:none;
+    line-height:14px;
+    margin:0;
+}
+.eav-entityselect-item:hover .eav-entityselect-item-actions { opacity: 1; }
+.eav-entityselect-item-actions li { float:left;}
+.eav-entityselect-item-actions li a {}
+.eav-entityselect-item-actions li a i { color:#434a54; }
+
+.eav-entityselect-item > div { padding: 5px 4px 5px 0; position: relative; line-height: 25px; }
+.eav-entityselect-item > div:hover { background: #8DCAFA; }
+.eav-entityselect-item-title { display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; font-weight: normal; }
+
+.eav-entityselect-table tr th:first-child { width:32px; }
+.eav-entityselect-table tr th:last-child { width: 110px; text-align: right; }
+.eav-entityselect-table th { padding:0!important; line-height:0!important; border:0!important; }
+
+.eav-entityselect-selector option[disabled], .eav-entityselect-selector option:disabled { color: #dddddd; }
+.angular-ui-tree-placeholder { margin: 0; border:1px dotted #DDD; background:#EFEFEF }
+
+table.eav-entityselect-table { width: 100%; }
+table.eav-entityselect-table tr.eav-entityselect-item td { padding-top: 2px; padding-bottom: 4px; line-height: 24px; }
+
+.subtle-till-mouseover { opacity: 0.2; }
+.subtle-till-mouseover:hover { opacity: 1; }
+
+.eav-entityselect-actions { position:relative; padding-top:3px; }
+.eav-entityselect-actions.no-add { border-bottom:1px solid #ddd!important; }
+.eav-entityselect-action-create { width:100px; position:absolute; right:0; top:0; }
+.eav-entityselect-action-addexisting { padding-right:47px;  }
+.eav-entityselect-action-addexisting .ui-select-toggle { border:0; border-bottom:1px solid #ddd!important; border-radius:0; padding:2px 0 0 0; color:#777; }
+
+.eav-entityselect .dropdown-menu { background:white; border: 1px solid rgba(0,0,0,.15); border-radius:4px; box-shadow:0 6px 12px rgba(0,0,0,.175); }
+.ui-select-bootstrap .ui-select-choices-row>span { }
+.ui-select-match { outline:0!important; }
+.ui-select-container input { font-size:20px!important; }
+.formly-field { position:relative; }
+.eav-localization { position:absolute; top:0; right:0; }
+.eav-localization-lock { float: right; display: inline-block; }
+.eav-localization-lock-open { color: #228b22; }
+.eav-localization-dropdown { margin-top: 0px; display:none!important;  }
+.eav-localization:hover > .eav-localization-dropdown { display: block!important; }
+/* CSS for multi-level dropdown menu - source: http://bootsnipp.com/snippets/featured/multi-level-dropdown-menu-bs3 */
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu .dropdown-menu { display:none!important; }
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block!important;
+}
+
+.dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+/* must hide help-block because of duplicate description */
+.help-block {
+    display:none;
+}
+
+/****** new floating label styles ******/
+
+/* the input with just a thin line under the information */
+div.wrap-float-label input {
+    border: 0;
+    border-bottom: 1px;
+    border-bottom-color: #ddd; /* #8DCAFA; /* todo: define the official color  #0087F4; */
+    border-bottom-style: solid;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-left: 0;
+
+    background-color: transparent;
+}
+
+/* when focussed, make the line thicker and blue */
+div.wrap-float-label input:focus {
+    border-bottom: 2px;
+    border-bottom-style: solid;
+    border-bottom-color:  #0087F4;
+}
+
+/* error state: when the input has an error, make it strongly visible */
+.has-error div.wrap-float-label input {
+    border-bottom-color: red;
+}
+
+/* error state: the label should be red too */
+.has-error div.wrap-float-label label,
+.has-error div.wrap-float-label.focused label,
+div.wrap-float-label.focused.ng-invalid.ng-touched label
+ {
+    color: red;
+}
+
+/****** the label ******/
+
+/* float it - but at the same spot when on top */
+div.wrap-float-label.float-disabled label {
+    position: absolute;
+    top: 0;
+    font-size: 14px;
+}
+
+/* the label will be floating in this mode, so we need to add the space with a padding on the container */
+div.wrap-float-label {
+    padding-top: 8px;
+}
+
+/* when really floating, the label must move down to the line and be live a background-text */
+div.wrap-float-label label {
+    position: absolute;
+    top: 20px;
+    font-size: 20px;
+    /* opacity: 0.4;*/
+}
+
+
+/* when focussed, the label should glow blue */
+div.wrap-float-label.focused label {
+    color: #0087f4;
+    opacity: 1;
+}
+
+/* when floating, the info-wrapper must move down some*/
+div.wrap-float-label div.info-wrapper {
+    padding-top: 12px;
+}
+
+/* remove some strange padding on the help-text, which duplicates again on all P tags in the help text (these are commmon, as they are added with the wysiwyg */
+div.wrap-float-label p.bg-info,
+div.wrap-float-label p.bg-info p {
+    margin-bottom: 0;
+}
+.preview-default {
+    display: table;
+    width: 100%;
+}
+
+div.preview-area {
+    display: block;
+    float: left;
+    width: 64px;
+    height: 64px;
+    /*border: solid;*/
+    margin-right: 8px;
+    margin-bottom: 8px;
+    background-color: #eee;
+}

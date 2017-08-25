@@ -132,6 +132,10 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Environment\Dnn7\Versioning.cs" />
+    <Compile Include="Environment\Dnn7\Versioning\ISettingsController.cs" />
+    <Compile Include="Environment\Dnn7\Versioning\ModuleSettingsController.cs" />
+    <Compile Include="Environment\Dnn7\Versioning\ModuleVersionSettingsController.cs" />
+    <Compile Include="Environment\Dnn7\Versioning\Versioning.cs" />
     <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
     <Compile Include="SexyContent\ContentBlocks\Renderers\InTextContentBlocks.cs" />
     <Compile Include="DnnWebForms\FileManager.ascx.cs">
@@ -359,6 +363,9 @@
       <Project>{cf3b9349-8c66-4901-8edb-a4ec1d75326b}</Project>
       <Name>ToSic.Eav</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,10 +1,5 @@
 ﻿using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ToSic.Sxc.Environment.Dnn9.Environment
 {
@@ -12,12 +7,10 @@ namespace ToSic.Sxc.Environment.Dnn9.Environment
     {
         public ModuleInfo ModuleInfo { get; set; }
 
-
         public ModuleSettingsController(int moduleId)
         {
             ModuleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
         }
-
 
         public string GetModuleSetting(string settingName, string defaultValue)
         {

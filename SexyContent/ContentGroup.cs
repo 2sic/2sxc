@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Data;
 using ToSic.Eav.Persistence;
+using ToSic.SexyContent.Environment.Dnn7;
 using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
@@ -14,9 +16,7 @@ namespace ToSic.SexyContent
         private Eav.Interfaces.IEntity _contentGroupEntity;
         private readonly int _zoneId;
         private readonly int _appId;
-
         private readonly Guid? _previewTemplateId;
-
 
         public ContentGroup(Eav.Interfaces.IEntity contentGroupEntity, int zoneId, int appId)
         {
@@ -88,7 +88,6 @@ namespace ToSic.SexyContent
         }
 
         #endregion
-
 
         public int ContentGroupId => _contentGroupEntity?.EntityId ?? 0;
 
@@ -290,10 +289,14 @@ namespace ToSic.SexyContent
         {
             var contentIds = ListWithNulls(AppConstants.Content); 
             var presentationIds = GetPresentationIdWithSameLengthAsContent();
-
             var contentId = contentIds[sortOrder];
             var presentationId = presentationIds[sortOrder];
 
+            /*
+             * ToDo 2017-08-28:
+             * Create a DRAFT copy of the ContentGroup if versioning is enabled.
+             */
+            
             contentIds.RemoveAt(sortOrder);
             presentationIds.RemoveAt(sortOrder);
 

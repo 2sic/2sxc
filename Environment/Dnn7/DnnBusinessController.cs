@@ -7,26 +7,29 @@ using ToSic.SexyContent.Search;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.ContentBlocks;
 using DotNetNuke.Common.Utilities;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
+using System.IO;
+using ToSic.Eav.Interfaces;
+using ToSic.SexyContent.EAVExtensions;
+using System.Linq;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class DnnBusinessController : ModuleSearchBase, IUpgradeable, IVersionable
     {
-
         #region DNN Interface Members - search, upgrade, versionable
 
         private IEnvironmentVersioning versioning;
 
         /// <summary>
         /// Constructor overload for DotNetNuke
-        /// (BusinessControllerClass needs parameterless constructor)
+        /// (BusinessController needs a parameterless constructor)
         /// </summary>
         public DnnBusinessController()
         {
-            versioning = ToSic.Eav.Factory.Resolve<IEnvironmentVersioning>();
-        } //: this(0, 0) { }
-
-
+            versioning = new Versioning();
+        }
 
         public int GetLatestVersion(int moduleId)
         {
@@ -41,7 +44,22 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public void PublishVersion(int moduleId, int version)
         {
             versioning.DoInsidePublishLatestVersion(moduleId, (args) => {
-                // NOTE for 2dm: Set all items of the content-block to published
+
+                // publish all entites of this content block
+                var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
+                var cb = new ModuleContentBlock(moduleInfo);
+                var appManager = new AppManager(cb.AppId);
+                var list = cb.Data["Default"]?.LightList;
+                list = list.Concat(cb.Data["Presentation"]?.LightList);
+                list = list.Concat(cb.Data["ListContent"]?.LightList);
+                list = list.Concat(cb.Data["ListPresentation"]?.LightList);
+
+                var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToArray();
+
+                // publish ContentGroup as well
+                ids.ToList<int>().Add(cb.ContentGroup.ContentGroupId);
+
+                appManager.Entities.Publish(ids);
             });
         }
 

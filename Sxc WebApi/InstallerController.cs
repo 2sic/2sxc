@@ -17,7 +17,6 @@ namespace ToSic.SexyContent.WebApi
     [SxcWebApiExceptionHandling]
     public class InstallerController : DnnApiControllerWithFixes
     {
-
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         //[ValidateAntiForgeryToken]

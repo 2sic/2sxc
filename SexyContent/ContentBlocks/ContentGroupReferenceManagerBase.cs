@@ -23,8 +23,6 @@ namespace ToSic.SexyContent.ContentBlocks
             ModuleId = SxcContext.ModuleInfo.ModuleID;
         }
 
-        
-
         #region methods which the entity-implementation must customize - so it's virtual
 
         protected abstract void SavePreviewTemplateId(Guid templateGuid, bool? newTemplateChooserState = null);
@@ -106,12 +104,9 @@ namespace ToSic.SexyContent.ContentBlocks
             }
         }
 
-
-
         public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes()
             => SxcContext.App?.TemplateManager.GetContentTypesWithStatus();
         
-
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
             try

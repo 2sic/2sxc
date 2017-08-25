@@ -25,7 +25,6 @@ namespace ToSic.SexyContent.Search
         public IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
         {
             var searchDocuments = new List<SearchDocument>();
-
             var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
 
             // New Context because PortalSettings.Current is null
