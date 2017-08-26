@@ -249,7 +249,6 @@ angular.module("Adam")
         vm.allowCreateFolder = function() {
             return vm.svc.folders.length < vm.folderDepth;
         };
-
         //#endregion
 
         //#region Metadata
@@ -259,7 +258,6 @@ angular.module("Adam")
             ];
 
             eavAdminDialogs.openEditItems(items, vm.refresh);
-
         };
 
         vm.getMetadataType = function(item) {

@@ -17,7 +17,7 @@
 
     if (/* window.jQuery !== undefined && */ runningInDnn) { // in dnn-page there is a jquery, which also allows us to find attributes
         // in jQuery-Mode I have to wait till the document is ready
-        $(function() {
+        $(function () {
             var moduleElement = $(document);
             // var manageInfo = $.parseJSON($(moduleElement.find(".Mod2sxcC, .Mod2sxcappC")[0]).attr("data-2sxc")).manage;
             var manageInfo = $.parseJSON($(moduleElement.find("div[data-2sxc]")[0]).attr("data-2sxc")).manage;
@@ -26,26 +26,22 @@
             lng.defaultLanguage = manageInfo.langPrimary;
             lng.currentLanguage = manageInfo.lang;
             lng.languages = manageInfo.languages;
-       });
-    }
-    else {
+        });
+    } else {
         var lng = window.$eavUIConfig.languages;
         lng.i18nRoot = location.href.substring(0, location.href.indexOf("dist/dnn/ui.html")) + "dist/i18n/";
         lng.defaultLanguage = $2sxc.urlParams.require("langpri");   // the primary content-language - for first translation 
         lng.currentLanguage = $2sxc.urlParams.require("lang");      // the current ui language used for i18n and/or for content
         lng.languages = JSON.parse($2sxc.urlParams.require("langs"));
     }
-
 })();
 
 if (window.angular) // needed because the file is also included in older non-angular dialogs
     angular.module("EavConfiguration", [])
         .constant("languages", window.$eavUIConfig.languages)
         .factory("eavConfig", ["$location", "sxc", "portalRoot", "systemRoot", "appRoot", "AppInstanceId", function ($location, sxc, portalRoot, systemRoot, appRoot, AppInstanceId) {
-
             return {
                 dialogClass: "dnnFormPopup",
-
                 getUrlPrefix: function (area) {
                     var result = "";
                     if (area === "api") {
@@ -53,21 +49,19 @@ if (window.angular) // needed because the file is also included in older non-ang
                         result = url.substr(0, url.length - 5);
                     }
 
-                    if (area === "system")      result = systemRoot;                    // used to link to JS-stuff and similar
-                    if (area === "zone")        result = portalRoot;                    // used to link to the site-root (like an image)
-                    if (area === "app")         result = appRoot;                       // used to find the app-root of something inside an app
-                    if (area === "dialog")      result = systemRoot + "dnn";            // note: not tested yet
+                    if (area === "system") result = systemRoot;                    // used to link to JS-stuff and similar
+                    if (area === "zone") result = portalRoot;                    // used to link to the site-root (like an image)
+                    if (area === "app") result = appRoot;                       // used to find the app-root of something inside an app
+                    if (area === "dialog") result = systemRoot + "dnn";            // note: not tested yet
                     if (area === "dialog-page") result = systemRoot + "dnn/ui.html";    // note: not tested yet
-                    
-                    if (result.endsWith("/")) 
-                        result = result.substring(0, result.length - 1);
+                    if (result.endsWith("/")) result = result.substring(0, result.length - 1);
+
                     return result;
                 },
                 pipelineDesigner: {
                     outDataSource: {
                         className: "SexyContentTemplate",
                         in: ["ListContent", "Default"],
-
                         name: "2sxc Target (View or API)",
                         description: "The template/script which will show this data",
                         visualDesignerData: { Top: 20, Left: 420 }
@@ -78,13 +72,11 @@ if (window.angular) // needed because the file is also included in older non-ang
                                 entityGuid: "unsaved1",
                                 partAssemblyAndType: "ToSic.Eav.DataSources.Caches.ICache, ToSic.Eav.DataSources",
                                 visualDesignerData: { Top: 800, Left: 440 }
-                            },
-                            {
+                            }, {
                                 entityGuid: "unsaved2",
                                 partAssemblyAndType: "ToSic.Eav.DataSources.PublishingFilter, ToSic.Eav.DataSources",
                                 visualDesignerData: { Top: 620, Left: 440 }
-                            },
-                            {
+                            }, {
                                 entityGuid: "unsaved3",
                                 partAssemblyAndType: "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent",
                                 visualDesignerData: { Top: 440, Left: 440 }
@@ -99,7 +91,7 @@ if (window.angular) // needed because the file is also included in older non-ang
                             { From: "unsaved3", Out: "Default", To: "Out", In: "Default" }
                         ]
                     },
-                    testParameters: "[Module:ModuleID]=" + AppInstanceId 
+                    testParameters: "[Module:ModuleID]=" + AppInstanceId
                 },
                 metadataOfEntity: 4,
                 metadataOfAttribute: 2,
@@ -125,11 +117,11 @@ if (window.angular) // needed because the file is also included in older non-ang
                         var config = field.InputTypeConfig || {}; // note: can be null
                         var applyChanges = false;
                         switch (field.InputType) {
-                        case "string-wysiwyg-tinymce":
-                            config.Assets = "//cdn.tinymce.com/4/tinymce.min.js\n" +
-                                "../edit/extensions/field-string-wysiwyg-tinymce/set.js";
-                            applyChanges = true;
-                            break;
+                            case "string-wysiwyg-tinymce":
+                                config.Assets = "//cdn.tinymce.com/4/tinymce.min.js\n" +
+                                    "../edit/extensions/field-string-wysiwyg-tinymce/set.js";
+                                applyChanges = true;
+                                break;
                             case "entity-default":
                                 var merged = field.Metadata.merged;
                                 var defaults = {
@@ -143,19 +135,16 @@ if (window.angular) // needed because the file is also included in older non-ang
                                     if (merged[key] === null || merged[key] === undefined)
                                         merged[key] = defaults[key];
                                 });
-                        break;
+                                break;
                             case "unknown": // server default if not defined
                                 break;
                             default:        // default if not defined in this list
                                 break;
 
                         }
-                        if (applyChanges && !field.InputTypeConfig)
-                            field.InputTypeConfig = config;
+                        if (applyChanges && !field.InputTypeConfig) field.InputTypeConfig = config;
                     }
-
                 }
-
             };
         }]);
 
