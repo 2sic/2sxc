@@ -41,7 +41,7 @@ namespace ToSic.SexyContent.ContentBlocks
         }
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
-            => UpdateValue(EntityContentBlock.CbPropertyContentGroup, cgGuid);
+            => UpdateValue(EntityContentBlock.CbPropertyContentGroup, cgGuid.ToString()); // must pre-convert to string, as it's not a reference to an entity in the same app
 
 
         internal override void UpdateTitle(ToSic.Eav.Interfaces.IEntity titleItem)
