@@ -176,6 +176,7 @@
     }
 
 } ());
+
 (function () { 
     DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "contentTypeName", "eavAdminDialogs", "$ocLazyLoad"];
     angular.module("DialogHost", [
@@ -257,7 +258,6 @@
                 throw "Trying to open a dialog, don't know which one";
         }
     }
-
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 

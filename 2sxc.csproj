@@ -132,6 +132,10 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Environment\Dnn7\Versioning.cs" />
+    <Compile Include="Environment\Dnn7\Versioning\ISettingsController.cs" />
+    <Compile Include="Environment\Dnn7\Versioning\ModuleSettingsController.cs" />
+    <Compile Include="Environment\Dnn7\Versioning\ModuleVersionSettingsController.cs" />
+    <Compile Include="Environment\Dnn7\Versioning\Versioning.cs" />
     <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
     <Compile Include="SexyContent\ContentBlocks\Renderers\InTextContentBlocks.cs" />
     <Compile Include="DnnWebForms\Helpers\DnnLinkHelper.cs" />
@@ -403,7 +407,34 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PostBuildEvent>
-    </PostBuildEvent>
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.Apps.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.Apps.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.Core.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.Core.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.DataSources.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.DataSources.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.ImportExport.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.ImportExport.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.Persistence.Efc.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.Persistence.Efc.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.Repository.Efc.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.Repository.Efc.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.Tokens.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.Tokens.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.WebApi.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Eav.WebApi.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.SexyContent.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.SexyContent.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.SexyContent.Razor.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.SexyContent.Razor.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.SexyContent.WebApi.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.SexyContent.WebApi.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Sxc.Environment.Dnn9.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Sxc.Environment.Dnn9.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+
+</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <Extension>zip</Extension>

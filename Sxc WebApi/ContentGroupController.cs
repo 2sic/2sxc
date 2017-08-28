@@ -71,7 +71,6 @@ namespace ToSic.SexyContent.WebApi
             var cache = App.Data.Cache; 
             var ct = cache.GetContentType(attributeSetName);
 
-
             var dataSource = App.Data[ct.Name]; 
             var results = dataSource.List.ToDictionary(p => p.Value.EntityId,
                 p => p.Value.GetBestTitle() ?? "");

@@ -1,0 +1,83 @@
+﻿-- Remove Tables
+
+DROP TABLE [dbo].[ToSIC_EAV_EntityRelationships]
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_ContentGroupItems]') AND TYPE IN (N'U'))
+DROP TABLE [dbo].[ToSIC_SexyContent_ContentGroupItems]
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U'))
+DROP TABLE [dbo].[ToSIC_SexyContent_Templates]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_ValuesDimensions]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_Dimensions]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_Values]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_Entities]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_DataTimeline]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_AttributesInSets]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_Attributes]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_AttributeTypes]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_AttributeGroups]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_AttributeSets]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_Attachments]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_AssignmentObjectTypes]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_Apps]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_Zones]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_ChangeLog]
+GO
+
+DROP TABLE [dbo].[ToSIC_EAV_ContextInfo]
+GO
+
+-- Remove Stored Procedures
+
+DROP PROCEDURE [dbo].[ToSIC_EAV_DeleteApp]
+GO
+
+DROP PROCEDURE [dbo].[ToSIC_EAV_ChangeLogAdd]
+GO
+
+DROP PROCEDURE [dbo].[ToSIC_EAV_ChangeLogSet]
+GO
+
+DROP PROCEDURE [dbo].[ToSIC_EAV_LogToTimeline]
+GO
+
+DROP PROCEDURE [dbo].[ToSIC_EAV_ChangeLogGet]
+GO
+
+
+-- Remove PortalSettings
+
+DELETE FROM PortalSettings
+WHERE (SettingName = N'ToSIC_SexyContent_ZoneID')

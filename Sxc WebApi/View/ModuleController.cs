@@ -18,6 +18,7 @@ using ToSic.Eav.Apps.ItemListActions;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Interfaces;
 using Assembly = System.Reflection.Assembly;
+using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.WebApi.View
 {
@@ -28,23 +29,29 @@ namespace ToSic.SexyContent.WebApi.View
 
         private ContentGroupReferenceManagerBase ContentGroupReferenceManager => _cbm ?? (_cbm = SxcContext.ContentBlock.Manager);
 
-
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void AddItem([FromUri] int? sortOrder = null) => ContentGroupReferenceManager.AddItem(sortOrder);
+        public void AddItem([FromUri] int? sortOrder = null, [FromUri] bool partOfPage = false)
+        {
+            var versioning = new Versioning();
+
+            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
+                ContentGroupReferenceManager.AddItem(sortOrder);
+            };
+
+            // use dnn versioning if partOfPage
+            if (partOfPage) versioning.DoInsideVersioning(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            else internalSave(null);
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
             => ContentGroupReferenceManager.SaveTemplateId(templateId, forceCreateContentGroup, newTemplateChooserState);
 
-
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void SetTemplateChooserState([FromUri] bool state) => ContentGroupReferenceManager.SetTemplateChooserState(state);
-
-
-
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -107,17 +114,27 @@ namespace ToSic.SexyContent.WebApi.View
                 if (sortOrder > intList.Count) sortOrder = intList.Count;
                 intList.Insert(sortOrder, entityId);
             }
-            var updateDic = new Dictionary<string, object> {{field, intList/*.ToArray()*/}};
+            var updateDic = new Dictionary<string, object> {{field, intList}};
             new AppManager(cgApp).Entities.UpdateParts(cbEnt.EntityId, updateDic);
-
             #endregion
-
+            
             return entityId;
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool MoveItemInList(int parentId, string field, int indexFrom, int indexTo) => ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
+        public void MoveItemInList(int parentId, string field, int indexFrom, int indexTo, [FromUri] bool partOfPage = false)
+        {
+            var versioning = new Versioning();
+
+            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
+                ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
+            };
+
+            // use dnn versioning if partOfPage
+            if (partOfPage) versioning.DoInsideVersioning(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            else internalSave(null);
+        }
 
         /// <summary>
         /// 2016-04-07 2dm: note: remove was never tested! UI not clear yet
@@ -127,8 +144,18 @@ namespace ToSic.SexyContent.WebApi.View
         /// <param name="index"></param>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool RemoveItemInList(int parentId, string field, int index) => ModifyItemList(parentId, field, new Remove(index));
+        public void RemoveItemInList(int parentId, string field, int index, [FromUri] bool partOfPage = false)
+        {
+            var versioning = new Versioning();
 
+            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
+                ModifyItemList(parentId, field, new Remove(index));
+            };
+
+            // use dnn versioning if partOfPage
+            if (partOfPage) versioning.DoInsideVersioning(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            else internalSave(null);
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -172,27 +199,48 @@ namespace ToSic.SexyContent.WebApi.View
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder) => ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
+        public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder, [FromUri] bool partOfPage = false)
+        {
+            var versioning = new Versioning();
+
+            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
+                ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
+            };
+
+            // use dnn versioning if partOfPage
+            if (partOfPage) versioning.DoInsideVersioning(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            else internalSave(null);
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Publish(string part, int sortOrder) => ContentGroupReferenceManager.Publish(part, sortOrder);
-
+        
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Publish(int id) => ContentGroupReferenceManager.Publish(id, true);
-    
 
         [HttpGet]
-		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void RemoveFromList([FromUri] int sortOrder) => ContentGroupReferenceManager.RemoveFromList(sortOrder);
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public void RemoveFromList([FromUri] int sortOrder, [FromUri] bool partOfPage = false)
+        {
+            var versioning = new Versioning();
+
+            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
+                ContentGroupReferenceManager.RemoveFromList(sortOrder);
+            };
+
+            // use dnn versioning if partOfPage
+            if (partOfPage) versioning.DoInsideVersioning(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            else internalSave(null);
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public string RemoteInstallDialogUrl(string dialog, bool isContentApp)
         {
             // note / warning: some duplicate code with SystemController.cs
-
+            
             if (dialog != "gettingstarted")
                 throw new Exception("unknown dialog name: " + dialog);
 
@@ -260,15 +308,12 @@ namespace ToSic.SexyContent.WebApi.View
             return true;
         }
 
-
-
         #region Helpers to get things done
         // todo: probably should move to the new Eav.Apps section, but for that we must
         // change the access to use the DB, not the cache...
         private bool ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
         {
             var parentEntity = SxcContext.App.Data["Default"].List[parentId];
-
             var parentField = parentEntity.GetBestValue(field);
             var fieldList = parentField as Eav.Data.EntityRelationship;
 
@@ -286,7 +331,4 @@ namespace ToSic.SexyContent.WebApi.View
         }
         #endregion
     }
-
-
-
 }

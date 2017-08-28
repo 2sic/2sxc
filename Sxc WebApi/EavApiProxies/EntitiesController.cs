@@ -11,6 +11,8 @@ using ToSic.Eav.Interfaces;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Security;
+using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.Eav.Apps.Enums;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -44,7 +46,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public dynamic GetManyForEditing([FromBody]  List<ItemIdentifier> items, int appId)
+        public dynamic GetManyForEditing([FromBody] List<ItemIdentifier> items, int appId)
         {
             // this will contain the list of the items we'll really return
             var newItems = new List<ItemIdentifier>();
@@ -95,34 +97,40 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             return _entitiesController.GetManyForEditing(appId, newItems);
 
             // todo: find out how to handle Presentation items
-            
-
         }
-
-
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         // todo: should refactor to save all items in 1 transaction
-        public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items)
+        public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items, [FromUri] bool partOfPage = false)
         {
-            // before we create/save/update it, we must check if it's new, in case we must add it to a group
+            // if it's new, it has to be added to a group
             // only add if the header wants it, AND we started with ID unknown
             // var allowAddGroup = items.First().Entity.Id == 0;
 
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
-            var postSaveIds = _entitiesController.SaveMany(appId, items);
 
-            // now assign all content-groups as needed
-            var groupItems = items
-                .Where(i => i.Header.Group != null)
-                .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() +  i.Header.Group.Add)
-                .ToList();
+            var versioning = new Versioning();
+            Dictionary<Guid, int> postSaveIds = null;
 
-            if (groupItems.Any())
-                DoAdditionalGroupProcessing(appId, postSaveIds, groupItems);
-            
+            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
+                postSaveIds = _entitiesController.SaveMany(appId, items, partOfPage);
+                
+                // now assign all content-groups as needed
+                var groupItems = items
+                    .Where(i => i.Header.Group != null)
+                    .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add)
+                    .ToList();
+
+                if (groupItems.Any())
+                    DoAdditionalGroupProcessing(appId, postSaveIds, groupItems);
+            };
+
+            // use dnn versioning if partOfPage
+            if (partOfPage) versioning.DoInsideVersioning(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            else internalSave(null);
+
             return postSaveIds;
         }
 

@@ -147,7 +147,6 @@ angular.module("Adam")
         vm.show = false;
         vm.appRoot = appRoot;        
         vm.adamModeConfig = $scope.adamModeConfig;
-
         vm.disabled = $scope.ngDisabled;
         vm.enableSelect = ($scope.enableSelect === false) ? false : true; // must do it like this, $scope.enableSelect || true will not work
 

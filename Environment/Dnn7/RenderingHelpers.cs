@@ -11,6 +11,8 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
+using ToSic.Eav.Apps.Enums;
+using ToSic.Eav.Apps.Interfaces;
 // ReSharper disable InconsistentNaming
 
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -105,13 +107,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 msg = "<div class='sc-content-block' data-cb-instance='" + _moduleInfo.ModuleID + "' data-cb-id='" + _moduleInfo.ModuleID + "'>" + msg + "</div>";
 
             return msg;
-
         }
-
     }
-
-
-
 
     #region ClientInfos Objects to generate the json-attribute
     public class ClientInfosAll
@@ -123,14 +120,17 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public ClientInfoContentGroup ContentGroup;
         // ReSharper disable once InconsistentNaming
         public ClientInfosError error;
+        private IEnvironmentVersioning versioning;
 
         public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated)
         {
+            versioning = new Versioning();
+
             Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic, sxc);
             Language = new ClientInfosLanguages(ps, zoneId);
             User = new ClientInfosUser(uinfo);
 
-            ContentBlock = new ClientInfoContentBlock(sxc.ContentBlock, null, 0);
+            ContentBlock = new ClientInfoContentBlock(sxc.ContentBlock, null, 0, versioning.Requirements(mic.ModuleID));
             ContentGroup = new ClientInfoContentGroup(sxc, isCreated);
             error = new ClientInfosError(sxc.ContentBlock);
         }
@@ -226,18 +226,21 @@ namespace ToSic.SexyContent.Environment.Dnn7
     {
         public bool ShowTemplatePicker;
         public bool IsEntity;
+        public string VersioningRequirements;
         public int Id;
         public string ParentFieldName;
         public int ParentFieldSortOrder;
+
         // public bool DataIsMissing;
 
-        internal ClientInfoContentBlock(IContentBlock contentBlock, string parentFieldName, int indexInField)
+        internal ClientInfoContentBlock(IContentBlock contentBlock, string parentFieldName, int indexInField, VersioningRequirements versioningRequirements)
         {
             ShowTemplatePicker = contentBlock.ShowTemplateChooser;
             IsEntity = contentBlock.ParentIsEntity;
             Id = contentBlock.ContentBlockId;
             ParentFieldName = parentFieldName;
             ParentFieldSortOrder = indexInField;
+            VersioningRequirements = versioningRequirements.ToString();
             // DataIsMissing = contentBlock.DataIsMissing;
         }
     };
