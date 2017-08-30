@@ -1,6 +1,5 @@
 ﻿using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Interfaces;
-using ToSic.SexyContent.Environment.Interfaces;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
