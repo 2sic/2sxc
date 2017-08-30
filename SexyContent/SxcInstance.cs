@@ -218,7 +218,7 @@ namespace ToSic.SexyContent
 
                 #region Wrap it all up into a nice wrapper tag
                 var editInfos = JsonConvert.SerializeObject(renderHelp.GetClientInfosAll());
-                var isInnerContent = ContentBlock.ParentIsEntity;
+                var isInnerContent = ContentBlock.ParentId != ContentBlock.ContentBlockId;
                 var startTag = (RenderWithDiv
                     ? $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
                       $" data-cb-id=\"{ContentBlock.ContentBlockId}\""

@@ -89,15 +89,9 @@ namespace ToSic.SexyContent
 
             #endregion
 
-<<<<<<< HEAD
-            var result = Entity.GetBestValue(attributeName, _dimensions, true);
-
-            if (result is Eav.Data.EntityRelationship)
-=======
             object result = null;
             // check Entity is null (in cases where null-objects are asked for properties)
             if (Entity != null)
->>>>>>> a05ea3c013c29377a9c88c8545bb14b4eb5f46b5
             {
                 result = Entity.GetBestValue(attributeName, _dimensions, true);
 

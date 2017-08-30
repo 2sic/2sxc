@@ -10,6 +10,9 @@ namespace ToSic.SexyContent.Interfaces
         // bool ContentGroupIsCreated { get;  }
         bool ShowTemplateChooser { get; }
 
+        /// <summary>
+        /// Warning: 2017-08-30 2dm I believe this has the worng value (is always false) but this wasn't noticed because it's not in use
+        /// </summary>
         bool ParentIsEntity { get; }   // alternative is module
         int ParentId { get; }
 

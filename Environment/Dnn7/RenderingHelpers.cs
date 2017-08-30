@@ -229,6 +229,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public int Id;
         public string ParentFieldName;
         public int ParentFieldSortOrder;
+        public bool PartOfPage;
 
         // public bool DataIsMissing;
 
@@ -240,6 +241,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
             ParentFieldName = parentFieldName;
             ParentFieldSortOrder = indexInField;
             VersioningRequirements = versioningRequirements.ToString();
+            PartOfPage = contentBlock.ParentId == contentBlock.ContentBlockId; // if the CBID is the moduleId, then it's part of page
+
             // DataIsMissing = contentBlock.DataIsMissing;
         }
     };
