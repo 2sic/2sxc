@@ -17,7 +17,6 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             _sxcInstance = sxc;
         }
 
-
         public bool Enabled => _sxcInstance?.Environment?.Permissions?.UserMayEditContent ?? false;
 
         public HtmlString Toolbar(DynamicEntity target = null,
@@ -35,8 +34,7 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
 
             return new HtmlString(itmToolbar.Toolbar);
         }
-
-
+        
         public HtmlString ContextAttributes(DynamicEntity target,
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
             string field = null,
@@ -46,11 +44,11 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             if (!Enabled) return null;
             Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes");
 
-            if(field == null) throw new Exception("need parameter field");
+            if (field == null) throw new Exception("need parameter field");
 
             return new HtmlString(string.Format(
-                _jsonTemplate, 
-                target.EntityId, 
+                _jsonTemplate,
+                target.EntityId,
                 field,
                 contentType ?? Settings.AttributeSetStaticNameContentBlockTypeName,
                 newGuid));
@@ -77,6 +75,5 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
         /// <returns></returns>
         public HtmlString Attribute(string name, object value)
             => !Enabled ? null : Attribute(name, JsonConvert.SerializeObject(value));
-
     }
 }

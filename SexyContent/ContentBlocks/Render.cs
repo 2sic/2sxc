@@ -26,12 +26,11 @@ namespace ToSic.SexyContent.ContentBlocks
             Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "One");
             if (item == null)
                 item = context;
-
+            
             return field == null
-                ? Simple.Render(context.SxcInstance.ContentBlock, item.Entity)
-                : new HtmlString(Simple.RenderWithEditContext(context, item, field, newGuid));
+                ? Simple.Render(context.SxcInstance.ContentBlock, item.Entity) // data-edit-context
+                : new HtmlString(Simple.RenderWithEditContext(context, item, field, newGuid) + "<b>data-list-context</b>"); // data-list-context (no edit context)
         }
-
 
         /// <summary>
         /// Render content-blocks into a larger html-block containing placeholders
@@ -54,7 +53,5 @@ namespace ToSic.SexyContent.ContentBlocks
                 ? new HtmlString(Simple.RenderListWithContext(context, field))
                 : new HtmlString(InTextContentBlocks.Render(context, field, merge));
         }
-
-
     }
 }

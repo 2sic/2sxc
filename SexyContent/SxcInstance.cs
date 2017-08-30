@@ -10,7 +10,6 @@ using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Interfaces;
 
@@ -167,7 +166,7 @@ namespace ToSic.SexyContent
         public HtmlString Render()
         {
             var renderHelp = new RenderingHelpers(this);
-
+            
             try
             {
                 string innerContent = null;
@@ -219,6 +218,7 @@ namespace ToSic.SexyContent
 
                 #region Wrap it all up into a nice wrapper tag
                 var editInfos = JsonConvert.SerializeObject(renderHelp.GetClientInfosAll());
+                var isInnerContent = ContentBlock.ParentIsEntity;
                 var startTag = (RenderWithDiv
                     ? $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
                       $" data-cb-id=\"{ContentBlock.ContentBlockId}\""

@@ -11,7 +11,7 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
     {
         private static string EmptyMessage = "<!-- auto-render of item {0} -->";
 
-        internal static IHtmlString Render(IContentBlock parentCb, ToSic.Eav.Interfaces.IEntity entity)
+        internal static IHtmlString Render(IContentBlock parentCb, Eav.Interfaces.IEntity entity)
         {
             
             // if not the expected content-type, just output a hidden html placeholder
@@ -38,8 +38,6 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
 
-
-
         internal static string RenderListWithContext(DynamicEntity parent, string fieldName, IInPageEditingSystem edit = null)
         {
             object objFound;
@@ -48,7 +46,7 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
             if (found)
             {
                 var itms = objFound as IList<DynamicEntity>;
-                if(itms != null)
+                if (itms != null)
                     foreach (var cb in itms)
                         innerBuilder.Append(Render(cb.SxcInstance.ContentBlock, cb.Entity));
             }
@@ -63,8 +61,6 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
                 edit.ContextAttributes(parent, field: fieldName),
                 innerBuilder
             });
-
         }
-
     }
 }

@@ -47,7 +47,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return string.IsNullOrEmpty(request.QueryString["debug"]);
         }
 
-
         internal void RegisterClientDependencies(Page page)
         {
             var root = "~/desktopmodules/tosic_sexycontent/";

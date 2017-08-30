@@ -10,8 +10,6 @@ using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent
 {
-
-
     public class DynamicEntity : DynamicObject, IDynamicEntity
     {
         public ContentConfiguration Configuration = new ContentConfiguration();
@@ -77,7 +75,6 @@ namespace ToSic.SexyContent
             return true;
         }
 
-
         public object GetEntityValue(string attributeName, out bool propertyNotFound)
         {
             propertyNotFound = false;   // assume found, as that's usually the case
@@ -91,7 +88,6 @@ namespace ToSic.SexyContent
                 return Presentation;
 
             #endregion
-
 
             var result = Entity.GetBestValue(attributeName, _dimensions, true);
 
@@ -139,7 +135,5 @@ namespace ToSic.SexyContent
         public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, SxcInstance);
 
         public IHtmlString Render() => ContentBlocks.Render.One(this);
-        
     }
-
 }

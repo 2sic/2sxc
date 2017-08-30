@@ -138,7 +138,7 @@ angular.module("Adam")
                 ? $scope.folderDepth
                 : 2;
             vm.showFolders = !!vm.folderDepth;
-            vm.allowAssetsInRoot = $scope.allowAssetsInRoot || true;
+            vm.allowAssetsInRoot = $scope.allowAssetsInRoot || true;    // if true, the initial folder can have files, otherwise only subfolders
             vm.metadataContentTypes = $scope.metadataContentTypes || "";
         };
 
@@ -146,6 +146,7 @@ angular.module("Adam")
         
         vm.show = false;
         vm.appRoot = appRoot;        
+        vm.adamModeConfig = $scope.adamModeConfig;
 
         vm.disabled = $scope.ngDisabled;
         vm.enableSelect = ($scope.enableSelect === false) ? false : true; // must do it like this, $scope.enableSelect || true will not work
@@ -156,7 +157,6 @@ angular.module("Adam")
             if ($scope.registerSelf)
                 $scope.registerSelf(vm);
         };
-
 
         // load svc...
         vm.svc = adamSvc(vm.contentTypeName, vm.entityGuid, vm.fieldName, vm.subFolder, $scope.adamModeConfig);
@@ -176,7 +176,7 @@ angular.module("Adam")
             var configChanged = false;
             if (newConfig) {
                 // Detect changes in config, allows correct toggle behaviour
-                if (JSON.stringify(newConfig) != vm.oldConfig)
+                if (JSON.stringify(newConfig) !== vm.oldConfig)
                     configChanged = true;
                 vm.oldConfig = JSON.stringify(newConfig);
 
@@ -228,9 +228,9 @@ angular.module("Adam")
 
         vm.rename = function rename(item) {
             var newName = window.prompt('Rename the file / folder to: ', item.Name);
-            if(newName)
+            if (newName)
                 vm.svc.rename(item, newName);
-        }
+        };
 
         //#region Folder Navigation
         vm.goIntoFolder = function (folder) {
@@ -249,7 +249,6 @@ angular.module("Adam")
         vm.allowCreateFolder = function() {
             return vm.svc.folders.length < vm.folderDepth;
         };
-
         //#endregion
 
         //#region Metadata
@@ -259,7 +258,6 @@ angular.module("Adam")
             ];
 
             eavAdminDialogs.openEditItems(items, vm.refresh);
-
         };
 
         vm.getMetadataType = function(item) {
@@ -324,7 +322,7 @@ angular.module("Adam")
         }
 
         vm.fileEndingFilter = function (item) {
-            if (vm.allowedFileTypes.length == 0)
+            if (vm.allowedFileTypes.length === 0)
                 return true;
             var extension = item.Name.match(/(?:\.([^.]+))?$/)[0];
             return vm.allowedFileTypes.indexOf(extension) != -1;
@@ -532,10 +530,10 @@ angular.module("Adam")
 
 angular.module("sxcFieldTemplates")
     /*@ngInject*/
-    .factory("dnnBridgeSvc", ["$uibModal", "$http", "promiseToastr", "eavConfig", "sxc", function ($uibModal, $http, promiseToastr, eavConfig, sxc) {
+    .factory("dnnBridgeSvc", ["$uibModal", "$http", "promiseToastr", function ($uibModal, $http, promiseToastr) {
         var svc = {};
-        svc.open = function open(type, oldValue, params, callback) {
-            var template = type === "pagepicker" ? "pagepicker" : "filemanager";
+        svc.open = function open(oldValue, params, callback) {
+            var type = "pagepicker";
 
             var connector = {
                 params: params,
@@ -543,17 +541,17 @@ angular.module("sxcFieldTemplates")
                 dialogType: type
             };
 
-            connector.valueChanged = function valueChanged(value, type) {
+            connector.valueChanged = function valueChanged(value) {
                 connector.modalInstance.close();
-                callback(value, type);
+                callback(value);
             };
 
             connector.params.CurrentValue = oldValue;
 
-            console.log("before open");
+            console.log("before open page picker");
             console.log($uibModal);
             connector.modalInstance = $uibModal.open({
-                templateUrl: "fields/dnn-bridge/hyperlink-default-" + template + ".html",
+                templateUrl: "fields/dnn-bridge/hyperlink-default-pagepicker.html",
                 resolve: {
                     bridge: function () {
                         return connector;
@@ -565,22 +563,23 @@ angular.module("sxcFieldTemplates")
                 }],
                 windowClass: "sxc-dialog-filemanager"
             });
-            console.log("after open");
+            console.log("after open page picker");
 
             return connector.modalInstance;
         };
 
+        // 2017-08-12 2dm looks unused now
         // convert the url to a Id-code
-        svc.convertPathToId = function(path, type) {
-            var pathWithoutVersion = path.replace(/\?ver=[0-9\-]*$/gi, "");
-            // todo: working on https://github.com/2sic/2sxc/issues/656 but can't reproduce error
-            // this is why I tried ignoreErrors and promisetoaster, but atm there is nothing to work on...
-            var promise = $http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(pathWithoutVersion),
-            {
-                //ignoreErrors: true
-            });
-            return promiseToastr(promise, "Edit.Field.Hyperlink.Message.Loading", "Edit.Field.Hyperlink.Message.Ok", "Edit.Field.Hyperlink.Message.Error", 0, 0, 1000);
-        };
+        //svc.convertPathToId = function(path, type) {
+        //    var pathWithoutVersion = path.replace(/\?ver=[0-9\-]*$/gi, "");
+        //    // todo: working on https://github.com/2sic/2sxc/issues/656 but can't reproduce error
+        //    // this is why I tried ignoreErrors and promisetoaster, but atm there is nothing to work on...
+        //    var promise = $http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(pathWithoutVersion),
+        //    {
+        //        //ignoreErrors: true
+        //    });
+        //    return promiseToastr(promise, "Edit.Field.Hyperlink.Message.Loading", "Edit.Field.Hyperlink.Message.Ok", "Edit.Field.Hyperlink.Message.Error", 0, 0, 1000);
+        //};
 
         // handle short-ID links like file:17
         svc.getUrlOfId = function(idCode) {
@@ -764,39 +763,28 @@ angular.module("sxcFieldTemplates")
                     vm.testLink = newValue;
             });
 
-            //#region dnn-bridge dialogs
+            //#region dnn-page picker dialog
 
             // the callback when something was selected
-            vm.processResultOfDnnBridge = function(value, type) {
+            vm.processResultOfPagePicker = function (value) {
                 $scope.$apply(function() {
-                    if (!value) return;
-                    
-                    // Convert file path to file ID if type file is specified
-                    if (type === "page") {
+                    // Convert to page:xyz format (if it wasn't cancelled)
+                    if (value)
                         $scope.value.Value = "page:" + value.id;
-                    }
-                    if (type === "file" || type === "image") {
-                        dnnBridgeSvc.convertPathToId(value, type)
-                            .then(function (result) {
-                                $scope.value.Value = (result.data)
-                                    ? "file:" + result.data.FileId // default case, found number for this
-                                    : value; // this happens when it couldn't be resolved, for example on a secure file ticket
-                            });
-                    }
                 });
             };
 
             // open the dialog
-            vm.openDialog = function (type) {
+            vm.openPageDialog = function () {
                 dnnBridgeSvc.open(
-                    type,
                     $scope.value.Value,
                     {
                         Paths: $scope.to.settings.merged ? $scope.to.settings.merged.Paths : "",
                         FileFilter: $scope.to.settings.merged ? $scope.to.settings.merged.FileFilter : ""
                     },
-                    vm.processResultOfDnnBridge);
+                    vm.processResultOfPagePicker);
             };
+            //#endregion dnn page picker
 
             //#region new adam: callbacks only
             vm.registerAdam = function(adam) {
@@ -846,6 +834,10 @@ angular.module("sxcFieldTemplates")
             vm.debug = debugState;
             vm.modalInstance = null;
             vm.testLink = "";
+
+            vm.adamModeConfig = {
+                usePortalRoot: false
+            };
 
             //#region new adam: callbacks only
             vm.registerAdam = function(adam) {
@@ -1962,12 +1954,11 @@ angular.module("sxcFieldTemplates")
         return svc;
     }]);
 angular.module("SxcEditTemplates", []).run(["$templateCache", function($templateCache) {$templateCache.put("adam/adam-hint.html","<div class=\"small pull-right\">\r\n    <span style=\"opacity: 0.5\">drop files here -</span>\r\n    <a href=\"http://2sxc.org/help?tag=adam\" target=\"_blank\" uib-tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\">\r\n        <i class=\"eav-icon-apple\"></i>\r\n        Adam\r\n    </a>\r\n    <span style=\"opacity: 0.5\"> is sponsored with\r\n    <i class=\"eav-icon-heart\"></i> by\r\n    <a tabindex=\"-1\" href=\"http://2sic.com/\" target=\"_blank\">\r\n        2sic.com\r\n    </a>\r\n    </span>\r\n</div>\r\n");
-$templateCache.put("adam/browser.html","<div ng-if=\"vm.show\" class=\"\">\r\n    <!-- info for dropping stuff here -->\r\n    <div class=\"dz-preview dropzone-adam\" ng-disabled=\"vm.disabled\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.AdamUploadLabel\' | translate }}\" ng-click=\"vm.openUpload()\">\r\n        <div class=\"dz-image adam-browse-background-icon adam-browse-background\" xstyle=\"background-color: whitesmoke\">\r\n            <i class=\"eav-icon-up-circled2\"></i>\r\n            <div class=\"adam-short-label\">drop files</div>\r\n        </div>\r\n    </div>\r\n\r\n    <!-- add folder - not always shown -->\r\n    <div ng-show=\"vm.allowCreateFolder() || vm.debug.on\" class=\"dz-preview\" ng-disabled=\"vm.disabled\" ng-click=\"vm.addFolder()\">\r\n        <div class=\"dz-image adam-browse-background-icon adam-browse-background\">\r\n            <div class=\"\">\r\n                <i class=\"eav-icon-folder-empty\"></i>\r\n                <div class=\"adam-short-label\">new folder</div>\r\n            </div>\r\n        </div>\r\n        <div class=\"adam-background adam-browse-background-icon\">\r\n            <i class=\"eav-icon-plus\" style=\"font-size: 2em; top: 13px; position: relative;\"></i>\r\n        </div>\r\n        <div class=\"dz-details\" style=\"opacity: 1\">\r\n\r\n        </div>\r\n    </div>\r\n\r\n    <!-- browse up a folder - not always shown -->\r\n    <div ng-show=\"vm.showFolders || vm.debug.on\" class=\"dz-preview\" ng-disabled=\"vm.disabled\" ng-if=\"vm.folders.length > 0\" ng-click=\"vm.goUp()\">\r\n        <div class=\"dz-image  adam-browse-background-icon adam-browse-background\">\r\n            <i class=\"eav-icon-folder-empty\"></i>\r\n            <div class=\"adam-short-label\">up</div>\r\n        </div>\r\n        <div class=\"adam-background adam-browse-background-icon\">\r\n            <i class=\"eav-icon-level-up\" style=\"font-size: 2em; top: 13px; position: relative;\"></i>\r\n        </div>\r\n    </div>\r\n\r\n    <!-- folder list - not always shown -->\r\n    <div ng-show=\"vm.showFolders || vm.debug.on\" class=\"dz-preview\" ng-repeat=\"item in vm.items | filter: { IsFolder: true } | filter: { Name: \'!2sxc\' } | filter: { Name: \'!adam\' } | orderBy:\'Name\'\"\r\n         ng-click=\"vm.goIntoFolder(item)\">\r\n        <div class=\"dz-image adam-blur adam-browse-background-icon adam-browse-background\">\r\n            <i class=\"eav-icon-folder-empty\"></i>\r\n            <div class=\"short-label\">{{ item.Name }}</div>\r\n        </div>\r\n\r\n        <div class=\"dz-details file-type-{{item.Type}}\">\r\n            <span ng-click=\"vm.del(item)\" stop-event=\"click\" class=\"adam-delete-button\"><i class=\"eav-icon-cancel\"></i></span>\r\n            <span ng-click=\"vm.rename(item)\" stop-event=\"click\" class=\"adam-rename-button\"><i class=\"eav-icon-pencil\"></i></span>\r\n            <div class=\"adam-full-name-area\">\r\n                <div class=\"adam-full-name\">{{ item.Name }}</div>\r\n            </div>\r\n        </div>\r\n\r\n        <span class=\"adam-tag\" ng-class=\"{\'metadata-exists\': item.MetadataId > 0}\"\r\n              ng-click=\"vm.editMetadata(item)\"\r\n              ng-if=\"vm.getMetadataType(item)\"\r\n              stop-event=\"click\"\r\n              uib-tooltip=\"{{vm.getMetadataType(item)}}:{{item.MetadataId}}\">\r\n            <i class=\"eav-icon-tag\" style=\"font-size: larger\"></i>\r\n        </span>\r\n    </div>\r\n\r\n\r\n    <!-- files -->\r\n    <div class=\"dz-preview\" ng-class=\"{ \'dz-success\': value.Value.toLowerCase() == \'file:\' + item.Id }\" ng-repeat=\"item in (vm.items | filter: vm.fileEndingFilter | filter: { IsFolder: false }) | filter: (vm.showImagesOnly ? {Type: \'image\'} : {})  | orderBy:\'Name\'\" ng-click=\"vm.select(item)\" ng-disabled=\"vm.disabled || !vm.enableSelect\">\r\n        <div ng-if=\"item.Type !== \'image\'\" class=\"dz-image adam-blur  adam-browse-background-icon adam-browse-background\">\r\n            <i ng-class=\"vm.icon(item)\"></i>\r\n            <div class=\"adam-short-label\">{{ item.Name }}</div>\r\n        </div>\r\n        <div ng-if=\"item.Type === \'image\'\" class=\"dz-image\">\r\n            <img data-dz-thumbnail=\"\" alt=\"{{ item.Id + \':\' + item.Name\r\n}}\" ng-src=\"{{ item.fullPath + \'?w=120&h=120&mode=crop\' }}\">\r\n        </div>\r\n\r\n\r\n\r\n        <div class=\"dz-details file-type-{{item.Type}}\">\r\n            <span ng-click=\"vm.del(item)\" stop-event=\"click\" class=\"adam-delete-button\"><i class=\"eav-icon-cancel\"></i></span>\r\n            <span ng-click=\"vm.rename(item)\" stop-event=\"click\" class=\"adam-rename-button\"><i class=\"eav-icon-pencil\"></i></span>\r\n            <div class=\"adam-full-name-area\">\r\n                <div class=\"adam-full-name\">{{ item.Name }}</div>\r\n            </div>\r\n            <div class=\"dz-filename adam-short-label\">\r\n                <span>#{{ item.Id }} - {{ (item.Size / 1024).toFixed(0) }} kb</span>\r\n            </div>\r\n            <a class=\"adam-link-button\" target=\"_blank\" ng-href=\"{{ item.fullPath }}\">\r\n                <i class=\"eav-icon-link-ext\" style=\"font-size: larger\"></i>\r\n            </a>\r\n        </div>\r\n\r\n        <span class=\"adam-tag\" ng-class=\"{\'metadata-exists\': item.MetadataId > 0}\"\r\n              ng-click=\"vm.editMetadata(item)\"\r\n              ng-if=\"vm.getMetadataType(item)\"\r\n              stop-event=\"click\"\r\n              uib-tooltip=\"{{vm.getMetadataType(item)}}:{{item.MetadataId}}\">\r\n            <i class=\"eav-icon-tag\" style=\"font-size: larger\"></i>\r\n        </span>\r\n\r\n\r\n        <div class=\"dz-success-mark\">\r\n            <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\r\n                <title>Check</title>\r\n                <defs></defs>\r\n                <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\r\n                    <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\" sketch:type=\"MSShapeGroup\"></path>\r\n                </g>\r\n            </svg>\r\n        </div>\r\n    </div>\r\n\r\n</div>");
+$templateCache.put("adam/browser.html","<div ng-if=\"vm.show\" ng-class=\"\'adam-scope-\' + (vm.adamModeConfig.usePortalRoot ? \'site\' : field)\">\r\n    <!-- info for dropping stuff here -->\r\n    <div class=\"dz-preview dropzone-adam\" ng-disabled=\"vm.disabled\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.AdamUploadLabel\' | translate }}\" ng-click=\"vm.openUpload()\">\r\n        <div class=\"dz-image adam-browse-background-icon adam-browse-background\" xstyle=\"background-color: whitesmoke\">\r\n            <i class=\"eav-icon-up-circled2\"></i>\r\n            <div class=\"adam-short-label\">upload to<i ng-class=\"vm.adamModeConfig.usePortalRoot ? \'eav-icon-globe\' : \'eav-icon-apple\'\" style=\"font-size: larger\"></i></div>\r\n        </div>\r\n    </div>\r\n\r\n    <!-- add folder - not always shown -->\r\n    <div ng-show=\"vm.allowCreateFolder() || vm.debug.on\" class=\"dz-preview\" ng-disabled=\"vm.disabled\" ng-click=\"vm.addFolder()\">\r\n        <div class=\"dz-image adam-browse-background-icon adam-browse-background\">\r\n            <div class=\"\">\r\n                <i class=\"eav-icon-folder-empty\"></i>\r\n                <div class=\"adam-short-label\">new folder</div>\r\n            </div>\r\n        </div>\r\n        <div class=\"adam-background adam-browse-background-icon\">\r\n            <i class=\"eav-icon-plus\" style=\"font-size: 2em; top: 13px; position: relative;\"></i>\r\n        </div>\r\n        <div class=\"dz-details\" style=\"opacity: 1\">\r\n\r\n        </div>\r\n    </div>\r\n\r\n    <!-- browse up a folder - not always shown -->\r\n    <div ng-show=\"vm.showFolders || vm.debug.on\" class=\"dz-preview\" ng-disabled=\"vm.disabled\" ng-if=\"vm.folders.length > 0\" ng-click=\"vm.goUp()\">\r\n        <div class=\"dz-image  adam-browse-background-icon adam-browse-background\">\r\n            <i class=\"eav-icon-folder-empty\"></i>\r\n            <div class=\"adam-short-label\">up</div>\r\n        </div>\r\n        <div class=\"adam-background adam-browse-background-icon\">\r\n            <i class=\"eav-icon-level-up\" style=\"font-size: 2em; top: 13px; position: relative;\"></i>\r\n        </div>\r\n    </div>\r\n\r\n    <!-- folder list - not always shown -->\r\n    <div ng-show=\"vm.showFolders || vm.debug.on\" class=\"dz-preview\" ng-repeat=\"item in vm.items | filter: { IsFolder: true } | filter: { Name: \'!2sxc\' } | filter: { Name: \'!adam\' } | orderBy:\'Name\'\"\r\n         ng-click=\"vm.goIntoFolder(item)\">\r\n        <div class=\"dz-image adam-blur adam-browse-background-icon adam-browse-background\">\r\n            <i class=\"eav-icon-folder-empty\"></i>\r\n            <div class=\"short-label\">{{ item.Name }}</div>\r\n        </div>\r\n\r\n        <div class=\"dz-details file-type-{{item.Type}}\">\r\n            <span ng-click=\"vm.del(item)\" stop-event=\"click\" class=\"adam-delete-button\"><i class=\"eav-icon-cancel\"></i></span>\r\n            <span ng-click=\"vm.rename(item)\" stop-event=\"click\" class=\"adam-rename-button\"><i class=\"eav-icon-pencil\"></i></span>\r\n            <div class=\"adam-full-name-area\">\r\n                <div class=\"adam-full-name\">{{ item.Name }}</div>\r\n            </div>\r\n        </div>\r\n\r\n        <span class=\"adam-tag\" ng-class=\"{\'metadata-exists\': item.MetadataId > 0}\"\r\n              ng-click=\"vm.editMetadata(item)\"\r\n              ng-if=\"vm.getMetadataType(item)\"\r\n              stop-event=\"click\"\r\n              uib-tooltip=\"{{vm.getMetadataType(item)}}:{{item.MetadataId}}\">\r\n            <i class=\"eav-icon-tag\" style=\"font-size: larger\"></i>\r\n        </span>\r\n    </div>\r\n\r\n\r\n    <!-- files -->\r\n    <div class=\"dz-preview\" ng-class=\"{ \'dz-success\': value.Value.toLowerCase() == \'file:\' + item.Id }\" ng-repeat=\"item in (vm.items | filter: vm.fileEndingFilter | filter: { IsFolder: false }) | filter: (vm.showImagesOnly ? {Type: \'image\'} : {})  | orderBy:\'Name\'\" ng-click=\"vm.select(item)\" ng-disabled=\"vm.disabled || !vm.enableSelect\">\r\n        <div ng-if=\"item.Type !== \'image\'\" class=\"dz-image adam-blur  adam-browse-background-icon adam-browse-background\">\r\n            <i ng-class=\"vm.icon(item)\"></i>\r\n            <div class=\"adam-short-label\">{{ item.Name }}</div>\r\n        </div>\r\n        <div ng-if=\"item.Type === \'image\'\" class=\"dz-image\">\r\n            <img data-dz-thumbnail=\"\" alt=\"{{ item.Id + \':\' + item.Name\r\n}}\" ng-src=\"{{ item.fullPath + \'?w=120&h=120&mode=crop\' }}\">\r\n        </div>\r\n\r\n\r\n\r\n        <div class=\"dz-details file-type-{{item.Type}}\">\r\n            <span ng-click=\"vm.del(item)\" stop-event=\"click\" class=\"adam-delete-button\"><i class=\"eav-icon-cancel\"></i></span>\r\n            <span ng-click=\"vm.rename(item)\" stop-event=\"click\" class=\"adam-rename-button\"><i class=\"eav-icon-pencil\"></i></span>\r\n            <div class=\"adam-full-name-area\">\r\n                <div class=\"adam-full-name\">{{ item.Name }}</div>\r\n            </div>\r\n            <div class=\"dz-filename adam-short-label\">\r\n                <span>#{{ item.Id }} - {{ (item.Size / 1024).toFixed(0) }} kb</span>\r\n            </div>\r\n            <a class=\"adam-link-button\" target=\"_blank\" ng-href=\"{{ item.fullPath }}\">\r\n                <i class=\"eav-icon-link-ext\" style=\"font-size: larger\"></i>\r\n            </a>\r\n        </div>\r\n\r\n        <span class=\"adam-tag\" ng-class=\"{\'metadata-exists\': item.MetadataId > 0}\"\r\n              ng-click=\"vm.editMetadata(item)\"\r\n              ng-if=\"vm.getMetadataType(item)\"\r\n              stop-event=\"click\"\r\n              uib-tooltip=\"{{vm.getMetadataType(item)}}:{{item.MetadataId}}\">\r\n            <i class=\"eav-icon-tag\" style=\"font-size: larger\"></i>\r\n        </span>\r\n\r\n\r\n        <div class=\"dz-success-mark\">\r\n            <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\r\n                <title>Check</title>\r\n                <defs></defs>\r\n                <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\r\n                    <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\" sketch:type=\"MSShapeGroup\"></path>\r\n                </g>\r\n            </svg>\r\n        </div>\r\n    </div>\r\n\r\n</div>");
 $templateCache.put("adam/dropzone-upload-preview.html","<div ng-show=\"uploading\">\r\n    <div class=\"dropzone-previews\">\r\n    </div>\r\n    <span class=\"invisible-clickable\" data-note=\"just a fake, invisible area for dropzone\"></span>\r\n</div>");
-$templateCache.put("fields/dnn-bridge/hyperlink-default-filemanager.html","<div>\r\n	<iframe class=\"sxc-dialog-filemanager-iframe\" style=\"width:100%; height:100%; overflow:hidden; border: 0;\" scrolling=\"no\" web-forms-bridge=\"bridge\" bridge-type=\"filemanager\" bridge-sync-height=\"false\"></iframe>\r\n</div>\r\n\r\n<style>\r\n	.sxc-dialog-filemanager .modal-dialog { width: 100%;height: 100%;margin: 0; }\r\n	.sxc-dialog-filemanager .modal-content { background: none;height: 100%; }\r\n	.sxc-dialog-filemanager-iframe { position: absolute;top: 0;left: 0;right: 0;bottom: 0; }\r\n</style>");
 $templateCache.put("fields/dnn-bridge/hyperlink-default-pagepicker.html","<div>\r\n	<div class=\"modal-header\">\r\n		<h3 class=\"modal-title\" translate=\"Edit.Fields.Hyperlink.PagePicker.Title\"></h3>\r\n	</div>\r\n	<div class=\"modal-body\" style=\"height:370px; width:600px\">\r\n		<iframe style=\"width:100%; height: 350px; border: 0;\" web-forms-bridge=\"bridge\" bridge-type=\"pagepicker\" bridge-sync-height=\"false\"></iframe>\r\n	</div>\r\n	<div class=\"modal-footer\"></div>\r\n</div>");
-$templateCache.put("fields/hyperlink/hyperlink-default.html","<div class=\"dropzone\">\r\n    <div class=\"clearfix\">\r\n        <div ng-if=\"value.Value && vm.isImage()\"\r\n             class=\"thumbnail-before-input\"\r\n             ng-style=\"{ \'background-image\': \'url(\' + vm.thumbnailUrl(1, true) + \')\' }\"\r\n             ng-mouseover=\"vm.showPreview = true\"\r\n             ng-mouseleave=\"vm.showPreview = false\">\r\n        </div>\r\n\r\n        <div ng-if=\"value.Value && !vm.isImage()\"\r\n           class=\"thumbnail-before-input icon-before-input\">\r\n            <a href=\"{{vm.testLink}}\"\r\n               target=\"_blank\" tabindex=\"-1\"\r\n               tooltip-html=\"{{vm.tooltipUrl(vm.testLink)}}\"\r\n               tooltip-placement=\"right\"\r\n               ng-class=\"vm.icon()\">\r\n            </a>            \r\n        </div>\r\n        <div ng-if=\"!value.Value\"\r\n             class=\"thumbnail-before-input empty-placeholder\">\r\n        </div>\r\n        <div class=\"after-preview\">\r\n            <div class=\"input-group\" uib-dropdown>\r\n                <input type=\"text\" class=\"form-control input-lg\" ng-model=\"value.Value\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.Tooltip1\' | translate }}\r\n{{\'Edit.Fields.Hyperlink.Default.Tooltip2\' | translate }}\r\nADAM - sponsored with ♥ by 2sic.com\">\r\n                <span class=\"input-group-btn\" style=\"vertical-align: top;\">\r\n                    <div style=\"width: 6px;\"></div>\r\n                    <button ng-if=\"to.settings[\'merged\'].Buttons.indexOf(\'adam\') > -1\" type=\"button\" class=\"btn btn-default icon-field-button\" ng-disabled=\"to.disabled\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.AdamUploadLabel\' | translate }}\" ng-click=\"vm.toggleAdam()\">\r\n                        <i class=\"eav-icon-apple\"></i>\r\n                    </button>\r\n                    <button ng-if=\"to.settings[\'merged\'].Buttons.indexOf(\'page\') > -1\" type=\"button\" class=\"btn btn-default icon-field-button\" ng-disabled=\"to.disabled\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.PageLabel\' | translate }}\" ng-click=\"vm.openDialog(\'pagepicker\')\">\r\n                        <i class=\"eav-icon-sitemap\"></i>\r\n                    </button>\r\n                    <button ng-if=\"to.settings[\'merged\'].Buttons.indexOf(\'more\') > -1\" tabindex=\"-1\" type=\"button\" class=\"btn btn-default uib-dropdown-toggle icon-field-button\" uib-dropdown-toggle ng-disabled=\"to.disabled\">\r\n                        <i class=\"eav-icon-options\"></i>\r\n                    </button>\r\n                </span>\r\n                <ul class=\"dropdown-menu pull-right\" uib-dropdown-menu role=\"menu\">\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowAdam\"><a class=\"dropzone-adam\" ng-click=\"vm.toggleAdam(false)\" href=\"javascript:void(0);\"><i class=\"eav-icon-apple\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuAdam\"></span></a></li>\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowPagePicker\"><a ng-click=\"vm.openDialog(\'pagepicker\')\" href=\"javascript:void(0)\"><i class=\"eav-icon-sitemap\" xicon=\"home\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuPage\"></span></a></li>\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowImageManager\"><a ng-click=\"vm.toggleAdam(true, true)\" href=\"javascript:void(0)\"><i class=\"eav-icon-file-image\" xicon=\"picture\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuImage\"></span></a></li>\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowFileManager\"><a ng-click=\"vm.toggleAdam(true, false)\" href=\"javascript:void(0)\"><i class=\"eav-icon-file\" xicon=\"file\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuDocs\"></span></a></li>\r\n                </ul>\r\n            </div>\r\n            <div ng-if=\"vm.showPreview\" style=\"position: relative\">\r\n                <div style=\"position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0;\">\r\n                    <img ng-src=\"{{vm.thumbnailUrl(2)}}\" />\r\n                </div>\r\n            </div>\r\n\r\n            <adam-hint class=\"field-hints\"></adam-hint>\r\n            <div ng-if=\"value.Value\" class=\"field-hints\">\r\n                <a href=\"{{vm.testLink}}\" target=\"_blank\" tabindex=\"-1\" tooltip-html=\"{{vm.tooltipUrl(vm.testLink)}}\">\r\n                    <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span>\r\n                </a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div>\r\n        <!-- The ADAM file browser, requires the uploader wrapped around it -->\r\n        <adam-browser content-type-name=\"to.header.ContentTypeName\"\r\n                      entity-guid=\"to.header.Guid\"\r\n                      field-name=\"options.key\"\r\n                      auto-load=\"false\"\r\n                      folder-depth=\"0\"\r\n                      sub-folder=\"\"\r\n                      update-callback=\"vm.setValue\"\r\n                      register-self=\"vm.registerAdam\"\r\n                      adam-mode-config=\"vm.adamModeConfig\"\r\n                      ng-disabled=\"to.disabled\"\r\n                      file-filter=\"to.settings[\'merged\'].FileFilter\"></adam-browser>\r\n\r\n        <!-- the preview of the uploader -->\r\n        <dropzone-upload-preview></dropzone-upload-preview>\r\n\r\n    </div>\r\n</div>");
-$templateCache.put("fields/hyperlink/hyperlink-library.html","<div>\r\n    <div class=\"dropzone\">\r\n        <!-- The ADAM file browser, requires the uploader wrapped around it -->\r\n        <adam-browser\r\n            content-type-name=\"to.header.ContentTypeName\"\r\n            entity-guid=\"to.header.Guid\"\r\n            field-name=\"options.key\"\r\n            auto-load=\"true\"\r\n            sub-folder=\"\"\r\n            folder-depth=\"to.settings.merged.FolderDepth\"\r\n            metadata-content-types=\"to.settings.merged.MetadataContentTypes\"\r\n            allow-assets-in-root=\"to.settings.merged.allowAssetsInRoot\"\r\n            enable-select=\"false\"\r\n            update-callback=\"vm.setValue\"\r\n            register-self=\"vm.registerAdam\">\r\n        </adam-browser>\r\n\r\n\r\n        <!-- the preview of the uploader -->\r\n        <dropzone-upload-preview></dropzone-upload-preview>\r\n\r\n    </div>\r\n</div>");
+$templateCache.put("fields/hyperlink/hyperlink-default.html","<div class=\"dropzone\">\r\n    <div class=\"clearfix\">\r\n        <div ng-if=\"value.Value && vm.isImage()\"\r\n             class=\"thumbnail-before-input\"\r\n             ng-style=\"{ \'background-image\': \'url(\' + vm.thumbnailUrl(1, true) + \')\' }\"\r\n             ng-mouseover=\"vm.showPreview = true\"\r\n             ng-mouseleave=\"vm.showPreview = false\">\r\n        </div>\r\n\r\n        <div ng-if=\"value.Value && !vm.isImage()\"\r\n           class=\"thumbnail-before-input icon-before-input\">\r\n            <a href=\"{{vm.testLink}}\"\r\n               target=\"_blank\" tabindex=\"-1\"\r\n               tooltip-html=\"{{vm.tooltipUrl(vm.testLink)}}\"\r\n               tooltip-placement=\"right\"\r\n               ng-class=\"vm.icon()\">\r\n            </a>            \r\n        </div>\r\n        <div ng-if=\"!value.Value\"\r\n             class=\"thumbnail-before-input empty-placeholder\">\r\n        </div>\r\n        <div class=\"after-preview\">\r\n            <div class=\"input-group\" uib-dropdown>\r\n                <input type=\"text\" class=\"form-control input-lg\" ng-model=\"value.Value\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.Tooltip1\' | translate }}\r\n{{\'Edit.Fields.Hyperlink.Default.Tooltip2\' | translate }}\r\nADAM - sponsored with ♥ by 2sic.com\">\r\n                <span class=\"input-group-btn\" style=\"vertical-align: top;\">\r\n                    <div style=\"width: 6px;\"></div>\r\n                    <button ng-if=\"to.settings[\'merged\'].Buttons.indexOf(\'adam\') > -1\" type=\"button\" class=\"btn btn-default icon-field-button\" ng-disabled=\"to.disabled\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.AdamUploadLabel\' | translate }}\" ng-click=\"vm.toggleAdam()\">\r\n                        <i class=\"eav-icon-apple\"></i>\r\n                    </button>\r\n                    <button ng-if=\"to.settings[\'merged\'].Buttons.indexOf(\'page\') > -1\" type=\"button\" class=\"btn btn-default icon-field-button\" ng-disabled=\"to.disabled\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.PageLabel\' | translate }}\" ng-click=\"vm.openPageDialog()\">\r\n                        <i class=\"eav-icon-sitemap\"></i>\r\n                    </button>\r\n                    <button ng-if=\"to.settings[\'merged\'].Buttons.indexOf(\'more\') > -1\" tabindex=\"-1\" type=\"button\" class=\"btn btn-default uib-dropdown-toggle icon-field-button\" uib-dropdown-toggle ng-disabled=\"to.disabled\">\r\n                        <i class=\"eav-icon-options\"></i>\r\n                    </button>\r\n                </span>\r\n                <ul class=\"dropdown-menu pull-right\" uib-dropdown-menu role=\"menu\">\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowAdam\"><a class=\"dropzone-adam\" ng-click=\"vm.toggleAdam(false)\" href=\"javascript:void(0);\"><i class=\"eav-icon-apple\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuAdam\"></span></a></li>\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowPagePicker\"><a ng-click=\"vm.openPageDialog()\" href=\"javascript:void(0)\"><i class=\"eav-icon-sitemap\" xicon=\"home\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuPage\"></span></a></li>\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowImageManager\"><a ng-click=\"vm.toggleAdam(true, true)\" href=\"javascript:void(0)\"><i class=\"eav-icon-file-image\" xicon=\"picture\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuImage\"></span></a></li>\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowFileManager\"><a ng-click=\"vm.toggleAdam(true, false)\" href=\"javascript:void(0)\"><i class=\"eav-icon-file\" xicon=\"file\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuDocs\"></span></a></li>\r\n                </ul>\r\n            </div>\r\n            <div ng-if=\"vm.showPreview\" style=\"position: relative\">\r\n                <div style=\"position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0;\">\r\n                    <img ng-src=\"{{vm.thumbnailUrl(2)}}\" />\r\n                </div>\r\n            </div>\r\n\r\n            <adam-hint class=\"field-hints\"></adam-hint>\r\n            <div ng-if=\"value.Value\" class=\"field-hints\">\r\n                <a href=\"{{vm.testLink}}\" target=\"_blank\" tabindex=\"-1\" tooltip-html=\"{{vm.tooltipUrl(vm.testLink)}}\">\r\n                    <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span>\r\n                </a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div>\r\n        <!-- The ADAM file browser, requires the uploader wrapped around it -->\r\n        <adam-browser content-type-name=\"to.header.ContentTypeName\"\r\n                      entity-guid=\"to.header.Guid\"\r\n                      field-name=\"options.key\"\r\n                      auto-load=\"false\"\r\n                      folder-depth=\"0\"\r\n                      sub-folder=\"\"\r\n                      update-callback=\"vm.setValue\"\r\n                      register-self=\"vm.registerAdam\"\r\n                      adam-mode-config=\"vm.adamModeConfig\"\r\n                      ng-disabled=\"to.disabled\"\r\n                      file-filter=\"to.settings[\'merged\'].FileFilter\"></adam-browser>\r\n\r\n        <!-- the preview of the uploader -->\r\n        <dropzone-upload-preview></dropzone-upload-preview>\r\n\r\n    </div>\r\n</div>");
+$templateCache.put("fields/hyperlink/hyperlink-library.html","<div>\r\n    <div class=\"dropzone\">\r\n        <!-- The ADAM file browser, requires the uploader wrapped around it -->\r\n        <adam-browser\r\n            content-type-name=\"to.header.ContentTypeName\"\r\n            entity-guid=\"to.header.Guid\"\r\n            field-name=\"options.key\"\r\n            auto-load=\"true\"\r\n            sub-folder=\"\"\r\n            folder-depth=\"to.settings.merged.FolderDepth\"\r\n            metadata-content-types=\"to.settings.merged.MetadataContentTypes\"\r\n            allow-assets-in-root=\"to.settings.merged.allowAssetsInRoot\"\r\n            enable-select=\"false\"\r\n            update-callback=\"vm.setValue\"\r\n            register-self=\"vm.registerAdam\"\r\n            adam-mode-config=\"vm.adamModeConfig\">\r\n        </adam-browser>\r\n\r\n\r\n        <!-- the preview of the uploader -->\r\n        <dropzone-upload-preview></dropzone-upload-preview>\r\n\r\n    </div>\r\n</div>");
 $templateCache.put("fields/string/string-font-icon-picker.html","<div>\r\n    <div uib-dropdown uib-keyboard-nav auto-close=\"outsideClick\" is-open=\"vm.selectorIsOpen\">\r\n        <div class=\"thumbnail-before-input icon-preview\">\r\n            <button type=\"button\" class=\"\" uib-tooltip=\"{{value.Value}}\" uib-dropdown-toggle>\r\n                <i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=\"value.Value\"></i>\r\n                <span ng-show=\"!value.Value\">&nbsp;&nbsp;</span>\r\n            </button>\r\n        </div>\r\n        <div class=\"input-group\" uib-dropdown-toggle>\r\n            <input type=\"text\" class=\"form-control input-lg\" ng-model=\"value.Value\" ng-disabled=\"false\" >\r\n        </div>\r\n        <!-- the search ui -->\r\n        <ul class=\"dropdown-menu icons-menu-columns\" role=\"menu\" uib-dropdown-menu>\r\n            <li class=\"input-group\">\r\n                <span class=\"input-group-addon btn-default btn\" ng-click=\"vm.selectorIsOpen = false; value.Value = \'\'\">\r\n                    <i class=\"eav-icon-cancel\"></i>\r\n                </span>\r\n                <input type=\"search\" ng-model=\"vm.iconFilter\" class=\"form-control input-lg\" placeholder=\"search...\" />\r\n            </li>\r\n\r\n            <li ng-repeat=\"icn in vm.icons\" role=\"menuitem\"\r\n                ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\">\r\n                <a ng-click=\"vm.setIcon(icn.class)\" xng-click=\"value.Value = icn.class; vm.selectorIsOpen = false;\">\r\n                    <i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span uib-tooltip=\"{{icn.class}}\">...{{icn.class.substring(vm.prefix.length-1,25)}}</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div ng-if=\"vm.debug.on\">Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Selected is \"{{value.Value}}\" and files are: {{vm.files}}</div>\r\n</div> ");
 $templateCache.put("fields/string/string-template-picker.html","<div>\r\n    <div class=\"input-group\">\r\n\r\n        <select class=\"form-control input-material material\"\r\n                ng-model=\"value.Value\"\r\n                ng-disabled=\"!readyToUse()\">\r\n            <option value=\"\">(no file selected)</option>\r\n            <option ng-repeat=\"item in templates | isValidFile:file.ext\"\r\n                    ng-selected=\"{{item == value.Value}}\"\r\n                    value=\"{{item}}\">\r\n                {{item}}\r\n            </option>\r\n        </select>\r\n        <span class=\"input-group-btn\" style=\"vertical-align: top;\">\r\n            <button class=\"btn btn-default icon-field-button\" type=\"button\" ng-click=\"add()\" ng-disabled=\"!readyToUse()\">\r\n                <span class=\"eav-icon-plus\"></span>\r\n            </button>\r\n        </span>\r\n    </div>\r\n</div>");
 $templateCache.put("fields/string/string-wysiwyg-adv.html","<div>\r\n    this would be an advanced, configurable WYSIWYG. It does not exist yet :). \r\n</div>");

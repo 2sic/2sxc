@@ -1,60 +1,111 @@
 // this enhances the $2sxc client controller with stuff only needed when logged in
-(function() {
-    if (window.$2sxc) {
+(function () {
+    if (!window.$2sxc || window.$2sxc.consts) return false;
+    $2sxc.c = $2sxc.consts = {
+        // classes
+        cls: {
+            scMenu: "sc-menu",
+            scCb: "sc-content-block",
+            scElm: "sc-element"
+        },
         
-        //#region System Commands - at the moment only finishUpgrade
-        $2sxc.system = {
-            // upgrade command - started when an error contains a link to start this
-            finishUpgrade: function(domElement) {
-                var mc = $2sxc(domElement);
-                $.ajax({
-                    type: "get",
-                    url: mc.resolveServiceUrl("view/module/finishinstallation"),
-                    beforeSend: $.ServicesFramework(mc.id).setModuleHeaders
-                }).success(function() {
-                    alert("Upgrade ok, restarting the CMS and reloading...");
-                    location.reload();
-                });
-                alert("starting upgrade. This could take a few minutes. You'll see an 'ok' when it's done. Please wait...");
-            }
-        };
-        //#endregion
-    }
+        // attribs
+        attr: {
+            toolbar: "toolbar",
+            toolbarData: "data-toolbar",
+            settings: "settings",
+            settingsData: "data-settings"
+        }
+
+    };
+
+    // selectors
+    var sel = $2sxc.c.sel = {};
+    Object.keys($2sxc.c.cls).forEach(function (key, index) {
+        sel[key] = "." + $2sxc.c.cls[key];
+    });
+
+    /*
+    ToDo: functional programming
+    $2sxc.c.sel = Object.entries($2sxc.c.cls).reduce((res, current) => {
+        res[entry[0]] = entry[1];
+        return t;
+    }, {});
+    */
 })();
 // this enhances the $2sxc client controller with stuff only needed when logged in
-(function() {
-    if (window.$2sxc) {
-        
-        //#region contentItem Commands - at the moment only finishUpgrade
-        $2sxc.contentItems = {
-            // delete command - try to really delete a content-item
-            "delete": function (sxc, itemId, itemGuid, itemTitle) {
-                // first show main warning / get ok
-                var ok = confirm($2sxc.translate("Delete.Confirm")
-                    .replace("{id}", itemId)
-                    .replace("{title}", itemTitle));
-                if (!ok) return;
+(function () {
+    if (!window.$2sxc) return false;
+    return $2sxc.system = {
+        finishUpgrade: finishUpgrade,
+    };
 
-                sxc.webApi.delete("app-content/any/" + itemGuid, null, null, true)
-                    .success(function () {
-                        location.reload();
-                    }).error(function (error) {
-                        var msgJs = $2sxc.translate("Delete.ErrCheckConsole");
-                        // check if it's a permission config problem
-                        console.log(error);
-                        if (error.status === 401) {
-                            alert($2sxc.translate("Delete.ErrPermission") + msgJs);
-                        }
-                        if (error.status === 400) {
-                            alert($2sxc.translate("Delete.ErrInUse") + msgJs);
-                        }
-                    });
-            }
-        };
-        //#endregion
-
+    // upgrade command - started when an error contains a link to start this
+    function finishUpgrade(domElement) {
+        var mc = $2sxc(domElement);
+        $.ajax({
+            type: 'get',
+            url: mc.resolveServiceUrl('view/module/finishinstallation'),
+            beforeSend: $.ServicesFramework(mc.id).setModuleHeaders
+        }).success(function () {
+            alert('Upgrade ok, restarting the CMS and reloading...');
+            location.reload();
+        });
+        alert('starting upgrade. This could take a few minutes. You\'ll see an \'ok\' when it\'s done. Please wait...');
     }
 })();
+// module & toolbar bootstrapping (initialize all toolbars after loading page)
+// this will run onReady...
+$(function () {
+    var initializedModules = [];
+
+    initAllModules(true);
+    document.body.addEventListener('DOMSubtreeModified', initAllModules, false);
+    
+    function initAllModules(isFirstRun) {
+        $("div[data-edit-context]").each(function () { initModule(this, isFirstRun); });
+    }
+
+    function initModule(module, isFirstRun) {
+        // check if module is already in the list of initialized modules
+        if (initializedModules.find(function(m) {
+            return m === module;
+        })) return false;
+
+        // add to modules-list
+        initializedModules.push(module);
+
+        var sxc = $2sxc(module);
+
+        // note: this can't work - just re-finding the tag will cause many side-effects
+        // the tag might have changed
+        //ctl.manage.reloadContentBlockTag();
+        var uninitialized = showGlassesButtonIfUninitialized(sxc);
+        //var uninitialized = ctl.manage._showGlassesButtonIfUninitialized();
+
+        if (isFirstRun && !uninitialized) $2sxc._toolbarManager.buildToolbars(module);
+
+        return true;
+    }
+
+    
+    function showGlassesButtonIfUninitialized (sxc) {
+        // already initialized
+        if (sxc.manage.contentBlock.templateId !== 0) return false;
+
+        // already has a glasses button
+        if ($(sxc.manage._tag).find(".sc-uninitialized").length !== 0) return false;
+
+        // note: title is added on mouseover, as the translation isn't ready at page-load
+        var btn = $('<div class="sc-uninitialized" onmouseover="this.title = $2sxc.translate(this.title)" title="InPage.NewElement"><div class="icon-sxc-glasses"></div></div>');
+        btn.on("click", function () {
+            sxc.manage.run("layout");
+        });
+
+        $(sxc.manage._tag).append(btn);
+        return true;
+    }
+});
 (function() {
     $2sxc._commands = {};
 })();
@@ -361,7 +412,8 @@
         //#endregion
         addDef(makeDef("layout", "ChangeLayout", "glasses", true, {
             code: function (settings, event, sxc) {
-                sxc.manage.contentBlock.dialogToggle();
+                //sxc.manage.contentBlock.dialogToggle();
+                $2sxc._contentBlock.dialogToggle(sxc);
             }
         }));
 
@@ -391,18 +443,16 @@
 
 
 (function () {
-    $2sxc._commands.engine = function (sxc, targetTag) {
-        var cmc = {
-            manage: "must-be-added-after-initialization",
-            init: function (manage) {
-                cmc.manage = manage;
-            },
+    $2sxc._commands.instanceEngine = function (sxc, targetTag, editContext) {
+        var engine = {
+            commands: $2sxc._commands.initializeInstanceCommands(editContext),
 
             // assemble an object which will store the configuration and execute it
             create: function (specialSettings) {
-                var settings = $2sxc._lib.extend({}, cmc.manage._toolbarConfig, specialSettings); // merge button with general toolbar-settings
-                var ngDialogUrl = cmc.manage._editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?sxcver="
-                    + cmc.manage._editContext.Environment.SxcVersion;
+                var settings = $2sxc._lib.extend({}, sxc.manage._instanceConfig, specialSettings); // merge button with general toolbar-settings
+                var ngDialogUrl = sxc.manage._editContext.Environment.SxcRootUrl
+                    + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?sxcver="
+                    + sxc.manage._editContext.Environment.SxcVersion;
                 var isDebug = $2sxc.urlParams.get("debug") ? "&debug=true" : "";
 
                 var cmd = {
@@ -443,6 +493,7 @@
                         if (withPresentation) cmd.addContentGroupItem(groupId, index, pTerm.toLowerCase(), isAdd, cmd.settings.cbIsEntity, cmd.settings.cbId, "EditFormTitle." + pTerm);
                     },
 
+                    // build the link, combining specific params with global ones and put all in the url
                     generateLink: function (dialogUrl) {
                         // if there is no items-array, create an empty one (it's required later on)
                         if (!cmd.settings.items) cmd.settings.items = [];
@@ -454,9 +505,9 @@
                             }
                         }
                         cmd.params.items = JSON.stringify(cmd.items); // Serialize/json-ify the complex items-list
-
+                        
                         return (dialogUrl || ngDialogUrl)
-                            + "#" + $.param(cmc.manage._dialogParameters)
+                            + "#" + $.param(sxc.manage._dialogParameters)
                             + "&" + $.param(cmd.params)
                             + isDebug;
                         //#endregion
@@ -467,7 +518,7 @@
 
             // create a dialog link
             _linkToNgDialog: function (specialSettings) {
-                var cmd = cmc.manage._commands.create(specialSettings);
+                var cmd = sxc.manage._commands.create(specialSettings);
 
                 if (cmd.settings.useModuleList) cmd.addContentGroupItemSetsToEditList(true);
                 else cmd.addSimpleItem();
@@ -476,64 +527,200 @@
                 if (cmd.settings.configureCommand) cmd.settings.configureCommand(cmd);
 
                 if (specialSettings.angularDialog) {
-                    var modernDialogUrl = cmc.manage._editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/ng/ui.html?sxcver="
-                        + cmc.manage._editContext.Environment.SxcVersion;
+                    var modernDialogUrl = sxc.manage._editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/ng/ui.html?sxcver="
+                        + sxc.manage._editContext.Environment.SxcVersion;
                     return cmd.generateLink(modernDialogUrl);
                 }
                 return cmd.generateLink();
             },
 
-            _openModernDialog: function (settings) {
-                var link = cmc._linkToNgDialog(settings);
-                return $2sxc._angularDialog.open(url, settings.name);
-            },
-
             // open a new dialog of the angular-ui
             _openNgDialog: function (settings, event, closeCallback) {
+                // the callback will handle events after closing the dialog
+                // and reload the in-page view w/ajax or page reload
                 var callback = function () {
-                    cmc.manage.contentBlock.reloadAndReInitialize();
-                    closeCallback();
-                }, link = cmc._linkToNgDialog(settings);
+                        $2sxc._contentBlock.reloadAndReInitialize(sxc);
+                        //sxc.manage.contentBlock.reloadAndReInitialize();
+                        closeCallback();
+                    },
+                    link = engine._linkToNgDialog(settings); // the link contains everything to open a full dialog (lots of params added)
+                if (settings.inlineWindow) return $2sxc._quickDialog(sxc, targetTag, link, callback, settings.dialog === 'item-history');
                 if (settings.newWindow || (event && event.shiftKey)) return window.open(link);
-                if (settings.inlineWindow) return $2sxc._dialog(sxc, targetTag, link, callback, settings.dialog === 'item-history');
                 return $2sxc.totalPopup.open(link, callback);
             },
 
             // ToDo: remove dead code
             executeAction: function (nameOrSettings, settings, event) {
-                var conf,
-                    // ToDo: review this code
-                    // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
-                    origEvent = event || window.event;
 
-                // check if name is name (string) or object (settings)
-                if (!event && settings && typeof settings.altKey !== 'undefined') { // no event param, but settings contains the event-object
+                // cycle parameters, in case it was called with 2 params only
+                if (!event && settings && typeof settings.altKey !== "undefined") { // no event param, but settings contains the event-object
                     event = settings;   // move it to the correct variable
-                    settings = {};      // clear the settings variable
+                    settings = {};      // clear the settings variable, as none was provided
                 }
 
+                // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
+                var origEvent = event || window.event;
+
+                // check if name is name (string) or object (settings)
                 settings = (typeof nameOrSettings === "string")
                     ? $2sxc._lib.extend(settings || {}, { "action": nameOrSettings }) // place the name as an action-name into a command-object
                     : nameOrSettings;
 
-                conf = cmc.manage._toolbar.actions[settings.action];
+                var conf = /*sxc.manage._actions*/ engine.commands[settings.action];
                 settings = $2sxc._lib.extend({}, conf, settings); // merge conf & settings, but settings has higher priority
 
                 if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb ? dialog
-                if (!settings.code) settings.code = cmc._openNgDialog; // decide what action to perform
+                if (!settings.code) settings.code = engine._openNgDialog; // decide what action to perform
 
-                if (conf.uiActionOnly) return settings.code(settings, origEvent, sxc); // 2016-11-03 cmc.manage);
+                if (conf.uiActionOnly) return settings.code(settings, origEvent, sxc); 
 
                 // if more than just a UI-action, then it needs to be sure the content-group is created first
-                cmc.manage.contentBlock.prepareToAddContent()
+                sxc.manage.contentBlock.prepareToAddContent()
                     .then(function () {
-                        return settings.code(settings, origEvent, sxc); // 2016-11-03 cmc.manage);
+                        return settings.code(settings, origEvent, sxc); // 2016-11-03 sxc.manage);
                     });
             }
         };
 
-        return cmc;
+        return engine;
     };
+})();
+(function() {
+    $2sxc._commands.initializeInstanceCommands = function(editContext) {
+        var cg = editContext.ContentGroup;
+        return $2sxc._commands.definitions.create({
+            canDesign: editContext.User.CanDesign,
+            templateId: cg.TemplateId,
+            contentTypeId: cg.ContentTypeName,
+            isContent: cg.IsContent,
+            queryId: cg.QueryId,
+            appResourcesId: cg.AppResourcesId,
+            appSettingsId: cg.AppSettingsId
+        });
+    };
+
+})();
+/* 
+ * this is a content block in the browser
+ * 
+ * A Content Block is a standalone unit of content, with it's own definition of
+ * 1. content items
+ * 2. template
+ * + some other stuff
+ *
+ * it should be able to render itself
+ * 
+ * Maybe ToDo 2cb:
+ * 2sxc should have one entry point (interface to browser context) only.
+ * Otherwise, we cannot know, when which part will be executed and debugging becomes very difficult.
+ * 
+ */
+(function () {
+    $2sxc._contentBlock = {};
+})();
+// Todo: Refactoring
+// Todo: then find out where these commands are used, and try to replace with the stateless version
+// Todo: move entire dialog-state out of the content-block into manage/quick-dialog
+// Todo: then re-enable preview without toolbars if possible
+
+/*
+ * this is a content block in the browser
+ * 
+ * A Content Block is a standalone unit of content, with it's own definition of
+ * 1. content items
+ * 2. template
+ * + some other stuff
+ *
+ * it should be able to render itself
+ */
+(function () {
+    // the content-block-manager contains many stateless methods to do things with content-blocks
+    var cbm = $2sxc._contentBlock;
+    return $2sxc._contentBlock.createCbInstance = createCbInstance;
+
+    function createCbInstance(sxc, manage) {
+        //#region loads of old stuff, should be cleaned, mostly just copied from the angulare code
+        var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
+        var editContext = manage._editContext;
+        var ctid = (editContext.ContentGroup.ContentTypeName === "" && editContext.ContentGroup.TemplateId !== null)
+            ? cViewWithoutContent // has template but no content, use placeholder
+            : editContext.ContentGroup.ContentTypeName;
+
+        //#endregion
+        var cb = {
+            //sxc: sxc,
+            templateId: editContext.ContentGroup.TemplateId,
+            undoTemplateId: editContext.ContentGroup.TemplateId,
+            contentTypeId: ctid,
+            undoContentTypeId: ctid,
+            buttonsAreLoaded: true,
+
+            // ajax update/replace the content of the content-block
+            replace: function (newContent, justPreview) { cbm.replace(sxc, newContent, justPreview); },
+
+            //2017-08-27 todo 2dm seems unused, but should be used for the preview...
+            //replacePreview: function (newContent) { cb.replace(newContent, true); },
+
+            // this one assumes a replace / change has already happened, but now must be finalized...
+            // note: have a deep dependency on the angular-ui, must change
+            reloadAndReInitialize: function (forceAjax, preview) { return cbm.reloadAndReInitialize(sxc, forceAjax, preview); },
+
+            reload: function (templateId) { return cbm.reload(sxc, templateId); },
+
+            // this shows a message that there is no ajax-preview for something
+            // note: also used with deep dependency from angular-ui
+            reloadNoLivePreview: function (msg) {
+                cb.replace(msg);
+                return $.when();
+            },
+            
+            // ToDo: remove dead code
+            //_getAndReload: function(url, params) {
+            //    return sxc.webApi.get({
+            //            url: url,
+            //            params: params
+            //        }).then(function() { cbm.reloadAndReInitialize(sxc); });
+            //},
+
+            //#region simple item commands like publish, remove, add, re-order
+            // set a content-item in this block to published, then reload
+            publish: function (part, sortOrder) { return cbm.getAndReload(sxc, "view/module/publish", { part: part, sortOrder: sortOrder }); },
+
+            publishId: function (entityId) { return cbm.getAndReload(sxc, "view/module/publish", { id: entityId }); },
+
+            // remove an item from a list, then reload
+            removeFromList: function (sortOrder) { return cbm.getAndReload(sxc, "view/module/removefromlist", { sortOrder: sortOrder }); },
+
+            // change the order of an item in a list, then reload
+            changeOrder: function (initOrder, newOrder) { return cbm.getAndReload(sxc, "view/module/changeorder", { sortOrder: initOrder, destinationSortOrder: newOrder }); },
+
+            // add an item to the list at this position
+            addItem: function (sortOrder) { return cbm.getAndReload(sxc, "view/module/additem", { sortOrder: sortOrder }); },
+
+            // Cancel and reset back to original state
+            // note: is accessed from the angular-ui
+            _cancelTemplateChange: function () {
+                cb.templateId = cb.undoTemplateId;
+                cb.contentTypeId = cb.undoContentTypeId;
+
+                // dialog...
+                // todo: ugly kind of callback, this only works, because this method is called from inside this dialog, so it exist at that time
+                sxc.manage.dialog.justHide();
+                //cb._setTemplateChooserState(false)
+                cbm.setTemplateChooserState(sxc, false)
+                    .then(function () { cbm.reloadAndReInitialize(sxc); });
+            },
+
+            // prepare the instance so content can be added (requires that the content-group has been created)
+            prepareToAddContent: function () { return cb.persistTemplate(true, false); },
+
+            // persist the template state - needed if the template was more in preview than really changed
+            persistTemplate: function (forceCreate, selectorVisibility) { return cbm.persistTemplate(sxc, forceCreate, selectorVisibility); }
+
+        };
+
+        return cb;
+    }
 })();
 /* 
  * this is a content block in the browser
@@ -545,284 +732,71 @@
  *
  * it should be able to render itself
  */
-$2sxc._contentBlock = {};
-$2sxc._contentBlock.create = function (sxc, manage, cbTag) {
-    //#region loads of old stuff, should be cleaned, mostly just copied from the angulare code
+(function () {
 
-    var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
-    var editContext = manage._editContext;
-    var ctid = (editContext.ContentGroup.ContentTypeName === "" && editContext.ContentGroup.TemplateId !== null)
-        ? cViewWithoutContent // has template but no content, use placeholder
-        : editContext.ContentGroup.ContentTypeName;// manageInfo.contentTypeId;
+    var cbm = $2sxc._contentBlock;
 
-    //#endregion
+    //#region functions working only with what they are given
+    // 2017-08-27 2dm: I'm working on cleaning up this code, and an important part 
+    // is to have code which doesn't use old state (like object-properties initialized earlier)
+    // extracting these methods is part of the work
 
-    var cb = {
-        sxc: sxc,
-        editContext: editContext,    // todo: not ideal depedency, but ok...
+    cbm.dialogToggle = function (sxc) {
+        // check if the dialog already exists, if yes, use that
+        // it can already exist as part of the manage-object, 
+        // ...or if the manage object was reset, we must find it in the DOM
 
-        templateId: editContext.ContentGroup.TemplateId,
-        undoTemplateId: editContext.ContentGroup.TemplateId,
-        contentTypeId: ctid,
-        undoContentTypeId: ctid,
-        buttonsAreLoaded: true,
-
-        // ajax update/replace the content of the content-block
-        replace: function (newContent, justPreview) {
-            try {
-                var newStuff = $(newContent);
-                // don't do this yet, too many side-effects
-                //if (justPreview) {    
-                //    newStuff.attr("data-cb-id", "preview" + newStuff.attr("data-cb-id"));
-                //    newStuff.Attr("data-cb-preview", true);
-                //}
-                $(cbTag).replaceWith(newStuff);
-                cbTag = newStuff;
-                cb.buttonsAreLoaded = false;
-                //$2sxc(newStuff).manage._toolbar._processToolbars(newStuff); // init it...
-            } catch (e) {
-                console.log("Error while rendering template:");
-                console.log(e);
-            }
-        },
-        replacePreview: function (newContent) {
-            cb.replace(newContent, true);
-        },
-
-        // this one assumes a replace / change has already happened, but now must be finalized...
-        reloadAndReInitialize: function (forceAjax, preview) {
-            // force ajax is set when a new app was chosen, and the new app supports ajax
-            // this value can only be true, or not exist at all
-            if (forceAjax) manage._reloadWithAjax = true;
-
-            // necessary to show the original template again
-            if (manage._reloadWithAjax) return (forceAjax
-                ? cb.reload(-1) // -1 is important to it doesn't try to use the old templateid
-                : cb.reload())
-                .then(function () {
-                    if (manage._reloadWithAjax && sxc.manage.dialog) sxc.manage.dialog.destroy(); // only remove on force, which is an app-change
-                    if (preview) return;
-                    cb.sxc = cb.sxc.recreate(); // create new sxc-object
-                    cb.sxc.manage._toolbar._processToolbars(); // sub-optimal deep dependency
-                    cb.buttonsAreLoaded = true;
-                }, function () {
-                    // nothing to load
-                });
-            return window.location.reload();
-        },
-
-        // retrieve new preview-content with alternate template and then show the result
-        reload: function (templateId) {
-            // if nothing specified, use stored id
-            if (!templateId) templateId = cb.templateId;
-
-            // if nothing specified / stored, cancel
-            if (!templateId)
-                return $.Deferred().reject();
-
-            // if reloading a non-content-app, re-load the page
-            if (!manage._reloadWithAjax) // special code to force ajax-app-change
-                return window.location.reload();
-
-            // remember for future persist/save/undo
-            cb.templateId = templateId;
-
-            // ajax-call, then replace
-            return cb._getPreviewWithTemplate(templateId)
-                .then(cb.replace)
-                .then($quickE.reset);   // reset quick-edit, because the config could have changed
-        },
-
-        reloadNoLivePreview: function (msg) {
-            cb.replace(msg);
-            return $.when();
-        },
-
-        //#region simple item commands like publish, remove, add, re-order
-        // set a content-item in this block to published, then reload
-        publish: function (part, sortOrder) {
-            return cb.sxc.webApi.get({
-                url: "view/module/publish",
-                params: { part: part, sortOrder: sortOrder }
-            }).then(cb.reloadAndReInitialize);
-        },
-
-        publishId: function (entityId) {
-            return cb.sxc.webApi.get({
-                url: "view/module/publish",
-                params: { id: entityId }
-            }).then(cb.reloadAndReInitialize);
-        },
-
-        // remove an item from a list, then reload
-        removeFromList: function (sortOrder) {
-            return cb.sxc.webApi.get({
-                url: "view/module/removefromlist",
-                params: { sortOrder: sortOrder }
-            }).then(cb.reloadAndReInitialize);
-        },
-
-        // change the order of an item in a list, then reload
-        changeOrder: function (sortOrder, destinationSortOrder) {
-            return cb.sxc.webApi.get({
-                url: "view/module/changeorder",
-                params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
-            }).then(cb.reloadAndReInitialize);
-        },
-
-
-        addItem: function (sortOrder) {
-            return cb.sxc.webApi.get({
-                url: "view/module/additem",
-                params: { sortOrder: sortOrder }
-            }).then(cb.reloadAndReInitialize);
-        },
-        //#endregion
-
-        _getPreviewWithTemplate: function (templateId) {
-            return cb.sxc.webApi.get({
-                url: "view/module/rendertemplate",
-                params: {
-                    templateId: templateId,
-                    lang: cb.editContext.Language.Current,
-                    cbisentity: editContext.ContentBlock.IsEntity,
-                    cbid: editContext.ContentBlock.Id,
-                    originalparameters: JSON.stringify(editContext.Environment.parameters)
-                },
-                dataType: "html"
-            });
-        },
-
-        _setTemplateChooserState: function (state) {
-            return cb.sxc.webApi.get({
-                url: "view/module/SetTemplateChooserState",
-                params: { state: state }
-            });
-        },
-
-        _saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
-            return cb.sxc.webApi.get({
-                url: "view/module/savetemplateid",
-                params: {
-                    templateId: templateId,
-                    forceCreateContentGroup: forceCreateContentGroup,
-                    newTemplateChooserState: newTemplateChooserState
-                }
-            });
-        },
-
-        // Cancel and reset back to original state
-        _cancelTemplateChange: function () {
-            cb.templateId = cb.undoTemplateId;
-            cb.contentTypeId = cb.undoContentTypeId;
-
-            // dialog...
-            sxc.manage.dialog.justHide();
-            cb._setTemplateChooserState(false)
-                .then(cb.reloadAndReInitialize);
-        },
-
-        dialogToggle: function () {
-            // check if the dialog already exists, if yes, use that
-            // it can already exist as part of the manage-object, 
-            // ...or if the manage object was reset, we must find it in the DOM
-
-            var diag = manage.dialog;
-            if (!diag) {
-                // todo: look for it in the dom
-            }
-            if (!diag) {
-                // still not found, create it
-                diag = manage.dialog = manage.run("dash-view"); // not ideal, must improve
-            } else {
-                diag.toggle();
-            }
-
-            var isVisible = diag.isVisible();
-            if (manage._editContext.ContentBlock.ShowTemplatePicker === isVisible) return;
-
-            // 2017-06-01 change to not send to server, as not used any more
-            cb._setTemplateChooserState(isVisible)
-                .then(function () {
-                    manage._editContext.ContentBlock.ShowTemplatePicker = isVisible;
-                });
-        },
-        
-        prepareToAddContent: function () {
-            return cb.persistTemplate(true, false);
-        },
-
-        persistTemplate: function (forceCreate, selectorVisibility) {
-            // Save only if the currently saved is not the same as the new
-            var groupExistsAndTemplateUnchanged = !!cb.editContext.ContentGroup.HasContent
-                && (cb.undoTemplateId === cb.templateId);
-            var promiseToSetState;
-            if (groupExistsAndTemplateUnchanged)
-                promiseToSetState = (cb.editContext.ContentBlock.ShowTemplatePicker)//.minfo.templateChooserVisible)
-                    ? cb._setTemplateChooserState(false) // hide in case it was visible
-                    : $.when(null); // all is ok, create empty promise to allow chaining the result
-            else
-                promiseToSetState = cb._saveTemplate(cb.templateId, forceCreate, selectorVisibility)
-                    .then(function (data, textStatus, xhr) {
-                        if (xhr.status !== 200) { // only continue if ok
-                            alert("error - result not ok, was not able to create ContentGroup");
-                            return;
-                        }
-                        var newGuid = data;
-                        if (!newGuid) return;
-                        newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
-                        if (console) console.log("created content group {" + newGuid + "}");
-
-                        manage._updateContentGroupGuid(newGuid);
-                    });
-
-            var promiseToCorrectUi = promiseToSetState.then(function () {
-                cb.undoTemplateId = cb.templateId; // remember for future undo
-                cb.undoContentTypeId = cb.contentTypeId; // remember ...
-
-                cb.editContext.ContentBlock.ShowTemplatePicker = false; // cb.minfo.templateChooserVisible = false;
-
-                if (manage.dialog) manage.dialog.justHide();
-
-                if (!cb.editContext.ContentGroup.HasContent) // if it didn't have content, then it only has now...
-                    cb.editContext.ContentGroup.HasContent = forceCreate;
-
-                // only re-load on content, not on app as that was already re-loaded on the preview
-                if (!cb.buttonsAreLoaded || (!groupExistsAndTemplateUnchanged && manage._reloadWithAjax))      // necessary to show the original template again
-                    cb.reloadAndReInitialize();
-            });
-
-            return promiseToCorrectUi;
+        var diag = sxc.manage.dialog;
+        if (!diag) {
+            // todo: look for it in the dom
+        }
+        if (!diag) {
+            // still not found, create it
+            diag = sxc.manage.dialog = sxc.manage.run("dash-view"); // not ideal, must improve
+        } else {
+            diag.toggle();
         }
 
+        var isVisible = diag.isVisible();
+        if (sxc.manage._editContext.ContentBlock.ShowTemplatePicker === isVisible) return;
 
+        // 2017-06-01 change to not send to server, as not used any more
+        //cb._setTemplateChooserState(isVisible)
+        cbm.setTemplateChooserState(sxc, isVisible)
+            .then(function () {
+                sxc.manage._editContext.ContentBlock.ShowTemplatePicker = isVisible;
+            });
     };
-
-    return cb;
-};
+    //#endregion
 
 
+    
+})();
 // contains commands to create/move/delete a contentBlock in a page
 
-$2sxc._contentBlock.manipulator = function(sxc) {
+$2sxc._contentBlock.manipulator = function (sxc) {
     return {
-        create: function(parentId, fieldName, index, appName, container, newGuid) {
-            // the wrapper, into which this will be placed and the list of pre-existing blocks
-            var listTag = container;
-            if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
-            var cblockList = listTag.find("div.sc-content-block");
-            if (index > cblockList.length)
-                index = cblockList.length; // make sure index is never greater than the amount of items
-            return sxc.webApi.get({
-                url: "view/module/generatecontentblock",
-                params: {
-                    parentId: parentId,
-                    field: fieldName,
-                    sortOrder: index,
-                    app: appName,
-                    guid: newGuid
-                }
-            }).then(function(result) {
+        create: create,
+        move: move,
+        delete: remove
+    };
+
+    function create(parentId, fieldName, index, appName, container, newGuid) {
+        // the wrapper, into which this will be placed and the list of pre-existing blocks
+        var listTag = container;
+        if (listTag.length === 0) return alert('can\'t add content-block as we couldn\'t find the list');
+        var cblockList = listTag.find('div.sc-content-block');
+        if (index > cblockList.length) index = cblockList.length; // make sure index is never greater than the amount of items
+
+        var params = {
+            parentId: parentId,
+            field: fieldName,
+            sortOrder: index,
+            app: appName,
+            guid: newGuid,
+        };
+        return sxc.webApi.get({ url: 'view/module/generatecontentblock', params: params })
+            .then(function (result) {
                 var newTag = $(result); // prepare tag for inserting
 
                 // should I add it to a specific position...
@@ -832,57 +806,268 @@ $2sxc._contentBlock.manipulator = function(sxc) {
                 else //...or just at the beginning?
                     listTag.prepend(newTag);
 
-
                 var sxcNew = $2sxc(newTag);
-                sxcNew.manage._toolbar._processToolbars(newTag);
-
+                $2sxc._toolbarManager.buildToolbars(newTag);
             });
-        },
+    }
 
+    function move(parentId, field, indexFrom, indexTo) {
+        var params = {
+            parentId: parentId,
+            field: field,
+            indexFrom: indexFrom,
+            indexTo: indexTo,
+        };
 
-        move: function(parentId, field, indexFrom, indexTo) {
-            // todo: need sxc!
-            return sxc.webApi.get({
-                url: "view/module/moveiteminlist",
-                params: {
-                    parentId: parentId,
-                    field: field,
-                    indexFrom: indexFrom,
-                    indexTo: indexTo
-                }
-            }).then(function() {
+        // todo: need sxc!
+        return sxc.webApi.get({ url: 'view/module/moveiteminlist', params: params })
+            .then(function () {
                 console.log("done moving!");
                 window.location.reload();
             });
-        },
+    }
 
-        // delete a content-block inside a list of content-blocks
-        "delete": function(parentId, field, index) {
-            if (confirm($2sxc.translate("QuickInsertMenu.ConfirmDelete")))
-                return sxc.webApi.get({
-                    url: "view/module/RemoveItemInList",
-                    params: { parentId: parentId, field: field, index: index }
-                }).then(function() {
-                    console.log("done deleting!");
-                    window.location.reload();
-                });
-            return null;
+    // delete a content-block inside a list of content-blocks
+    function remove(parentId, field, index) {
+        if (!confirm($2sxc.translate('QuickInsertMenu.ConfirmDelete'))) return null;
+        var params = {
+            parentId: parentId,
+            field: field,
+            index: index,
+        };
+        return sxc.webApi.get({ url: 'view/module/RemoveItemInList', params: params })
+            .then(function () {
+                console.log('done deleting!');
+                window.location.reload();
+            });
+    }
+};
+/* 
+ * this is a content block in the browser
+ * 
+ * A Content Block is a standalone unit of content, with it's own definition of
+ * 1. content items
+ * 2. template
+ * + some other stuff
+ *
+ * it should be able to render itself
+ */
+(function () {
+    var cbm = $2sxc._contentBlock;
+
+    // ajax update/replace the content of the content-block
+    cbm.replace = function (sxc, newContent, justPreview) {
+        var cb = sxc.manage.contentBlock;
+        try {
+            var newStuff = $(newContent);
+            // don't do this yet, too many side-effects
+            //if (justPreview) {    
+            //    newStuff.attr("data-cb-id", "preview" + newStuff.attr("data-cb-id"));
+            //    newStuff.Attr("data-cb-preview", true);
+            //}
+            // todo: not nice dependency, manipulating the manage object, must find a better way
+            $(sxc.manage._tag).replaceWith(newStuff);
+            cb.buttonsAreLoaded = false;
+            //$2sxc._toolbarManager.buildToolbars(newStuff); // init it...
+        } catch (e) {
+            console.log("Error while rendering template:");
+            console.log(e);
         }
     };
-};
 
+    cbm.reload = function (sxc, templateId) {
+        var manage = sxc.manage,
+            cb = manage.contentBlock;
+            
+        // if nothing specified, use stored id
+        if (!templateId) templateId = cb.templateId;
 
+        // if nothing specified / stored, cancel
+        if (!templateId)
+            return $.Deferred().reject();
 
+        // if reloading a non-content-app, re-load the page
+        if (!manage._reloadWithAjax) // special code to force ajax-app-change
+            return window.location.reload();
+
+        // remember for future persist/save/undo
+        cb.templateId = templateId;
+
+        // ajax-call, then replace
+        return cbm.getPreviewWithTemplate(sxc, templateId)
+            .then(cb.replace)
+            .then($quickE.reset); // reset quick-edit, because the config could have changed
+    };
+
+    // this one assumes a replace / change has already happened, but now must be finalized...
+    cbm.reloadAndReInitialize = function (sxc, forceAjax, preview) {
+        var manage = sxc.manage,
+            cb = manage.contentBlock;
+
+        // force ajax is set when a new app was chosen, and the new app supports ajax
+        // this value can only be true, or not exist at all
+        if (forceAjax) manage._reloadWithAjax = true;
+
+        // necessary to show the original template again
+        if (manage._reloadWithAjax) return (forceAjax
+            ? cb.reload(-1) // -1 is important to it doesn't try to use the old templateid
+            : cb.reload())
+            .then(function () {
+                if (manage._reloadWithAjax && manage.dialog) manage.dialog.destroy(); // only remove on force, which is an app-change
+                if (preview) return;
+                sxc = sxc.recreate(); // create new sxc-object
+                $2sxc._toolbarManager.buildToolbars(null, sxc.id);// sub-optimal deep dependency
+                //cb.sxc.manage._toolbar._processToolbars(); // sub-optimal deep dependency
+                sxc.manage.contentBlock.buttonsAreLoaded = true;
+            }, function () {
+                // nothing to load
+            });
+        return window.location.reload();
+    };
+
+})();
+/* 
+ * this is a content block in the browser
+ * 
+ * A Content Block is a standalone unit of content, with it's own definition of
+ * 1. content items
+ * 2. template
+ * + some other stuff
+ *
+ * it should be able to render itself
+ */
+(function () {
+    var cbm = $2sxc._contentBlock;
+
+    //#region functions working only with what they are given
+    // 2017-08-27 2dm: I'm working on cleaning up this code, and an important part 
+    // is to have code which doesn't use old state (like object-properties initialized earlier)
+    // extracting these methods is part of the work
+    cbm.persistTemplate = function (sxc, forceCreate, selectorVisibility) {
+        var manage = sxc.manage,
+            cb = manage.contentBlock,
+            ec = manage._editContext,
+            // Save only if the currently saved is not the same as the new
+            groupExistsAndTemplateUnchanged = !!ec.ContentGroup.HasContent && (cb.undoTemplateId === cb.templateId),
+            promiseToSetState;
+
+        if (groupExistsAndTemplateUnchanged)
+            promiseToSetState = (ec.ContentBlock.ShowTemplatePicker) //.minfo.templateChooserVisible)
+                ? cbm.setTemplateChooserState(sxc, false) // hide in case it was visible
+                : $.when(null); // all is ok, create empty promise to allow chaining the result
+        else
+            promiseToSetState = cbm.saveTemplate(sxc, cb.templateId, forceCreate, selectorVisibility)
+                .then(function (data, textStatus, xhr) {
+                    if (xhr.status !== 200) { // only continue if ok
+                        alert("error - result not ok, was not able to create ContentGroup");
+                        return;
+                    }
+                    var newGuid = data;
+                    if (!newGuid) return;
+                    newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
+                    if (console) console.log("created content group {" + newGuid + "}");
+
+                    sxc.manage._updateContentGroupGuid(newGuid);
+                });
+
+        // todo: should move things like remembering undo etc. back into the contentBlock state manager
+        // or just reset it, so it picks up the right values again ?
+        return promiseToSetState
+            .then(function () {
+                cb.undoTemplateId = cb.templateId; // remember for future undo
+                cb.undoContentTypeId = cb.contentTypeId; // remember ...
+                
+                ec.ContentBlock.ShowTemplatePicker = false; // cb.minfo.templateChooserVisible = false;
+
+                if (manage.dialog) manage.dialog.justHide();
+
+                if (!ec.ContentGroup.HasContent) // if it didn't have content, then it only has now...
+                    ec.ContentGroup.HasContent = forceCreate;
+
+                // only re-load on content, not on app as that was already re-loaded on the preview
+                if (!cb.buttonsAreLoaded || (!groupExistsAndTemplateUnchanged && manage._reloadWithAjax))      // necessary to show the original template again
+                    cbm.reloadAndReInitialize(sxc);
+            });
+    };
+    //#endregion
+})();
+/* 
+ * this is a content block in the browser
+ * 
+ * A Content Block is a standalone unit of content, with it's own definition of
+ * 1. content items
+ * 2. template
+ * + some other stuff
+ *
+ * it should be able to render itself
+ */
+(function () {
+    var cbm = $2sxc._contentBlock;
+
+    /*
+    ToDo: make the code more readable:
+    return Object.assign(cbm, {
+        getAndReload: getAndReload,
+        setTemplateChooserState: setTemplateChooserState,
+        saveTemplate: saveTemplate,
+        getPreviewWithTemplate: getPreviewWithTemplate,
+    })*/
+
+    //#region functions working only with what they are given
+    // 2017-08-27 2dm: I'm working on cleaning up this code, and an important part 
+    // is to have code which doesn't use old state (like object-properties initialized earlier)
+    // extracting these methods is part of the work
+    cbm.getAndReload = function (sxc, url, params) {
+        return sxc.webApi.get({
+            url: url,
+            params: params
+        }).then(function () { cbm.reloadAndReInitialize(sxc); });
+    };
+
+    cbm.setTemplateChooserState = function (sxc, state) {
+        return sxc.webApi.get({
+            url: 'view/module/SetTemplateChooserState',
+            params: { state: state }
+        });
+    };
+
+    cbm.saveTemplate = function (sxc, templateId, forceCreateContentGroup, newTemplateChooserState) {
+        return sxc.webApi.get({
+            url: 'view/module/savetemplateid',
+            params: {
+                templateId: templateId,
+                forceCreateContentGroup: forceCreateContentGroup,
+                newTemplateChooserState: newTemplateChooserState
+            }
+        });
+    };
+
+    cbm.getPreviewWithTemplate = function (sxc, templateId) {
+        var ec = sxc.manage._editContext;
+        return sxc.webApi.get({
+            url: 'view/module/rendertemplate',
+            params: {
+                templateId: templateId,
+                lang: ec.Language.Current,
+                cbisentity: ec.ContentBlock.IsEntity,
+                cbid: ec.ContentBlock.Id,
+                originalparameters: JSON.stringify(ec.Environment.parameters)
+            },
+            dataType: 'html'
+        });
+    };
+    //#endregion
+})();
 // Maps actions of the module menu to JS actions - needed because onclick event can't be set (actually, a bug in DNN)
 var $2sxcActionMenuMapper = function (moduleId) {
     var run = $2sxc(moduleId).manage.run;
     return {
-        changeLayoutOrContent: function () {    run("layout");  },
-        addItem: function () {                  run("add", { "useModuleList": true, "sortOrder": 0 }); },
-        edit: function () {                     run("edit", { "useModuleList": true, "sortOrder": 0 });},
-        adminApp: function () {                 run("app"); },
-        adminZone: function () {                run("zone");},
-        develop: function () {                  run("template-develop"); }
+        changeLayoutOrContent: function () { run('layout'); },
+        addItem: function () { run('add', { useModuleList: true, sortOrder: 0 }); },
+        edit: function () { run("edit", { useModuleList: true, sortOrder: 0 }); },
+        adminApp: function () { run('app'); },
+        adminZone: function () { run('zone'); },
+        develop: function () { run('template-develop'); },
     };
 };
 // The following script fixes a bug in DNN 08.00.04
@@ -908,6 +1093,263 @@ var $2sxcActionMenuMapper = function (moduleId) {
         return val.replace('DnnModule-2sxc ', '') + ' DnnModule-2sxc';
     };
 })();
+// this enhances the $2sxc client controller with stuff only needed when logged in
+(function() {
+    if (window.$2sxc) {
+        
+        //#region contentItem Commands
+        $2sxc.contentItems = {
+            // delete command - try to really delete a content-item
+            "delete": function (sxc, itemId, itemGuid, itemTitle) {
+                // first show main warning / get ok
+                var ok = confirm($2sxc.translate("Delete.Confirm")
+                    .replace("{id}", itemId)
+                    .replace("{title}", itemTitle));
+                if (!ok) return;
+
+                sxc.webApi.delete("app-content/any/" + itemGuid, null, null, true)
+                    .success(function () {
+                        location.reload();
+                    }).error(function (error) {
+                        var msgJs = $2sxc.translate("Delete.ErrCheckConsole");
+                        console.log(error);
+
+                        // check if it's a permission config problem
+                        if (error.status === 401) alert($2sxc.translate("Delete.ErrPermission") + msgJs);
+                        if (error.status === 400) alert($2sxc.translate("Delete.ErrInUse") + msgJs);
+                    });
+            }
+        };
+        //#endregion
+
+    }
+})();
+
+(function () {
+	$2sxc._lib = {
+		extend:
+            function extend() { // same as angular.extend or jquery.extend, but without that additional dependency
+            	for (var i = 1; i < arguments.length; i++)
+            		for (var key in arguments[i])
+            			if (arguments[i].hasOwnProperty(key))
+            				arguments[0][key] = arguments[i][key];
+            	return arguments[0];
+            }
+	};
+})();
+
+// A helper-controller in charge of opening edit-dialogs + creating the toolbars for it
+// all in-page toolbars etc.
+// if loaded, it's found under the $2sxc(module).manage
+// it has commands to
+// - getButton
+// - getToolbar
+// - run(...)
+// - isEditMode
+
+(function () {
+    $2sxc._manage = {};
+})();
+// A helper-controller in charge of opening edit-dialogs + creating the toolbars for it
+// all in-page toolbars etc.
+// if loaded, it's found under the $2sxc(module).manage
+// it has commands to
+// - getButton
+// - getToolbar
+// - run(...)
+// - isEditMode
+
+(function () {
+    $2sxc._manage.initInstance = function (sxc) {
+        var contentBlockTag = getContentBlockTag(sxc);
+        var editContext = getContextInfo(contentBlockTag);
+        var userInfo = { canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign };
+
+        
+        // assemble all parameters needed for the common dialogs if we open anything
+        var ngDialogParams = {
+            zoneId: editContext.ContentGroup.ZoneId,
+            appId: editContext.ContentGroup.AppId,
+            tid: editContext.Environment.PageId,
+            mid: editContext.Environment.InstanceId,
+            cbid: sxc.cbid,
+            lang: editContext.Language.Current,
+            langpri: editContext.Language.Primary,
+            langs: JSON.stringify(editContext.Language.All),
+            portalroot: editContext.Environment.WebsiteUrl,
+            websiteroot: editContext.Environment.SxcRootUrl,
+            partOfPage: true,
+            versioningRequirements: editContext.ContentBlock.VersioningRequirements,
+
+            // todo: probably move the user into the dashboard info
+            user: userInfo,//{ canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign },
+            approot: editContext.ContentGroup.AppUrl || null // this is the only value which doesn't have a slash by default.  note that the app-root doesn't exist when opening "manage-app"
+        };
+        // configuration needed by the quick-dialogs
+        var quickDialogConfig = {
+            appId: editContext.ContentGroup.AppId,
+            isContent: editContext.ContentGroup.IsContent,
+            hasContent: editContext.ContentGroup.HasContent,
+            isList: editContext.ContentGroup.IsList,
+            templateId: editContext.ContentGroup.TemplateId,
+            contentTypeId: editContext.ContentGroup.ContentTypeName,
+            templateChooserVisible: editContext.ContentBlock.ShowTemplatePicker, // todo: maybe move to content-goup
+            user: userInfo,// { canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign },
+            supportsAjax: editContext.ContentGroup.SupportsAjax
+        };
+        
+        // #region helper functions
+        // todo: should probably move this away later on, not yet sure to where
+        function createInstanceConfig(editContext) {
+            var ce = editContext.Environment, cg = editContext.ContentGroup, cb = editContext.ContentBlock;
+            return {
+                portalId: ce.WebsiteId,
+                tabId: ce.PageId,
+                moduleId: ce.InstanceId,
+                version: ce.SxcVersion,
+
+                contentGroupId: cg.Guid,
+                cbIsEntity: cb.IsEntity,
+                cbId: cb.Id,
+                appPath: cg.AppUrl,
+                isList: cg.IsList
+            };
+        }
+
+        //#endregion helper functions
+
+
+        var toolsAndButtons = $2sxc._toolbarManager.createInstance(sxc, editContext);
+        var cmdEngine = $2sxc._commands.instanceEngine(sxc, contentBlockTag, editContext);
+
+        var editManager = sxc.manage = {
+            //#region Official, public properties and commands, which are stable for use from the outside
+            // run a command - often used in toolbars and custom buttons
+            run: cmdEngine.executeAction,
+
+            // get a button or a toolbar for something
+            getButton: toolsAndButtons.getButton,
+            getToolbar: toolsAndButtons.getToolbar,
+            //#endregion official, public properties - everything below this can change at any time
+
+
+            // internal method to find out if it's in edit-mode
+            _isEditMode: function () { return editContext.Environment.IsEditable; },
+            _reloadWithAjax: editContext.ContentGroup.SupportsAjax,
+            _dialogParameters: ngDialogParams,      // used for various dialogs
+            _instanceConfig: createInstanceConfig(editContext),// toolsAndButtons.config, // used to configure buttons / toolbars
+            _editContext: editContext,              // metadata necessary to know what/how to edit
+            _quickDialogConfig: quickDialogConfig,           // used for in-page dialogs
+            _dashboardConfig: quickDialogConfig, // temp 2017-08-27 - keep till the angular uses the new name
+            _commands: cmdEngine,                        // used to handle the commands for this content-block
+            _tag: contentBlockTag,
+            _user: userInfo,
+            //#region toolbar quick-access commands - might be used by other scripts, so I'm keeping them here for the moment, but may just delete them later
+            _toolbar: toolsAndButtons, // should use this from now on when accessing from outside
+            //#endregion
+
+            // init this object 
+            init: function init() {
+                // enhance UI in case there are known errors / issues
+                if (editContext.error.type)
+                    editManager._handleErrors(editContext.error.type, editManager._tag);
+
+                // finish init of sub-objects
+                //editManager._commands.init(editManager);
+                editManager.contentBlock = $2sxc._contentBlock.createCbInstance(sxc, editManager, editManager._tag);
+
+                // display the dialog
+                var openDialogId = sessionStorage.getItem('dia-cbid');
+                if (editContext.error.type || !openDialogId || openDialogId !== sxc.cbid) return false;
+                sessionStorage.removeItem('dia-cbid');
+                editManager.run("layout");
+            },
+
+            // private: show error when the app-data hasn't been installed yet for this imported-module
+            _handleErrors: function (errType, cbTag) {
+                var errWrapper = $("<div class=\"dnnFormMessage dnnFormWarning sc-element\"></div>");
+                var msg = "";
+                var toolbar = $("<ul class='sc-menu'></ul>");
+                if (errType === "DataIsMissing") {
+                    msg = "Error: System.Exception: Data is missing - usually when a site is copied but the content / apps have not been imported yet - check 2sxc.org/help?tag=export-import";
+                    toolbar.attr("data-toolbar", '[{\"action\": \"zone\"}, {\"action\": \"more\"}]');
+                }
+                errWrapper.append(msg);
+                errWrapper.append(toolbar);
+                $(cbTag).append(errWrapper);
+            },
+            // change config by replacing the guid, and refreshing dependend sub-objects
+            _updateContentGroupGuid: function (newGuid) {
+                editContext.ContentGroup.Guid = newGuid;
+                editManager._instanceConfig = createInstanceConfig(editContext);
+            },
+            _getCbManipulator: function () {
+                return $2sxc._contentBlock.manipulator(sxc);
+            }
+        };
+
+        editManager.init();
+        return editManager;
+    };
+
+
+
+
+    //#region helper functions
+    function getContentBlockTag(sxci) {
+        return $("div[data-cb-id='" + sxci.cbid + "']")[0];
+    }
+
+    function getContextInfo(cb) {
+        var attr = cb.getAttribute("data-edit-context");
+        return JSON.parse(attr || "");
+    }
+    //#endregion
+})();
+// https://tc39.github.io/ecma262/#sec-array.prototype.find
+if (!Array.prototype.find) {
+    Object.defineProperty(Array.prototype, 'find', {
+        value: function (predicate) {
+            // 1. Let O be ? ToObject(this value).
+            if (this == null) { // jshint ignore:line
+                throw new TypeError('"this" is null or not defined');
+            }
+
+            var o = Object(this);
+
+            // 2. Let len be ? ToLength(? Get(O, "length")).
+            var len = o.length >>> 0;
+
+            // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+            if (typeof predicate !== 'function') {
+                throw new TypeError('predicate must be a function');
+            }
+
+            // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+            var thisArg = arguments[1];
+
+            // 5. Let k be 0.
+            var k = 0;
+
+            // 6. Repeat, while k < len
+            while (k < len) {
+                // a. Let Pk be ! ToString(k).
+                // b. Let kValue be ? Get(O, Pk).
+                // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+                // d. If testResult is true, return kValue.
+                var kValue = o[k];
+                if (predicate.call(thisArg, kValue, k, o)) {
+                    return kValue;
+                }
+                // e. Increase k by 1.
+                k++;
+            }
+
+            // 7. Return undefined.
+            return undefined;
+        }
+    });
+}
 // this is a dialog handler which will create in-page dialogs for 
 // - the template / view picker
 // - the getting-started / install-templates dialog
@@ -915,7 +1357,7 @@ var $2sxcActionMenuMapper = function (moduleId) {
 // known issues
 // - we never got around to making the height adjust automatically
 (function () {
-    $2sxc._dialog = Dialog;
+    $2sxc._quickDialog = Dialog;
 
     var isFullscreen = false,
         RESIZE_INTERVAL = 200,
@@ -953,6 +1395,7 @@ var $2sxcActionMenuMapper = function (moduleId) {
         isFullscreen = fullScreen;
 
         init();
+        
         /**
          * Assign properties to the iframe for later use.
          */
@@ -1025,7 +1468,7 @@ var $2sxcActionMenuMapper = function (moduleId) {
         }
 
         function getAdditionalDashboardConfig() {
-            return sxc.manage._dashboardConfig;
+            return sxc.manage._quickDialogConfig;
         }
 
         function getCommands() {
@@ -1056,222 +1499,6 @@ if (typeof Object.assign != 'function') {
         }
         return to;
     };
-}
-
-(function () {
-	$2sxc._lib = {
-		extend:
-            function extend() { // same as angular.extend or jquery.extend, but without that additional dependency
-            	for (var i = 1; i < arguments.length; i++)
-            		for (var key in arguments[i])
-            			if (arguments[i].hasOwnProperty(key))
-            				arguments[0][key] = arguments[i][key];
-            	return arguments[0];
-            }
-	};
-})();
-
-// A helper-controller in charge of opening edit-dialogs + creating the toolbars for it
-// all in-page toolbars etc.
-// if loaded, it's found under the $2sxc(module).manage
-// it has commands to
-// - getButton
-// - getToolbar
-// - run(...)
-// - isEditMode
-
-(function () {
-    $2sxc._manage = {};
-    $2sxc._manage.attach = function (sxc) {
-        var contentBlockTag = getContentBlockTag(sxc);
-        var editContext = getContextInfo(contentBlockTag);
-        
-        // assemble all parameters needed for the dialogs if we open anything
-        var ngDialogParams = {
-            zoneId: editContext.ContentGroup.ZoneId,
-            appId: editContext.ContentGroup.AppId,
-            tid: editContext.Environment.PageId,
-            mid: editContext.Environment.InstanceId,
-            cbid: sxc.cbid,
-            lang: editContext.Language.Current,
-            langpri: editContext.Language.Primary,
-            langs: JSON.stringify(editContext.Language.All),
-            portalroot: editContext.Environment.WebsiteUrl,
-            websiteroot: editContext.Environment.SxcRootUrl,
-            // todo: probably move the user into the dashboard info
-            user: { canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign },
-            approot: editContext.ContentGroup.AppUrl || null // this is the only value which doesn't have a slash by default.  note that the app-root doesn't exist when opening "manage-app"
-        }, dashConfig = {
-            appId: editContext.ContentGroup.AppId,
-            isContent: editContext.ContentGroup.IsContent,
-            hasContent: editContext.ContentGroup.HasContent,
-            isList: editContext.ContentGroup.IsList,
-            templateId: editContext.ContentGroup.TemplateId,
-            contentTypeId: editContext.ContentGroup.ContentTypeName,
-            templateChooserVisible: editContext.ContentBlock.ShowTemplatePicker, // todo: maybe move to content-goup
-            user: { canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign },
-            supportsAjax: editContext.ContentGroup.SupportsAjax
-        };
-
-        var toolsAndButtons = $2sxc._toolbarManager.create(sxc, editContext);
-        var cmds = $2sxc._commands.engine(sxc, contentBlockTag);
-
-        var editManager = sxc.manage = {
-            //#region Official, public properties and commands, which are stable for use from the outside
-            // run a command - often used in toolbars and custom buttons
-            run: cmds.executeAction,
-
-            // get a button or a toolbar for something
-            getButton: toolsAndButtons.getButton,
-            getToolbar: toolsAndButtons.getToolbar,
-            //#endregion official, public properties - everything below this can change at any time
-
-            // internal method to find out if it's in edit-mode
-            _isEditMode: function () { return editContext.Environment.IsEditable; },
-            _reloadWithAjax: editContext.ContentGroup.SupportsAjax,
-            _dialogParameters: ngDialogParams,      // used for various dialogs
-            _toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
-            _editContext: editContext,              // metadata necessary to know what/how to edit
-            _dashboardConfig: dashConfig,           // used for in-page dialogs
-            _commands: cmds,                        // used to handle the commands for this content-block
-
-            //#region toolbar quick-access commands - might be used by other scripts, so I'm keeping them here for the moment, but may just delete them later
-            _toolbar: toolsAndButtons, // should use this from now on when accessing from outside
-            //#endregion
-
-            // init this object 
-            init: function init() {
-
-                // enhance UI in case there are known errors / issues
-                if (editContext.error.type)
-                    editManager._handleErrors(editContext.error.type, contentBlockTag);
-
-                // finish init of sub-objects
-                editManager._commands.init(editManager);
-                editManager.contentBlock = $2sxc._contentBlock.create(sxc, editManager, contentBlockTag);
-
-                // display the dialog
-                var openDialogId = sessionStorage.getItem('dia-cbid');
-                if (editContext.error.type || !openDialogId || openDialogId !== sxc.cbid) return false;
-                sessionStorage.removeItem('dia-cbid');
-                editManager.run("layout");
-            },
-
-            reloadContentBlockTag: function() {
-                contentBlockTag = getContentBlockTag(sxc);
-            },
-
-            initGlassesButton: function () {
-
-                // already initialized
-                if (editManager.contentBlock.templateId !== 0) return false;
-
-                // has already a glasses button
-                if ($(contentBlockTag).find(".sc-uninitialized").length !== 0) return false;
-
-                // note: title is added on mouseover, as the translation isn't ready at page-load
-                var btn = $('<div class="sc-uninitialized" onmouseover="this.title = $2sxc.translate(this.title)" title="InPage.NewElement"><div class="icon-sxc-glasses"></div></div>');
-                btn.on("click", function () {
-                    editManager.run("layout");
-                });
-
-                $(contentBlockTag).append(btn);
-            },
-
-            // private: show error when the app-data hasn't been installed yet for this imported-module
-            _handleErrors: function (errType, cbTag) {
-                var errWrapper = $("<div class=\"dnnFormMessage dnnFormWarning sc-element\"></div>");
-                var msg = "";
-                var toolbar = $("<ul class='sc-menu'></ul>");
-                if (errType === "DataIsMissing") {
-                    msg = "Error: System.Exception: Data is missing - usually when a site is copied but the content / apps have not been imported yet - check 2sxc.org/help?tag=export-import";
-                    toolbar.attr("data-toolbar", '[{\"action\": \"zone\"}, {\"action\": \"more\"}]');
-                }
-                errWrapper.append(msg);
-                errWrapper.append(toolbar);
-                $(cbTag).append(errWrapper);
-            },
-            // change config by replacing the guid, and refreshing dependend sub-objects
-            _updateContentGroupGuid: function (newGuid) {
-                editContext.ContentGroup.Guid = newGuid;
-                toolsAndButtons.refreshConfig();
-                editManager._toolbarConfig = toolsAndButtons.config;
-            },
-            _getCbManipulator: function () {
-                return $2sxc._contentBlock.manipulator(sxc);
-            },
-            //#region deprecated properties - these all should have been undocumented/ private till now
-            // 2016-11-03 v.08.06 deprecated command "action", it was only for internal use till now
-            action: function () {
-                console.error("Obsolete: you are using a deprecated method 'action' which will be removed in 2sxc v9. you must change it to 'run'");
-                return cmds.executeAction.apply(undefined, arguments);
-            },
-            // 2016-10-11 v08.06 maybe breaking change, but shouldn't be exposed
-            createDefaultToolbar: function () {
-                console.error("Obsolete: you are using a deprecated method 'createDefaultToolbar' which will be removed in 2sxc v9. you must change it to 'getToolbar'");
-                return toolsAndButtons.defaultButtonList.apply(undefined, arguments);
-            }
-            //#endregion
-        };
-
-        editManager.init();
-        return editManager;
-    };
-
-    //#region helper functions
-    function getContentBlockTag(sxci) {
-        return $("div[data-cb-id='" + sxci.cbid + "']")[0];
-    }
-
-    function getContextInfo(cb) {
-        var attr = cb.getAttribute("data-edit-context");
-        return JSON.parse(attr || "");
-    }
-    //#endregion
-})();
-// https://tc39.github.io/ecma262/#sec-array.prototype.find
-if (!Array.prototype.find) {
-    Object.defineProperty(Array.prototype, 'find', {
-        value: function (predicate) {
-            // 1. Let O be ? ToObject(this value).
-            if (this == null) {
-                throw new TypeError('"this" is null or not defined');
-            }
-
-            var o = Object(this);
-
-            // 2. Let len be ? ToLength(? Get(O, "length")).
-            var len = o.length >>> 0;
-
-            // 3. If IsCallable(predicate) is false, throw a TypeError exception.
-            if (typeof predicate !== 'function') {
-                throw new TypeError('predicate must be a function');
-            }
-
-            // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-            var thisArg = arguments[1];
-
-            // 5. Let k be 0.
-            var k = 0;
-
-            // 6. Repeat, while k < len
-            while (k < len) {
-                // a. Let Pk be ! ToString(k).
-                // b. Let kValue be ? Get(O, Pk).
-                // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-                // d. If testResult is true, return kValue.
-                var kValue = o[k];
-                if (predicate.call(thisArg, kValue, k, o)) {
-                    return kValue;
-                }
-                // e. Increase k by 1.
-                k++;
-            }
-
-            // 7. Return undefined.
-            return undefined;
-        }
-    });
 }
 $(function () {
     "use strict";
@@ -1503,7 +1730,7 @@ $(function () {
             enable: null    // default: auto-detect
         }
     };
-
+    
     $quickE._readPageConfig = function () {
         var configs = $("[" + configAttr + "]"), finalConfig = {}, confJ, confO;
 
@@ -1526,12 +1753,10 @@ $(function () {
 
         // re-check "auto" or "null"
         // if it has inner-content, then it's probably a details page, where quickly adding modules would be a problem, so for now, disable modules in this case
-        if (conf.modules.enable === null || conf.modules.enable === "auto")
-            conf.modules.enable = !hasInnerCBs;
+        if (conf.modules.enable === null || conf.modules.enable === 'auto') conf.modules.enable = !hasInnerCBs;
 
         // for now, ContentBlocks are only enabled if they exist on the page
-        if (conf.innerBlocks.enable === null || conf.innerBlocks.enable === "auto")
-            conf.innerBlocks.enable = hasInnerCBs;  
+        if (conf.innerBlocks.enable === null || conf.innerBlocks.enable === 'auto') conf.innerBlocks.enable = hasInnerCBs;  
     };
 
 });
@@ -2065,42 +2290,18 @@ $(function () {
     return Shake;
 }));
 
-// toolbar bootstrapping (initialize all toolbars after loading page)
-$(function () {
-    var modules = [];
+
+
+(function () {
 
     // prevent propagation of the click (if menu was clicked)
-    $(".sc-menu").click(function (e) {
+    $($2sxc.c.sel.scMenu /*".sc-menu"*/).click(function (e) {
         e.stopPropagation();
     });
 
-    initModules(true);
-    document.body.addEventListener('DOMSubtreeModified', initModules, false);
-    
-    function initModules(initial) {
-        $("div[data-edit-context]").each(function () {
-            processToolbar(this, initial);
-        });
-    }
-    
-    function processToolbar(module, initial) {
-        var ctl;
-        
-        // check if module is already initialized
-        if (modules.find(function (m) {
-            return m === module;
-        })) return false;
-
-        // new element or moved
-        modules.push(module);
-        ctl = $2sxc(module);
-        
-        // the tag might have changed
-        ctl.manage.reloadContentBlockTag();
-        ctl.manage.initGlassesButton();
-
-        if (initial) ctl.manage._toolbar._processToolbars(module);
-    }
+})();
+// enable shake detection on all toolbars
+$(function () {
 
     // this will add a css-class to auto-show all toolbars (or remove it again)
     function toggleAllToolbars() {
@@ -2118,179 +2319,189 @@ $(function () {
     $2sxc._toolbarManager = {};
 })();
 (function () {
-    var tbManager = $2sxc._toolbarManager;
-    tbManager.create = function (sxc, editContext) {
-        var id = sxc.id,
-            cbid = sxc.cbid,
-            ec = editContext,
-            cg = ec.ContentGroup,
-            allActions = $2sxc._commands.definitions.create({
-                canDesign: ec.User.CanDesign,
-                templateId: cg.TemplateId,
-                contentTypeId: cg.ContentTypeName,
-                isContent: cg.IsContent,
-                queryId: cg.QueryId,
-                appResourcesId: cg.AppResourcesId,
-                appSettingsId: cg.AppSettingsId
-            });
+    // quick debug - set to false if not needed for production
+    var dbg = false;
 
-        // #region helper functions
-        function createToolbarConfig(context) {
-            var c = context, ce = c.Environment, cg = c.ContentGroup, cb = c.ContentBlock;
-            return {
-                portalId: ce.WebsiteId,
-                tabId: ce.PageId,
-                moduleId: ce.InstanceId,
-                version: ce.SxcVersion,
+    // default / fallback settings for toolbars when nothings is specified
+    var settingsForEmptyToolbar = {
+        hover: "left",
+        autoAddMore: "left"
+    };
 
-                contentGroupId: cg.Guid,
-                cbIsEntity: cb.IsEntity,
-                cbId: cb.Id,
-                appPath: cg.AppUrl,
-                isList: cg.IsList
-            };
+    // generate an empty / fallback toolbar tag
+    function generateFallbackToolbar() {
+        var settingsString = JSON.stringify(settingsForEmptyToolbar);
+        return $("<ul class='sc-menu' toolbar='' settings='" + settingsString + "'/>");
+    }
+
+    // find current toolbars inside this wrapper-tag
+    function getToolbarTags(parentTag) {
+        var allInner = $(".sc-menu[toolbar],.sc-menu[data-toolbar]", parentTag);
+
+        // return only those, which don't belong to a sub-item
+        var res = allInner.filter(function (i, e) {
+            return $(e).closest(".sc-content-block")[0] === parentTag[0];
+        });
+        if (dbg) console.log("found toolbars for parent", parentTag, res);
+        return res;
+    }
+
+    // create a process-toolbar command to generate toolbars inside a tag
+    $2sxc._toolbarManager.buildToolbars = function(parentTag, optionalId) {
+        parentTag = $(parentTag || ".DnnModule-" + optionalId);
+
+        // todo: change mechanism to not render toolbar, this uses a secret class name which the toolbar shouldn't know
+        // don't add, if it is has un-initialized content
+        var disableAutoAdd = $(".sc-uninitialized", parentTag).length !== 0;
+
+        var toolbars = getToolbarTags(parentTag);
+
+        // no toolbars found, must help a bit because otherwise editing is hard
+        if (toolbars.length === 0 && !disableAutoAdd) {
+            if (dbg) console.log("didn't find toolbar, so will auto-create", parentTag);
+
+            var outsideCb = !parentTag.hasClass($2sxc.c.cls.scCb); // "sc-content-block");
+            var contentTag = outsideCb ? parentTag.find("div.sc-content-block") : parentTag;
+            contentTag.addClass($2sxc.c.cls.scElm); // "sc-element");
+
+            contentTag.prepend(generateFallbackToolbar());
+            toolbars = getToolbarTags(parentTag);
         }
 
-        // does some clean-up work on a button-definition object
-        // because the target item could be specified directly, or in a complex internal object called entity
-        function flattenActionDefinition(actDef) {
-            if (actDef.entity && actDef.entity._2sxcEditInformation) {
-                var editInfo = actDef.entity._2sxcEditInformation;
-                actDef.useModuleList = (editInfo.sortOrder !== undefined); // has sort-order, so use list
-                if (editInfo.entityId !== undefined)
-                    actDef.entityId = editInfo.entityId;
-                if (editInfo.sortOrder !== undefined)
-                    actDef.sortOrder = editInfo.sortOrder;
-                delete actDef.entity;   // clean up edit-info
+        toolbars.each(function initToolbar() {
+            var tag = $(this), data = null, toolbarConfig, toolbarSettings, at = $2sxc.c.attr;
+
+            try {
+                data = tag.attr(at.toolbar) || tag.attr(at.toolbarData) || "{}";
+                toolbarConfig = JSON.parse(data);
+                data = tag.attr(at.settings) || tag.attr(at.settingsData) || "{}";
+                toolbarSettings = JSON.parse(data);
+                if (toolbarConfig === {} && toolbarSettings === {})
+                    toolbarSettings = settingsForEmptyToolbar;
+            } catch (err) {
+                console
+                    .error("error in settings JSON - probably invalid - make sure you also quote your properties like \"name\": ...", data, err);
+                return;
             }
-        }
 
-        //#endregion helper functions
+            try {
+                tag.replaceWith($2sxc(tag).manage.getToolbar(toolbarConfig, toolbarSettings));
+            } catch (err2) {
+                // note: errors happen a lot on custom toolbars, amke sure the others are still rendered
+                console.error("error creating toolbar - will skip this one", err2);
+            }
+        });
+    };
+
+
+})();
+(function () {
+
+    var tbManager = $2sxc._toolbarManager;
+
+    // create an object oriented simple call to access toolbar actions of an instance
+    $2sxc._toolbarManager.createInstance = function (sxc) {
+
         var tb = {
-            config: createToolbarConfig(editContext),
-            refreshConfig: function () { tb.config = createToolbarConfig(editContext); },
-            actions: allActions,
-
             // Generate a button (an <a>-tag) for one specific toolbar-action. 
             // Expects: settings, an object containing the specs for the expected buton
-            getButton: function (actDef, groupIndex) {
-
-                // if the button belongs to a content-item, move the specs up to the item into the settings-object
-                flattenActionDefinition(actDef);
-
-                // retrieve configuration for this button
-                var showClasses = "group-" + groupIndex,
-                    classesList = (actDef.classes || "").split(","),
-                    box = $("<div/>"),
-                    symbol = $("<i class=\"" + actDef.icon + "\" aria-hidden=\"true\"></i>"),
-                    onclick = actDef.disabled ? "" : "$2sxc(" + id + ", " + cbid + ").manage.run(" + JSON.stringify(actDef.command /*, tb._jsonifyFilterGroup*/) + ", event);";
-
-                for (var c = 0; c < classesList.length; c++)
-                    showClasses += " " + classesList[c];
-
-                var button = $("<a />", {
-                    'class': "sc-" + actDef.action + " " + showClasses + (actDef.dynamicClasses ? " " + actDef.dynamicClasses(actDef) : ""),
-                    'onclick': onclick,
-                    'data-i18n': "[title]" + actDef.title
-                });
-
-                button.html(box.html(symbol));
-
-                return button[0].outerHTML;
+            getButton: function(actDef, groupIndex) {
+                return tbManager.generateButtonHtml(sxc, actDef, groupIndex);
             },
 
             // Builds the toolbar and returns it as HTML
             // expects settings - either for 1 button or for an array of buttons
-            getToolbar: function (tbConfig, moreSettings) {
-                var btnList, tlbDef, btnGroups, behaviourClasses, tbClasses, toolbar, btns, i, h;
-
-                // if it has an action or is an array, keep that. Otherwise get standard buttons
-                tbConfig = tbConfig || {};// if null/undefined, use empty object
-                btnList = tbConfig;
-                if (!tbConfig.action && !tbConfig.groups && !tbConfig.buttons && !Array.isArray(tbConfig)) btnList = tbManager.standardButtons(editContext.User.CanDesign, tbConfig);
-
-                // whatever we had, if more settings were provided, override with these...
-                tlbDef = tbManager.buttonHelpers.buildFullDefinition(btnList, allActions, tb.config, moreSettings);
-                btnGroups = tlbDef.groups;
-                behaviourClasses = " sc-tb-hover-" + tlbDef.settings.hover
-                    + " sc-tb-show-" + tlbDef.settings.show;
-
-                // todo: these settings assume it's not in an array...
-                tbClasses = "sc-menu group-0 "
-                    + behaviourClasses + " "
-                    + ((tbConfig.sortOrder === -1) ? ' listContent' : '')
-                    + (tlbDef.settings.classes ? " " + tlbDef.settings.classes : '');
-                toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "var e = arguments[0] || window.event; e.stopPropagation();" });
-
-                for (i = 0; i < btnGroups.length; i++) {
-                    btns = btnGroups[i].buttons;
-                    for (h = 0; h < btns.length; h++) toolbar.append($("<li />").append($(tb.getButton(btns[h], i))));
-                }
-
-                toolbar.attr("group-count", btnGroups.length);
-
-                return toolbar[0].outerHTML;
-            },
-
-            // find all toolbar-info-attributes in the HTML, convert to <ul><li> toolbar
-            _processToolbars: function (parentTag) {
-                var disableAutoAdd, toolbars, settingsForEmptyToolbar = {
-                    hover: "left",
-                    autoAddMore: "left"
-                };
-                parentTag = $(parentTag || '.DnnModule-' + id);
-
-                // don't add, if it is has un-initialized content
-                disableAutoAdd = $(".sc-uninitialized", parentTag).length !== 0;
-
-                toolbars = getToolbars();
-
-                // no toolbars found, must help a bit because otherwise editing is hard
-                if (toolbars.length === 0 && !disableAutoAdd) {
-
-                    // console.log("didn't find a toolbar, so will create an automatic one to help for the block", parentTag);
-                    var outsideCb = !parentTag.hasClass('sc-content-block');
-                    var contentTag = outsideCb ? parentTag.find("div.sc-content-block") : parentTag;
-                    contentTag.addClass("sc-element");
-
-                    // todo: make the empty-toolbar-default-settings used below as well...
-                    var settingsString = JSON.stringify(settingsForEmptyToolbar);
-                    contentTag.prepend($("<ul class='sc-menu' toolbar='' settings='" + settingsString + "'/>"));
-                    toolbars = getToolbars();
-                }
-
-                toolbars.each(initToolbar);
-
-                // find current toolbars on this tag
-                function getToolbars() {
-                    return $(".sc-menu[toolbar],.sc-menu[data-toolbar]", parentTag);
-                }
-
-                function initToolbar() {
-                    var tag = $(this), data, toolbarConfig, toolbarSettings;
-
-                    try {
-                        data = tag.attr("toolbar") || tag.attr("data-toolbar");
-                        toolbarConfig = data ? JSON.parse(data) : {};
-                        data = tag.attr("settings") || tag.attr("data-settings");
-                        toolbarSettings = data ? JSON.parse(data) : {};
-                        if (toolbarConfig === {} && toolbarSettings === {})
-                            toolbarSettings = settingsForEmptyToolbar;
-                    } catch (err) {
-                        console.error("error in settings JSON - probably invalid - make sure you also quote your properties like \"name\": ...", data, err);
-                        return;
-                    }
-
-                    try {
-                        tag.replaceWith($2sxc(tag).manage.getToolbar(toolbarConfig, toolbarSettings));
-                    } catch (err) {
-                        // note: errors can happen a lot on custom toolbars, must be sure the others are still rendered
-                        console.error("error creating toolbar - will skip this one", err);
-                    }
-                }
+            getToolbar: function(tbConfig, moreSettings) {
+                return tbManager.generateToolbarHtml(sxc, tbConfig, moreSettings);
             }
+
         };
         return tb;
+    };
+
+})();
+(function () {
+
+    // does some clean-up work on a button-definition object
+    // because the target item could be specified directly, or in a complex internal object called entity
+    function flattenActionDefinition(actDef) {
+        if (actDef.entity && actDef.entity._2sxcEditInformation) {
+            var editInfo = actDef.entity._2sxcEditInformation;
+            actDef.useModuleList = (editInfo.sortOrder !== undefined); // has sort-order, so use list
+            if (editInfo.entityId !== undefined)
+                actDef.entityId = editInfo.entityId;
+            if (editInfo.sortOrder !== undefined)
+                actDef.sortOrder = editInfo.sortOrder;
+            delete actDef.entity; // clean up edit-info
+        }
+    }
+
+    // generate the html for a button
+    // Expects: instance sxc, action-definition, + group-index in which the button is shown
+    $2sxc._toolbarManager.generateButtonHtml = function (sxc, actDef, groupIndex) {
+
+        // if the button belongs to a content-item, move the specs up to the item into the settings-object
+        flattenActionDefinition(actDef);
+
+        // retrieve configuration for this button
+        var showClasses = "group-" + groupIndex,
+            classesList = (actDef.classes || "").split(","),
+            box = $("<div/>"),
+            symbol = $("<i class=\"" + actDef.icon + "\" aria-hidden=\"true\"></i>"),
+            onclick = actDef.disabled
+                ? ""
+                : "$2sxc(" + sxc.id + ", " + sxc.cbid + ").manage.run(" + JSON.stringify(actDef.command) + ", event);";
+
+        for (var c = 0; c < classesList.length; c++)
+            showClasses += " " + classesList[c];
+
+        var button = $("<a />",
+        {
+            'class': "sc-" + actDef.action + " " + showClasses +
+                (actDef.dynamicClasses ? " " + actDef.dynamicClasses(actDef) : ""),
+            'onclick': onclick,
+            'data-i18n': "[title]" + actDef.title
+        });
+
+        button.html(box.html(symbol));
+
+        return button[0].outerHTML;
+    };
+
+
+})();
+(function () {
+
+    var tbManager = $2sxc._toolbarManager;
+
+    $2sxc._toolbarManager.generateToolbarHtml = function(sxc, tbConfig, moreSettings) {
+        // if it has an action or is an array, keep that. Otherwise get standard buttons
+        tbConfig = tbConfig || {}; // if null/undefined, use empty object
+        var btnList = tbConfig;
+        if (!tbConfig.action && !tbConfig.groups && !tbConfig.buttons && !Array.isArray(tbConfig))
+            btnList = tbManager.standardButtons(sxc.manage._user.canDesign /* editContext.User.CanDesign */, tbConfig);
+
+        // whatever we had, if more settings were provided, override with these...
+        var tlbDef = tbManager.buttonHelpers.buildFullDefinition(btnList, sxc.manage._commands.commands, sxc.manage._instanceConfig /* tb.config */, moreSettings);
+        var btnGroups = tlbDef.groups;
+        var behaviourClasses = " sc-tb-hover-" + tlbDef.settings.hover + " sc-tb-show-" + tlbDef.settings.show;
+
+        // todo: these settings assume it's not in an array...
+        var tbClasses = "sc-menu group-0 " + behaviourClasses + " " +
+            ((tbConfig.sortOrder === -1) ? " listContent" : "") +
+            (tlbDef.settings.classes ? " " + tlbDef.settings.classes : "");
+        var toolbar = $("<ul />",
+            { 'class': tbClasses, 'onclick': "var e = arguments[0] || window.event; e.stopPropagation();" });
+
+        for (var i = 0; i < btnGroups.length; i++) {
+            var btns = btnGroups[i].buttons;
+            for (var h = 0; h < btns.length; h++)
+                toolbar.append($("<li />").append($(tbManager.generateButtonHtml(sxc, btns[h], i))));
+        }
+
+        toolbar.attr("group-count", btnGroups.length);
+
+        return toolbar[0].outerHTML;
     };
 })();
 // the toolbar manager is an internal helper
