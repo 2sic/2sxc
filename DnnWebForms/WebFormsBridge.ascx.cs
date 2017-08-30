@@ -25,11 +25,6 @@ namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 					controlWysiwyg.PortalId = this.PortalId;
 					pnlBridgeContent.Controls.Add(controlWysiwyg);
 					break;
-				case "filemanager":
-					var controlFileManager = (FileManager)LoadControl("~/DesktopModules/ToSIC_SexyContent/DnnWebForms/FileManager.ascx");
-					controlFileManager.PortalId = this.PortalId;
-					pnlBridgeContent.Controls.Add(controlFileManager);
-					break;
 				default:
 					throw new Exception("WebForms Bridge: No valid type was specified.");
 			}

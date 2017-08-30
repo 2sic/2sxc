@@ -45,7 +45,8 @@ namespace ToSic.SexyContent
 
             // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
-            App.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent, data.ConfigurationProvider);
+            // Note that app could be null, if a user is in admin-ui of a module which hasn't actually be configured yet
+            App?.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent, data.ConfigurationProvider);
 
             #region Assemble the mapping of the data-stream "default"/Presentation to the List object and the "ListContent" too
 	        List = new List<Element>();
@@ -232,7 +233,7 @@ namespace ToSic.SexyContent
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
         public AdamNavigator AsAdam(ToSic.Eav.Interfaces.IEntity entity, string fieldName)
-            => new AdamNavigator(_sxcInstance, App, Dnn.Portal, entity.EntityGuid, fieldName);
+            => new AdamNavigator(_sxcInstance, App, Dnn.Portal, entity.EntityGuid, fieldName, false);
         #endregion
 
 

@@ -2,25 +2,21 @@
 IF YOU DON'T FILL OUT THE FOLLOWING INFORMATION WE MIGHT CLOSE YOUR ISSUE WITHOUT INVESTIGATING
 -->
 
-**I'm submitting a ...**  <!-- check one with "x" -->
-```
-- [ ] bug report => search github for a similar issue before submitting 
-- [ ] feature request
-- [ ] support request => do not submit here, see https://2sxc.org/en/blog/post/moving-discussions-from-codeplex-to-stack-overflow
-- [ ] not sure
-```
+**I'm submitting a ...**  <!-- remove lines which don't apply  -->
+[x] bug report => search github for a similar issue before submitting 
+[x] feature request
+[x] support request => do not submit here, see https://2sxc.org/en/blog/post/moving-discussions-from-codeplex-to-stack-overflow
+[x] not sure
 
-**...about**  <!-- check one with "x" -->
-```
-- [ ] edit experience / UI
-- [ ] admin experience UI
-- [ ] Razor templating
-- [ ] JS development
-- [ ] Content Types or data management
-- [ ] APIs like REST
-- [ ] DNN parts
-- [ ] other / unknown
-```
+**...about**   <!-- remove lines which don't apply  -->
+[x] edit experience / UI
+[x] admin experience UI
+[x] Razor templating
+[x] JS development
+[x] Content Types or data management
+[x] APIs like REST
+[x] DNN parts
+[x] other / unknown
 
 **Current behavior**
 <!-- Describe how the bug manifests. -->

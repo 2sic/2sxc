@@ -138,13 +138,6 @@
     <Compile Include="Environment\Dnn7\Versioning\Versioning.cs" />
     <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
     <Compile Include="SexyContent\ContentBlocks\Renderers\InTextContentBlocks.cs" />
-    <Compile Include="DnnWebForms\FileManager.ascx.cs">
-      <DependentUpon>FileManager.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="DnnWebForms\FileManager.ascx.designer.cs">
-      <DependentUpon>FileManager.ascx</DependentUpon>
-    </Compile>
     <Compile Include="DnnWebForms\Helpers\DnnLinkHelper.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
@@ -292,7 +285,6 @@
     <Content Include="Administration\Export.js" />
     <Content Include="API\Services.asmx" />
     <Content Include="ClientScripts\ModuleEditor.js" />
-    <Content Include="DnnWebForms\FileManager.ascx" />
     <Content Include="DnnWebForms\PagePicker.ascx" />
     <Content Include="DnnWebForms\WebFormsBridge.ascx" />
     <Content Include="DnnWebForms\Wysiwyg.ascx" />
@@ -365,7 +357,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="ClientScripts\readme.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
