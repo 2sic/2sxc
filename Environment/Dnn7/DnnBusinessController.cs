@@ -44,15 +44,19 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public void PublishVersion(int moduleId, int version)
         {
             versioning.DoInsidePublishLatestVersion(moduleId, (args) => {
-
+                
                 // publish all entites of this content block
                 var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
                 var cb = new ModuleContentBlock(moduleInfo);
                 var appManager = new AppManager(cb.AppId);
                 var list = cb.Data["Default"]?.LightList;
-                list = list.Concat(cb.Data["Presentation"]?.LightList);
-                list = list.Concat(cb.Data["ListContent"]?.LightList);
-                list = list.Concat(cb.Data["ListPresentation"]?.LightList);
+
+                var pres = cb.Data["Presentation"]?.LightList;
+                if (pres != null) list = list.Concat(pres);
+                var cont = cb.Data["ListContent"]?.LightList;
+                if (cont != null) list = list.Concat(cont);
+                var lPres = cb.Data["ListPresentation"]?.LightList;
+                if (lPres != null) list = list.Concat(lPres);
 
                 var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToArray();
 
