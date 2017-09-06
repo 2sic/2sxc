@@ -39,8 +39,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void PublishVersion(int moduleId, int version)
         {
-            versioning.DoInsidePublishLatestVersion(moduleId, (args) => {
-                
+            //(args) => {
+
                 // publish all entites of this content block
                 var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
                 var cb = new ModuleContentBlock(moduleInfo);
@@ -60,14 +60,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 ids.ToList<int>().Add(cb.ContentGroup.ContentGroupId);
 
                 appManager.Entities.Publish(ids);
-            });
+            //}
+            //versioning.DoInsidePublishLatestVersion(moduleId, );
         }
 
         public void DeleteVersion(int moduleId, int version)
         {
-            versioning.DoInsideDeleteLatestVersion(moduleId, (args) => {
-                // NOTE for 2dm: If we want to support delete, reset any item in draft state of the content-block
-            });
+            //versioning.DoInsideDeleteLatestVersion(moduleId, (args) => {
+            //    // NOTE for 2dm: If we want to support delete, reset any item in draft state of the content-block
+            //});
         }
 
         public int RollBackVersion(int moduleId, int version)

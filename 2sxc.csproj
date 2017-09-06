@@ -132,10 +132,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Environment\Dnn7\Versioning.cs" />
-    <Compile Include="Environment\Dnn7\Versioning\ISettingsController.cs" />
-    <Compile Include="Environment\Dnn7\Versioning\ModuleSettingsController.cs" />
-    <Compile Include="Environment\Dnn7\Versioning\ModuleVersionSettingsController.cs" />
-    <Compile Include="Environment\Dnn7\Versioning\Versioning.cs" />
+    <Compile Include="Environment\Dnn7\ModuleSettingsHelper.cs" />
+    <Compile Include="Environment\Dnn7\PagePublishing_ModuleSettings.cs" />
+    <Compile Include="Environment\Dnn7\PagePublishing.cs" />
     <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
     <Compile Include="SexyContent\ContentBlocks\Renderers\InTextContentBlocks.cs" />
     <Compile Include="DnnWebForms\Helpers\DnnLinkHelper.cs" />
@@ -431,8 +430,8 @@ xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.SexyContent.Razor.dll" "C:\Project
 xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.SexyContent.Razor.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
 xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.SexyContent.WebApi.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
 xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.SexyContent.WebApi.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
-xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Sxc.Environment.Dnn9.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
-xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Sxc.Environment.Dnn9.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+rem xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Sxc.Environment.Dnn9.dll" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
+rem xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.Sxc.Environment.Dnn9.pdb" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I
 
 </PostBuildEvent>
   </PropertyGroup>

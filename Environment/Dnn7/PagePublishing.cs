@@ -52,29 +52,29 @@ namespace ToSic.SexyContent.Environment.Dnn7
             action.Invoke(versioningActionInfo);
         }
 
-        public void DoInsidePublishLatestVersion(int moduleId, Action<VersioningActionInfo> action)
-        {
-            if(IsVersioningEnabled(moduleId))
-            {
-                var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
-                moduleVersionSettings.PublishLatestVersion();
-            }
+        //public void DoInsidePublishLatestVersion(int moduleId, Action<VersioningActionInfo> action)
+        //{
+        //    if(IsVersioningEnabled(moduleId))
+        //    {
+        //        var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
+        //        moduleVersionSettings.PublishLatestVersion();
+        //    }
 
-            var versioningActionInfo = new VersioningActionInfo();
-            action.Invoke(versioningActionInfo);
-        }
+        //    var versioningActionInfo = new VersioningActionInfo();
+        //    action.Invoke(versioningActionInfo);
+        //}
 
-        public void DoInsideDeleteLatestVersion(int moduleId, Action<VersioningActionInfo> action)
-        {
-            if (IsVersioningEnabled(moduleId))
-            {
-                var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
-                moduleVersionSettings.DeleteLatestVersion();
-            }
+        //public void DoInsideDeleteLatestVersion(int moduleId, Action<VersioningActionInfo> action)
+        //{
+        //    if (IsVersioningEnabled(moduleId))
+        //    {
+        //        var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
+        //        moduleVersionSettings.DeleteLatestVersion();
+        //    }
 
-            var versioningActionInfo = new VersioningActionInfo();
-            action.Invoke(versioningActionInfo);
-        }
+        //    var versioningActionInfo = new VersioningActionInfo();
+        //    action.Invoke(versioningActionInfo);
+        //}
 
         public int GetLatestVersion(int moduleId)
         {
