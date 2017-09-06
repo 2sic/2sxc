@@ -61,6 +61,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 ids.Add(cb.ContentGroup.ContentGroupId);
 
                 appManager.Entities.Publish(ids.ToArray());
+
+            // Set published version
+            var moduleVersionSettings = new ToSic.SexyContent.Environment.Dnn7.PagePublishing.ModuleVersionSettingsController(moduleId);
+            moduleVersionSettings.PublishLatestVersion();
+
             //}
             //versioning.DoInsidePublishLatestVersion(moduleId, );
         }

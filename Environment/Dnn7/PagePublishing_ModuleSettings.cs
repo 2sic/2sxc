@@ -6,7 +6,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
     {
 
 
-        private class ModuleVersionSettingsController
+        internal class ModuleVersionSettingsController
         {
             private const string LatestVersionSettingsKey = "LatestVersion";
 
