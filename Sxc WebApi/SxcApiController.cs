@@ -4,14 +4,12 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ToSic.Eav;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Security;
@@ -31,7 +29,7 @@ namespace ToSic.SexyContent.WebApi
         internal SxcInstance SxcContext => _instanceContext ?? (_instanceContext = Helpers.GetSxcOfApiRequest(Request, true));
         private SxcInstance _instanceContext;
 
-        protected IEnvironment Env = new Environment.DnnEnvironment();
+        //protected IEnvironment Env = new Environment.DnnEnvironment();
 
         #region AppAndDataHelpers implementation
 
