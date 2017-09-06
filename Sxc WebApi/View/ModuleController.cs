@@ -33,14 +33,14 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void AddItem([FromUri] int? sortOrder = null, [FromUri] bool partOfPage = false)
         {
-            var versioning = new Versioning();
+            var versioning = new PagePublishing();
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
                 ContentGroupReferenceManager.AddItem(sortOrder);
             };
 
             // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsideVersioning(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
             else internalSave(null);
         }
 
@@ -125,14 +125,14 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void MoveItemInList(int parentId, string field, int indexFrom, int indexTo, [FromUri] bool partOfPage = false)
         {
-            var versioning = new Versioning();
+            var versioning = new PagePublishing();
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
                 ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
             };
 
             // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsideVersioning(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
             else internalSave(null);
         }
 
@@ -146,14 +146,14 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void RemoveItemInList(int parentId, string field, int index, [FromUri] bool partOfPage = false)
         {
-            var versioning = new Versioning();
+            var versioning = new PagePublishing();
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
                 ModifyItemList(parentId, field, new Remove(index));
             };
 
             // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsideVersioning(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
             else internalSave(null);
         }
 
@@ -201,14 +201,14 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder, [FromUri] bool partOfPage = false)
         {
-            var versioning = new Versioning();
+            var versioning = new PagePublishing();
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
                 ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
             };
 
             // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsideVersioning(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
             else internalSave(null);
         }
 
@@ -224,14 +224,14 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void RemoveFromList([FromUri] int sortOrder, [FromUri] bool partOfPage = false)
         {
-            var versioning = new Versioning();
+            var versioning = new PagePublishing();
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
                 ContentGroupReferenceManager.RemoveFromList(sortOrder);
             };
 
             // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsideVersioning(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
             else internalSave(null);
         }
 

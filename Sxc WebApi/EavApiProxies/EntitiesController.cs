@@ -111,7 +111,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
 
-            var versioning = new Versioning();
+            var versioning = new PagePublishing();
             Dictionary<Guid, int> postSaveIds = null;
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
@@ -128,7 +128,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             };
 
             // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsideVersioning(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
             else internalSave(null);
 
             return postSaveIds;

@@ -9,31 +9,31 @@ using ToSic.Eav.Apps.Environment;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class Versioning : IEnvironmentVersioning
+    internal partial class PagePublishing : IPagePublishing
     {
         public bool Supported => true;
         
-        public VersioningRequirements Requirements(int moduleId)
+        public PublishingMode Requirements(int moduleId)
         {
             var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
             var versioningEnabled = TabChangeSettings.Instance.IsChangeControlEnabled(moduleInfo.PortalID, moduleInfo.TabID);
             if (!versioningEnabled)
-                return VersioningRequirements.DraftOptional;
+                return PublishingMode.DraftOptional;
             
             var portalSettings = new PortalSettings(moduleInfo.PortalID);
             if (!portalSettings.UserInfo.IsSuperUser)
-                return VersioningRequirements.DraftRequired;
+                return PublishingMode.DraftRequired;
             
             // Else versioningEnabled && IsSuperUser
-            return VersioningRequirements.DraftRequired;
+            return PublishingMode.DraftRequired;
         }
         
         public bool IsVersioningEnabled(int moduleId)
         {
-            return Requirements(moduleId) != VersioningRequirements.DraftOptional;
+            return Requirements(moduleId) != PublishingMode.DraftOptional;
         }
 
-        public void DoInsideVersioning(int moduleId, int userId, Action<VersioningActionInfo> action)
+        public void DoInsidePublishing(int moduleId, int userId, Action<VersioningActionInfo> action)
         {
             if (IsVersioningEnabled(moduleId))
             {
@@ -48,7 +48,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 }
             }
 
-            var versioningActionInfo = new VersioningActionInfo() { };
+            var versioningActionInfo = new VersioningActionInfo();
             action.Invoke(versioningActionInfo);
         }
 
@@ -60,7 +60,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 moduleVersionSettings.PublishLatestVersion();
             }
 
-            var versioningActionInfo = new VersioningActionInfo() { };
+            var versioningActionInfo = new VersioningActionInfo();
             action.Invoke(versioningActionInfo);
         }
 
@@ -72,7 +72,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 moduleVersionSettings.DeleteLatestVersion();
             }
 
-            var versioningActionInfo = new VersioningActionInfo() { };
+            var versioningActionInfo = new VersioningActionInfo();
             action.Invoke(versioningActionInfo);
         }
 

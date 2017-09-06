@@ -119,11 +119,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public ClientInfoContentGroup ContentGroup;
         // ReSharper disable once InconsistentNaming
         public ClientInfosError error;
-        private IEnvironmentVersioning versioning;
+        private IPagePublishing versioning;
 
         public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated)
         {
-            versioning = new Versioning();
+            versioning = new PagePublishing();
 
             Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic, sxc);
             Language = new ClientInfosLanguages(ps, zoneId);
@@ -233,7 +233,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         // public bool DataIsMissing;
 
-        internal ClientInfoContentBlock(IContentBlock contentBlock, string parentFieldName, int indexInField, VersioningRequirements versioningRequirements)
+        internal ClientInfoContentBlock(IContentBlock contentBlock, string parentFieldName, int indexInField, PublishingMode versioningRequirements)
         {
             ShowTemplatePicker = contentBlock.ShowTemplateChooser;
             IsEntity = contentBlock.ParentIsEntity;
