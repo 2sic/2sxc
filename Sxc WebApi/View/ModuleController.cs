@@ -199,7 +199,7 @@ namespace ToSic.SexyContent.WebApi.View
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder, [FromUri] bool partOfPage = false)
+        public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
             var versioning = new PagePublishing();
 
@@ -207,9 +207,8 @@ namespace ToSic.SexyContent.WebApi.View
                 ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
             };
 
-            // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
-            else internalSave(null);
+            // use dnn versioning - items here are always part of list
+            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
         }
 
         [HttpGet]
@@ -222,7 +221,7 @@ namespace ToSic.SexyContent.WebApi.View
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void RemoveFromList([FromUri] int sortOrder, [FromUri] bool partOfPage = false)
+        public void RemoveFromList([FromUri] int sortOrder)
         {
             var versioning = new PagePublishing();
 
@@ -230,9 +229,9 @@ namespace ToSic.SexyContent.WebApi.View
                 ContentGroupReferenceManager.RemoveFromList(sortOrder);
             };
 
-            // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
-            else internalSave(null);
+            // use dnn versioning - items here are always part of list
+            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            //else internalSave(null);
         }
 
         [HttpGet]
