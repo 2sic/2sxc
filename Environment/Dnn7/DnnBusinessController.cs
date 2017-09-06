@@ -45,13 +45,13 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
                 var cb = new ModuleContentBlock(moduleInfo);
                 var appManager = new AppManager(cb.AppId);
-                var list = cb.Data["Default"]?.LightList;
+                var list = cb.Data.Out.ContainsKey("Default") ? cb.Data["Default"]?.LightList : null;
 
-                var pres = cb.Data["Presentation"]?.LightList;
+                var pres = cb.Data.Out.ContainsKey("Presentation") ? cb.Data["Presentation"]?.LightList : null;
                 if (pres != null) list = list.Concat(pres);
-                var cont = cb.Data["ListContent"]?.LightList;
+                var cont = cb.Data.Out.ContainsKey("ListContent") ? cb.Data["ListContent"]?.LightList : null;
                 if (cont != null) list = list.Concat(cont);
-                var lPres = cb.Data["ListPresentation"]?.LightList;
+                var lPres = cb.Data.Out.ContainsKey("ListPresentation") ? cb.Data["ListPresentation"]?.LightList : null;
                 if (lPres != null) list = list.Concat(lPres);
 
                 var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToArray();
