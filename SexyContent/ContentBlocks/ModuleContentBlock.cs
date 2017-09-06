@@ -54,6 +54,9 @@ namespace ToSic.SexyContent.ContentBlocks
             {
                 // try to load the app - if possible
                 App = new App(ZoneId, AppId, PortalSettings);
+                // maybe ensure that App.Data is ready
+                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, Data.ConfigurationProvider);
+
                 ContentGroup = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
 
                 if (ContentGroup.DataIsMissing)
@@ -72,8 +75,7 @@ namespace ToSic.SexyContent.ContentBlocks
                 if (bool.TryParse((showStatus ?? true).ToString(), out show))
                     ShowTemplateChooser = show;
 
-                // maybe ensure that App.Data is ready
-                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, Data.ConfigurationProvider);
+                
             }
         }
 

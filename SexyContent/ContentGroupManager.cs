@@ -15,16 +15,18 @@ namespace ToSic.SexyContent
 
 		private readonly int _zoneId;
 		private readonly int _appId;
+        private readonly bool _showDrafts;
 
-		public ContentGroupManager(int zoneId, int appId)
+		public ContentGroupManager(int zoneId, int appId, bool showDrafts)
 		{
 			_zoneId = zoneId;
 			_appId = appId;
+            _showDrafts = showDrafts;
 		}
 
 		private IDataSource ContentGroupSource()
 		{
-			var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId, false);
+			var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId, _showDrafts);
 			dataSource = DataSource.GetDataSource<EntityTypeFilter>(_zoneId, _appId, dataSource);
 			((EntityTypeFilter)dataSource).TypeName = ContentGroupTypeName;
 			return dataSource;
@@ -32,7 +34,7 @@ namespace ToSic.SexyContent
 
 		public IEnumerable<ContentGroup> GetContentGroups()
 		{
-			return ContentGroupSource().List.Select(p => new ContentGroup(p.Value, _zoneId, _appId));
+			return ContentGroupSource().List.Select(p => new ContentGroup(p.Value, _zoneId, _appId, _showDrafts));
 		}
 
 		public ContentGroup GetContentGroup(Guid contentGroupGuid)
@@ -41,8 +43,8 @@ namespace ToSic.SexyContent
 			// ToDo: Should use an indexed guid source
 		    var groupEntity = dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == contentGroupGuid).Value;
 		    return groupEntity != null 
-                ? new ContentGroup(groupEntity, _zoneId, _appId) 
-                : new ContentGroup(Guid.Empty, _zoneId, _appId) {DataIsMissing = true};
+                ? new ContentGroup(groupEntity, _zoneId, _appId, _showDrafts) 
+                : new ContentGroup(Guid.Empty, _zoneId, _appId, _showDrafts) {DataIsMissing = true};
 		}
 
 		public bool IsConfigurationInUse(int templateId, string type)
@@ -135,7 +137,7 @@ namespace ToSic.SexyContent
 	    {
 	        // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
 	        return groupGuid == Guid.Empty 
-                ? new ContentGroup(previewTemplateGuid, _zoneId, _appId)
+                ? new ContentGroup(previewTemplateGuid, _zoneId, _appId, _showDrafts)
                 : GetContentGroup(groupGuid);
 	    }
 

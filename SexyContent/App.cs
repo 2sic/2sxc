@@ -49,7 +49,7 @@ namespace ToSic.SexyContent
 
         private ContentGroupManager _contentGroupManager;
         public ContentGroupManager ContentGroupManager => _contentGroupManager 
-            ?? (_contentGroupManager = new ContentGroupManager(ZoneId, AppId));
+            ?? (_contentGroupManager = new ContentGroupManager(ZoneId, AppId, ShowDraftsInData));
 
         #endregion
 

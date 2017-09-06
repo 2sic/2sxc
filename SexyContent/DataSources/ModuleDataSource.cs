@@ -42,7 +42,7 @@ namespace ToSic.SexyContent.DataSources
                         if (!ModuleId.HasValue)
                             throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
                         var tabId = ((ModuleInfo)ModuleController.Instance.GetTabModulesByModule(ModuleId.Value)[0]).TabID;
-                        _contentGroup = new ContentGroupManager(ZoneId, AppId).GetContentGroupForModule(ModuleId.Value, tabId);
+                        _contentGroup = new ContentGroupManager(ZoneId, AppId, SxcContext.Environment.Permissions.UserMayEditContent).GetContentGroupForModule(ModuleId.Value, tabId);
                     }
                 }
                 return _contentGroup;
