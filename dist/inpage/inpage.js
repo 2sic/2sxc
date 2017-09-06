@@ -15,7 +15,9 @@
             toolbarData: "data-toolbar",
             settings: "settings",
             settingsData: "data-settings"
-        }
+        },
+
+        publishAllowed: "DraftOptional"
 
     };
 
@@ -61,7 +63,9 @@ $(function () {
     var initializedModules = [];
 
     initAllModules(true);
-    document.body.addEventListener("DOMSubtreeModified", initAllModules, false);
+
+    // watch for ajax reloads on edit or view-changes, to re-init the toolbars etc.
+    document.body.addEventListener("DOMSubtreeModified", function(event) { initAllModules(false); }, false);
     
     function initAllModules(isFirstRun) {
         $("div[data-edit-context]").each(function () { initModule(this, isFirstRun); });
@@ -76,14 +80,18 @@ $(function () {
         // add to modules-list
         initializedModules.push(module);
 
+
+
         var sxc = $2sxc(module);
 
-        // note: this can't work - just re-finding the tag will cause many side-effects
-        // the tag might have changed
-        //ctl.manage.reloadContentBlockTag();
-        var uninitialized = showGlassesButtonIfUninitialized(sxc);
+        // check if the sxc must be re-created. This is necessary when modules are dynamically changed
+        // because the configuration may change, and that is cached otherwise, resulting in toolbars with wrong config
+        if (!isFirstRun) sxc = sxc.recreate(true);
 
-        if (isFirstRun && !uninitialized) $2sxc._toolbarManager.buildToolbars(module);
+        // only try to add the glasses if it's the first run...
+        var uninitialized = isFirstRun && showGlassesButtonIfUninitialized(sxc);
+
+        if (!uninitialized) $2sxc._toolbarManager.buildToolbars(module);
 
         return true;
     }
@@ -129,29 +137,34 @@ $(function () {
 
 (function () {
     // helper function to create the configuration object
-    function makeDef(name, translateKey, icon, uiOnly, more) {
+    function makeDef(name, translateKey, icon, uiOnly, partOfPage, more) {
+        if (typeof (partOfPage) !== "boolean")
+            throw "partOfPage in commands not provided, order will be wrong!";
+
         return $2sxc._lib.extend({
             name: name,
             title: "Toolbar." + translateKey,
             icon: "icon-sxc-" + icon,
-            uiActionOnly: uiOnly
+            uiActionOnly: uiOnly,
+            partOfPage: partOfPage
         }, more);
     }
 
     $2sxc._commands.definitions = {};
-    $2sxc._commands.definitions.create = function (editContext) {
-        var enableTools = editContext.canDesign;
-        var isContent = editContext.isContent;
+    $2sxc._commands.definitions.create = function (cmdSpecs) {
+        var enableTools = cmdSpecs.canDesign;
+        var isContent = cmdSpecs.isContent;
 
         var act = {
             // show the basic dashboard which allows view-changing
-            "dash-view": makeDef("dash-view", "Dashboard", "", true, { inlineWindow: true }),
+            // 2017-09-06 2dm "dash-view" deprecated - old name for now "layout" - should not be used any more!
+            //"dash-view": makeDef("dash-view", "Dashboard", "", true, { inlineWindow: true }),
 
             // open the import dialog
-            "app-import": makeDef("app-import", "Dashboard", "", true, {}),
+            "app-import": makeDef("app-import", "Dashboard", "", true, false, {}),
 
             // open an edit-item dialog
-            'edit': makeDef("edit", "Edit", "pencil", false, {
+            'edit': makeDef("edit", "Edit", "pencil", false, true, {
                 params: { mode: "edit" },
                 showCondition: function (settings, modConfig) {
                     return settings.entityId || settings.useModuleList; // need ID or a "slot", otherwise edit won't work
@@ -162,7 +175,7 @@ $(function () {
             // new can also be used for mini-toolbars which just add an entity not attached to a module
             // in that case it's essential to add a contentType like 
             // <ul class="sc-menu" data-toolbar='{"action":"new", "contentType": "Category"}'></ul>
-            'new': makeDef("new", "New", "plus", false, {
+            'new': makeDef("new", "New", "plus", false, true, {
                 params: { mode: "new" },
                 dialog: "edit", // don't use "new" (default) but use "edit"
                 showCondition: function (settings, modConfig) {
@@ -175,7 +188,7 @@ $(function () {
             }),
 
             // add brings no dialog, just add an empty item
-            'add': makeDef("add", "AddDemo", "plus-circled", false, {
+            'add': makeDef("add", "AddDemo", "plus-circled", false, true, {
                 showCondition: function (settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
@@ -185,7 +198,7 @@ $(function () {
             }),
 
             // create a metadata toolbar
-            "metadata": makeDef("metadata", "Metadata", "tag", false, {
+            "metadata": makeDef("metadata", "Metadata", "tag", false, false, {
                 params: { mode: "new" },
                 dialog: "edit", // don't use "new" (default) but use "edit"
                 dynamicClasses: function (settings) {
@@ -206,7 +219,7 @@ $(function () {
             }),
 
             // remove an item from the placeholder (usually for lists)
-            'remove': makeDef("remove", "Remove", "minus-circled", false, {
+            'remove': makeDef("remove", "Remove", "minus-circled", false, true, {
                 showCondition: function (settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
@@ -220,7 +233,7 @@ $(function () {
             }),
 
             // todo: work in progress related to https://github.com/2sic/2sxc/issues/618
-            'delete': makeDef("deleteItem", "Delete", "cancel", true, {
+            'delete': makeDef("deleteItem", "Delete", "cancel", true, false, {
                 // disabled: true,
                 showCondition: function (settings) {
                     // can never be used for a modulelist item, as it is always in use somewhere
@@ -235,7 +248,7 @@ $(function () {
                 }
             }),
 
-            'moveup': makeDef("moveup", "MoveUp", "move-up", false, {
+            'moveup': makeDef("moveup", "MoveUp", "move-up", false, true, {
                 showCondition: function (settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0;
                 },
@@ -244,7 +257,7 @@ $(function () {
                 }
             }),
 
-            'movedown': makeDef("movedown", "MoveDown", "move-down", false, {
+            'movedown': makeDef("movedown", "MoveDown", "move-down", false, true, {
                 showCondition: function (settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
@@ -253,13 +266,14 @@ $(function () {
                 }
             }),
 
-            'instance-list': makeDef("instance-list", "Sort", "list-numbered", false, {
+            'instance-list': makeDef("instance-list", "Sort", "list-numbered", false, true, {
                 showCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
             }),
 
-            'publish': makeDef("publish", "Unpublished", "eye-off", false, {
+            // todo: shouldn't be available if changes are not allowed
+            'publish': makeDef("publish", "Unpublished", "eye-off", false, false, {
                 showCondition: function (settings, modConfig) {
-                    return settings.isPublished === false;
+                    return settings.isPublished === false && cmdSpecs.allowPublish;
                 },
                 code: function (settings, event, sxc) {
                     if (settings.isPublished) return alert($2sxc.translate("Toolbar.AlreadyPublished"));
@@ -273,48 +287,48 @@ $(function () {
                 }
             }),
 
-            'replace': makeDef("replace", "Replace", "replace", false, {
+            'replace': makeDef("replace", "Replace", "replace", false, true, {
                 showCondition: function (settings) { return settings.useModuleList; }
             }),
 
             //#region app-actions: app-settings, app-resources
-            'app-settings': makeDef("app-settings", "AppSettings", "sliders", true, {
+            'app-settings': makeDef("app-settings", "AppSettings", "sliders", true, false, {
                 dialog: "edit",
-                disabled: editContext.appSettingsId === null,
-                title: "Toolbar.AppSettings" + (editContext.appSettingsId === null ? "Disabled" : ""),
+                disabled: cmdSpecs.appSettingsId === null,
+                title: "Toolbar.AppSettings" + (cmdSpecs.appSettingsId === null ? "Disabled" : ""),
                 showCondition: function (settings, modConfig) {
                     return enableTools && !isContent; // only if settings exist, or are 0 (to be created)
                 },
                 configureCommand: function (cmd) {
-                    cmd.items = [{ EntityId: editContext.appSettingsId }];
+                    cmd.items = [{ EntityId: cmdSpecs.appSettingsId }];
                 },
                 dynamicClasses: function (settings) {
-                    return editContext.appSettingsId !== null ? "" : "empty";  // if it doesn't have a query, make it less strong
+                    return cmdSpecs.appSettingsId !== null ? "" : "empty";  // if it doesn't have a query, make it less strong
                 }
             }),
 
-            'app-resources': makeDef("app-resources", "AppResources", "language", true, {
+            'app-resources': makeDef("app-resources", "AppResources", "language", true, false, {
                 dialog: "edit",
-                disabled: editContext.appResourcesId === null,
-                title: "Toolbar.AppResources" + (editContext.appResourcesId === null ? "Disabled" : ""),
+                disabled: cmdSpecs.appResourcesId === null,
+                title: "Toolbar.AppResources" + (cmdSpecs.appResourcesId === null ? "Disabled" : ""),
                 showCondition: function (settings, modConfig) {
                     return enableTools && !isContent; // only if resources exist or are 0 (to be created)...
                 },
                 configureCommand: function (cmd) {
-                    cmd.items = [{ EntityId: editContext.appResourcesId }];
+                    cmd.items = [{ EntityId: cmdSpecs.appResourcesId }];
                 },
                 dynamicClasses: function (settings) {
-                    return editContext.appResourcesId !== null ? "" : "empty";  // if it doesn't have a query, make it less strong
+                    return cmdSpecs.appResourcesId !== null ? "" : "empty";  // if it doesn't have a query, make it less strong
                 }
             }),
             //#endregion
 
             //#region app & zone
-            'app': makeDef("app", "App", "settings", true, {
+            'app': makeDef("app", "App", "settings", true, false, {
                 showCondition: enableTools
             }),
 
-            'zone': makeDef("zone", "Zone", "manage", true, {
+            'zone': makeDef("zone", "Zone", "manage", true, false, {
                 showCondition: enableTools
             })
             //#endregion
@@ -326,21 +340,21 @@ $(function () {
         }
 
         //#region template commands: contenttype, contentitems, template-query, template-develop, template-settings
-        addDef(makeDef("contenttype", "ContentType", "fields", true, {
+        addDef(makeDef("contenttype", "ContentType", "fields", true, false, {
             showCondition: enableTools
         }));
 
-        addDef(makeDef("contentitems", "ContentItems", "table", true, {
-            params: { contentTypeName: editContext.contentTypeId },
+        addDef(makeDef("contentitems", "ContentItems", "table", true, false, {
+            params: { contentTypeName: cmdSpecs.contentTypeId },
             showCondition: function (settings, modConfig) {
-                return enableTools && (settings.contentType || editContext.contentTypeId);
+                return enableTools && (settings.contentType || cmdSpecs.contentTypeId);
             },
             configureCommand: function (cmd) {
                 if (cmd.settings.contentType) // optionally override with custom type
                     cmd.params.contentTypeName = cmd.settings.contentType;
                 // maybe: if item doesn't have a type, use that of template
-                // else if (editContext.contentTypeId)
-                //    cmd.params.contentTypeName = editContext.contentTypeId;
+                // else if (cmdSpecs.contentTypeId)
+                //    cmd.params.contentTypeName = cmdSpecs.contentTypeId;
                 if (cmd.settings.filters) {
                     var enc = JSON.stringify(cmd.settings.filters);
                     
@@ -354,41 +368,41 @@ $(function () {
             }
         }));
 
-        addDef(makeDef("template-develop", "Develop", "code", true, {
+        addDef(makeDef("template-develop", "Develop", "code", true, false, {
             newWindow: true,
             dialog: "develop",
             showCondition: enableTools,
             configureCommand: function (cmd) {
-                cmd.items = [{ EntityId: editContext.templateId }];
+                cmd.items = [{ EntityId: cmdSpecs.templateId }];
             }
         }));
 
-        addDef(makeDef("template-query", "QueryEdit", "filter", true, {
+        addDef(makeDef("template-query", "QueryEdit", "filter", true, false, {
             dialog: "pipeline-designer",
-            params: { pipelineId: editContext.queryId },
+            params: { pipelineId: cmdSpecs.queryId },
             newWindow: true,
-            disabled: editContext.appSettingsId === null,
-            title: "Toolbar.QueryEdit" + (editContext.queryId === null ? "Disabled" : ""),
+            disabled: cmdSpecs.appSettingsId === null,
+            title: "Toolbar.QueryEdit" + (cmdSpecs.queryId === null ? "Disabled" : ""),
             showCondition: function (settings, modConfig) {
                 return enableTools && !isContent;
             },
             dynamicClasses: function (settings) {
-                return editContext.queryId ? "" : "empty"; // if it doesn't have a query, make it less strong
+                return cmdSpecs.queryId ? "" : "empty"; // if it doesn't have a query, make it less strong
             }
         }));
 
-        addDef(makeDef("template-settings", "TemplateSettings", "sliders", true, {
+        addDef(makeDef("template-settings", "TemplateSettings", "sliders", true, false, {
             dialog: "edit",
             showCondition: enableTools,
             configureCommand: function (cmd) {
-                cmd.items = [{ EntityId: editContext.templateId }];
+                cmd.items = [{ EntityId: cmdSpecs.templateId }];
             }
 
         }));
         //#endregion template commands
 
         //#region custom code buttons
-        addDef(makeDef("custom", "Custom", "bomb", true, {
+        addDef(makeDef("custom", "Custom", "bomb", true, false, {
             code: function (settings, event, sxc) {
                 var fn;
                 console.log("custom action with code - BETA feature, may change");
@@ -407,11 +421,11 @@ $(function () {
         //#endregion
 
 
-        addDef(makeDef("layout", "ChangeLayout", "glasses", true, {
+        addDef(makeDef("layout", "ChangeLayout", "glasses", true, true, {
              inlineWindow: true 
         }));
 
-        addDef(makeDef("more", "MoreActions", "options btn-mode", true, {
+        addDef(makeDef("more", "MoreActions", "options btn-mode", true, false, {
             code: function (settings, event) {
                 var btn = $(event.target),
                     fullMenu = btn.closest("ul.sc-menu"),
@@ -426,7 +440,7 @@ $(function () {
         }));
         
         // show the version dialog
-        addDef(makeDef("item-history", "ItemHistory", "clock", true, {
+        addDef(makeDef("item-history", "ItemHistory", "clock", true, false, {
             inlineWindow: true,
             fullScreen: true
         }));
@@ -488,7 +502,7 @@ $(function () {
                     },
 
                     // build the link, combining specific params with global ones and put all in the url
-                    generateLink: function (dialogUrl) {
+                    generateLink: function () {
                         // if there is no items-array, create an empty one (it's required later on)
                         if (!cmd.settings.items) cmd.settings.items = [];
                         //#region steps for all actions: prefill, serialize, open-dialog
@@ -499,9 +513,16 @@ $(function () {
                             }
                         }
                         cmd.params.items = JSON.stringify(cmd.items); // Serialize/json-ify the complex items-list
-                        
-                        return (dialogUrl || ngDialogUrl)
-                            + "#" + $.param(sxc.manage._dialogParameters)
+
+                        // clone the params and adjust parts based on partOfPage settings...
+                        var sharedParams = $2sxc._lib.extend({}, sxc.manage._dialogParameters);
+                        if (!cmd.settings.partOfPage) {
+                            delete sharedParams.versioningRequirements;
+                            sharedParams.partOfPage = false;
+                        }
+
+                        return ngDialogUrl
+                            + "#" + $.param(sharedParams)
                             + "&" + $.param(cmd.params)
                             + isDebug;
                         //#endregion
@@ -519,13 +540,6 @@ $(function () {
 
                 // if the command has own configuration stuff, do that now
                 if (cmd.settings.configureCommand) cmd.settings.configureCommand(cmd);
-
-                //if (specialSettings.angularDialog) {
-                //    var modernDialogUrl = sxc.manage._editContext.Environment.SxcRootUrl
-                //        + "desktopmodules/tosic_sexycontent/dist/ng/ui.html?sxcver="
-                //        + sxc.manage._editContext.Environment.SxcVersion;
-                //    return cmd.generateLink(modernDialogUrl);
-                //}
 
                 return cmd.generateLink();
             },
@@ -592,7 +606,8 @@ $(function () {
             isContent: cg.IsContent,
             queryId: cg.QueryId,
             appResourcesId: cg.AppResourcesId,
-            appSettingsId: cg.AppSettingsId
+            appSettingsId: cg.AppSettingsId,
+            allowPublish: editContext.ContentBlock.VersioningRequirements === $2sxc.c.publishAllowed
         });
     };
 
@@ -1205,7 +1220,7 @@ var $2sxcActionMenuMapper = function (moduleId) {
         var editContext = mngApi.getEditContext(sxc);
         var userInfo = mngApi.getUserOfEditContext(editContext);
 
-        var cmdEngine = $2sxc._commands.instanceEngine(sxc, /* contentBlockTag, */ editContext);
+        var cmdEngine = $2sxc._commands.instanceEngine(sxc, editContext);
 
         var editManager = sxc.manage = {
             //#region Official, public properties and commands, which are stable for use from the outside
