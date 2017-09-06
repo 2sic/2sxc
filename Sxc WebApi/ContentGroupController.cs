@@ -5,6 +5,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -89,8 +90,15 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Replace(Guid guid, string part, int index, int entityId)
         {
-            var contentGroup = SxcContext.App.ContentGroupManager.GetContentGroup(guid);
-            contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
+            var versioning = new PagePublishing();
+
+            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
+                var contentGroup = SxcContext.App.ContentGroupManager.GetContentGroup(guid);
+                contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
+            };
+
+            // use dnn versioning - this is always part of page
+            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
         }
 
         [HttpGet]
@@ -116,12 +124,22 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> list)
         {
-            var cg = GetContentGroup(guid);
+            var versioning = new PagePublishing();
 
-            var sequence = list.Select(i => i.Index).ToArray();
+            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
+                var cg = GetContentGroup(guid);
 
-            cg.ReorderAll(sequence);
+                var sequence = list.Select(i => i.Index).ToArray();
+
+                cg.ReorderAll(sequence);
+                
+            };
+
+            // use dnn versioning - items here are always part of list
+            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+
             return true;
+
         }
 
         [HttpGet]

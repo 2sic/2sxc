@@ -17,9 +17,10 @@ namespace ToSic.SexyContent
         private readonly int _zoneId;
         private readonly int _appId;
         private readonly bool _showDrafts;
+        private readonly bool _versioningEnabled;
         private readonly Guid? _previewTemplateId;
 
-        public ContentGroup(Eav.Interfaces.IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts)
+        public ContentGroup(Eav.Interfaces.IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled)
         {
             if (contentGroupEntity == null)
                 throw new Exception("ContentGroup entity is null. This usually happens when you are duplicating a site, and have not yet imported the other content/apps. If that is your issue, check 2sxc.org/help?tag=export-import");
@@ -28,12 +29,13 @@ namespace ToSic.SexyContent
             _zoneId = zoneId;
             _appId = appId;
             _showDrafts = showDrafts;
+            _versioningEnabled = versioningEnabled;
         }
 
         /// <summary>
         /// Instanciate a "temporary" ContentGroup with the specified templateId and no Content items
         /// </summary>
-        public ContentGroup(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts)
+        public ContentGroup(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts, bool versioningEnabled)
         {
             _previewTemplateId = previewTemplateId;
             _zoneId = zoneId;
@@ -200,15 +202,17 @@ namespace ToSic.SexyContent
 
             var saveEnt = EntitySaver.CreateMergedForSaving(_contentGroupEntity, newEnt, saveOpts);
 
-            // Force saving as draft if needed (if versioning is enabled and part of page is true)
-            // ToDo: There are conditions where entities need to be published here instead of drafted (when isVersioning is disabled)
-            ((Entity)saveEnt).PlaceDraftInBranch = true;
-            ((Entity)saveEnt).IsPublished = false;
+            if (_versioningEnabled)
+            {
+                // Force saving as draft if needed (if versioning is enabled)
+                ((Entity)saveEnt).PlaceDraftInBranch = true;
+                ((Entity)saveEnt).IsPublished = false;
+            }
 
             new AppManager(_zoneId, _appId).Entities.Save(saveEnt, saveOpts);
 
             // Refresh content group entity (ensures contentgroup is up to date)
-            _contentGroupEntity = new ContentGroupManager(_zoneId, _appId, _showDrafts).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
+            _contentGroupEntity = new ContentGroupManager(_zoneId, _appId, _showDrafts, _versioningEnabled).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
         }
 
         private Dictionary<string, List<int?>> PrepareSavePackage(string type, List<int?> entityIds,

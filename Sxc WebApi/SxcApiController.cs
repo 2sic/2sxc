@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.WebApi
 
                 var routeAppPath = Request.GetRouteData().Values["apppath"]?.ToString();
                 var appId = GetCurrentAppIdFromPath(routeAppPath);
-                return _app = (App) Environment.Dnn7.Factory.App(appId);
+                return _app = (App) Environment.Dnn7.Factory.App(appId, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(this.Dnn.Module.ModuleID));
             }
         }
         private App _app;

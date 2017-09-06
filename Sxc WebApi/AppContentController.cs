@@ -157,7 +157,8 @@ namespace ToSic.SexyContent.WebApi
 
             // try to create
             var currentApp = new App(PortalSettings, appId);
-            currentApp.InitData(false, new ValueCollectionProvider());
+            //currentApp.InitData(false, new ValueCollectionProvider());
+            currentApp.InitData(false, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(this.ActiveModule.ModuleID), Data.ConfigurationProvider);
             if (id == null)
             {
                 currentApp.Data.Create(contentType, cleanedNewItem, userName);

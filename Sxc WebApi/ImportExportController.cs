@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.WebApi
         {
             var appWrapper = (UserInfo.IsSuperUser)
                 ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
-                : new SxcAppWrapper(appId);
+                : new SxcAppWrapper(appId, false);
 
             var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
             var cultCount = new Environment.DnnEnvironment().ZoneMapper
@@ -54,7 +54,7 @@ namespace ToSic.SexyContent.WebApi
         {
             var appWrapper = (UserInfo.IsSuperUser)
                 ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
-                : new SxcAppWrapper(appId);
+                : new SxcAppWrapper(appId, false);
 
             var contentTypes = new AppRuntime(appWrapper.App).ContentTypes.FromScope(scope);//  appWrapper.GetContentTypes(scope);
             var entities = appWrapper.GetEntities();
@@ -97,7 +97,7 @@ namespace ToSic.SexyContent.WebApi
 
             var appWrapper = (UserInfo.IsSuperUser)
                 ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
-                : new SxcAppWrapper(appId);
+                : new SxcAppWrapper(appId, false);
 
             var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
@@ -119,7 +119,7 @@ namespace ToSic.SexyContent.WebApi
             // ReSharper disable once UnusedVariable
             var appWrapper = (UserInfo.IsSuperUser)
                 ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
-                : new SxcAppWrapper(appId);
+                : new SxcAppWrapper(appId, false);
 
             var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
@@ -135,7 +135,7 @@ namespace ToSic.SexyContent.WebApi
 
             var appWrapper = (UserInfo.IsSuperUser)
                 ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
-                : new SxcAppWrapper(appId);
+                : new SxcAppWrapper(appId, false);
 
             var fileName = $"2sxcContentExport_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}.xml";
             var fileXml = new ToSxcXmlExporter().Init(zoneId, appId, false,

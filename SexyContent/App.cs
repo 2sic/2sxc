@@ -40,6 +40,7 @@ namespace ToSic.SexyContent
         public dynamic Resources { get; internal set; } 
         private IValueCollectionProvider ConfigurationProvider { get; set; }
         private bool ShowDraftsInData { get; set; }
+        private bool VersioningEnabled { get; set; }
         #endregion
 
         #region App-Level TemplateManager, ContentGroupManager, EavContext
@@ -49,7 +50,7 @@ namespace ToSic.SexyContent
 
         private ContentGroupManager _contentGroupManager;
         public ContentGroupManager ContentGroupManager => _contentGroupManager 
-            ?? (_contentGroupManager = new ContentGroupManager(ZoneId, AppId, ShowDraftsInData));
+            ?? (_contentGroupManager = new ContentGroupManager(ZoneId, AppId, ShowDraftsInData, VersioningEnabled));
 
         #endregion
 
@@ -144,10 +145,11 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="showDrafts"></param>
         /// <param name="configurationValues">this is needed for providing parameters to the data-query-system</param>
-        internal void InitData(bool showDrafts, IValueCollectionProvider configurationValues)
+        internal void InitData(bool showDrafts, bool versioningEnabled, IValueCollectionProvider configurationValues)
         {
             ConfigurationProvider = configurationValues;
             ShowDraftsInData = showDrafts;
+            VersioningEnabled = versioningEnabled;
         }
 
         private void ConfigureDataOnDemand()

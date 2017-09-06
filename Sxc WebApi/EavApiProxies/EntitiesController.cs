@@ -61,7 +61,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                     continue;
                 }
                 var app = new App(PortalSettings.Current, appId);
-                app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, Data.ConfigurationProvider);
+                app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(this.ActiveModule.ModuleID), Data.ConfigurationProvider);
                 
                 var contentGroup = app.ContentGroupManager.GetContentGroup(reqItem.Group.Guid);
                 var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(reqItem.Group.Part);

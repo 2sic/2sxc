@@ -12,9 +12,9 @@ namespace ToSic.SexyContent.WebApi.ImportExport
         public App App { get; }
 
 
-        public SxcAppWrapper(int appId)
+        public SxcAppWrapper(int appId, bool versioningEnabled)
         {
-            App = Environment.Dnn7.Factory.App(appId) as App;
+            App = Environment.Dnn7.Factory.App(appId, versioningEnabled) as App;
         }
 
         public SxcAppWrapper(int zoneId, int appId)

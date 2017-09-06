@@ -76,6 +76,9 @@ namespace ToSic.SexyContent.ContentBlocks
             {
                 // try to load the app - if possible
                 App = new App(ZoneId, AppId, PortalSettings);
+                // maybe ensure that App.Data is ready
+                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(Parent.SxcInstance.ModuleInfo.ModuleID), Data.ConfigurationProvider);
+
                 ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 
                 // handle cases where the content group is missing - usually because of uncomplete import
@@ -89,8 +92,7 @@ namespace ToSic.SexyContent.ContentBlocks
                 // use the content-group template, which already covers stored data + module-level stored settings
                 Template = ContentGroup.Template;
 
-                // maybe ensure that App.Data is ready
-                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, Data.ConfigurationProvider);
+                
             }
         }
 

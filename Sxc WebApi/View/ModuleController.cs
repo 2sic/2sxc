@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.WebApi.View
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void AddItem([FromUri] int? sortOrder = null, [FromUri] bool partOfPage = false)
+        public void AddItem([FromUri] int? sortOrder = null)
         {
             var versioning = new PagePublishing();
 
@@ -39,9 +39,9 @@ namespace ToSic.SexyContent.WebApi.View
                 ContentGroupReferenceManager.AddItem(sortOrder);
             };
 
-            // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
-            else internalSave(null);
+            // use dnn versioning - this is always part of page
+            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            //else internalSave(null);
         }
 
         [HttpGet]

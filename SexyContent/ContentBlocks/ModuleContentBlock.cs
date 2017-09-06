@@ -55,7 +55,7 @@ namespace ToSic.SexyContent.ContentBlocks
                 // try to load the app - if possible
                 App = new App(ZoneId, AppId, PortalSettings);
                 // maybe ensure that App.Data is ready
-                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, Data.ConfigurationProvider);
+                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(moduleInfo.ModuleID), Data.ConfigurationProvider);
 
                 ContentGroup = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
 

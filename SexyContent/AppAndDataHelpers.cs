@@ -46,7 +46,7 @@ namespace ToSic.SexyContent
             // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
             // Note that app could be null, if a user is in admin-ui of a module which hasn't actually be configured yet
-            App?.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent, data.ConfigurationProvider);
+            App?.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(module.ModuleID), data.ConfigurationProvider);
 
             #region Assemble the mapping of the data-stream "default"/Presentation to the List object and the "ListContent" too
 	        List = new List<Element>();

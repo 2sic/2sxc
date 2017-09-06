@@ -37,18 +37,18 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// </summary>
         /// <param name="appId"></param>
         /// <returns></returns>
-        public static IApp App(int appId)
+        public static IApp App(int appId, bool versioningEnabled)
         {
-            return App(appId, PortalSettings.Current);
+            return App(appId, PortalSettings.Current, versioningEnabled);
         }
 
-        public static IApp App(int appId, PortalSettings ownerPortalSettings)
+        public static IApp App(int appId, PortalSettings ownerPortalSettings, bool versioningEnabled)
         {
             var appStuff = new App(ownerPortalSettings, appId);
 
             var provider = new ValueCollectionProvider(); // use blank provider for now
 
-            appStuff.InitData(false, provider);
+            appStuff.InitData(false, versioningEnabled, provider);
 
             return appStuff;
         }
