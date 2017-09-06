@@ -45,8 +45,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
                 var cb = new ModuleContentBlock(moduleInfo);
                 var appManager = new AppManager(cb.AppId);
-                var list = cb.Data.Out.ContainsKey("Default") ? cb.Data["Default"]?.LightList : null;
+                var list = cb.Data["Default"]?.LightList;
 
+                // ToDo: Must add all Presentation items for all content and listcontent items
                 var pres = cb.Data.Out.ContainsKey("Presentation") ? cb.Data["Presentation"]?.LightList : null;
                 if (pres != null) list = list.Concat(pres);
                 var cont = cb.Data.Out.ContainsKey("ListContent") ? cb.Data["ListContent"]?.LightList : null;
