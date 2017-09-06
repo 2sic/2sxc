@@ -54,12 +54,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 var lPres = cb.Data.Out.ContainsKey("ListPresentation") ? cb.Data["ListPresentation"]?.LightList : null;
                 if (lPres != null) list = list.Concat(lPres);
 
-                var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToArray();
+                var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
 
                 // publish ContentGroup as well
-                ids.ToList<int>().Add(cb.ContentGroup.ContentGroupId);
+                ids.Add(cb.ContentGroup.ContentGroupId);
 
-                appManager.Entities.Publish(ids);
+                appManager.Entities.Publish(ids.ToArray());
             //}
             //versioning.DoInsidePublishLatestVersion(moduleId, );
         }
