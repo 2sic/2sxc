@@ -19,8 +19,7 @@
         function createFakeSf(apiUrl) {
             if ($2sxc.urlParams.require("mid") === "")
                 alert("ModuleId (mid) missing - cannot continue");
-            if (window.$ === undefined)
-                window.$ = {};
+            if (window.$ === undefined) window.$ = {};
             window.$.ServicesFramework = function (id) {
                 return {
                     name: "This is a fake DNN ServicesFramework",
@@ -105,13 +104,8 @@
             '../inpage/inpage-dialogs.min.css'
         ];
 
-        if (dialogName === "dash-view") {
-            scripts = scripts.concat(miniDiagScripts);
-            styles = styles.concat(miniDiagStyles);
-        } else {
-            scripts = scripts.concat(editScripts);
-            styles = styles.concat(editStyles);
-        }
+        scripts = scripts.concat(editScripts);
+        styles = styles.concat(editStyles);
 
         for (var s = 0; s < scripts.length; s++)
             addScript(scripts[s]);
@@ -142,9 +136,6 @@
         // note: the pipeline designer is special - it doesn't open a modal-dialog but should be shown directly
         // all others will be modal-opened by the DialogHost App
         switch (dialogName) {
-            case 'dash-view':
-                document.write("<div class=\"contentBlockDashboard\" sxc-app=\"2sxc.view\" ng-controller=\"TemplateSelectorCtrl as vm\" class=\"sc-selector-wrapper\" ng-include=\"'template-selector/template-selector.html'\"> </div>");
-                break;
             case 'pipeline-designer':
                 document.write('<div sxc-app="PipelineDesigner" ng-include="\'pipelines/pipeline-designer.html\'" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,PipelineDesigner"></div>');
                 break;

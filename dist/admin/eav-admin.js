@@ -2439,7 +2439,7 @@ angular.module("EavServices")
  *  
  * How to use
  * 1. you must already include all js files in your main app - so the controllers you'll need must be preloaded
- * 2. Your main app must also declare the other apps as dependencies, so angular.module('yourname', ['dialog 1', 'diolag 2'])
+ * 2. Your main app must also  declare the other apps as dependencies, so angular.module('yourname', ['dialog 1', 'diolag 2'])
  * 3. your main app must also need this ['EavAdminUI']
  * 4. your controller must require eavAdminDialogs
  * 5. Then you can call such a dialog
@@ -2468,213 +2468,213 @@ angular.module("EavAdminUi", ["ng",
     // is defined. very not clean :( 
     // but much faster for now
     // the correct clean up would be to create an edit-dialogs class or something (todo)
-    // "eavEditEntity"			// the edit-app
+	// "eavEditEntity"			// the edit-app
 ])
     .factory("eavAdminDialogs", ["$uibModal", "eavConfig", "$window", "entitiesSvc", "contentTypeSvc", "appId", function ($uibModal, eavConfig, $window,
         // these are needed just for simple access to some dialogs
         entitiesSvc,    // warning: this only works ATM when called in 2sxc, because it needs the eavEditEntity dependency
         contentTypeSvc,
         appId) {
-        /*jshint laxbreak:true */
+            /*jshint laxbreak:true */
 
-        var svc = {};
+            var svc = {};
 
-        //#region List of Content Items dialogs
-        svc.openContentItems = function oci(appId, staticName, itemId, closeCallback) {
-            var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, contentTypeId: itemId });
-            return svc.OpenModal("content-items/content-items-agnostic.html", "ContentItemsList as vm", "fullscreen", resolve, closeCallback);
-        };
-        //#endregion
+            //#region List of Content Items dialogs
+            svc.openContentItems = function oci(appId, staticName, itemId, closeCallback) {
+            	var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, contentTypeId: itemId });
+            	return svc.OpenModal("content-items/content-items-agnostic.html", "ContentItemsList as vm", "fullscreen", resolve, closeCallback);
+            };
+            //#endregion
 
-        //#region content import export
-        svc.openContentImport = function ocimp(appId, staticName, closeCallback) {
-            var resolve = svc.CreateResolve({ appId: appId, contentType: staticName });
-            return svc.OpenModal("content-import-export/content-import.html", "ContentImport as vm", "lg", resolve, closeCallback);
-        };
+            //#region content import export
+            svc.openContentImport = function ocimp(appId, staticName, closeCallback) {
+                var resolve = svc.CreateResolve({ appId: appId, contentType: staticName });
+                return svc.OpenModal("content-import-export/content-import.html", "ContentImport as vm", "lg", resolve, closeCallback);
+            };
 
-        svc.openContentExport = function ocexp(appId, staticName, closeCallback, optionalIds) {
-            var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, itemIds: optionalIds });
-            return svc.OpenModal("content-import-export/content-export.html", "ContentExport as vm", "lg", resolve, closeCallback);
-        };
+            svc.openContentExport = function ocexp(appId, staticName, closeCallback, optionalIds) {
+                var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, itemIds: optionalIds });
+                return svc.OpenModal("content-import-export/content-export.html", "ContentExport as vm", "lg", resolve, closeCallback);
+            };
 
-        //#endregion
+            //#endregion
 
-        //#region ContentType dialogs
+            //#region ContentType dialogs
 
-        svc.openContentTypeEdit = function octe(item, closeCallback) {
-            var resolve = svc.CreateResolve({ item: item });
-            return svc.OpenModal("content-types/content-types-edit.html", "Edit as vm", "", resolve, closeCallback);
-        };
+            svc.openContentTypeEdit = function octe(item, closeCallback) {
+                var resolve = svc.CreateResolve({ item: item });
+                return svc.OpenModal("content-types/content-types-edit.html", "Edit as vm", "", resolve, closeCallback);
+            };
 
-        svc.openContentTypeFields = function octf(item, closeCallback) {
-            var resolve = svc.CreateResolve({ contentType: item });
-            return svc.OpenModal("content-types/content-types-fields.html", "FieldList as vm", "xlg", resolve, closeCallback);
-        };
+            svc.openContentTypeFields = function octf(item, closeCallback) {
+                    var resolve = svc.CreateResolve({ contentType: item });
+                    return svc.OpenModal("content-types/content-types-fields.html", "FieldList as vm", "xlg", resolve, closeCallback);
+            };
 
-        // this one assumes we have a content-item, but must first retrieve content-type-infos
-        svc.openContentTypeFieldsOfItems = function octf(item, closeCallback) {
-            return entitiesSvc.getManyForEditing(appId, item)
-                .then(function (result) {
-                    var ctName = result.data[0].Header.ContentTypeName;
-                    var svcForThis = contentTypeSvc(appId); // note: won't specify scope to fallback
-                    return svcForThis.getDetails(ctName).then(function (result2) {
-                        return svc.openContentTypeFields(result2.data, closeCallback);
+            // this one assumes we have a content-item, but must first retrieve content-type-infos
+            svc.openContentTypeFieldsOfItems = function octf(item, closeCallback) {
+                return entitiesSvc.getManyForEditing(appId, item)
+                    .then(function(result) {
+                        var ctName = result.data[0].Header.ContentTypeName;
+                        var svcForThis = contentTypeSvc(appId); // note: won't specify scope to fallback
+                        return svcForThis.getDetails(ctName).then(function(result2) {
+                            return svc.openContentTypeFields(result2.data, closeCallback);
+                        });
                     });
+            };
+
+
+            //#endregion
+        
+            //#region Item - new, edit
+            svc.openItemNew = function oin(contentTypeName, closeCallback) {
+                return svc.openEditItems([{ ContentTypeName: contentTypeName }], closeCallback);
+            };
+
+            svc.openItemEditWithEntityId = function oie(entityId, closeCallback) {
+                return svc.openEditItems([{ EntityId: entityId }], closeCallback);
+            };
+
+            svc.openEditItems = function oel(items, closeCallback) {
+                var resolve = svc.CreateResolve({ items: items });
+                return svc.OpenModal("form/main-form.html", "EditEntityWrapperCtrl as vm", "ent-edit", resolve, closeCallback);
+            };
+
+            svc.openItemHistory = function ioh(entityId, closeCallback) {
+                return svc.OpenModal("content-items/history.html", "History as vm", "lg",
+                    svc.CreateResolve({ entityId: entityId }),
+                    closeCallback);
+            };
+            //#endregion
+
+            //#region Metadata - mainly new
+            svc.openMetadataNew = function omdn(appId, targetType, targetId, metadataType, closeCallback) {
+                var metadata = {};
+                switch (targetType) {
+                    case "entity":
+                        metadata.Key = targetId;
+                        metadata.KeyType = "guid";
+                        metadata.TargetType = eavConfig.metadataOfEntity;
+                        break;
+                    case "attribute":
+                        metadata.Key = targetId;
+                        metadata.KeyType = "number";
+                        metadata.TargetType = eavConfig.metadataOfAttribute;
+                        break;
+                    default: throw "targetType unknown, only accepts entity or attribute for now";
+                }
+                var items = [{
+                    ContentTypeName: metadataType,
+                    Metadata: metadata
+                }];
+
+                svc.openEditItems(items, closeCallback);
+            };
+            //#endregion
+
+            //#region Permissions Dialog
+            svc.openPermissionsForGuid = function opfg(appId, targetGuid, closeCallback) {
+                var resolve = svc.CreateResolve({ appId: appId, targetGuid: targetGuid });
+                return svc.OpenModal("permissions/permissions.html", "PermissionList as vm", "lg", resolve, closeCallback);
+            };
+            //#endregion
+
+            //#region Pipeline Designer
+            svc.editPipeline = function ep(appId, pipelineId, closeCallback) {
+                var url = svc.derivedUrl({
+                    dialog: "pipeline-designer",
+                    pipelineId: pipelineId
                 });
-        };
-
-        //#endregion
-        //#region Item - new, edit
-        svc.openItemNew = function oin(contentTypeName, closeCallback) {
-            return svc.openEditItems([{ ContentTypeName: contentTypeName }], { PartOfPage: false }, closeCallback);
-        };
-
-        svc.openItemEditWithEntityId = function oie(entityId, closeCallback) {
-            return svc.openEditItems([{ EntityId: entityId }], { PartOfPage: false }, closeCallback);
-        };
-
-        svc.openEditItems = function oel(items, closeCallback, moreResolves) {
-            alert("test");
-            var merged = angular.extend(items, moreResolves || {});
-            merged.partOfPage = Boolean(merged.partOfPage);
-            var resolve = svc.CreateResolve({ items: merged });
-            return svc.OpenModal("form/main-form.html", "EditEntityWrapperCtrl as vm", "ent-edit", resolve, closeCallback);
-        };
-
-        svc.openItemHistory = function ioh(entityId, closeCallback) {
-            return svc.OpenModal("content-items/history.html", "History as vm", "lg",
-                svc.CreateResolve({ entityId: entityId }),
-                closeCallback);
-        };
-        //#endregion
-
-        //#region Metadata - mainly new
-        svc.openMetadataNew = function omdn(appId, targetType, targetId, metadataType, closeCallback) {
-            var metadata = {};
-            switch (targetType) {
-                case "entity":
-                    metadata.Key = targetId;
-                    metadata.KeyType = "guid";
-                    metadata.TargetType = eavConfig.metadataOfEntity;
-                    break;
-                case "attribute":
-                    metadata.Key = targetId;
-                    metadata.KeyType = "number";
-                    metadata.TargetType = eavConfig.metadataOfAttribute;
-                    break;
-                default: throw "targetType unknown, only accepts entity or attribute for now";
-            }
-            var items = [{
-                ContentTypeName: metadataType,
-                Metadata: metadata
-            }];
-
-            svc.openEditItems(items, closeCallback);
-        };
-        //#endregion
-
-        //#region Permissions Dialog
-        svc.openPermissionsForGuid = function opfg(appId, targetGuid, closeCallback) {
-            var resolve = svc.CreateResolve({ appId: appId, targetGuid: targetGuid });
-            return svc.OpenModal("permissions/permissions.html", "PermissionList as vm", "lg", resolve, closeCallback);
-        };
-        //#endregion
-
-        //#region Pipeline Designer
-        svc.editPipeline = function ep(appId, pipelineId, closeCallback) {
-            var url = svc.derivedUrl({
-                dialog: "pipeline-designer",
-                pipelineId: pipelineId
-            });
-            $window.open(url);
-            return;
-        };
-        //#endregion
+                $window.open(url);
+                return;
+            };
+            //#endregion
 
         //#region GenerateUrlBasedOnCurrent
-        svc.derivedUrl = function derivedUrl(varsToReplace) {
-            var url = window.location.href;
-            for (var prop in varsToReplace)
-                if (varsToReplace.hasOwnProperty(prop))
-                    url = svc.replaceOrAddOneParam(url, prop, varsToReplace[prop]);
+            svc.derivedUrl = function derivedUrl(varsToReplace) {
+                var url = window.location.href;
+                for (var prop in varsToReplace)
+                    if (varsToReplace.hasOwnProperty(prop))
+                        url = svc.replaceOrAddOneParam(url, prop, varsToReplace[prop]);
 
-            return url;
-            //url = url
-            //    .replace(new RegExp("appid=[0-9]*", "i"), "appid=" + item.Id) // note: sometimes it doesn't have an appid, so it's [0-9]* instead of [0-9]+
-            //    .replace(/approot=[^&]*/, "approot=" + item.AppRoot + "/")
-            //    .replace("dialog=zone", "dialog=app");
-        };
+                return url;
+                //url = url
+                //    .replace(new RegExp("appid=[0-9]*", "i"), "appid=" + item.Id) // note: sometimes it doesn't have an appid, so it's [0-9]* instead of [0-9]+
+                //    .replace(/approot=[^&]*/, "approot=" + item.AppRoot + "/")
+                //    .replace("dialog=zone", "dialog=app");
+            };
 
-        svc.replaceOrAddOneParam = function replaceOneParam(original, param, value) {
-            var rule = new RegExp("(" + param + "=).*?(&)", "i");
-            var newText = rule.test(original)
-                ? original.replace(rule, "$1" + value + "$2")
-                : original + "&" + param + "=" + value;
-            return newText;
-        };
+            svc.replaceOrAddOneParam = function replaceOneParam(original, param, value) {
+                var rule = new RegExp("(" + param + "=).*?(&)", "i");
+                var newText = rule.test(original)
+                    ? original.replace(rule, "$1" + value + "$2")
+                    : original + "&" + param + "=" + value;
+                return newText;
+            };
         //#endregion
 
 
         //#region Internal helpers
-        svc._attachCallbacks = function attachCallbacks(promise, callbacks) {
-            if (typeof (callbacks) === "undefined")
-                return null;
-            if (typeof (callbacks) === "function") // if it's only one callback, use it for all close-cases
-                callbacks = { close: callbacks };
-            return promise.result.then(callbacks.success || callbacks.close, callbacks.error || callbacks.close, callbacks.notify || callbacks.close);
-        };
+            svc._attachCallbacks = function attachCallbacks(promise, callbacks) {
+                if (typeof (callbacks) === "undefined")
+                    return null;
+                if (typeof (callbacks) === "function") // if it's only one callback, use it for all close-cases
+                    callbacks = { close: callbacks };
+                return promise.result.then(callbacks.success || callbacks.close, callbacks.error || callbacks.close, callbacks.notify || callbacks.close);
+            };
 
         // Will open a modal window. Has various specials, like
         // 1. If the templateUrl begins with "~/" - this will be re-mapped to the ng-app root. Only use this for not-inline stuff
         // 2. The controller can be written as "something as vm" and this will be split and configured corectly
-        svc.openModalComponent = function (componentName, size, values, callbacks) {
-            var modalInstance = $uibModal.open({
-                component: componentName,
-                resolve: svc.CreateResolve(values),
-                size: size,
-            }
-            );
-            return svc._attachCallbacks(modalInstance, callbacks);
-        };
+            svc.openModalComponent = function (componentName, size, values, callbacks) {
+                var modalInstance = $uibModal.open({
+                        component: componentName,
+                        resolve: svc.CreateResolve(values),
+                        size: size,
+                    }
+                );
+                return svc._attachCallbacks(modalInstance, callbacks);
+            };
 
-        svc.OpenModal = function openModal(templateUrl, controller, size, resolveValues, callbacks) {
-            var foundAs = controller.indexOf(" as ");
-            var contAs = foundAs > 0 ?
-                controller.substring(foundAs + 4)
-                : null;
+            svc.OpenModal = function openModal(templateUrl, controller, size, resolveValues, callbacks) {
+                var foundAs = controller.indexOf(" as ");
+                var contAs = foundAs > 0 ?
+                    controller.substring(foundAs + 4)
+                    : null;
+                if (foundAs > 0)
+                    controller = controller.substring(0, foundAs);
 
-            if (foundAs > 0) controller = controller.substring(0, foundAs);
-            var modalInstance = $uibModal.open({
-                animation: true,
-                templateUrl: templateUrl,
-                controller: controller,
-                controllerAs: contAs,
-                size: size,
-                resolve: resolveValues
-            });
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: templateUrl,
+                    controller: controller,
+                    controllerAs: contAs,
+                    size: size,
+                    resolve: resolveValues
+                });
 
-            return svc._attachCallbacks(modalInstance, callbacks);
-        };
+                return svc._attachCallbacks(modalInstance, callbacks);
+            };
 
         /// This will create a resolve-object containing return function()... for each property in the array
-        svc.CreateResolve = function createResolve() {
-            var fns = {}, list = arguments[0];
-            for (var prop in list)
-                if (list.hasOwnProperty(prop))
-                    fns[prop] = svc._create1Resolve(list[prop]);
-            return fns;
-        };
+            svc.CreateResolve = function createResolve() {
+                var fns = {}, list = arguments[0];
+                for (var prop in list) 
+                    if (list.hasOwnProperty(prop))
+                        fns[prop] = svc._create1Resolve(list[prop]);
+                return fns;
+            };
 
-        svc._create1Resolve = function (value) {
-            return function () { return value; };
-        };
+            svc._create1Resolve = function (value) {
+                return function () { return value; };
+            };
         //#endregion
 
 
         return svc;
     }])
 
-    ;
+;
 /*  this file contains various eav-angular services
  *  1. the basic configuration enforcing html5 mode
  */
