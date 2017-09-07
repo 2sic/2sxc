@@ -9,6 +9,7 @@ using ToSic.SexyContent.ContentBlocks;
 using DotNetNuke.Common.Utilities;
 using ToSic.Eav.Apps;
 using System.Linq;
+using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -39,35 +40,31 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void PublishVersion(int moduleId, int version)
         {
-            //(args) => {
+            // publish all entites of this content block
+            var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
+            var cb = new ModuleContentBlock(moduleInfo);
+            var appManager = new AppManager(cb.AppId);
 
-                // publish all entites of this content block
-                var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
-                var cb = new ModuleContentBlock(moduleInfo);
-                var appManager = new AppManager(cb.AppId);
-                var list = cb.Data["Default"]?.LightList;
+            // Add content entities
+            var list = cb.Data["Default"]?.LightList;
+            
+            // Add list content if defined
+            var cont = cb.Data.Out.ContainsKey("ListContent") ? cb.Data["ListContent"]?.LightList : null;
+            if (cont != null) list = list.Concat(cont);
+            
+            // Find related presentation entities
+            list = list.Concat(list.Where(e => e is EntityInContentGroup && ((EntityInContentGroup)e).Presentation != null).Select(e => ((EntityInContentGroup)e).Presentation));
 
-                // ToDo: Must add all Presentation items for all content and listcontent items
-                var pres = cb.Data.Out.ContainsKey("Presentation") ? cb.Data["Presentation"]?.LightList : null;
-                if (pres != null) list = list.Concat(pres);
-                var cont = cb.Data.Out.ContainsKey("ListContent") ? cb.Data["ListContent"]?.LightList : null;
-                if (cont != null) list = list.Concat(cont);
-                var lPres = cb.Data.Out.ContainsKey("ListPresentation") ? cb.Data["ListPresentation"]?.LightList : null;
-                if (lPres != null) list = list.Concat(lPres);
+            var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
 
-                var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
+            // publish ContentGroup as well
+            ids.Add(cb.ContentGroup.ContentGroupId);
 
-                // publish ContentGroup as well
-                ids.Add(cb.ContentGroup.ContentGroupId);
-
-                appManager.Entities.Publish(ids.ToArray());
+            appManager.Entities.Publish(ids.ToArray());
 
             // Set published version
             var moduleVersionSettings = new ToSic.SexyContent.Environment.Dnn7.PagePublishing.ModuleVersionSettingsController(moduleId);
             moduleVersionSettings.PublishLatestVersion();
-
-            //}
-            //versioning.DoInsidePublishLatestVersion(moduleId, );
         }
 
         public void DeleteVersion(int moduleId, int version)
