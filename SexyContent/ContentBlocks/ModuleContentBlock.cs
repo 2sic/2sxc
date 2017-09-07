@@ -68,9 +68,11 @@ namespace ToSic.SexyContent.ContentBlocks
                 }
 
                 // use the content-group template, which already covers stored data + module-level stored settings
-                Template = ContentGroup.Template;
+                //Template = ContentGroup.Template;
 
-                SxcInstance.CheckTemplateOverrides();
+                SxcInstance.SetTemplateOrOverrideFromUrl(ContentGroup.Template);
+
+                //SxcInstance.CheckTemplateOverrides();
 
                 // set show-status of the template/view picker
                 var showStatus = moduleInfo.ModuleSettings[Settings.SettingsShowTemplateChooser];

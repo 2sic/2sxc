@@ -90,9 +90,9 @@ namespace ToSic.SexyContent.ContentBlocks
                 }
 
                 // use the content-group template, which already covers stored data + module-level stored settings
-                Template = ContentGroup.Template;
+                //Template = ContentGroup.Template;
+                SxcInstance.SetTemplateOrOverrideFromUrl(ContentGroup.Template);
 
-                
             }
         }
 

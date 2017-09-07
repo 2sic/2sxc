@@ -85,8 +85,9 @@ namespace ToSic.SexyContent
             set { ContentBlock.Template = value; }
         }
 
-        internal void CheckTemplateOverrides()
+        internal void SetTemplateOrOverrideFromUrl(Template defaultTemplate)
         {
+            Template = defaultTemplate;
             // skif if not relevant or not yet initialized
             if (IsContentApp || App == null) return;
 
@@ -144,7 +145,8 @@ namespace ToSic.SexyContent
                 : new Environment.None.Permissions();
 
             // url-override of view / data
-            CheckTemplateOverrides();   // allow view change on apps
+            // 2017-09-07 2dm/2rm - disabled this for now, will only use this if the sxc-instance cares about the current template - so when actually rendering a view
+            //CheckTemplateOverrides();   // allow view change on apps
         }
 
         internal SxcInstance(IContentBlock cb, SxcInstance runtimeInstance)
@@ -156,7 +158,8 @@ namespace ToSic.SexyContent
             Environment.Permissions = runtimeInstance.Environment.Permissions;
 
             // url-override of view / data
-            CheckTemplateOverrides();   // allow view change on apps
+            // 2017-09-07 2dm/2rm - disabled this for now, will only use this if the sxc-instance cares about the current template - so when actually rendering a view
+            //CheckTemplateOverrides();   // allow view change on apps
         }
         #endregion
 
