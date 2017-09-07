@@ -138,6 +138,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         private void DoAdditionalGroupProcessing(int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeader>> groupItems)
         {
             var app = new App(PortalSettings.Current, appId);
+            app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(this.ActiveModule.ModuleID), Data.ConfigurationProvider);
 
             foreach (var entitySets in groupItems)
             {
@@ -174,7 +175,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                     presentationId = presItem.Header.Group.SlotIsEmpty ? null : presentationId;
                     // use null if it shouldn't have one
                 }
-
                 // add or update slots
                 var reallyAddGroup = contItem.Entity.Id == 0; // only really add if it's really new
                 if (contItem.Header.Group.Add && reallyAddGroup) // this cannot be auto-detected, it must be specified
