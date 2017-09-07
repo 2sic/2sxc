@@ -33,6 +33,8 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 
 /* this one is for buttons which can have a full/empty state */
 .sc-menu li a.empty i {opacity: 0.4} 
+/* this one is for buttons which can be disabled, like publish */
+.sc-menu li a.disabled i {opacity: 0.4} 
 
 .sc-menu a div { 
     width: 28px!important;
