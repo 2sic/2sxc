@@ -638,19 +638,16 @@ angular.module("eavFieldTemplates")
 
 /* global angular */
 (function () {
-    /* jshint laxbreak:true*/
     "use strict";
 
     var app = angular.module("eavEditEntity");
 
     // The controller for the main form directive
     app.controller("EditEntities", ["appId", "$http", "$scope", "entitiesSvc", "contentTypeSvc", "$sce", "toastr", "saveToastr", "$translate", "debugState", "ctrlS", function editEntityCtrl(appId, $http, $scope, entitiesSvc, contentTypeSvc, $sce, toastr, saveToastr, $translate, debugState, ctrlS) {
-        //#region detailled logging if necessary
         var detailedLogging = false;
         var clog = detailedLogging
             ? function () { for (var i = 0; i < arguments.length; i++) console.log(arguments[i]); }
             : function () { };
-        //#endregion
 
         var vm = this;
         vm.debug = debugState;
@@ -668,10 +665,21 @@ angular.module("eavFieldTemplates")
         // the activate-command, to intialize everything. Must be called later, when all methods have been attached
         function activate() {
             // bind ctrl+S
-            vm.saveShortcut = ctrlS(function () { vm.save(); });
+            vm.saveShortcut = ctrlS(vm.save);
 
             // load all data
             vm.loadAll();
+            vm.versioningOptions = getVersioningOptions();
+        }
+
+        function getVersioningOptions() {
+            var req = $2sxc.urlParams.get("publishing") || "";
+            switch (req) {
+                case "":
+                case "DraftOptional": return { show: true, hide: true, branch: true };
+                case "DraftRequired": return { branch: true, hide: true };
+                default: throw "invalid versioning requiremenets: " + req.toString();
+            }
         }
 
         // clean-up call when the dialog is closed
@@ -689,15 +697,14 @@ angular.module("eavFieldTemplates")
         vm.registerEditControl = function (control) {
             vm.registeredControls.push(control);
         };
-
         //#region load / save
 
         // load all data
-        vm.loadAll = function() {
+        vm.loadAll = function () {
             entitiesSvc.getManyForEditing(appId, $scope.itemList)
-                .then(function(result) {
+                .then(function (result) {
                     vm.items = result.data;
-                    angular.forEach(vm.items, function(v, i) {
+                    angular.forEach(vm.items, function (v, i) {
 
                         // If the entity is null, it does not exist yet. Create a new one
                         if (!vm.items[i].Entity && !!vm.items[i].Header.ContentTypeName)
@@ -707,7 +714,6 @@ angular.module("eavFieldTemplates")
 
                         //// load more content-type metadata to show
                         //vm.items[i].ContentType = contentTypeSvc.getDetails(vm.items[i].Header.ContentTypeName);
-
                         // set slot value - must be inverte for boolean-switch
                         var grp = vm.items[i].Header.Group;
                         vm.items[i].slotIsUsed = (grp === null || grp === undefined || grp.SlotIsEmpty !== true);
@@ -717,11 +723,14 @@ angular.module("eavFieldTemplates")
                     vm.publishMode = vm.items[0].Entity.IsBranch
                         ? "branch" // it's a branch, so it must have been saved as a draft-branch
                         : vm.items[0].Entity.IsPublished ? "show" : "hide";
+
+                    // if publis mode is prohibited, revert to default
+                    if (!vm.versioningOptions[vm.publishMode]) vm.publishMode = Object.keys(vm.versioningOptions)[0];
                     return result;
-                }).then(function(result) {
+                }).then(function (result) {
                     angular.forEach(vm.items, function (v, i) {
                         // load more content-type metadata to show
-                        ctSvc.getDetails(vm.items[i].Header.ContentTypeName).then(function(ct) {
+                        ctSvc.getDetails(vm.items[i].Header.ContentTypeName).then(function (ct) {
                             if (ct.data && ct.data.Metadata && ct.data.Metadata.EditInstructions)
                                 vm.itemsHelp[i] = $sce.trustAsHtml(ct.data.Metadata.EditInstructions);
                         });
@@ -729,31 +738,31 @@ angular.module("eavFieldTemplates")
                 });
         };
 
-        vm.showFormErrors = function() {
-                var errors = vm.formErrors();
-                var msgs = [], msgTemplate = $translate.instant("Message.FieldErrorList");
-                for (var set = 0; set < errors.length; set++) {
-                    if (errors[set].required) {
-                        var req = errors[set].required.map(function (itm) { return { field: itm.$name, error: "required" }; });
-                        msgs = msgs.concat(req);
-                    }
+        vm.showFormErrors = function () {
+            var errors = vm.formErrors();
+            var msgs = [], msgTemplate = $translate.instant("Message.FieldErrorList");
+            for (var set = 0; set < errors.length; set++) {
+                if (errors[set].required) {
+                    var req = errors[set].required.map(function (itm) { return { field: itm.$name, error: "required" }; });
+                    msgs = msgs.concat(req);
                 }
-                var nice = msgs.map(function (err) {
-                    var specs = err.field.split("_");
+            }
+            var nice = msgs.map(function (err) {
+                var specs = err.field.split("_");
 
-                    return msgTemplate.replace("{form}", specs[1])
-                        .replace("{field}", specs[3])
-                        .replace("{error}", err.error);
-                });
+                return msgTemplate.replace("{form}", specs[1])
+                    .replace("{field}", specs[3])
+                    .replace("{error}", err.error);
+            });
             var msg = nice.join("<br/>");
             return toastr.error($translate.instant("Message.CantSaveInvalid").replace("{0}", msg),
-                $translate.instant("Message.Error"), { allowHtml: true }); 
+                $translate.instant("Message.Error"), { allowHtml: true });
         };
 
         // the save-call
         vm.save = function (close) {
             // check if saving is allowed
-            if (!vm.isValid()) 
+            if (!vm.isValid())
                 return vm.showFormErrors();
 
             if (vm.isWorking > 0)
@@ -761,17 +770,18 @@ angular.module("eavFieldTemplates")
 
             // save
             vm.isWorking++;
-            saveToastr(entitiesSvc.saveMany(appId, vm.items)).then(function (result) {
-                $scope.state.setPristine();
-                if (close) {
-                    vm.allowCloseWithoutAsking = true;
-                    vm.afterSaveEvent(result);
-                }
-                vm.enableDraft = true;  // after saving, we can re-save as draft
-                vm.isWorking--;
-            }, function errorWhileSaving() {
-                vm.isWorking--;
-            });
+            saveToastr(entitiesSvc.saveMany(appId, vm.items, $scope.partOfPage))
+                .then(function (result) {
+                    $scope.state.setPristine();
+                    if (close) {
+                        vm.allowCloseWithoutAsking = true;
+                        vm.afterSaveEvent(result);
+                    }
+                    vm.enableDraft = true;  // after saving, we can re-save as draft
+                    vm.isWorking--;
+                }, function errorWhileSaving() {
+                    vm.isWorking--;
+                });
             return null;
         };
 
@@ -803,7 +813,7 @@ angular.module("eavFieldTemplates")
         // check if dirty
         $scope.state.isDirty = function () {
             var dirty = false;
-            angular.forEach(vm.registeredControls, function(e) {
+            angular.forEach(vm.registeredControls, function (e) {
                 if (e.isDirty())
                     dirty = true;
             });
@@ -811,8 +821,8 @@ angular.module("eavFieldTemplates")
         };
 
         // set to not-dirty (pristine)
-        $scope.state.setPristine = function() {
-            angular.forEach(vm.registeredControls, function(e) {
+        $scope.state.setPristine = function () {
+            angular.forEach(vm.registeredControls, function (e) {
                 e.setPristine();
             });
         };
@@ -836,14 +846,14 @@ angular.module("eavFieldTemplates")
 
         // handle maybe-leave
         vm.maybeLeave = {
-            save: function() { vm.save(true); },
+            save: function () { vm.save(true); },
             quit: $scope.close,
             handleClick: function (event) {
-                clog('handleClick', event);
+                clog("handleClick", event);
                 var target = event.target || event.srcElement;
                 if (target.nodeName === "I") target = target.parentNode;
                 if (target.id === "save" || target.id === "quit") {
-                    clog('for ' + target.id);
+                    clog("for " + target.id);
                     vm.allowCloseWithoutAsking = true;
                     vm.maybeLeave[target.id]();
                 }
@@ -853,7 +863,7 @@ angular.module("eavFieldTemplates")
                     return;
                 var template = "<div>"  // note: this variable must be inside this method, to ensure that translate is pre-loaded before we call it
                     + $translate.instant("Errors.UnsavedChanges") + "<br>"
-                    + "<button type='button' id='save' class='btn btn-primary' ><i class='eav-icon-ok'></i>" +  $translate.instant("General.Buttons.Save") + "</button> &nbsp;"
+                    + "<button type='button' id='save' class='btn btn-primary' ><i class='eav-icon-ok'></i>" + $translate.instant("General.Buttons.Save") + "</button> &nbsp;"
                     + "<button type='button' id='quit' class='btn btn-default' ><i class= 'eav-icon-cancel'></i>" + $translate.instant("General.Buttons.NotSave") + "</button>"
                     + "</div>";
                 if (vm.dialog && vm.dialog.isOpened)
@@ -868,7 +878,7 @@ angular.module("eavFieldTemplates")
                 e.preventDefault();
             }
         };
-        
+
         $scope.$on("modal.closing", vm.maybeLeave.ask);
 
 
@@ -884,16 +894,13 @@ angular.module("eavFieldTemplates")
         activate();
 
     }]);
-
-
-
 })();
 
 (function () {
     "use strict";
 
     var app = angular.module("eavEditEntity");
-
+    
     app.directive("eavEditEntities", function () {
         return {
             templateUrl: "form/edit-many-entities.html",
@@ -902,14 +909,13 @@ angular.module("eavFieldTemplates")
                 itemList: "=",
                 afterSaveEvent: "=",
                 state: "=",
-                close: "="
+                close: "=",
+                partOfPage: "="
             },
             controller: "EditEntities",
             controllerAs: "vm"
         };
     });
-
-
 })();
 
 (function () {
@@ -917,7 +923,7 @@ angular.module("eavFieldTemplates")
 	"use strict";
 
 	var app = angular.module("eavEditEntity"); 
-
+	
 	// The controller for the main form directive
 	app.controller("EditEntityFormCtrl", ["appId", "$http", "$scope", "formlyConfig", "contentTypeFieldSvc", "$sce", "debugState", "customInputTypes", "eavConfig", "$injector", function editEntityCtrl(appId, $http, $scope, formlyConfig, contentTypeFieldSvc, $sce, debugState, customInputTypes, eavConfig, $injector) {
 
@@ -959,7 +965,6 @@ angular.module("eavFieldTemplates")
 		                //if (e.InputType && eavConfig.formly.inputTypeReplacementMap[e.InputType]) 
 		                //    e.InputType = eavConfig.formly.inputTypeReplacementMap[e.InputType];
 
-
 		                // review type and get additional configs!
 		                e.InputType = vm.getType(e);
 		                eavConfig.formly.inputTypeReconfig(e);  // provide custom overrides etc. if necessary
@@ -973,8 +978,6 @@ angular.module("eavFieldTemplates")
 		            promiseToLoad.then(function(dependencyResult) {
 		                vm.registerAllFieldsFromReturnedDefinition(result);
 		            });
-
-
 		        });
 		};
 
@@ -1017,8 +1020,6 @@ angular.module("eavFieldTemplates")
 	                console.log(ex);
 	            }
 	        }
-
-
 	    };
 
 	    vm.registerAllFieldsFromReturnedDefinition = function raffrd(result) {
@@ -1038,9 +1039,7 @@ angular.module("eavFieldTemplates")
 
 	            // always remember the last heading so all the following fields know to look there for collapse-setting
 	            var isFieldHeading = (fieldType === "empty-default");
-	            if (isFieldHeading)
-	                lastGroupHeadingId = i;
-
+	            if (isFieldHeading) lastGroupHeadingId = i;
 
 	            var nextField = {
 	                key: e.StaticName,
@@ -1098,11 +1097,8 @@ angular.module("eavFieldTemplates")
 	        });
 	    };
 
-
 	    // Load existing entity if defined
-		if (vm.entity !== null)
-		    loadContentType();
-
+		if (vm.entity !== null) loadContentType();
 
 	    // Returns the field type for an attribute configuration
 		vm.getType = function (attributeConfiguration) {
@@ -1143,9 +1139,6 @@ angular.module("eavFieldTemplates")
 		    return (inputType);
 		};
 	}]);
-    
-	
-
 })();
 
 (function () {
@@ -1165,8 +1158,6 @@ angular.module("eavFieldTemplates")
 			controllerAs: "vm"
 		};
 	});
-	
-
 })();
 /* global angular */
 (function () {
@@ -1175,10 +1166,11 @@ angular.module("eavFieldTemplates")
 	var app = angular.module("eavEditEntity");
 
 	// The controller for the main form directive
-	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$uibModalInstance", "$window", "$translate", "toastr", function editEntityCtrl($q, $http, $scope, items, $uibModalInstance, $window, $translate, toastr) {
-
-	    var vm = this;
-	    vm.itemList = items;
+	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$uibModalInstance", "$window", "$translate", "toastr", "partOfPage", function editEntityCtrl($q, $http, $scope, items, $uibModalInstance, $window, $translate, toastr, partOfPage) {
+		var vm = this;
+		
+		vm.partOfPage = partOfPage;
+		vm.itemList = items;
 
 	    // this is the callback after saving - needed to close everything
 	    vm.afterSave = function(result) {
@@ -1188,7 +1180,7 @@ angular.module("eavFieldTemplates")
 	            alert($translate.instant("Errors.UnclearError"));
 	        }
 	    };
-
+		
 	    vm.state = {
 	        isDirty: function() {
 	            throw $translate.instant("Errors.InnerControlMustOverride");
@@ -1208,7 +1200,6 @@ angular.module("eavFieldTemplates")
 	        return null;
 	    });
 	}]);
-
 })();
 
 (function () {
@@ -1724,45 +1715,45 @@ function enhanceEntity(entity) {
 })();
 /* global angular */
 (function () {
-	"use strict";
+    "use strict";
 
     angular.module("eavEditEntity")
         /// Standard entity commands like get one, many etc.
-        .factory("entitiesSvc", ["$http", "appId", "toastrWithHttpErrorHandling", "promiseToastr", "$q", "$translate", "toastr", function ($http, appId, toastrWithHttpErrorHandling, promiseToastr, $q, $translate, toastr) {
+        .factory('entitiesSvc', ["$http", "appId", "toastrWithHttpErrorHandling", "promiseToastr", "$q", "$translate", "toastr", function ($http, appId, toastrWithHttpErrorHandling, promiseToastr, $q, $translate, toastr) {
             var svc = {
                 toastr: toastrWithHttpErrorHandling
             };
 
-            svc.getManyForEditing = function(appId, items) {
-                return $http.post("eav/entities/getmanyforediting", items, { params: { appId: appId } });
+            svc.getManyForEditing = function (appId, items) {
+                return $http.post('eav/entities/getmanyforediting', items, { params: { appId: appId } });
             };
+            
+            svc.saveMany = function (appId, items, partOfPage) {
 
-            svc.saveMany = function(appId, items) {
                 // first clean up unnecessary nodes - just to make sure we don't miss-read the JSONs transferred
-                var removeTempValue = function(value, key) { delete value._currentValue; };
+                var removeTempValue = function (value, key) { delete value._currentValue; };
                 var itmCopy = angular.copy(items);
-                for (var ei = 0; ei < itmCopy.length; ei++)
-                    angular.forEach(itmCopy[ei].Entity.Attributes, removeTempValue);
+                for (var ei = 0; ei < itmCopy.length; ei++) angular.forEach(itmCopy[ei].Entity.Attributes, removeTempValue);
 
-                return $http.post("eav/entities/savemany", itmCopy, { params: { appId: appId } }).then(function (serverKeys) {
-                    var syncUpdatedKeys = function(value, key) {
-                        // first ensure we don't break something
-                        var ent = value.Entity;
-                        if ((ent.Id === null || ent.Id === 0) && (ent.Guid !== null || typeof (ent.Guid) !== "undefined" || ent.Guid !== "00000000-0000-0000-0000-000000000000")) {
-                            // try to find it in the return material to re-assign it
-                            var newId = serverKeys.data[ent.Guid];
-                            value.Entity.Id = newId;
-                            value.Header.ID = newId;
-                        }
-                    };
-                    angular.forEach(items, syncUpdatedKeys);
+                return $http.post("eav/entities/savemany", itmCopy, { params: { appId: appId, partOfPage: partOfPage || false } })
+                    .then(function (serverKeys) {
+                        var syncUpdatedKeys = function (value, key) {
+                            // first ensure we don't break something
+                            var ent = value.Entity;
+                            if ((ent.Id === null || ent.Id === 0) && (ent.Guid !== null || typeof (ent.Guid) !== "undefined" || ent.Guid !== "00000000-0000-0000-0000-000000000000")) {
+                                // try to find it in the return material to re-assign it
+                                var newId = serverKeys.data[ent.Guid];
+                                value.Entity.Id = newId;
+                                value.Header.ID = newId;
+                            }
+                        };
+                        angular.forEach(items, syncUpdatedKeys);
 
-                    return serverKeys;
-                });
+                        return serverKeys;
+                    });
             };
 
             svc.tryDeleteAndAskForce = function tryDeleteAndAskForce(type, id, itemTitle) {
-
                 var deferred = $q.defer();
 
                 // todo: i18n
@@ -1797,9 +1788,7 @@ function enhanceEntity(entity) {
                         }
                     });
                 }
-
                 return deferred.promise;
-
             };
 
             svc.delete = function del(type, id, tryForce) {
@@ -1818,10 +1807,10 @@ function enhanceEntity(entity) {
                 return promiseToastr(delPromise, "Message.Deleting", "Message.Ok", "Message.Error");
             };
 
-            svc.newEntity = function(header) {
+            svc.newEntity = function (header) {
                 return {
                     Id: null,
-                    Guid: header.Guid, 
+                    Guid: header.Guid,
                     Type: {
                         StaticName: header.ContentTypeName // contentTypeName
                     },
@@ -1829,7 +1818,6 @@ function enhanceEntity(entity) {
                     IsPublished: true
                 };
             };
-
 
             svc.save = function save(appId, newData) {
                 return $http.post("eav/entities/save", newData, { params: { appId: appId } });
@@ -1939,9 +1927,9 @@ $templateCache.put("fields/datetime/datetime-default.html","<div>\r\n    <div cl
 $templateCache.put("fields/empty/empty-default.html","<span></span>");
 $templateCache.put("fields/entity/entity-default.html","<div class=\"eav-entityselect\">\r\n    <div>\r\n        <div ui-tree=\"options\" data-empty-placeholder-enabled=\"false\" ng-show=\"to.settings.merged.EnableCreate || chosenEntities.length > 0\">\r\n            <table ui-tree-nodes ng-model=\"chosenEntities\" entity-validation ng-required=\"false\" class=\"eav-entityselect-table\" style=\"table-layout: fixed;\">\r\n                <thead>\r\n                <tr>\r\n                    <th></th>\r\n                    <th></th>\r\n                    <th></th>\r\n                </tr>\r\n                </thead>\r\n                <!-- important note - track by $index very important for multiple null-values in list -->\r\n                <tr ng-repeat=\"item in chosenEntities track by $index\" ui-tree-node class=\"eav-entityselect-item\" >\r\n                    <td ui-tree-handle>\r\n                        <i title=\"{{ \'FieldType.Entity.DragMove\' | translate }}\" class=\"eav-icon-link pull-left eav-entityselect-icon\" ng-show=\"to.settings.Entity.AllowMultiValue\"></i>\r\n                        <i title=\"\" class=\"eav-icon-link pull-left eav-entityselect-icon\" ng-show=\"!to.settings.Entity.AllowMultiValue\"></i>\r\n                    </td>\r\n                    <td ui-tree-handle>\r\n                        <span class=\"eav-entityselect-item-title\" title=\"{{getEntityText(item) + \' (\' + item + \')\'}}\">{{getEntityText(item)}}</span>\r\n                    </td>\r\n                    <td style=\"text-align: right;\">\r\n                        <ul class=\"eav-entityselect-item-actions\">\r\n                            <li>\r\n                                <a title=\"{{ \'FieldType.Entity.Edit\' | translate }}\" ng-click=\"edit(item, index)\" ng-show=\"to.settings.merged.EnableEdit\" data-nodrag>\r\n                                    <i class=\"eav-icon-pencil\"></i>\r\n                                </a>\r\n                            </li>\r\n                            <li>\r\n                                <a title=\"{{ \'FieldType.Entity.Remove\' | translate }}\" ng-click=\"removeSlot(item, $index)\" class=\"eav-entityselect-item-remove\" ng-show=\"to.settings.merged.EnableRemove\" data-nodrag>\r\n                                    <i ng-class=\"{ \'eav-icon-minus-circled\': to.settings.merged.AllowMultiValue, \'eav-icon-down-dir\': !to.settings.merged.AllowMultiValue  }\"></i>\r\n                                </a>\r\n                            </li>\r\n                            <li>\r\n                                <!-- todo: i18n, code in action, eav-icon-visiblity/alignment -->\r\n                                <a title=\"{{ \'FieldType.Entity.Delete\' | translate }}\" ng-click=\"deleteItemInSlot(item, $index)\" class=\"eav-entityselect-item-remove\" ng-show=\"to.settings.merged.EnableDelete\" data-nodrag>\r\n                                    <i class=\"eav-icon-cancel\"></i>\r\n                                </a>\r\n                            </li>\r\n                        </ul>\r\n                    </td>\r\n                </tr>\r\n            </table>\r\n        </div>\r\n\r\n        <div class=\"eav-entityselect-actions\" ng-class=\"{ \'no-add\': (!to.settings.merged.AllowMultiValue && chosenEntities.length > 0) }\">\r\n\r\n            <!-- pick existing entity -->\r\n            <div class=\"eav-entityselect-action-addexisting\"\r\n                 ng-show=\"to.settings.merged.EnableAddExisting && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\">\r\n                <div class=\"eav-entityselect-selector-wrapper\">\r\n                    <div class=\"eav-entityselect-action-addexisting-close\" ng-show=\"$select.open\">Close</div>\r\n                    <ui-select theme=\"bootstrap\"\r\n                               ng-model=\"selectedEntity\"\r\n                               on-highlight=\"maybeReload()\"\r\n                               ng-required=\"false\"\r\n                               on-select=\"addEntity($select.selected.Value)\">\r\n                        <ui-select-match placeholder=\"{{ $select.open ? \'search\' : \'FieldType.Entity.Choose\' | translate }}\">\r\n                            <!--<div ng-bind=\"$select.selected.Text\"></div>-->\r\n                            {{ \'FieldType.Entity.Choose\' | translate }}\r\n                        </ui-select-match>\r\n                        <ui-select-choices ng-style=\"{opacity: $select.open ? 1 : 0 }\"  repeat=\"item in availableEntities | filter: { Text : $select.search } track by item.Value\"\r\n                                           refresh=\"maybeReload()\"\r\n                                           refresh-delay=\"0\"\r\n                                           minimum-input-length=\"0\"\r\n                                           ui-disable-choice=\"chosenEntities.indexOf(item.Value) != -1\">\r\n                            <span ng-bind=\"item.Text\"></span>\r\n                        </ui-select-choices>\r\n                    </ui-select>\r\n                </div>\r\n            </div>\r\n\r\n            <!-- create new entity to add to this list -->\r\n            <button ng-if=\"to.settings.merged.EnableCreate && to.settings.merged.EntityType !== \'\' && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\"\r\n                    class=\"eav-entityselect-action-create icon-field-button\"\r\n                    ng-click=\"openNewEntityDialog()\">\r\n                <i class=\"eav-icon-plus\"></i>\r\n            </button>\r\n        </div>\r\n        \r\n        <div ng-if=\"debug.on\">\r\n            debug: <span ng-click=\"insertNull()\">add null-item</span>\r\n        </div>\r\n\r\n        <!-- test - want to re-align how two add-scenarios work; ideally side-by side\r\n        <div class=\"subtle-till-mouseover\"\r\n             ng-show=\"(to.settings.merged.EnableAddExisting && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)) || (to.settings.merged.EnableCreate && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1))\">\r\n        </div>-->\r\n    </div>\r\n</div>");
 $templateCache.put("fields/string/string-contenttype.html","<div>\r\n    <select class=\"form-control input-material material\"\r\n            ng-model=\"value.Value\">\r\n        <option value=\"\">(none)</option>\r\n        <option\r\n            ng-repeat=\"item in contentTypes\"\r\n            ng-selected=\"{{item.StaticName == value.Value}}\"\r\n            value=\"{{item.StaticName}}\">\r\n            {{item.Label}}\r\n        </option>\r\n    </select>\r\n</div>");
-$templateCache.put("form/edit-many-entities.html","<div ng-if=\"vm.items != null\" ng-click=\"vm.debug.autoEnableAsNeeded($event)\" class=\"form-container-multi\">\r\n    <eav-language-switcher is-disabled=\"!vm.isValid()\"></eav-language-switcher>\r\n\r\n    <div ng-repeat=\"p in vm.items\" class=\"group-entity\">\r\n        <div class=\"form-ci-title unhide-area\" ng-click=\"p.collapse = !p.collapse\">\r\n            <span style=\"position: relative\">\r\n                <i class=\"decoration eav-icon-side-marker\"></i>\r\n                <i class=\"decoration state eav-icon-minus collapse-entity-button hide-till-mouseover\" ng-if=\"!p.collapse\"></i>\r\n                <i class=\"decoration state eav-icon-plus collapse-entity-button\" ng-if=\"p.collapse\"></i>\r\n            </span>\r\n\r\n            {{p.Header.Title ? p.Header.Title : \'EditEntity.DefaultTitle\' | translate }}&nbsp;\r\n            <span ng-if=\"p.Header.Group.SlotCanBeEmpty\" ng-click=\"vm.toggleSlotIsEmpty(p)\" stop-event=\"click\">\r\n                <i class=\"eav-icon-toggle-off\" ng-class=\" p.slotIsUsed ? \'eav-icon-toggle-on\' : \'eav-icon-toggle-off\' \" ng-click=\"p.slotIsUsed = !p.slotIsUsed\" uib-tooltip=\"{{\'EditEntity.SlotUsed\' + p.slotIsUsed | translate}}\"></i>\r\n            </span>\r\n        </div>\r\n        <div ng-if=\"vm.itemsHelp[$index]\" ng-bind-html=\"vm.itemsHelp[$index]\"></div>\r\n        <eav-edit-entity-form entity=\"p.Entity\" header=\"p.Header\" register-edit-control=\"vm.registerEditControl\" ng-hide=\"p.collapse\"></eav-edit-entity-form>\r\n    </div>\r\n\r\n\r\n    <div>\r\n        <!-- note: the buttons are not really disabled, because we want to be able to click them and see the error message -->\r\n        <div class=\"btn-group\" uib-dropdown>\r\n            <button ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" ng-click=\"vm.save(true)\" type=\"button\" class=\"btn btn-primary btn-lg submit-button\">\r\n                <span class=\"eav-icon-ok\" uib-tooltip=\"{{ \'Button.Save\' | translate }}\"></span> &nbsp;<span translate=\"Button.Save\"></span>\r\n            </button>\r\n            <button class=\"dropdown-toggle btn btn-primary btn-lg\" ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" uib-dropdown-toggle><i class=\"caret\"></i></button>\r\n            <ul class=\"dropdown-menu\" role=\"menu\">\r\n                <li><a ng-click=\"vm.save(true)\"><i class=\"eav-icon-ok\"></i> {{ \'Button.Save\' | translate }}</a></li>\r\n                <li><a ng-click=\"vm.save(false)\"><i class=\"eav-icon-ok-circled2\"></i> {{ \'Button.SaveAndKeepOpen\' | translate }}</a></li>\r\n            </ul>\r\n        </div>\r\n        <!--&nbsp;\r\n        <button ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" class=\"btn btn-default btn-lg btn-icon-square\" type=\"button\" ng-click=\"vm.save(false)\">\r\n            <span class=\"eav-icon-ok-circled2\" uib-tooltip=\"{{ \'Button.SaveAndKeepOpen\' | translate }}\"></span>\r\n        </button>-->\r\n        &nbsp;\r\n        <!-- note: published status will apply to all - so the first is taken for identification if published -->\r\n        &nbsp;\r\n        <div class=\"btn-group\" uib-dropdown>\r\n            <a class=\"dropdown-toggle\" uib-dropdown-toggle><i ng-class=\"{\'eav-icon-eye\': vm.publishMode === \'show\', \'eav-icon-eye-close\': vm.publishMode === \'hide\', \'eav-icon-git-branch\': vm.publishMode === \'branch\'}\"></i> {{ \'SaveMode.\' + vm.publishMode |translate }}<i class=\"caret\"></i></a>\r\n            <ul class=\"dropdown-menu\" role=\"menu\">\r\n                <li><a ng-click=\"vm.publishMode = \'show\'\"><i class=\"eav-icon-eye\"></i> {{ \'SaveMode.show\' |translate }}</a></li>\r\n                <li><a ng-click=\"vm.publishMode = \'hide\'\"><i class=\"eav-icon-eye-close\"></i> {{ \'SaveMode.hide\' |translate }}</a></li>\r\n                <li ng-show=\"vm.enableDraft\"><a ng-click=\"vm.publishMode = \'branch\'\"><i class=\"eav-icon-git-branch\"></i> {{ \'SaveMode.branch\' |translate }}</a></li>\r\n            </ul>\r\n        </div>\r\n\r\n\r\n\r\n        <span ng-if=\"vm.debug.on\">\r\n            <button class=\"eav-icon-flash btn\" uib-tooltip=\"debug\" ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button>\r\n        </span>\r\n        <show-debug-availability class=\"pull-right\" style=\"margin-top: 20px;\"></show-debug-availability>\r\n    </div>\r\n    <div ng-if=\"vm.debug.on && vm.showDebugItems\">\r\n        <div>\r\n            isValid: {{vm.isValid()}}<br />\r\n            isWorking: {{vm.isWorking}}\r\n        </div>\r\n        <pre>{{ vm.items | json }}</pre>\r\n    </div>\r\n</div>");
+$templateCache.put("form/edit-many-entities.html","<div ng-if=\"vm.items != null\" ng-click=\"vm.debug.autoEnableAsNeeded($event)\" class=\"form-container-multi\">\r\n    <eav-language-switcher is-disabled=\"!vm.isValid()\"></eav-language-switcher>\r\n    <div ng-repeat=\"p in vm.items\" class=\"group-entity\">\r\n        <div class=\"form-ci-title unhide-area\" ng-click=\"p.collapse = !p.collapse\">\r\n            <span style=\"position: relative\">\r\n                <i class=\"decoration eav-icon-side-marker\"></i>\r\n                <i class=\"decoration state eav-icon-minus collapse-entity-button hide-till-mouseover\" ng-if=\"!p.collapse\"></i>\r\n                <i class=\"decoration state eav-icon-plus collapse-entity-button\" ng-if=\"p.collapse\"></i>\r\n            </span>\r\n            {{p.Header.Title ? p.Header.Title : \'EditEntity.DefaultTitle\' | translate }}&nbsp;\r\n            <span ng-if=\"p.Header.Group.SlotCanBeEmpty\" ng-click=\"vm.toggleSlotIsEmpty(p)\" stop-event=\"click\">\r\n                <i class=\"eav-icon-toggle-off\" ng-class=\" p.slotIsUsed ? \'eav-icon-toggle-on\' : \'eav-icon-toggle-off\' \" ng-click=\"p.slotIsUsed = !p.slotIsUsed\" uib-tooltip=\"{{\'EditEntity.SlotUsed\' + p.slotIsUsed | translate}}\"></i>\r\n            </span>\r\n        </div>\r\n        <div ng-if=\"vm.itemsHelp[$index]\" ng-bind-html=\"vm.itemsHelp[$index]\"></div>\r\n        <eav-edit-entity-form entity=\"p.Entity\" header=\"p.Header\" register-edit-control=\"vm.registerEditControl\" ng-hide=\"p.collapse\"></eav-edit-entity-form>\r\n    </div>\r\n    <div>\r\n        <!-- note: the buttons are not really disabled, because we want to be able to click them and see the error message -->\r\n        <div class=\"btn-group\" uib-dropdown>\r\n            <button ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" ng-click=\"vm.save(true)\" type=\"button\" class=\"btn btn-primary btn-lg submit-button\">\r\n                <span class=\"eav-icon-ok\" uib-tooltip=\"{{ \'Button.Save\' | translate }}\"></span> &nbsp;<span translate=\"Button.Save\"></span>\r\n            </button>\r\n            <button class=\"dropdown-toggle btn btn-primary btn-lg\" ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" uib-dropdown-toggle><i class=\"caret\"></i></button>\r\n            <ul class=\"dropdown-menu\" role=\"menu\">\r\n                <li><a ng-click=\"vm.save(true)\"><i class=\"eav-icon-ok\"></i> {{ \'Button.Save\' | translate }}</a></li>\r\n                <li><a ng-click=\"vm.save(false)\"><i class=\"eav-icon-ok-circled2\"></i> {{ \'Button.SaveAndKeepOpen\' | translate }}</a></li>\r\n            </ul>\r\n        </div>\r\n        <!--&nbsp;\r\n        <button ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" class=\"btn btn-default btn-lg btn-icon-square\" type=\"button\" ng-click=\"vm.save(false)\">\r\n            <span class=\"eav-icon-ok-circled2\" uib-tooltip=\"{{ \'Button.SaveAndKeepOpen\' | translate }}\"></span>\r\n        </button>-->\r\n        &nbsp;\r\n        <!-- note: published status will apply to all - so the first is taken for identification if published -->\r\n        &nbsp;\r\n        <div class=\"btn-group\" uib-dropdown>\r\n            <a class=\"dropdown-toggle\" uib-dropdown-toggle><i ng-class=\"{\'eav-icon-eye\': vm.publishMode === \'show\', \'eav-icon-eye-close\': vm.publishMode === \'hide\', \'eav-icon-git-branch\': vm.publishMode === \'branch\'}\"></i> {{ \'SaveMode.\' + vm.publishMode |translate }}<i class=\"caret\"></i></a>\r\n            <ul class=\"dropdown-menu\" role=\"menu\">\r\n                <li ng-if=\"vm.versioningOptions.show\"><a ng-click=\"vm.publishMode = \'show\'\"><i class=\"eav-icon-eye\"></i> {{ \'SaveMode.show\' |translate }}</a></li>\r\n                <li ng-if=\"vm.versioningOptions.hide\"><a ng-click=\"vm.publishMode = \'hide\'\"><i class=\"eav-icon-eye-close\"></i> {{ \'SaveMode.hide\' |translate }}</a></li>\r\n                <li ng-if=\"vm.versioningOptions.branch\" ng-show=\"vm.enableDraft\"><a ng-click=\"vm.publishMode = \'branch\'\"><i class=\"eav-icon-git-branch\"></i> {{ \'SaveMode.branch\' |translate }}</a></li>\r\n            </ul>\r\n        </div>\r\n        <span ng-if=\"vm.debug.on\">\r\n            <button class=\"eav-icon-flash btn\" uib-tooltip=\"debug\" ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button>\r\n        </span>\r\n        <show-debug-availability class=\"pull-right\" style=\"margin-top: 20px;\"></show-debug-availability>\r\n    </div>\r\n    <div ng-if=\"vm.debug.on && vm.showDebugItems\">\r\n        <div>\r\n            isValid: {{vm.isValid()}}<br />\r\n            isWorking: {{vm.isWorking}}\r\n        </div>\r\n        <pre>{{ vm.items | json }}</pre>\r\n    </div>\r\n</div>");
 $templateCache.put("form/edit-single-entity.html","<div ng-show=\"vm.editInDefaultLanguageFirst()\" translate=\"Message.PleaseCreateDefLang\">\r\n	\r\n</div>\r\n<div ng-show=\"!vm.editInDefaultLanguageFirst()\">\r\n    <formly-form ng-if=\"vm.formFields && vm.formFields.length\" ng-submit=\"vm.onSubmit()\" form=\"vm.form\" model=\"vm.entity.Attributes\" fields=\"vm.formFields\"></formly-form>\r\n</div>\r\n");
-$templateCache.put("form/main-form.html","<div class=\"modal-body-disabled\">\r\n    <span class=\"pull-right\">\r\n        <span style=\"display: inline-block; position: relative; left:0px\">\r\n            <button class=\"btn btn-default btn-icon-square btn-subtle\" type=\"button\" ng-click=\"vm.close()\">\r\n                <i class=\"eav-icon-cancel\"></i>\r\n            </button>\r\n        </span>\r\n    </span>\r\n    <eav-edit-entities item-list=\"vm.itemList\" after-save-event=\"vm.afterSave\" state=\"vm.state\" close=\"vm.close\"></eav-edit-entities>\r\n</div>");
+$templateCache.put("form/main-form.html","<div class=\"modal-body-disabled\">\r\n    <span class=\"pull-right\">\r\n        <span style=\"display: inline-block; position: relative; left:0px\">\r\n            <button class=\"btn btn-default btn-icon-square btn-subtle\" type=\"button\" ng-click=\"vm.close()\">\r\n                <i class=\"eav-icon-cancel\"></i>\r\n            </button>\r\n        </span>\r\n    </span>\r\n    <eav-edit-entities part-of-page=\"vm.partOfPage\" item-list=\"vm.itemList\" after-save-event=\"vm.afterSave\" state=\"vm.state\" close=\"vm.close\"></eav-edit-entities>\r\n</div>");
 $templateCache.put("localization/formly-localization-wrapper.html","<eav-localization-scope-control></eav-localization-scope-control>\r\n<div ng-if=\"!!value\">\r\n    <formly-transclude></formly-transclude>\r\n    <eav-localization-menu form-model=\"model\" field-model=\"model[options.key]\" options=\"options\" value=\"value\" index=\"index\"></eav-localization-menu>\r\n</div>\r\n<p class=\"bg-info\" style=\"padding:12px;\" ng-if=\"!value\" translate=\"LangWrapper.CreateValueInDefFirst\" translate-values=\"{ fieldname: \'{{to.label}}\' }\">Please... <i>\'{{to.label}}\'</i> in the def...</p>");
 $templateCache.put("localization/language-switcher.html","<uib-tabset ng-init=\"activeLang = languages.currentLanguage;\" active=\"activeLang\">\r\n    <uib-tab ng-repeat=\"l in languages.languages\" index=\"l.key\" heading=\"{{ l.name.substring(0, l.name.indexOf(\'(\') > 0 ? l.name.indexOf(\'(\') - 1 : 100 ) }}\" ng-click=\"!isDisabled ? languages.currentLanguage = l.key : false;\" disable=\"isDisabled\" uib-tooltip=\"{{l.name}}\"></uib-tab><!-- -->\r\n</uib-tabset>");
 $templateCache.put("localization/localization-menu.html","<div uib-dropdown is-open=\"status.isopen\" class=\"eav-localization\"> <!--style=\"z-index:{{1000 - index}};\"-->\r\n	<a class=\"eav-localization-lock\" ng-click=\"vm.actions.toggleTranslate();\" ng-if=\"vm.isDefaultLanguage()\" title=\"{{vm.tooltip()}}\" ng-class=\"{ \'eav-localization-lock-open\': !options.templateOptions.disabled }\" uib-dropdown-toggle>\r\n        {{vm.infoMessage()}} <i class=\"glyphicon glyphicon-globe\"></i>\r\n	</a>\r\n    <ul class=\"dropdown-menu multi-level pull-right eav-localization-dropdown\" role=\"menu\" aria-labelledby=\"single-button\">\r\n        <li role=\"menuitem\"><a ng-click=\"vm.actions.translate()\" translate=\"LangMenu.Unlink\"></a></li>\r\n        <li role=\"menuitem\"><a ng-click=\"vm.actions.linkDefault()\" translate=\"LangMenu.LinkDefault\"></a></li>\r\n        <!-- Google translate is disabled because there is no longer a free version\r\n            <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.GoogleTranslate\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.autoTranslate(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>-->\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.Copy\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: options.templateOptions.disabled || !vm.hasLanguage(language.key) }\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.copyFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.Use\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.useFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.Share\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.shareFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n        <!-- All fields -->\r\n        <li class=\"divider\"></li>\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.AllFields\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li role=\"menuitem\"><a ng-click=\"vm.actions.all.translate()\" translate=\"LangMenu.Unlink\"></a></li>\r\n                <li role=\"menuitem\"><a ng-click=\"vm.actions.all.linkDefault()\" translate=\"LangMenu.LinkDefault\"></a></li>\r\n                <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n                    <a href=\"#\" translate=\"LangMenu.Copy\"></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                            <a ng-click=\"vm.actions.all.copyFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                        </li>\r\n                    </ul>\r\n                </li>\r\n                <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n                    <a href=\"#\" translate=\"LangMenu.Use\"></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                            <a ng-click=\"vm.actions.all.useFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                        </li>\r\n                    </ul>\r\n                </li>\r\n                <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n                    <a href=\"#\" translate=\"LangMenu.Share\"></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                            <a ng-click=\"vm.actions.all.shareFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                        </li>\r\n                    </ul>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n    </ul>\r\n</div>");

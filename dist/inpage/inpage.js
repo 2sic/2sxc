@@ -518,6 +518,7 @@ $(function () {
                         var sharedParams = $2sxc._lib.extend({}, sxc.manage._dialogParameters);
                         if (!cmd.settings.partOfPage) {
                             delete sharedParams.versioningRequirements;
+                            delete sharedParams.publishing;
                             sharedParams.partOfPage = false;
                         }
 
@@ -1197,7 +1198,8 @@ var $2sxcActionMenuMapper = function (moduleId) {
             portalroot: editContext.Environment.WebsiteUrl,
             websiteroot: editContext.Environment.SxcRootUrl,
             partOfPage: editContext.ContentBlock.PartOfPage,
-            versioningRequirements: editContext.ContentBlock.VersioningRequirements,
+            //versioningRequirements: editContext.ContentBlock.VersioningRequirements,
+            publishing: editContext.ContentBlock.VersioningRequirements,
 
             // todo: probably move the user into the dashboard info
             user: $2sxc._manage.getUserOfEditContext(editContext),
