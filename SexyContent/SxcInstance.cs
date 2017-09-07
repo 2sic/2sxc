@@ -85,7 +85,7 @@ namespace ToSic.SexyContent
             set { ContentBlock.Template = value; }
         }
 
-        private void CheckTemplateOverrides()
+        internal void CheckTemplateOverrides()
         {
             // skif if not relevant or not yet initialized
             if (IsContentApp || App == null) return;

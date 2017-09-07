@@ -57,6 +57,7 @@ namespace ToSic.SexyContent.ContentBlocks
                 // maybe ensure that App.Data is ready
                 App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(moduleInfo.ModuleID), Data.ConfigurationProvider);
 
+
                 ContentGroup = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
 
                 if (ContentGroup.DataIsMissing)
@@ -68,6 +69,8 @@ namespace ToSic.SexyContent.ContentBlocks
 
                 // use the content-group template, which already covers stored data + module-level stored settings
                 Template = ContentGroup.Template;
+
+                SxcInstance.CheckTemplateOverrides();
 
                 // set show-status of the template/view picker
                 var showStatus = moduleInfo.ModuleSettings[Settings.SettingsShowTemplateChooser];
