@@ -43,6 +43,8 @@
       <DefaultExclude Include="**\grunt-tasks\**" />
       <DefaultExclude Include="packages\**" />
       <DefaultExclude Include="src\**" />
+      <!-- exclude the vendor bundle map, as it's huge, and we don't want it for customer-side debugging -->
+      <DefaultExclude Include="dist\ng\vendor.bundle.js.map" />
       <DefaultExclude Include="tmp\**" />
       <DefaultExclude Include=".vs\**" />
 			<DefaultExclude Include="_\**" />
