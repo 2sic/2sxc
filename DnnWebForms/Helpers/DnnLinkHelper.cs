@@ -27,5 +27,14 @@ namespace ToSic.SexyContent.DnnWebForms.Helpers
                 : DotNetNuke.Common.Globals.NavigateURL(targetPage, "", parametersToUse);
 
         }
+
+        public string Base()
+        {
+            // helper to generate a base path which is also valid on home (special DNN behaviour)
+            var randomxyz = "this-should-never-exist-in-the-url";
+            var basePath = To(parameters: randomxyz + "=1");
+            return basePath.Substring(0, basePath.IndexOf(randomxyz, StringComparison.Ordinal));
+
+        }
     }
 }
