@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.Interfaces
 
         App App { get; }
 
-        SxcValueCollectionProvider Configuration { get; }
+        ValueCollectionProvider Configuration { get; }
 
         ViewDataSource Data { get; }
 

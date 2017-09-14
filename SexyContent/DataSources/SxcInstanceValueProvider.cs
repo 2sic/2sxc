@@ -5,9 +5,9 @@ namespace ToSic.SexyContent.DataSources
 {
     /// <inheritdoc />
     /// <summary>
-    /// Property Accessor to test a Pipeline with Static Values
+    /// special "fake" value provider, which also transports the Sxc-depedency to underlying layers
     /// </summary>
-    public class SxcInstanceValueProvider : StaticValueProvider// IValueProvider
+    public class SxcInstanceValueProvider : StaticValueProvider
     {
         /// <inheritdoc />
         /// <summary>

@@ -12,11 +12,11 @@ namespace ToSic.SexyContent.DataSources
     {
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal static SxcValueCollectionProvider GetConfigProviderForModule(int moduleId, SexyContent.App app, SxcInstance sxc)
+        internal static ValueCollectionProvider GetConfigProviderForModule(int moduleId, SexyContent.App app, SxcInstance sxc)
         {
             var portalSettings = PortalSettings.Current;
 
-            var provider = new SxcValueCollectionProvider(sxc);
+            var provider = new ValueCollectionProvider();//sxc);
 
             // only add these in running inside an http-context. Otherwise leave them away!
             if (HttpContext.Current != null)

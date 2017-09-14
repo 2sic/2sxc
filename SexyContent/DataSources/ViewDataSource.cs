@@ -12,7 +12,6 @@ namespace ToSic.SexyContent.DataSources
         internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, ValueCollectionProvider configurationProvider, int moduleId = 0)
         {
             var showDrafts = sxc.Environment.Permissions.UserMayEditContent;
-            //var configurationProvider = DataSources.ConfigurationProvider.GetConfigProviderForModule(moduleId, sxc.App, sxc);
 
             // Get ModuleDataSource
             var initialSource = DataSource.GetInitialDataSource(sxc.ZoneId, sxc.AppId, showDrafts, configurationProvider);
@@ -21,7 +20,6 @@ namespace ToSic.SexyContent.DataSources
 
             moduleDataSource.OverrideTemplate = overrideTemplate; // new
             moduleDataSource.UseSxcInstanceContentGroup = true; // new
-            //moduleDataSource.SxcContext = sxc;
 
             // If the Template has a Data-Pipeline, use an empty upstream, else use the ModuleDataSource created above
             var viewDataSourceUpstream = overrideTemplate?.Pipeline == null

@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
+using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 
@@ -56,7 +57,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         public PortalSettings PortalSettings { get; protected set; }
 
-        public SxcValueCollectionProvider Configuration { get; protected set; }
+        public ValueCollectionProvider Configuration { get; protected set; }
 
         // ReSharper disable once InconsistentNaming
         protected ViewDataSource _dataSource;
