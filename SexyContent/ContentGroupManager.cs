@@ -119,20 +119,20 @@ namespace ToSic.SexyContent
 	    }
 
 	    // todo: this doesn't look right, will have to mostly move to the new content-block
-		public ContentGroup GetContentGroupForModule(int moduleId, int tabId)
+		public Tuple<Guid,Guid> GetContentGroupForModule(int moduleId, int tabId)
 		{
 			var settings = ModuleController.Instance.GetModule(moduleId, tabId, false).ModuleSettings;
 			//var settings = moduleControl.GetModule(moduleId,).ModuleSettings;
 		    var maybeGuid = settings[Settings.ContentGroupGuidString];
-		    Guid groupGuid;
-		    Guid.TryParse(maybeGuid?.ToString(), out groupGuid);
+		    Guid.TryParse(maybeGuid?.ToString(), out var groupGuid);
             var previewTemplateString = settings[Settings.PreviewTemplateIdString]?.ToString();
 
 		    var templateGuid = !string.IsNullOrEmpty(previewTemplateString)
 		        ? Guid.Parse(previewTemplateString)
 		        : new Guid();
 
-            return GetContentGroupOrGeneratePreview(groupGuid, templateGuid);
+		    return Tuple.Create(groupGuid, templateGuid);
+            //return GetContentGroupOrGeneratePreview(groupGuid, templateGuid);
 		}
 
 	    internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)

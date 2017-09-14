@@ -9,6 +9,7 @@ using ToSic.SexyContent.ContentBlocks;
 using DotNetNuke.Common.Utilities;
 using ToSic.Eav.Apps;
 using System.Linq;
+using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -28,43 +29,52 @@ namespace ToSic.SexyContent.Environment.Dnn7
             versioning = new PagePublishing();
         }
 
-        public int GetLatestVersion(int moduleId)
-        {
-            return versioning.GetLatestVersion(moduleId);
-        }
+        public int GetLatestVersion(int moduleId) => versioning.GetLatestVersion(moduleId);
 
-        public int GetPublishedVersion(int moduleId)
-        {
-            return versioning.GetPublishedVersion(moduleId);
-        }
+        public int GetPublishedVersion(int moduleId) => versioning.GetPublishedVersion(moduleId);
 
         public void PublishVersion(int moduleId, int version)
         {
-            // publish all entites of this content block
-            var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
-            var cb = new ModuleContentBlock(moduleInfo);
-            var appManager = new AppManager(cb.AppId);
+            try
+            {
+                // publish all entites of this content block
+                var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
+                var cb = new ModuleContentBlock(moduleInfo);
+                var appManager = new AppManager(cb.AppId);
 
-            // Add content entities
-            var list = cb.Data["Default"]?.LightList;
-            
-            // Add list content if defined
-            var cont = cb.Data.Out.ContainsKey("ListContent") ? cb.Data["ListContent"]?.LightList : null;
-            if (cont != null) list = list.Concat(cont);
-            
-            // Find related presentation entities
-            list = list.Concat(list.Where(e => e is EntityInContentGroup && ((EntityInContentGroup)e).Presentation != null).Select(e => ((EntityInContentGroup)e).Presentation));
+                // Add content entities
+                var list = cb.Data["Default"]?.LightList ?? new List<IEntity>();
 
-            var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
+                // Add list content if defined
+                var cont = cb.Data.Out.ContainsKey("ListContent") ? cb.Data["ListContent"]?.LightList : null;
+                if (cont != null) list = list.Concat(cont);
 
-            // publish ContentGroup as well
-            ids.Add(cb.ContentGroup.ContentGroupId);
+                // Find related presentation entities
+                var presentationItems = list
+                    .Where(e => (e as EntityInContentGroup)?.Presentation != null)
+                    .Select(e => ((EntityInContentGroup) e).Presentation);
+                list = list.Concat(presentationItems);
 
-            appManager.Entities.Publish(ids.ToArray());
+                var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
 
-            // Set published version
-            var moduleVersionSettings = new ToSic.SexyContent.Environment.Dnn7.PagePublishing.ModuleVersionSettingsController(moduleId);
-            moduleVersionSettings.PublishLatestVersion();
+                // publish ContentGroup as well - if there already is one
+                if (cb.ContentGroup != null)
+                    ids.Add(cb.ContentGroup.ContentGroupId);
+
+                if (ids.Any())
+                    appManager.Entities.Publish(ids.ToArray());
+
+                // Set published version
+                // 2017-09-13 2dm - not sure if this is needed, may cause trouble because then DNN says the page changed again 
+                // + isn't necessary, because DNN will publish the settings
+                var moduleVersionSettings = new PagePublishing.ModuleVersionSettingsController(moduleId);
+                moduleVersionSettings.PublishLatestVersion();
+            }
+            catch (Exception ex)
+            {
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
+                throw;
+            }
         }
 
         public void DeleteVersion(int moduleId, int version)

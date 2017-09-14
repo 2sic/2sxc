@@ -197,6 +197,7 @@
     <Compile Include="SexyContent\ContentBlocks\ModuleContentGroupReferenceManager.cs" />
     <Compile Include="SexyContent\ContentBlocks\Renderers\Simple.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
+    <Compile Include="SexyContent\DataSources\SxcInstanceValueProvider.cs" />
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
     <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />

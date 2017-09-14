@@ -48,7 +48,12 @@ namespace ToSic.SexyContent.Search
 
             // old 2016-03-27
             var language = moduleInfo.CultureCode;
-	        var contentGroup = sexy.App.ContentGroupManager./*AppContentGroups.*/GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
+            //var contentGroup = sexy.App.ContentGroupManager./*AppContentGroups.*/GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
+            var res = sexy.App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
+            var _contentGroupGuid = res.Item1;
+            var _previewTemplateGuid = res.Item2;
+            var contentGroup = sexy.App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
+
             var template = contentGroup.Template;
 
             // This list will hold all EAV entities to be indexed

@@ -5,17 +5,16 @@ using System.Collections.Generic;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class TokenReplaceDnn : DotNetNuke.Services.Tokens.TokenReplace
+    public class TokenReplaceDnn : TokenReplace
     {
         /// <summary>
         /// This class is mainly here to deliver all standard DNN-token lists to 2sxc. 
         /// So it mainly initializes the normal DNN-Tokenprovider and offers a property called Property-Access which then contains all value-resolvers
         /// </summary>
-        /// <param name="app"></param>
         /// <param name="moduleId"></param>
         /// <param name="ps"></param>
         /// <param name="uinfo"></param>
-        public TokenReplaceDnn(App app, int moduleId, PortalSettings ps, UserInfo uinfo)
+        public TokenReplaceDnn(int moduleId, PortalSettings ps, UserInfo uinfo)
             : base(Scope.DefaultSettings, "", ps, uinfo, moduleId)
         {
             ModuleId = moduleId;
@@ -23,12 +22,6 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             ReplaceTokens("InitializePropertySources"); // must be executed, otherwise the list doesn't get built
         }
 
-        public Dictionary<string, IPropertyAccess> PropertySources
-        {
-            get
-            {
-                return PropertySource; 
-            }
-        }
+        public Dictionary<string, IPropertyAccess> PropertySources => PropertySource;
     }
 }

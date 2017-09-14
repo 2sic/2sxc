@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
+using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
 
@@ -32,6 +33,8 @@ namespace ToSic.SexyContent.Interfaces
         ContentGroup ContentGroup { get; }
 
         App App { get; }
+
+        SxcValueCollectionProvider Configuration { get; }
 
         ViewDataSource Data { get; }
 

@@ -5,9 +5,9 @@ using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
-    internal class ContentBlockBase: IContentBlock
+    internal abstract class ContentBlockBase: IContentBlock
     {
-        public IContentBlock Parent;// => SxcInstance;
+        public IContentBlock Parent;
 
         public int ZoneId { get; protected set; }
         public int AppId { get; protected set; }
@@ -21,6 +21,7 @@ namespace ToSic.SexyContent.ContentBlocks
         public virtual bool ParentIsEntity => false;
         public int ParentId { get; protected set; }
 
+        // ReSharper disable once InconsistentNaming
         protected bool _dataIsMissing = false;
         public bool DataIsMissing => _dataIsMissing;
 
@@ -55,6 +56,8 @@ namespace ToSic.SexyContent.ContentBlocks
 
         public PortalSettings PortalSettings { get; protected set; }
 
+        public SxcValueCollectionProvider Configuration { get; protected set; }
+
         // ReSharper disable once InconsistentNaming
         protected ViewDataSource _dataSource;
         public virtual ViewDataSource Data => null;
@@ -64,8 +67,8 @@ namespace ToSic.SexyContent.ContentBlocks
 
         // ReSharper disable once InconsistentNaming
         protected SxcInstance _sxcInstance;
-        public virtual SxcInstance SxcInstance => _sxcInstance 
-            ?? (_sxcInstance = new SxcInstance(this, Parent.SxcInstance));
+
+        public virtual SxcInstance SxcInstance => null;
 
         public virtual bool IsContentApp => false;
 

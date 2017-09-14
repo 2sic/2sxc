@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent.DataSources
@@ -19,10 +20,18 @@ namespace ToSic.SexyContent.DataSources
             {
                 if (_sxcContext == null)
                 {
-                    var provider = ConfigurationProvider as SxcValueCollectionProvider;
-                    _sxcContext = provider?.SxcInstance;
-                    if (provider == null)
-                        throw new Exception("SxcContent is still null - can't access the SxcContent before initializing it");
+                    var sxciProvider = ConfigurationProvider.Sources["SxcInstance"];
+                    if(sxciProvider == null)
+                        throw new Exception("value provider didn't have sxc provider - can't use module data source");
+
+                    _sxcContext = (sxciProvider as SxcInstanceValueProvider)?
+                        .SxcInstance 
+                        ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
+
+                    //var provider = ConfigurationProvider as SxcValueCollectionProvider;
+                    //_sxcContext = provider?.SxcInstance;
+                    //if (provider == null)
+                    //    throw new Exception("SxcContent is still null - can't access the SxcContent before initializing it");
                 }
                 return _sxcContext;
             }
@@ -41,8 +50,17 @@ namespace ToSic.SexyContent.DataSources
                     {
                         if (!ModuleId.HasValue)
                             throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
-                        var tabId = ((ModuleInfo)ModuleController.Instance.GetTabModulesByModule(ModuleId.Value)[0]).TabID;
-                        _contentGroup = new ContentGroupManager(ZoneId, AppId, SxcContext.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(this.ModuleId.Value)).GetContentGroupForModule(ModuleId.Value, tabId);
+                        var tabId = ModuleController.Instance.GetTabModulesByModule(ModuleId.Value)[0].TabID;
+                        var cgm = new ContentGroupManager(ZoneId, AppId,
+                            SxcContext.Environment.Permissions.UserMayEditContent,
+                            new Environment.Dnn7.PagePublishing().IsVersioningEnabled(ModuleId.Value));
+                        var res = cgm.GetContentGroupForModule(ModuleId.Value, tabId);
+                        var _contentGroupGuid = res.Item1;
+                        var _previewTemplateGuid = res.Item2;
+                        _contentGroup = cgm.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid); 
+
+                        //_contentGroup = new ContentGroupManager(ZoneId, AppId, SxcContext.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(ModuleId.Value))
+                        //    .GetContentGroupForModule(ModuleId.Value, tabId);
                     }
                 }
                 return _contentGroup;
@@ -58,8 +76,8 @@ namespace ToSic.SexyContent.DataSources
         }
 
         #region Cached properties for Content, Presentation etc. --> not necessary, as each stream auto-caches
-        private IDictionary<int, ToSic.Eav.Interfaces.IEntity> _content;
-        private IDictionary<int, ToSic.Eav.Interfaces.IEntity> GetContent()
+        private IDictionary<int, IEntity> _content;
+        private IDictionary<int, IEntity> GetContent()
         {
             try
             {
@@ -74,8 +92,8 @@ namespace ToSic.SexyContent.DataSources
             }
         }
 
-        private IDictionary<int, ToSic.Eav.Interfaces.IEntity> _listContent;
-        private IDictionary<int, ToSic.Eav.Interfaces.IEntity> GetListContent()
+        private IDictionary<int, IEntity> _listContent;
+        private IDictionary<int, IEntity> GetListContent()
         {
             try
             {
@@ -97,9 +115,9 @@ namespace ToSic.SexyContent.DataSources
         private Template _template;
 		private Template Template => _template ?? (_template = OverrideTemplate ?? ContentGroup.Template);
 
-	    private IDictionary<int, ToSic.Eav.Interfaces.IEntity> GetStream(List<ToSic.Eav.Interfaces.IEntity> content, ToSic.Eav.Interfaces.IEntity contentDemoEntity, List<ToSic.Eav.Interfaces.IEntity> presentation, ToSic.Eav.Interfaces.IEntity presentationDemoEntity, bool isListHeader = false)
+	    private IDictionary<int, IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity, bool isListHeader = false)
         {
-			var entitiesToDeliver = new Dictionary<int, ToSic.Eav.Interfaces.IEntity>();
+			var entitiesToDeliver = new Dictionary<int, IEntity>();
             // if no template is defined, return empty list
 			if (ContentGroup.Template == null && OverrideTemplate == null /*!OverrideTemplateId.HasValue*/) return entitiesToDeliver;
 
@@ -129,7 +147,7 @@ namespace ToSic.SexyContent.DataSources
                 // use demo-entites where available
                 var entityId = contentEntity.EntityId;
 
-                ToSic.Eav.Interfaces.IEntity presentationEntity = null;
+                IEntity presentationEntity = null;
 
 	            if (presentation != null)
 	            {

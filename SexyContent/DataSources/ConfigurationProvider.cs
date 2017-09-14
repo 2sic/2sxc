@@ -12,7 +12,7 @@ namespace ToSic.SexyContent.DataSources
     {
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal static ValueCollectionProvider GetConfigProviderForModule(int moduleId, SexyContent.App app, SxcInstance sxc)
+        internal static SxcValueCollectionProvider GetConfigProviderForModule(int moduleId, SexyContent.App app, SxcInstance sxc)
         {
             var portalSettings = PortalSettings.Current;
 
@@ -42,7 +42,7 @@ namespace ToSic.SexyContent.DataSources
             {
                 var dnnUsr = portalSettings.UserInfo;
                 var dnnCult = Thread.CurrentThread.CurrentCulture;
-                var dnn = new TokenReplaceDnn(app, moduleId, portalSettings, dnnUsr);
+                var dnn = new TokenReplaceDnn(moduleId, portalSettings, dnnUsr);
                 var stdSources = dnn.PropertySources;
                 foreach (var propertyAccess in stdSources)
                     provider.Sources.Add(propertyAccess.Key,
@@ -58,8 +58,14 @@ namespace ToSic.SexyContent.DataSources
                 modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
                 provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
             }
+
+            // provide the current SxcInstance to the children where necessary
+            if (!provider.Sources.ContainsKey("SxcInstance"))
+            {
+                var sxci = new SxcInstanceValueProvider("SxcInstance", null, sxc);
+                provider.Sources.Add(sxci.Name, sxci);
+            }
             return provider;
-            //return _valueCollectionProvider;
         }
     }
 }

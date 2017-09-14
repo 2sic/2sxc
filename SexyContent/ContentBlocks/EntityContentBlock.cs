@@ -17,16 +17,16 @@ namespace ToSic.SexyContent.ContentBlocks
         public override bool ParentIsEntity => false;
 
         public override ViewDataSource Data => _dataSource 
-            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template));
+            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, Configuration));
 
         #region ContentBlock Definition Entity
 
-        internal ToSic.Eav.Interfaces.IEntity ContentBlockEntity;
+        internal Eav.Interfaces.IEntity ContentBlockEntity;
         private string _appName;
         private Guid _contentGroupGuid;
         private Guid _previewTemplateGuid;
 
-        private void ParseContentBlockDefinition(ToSic.Eav.Interfaces.IEntity cbDefinition)
+        private void ParseContentBlockDefinition(Eav.Interfaces.IEntity cbDefinition)
         {
             ContentBlockEntity = cbDefinition;
             _appName = ContentBlockEntity.GetBestValue(CbPropertyApp)?.ToString() ?? "";
@@ -45,12 +45,12 @@ namespace ToSic.SexyContent.ContentBlocks
         }
         #endregion
 
-        public EntityContentBlock(IContentBlock parent, ToSic.Eav.Interfaces.IEntity cbDefinition)
+        public EntityContentBlock(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition)
         {
             _constructor(parent, cbDefinition);
         }
 
-        private void _constructor(IContentBlock parent, ToSic.Eav.Interfaces.IEntity cbDefinition)
+        private void _constructor(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition)
         {
             Parent = parent;
             ParseContentBlockDefinition(cbDefinition);
@@ -76,8 +76,11 @@ namespace ToSic.SexyContent.ContentBlocks
             {
                 // try to load the app - if possible
                 App = new App(ZoneId, AppId, PortalSettings);
+
+                Configuration = ConfigurationProvider.GetConfigProviderForModule(ParentId, App, SxcInstance);
+
                 // maybe ensure that App.Data is ready
-                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(Parent.SxcInstance.ModuleInfo.ModuleID), Data.ConfigurationProvider);
+                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(Parent.SxcInstance.ModuleInfo.ModuleID), Configuration/* Data.ConfigurationProvider*/);
 
                 ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 
@@ -107,7 +110,7 @@ namespace ToSic.SexyContent.ContentBlocks
                                           (_sxcInstance = new SxcInstance(this, Parent.SxcInstance));
 
 
-        public override bool IsContentApp => _appName == Constants.DefaultAppName;
+        public override bool IsContentApp => _appName == Eav.Constants.DefaultAppName;
 
     }
 }

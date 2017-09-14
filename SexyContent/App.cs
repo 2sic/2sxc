@@ -160,7 +160,7 @@ namespace ToSic.SexyContent
             if (_data == null)
             {
                 // ModulePermissionController does not work when indexing, return false for search
-                var initialSource = DataSource.GetInitialDataSource(ZoneId, AppId, ShowDraftsInData);
+                var initialSource = DataSource.GetInitialDataSource(ZoneId, AppId, ShowDraftsInData, configProvider: ConfigurationProvider as ValueCollectionProvider);
 
                 // todo: probably use th efull configuration provider from function params, not from initial source?
                 _data = DataSource.GetDataSource<DataSources.App>(initialSource.ZoneId,

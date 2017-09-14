@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.DataSources
 {
@@ -8,13 +9,13 @@ namespace ToSic.SexyContent.DataSources
     {
         public DataPublishing Publish = new DataPublishing();
 
-        internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, int moduleId = 0)
+        internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, ValueCollectionProvider configurationProvider, int moduleId = 0)
         {
             var showDrafts = sxc.Environment.Permissions.UserMayEditContent;
-            var configurationProvider = DataSources.ConfigurationProvider.GetConfigProviderForModule(moduleId, sxc.App, sxc);
+            //var configurationProvider = DataSources.ConfigurationProvider.GetConfigProviderForModule(moduleId, sxc.App, sxc);
 
             // Get ModuleDataSource
-            var initialSource = DataSource.GetInitialDataSource(sxc.ZoneId, sxc.AppId, showDrafts);
+            var initialSource = DataSource.GetInitialDataSource(sxc.ZoneId, sxc.AppId, showDrafts, configurationProvider);
             var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(sxc.ZoneId, sxc.AppId, initialSource, configurationProvider);
             moduleDataSource.ModuleId = moduleId;
 
@@ -23,7 +24,7 @@ namespace ToSic.SexyContent.DataSources
             //moduleDataSource.SxcContext = sxc;
 
             // If the Template has a Data-Pipeline, use an empty upstream, else use the ModuleDataSource created above
-            var viewDataSourceUpstream = (overrideTemplate?.Pipeline == null)
+            var viewDataSourceUpstream = overrideTemplate?.Pipeline == null
                 ? moduleDataSource
                 : null;
 

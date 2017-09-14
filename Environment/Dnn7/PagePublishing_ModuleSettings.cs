@@ -39,7 +39,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
             public void PublishLatestVersion()
-                => _settingsHelper.SetModuleSetting(PublishedVersionSettingsKey, GetLatestVersion().ToString());
+            {
+                // 2017-09-13 must check maybe don't do anything, because 
+                // this setting is already published by DNN when releasing the module
+                _settingsHelper.SetModuleSetting(PublishedVersionSettingsKey, GetLatestVersion().ToString());
+            }
 
             public void DeleteLatestVersion()
                 => _settingsHelper.SetModuleSetting(LatestVersionSettingsKey, GetPublishedVersion().ToString());
