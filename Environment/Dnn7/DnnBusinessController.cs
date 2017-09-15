@@ -40,10 +40,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 // publish all entites of this content block
                 var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
                 var cb = new ModuleContentBlock(moduleInfo);
-                var appManager = new AppManager(cb.AppId);
 
                 if (cb.ContentGroupExists)
                 {
+                    var appManager = new AppManager(cb.AppId);
+
                     // Add content entities
                     var list = cb.Data["Default"]?.LightList ?? new List<IEntity>();
 
