@@ -42,27 +42,30 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 var cb = new ModuleContentBlock(moduleInfo);
                 var appManager = new AppManager(cb.AppId);
 
-                // Add content entities
-                var list = cb.Data["Default"]?.LightList ?? new List<IEntity>();
+                if (cb.ContentGroupExists)
+                {
+                    // Add content entities
+                    var list = cb.Data["Default"]?.LightList ?? new List<IEntity>();
 
-                // Add list content if defined
-                var cont = cb.Data.Out.ContainsKey("ListContent") ? cb.Data["ListContent"]?.LightList : null;
-                if (cont != null) list = list.Concat(cont);
+                    // Add list content if defined
+                    var cont = cb.Data.Out.ContainsKey("ListContent") ? cb.Data["ListContent"]?.LightList : null;
+                    if (cont != null) list = list.Concat(cont);
 
-                // Find related presentation entities
-                var presentationItems = list
-                    .Where(e => (e as EntityInContentGroup)?.Presentation != null)
-                    .Select(e => ((EntityInContentGroup) e).Presentation);
-                list = list.Concat(presentationItems);
+                    // Find related presentation entities
+                    var presentationItems = list
+                        .Where(e => (e as EntityInContentGroup)?.Presentation != null)
+                        .Select(e => ((EntityInContentGroup)e).Presentation);
+                    list = list.Concat(presentationItems);
 
-                var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
+                    var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
 
-                // publish ContentGroup as well - if there already is one
-                if (cb.ContentGroup != null)
-                    ids.Add(cb.ContentGroup.ContentGroupId);
+                    // publish ContentGroup as well - if there already is one
+                    if (cb.ContentGroup != null)
+                        ids.Add(cb.ContentGroup.ContentGroupId);
 
-                if (ids.Any())
-                    appManager.Entities.Publish(ids.ToArray());
+                    if (ids.Any())
+                        appManager.Entities.Publish(ids.ToArray());
+                }
 
                 // Set published version
                 // 2017-09-13 2dm - not sure if this is needed, may cause trouble because then DNN says the page changed again 
