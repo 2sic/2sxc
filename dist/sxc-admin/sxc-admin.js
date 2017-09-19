@@ -207,7 +207,7 @@
         
         switch (initialDialog) {
             case "edit":
-                eavAdminDialogs.openEditItems(items, vm.close, { partOfPage: $2sxc.urlParams.get('partOfPage') });
+                eavAdminDialogs.openEditItems(items, vm.close, { partOfPage: $2sxc.urlParams.get('partOfPage'), publishing: $2sxc.urlParams.get('publishing') });
                 break;
             case "zone":
                 // this is the zone-config dialog showing mainly all the apps
@@ -842,7 +842,7 @@
                 },
                 Title: $translate.instant("EditFormTitle.ListPresentation")
             });
-            eavAdminDialogs.openEditItems(items, vm.reloadHeader);
+            eavAdminDialogs.openEditItems(items, vm.reloadHeader, { partOfPage: $2sxc.urlParams.get('partOfPage'), publishing: $2sxc.urlParams.get('publishing') });
 
         };
 

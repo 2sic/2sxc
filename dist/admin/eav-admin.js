@@ -2521,6 +2521,8 @@ angular.module("EavAdminUi", ["ng",
         svc.openEditItems = function oel(items, closeCallback, moreResolves) {
             var merged = angular.extend({ items: items }, moreResolves || {});
             merged.partOfPage = Boolean(merged.partOfPage);
+            merged.publishing = merged.publishing || null;
+            console.log("openEditItems: partOfPage: " + merged.partOfPage, " publishing: " + merged.publishing);
             var resolve = svc.CreateResolve(merged);
             return svc.OpenModal("form/main-form.html", "EditEntityWrapperCtrl as vm", "ent-edit", resolve, closeCallback);
         };
