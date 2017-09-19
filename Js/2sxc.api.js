@@ -12,80 +12,65 @@ var ToSic;
 (function (ToSic) {
     var Sxc;
     (function (Sxc) {
-        var SxcWebApiWithInternals = (function () {
-            function SxcWebApiWithInternals(controller, id, cbid) {
-                this.controller = controller;
-                this.id = id;
-                this.cbid = cbid;
+        function SxcController(id, cbid) {
+            var $2sxc = window.$2sxc;
+            if (!$2sxc._controllers)
+                throw "$2sxc not initialized yet";
+            if (typeof id === "object") {
+                var idTuple = autoFind(id);
+                id = idTuple[0];
+                cbid = idTuple[1];
             }
-            SxcWebApiWithInternals.prototype.get = function (settingsOrUrl, params, data, preventAutoFail) {
-                this.request(settingsOrUrl, params, data, preventAutoFail, "GET");
+            if (!cbid)
+                cbid = id;
+            var cacheKey = id + ":" + cbid;
+            if ($2sxc._controllers[cacheKey])
+                return $2sxc._controllers[cacheKey];
+            if (!$2sxc._data[cacheKey])
+                $2sxc._data[cacheKey] = {};
+            return ($2sxc._controllers[cacheKey] = new Sxc.SxcInstanceWithInternals(id, cbid, cacheKey, $2sxc, $.ServicesFramework));
+        }
+        function buildSxcController() {
+            var url = new Sxc.UrlParamManager();
+            var debug = {
+                load: (url.get("debug") === "true"),
+                uncache: url.get("sxcver")
             };
-            ;
-            SxcWebApiWithInternals.prototype.post = function (settingsOrUrl, params, data, preventAutoFail) {
-                this.request(settingsOrUrl, params, data, preventAutoFail, "POST");
-            };
-            ;
-            SxcWebApiWithInternals.prototype.delete = function (settingsOrUrl, params, data, preventAutoFail) {
-                this.request(settingsOrUrl, params, data, preventAutoFail, "DELETE");
-            };
-            ;
-            SxcWebApiWithInternals.prototype.put = function (settingsOrUrl, params, data, preventAutoFail) {
-                this.request(settingsOrUrl, params, data, preventAutoFail, "PUT");
-            };
-            ;
-            SxcWebApiWithInternals.prototype.request = function (settings, params, data, preventAutoFail, method) {
-                if (typeof params != "object" && typeof params != "undefined")
-                    params = { id: params };
-                if (typeof settings == "string") {
-                    var controllerAction = settings.split("/");
-                    var controllerName = controllerAction[0];
-                    var actionName = controllerAction[1];
-                    if (controllerName === "" || actionName === "")
-                        alert("Error: controller or action not defined. Will continue with likely errors.");
-                    settings = {
-                        controller: controllerName,
-                        action: actionName,
-                        params: params,
-                        data: data,
-                        url: controllerAction.length > 2 ? settings : null,
-                        preventAutoFail: preventAutoFail
-                    };
-                }
-                var defaults = {
-                    method: method === null ? "POST" : method,
-                    params: null,
-                    preventAutoFail: false
-                };
-                settings = $.extend({}, defaults, settings);
-                var sf = $.ServicesFramework(this.id);
-                var promise = $.ajax({
-                    type: settings.method,
-                    dataType: settings.dataType || "json",
-                    async: true,
-                    data: JSON.stringify(settings.data),
-                    contentType: "application/json",
-                    url: this.getActionUrl(settings),
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader("ContentBlockId", this.cbid);
-                        sf.setModuleHeaders(xhr);
+            var addOn = {
+                _controllers: {},
+                sysinfo: {
+                    version: "09.05.02",
+                    description: "The 2sxc Controller object - read more about it on 2sxc.org"
+                },
+                beta: {},
+                _data: {},
+                totalPopup: new Sxc.TotalPopup(),
+                urlParams: url,
+                debug: debug,
+                parts: {
+                    getUrl: function (url, preventUnmin) {
+                        var r = (preventUnmin || !debug.load) ? url : url.replace(".min", "");
+                        if (debug.uncache && r.indexOf("sxcver") === -1)
+                            r = r + ((r.indexOf("?") === -1) ? "?" : "&") + "sxcver=" + debug.uncache;
+                        return r;
                     }
-                });
-                if (!settings.preventAutoFail)
-                    promise.fail(this.controller.showDetailedHttpError);
-                return promise;
+                },
             };
-            ;
-            SxcWebApiWithInternals.prototype.getActionUrl = function (settings) {
-                var sf = $.ServicesFramework(this.id);
-                var base = (settings.url)
-                    ? this.controller.resolveServiceUrl(settings.url)
-                    : sf.getServiceRoot("2sxc") + "app/auto/api/" + settings.controller + "/" + settings.action;
-                return base + (settings.params === null ? "" : ("?" + $.param(settings.params)));
-            };
-            return SxcWebApiWithInternals;
-        }());
-        Sxc.SxcWebApiWithInternals = SxcWebApiWithInternals;
+            for (var property in addOn)
+                if (addOn.hasOwnProperty(property))
+                    SxcController[property] = addOn[property];
+            return SxcController;
+        }
+        Sxc.buildSxcController = buildSxcController;
+        function autoFind(domElement) {
+            var containerTag = $(domElement).closest(".sc-content-block")[0];
+            if (!containerTag)
+                return null;
+            var iid = containerTag.getAttribute("data-cb-instance"), cbid = containerTag.getAttribute("data-cb-id");
+            if (!iid || !cbid)
+                return null;
+            return [iid, cbid];
+        }
     })(Sxc = ToSic.Sxc || (ToSic.Sxc = {}));
 })(ToSic || (ToSic = {}));
 var ToSic;
@@ -173,7 +158,7 @@ var ToSic;
                 this.dnnSf = dnnSf;
                 this.serviceScopes = ["app", "app-sys", "app-api", "app-query", "app-content", "eav", "view", "dnn"];
                 this.serviceRoot = dnnSf(id).getServiceRoot("2sxc");
-                this.webApi = new ToSic.Sxc.SxcWebApiWithInternals(this, id, cbid);
+                this.webApi = new Sxc.SxcWebApiWithInternals(this, id, cbid);
             }
             SxcInstance.prototype.resolveServiceUrl = function (virtualPath) {
                 var scope = virtualPath.split("/")[0].toLowerCase();
@@ -276,79 +261,6 @@ var ToSic;
 (function (ToSic) {
     var Sxc;
     (function (Sxc) {
-        function SxcController(id, cbid) {
-            var $2sxc = window.$2sxc;
-            if (!$2sxc._controllers)
-                throw "$2sxc not initialized yet";
-            if (typeof id === "object") {
-                var idTuple = autoFind(id);
-                id = idTuple[0];
-                cbid = idTuple[1];
-            }
-            if (!cbid)
-                cbid = id;
-            var cacheKey = id + ":" + cbid;
-            if ($2sxc._controllers[cacheKey])
-                return $2sxc._controllers[cacheKey];
-            if (!$2sxc._data[cacheKey])
-                $2sxc._data[cacheKey] = {};
-            return $2sxc._controllers[cacheKey] = new ToSic.Sxc.SxcInstanceWithInternals(id, cbid, cacheKey, $2sxc, $.ServicesFramework);
-        }
-        Sxc.SxcController = SxcController;
-        function buildSxcController() {
-            var url = new ToSic.Sxc.UrlParamManager();
-            var debug = {
-                load: (url.get("debug") === "true"),
-                uncache: url.get("sxcver")
-            };
-            var addOn = {
-                _controllers: {},
-                sysinfo: {
-                    version: "09.05.00",
-                    description: "The 2sxc Controller object - read more about it on 2sxc.org"
-                },
-                beta: {},
-                _data: {},
-                totalPopup: new ToSic.Sxc.TotalPopup(),
-                urlParams: url,
-                debug: debug,
-                parts: {
-                    getUrl: function (url, preventUnmin) {
-                        var r = (preventUnmin || !debug.load) ? url : url.replace(".min", "");
-                        if (debug.uncache && r.indexOf("sxcver") === -1)
-                            r = r + ((r.indexOf("?") === -1) ? "?" : "&") + "sxcver=" + debug.uncache;
-                        return r;
-                    }
-                },
-            };
-            for (var property in addOn)
-                if (addOn.hasOwnProperty(property))
-                    SxcController[property] = addOn[property];
-            return SxcController;
-        }
-        Sxc.buildSxcController = buildSxcController;
-        function applyMixins(derivedCtor, baseCtors) {
-            baseCtors.forEach(function (baseCtor) {
-                Object.getOwnPropertyNames(baseCtor.prototype).forEach(function (name) {
-                    derivedCtor.prototype[name] = baseCtor.prototype[name];
-                });
-            });
-        }
-        function autoFind(domElement) {
-            var containerTag = $(domElement).closest(".sc-content-block")[0];
-            if (!containerTag)
-                return null;
-            var iid = containerTag.getAttribute("data-cb-instance"), cbid = containerTag.getAttribute("data-cb-id");
-            if (!iid || !cbid)
-                return null;
-            return [iid, cbid];
-        }
-    })(Sxc = ToSic.Sxc || (ToSic.Sxc = {}));
-})(ToSic || (ToSic = {}));
-var ToSic;
-(function (ToSic) {
-    var Sxc;
-    (function (Sxc) {
         var TotalPopup = (function () {
             function TotalPopup() {
                 this.frame = undefined;
@@ -424,7 +336,81 @@ var ToSic;
             return UrlParamManager;
         }());
         Sxc.UrlParamManager = UrlParamManager;
-        ;
+    })(Sxc = ToSic.Sxc || (ToSic.Sxc = {}));
+})(ToSic || (ToSic = {}));
+var ToSic;
+(function (ToSic) {
+    var Sxc;
+    (function (Sxc) {
+        var SxcWebApiWithInternals = (function () {
+            function SxcWebApiWithInternals(controller, id, cbid) {
+                this.controller = controller;
+                this.id = id;
+                this.cbid = cbid;
+            }
+            SxcWebApiWithInternals.prototype.get = function (settingsOrUrl, params, data, preventAutoFail) {
+                return this.request(settingsOrUrl, params, data, preventAutoFail, "GET");
+            };
+            SxcWebApiWithInternals.prototype.post = function (settingsOrUrl, params, data, preventAutoFail) {
+                return this.request(settingsOrUrl, params, data, preventAutoFail, "POST");
+            };
+            SxcWebApiWithInternals.prototype.delete = function (settingsOrUrl, params, data, preventAutoFail) {
+                return this.request(settingsOrUrl, params, data, preventAutoFail, "DELETE");
+            };
+            SxcWebApiWithInternals.prototype.put = function (settingsOrUrl, params, data, preventAutoFail) {
+                return this.request(settingsOrUrl, params, data, preventAutoFail, "PUT");
+            };
+            SxcWebApiWithInternals.prototype.request = function (settings, params, data, preventAutoFail, method) {
+                if (typeof params != "object" && typeof params != "undefined")
+                    params = { id: params };
+                if (typeof settings == "string") {
+                    var controllerAction = settings.split("/");
+                    var controllerName = controllerAction[0];
+                    var actionName = controllerAction[1];
+                    if (controllerName === "" || actionName === "")
+                        alert("Error: controller or action not defined. Will continue with likely errors.");
+                    settings = {
+                        controller: controllerName,
+                        action: actionName,
+                        params: params,
+                        data: data,
+                        url: controllerAction.length > 2 ? settings : null,
+                        preventAutoFail: preventAutoFail
+                    };
+                }
+                var defaults = {
+                    method: method === null ? "POST" : method,
+                    params: null,
+                    preventAutoFail: false
+                };
+                settings = $.extend({}, defaults, settings);
+                var sf = $.ServicesFramework(this.id);
+                var promise = $.ajax({
+                    type: settings.method,
+                    dataType: settings.dataType || "json",
+                    async: true,
+                    data: JSON.stringify(settings.data),
+                    contentType: "application/json",
+                    url: this.getActionUrl(settings),
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("ContentBlockId", this.cbid);
+                        sf.setModuleHeaders(xhr);
+                    }
+                });
+                if (!settings.preventAutoFail)
+                    promise.fail(this.controller.showDetailedHttpError);
+                return promise;
+            };
+            SxcWebApiWithInternals.prototype.getActionUrl = function (settings) {
+                var sf = $.ServicesFramework(this.id);
+                var base = (settings.url)
+                    ? this.controller.resolveServiceUrl(settings.url)
+                    : sf.getServiceRoot("2sxc") + "app/auto/api/" + settings.controller + "/" + settings.action;
+                return base + (settings.params === null ? "" : ("?" + $.param(settings.params)));
+            };
+            return SxcWebApiWithInternals;
+        }());
+        Sxc.SxcWebApiWithInternals = SxcWebApiWithInternals;
     })(Sxc = ToSic.Sxc || (ToSic.Sxc = {}));
 })(ToSic || (ToSic = {}));
 if (!window.$2sxc)
