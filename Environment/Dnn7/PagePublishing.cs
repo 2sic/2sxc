@@ -38,14 +38,14 @@ namespace ToSic.SexyContent.Environment.Dnn7
             if (IsVersioningEnabled(moduleId))
             {
                 var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
-                if (moduleVersionSettings.IsLatestVersionPublished())
-                {
+                //if (moduleVersionSettings.IsLatestVersionPublished())
+                //{
                     // If the latest version is published, get an new version number and submit it to DNN
                     TabChangeTracker.Instance.TrackModuleModification
                     (
                         moduleVersionSettings.ModuleInfo, moduleVersionSettings.IncreaseLatestVersion(), userId
                     );
-                }
+                //}
             }
 
             var versioningActionInfo = new VersioningActionInfo();
