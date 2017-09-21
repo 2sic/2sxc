@@ -306,3 +306,8 @@ h3.clickable:hover, h4.clickable:hover {
 
 .hover-pair .hover-hover { display: none; }
 .hover-pair:hover .hover-hover { display: block; }
+
+/* special design for the content-fields table */
+.eav-admin-field-list .type-empty {
+    background: #eeeeee;
+}

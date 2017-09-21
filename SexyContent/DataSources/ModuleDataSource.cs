@@ -18,24 +18,25 @@ namespace ToSic.SexyContent.DataSources
         {
             get
             {
-                if (_sxcContext == null)
-                {
-                    var sxciProvider = ConfigurationProvider.Sources["SxcInstance"];
-                    if(sxciProvider == null)
-                        throw new Exception("value provider didn't have sxc provider - can't use module data source");
+                if (_sxcContext != null) return _sxcContext;
 
-                    _sxcContext = (sxciProvider as SxcInstanceValueProvider)?
-                        .SxcInstance 
-                        ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
+                if(!HasSxcContext)
+                    throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
-                    //var provider = ConfigurationProvider as SxcValueCollectionProvider;
-                    //_sxcContext = provider?.SxcInstance;
-                    //if (provider == null)
-                    //    throw new Exception("SxcContent is still null - can't access the SxcContent before initializing it");
-                }
+                var sxciProvider = ConfigurationProvider.Sources["SxcInstance"];
+                _sxcContext = (sxciProvider as SxcInstanceValueProvider)?
+                              .SxcInstance 
+                              ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
+
+                //var provider = ConfigurationProvider as SxcValueCollectionProvider;
+                //_sxcContext = provider?.SxcInstance;
+                //if (provider == null)
+                //    throw new Exception("SxcContent is still null - can't access the SxcContent before initializing it");
                 return _sxcContext;
             }
         }
+
+        internal bool HasSxcContext => ConfigurationProvider.Sources.ContainsKey("SxcInstance");
 
 		private ContentGroup _contentGroup;
 		private ContentGroup ContentGroup
@@ -52,12 +53,12 @@ namespace ToSic.SexyContent.DataSources
                             throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
                         var tabId = ModuleController.Instance.GetTabModulesByModule(ModuleId.Value)[0].TabID;
                         var cgm = new ContentGroupManager(ZoneId, AppId,
-                            SxcContext.Environment.Permissions.UserMayEditContent,
+                            HasSxcContext && SxcContext.Environment.Permissions.UserMayEditContent,
                             new Environment.Dnn7.PagePublishing().IsVersioningEnabled(ModuleId.Value));
                         var res = cgm.GetContentGroupForModule(ModuleId.Value, tabId);
-                        var _contentGroupGuid = res.Item1;
-                        var _previewTemplateGuid = res.Item2;
-                        _contentGroup = cgm.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid); 
+                        var contentGroupGuid = res.Item1;
+                        var previewTemplateGuid = res.Item2;
+                        _contentGroup = cgm.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid); 
 
                         //_contentGroup = new ContentGroupManager(ZoneId, AppId, SxcContext.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(ModuleId.Value))
                         //    .GetContentGroupForModule(ModuleId.Value, tabId);
@@ -77,38 +78,20 @@ namespace ToSic.SexyContent.DataSources
 
         #region Cached properties for Content, Presentation etc. --> not necessary, as each stream auto-caches
         private IDictionary<int, IEntity> _content;
-        private IDictionary<int, IEntity> GetContent()
-        {
-            try
-            {
-                return _content ??
-                       (_content =
-                           GetStream(ContentGroup.Content, Template.ContentDemoEntity, ContentGroup.Presentation,
-                               Template.PresentationDemoEntity));
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error loading items of a module - probably the module-id is incorrect - happens a lot with test-values on visual queries.", ex);
-            }
-        }
+
+        private IDictionary<int, IEntity> GetContent() => _content ?? (_content =
+                                                              GetStream(ContentGroup.Content,
+                                                                  Template.ContentDemoEntity, 
+                                                                  ContentGroup.Presentation,
+                                                                  Template.PresentationDemoEntity));
 
         private IDictionary<int, IEntity> _listContent;
-        private IDictionary<int, IEntity> GetListContent()
-        {
-            try
-            {
 
-                return _listContent ??
-                   (_listContent =
-                       GetStream(ContentGroup.ListContent, Template.ListContentDemoEntity, ContentGroup.ListPresentation,
-                           Template.ListPresentationDemoEntity, true));
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error loading items of a module - probably the module-id is incorrect - happens a lot with test-values on visual queries.", ex);
-            }
-
-        }
+        private IDictionary<int, IEntity> GetListContent() => _listContent ?? (_listContent =
+                                                                  GetStream(ContentGroup.ListContent,
+                                                                      Template.ListContentDemoEntity,
+                                                                      ContentGroup.ListPresentation,
+                                                                      Template.ListPresentationDemoEntity, true));
 
         #endregion
 
@@ -117,67 +100,104 @@ namespace ToSic.SexyContent.DataSources
 
 	    private IDictionary<int, IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity, bool isListHeader = false)
         {
-			var entitiesToDeliver = new Dictionary<int, IEntity>();
-            // if no template is defined, return empty list
-			if (ContentGroup.Template == null && OverrideTemplate == null /*!OverrideTemplateId.HasValue*/) return entitiesToDeliver;
-
-			var contentEntities = content.ToList(); // Create copy of list (not in cache) because it will get modified
-
-            // If no Content Elements exist and type is content (means, presentation is not null), add an empty entity (demo entry will be taken for this)
-            if (content.Count == 0 && presentation != null)
-                contentEntities.Add(null);
-
-            var originals = In["Default"].List;
-
-            for (var i = 0; i < contentEntities.Count; i++)
+            try
             {
-                // get the entity, if null: try to substitute with the demo item
-                var contentEntity = contentEntities[i];
+                var entitiesToDeliver = new Dictionary<int, IEntity>();
+                // if no template is defined, return empty list
+                if (ContentGroup.Template == null && OverrideTemplate == null) return entitiesToDeliver;
 
-                // check if it "exists" in the in-stream. if not, then it's probably unpublished
-                // so try revert back to the demo-item (assuming it exists...)
-                if (contentEntity == null || !originals.ContainsKey(contentEntity.EntityId))
-                    contentEntity = contentDemoEntity;
+                var contentEntities = content.ToList(); // Create copy of list (not in cache) because it will get modified
 
-                // now check again...
-                // ...we can't deliver entities that are not delivered by base (original stream), so continue
-                if (contentEntity == null || !originals.ContainsKey(contentEntity.EntityId))
-                    continue;
+                // If no Content Elements exist and type is content (means, presentation is not null), add an empty entity (demo entry will be taken for this)
+                if (content.Count == 0 && presentation != null)
+                    contentEntities.Add(null);
 
-                // use demo-entites where available
-                var entityId = contentEntity.EntityId;
+                var originals = In["Default"].List;
+                int i = 0, entityId = 0, prevIdForErrorReporting = 0;
+                try
+                {
+                    for (; i < contentEntities.Count; i++)
+                    {
+                        // get the entity, if null: try to substitute with the demo item
+                        var contentEntity = contentEntities[i];
 
-                IEntity presentationEntity = null;
+                        // check if it "exists" in the in-stream. if not, then it's probably unpublished
+                        // so try revert back to the demo-item (assuming it exists...)
+                        if (contentEntity == null || !originals.ContainsKey(contentEntity.EntityId))
+                            contentEntity = contentDemoEntity;
 
-	            if (presentation != null)
-	            {
-		            // Try to find presentation entity
-		            var presentationEntityId = (presentation.Count - 1 >= i) && presentation[i] != null && originals.ContainsKey(presentation[i].EntityId) ? presentation[i].EntityId : new int?();
+                        // now check again...
+                        // ...we can't deliver entities that are not delivered by base (original stream), so continue
+                        if (contentEntity == null || !originals.ContainsKey(contentEntity.EntityId))
+                            continue;
 
-		            // If there is no presentation entity, take default entity
-		            if (!presentationEntityId.HasValue)
-			            presentationEntityId = presentationDemoEntity != null && originals.ContainsKey(presentationDemoEntity.EntityId) ? presentationDemoEntity.EntityId : new int?();
+                        // use demo-entites where available
+                        entityId = contentEntity.EntityId;
 
-		            presentationEntity = presentationEntityId.HasValue ? originals[presentationEntityId.Value] : null;
-	            }
+                        IEntity presentationEntity = null;
+                        try
+                        {
+                            if (presentation != null)
+                            {
+                                // Try to find presentation entity
+                                var presentationEntityId =
+                                    presentation.Count - 1 >= i && presentation[i] != null &&
+                                    originals.ContainsKey(presentation[i].EntityId)
+                                        ? presentation[i].EntityId
+                                        : new int?();
+
+                                // If there is no presentation entity, take default entity
+                                if (!presentationEntityId.HasValue)
+                                    presentationEntityId =
+                                        presentationDemoEntity != null &&
+                                        originals.ContainsKey(presentationDemoEntity.EntityId)
+                                            ? presentationDemoEntity.EntityId
+                                            : new int?();
+
+                                presentationEntity =
+                                    presentationEntityId.HasValue ? originals[presentationEntityId.Value] : null;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("trouble adding presentation of " + entityId, ex);
+                        }
 
 
-	            var key = entityId;
+                        var key = entityId;
 
-                // This ensures that if an entity is added more than once, the dictionary doesn't complain because of duplicate keys
-                while (entitiesToDeliver.ContainsKey(key))
-                    key += 1000000000;
+                        // This ensures that if an entity is added more than once, the dictionary doesn't complain because of duplicate keys
+                        while (entitiesToDeliver.ContainsKey(key))
+                            key += 1000000000;
 
-				entitiesToDeliver.Add(key, new EntityInContentGroup(originals[entityId])
-				{
-				    SortOrder = isListHeader ? -1 : i, 
-                    ContentGroupItemModified = originals[entityId].Modified, 
-                    Presentation = presentationEntity, 
-                    GroupId = ContentGroup.ContentGroupGuid
-				});
+                        try
+                        {
+                            entitiesToDeliver.Add(key, new EntityInContentGroup(originals[entityId])
+                            {
+                                SortOrder = isListHeader ? -1 : i,
+                                ContentGroupItemModified = originals[entityId].Modified,
+                                Presentation = presentationEntity,
+                                GroupId = ContentGroup.ContentGroupGuid
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("trouble adding to output-list, id was " + entityId, ex);
+                        }
+                        prevIdForErrorReporting = entityId;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("problems looping items - had to stop on id " + i + "; current entity is " + entityId + "; prev is " + prevIdForErrorReporting, ex);
+                }
+
+                return entitiesToDeliver;
             }
-
-            return entitiesToDeliver;
+            catch (Exception ex)
+            {
+                throw new Exception("Error loading items of a module - probably the module-id is incorrect - happens a lot with test-values on visual queries.", ex);
+            }
         }
 
         public int? ModuleId
@@ -186,10 +206,9 @@ namespace ToSic.SexyContent.DataSources
             {
                 EnsureConfigurationIsLoaded();
                 var listIdString = Configuration["ModuleId"];
-                int listId;
-                return int.TryParse(listIdString, out listId) ? listId : new int?();
+                return int.TryParse(listIdString, out var listId) ? listId : new int?();
             }
-            set { Configuration["ModuleId"] = value.ToString(); }
+            set => Configuration["ModuleId"] = value.ToString();
         }
 
 	    public bool UseSxcInstanceContentGroup = false;
