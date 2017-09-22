@@ -6,11 +6,21 @@ using System;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     internal partial class PagePublishing : IPagePublishing
     {
+        private readonly Log _log = new Log("DnPPubl");
+
+        public PagePublishing(Log parentLog = null)
+        {
+            if (parentLog != null)
+                _log.LinkTo(parentLog);
+        }
+
+
         public bool Supported => true;
         
         public PublishingMode Requirements(int moduleId)
@@ -35,15 +45,19 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void DoInsidePublishing(int moduleId, int userId, Action<VersioningActionInfo> action)
         {
-            if (IsVersioningEnabled(moduleId))
+            var enabled = IsVersioningEnabled(moduleId);
+            _log.Add("do inside mid:" + moduleId + ", uid:" + userId + ", enabled:" + enabled);
+            if (enabled)
             {
                 var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
                 if (moduleVersionSettings.IsLatestVersionPublished())
                 {
+                    _log.Add("tell dnn that we're changing something");
                     // If the latest version is published, get an new version number and submit it to DNN
-                    TabChangeTracker.Instance.TrackModuleModification
-                    (
-                        moduleVersionSettings.ModuleInfo, moduleVersionSettings.IncreaseLatestVersion(), userId
+                    TabChangeTracker.Instance.TrackModuleModification(
+                        moduleVersionSettings.ModuleInfo,
+                        moduleVersionSettings.IncreaseLatestVersion(),
+                        userId
                     );
                 }
             }
