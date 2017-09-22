@@ -45,21 +45,17 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void DoInsidePublishing(int moduleId, int userId, Action<VersioningActionInfo> action)
         {
-            var enabled = IsVersioningEnabled(moduleId);
-            _log.Add("do inside mid:" + moduleId + ", uid:" + userId + ", enabled:" + enabled);
-            if (enabled)
+            if (IsVersioningEnabled(moduleId))
             {
                 var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
-                if (moduleVersionSettings.IsLatestVersionPublished())
-                {
-                    _log.Add("tell dnn that we're changing something");
-                    // If the latest version is published, get an new version number and submit it to DNN
-                    TabChangeTracker.Instance.TrackModuleModification(
-                        moduleVersionSettings.ModuleInfo,
-                        moduleVersionSettings.IncreaseLatestVersion(),
-                        userId
-                    );
-                }
+                
+                // Get an new version number and submit it to DNN
+                // The submission must be made every time something changes, because a "discard" could have happened
+                // in the meantime.
+                TabChangeTracker.Instance.TrackModuleModification
+                (
+                    moduleVersionSettings.ModuleInfo, moduleVersionSettings.IncreaseLatestVersion(), userId
+                );
             }
 
             var versioningActionInfo = new VersioningActionInfo();
