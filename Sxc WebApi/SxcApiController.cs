@@ -38,17 +38,6 @@ namespace ToSic.SexyContent.WebApi
 
 	    // Sexy object should not be accessible for other assemblies - just internal use
         internal SxcInstance SxcContext { get; private set; }
-        //{
-        //    get
-        //    {
-        //        if(Request == null)
-        //            throw new Exception("Request is null - some code is trying to access the SxcContext before the http Request is ready");
-        //        return _instanceContext ?? (_instanceContext = Helpers.GetSxcOfApiRequest(Request, true));
-        //    }
-        //}
-        //private SxcInstance _instanceContext;
-
-        //protected IEnvironment Env = new Environment.DnnEnvironment();
 
         #region AppAndDataHelpers implementation
 

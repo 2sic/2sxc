@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.SexyContent.WebApi.Dnn;
 
@@ -15,13 +16,14 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     [SxcWebApiExceptionHandling]
     public class ContentExportController : DnnApiControllerWithFixes // DnnApiController // SxcApiController
 	{
-        private readonly Eav.WebApi.ContentExportController _eavCtc = new Eav.WebApi.ContentExportController();
-        //public ContentExportController()
-        //{
-        //    // now using dependency injection
-        //    //_eavCtc = new Eav.WebApi.ContentExportController();
-        //    //_eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
-        //}
+	    protected override void Initialize(HttpControllerContext controllerContext)
+	    {
+	        base.Initialize(controllerContext); // very important!!!
+	        Log.Rename("2sSysC");
+            _eavCtc = new Eav.WebApi.ContentExportController();
+	    }
+
+	    private Eav.WebApi.ContentExportController _eavCtc;
 
 
         [HttpGet]

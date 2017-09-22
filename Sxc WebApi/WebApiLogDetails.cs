@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.WebApi
                               false)) return;
 
                         var log = actionExecutedContext.Request.Properties[Constants.EavLogKey] as Log;
-                        Environment.Dnn7.Logging.LogToDnn("Message", log?.SerializeTree());
+                        Environment.Dnn7.Logging.LogToDnn("Api", "Auto-Log", log);
                     }
                 }
             }

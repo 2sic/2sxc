@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.WebApi
                 if (context.Request?.Properties.ContainsKey(Constants.EavLogKey) ?? false)
                 {
                     var log = context.Request.Properties[Constants.EavLogKey] as Log;
-                    Environment.Dnn7.Logging.LogToDnn("Message", log?.SerializeTree());
+                    Environment.Dnn7.Logging.LogToDnn("Exception", "Auto-Log", log);
                 }
                 else
                     Environment.Dnn7.Logging.LogToDnn("Message", "no additional internal log to add, EavLog doesn't exist");

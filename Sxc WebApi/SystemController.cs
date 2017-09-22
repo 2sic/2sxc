@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Common;
@@ -26,6 +27,7 @@ namespace ToSic.SexyContent.WebApi
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
+            base.Initialize(controllerContext); // very important!!!
             Log.Rename("2sSysC");
         }
 
@@ -186,12 +188,15 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public string ExtendedLogging(int duration = 1)
         {
-            Log.Add("set extended logging duration:" + duration);
+            Log.Add("Extended logging will set for duration:" + duration);
             if (duration > 10)
                 duration = 10;
             ControllerContext.Configuration.Properties.GetOrAdd(Constants.AdvancedLoggingEnabledKey, duration > 0);
-            ControllerContext.Configuration.Properties.GetOrAdd(Constants.AdvancedLoggingTillKey, DateTime.Now.AddMinutes(duration));
-            return $"Extended logging activated for {duration} minutes";
+            var timeout = DateTime.Now.AddMinutes(duration);
+            ControllerContext.Configuration.Properties.AddOrUpdate(Constants.AdvancedLoggingTillKey, timeout, (a, b) => timeout);
+            var msg = $"Extended logging activated for {duration} minutes to {timeout}";
+            Log.Add(msg);
+            return msg;
         }
 
         #endregion

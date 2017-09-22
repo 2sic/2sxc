@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
@@ -24,11 +25,16 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		{
 			_controller = new Eav.WebApi.PipelineDesignerController("SiteSqlServer");
 		}
+	    protected override void Initialize(HttpControllerContext controllerContext)
+	    {
+	        base.Initialize(controllerContext); // very important!!!
+	        Log.Rename("2sPipC");
+	    }
 
-		/// <summary>
-		/// Get a Pipeline with DataSources
-		/// </summary>
-		[HttpGet]
+        /// <summary>
+        /// Get a Pipeline with DataSources
+        /// </summary>
+        [HttpGet]
 		public Dictionary<string, object> GetPipeline(int appId, int? id = null) => _controller.GetPipeline(appId, id);
 
 	    /// <summary>

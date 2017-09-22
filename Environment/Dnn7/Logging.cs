@@ -1,34 +1,40 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using DotNetNuke.Services.Log.EventLog;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     public static class Logging
     {
-        public static void LogToDnn(string key, string message, LogInfo logInfo = null, DnnHelper dnn = null)
+        public static void LogToDnn(string key, string message, Log log = null, DnnHelper dnn = null)
         {
             try
             {
-                if (logInfo == null)
-                    logInfo = new LogInfo();
+                //if (logInfo == null)
+                    var logInfo = new LogInfo();
 
                 if (dnn != null)
                 {
                     logInfo.LogUserName = dnn.User?.DisplayName ?? "unknown";
                     logInfo.LogUserID = dnn.User?.UserID ?? -1;
                     logInfo.LogPortalID = dnn.Portal.PortalId;
-                    logInfo.AddProperty("ModuleId", dnn?.Module?.ModuleID.ToString() ?? "unknown");
+                    logInfo.AddProperty("ModuleId", dnn.Module?.ModuleID.ToString() ?? "unknown");
                 }
                 if(string.IsNullOrEmpty(logInfo.LogTypeKey ))
                     logInfo.LogTypeKey = EventLogController.EventLogType.ADMIN_ALERT.ToString();
 
-                var messages = Split(message, 480).ToList();
-                var num = 1;
-                messages.ForEach(m => logInfo.AddProperty("M" + num++, m));
 
+                if(!string.IsNullOrEmpty(message))
+                    logInfo.AddProperty(key, message);
+
+                log?.Entries.ForEach(e => logInfo.AddProperty(e.Source, e.Message));
+                //var messages = Split(message, 480).ToList();
+                //var num = 1;
+                //messages = message.Split('\n').ToList();
+                //messages.ForEach(m => logInfo.AddProperty("M" + num++, "\n" + m));
+            
                 new EventLogController().AddLog(logInfo);
             }
             catch

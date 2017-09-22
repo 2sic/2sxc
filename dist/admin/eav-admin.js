@@ -1286,10 +1286,18 @@ angular.module("EavDirectives", [])
             controller: ["$scope", "debugState", function ($scope, debugState) {
                 $scope.debugState = debugState;
 
+                function askLogging() {
+                    var duration = prompt("enable extended logging for a few minutes? type in duration below: ", 1);
+                    if (duration === null || duration === undefined) return;
+                    debugState.enableExtendedLogging(duration).then(function (res) {
+                        console.log(res.data);
+                    });
+                }
+
+
                 $scope.askForLogging = function () {
-                    console.log("on", debugState.on);
                     if (!debugState.on) return;
-                    debugState.askLogging();
+                    askLogging();
                 };
             }]
         };
@@ -2400,16 +2408,6 @@ angular.module("EavServices")
                 e.alreadySwitchedDebugState = true;
             }
         };
-
-        svc.askLogging = function() {
-            var duration = prompt("enable extended logging for a few minutes? type in duration below: ", 1);
-            if (duration === null || duration === undefined) return;
-            svc.enableExtendedLogging(duration).then(function(res) {
-                console.log(res.data);
-            });
-        };
-
-        console.log('new code');
 
         svc.enableExtendedLogging = function(duration) {
             return $http.get("app-sys/system/extendedlogging", { params: { "duration": duration } });

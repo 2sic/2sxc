@@ -6,7 +6,6 @@ using DotNetNuke.Web.Api;
 using ToSic.SexyContent.Serializers;
 using System.Linq;
 using System.Web.Http.Controllers;
-using DotNetNuke.Common;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Interfaces;
@@ -25,43 +24,24 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	[SupportedModules("2sxc,2sxc-app")]
 	public class EntitiesController : SxcApiController
 	{
-	    //private Eav.WebApi.EntitiesController _eAc;
 	    private Eav.WebApi.EntitiesController EavEntitiesController { get; set; }
-	    //{
-	    //    get
-	    //    {
-	    //        if (_eAc != null) return _eAc;
-     //           _eAc = new Eav.WebApi.EntitiesController(Log);
-	    //        ((Serializer)_eAc.Serializer).Sxc = SxcContext;
-	    //        return _eAc;
-	    //    }
-     //   }
-
+ 
 	    protected override void Initialize(HttpControllerContext controllerContext)
 	    {
-	        base.Initialize(controllerContext);
-	        Log.Rename("2sEntC");
+	        base.Initialize(controllerContext); // very important!!!
+            Log.Rename("2sEntC");
             EavEntitiesController = new Eav.WebApi.EntitiesController(Log);
 	        ((Serializer)EavEntitiesController.Serializer).Sxc = SxcContext;
         }
-
-        //private void EnsureSerializerHasSxc()
-        //{
-        //    //EavEntitiesController 
-        //    //((Serializer) EavEntitiesController.Serializer).Sxc = SxcContext;
-        //}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
-            // todo: try to refactor into the other "GetOne"
-            // note that the culture-code isn't actually used...
-            // tmp: EnsureSerializerHasSxc();
-
             // check if admin rights, then ok
             PerformSecurityCheck(contentType, PermissionGrant.Read, true, useContext: true, appId: appId);
 
+            // note that the culture-code isn't actually used...
             return EavEntitiesController.GetOne(contentType, id, appId, cultureCode);
         }
 
@@ -83,7 +63,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                     continue;
                 }
                 var app = new App(PortalSettings.Current, appId);
-                app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(this.ActiveModule.ModuleID), Data.ConfigurationProvider);
+                app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, new PagePublishing().IsVersioningEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
                 
                 var contentGroup = app.ContentGroupManager.GetContentGroup(reqItem.Group.Guid);
                 var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(reqItem.Group.Part);
@@ -117,7 +97,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             }
 
             // Now get all
-            // tmp: EnsureSerializerHasSxc();
             return EavEntitiesController.GetManyForEditing(appId, newItems);
 
             // todo: find out how to handle Presentation items
@@ -161,8 +140,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             }
             else InternalSave(null);
 
-            // testing
-            //Logging.LogToDnn("2sxc Save", Log.SerializeTree(), dnn: Dnn);
             return postSaveIds;
         }
 
@@ -170,7 +147,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             var myLog = new Log("GrpPrc", Log, "start");
             var app = new App(PortalSettings.Current, appId);
-            app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(this.ActiveModule.ModuleID), Data.ConfigurationProvider);
+            app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, new PagePublishing().IsVersioningEnabled(this.ActiveModule.ModuleID), Data.ConfigurationProvider);
 
             foreach (var entitySets in groupItems)
             {
@@ -225,18 +202,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         /// </summary>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, int appId, string cultureCode = null)
-		{
-            // tmp: EnsureSerializerHasSxc();
-            return EavEntitiesController.GetEntities(contentType, cultureCode, appId);
-		}
+        public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, int appId, string cultureCode = null) 
+            => EavEntitiesController.GetEntities(contentType, cultureCode, appId);
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
-            // tmp: EnsureSerializerHasSxc();
-
             // check if admin rights, then ok
             PerformSecurityCheck(contentType, PermissionGrant.Read, true, useContext: true, appId: appId);
 
@@ -249,8 +221,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
-            // tmp: EnsureSerializerHasSxc();
-
             // check if admin rights, then ok
             PerformSecurityCheck(contentType, PermissionGrant.Delete, true, useContext: true, appId: appId);
 
@@ -261,8 +231,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
-            // tmp: EnsureSerializerHasSxc();
-
             // check if admin rights, then ok
             PerformSecurityCheck(contentType, PermissionGrant.Delete, true, useContext: true, appId: appId);
 
@@ -283,15 +251,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		/// </summary>
 		[HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IContentType GetContentType(string contentType, int appId)
-		{
-            // tmp: EnsureSerializerHasSxc();
+        public IContentType GetContentType(string contentType, int appId) 
+            => new Eav.WebApi.ContentTypeController().GetSingle(appId, contentType, null);
 
-            return new Eav.WebApi.ContentTypeController().GetSingle(appId, contentType, null);
-            // return entitesController.GetContentType(contentType, appId);
-		}
-
-        #endregion
+	    #endregion
 
         #region versioning
 
@@ -299,7 +262,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public List<ItemHistory> History(int appId, [FromBody]ItemIdentifier item)
 	    {
-            // tmp: EnsureSerializerHasSxc();
             ResolveItemIdOfGroup(appId, item);
             return EavEntitiesController.History(appId, item.EntityId);
         }
@@ -317,7 +279,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Restore(int appId, int changeId, [FromBody]ItemIdentifier item)
 	    {
-            // tmp: EnsureSerializerHasSxc();
             ResolveItemIdOfGroup(appId, item);
             return EavEntitiesController.Restore(appId, item.EntityId, changeId);
 	    }

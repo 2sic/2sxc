@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Security.Authentication;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using System.Xml.Linq;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Apps;
@@ -20,6 +21,11 @@ namespace ToSic.SexyContent.WebApi
 {
     public class ImportExportController : DnnApiControllerWithFixes
     {
+        protected override void Initialize(HttpControllerContext controllerContext)
+        {
+            base.Initialize(controllerContext); // very important!!!
+            Log.Rename("2sIExC");
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
