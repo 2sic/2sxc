@@ -5,6 +5,8 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.Serializers;
 using System.Linq;
+using System.Web.Http.Controllers;
+using DotNetNuke.Common;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Interfaces;
@@ -23,18 +25,25 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	[SupportedModules("2sxc,2sxc-app")]
 	public class EntitiesController : SxcApiController
 	{
-	    private Eav.WebApi.EntitiesController _eAc;
-	    private Eav.WebApi.EntitiesController EavEntitiesController
-	    {
-	        get
-	        {
-	            if (_eAc != null) return _eAc;
-                _eAc = new Eav.WebApi.EntitiesController(Log);
-	            ((Serializer)_eAc.Serializer).Sxc = SxcContext;
-	            return _eAc;
-	        }
-        }
+	    //private Eav.WebApi.EntitiesController _eAc;
+	    private Eav.WebApi.EntitiesController EavEntitiesController { get; set; }
+	    //{
+	    //    get
+	    //    {
+	    //        if (_eAc != null) return _eAc;
+     //           _eAc = new Eav.WebApi.EntitiesController(Log);
+	    //        ((Serializer)_eAc.Serializer).Sxc = SxcContext;
+	    //        return _eAc;
+	    //    }
+     //   }
 
+	    protected override void Initialize(HttpControllerContext controllerContext)
+	    {
+	        base.Initialize(controllerContext);
+	        Log.Rename("2sEntC");
+            EavEntitiesController = new Eav.WebApi.EntitiesController(Log);
+	        ((Serializer)EavEntitiesController.Serializer).Sxc = SxcContext;
+        }
 
         //private void EnsureSerializerHasSxc()
         //{
@@ -153,7 +162,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             else InternalSave(null);
 
             // testing
-            LogToDnn("2sxc Save", Log.Serialize());
+            //Logging.LogToDnn("2sxc Save", Log.SerializeTree(), dnn: Dnn);
             return postSaveIds;
         }
 

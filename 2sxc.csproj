@@ -131,6 +131,7 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Environment\Dnn7\Logging.cs" />
     <Compile Include="Environment\Dnn7\Versioning.cs" />
     <Compile Include="Environment\Dnn7\ModuleSettingsHelper.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing_ModuleSettings.cs" />

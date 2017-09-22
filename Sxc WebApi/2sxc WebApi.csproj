@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebApiLogDetails.cs" />
     <Compile Include="Adam\AdamController.cs" />
     <Compile Include="AppApiControllerSelector.cs" />
     <Compile Include="AppAssetsController.cs" />

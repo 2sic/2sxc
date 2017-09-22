@@ -12,6 +12,10 @@ namespace ToSic.SexyContent
         // Special constant to protect functions which should use named parameters
         internal const string RandomProtectionParameter = "random-y023n";
 
+        public const string EavLogKey = "EavLog";
+        public const string AdvancedLoggingEnabledKey = "2sxc-enable-extended-logging";
+        public const string AdvancedLoggingTillKey = "2sxc-extended-logging-expires";
+
         // ReSharper disable once UnusedParameter.Local
         internal static void ProtectAgainstMissingParameterNames(string criticalParameter, string protectedMethod)
         {

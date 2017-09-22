@@ -1,11 +1,16 @@
-﻿using DotNetNuke.Web.Api;
+﻿using System.Web.Http.Controllers;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
-	public class DnnApiControllerWithFixes: DnnApiController
+    [WebApiLogDetails]
+    public class DnnApiControllerWithFixes: DnnApiController
 	{
         protected IEnvironment Env = new Environment.DnnEnvironment();
+
+        protected Log Log = new Log("DnnApi");
 
 	    public DnnApiControllerWithFixes()
 	    {
@@ -13,9 +18,18 @@ namespace ToSic.SexyContent.WebApi.Dnn
             // this is technically only necessary, when dnn just restarted and didn't already set this
             Settings.EnsureSystemIsInitialized();
 
-            // ensure that the call to this webservice doesn't reset the language in the cookie
-            // this is a dnn-bug
-            Helpers.RemoveLanguageChangingCookie();
+	        // ensure that the call to this webservice doesn't reset the language in the cookie
+	        // this is a dnn-bug
+	        Helpers.RemoveLanguageChangingCookie();
+        }
+
+        protected override void Initialize(HttpControllerContext controllerContext)
+	    {
+            var req = controllerContext.Request;
+            // Add the logger to the requst, in case it's needed in error-reporting
+            req.Properties.Add(Constants.EavLogKey, Log);
+
+	        base.Initialize(controllerContext);
         }
 
 

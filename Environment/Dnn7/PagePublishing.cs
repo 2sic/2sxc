@@ -6,11 +6,21 @@ using System;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     internal partial class PagePublishing : IPagePublishing
     {
+        #region logging
+        private readonly Log _log = new Log("DnPubl");
+        #endregion
+
+        public PagePublishing(Log parentLog = null)
+        {
+            _log.LinkTo(parentLog);
+        }
+
         public bool Supported => true;
         
         public PublishingMode Requirements(int moduleId)
@@ -35,16 +45,19 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void DoInsidePublishing(int moduleId, int userId, Action<VersioningActionInfo> action)
         {
-            if (IsVersioningEnabled(moduleId))
+            var enabled = IsVersioningEnabled(moduleId);
+            _log.Add("do inside mid:" + moduleId + ", uid:" + userId + ", enabled:" + enabled);
+            if (enabled)
             {
                 var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
                 
                 // Get an new version number and submit it to DNN
                 // The submission must be made every time something changes, because a "discard" could have happened
                 // in the meantime.
-                TabChangeTracker.Instance.TrackModuleModification
-                (
-                    moduleVersionSettings.ModuleInfo, moduleVersionSettings.IncreaseLatestVersion(), userId
+                TabChangeTracker.Instance.TrackModuleModification(
+                    moduleVersionSettings.ModuleInfo, 
+                    moduleVersionSettings.IncreaseLatestVersion(), 
+                    userId
                 );
             }
 

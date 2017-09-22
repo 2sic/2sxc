@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using DotNetNuke.Services.Log.EventLog;
+using System.Web.Http.Controllers;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.ValueProvider;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Adam;
@@ -23,21 +22,31 @@ namespace ToSic.SexyContent.WebApi
     [SxcWebApiExceptionHandling]
     public abstract class SxcApiController : DnnApiControllerWithFixes, IAppAndDataHelpers
     {
+        #region constructor
+
+        protected override void Initialize(HttpControllerContext controllerContext)
+        {
+            base.Initialize(controllerContext);
+            Log.Rename("2sApiC");
+            SxcContext = Helpers.GetSxcOfApiRequest(Request, true);
+        }
+        #endregion
+
         private AppAndDataHelpers AppAndDataHelpers => _appAndDataHelpers ?? (_appAndDataHelpers = new AppAndDataHelpers(SxcContext, SxcContext?.ModuleInfo));
 
         private AppAndDataHelpers _appAndDataHelpers;
 
 	    // Sexy object should not be accessible for other assemblies - just internal use
-        internal SxcInstance SxcContext
-        {
-            get
-            {
-                if(Request == null)
-                    throw new Exception("Request is null - some code is trying to access the SxcContext before the http Request is ready");
-                return _instanceContext ?? (_instanceContext = Helpers.GetSxcOfApiRequest(Request, true));
-            }
-        }
-        private SxcInstance _instanceContext;
+        internal SxcInstance SxcContext { get; private set; }
+        //{
+        //    get
+        //    {
+        //        if(Request == null)
+        //            throw new Exception("Request is null - some code is trying to access the SxcContext before the http Request is ready");
+        //        return _instanceContext ?? (_instanceContext = Helpers.GetSxcOfApiRequest(Request, true));
+        //    }
+        //}
+        //private SxcInstance _instanceContext;
 
         //protected IEnvironment Env = new Environment.DnnEnvironment();
 
@@ -264,24 +273,5 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
-        #region event logging
-
-        protected readonly Log Log = new Log("2sApiC");
-
-        protected void LogToDnn(string key, string message)
-        {
-            LogInfo logInfo = new LogInfo
-            {
-                LogUserName = Dnn.User?.DisplayName ?? "unknown",
-                LogUserID = Dnn.User?.UserID ?? -1,
-                LogPortalID = PortalSettings.PortalId,
-                LogTypeKey = EventLogController.EventLogType.ADMIN_ALERT.ToString()
-            };
-            logInfo.AddProperty("ModuleId", Dnn?.Module?.ModuleID.ToString() ?? "unknown");
-            logInfo.AddProperty("Message", message);
-
-            new EventLogController().AddLog(logInfo);
-        }
-        #endregion
     }
 }

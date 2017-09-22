@@ -311,3 +311,8 @@ h3.clickable:hover, h4.clickable:hover {
 .eav-admin-field-list .type-empty {
     background: #eeeeee;
 }
+
+/* special debug stuff */
+.debug-indicator.debug-enabled {
+    color: red;
+}

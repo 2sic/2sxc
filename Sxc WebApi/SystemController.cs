@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Portals;
@@ -22,10 +24,16 @@ namespace ToSic.SexyContent.WebApi
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class SystemController : DnnApiControllerWithFixes
     {
+        protected override void Initialize(HttpControllerContext controllerContext)
+        {
+            Log.Rename("2sSysC");
+        }
 
-	    [HttpGet]
+
+        [HttpGet]
 	    public dynamic GetLanguages()
 	    {
+            Log.Add("get langs");
 	        var portalId = PortalSettings.PortalId;
 	        var zoneId = Env.ZoneMapper.GetZoneId(portalId);
 	        var env = new Environment.DnnEnvironment();
@@ -37,6 +45,8 @@ namespace ToSic.SexyContent.WebApi
 	                Culture = c.Text,
 	                IsEnabled = c.Active
 	            });
+
+            Log.Add("langs - found:" + cultures.Count());
 	        return cultures;
 	    }
 
@@ -168,9 +178,22 @@ namespace ToSic.SexyContent.WebApi
             gsUrl += hostSettings.ContainsKey("GUID") ? "&DnnGUID=" + hostSettings["GUID"] : "";
             return gsUrl;
         }
-        
+
         #endregion
 
+        #region advanced logging
 
+        [HttpGet]
+        public string ExtendedLogging(int duration = 1)
+        {
+            Log.Add("set extended logging duration:" + duration);
+            if (duration > 10)
+                duration = 10;
+            ControllerContext.Configuration.Properties.GetOrAdd(Constants.AdvancedLoggingEnabledKey, duration > 0);
+            ControllerContext.Configuration.Properties.GetOrAdd(Constants.AdvancedLoggingTillKey, DateTime.Now.AddMinutes(duration));
+            return $"Extended logging activated for {duration} minutes";
+        }
+
+        #endregion
     }
 }
