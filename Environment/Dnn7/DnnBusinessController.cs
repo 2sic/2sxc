@@ -10,6 +10,7 @@ using DotNetNuke.Common.Utilities;
 using ToSic.Eav.Apps;
 using System.Linq;
 using ToSic.Eav.Interfaces;
+using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -46,11 +47,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     var appManager = new AppManager(cb.AppId);
 
                     // Add content entities
-                    var list = cb.Data["Default"]?.LightList ?? new List<IEntity>();
+                    IEnumerable<IEntity> list = new List<IEntity>();
+                    list = TryToAddStream(list, cb.Data, "Default");
+                    //var list = cb.Data["Default"]?.LightList ?? new List<IEntity>();
 
                     // Add list content if defined
-                    var cont = cb.Data.Out.ContainsKey("ListContent") ? cb.Data["ListContent"]?.LightList : null;
-                    if (cont != null) list = list.Concat(cont);
+                    list = TryToAddStream(list, cb.Data, "ListContent");
+
+                    // Add list partofpage if defined
+                    list = TryToAddStream(list, cb.Data, "PartOfPage");
 
                     // Find related presentation entities
                     var presentationItems = list
@@ -79,6 +84,13 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
                 throw;
             }
+        }
+
+        private static IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, ViewDataSource data, string key)
+        {
+            var cont = data.Out.ContainsKey(key) ? data[key]?.LightList : null;
+            if (cont != null) list = list.Concat(cont);
+            return list;
         }
 
         public void DeleteVersion(int moduleId, int version)
