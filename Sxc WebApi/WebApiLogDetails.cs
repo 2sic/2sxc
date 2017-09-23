@@ -1,6 +1,7 @@
-﻿using System;
-using System.Web.Http.Filters;
+﻿using System.Web.Http.Filters;
 using ToSic.Eav.Logging.Simple;
+using ToSic.SexyContent.Razor.Helpers;
+using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -13,27 +14,24 @@ namespace ToSic.SexyContent.WebApi
             base.OnActionExecuted(actionExecutedContext);
             try
             {
-                var props = actionExecutedContext.ActionContext?.ControllerContext?.Configuration?.Properties;
-                if (props != null && props.TryGetValue(Constants.AdvancedLoggingEnabledKey, out object enabled))
-                {
-                    if (!(enabled is bool)) return;
-                    if (!(bool) enabled) return;
+                if (!(actionExecutedContext.Request?.Properties.ContainsKey(Constants.EavLogKey) ??
+                      false)) return;
 
-                    if (props.TryGetValue(Constants.AdvancedLoggingTillKey, out object till))
-                    {
-                        if (!(till is DateTime)) return;
-                        var dtmTill = (DateTime) till;
-                        if (dtmTill.CompareTo(DateTime.Now) <= 0) return;
+                var log = actionExecutedContext.Request.Properties[Constants.EavLogKey] as Log;
+                actionExecutedContext.Request.Properties.TryGetValue(Constants.DnnContextKey,
+                    out var dnnContext);
 
-                        if (!(actionExecutedContext.Request?.Properties.ContainsKey(Constants.EavLogKey) ??
-                              false)) return;
 
-                        var log = actionExecutedContext.Request.Properties[Constants.EavLogKey] as Log;
-                        Environment.Dnn7.Logging.LogToDnn("Api", "Auto-Log", log);
-                    }
-                }
+                //if (Logging.CheckIfWeShouldSkipEventLogging(actionExecutedContext.ActionContext?
+                //    .ControllerContext?.Configuration?.Properties)) return;
+
+                Logging.LogToDnn("2sxc-Api", "Auto-Log", log, dnnContext as DnnHelper);
             }
-            catch { }
+            catch
+            {
+                Logging.TryToReportLoggingFailure("WebApiLogDetails");
+            }
         }
+
     }
 }

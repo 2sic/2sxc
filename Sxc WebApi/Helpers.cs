@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Interfaces;
 
@@ -20,9 +21,9 @@ namespace ToSic.SexyContent.WebApi
             public string Value{ get; set; }
         }
 
-        internal static SxcInstance GetSxcOfApiRequest(HttpRequestMessage request, bool allowNoContextFound = false)
+        internal static SxcInstance GetSxcOfApiRequest(HttpRequestMessage request, bool allowNoContextFound = false, Log log = null)
         {
-            string cbidHeader = "ContentBlockId";
+            var cbidHeader = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();
 
             // get url parameters and provide override values to ensure all configuration is 
@@ -42,7 +43,7 @@ namespace ToSic.SexyContent.WebApi
             if (allowNoContextFound & moduleInfo == null)
                 return null;
 
-            IContentBlock contentBlock = new ModuleContentBlock(moduleInfo, urlParams);
+            IContentBlock contentBlock = new ModuleContentBlock(moduleInfo, log, urlParams);
 
             // check if we need an inner block
             if (request.Headers.Contains(cbidHeader)) { 
@@ -50,7 +51,7 @@ namespace ToSic.SexyContent.WebApi
                 int cbid;
                 Int32.TryParse(cbidh, out cbid);
                 if (cbid < 0)   // negative id, so it's an inner block
-                    contentBlock = new EntityContentBlock(contentBlock, cbid);
+                    contentBlock = new EntityContentBlock(contentBlock, cbid, log);
             }
 
             return contentBlock.SxcInstance;

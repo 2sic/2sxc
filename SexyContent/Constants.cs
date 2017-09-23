@@ -13,6 +13,7 @@ namespace ToSic.SexyContent
         internal const string RandomProtectionParameter = "random-y023n";
 
         public const string EavLogKey = "EavLog";
+        public const string DnnContextKey = "DnnContext";
         public const string AdvancedLoggingEnabledKey = "2sxc-enable-extended-logging";
         public const string AdvancedLoggingTillKey = "2sxc-extended-logging-expires";
 

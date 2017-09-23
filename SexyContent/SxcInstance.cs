@@ -7,6 +7,7 @@ using DotNetNuke.Entities.Portals;
 using Newtonsoft.Json;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -26,12 +27,6 @@ namespace ToSic.SexyContent
     {
         #region App-level information
 
-        // 2017-04-01 2dm - disabled, to remove deep dependencies
-        ///// <summary>
-        ///// The Content Data Context pointing to a full EAV, pre-configured for this specific App
-        ///// </summary>
-        //public EavDataController EavAppContext => App.EavContext;
-
         internal int? ZoneId => ContentBlock.ZoneId;
 
         internal int? AppId => ContentBlock.AppId;
@@ -45,6 +40,8 @@ namespace ToSic.SexyContent
         //public ContentGroupManager AppContentGroups => App.ContentGroupManager; // todo: remove, use App...
 
         #endregion
+
+        public Log Log { get; }
 
         /// <summary>
         /// The url-parameters (or alternative thereof) to use when picking views or anything
@@ -81,8 +78,8 @@ namespace ToSic.SexyContent
 
         public Template Template
         {
-            get { return ContentBlock.Template; }
-            set { ContentBlock.Template = value; }
+            get => ContentBlock.Template;
+            set => ContentBlock.Template = value;
         }
 
         internal void SetTemplateOrOverrideFromUrl(Template defaultTemplate)
@@ -92,7 +89,6 @@ namespace ToSic.SexyContent
             if (IsContentApp || App == null) return;
 
             // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
-            if (Parameters == null) return;
             var templateFromUrl = TryToGetTemplateBasedOnUrlParams();
             if (templateFromUrl != null)
                 Template = templateFromUrl;
@@ -100,15 +96,13 @@ namespace ToSic.SexyContent
 
         private Template TryToGetTemplateBasedOnUrlParams()
         {
+            Log.Add("template override - check");
             if (Parameters == null) return null;
 
             // new 2016-05-01
             var urlParameterDict = Parameters.ToDictionary(pair => pair.Key?.ToLower() ?? "", pair =>
                 $"{pair.Key}/{pair.Value}".ToLower());
             
-            // old
-            //var urlParameterDict = Parameters.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key =>
-            //    $"{key}/{Parameters[key]}".ToLower());
 
             foreach (var template in App.TemplateManager.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
             {
@@ -117,45 +111,57 @@ namespace ToSic.SexyContent
                 {
                     var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);
                     if (urlParameterDict.ContainsKey(keyName))
+                    {
+                        Log.Add("template override - found:" + template.Name);
                         return template;
+                    }
                 }
                 else if (urlParameterDict.ContainsValue(desiredFullViewName)) // match view/details
+                {
+                    Log.Add("template override - found:" + template.Name);
                     return template;
+                }
             }
 
+            Log.Add("template override - none");
             return null;
         }
 
         #endregion
 
         #region Constructor
-        internal SxcInstance(IContentBlock cb, ModuleInfo runtimeModuleInfo, IEnumerable<KeyValuePair<string, string>> urlparams = null)
+        internal SxcInstance(IContentBlock cb, 
+            ModuleInfo runtimeModuleInfo, 
+            IEnumerable<KeyValuePair<string, string>> urlparams = null, 
+            IPermissions permissions = null,
+            Log parentLog = null)
         {
+            Log = new Log("SxcIns", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
             ContentBlock = cb;
             ModuleInfo = runtimeModuleInfo;
 
-            // try to get url parameters, because we may need them later for view-switching and more
+            // keep url parameters, because we may need them later for view-switching and more
             Parameters = urlparams;
-            //if (Parameters == null)
-            //    Parameters = HttpContext.Current?.Request?.QueryString; // todo: reduce dependency on context-current...
-            // Build up the environment. If we know the module context, then use permissions from there
+
             // modinfo is null in cases where things are not known yet, portalsettings are null in search-scenarios
-            Environment.Permissions = (ModuleInfo != null) && (PortalSettings.Current != null)
-                ? (IPermissions)new Permissions(ModuleInfo)
-                : new Environment.None.Permissions();
+            Environment.Permissions = permissions
+                                      ?? (ModuleInfo != null && PortalSettings.Current != null
+                                          ? (IPermissions) new Permissions(ModuleInfo)
+                                          : new Environment.None.Permissions());
 
             // url-override of view / data
             // 2017-09-07 2dm/2rm - disabled this for now, will only use this if the sxc-instance cares about the current template - so when actually rendering a view
             //CheckTemplateOverrides();   // allow view change on apps
         }
 
-        internal SxcInstance(IContentBlock cb, SxcInstance runtimeInstance)
+        // todo: remove this, move the call to the only use
+        internal SxcInstance(IContentBlock cb, SxcInstance runtimeInstance): this(cb, runtimeInstance.ModuleInfo, runtimeInstance.Parameters, runtimeInstance.Environment.Permissions)
         {
-            ContentBlock = cb;
-            // Inherit various context information from the original SxcInstance
-            ModuleInfo = runtimeInstance.ModuleInfo;
-            Parameters = runtimeInstance.Parameters;
-            Environment.Permissions = runtimeInstance.Environment.Permissions;
+            //ContentBlock = cb;
+            //// Inherit various context information from the original SxcInstance
+            //ModuleInfo = runtimeInstance.ModuleInfo;
+            //Parameters = runtimeInstance.Parameters;
+            //Environment.Permissions = runtimeInstance.Environment.Permissions;
 
             // url-override of view / data
             // 2017-09-07 2dm/2rm - disabled this for now, will only use this if the sxc-instance cares about the current template - so when actually rendering a view
@@ -168,6 +174,7 @@ namespace ToSic.SexyContent
         private bool RenderWithEditMetadata => Environment.Permissions.UserMayEditContent;
         public HtmlString Render()
         {
+            Log.Add("render");
             var renderHelp = new RenderingHelpers(this);
             
             try

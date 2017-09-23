@@ -25,10 +25,8 @@ namespace ToSic.SexyContent.WebApi.Dnn
 
         protected override void Initialize(HttpControllerContext controllerContext)
 	    {
-            var req = controllerContext.Request;
             // Add the logger to the requst, in case it's needed in error-reporting
-            req.Properties.Add(Constants.EavLogKey, Log);
-
+	        controllerContext.Request.Properties.Add(Constants.EavLogKey, Log);
 	        base.Initialize(controllerContext);
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Installer
 {
@@ -50,13 +51,13 @@ namespace ToSic.SexyContent.Installer
         }
 
 
-        internal static void ImportXmlSchemaOfVersion(string version, bool leaveOriginalsUntouched)
+        internal static void ImportXmlSchemaOfVersion(string version, bool leaveOriginalsUntouched, Log parentLog = null)
         {
             //var userName = "System-ModuleUpgrade-" + version;
             var xmlToImport =
                 File.ReadAllText(
                     HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/" + version + ".xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
+            var xmlImport = new XmlImportWithFiles(parentLog, "en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport),
                 leaveOriginalsUntouched);
 

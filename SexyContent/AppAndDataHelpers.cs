@@ -61,7 +61,7 @@ namespace ToSic.SexyContent
 					if (elements.Any())
 					{
 						Content = elements.First().Content;
-						Presentation = elements.First().Presentation;
+						//Presentation = elements.First().Presentation;
 					}
 		        }
 
@@ -73,7 +73,7 @@ namespace ToSic.SexyContent
 					if (listElement != null)
 					{
 						ListContent = listElement.Content;
-						ListPresentation = listElement.Presentation;
+						// ListPresentation = listElement.Presentation;
 					}
 		        }
 
@@ -82,7 +82,7 @@ namespace ToSic.SexyContent
 
         }
 
-	    private Element GetElementFromEntity(ToSic.Eav.Interfaces.IEntity e)
+	    private Element GetElementFromEntity(Eav.Interfaces.IEntity e)
 	    {
 			var el = new Element
 			{
@@ -101,10 +101,25 @@ namespace ToSic.SexyContent
 		    return el;
 	    }
 
+        /// <summary>
+        /// The current app containing the data and read/write commands
+        /// </summary>
         public App App { get; }
+
+        /// <summary>
+        /// The view data
+        /// </summary>
         public ViewDataSource Data { get; }
+
+        /// <summary>
+        /// Dnn context with module, page, portal etc.
+        /// </summary>
         public DnnHelper Dnn { get; }
 		public SxcHelper Sxc { get; }
+
+        /// <summary>
+        /// Link helper object to create the correct links
+        /// </summary>
         public ILinkHelper Link { get; }
 
 
@@ -114,7 +129,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, _sxcInstance);
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, _sxcInstance);
         
 
         /// <summary>
@@ -129,7 +144,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entityKeyValuePair"></param>
         /// <returns></returns>
-        public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
 
         /// <summary>
         /// In case AsDynamic is used with Data["name"]
@@ -142,21 +157,21 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IDictionary<int, ToSic.Eav.Interfaces.IEntity> list) => list.Select(e => AsDynamic(e.Value));
+        public IEnumerable<dynamic> AsDynamic(IDictionary<int, Eav.Interfaces.IEntity> list) => list.Select(e => AsDynamic(e.Value));
 
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
-        public ToSic.Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity) => ((DynamicEntity) dynamicEntity).Entity;
+        public Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity) => ((DynamicEntity) dynamicEntity).Entity;
 
         /// <summary>
         /// Returns a list of DynamicEntities
         /// </summary>
         /// <param name="entities">List of entities</param>
         /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities) => entities.Select(e => AsDynamic(e));
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => entities.Select(e => AsDynamic(e));
         #endregion
 
         private IValueCollectionProvider _configurationProvider;
@@ -187,6 +202,7 @@ namespace ToSic.SexyContent
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Create a source with initial stream to attach...
         /// </summary>
@@ -200,18 +216,36 @@ namespace ToSic.SexyContent
 
             var srcDs = (IDataTarget)src;
             srcDs.In.Clear();
-            srcDs.In.Add(Constants.DefaultStreamName, inStream);
+            srcDs.In.Add(Eav.Constants.DefaultStreamName, inStream);
             return src;
         }
 
         #region basic properties like Content, Presentation, ListContent, ListPresentation
 
-        public dynamic Content { get; private set; }
-		public dynamic Presentation { get; private set; }
-		public dynamic ListContent { get; private set; }
-		public dynamic ListPresentation { get; private set; }
+        /// <summary>
+        /// content item of the current view
+        /// </summary>
+        public dynamic Content { get; }
+
+        /// <summary>
+        /// presentation item of the content-item. 
+        /// </summary>
+        //[Obsolete("please use Content.Presentation instead")]
+		//public dynamic Presentation { get; }
+
+        /// <summary>
+        /// List item of the current view
+        /// </summary>
+		public dynamic ListContent { get; }
+
+        /// <summary>
+        /// presentation of the list-item
+        /// </summary>
+        //[Obsolete("please use ListContent.Presentation instead")]
+        //public dynamic ListPresentation { get; }
+
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
-        public List<Element> List { get; private set; }
+        public List<Element> List { get; }
         #endregion
 
         #region Adam
@@ -232,7 +266,7 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AdamNavigator AsAdam(ToSic.Eav.Interfaces.IEntity entity, string fieldName)
+        public AdamNavigator AsAdam(Eav.Interfaces.IEntity entity, string fieldName)
             => new AdamNavigator(_sxcInstance, App, Dnn.Portal, entity.EntityGuid, fieldName, false);
         #endregion
 

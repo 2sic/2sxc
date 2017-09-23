@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Security;
@@ -16,6 +17,7 @@ using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Installer;
 using ToSic.Eav.Apps.ItemListActions;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Data;
 using ToSic.Eav.Interfaces;
 using Assembly = System.Reflection.Assembly;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -25,17 +27,25 @@ namespace ToSic.SexyContent.WebApi.View
     // had to disable this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ModuleController : SxcApiController
     {
-        private ContentGroupReferenceManagerBase _cbm;
+        protected override void Initialize(HttpControllerContext controllerContext)
+        {
+            base.Initialize(controllerContext); // very important!!!
+            Log.Rename("2sModC");
+            ContentGroupReferenceManager = SxcContext.ContentBlock.Manager;
+        }
 
-        private ContentGroupReferenceManagerBase ContentGroupReferenceManager => _cbm ?? (_cbm = SxcContext.ContentBlock.Manager);
+        //private ContentGroupReferenceManagerBase _cbm;
+
+        private ContentGroupReferenceManagerBase ContentGroupReferenceManager { get; set;  }// => _cbm ?? (_cbm = SxcContext.ContentBlock.Manager);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void AddItem([FromUri] int? sortOrder = null)
         {
+            Log.Add($"add order:{sortOrder}");
             var versioning = new PagePublishing();
 
-            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
+            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = args => {
                 ContentGroupReferenceManager.AddItem(sortOrder);
             };
 
@@ -78,6 +88,7 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public string GenerateContentBlock(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
         {
+            Log.Add($"get CB parent:{parentId}, field:{field}, order:{sortOrder}, app:{app}, guid:{guid}");
             var contentTypeName = Settings.AttributeSetStaticNameContentBlockTypeName;
             var values = new Dictionary<string, object>
             {
@@ -89,7 +100,7 @@ namespace ToSic.SexyContent.WebApi.View
             var entityId = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, newGuid);
 
             // now return a rendered instance
-            var newContentBlock = new EntityContentBlock(SxcContext.ContentBlock, entityId);
+            var newContentBlock = new EntityContentBlock(SxcContext.ContentBlock, entityId, Log);
             return newContentBlock.SxcInstance.Render().ToString();
 
         }
@@ -100,7 +111,7 @@ namespace ToSic.SexyContent.WebApi.View
             var cgApp = SxcContext.App;
 
             // create the new entity 
-            var entityId = new AppManager(cgApp).Entities.GetOrCreate(newGuid, contentTypeName, values);
+            var entityId = new AppManager(cgApp, Log).Entities.GetOrCreate(newGuid, contentTypeName, values);
 
             #region attach to the current list of items
 
@@ -115,7 +126,7 @@ namespace ToSic.SexyContent.WebApi.View
                 intList.Insert(sortOrder, entityId);
             }
             var updateDic = new Dictionary<string, object> {{field, intList}};
-            new AppManager(cgApp).Entities.UpdateParts(cbEnt.EntityId, updateDic);
+            new AppManager(cgApp, Log).Entities.UpdateParts(cbEnt.EntityId, updateDic);
             #endregion
             
             return entityId;
@@ -125,6 +136,7 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void MoveItemInList(int parentId, string field, int indexFrom, int indexTo, [FromUri] bool partOfPage = false)
         {
+            Log.Add($"move item in list parent:{parentId}, field:{field}, from:{indexFrom}, to:{indexTo}, partOfpage:{partOfPage}");
             var versioning = new PagePublishing();
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
@@ -146,6 +158,7 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void RemoveItemInList(int parentId, string field, int index, [FromUri] bool partOfPage = false)
         {
+            Log.Add($"remove item: parent{parentId}, field:{field}, index:{index}, partOfPage{partOfPage}");
             var versioning = new PagePublishing();
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
@@ -161,6 +174,7 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang, bool cbIsEntity = false)
         {
+            Log.Add($"render template:{templateId}, lang:{lang}, isEnt:{cbIsEntity}");
             try
             {
                 // Try setting thread language to enable 2sxc to render the template in this language
@@ -201,6 +215,7 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
+            Log.Add($"change order sort:{sortOrder}, dest:{destinationSortOrder}");
             var versioning = new PagePublishing();
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
@@ -223,6 +238,7 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void RemoveFromList([FromUri] int sortOrder)
         {
+            Log.Add($"remove from index:{sortOrder}");
             var versioning = new PagePublishing();
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
@@ -298,6 +314,7 @@ namespace ToSic.SexyContent.WebApi.View
         // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public bool FinishInstallation()
         {
+            Log.Add("finish installation");
             var ic = new InstallationController();
             if (ic.IsUpgradeRunning)
                 throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 10 minutes, please restart the web application.");
@@ -310,23 +327,22 @@ namespace ToSic.SexyContent.WebApi.View
         #region Helpers to get things done
         // todo: probably should move to the new Eav.Apps section, but for that we must
         // change the access to use the DB, not the cache...
-        private bool ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
+        private void ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
         {
+            Log.Add($"modify item list parent:{parentId}, field:{field}, action:{actionToPerform}");
             var parentEntity = SxcContext.App.Data["Default"].List[parentId];
             var parentField = parentEntity.GetBestValue(field);
-            var fieldList = parentField as Eav.Data.EntityRelationship;
 
-            if (fieldList == null)
+            if (!(parentField is EntityRelationship fieldList))
                 throw new Exception("field " + field + " doesn't seem to be a list of content-items, must abort");
 
             var ids = fieldList.EntityIds.ToList();
 
-            if (!actionToPerform.Change(ids)) return false;
+            if (!actionToPerform.Change(ids)) return;
 
             // save
             var values = new Dictionary<string, object> { { field, ids.ToArray() } };
-            new AppManager(SxcContext.App).Entities.UpdateParts(parentEntity.EntityId, values);
-            return true;
+            new AppManager(SxcContext.App, Log).Entities.UpdateParts(parentEntity.EntityId, values);
         }
         #endregion
     }

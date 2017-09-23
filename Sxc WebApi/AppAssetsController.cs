@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
@@ -22,12 +23,19 @@ namespace ToSic.SexyContent.WebApi
         // todo: create the delete-file/folder api
         // todo: create the copy file api
 
+        protected override void Initialize(HttpControllerContext controllerContext)
+        {
+            base.Initialize(controllerContext); // very important!!!
+            Log.Rename("2sApAs");
+        }
+
         #region Public API
 
         // private bool _allowFullAccess;
         [HttpGet]
         public  List<string> List(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {
+            Log.Add($"list a:{appId}, global:{global}, path:{path}, mask:{mask}, withSub:{withSubfolders}, withFld:{returnFolders}");
             // set global access security if ok...
             var allowFullAccess = UserInfo.IsSuperUser;
 
@@ -147,6 +155,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpPost]
         public bool Create([FromUri] int appId, [FromUri] string path,[FromBody] ContentHelper content, bool global = false)
         {
+            Log.Add($"create a:{appId}, path:{path}, global:{global}, cont-length:{content.Content?.Length}");
             path = path.Replace("/", "\\");
 
             var thisApp = new App(PortalSettings.Current, appId);
@@ -181,6 +190,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public AssetEditInfo Asset(int templateId = 0, string path = null, bool global = false)
         {
+            Log.Add($"asset templ:{templateId}, path:{path}, global:{global}");
             var assetEditor = (templateId != 0 && path == null)
                 ? new AssetEditor(SxcContext.App, templateId, UserInfo, PortalSettings)
                 : new AssetEditor(SxcContext.App, path, UserInfo, PortalSettings, global);
@@ -200,6 +210,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpPost]
         public bool Asset([FromBody] AssetEditInfo template,[FromUri] int templateId = 0, [FromUri] bool global = false, [FromUri] string path = null)
         {
+            Log.Add($"asset templ:{templateId}, global:{global}, path:{path}");
             var assetEditor = (templateId != 0 && path == null)
                 ? new AssetEditor(SxcContext.App, templateId, UserInfo, PortalSettings)
                 : new AssetEditor(SxcContext.App, path, UserInfo, PortalSettings, global);

@@ -4,7 +4,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 {
     internal partial class PagePublishing
     {
-        internal class ModuleVersionSettingsController
+        internal class ModuleVersions
         {
             private const string LatestVersionSettingsKey = "LatestVersion";
 
@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             public ModuleInfo ModuleInfo => _settingsHelper.ModuleInfo;
 
 
-            public ModuleVersionSettingsController(int moduleId)
+            public ModuleVersions(int moduleId)
             {
                 _settingsHelper = new ModuleSettingsHelper(moduleId);
             }

@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.DataSources;
@@ -20,11 +21,18 @@ namespace ToSic.SexyContent.WebApi
         private App _queryApp;
         private bool _useModuleAndCheckModulePermissions = true; // by default, try to check module stuff too
 
+        protected override void Initialize(HttpControllerContext controllerContext)
+        {
+            base.Initialize(controllerContext); // very important!!!
+            Log.Rename("2sApQr");
+        }
+
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
         [ValidateAntiForgeryToken]                                          // currently only available for modules, so always require the security token
-        public dynamic Query([FromUri] string name)//, [FromUri] string appPath = null)
+        public dynamic Query([FromUri] string name)
         {
+            Log.Add($"query name:{name}");
             // use the previously defined query, or just get it from the request (module-mode)
             if (_queryApp == null)
                 _queryApp = App;
@@ -53,11 +61,12 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
         public dynamic PublicQuery([FromUri] string appPath, [FromUri] string name)
         {
+            Log.Add($"public query path:{appPath}, name:{name}");
             _queryApp = new App(PortalSettings, GetCurrentAppIdFromPath(appPath));
 
             // ensure the queries can be executed (needs configuration provider, usually given in SxcInstance, but we don't hav that here)
             var config = DataSources.ConfigurationProvider.GetConfigProviderForModule(0, _queryApp, null);
-            _queryApp.InitData(false, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(this.ActiveModule.ModuleID), config);
+            _queryApp.InitData(false, new Environment.Dnn7.PagePublishing(Log).IsVersioningEnabled(ActiveModule.ModuleID), config);
             _useModuleAndCheckModulePermissions = false;    // disable module level permission check, as there is no module which can give more permissions
 
             // now just run the default query check and serializer

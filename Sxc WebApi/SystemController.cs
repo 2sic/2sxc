@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Common;
@@ -11,6 +10,8 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Dnn;
 using Assembly = System.Reflection.Assembly;
@@ -59,18 +60,12 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public void SwitchLanguage(string cultureCode, bool enable)
 	    {
+            Log.Add($"switch language:{cultureCode}, to:{enable}");
             // Activate or Deactivate the Culture
-            //var portalId = PortalSettings.PortalId;
-	        var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);// ZoneHelpers.GetZoneId(portalId);
-            // ReSharper disable once PossibleInvalidOperationException
-	        //var cache = DataSource.GetCache(zoneId);
-            //var sexy = new SxcInstance(zoneId.Value, cache.AppId);
-            //var app = new App(zoneId, cache.AppId, PortalSettings, false);
+	        var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
+
             var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
             new ZoneManager(zoneId).SaveLanguage(cultureCode, cultureText, enable);
-            // State.ZoneLanguageAddOrUpdate(zoneId, cultureCode, cultureText, enable);
-            //new EavBridge(app).ZoneAddOrUpdateLanguage(cultureCode, cultureText, enable);
-            // app.EavContext.Dimensions.AddOrUpdateLanguage();
 	    }
 
 
@@ -89,15 +84,12 @@ namespace ToSic.SexyContent.WebApi
                 a.Folder,
                 AppRoot = GetPath(zoneId, a.AppId),
                 IsHidden = a.Hidden,
-                //Tokens = a.Settings?.AllowTokenTemplates ?? false,
-                //Razor = a.Configuration?.AllowRazorTemplates ?? false,
                 ConfigurationId = a.Configuration?.EntityId
             }).ToList();
         }
 
         private string GetPath(int zoneId, int appId)
         {
-            //var sexy = new SxcInstance(zoneId, appId);
             var app = new App(zoneId, appId , PortalSettings);
             return app.Path;
         }
@@ -106,7 +98,6 @@ namespace ToSic.SexyContent.WebApi
         public void DeleteApp(int zoneId, int appId)
         {
             var userId = PortalSettings.Current.UserId;
-            //var portalId = this.PortalSettings.PortalId;
             AppManagement.RemoveAppInDnnAndEav(zoneId, appId, PortalSettings, userId);
         }
 
@@ -189,12 +180,7 @@ namespace ToSic.SexyContent.WebApi
         public string ExtendedLogging(int duration = 1)
         {
             Log.Add("Extended logging will set for duration:" + duration);
-            if (duration > 10)
-                duration = 10;
-            ControllerContext.Configuration.Properties.GetOrAdd(Constants.AdvancedLoggingEnabledKey, duration > 0);
-            var timeout = DateTime.Now.AddMinutes(duration);
-            ControllerContext.Configuration.Properties.AddOrUpdate(Constants.AdvancedLoggingTillKey, timeout, (a, b) => timeout);
-            var msg = $"Extended logging activated for {duration} minutes to {timeout}";
+            var msg = Logging.ActivateForDuration(duration);
             Log.Add(msg);
             return msg;
         }

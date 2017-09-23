@@ -11,8 +11,8 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.ValueProvider;
-using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 using IApp = ToSic.SexyContent.Interfaces.IApp;
@@ -26,7 +26,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        private const string ContentAppName = Constants.ContentAppName;
+        private const string ContentAppName = Eav.Constants.ContentAppName;
         #endregion
 
         #region Simple Properties
@@ -54,25 +54,31 @@ namespace ToSic.SexyContent
 
         #endregion
 
+        #region Logging
+
+        private Log Log;
+        #endregion
+
         internal PortalSettings OwnerPortalSettings { get; set; }
 
         public string AppGuid { get; set; }
 
         private IEnvironment env = new Environment.DnnEnvironment();
 
-        public App(PortalSettings ownerPortalSettings, int appId) : this(-1, appId, ownerPortalSettings)
+        public App(PortalSettings ownerPortalSettings, int appId, Log parentLog = null) : this(-1, appId, ownerPortalSettings, parentLog: parentLog)
         {
         }
-
-        //public App(int zoneId, int appId, PortalSettings ownerPortalSettings): this(...)
 
         // todo: I should change the order of the parameters app/zone because this is the only 
         // system which reverses it with app-first
         // better to create two overloads, but when I have two parameters, assume that zone is first
         // 2016-04-04 2dm: wait with refactoring/correcting this till 2tk checks in his code
-        public App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool allowSideEffects = true)
+        public App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool allowSideEffects = true, Log parentLog = null)
         {
-            // require valid ownerPS - note: not sure what this is actually used for
+            // init Log
+            Log = new Log("2sxApp", parentLog, $"prep App z:{zoneId}, a:{appId}, allowSE:{allowSideEffects}, P:{ownerPortalSettings?.PortalId}");
+
+            // require valid ownerPS
             if (ownerPortalSettings == null)
                 throw new Exception("no portal settings received");
 
@@ -90,9 +96,9 @@ namespace ToSic.SexyContent
 
             // Look up name
             // Get appName from cache
-            AppGuid = ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
+            AppGuid = ((BaseCache)DataSource.GetCache(zoneId)).ZoneApps[zoneId].Apps[appId];
 
-            if (AppGuid == Constants.DefaultAppName)
+            if (AppGuid == Eav.Constants.DefaultAppName)
                 Name = Folder = ContentAppName;
             else
                 InitializeResourcesSettingsAndMetadata(allowSideEffects);
@@ -103,12 +109,14 @@ namespace ToSic.SexyContent
         /// </summary>
         private void InitializeResourcesSettingsAndMetadata(bool allowSideEffects)
         {
+            Log.Add($"init app resources allowSE:{allowSideEffects}");
+
             if (allowSideEffects)
                 // if it's a real App (not content/default), do more
                 AppManagement.EnsureAppIsConfigured(ZoneId, AppId); // make sure additional settings etc. exist
 
             // Get app-describing entity
-            var appAssignmentId = SystemRuntime.GetMetadataType(Constants.AppAssignmentName);
+            var appAssignmentId = SystemRuntime.GetMetadataType(Eav.Constants.AppAssignmentName);
             var mds = DataSource.GetMetaDataSource(ZoneId, AppId);
             var appMetaData = mds
                     .GetAssignedEntities(appAssignmentId, AppId,
@@ -144,9 +152,11 @@ namespace ToSic.SexyContent
         /// todo: later this should be moved to initialization of this object
         /// </summary>
         /// <param name="showDrafts"></param>
+        /// <param name="versioningEnabled"></param>
         /// <param name="configurationValues">this is needed for providing parameters to the data-query-system</param>
         internal void InitData(bool showDrafts, bool versioningEnabled, IValueCollectionProvider configurationValues)
         {
+            Log.Add($"init data drafts:{showDrafts}, vers:{versioningEnabled}, hasConf:{configurationValues != null}");
             ConfigurationProvider = configurationValues;
             ShowDraftsInData = showDrafts;
             VersioningEnabled = versioningEnabled;
@@ -154,6 +164,7 @@ namespace ToSic.SexyContent
 
         private void ConfigureDataOnDemand()
         {
+            Log.Add("configure on demand start");
             if(ConfigurationProvider == null)
                 throw new Exception("Cannot provide Data for the object App as crucial information is missing. Please call InitData first to provide this data.");
             // ToDo: Remove this as soon as App.Data getter on App class is fixed #1 and #2
@@ -175,8 +186,10 @@ namespace ToSic.SexyContent
                 xData.DefaultLanguage = defaultLanguage;
                 xData.CurrentUserName = env.User.CurrentUserIdentityToken;// Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*OwnerPS.UserInfo.Username*/;
             }
+            Log.Add("configure on demand completed");
         }
 
+        #region Paths
         public string Path
         {
             get
@@ -193,6 +206,7 @@ namespace ToSic.SexyContent
                 return HostingEnvironment.MapPath(appPath);
             }
         }
+        #endregion
 
         #region Data / Query
         private IAppData _data;

@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 
 namespace ToSic.SexyContent.WebApi
 {
+    /// <inheritdoc />
     /// <summary>
     /// This controller will check if it's responsible (based on url)
     /// ...and if yes, compile / run the app-specific api controllers

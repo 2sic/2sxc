@@ -158,11 +158,11 @@ namespace ToSic.SexyContent.Razor
         #region Content, Presentation, ListContent, ListPresentation and List
         public dynamic Content => AppAndDataHelpers.Content;
 
-        public dynamic Presentation => AppAndDataHelpers.Presentation;
+        public dynamic Presentation => AppAndDataHelpers.Content?.Presentation;
 
         public dynamic ListContent => AppAndDataHelpers.ListContent;
 
-        public dynamic ListPresentation => AppAndDataHelpers.ListPresentation;
+        public dynamic ListPresentation => AppAndDataHelpers.ListContent?.ListPresentation;
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
         public List<Element> List => AppAndDataHelpers.List;

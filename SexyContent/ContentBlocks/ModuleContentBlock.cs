@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav.ValueProvider;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Internal;
 
@@ -10,6 +10,7 @@ namespace ToSic.SexyContent.ContentBlocks
 {
     internal sealed class ModuleContentBlock: ContentBlockBase
     {
+
         public ModuleInfo ModuleInfo;
 
         public override ContentGroupReferenceManagerBase Manager => new ModuleContentGroupReferenceManager(SxcInstance);
@@ -22,8 +23,15 @@ namespace ToSic.SexyContent.ContentBlocks
 
         private readonly IEnumerable<KeyValuePair<string, string>> _urlParams;
 
-        public ModuleContentBlock(ModuleInfo moduleInfo, IEnumerable<KeyValuePair<string, string>> overrideParams = null)
+        /// <summary>
+        /// Create a module-content block
+        /// </summary>
+        /// <param name="moduleInfo">the dnn module-info</param>
+        /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
+        /// <param name="overrideParams">optional override parameters</param>
+        public ModuleContentBlock(ModuleInfo moduleInfo, Log parentLog, IEnumerable<KeyValuePair<string, string>> overrideParams = null)
         {
+            Log = new Log("ModCB", parentLog, "constructor");
             ModuleInfo = moduleInfo ?? throw new Exception("Need valid ModuleInfo / ModuleConfiguration of runtime");
             ParentId = moduleInfo.ModuleID;
             ContentBlockId = ParentId;
@@ -60,9 +68,9 @@ namespace ToSic.SexyContent.ContentBlocks
                 App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(moduleInfo.ModuleID), Configuration /*Data.ConfigurationProvider*/);
 
                 var res = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
-                var _contentGroupGuid = res.Item1;
-                var _previewTemplateGuid = res.Item2;
-                ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
+                var contentGroupGuid = res.Item1;
+                var previewTemplateGuid = res.Item2;
+                ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid);
 
                 //ContentGroup = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
 
@@ -93,7 +101,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
         public override SxcInstance SxcInstance => _sxcInstance ??
-                                          (_sxcInstance = new SxcInstance(this, ModuleInfo, _urlParams));
+                                          (_sxcInstance = new SxcInstance(this, ModuleInfo, _urlParams, parentLog:Log));
 
         public override bool IsContentApp => ModuleInfo.DesktopModule.ModuleName == "2sxc";
 

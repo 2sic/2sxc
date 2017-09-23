@@ -31,9 +31,8 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public dynamic GetAppInfo(int appId, int zoneId)
         {
-            var appWrapper = (UserInfo.IsSuperUser)
-                ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
-                : new SxcAppWrapper(appId, false);
+            Log.Add($"get app info for app:{appId} and zone:{zoneId}");
+            var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
             var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
             var cultCount = new Environment.DnnEnvironment().ZoneMapper
@@ -58,14 +57,12 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public dynamic GetContentInfo(int appId, int zoneId, string scope)
         {
-            var appWrapper = (UserInfo.IsSuperUser)
-                ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
-                : new SxcAppWrapper(appId, false);
+            Log.Add($"get content info for z:{zoneId}, a:{appId}, scope:{scope} super?:{UserInfo.IsSuperUser}");
+            var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
-            var contentTypes = new AppRuntime(appWrapper.App).ContentTypes.FromScope(scope);//  appWrapper.GetContentTypes(scope);
+            var contentTypes = new AppRuntime(appWrapper.App).ContentTypes.FromScope(scope);
             var entities = appWrapper.GetEntities();
             var templates = appWrapper.GetTemplates();
-            //var dimensions = new[] { appWrapper.GetCultureCode() };
 
             return new
             {
@@ -96,23 +93,25 @@ namespace ToSic.SexyContent.WebApi
         }
 
 
+
         [HttpGet]
         public HttpResponseMessage ExportApp(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
-            EnsureUserIsAdmin();
+            Log.Add($"export app z:{zoneId}, a:{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
+            EnsureUserIsAdmin(); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var appWrapper = (UserInfo.IsSuperUser)
-                ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
-                : new SxcAppWrapper(appId, false);
+            var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
             var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
             var fileName =
                 $"2sxcApp_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}{addOnWhenContainingContent}.zip";
+            Log.Add($"file name:{fileName}");
             using (var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid))
             {
                 var fileBytes = fileStream.ToArray();
+                Log.Add("will stream so many bytes:" + fileBytes.Length);
                 return HttpResponseMessageHelper.GetAttachmentHttpResponseMessage(fileName, "application/octet-stream", new MemoryStream(fileBytes));
             }
         }
@@ -120,12 +119,11 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public bool ExportForVersionControl(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
+            Log.Add($"export for version control z:{zoneId}, a:{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             EnsureUserIsAdmin();
 
             // ReSharper disable once UnusedVariable
-            var appWrapper = (UserInfo.IsSuperUser)
-                ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
-                : new SxcAppWrapper(appId, false);
+            var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
             var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
@@ -136,12 +134,10 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public HttpResponseMessage ExportContent(int appId, int zoneId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
+            Log.Add($"export content z:{zoneId}, a:{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
             EnsureUserIsAdmin();
 
-
-            var appWrapper = (UserInfo.IsSuperUser)
-                ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
-                : new SxcAppWrapper(appId, false);
+            var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
             var fileName = $"2sxcContentExport_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}.xml";
             var fileXml = new ToSxcXmlExporter().Init(zoneId, appId, false,
@@ -157,6 +153,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public ImportResult ImportApp()
         {
+            Log.Add("import app start");
             var result = new ImportResult();
 
             var request = HttpContext.Current.Request;
@@ -167,7 +164,7 @@ namespace ToSic.SexyContent.WebApi
             var helper = new ImportExportEnvironment();
             try
             {
-                var zipImport = new ZipImport(helper, zoneId, null, PortalSettings.UserInfo.IsSuperUser);
+                var zipImport = new ZipImport(helper, zoneId, null, PortalSettings.UserInfo.IsSuperUser, Log);
                 var temporaryDirectory = HttpContext.Current.Server.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory, Guid.NewGuid().ToString().Substring(0, 8)));
 
                 // Increase script timeout to prevent timeouts
@@ -188,6 +185,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public ImportResult ImportContent()
         {
+            Log.Add("import content start");
             var result = new ImportResult();
 
             var request = HttpContext.Current.Request;
@@ -196,35 +194,34 @@ namespace ToSic.SexyContent.WebApi
 
             var appId = int.Parse(request["AppId"]);
             var zoneId = int.Parse(request["ZoneId"]);
-            if (request.Files.Count > 0)
-            {
-                var file = request.Files[0];
-                if (file.FileName.EndsWith(".zip"))
-                {   // ZIP
-                    try
-                    {
-                        var env = new ImportExportEnvironment(); ;
-                        var zipImport = new ZipImport(env, zoneId, appId, PortalSettings.UserInfo.IsSuperUser);
-                        // Increase script timeout to prevent timeouts
-                        HttpContext.Current.Server.ScriptTimeout = 300;
-                        var temporaryDirectory = HttpContext.Current.Server.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory, Guid.NewGuid().ToString()));
-                        result.Succeeded = zipImport.ImportZip(file.InputStream, temporaryDirectory);// HttpContext.Current.Server); // , /*PortalSettings,*/ env.Messages);
-                        result.Messages = env.Messages;
-                    }
-                    catch (Exception ex)
-                    {
-                        Exceptions.LogException(ex);
-                    }
+            if (request.Files.Count <= 0) return result;
+
+            var file = request.Files[0];
+            if (file.FileName.EndsWith(".zip"))
+            {   // ZIP
+                try
+                {
+                    var env = new ImportExportEnvironment();
+                    var zipImport = new ZipImport(env, zoneId, appId, PortalSettings.UserInfo.IsSuperUser, Log);
+                    // Increase script timeout to prevent timeouts
+                    HttpContext.Current.Server.ScriptTimeout = 300;
+                    var temporaryDirectory = HttpContext.Current.Server.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory, Guid.NewGuid().ToString()));
+                    result.Succeeded = zipImport.ImportZip(file.InputStream, temporaryDirectory);// HttpContext.Current.Server); // , /*PortalSettings,*/ env.Messages);
+                    result.Messages = env.Messages;
                 }
-                else
-                {   // XML
-                    using (var fileStreamReader = new StreamReader(file.InputStream))
-                    {
-                        var xmlImport = new XmlImportWithFiles(PortalSettings.DefaultLanguage, /*UserIdentity.CurrentUserIdentityToken,*/ allowSystemChanges);
-                        var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
-                        result.Succeeded = xmlImport.ImportXml(zoneId, appId, xmlDocument);
-                        result.Messages = xmlImport.ImportLog;
-                    }
+                catch (Exception ex)
+                {
+                    Exceptions.LogException(ex);
+                }
+            }
+            else
+            {   // XML
+                using (var fileStreamReader = new StreamReader(file.InputStream))
+                {
+                    var xmlImport = new XmlImportWithFiles(Log, PortalSettings.DefaultLanguage, /*UserIdentity.CurrentUserIdentityToken,*/ allowSystemChanges);
+                    var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
+                    result.Succeeded = xmlImport.ImportXml(zoneId, appId, xmlDocument);
+                    result.Messages = xmlImport.ImportLog;
                 }
             }
             return result;
@@ -233,8 +230,27 @@ namespace ToSic.SexyContent.WebApi
 
         private void EnsureUserIsAdmin()
         {
+            Log.Add("ensure user is admin");
             if (!PortalSettings.UserInfo.Roles.Contains(PortalSettings.AdministratorRoleName) && !PortalSettings.UserInfo.IsSuperUser) // todo: add to 8.5
                 throw new AuthenticationException("user doesn't seem to be admin or super-user");
         }
+
+        /// <summary>
+        /// get the app, but only switch to another zone if the user is super-user
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="zoneId"></param>
+        /// <returns></returns>
+        /// <exception>
+        /// will throw exception if the app is in another zone, and the user is not a super-user
+        /// </exception>
+        private SxcAppWrapper AppBasedOnUserPermissions(int appId, int zoneId)
+        {
+            var appWrapper = UserInfo.IsSuperUser
+                ? new SxcAppWrapper(zoneId, appId) // only super-user may switch to another zone for export
+                : new SxcAppWrapper(appId, false);
+            return appWrapper;
+        }
+
     }
 }

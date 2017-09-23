@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
@@ -72,6 +73,8 @@ namespace ToSic.SexyContent.ContentBlocks
         public virtual SxcInstance SxcInstance => null;
 
         public virtual bool IsContentApp => false;
+
+        protected Log Log;
 
     }
 }

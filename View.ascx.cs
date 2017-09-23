@@ -15,7 +15,7 @@ namespace ToSic.SexyContent
     public partial class View : PortalModuleBase, IActionable, IVersionableControl
     {
         private SxcInstance _sxci;
-        protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(ModuleConfiguration).SxcInstance);
+        protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(ModuleConfiguration, parentLog: null).SxcInstance);
 
         /// <summary>
         /// Page Load event - preload template chooser if necessary

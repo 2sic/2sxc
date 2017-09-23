@@ -106,6 +106,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -132,7 +133,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Environment\Dnn7\Logging.cs" />
-    <Compile Include="Environment\Dnn7\Versioning.cs" />
     <Compile Include="Environment\Dnn7\ModuleSettingsHelper.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing_ModuleSettings.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing.cs" />

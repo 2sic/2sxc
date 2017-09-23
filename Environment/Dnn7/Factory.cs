@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public static ISxcInstance SxcInstanceForModule(ModuleInfo moduleInfo)
         {
-            ModuleContentBlock mcb = new ModuleContentBlock(moduleInfo);
+            ModuleContentBlock mcb = new ModuleContentBlock(moduleInfo, parentLog: null);
             return mcb.SxcInstance;
         }
 

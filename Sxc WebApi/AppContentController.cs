@@ -4,13 +4,13 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.ValueProvider;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Security;
@@ -29,6 +29,12 @@ namespace ToSic.SexyContent.WebApi
 	{
 	    private EntitiesController _entitiesController;
 
+	    protected override void Initialize(HttpControllerContext controllerContext)
+	    {
+	        base.Initialize(controllerContext); // very important!!!
+	        Log.Rename("2sApCo");
+	    }
+
         #region Get List / all of a certain content-type
         /// <summary>
         /// Get all Entities of specified Type
@@ -37,6 +43,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null, string cultureCode = null)
         {
+            Log.Add($"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
             // if app-path specified, use that app, otherwise use from context
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
@@ -76,6 +83,7 @@ namespace ToSic.SexyContent.WebApi
         /// <returns></returns>
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<int, IEntity> getOne, string appPath)
         {
+            Log.Add($"get and serialie after security check type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
@@ -91,6 +99,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
 	    public HttpResponseMessage GetContentBlockData()
         {
+            Log.Add("get content block data");
             InitEavAndSerializer();
             // Important note: we are NOT supporting url-view switch at the moment for this
             // reason is, that this kind of data-access is fairly special
@@ -132,6 +141,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public Dictionary<string, object> CreateOrUpdate([FromUri] string contentType, [FromBody] Dictionary<string, object> newContentItem, [FromUri] int? id = null, [FromUri] string appPath = null)
         {
+            Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
@@ -158,7 +168,9 @@ namespace ToSic.SexyContent.WebApi
             // try to create
             var currentApp = new App(PortalSettings, appId);
             //currentApp.InitData(false, new ValueCollectionProvider());
-            currentApp.InitData(false, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(this.ActiveModule.ModuleID), Data.ConfigurationProvider);
+            currentApp.InitData(false, 
+                new Environment.Dnn7.PagePublishing(Log).IsVersioningEnabled(ActiveModule.ModuleID), 
+                Data.ConfigurationProvider);
             if (id == null)
             {
                 currentApp.Data.Create(contentType, cleanedNewItem, userName);
@@ -180,7 +192,8 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="appId"></param>
         /// <returns></returns>
         private Dictionary<string, object> CreateEntityDictionary(string contentType, Dictionary<string, object> newContentItem, int appId)
-	    {
+        {
+            Log.Add($"create ent dic a:{appId}, type:{contentType}");
             // Retrieve content-type definition and check all the fields that this content-type has
 	        var cache = (BaseCache) DataSource.GetCache(null, appId);
 	        var listOfTypes = cache.GetContentType(contentType);// as ContentType;
@@ -265,27 +278,26 @@ namespace ToSic.SexyContent.WebApi
 	    /// <param name="foundValue"></param>
 	    private int CreateSingleRelationshipItem(object foundValue)
 	    {
+	        Log.Add("create relationship");
 	        try
 	        {
 	            // the object foundNumber is either just an Id, or an Id/Title combination
                 // Try to see if it's already a number, else check if it's a JSON property
-                int foundNumber;
-	            if (!int.TryParse(foundValue.ToString(), out foundNumber))
+	            if (!int.TryParse(foundValue.ToString(), out var foundNumber))
 	            {
-	                JProperty jp = foundValue as JProperty;
-                    if(jp != null)
-	                    foundNumber = (int) (foundValue as JProperty).Value;
+	                if(foundValue is JProperty jp)
+	                    foundNumber = (int) jp.Value;
                     else
                     {
-                        JObject jo = foundValue as JObject;
-                        JToken foundId;
+                        var jo = foundValue as JObject;
                         // ReSharper disable once PossibleNullReferenceException
-                        if (jo.TryGetValue("Id", out foundId))
+                        if (jo.TryGetValue("Id", out var foundId))
                             foundNumber = (int) foundId;
                         else if (jo.TryGetValue("id", out foundId))
                             foundNumber = (int) foundId;
                     }
 	            }
+	            Log.Add($"relationship found:{foundNumber}");
 	            return foundNumber;
 	        }
 	        catch
@@ -306,6 +318,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public void Delete(string contentType, int id, [FromUri] string appPath = null)
         {
+            Log.Add($"delete id:{id}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
@@ -329,6 +342,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public void Delete(string contentType, Guid guid, [FromUri] string appPath = null)
         {
+            Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 	        IEntity itm = _entitiesController.GetEntityOrThrowError(contentType == "any" ? null : contentType, guid, appId);
@@ -349,7 +363,8 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 		public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, [FromUri] string appPath = null)
-		{
+        {
+            Log.Add($"get assigned for assigmentType:{assignmentObjectTypeId}, guid:{keyGuid}, type:{contentType}, path:{appPath}");
             InitEavAndSerializer();
 	        return new MetadataController().GetAssignedEntities(assignmentObjectTypeId, "guid", keyGuid.ToString(), contentType);
 		}
@@ -360,9 +375,9 @@ namespace ToSic.SexyContent.WebApi
 
 	    private void InitEavAndSerializer(int? appId = null)
 	    {
+	        Log.Add($"init eav for a:{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             _entitiesController = new EntitiesController(appId ?? App.AppId);
-            //_entitiesController.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
 
             // only do this if we have a real context - otherwise don't do this
 	        if (!appId.HasValue)
@@ -378,6 +393,7 @@ namespace ToSic.SexyContent.WebApi
         /// <returns></returns>
         private int GetAppIdFromPathOrContext_AndInitEavAndSerializer(string appPath)
         {
+            Log.Add($"auto detect app and init eav - path:{appPath}");
             var appId = appPath == null || appPath == "auto"
                 ? App.AppId
                 : GetCurrentAppIdFromPath(appPath);

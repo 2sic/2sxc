@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 
@@ -11,15 +12,16 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     [SupportedModules("2sxc,2sxc-app")]
     public class ContentTypeController : SxcApiController
 	{
-        private readonly Eav.WebApi.ContentTypeController _eavCtc;
-        public ContentTypeController()
-        {
-            _eavCtc = new Eav.WebApi.ContentTypeController();
-            //eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+        private Eav.WebApi.ContentTypeController _eavCtc;
 
-        }
+	    protected override void Initialize(HttpControllerContext controllerContext)
+	    {
+	        base.Initialize(controllerContext); // very important!!!
+	        Log.Rename("2sCTC");
+            _eavCtc = new Eav.WebApi.ContentTypeController(Log);
+	    }
 
-        #region Content-Type Get, Delete, Save
+	    #region Content-Type Get, Delete, Save
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<dynamic> Get(int appId, string scope = null, bool withStatistics = false) 
@@ -82,29 +84,31 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    [HttpGet]
         [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool DeleteField(int appId, int contentTypeId, int attributeId) => _eavCtc.DeleteField(appId, contentTypeId, attributeId);
+        public bool DeleteField(int appId, int contentTypeId, int attributeId) 
+            => _eavCtc.DeleteField(appId, contentTypeId, attributeId);
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool Reorder(int appId, int contentTypeId, string newSortOrder) => _eavCtc.Reorder(appId, contentTypeId, newSortOrder);
+        public bool Reorder(int appId, int contentTypeId, string newSortOrder) 
+            => _eavCtc.Reorder(appId, contentTypeId, newSortOrder);
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void SetTitle(int appId, int contentTypeId, int attributeId) => _eavCtc.SetTitle(appId, contentTypeId, attributeId);
+        public void SetTitle(int appId, int contentTypeId, int attributeId) 
+            => _eavCtc.SetTitle(appId, contentTypeId, attributeId);
         
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool UpdateInputType(int appId, int attributeId, string inputType) => _eavCtc.UpdateInputType(appId, attributeId, inputType);
+        public bool UpdateInputType(int appId, int attributeId, string inputType) 
+            => _eavCtc.UpdateInputType(appId, attributeId, inputType);
 
 	    #endregion
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void Rename(int appId, int contentTypeId, int attributeId, string newName)
-        {
-            _eavCtc.Rename(appId, contentTypeId, attributeId, newName);
-        }
+            => _eavCtc.Rename(appId, contentTypeId, attributeId, newName);
 
     }
 }

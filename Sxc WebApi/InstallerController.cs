@@ -29,6 +29,7 @@ namespace ToSic.SexyContent.WebApi
         //[ValidateAntiForgeryToken]
         public HttpResponseMessage InstallPackage(string packageUrl)
         {
+            Log.Add("install package:" + packageUrl);
             var zoneId = Env.ZoneMapper.GetZoneId(ActiveModule.PortalID);// ZoneHelpers.GetZoneId(ActiveModule.PortalID).Value;
             var appId = AppHelpers.GetAppIdFromModule(ActiveModule, zoneId);
             bool success;
@@ -41,7 +42,7 @@ namespace ToSic.SexyContent.WebApi
                 // Increase script timeout to prevent timeouts
                 HttpContext.Current.Server.ScriptTimeout = 300;
 
-                success = new ZipImport(helper, zoneId, appId, PortalSettings.UserInfo.IsSuperUser)
+                success = new ZipImport(helper, zoneId, appId, PortalSettings.UserInfo.IsSuperUser, Log)
                     .ImportZipFromUrl(packageUrl, ActiveModule.DesktopModule.ModuleName == "2sxc-app");
             }
             catch (Exception ex)
@@ -50,6 +51,7 @@ namespace ToSic.SexyContent.WebApi
                 throw new Exception("An error occurred while installing the app: " + ex.Message, ex);
             }
             
+            Log.Add("install completed with success:" + success);
             return Request.CreateResponse(success ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { success, helper.Messages });
         }
 

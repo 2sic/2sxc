@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
@@ -45,13 +46,14 @@ namespace ToSic.SexyContent.ContentBlocks
         }
         #endregion
 
-        public EntityContentBlock(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition)
+        public EntityContentBlock(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition, Log parentLog = null)
         {
-            _constructor(parent, cbDefinition);
+            _constructor(parent, cbDefinition, parentLog);
         }
 
-        private void _constructor(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition)
+        private void _constructor(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition, Log parentLog)
         {
+            Log = new Log("EntCB", parentLog, "constructor");
             Parent = parent;
             ParseContentBlockDefinition(cbDefinition);
             ParentId = parent.ParentId;
@@ -99,11 +101,11 @@ namespace ToSic.SexyContent.ContentBlocks
             }
         }
 
-        public EntityContentBlock(IContentBlock parent, int contentBlockId)
+        public EntityContentBlock(IContentBlock parent, int contentBlockId, Log parentLog)
         {
             contentBlockId = Math.Abs(contentBlockId); // for various reasons this can be introduced as a negative value, make sure we neutralize that
             var cbDef = parent.SxcInstance.App.Data["Default"].List[contentBlockId];  // get the content-block definition
-            _constructor(parent, cbDef);
+            _constructor(parent, cbDef, parentLog);
         }
 
         public override SxcInstance SxcInstance => _sxcInstance ??

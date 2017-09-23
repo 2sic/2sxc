@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.Installer
                 var xmlToImport =
                     File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.02.00.xml"));
                 //var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
-                var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
+                var xmlImport = new XmlImportWithFiles(null, "en-US", /*userName,*/ true);
                 var success = xmlImport.ImportXml(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
                 if (!success)
@@ -58,7 +58,7 @@ namespace ToSic.SexyContent.Installer
             // 1. Import new Attributes for @All content type
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-01.xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
+            var xmlImport = new XmlImportWithFiles(null, "en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
             if (!success)
@@ -70,7 +70,7 @@ namespace ToSic.SexyContent.Installer
             // 2. Import ContentType-InputType and entities for it
             xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-02.xml"));
-            xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
+            xmlImport = new XmlImportWithFiles(null, "en-US", /*userName,*/ true);
             success = xmlImport.ImportXml(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
             if (!success)
@@ -82,7 +82,7 @@ namespace ToSic.SexyContent.Installer
             // 3. Hide all unneeded fields - all fields for string, number: all but "Number of Decimals", Minimum and Maximum
             xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-03.xml"));
-            xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
+            xmlImport = new XmlImportWithFiles(null, "en-US", /*userName,*/ true);
             success = xmlImport.ImportXml(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
 
             if (!success)

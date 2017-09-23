@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.Installer
             // Fix AddressMask field in GPS settings content type
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.00.02.xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
+            var xmlImport = new XmlImportWithFiles(null, "en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
 
             if (!success)
@@ -48,7 +48,7 @@ namespace ToSic.SexyContent.Installer
             // Fix AddressMask field in GPS settings content type
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.00.04.xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
+            var xmlImport = new XmlImportWithFiles(null, "en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
 
             if (!success)
@@ -78,7 +78,7 @@ namespace ToSic.SexyContent.Installer
             // Add new content types and entities
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.01.00.xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
+            var xmlImport = new XmlImportWithFiles(null, "en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
 
             if (!success)
@@ -100,7 +100,7 @@ namespace ToSic.SexyContent.Installer
             // Add new content types and entities
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.03.02.xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
+            var xmlImport = new XmlImportWithFiles(null, "en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), true);
 
             if (!success)
@@ -130,7 +130,7 @@ namespace ToSic.SexyContent.Installer
             // Change "Author" to "Owner" (permissions content type)
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.03.03.xml"));
-            var xmlImport = new XmlImportWithFiles("en-US", /*userName,*/ true);
+            var xmlImport = new XmlImportWithFiles(null, "en-US", /*userName,*/ true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // Overwrite existing values
 
             if (!success)

@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Http;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.Apps.Interfaces;
-using ToSic.SexyContent.ContentBlocks;
-using DotNetNuke.Common.Utilities;
-using ToSic.Eav.Apps;
-using System.Linq;
-using ToSic.Eav.Interfaces;
-using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.EAVExtensions;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class DnnBusinessController : ModuleSearchBase, IUpgradeable, IVersionable
     {
+        private Log Log { get; }
+
         #region DNN Interface Members - search, upgrade, versionable
 
-        private IPagePublishing versioning;
+        private IPagePublishing Publishing { get; }
 
         /// <summary>
         /// Constructor overload for DotNetNuke
@@ -27,74 +24,34 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// </summary>
         public DnnBusinessController()
         {
-            versioning = new PagePublishing();
+            Publishing = new PagePublishing();
+            Log = new Log("DnnBuC", null, "starting the business controller");
         }
 
-        public int GetLatestVersion(int moduleId) => versioning.GetLatestVersion(moduleId);
+        public int GetLatestVersion(int moduleId) => Publishing.GetLatestVersion(moduleId);
 
-        public int GetPublishedVersion(int moduleId) => versioning.GetPublishedVersion(moduleId);
+        public int GetPublishedVersion(int moduleId) => Publishing.GetPublishedVersion(moduleId);
 
         public void PublishVersion(int moduleId, int version)
         {
+            Log.Add("publish");
+            Publishing.Publish(moduleId, version);
+
             try
             {
-                // publish all entites of this content block
-                var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
-                var cb = new ModuleContentBlock(moduleInfo);
-
-                if (cb.ContentGroupExists)
-                {
-                    var appManager = new AppManager(cb.AppId);
-
-                    // Add content entities
-                    IEnumerable<IEntity> list = new List<IEntity>();
-                    list = TryToAddStream(list, cb.Data, "Default");
-                    //var list = cb.Data["Default"]?.LightList ?? new List<IEntity>();
-
-                    // Add list content if defined
-                    list = TryToAddStream(list, cb.Data, "ListContent");
-
-                    // Add list partofpage if defined
-                    list = TryToAddStream(list, cb.Data, "PartOfPage");
-
-                    // Find related presentation entities
-                    var presentationItems = list
-                        .Where(e => (e as EntityInContentGroup)?.Presentation != null)
-                        .Select(e => ((EntityInContentGroup)e).Presentation);
-                    list = list.Concat(presentationItems);
-
-                    var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
-
-                    // publish ContentGroup as well - if there already is one
-                    if (cb.ContentGroup != null)
-                        ids.Add(cb.ContentGroup.ContentGroupId);
-
-                    if (ids.Any())
-                        appManager.Entities.Publish(ids.ToArray());
-                }
-
-                // Set published version
-                // 2017-09-13 2dm - not sure if this is needed, may cause trouble because then DNN says the page changed again 
-                // + isn't necessary, because DNN will publish the settings
-                var moduleVersionSettings = new PagePublishing.ModuleVersionSettingsController(moduleId);
-                moduleVersionSettings.PublishLatestVersion();
+                Logging.LogToDnn("publishing", "ok", Log);
             }
-            catch (Exception ex)
+            catch
             {
-                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
-                throw;
+                // ignore
             }
         }
 
-        private static IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, ViewDataSource data, string key)
-        {
-            var cont = data.Out.ContainsKey(key) ? data[key]?.LightList : null;
-            if (cont != null) list = list.Concat(cont);
-            return list;
-        }
+
 
         public void DeleteVersion(int moduleId, int version)
         {
+            Log.Add("delete version is not supported");
             //versioning.DoInsideDeleteLatestVersion(moduleId, (args) => {
             //    // NOTE for 2dm: If we want to support delete, reset any item in draft state of the content-block
             //});
@@ -112,7 +69,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// <returns></returns>
         public string UpgradeModule(string version)
         {
-            return new InstallationController().UpgradeModule(version);
+            Log.Add($"upgrade module - start for v:{version}");
+            var res = new InstallationController().UpgradeModule(version);
+            Log.Add($"result:{res}");
+            Logging.LogToDnn("Upgrade", "ok", Log, force:true); // always log, this often causes hidden problems
+            return res;
         }
 
         public override IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)

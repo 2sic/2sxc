@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
@@ -12,6 +13,11 @@ namespace ToSic.SexyContent.WebApi
     [SupportedModules("2sxc,2sxc-app")]
     public class ContentGroupController : SxcApiController
     {
+        protected override void Initialize(HttpControllerContext controllerContext)
+        {
+            base.Initialize(controllerContext); // very important!!!
+            Log.Rename("2sCoGr");
+        }
 
         // ToDo 2rm: Check if this is needed somewhere...
         //[HttpGet]
@@ -39,6 +45,7 @@ namespace ToSic.SexyContent.WebApi
 
         private ContentGroup GetContentGroup(Guid contentGroupGuid)
         {
+            Log.Add($"get group:{contentGroupGuid}");
             var contentGroup = SxcContext.App.ContentGroupManager.GetContentGroup(contentGroupGuid);
 
             if (contentGroup == null)
@@ -50,6 +57,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public ReplaceSet Replace(Guid guid, string part, int index)
         {
+            Log.Add($"replace target:{guid}, part:{part}, index:{index}");
             part = part.ToLower();
             var contentGroup = GetContentGroup(guid);
 
@@ -90,6 +98,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Replace(Guid guid, string part, int index, int entityId)
         {
+            Log.Add($"replace target:{guid}, part:{part}, index:{index}, id:{entityId}");
             var versioning = new PagePublishing();
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
@@ -105,6 +114,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public List<SortedEntityItem> ItemList(Guid guid)
         {
+            Log.Add($"item list for:{guid}");
             var cg = GetContentGroup(guid);
 
             var list = cg.Content.Select((c, index) => new SortedEntityItem
@@ -124,6 +134,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> list)
         {
+            Log.Add($"list for:{guid}, items:{list?.Count}");
             var versioning = new PagePublishing();
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
@@ -146,6 +157,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public SortedEntityItem Header(Guid guid)
         {
+            Log.Add($"header for:{guid}");
             var cg = GetContentGroup(guid);
 
             var header = cg.ListContent.FirstOrDefault();

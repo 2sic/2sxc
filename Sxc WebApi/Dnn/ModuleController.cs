@@ -21,8 +21,10 @@ namespace ToSic.SexyContent.WebApi.Dnn
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 		public bool Delete(int tabId, int modId)
 		{
+            Log.Add($"delete mod:{modId} on tab:{tabId}");
 		    var mc = new DotNetNuke.Entities.Modules.ModuleController();
             mc.DeleteTabModule(tabId, modId, true);
+            Log.Add("delete completed");
             return true;
 		}
 

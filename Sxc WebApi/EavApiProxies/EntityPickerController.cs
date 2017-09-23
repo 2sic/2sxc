@@ -11,6 +11,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [HttpGet]
         [HttpPost]
  		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<dynamic> GetAvailableEntities([FromUri]int appId, [FromBody] string[] items, [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null) => new Eav.WebApi.EntityPickerController().GetAvailableEntities(appId, items, contentTypeName, dimensionId);
+        public IEnumerable<dynamic> GetAvailableEntities([FromUri]int appId, [FromBody] string[] items, [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null) 
+            => new Eav.WebApi.EntityPickerController(Log).GetAvailableEntities(appId, items, contentTypeName, dimensionId);
     }
 }

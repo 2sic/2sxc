@@ -12,20 +12,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class MetadataController : SxcApiController
 	{
-        private readonly Eav.WebApi.MetadataController _eavMeta;
-        public MetadataController()
-        {
-            _eavMeta = new Eav.WebApi.MetadataController();
-            // now using dependency injection
-            //_eavMeta.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
-
-            // eavMeta.GetAssignedEntities();
-        }
 
         #region Content-Type Get, Delete, Save
         [HttpGet]
         public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, string keyType, string key, string contentType, int? appId = null) 
-            => _eavMeta.GetAssignedEntities(assignmentObjectTypeId, keyType, key, contentType, appId);
+            => new Eav.WebApi.MetadataController(Log).GetAssignedEntities(assignmentObjectTypeId, keyType, key, contentType, appId);
 
 	    #endregion
 

@@ -6,7 +6,6 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -19,16 +18,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     [SxcWebApiExceptionHandling]
 	public class PipelineDesignerController : DnnApiControllerWithFixes
 	{
-		private readonly Eav.WebApi.PipelineDesignerController _controller;
+		private Eav.WebApi.PipelineDesignerController _controller;
 
-		public PipelineDesignerController()
-		{
-			_controller = new Eav.WebApi.PipelineDesignerController("SiteSqlServer");
-		}
 	    protected override void Initialize(HttpControllerContext controllerContext)
 	    {
 	        base.Initialize(controllerContext); // very important!!!
 	        Log.Rename("2sPipC");
+			_controller = new Eav.WebApi.PipelineDesignerController(Log);
 	    }
 
         /// <summary>
@@ -75,6 +71,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		[HttpGet]
 		public object DeletePipeline(int appId, int id)
 		{
+            Log.Add($"delete pipe:{id} on app:{appId}");
 			// Stop if a Template uses this Pipeline
             var app = new App(PortalSettings.Current, appId);
 			var templatesUsingPipeline = app.TemplateManager.GetAllTemplates().Where(t => t.Pipeline != null && t.Pipeline.EntityId == id).Select(t => t.TemplateId).ToArray();

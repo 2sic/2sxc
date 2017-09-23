@@ -43,7 +43,7 @@ namespace ToSic.SexyContent.Search
             }
 
             // new 2016-03-27
-            var mcb = new ModuleContentBlock(moduleInfo);
+            var mcb = new ModuleContentBlock(moduleInfo, parentLog: null);
             var sexy = mcb.SxcInstance;
 
             // old 2016-03-27

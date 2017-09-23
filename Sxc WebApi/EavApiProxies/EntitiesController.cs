@@ -50,6 +50,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public dynamic GetManyForEditing([FromBody] List<ItemIdentifier> items, int appId)
         {
+            Log.Add($"get many a:{appId}, item-count:{items.Count}");
             // this will contain the list of the items we'll really return
             var newItems = new List<ItemIdentifier>();
 
