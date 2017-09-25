@@ -11,10 +11,11 @@ namespace ToSic.SexyContent.Internal
 {
     public class AppHelpers
     {
+
         public static int? GetAppIdFromModule(ModuleInfo module, int zoneId)
         {
             if (module.DesktopModule.ModuleName == "2sxc")
-                return new ZoneRuntime(zoneId).DefaultAppId;
+                return new ZoneRuntime(zoneId, null).DefaultAppId;
 
             if(module.ModuleSettings.ContainsKey(Settings.AppNameString))
                 return GetAppIdFromGuidName(zoneId, module.ModuleSettings[Settings.AppNameString].ToString());

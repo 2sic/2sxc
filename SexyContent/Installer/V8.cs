@@ -8,6 +8,7 @@ using DotNetNuke.Entities.Modules;
 using System.Data.SqlClient;
 using System.Configuration;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Installer
 {
@@ -15,7 +16,7 @@ namespace ToSic.SexyContent.Installer
 
     internal class V8: VersionBase
     {
-        public V8(string version, Logger sharedLogger) : base(version, sharedLogger)  { }
+        public V8(string version, Logger sharedLogger, Log parentLog) : base(version, sharedLogger, "UpgV8", parentLog)  { }
 
         internal void Version080002()
         {
@@ -108,16 +109,6 @@ namespace ToSic.SexyContent.Installer
                 var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Text).ToArray());
                 throw new Exception("The 2sxc module upgrade to 08.03.02 failed: " + messages);
             }
-
-            // 2016-03-13 2dm: disabled this rename again, because I tested it without and it seems the manifest works, so this could only lead to trouble one day
-            //var desktopModuleNames = new[] { "2sxc", "2sxc-app" };
-            //// Update BusinessController class name in desktop module info
-            //foreach (var d in desktopModuleNames)
-            //{
-            //    var dmi = DesktopModuleController.GetDesktopModuleByModuleName(d, -1);
-            //    dmi.BusinessControllerClass = "ToSic.SexyContent.Environment.Dnn7.DnnBusinessController";
-            //    DesktopModuleController.SaveDesktopModule(dmi, false, true);
-            //}
 
         }
 

@@ -12,6 +12,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Installer;
@@ -43,14 +44,12 @@ namespace ToSic.SexyContent.WebApi.View
         public void AddItem([FromUri] int? sortOrder = null)
         {
             Log.Add($"add order:{sortOrder}");
-            var versioning = new PagePublishing();
+            var versioning = new PagePublishing(Log);
 
-            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = args => {
-                ContentGroupReferenceManager.AddItem(sortOrder);
-            };
+            void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.AddItem(sortOrder);
 
             // use dnn versioning - this is always part of page
-            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
             //else internalSave(null);
         }
 
@@ -137,15 +136,13 @@ namespace ToSic.SexyContent.WebApi.View
         public void MoveItemInList(int parentId, string field, int indexFrom, int indexTo, [FromUri] bool partOfPage = false)
         {
             Log.Add($"move item in list parent:{parentId}, field:{field}, from:{indexFrom}, to:{indexTo}, partOfpage:{partOfPage}");
-            var versioning = new PagePublishing();
+            var versioning = new PagePublishing(Log);
 
-            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
-                ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
-            };
+            void InternalSave(VersioningActionInfo args) => ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
 
             // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
-            else internalSave(null);
+            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
+            else InternalSave(null);
         }
 
         /// <summary>
@@ -159,15 +156,13 @@ namespace ToSic.SexyContent.WebApi.View
         public void RemoveItemInList(int parentId, string field, int index, [FromUri] bool partOfPage = false)
         {
             Log.Add($"remove item: parent{parentId}, field:{field}, index:{index}, partOfPage{partOfPage}");
-            var versioning = new PagePublishing();
+            var versioning = new PagePublishing(Log);
 
-            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
-                ModifyItemList(parentId, field, new Remove(index));
-            };
+            void InternalSave(VersioningActionInfo args) => ModifyItemList(parentId, field, new Remove(index));
 
             // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
-            else internalSave(null);
+            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
+            else InternalSave(null);
         }
 
         [HttpGet]
@@ -216,14 +211,12 @@ namespace ToSic.SexyContent.WebApi.View
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
             Log.Add($"change order sort:{sortOrder}, dest:{destinationSortOrder}");
-            var versioning = new PagePublishing();
+            var versioning = new PagePublishing(Log);
 
-            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
-                ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
-            };
+            void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
 
             // use dnn versioning - items here are always part of list
-            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
         }
 
         [HttpGet]
@@ -239,14 +232,12 @@ namespace ToSic.SexyContent.WebApi.View
         public void RemoveFromList([FromUri] int sortOrder)
         {
             Log.Add($"remove from index:{sortOrder}");
-            var versioning = new PagePublishing();
+            var versioning = new PagePublishing(Log);
 
-            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
-                ContentGroupReferenceManager.RemoveFromList(sortOrder);
-            };
+            void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.RemoveFromList(sortOrder);
 
             // use dnn versioning - items here are always part of list
-            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
             //else internalSave(null);
         }
 

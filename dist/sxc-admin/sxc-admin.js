@@ -176,16 +176,16 @@
     }
 
 } ());
-(function () { 
+(function () {
     DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "contentTypeName", "eavAdminDialogs", "$ocLazyLoad"];
-    angular.module("DialogHost", [
-        "SxcAdminUi",
-        "EavAdminUi",
-        "oc.lazyLoad",
+    angular
+        .module("DialogHost", [
+            "SxcAdminUi",
+            "EavAdminUi",
+            "oc.lazyLoad",
 
-        "eavEditEntity" // new it must be added here, so it's available in the entire application - not good architecture, must fix someday
-    ])
-         
+            "eavEditEntity" // new it must be added here, so it's available in the entire application - not good architecture, must fix someday
+        ])
         .controller("DialogHost", DialogHostController);
 
     function preLoadAgGrid($ocLazyLoad) {
@@ -194,20 +194,23 @@
             "../lib/ag-grid/ag-grid.min.css"
         ]);
     }
-    
+
     /*@ngInject*/
     function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, contentTypeName, eavAdminDialogs, $ocLazyLoad) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
-        
+
         vm.close = function close() {
             sxcDialogs.closeThis();
         };
-        
+
         switch (initialDialog) {
             case "edit":
-                eavAdminDialogs.openEditItems(items, vm.close, { partOfPage: $2sxc.urlParams.get('partOfPage'), publishing: $2sxc.urlParams.get('publishing') });
+                eavAdminDialogs.openEditItems(items, vm.close, {
+                    partOfPage: $2sxc.urlParams.get('partOfPage'),
+                    publishing: $2sxc.urlParams.get('publishing')
+                });
                 break;
             case "zone":
                 // this is the zone-config dialog showing mainly all the apps
@@ -215,7 +218,7 @@
                 break;
             case "app":
                 // this opens the manage-an-app with content-types, views, etc.
-                preLoadAgGrid($ocLazyLoad).then(function() {
+                preLoadAgGrid($ocLazyLoad).then(function () {
                     sxcDialogs.openAppMain(appId, vm.close);
                 });
                 break;
@@ -235,7 +238,7 @@
                 $ocLazyLoad.load([
                         $2sxc.parts.getUrl("../sxc-develop/sxc-develop.min.js")
                     ])
-                    .then(function() {
+                    .then(function () {
                         sxcDialogs.openDevelop(items[0], vm.close);
                     });
                 break;
@@ -243,7 +246,7 @@
                 eavAdminDialogs.openContentTypeFieldsOfItems(items, vm.close);
                 break;
             case "contentitems":
-                preLoadAgGrid($ocLazyLoad).then(function() {
+                preLoadAgGrid($ocLazyLoad).then(function () {
                     eavAdminDialogs.openContentItems(appId, contentTypeName, contentTypeName, vm.close);
                 });
                 break;
@@ -258,7 +261,7 @@
         }
     }
 
-} ());
+}());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
     angular.module("SxcFilters", [])

@@ -175,7 +175,7 @@ namespace ToSic.SexyContent
         public HtmlString Render()
         {
             Log.Add("render");
-            var renderHelp = new RenderingHelpers(this);
+            var renderHelp = new RenderingHelpers(this, Log);
             
             try
             {

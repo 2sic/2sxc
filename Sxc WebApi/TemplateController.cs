@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.AppEngine;
@@ -13,14 +14,23 @@ namespace ToSic.SexyContent.WebApi
 	public class TemplateController : SxcApiController
 	{
 
-	    [HttpGet]
+	    protected override void Initialize(HttpControllerContext controllerContext)
+	    {
+	        base.Initialize(controllerContext); // very important!!!
+	        Log.Rename("2sSysC");
+	    }
+
+
+        [HttpGet]
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public IEnumerable<object> GetAll(int appId)
-	    {
+        {
+            Log.Add($"get all a:{appId}");
             var tm = TemplateManager(appId);
 
-	        var attributeSetList = new AppRuntime(tm.ZoneId, tm.AppId).ContentTypes.FromScope(Settings.AttributeSetScope).ToList();// tm.GetAvailableContentTypes(Settings.AttributeSetScope).ToList();
-            var templateList = tm.GetAllTemplates();
+	        var attributeSetList = new AppRuntime(tm.ZoneId, tm.AppId).ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
+            var templateList = tm.GetAllTemplates().ToList();
+            Log.Add($"attrib list count:{attributeSetList.Count}, template count:{templateList.Count}");
             var templates = from c in templateList
                             select new
                             {
@@ -40,7 +50,7 @@ namespace ToSic.SexyContent.WebApi
 
 	    private TemplateManager TemplateManager(int appId)
 	    {
-	        var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);// ZoneHelpers.GetZoneId(PortalSettings.PortalId).Value;
+	        var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
 	        var tm = new TemplateManager(zoneId, appId);
 	        return tm;
 	    }
@@ -70,6 +80,7 @@ namespace ToSic.SexyContent.WebApi
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public bool Delete(int appId, int id)
 	    {
+	        Log.Add($"delete a{appId}, t:{id}");
             var tm = TemplateManager(appId);
             tm.DeleteTemplate(id);
 	        return true;

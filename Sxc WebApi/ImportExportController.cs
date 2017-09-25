@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
             var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
-            var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
+            var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath, Log);
             var cultCount = new Environment.DnnEnvironment().ZoneMapper
                 .CulturesWithState(appWrapper.App.OwnerPortalSettings.PortalId, appWrapper.App.ZoneId)
                 .Count(c => c.Active);
@@ -102,7 +102,7 @@ namespace ToSic.SexyContent.WebApi
 
             var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
-            var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
+            var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath, Log);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
             var fileName =
@@ -125,7 +125,7 @@ namespace ToSic.SexyContent.WebApi
             // ReSharper disable once UnusedVariable
             var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
-            var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath);
+            var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath, Log);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
 
             return true;
@@ -142,7 +142,8 @@ namespace ToSic.SexyContent.WebApi
             var fileName = $"2sxcContentExport_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}.xml";
             var fileXml = new ToSxcXmlExporter().Init(zoneId, appId, false,
                 contentTypeIdsString?.Split(';') ?? new string[0],
-                entityIdsString?.Split(';') ?? new string[0]
+                entityIdsString?.Split(';') ?? new string[0],
+                Log
             ).GenerateNiceXml();
 
             return HttpResponseMessageHelper.GetAttachmentHttpResponseMessage(fileName, "text/xml", fileXml);
@@ -161,7 +162,7 @@ namespace ToSic.SexyContent.WebApi
             var zoneId  = int.Parse(request["ZoneId"]);
             if (request.Files.Count <= 0) return result;
 
-            var helper = new ImportExportEnvironment();
+            var helper = new ImportExportEnvironment(Log);
             try
             {
                 var zipImport = new ZipImport(helper, zoneId, null, PortalSettings.UserInfo.IsSuperUser, Log);
@@ -201,7 +202,7 @@ namespace ToSic.SexyContent.WebApi
             {   // ZIP
                 try
                 {
-                    var env = new ImportExportEnvironment();
+                    var env = new ImportExportEnvironment(Log);
                     var zipImport = new ZipImport(env, zoneId, appId, PortalSettings.UserInfo.IsSuperUser, Log);
                     // Increase script timeout to prevent timeouts
                     HttpContext.Current.Server.ScriptTimeout = 300;

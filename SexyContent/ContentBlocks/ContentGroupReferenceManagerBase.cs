@@ -5,23 +5,25 @@ using System.Web.Http;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Logging;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
 
-    internal abstract class ContentGroupReferenceManagerBase 
+    internal abstract class ContentGroupReferenceManagerBase : HasLog
     {
         protected SxcInstance SxcContext;
         protected int ModuleId;
 
         protected ContentGroup CGroup;
 
-        internal ContentGroupReferenceManagerBase(SxcInstance sxc)
+        internal ContentGroupReferenceManagerBase(SxcInstance sxc): base("CGRMan", sxc.Log)
         {
             SxcContext = sxc;
             ModuleId = SxcContext.ModuleInfo.ModuleID;
         }
+
 
         #region methods which the entity-implementation must customize - so it's virtual
 
@@ -32,7 +34,7 @@ namespace ToSic.SexyContent.ContentBlocks
         internal abstract void SetAppId(int? appId);
 
         internal abstract void EnsureLinkToContentGroup(Guid cgGuid);
-        internal abstract void UpdateTitle(ToSic.Eav.Interfaces.IEntity titleItem);
+        internal abstract void UpdateTitle(Eav.Interfaces.IEntity titleItem);
         #endregion
 
         #region methods which are fairly stable / the same across content-block implementations
@@ -46,6 +48,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
         {
+            Log.Add($"save template id{templateId}, forceCreateCG:{forceCreateContentGroup}");
             Guid? result;
             var contentGroup = ContentGroup;
 
@@ -84,11 +87,12 @@ namespace ToSic.SexyContent.ContentBlocks
 
         public IEnumerable<AppUiInfo> GetSelectableApps()
         {
+            Log.Add($"get selectable apps");
             try
             {
                 var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.PortalSettings.PortalId);
                 return
-                    AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.PortalSettings)
+                    AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.PortalSettings, Log)
                         .Where(a => !a.Hidden)
                         .Select(a => new AppUiInfo {
                             Name = a.Name,
@@ -109,6 +113,7 @@ namespace ToSic.SexyContent.ContentBlocks
         
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
+            Log.Add($"change order orig:{sortOrder}, dest:{destinationSortOrder}");
             try
             {
                 ContentGroup.ReorderEntities(sortOrder, destinationSortOrder);
@@ -125,6 +130,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         public bool Publish(string part, int sortOrder)
         {
+            Log.Add($"publish part{part}, order:{sortOrder}");
             try
             {
                 var contentGroup = ContentGroup;
@@ -157,6 +163,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         public void RemoveFromList([FromUri] int sortOrder)
         {
+            Log.Add($"remove from list order:{sortOrder}");
             try
             {
                 var contentGroup = ContentGroup;
@@ -173,6 +180,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         internal void UpdateTitle()
         {
+            Log.Add($"update title");
             // check the contentGroup as to what should be the module title, then try to set it
             // technically it could have multiple different groups to save in, 
             // ...but for now we'll just update the current modules title
@@ -180,7 +188,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
             // re-load the content-group so we have the new title
             var app = SxcContext.App;
-            var contentGroup = app.ContentGroupManager.GetContentGroup(ContentGroup.ContentGroupGuid);// .GetContentGroupForModule(SxcContext.ModuleInfo.ModuleID);
+            var contentGroup = app.ContentGroupManager.GetContentGroup(ContentGroup.ContentGroupGuid);
 
             var titleItem = contentGroup.ListContent.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
 

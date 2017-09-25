@@ -6,7 +6,8 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Persistence;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
@@ -14,28 +15,26 @@ using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class ImportExportEnvironment : IImportExportEnvironment
+    public class ImportExportEnvironment : HasLog, IImportExportEnvironment
     {
+        public ImportExportEnvironment(Log parentLog = null) : base("IExEnv", parentLog)
+        {
+        }
+
         public List<Message> Messages { get; } = new List<Message>();
 
-        //private IFileManager _dnnFileManager;
-        //private IFolderManager _dnnFolderManager;
-        //private int _portalId;
-
+        /// <inheritdoc />
         /// <summary>
         /// Copy all files from SourceFolder to DestinationFolder
         /// </summary>
         /// <param name="sourceFolder"></param>
         /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
-        ///// <param name="overwriteFiles"></param>
-        ///// <param name="messages"></param>
-        ///// <param name="fileIdMapping">The fileIdMapping is needed to re-assign the existing "File:" parameters while importing the content</param>
         public void TransferFilesToTennant(string sourceFolder, string destinationFolder)//, Boolean overwriteFiles, List<ExportImportMessage> messages)
         {
             var messages = Messages;
             var files = Directory.GetFiles(sourceFolder, "*.*");
 
-            var dnnFileManager = DotNetNuke.Services.FileSystem.FileManager.Instance;
+            var dnnFileManager = FileManager.Instance;
             var dnnFolderManager = FolderManager.Instance;
             var portalId = PortalSettings.Current.PortalId;
 
@@ -90,7 +89,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             var app = new App(zoneId, appId, PortalSettings.Current, false);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-            var templateRoot =  HttpContext.Current.Server.MapPath(Internal.TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
+            var templateRoot =  HttpContext.Current.Server.MapPath(TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
             return templateRoot;
         }
 
@@ -176,7 +175,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public string FallbackContentTypeScope => Settings.AttributeSetScope;
 
-        public SaveOptions SaveOptions(int zoneId) => new SaveOptions(DefaultLanguage, new ZoneRuntime(zoneId).Languages(true));
+        public SaveOptions SaveOptions(int zoneId) => new SaveOptions(DefaultLanguage, new ZoneRuntime(zoneId, Log).Languages(true));
 
         #endregion
     }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -10,10 +7,9 @@ using System.Xml.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
-using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Logging.Simple;
 
 //using Microsoft.Practices.Unity;
 
@@ -21,7 +17,7 @@ namespace ToSic.SexyContent.Installer
 {
     internal class V7: VersionBase
     {
-        public V7(string version, Logger sharedLogger) : base(version, sharedLogger)  { }
+        public V7(string version, Logger sharedLogger, Log parentLog) : base(version, sharedLogger, "UpgV7", parentLog)  { }
         
         internal void Version070200()
         {
@@ -122,7 +118,7 @@ namespace ToSic.SexyContent.Installer
             importer.Import(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId, attributeSets, null);
 
             // Run EAV Version Upgrade (also ensures Content Type sharing)
-            var eavVersionUpgrade = new VersionUpgrade(Settings.InternalUserName);
+            var eavVersionUpgrade = new VersionUpgrade(Settings.InternalUserName, Log);
 
             eavVersionUpgrade.EnsurePipelineDesignerAttributeSets();
             SystemManager.PurgeZoneList();

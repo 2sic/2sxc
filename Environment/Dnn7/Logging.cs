@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public static void LogToDnn(string key, string message, Log log = null, DnnHelper dnnContext = null, bool force = false)
         {
             if(!force)
-                if (CheckIfWeShouldSkipEventLogging(GlobalConfiguration.Configuration.Properties)) return;
+                if (SkipEventLogging(GlobalConfiguration.Configuration.Properties)) return;
 
 
             // note: this code has a lot of try/catch, to ensure that most of it works and that
@@ -75,7 +75,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             }
         }
 
-        public static bool CheckIfWeShouldSkipEventLogging(ConcurrentDictionary<object, object> props)
+        public static bool SkipEventLogging(ConcurrentDictionary<object, object> props)
         {
             if (props == null) return true;
             if (!props.TryGetValue(Constants.AdvancedLoggingEnabledKey, out var enabled)) return true;

@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.SexyContent.Serializers;
 using System.Linq;
+using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.SexyContent.Security;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Logging.Simple;
+using ToSic.SexyContent.Security;
+using ToSic.SexyContent.Serializers;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -64,7 +64,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                     continue;
                 }
                 var app = new App(PortalSettings.Current, appId);
-                app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, new PagePublishing().IsVersioningEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
+                app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, new PagePublishing(Log).IsVersioningEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
                 
                 var contentGroup = app.ContentGroupManager.GetContentGroup(reqItem.Group.Guid);
                 var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(reqItem.Group.Part);
@@ -114,16 +114,16 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
 
-            var myLog = new Log("SaveM", Log, "save many started with app: " + appId + ", items:" + items.Count + ", partOfPage: " + partOfPage);
+            Log.Add($"save many started with a:{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
 
-            var versioning = new PagePublishing(myLog);
+            var versioning = new PagePublishing(Log);
             Dictionary<Guid, int> postSaveIds = null;
 
             void InternalSave(VersioningActionInfo args)
             {
                 postSaveIds = EavEntitiesController.SaveMany(appId, items, partOfPage);
 
-                myLog.Add("check groupings");
+                Log.Add("check groupings");
                 // now assign all content-groups as needed
                 var groupItems = items.Where(i => i.Header.Group != null)
                     .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add)
@@ -136,7 +136,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // use dnn versioning if partOfPage
             if (partOfPage)
             {
-                myLog.Add("save with publishing");
+                Log.Add("save with publishing");
                 versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
             }
             else InternalSave(null);
@@ -148,7 +148,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             var myLog = new Log("GrpPrc", Log, "start");
             var app = new App(PortalSettings.Current, appId);
-            app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, new PagePublishing().IsVersioningEnabled(this.ActiveModule.ModuleID), Data.ConfigurationProvider);
+            app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, new PagePublishing(Log).IsVersioningEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
 
             foreach (var entitySets in groupItems)
             {

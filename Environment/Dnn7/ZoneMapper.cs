@@ -6,13 +6,17 @@ using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
-using ToSic.SexyContent.Environment.Base;
-using ToSic.SexyContent.Environment.Interfaces;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class ZoneMapper : IZoneMapper
+    public class ZoneMapper : HasLog, IZoneMapper
     {
+        public ZoneMapper(Log parentLog = null) : base("ZnMapr", parentLog)
+        {
+        }
+
         /// <summary>
         /// Will get the EAV ZoneId for the current tennant
         /// Always returns a valid value, as it will otherwise create one if it was missing
@@ -35,7 +39,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // Create new zone automatically
             if (!c.ContainsKey(zoneSettingKey))
             {
-                zoneId = ZoneManager.CreateZone(portalSettings.PortalName + " (Portal " + tennantId + ")");
+                zoneId = ZoneManager.CreateZone(portalSettings.PortalName + " (Portal " + tennantId + ")", Log);
                 PortalController.UpdatePortalSetting(tennantId, Settings.PortalSettingZoneId, zoneId.ToString());
             }
             else zoneId = Int32.Parse(c[zoneSettingKey]);
@@ -50,7 +54,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public List<TempTempCulture> CulturesWithState(int tennantId, int zoneId)
         {
             // note: 
-            var availableEavLanguages = new ZoneRuntime(zoneId).Languages(true); 
+            var availableEavLanguages = new ZoneRuntime(zoneId, Log).Languages(true); 
             var defaultLanguageCode = new PortalSettings(tennantId).DefaultLanguage;
             var defaultLanguage = availableEavLanguages
                 .FirstOrDefault(p => p.Matches(defaultLanguageCode));

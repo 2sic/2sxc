@@ -13,11 +13,14 @@ using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
+
 // ReSharper disable InconsistentNaming
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    internal class RenderingHelpers
+    internal class RenderingHelpers: HasLog
     {
         private readonly SxcInstance _sxcInstance;
         private readonly PortalSettings _portalSettings;
@@ -25,12 +28,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private readonly string _applicationRoot;
         private readonly ModuleInfo _moduleInfo;
 
-        internal RenderingHelpers(SxcInstance sxc)
+        internal RenderingHelpers(SxcInstance sxc, Log parentLog): base("RndHlp", parentLog)
         {
             string appRoot = VirtualPathUtility.ToAbsolute("~/");
-            _moduleInfo = sxc?.ModuleInfo;// mi;// mic.Configuration;
+            _moduleInfo = sxc?.ModuleInfo;
             _sxcInstance = sxc;
-            _portalSettings = PortalSettings.Current; // mic.PortalSettings;// PortalSettings.Current;
+            _portalSettings = PortalSettings.Current;
 
             _userInfo = PortalSettings.Current.UserInfo;
             _applicationRoot = appRoot;
@@ -82,7 +85,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public ClientInfosAll GetClientInfosAll()
         {
             return new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, _sxcInstance, _userInfo,
-                    _sxcInstance.ZoneId ?? 0, _sxcInstance.ContentBlock.ContentGroupExists);
+                    _sxcInstance.ZoneId ?? 0, _sxcInstance.ContentBlock.ContentGroupExists, Log);
         }
 
         public string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError, bool addMinimalWrapper, bool encodeMessage)
@@ -119,11 +122,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public ClientInfoContentGroup ContentGroup;
         // ReSharper disable once InconsistentNaming
         public ClientInfosError error;
-        private IPagePublishing versioning;
 
-        public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated)
+        public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated, Log parentLog)
         {
-            versioning = new PagePublishing();
+            IPagePublishing versioning = new PagePublishing(parentLog);
 
             Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic, sxc);
             Language = new ClientInfosLanguages(ps, zoneId);

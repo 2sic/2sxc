@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Http;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.SexyContent.Installer;
@@ -24,7 +23,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// </summary>
         public DnnBusinessController()
         {
-            Publishing = new PagePublishing();
+            Publishing = new PagePublishing(Log);
             Log = new Log("DnnBuC", null, "starting the business controller");
         }
 
@@ -80,7 +79,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             try
             {
-                return new SearchController().GetModifiedSearchDocuments(moduleInfo, beginDate);
+                return new SearchController(Log).GetModifiedSearchDocuments(moduleInfo, beginDate);
             }
             catch (Exception e)
             {

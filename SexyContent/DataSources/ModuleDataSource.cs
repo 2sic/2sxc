@@ -54,7 +54,7 @@ namespace ToSic.SexyContent.DataSources
                         var tabId = ModuleController.Instance.GetTabModulesByModule(ModuleId.Value)[0].TabID;
                         var cgm = new ContentGroupManager(ZoneId, AppId,
                             HasSxcContext && SxcContext.Environment.Permissions.UserMayEditContent,
-                            new Environment.Dnn7.PagePublishing().IsVersioningEnabled(ModuleId.Value));
+                            new Environment.Dnn7.PagePublishing(Log).IsVersioningEnabled(ModuleId.Value));
                         var res = cgm.GetContentGroupForModule(ModuleId.Value, tabId);
                         var contentGroupGuid = res.Item1;
                         var previewTemplateGuid = res.Item2;

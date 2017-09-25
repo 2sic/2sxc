@@ -7,6 +7,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Logging;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
@@ -18,13 +19,13 @@ using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent
 {
-    public class AppAndDataHelpers : IAppAndDataHelpers
+    public class AppAndDataHelpers : HasLog, IAppAndDataHelpers
     {
         private readonly SxcInstance _sxcInstance;
 
         public AppAndDataHelpers(SxcInstance sexy) : this(sexy, sexy.ModuleInfo) {}
 
-        public AppAndDataHelpers(SxcInstance sexy, ModuleInfo module)
+        public AppAndDataHelpers(SxcInstance sexy, ModuleInfo module): base("ADHlpr")
         {
             // ModuleInfo module = sexy.ModuleInfo;
             // Init things than require module-info or similar, but not 2sxc
@@ -46,7 +47,7 @@ namespace ToSic.SexyContent
             // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
             // Note that app could be null, if a user is in admin-ui of a module which hasn't actually be configured yet
-            App?.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(module.ModuleID), data.ConfigurationProvider);
+            App?.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing(Log).IsVersioningEnabled(module.ModuleID), data.ConfigurationProvider);
 
             #region Assemble the mapping of the data-stream "default"/Presentation to the List object and the "ListContent" too
 	        List = new List<Element>();

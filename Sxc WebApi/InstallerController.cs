@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.WebApi
 
             // Install package
             // var messages = new List<ExportImportMessage>();
-            var helper = new ImportExportEnvironment();
+            var helper = new ImportExportEnvironment(Log);
             try
             {
                 // Increase script timeout to prevent timeouts

@@ -7,6 +7,8 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
@@ -14,8 +16,12 @@ using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Search
 {
-    internal class SearchController
+    internal class SearchController: HasLog
     {
+        public SearchController(Log parentLog = null) : base("SrchC", parentLog)
+        {
+        }
+
         /// <summary>
         /// Get search info for each dnn module containing 2sxc data
         /// </summary>
@@ -33,7 +39,7 @@ namespace ToSic.SexyContent.Search
             //if (!zoneId.HasValue)
             //    return searchDocuments;
 
-            int? appId = new ZoneRuntime(zoneId).DefaultAppId;// State.GetDefaultAppId(zoneId);
+            int? appId = new ZoneRuntime(zoneId, Log).DefaultAppId;// State.GetDefaultAppId(zoneId);
 
             if (!isContentModule)
             {

@@ -14,16 +14,15 @@ namespace ToSic.SexyContent.WebApi
             base.OnActionExecuted(actionExecutedContext);
             try
             {
+                // check if we have any logging details for this request
                 if (!(actionExecutedContext.Request?.Properties.ContainsKey(Constants.EavLogKey) ??
                       false)) return;
 
                 var log = actionExecutedContext.Request.Properties[Constants.EavLogKey] as Log;
+
+                // check if we have additional context information (portal, module, etc.)
                 actionExecutedContext.Request.Properties.TryGetValue(Constants.DnnContextKey,
                     out var dnnContext);
-
-
-                //if (Logging.CheckIfWeShouldSkipEventLogging(actionExecutedContext.ActionContext?
-                //    .ControllerContext?.Configuration?.Properties)) return;
 
                 Logging.LogToDnn("2sxc-Api", "Auto-Log", log, dnnContext as DnnHelper);
             }

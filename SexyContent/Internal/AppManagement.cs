@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Logging.Simple;
 using static System.String;
 
 namespace ToSic.SexyContent.Internal
@@ -19,9 +20,9 @@ namespace ToSic.SexyContent.Internal
         /// <param name="includeDefaultApp"></param>
         /// <param name="ownerPs"></param>
         /// <returns></returns>
-        public static List<App> GetApps(int zoneId, bool includeDefaultApp, PortalSettings ownerPs)
+        public static List<App> GetApps(int zoneId, bool includeDefaultApp, PortalSettings ownerPs, Log parentLog)
         {
-            var appIds = new ZoneRuntime(zoneId).Apps;// State.GetAppList(zoneId);
+            var appIds = new ZoneRuntime(zoneId, parentLog).Apps;// State.GetAppList(zoneId);
             var sexyApps = appIds.Select(eavApp => new App(zoneId, eavApp.Key, ownerPs));
 
             if (!includeDefaultApp)
@@ -36,7 +37,7 @@ namespace ToSic.SexyContent.Internal
         /// <param name="zoneId"></param>
         /// <param name="appId"></param>
         /// <param name="appName"></param>
-        internal static void EnsureAppIsConfigured(int zoneId, int appId, string appName = null)
+        internal static void EnsureAppIsConfigured(int zoneId, int appId, Log parentLog, string appName = null)
         {
             var appAssignment = SystemRuntime.GetMetadataType(Constants.AppAssignmentName);
             var scope = Settings.AttributeSetScopeApps;
@@ -46,7 +47,7 @@ namespace ToSic.SexyContent.Internal
             var appSettings = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
 
             // Get appName from cache - stop if it's a "Default" app
-            var eavAppName = new ZoneRuntime(zoneId).GetName(appId);// State.GetAppName(zoneId, appId); 
+            var eavAppName = new ZoneRuntime(zoneId, parentLog).GetName(appId);// State.GetAppName(zoneId, appId); 
 
             if (eavAppName == Eav.Constants.DefaultAppName)
                 return;
@@ -96,24 +97,24 @@ namespace ToSic.SexyContent.Internal
         /// <param name="appName"></param>
         /// <param name="ownerPs"></param>
         /// <returns></returns>
-        internal static void AddBrandNewApp(int zoneId, string appName, PortalSettings ownerPs)
+        internal static void AddBrandNewApp(int zoneId, string appName, PortalSettings ownerPs, Log parentLog)
         {
             // check if invalid app-name
             if (appName == Constants.ContentAppName || appName == Eav.Constants.DefaultAppName || IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
                 throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
 
-            var appId = new ZoneManager(zoneId).CreateApp();// State.AppCreate(zoneId);
+            var appId = new ZoneManager(zoneId, parentLog).CreateApp();// State.AppCreate(zoneId);
 
-            EnsureAppIsConfigured(zoneId, appId, appName);
+            EnsureAppIsConfigured(zoneId, appId, parentLog: parentLog, appName: appName);
         }
 
-        internal static void RemoveAppInDnnAndEav(int zoneId, int appId, PortalSettings ps, int userId)
+        internal static void RemoveAppInDnnAndEav(int zoneId, int appId, PortalSettings ps, int userId, Log parentLog)
         {
             // check portal assignment and that it's not the default app
             if (zoneId != new Environment.DnnEnvironment().ZoneMapper.GetZoneId(ps.PortalId))//  ZoneHelpers.GetZoneId(ps.PortalId) )
                 throw new Exception("This app does not belong to portal " + ps.PortalId);
 
-            if (appId == new ZoneRuntime(zoneId).DefaultAppId)// State.GetDefaultAppId(zoneId))
+            if (appId == new ZoneRuntime(zoneId, parentLog).DefaultAppId)// State.GetDefaultAppId(zoneId))
                 throw new Exception("The default app of a zone cannot be removed.");
 
             // Delete folder in dnn
@@ -121,7 +122,7 @@ namespace ToSic.SexyContent.Internal
             if (!IsNullOrEmpty(sexyApp.Folder) && Directory.Exists(sexyApp.PhysicalPath))
                 Directory.Delete(sexyApp.PhysicalPath, true);
 
-            new ZoneManager(zoneId).DeleteApp(appId); //State.AppDelete(zoneId, appId);
+            new ZoneManager(zoneId, parentLog).DeleteApp(appId); //State.AppDelete(zoneId, appId);
         }
 
 

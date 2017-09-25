@@ -24,10 +24,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private Log Log { get; }
         #endregion
 
-        public PagePublishing(Log parentLog = null)
+        public PagePublishing(Log parentLog)// = null)
         {
             Log = new Log("DnPubl", parentLog, "constructor");
-            Log.LinkTo(parentLog);
         }
 
         public bool Supported => true;
@@ -149,20 +148,26 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     var attachedPresItems = list
                         .Where(e => (e as EntityInContentGroup)?.Presentation != null)
                         .Select(e => ((EntityInContentGroup)e).Presentation);
+                    Log.Add($"adding presentation item⋮{attachedPresItems.Count()}");
                     list = list.Concat(attachedPresItems);
                     // ReSharper restore PossibleMultipleEnumeration
 
                     var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
 
-                    Log.Add("will publish count:" + ids.Count);
+                    Log.Add("will publish id⋮" + ids.Count);
                     Log.Add(() => "ids:[" + string.Join(",", ids.Select(i => i.ToString()).ToArray()) + "]");
 
                     // publish ContentGroup as well - if there already is one
                     if (cb.ContentGroup != null)
+                    {
+                        Log.Add($"add group id:{cb.ContentGroup.ContentGroupId}");
                         ids.Add(cb.ContentGroup.ContentGroupId);
+                    }
 
                     if (ids.Any())
                         appManager.Entities.Publish(ids.ToArray());
+                    else
+                        Log.Add("no ids found, won\'t publish items");
                 }
 
                 // Set published version
@@ -181,7 +186,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, ViewDataSource data, string key)
         {
             var cont = data.Out.ContainsKey(key) ? data[key]?.LightList : null;
-            Log.Add($"try to add stream:{key}, found:{cont != null}");
+            Log.Add($"try to add stream:{key}, found:{cont != null} add⋮{cont?.Count() ?? 0}" );
             if (cont != null) list = list.Concat(cont);
             return list;
         }

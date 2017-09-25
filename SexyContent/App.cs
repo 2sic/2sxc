@@ -113,7 +113,7 @@ namespace ToSic.SexyContent
 
             if (allowSideEffects)
                 // if it's a real App (not content/default), do more
-                AppManagement.EnsureAppIsConfigured(ZoneId, AppId); // make sure additional settings etc. exist
+                AppManagement.EnsureAppIsConfigured(ZoneId, AppId, parentLog: Log); // make sure additional settings etc. exist
 
             // Get app-describing entity
             var appAssignmentId = SystemRuntime.GetMetadataType(Eav.Constants.AppAssignmentName);

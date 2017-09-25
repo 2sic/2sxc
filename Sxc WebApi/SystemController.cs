@@ -65,7 +65,7 @@ namespace ToSic.SexyContent.WebApi
 	        var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
 
             var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
-            new ZoneManager(zoneId).SaveLanguage(cultureCode, cultureText, enable);
+            new ZoneManager(zoneId, Log).SaveLanguage(cultureCode, cultureText, enable);
 	    }
 
 
@@ -74,7 +74,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic Apps(int zoneId)
         {
-            var list = AppManagement.GetApps(zoneId, true, new PortalSettings(ActiveModule.OwnerPortalID));
+            var list = AppManagement.GetApps(zoneId, true, new PortalSettings(ActiveModule.OwnerPortalID), Log);
             return list.Select(a => new
             {
                 Id = a.AppId,
@@ -98,13 +98,13 @@ namespace ToSic.SexyContent.WebApi
         public void DeleteApp(int zoneId, int appId)
         {
             var userId = PortalSettings.Current.UserId;
-            AppManagement.RemoveAppInDnnAndEav(zoneId, appId, PortalSettings, userId);
+            AppManagement.RemoveAppInDnnAndEav(zoneId, appId, PortalSettings, userId, Log);
         }
 
         [HttpPost]
         public void App(int zoneId, string name)
         {
-            AppManagement.AddBrandNewApp(zoneId, name, new PortalSettings(ActiveModule.OwnerPortalID));
+            AppManagement.AddBrandNewApp(zoneId, name, new PortalSettings(ActiveModule.OwnerPortalID), Log);
         }
 
         #endregion
