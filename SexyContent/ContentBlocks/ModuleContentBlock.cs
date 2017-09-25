@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Services.Journal;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Internal;
@@ -19,7 +20,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
         public override ViewDataSource Data => _dataSource 
-            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, Configuration, ModuleInfo.ModuleID));
+            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, Configuration, Log, ModuleInfo.ModuleID));
 
         private readonly IEnumerable<KeyValuePair<string, string>> _urlParams;
 
@@ -29,9 +30,8 @@ namespace ToSic.SexyContent.ContentBlocks
         /// <param name="moduleInfo">the dnn module-info</param>
         /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
         /// <param name="overrideParams">optional override parameters</param>
-        public ModuleContentBlock(ModuleInfo moduleInfo, Log parentLog, IEnumerable<KeyValuePair<string, string>> overrideParams = null)
+        public ModuleContentBlock(ModuleInfo moduleInfo, Log parentLog, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "ModCB")
         {
-            Log = new Log("ModCB", parentLog, "constructor");
             ModuleInfo = moduleInfo ?? throw new Exception("Need valid ModuleInfo / ModuleConfiguration of runtime");
             ParentId = moduleInfo.ModuleID;
             ContentBlockId = ParentId;
@@ -51,21 +51,27 @@ namespace ToSic.SexyContent.ContentBlocks
             
             AppId = AppHelpers.GetAppIdFromModule(moduleInfo, ZoneId) ?? 0;// fallback/undefined YET
 
+            Log.Add($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
+
             if (AppId == Settings.DataIsMissingInDb)
             {
                 _dataIsMissing = true;
+                Log.Add("data is missing, will stop here");
                 return;
             }
 
             if (AppId != 0)
             {
+                Log.Add("real app, will load data");
                 // try to load the app - if possible
-                App = new App(ZoneId, AppId, PortalSettings);
+                App = new App(ZoneId, AppId, PortalSettings, parentLog: Log);
 
                 Configuration = ConfigurationProvider.GetConfigProviderForModule(moduleInfo.ModuleID, App, SxcInstance);
 
                 // maybe ensure that App.Data is ready
-                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing(Log).IsVersioningEnabled(moduleInfo.ModuleID), Configuration /*Data.ConfigurationProvider*/);
+                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, 
+                    new Environment.Dnn7.PagePublishing(Log).IsVersioningEnabled(moduleInfo.ModuleID), 
+                    Configuration);
 
                 var res = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
                 var contentGroupGuid = res.Item1;

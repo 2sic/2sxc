@@ -6,12 +6,12 @@ using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
@@ -67,70 +67,46 @@ namespace ToSic.SexyContent.Razor
 
         #region AppAndDataHelpers implementation
 
+        /// <inheritdoc />
         public DnnHelper Dnn => AppAndDataHelpers.Dnn;
 
+        /// <inheritdoc />
         public SxcHelper Sxc => AppAndDataHelpers.Sxc;
 
+        /// <inheritdoc />
         public new App App => AppAndDataHelpers.App;
 
+        /// <inheritdoc />
         public ViewDataSource Data => AppAndDataHelpers.Data;
 
         public IPermissions Permissions => Sexy.Environment.Permissions;
 
         #region AsDynamic in many variations
-        /// <summary>
-        /// Transform a IEntity to a DynamicEntity as dynamic object
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity) => AppAndDataHelpers.AsDynamic(entity);
+        /// <inheritdoc />
+        public dynamic AsDynamic(IEntity entity) => AppAndDataHelpers.AsDynamic(entity);
         
 
-        /// <summary>
-        /// Makes sure a dynamicEntity could be wrapped in AsDynamic()
-        /// </summary>
-        /// <param name="dynamicEntity"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public dynamic AsDynamic(dynamic dynamicEntity) =>  AppAndDataHelpers.AsDynamic(dynamicEntity);
-        
 
-        /// <summary>
-        /// Returns the value of a KeyValuePair as DynamicEntity
-        /// </summary>
-        /// <param name="entityKeyValuePair"></param>
-        /// <returns></returns>
-        public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair) =>  AppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
-        
 
-        /// <summary>
-        /// In case AsDynamic is used with Data["name"]
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  AppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
+
+
+        /// <inheritdoc />
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AppAndDataHelpers.AsDynamic(stream.List);
-        
 
-        /// <summary>
-        /// In case AsDynamic is used with Data["name"].List
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IDictionary<int, ToSic.Eav.Interfaces.IEntity> list) =>  AppAndDataHelpers.AsDynamic(list);
 
-        /// <summary>
-        /// Transform a DynamicEntity dynamic object back to a IEntity instance
-        /// </summary>
-        /// <param name="dynamicEntity"></param>
-        /// <returns></returns>
-        public ToSic.Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity) => AppAndDataHelpers.AsEntity(dynamicEntity);
-        
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsDynamic(IDictionary<int, IEntity> list) =>  AppAndDataHelpers.AsDynamic(list);
 
-        /// <summary>
-        /// Returns a list of DynamicEntities
-        /// </summary>
-        /// <param name="entities">List of entities</param>
-        /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities) => AppAndDataHelpers.AsDynamic(entities);
+        /// <inheritdoc />
+        public IEntity AsEntity(dynamic dynamicEntity) => AppAndDataHelpers.AsEntity(dynamicEntity);
+
+
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => AppAndDataHelpers.AsDynamic(entities);
 
         #endregion
 
@@ -164,7 +140,7 @@ namespace ToSic.SexyContent.Razor
 
         public dynamic ListPresentation => AppAndDataHelpers.ListContent?.ListPresentation;
 
-        [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
+        [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
         public List<Element> List => AppAndDataHelpers.List;
         #endregion
 
@@ -187,25 +163,6 @@ namespace ToSic.SexyContent.Razor
             webPage.ConfigurePage(this);
             return webPage;
         }
-
-        //public override HelperResult RenderPage(string path, params object[] data)
-        //{
-        //    if (String.IsNullOrEmpty(path))
-        //    {
-        //        throw ExceptionHelper.CreateArgumentNullOrEmptyException("path");
-        //    }
-
-        //    return new HelperResult(writer => {
-        //        path = NormalizePath(path);
-        //        Util.EnsureValidPageType(this, path);
-
-        //        WebPageBase subPage = CreatePageFromVirtualPath(path);
-        //        var pageContext = CreatePageContextFromParameters(isLayoutPage, data);
-
-        //        subPage.ConfigurePage(this);
-        //        subPage.ExecutePageHierarchy(pageContext, writer);
-        //    });
-        //}
 
 
         /// <summary>
@@ -240,7 +197,7 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AdamNavigator AsAdam(ToSic.Eav.Interfaces.IEntity entity, string fieldName) =>  AppAndDataHelpers.AsAdam(entity, fieldName);
+        public AdamNavigator AsAdam(IEntity entity, string fieldName) =>  AppAndDataHelpers.AsAdam(entity, fieldName);
 
         #endregion
 

@@ -50,11 +50,16 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public dynamic GetManyForEditing([FromBody] List<ItemIdentifier> items, int appId)
         {
-            Log.Add($"get many a:{appId}, item-count:{items.Count}");
+            Log.Add($"get many a#{appId}, items⋮{items.Count}");
             // this will contain the list of the items we'll really return
             var newItems = new List<ItemIdentifier>();
 
             // go through all the groups, assign relevant info so that we can then do get-many
+            var app = new App(PortalSettings.Current, appId, Log);
+            app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, 
+                new PagePublishing(Log).IsVersioningEnabled(ActiveModule.ModuleID), 
+                Data.ConfigurationProvider);
+
             foreach (var reqItem in items)
             {
                 // only do special processing if it's a "group" item
@@ -63,8 +68,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                     newItems.Add(reqItem);
                     continue;
                 }
-                var app = new App(PortalSettings.Current, appId);
-                app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, new PagePublishing(Log).IsVersioningEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
                 
                 var contentGroup = app.ContentGroupManager.GetContentGroup(reqItem.Group.Guid);
                 var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(reqItem.Group.Part);
@@ -114,7 +117,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
 
-            Log.Add($"save many started with a:{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
+            Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
 
             var versioning = new PagePublishing(Log);
             Dictionary<Guid, int> postSaveIds = null;

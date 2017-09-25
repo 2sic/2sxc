@@ -12,7 +12,7 @@ namespace ToSic.SexyContent.DataSources
 	[PipelineDesigner]
     public sealed class ModuleDataSource : BaseDataSource
     {
-        public override string LogId => "DS-Mod";
+        public override string LogId => "DS.Module";
 
         private SxcInstance _sxcContext;
 
@@ -45,26 +45,30 @@ namespace ToSic.SexyContent.DataSources
 		{
             get
             {
-                if (_contentGroup == null)
-                {
-                    if (UseSxcInstanceContentGroup)
-                        _contentGroup = SxcContext.ContentGroup;
-                    else
-                    {
-                        if (!ModuleId.HasValue)
-                            throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
-                        var tabId = ModuleController.Instance.GetTabModulesByModule(ModuleId.Value)[0].TabID;
-                        var cgm = new ContentGroupManager(ZoneId, AppId,
-                            HasSxcContext && SxcContext.Environment.Permissions.UserMayEditContent,
-                            new Environment.Dnn7.PagePublishing(Log).IsVersioningEnabled(ModuleId.Value));
-                        var res = cgm.GetContentGroupForModule(ModuleId.Value, tabId);
-                        var contentGroupGuid = res.Item1;
-                        var previewTemplateGuid = res.Item2;
-                        _contentGroup = cgm.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid); 
+                if (_contentGroup != null) return _contentGroup;
 
-                        //_contentGroup = new ContentGroupManager(ZoneId, AppId, SxcContext.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(ModuleId.Value))
-                        //    .GetContentGroupForModule(ModuleId.Value, tabId);
-                    }
+                if (UseSxcInstanceContentGroup)
+                {
+                    Log.Add("need content-group, will use from sxc-context");
+                    _contentGroup = SxcContext.ContentGroup;
+                }
+                else
+                {
+                    Log.Add("need content-group, will construct as cannot use context");
+                    if (!ModuleId.HasValue)
+                        throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
+                    var tabId = ModuleController.Instance.GetTabModulesByModule(ModuleId.Value)[0].TabID;
+                    var cgm = new ContentGroupManager(ZoneId, AppId,
+                        HasSxcContext && SxcContext.Environment.Permissions.UserMayEditContent,
+                        new Environment.Dnn7.PagePublishing(Log).IsVersioningEnabled(ModuleId.Value),
+                        Log);
+                    var res = cgm.GetContentGroupForModule(ModuleId.Value, tabId);
+                    var contentGroupGuid = res.Item1;
+                    var previewTemplateGuid = res.Item2;
+                    _contentGroup = cgm.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid); 
+
+                    //_contentGroup = new ContentGroupManager(ZoneId, AppId, SxcContext.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(ModuleId.Value))
+                    //    .GetContentGroupForModule(ModuleId.Value, tabId);
                 }
                 return _contentGroup;
             }
@@ -85,7 +89,7 @@ namespace ToSic.SexyContent.DataSources
                                                               GetStream(ContentGroup.Content,
                                                                   Template.ContentDemoEntity, 
                                                                   ContentGroup.Presentation,
-                                                                  Template.PresentationDemoEntity));
+                                                                  Template.PresentationDemoEntity, false));
 
         private IDictionary<int, IEntity> _listContent;
 
@@ -100,19 +104,27 @@ namespace ToSic.SexyContent.DataSources
         private Template _template;
 		private Template Template => _template ?? (_template = OverrideTemplate ?? ContentGroup.Template);
 
-	    private IDictionary<int, IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity, bool isListHeader = false)
-        {
+	    private IDictionary<int, IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity, bool isListHeader)
+	    {
+	        Log.Add($"get stream content⋮{content.Count}, demo#{contentDemoEntity?.EntityId}, present⋮{presentation.Count}, presDemo#{presentationDemoEntity?.EntityId}, header:{isListHeader}");
             try
             {
                 var entitiesToDeliver = new Dictionary<int, IEntity>();
                 // if no template is defined, return empty list
-                if (ContentGroup.Template == null && OverrideTemplate == null) return entitiesToDeliver;
+                if (ContentGroup.Template == null && OverrideTemplate == null)
+                {
+                    Log.Add("no template definition - will return empty list");
+                    return entitiesToDeliver;
+                }
 
                 var contentEntities = content.ToList(); // Create copy of list (not in cache) because it will get modified
 
                 // If no Content Elements exist and type is content (means, presentation is not null), add an empty entity (demo entry will be taken for this)
                 if (content.Count == 0 && presentation != null)
+                {
+                    Log.Add("empty list, will add a null-item");
                     contentEntities.Add(null);
+                }
 
                 var originals = In["Default"].List;
                 int i = 0, entityId = 0, prevIdForErrorReporting = 0;
@@ -194,6 +206,7 @@ namespace ToSic.SexyContent.DataSources
                     throw new Exception("problems looping items - had to stop on id " + i + "; current entity is " + entityId + "; prev is " + prevIdForErrorReporting, ex);
                 }
 
+                Log.Add($"stream:{(isListHeader ? "list" : "content")} - items⋮{entitiesToDeliver.Count}");
                 return entitiesToDeliver;
             }
             catch (Exception ex)

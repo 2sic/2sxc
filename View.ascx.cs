@@ -34,6 +34,7 @@ namespace ToSic.SexyContent
 
             if (!UserMayEditThisModule) return;
 
+            Log.Add("user is editor, will add context");
             #region If logged in, inject Edit JavaScript, and delete / add items
             // register scripts and css
             try
@@ -48,7 +49,7 @@ namespace ToSic.SexyContent
             #endregion
         }
 
-        /// <summary>
+        /// <summary>s
         /// Process View if a Template has been set
         /// </summary>
         /// <param name="sender"></param>
@@ -73,7 +74,7 @@ namespace ToSic.SexyContent
                     if (Request.QueryString["debug"] == "true")
                     {
                         // only attach debug, if it has been enabled for the current time period
-                        if (!Logging.SkipEventLogging(GlobalConfiguration.Configuration
+                        if (UserInfo.IsSuperUser || Logging.EnableLogging(GlobalConfiguration.Configuration
                             .Properties))
                             renderedTemplate += HtmlLog();
                     }
@@ -104,7 +105,7 @@ namespace ToSic.SexyContent
 
         private string HtmlLog()
         {
-            var lg = new StringBuilder("<!-- detailed log for " + ModuleId + "\n");
+            var lg = new StringBuilder("<!-- 2sxc extensive log for " + ModuleId + "\n");
             Log.Entries.ForEach(e => lg.AppendLine(e.Source + " - " + e.Message));
             lg.Append("-->");
             return lg.ToString();

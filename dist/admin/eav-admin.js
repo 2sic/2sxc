@@ -1283,14 +1283,15 @@ angular.module("EavDirectives", [])
             + "ng-click='askForLogging()'>"
                 + "&pi;"
             + "</span><br/>",
-            controller: ["$scope", "debugState", function ($scope, debugState) {
+            controller: ["$scope", "debugState", "toastr", function ($scope, debugState, toastr) {
                 $scope.debugState = debugState;
 
                 function askLogging() {
-                    var duration = prompt("enable extended logging for a few minutes? type in duration below: ", 1);
+                    var duration = prompt("enable extended logging? type desired duration in minutes:", 1);
                     if (duration === null || duration === undefined) return;
                     debugState.enableExtendedLogging(duration).then(function (res) {
                         console.log(res.data);
+                        toastr.info(res.data, { timeOut: 1000 });
                     });
                 }
 

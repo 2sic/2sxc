@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public dynamic GetContentInfo(int appId, int zoneId, string scope)
         {
-            Log.Add($"get content info for z:{zoneId}, a:{appId}, scope:{scope} super?:{UserInfo.IsSuperUser}");
+            Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{UserInfo.IsSuperUser}");
             var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
             var contentTypes = new AppRuntime(appWrapper.App).ContentTypes.FromScope(scope);
@@ -97,7 +97,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public HttpResponseMessage ExportApp(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
-            Log.Add($"export app z:{zoneId}, a:{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
+            Log.Add($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
             EnsureUserIsAdmin(); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
@@ -119,7 +119,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public bool ExportForVersionControl(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
-            Log.Add($"export for version control z:{zoneId}, a:{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
+            Log.Add($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             EnsureUserIsAdmin();
 
             // ReSharper disable once UnusedVariable
@@ -134,7 +134,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public HttpResponseMessage ExportContent(int appId, int zoneId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
-            Log.Add($"export content z:{zoneId}, a:{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
+            Log.Add($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
             EnsureUserIsAdmin();
 
             var appWrapper = AppBasedOnUserPermissions(appId, zoneId);

@@ -52,6 +52,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         internal void RegisterClientDependencies(Page page)
         {
+            Log.Add("will auto-register client dependencies (js/css");
             var root = "~/desktopmodules/tosic_sexycontent/";
             root = page.ResolveUrl(root);
             var breakCache = "?sxcver=" + Settings.Version;
@@ -115,6 +116,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
     #region ClientInfos Objects to generate the json-attribute
     public class ClientInfosAll
     {
+        private readonly Log Log;
+
         public ClientInfosEnvironment Environment;
         public ClientInfosUser User;
         public ClientInfosLanguages Language;
@@ -125,7 +128,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated, Log parentLog)
         {
-            IPagePublishing versioning = new PagePublishing(parentLog);
+            Log = new Log("CliInf", parentLog, "building entire client-context");
+            IPagePublishing versioning = new PagePublishing(Log);
 
             Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic, sxc);
             Language = new ClientInfosLanguages(ps, zoneId);
@@ -211,7 +215,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Primary = ps.DefaultLanguage.ToLower();
             All = new ZoneMapper().CulturesWithState(ps.PortalId, zoneId) // ZoneHelpers.CulturesWithState(ps.PortalId, zoneId)
                     .Where(c => c.Active)
-                    .Select(c => new ClientInfoLanguage() { key = c.Key.ToLower(), name = c.Text });
+                    .Select(c => new ClientInfoLanguage { key = c.Key.ToLower(), name = c.Text });
         }
     }
 

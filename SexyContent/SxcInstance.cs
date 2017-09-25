@@ -179,30 +179,37 @@ namespace ToSic.SexyContent
             
             try
             {
-                string innerContent = null;
+                string body = null;
 
                 #region do pre-check to see if system is stable & ready
                 var notReady = new InstallationController().CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
                 if (!string.IsNullOrEmpty(notReady))
-                    innerContent = renderHelp.DesignErrorMessage(new Exception(notReady), true, "Error - needs admin to fix this", false, false);
+                {
+                    Log.Add("system isn't ready,show upgrade message");
+                    body = renderHelp.DesignErrorMessage(new Exception(notReady), true,
+                        "Error - needs admin to fix this", false, false);
+                }
+                Log.Add("system is ready, no upgrade-message to show");
 
                 #endregion
 
                 #region check if the content-group exists (sometimes it's missing if a site is being imported and the data isn't in yet
-                if (innerContent == null)
+                if (body == null)
                 {
+                    Log.Add("pre-init innerContent content is empty so no errors, will build");
                     if (ContentBlock.DataIsMissing)
                     {
+                        Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
                         if (Environment.Permissions.UserMayEditContent)
                         {
-                            innerContent = ""; // stop further processing
+                            body = ""; // stop further processing
                         }
                         else // end users should see server error as no js-side processing will happen
                         {
                             var ex =
                                 new Exception(
                                     "Data is missing - usually when a site is copied but the content / apps have not been imported yet - check 2sxc.org/help?tag=export-import");
-                            innerContent = renderHelp.DesignErrorMessage(ex, true,
+                            body = renderHelp.DesignErrorMessage(ex, true,
                                 "Error - needs admin to fix", false, true);
                         }
                     }
@@ -210,36 +217,37 @@ namespace ToSic.SexyContent
                 #endregion
 
                 #region try to render the block or generate the error message
-                if (innerContent == null)
+                if (body == null)
                     try
                     {
                         if (Template != null) // when a content block is still new, there is no definition yet
                         {
+                            Log.Add("standard case, found template, will render");
                             var engine = GetRenderingEngine(InstancePurposes.WebView);
-                            innerContent = engine.Render();
+                            body = engine.Render();
                         }
-                        else innerContent = "";
+                        else body = "";
                     }
                     catch (Exception ex)
                     {
-                        innerContent = renderHelp.DesignErrorMessage(ex, true, "Error rendering template", false, true);
+                        body = renderHelp.DesignErrorMessage(ex, true, "Error rendering template", false, true);
                     }
                 #endregion
 
                 #region Wrap it all up into a nice wrapper tag
                 var editInfos = JsonConvert.SerializeObject(renderHelp.GetClientInfosAll());
                 var isInnerContent = ContentBlock.ParentId != ContentBlock.ContentBlockId;
-                var startTag = (RenderWithDiv
-                    ? $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
+                var startTag = !RenderWithDiv
+                    ? ""
+                    : $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
                       $" data-cb-id=\"{ContentBlock.ContentBlockId}\""
                       +
                       (RenderWithEditMetadata
                           ? " data-edit-context=\'" + editInfos + "'"
                           : "")
-                      + ">\n"
-                    : "");
-                var endTag = (RenderWithDiv ? "\n</div>" : "");
-                string result = startTag + innerContent + endTag;
+                      + ">\n";
+                var endTag = RenderWithDiv ? "\n</div>" : "";
+                string result = startTag + body + endTag;
                 #endregion
 
                 return new HtmlString(result);
@@ -254,7 +262,7 @@ namespace ToSic.SexyContent
         public IEngine GetRenderingEngine(InstancePurposes renderingPurpose)
         {
             var engine = EngineFactory.CreateEngine(Template);
-            engine.Init(Template, App, ModuleInfo, Data, renderingPurpose, this);
+            engine.Init(Template, App, ModuleInfo, Data, renderingPurpose, this, Log);
             return engine;
         }
 

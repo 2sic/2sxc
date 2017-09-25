@@ -5,6 +5,8 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Serializers;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent;
@@ -14,12 +16,12 @@ using ToSic.SexyContent.Internal;
 
 namespace ToSic.Eav.AppEngine
 {
-	public class TemplateManager
+	public class TemplateManager: HasLog
 	{
 		public readonly int ZoneId;
 		public readonly int AppId;
 
-		public TemplateManager(int zoneId, int appId)
+		public TemplateManager(int zoneId, int appId, Log parentLog): base("TmplMg", parentLog)
 		{
 			ZoneId = zoneId;
 			AppId = appId;
@@ -38,7 +40,7 @@ namespace ToSic.Eav.AppEngine
 		}
 
 		public IEnumerable<Template> GetAllTemplates() 
-            => TemplateDataSource().List.Select(p => new Template(p.Value)).OrderBy(p => p.Name);
+            => TemplateDataSource().List.Select(p => new Template(p.Value, Log)).OrderBy(p => p.Name);
 
 		public Template GetTemplate(int templateId)
 		{
@@ -50,7 +52,7 @@ namespace ToSic.Eav.AppEngine
 			if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");
 
-			return new Template(templateEntity);
+			return new Template(templateEntity, Log);
 		}
 
         public bool DeleteTemplate(int templateId)

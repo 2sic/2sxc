@@ -25,7 +25,7 @@ namespace ToSic.SexyContent.WebApi
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public IEnumerable<object> GetAll(int appId)
         {
-            Log.Add($"get all a:{appId}");
+            Log.Add($"get all a#{appId}");
             var tm = TemplateManager(appId);
 
 	        var attributeSetList = new AppRuntime(tm.ZoneId, tm.AppId).ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.WebApi
 	    private TemplateManager TemplateManager(int appId)
 	    {
 	        var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
-	        var tm = new TemplateManager(zoneId, appId);
+	        var tm = new TemplateManager(zoneId, appId, Log);
 	        return tm;
 	    }
 

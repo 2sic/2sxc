@@ -5,11 +5,13 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {
-	public class ContentGroupManager
+	public class ContentGroupManager: HasLog
 	{
 		private const string ContentGroupTypeName = "2SexyContent-ContentGroup";
 
@@ -18,7 +20,7 @@ namespace ToSic.SexyContent
         private readonly bool _showDrafts;
         private readonly bool _enableVersioning;
 
-        public ContentGroupManager(int zoneId, int appId, bool showDrafts, bool enableVersioning)
+        public ContentGroupManager(int zoneId, int appId, bool showDrafts, bool enableVersioning, Log parentLog): base("CGMang", parentLog)
 		{
 			_zoneId = zoneId;
 			_appId = appId;
@@ -36,17 +38,18 @@ namespace ToSic.SexyContent
 
 		public IEnumerable<ContentGroup> GetContentGroups()
 		{
-			return ContentGroupSource().List.Select(p => new ContentGroup(p.Value, _zoneId, _appId, _showDrafts, _enableVersioning));
+			return ContentGroupSource().List.Select(p => new ContentGroup(p.Value, _zoneId, _appId, _showDrafts, _enableVersioning, Log));
 		}
 
 		public ContentGroup GetContentGroup(Guid contentGroupGuid)
 		{
+		    Log.Add($"get CG#{contentGroupGuid}");
 			var dataSource = ContentGroupSource();
 			// ToDo: Should use an indexed guid source
 		    var groupEntity = dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == contentGroupGuid).Value;
 		    return groupEntity != null 
-                ? new ContentGroup(groupEntity, _zoneId, _appId, _showDrafts, _enableVersioning) 
-                : new ContentGroup(Guid.Empty, _zoneId, _appId, _showDrafts, _enableVersioning) {DataIsMissing = true};
+                ? new ContentGroup(groupEntity, _zoneId, _appId, _showDrafts, _enableVersioning, Log) 
+                : new ContentGroup(Guid.Empty, _zoneId, _appId, _showDrafts, _enableVersioning, Log) {DataIsMissing = true};
 		}
 
 		public bool IsConfigurationInUse(int templateId, string type)
@@ -68,15 +71,15 @@ namespace ToSic.SexyContent
 
             return new AppManager(_zoneId, _appId).Entities.Create(ContentGroupTypeName, values).Item2;
 		}
-        
 
-        /// <summary>
-        /// Saves a temporary templateId to the module's settings
-        /// This templateId will be used until a contentgroup exists
-        /// </summary>
-        /// <param name="moduleId"></param>
-        /// <param name="previewTemplateId"></param>
-        public void SetModulePreviewTemplateId(int moduleId, Guid previewTemplateGuid)
+
+	    /// <summary>
+	    /// Saves a temporary templateId to the module's settings
+	    /// This templateId will be used until a contentgroup exists
+	    /// </summary>
+	    /// <param name="moduleId"></param>
+	    /// <param name="previewTemplateGuid"></param>
+	    public void SetModulePreviewTemplateId(int moduleId, Guid previewTemplateGuid)
 		{
             // todo: 2rm - I believe you are accidentally using uncached module settings access - pls check and probably change
             // todo: note: this is done ca. 3x in this class
@@ -121,6 +124,7 @@ namespace ToSic.SexyContent
 	    // todo: this doesn't look right, will have to mostly move to the new content-block
 		public Tuple<Guid,Guid> GetContentGroupForModule(int moduleId, int tabId)
 		{
+		    Log.Add($"find content-group for mid#{moduleId} and tab#{tabId}");
 			var settings = ModuleController.Instance.GetModule(moduleId, tabId, false).ModuleSettings;
 			//var settings = moduleControl.GetModule(moduleId,).ModuleSettings;
 		    var maybeGuid = settings[Settings.ContentGroupGuidString];
@@ -137,9 +141,10 @@ namespace ToSic.SexyContent
 
 	    internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)
 	    {
+	        Log.Add($"get CG or gen preview for grp#{groupGuid}, preview#{previewTemplateGuid}");
 	        // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
 	        return groupGuid == Guid.Empty 
-                ? new ContentGroup(previewTemplateGuid, _zoneId, _appId, _showDrafts, _enableVersioning)
+                ? new ContentGroup(previewTemplateGuid, _zoneId, _appId, _showDrafts, _enableVersioning, Log)
                 : GetContentGroup(groupGuid);
 	    }
 

@@ -25,7 +25,7 @@ namespace ToSic.SexyContent
 
         public AppAndDataHelpers(SxcInstance sexy) : this(sexy, sexy.ModuleInfo) {}
 
-        public AppAndDataHelpers(SxcInstance sexy, ModuleInfo module): base("ADHlpr")
+        public AppAndDataHelpers(SxcInstance sexy, ModuleInfo module): base("ADHlpr", sexy?.Log)
         {
             // ModuleInfo module = sexy.ModuleInfo;
             // Init things than require module-info or similar, but not 2sxc

@@ -9,22 +9,32 @@ namespace ToSic.SexyContent.WebApi
     {
         public override bool AllowMultiple => false;
 
-        public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
+        const string AlreadyLogged = "LogDetailsAlreadyHappened";
+
+        public override void OnActionExecuted(HttpActionExecutedContext actionContext)
         {
-            base.OnActionExecuted(actionExecutedContext);
+            base.OnActionExecuted(actionContext);
+
             try
             {
+                var reqProps = actionContext.Request.Properties;
                 // check if we have any logging details for this request
-                if (!(actionExecutedContext.Request?.Properties.ContainsKey(Constants.EavLogKey) ??
-                      false)) return;
+                if (!reqProps.ContainsKey(Constants.EavLogKey)) return;
 
-                var log = actionExecutedContext.Request.Properties[Constants.EavLogKey] as Log;
+                if (reqProps.ContainsKey(AlreadyLogged)) return;
+
+                var log = reqProps[Constants.EavLogKey] as Log;
 
                 // check if we have additional context information (portal, module, etc.)
-                actionExecutedContext.Request.Properties.TryGetValue(Constants.DnnContextKey,
-                    out var dnnContext);
+                reqProps.TryGetValue(Constants.DnnContextKey, out var dnnContext);
 
-                Logging.LogToDnn("2sxc-Api", "Auto-Log", log, dnnContext as DnnHelper);
+                Logging.LogToDnn("2sxc-Api", 
+                    actionContext.Request.RequestUri.PathAndQuery, 
+                    log, 
+                    dnnContext as DnnHelper);
+
+                // set property, to prevent double-logging
+                actionContext.Request.Properties.Add(AlreadyLogged, true);
             }
             catch
             {

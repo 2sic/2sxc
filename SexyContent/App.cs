@@ -46,11 +46,11 @@ namespace ToSic.SexyContent
         #region App-Level TemplateManager, ContentGroupManager, EavContext
         private TemplateManager _templateManager;
         public TemplateManager TemplateManager => _templateManager 
-            ?? (_templateManager = new TemplateManager(ZoneId, AppId));
+            ?? (_templateManager = new TemplateManager(ZoneId, AppId, Log));
 
         private ContentGroupManager _contentGroupManager;
         public ContentGroupManager ContentGroupManager => _contentGroupManager 
-            ?? (_contentGroupManager = new ContentGroupManager(ZoneId, AppId, ShowDraftsInData, VersioningEnabled));
+            ?? (_contentGroupManager = new ContentGroupManager(ZoneId, AppId, ShowDraftsInData, VersioningEnabled, Log));
 
         #endregion
 
@@ -63,7 +63,7 @@ namespace ToSic.SexyContent
 
         public string AppGuid { get; set; }
 
-        private IEnvironment env = new Environment.DnnEnvironment();
+        private readonly IEnvironment _env = new Environment.DnnEnvironment();
 
         public App(PortalSettings ownerPortalSettings, int appId, Log parentLog = null) : this(-1, appId, ownerPortalSettings, parentLog: parentLog)
         {
@@ -76,14 +76,14 @@ namespace ToSic.SexyContent
         public App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool allowSideEffects = true, Log parentLog = null)
         {
             // init Log
-            Log = new Log("2sxApp", parentLog, $"prep App z:{zoneId}, a:{appId}, allowSE:{allowSideEffects}, P:{ownerPortalSettings?.PortalId}");
+            Log = new Log("2sxApp", parentLog, $"prep App z#{zoneId}, a#{appId}, allowSE:{allowSideEffects}, P:{ownerPortalSettings?.PortalId}");
 
             // require valid ownerPS
             if (ownerPortalSettings == null)
                 throw new Exception("no portal settings received");
 
             // if zone is missing, try to find it; if still missing, throw error
-            if (zoneId == -1) zoneId = env.ZoneMapper.GetZoneId(ownerPortalSettings.PortalId);
+            if (zoneId == -1) zoneId = _env.ZoneMapper.GetZoneId(ownerPortalSettings.PortalId);
             if (zoneId == -1) throw new Exception("Cannot find zone-id for portal specified");
 
             // Save basic values
@@ -180,14 +180,14 @@ namespace ToSic.SexyContent
 
 
                 var defaultLanguage = "";
-                var languagesActive = env.ZoneMapper.CulturesWithState(OwnerPortalSettings.PortalId, ZoneId)
+                var languagesActive = _env.ZoneMapper.CulturesWithState(OwnerPortalSettings.PortalId, ZoneId)
                     /* 2017-04-01 2dm: from this: ZoneHelpers.CulturesWithState(OwnerPortalSettings.PortalId, ZoneId)*/
                     .Any(c => c.Active);
                 if (languagesActive)
                     defaultLanguage = OwnerPortalSettings.DefaultLanguage;
                 var xData = (DataSources.App) Data;
                 xData.DefaultLanguage = defaultLanguage;
-                xData.CurrentUserName = env.User.CurrentUserIdentityToken;// Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*OwnerPS.UserInfo.Username*/;
+                xData.CurrentUserName = _env.User.CurrentUserIdentityToken;// Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*OwnerPS.UserInfo.Username*/;
             }
             Log.Add("configure on demand completed");
         }

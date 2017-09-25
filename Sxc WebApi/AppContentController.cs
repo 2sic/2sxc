@@ -193,7 +193,7 @@ namespace ToSic.SexyContent.WebApi
         /// <returns></returns>
         private Dictionary<string, object> CreateEntityDictionary(string contentType, Dictionary<string, object> newContentItem, int appId)
         {
-            Log.Add($"create ent dic a:{appId}, type:{contentType}");
+            Log.Add($"create ent dic a#{appId}, type:{contentType}");
             // Retrieve content-type definition and check all the fields that this content-type has
 	        var cache = (BaseCache) DataSource.GetCache(null, appId);
 	        var listOfTypes = cache.GetContentType(contentType);// as ContentType;
@@ -364,7 +364,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 		public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, [FromUri] string appPath = null)
         {
-            Log.Add($"get assigned for assigmentType:{assignmentObjectTypeId}, guid:{keyGuid}, type:{contentType}, path:{appPath}");
+            Log.Add($"get assigned for assigmentType#{assignmentObjectTypeId}, guid:{keyGuid}, type:{contentType}, path:{appPath}");
             InitEavAndSerializer();
 	        return new MetadataController().GetAssignedEntities(assignmentObjectTypeId, "guid", keyGuid.ToString(), contentType);
 		}
@@ -375,7 +375,7 @@ namespace ToSic.SexyContent.WebApi
 
 	    private void InitEavAndSerializer(int? appId = null)
 	    {
-	        Log.Add($"init eav for a:{appId}");
+	        Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             _entitiesController = new EntitiesController(appId ?? App.AppId);
 

@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.ContentBlocks
         public override bool ParentIsEntity => false;
 
         public override ViewDataSource Data => _dataSource 
-            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, Configuration));
+            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, Configuration, Log));
 
         #region ContentBlock Definition Entity
 
@@ -46,14 +46,18 @@ namespace ToSic.SexyContent.ContentBlocks
         }
         #endregion
 
-        public EntityContentBlock(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition, Log parentLog = null)
+        public EntityContentBlock(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition, Log parentLog = null): base(parentLog, "EntyCb") 
+            => _constructor(parent, cbDefinition);
+
+        public EntityContentBlock(IContentBlock parent, int contentBlockId, Log parentLog) : base(parentLog, "EntyCB")
         {
-            _constructor(parent, cbDefinition, parentLog);
+            contentBlockId = Math.Abs(contentBlockId); // for various reasons this can be introduced as a negative value, make sure we neutralize that
+            var cbDef = parent.SxcInstance.App.Data["Default"].List[contentBlockId];  // get the content-block definition
+            _constructor(parent, cbDef);
         }
 
-        private void _constructor(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition, Log parentLog)
+        private void _constructor(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition)
         {
-            Log = new Log("EntCB", parentLog, "constructor");
             Parent = parent;
             ParseContentBlockDefinition(cbDefinition);
             ParentId = parent.ParentId;
@@ -101,12 +105,6 @@ namespace ToSic.SexyContent.ContentBlocks
             }
         }
 
-        public EntityContentBlock(IContentBlock parent, int contentBlockId, Log parentLog)
-        {
-            contentBlockId = Math.Abs(contentBlockId); // for various reasons this can be introduced as a negative value, make sure we neutralize that
-            var cbDef = parent.SxcInstance.App.Data["Default"].List[contentBlockId];  // get the content-block definition
-            _constructor(parent, cbDef, parentLog);
-        }
 
         public override SxcInstance SxcInstance => _sxcInstance ??
                                           (_sxcInstance = new SxcInstance(this, Parent.SxcInstance));

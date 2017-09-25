@@ -26,22 +26,15 @@ namespace ToSic.SexyContent.Engines
                 InitWebpage();
             }
             // Catch web.config Error on DNNs upgraded to 7
-            catch (ConfigurationErrorsException Exc)
+            catch (ConfigurationErrorsException exc)
             {
-                var e = new Exception("Configuration Error: Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", Exc);
+                var e = new Exception("Configuration Error: Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", exc);
                 throw e;
             }
         }
 
-        protected HttpContextBase HttpContext
-        {
-            get
-            {
-                if (System.Web.HttpContext.Current == null)
-                    return null;
-                return new HttpContextWrapper(System.Web.HttpContext.Current);
-            }
-        }
+        protected HttpContextBase HttpContext 
+            => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
 
         public Type RequestedModelType()
         {
@@ -49,18 +42,15 @@ namespace ToSic.SexyContent.Engines
             {
                 var webpageType = Webpage.GetType();
                 if (webpageType.BaseType.IsGenericType)
-                {
                     return webpageType.BaseType.GetGenericArguments()[0];
-                }
             }
             return null;
         }
 
-        // <2sic removed: Render<T>(TextWriter writer, T model)>
-        // </2sic>
 
         public void Render(TextWriter writer)
         {
+            Log.Add("will render into textwriter");
             Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, null), writer, Webpage);
         }
 
@@ -68,8 +58,9 @@ namespace ToSic.SexyContent.Engines
         /// Renders the template
         /// </summary>
         /// <returns></returns>
-        protected override string RenderTemplate() 
+        protected override string RenderTemplate()
         {
+            Log.Add("will render razor template");
             var writer = new StringWriter();
             Render(writer);
             return writer.ToString();
@@ -91,7 +82,7 @@ namespace ToSic.SexyContent.Engines
             webPage.Html = new HtmlHelper();
             webPage.Url = new UrlHelper(ModuleInfo);
             webPage.Sexy = Sexy;
-            webPage.AppAndDataHelpers = new AppAndDataHelpers(Sexy);//, ModuleInfo, (ViewDataSource)DataSource);//, App);
+            webPage.AppAndDataHelpers = new AppAndDataHelpers(Sexy);
 
         }
 
@@ -100,7 +91,7 @@ namespace ToSic.SexyContent.Engines
             if (string.IsNullOrEmpty(TemplatePath)) return;
 
             var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
-            if ((objectValue == null))
+            if (objectValue == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", new object[] { TemplatePath }));
 
             Webpage = objectValue as SexyContentWebPage;
@@ -114,16 +105,10 @@ namespace ToSic.SexyContent.Engines
             InitHelpers(Webpage);
         }
 
-        public override void CustomizeData()
-        {
-            if (Webpage != null)
-                Webpage.CustomizeData();
-        }
+        public override void CustomizeData() 
+            => Webpage?.CustomizeData();
 
-        public override void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
-        {
-            if (Webpage != null)
-                Webpage.CustomizeSearch(searchInfos, moduleInfo, beginDate);
-        }
+        public override void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate) 
+            => Webpage?.CustomizeSearch(searchInfos, moduleInfo, beginDate);
     }
 }

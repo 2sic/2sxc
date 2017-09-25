@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
@@ -7,8 +8,10 @@ using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
-    internal abstract class ContentBlockBase: IContentBlock
+    internal abstract class ContentBlockBase: HasLog, IContentBlock
     {
+        protected ContentBlockBase(Log parentLog, string logName) : base(logName, parentLog) { }
+
         public IContentBlock Parent;
 
         public int ZoneId { get; protected set; }
@@ -73,8 +76,6 @@ namespace ToSic.SexyContent.ContentBlocks
         public virtual SxcInstance SxcInstance => null;
 
         public virtual bool IsContentApp => false;
-
-        protected Log Log;
 
     }
 }

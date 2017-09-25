@@ -35,7 +35,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public  List<string> List(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {
-            Log.Add($"list a:{appId}, global:{global}, path:{path}, mask:{mask}, withSub:{withSubfolders}, withFld:{returnFolders}");
+            Log.Add($"list a#{appId}, global:{global}, path:{path}, mask:{mask}, withSub:{withSubfolders}, withFld:{returnFolders}");
             // set global access security if ok...
             var allowFullAccess = UserInfo.IsSuperUser;
 
@@ -155,7 +155,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpPost]
         public bool Create([FromUri] int appId, [FromUri] string path,[FromBody] ContentHelper content, bool global = false)
         {
-            Log.Add($"create a:{appId}, path:{path}, global:{global}, cont-length:{content.Content?.Length}");
+            Log.Add($"create a#{appId}, path:{path}, global:{global}, cont-length:{content.Content?.Length}");
             path = path.Replace("/", "\\");
 
             var thisApp = new App(PortalSettings.Current, appId);

@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public static void LogToDnn(string key, string message, Log log = null, DnnHelper dnnContext = null, bool force = false)
         {
             if(!force)
-                if (SkipEventLogging(GlobalConfiguration.Configuration.Properties)) return;
+                if (!EnableLogging(GlobalConfiguration.Configuration.Properties)) return;
 
 
             // note: this code has a lot of try/catch, to ensure that most of it works and that
@@ -75,18 +75,17 @@ namespace ToSic.SexyContent.Environment.Dnn7
             }
         }
 
-        public static bool SkipEventLogging(ConcurrentDictionary<object, object> props)
+        public static bool EnableLogging(ConcurrentDictionary<object, object> props)
         {
-            if (props == null) return true;
-            if (!props.TryGetValue(Constants.AdvancedLoggingEnabledKey, out var enabled)) return true;
-            if (!(enabled is bool)) return true;
-            if (!(bool)enabled) return true;
+            if (props == null) return false;
+            if (!props.TryGetValue(Constants.AdvancedLoggingEnabledKey, out var enabled)) return false;
+            if (!(enabled is bool)) return false;
+            if (!(bool)enabled) return false;
 
-            if (!props.TryGetValue(Constants.AdvancedLoggingTillKey, out var till)) return true;
-            if (!(till is DateTime)) return true;
-            var dtmTill = (DateTime)till;
-            if (dtmTill.CompareTo(DateTime.Now) <= 0) return true;
-            return false;
+            if (!props.TryGetValue(Constants.AdvancedLoggingTillKey, out var till)) return false;
+            if (!(till is DateTime)) return false;
+            if (((DateTime)till).CompareTo(DateTime.Now) <= 0) return false;
+            return true;
         }
 
         /// <summary>

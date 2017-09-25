@@ -72,14 +72,5 @@ namespace ToSic.SexyContent
         T CreateSource<T>(IDataStream inStream);
         IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null);
         T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null);
-
-        // 2016-03-02 Removing this from the interface. 
-        // It still works in the scripts, but should not be in the interface
-		//dynamic Content { get; }
-		//dynamic Presentation { get; }
-		//dynamic ListContent { get; }
-		//dynamic ListPresentation { get; }
-
-        //List<Element> List { get; }
     }
 }

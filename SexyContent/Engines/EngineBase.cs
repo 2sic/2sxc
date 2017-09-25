@@ -6,9 +6,9 @@ using System.Web;
 using System.Web.Hosting;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-//using DotNetNuke.Modules.UserDefinedTable;
 using Newtonsoft.Json;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Search;
 using ToSic.SexyContent.Security;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
@@ -27,10 +27,13 @@ namespace ToSic.SexyContent.Engines
 
         public RenderStatusType PreRenderStatus { get; internal set; }
 
+        protected Log Log { get; set; }
 
-        public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sexy)
+        public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, Log parentLog)
         {
             var templatePath = VirtualPathUtility.Combine(Internal.TemplateHelpers.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
+
+            Log = new Log("RendEg", parentLog);
 
             // Throw Exception if Template does not exist
             if (!File.Exists(HostingEnvironment.MapPath(templatePath)))
@@ -43,13 +46,13 @@ namespace ToSic.SexyContent.Engines
             ModuleInfo = hostingModule;
             DataSource = dataSource;
             InstancePurposes = instancePurposes;
-            Sexy = sexy;
+            Sexy = sxcInstance;
 
             // check common errors
             CheckExpectedTemplateErrors();
 
             // check access permissions - before initializing or running data-code in the template
-            CheckTemplatePermissions(sexy.AppPortalSettings);
+            CheckTemplatePermissions(sxcInstance.AppPortalSettings);
 
             // Run engine-internal init stuff
             Init();
@@ -75,6 +78,7 @@ namespace ToSic.SexyContent.Engines
         {
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Renders the given elements with Razor or TokenReplace and returns the string representation.
         /// </summary>

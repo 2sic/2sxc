@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Engines
@@ -13,12 +14,12 @@ namespace ToSic.SexyContent.Engines
         /// Initialize the Engine (pass everything needed for Render to it)
         /// </summary>
         /// <param name="template"></param>
-        /// <param name="templatePath"></param>
         /// <param name="app"></param>
         /// <param name="hostingModule"></param>
-        /// <param name="localResourcesPath"></param>
         /// <param name="dataSource"></param>
-        void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance Sexy);
+        /// <param name="instancePurposes"></param>
+        /// <param name="sxcInstance"></param>
+        void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, Log parentLog);
 
         /// <summary>
         /// Renders a template, returning a string with the rendered template.

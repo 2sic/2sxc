@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Data;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Persistence;
-using ToSic.SexyContent.Environment.Dnn7;
 using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
 {
-    public class ContentGroup
+    public class ContentGroup: HasLog
     {
         private Eav.Interfaces.IEntity _contentGroupEntity;
         private readonly int _zoneId;
@@ -20,12 +20,9 @@ namespace ToSic.SexyContent
         private readonly bool _versioningEnabled;
         private readonly Guid? _previewTemplateId;
 
-        public ContentGroup(Eav.Interfaces.IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled)
+        public ContentGroup(Eav.Interfaces.IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled, Log parentLog): base("ConGrp", parentLog)
         {
-            if (contentGroupEntity == null)
-                throw new Exception("ContentGroup entity is null. This usually happens when you are duplicating a site, and have not yet imported the other content/apps. If that is your issue, check 2sxc.org/help?tag=export-import");
-
-            _contentGroupEntity = contentGroupEntity;
+            _contentGroupEntity = contentGroupEntity ?? throw new Exception("ContentGroup entity is null. This usually happens when you are duplicating a site, and have not yet imported the other content/apps. If that is your issue, check 2sxc.org/help?tag=export-import");
             _zoneId = zoneId;
             _appId = appId;
             _showDrafts = showDrafts;
@@ -35,7 +32,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Instanciate a "temporary" ContentGroup with the specified templateId and no Content items
         /// </summary>
-        public ContentGroup(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts, bool versioningEnabled)
+        public ContentGroup(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts, bool versioningEnabled, Log parentLog): base("ConGrp", parentLog)
         {
             _previewTemplateId = previewTemplateId;
             _zoneId = zoneId;
@@ -73,7 +70,7 @@ namespace ToSic.SexyContent
                     templateEntity =
                         ((EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
 
-                _template = templateEntity == null ? null : new Template(templateEntity);
+                _template = templateEntity == null ? null : new Template(templateEntity, Log);
 
                 return _template;
             }
@@ -86,10 +83,7 @@ namespace ToSic.SexyContent
                 {"Template", templateId.HasValue ? new List<int?> {templateId.Value} : new List<int?>()}
             };
 
-            // 2017-04-01 2dm centralizing eav access
             new AppManager(_zoneId, _appId).Entities.UpdateParts(_contentGroupEntity.EntityId, values);
-            //var context = EavDataController.Instance(_zoneId, _appId).Entities; // EavContext.Instance(_zoneId, _appId);
-            //context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
         }
 
         #endregion
@@ -212,7 +206,7 @@ namespace ToSic.SexyContent
             new AppManager(_zoneId, _appId).Entities.Save(saveEnt, saveOpts);
 
             // Refresh content group entity (ensures contentgroup is up to date)
-            _contentGroupEntity = new ContentGroupManager(_zoneId, _appId, _showDrafts, _versioningEnabled).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
+            _contentGroupEntity = new ContentGroupManager(_zoneId, _appId, _showDrafts, _versioningEnabled, Log).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
         }
 
         private Dictionary<string, List<int?>> PrepareSavePackage(string type, List<int?> entityIds,

@@ -56,9 +56,9 @@ namespace ToSic.SexyContent.Search
             var language = moduleInfo.CultureCode;
             //var contentGroup = sexy.App.ContentGroupManager./*AppContentGroups.*/GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
             var res = sexy.App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
-            var _contentGroupGuid = res.Item1;
-            var _previewTemplateGuid = res.Item2;
-            var contentGroup = sexy.App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
+            var contentGroupGuid = res.Item1;
+            var previewTemplateGuid = res.Item2;
+            var contentGroup = sexy.App.ContentGroupManager.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid);
 
             var template = contentGroup.Template;
 
@@ -70,7 +70,7 @@ namespace ToSic.SexyContent.Search
                 return searchDocuments;
 
             var engine = EngineFactory.CreateEngine(template);
-            engine.Init(template, sexy.App, moduleInfo, dataSource, InstancePurposes.IndexingForSearch, sexy);
+            engine.Init(template, sexy.App, moduleInfo, dataSource, InstancePurposes.IndexingForSearch, sexy, Log);
 
             // see if data customization inside the cshtml works
             try
