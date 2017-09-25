@@ -13,6 +13,7 @@ using DotNetNuke.Web.Api;
 using ToSic.SexyContent.WebApi;
 using System.Configuration;
 using System.Web.Configuration;
+using System.Web.Http.Controllers;
 
 namespace ToSic.SexyContent.Adam
 {
@@ -20,12 +21,17 @@ namespace ToSic.SexyContent.Adam
     /// Direct access to app-content items, simple manipulations etc.
     /// Should check for security at each standard call - to see if the current user may do this
     /// Then we can reduce security access level to anonymous, because each method will do the security check
-    /// todo: security
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
    public class AdamController: SxcApiController
     {
+        protected override void Initialize(HttpControllerContext controllerContext)
+        {
+            base.Initialize(controllerContext); // very important!!!
+            Log.Rename("AdamCont");
+        }
+
         public EntityBase EntityBase;
 
         private void PrepCore(Guid entityGuid, string fieldName, bool usePortalRoot)
@@ -33,7 +39,7 @@ namespace ToSic.SexyContent.Adam
             EntityBase = new EntityBase(SxcContext, App, Dnn.Portal, entityGuid, fieldName, usePortalRoot);
         }
 
-        public int MaxFileSizeKb => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection).MaxRequestLength;
+        public int MaxFileSizeKb => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection)?.MaxRequestLength ?? 1; // if not specified, go to very low value, but not 0, as that could be infinite...
 
 
         [HttpPost]
@@ -42,6 +48,7 @@ namespace ToSic.SexyContent.Adam
 
         private UploadResult UploadOne(string contentTypeName, Guid guid, string field, string subFolder, bool usePortalRoot)
         {
+            Log.Add($"upload one a:{App?.AppId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
@@ -57,8 +64,8 @@ namespace ToSic.SexyContent.Adam
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
             if (fieldDef == null || !(fieldDef.Type != "Hyperlink" || fieldDef.Type != "String"))
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest,
-                    "Requested field '" + field + "' type doesn't allow upload"));// { HttpStatusCode = HttpStatusCode.BadRequest });
-
+                    "Requested field '" + field + "' type doesn't allow upload"));
+            Log.Add($"field type:{fieldDef.Type}");
             // check for special extensions
 
             try
@@ -67,6 +74,7 @@ namespace ToSic.SexyContent.Adam
                 if(!string.IsNullOrEmpty(subFolder)) 
                     folder = EntityBase.Folder(subFolder, false);
                 var filesCollection = HttpContext.Current.Request.Files;
+                Log.Add($"folder: {folder}, file⋮{filesCollection.Count}");
                 if (filesCollection.Count > 0)
                 {
                     var originalFile = filesCollection[0];
@@ -74,8 +82,6 @@ namespace ToSic.SexyContent.Adam
                     #region check content-type extensions...
 
                     // Check file size and extension
-                    //var extension = Path.GetExtension(originalFile.FileName).ToLower().Replace(".", "");
-                    //if (!AdamAllowedExtensions.Contains(extension))
                     if(!IsAllowedDnnExtension(originalFile.FileName))
                         throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
@@ -90,6 +96,9 @@ namespace ToSic.SexyContent.Adam
                     var fileName = originalFile.FileName
                         .Replace("%", "per")
                         .Replace("#", "hash");
+
+                    if (fileName != originalFile.FileName)
+                        Log.Add($"cleaned file name from'{originalFile.FileName}' to '{fileName}'");
 
                     // Make sure the image does not exist yet (change file name)
                     for (int i = 1; FileManager.Instance.FileExists(folder, Path.GetFileName(fileName)); i++)
@@ -110,7 +119,7 @@ namespace ToSic.SexyContent.Adam
                         Type = EntityBase.TypeName(dnnFile.Extension)
                     };
                 }
-
+                Log.Add("upload one complete");
                 return new UploadResult { Success = false, Error = "No image was uploaded." };
             }
             catch (Exception e)
@@ -161,6 +170,7 @@ namespace ToSic.SexyContent.Adam
         [HttpGet]
         public IEnumerable<AdamItem> Items(Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
+            Log.Add($"adam items a:{App?.AppId}, i:{guid}, field:{field}, subfold:{subfolder}, useRoot:{usePortalRoot}");
             ExplicitlyRecheckEditPermissions();
             PrepCore(guid, field, usePortalRoot);
             var folderManager = FolderManager.Instance;
@@ -176,12 +186,15 @@ namespace ToSic.SexyContent.Adam
 
             var adamFolders =
                 subfolders.Where(s => s.FolderID != current.FolderID)
-                    .Select(f => new AdamItem(f) {MetadataId = EntityBase.GetMetadataId(f.FolderID, true)});
+                    .Select(f => new AdamItem(f) {MetadataId = EntityBase.GetMetadataId(f.FolderID, true)})
+                    .ToList();
             var adamFiles = files
-                .Select(f => new AdamItem(f) {MetadataId = EntityBase.GetMetadataId(f.FileId, false), Type = EntityBase.TypeName(f.Extension)});
+                .Select(f => new AdamItem(f) {MetadataId = EntityBase.GetMetadataId(f.FileId, false), Type = EntityBase.TypeName(f.Extension)})
+                .ToList();
 
-            var all = adamFolders.Concat(adamFiles);
+            var all = adamFolders.Concat(adamFiles).ToList();
 
+            Log.Add($"items complete - will return fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{all.Count}");
             return all;
         }
 
@@ -192,6 +205,7 @@ namespace ToSic.SexyContent.Adam
         /// </summary>
         private void ExplicitlyRecheckEditPermissions()
         {
+            Log.Add("explicitly recheck permissions, will throw if not ok");
             if(!SxcContext.Environment.Permissions.UserMayEditContent)
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
@@ -199,6 +213,7 @@ namespace ToSic.SexyContent.Adam
         [HttpPost]
         public IEnumerable<AdamItem> Folder(Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
         {
+            Log.Add($"get folders for a:{App?.AppId}, i:{guid}, field:{field}, subfld:{subfolder}, new:{newFolder}, useRoot:{usePortalRoot}");
             ExplicitlyRecheckEditPermissions();
             PrepCore(guid, field, usePortalRoot);
 
@@ -217,6 +232,7 @@ namespace ToSic.SexyContent.Adam
         [HttpGet]
         public bool Delete(Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
         {
+            Log.Add($"delete from a:{App?.AppId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
             ExplicitlyRecheckEditPermissions();
             PrepCore(guid, field, usePortalRoot);
 
@@ -243,12 +259,14 @@ namespace ToSic.SexyContent.Adam
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) {ReasonPhrase = "can't delete file - not found in folder"});
             }
 
+            Log.Add("delete complete");
             return true;
         }
 
         [HttpGet]
         public bool Rename(Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
         {
+            Log.Add($"rename a:{App?.AppId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
             ExplicitlyRecheckEditPermissions();
             PrepCore(guid, field, usePortalRoot);
 
@@ -278,6 +296,7 @@ namespace ToSic.SexyContent.Adam
                 fileManager.RenameFile(file, newName);
             }
 
+            Log.Add("rename complete");
             return true;
         }
 
