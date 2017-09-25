@@ -24,9 +24,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private Log Log { get; }
         #endregion
 
-        public PagePublishing(Log parentLog)// = null)
+        public PagePublishing(Log parentLog)
         {
-            Log = new Log("DnPubl", parentLog, "constructor");
+            Log = new Log("DnPubl", parentLog);
         }
 
         public bool Supported => true;
@@ -62,7 +62,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public void DoInsidePublishing(int moduleId, int userId, Action<VersioningActionInfo> action)
         {
             var enabled = IsVersioningEnabled(moduleId);
-            Log.Add("do inside mid:" + moduleId + ", uid:" + userId + ", enabled:" + enabled);
+            Log.Add($"do inside publishing - module:{moduleId}, user:{userId}, enabled:{enabled}");
             if (enabled)
             {
                 var moduleVersionSettings = new ModuleVersions(moduleId);
@@ -79,7 +79,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             var versioningActionInfo = new VersioningActionInfo();
             action.Invoke(versioningActionInfo);
-            Log.Add("do inside completed");
+            Log.Add("do inside publishing - completed");
         }
 
         //public void DoInsidePublishLatestVersion(int moduleId, Action<VersioningActionInfo> action)
@@ -125,7 +125,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void Publish(int instanceId, int version)
         {
-            Log.Add($"publish m:{instanceId}, v:{version}");
+            Log.Add($"publish started m:{instanceId}, v:{version}");
             try
             {
                 // publish all entites of this content block
@@ -154,15 +154,14 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
                     var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
 
-                    Log.Add("will publish id⋮" + ids.Count);
-                    Log.Add(() => "ids:[" + string.Join(",", ids.Select(i => i.ToString()).ToArray()) + "]");
-
                     // publish ContentGroup as well - if there already is one
                     if (cb.ContentGroup != null)
                     {
                         Log.Add($"add group id:{cb.ContentGroup.ContentGroupId}");
                         ids.Add(cb.ContentGroup.ContentGroupId);
                     }
+
+                    Log.Add(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]");
 
                     if (ids.Any())
                         appManager.Entities.Publish(ids.ToArray());
@@ -172,7 +171,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
                 // Set published version
                 new ModuleVersions(instanceId).PublishLatestVersion();
-                Log.Add("completed");
+                Log.Add("publish completed");
             }
             catch (Exception ex)
             {
@@ -185,8 +184,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, ViewDataSource data, string key)
         {
-            var cont = data.Out.ContainsKey(key) ? data[key]?.LightList : null;
-            Log.Add($"try to add stream:{key}, found:{cont != null} add⋮{cont?.Count() ?? 0}" );
+            var cont = data.Out.ContainsKey(key) ? data[key]?.LightList?.ToList() : null;
+            Log.Add($"try to add stream:{key}, found:{cont != null} add⋮{cont?.Count ?? 0}" );
             if (cont != null) list = list.Concat(cont);
             return list;
         }

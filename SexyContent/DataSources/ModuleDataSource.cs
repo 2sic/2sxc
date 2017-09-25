@@ -12,6 +12,8 @@ namespace ToSic.SexyContent.DataSources
 	[PipelineDesigner]
     public sealed class ModuleDataSource : BaseDataSource
     {
+        public override string LogId => "DS-Mod";
+
         private SxcInstance _sxcContext;
 
         internal SxcInstance SxcContext

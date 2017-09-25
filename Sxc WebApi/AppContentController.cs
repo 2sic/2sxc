@@ -149,7 +149,7 @@ namespace ToSic.SexyContent.WebApi
             // this throws an error if it's not the correct type
             var itm = id == null 
                 ? null 
-                : _entitiesController.GetEntityOrThrowError(contentType, id.Value/*, appId*/);
+                : _entitiesController.GetEntityOrThrowError(contentType, id.Value);
 
             var perm = id == null 
                 ? PermissionGrant.Create 

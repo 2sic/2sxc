@@ -197,10 +197,10 @@ namespace ToSic.SexyContent
                 configurationProvider = ConfigurationProvider;
 
             if (inSource != null)
-                return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
+                return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider, Log);
 
             var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(Dnn.Portal.PortalId), App.AppId, _sxcInstance.Environment.Permissions.UserMayEditContent, ConfigurationProvider as ValueCollectionProvider);
-            return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
+            return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider, Log);
         }
 
         /// <inheritdoc />

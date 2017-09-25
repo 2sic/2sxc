@@ -47,8 +47,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
             var tabController = new TabController();
             var tabCollection = tabController.GetTabsByPortal(portalInfo.PortalId);
             var tabInfo = tabCollection.Select(tab => tab.Value)
-                                       .Where(tab => tab.TabPath == potentialFilePath)
-                                       .FirstOrDefault();
+                                       .FirstOrDefault(tab => tab.TabPath == potentialFilePath);
 
             if (tabInfo != null)
                 return "Page:" + tabInfo.TabID;

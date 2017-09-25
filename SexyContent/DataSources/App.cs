@@ -9,42 +9,39 @@ namespace ToSic.SexyContent.DataSources
     {
         public App(Log parentLog = null)
         {
-            Log = new Log("EaApDS", parentLog);
+            InitLog("EaApDS", parentLog);
         }
 
         internal string DefaultLanguage { get; set; }
         internal string CurrentUserName { get; set; }
 
-        private Log Log { get; }
         /// <summary>
         /// Get a correctly instantiated instance of the simple data controller.
         /// </summary>
         /// <returns>An data controller to create, update and delete entities</returns>
-        private SimpleDataController DataController()//string userName = null)
-        {
-            //if (userName == null)
-            //    userName = CurrentUserName;
-            return new SimpleDataController(ZoneId, AppId, /*userName,*/ DefaultLanguage, Log);
-        }
+        private SimpleDataController DataController() => new SimpleDataController(ZoneId, AppId, DefaultLanguage, Log);
 
         public void Create(string contentTypeName,
             Dictionary<string, object> values, string userName = null)
         {
-            var x = DataController(/*userName*/);
+            Log.Add($"app create new entity of type:{contentTypeName}");
+            var x = DataController();
             x.Create(contentTypeName, values);
         }
 
         public void Update(int entityId, Dictionary<string, object> values,
             string userName = null)
         {
-            var x = DataController(/*userName*/);
+            Log.Add($"app update i:{entityId}");
+            var x = DataController();
             x.Update(entityId, values);
         }
 
 
         public void Delete(int entityId, string userName = null)
         {
-            var x = DataController(/*userName*/);
+            Log.Add($"app delete i:{entityId}");
+            var x = DataController();
             x.Delete(entityId);
         }
  

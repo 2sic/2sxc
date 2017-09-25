@@ -5,6 +5,7 @@ using ToSic.Eav.DataSources;
 
 namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 {
+    /// <inheritdoc />
     /// <summary>
     /// Delivers UDT-data (now known as Form and List) to the templating engine
     /// </summary>
@@ -14,6 +15,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
         private DataTableDataSource DtDs;
 
         #region Configuration-properties
+        public override string LogId => "DS-FnL";
 
         private const string ModuleIdKey = "ModuleId";
         private const string TitleFieldKey = "TitleField";
@@ -27,8 +29,8 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
         /// </summary>
         public int ModuleId
         {
-            get { return int.Parse(Configuration[ModuleIdKey]); }
-            set { Configuration[ModuleIdKey] = value.ToString(); }
+            get => int.Parse(Configuration[ModuleIdKey]);
+            set => Configuration[ModuleIdKey] = value.ToString();
         }
 
         /// <summary>
@@ -36,8 +38,8 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
         /// </summary>
         public string TitleField
         {
-            get { return Configuration[TitleFieldKey]; }
-            set { Configuration[TitleFieldKey] = value; }
+            get => Configuration[TitleFieldKey];
+            set => Configuration[TitleFieldKey] = value;
         }
 
         /// <summary>
@@ -45,8 +47,8 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
         /// </summary>
         public string ContentType 
         {
-            get { return Configuration[ContentTypeKey]; }
-            set { Configuration[ContentTypeKey] = value; }
+            get => Configuration[ContentTypeKey];
+            set => Configuration[ContentTypeKey] = value;
         }
         #endregion
 
@@ -72,7 +74,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
             // Preferred way in Form and List
             var udt = new UserDefinedTableController();
             var ds = udt.GetDataSet(ModuleId);
-            DtDs = DataSource.GetDataSource<DataTableDataSource>(valueCollectionProvider: ConfigurationProvider);
+            DtDs = DataSource.GetDataSource<DataTableDataSource>(valueCollectionProvider: ConfigurationProvider, parentLog:Log);
             DtDs.Source = ds.Tables["Data"];
             DtDs.EntityIdField = "UserDefinedRowId";         // default column created by UDT
             DtDs.ContentType = ContentType;

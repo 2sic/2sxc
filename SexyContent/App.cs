@@ -175,7 +175,10 @@ namespace ToSic.SexyContent
 
                 // todo: probably use th efull configuration provider from function params, not from initial source?
                 _data = DataSource.GetDataSource<DataSources.App>(initialSource.ZoneId,
-                    initialSource.AppId, initialSource, initialSource.ConfigurationProvider);
+                    initialSource.AppId, initialSource, initialSource.ConfigurationProvider, Log);
+                
+
+
                 var defaultLanguage = "";
                 var languagesActive = env.ZoneMapper.CulturesWithState(OwnerPortalSettings.PortalId, ZoneId)
                     /* 2017-04-01 2dm: from this: ZoneHelpers.CulturesWithState(OwnerPortalSettings.PortalId, ZoneId)*/
@@ -240,7 +243,7 @@ namespace ToSic.SexyContent
 
                 if(ConfigurationProvider == null)
                     throw new Exception("Can't use app-queries, because the necessary configuration provider hasn't been initialized. Call InitData first.");
-                _queries = DataPipeline.AllPipelines(ZoneId, AppId, ConfigurationProvider);
+                _queries = DataPipeline.AllPipelines(ZoneId, AppId, ConfigurationProvider, Log);
                 return _queries;
             }
         }

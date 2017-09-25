@@ -17,9 +17,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class ImportExportEnvironment : HasLog, IImportExportEnvironment
     {
-        public ImportExportEnvironment(Log parentLog = null) : base("IExEnv", parentLog)
+        public ImportExportEnvironment() : this(null)
         {
         }
+
+        public ImportExportEnvironment(Log parentLog) : base("IExEnv", parentLog) { }
 
         public List<Message> Messages { get; } = new List<Message>();
 
@@ -31,6 +33,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
         public void TransferFilesToTennant(string sourceFolder, string destinationFolder)//, Boolean overwriteFiles, List<ExportImportMessage> messages)
         {
+            Log.Add($"transfer files to tennant from:{sourceFolder} to:{destinationFolder}");
             var messages = Messages;
             var files = Directory.GetFiles(sourceFolder, "*.*");
 
@@ -44,6 +47,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             foreach (var sourceFilePath in files)
             {
+                Log.Add($"file:{sourceFilePath}");
                 var destinationFileName = Path.GetFileName(sourceFilePath);
 
                 if (!dnnFileManager.FileExists(folderInfo, destinationFileName))
@@ -75,8 +79,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // Call the method recursively to handle subdirectories
             foreach (var sourceFolderPath in Directory.GetDirectories(sourceFolder))
             {
+                Log.Add($"subfolder:{sourceFolderPath}");
                 var newDestinationFolder = Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "").TrimStart('\\')).Replace('\\', '/');
-                TransferFilesToTennant(sourceFolderPath, newDestinationFolder);//, overwriteFiles, messages);
+                TransferFilesToTennant(sourceFolderPath, newDestinationFolder);
             }
         }
 
@@ -104,6 +109,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
         {
+            Log.Add($"will map files - map-size:{fileIdMap.Count}");
             var maybePortalId = PortalSettings.Current?.PortalId;
 
             if (!maybePortalId.HasValue)
@@ -137,6 +143,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog)
         {
+            Log.Add("create folder and map IDs - start");
             var maybePortalId = PortalSettings.Current?.PortalId;
 
             if (!maybePortalId.HasValue)
@@ -169,6 +176,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                             Message.MessageTypes.Warning));
                 }
             }
+            Log.Add("create folder and map IDs - completed");
         }
 
         public string ModuleVersion => Settings.ModuleVersion;
