@@ -1,21 +1,26 @@
 ﻿using System;
+using System.Text;
 using System.Web;
+using System.Web.Http;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Framework;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {
-    public partial class View : PortalModuleBase, IActionable, IVersionableControl
+    public partial class View : PortalModuleBase, IActionable
     {
         private SxcInstance _sxci;
-        protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(ModuleConfiguration, parentLog: null).SxcInstance);
+        protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(ModuleConfiguration, Log).SxcInstance);
+
+        private Log Log { get; } = new Log("View");
 
         /// <summary>
         /// Page Load event - preload template chooser if necessary
@@ -34,7 +39,7 @@ namespace ToSic.SexyContent
             try
             {
                 //var renderHelp = new RenderingHelpers(SxcI);
-                new RenderingHelpers(SxcI).RegisterClientDependencies(Page);
+                new RenderingHelpers(SxcI, Log).RegisterClientDependencies(Page);
             }
             catch (Exception ex)
             {
@@ -57,10 +62,23 @@ namespace ToSic.SexyContent
                 if (!isSharedModule && !SxcI.ContentBlock.ContentGroupExists && SxcI.App != null)
                     new DnnStuffToRefactor().EnsurePortalIsConfigured(SxcI, Server, ControlPath);
 
-                var renderNaked = (Request.QueryString["standalone"] == "true");
+                var renderNaked = Request.QueryString["standalone"] == "true";
                 if (renderNaked)
                     SxcI.RenderWithDiv = false;
                 var renderedTemplate = SxcI.Render().ToString();
+
+                // optional detailed logging
+                try
+                {
+                    if (Request.QueryString["debug"] == "true")
+                    {
+                        // only attach debug, if it has been enabled for the current time period
+                        if (!Logging.SkipEventLogging(GlobalConfiguration.Configuration
+                            .Properties))
+                            renderedTemplate += HtmlLog();
+                    }
+                }
+                catch { /* ignore */}
 
                 // If standalone is specified, output just the template without anything else
                 if (renderNaked)
@@ -84,6 +102,13 @@ namespace ToSic.SexyContent
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
+        private string HtmlLog()
+        {
+            var lg = new StringBuilder("<!-- detailed log for " + ModuleId + "\n");
+            Log.Entries.ForEach(e => lg.AppendLine(e.Source + " - " + e.Message));
+            lg.Append("-->");
+            return lg.ToString();
+        }
 
 
         #region Security Check
@@ -169,11 +194,6 @@ namespace ToSic.SexyContent
             }
         }
         #endregion
-
-        public void SetModuleVersion(int version)
-        {
-            // NOTE: We can leave it empty
-        }
 
     }
 }
