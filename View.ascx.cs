@@ -20,7 +20,7 @@ namespace ToSic.SexyContent
         private SxcInstance _sxci;
         protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(ModuleConfiguration, Log).SxcInstance);
 
-        private Log Log { get; } = new Log("View");
+        private Log Log { get; } = new Log("Sxc.View");
 
         /// <summary>
         /// Page Load event - preload template chooser if necessary

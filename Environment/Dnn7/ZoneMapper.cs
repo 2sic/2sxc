@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class ZoneMapper : HasLog, IZoneMapper
     {
-        public ZoneMapper(Log parentLog = null) : base("ZnMapr", parentLog)
+        public ZoneMapper(Log parentLog = null) : base("DNN.ZoneMp", parentLog)
         {
         }
 

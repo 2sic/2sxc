@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public PagePublishing(Log parentLog)
         {
-            Log = new Log("DnPubl", parentLog);
+            Log = new Log("DNN.Publsh", parentLog);
         }
 
         public bool Supported => true;

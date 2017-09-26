@@ -149,7 +149,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
         private void DoAdditionalGroupProcessing(int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeader>> groupItems)
         {
-            var myLog = new Log("GrpPrc", Log, "start");
+            var myLog = new Log("2Ap.GrpPrc", Log, "start");
             var app = new App(PortalSettings.Current, appId);
             app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, SxcContext.Environment.PagePublishing /*new PagePublishing(Log)*/.IsEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
 

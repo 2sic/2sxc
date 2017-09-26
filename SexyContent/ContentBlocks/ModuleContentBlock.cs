@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Services.Journal;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Internal;
@@ -30,7 +29,7 @@ namespace ToSic.SexyContent.ContentBlocks
         /// <param name="moduleInfo">the dnn module-info</param>
         /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
         /// <param name="overrideParams">optional override parameters</param>
-        public ModuleContentBlock(ModuleInfo moduleInfo, Log parentLog, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Module")
+        public ModuleContentBlock(ModuleInfo moduleInfo, Log parentLog, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
         {
             ModuleInfo = moduleInfo ?? throw new Exception("Need valid ModuleInfo / ModuleConfiguration of runtime");
             ParentId = moduleInfo.ModuleID;

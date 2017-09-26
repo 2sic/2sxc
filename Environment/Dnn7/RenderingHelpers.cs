@@ -28,7 +28,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private readonly string _applicationRoot;
         private readonly ModuleInfo _moduleInfo;
 
-        internal RenderingHelpers(SxcInstance sxc, Log parentLog): base("RndHlp", parentLog)
+        internal RenderingHelpers(SxcInstance sxc, Log parentLog): base("DN.Render", parentLog)
         {
             string appRoot = VirtualPathUtility.ToAbsolute("~/");
             _moduleInfo = sxc?.ModuleInfo;
@@ -128,7 +128,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated, Log parentLog)
         {
-            Log = new Log("CliInf", parentLog, "building entire client-context");
+            Log = new Log("Sxc.CliInf", parentLog, "building entire client-context");
             IPagePublishing versioning = sxc.Environment.PagePublishing;// new PagePublishing(Log);
 
             Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic, sxc);

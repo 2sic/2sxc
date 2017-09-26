@@ -46,10 +46,10 @@ namespace ToSic.SexyContent.ContentBlocks
         }
         #endregion
 
-        public EntityContentBlock(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition, Log parentLog = null): base(parentLog, "EntyCb") 
+        public EntityContentBlock(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition, Log parentLog = null): base(parentLog, "CB.Ent") 
             => _constructor(parent, cbDefinition);
 
-        public EntityContentBlock(IContentBlock parent, int contentBlockId, Log parentLog) : base(parentLog, "EntyCB")
+        public EntityContentBlock(IContentBlock parent, int contentBlockId, Log parentLog) : base(parentLog, "CB.Ent")
         {
             contentBlockId = Math.Abs(contentBlockId); // for various reasons this can be introduced as a negative value, make sure we neutralize that
             var cbDef = parent.SxcInstance.App.Data["Default"].List[contentBlockId];  // get the content-block definition

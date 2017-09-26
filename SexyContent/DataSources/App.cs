@@ -9,7 +9,7 @@ namespace ToSic.SexyContent.DataSources
     {
         public App(Log parentLog = null)
         {
-            InitLog("EaApDS", parentLog);
+            InitLog("DS.EavApp", parentLog);
         }
 
         internal string DefaultLanguage { get; set; }

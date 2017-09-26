@@ -136,7 +136,7 @@ namespace ToSic.SexyContent
             IPermissions permissions = null,
             Log parentLog = null)
         {
-            Log = new Log("SxcIns", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
+            Log = new Log("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
             Environment = new Environment.DnnEnvironment(Log);
             ContentBlock = cb;
             ModuleInfo = runtimeModuleInfo;

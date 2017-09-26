@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
 
         internal static IHtmlString Render(IContentBlock parentCb, Eav.Interfaces.IEntity entity, Log parentLog)
         {
-            var log = new Log("Render", parentLog, "simple");
+            var log = new Log("Htm.Render", parentLog, "simple");
 
             // if not the expected content-type, just output a hidden html placeholder
             if (entity.Type.Name != Settings.AttributeSetStaticNameContentBlockTypeName)

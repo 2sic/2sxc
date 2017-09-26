@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public DnnBusinessController()
         {
             Publishing = new PagePublishing(Log);
-            Log = new Log("DnnBuC", null, "starting the business controller");
+            Log = new Log("DNN.BusCon", null, "starting the business controller");
         }
 
         public int GetLatestVersion(int moduleId) => Publishing.GetLatestVersion(moduleId);

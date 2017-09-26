@@ -15,9 +15,9 @@ namespace ToSic.SexyContent.Environment
 
         public IPagePublishing PagePublishing {get ; }
 
-        public  DnnEnvironment() : base("Dn.Enviro") { }
+        public  DnnEnvironment() : base("DNN.Enviro") { }
 
-        public DnnEnvironment(Log parentLog = null) : base("DN.Enviro", parentLog)
+        public DnnEnvironment(Log parentLog = null) : base("DNN.Enviro", parentLog)
         {
             PagePublishing = new PagePublishing(Log);
         }

@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.Search
 {
     internal class SearchController: HasLog
     {
-        public SearchController(Log parentLog = null) : base("SrchC", parentLog)
+        public SearchController(Log parentLog = null) : base("DNN.Search", parentLog)
         {
         }
 

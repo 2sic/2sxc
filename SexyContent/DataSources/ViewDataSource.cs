@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.DataSources
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
             var showDrafts = sxc.Environment.Permissions.UserMayEditContent;
-            log.Add($"mid#{moduleId}, draft:{showDrafts}, template:{overrideTemplate.Name}");
+            log.Add($"mid#{moduleId}, draft:{showDrafts}, template:{overrideTemplate?.Name}");
             // Get ModuleDataSource
             var initialSource = DataSource.GetInitialDataSource(sxc.ZoneId, sxc.AppId, showDrafts, configurationProvider, parentLog);
             var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(sxc.ZoneId, sxc.AppId, initialSource, configurationProvider, parentLog);

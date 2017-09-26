@@ -32,7 +32,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Instanciate a "temporary" ContentGroup with the specified templateId and no Content items
         /// </summary>
-        public ContentGroup(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts, bool versioningEnabled, Log parentLog): base("ConGrp", parentLog)
+        public ContentGroup(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts, bool versioningEnabled, Log parentLog): base("CG.Group", parentLog)
         {
             _previewTemplateId = previewTemplateId;
             _zoneId = zoneId;

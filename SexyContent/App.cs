@@ -76,7 +76,7 @@ namespace ToSic.SexyContent
         public App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool allowSideEffects = true, Log parentLog = null)
         {
             // init Log
-            Log = new Log("2sxApp", parentLog, $"prep App z#{zoneId}, a#{appId}, allowSE:{allowSideEffects}, P:{ownerPortalSettings?.PortalId}");
+            Log = new Log("App.2sxcAp", parentLog, $"prep App z#{zoneId}, a#{appId}, allowSE:{allowSideEffects}, P:{ownerPortalSettings?.PortalId}");
             _env = new Environment.DnnEnvironment(Log);
 
             // require valid ownerPS

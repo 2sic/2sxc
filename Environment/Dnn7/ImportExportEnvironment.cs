@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
         }
 
-        public ImportExportEnvironment(Log parentLog) : base("IExEnv", parentLog) { }
+        public ImportExportEnvironment(Log parentLog) : base("Dta.ImExEn", parentLog) { }
 
         public List<Message> Messages { get; } = new List<Message>();
 

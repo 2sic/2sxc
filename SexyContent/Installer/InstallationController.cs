@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.Installer
 
         private readonly Logger _installLogger;
 
-        private Log Log = new Log("instCon");
+        private Log Log = new Log("Ist.InstCo");
 
         /// <summary>
         /// This static initializer will do a one-time check to see if everything is ready,

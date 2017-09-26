@@ -21,7 +21,7 @@ namespace ToSic.Eav.AppEngine
 		public readonly int ZoneId;
 		public readonly int AppId;
 
-		public TemplateManager(int zoneId, int appId, Log parentLog): base("TmplMg", parentLog)
+		public TemplateManager(int zoneId, int appId, Log parentLog): base("App.TmplMg", parentLog)
 		{
 			ZoneId = zoneId;
 			AppId = appId;

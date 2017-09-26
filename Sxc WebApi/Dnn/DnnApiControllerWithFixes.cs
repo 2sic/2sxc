@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
 	        // this is a dnn-bug
 	        Helpers.RemoveLanguageChangingCookie();
 
-            Log = new Log("DN.WebApi");
+            Log = new Log("DNN.WebApi");
             Env = new DnnEnvironment(Log);
         }
 
