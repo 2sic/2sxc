@@ -39,9 +39,9 @@ namespace ToSic.SexyContent.WebApi
             Log.Add("get langs");
 	        var portalId = PortalSettings.PortalId;
 	        var zoneId = Env.ZoneMapper.GetZoneId(portalId);
-	        var env = new Environment.DnnEnvironment();
+	        // var env = new Environment.DnnEnvironment(Log);
 	        // ReSharper disable once PossibleInvalidOperationException
-	        var cultures = env.ZoneMapper.CulturesWithState(portalId, zoneId) 
+	        var cultures = Env.ZoneMapper.CulturesWithState(portalId, zoneId) 
 	            .Select(c => new
 	            {
 	                Code = c.Key,
@@ -98,7 +98,7 @@ namespace ToSic.SexyContent.WebApi
         public void DeleteApp(int zoneId, int appId)
         {
             var userId = PortalSettings.Current.UserId;
-            AppManagement.RemoveAppInDnnAndEav(zoneId, appId, PortalSettings, userId, Log);
+            AppManagement.RemoveAppInDnnAndEav(Env, zoneId, appId, PortalSettings, userId, Log);
         }
 
         [HttpPost]

@@ -86,7 +86,7 @@ namespace ToSic.SexyContent.ContentBlocks
                 Configuration = ConfigurationProvider.GetConfigProviderForModule(ParentId, App, SxcInstance);
 
                 // maybe ensure that App.Data is ready
-                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing(Log).IsVersioningEnabled(Parent.SxcInstance.ModuleInfo.ModuleID), Configuration/* Data.ConfigurationProvider*/);
+                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, SxcInstance.Environment.PagePublishing /*new Environment.Dnn7.PagePublishing(Log)*/.IsEnabled(Parent.SxcInstance.ModuleInfo.ModuleID), Configuration/* Data.ConfigurationProvider*/);
 
                 ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 

@@ -63,7 +63,7 @@ namespace ToSic.SexyContent
 
         public string AppGuid { get; set; }
 
-        private readonly IEnvironment _env = new Environment.DnnEnvironment();
+        private  IEnvironment _env;
 
         public App(PortalSettings ownerPortalSettings, int appId, Log parentLog = null) : this(-1, appId, ownerPortalSettings, parentLog: parentLog)
         {
@@ -77,6 +77,7 @@ namespace ToSic.SexyContent
         {
             // init Log
             Log = new Log("2sxApp", parentLog, $"prep App z#{zoneId}, a#{appId}, allowSE:{allowSideEffects}, P:{ownerPortalSettings?.PortalId}");
+            _env = new Environment.DnnEnvironment(Log);
 
             // require valid ownerPS
             if (ownerPortalSettings == null)
@@ -110,6 +111,7 @@ namespace ToSic.SexyContent
         private void InitializeResourcesSettingsAndMetadata(bool allowSideEffects)
         {
             Log.Add($"init app resources allowSE:{allowSideEffects}");
+            _env = new Environment.DnnEnvironment(Log);
 
             if (allowSideEffects)
                 // if it's a real App (not content/default), do more

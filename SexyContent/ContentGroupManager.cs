@@ -20,7 +20,7 @@ namespace ToSic.SexyContent
         private readonly bool _showDrafts;
         private readonly bool _enableVersioning;
 
-        public ContentGroupManager(int zoneId, int appId, bool showDrafts, bool enableVersioning, Log parentLog): base("CGMang", parentLog)
+        public ContentGroupManager(int zoneId, int appId, bool showDrafts, bool enableVersioning, Log parentLog): base("CG.Manage", parentLog)
 		{
 			_zoneId = zoneId;
 			_appId = appId;
@@ -36,12 +36,10 @@ namespace ToSic.SexyContent
 			return dataSource;
 		}
 
-		public IEnumerable<ContentGroup> GetContentGroups()
-		{
-			return ContentGroupSource().List.Select(p => new ContentGroup(p.Value, _zoneId, _appId, _showDrafts, _enableVersioning, Log));
-		}
+		public IEnumerable<ContentGroup> GetContentGroups() 
+            => ContentGroupSource().List.Select(p => new ContentGroup(p.Value, _zoneId, _appId, _showDrafts, _enableVersioning, Log));
 
-		public ContentGroup GetContentGroup(Guid contentGroupGuid)
+	    public ContentGroup GetContentGroup(Guid contentGroupGuid)
 		{
 		    Log.Add($"get CG#{contentGroupGuid}");
 			var dataSource = ContentGroupSource();
@@ -56,20 +54,6 @@ namespace ToSic.SexyContent
 		{
 			var contentGroups = GetContentGroups().Where(p => p.Template != null && p.Template.TemplateId == templateId);
 			return contentGroups.Any(p => p[type].Any(c => c != null));
-		}
-
-		public Guid CreateNewContentGroup(int? templateId)
-		{
-			var values = new Dictionary<string, object>
-			{
-				{"Template", templateId.HasValue ? new List<int> { templateId.Value } : new List<int>()},
-				{ AppConstants.Content, new List<int>()},
-				{ AppConstants.Presentation, new List<int>()},
-				{AppConstants.ListContent, new List<int>()},
-				{AppConstants.ListPresentation, new List<int>()}
-			};
-
-            return new AppManager(_zoneId, _appId).Entities.Create(ContentGroupTypeName, values).Item2;
 		}
 
 
@@ -104,11 +88,28 @@ namespace ToSic.SexyContent
 
 		public Guid UpdateOrCreateContentGroup(ContentGroup contentGroup, int templateId)
 		{
+		    var appMan = new AppManager(_zoneId, _appId, Log);
+
 		    if (!contentGroup.Exists)
-		        return CreateNewContentGroup(templateId);
-		    
-		    contentGroup.UpdateTemplate(templateId);
-		    return contentGroup.ContentGroupGuid;
+		    {
+		        Log.Add($"doesn't exist, will creat new CG with template#{templateId}");
+		        return appMan.Entities.Create(ContentGroupTypeName, new Dictionary<string, object>
+		        {
+		            {"Template", new List<int> {templateId}},
+		            {AppConstants.Content, new List<int>()},
+		            {AppConstants.Presentation, new List<int>()},
+		            {AppConstants.ListContent, new List<int>()},
+		            {AppConstants.ListPresentation, new List<int>()}
+		        }).Item2; // new guid
+		    }
+		    else
+		    {
+		        Log.Add($"exists, create for group#{contentGroup.ContentGroupGuid} with template#{templateId}");
+		        appMan.Entities.UpdateParts(contentGroup._contentGroupEntity.EntityId,
+		            new Dictionary<string, object> {{"Template", new List<int?> {templateId}}});
+
+		        return contentGroup.ContentGroupGuid; // guid didn't change
+		    }
 		}
 
 	    internal void PersistContentGroupAndBlankTemplateToModule(int moduleId, bool wasCreated, Guid guid)

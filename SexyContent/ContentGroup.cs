@@ -13,14 +13,14 @@ namespace ToSic.SexyContent
 {
     public class ContentGroup: HasLog
     {
-        private Eav.Interfaces.IEntity _contentGroupEntity;
+        internal Eav.Interfaces.IEntity _contentGroupEntity;
         private readonly int _zoneId;
         private readonly int _appId;
         private readonly bool _showDrafts;
         private readonly bool _versioningEnabled;
         private readonly Guid? _previewTemplateId;
 
-        public ContentGroup(Eav.Interfaces.IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled, Log parentLog): base("ConGrp", parentLog)
+        public ContentGroup(Eav.Interfaces.IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled, Log parentLog): base("CG.Group", parentLog)
         {
             _contentGroupEntity = contentGroupEntity ?? throw new Exception("ContentGroup entity is null. This usually happens when you are duplicating a site, and have not yet imported the other content/apps. If that is your issue, check 2sxc.org/help?tag=export-import");
             _zoneId = zoneId;
@@ -76,15 +76,6 @@ namespace ToSic.SexyContent
             }
         }
 
-        public void UpdateTemplate(int? templateId)
-        {
-            var values = new Dictionary<string, object>
-            {
-                {"Template", templateId.HasValue ? new List<int?> {templateId.Value} : new List<int?>()}
-            };
-
-            new AppManager(_zoneId, _appId).Entities.UpdateParts(_contentGroupEntity.EntityId, values);
-        }
 
         #endregion
 
@@ -130,10 +121,8 @@ namespace ToSic.SexyContent
             }
         }
 
-        public List<int?> ListWithNulls(string type)
-        {
-            return this[type].Select(p => p?.EntityId).ToList();
-        }
+        public List<int?> ListWithNulls(string type) 
+            => this[type].Select(p => p?.EntityId).ToList();
 
         #endregion
 
@@ -224,8 +213,8 @@ namespace ToSic.SexyContent
             partName = partName.ToLower();
             if (partName == AppConstants.ContentLower) partName = AppConstants.Content;
             else if (partName == AppConstants.PresentationLower) partName = AppConstants.Presentation;
-            else if (partName == AppConstants.ListContentLower) partName = AppConstants.ListContent;// cListC;
-            else if (partName == AppConstants.ListPresentationLower) partName = AppConstants.ListPresentation;// cListP;
+            else if (partName == AppConstants.ListContentLower) partName = AppConstants.ListContent;
+            else if (partName == AppConstants.ListPresentationLower) partName = AppConstants.ListPresentation;
             else throw new Exception("Wanted to capitalize part name - but part name unknown: " + partName);
             return partName;
         }
@@ -237,7 +226,7 @@ namespace ToSic.SexyContent
         /// <param name="sortOrder"></param>
         public void RemoveContentAndPresentationEntities(string type, int sortOrder)
         {
-
+            Log.Add($"remove content and pres items type:{type}, order:{sortOrder}");
             var list1 = ListWithNulls(type);
             list1.RemoveAt(sortOrder);
             var type2 = ReCapitalizePartName(type).Replace(AppConstants.Content, AppConstants.Presentation);
@@ -257,6 +246,7 @@ namespace ToSic.SexyContent
         /// <param name="presentationId"></param>
         public void AddContentAndPresentationEntity(string type, int? sortOrder, int? contentId, int? presentationId)
         {
+            Log.Add($"add content/pres for type:{type}, order:{sortOrder}, content#{contentId}, pres#{presentationId}");
             if (type.ToLower() != AppConstants.ContentLower)
                 throw new Exception("This is only meant to work for content, not for list-content");
 
@@ -294,6 +284,7 @@ namespace ToSic.SexyContent
 
         public void ReorderEntities(int sortOrder, int destinationSortOrder)
         {
+            Log.Add($"reorder entities before:{sortOrder} to after:{destinationSortOrder}");
             var contentIds = ListWithNulls(AppConstants.Content); 
             var presentationIds = GetPresentationIdWithSameLengthAsContent();
             var contentId = contentIds[sortOrder];
@@ -317,6 +308,7 @@ namespace ToSic.SexyContent
 
         public bool ReorderAll(int[] newSequence)
         {
+            Log.Add(() => $"reorder all to:[{string.Join(",", newSequence)}]");
             var oldCIds = ListWithNulls(AppConstants.Content);
             var oldPIds = GetPresentationIdWithSameLengthAsContent();
 

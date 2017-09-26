@@ -35,7 +35,7 @@ namespace ToSic.SexyContent.WebApi
             var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
             var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath, Log);
-            var cultCount = new Environment.DnnEnvironment().ZoneMapper
+            var cultCount = /*new Environment.DnnEnvironment(Log)*/Env.ZoneMapper
                 .CulturesWithState(appWrapper.App.OwnerPortalSettings.PortalId, appWrapper.App.ZoneId)
                 .Count(c => c.Active);
             return new

@@ -4,7 +4,9 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.Logging.Simple;
 using static System.String;
 
 namespace ToSic.SexyContent.Internal
@@ -59,14 +61,14 @@ namespace ToSic.SexyContent.Internal
         }
 
 
-        public static void SetAppIdForModule(ModuleInfo module, int? appId)
+        internal static void SetAppIdForModule(ModuleInfo module, IEnvironment env, int? appId, Log parentLog)
         {
             // Reset temporary template
             ContentGroupManager.DeletePreviewTemplateId(module.ModuleID);
 
             // ToDo: Should throw exception if a real ContentGroup exists
 
-            var zoneId = new Environment.DnnEnvironment().ZoneMapper.GetZoneId(module.OwnerPortalID);// ZoneHelpers.GetZoneId(module.OwnerPortalID);
+            var zoneId = /*new Environment.DnnEnvironment(parentLog)*/env.ZoneMapper.GetZoneId(module.OwnerPortalID);// ZoneHelpers.GetZoneId(module.OwnerPortalID);
 
             if (appId == 0 || !appId.HasValue)
                 DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, Settings.AppNameString, null);

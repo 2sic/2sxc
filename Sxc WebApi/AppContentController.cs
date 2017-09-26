@@ -169,7 +169,7 @@ namespace ToSic.SexyContent.WebApi
             var currentApp = new App(PortalSettings, appId);
             //currentApp.InitData(false, new ValueCollectionProvider());
             currentApp.InitData(false, 
-                new Environment.Dnn7.PagePublishing(Log).IsVersioningEnabled(ActiveModule.ModuleID), 
+                new Environment.Dnn7.PagePublishing(Log).IsEnabled(ActiveModule.ModuleID), 
                 Data.ConfigurationProvider);
             if (id == null)
             {

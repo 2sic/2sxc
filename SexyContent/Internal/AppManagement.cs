@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using static System.String;
 
@@ -108,10 +109,10 @@ namespace ToSic.SexyContent.Internal
             EnsureAppIsConfigured(zoneId, appId, parentLog: parentLog, appName: appName);
         }
 
-        internal static void RemoveAppInDnnAndEav(int zoneId, int appId, PortalSettings ps, int userId, Log parentLog)
+        internal static void RemoveAppInDnnAndEav(IEnvironment env, int zoneId, int appId, PortalSettings ps, int userId, Log parentLog)
         {
             // check portal assignment and that it's not the default app
-            if (zoneId != new Environment.DnnEnvironment().ZoneMapper.GetZoneId(ps.PortalId))//  ZoneHelpers.GetZoneId(ps.PortalId) )
+            if (zoneId != /*new Environment.DnnEnvironment(parentLog)*/ env.ZoneMapper.GetZoneId(ps.PortalId))
                 throw new Exception("This app does not belong to portal " + ps.PortalId);
 
             if (appId == new ZoneRuntime(zoneId, parentLog).DefaultAppId)// State.GetDefaultAppId(zoneId))

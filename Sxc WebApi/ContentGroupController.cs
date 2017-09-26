@@ -99,7 +99,7 @@ namespace ToSic.SexyContent.WebApi
         public void Replace(Guid guid, string part, int index, int entityId)
         {
             Log.Add($"replace target:{guid}, part:{part}, index:{index}, id:{entityId}");
-            var versioning = new PagePublishing(Log);
+            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
                 var contentGroup = SxcContext.App.ContentGroupManager.GetContentGroup(guid);
@@ -135,7 +135,7 @@ namespace ToSic.SexyContent.WebApi
         public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> list)
         {
             Log.Add($"list for:{guid}, items:{list?.Count}");
-            var versioning = new PagePublishing(Log);
+            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
                 var cg = GetContentGroup(guid);

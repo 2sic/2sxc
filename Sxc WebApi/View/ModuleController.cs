@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.WebApi.View
         public void AddItem([FromUri] int? sortOrder = null)
         {
             Log.Add($"add order:{sortOrder}");
-            var versioning = new PagePublishing(Log);
+            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
 
             void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.AddItem(sortOrder);
 
@@ -55,12 +55,8 @@ namespace ToSic.SexyContent.WebApi.View
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
-            => ContentGroupReferenceManager.SaveTemplateId(templateId, forceCreateContentGroup, newTemplateChooserState);
-
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void SetTemplateChooserState([FromUri] bool state) => ContentGroupReferenceManager.SetTemplateChooserState(state);
+        public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup) 
+            => ContentGroupReferenceManager.SaveTemplateId(templateId, forceCreateContentGroup);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -136,7 +132,7 @@ namespace ToSic.SexyContent.WebApi.View
         public void MoveItemInList(int parentId, string field, int indexFrom, int indexTo, [FromUri] bool partOfPage = false)
         {
             Log.Add($"move item in list parent:{parentId}, field:{field}, from:{indexFrom}, to:{indexTo}, partOfpage:{partOfPage}");
-            var versioning = new PagePublishing(Log);
+            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
 
             void InternalSave(VersioningActionInfo args) => ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
 
@@ -156,7 +152,7 @@ namespace ToSic.SexyContent.WebApi.View
         public void RemoveItemInList(int parentId, string field, int index, [FromUri] bool partOfPage = false)
         {
             Log.Add($"remove item: parent{parentId}, field:{field}, index:{index}, partOfPage{partOfPage}");
-            var versioning = new PagePublishing(Log);
+            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
 
             void InternalSave(VersioningActionInfo args) => ModifyItemList(parentId, field, new Remove(index));
 
@@ -211,7 +207,7 @@ namespace ToSic.SexyContent.WebApi.View
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
             Log.Add($"change order sort:{sortOrder}, dest:{destinationSortOrder}");
-            var versioning = new PagePublishing(Log);
+            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
 
             void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
 
@@ -232,7 +228,7 @@ namespace ToSic.SexyContent.WebApi.View
         public void RemoveFromList([FromUri] int sortOrder)
         {
             Log.Add($"remove from index:{sortOrder}");
-            var versioning = new PagePublishing(Log);
+            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
 
             void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.RemoveFromList(sortOrder);
 

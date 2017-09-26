@@ -8,24 +8,15 @@ namespace ToSic.SexyContent.ContentBlocks
 {
     internal class EntityContentGroupReferenceManager : ContentGroupReferenceManagerBase
     {
-        internal EntityContentGroupReferenceManager(SxcInstance sxc): base(sxc)
-        {
-        }
-        #region methods which the entity-implementation must customize - so it's virtual
+        internal EntityContentGroupReferenceManager(SxcInstance sxc): base(sxc) { }
 
-        protected override void SavePreviewTemplateId(Guid templateGuid, bool? newTemplateChooserState = null)
-        {
-            var vals = new Dictionary<string, object>
+        #region methods which the entity-implementation must customize 
+
+        protected override void SavePreviewTemplateId(Guid templateGuid)
+            => Update(new Dictionary<string, object>
             {
                 {EntityContentBlock.CbPropertyTemplate, templateGuid.ToString()}
-            };
-            if (newTemplateChooserState.HasValue)
-                vals.Add(EntityContentBlock.CbPropertyShowChooser, newTemplateChooserState.Value); // must blank the template
-            Update(vals);
-        }
-
-        internal override void SetTemplateChooserState(bool state)
-            => UpdateValue(EntityContentBlock.CbPropertyShowChooser, state);
+            });
 
 
         internal override void SetAppId(int? appId)
@@ -44,10 +35,9 @@ namespace ToSic.SexyContent.ContentBlocks
             => UpdateValue(EntityContentBlock.CbPropertyContentGroup, cgGuid.ToString()); // must pre-convert to string, as it's not a reference to an entity in the same app
 
 
-        internal override void UpdateTitle(ToSic.Eav.Interfaces.IEntity titleItem)
+        internal override void UpdateTitle(Eav.Interfaces.IEntity titleItem)
         {
             if (titleItem?.GetBestTitle() == null) return;
-
             UpdateValue(EntityContentBlock.CbPropertyTitle, titleItem.GetBestTitle());
         }
 
@@ -55,24 +45,13 @@ namespace ToSic.SexyContent.ContentBlocks
 
         #region private helpers
 
-        private void UpdateValue(string key, object value)
-        {
-            var vals = new Dictionary<string, object> { { key, value } };
-            Update(vals);
-
-        }
+        private void UpdateValue(string key, object value) 
+            => Update(new Dictionary<string, object> { { key, value } });
 
         private void Update(Dictionary<string, object> newValues)
         {
-            // 2017-04-01 2dm centralizing eav access
             var app = ((ContentBlockBase)SxcContext.ContentBlock).Parent.App;
-            new AppManager(app.ZoneId, app.AppId).Entities.UpdateParts(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);
-            //var cgApp = ((ContentBlockBase)SxcContext.ContentBlock).Parent.App;
-            //var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
-            //eavDc.Entities.UpdateEntity(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);
-
-            //((ContentBlockBase)SxcContext.ContentBlock).Parent.App
-            //    .Data.Update(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues); 
+            new AppManager(app.ZoneId, app.AppId, Log).Entities.UpdateParts(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues);
         }
 
         #endregion

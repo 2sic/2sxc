@@ -129,7 +129,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated, Log parentLog)
         {
             Log = new Log("CliInf", parentLog, "building entire client-context");
-            IPagePublishing versioning = new PagePublishing(Log);
+            IPagePublishing versioning = sxc.Environment.PagePublishing;// new PagePublishing(Log);
 
             Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic, sxc);
             Language = new ClientInfosLanguages(ps, zoneId);

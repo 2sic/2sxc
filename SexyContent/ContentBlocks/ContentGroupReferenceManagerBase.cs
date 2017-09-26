@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         protected ContentGroup CGroup;
 
-        internal ContentGroupReferenceManagerBase(SxcInstance sxc): base("CGRMan", sxc.Log)
+        internal ContentGroupReferenceManagerBase(SxcInstance sxc): base("CG.RefMan", sxc.Log)
         {
             SxcContext = sxc;
             ModuleId = SxcContext.ModuleInfo.ModuleID;
@@ -27,9 +27,8 @@ namespace ToSic.SexyContent.ContentBlocks
 
         #region methods which the entity-implementation must customize - so it's virtual
 
-        protected abstract void SavePreviewTemplateId(Guid templateGuid, bool? newTemplateChooserState = null);
+        protected abstract void SavePreviewTemplateId(Guid templateGuid);
 
-        internal abstract void SetTemplateChooserState(bool state);
 
         internal abstract void SetAppId(int? appId);
 
@@ -46,14 +45,13 @@ namespace ToSic.SexyContent.ContentBlocks
             => ContentGroup.AddContentAndPresentationEntity(AppConstants.ContentLower, sortOrder, null, null);
         
 
-        public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
+        public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
-            Log.Add($"save template id{templateId}, forceCreateCG:{forceCreateContentGroup}");
             Guid? result;
-            var contentGroup = ContentGroup;
+            Log.Add($"save template#{templateId}, CG-exists:{ContentGroup.Exists} forceCreateCG:{forceCreateContentGroup}");
 
             // if it exists or has a force-create, then write to the Content-Group, otherwise it's just a preview
-            if (contentGroup.Exists || forceCreateContentGroup)
+            if (ContentGroup.Exists || forceCreateContentGroup)
             {
                 var existedBeforeSettingTemplate = ContentGroup.Exists;
 
@@ -64,16 +62,13 @@ namespace ToSic.SexyContent.ContentBlocks
                     EnsureLinkToContentGroup(contentGroupGuid);
 
                 result = contentGroupGuid;
-
-                if (newTemplateChooserState.HasValue && newTemplateChooserState.Value != SxcContext.ContentBlock.ShowTemplateChooser)
-                    SetTemplateChooserState(newTemplateChooserState.Value);
             }
             else
             {
                 // only set preview / content-group-reference - but must use the guid
                 var dataSource = SxcContext.App.Data["Default"];
                 var templateGuid = dataSource.List[templateId].EntityGuid;
-                SavePreviewTemplateId(templateGuid, newTemplateChooserState);
+                SavePreviewTemplateId(templateGuid);//, newTemplateChooserState);
                 result = null; // send null back
             }
 
@@ -87,7 +82,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         public IEnumerable<AppUiInfo> GetSelectableApps()
         {
-            Log.Add($"get selectable apps");
+            Log.Add("get selectable apps");
             try
             {
                 var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.PortalSettings.PortalId);

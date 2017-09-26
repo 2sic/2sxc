@@ -30,7 +30,7 @@ namespace ToSic.SexyContent.ContentBlocks
         /// <param name="moduleInfo">the dnn module-info</param>
         /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
         /// <param name="overrideParams">optional override parameters</param>
-        public ModuleContentBlock(ModuleInfo moduleInfo, Log parentLog, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "ModCB")
+        public ModuleContentBlock(ModuleInfo moduleInfo, Log parentLog, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Module")
         {
             ModuleInfo = moduleInfo ?? throw new Exception("Need valid ModuleInfo / ModuleConfiguration of runtime");
             ParentId = moduleInfo.ModuleID;
@@ -47,7 +47,7 @@ namespace ToSic.SexyContent.ContentBlocks
                 : PortalSettings.Current;
 
             // important: don't use the SxcInstance.Environment, as it would try to init the Sxc-object before the app is known, causing various side-effects
-            ZoneId = new Environment.DnnEnvironment().ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);// ZoneHelpers.GetZoneId(moduleInfo.OwnerPortalID) ?? 0; // new
+            ZoneId = new Environment.DnnEnvironment(Log).ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);// ZoneHelpers.GetZoneId(moduleInfo.OwnerPortalID) ?? 0; // new
             
             AppId = AppHelpers.GetAppIdFromModule(moduleInfo, ZoneId) ?? 0;// fallback/undefined YET
 
@@ -69,8 +69,9 @@ namespace ToSic.SexyContent.ContentBlocks
                 Configuration = ConfigurationProvider.GetConfigProviderForModule(moduleInfo.ModuleID, App, SxcInstance);
 
                 // maybe ensure that App.Data is ready
-                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, 
-                    new Environment.Dnn7.PagePublishing(Log).IsVersioningEnabled(moduleInfo.ModuleID), 
+                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent,
+                    SxcInstance.Environment.PagePublishing
+                    /*new Environment.Dnn7.PagePublishing(Log)*/.IsEnabled(moduleInfo.ModuleID), 
                     Configuration);
 
                 var res = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);

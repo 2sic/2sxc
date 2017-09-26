@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // go through all the groups, assign relevant info so that we can then do get-many
             var app = new App(PortalSettings.Current, appId, Log);
             app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, 
-                new PagePublishing(Log).IsVersioningEnabled(ActiveModule.ModuleID), 
+                SxcContext.Environment.PagePublishing /*new PagePublishing(Log)*/ .IsEnabled(ActiveModule.ModuleID), 
                 Data.ConfigurationProvider);
 
             foreach (var reqItem in items)
@@ -151,7 +151,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             var myLog = new Log("GrpPrc", Log, "start");
             var app = new App(PortalSettings.Current, appId);
-            app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, new PagePublishing(Log).IsVersioningEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
+            app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, SxcContext.Environment.PagePublishing /*new PagePublishing(Log)*/.IsEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
 
             foreach (var entitySets in groupItems)
             {

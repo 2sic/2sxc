@@ -30,38 +30,34 @@ namespace ToSic.SexyContent.Environment.Dnn7
         }
 
         public bool Supported => true;
+
+        private readonly Dictionary<int, PublishingMode> _cache = new Dictionary<int, PublishingMode>();
         
         public PublishingMode Requirements(int moduleId)
         {
-            Log.Add($"requirements for mod:{moduleId}");
+            if (_cache.ContainsKey(moduleId)) return _cache[moduleId];
+
+            Log.Add($"checking requirements first time for mod:{moduleId}");
             var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
+            PublishingMode decision;
             var versioningEnabled = TabChangeSettings.Instance.IsChangeControlEnabled(moduleInfo.PortalID, moduleInfo.TabID);
             if (!versioningEnabled)
-            {
-                Log.Add("result: is optional");
-                return PublishingMode.DraftOptional;
-            }
+                decision = PublishingMode.DraftOptional;
+            else if (!new PortalSettings(moduleInfo.PortalID).UserInfo.IsSuperUser)
+                decision = PublishingMode.DraftRequired;
+            else
+                decision = PublishingMode.DraftRequired;
 
-            var portalSettings = new PortalSettings(moduleInfo.PortalID);
-            if (!portalSettings.UserInfo.IsSuperUser)
-            {
-                Log.Add("is super user, but draft still required");
-                return PublishingMode.DraftRequired;
-            }
-
-            // Else versioningEnabled && IsSuperUser
-            Log.Add("normal user, draft required");
-            return PublishingMode.DraftRequired;
+            Log.Add($"decision: {decision}");
+            _cache.Add(moduleId, decision);
+            return decision;
         }
         
-        public bool IsVersioningEnabled(int moduleId)
-        {
-            return Requirements(moduleId) != PublishingMode.DraftOptional;
-        }
+        public bool IsEnabled(int moduleId) => Requirements(moduleId) != PublishingMode.DraftOptional;
 
         public void DoInsidePublishing(int moduleId, int userId, Action<VersioningActionInfo> action)
         {
-            var enabled = IsVersioningEnabled(moduleId);
+            var enabled = IsEnabled(moduleId);
             Log.Add($"do inside publishing - module:{moduleId}, user:{userId}, enabled:{enabled}");
             if (enabled)
             {
@@ -82,29 +78,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Log.Add("do inside publishing - completed");
         }
 
-        //public void DoInsidePublishLatestVersion(int moduleId, Action<VersioningActionInfo> action)
-        //{
-        //    if(IsVersioningEnabled(moduleId))
-        //    {
-        //        var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
-        //        moduleVersionSettings.PublishLatestVersion();
-        //    }
 
-        //    var versioningActionInfo = new VersioningActionInfo();
-        //    action.Invoke(versioningActionInfo);
-        //}
-
-        //public void DoInsideDeleteLatestVersion(int moduleId, Action<VersioningActionInfo> action)
-        //{
-        //    if (IsVersioningEnabled(moduleId))
-        //    {
-        //        var moduleVersionSettings = new ModuleVersionSettingsController(moduleId);
-        //        moduleVersionSettings.DeleteLatestVersion();
-        //    }
-
-        //    var versioningActionInfo = new VersioningActionInfo();
-        //    action.Invoke(versioningActionInfo);
-        //}
 
         public int GetLatestVersion(int moduleId)
         {

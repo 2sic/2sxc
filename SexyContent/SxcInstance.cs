@@ -56,7 +56,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Environment - should be the place to refactor everything into, which is the host around 2sxc
         /// </summary>
-        public Environment.DnnEnvironment Environment = new Environment.DnnEnvironment();
+        public Environment.DnnEnvironment Environment { get; }
 
         internal ModuleInfo ModuleInfo { get; }
 
@@ -137,6 +137,7 @@ namespace ToSic.SexyContent
             Log parentLog = null)
         {
             Log = new Log("SxcIns", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
+            Environment = new Environment.DnnEnvironment(Log);
             ContentBlock = cb;
             ModuleInfo = runtimeModuleInfo;
 

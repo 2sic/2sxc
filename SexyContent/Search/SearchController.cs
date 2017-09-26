@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.Search
             var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
 
             // New Context because PortalSettings.Current is null
-            var zoneId = new Environment.DnnEnvironment().ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);// ZoneHelpers.GetZoneId(moduleInfo.OwnerPortalID);
+            var zoneId = new Environment.DnnEnvironment(Log).ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);
 
             //if (!zoneId.HasValue)
             //    return searchDocuments;
