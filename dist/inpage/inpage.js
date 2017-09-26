@@ -633,7 +633,7 @@ $(function () {
                 if (conf.uiActionOnly) return settings.code(settings, origEvent, sxc);
 
                 // if more than just a UI-action, then it needs to be sure the content-group is created first
-                return $2sxc._contentBlock.prepareToAddContent(sxc)
+                return $2sxc._contentBlock.prepareToAddContent(sxc, settings.useModuleList)
                     .then(function () {
                         return settings.code(settings, origEvent, sxc);
                     });
@@ -675,17 +675,16 @@ $(function () {
  * 
  */
 (function () {
+
     /**
      * The main content-block manager
      */
     $2sxc._contentBlock = {
 
         // constants
-        cViewWithoutContent: "_LayoutElement", // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
+        cViewWithoutContent: '_LayoutElement', // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
         cUseExistingTemplate: -1
     };
-
-
 })();
 /* 
  * this is a content block in the browser
@@ -910,8 +909,14 @@ $2sxc._contentBlock.manipulator = function (sxc) {
  * this is part of the content block manager
  */
 (function () {
-
     var cbm = $2sxc._contentBlock;
+
+    Object.assign(cbm, {
+        prepareToAddContent: prepareToAddContent,
+        updateTemplateFromDia: updateTemplateFromDia
+    });
+
+    return;
 
     /**
      * prepare the instance so content can be added
@@ -919,59 +924,68 @@ $2sxc._contentBlock.manipulator = function (sxc) {
      * @param {} sxc 
      * @returns {} 
      */
-    cbm.prepareToAddContent = function(sxc) {
-        return cbm.persistTemplate(sxc, null, true);
-    };
+    function prepareToAddContent(sxc, useModuleList) {
+        var isCreated = sxc.manage._editContext.ContentGroup.IsCreated;
+        if (isCreated || !useModuleList) return $.when(null);
+        // return persistTemplate(sxc, null);
+        // var manage = sxc.manage;
+        // var contentGroup = manage._editContext.ContentGroup;
+        // var showingAjaxPreview = $2sxc._toolbarManager.isDisabled(sxc);
+        // var groupExistsAndTemplateUnchanged = !!contentGroup.HasContent; // && !showingAjaxPreview;
+
+        var templateId = /* templateId || */ sxc.manage._editContext.ContentGroup.TemplateId;
+
+        // template has not changed
+        // if (groupExistsAndTemplateUnchanged) return $.when(null);
+
+        // persist the template
+        return updateTemplate(sxc, templateId, true);
+    }
 
     /**
-     * Save / Store the current preview - and optionally ensure that it's final enough to add content-items
-     * @param {} sxc 
-     * @param {} forceCreate 
-     * @returns {} 
+     * Update the template and adjust UI accordingly.
+     * @param {*} sxc 
+     * @param {*} templateId 
+     * @param {*} forceCreate 
      */
-    cbm.persistTemplate = function (sxc, templateId, forceCreate) {
-        var manage = sxc.manage,
-            contentGroup = manage._editContext.ContentGroup,
-            showingAjaxPreview = $2sxc._toolbarManager.isDisabled(sxc),
-            // Save only if the currently saved is not the same as the new
-            templateIdHasChanged = templateId !== undefined && templateId !== manage._editContext.ContentGroup.TemplateId,
-            groupExistsAndTemplateUnchanged = !!contentGroup.HasContent && !showingAjaxPreview && !templateIdHasChanged;
-
-        templateId = templateId || manage._editContext.ContentGroup.TemplateId;
-
-        var promiseToSetState = (groupExistsAndTemplateUnchanged)
-            ? $.when(null) // all is ok, create empty promise to allow chaining the result
-            : cbm.saveTemplate(sxc, templateId, forceCreate)
-                .then(function (data, textStatus, xhr) {
-                    if (xhr.status !== 200) { // only continue if ok
-                        alert("error - result not ok, was not able to create ContentGroup");
-                        return;
-                    }
-                    var newGuid = data;
-                    if (!newGuid) return;
-                    newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
-                    if (console) console.log("created content group {" + newGuid + "}");
-
-                    sxc.manage._updateContentGroupGuid(newGuid);
-                });
+    function updateTemplateFromDia(sxc, templateId, forceCreate) {
+        var contentGroup = sxc.manage._editContext.ContentGroup;
+        var showingAjaxPreview = $2sxc._toolbarManager.isDisabled(sxc);
 
         // todo: should move things like remembering undo etc. back into the contentBlock state manager
         // or just reset it, so it picks up the right values again ?
-        var promiseToCorrectUi = promiseToSetState.then(function () {
-            $2sxc._quickDialog.hide();
+        return updateTemplate(sxc, templateId, forceCreate)
+            .then(function () {
+                $2sxc._quickDialog.hide();
 
-            // if it didn't have content, then it only has now...
-            if (!contentGroup.HasContent) contentGroup.HasContent = forceCreate;
+                // if it didn't have content, then it only has now...
+                if (!contentGroup.HasContent) contentGroup.HasContent = forceCreate;
 
-            // only re-load on ajax, not on app as that was already re-loaded on the preview
-            if (showingAjaxPreview)      // necessary to show the original template again
-                cbm.reloadAndReInitialize(sxc);
-        });
+                // only reload on ajax, not on app as that was already re-loaded on the preview
+                // necessary to show the original template again
+                if (showingAjaxPreview) cbm.reloadAndReInitialize(sxc);
+            });
+    }
 
-        return promiseToCorrectUi;
-    };
+    /**
+     * Update the template.
+     */
+    function updateTemplate(sxc, templateId, forceCreate) {
+        return cbm.saveTemplate(sxc, templateId, forceCreate)
+            .then(function (data, textStatus, xhr) {
 
-    
+                // error handling
+                if (xhr.status !== 200) return alert('error - result not ok, was not able to create ContentGroup');
+
+                if (!data) return;
+
+                // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
+                newGuid = data.replace(/[\",\']/g, '');
+
+                if (console) console.log('created content group {' + newGuid + '}');
+                sxc.manage._updateContentGroupGuid(newGuid);
+            });
+    }
 })();
 /* 
  * this is a content block in the browser
@@ -1013,13 +1027,13 @@ $2sxc._contentBlock.manipulator = function (sxc) {
      * @param {boolean} [forceCreateContentGroup]
      * @returns {promise} 
      */
-    cbm.saveTemplate = function(sxc, templateId, forceCreateContentGroup) {//}, newTemplateChooserState) {
+    cbm.saveTemplate = function(sxc, templateId, forceCreateContentGroup) {
         return sxc.webApi.get({
             url: "view/module/savetemplateid",
             params: {
                 templateId: templateId,
                 forceCreateContentGroup: forceCreateContentGroup,
-                newTemplateChooserState: false//  newTemplateChooserState
+                newTemplateChooserState: false
             }
         });
     };
@@ -1554,9 +1568,9 @@ if (typeof Object.assign != 'function') {
     }
 
     function extendIFrameWithSxcState(iFrame) {
-        var hiddenSxc = null,
-            cbApi = $2sxc._contentBlock,
-            tagModule = null;
+        var hiddenSxc = null;
+        var cbApi = $2sxc._contentBlock;
+        var tagModule = null;
 
         /**
          * get the sxc-object of this iframe
@@ -1612,12 +1626,11 @@ if (typeof Object.assign != 'function') {
                 return cbApi.reloadAndReInitialize(reSxc(), true, true);
             },
             saveTemplate: function (templateId) {
-                return cbApi.persistTemplate(reSxc(), templateId, false);
+                return cbApi.updateTemplateFromDia(reSxc(), templateId, false);
             },
             previewTemplate: function (templateId) {
                 return cbApi.ajaxLoad(reSxc(), templateId, true);
             }
-
         });
         return newFrm;
     }
@@ -1659,26 +1672,24 @@ if (typeof Object.assign != 'function') {
         var cont = diagManager.getContainer();
         if (!resizeWatcher) // only add a timer if not already running
             resizeWatcher = setInterval(function () {
-                    try {
-                        var frm = diagManager.getIFrame(cont);
-                        if (!frm) return;
-                        var height = frm.contentDocument.body.offsetHeight;
-                        if (frm.previousHeight === height) return;
-                        frm.style.minHeight = cont.css("min-height");
-                        frm.style.height = height + "px";
-                        frm.previousHeight = height;
-                        if (isFullscreen) {
-                            frm.style.height = "100%";
-                            frm.style.position = "absolute";
-                        }
-                    } catch (e) {
-                        // ignore
+                try {
+                    var frm = diagManager.getIFrame(cont);
+                    if (!frm) return;
+                    var height = frm.contentDocument.body.offsetHeight;
+                    if (frm.previousHeight === height) return;
+                    frm.style.minHeight = cont.css("min-height");
+                    frm.style.height = height + "px";
+                    frm.previousHeight = height;
+                    if (isFullscreen) {
+                        frm.style.height = "100%";
+                        frm.style.position = "absolute";
                     }
-                },
-                resizeInterval);
+                } catch (e) {
+                    // ignore
+                }
+            }, resizeInterval);
         return resizeWatcher;
     }
-
 })();
 $(function () {
     "use strict";
@@ -2506,13 +2517,15 @@ $(function () {
 
     // default / fallback settings for toolbars when nothings is specified
     var settingsForEmptyToolbar = {
-        hover: "left",
-        autoAddMore: "left"
+        hover: 'left',
+        autoAddMore: 'left'
     };
 
-    $2sxc._toolbarManager.buildToolbars = buildToolbars;
-    $2sxc._toolbarManager.disable = disable;
-    $2sxc._toolbarManager.isDisabled = isDisabled;
+    Object.assign($2sxc._toolbarManager, {
+        buildToolbars: buildToolbars,
+        disable: disable,
+        isDisabled: isDisabled
+    });
 
     return;
 
