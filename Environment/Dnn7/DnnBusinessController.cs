@@ -23,8 +23,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// </summary>
         public DnnBusinessController()
         {
-            Publishing = new PagePublishing(Log);
             Log = new Log("DNN.BusCon", null, "starting the business controller");
+            Publishing = new PagePublishing(Log);
         }
 
         public int GetLatestVersion(int moduleId) => Publishing.GetLatestVersion(moduleId);
@@ -33,12 +33,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void PublishVersion(int moduleId, int version)
         {
-            Log.Add("publish");
+            Log.Add("publish m#{moduleId}, v:{version}");
             Publishing.Publish(moduleId, version);
 
             try
             {
-                Logging.LogToDnn("publishing", "ok", Log);
+                Logging.LogToDnn("Publishing", "ok", Log, force:true);
             }
             catch
             {
