@@ -18,9 +18,7 @@ namespace ToSic.SexyContent.Search
 {
     internal class SearchController: HasLog
     {
-        public SearchController(Log parentLog = null) : base("DNN.Search", parentLog)
-        {
-        }
+        public SearchController(Log parentLog = null) : base("DNN.Search", parentLog) { }
 
         /// <summary>
         /// Get search info for each dnn module containing 2sxc data
@@ -30,6 +28,8 @@ namespace ToSic.SexyContent.Search
         /// <returns></returns>
         public IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
         {
+            // always log with method, to ensure errors are cought
+            Log.Add(() => $"start search for mod#{moduleInfo.ModuleID}");
             var searchDocuments = new List<SearchDocument>();
             var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
 
@@ -39,7 +39,7 @@ namespace ToSic.SexyContent.Search
             //if (!zoneId.HasValue)
             //    return searchDocuments;
 
-            int? appId = new ZoneRuntime(zoneId, Log).DefaultAppId;// State.GetDefaultAppId(zoneId);
+            int? appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
 
             if (!isContentModule)
             {
@@ -49,7 +49,7 @@ namespace ToSic.SexyContent.Search
             }
 
             // new 2016-03-27
-            var mcb = new ModuleContentBlock(moduleInfo, parentLog: null);
+            var mcb = new ModuleContentBlock(moduleInfo, Log);
             var sexy = mcb.SxcInstance;
 
             // old 2016-03-27
@@ -143,10 +143,7 @@ namespace ToSic.SexyContent.Search
             return searchDocuments;
         }
 
-        private string StripHtmlAndHtmlDecode(string Text)
-        {
-            return HttpUtility.HtmlDecode(Regex.Replace(Text, "<.*?>", string.Empty));
-        }
+        private string StripHtmlAndHtmlDecode(string text) => HttpUtility.HtmlDecode(Regex.Replace(text, "<.*?>", string.Empty));
 
         /// <summary>
         /// Gets a string that represents all entities joined with a comma , separator
@@ -155,7 +152,7 @@ namespace ToSic.SexyContent.Search
         /// <param name="entity"></param>
         /// <param name="language"></param>
         /// <returns></returns>
-        private string GetJoinedAttributes(ToSic.Eav.Interfaces.IEntity entity, string language)
+        private string GetJoinedAttributes(Eav.Interfaces.IEntity entity, string language)
         {
             return String.Join(", ",
                 entity.Attributes.Where(x => x.Value.Type == "String" || x.Value.Type == "Number").Select(x => x.Value[language])

@@ -183,7 +183,7 @@ namespace ToSic.SexyContent
             var saveOpts = SaveOptions.Build(_zoneId);
             saveOpts.PreserveUntouchedAttributes = true;
 
-            var saveEnt = EntitySaver.CreateMergedForSaving(_contentGroupEntity, newEnt, saveOpts);
+            var saveEnt = new EntitySaver(Log).CreateMergedForSaving(_contentGroupEntity, newEnt, saveOpts);
 
             if (_versioningEnabled)
             {

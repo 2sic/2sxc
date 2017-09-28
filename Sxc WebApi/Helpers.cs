@@ -48,8 +48,7 @@ namespace ToSic.SexyContent.WebApi
             // check if we need an inner block
             if (request.Headers.Contains(cbidHeader)) { 
                 var cbidh = request.Headers.GetValues(cbidHeader).FirstOrDefault();
-                int cbid;
-                Int32.TryParse(cbidh, out cbid);
+                int.TryParse(cbidh, out var cbid);
                 if (cbid < 0)   // negative id, so it's an inner block
                     contentBlock = new EntityContentBlock(contentBlock, cbid, log);
             }

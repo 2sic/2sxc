@@ -8,6 +8,7 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
@@ -23,9 +24,9 @@ namespace ToSic.SexyContent
     {
         private readonly SxcInstance _sxcInstance;
 
-        public AppAndDataHelpers(SxcInstance sexy) : this(sexy, sexy.ModuleInfo) {}
+        public AppAndDataHelpers(SxcInstance sexy) : this(sexy, sexy.ModuleInfo, null) {}
 
-        public AppAndDataHelpers(SxcInstance sexy, ModuleInfo module): base("Sxc.AppHlp", sexy?.Log)
+        public AppAndDataHelpers(SxcInstance sexy, ModuleInfo module, Log parentLog): base("Sxc.AppHlp", parentLog ?? sexy?.Log)
         {
             // ModuleInfo module = sexy.ModuleInfo;
             // Init things than require module-info or similar, but not 2sxc

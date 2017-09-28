@@ -5,7 +5,7 @@ using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.DataSources
 {
-    public class App: Eav.DataSources.App, IAppData
+    public sealed class App: Eav.DataSources.App, IAppData
     {
         public App(Log parentLog = null)
         {
@@ -25,24 +25,21 @@ namespace ToSic.SexyContent.DataSources
             Dictionary<string, object> values, string userName = null)
         {
             Log.Add($"app create new entity of type:{contentTypeName}");
-            var x = DataController();
-            x.Create(contentTypeName, values);
+            DataController().Create(contentTypeName, values);
         }
 
         public void Update(int entityId, Dictionary<string, object> values,
             string userName = null)
         {
             Log.Add($"app update i:{entityId}");
-            var x = DataController();
-            x.Update(entityId, values);
+            DataController().Update(entityId, values);
         }
 
 
         public void Delete(int entityId, string userName = null)
         {
             Log.Add($"app delete i:{entityId}");
-            var x = DataController();
-            x.Delete(entityId);
+            DataController().Delete(entityId);
         }
  
     }
