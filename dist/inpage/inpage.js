@@ -219,7 +219,7 @@ $(function () {
                 },
                 code: function (settings, event, sxc) {
                     // todo - should refactor this to be a toolbarManager.contentBlock command
-                    sxc.manage._commands._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+                    sxc.manage._commands._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event, sxc);
                 }
             }),
 
@@ -589,12 +589,12 @@ $(function () {
             },
 
             // open a new dialog of the angular-ui
-            _openNgDialog: function (settings, event, closeCallback) {
+            _openNgDialog: function (settings, event, sxc /*, closeCallback*/) {
                 // the callback will handle events after closing the dialog
                 // and reload the in-page view w/ajax or page reload
                 var callback = function () {
                     $2sxc._contentBlock.reloadAndReInitialize(sxc);
-                    closeCallback();
+                    // 2017-09-29 2dm: no call of _openNgDialog seems to give a callback ATM closeCallback();
                 };
                 var link = engine._linkToNgDialog(settings); // the link contains everything to open a full dialog (lots of params added)
                 if (settings.inlineWindow)
@@ -898,6 +898,12 @@ $2sxc._contentBlock.manipulator = function (sxc) {
 
         return cbm.ajaxLoad(sxc, cbm.cUseExistingTemplate, !!preview)
             .then(function () {
+
+                // ToDo: tell Evoq that page has changed if it has changed (Ajax call)
+                // maybe check if already publish
+                // compare to HTML module
+                // if (publishing is required (FROM CONTENT BLOCK) and publish button not visible) show publish button
+
                 // 2017-09-02 2dm - believe this was meant to re-init the dialog manager, but it doesn't actually work
                 // must check for side-effects, which would need the manager to re-build the configuration
                 $2sxc._quickDialog.hide();
@@ -2688,7 +2694,7 @@ $(function () {
 
         toolbar.attr("group-count", btnGroups.length);
         return toolbar[0].outerHTML;
-    };
+    }
 })();
 // the toolbar manager is an internal helper
 // taking care of toolbars, buttons etc.
@@ -2951,7 +2957,7 @@ $(function () {
         btns.params = sharedParameters && (Array.isArray(sharedParameters) && sharedParameters[0]) || sharedParameters;
         if (!canDesign) btns.groups.splice(2, 1); // remove this menu
         return btns;
-    };
+    }
 })();
 // the default / initial buttons in a standard toolbar
 (function () {
