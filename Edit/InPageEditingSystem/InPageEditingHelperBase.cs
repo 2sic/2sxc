@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Web;
 using Newtonsoft.Json;
+using ToSic.Eav.Logging;
 using ToSic.SexyContent.Edit.Toolbar;
 
 namespace ToSic.SexyContent.Edit.InPageEditingSystem
 {
-    public class InPageEditingHelperBase : IInPageEditingSystem
+    public class InPageEditingHelperBase : HasLog, IInPageEditingSystem
     {
         private readonly string _jsonTemplate =
             "data-list-context='{{ `parent`: {0}, `field`: `{1}`, `type`: `{2}`, `guid`: `{3}`}}'".Replace("`", "\"");
 
         private readonly SxcInstance _sxcInstance;
 
-        internal InPageEditingHelperBase(SxcInstance sxc)
+        internal InPageEditingHelperBase(SxcInstance sxc) : base("Edt", sxc?.Log)
         {
             _sxcInstance = sxc;
         }
@@ -41,10 +42,11 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             string contentType = null, 
             Guid? newGuid = null)
         {
+            Log.Add("ctx attribs - enabled:{Enabled}");
             if (!Enabled) return null;
             Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes");
 
-            if (field == null) throw new Exception("need parameter field");
+            if (field == null) throw new Exception("need parameter 'field'");
 
             return new HtmlString(string.Format(
                 _jsonTemplate,
@@ -62,9 +64,11 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
         /// <param name="value"></param>
         /// <returns></returns>
         public HtmlString Attribute(string name, string value)
-        {
-            return !Enabled ? null : new HtmlString(name + "='" + value.Replace("'", "\\'") + "'");
-        }
+            // special notes: has trailing space to ensure attributes never "stick" together
+            // we also don't want to use {HttpUtility.HtmlAttributeEncode(value)...
+            // ...because it makes the html hard to work with when debugging
+            // so we just manually replace all apos to make sure it doesn't create invalid html
+            => !Enabled ? null : new HtmlString($" {name}='{value.Replace("'", "&apos;")}'");
 
         /// <summary>
         /// Generate an HTML attribute by converting the value to JSON 

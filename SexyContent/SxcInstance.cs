@@ -9,6 +9,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Installer;
@@ -237,18 +238,17 @@ namespace ToSic.SexyContent
 
                 #region Wrap it all up into a nice wrapper tag
                 var editInfos = JsonConvert.SerializeObject(renderHelp.GetClientInfosAll());
-                var isInnerContent = ContentBlock.ParentId != ContentBlock.ContentBlockId;
+                var editHelper = new InPageEditingHelper(this);
                 var startTag = !RenderWithDiv
                     ? ""
                     : $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
                       $" data-cb-id=\"{ContentBlock.ContentBlockId}\""
-                      +
-                      (RenderWithEditMetadata
-                          ? " data-edit-context=\'" + editInfos + "'"
-                          : "")
+                      + (RenderWithEditMetadata
+                          ? editHelper.Attribute("data-edit-context", editInfos)
+                          : null)
                       + ">\n";
-                var endTag = RenderWithDiv ? "\n</div>" : "";
-                string result = startTag + body + endTag;
+                var endTag = !RenderWithDiv ? "" : "\n</div>";
+                var result = startTag + body + endTag;
                 #endregion
 
                 return new HtmlString(result);

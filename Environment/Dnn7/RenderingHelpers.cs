@@ -56,7 +56,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             var root = "~/desktopmodules/tosic_sexycontent/";
             root = page.ResolveUrl(root);
             var breakCache = "?sxcver=" + Settings.Version;
-            var ext = (IsDebugUrl(page.Request) ? ".min.js" : ".js" + breakCache);
+            var ext = IsDebugUrl(page.Request) ? ".min.js" : ".js" + breakCache;
             var ver = Settings.Version.ToString();
 
             // add edit-mode CSS
@@ -149,9 +149,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         internal ClientInfosError(IContentBlock cb)
         {
             if (cb.DataIsMissing)
-            {
                 type = "DataIsMissing";
-            }
         }
     }
 
@@ -237,8 +235,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public int ParentFieldSortOrder;
         public bool PartOfPage;
 
-        // public bool DataIsMissing;
-
         internal ClientInfoContentBlock(IContentBlock contentBlock, string parentFieldName, int indexInField, PublishingMode versioningRequirements)
         {
             ShowTemplatePicker = contentBlock.ShowTemplateChooser;
@@ -248,8 +244,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
             ParentFieldSortOrder = indexInField;
             VersioningRequirements = versioningRequirements.ToString();
             PartOfPage = contentBlock.ParentId == contentBlock.ContentBlockId; // if the CBID is the moduleId, then it's part of page
-
-            // DataIsMissing = contentBlock.DataIsMissing;
         }
     };
 

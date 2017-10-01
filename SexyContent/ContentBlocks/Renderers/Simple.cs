@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
                 edit = new InPageEditingHelper(parent.SxcInstance);
 
             var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
-            var inner = (subItem == null) ? "": Render(parent.SxcInstance.ContentBlock, subItem.Entity, parent.SxcInstance.Log).ToString();
+            var inner = subItem == null ? "": Render(parent.SxcInstance.ContentBlock, subItem.Entity, parent.SxcInstance.Log).ToString();
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
