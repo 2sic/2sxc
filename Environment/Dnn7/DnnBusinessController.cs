@@ -58,7 +58,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public int RollBackVersion(int moduleId, int version)
         {
-            throw new NotImplementedException();
+            Log.Add("DNN tried to rollback version " + version + ", but 2sxc does not support this.");
+
+            // Return the currently published version, because this is what the module's state is after this operation
+            return Publishing.GetPublishedVersion(moduleId);
         }
 
         /// <summary>
