@@ -898,6 +898,10 @@ $2sxc._contentBlock.manipulator = function (sxc) {
 
         return cbm.ajaxLoad(sxc, cbm.cUseExistingTemplate, !!preview)
             .then(function () {
+                
+                if (dnn_tabVersioningEnabled) {
+                    dnn.ContentEditorManager.triggerChangeOnPageContentEvent();
+                }
 
                 // ToDo: tell Evoq that page has changed if it has changed (Ajax call)
                 // maybe check if already publish
@@ -911,6 +915,7 @@ $2sxc._contentBlock.manipulator = function (sxc) {
     };
 
 })();
+
 /* 
  * this is part of the content block manager
  */
