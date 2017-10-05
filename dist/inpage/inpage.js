@@ -57,100 +57,6 @@
         alert("starting upgrade. This could take a few minutes. You'll see an 'ok' when it's done. Please wait...");
     }
 })();
-// module & toolbar bootstrapping (initialize all toolbars after loading page)
-// this will run onReady...
-$(function () {
-    var initializedModules = [];
-    var openedTemplatePickerOnce = false;
-    var cancelledDialog = localStorage.getItem('cancelled-dialog');
-
-    if (cancelledDialog) localStorage.removeItem('cancelled-dialog');
-
-    initAllModules(true);
-
-    // watch for ajax reloads on edit or view-changes, to re-init the toolbars etc.
-    document.body.addEventListener("DOMSubtreeModified", function (event) {
-        initAllModules(false);
-    }, false);
-
-    return; // avoid side-effects
-
-    function initAllModules(isFirstRun) {
-        $("div[data-edit-context]").each(function () {
-            initModule(this, isFirstRun);
-        });
-        tryShowTemplatePicker();
-    }
-
-    /**
-     * Show the template picker if
-     * - template picker has not yet been opened
-     * - dialog has not been cancelled
-     * - only one uninitialized module on page
-     * @returns
-     */
-    function tryShowTemplatePicker() {
-        var uninitializedModules = $('.sc-uninitialized');
-        var module;
-
-        if (cancelledDialog || openedTemplatePickerOnce) return false;
-
-        // already showing a dialog
-        if ($2sxc._quickDialog.current !== null) return false;
-
-        // not exactly one uninitialized module
-        if (uninitializedModules.length !== 1) return false;
-
-        // show the template picker of this module
-        module = uninitializedModules.parent('div[data-edit-context]')[0];
-        $2sxc(module).manage.run('layout');
-        openedTemplatePickerOnce = true;
-    }
-
-    function initModule(module, isFirstRun) {
-
-        // check if module is already in the list of initialized modules
-        if (initializedModules.find(function (m) {
-                return m === module;
-            })) return false;
-        
-        // add to modules-list
-        initializedModules.push(module);
-        
-        var sxc = $2sxc(module);
-        
-        // check if the sxc must be re-created. This is necessary when modules are dynamically changed
-        // because the configuration may change, and that is cached otherwise, resulting in toolbars with wrong config
-        if (!isFirstRun) sxc = sxc.recreate(true);
-        
-        // check if we must show the glasses
-        // this must run even after first-run, because it can be added ajax-style
-        var wasEmpty = showGlassesButtonIfUninitialized(sxc);
-        
-        if (isFirstRun || !wasEmpty) $2sxc._toolbarManager.buildToolbars(module);
-
-        return true;
-    }
-
-    function showGlassesButtonIfUninitialized(sxc) {
-
-        // already initialized
-        if (sxc.manage._editContext.ContentGroup.TemplateId !== 0) return false;
-
-        // already has a glasses button
-        var tag = $($2sxc._manage.getTag(sxc));
-        if (tag.find(".sc-uninitialized").length !== 0) return false;
-
-        // note: title is added on mouseover, as the translation isn't ready at page-load
-        var btn = $('<div class="sc-uninitialized" onmouseover="this.title = $2sxc.translate(this.title)" title="InPage.NewElement"><div class="icon-sxc-glasses"></div></div>');
-        btn.on("click", function () {
-            sxc.manage.run("layout");
-        });
-
-        tag.append(btn);
-        return true;
-    }
-});
 (function() {
     $2sxc._commands = {};
 })();
@@ -3075,3 +2981,96 @@ $(function () {
 void this.loadResources(t)):t()},t.prototype.dir=function(e){e||(e=this.language);var t=["ar","shu","sqr","ssh","xaa","yhd","yud","aao","abh","abv","acm","acq","acw","acx","acy","adf","ads","aeb","aec","afb","ajp","apc","apd","arb","arq","ars","ary","arz","auz","avl","ayh","ayl","ayn","ayp","bbz","pga","he","iw","ps","pbt","pbu","pst","prp","prd","ur","ydd","yds","yih","ji","yi","hbo","men","xmn","fa","jpr","peo","pes","prs","dv","sam"];return t.indexOf(this.services.languageUtils.getLanguagePartFromCode(e))?"ltr":"rtl"},t.prototype.createInstance=function(){var e=arguments.length<=0||void 0===arguments[0]?{}:arguments[0],n=arguments[1];return new t(e,n)},t.prototype.cloneInstance=function(){var e=this,n=arguments.length<=0||void 0===arguments[0]?{}:arguments[0],o=arguments[1],r=new t(m["extends"]({},n,this.options,{isClone:!0}),o),i=["store","translator","services","language"];return i.forEach(function(t){r[t]=e[t]}),r},t}(w),H=new M;return H});
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define("i18nextXHRBackend",t):e.i18nextXHRBackend=t()}(this,function(){"use strict";function e(e){return a.call(r.call(arguments,1),function(t){if(t)for(var n in t)void 0===e[n]&&(e[n]=t[n])}),e}function t(e,t,n,i,a){if(i&&"object"===("undefined"==typeof i?"undefined":o["typeof"](i))){var r="",s=encodeURIComponent;for(var l in i)r+="&"+s(l)+"="+s(i[l]);i=r.slice(1)+(a?"":"&_t="+new Date)}try{var c=new(XMLHttpRequest||ActiveXObject)("MSXML2.XMLHTTP.3.0");c.open(i?"POST":"GET",e,1),t.crossDomain||c.setRequestHeader("X-Requested-With","XMLHttpRequest"),c.setRequestHeader("Content-type","application/x-www-form-urlencoded"),c.onreadystatechange=function(){c.readyState>3&&n&&n(c.responseText,c)},c.send(i)}catch(s){window.console&&console.log(s)}}function n(){return{loadPath:"/locales/{{lng}}/{{ns}}.json",addPath:"locales/add/{{lng}}/{{ns}}",allowMultiLoading:!1,parse:JSON.parse,crossDomain:!1,ajax:t}}var o={};o["typeof"]="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol?"symbol":typeof e},o.classCallCheck=function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")},o.createClass=function(){function e(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}return function(t,n,o){return n&&e(t.prototype,n),o&&e(t,o),t}}();var i=[],a=i.forEach,r=i.slice,s=function(){function t(e){var n=arguments.length<=1||void 0===arguments[1]?{}:arguments[1];o.classCallCheck(this,t),this.init(e,n),this.type="backend"}return o.createClass(t,[{key:"init",value:function(t){var o=arguments.length<=1||void 0===arguments[1]?{}:arguments[1];this.services=t,this.options=e(o,this.options||{},n())}},{key:"readMulti",value:function(e,t,n){var o=this.services.interpolator.interpolate(this.options.loadPath,{lng:e.join("+"),ns:t.join("+")});this.loadUrl(o,n)}},{key:"read",value:function(e,t,n){var o=this.services.interpolator.interpolate(this.options.loadPath,{lng:e,ns:t});this.loadUrl(o,n)}},{key:"loadUrl",value:function(e,t){var n=this;this.options.ajax(e,this.options,function(o,i){var a=i.status.toString();if(0===a.indexOf("5"))return t("failed loading "+e,!0);if(0===a.indexOf("4"))return t("failed loading "+e,!1);var r=void 0,s=void 0;try{r=n.options.parse(o)}catch(l){s="failed parsing "+e+" to json"}return s?t(s,!1):void t(null,r)})}},{key:"create",value:function(e,t,n,o){var i=this;"string"==typeof e&&(e=[e]);var a={};a[n]=o||"",e.forEach(function(e){var n=i.services.interpolator.interpolate(i.options.addPath,{lng:e,ns:t});i.options.ajax(n,i.options,function(e,t){},a)})}}]),t}();return s.type="backend",s});
 !function(t,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define("jqueryI18next",e):t.jqueryI18next=e()}(this,function(){"use strict";function t(t,a){function r(n,a,r){function i(t,n){return s.parseDefaultValueFromContent?e["extends"]({},t,{defaultValue:n}):t}if(0!==a.length){var o="text";if(0===a.indexOf("[")){var f=a.split("]");a=f[1],o=f[0].substr(1,f[0].length-1)}if(a.indexOf(";")===a.length-1&&(a=a.substr(0,a.length-2)),"html"===o)n.html(t.t(a,i(r,n.html())));else if("text"===o)n.text(t.t(a,i(r,n.text())));else if("prepend"===o)n.prepend(t.t(a,i(r,n.html())));else if("append"===o)n.append(t.t(a,i(r,n.html())));else if(0===o.indexOf("data-")){var l=o.substr("data-".length),d=t.t(a,i(r,n.data(l)));n.data(l,d),n.attr(o,d)}else n.attr(o,t.t(a,i(r,n.attr(o))))}}function i(t,n){var i=t.attr(s.selectorAttr);if(i||"undefined"==typeof i||i===!1||(i=t.text()||t.val()),i){var o=t,f=t.data(s.targetAttr);if(f&&(o=t.find(f)||t),n||s.useOptionsAttr!==!0||(n=t.data(s.optionsAttr)),n=n||{},i.indexOf(";")>=0){var l=i.split(";");a.each(l,function(t,e){""!==e&&r(o,e,n)})}else r(o,i,n);if(s.useOptionsAttr===!0){var d={};d=e["extends"]({clone:d},n),delete d.lng,t.data(s.optionsAttr,d)}}}function o(t){return this.each(function(){i(a(this),t);var e=a(this).find("["+s.selectorAttr+"]");e.each(function(){i(a(this),t)})})}var s=arguments.length<=2||void 0===arguments[2]?{}:arguments[2];s=e["extends"]({},n,s),a[s.tName]=t.t.bind(t),a[s.i18nName]=t,a.fn[s.handleName]=o}var e={};e["extends"]=Object.assign||function(t){for(var e=1;e<arguments.length;e++){var n=arguments[e];for(var a in n)Object.prototype.hasOwnProperty.call(n,a)&&(t[a]=n[a])}return t};var n={tName:"t",i18nName:"i18n",handleName:"localize",selectorAttr:"data-i18n",targetAttr:"i18n-target",optionsAttr:"i18n-options",useOptionsAttr:!1,parseDefaultValueFromContent:!0},a={init:t};return a});
+// module & toolbar bootstrapping (initialize all toolbars after loading page)
+// this will run onReady...
+$(function () {
+    var initializedModules = [];
+    var openedTemplatePickerOnce = false;
+    var cancelledDialog = localStorage.getItem('cancelled-dialog');
+
+    if (cancelledDialog) localStorage.removeItem('cancelled-dialog');
+
+    initAllModules(true);
+
+    // watch for ajax reloads on edit or view-changes, to re-init the toolbars etc.
+    document.body.addEventListener("DOMSubtreeModified", function (event) {
+        initAllModules(false);
+    }, false);
+
+    return; // avoid side-effects
+
+    function initAllModules(isFirstRun) {
+        $("div[data-edit-context]").each(function () {
+            initModule(this, isFirstRun);
+        });
+        tryShowTemplatePicker();
+    }
+
+    /**
+     * Show the template picker if
+     * - template picker has not yet been opened
+     * - dialog has not been cancelled
+     * - only one uninitialized module on page
+     * @returns
+     */
+    function tryShowTemplatePicker() {
+        var uninitializedModules = $('.sc-uninitialized');
+
+        if (cancelledDialog || openedTemplatePickerOnce) return false;
+
+        // already showing a dialog
+        if ($2sxc._quickDialog.current !== null) return false;
+
+        // not exactly one uninitialized module
+        if (uninitializedModules.length !== 1) return false;
+
+        // show the template picker of this module
+        var module = uninitializedModules.parent('div[data-edit-context]')[0];
+        $2sxc(module).manage.run('layout');
+        openedTemplatePickerOnce = true;
+    }
+
+    function initModule(module, isFirstRun) {
+
+        // check if module is already in the list of initialized modules
+        if (initializedModules.find(function (m) {
+                return m === module;
+            })) return false;
+        
+        // add to modules-list
+        initializedModules.push(module);
+        
+        var sxc = $2sxc(module);
+        
+        // check if the sxc must be re-created. This is necessary when modules are dynamically changed
+        // because the configuration may change, and that is cached otherwise, resulting in toolbars with wrong config
+        if (!isFirstRun) sxc = sxc.recreate(true);
+        
+        // check if we must show the glasses
+        // this must run even after first-run, because it can be added ajax-style
+        var wasEmpty = showGlassesButtonIfUninitialized(sxc);
+        
+        if (isFirstRun || !wasEmpty) $2sxc._toolbarManager.buildToolbars(module);
+
+        return true;
+    }
+
+    function showGlassesButtonIfUninitialized(sxc) {
+
+        // already initialized
+        if (sxc.manage._editContext.ContentGroup.TemplateId !== 0) return false;
+
+        // already has a glasses button
+        var tag = $($2sxc._manage.getTag(sxc));
+        if (tag.find(".sc-uninitialized").length !== 0) return false;
+
+        // note: title is added on mouseover, as the translation isn't ready at page-load
+        var btn = $('<div class="sc-uninitialized" onmouseover="this.title = $2sxc.translate(this.title)" title="InPage.NewElement"><div class="icon-sxc-glasses"></div></div>');
+        btn.on("click", function () {
+            sxc.manage.run("layout");
+        });
+
+        tag.append(btn);
+        return true;
+    }
+});
