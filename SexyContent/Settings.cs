@@ -68,6 +68,8 @@ namespace ToSic.SexyContent
                 "09.06.00", "09.06.01"
             };
 
+            // this is the last version which must run server-side change-code
+            // it's not sql-code, as the SqlDataProvider files are imported by DNN, not by our code
             internal const string LastVersionWithServerChanges = "08.11.00";
         }
 
