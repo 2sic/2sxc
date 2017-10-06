@@ -6,6 +6,62 @@
   </Header>
   <AttributeSets>
     
+	<AttributeSet StaticName="@string-default" Name="@string-default" Description="Default single or multi-line string input" Scope="System"  AlwaysShareConfiguration="true">
+      <Attributes>
+        <Attribute StaticName="RowCount" Type="Number" IsTitle="true">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="157ae4b4-013a-45df-8356-6440a931e3de">
+            <Value Key="Name" Value="RowCount" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="InputType" Value="number-default" Type="String" />
+          </Entity>
+        </Attribute>
+      </Attributes>
+    </AttributeSet>
+    <AttributeSet StaticName="@string-dropdown" Name="@string-dropdown" Description="Dropdown string-input configuration" Scope="System"  AlwaysShareConfiguration="true">
+      <Attributes>
+        <Attribute StaticName="DropdownValues" Type="String" IsTitle="true">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="90b606e5-f105-43ac-a612-8c544e50588a">
+            <Value Key="Name" Value="DropdownValues" Type="String">
+            </Value>
+            <Value Key="Notes" Value="&lt;p&gt;Type in the values, one per line and separate keys:values with a &quot;:&quot;. &lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Example 1&lt;/strong&gt;&lt;br /&gt;&#xA;(none):&#xA;&lt;br /&gt;&#xA;Left:l&#xA;&lt;br /&gt;&#xA;Right:r&#xA;&lt;br /&gt;&#xA;Top:t&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Example 2&lt;/strong&gt;&lt;br /&gt;&#xA;MIT License:MIT&lt;br /&gt;&#xA;GUN Licnese:GNU&lt;br /&gt;&#xA;GPL-3 with mentioning of Author:GPL-3-BY&lt;/p&gt;" Type="String">
+            </Value>
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean">
+            </Value>
+            <Value Key="Required" Value="False" Type="Boolean">
+            </Value>
+            <Value Key="DefaultValue" Value="" Type="String">
+            </Value>
+            <Value Key="InputType" Value="string-default" Type="String">
+            </Value>
+            <Value Key="Disabled" Value="False" Type="Boolean">
+            </Value>
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@String" AttributeSetName="@String" EntityGUID="ef9d3d36-afdd-4994-be14-701d42f175c3">
+            <Value Key="DropdownValues" Value="" Type="String">
+            </Value>
+            <Value Key="InputType" Value="" Type="String">
+            </Value>
+            <Value Key="ValidationRegEx" Value="" Type="String">
+            </Value>
+            <Value Key="RowCount" Value="" Type="Number">
+            </Value>
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String">
+            </Value>
+            <Value Key="ValidationAutomatic" Value="" Type="String">
+            </Value>
+            <Value Key="WysiwygHeight" Value="" Type="Number">
+            </Value>
+            <Value Key="WysiwygWidth" Value="" Type="Number">
+            </Value>
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@string-default" AttributeSetName="@string-default" EntityGUID="bd7b7c85-4eee-400e-beda-a30befb455e4">
+            <Value Key="RowCount" Value="12" Type="Number">
+            </Value>
+          </Entity>
+        </Attribute>
+      </Attributes>
+    </AttributeSet>
+	
     <AttributeSet StaticName="ContentType-InputType" Name="ContentType-InputType" Description="Input type definition for a content-type" Scope="System"  AlwaysShareConfiguration="true">
       <Attributes>
         <Attribute StaticName="Type" Type="String" IsTitle="true">
@@ -130,61 +186,6 @@
             <Value Key="ValidationAutomatic" Value="" Type="String" />
             <Value Key="WysiwygHeight" Value="" Type="Number" />
             <Value Key="WysiwygWidth" Value="" Type="Number" />
-          </Entity>
-        </Attribute>
-      </Attributes>
-    </AttributeSet>
-    <AttributeSet StaticName="@string-default" Name="@string-default" Description="Default single or multi-line string input" Scope="System"  AlwaysShareConfiguration="true">
-      <Attributes>
-        <Attribute StaticName="RowCount" Type="Number" IsTitle="true">
-          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="157ae4b4-013a-45df-8356-6440a931e3de">
-            <Value Key="Name" Value="RowCount" Type="String" />
-            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
-            <Value Key="InputType" Value="number-default" Type="String" />
-          </Entity>
-        </Attribute>
-      </Attributes>
-    </AttributeSet>
-    <AttributeSet StaticName="@string-dropdown" Name="@string-dropdown" Description="Dropdown string-input configuration" Scope="System"  AlwaysShareConfiguration="true">
-      <Attributes>
-        <Attribute StaticName="DropdownValues" Type="String" IsTitle="true">
-          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="90b606e5-f105-43ac-a612-8c544e50588a">
-            <Value Key="Name" Value="DropdownValues" Type="String">
-            </Value>
-            <Value Key="Notes" Value="&lt;p&gt;Type in the values, one per line and separate keys:values with a &quot;:&quot;. &lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Example 1&lt;/strong&gt;&lt;br /&gt;&#xA;(none):&#xA;&lt;br /&gt;&#xA;Left:l&#xA;&lt;br /&gt;&#xA;Right:r&#xA;&lt;br /&gt;&#xA;Top:t&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Example 2&lt;/strong&gt;&lt;br /&gt;&#xA;MIT License:MIT&lt;br /&gt;&#xA;GUN Licnese:GNU&lt;br /&gt;&#xA;GPL-3 with mentioning of Author:GPL-3-BY&lt;/p&gt;" Type="String">
-            </Value>
-            <Value Key="VisibleInEditUI" Value="True" Type="Boolean">
-            </Value>
-            <Value Key="Required" Value="False" Type="Boolean">
-            </Value>
-            <Value Key="DefaultValue" Value="" Type="String">
-            </Value>
-            <Value Key="InputType" Value="string-default" Type="String">
-            </Value>
-            <Value Key="Disabled" Value="False" Type="Boolean">
-            </Value>
-          </Entity>
-          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@String" AttributeSetName="@String" EntityGUID="ef9d3d36-afdd-4994-be14-701d42f175c3">
-            <Value Key="DropdownValues" Value="" Type="String">
-            </Value>
-            <Value Key="InputType" Value="" Type="String">
-            </Value>
-            <Value Key="ValidationRegEx" Value="" Type="String">
-            </Value>
-            <Value Key="RowCount" Value="" Type="Number">
-            </Value>
-            <Value Key="ValidationRegExJavaScript" Value="" Type="String">
-            </Value>
-            <Value Key="ValidationAutomatic" Value="" Type="String">
-            </Value>
-            <Value Key="WysiwygHeight" Value="" Type="Number">
-            </Value>
-            <Value Key="WysiwygWidth" Value="" Type="Number">
-            </Value>
-          </Entity>
-          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@string-default" AttributeSetName="@string-default" EntityGUID="bd7b7c85-4eee-400e-beda-a30befb455e4">
-            <Value Key="RowCount" Value="12" Type="Number">
-            </Value>
           </Entity>
         </Attribute>
       </Attributes>
