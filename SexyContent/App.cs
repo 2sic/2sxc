@@ -121,15 +121,15 @@ namespace ToSic.SexyContent
             var appAssignmentId = SystemRuntime.GetMetadataType(Eav.Constants.AppAssignmentName);
             var mds = DataSource.GetMetaDataSource(ZoneId, AppId);
             var appMetaData = mds
-                    .GetAssignedEntities(appAssignmentId, AppId,
+                    .GetMetadata(appAssignmentId, AppId,
                         SexyContent.Settings.AttributeSetStaticNameApps)
                     .FirstOrDefault();
             var appResources = mds
-                    .GetAssignedEntities(appAssignmentId, AppId,
+                    .GetMetadata(appAssignmentId, AppId,
                         SexyContent.Settings.AttributeSetStaticNameAppResources)
                     .FirstOrDefault();
             var appSettings = mds 
-                    .GetAssignedEntities(appAssignmentId, AppId,
+                    .GetMetadata(appAssignmentId, AppId,
                         SexyContent.Settings.AttributeSetStaticNameAppSettings)
                     .FirstOrDefault();
 

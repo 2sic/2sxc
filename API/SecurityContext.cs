@@ -7,21 +7,13 @@ using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Permissions;
 using DNNSec = DotNetNuke.Security.Membership;
 
-//<2sic modified>
-//namespace Confusionists.IWebLite
 namespace ToSic.SexyContent.API
-//</2sic modified>
 {
-    /// <summary>
-    /// I know, you'll say, "doesn't this go know the Microsoft code conventions?
-    /// They're annoying, capital letters are for classes only.
-    /// I use them for namespaces too so as not to annoy too many other people.
-    /// </summary>
     public class SecurityContext
     {
-        public const string MODULE_PERMISSION_VIEW = "VIEW";
-        public const string MODULE_PERMISSION_EDIT = "EDIT";
-        public const string MODULE_SETTING_KEY_ASMX = "asmx";
+        public const string ModulePermissionView = "VIEW";
+        public const string ModulePermissionEdit = "EDIT";
+        public const string ModuleSettingKeyAsmx = "asmx";
 
         #region Static methods... you want 'em you got 'em
 
@@ -170,7 +162,6 @@ namespace ToSic.SexyContent.API
         /// <summary>
         /// I throw an exception if I can't find the portalId!
         /// </summary>
-        /// <param name="context"></param>
         public SecurityContext(HttpContext context, int moduleId, int tabId)
         {
             this.tabId = tabId;
@@ -195,9 +186,9 @@ namespace ToSic.SexyContent.API
             var retVal = false;
             var moduleController = new ModuleController();
             var settings = moduleController.GetTabModuleSettings(moduleInfo.TabModuleID);
-            if (settings.ContainsKey(MODULE_SETTING_KEY_ASMX))
+            if (settings.ContainsKey(ModuleSettingKeyAsmx))
             {
-                var setting = settings[MODULE_SETTING_KEY_ASMX] as string;
+                var setting = settings[ModuleSettingKeyAsmx] as string;
                 if (setting.Length > 0) // else false, of course
                     retVal = asmxName.ToLower().Contains(setting.ToLower());
             }

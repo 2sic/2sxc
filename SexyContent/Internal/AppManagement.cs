@@ -43,9 +43,9 @@ namespace ToSic.SexyContent.Internal
             var appAssignment = SystemRuntime.GetMetadataType(Constants.AppAssignmentName);
             var scope = Settings.AttributeSetScopeApps;
             var mds = DataSource.GetMetaDataSource(zoneId, appId);
-            var appMetaData = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
-            var appResources = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
-            var appSettings = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
+            var appMetaData = mds.GetMetadata(appAssignment, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
+            var appResources = mds.GetMetadata(appAssignment, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
+            var appSettings = mds.GetMetadata(appAssignment, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
 
             // Get appName from cache - stop if it's a "Default" app
             var eavAppName = new ZoneRuntime(zoneId, parentLog).GetName(appId);// State.GetAppName(zoneId, appId); 
