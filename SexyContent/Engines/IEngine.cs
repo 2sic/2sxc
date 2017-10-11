@@ -13,12 +13,6 @@ namespace ToSic.SexyContent.Engines
         /// <summary>
         /// Initialize the Engine (pass everything needed for Render to it)
         /// </summary>
-        /// <param name="template"></param>
-        /// <param name="app"></param>
-        /// <param name="hostingModule"></param>
-        /// <param name="dataSource"></param>
-        /// <param name="instancePurposes"></param>
-        /// <param name="sxcInstance"></param>
         void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, Log parentLog);
 
         /// <summary>

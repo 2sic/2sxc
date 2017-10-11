@@ -33,7 +33,7 @@ namespace ToSic.SexyContent.WebApi
 
         // private bool _allowFullAccess;
         [HttpGet]
-        public  List<string> List(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
+        public new List<string> List(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {
             Log.Add($"list a#{appId}, global:{global}, path:{path}, mask:{mask}, withSub:{withSubfolders}, withFld:{returnFolders}");
             // set global access security if ok...

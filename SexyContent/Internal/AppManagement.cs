@@ -17,9 +17,6 @@ namespace ToSic.SexyContent.Internal
         /// <summary>
         /// Returns all Apps for the current zone
         /// </summary>
-        /// <param name="zoneId"></param>
-        /// <param name="includeDefaultApp"></param>
-        /// <param name="ownerPs"></param>
         /// <returns></returns>
         public static List<App> GetApps(int zoneId, bool includeDefaultApp, PortalSettings ownerPs, Log parentLog)
         {
@@ -35,12 +32,9 @@ namespace ToSic.SexyContent.Internal
         /// <summary>
         /// Create app-describing entity for configuration and add Settings and Resources Content Type
         /// </summary>
-        /// <param name="zoneId"></param>
-        /// <param name="appId"></param>
-        /// <param name="appName"></param>
         internal static void EnsureAppIsConfigured(int zoneId, int appId, Log parentLog, string appName = null)
         {
-            var appAssignment = SystemRuntime.GetMetadataType(Constants.AppAssignmentName);
+            var appAssignment = SystemRuntime.MetadataType(Constants.AppAssignmentName);
             var scope = Settings.AttributeSetScopeApps;
             var mds = DataSource.GetMetaDataSource(zoneId, appId);
             var appMetaData = mds.GetMetadata(appAssignment, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
@@ -94,9 +88,6 @@ namespace ToSic.SexyContent.Internal
         /// Will create a new app in the system and initialize the basic settings incl. the 
         /// app-definition
         /// </summary>
-        /// <param name="zoneId"></param>
-        /// <param name="appName"></param>
-        /// <param name="ownerPs"></param>
         /// <returns></returns>
         internal static void AddBrandNewApp(int zoneId, string appName, PortalSettings ownerPs, Log parentLog)
         {

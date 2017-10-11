@@ -118,7 +118,7 @@ namespace ToSic.SexyContent
                 AppManagement.EnsureAppIsConfigured(ZoneId, AppId, parentLog: Log); // make sure additional settings etc. exist
 
             // Get app-describing entity
-            var appAssignmentId = SystemRuntime.GetMetadataType(Eav.Constants.AppAssignmentName);
+            var appAssignmentId = SystemRuntime.MetadataType(Eav.Constants.AppAssignmentName);
             var mds = DataSource.GetMetaDataSource(ZoneId, AppId);
             var appMetaData = mds
                     .GetMetadata(appAssignmentId, AppId,

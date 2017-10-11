@@ -35,7 +35,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// <summary>
         /// get a full app-object for accessing data of the app from outside
         /// </summary>
-        /// <param name="appId"></param>
         /// <returns></returns>
         public static IApp App(int appId, bool versioningEnabled)
         {

@@ -230,21 +230,9 @@ namespace ToSic.SexyContent
         public dynamic Content { get; }
 
         /// <summary>
-        /// presentation item of the content-item. 
-        /// </summary>
-        //[Obsolete("please use Content.Presentation instead")]
-		//public dynamic Presentation { get; }
-
-        /// <summary>
         /// List item of the current view
         /// </summary>
 		public dynamic ListContent { get; }
-
-        /// <summary>
-        /// presentation of the list-item
-        /// </summary>
-        //[Obsolete("please use ListContent.Presentation instead")]
-        //public dynamic ListPresentation { get; }
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
         public List<Element> List { get; }

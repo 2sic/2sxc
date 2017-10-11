@@ -37,10 +37,12 @@ namespace ToSic.SexyContent.API
 
         }
 
-        /// <param name="moduleId"></param>
+        /// <param name="portalId"></param>
         /// <param name="tabId"></param>
+        /// <param name="moduleInfo"></param>
         /// <param name="permissionKey">You can use the constants, but for modules there are only
         /// those two</param>
+        /// <param name="user"></param>
         /// <returns></returns>
         public static bool canUserAccessModule(UserInfo user, int portalId, int tabId, ModuleInfo moduleInfo, string permissionKey)
         {
