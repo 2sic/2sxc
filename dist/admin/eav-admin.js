@@ -1683,7 +1683,7 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                         return;
                     }
 
-                    pipelineService.editDataSourcePart(dataSource);
+                    pipelineService.editDataSourcePart(dataSource, $scope.pipelineData.InstalledDataSources);
 
                 };
 
@@ -2886,7 +2886,7 @@ angular.module("EavServices")
 
         // Get the Definition of a DataSource
         svc.getDataSourceDefinitionProperty = function (model, dataSource) {
-        	var definition = $filter("filter")(model.InstalledDataSources, function (d) { return d.PartAssemblyAndType == dataSource.PartAssemblyAndType; })[0];
+        	var definition = $filter("filter")(model.InstalledDataSources, function (d) { return d.PartAssemblyAndType === dataSource.PartAssemblyAndType; })[0];
         	if (!definition)
         		throw "DataSource Definition not found: " + dataSource.PartAssemblyAndType;
         	return definition;
@@ -2992,10 +2992,14 @@ angular.module("EavServices")
 
 
             // Get the URL to configure a DataSource
-            editDataSourcePart: function(dataSource) {
-                var dataSourceFullName = $filter("typename")(dataSource.PartAssemblyAndType, "classFullName");
-                var contentTypeName = "|Config " + dataSourceFullName; // todo refactor centralize
-                var assignmentObjectTypeId = 4; // todo refactor centralize
+            editDataSourcePart: function (dataSource, allSources) {
+                var sourceDef = $filter("filter")(allSources, { PartAssemblyAndType: dataSource.PartAssemblyAndType }, true)[0];
+                console.log(sourceDef);
+                var contentTypeName = (sourceDef && sourceDef.ContentType)
+                    ? sourceDef.ContentType
+                    : "|Config " + $filter("typename")(dataSource.PartAssemblyAndType, "classFullName"); // todo refactor centralize
+
+                var assignmentObjectTypeId = 4; // todo refactor centralize this constant
                 var keyGuid = dataSource.EntityGuid;
 
                 // Query for existing Entity
