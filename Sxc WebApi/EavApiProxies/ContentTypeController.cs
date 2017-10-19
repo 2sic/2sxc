@@ -3,11 +3,12 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
     /// <summary>
-    /// Web API Controller for the Pipeline Designer UI
+    /// Web API Controller for Content-Type structures, fields etc.
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
     public class ContentTypeController : SxcApiController
@@ -63,7 +64,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         /// </summary>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<dynamic> GetFields(int appId, string staticName) 
+        public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName) 
             => _eavCtc.GetFields(appId, staticName);
 
 	    [HttpGet]
