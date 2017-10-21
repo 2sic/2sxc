@@ -37,7 +37,7 @@ namespace ToSic.SexyContent.Installer
 
                 if (!success)
                 {
-                    var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Text).ToArray());
+                    var messages = String.Join("\r\n- ", xmlImport.Messages.Select(p => p.Text).ToArray());
                     throw new Exception("The 2sxc module upgrade to 07.02.00 failed: " + messages);
                 }
             }
@@ -59,7 +59,7 @@ namespace ToSic.SexyContent.Installer
 
             if (!success)
             {
-                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Text).ToArray());
+                var messages = String.Join("\r\n- ", xmlImport.Messages.Select(p => p.Text).ToArray());
                 throw new Exception("The 2sxc module upgrade to 07.03.03-01 failed: " + messages);
             }
 
@@ -71,7 +71,7 @@ namespace ToSic.SexyContent.Installer
 
             if (!success)
             {
-                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Text).ToArray());
+                var messages = String.Join("\r\n- ", xmlImport.Messages.Select(p => p.Text).ToArray());
                 throw new Exception("The 2sxc module upgrade to 07.03.03-02 failed: " + messages);
             }
 
@@ -83,7 +83,7 @@ namespace ToSic.SexyContent.Installer
 
             if (!success)
             {
-                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Text).ToArray());
+                var messages = String.Join("\r\n- ", xmlImport.Messages.Select(p => p.Text).ToArray());
                 throw new Exception("The 2sxc module upgrade to 07.03.03-03 failed: " + messages);
             }
 

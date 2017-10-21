@@ -10,6 +10,7 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
     <ProjectGuid>{48BF7477-1B8F-4C2E-ABAA-540500885188}</ProjectGuid>
+    <Configurations>Debug;Release;Dbg Testing</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="BuildScripts\ModulePackage.Targets" />

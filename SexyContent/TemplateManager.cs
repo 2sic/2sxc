@@ -119,7 +119,7 @@ namespace ToSic.Eav.AppEngine
             var ctc = new ContentTypeController();
             var serializer = new Serializer();
 
-            return new AppRuntime(ZoneId, AppId).ContentTypes.FromScope(Settings.AttributeSetScope) 
+            return new AppRuntime(ZoneId, AppId, Log).ContentTypes.FromScope(Settings.AttributeSetScope) 
                 .Where(ct => templates.Any(t => t.ContentTypeStaticName == ct.StaticName)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>

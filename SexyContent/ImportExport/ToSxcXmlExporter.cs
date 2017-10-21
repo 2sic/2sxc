@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Logging.Simple;
@@ -12,14 +13,12 @@ namespace ToSic.SexyContent.ImportExport
         private readonly IFileManager _dnnFiles = FileManager.Instance;
         internal AdamManager AdamManager;
 
-        public override XmlExporter Init(int zoneId, int appId, bool appExport, string[] attrSetIds, string[] entityIds, Log parentLog)
+        public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, Log parentLog)
         {
- 
             var app = new App(zoneId, appId, PortalSettings.Current);
             AdamManager = new AdamManager(PortalSettings.Current.PortalId, app);
-            Constructor(zoneId, appId, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
+            Constructor(zoneId, appRuntime, /*appId, */app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
-            // do following things
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
             InitExportXDocument(PortalSettings.Current.DefaultLanguage, Settings.ModuleVersion);
 

@@ -2,7 +2,7 @@
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using static ToSic.Eav.WebApi.ContentImportController;
+using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {

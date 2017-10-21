@@ -103,10 +103,10 @@ namespace ToSic.SexyContent.Internal
         internal static void RemoveAppInDnnAndEav(IEnvironment env, int zoneId, int appId, PortalSettings ps, int userId, Log parentLog)
         {
             // check portal assignment and that it's not the default app
-            if (zoneId != /*new Environment.DnnEnvironment(parentLog)*/ env.ZoneMapper.GetZoneId(ps.PortalId))
+            if (zoneId != env.ZoneMapper.GetZoneId(ps.PortalId))
                 throw new Exception("This app does not belong to portal " + ps.PortalId);
 
-            if (appId == new ZoneRuntime(zoneId, parentLog).DefaultAppId)// State.GetDefaultAppId(zoneId))
+            if (appId == new ZoneRuntime(zoneId, parentLog).DefaultAppId)
                 throw new Exception("The default app of a zone cannot be removed.");
 
             // Delete folder in dnn
@@ -114,7 +114,7 @@ namespace ToSic.SexyContent.Internal
             if (!IsNullOrEmpty(sexyApp.Folder) && Directory.Exists(sexyApp.PhysicalPath))
                 Directory.Delete(sexyApp.PhysicalPath, true);
 
-            new ZoneManager(zoneId, parentLog).DeleteApp(appId); //State.AppDelete(zoneId, appId);
+            new ZoneManager(zoneId, parentLog).DeleteApp(appId);
         }
 
 
