@@ -313,7 +313,6 @@ namespace ToSic.SexyContent.WebApi.View
 
         #region Helpers to get things done
         // todo: probably should move to the new Eav.Apps section, but for that we must
-        // change the access to use the DB, not the cache...
         private void ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
         {
             Log.Add($"modify item list parent:{parentId}, field:{field}, action:{actionToPerform}");

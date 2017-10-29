@@ -35,7 +35,7 @@ namespace ToSic.SexyContent.WebApi
             var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
             var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath, Log);
-            var cultCount = /*new Environment.DnnEnvironment(Log)*/Env.ZoneMapper
+            var cultCount = Env.ZoneMapper
                 .CulturesWithState(appWrapper.App.OwnerPortalSettings.PortalId, appWrapper.App.ZoneId)
                 .Count(c => c.Active);
             return new
@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.WebApi
                 Guid = appWrapper.App.AppGuid,
                 Version = appWrapper.GetVersion(),
                 EntitiesCount = appWrapper.GetEntities().Count,
-                LanguagesCount = cultCount,// 2017-04-01 2dm from: appWrapper.GetActiveLanguages().Count(),
+                LanguagesCount = cultCount,
                 TemplatesCount = appWrapper.GetTemplates().Count(),
                 HasRazorTemplates = appWrapper.GetRazorTemplates().Any(),
                 HasTokenTemplates = appWrapper.GetTokenTemplates().Any(),
