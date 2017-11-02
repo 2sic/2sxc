@@ -6,12 +6,6 @@ namespace ToSic.SexyContent
     [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
     public class Element
     {
-
-        /// <summary>
-        /// The ContentGroupID of this Element
-        /// </summary>
-        // public int Id { get; set; }
-
         /// <summary>
         /// The DynamicContent object, as dynamic
         /// </summary>
@@ -22,11 +16,6 @@ namespace ToSic.SexyContent
         /// </summary>
         public dynamic Presentation { get; set; }
         
-        /// <summary>
-        /// The ViewConfig object, as dynamic / DynamicContent
-        /// </summary>
-        // public dynamic ViewConfig { get; set; }
-
         /// <summary>
         /// The EntityID of the ContentGroupItem
         /// </summary>

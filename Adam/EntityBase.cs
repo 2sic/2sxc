@@ -95,7 +95,7 @@ namespace ToSic.SexyContent.Adam
 
         public ToSic.Eav.Interfaces.IEntity GetFirstMetadataEntity(int id, bool isFolder)
         {
-            return App.Data.Metadata.GetAssignedEntities(Constants.MetadataForCmsObject, 
+            return App.Data.Metadata.GetMetadata(Constants.MetadataForCmsObject, 
                 (isFolder ? "folder:" : "file:") + id)
                 .FirstOrDefault();
         }

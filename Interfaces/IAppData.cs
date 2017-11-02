@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Interfaces;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.SexyContent.Interfaces
@@ -12,6 +13,6 @@ namespace ToSic.SexyContent.Interfaces
 
         void Delete(int entityId, string userName = null);
 
-        IMetaDataSource Metadata { get; }
+        IMetadataProvider Metadata { get; }
     }
 }

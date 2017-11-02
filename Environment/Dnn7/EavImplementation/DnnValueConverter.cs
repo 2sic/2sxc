@@ -14,11 +14,9 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
 {
     public class DnnValueConverter : IEavValueConverter
     {
-        private string hlnkType = "Hyperlink";
-
         public string Convert(ConversionScenario scenario, string type, string originalValue/*, PortalSettings portalInfo*/)
         {
-            if (type == hlnkType)
+            if (type == Eav.Constants.Hyperlink)
                 return scenario == ConversionScenario.GetFriendlyValue
                     ? TryToResolveDnnCodeToLink(originalValue)
                     : TryToResolveOneLinkToInternalDnnCode(originalValue);

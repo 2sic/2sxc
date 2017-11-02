@@ -17,9 +17,6 @@ namespace ToSic.SexyContent.Internal
         /// <summary>
         /// Returns all Apps for the current zone
         /// </summary>
-        /// <param name="zoneId"></param>
-        /// <param name="includeDefaultApp"></param>
-        /// <param name="ownerPs"></param>
         /// <returns></returns>
         public static List<App> GetApps(int zoneId, bool includeDefaultApp, PortalSettings ownerPs, Log parentLog)
         {
@@ -35,17 +32,14 @@ namespace ToSic.SexyContent.Internal
         /// <summary>
         /// Create app-describing entity for configuration and add Settings and Resources Content Type
         /// </summary>
-        /// <param name="zoneId"></param>
-        /// <param name="appId"></param>
-        /// <param name="appName"></param>
         internal static void EnsureAppIsConfigured(int zoneId, int appId, Log parentLog, string appName = null)
         {
-            var appAssignment = SystemRuntime.GetMetadataType(Constants.AppAssignmentName);
+            var appAssignment = SystemRuntime.MetadataType(Constants.AppAssignmentName);
             var scope = Settings.AttributeSetScopeApps;
             var mds = DataSource.GetMetaDataSource(zoneId, appId);
-            var appMetaData = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
-            var appResources = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
-            var appSettings = mds.GetAssignedEntities(appAssignment, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
+            var appMetaData = mds.GetMetadata(appAssignment, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
+            var appResources = mds.GetMetadata(appAssignment, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
+            var appSettings = mds.GetMetadata(appAssignment, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
 
             // Get appName from cache - stop if it's a "Default" app
             var eavAppName = new ZoneRuntime(zoneId, parentLog).GetName(appId);// State.GetAppName(zoneId, appId); 
@@ -94,9 +88,6 @@ namespace ToSic.SexyContent.Internal
         /// Will create a new app in the system and initialize the basic settings incl. the 
         /// app-definition
         /// </summary>
-        /// <param name="zoneId"></param>
-        /// <param name="appName"></param>
-        /// <param name="ownerPs"></param>
         /// <returns></returns>
         internal static void AddBrandNewApp(int zoneId, string appName, PortalSettings ownerPs, Log parentLog)
         {
@@ -112,10 +103,10 @@ namespace ToSic.SexyContent.Internal
         internal static void RemoveAppInDnnAndEav(IEnvironment env, int zoneId, int appId, PortalSettings ps, int userId, Log parentLog)
         {
             // check portal assignment and that it's not the default app
-            if (zoneId != /*new Environment.DnnEnvironment(parentLog)*/ env.ZoneMapper.GetZoneId(ps.PortalId))
+            if (zoneId != env.ZoneMapper.GetZoneId(ps.PortalId))
                 throw new Exception("This app does not belong to portal " + ps.PortalId);
 
-            if (appId == new ZoneRuntime(zoneId, parentLog).DefaultAppId)// State.GetDefaultAppId(zoneId))
+            if (appId == new ZoneRuntime(zoneId, parentLog).DefaultAppId)
                 throw new Exception("The default app of a zone cannot be removed.");
 
             // Delete folder in dnn
@@ -123,7 +114,7 @@ namespace ToSic.SexyContent.Internal
             if (!IsNullOrEmpty(sexyApp.Folder) && Directory.Exists(sexyApp.PhysicalPath))
                 Directory.Delete(sexyApp.PhysicalPath, true);
 
-            new ZoneManager(zoneId, parentLog).DeleteApp(appId); //State.AppDelete(zoneId, appId);
+            new ZoneManager(zoneId, parentLog).DeleteApp(appId);
         }
 
 

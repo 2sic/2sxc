@@ -105,10 +105,11 @@ namespace ToSic.SexyContent
 
         private string HtmlLog()
         {
-            var lg = new StringBuilder("<!-- 2sxc extensive log for " + ModuleId + "\n");
-            Log.Entries.ForEach(e => lg.AppendLine(e.Source + " - " + e.Message));
-            lg.Append("-->");
-            return lg.ToString();
+            return Log.Dump(" - ", "<!-- 2sxc extensive log for " + ModuleId + "\n", "-->");
+            //var lg = new StringBuilder("<!-- 2sxc extensive log for " + ModuleId + "\n");
+            //Log.Entries.ForEach(e => lg.AppendLine(e.Source + " - " + e.Message));
+            //lg.Append("-->");
+            //return lg.ToString();
         }
 
 

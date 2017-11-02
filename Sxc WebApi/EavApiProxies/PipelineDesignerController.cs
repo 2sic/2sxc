@@ -6,6 +6,7 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Apps.Parts;
 using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -37,7 +38,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		/// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
 		/// </summary>
 		[HttpGet]
-		public IEnumerable<object> GetInstalledDataSources() => _controller.GetInstalledDataSources();
+		public IEnumerable<QueryRuntime.DataSourceInfo> GetInstalledDataSources() => _controller.GetInstalledDataSources();
 
 	    /// <summary>
 	    /// Save Pipeline

@@ -28,7 +28,7 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"get all a#{appId}");
             var tm = TemplateManager(appId);
 
-	        var attributeSetList = new AppRuntime(tm.ZoneId, tm.AppId).ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
+	        var attributeSetList = new AppRuntime(tm.ZoneId, tm.AppId, Log).ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
             var templateList = tm.GetAllTemplates().ToList();
             Log.Add($"attrib list count:{attributeSetList.Count}, template count:{templateList.Count}");
             var templates = from c in templateList

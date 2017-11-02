@@ -19,7 +19,7 @@ namespace ToSic.SexyContent
 {
     /// <summary>
     /// This is an instance-context of a Content-Module. It basically encapsulates the instance-state, incl.
-    /// IDs of Zone & App, the App, EAV-Context, Template, Content-Groups (if available), Environment and OriginalModule (in case it's from another portal)
+    /// IDs of Zone and App, the App, EAV-Context, Template, Content-Groups (if available), Environment and OriginalModule (in case it's from another portal)
     /// It is needed for just about anything, because without this set of information
     /// it would be hard to get anything done .
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user

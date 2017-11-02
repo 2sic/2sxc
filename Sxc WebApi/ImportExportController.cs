@@ -35,7 +35,7 @@ namespace ToSic.SexyContent.WebApi
             var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
             var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath, Log);
-            var cultCount = /*new Environment.DnnEnvironment(Log)*/Env.ZoneMapper
+            var cultCount = Env.ZoneMapper
                 .CulturesWithState(appWrapper.App.OwnerPortalSettings.PortalId, appWrapper.App.ZoneId)
                 .Count(c => c.Active);
             return new
@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.WebApi
                 Guid = appWrapper.App.AppGuid,
                 Version = appWrapper.GetVersion(),
                 EntitiesCount = appWrapper.GetEntities().Count,
-                LanguagesCount = cultCount,// 2017-04-01 2dm from: appWrapper.GetActiveLanguages().Count(),
+                LanguagesCount = cultCount,
                 TemplatesCount = appWrapper.GetTemplates().Count(),
                 HasRazorTemplates = appWrapper.GetRazorTemplates().Any(),
                 HasTokenTemplates = appWrapper.GetTokenTemplates().Any(),
@@ -60,7 +60,7 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{UserInfo.IsSuperUser}");
             var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
-            var contentTypes = new AppRuntime(appWrapper.App).ContentTypes.FromScope(scope);
+            var contentTypes = new AppRuntime(appWrapper.App, Log).ContentTypes.FromScope(scope);
             var entities = appWrapper.GetEntities();
             var templates = appWrapper.GetTemplates();
 
@@ -139,8 +139,10 @@ namespace ToSic.SexyContent.WebApi
 
             var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
 
+            var appRuntime = new AppRuntime(appId, Log);
+
             var fileName = $"2sxcContentExport_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}.xml";
-            var fileXml = new ToSxcXmlExporter().Init(zoneId, appId, false,
+            var fileXml = new ToSxcXmlExporter().Init(zoneId, appId, appRuntime, false,
                 contentTypeIdsString?.Split(';') ?? new string[0],
                 entityIdsString?.Split(';') ?? new string[0],
                 Log
@@ -222,7 +224,7 @@ namespace ToSic.SexyContent.WebApi
                     var xmlImport = new XmlImportWithFiles(Log, PortalSettings.DefaultLanguage, /*UserIdentity.CurrentUserIdentityToken,*/ allowSystemChanges);
                     var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
                     result.Succeeded = xmlImport.ImportXml(zoneId, appId, xmlDocument);
-                    result.Messages = xmlImport.ImportLog;
+                    result.Messages = xmlImport.Messages;
                 }
             }
             return result;

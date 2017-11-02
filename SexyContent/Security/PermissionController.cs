@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.Security
                 if (_permissionList == null)
                 {
                     var ds = DataSource.GetMetaDataSource(ZoneId, AppId);
-                    _permissionList = ds.GetAssignedEntities(AssignmentObjectId, TypeGuid, ContentTypeName);
+                    _permissionList = ds.GetMetadata(AssignmentObjectId, TypeGuid, ContentTypeName);
                 }
                 return _permissionList;
             }

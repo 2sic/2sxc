@@ -1,0 +1,35 @@
+﻿-- Make sure code-upgrade to 07.00.03 has finished before continuing upgrade
+-- This is done by checking existence of attribute-set PermissionConfiguration
+IF NOT EXISTS (SELECT * FROM ToSIC_EAV_AttributeSets WHERE StaticName = 'PermissionConfiguration')
+BEGIN
+	RAISERROR(N'It looks like the last upgrade has not finished yet. Please insert 2sxc on a page to check the status. Read more: http://2sxc.org/en/help?tag=upgrade ****************************************************************************************************************************************************************************************************************************************************************************************************************************************************', 16, 1)
+	RETURN
+END
+
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+-- add AppId column, nullable at first
+ALTER TABLE dbo.ToSIC_EAV_Entities ADD AppId int NULL;  
+ALTER TABLE dbo.ToSIC_EAV_Entities ADD ContentType nvarchar(250) NULL
+
+/* wrap as exec (not tested yet) to ensure it runs, even though AppId isn't ready yet */
+EXEC('
+UPDATE dbo.ToSIC_EAV_Entities
+Set dbo.ToSIC_EAV_Entities.AppId = dbo.ToSIC_EAV_AttributeSets.AppId
+FROM   dbo.ToSIC_EAV_AttributeSets
+WHERE  dbo.ToSIC_EAV_Entities.AttributeSetID = dbo.ToSIC_EAV_AttributeSets.AttributeSetId;
+
+ALTER TABLE dbo.ToSIC_EAV_Entities
+ADD CONSTRAINT FK_ToSIC_EAV_Entities_ToSIC_EAV_Apps
+FOREIGN KEY (AppId) REFERENCES ToSIC_EAV_Apps(AppId);
+
+ALTER TABLE dbo.ToSIC_EAV_Entities ALTER COLUMN AppId INTEGER NOT NULL
+');
+
+COMMIT TRANSACTION SexyContentUpdate;
+
+
+--ROLLBACK TRANSACTION SexyContentUpdate;

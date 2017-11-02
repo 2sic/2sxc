@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.EAVExtensions
         // 2017-06-13 2dm - try to disable this - I assume it's only used internally
         //public int AssignmentObjectTypeId => _baseEntity.Metadata.TargetType;
 
-        public IMetadata Metadata => _baseEntity.Metadata;
+        public IMetadataFor MetadataFor => _baseEntity.MetadataFor;
 
         public Dictionary<string, IAttribute> Attributes => _baseEntity.Attributes;
         public IContentType Type => _baseEntity.Type;

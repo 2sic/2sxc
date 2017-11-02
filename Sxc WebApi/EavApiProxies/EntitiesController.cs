@@ -8,7 +8,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Formats;
@@ -255,7 +254,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		/// </summary>
 		[HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IContentType GetContentType(string contentType, int appId) 
+        public ContentTypeInfo GetContentType(string contentType, int appId) 
             => new Eav.WebApi.ContentTypeController().GetSingle(appId, contentType, null);
 
 	    #endregion

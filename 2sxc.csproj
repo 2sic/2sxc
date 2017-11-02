@@ -137,6 +137,7 @@
     <Compile Include="Environment\Dnn7\PagePublishing_ModuleSettings.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing.cs" />
     <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
+    <Compile Include="Environment\DnnRuntime.cs" />
     <Compile Include="SexyContent\ContentBlocks\Renderers\InTextContentBlocks.cs" />
     <Compile Include="DnnWebForms\Helpers\DnnLinkHelper.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
@@ -281,6 +282,7 @@
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".data\ContentTypes\y48d849d6-b83d-4001-96e5-79da0833e84e.json" />
     <Content Include=".gitignore" />
     <Content Include="Administration\Export.js" />
     <Content Include="API\Services.asmx" />
@@ -357,6 +359,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.SqlDataSource.json" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>
@@ -375,6 +378,17 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'debug eav only|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DocumentationFile>..\..\bin\ToSic.SexyContent.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dbg Testing|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
