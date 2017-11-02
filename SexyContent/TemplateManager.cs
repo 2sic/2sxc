@@ -124,7 +124,7 @@ namespace ToSic.Eav.AppEngine
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
                 {
-                    var metadata = ct.MetadataItems.FirstOrDefault();// ctc.GetMetadata((ContentType)ct, mdCache);
+                    var metadata = ct.Metadata.FirstOrDefault();
                     return new ContentTypeUiInfo {
                         StaticName = ct.StaticName,
                         Name = ct.Name,

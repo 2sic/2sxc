@@ -13,6 +13,7 @@ BEGIN TRANSACTION SexyContentUpdate;
 
 -- add AppId column, nullable at first
 ALTER TABLE dbo.ToSIC_EAV_Entities ADD AppId int NULL;  
+ALTER TABLE dbo.ToSIC_EAV_Entities ADD ContentType nvarchar(250) NULL
 
 /* wrap as exec (not tested yet) to ensure it runs, even though AppId isn't ready yet */
 EXEC('

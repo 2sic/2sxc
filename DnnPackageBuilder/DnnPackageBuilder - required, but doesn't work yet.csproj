@@ -29,7 +29,6 @@
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.Persistence.EFC11\ToSic.Eav.Persistence.Efc.csproj" />
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.Repository.Efc\ToSic.Eav.Repository.Efc.csproj" />
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.Tokens\ToSic.Eav.TokenEngine.csproj" />
-    <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj" />
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
   </ItemGroup>
   <ItemGroup>
