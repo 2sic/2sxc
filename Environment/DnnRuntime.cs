@@ -4,7 +4,7 @@ using ToSic.Eav.ImportExport.Persistence.File;
 
 namespace ToSic.SexyContent.Environment
 {
-    public class DnnRuntime: Runtime
+    public class DnnRuntime : Runtime
     {
         public DnnRuntime() : base("Dnn.Runtim")
         {
