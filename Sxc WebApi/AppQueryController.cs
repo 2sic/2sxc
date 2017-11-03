@@ -66,7 +66,7 @@ namespace ToSic.SexyContent.WebApi
 
             // ensure the queries can be executed (needs configuration provider, usually given in SxcInstance, but we don't hav that here)
             var config = DataSources.ConfigurationProvider.GetConfigProviderForModule(0, _queryApp, null);
-            _queryApp.InitData(false, new Environment.Dnn7.PagePublishing(Log).IsEnabled(ActiveModule.ModuleID), config);
+            _queryApp.InitData(false, false, config);
             _useModuleAndCheckModulePermissions = false;    // disable module level permission check, as there is no module which can give more permissions
 
             // now just run the default query check and serializer
