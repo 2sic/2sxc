@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Attributes;
 using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent.DataSources
 {
 	[PipelineDesigner]
+    [DataSourceProperties(Type = DataSourceType.Source)]
     public sealed class ModuleDataSource : BaseDataSource
     {
         public override string LogId => "DS.Module";
@@ -106,7 +108,7 @@ namespace ToSic.SexyContent.DataSources
 
 	    private IDictionary<int, IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity, bool isListHeader)
 	    {
-	        Log.Add($"get stream content⋮{content.Count}, demo#{contentDemoEntity?.EntityId}, present⋮{presentation.Count}, presDemo#{presentationDemoEntity?.EntityId}, header:{isListHeader}");
+	        Log.Add($"get stream content⋮{content.Count}, demo#{contentDemoEntity?.EntityId}, present⋮{presentation?.Count}, presDemo#{presentationDemoEntity?.EntityId}, header:{isListHeader}");
             try
             {
                 var entitiesToDeliver = new Dictionary<int, IEntity>();

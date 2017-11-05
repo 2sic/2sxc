@@ -14,7 +14,7 @@
 	}
 
 .dataSource {
-	height: 100px;
+	height: 50px;
 	transition: box-shadow 0.15s ease-in 0s;
 	min-width: 190px;
 	border: 1px solid #346789;
@@ -23,7 +23,9 @@
 	-webkit-box-shadow: 2px 2px 19px #aaa;
 	-moz-box-shadow: 2px 2px 19px #aaa;
 	-moz-border-radius: 0.5em;
-	border-radius: 0.5em;
+	/* border-radius: 0.5em; */
+    border-top-left-radius: 0.8em;
+    border-bottom-right-radius: 0.8em;
 	filter: alpha(opacity=80);
 	text-align: center;
 	z-index: 20;
@@ -56,7 +58,7 @@
 	}
 
 	.dataSource .name {
-		margin-top: 25px;
+		margin-top: 2px;
 		font-weight: bold;
 	}
 
@@ -65,38 +67,64 @@
 	}
 
 	.dataSource .typename {
-		font-size: 0.8em;
+		font-size: 1em;
+	    background: white;
+	    opacity: 0.8;
+	    z-index: 100;
+	    padding-top:25px;
 		display: none;
 	}
 
 	.dataSource .delete {
 		display: none;
 		position: absolute;
-		top: 0;
-		right: 0;
-		width: 16px;
-		height: 16px;
+	    color: #aaaaaa;
+	    left: 0;
+		top: 32px;
+		/*right: 0;*/
 	}
 
 	.dataSource .configure {
+	    display: none;
 		position: absolute;
 		top: 0;
+		left: 0;
+	}
+
+	.dataSource .type-info {
+		position: absolute;
+		top: 10px;
 		left: 0;
 		padding: 3px;
 		font-size: large;
 	}
 
-	.dataSource:hover .delete, .dataSource:hover .typename {
-		display: block;
-	}
+    .dataSource .show-hover-inline {
+        display: none;
+    }
+
+    .dataSource:hover .show-hover-inline {
+        display: inline-block;
+    }
+
+    /* show all hidden elements */
+    .dataSource:hover .configure,
+    .dataSource:hover .delete,
+    .dataSource:hover .typename,
+    .dataSource:hover .add-endpoint {
+        display: block;
+    }
 
 
 .sourceEndpoint:after, .targetEndpoint:after {
 	font-family: 'Glyphicons Halflings';
-	content: "\e133";
+	/*content: "\e133";*/
+	/*content: "\e113"; */
+    content: "\e253"; 
 	color: #000;
-	font-size: 18px;
-	background-color: #fff;
+	/*font-size: 18px;*/
+	font-size: 10px;
+	/*background-color: #fff;*/
 	border-radius: 10px;
 	width: 20px;
 	display: inline-block;
@@ -106,6 +134,10 @@
 .jsplumb-endpoint, .endpointTargetLabel, .endpointSourceLabel {
 	z-index: 21;
 	cursor: pointer;
+}
+
+.sourceEndpoint.jsplumb-hover, .targetEndpoint.jsplumb-hover {
+    z-index: 101;
 }
 
 /* The endpoint needs a round radius, because otherwise the hover won't look good '*/
@@ -127,11 +159,11 @@
 
 .endpointTargetLabel, .endpointSourceLabel {
 	background-color: white;
-	padding: 0.4em;
+	/*padding: 0.4em;*/
 	font: 12px sans-serif;
 	color: #444;
 	/*z-index: 20;*/
-	border: 1px dotted gray;
+	/*border: 1px dotted gray;*/
 	opacity: 0.8;
 	filter: alpha(opacity=80);
 	cursor: pointer;
@@ -139,9 +171,10 @@
 
 .endpointSourceLabel.jsplumb-hover, .endpointTargetLabel.jsplumb-hover {
 	background-color: #5C96BC;
+    padding: 0.4em;
 	color: white;
 	border: 1px solid white;
-	/*z-index: 26;*/
+	z-index: 100;
 	opacity: 1;
 }
 
@@ -156,21 +189,21 @@
 	text-align: center;
 }
 
-.ep {
-	position: absolute;
-	bottom: 42%;
-	right: 5px;
-	width: 1em;
-	height: 1em;
-	cursor: pointer;
-	font-size: large;
-	color: orange;
+.add-endpoint {
+    position: absolute;
+    top: -15px;
+    right: 5px;
+    width: 1em;
+    height: 1em;
+    cursor: pointer;
+    font-size: large;
+    color: orange;
+    display: none
 }
 
-	.ep:hover {
-		color: #D98D00;
-	}
-
+.add-endpoint:hover {
+    color: #D98D00;
+}
 
 .noselect {
     cursor: default;
