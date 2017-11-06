@@ -23,7 +23,6 @@
 	-webkit-box-shadow: 2px 2px 19px #aaa;
 	-moz-box-shadow: 2px 2px 19px #aaa;
 	-moz-border-radius: 0.5em;
-	/* border-radius: 0.5em; */
     border-top-left-radius: 0.8em;
     border-bottom-right-radius: 0.8em;
 	filter: alpha(opacity=80);
@@ -46,10 +45,6 @@
 		filter: alpha(opacity=60);
 	}
 
-/*.dataSource.jsplumb-dragged {
-	z-index: 27;
-}*/
-
 	.dataSource .name, .dataSource .description {
 		display: inline-block;
 		max-width: 215px;
@@ -66,6 +61,11 @@
 		font-size: 0.8em;
 	}
 
+    .dataSource .description i, 
+    .dataSource .name i {
+        font-size: xx-small;
+    }
+
 	.dataSource .typename {
 		font-size: 1em;
 	    background: white;
@@ -81,7 +81,6 @@
 	    color: #aaaaaa;
 	    left: 0;
 		top: 32px;
-		/*right: 0;*/
 	}
 
 	.dataSource .configure {
@@ -117,18 +116,15 @@
 
 
 .sourceEndpoint:after, .targetEndpoint:after {
-	font-family: 'Glyphicons Halflings';
-	/*content: "\e133";*/
-	/*content: "\e113"; */
-    content: "\e253"; 
-	color: #000;
-	/*font-size: 18px;*/
-	font-size: 10px;
-	/*background-color: #fff;*/
-	border-radius: 10px;
-	width: 20px;
-	display: inline-block;
-	text-align: center;
+    font-family: 'app-icons';
+    content: "\e856";
+    margin-top: -10px;
+    color: #000;
+    font-size: 16px;
+    border-radius: 10px;
+    width: 20px;
+    display: inline-block;
+    text-align: center;
 }
 
 .jsplumb-endpoint, .endpointTargetLabel, .endpointSourceLabel {
@@ -139,6 +135,7 @@
 .sourceEndpoint.jsplumb-hover, .targetEndpoint.jsplumb-hover {
     z-index: 101;
 }
+
 
 /* The endpoint needs a round radius, because otherwise the hover won't look good '*/
 .jsplumb-endpoint {
@@ -159,11 +156,8 @@
 
 .endpointTargetLabel, .endpointSourceLabel {
 	background-color: white;
-	/*padding: 0.4em;*/
 	font: 12px sans-serif;
 	color: #444;
-	/*z-index: 20;*/
-	/*border: 1px dotted gray;*/
 	opacity: 0.8;
 	filter: alpha(opacity=80);
 	cursor: pointer;

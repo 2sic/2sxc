@@ -32,10 +32,6 @@ namespace ToSic.SexyContent.DataSources
                               .SxcInstance 
                               ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
-                //var provider = ConfigurationProvider as SxcValueCollectionProvider;
-                //_sxcContext = provider?.SxcInstance;
-                //if (provider == null)
-                //    throw new Exception("SxcContent is still null - can't access the SxcContent before initializing it");
                 return _sxcContext;
             }
         }
@@ -69,8 +65,6 @@ namespace ToSic.SexyContent.DataSources
                     var previewTemplateGuid = res.Item2;
                     _contentGroup = cgm.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid); 
 
-                    //_contentGroup = new ContentGroupManager(ZoneId, AppId, SxcContext.Environment.Permissions.UserMayEditContent, new Environment.Dnn7.PagePublishing().IsVersioningEnabled(ModuleId.Value))
-                    //    .GetContentGroupForModule(ModuleId.Value, tabId);
                 }
                 return _contentGroup;
             }
@@ -87,19 +81,15 @@ namespace ToSic.SexyContent.DataSources
         #region Cached properties for Content, Presentation etc. --> not necessary, as each stream auto-caches
         private IDictionary<int, IEntity> _content;
 
-        private IDictionary<int, IEntity> GetContent() => _content ?? (_content =
-                                                              GetStream(ContentGroup.Content,
-                                                                  Template.ContentDemoEntity, 
-                                                                  ContentGroup.Presentation,
-                                                                  Template.PresentationDemoEntity, false));
+        private IDictionary<int, IEntity> GetContent()
+            => _content ?? (_content = GetStream(ContentGroup.Content, Template.ContentDemoEntity,
+                   ContentGroup.Presentation, Template.PresentationDemoEntity, false));
 
         private IDictionary<int, IEntity> _listContent;
 
-        private IDictionary<int, IEntity> GetListContent() => _listContent ?? (_listContent =
-                                                                  GetStream(ContentGroup.ListContent,
-                                                                      Template.ListContentDemoEntity,
-                                                                      ContentGroup.ListPresentation,
-                                                                      Template.ListPresentationDemoEntity, true));
+        private IDictionary<int, IEntity> GetListContent()
+            => _listContent ?? (_listContent = GetStream(ContentGroup.ListContent, Template.ListContentDemoEntity,
+                   ContentGroup.ListPresentation, Template.ListPresentationDemoEntity, true));
 
         #endregion
 
