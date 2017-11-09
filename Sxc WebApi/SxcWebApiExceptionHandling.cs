@@ -19,8 +19,13 @@ namespace ToSic.SexyContent.WebApi
             {
                 if (context.Request?.Properties.ContainsKey(Constants.EavLogKey) ?? false)
                 {
-                    var log = context.Request.Properties[Constants.EavLogKey] as Log;
-                    var dnnContext = context.Request.Properties[Constants.DnnContextKey] as DnnHelper;
+                    // must to ContainsKey checks, otherwise we get too many errors which is a problem while debugging
+                    var log = context.Request.Properties.ContainsKey(Constants.EavLogKey)
+                        ? context.Request.Properties[Constants.EavLogKey] as Log
+                        : null;
+                    var dnnContext = context.Request.Properties.ContainsKey(Constants.DnnContextKey) 
+                        ? context.Request.Properties[Constants.DnnContextKey] as DnnHelper
+                        : null;
                     Environment.Dnn7.Logging.LogToDnn("2sxc-Api", "Auto-Log Exception", log, dnnContext, force: true);
                 }
                 else

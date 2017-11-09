@@ -359,7 +359,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.SqlDataSource.json" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>

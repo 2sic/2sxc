@@ -16,7 +16,7 @@
 .dataSource {
 	height: 50px;
 	transition: box-shadow 0.15s ease-in 0s;
-	min-width: 190px;
+	min-width: 250px;
 	border: 1px solid #346789;
 	box-shadow: 2px 2px 19px #aaa;
 	-o-box-shadow: 2px 2px 19px #aaa;
@@ -48,7 +48,7 @@
 	.dataSource .name, .dataSource .description {
 		display: inline-block;
 		max-width: 215px;
-		max-height: 14px;
+		max-height: 16px;
 		overflow: hidden;
 	}
 
@@ -79,9 +79,17 @@
 		display: none;
 		position: absolute;
 	    color: #aaaaaa;
-	    left: 0;
+	    right: 0;
 		top: 32px;
 	}
+
+    .dataSource .help {
+        display: none;
+        position: absolute;
+        color: #aaaaaa;
+        left: 0;
+        top: 32px;
+    }
 
 	.dataSource .configure {
 	    display: none;
@@ -109,6 +117,7 @@
     /* show all hidden elements */
     .dataSource:hover .configure,
     .dataSource:hover .delete,
+    .dataSource:hover .help,
     .dataSource:hover .typename,
     .dataSource:hover .add-endpoint {
         display: block;

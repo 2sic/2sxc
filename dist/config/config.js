@@ -63,7 +63,7 @@ if (window.angular) // needed because the file is also included in older non-ang
                         in: ["ListContent", "Default"],
                         name: "2sxc Target (View or API)",
                         description: "The template/script which will show this data",
-                        visualDesignerData: { Top: 20, Left: 420 }
+                        visualDesignerData: { Top: 20, Left: 200, Width: 700 }
                     },
                     defaultPipeline: {
                         dataSources: [

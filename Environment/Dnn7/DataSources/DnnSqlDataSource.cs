@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.DataSources;
-using ToSic.Eav.Types.Attributes;
+using ToSic.Eav.DataSources.Attributes;
 
 namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 {
 	[PipelineDesigner]
-	[ExpectsDataOfType("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource")]
+	[DataSourceProperties(Type = DataSourceType.Source, DynamicOut = true,
+	    ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnSqlDataSource")]
 	public class DnnSqlDataSource : SqlDataSource
 	{
 		public DnnSqlDataSource()
