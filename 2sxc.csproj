@@ -282,7 +282,6 @@
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".data\ContentTypes\y48d849d6-b83d-4001-96e5-79da0833e84e.json" />
     <Content Include=".gitignore" />
     <Content Include="Administration\Export.js" />
     <Content Include="API\Services.asmx" />
@@ -359,6 +358,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".data\ContentTypes\json.y48d849d6-b83d-4001-96e5-79da0833e84e.json" />
+    <Content Include=".data\ContentTypes\System.c76901b5-0345-4866-9fa3-6208de7f8543.json" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>
