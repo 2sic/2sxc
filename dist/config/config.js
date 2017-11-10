@@ -70,15 +70,15 @@ if (window.angular) // needed because the file is also included in older non-ang
                             {
                                 entityGuid: "unsaved1",
                                 partAssemblyAndType: "ToSic.Eav.DataSources.Caches.ICache, ToSic.Eav.DataSources",
-                                visualDesignerData: { Top: 800, Left: 440 }
+                                visualDesignerData: { Top: 440, Left: 440 }
                             }, {
                                 entityGuid: "unsaved2",
                                 partAssemblyAndType: "ToSic.Eav.DataSources.PublishingFilter, ToSic.Eav.DataSources",
-                                visualDesignerData: { Top: 620, Left: 440 }
+                                visualDesignerData: { Top: 300, Left: 440 }
                             }, {
                                 entityGuid: "unsaved3",
                                 partAssemblyAndType: "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent",
-                                visualDesignerData: { Top: 440, Left: 440 }
+                                visualDesignerData: { Top: 170, Left: 440 }
                             }
                         ],
                         streamWiring: [
