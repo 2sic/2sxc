@@ -61,7 +61,9 @@ namespace ToSic.SexyContent.WebApi
 
                 var routeAppPath = Request.GetRouteData().Values["apppath"]?.ToString();
                 var appId = GetCurrentAppIdFromPath(routeAppPath);
-                return _app = (App) Environment.Dnn7.Factory.App(appId, new Environment.Dnn7.PagePublishing(Log).IsEnabled(Dnn.Module.ModuleID));
+                // Look up if page publishing is enabled - if module context is not availabe, always false
+                var publishingEnabled = Dnn.Module != null ? new Environment.Dnn7.PagePublishing(Log).IsEnabled(Dnn.Module.ModuleID) : false;
+                return _app = (App) Environment.Dnn7.Factory.App(appId, publishingEnabled);
             }
         }
         private App _app;

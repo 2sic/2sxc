@@ -4,7 +4,7 @@ DECLARE @RequiredVersion int
 SET @RequiredVersion = 9
 
 DECLARE @RequiredVersionIsInstalled int
-SELECT @RequiredVersionIsInstalled = CASE WHEN EXISTS(SELECT * FROM Packages WHERE Name = N'2SexyContent' AND CONVERT(int, LEFT([Version], CHARINDEX('.', [Version])-1)) >= @RequiredVersion) THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+SELECT @RequiredVersionIsInstalled = CASE WHEN EXISTS(SELECT * FROM {databaseOwner}[{objectQualifier}Packages] WHERE Name = N'2SexyContent' AND CONVERT(int, LEFT([Version], CHARINDEX('.', [Version])-1)) >= @RequiredVersion) THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
 
 If @RequiredVersionIsInstalled = 0
 BEGIN
