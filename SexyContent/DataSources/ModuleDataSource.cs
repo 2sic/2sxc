@@ -11,7 +11,8 @@ using ToSic.SexyContent.EAVExtensions;
 namespace ToSic.SexyContent.DataSources
 {
 	[PipelineDesigner]
-    [DataSourceProperties(Type = DataSourceType.Source)]
+    [DataSourceProperties(Type = DataSourceType.Source, EnableConfig = false,
+        HelpLink = "https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ModuleDataSource")]
     public sealed class ModuleDataSource : BaseDataSource
     {
         public override string LogId => "DS.Module";
