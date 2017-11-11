@@ -40,14 +40,14 @@ namespace ToSic.Eav.AppEngine
 		}
 
 		public IEnumerable<Template> GetAllTemplates() 
-            => TemplateDataSource().List.Select(p => new Template(p.Value, Log)).OrderBy(p => p.Name);
+            => TemplateDataSource().LightList.Select(p => new Template(p, Log)).OrderBy(p => p.Name);
 
 		public Template GetTemplate(int templateId)
 		{
 			var dataSource = TemplateDataSource();
 			dataSource = DataSource.GetDataSource<EntityIdFilter>(ZoneId, AppId, dataSource);
 			((EntityIdFilter)dataSource).EntityIds = templateId.ToString();
-			var templateEntity = dataSource.List.FirstOrDefault().Value;
+			var templateEntity = dataSource.LightList.FirstOrDefault();
 
 			if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");

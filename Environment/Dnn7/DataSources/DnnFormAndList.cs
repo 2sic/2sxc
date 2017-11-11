@@ -64,7 +64,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
         /// </summary>
         public DnnFormAndList()
         {
-            Out.Add(Constants.DefaultStreamName, new DataStream(this, Constants.DefaultStreamName, GetEntities, GetList));
+            Out.Add(Constants.DefaultStreamName, new DataStream(this, Constants.DefaultStreamName, GetList));
             Configuration.Add(ModuleIdKey, FnLModuleIdDefaultToken);
             Configuration.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
             Configuration.Add(ContentTypeKey, ContentTypeDefaultToken);
@@ -94,18 +94,19 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
             DtDs.TitleField = TitleField;
         }
 
-        /// <summary>
-        /// Internal helper that returns the entities - actually just retrieving them from the attached Data-Source
-        /// </summary>
-        /// <returns></returns>
-        private IDictionary<int, ToSic.Eav.Interfaces.IEntity> GetEntities()
-        {
-            // if not initialized, do that first
-            if (DtDs == null)
-                LoadFnL();
+        // 2017-11-11 2dm removing classic list accessors
+        ///// <summary>
+        ///// Internal helper that returns the entities - actually just retrieving them from the attached Data-Source
+        ///// </summary>
+        ///// <returns></returns>
+        //private IDictionary<int, ToSic.Eav.Interfaces.IEntity> GetEntities()
+        //{
+        //    // if not initialized, do that first
+        //    if (DtDs == null)
+        //        LoadFnL();
 
-            return DtDs["Default"].List;
-        }
+        //    return DtDs["Default"].List;
+        //}
 
         /// <summary>
         /// Internal helper that returns the entities - actually just retrieving them from the attached Data-Source
@@ -117,7 +118,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
             if (DtDs == null)
                 LoadFnL();
 
-            return DtDs["Default"].LightList;
+            return DtDs["Default"].List;
         }
     }
 }

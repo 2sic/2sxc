@@ -58,7 +58,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 
 		public DnnUserProfileDataSource()
 		{
-			Out.Add(Constants.DefaultStreamName, new DataStream(this, Constants.DefaultStreamName, null, GetList));
+			Out.Add(Constants.DefaultStreamName, new DataStream(this, Constants.DefaultStreamName, GetList));
 			Configuration.Add(UserIdsKey, UserIdsDefaultKeyToken);
 			Configuration.Add(PropertiesKey, PropertiesDefaultKeyToken);
 			Configuration.Add(ContentTypeKey, ContentTypeDefaultToken);

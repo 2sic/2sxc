@@ -56,26 +56,24 @@ namespace ToSic.SexyContent
 	        {
 		        if (data.Out.ContainsKey("Default"))
 		        {
-			        var entities = data.List.Select(e => e.Value);
+			        var entities = data.LightList;//.Select(e => e.Value);
 					var elements = entities.Select(GetElementFromEntity).ToList();
 					List = elements;
 
 					if (elements.Any())
 					{
 						Content = elements.First().Content;
-						//Presentation = elements.First().Presentation;
 					}
 		        }
 
 		        if (data.Out.ContainsKey(AppConstants.ListContent))
 		        {
-			        var listEntity = data[AppConstants.ListContent].List.Select(e => e.Value).FirstOrDefault();
+			        var listEntity = data[AppConstants.ListContent].List.FirstOrDefault();// .List.Select(e => e.Value).FirstOrDefault();
 					var listElement = listEntity != null ? GetElementFromEntity(listEntity) : null;
 
 					if (listElement != null)
 					{
 						ListContent = listElement.Content;
-						// ListPresentation = listElement.Presentation;
 					}
 		        }
 
@@ -159,7 +157,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IDictionary<int, Eav.Interfaces.IEntity> list) => list.Select(e => AsDynamic(e.Value));
+        //public IEnumerable<dynamic> AsDynamic(IDictionary<int, Eav.Interfaces.IEntity> list) => list.Select(e => AsDynamic(e.Value));
 
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance

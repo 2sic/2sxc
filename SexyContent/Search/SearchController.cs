@@ -89,7 +89,7 @@ namespace ToSic.SexyContent.Search
             foreach (var stream in dataSource.Out.Where(p => p.Key != AppConstants.Presentation && p.Key != AppConstants.ListPresentation))
             {
                 
-                var entities = stream.Value.List.Select(p => p.Value);
+                var entities = stream.Value.List;//.Select(p => p.Value);
                 var searchInfoList = searchInfoDictionary[stream.Key] = new List<ISearchInfo>();
 
                 searchInfoList.AddRange(entities.Select(entity =>

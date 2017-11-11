@@ -9,6 +9,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.WebApi;
@@ -179,8 +180,8 @@ namespace ToSic.SexyContent.WebApi
             }
             else
             {
-                currentApp.Data.Update(id.Value, cleanedNewItem, userName); 
-                return _entitiesController.Serializer.Prepare(currentApp.Data.List[id.Value]);
+                currentApp.Data.Update(id.Value, cleanedNewItem, userName);
+                return _entitiesController.Serializer.Prepare(currentApp.Data.LightList.One(id.Value));
             }
         }
 

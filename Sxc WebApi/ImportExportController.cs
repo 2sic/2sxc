@@ -43,7 +43,7 @@ namespace ToSic.SexyContent.WebApi
                 appWrapper.App.Name,
                 Guid = appWrapper.App.AppGuid,
                 Version = appWrapper.GetVersion(),
-                EntitiesCount = appWrapper.GetEntities().Count,
+                EntitiesCount = appWrapper.GetEntities().Count(),
                 LanguagesCount = cultCount,
                 TemplatesCount = appWrapper.GetTemplates().Count(),
                 HasRazorTemplates = appWrapper.GetRazorTemplates().Any(),
@@ -77,11 +77,11 @@ namespace ToSic.SexyContent.WebApi
                         t.Name
                     }),
                     Entities = entities
-                        .Where(e => e.Value.Type.ContentTypeId == c.ContentTypeId)
+                        .Where(e => e/*.Value*/.Type.ContentTypeId == c.ContentTypeId)
                         .Select(e => new
                         {
-                            Title = e.Value.GetBestTitle(),
-                            Id = e.Value.EntityId
+                            Title = e/*.Value*/.GetBestTitle(),
+                            Id = e/*.Value*/.EntityId
                         })
                 }),
                 TemplatesWithoutContentTypes = templates.Where(t => !string.IsNullOrEmpty(t.ContentTypeStaticName)).Select(t => new

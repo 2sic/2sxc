@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.WebApi.ImportExport
         }
 
 
-        public IDictionary<int, Eav.Interfaces.IEntity> GetEntities() => DataSource.GetInitialDataSource(App.ZoneId, App.AppId).List;
+        public IEnumerable<Eav.Interfaces.IEntity> GetEntities() => DataSource.GetInitialDataSource(App.ZoneId, App.AppId).LightList;
 
         public IEnumerable<Template> GetTemplates() => App.TemplateManager.GetAllTemplates();
 

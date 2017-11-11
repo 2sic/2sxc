@@ -5,6 +5,7 @@ using System.Web.Http;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Internal;
 
@@ -67,7 +68,7 @@ namespace ToSic.SexyContent.ContentBlocks
             {
                 // only set preview / content-group-reference - but must use the guid
                 var dataSource = SxcContext.App.Data["Default"];
-                var templateGuid = dataSource.List[templateId].EntityGuid;
+                var templateGuid = dataSource.List.One(templateId).EntityGuid;
                 SavePreviewTemplateId(templateGuid);//, newTemplateChooserState);
                 result = null; // send null back
             }

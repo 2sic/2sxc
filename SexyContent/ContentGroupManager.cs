@@ -4,6 +4,7 @@ using System.Linq;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -37,14 +38,14 @@ namespace ToSic.SexyContent
 		}
 
 		public IEnumerable<ContentGroup> GetContentGroups() 
-            => ContentGroupSource().List.Select(p => new ContentGroup(p.Value, _zoneId, _appId, _showDrafts, _enableVersioning, Log));
+            => ContentGroupSource().LightList.Select(p => new ContentGroup(p, _zoneId, _appId, _showDrafts, _enableVersioning, Log));
 
 	    public ContentGroup GetContentGroup(Guid contentGroupGuid)
 		{
 		    Log.Add($"get CG#{contentGroupGuid}");
 			var dataSource = ContentGroupSource();
 			// ToDo: Should use an indexed guid source
-		    var groupEntity = dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == contentGroupGuid).Value;
+		    var groupEntity = dataSource.LightList.One(contentGroupGuid);//  .FirstOrDefault(e => e.Value.EntityGuid == contentGroupGuid).Value;
 		    return groupEntity != null 
                 ? new ContentGroup(groupEntity, _zoneId, _appId, _showDrafts, _enableVersioning, Log) 
                 : new ContentGroup(Guid.Empty, _zoneId, _appId, _showDrafts, _enableVersioning, Log) {DataIsMissing = true};

@@ -19,6 +19,7 @@ using ToSic.SexyContent.Installer;
 using ToSic.Eav.Apps.ItemListActions;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Query;
 using ToSic.Eav.Interfaces;
 using Assembly = System.Reflection.Assembly;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -110,8 +111,8 @@ namespace ToSic.SexyContent.WebApi.View
 
             #region attach to the current list of items
 
-            var cbEnt = SxcContext.App.Data["Default"].List[parentId];
-            var blockList = ((Eav.Data.EntityRelationship) cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
+            var cbEnt = SxcContext.App.Data["Default"].List.One(parentId);
+            var blockList = ((EntityRelationship) cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
             // add only if it's not already in the list (could happen if http requests are run again)
@@ -316,7 +317,7 @@ namespace ToSic.SexyContent.WebApi.View
         private void ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
         {
             Log.Add($"modify item list parent:{parentId}, field:{field}, action:{actionToPerform}");
-            var parentEntity = SxcContext.App.Data["Default"].List[parentId];
+            var parentEntity = SxcContext.App.Data["Default"].List.One(parentId);
             var parentField = parentEntity.GetBestValue(field);
 
             if (!(parentField is EntityRelationship fieldList))
