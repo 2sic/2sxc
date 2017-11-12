@@ -57,6 +57,7 @@
       <InstallInclude Include="**\*.resx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.js" Exclude="@(DefaultExclude);gruntfile.js" />
+      <InstallInclude Include="**\System.*.json" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.map" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
       <InstallInclude Include="**\*.ashx" Exclude="@(DefaultExclude)" />
@@ -116,20 +117,12 @@
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\System.Diagnostics.DiagnosticSource.dll" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\System.Interactive.Async.dll" />
       <!-- Must be included as assembly helper because it can't be added as DNN assembly (Cannot load a reference assembly for execution) -->
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\System.Runtime.dll" />
+      <!-- 2017-05-22 2rm removed because we add a web.config assembly entry now that references the GAC dll -->
+      <!--<AssemblyHelper Include="$(MSBuildDnnBinPath)\System.Runtime.dll" />-->
 
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\protobuf-net.dll" />-->
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.dll" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.Configuration.dll" />-->
-      
       <AssemblyInclude Include="$(ProjectDir)BuildScripts\Binary Dependencies\ImageResizer.dll" />
       <AssemblyInclude Include="$(ProjectDir)BuildScripts\Binary Dependencies\ImageResizer.Plugins.DiskCache.dll" />
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.pdb" />-->
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.DiskCache.dll" />-->
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.DiskCache.pdb" />-->
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.TinyCache.dll" />-->
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.TinyCache.pdb" />-->
-      
+
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\CsvHelper.dll" />
     </ItemGroup>
     
@@ -150,7 +143,6 @@
     </CreateItem>
 
     <CreateItem Include="DnnPackageBuilder/**\*.sqldataprovider">
-    <!--<CreateItem Include="**\*.sqldataprovider" Exclude="@(DefaultExclude)">-->
       <Output TaskParameter="Include" ItemName="SqlDataProviderFiles" />
     </CreateItem>
     

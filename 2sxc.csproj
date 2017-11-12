@@ -361,6 +361,7 @@
     <Content Include=".data\ContentTypes\json.y48d849d6-b83d-4001-96e5-79da0833e84e.json" />
     <Content Include=".data\ContentTypes\System.c76901b5-0345-4866-9fa3-6208de7f8543.json" />
     <Content Include=".data\ContentTypes\System.38e7822b-1049-4539-bb3f-f99949b1b1d1.json" />
+    <Content Include="BuildScripts\ModulePackage.Targets" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>

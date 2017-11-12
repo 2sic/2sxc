@@ -13,7 +13,6 @@
     <Configurations>Debug;Release;Dbg Testing</Configurations>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <Content Include="icon-app.png" />
