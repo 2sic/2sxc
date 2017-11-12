@@ -182,14 +182,13 @@
 }
 
 .streamEntitiesCount {
-	background: #FCF8E3;
-	color: #A66D3B;
-	padding: 2px;
-	border-radius: 25px;
-	border: 1px dotted gray;
-	opacity: 0.8;
-	min-width: 30px;
-	text-align: center;
+    background: #93ceff;
+    color: black;
+    padding: 2px;
+    border-radius: 25px;
+    opacity: 0.8;
+    min-width: 25px;
+    text-align: center;
 }
 
 .add-endpoint {
