@@ -2110,10 +2110,10 @@ angular.module("PipelineManagement", [
 
 function buildGuiTypes() {
     var guiTypes = {
-        iconPref: "eav-icon-"
+        iconPrefix: "eav-icon-"
     };
 
-    function addGuiType(name, icon, notes) { guiTypes[name] = { name: name, icon: guiTypes.iconPref + icon, notes: notes }; }
+    function addGuiType(name, icon, notes) { guiTypes[name] = { name: name, icon: guiTypes.iconPrefix + icon, notes: notes }; }
 
     addGuiType("Unknown", "circle", "unknown type");
     addGuiType("Cache", "history", "caching of data");
