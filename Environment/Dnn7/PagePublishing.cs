@@ -158,7 +158,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, ViewDataSource data, string key)
         {
-            var cont = data.Out.ContainsKey(key) ? data[key]?.LightList?.ToList() : null;
+            var cont = data.Out.ContainsKey(key) ? data[key]?.List?.ToList() : null;
             Log.Add($"try to add stream:{key}, found:{cont != null} add⋮{cont?.Count ?? 0}" );
             if (cont != null) list = list.Concat(cont);
             return list;

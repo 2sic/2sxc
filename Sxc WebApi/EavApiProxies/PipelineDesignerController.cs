@@ -62,7 +62,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    /// Clone a Pipeline with all DataSources and their configurations
 	    /// </summary>
 	    [HttpGet]
-	    public object ClonePipeline(int appId, int id)
+	    public void ClonePipeline(int appId, int id)
 	        => _controller.ClonePipeline(appId, id);
 	
 

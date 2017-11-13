@@ -63,22 +63,22 @@ if (window.angular) // needed because the file is also included in older non-ang
                         in: ["ListContent", "Default"],
                         name: "2sxc Target (View or API)",
                         description: "The template/script which will show this data",
-                        visualDesignerData: { Top: 20, Left: 420 }
+                        visualDesignerData: { Top: 20, Left: 200, Width: 700 }
                     },
                     defaultPipeline: {
                         dataSources: [
                             {
                                 entityGuid: "unsaved1",
                                 partAssemblyAndType: "ToSic.Eav.DataSources.Caches.ICache, ToSic.Eav.DataSources",
-                                visualDesignerData: { Top: 800, Left: 440 }
+                                visualDesignerData: { Top: 440, Left: 440 }
                             }, {
                                 entityGuid: "unsaved2",
                                 partAssemblyAndType: "ToSic.Eav.DataSources.PublishingFilter, ToSic.Eav.DataSources",
-                                visualDesignerData: { Top: 620, Left: 440 }
+                                visualDesignerData: { Top: 300, Left: 440 }
                             }, {
                                 entityGuid: "unsaved3",
                                 partAssemblyAndType: "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent",
-                                visualDesignerData: { Top: 440, Left: 440 }
+                                visualDesignerData: { Top: 170, Left: 440 }
                             }
                         ],
                         streamWiring: [

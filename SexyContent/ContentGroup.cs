@@ -64,7 +64,7 @@ namespace ToSic.SexyContent
                     var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId);
                     // ToDo: Should use an indexed Guid filter
                     templateEntity =
-                        dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == _previewTemplateId).Value;
+                        Eav.Data.Query.Entity.One(dataSource.LightList, _previewTemplateId.Value);//  .FirstOrDefault(e => e.Value.EntityGuid == _previewTemplateId).Value;
                 }
                 else if (_contentGroupEntity != null)
                     templateEntity =

@@ -49,7 +49,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        IEnumerable<dynamic> AsDynamic(IDictionary<int, Eav.Interfaces.IEntity> list);
+        //IEnumerable<dynamic> AsDynamic(IDictionary<int, Eav.Interfaces.IEntity> list);
 
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance

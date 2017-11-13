@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
@@ -52,7 +53,7 @@ namespace ToSic.SexyContent.ContentBlocks
         public EntityContentBlock(IContentBlock parent, int contentBlockId, Log parentLog) : base(parentLog, "CB.Ent")
         {
             contentBlockId = Math.Abs(contentBlockId); // for various reasons this can be introduced as a negative value, make sure we neutralize that
-            var cbDef = parent.SxcInstance.App.Data["Default"].List[contentBlockId];  // get the content-block definition
+            var cbDef = parent.SxcInstance.App.Data["Default"].List.One(contentBlockId);  // get the content-block definition
             _constructor(parent, cbDef);
         }
 

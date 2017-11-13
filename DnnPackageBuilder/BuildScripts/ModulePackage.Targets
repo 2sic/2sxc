@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="windows-1252"?>
 
+<!-- WARNING - this file is not in use!!! -->
+
+
+
 <!-- WARNING, WARNING, WARNING -->
 <!-- REMEMBER THAT IF YOU MODIFY THE TARGETS FILE YOU NEED TO CLOSE/OPEN THE PROJECT FOR THE CHANGES TO TAKE EFFECT -->
 
 <!-- THIS IS THE NEW FILE - DOESN'T WORK YET - NOT THE ORIGINAL WHICH WORKS!!! -->
 
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="dummy-to-disable-http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="MSBuild.Community.Tasks.Targets" />
   <Target Name="PackageModule" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
   <!--<Target Name="PackageModule" Condition=" '$(Configuration)|$(Platform)' == 'Release|DNN' ">-->
@@ -59,6 +63,7 @@
       <InstallInclude Include="..\**\*.resx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\**\*.aspx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\**\*.js" Exclude="@(DefaultExclude);gruntfile.js" />
+      <InstallInclude Include="..\**\System.*.json" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\**\*.map" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
       <InstallInclude Include="..\**\*.ashx" Exclude="@(DefaultExclude)" />
@@ -121,18 +126,9 @@
       <!-- 2017-05-22 2rm removed because we add a web.config assembly entry now that references the GAC dll -->
       <!--<AssemblyHelper Include="$(MSBuildDnnBinPath)\System.Runtime.dll" />-->
 
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\protobuf-net.dll" />-->
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.dll" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.Configuration.dll" />-->
-      
       <AssemblyInclude Include="$(ProjectDir)BuildScripts\Binary Dependencies\ImageResizer.dll" />
       <AssemblyInclude Include="$(ProjectDir)BuildScripts\Binary Dependencies\ImageResizer.Plugins.DiskCache.dll" />
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.pdb" />-->
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.DiskCache.dll" />-->
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.DiskCache.pdb" />-->
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.TinyCache.dll" />-->
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.TinyCache.pdb" />-->
-      
+
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\CsvHelper.dll" />
     </ItemGroup>
     
@@ -155,6 +151,7 @@
     <CreateItem Include="**\*.sqldataprovider">
       <Output TaskParameter="Include" ItemName="SqlDataProviderFiles" />
     </CreateItem>
+    
     
     <Copy SourceFiles="@(AssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin"/>
     <Copy SourceFiles="@(AssemblyHelper)" DestinationFolder="$(TempPackagePdbFolder)\bin"/>
@@ -186,15 +183,15 @@
     <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="ModulePackages/$(PackageName)_$(Version)_Install_b.$(Extension)" />
     <!-- Copy the Install package to the Packages folder -->
     <!--<Copy SourceFiles="$(TempPackageFolder)\$(PackageName)_$(Version)_Install.$(Extension)" DestinationFolder="ModulePackages/" />-->
-    
+
     <!-- Move node_modules folder back -->
     <!--<Exec Command="move ..\ToSIC_SexyContent-build-temp\node_modules node_modules" />
     <Exec Command="rmdir ..\ToSIC_SexyContent-build-temp" />-->
-    
+
     <!-- Cleanup -->
-    <RemoveDir Directories="$(TempPackageFolder)" />
+    <!--<RemoveDir Directories="$(TempPackageFolder)" />
     <RemoveDir Directories="$(TempPackageResourcesFolder)" />
-    <RemoveDir Directories="$(TempPackagePdbFolder)" />
+    <RemoveDir Directories="$(TempPackagePdbFolder)" />-->
 
   </Target>
 </Project>

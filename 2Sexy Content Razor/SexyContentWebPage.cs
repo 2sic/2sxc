@@ -99,9 +99,6 @@ namespace ToSic.SexyContent.Razor
 
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDictionary<int, IEntity> list) =>  AppAndDataHelpers.AsDynamic(list);
-
-        /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => AppAndDataHelpers.AsEntity(dynamicEntity);
 
 

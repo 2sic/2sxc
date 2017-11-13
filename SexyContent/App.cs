@@ -11,6 +11,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.DataSources.Pipeline;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Interfaces;

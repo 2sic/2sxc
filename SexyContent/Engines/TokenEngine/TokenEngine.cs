@@ -136,13 +136,13 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             if (!DataSource.Out.ContainsKey(streamName))
                 throw new ArgumentException("Was not able to implement REPEAT because I could not find Data:" + streamName + ". Please check spelling the pipeline delivering data to this template.");
 
-            var dataItems = DataSource[streamName].List;
+            var dataItems = DataSource[streamName].List.ToList();
             var itemsCount = dataItems.Count;
             for (var i = 0; i < itemsCount; i++)
             {
                 // Create property sources for the current data item (for the current data item and its list information)
                 var propertySources = new Dictionary<string, IValueProvider>();
-                propertySources.Add(sourceName, new DynamicEntityPropertyAccess(sourceName, _dataHelper.AsDynamic(dataItems.ElementAt(i).Value), i, itemsCount));
+                propertySources.Add(sourceName, new DynamicEntityPropertyAccess(sourceName, _dataHelper.AsDynamic(dataItems.ElementAt(i)), i, itemsCount));
                 builder.Append(RenderSection(template, propertySources));
             }
 

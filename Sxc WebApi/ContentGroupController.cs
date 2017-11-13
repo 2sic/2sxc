@@ -81,8 +81,8 @@ namespace ToSic.SexyContent.WebApi
             var ct = cache.GetContentType(attributeSetName);
 
             var dataSource = App.Data[ct.Name]; 
-            var results = dataSource.List.ToDictionary(p => p.Value.EntityId,
-                p => p.Value.GetBestTitle() ?? "");
+            var results = dataSource.List.ToDictionary(p => p.EntityId,
+                p => p.GetBestTitle() ?? "");
 
             var selectedId = set.Count == 0 ? null : set[index]?.EntityId;
 
