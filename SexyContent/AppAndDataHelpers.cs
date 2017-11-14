@@ -56,7 +56,7 @@ namespace ToSic.SexyContent
 	        {
 		        if (data.Out.ContainsKey("Default"))
 		        {
-			        var entities = data.LightList;//.Select(e => e.Value);
+			        var entities = data.List;//.Select(e => e.Value);
 					var elements = entities.Select(GetElementFromEntity).ToList();
 					List = elements;
 

@@ -38,14 +38,14 @@ namespace ToSic.SexyContent
 		}
 
 		public IEnumerable<ContentGroup> GetContentGroups() 
-            => ContentGroupSource().LightList.Select(p => new ContentGroup(p, _zoneId, _appId, _showDrafts, _enableVersioning, Log));
+            => ContentGroupSource().List.Select(p => new ContentGroup(p, _zoneId, _appId, _showDrafts, _enableVersioning, Log));
 
 	    public ContentGroup GetContentGroup(Guid contentGroupGuid)
 		{
 		    Log.Add($"get CG#{contentGroupGuid}");
 			var dataSource = ContentGroupSource();
 			// ToDo: Should use an indexed guid source
-		    var groupEntity = dataSource.LightList.One(contentGroupGuid);//  .FirstOrDefault(e => e.Value.EntityGuid == contentGroupGuid).Value;
+		    var groupEntity = dataSource.List.One(contentGroupGuid);//  .FirstOrDefault(e => e.Value.EntityGuid == contentGroupGuid).Value;
 		    return groupEntity != null 
                 ? new ContentGroup(groupEntity, _zoneId, _appId, _showDrafts, _enableVersioning, Log) 
                 : new ContentGroup(Guid.Empty, _zoneId, _appId, _showDrafts, _enableVersioning, Log) {DataIsMissing = true};
