@@ -181,7 +181,7 @@ namespace ToSic.SexyContent.WebApi
             else
             {
                 currentApp.Data.Update(id.Value, cleanedNewItem, userName);
-                return _entitiesController.Serializer.Prepare(currentApp.Data.LightList.One(id.Value));
+                return _entitiesController.Serializer.Prepare(currentApp.Data.List.One(id.Value));
             }
         }
 

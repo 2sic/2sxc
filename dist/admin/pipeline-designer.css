@@ -41,11 +41,12 @@
 		-o-box-shadow: 2px 2px 19px #444;
 		-webkit-box-shadow: 2px 2px 19px #444;
 		-moz-box-shadow: 2px 2px 19px #444;
-		cursor: pointer;
+		cursor: move;
 		filter: alpha(opacity=60);
 	}
 
 	.dataSource .name, .dataSource .description {
+	    cursor: text !important;
 		display: inline-block;
 		max-width: 215px;
 		max-height: 16px;
@@ -120,6 +121,7 @@
     .dataSource:hover .help,
     .dataSource:hover .typename,
     .dataSource:hover .add-endpoint {
+        cursor: pointer !important;
         display: block;
     }
 
@@ -164,6 +166,7 @@
 }
 
 .endpointTargetLabel, .endpointSourceLabel {
+    cursor: text !important;
 	background-color: white;
 	font: 12px sans-serif;
 	color: #444;

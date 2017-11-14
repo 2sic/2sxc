@@ -9,7 +9,7 @@
 
 <!-- THIS IS THE NEW FILE - DOESN'T WORK YET - NOT THE ORIGINAL WHICH WORKS!!! -->
 
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="dummy-to-disable-http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="MSBuild.Community.Tasks.Targets" />
   <Target Name="PackageModule" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
   <!--<Target Name="PackageModule" Condition=" '$(Configuration)|$(Platform)' == 'Release|DNN' ">-->
