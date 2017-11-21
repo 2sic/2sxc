@@ -27,6 +27,22 @@ namespace ToSic.SexyContent.DataSources
             InstanceId
         }
 
+        /// <summary>
+        /// The instance-id of the 2sxc instance - this is the same as the DNN ModuleId,
+        /// but named Instance-Id to be more neutral as we're opening it to other platforms
+        /// </summary>
+        public int? InstanceId
+        {
+            get
+            {
+                EnsureConfigurationIsLoaded();
+                var listIdString = Configuration["ModuleId"];
+                return int.TryParse(listIdString, out var listId) ? listId : new int?();
+            }
+            set => Configuration["ModuleId"] = value.ToString();
+        }
+
+
         internal SxcInstance SxcContext
         {
             get
@@ -62,14 +78,14 @@ namespace ToSic.SexyContent.DataSources
                 else
                 {
                     Log.Add("need content-group, will construct as cannot use context");
-                    if (!ModuleId.HasValue)
+                    if (!InstanceId.HasValue)
                         throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
-                    var tabId = ModuleController.Instance.GetTabModulesByModule(ModuleId.Value)[0].TabID;
+                    var tabId = ModuleController.Instance.GetTabModulesByModule(InstanceId.Value)[0].TabID;
                     var cgm = new ContentGroupManager(ZoneId, AppId,
                         HasSxcContext && SxcContext.Environment.Permissions.UserMayEditContent,
-                        new Environment.Dnn7.PagePublishing(Log).IsEnabled(ModuleId.Value),
+                        new Environment.Dnn7.PagePublishing(Log).IsEnabled(InstanceId.Value),
                         Log);
-                    var res = cgm.GetContentGroupForModule(ModuleId.Value, tabId);
+                    var res = cgm.GetContentGroupForModule(InstanceId.Value, tabId);
                     var contentGroupGuid = res.Item1;
                     var previewTemplateGuid = res.Item2;
                     _contentGroup = cgm.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid); 
@@ -127,7 +143,7 @@ namespace ToSic.SexyContent.DataSources
                     contentEntities.Add(null);
                 }
 
-                IEnumerable<IEntity> originals = In["Default"].List.ToList();
+                IEnumerable<IEntity> originals = In[Eav.Constants.DefaultStreamName].List.ToList();
                 int i = 0, entityId = 0, prevIdForErrorReporting = 0;
                 try
                 {
@@ -178,13 +194,6 @@ namespace ToSic.SexyContent.DataSources
                             throw new Exception("trouble adding presentation of " + entityId, ex);
                         }
 
-                        // 2017-11-11 2dm - not necessary any more, if we don't use a dictionary...
-                        //var key = entityId;
-
-                        // This ensures that if an entity is added more than once, the dictionary doesn't complain because of duplicate keys
-                        //while (entitiesToDeliver.Has(key))
-                        //    key += 1000000000;
-
                         try
                         {
                             var itm = originals.One(entityId);
@@ -217,20 +226,21 @@ namespace ToSic.SexyContent.DataSources
             }
         }
 
-        public int? ModuleId
-        {
-            get
-            {
-                EnsureConfigurationIsLoaded();
-                var listIdString = Configuration["ModuleId"];
-                return int.TryParse(listIdString, out var listId) ? listId : new int?();
-            }
-            set => Configuration["ModuleId"] = value.ToString();
-        }
+
 
 
         public bool UseSxcInstanceContentGroup = false;
 
         public Template OverrideTemplate { get; set; }
+
+
+        #region obsolete stuff
+        [Obsolete("became obsolete in 2sxc 9.9, use InstanceId instead")]
+        public int? ModuleId
+        {
+            get => InstanceId;
+            set => InstanceId = value;
+        }
+        #endregion
     }
 }

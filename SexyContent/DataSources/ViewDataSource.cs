@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.DataSources
             // Get ModuleDataSource
             var initialSource = DataSource.GetInitialDataSource(sxc.ZoneId, sxc.AppId, showDrafts, configurationProvider, parentLog);
             var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(sxc.ZoneId, sxc.AppId, initialSource, configurationProvider, parentLog);
-            moduleDataSource.ModuleId = moduleId;
+            moduleDataSource.InstanceId = moduleId;
 
             moduleDataSource.OverrideTemplate = overrideTemplate; // new
             moduleDataSource.UseSxcInstanceContentGroup = true; // new
