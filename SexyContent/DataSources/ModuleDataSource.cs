@@ -12,13 +12,20 @@ using ToSic.SexyContent.EAVExtensions;
 namespace ToSic.SexyContent.DataSources
 {
 	[PipelineDesigner]
-    [DataSourceProperties(Type = DataSourceType.Source, EnableConfig = false,
+    [DataSourceProperties(Type = DataSourceType.Source, 
+        EnableConfig = true,
+        ExpectsDataOfType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
         HelpLink = "https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ModuleDataSource")]
     public sealed class ModuleDataSource : BaseDataSource
     {
         public override string LogId => "DS.Module";
 
         private SxcInstance _sxcContext;
+
+        public enum Settings
+        {
+            InstanceId
+        }
 
         internal SxcInstance SxcContext
         {
@@ -74,10 +81,10 @@ namespace ToSic.SexyContent.DataSources
 
         public ModuleDataSource()
         {
-            Out.Add("Default", new DataStream(this, "Default", GetContent));
-            Out.Add(AppConstants.ListContent, new DataStream(this, "Default", GetListContent));
+            Out.Add(Eav.Constants.DefaultStreamName, new DataStream(this, Eav.Constants.DefaultStreamName, GetContent));
+            Out.Add(AppConstants.ListContent, new DataStream(this, Eav.Constants.DefaultStreamName, GetListContent));
 
-			Configuration.Add("ModuleId", "[Module:ModuleID||[Module:ModuleId]]");	// Look for ModuleID and ModuleId
+			Configuration.Add("ModuleId", $"[Settings:{Settings.InstanceId}||[Module:ModuleId]]");
         }
 
         #region Cached properties for Content, Presentation etc. --> not necessary, as each stream auto-caches
@@ -221,7 +228,8 @@ namespace ToSic.SexyContent.DataSources
             set => Configuration["ModuleId"] = value.ToString();
         }
 
-	    public bool UseSxcInstanceContentGroup = false;
+
+        public bool UseSxcInstanceContentGroup = false;
 
         public Template OverrideTemplate { get; set; }
     }
