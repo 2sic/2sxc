@@ -67,7 +67,7 @@ namespace ToSic.SexyContent.ContentBlocks
             else
             {
                 // only set preview / content-group-reference - but must use the guid
-                var dataSource = SxcContext.App.Data["Default"];
+                var dataSource = SxcContext.App.Data;
                 var templateGuid = dataSource.List.One(templateId).EntityGuid;
                 SavePreviewTemplateId(templateGuid);//, newTemplateChooserState);
                 result = null; // send null back

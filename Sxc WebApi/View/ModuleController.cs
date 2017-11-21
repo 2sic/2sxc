@@ -111,7 +111,7 @@ namespace ToSic.SexyContent.WebApi.View
 
             #region attach to the current list of items
 
-            var cbEnt = SxcContext.App.Data["Default"].List.One(parentId);
+            var cbEnt = SxcContext.App.Data.List.One(parentId);
             var blockList = ((EntityRelationship) cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
@@ -317,7 +317,7 @@ namespace ToSic.SexyContent.WebApi.View
         private void ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
         {
             Log.Add($"modify item list parent:{parentId}, field:{field}, action:{actionToPerform}");
-            var parentEntity = SxcContext.App.Data["Default"].List.One(parentId);
+            var parentEntity = SxcContext.App.Data.List.One(parentId);
             var parentField = parentEntity.GetBestValue(field);
 
             if (!(parentField is EntityRelationship fieldList))

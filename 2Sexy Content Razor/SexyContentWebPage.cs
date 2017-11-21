@@ -135,7 +135,7 @@ namespace ToSic.SexyContent.Razor
 
         public dynamic ListContent => AppAndDataHelpers.ListContent;
 
-        public dynamic ListPresentation => AppAndDataHelpers.ListContent?.ListPresentation;
+        public dynamic ListPresentation => AppAndDataHelpers.ListContent?.Presentation;
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
         public List<Element> List => AppAndDataHelpers.List;
