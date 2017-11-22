@@ -3,6 +3,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -74,7 +75,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<Dictionary<string, object>> InputTypes(int appId) 
+        public List<InputTypeInfo> InputTypes(int appId) 
             => _eavCtc.InputTypes(appId);
 
 	    [HttpGet]
