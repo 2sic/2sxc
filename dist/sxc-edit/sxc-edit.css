@@ -216,11 +216,15 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .eav-icon-target:before { content: '\e85f'; } /* '' */
 .eav-icon-content-block:before { content: '\e9bd'; } /* '' */
 .eav-icon-app:before { content: '\e9bf'; } /* '' */
+.eav-icon-sort:before { content: '\f0dc'; } /* '' */
+.eav-icon-sort-down:before { content: '\f0dd'; } /* '' */
+.eav-icon-sort-up:before { content: '\f0de'; } /* '' */
 .eav-icon-fork:before { content: '\f126'; } /* '' */
 .eav-icon-help:before { content: '\f128'; } /* '' */
 .eav-icon-sort-alt-up:before { content: '\f160'; } /* '' */
 .eav-icon-database:before { content: '\f1c0'; } /* '' */
 .eav-icon-history:before { content: '\f1da'; } /* '' */
+.eav-icon-i-cursor:before { content: '\f246'; } /* '' */
 @font-face {
   font-family: 'app-icons';
     src: url('../lib/fonts/app-icons.woff?09.08.00') format('woff'),
