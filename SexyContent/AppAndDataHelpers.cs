@@ -44,7 +44,9 @@ namespace ToSic.SexyContent
             // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
             // Note that app could be null, if a user is in admin-ui of a module which hasn't actually be configured yet
-            App?.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent, sexy.Environment.PagePublishing.IsEnabled(module.ModuleID), Data.ConfigurationProvider);
+            App?.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent,
+                PortalSettings.Current != null && sexy.Environment.PagePublishing.IsEnabled(module.ModuleID), 
+                Data.ConfigurationProvider);
         }
 
 
@@ -72,6 +74,7 @@ namespace ToSic.SexyContent
 
 
         #region AsDynamic overrides
+        /// <inheritdoc />
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
         /// </summary>
@@ -80,6 +83,7 @@ namespace ToSic.SexyContent
         public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, _sxcInstance);
         
 
+        /// <inheritdoc />
         /// <summary>
         /// Makes sure a dynamicEntity could be wrapped in AsDynamic()
         /// </summary>
@@ -87,6 +91,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public dynamic AsDynamic(dynamic dynamicEntity) => dynamicEntity;
 
+        /// <inheritdoc />
         /// <summary>
         /// Returns the value of a KeyValuePair as DynamicEntity
         /// </summary>
@@ -94,12 +99,14 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
 
+        /// <inheritdoc />
         /// <summary>
         /// In case AsDynamic is used with Data["name"]
         /// </summary>
         /// <returns></returns>
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AsDynamic(stream.List);
 
+        /// <inheritdoc />
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
         /// </summary>
@@ -107,6 +114,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity) => ((DynamicEntity) dynamicEntity).Entity;
 
+        /// <inheritdoc />
         /// <summary>
         /// Returns a list of DynamicEntities
         /// </summary>
@@ -205,7 +213,10 @@ namespace ToSic.SexyContent
 
         private dynamic _listContent;
 
-
+        /// <remarks>
+        /// This must be lazyl-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
+        /// - this would break API even though the List etc. are never accessed
+        /// </remarks>
         private void TryToBuildListContentObject()
         {
             Log.Add("try to build ListContent (header) object");
@@ -227,6 +238,10 @@ namespace ToSic.SexyContent
         }
         private List<Element> _list;
 
+        /// <remarks>
+        /// This must be lazyl-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
+        /// - this would break API even though the List etc. are never accessed
+        /// </remarks>
         private void TryToBuildContentAndList()
         {
             Log.Add("try to build List and Content objects");
