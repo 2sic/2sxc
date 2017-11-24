@@ -137,7 +137,7 @@
     <Compile Include="Environment\Dnn7\PagePublishing_ModuleSettings.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing.cs" />
     <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
-    <Compile Include="Environment\DnnRuntime.cs" />
+    <Compile Include="Environment\RepositoryInfoEavAndUi.cs" />
     <Compile Include="SexyContent\ContentBlocks\Renderers\InTextContentBlocks.cs" />
     <Compile Include="DnnWebForms\Helpers\DnnLinkHelper.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
@@ -282,6 +282,7 @@
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".databeta\readme.md" />
     <Content Include=".gitignore" />
     <Content Include="Administration\Export.js" />
     <Content Include="API\Services.asmx" />
@@ -358,10 +359,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".data\ContentTypes\json.y48d849d6-b83d-4001-96e5-79da0833e84e.json" />
+    <Content Include=".databeta\contenttypes\json.y48d849d6-b83d-4001-96e5-79da0833e84e.json" />
     <Content Include=".data\ContentTypes\System.c76901b5-0345-4866-9fa3-6208de7f8543.json" />
     <Content Include=".data\ContentTypes\System.38e7822b-1049-4539-bb3f-f99949b1b1d1.json" />
     <Content Include="BuildScripts\ModulePackage.Targets" />
+    <Content Include=".data\ContentTypes\System.7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02.json" />
+    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.RelationshipFilter.json" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>
