@@ -28,78 +28,26 @@ namespace ToSic.SexyContent
 
         public AppAndDataHelpers(SxcInstance sexy, ModuleInfo module, Log parentLog): base("Sxc.AppHlp", parentLog ?? sexy?.Log)
         {
-            // ModuleInfo module = sexy.ModuleInfo;
             // Init things than require module-info or similar, but not 2sxc
             Dnn = new DnnHelper(module);
             Link = new DnnLinkHelper(Dnn);
 
-            // todo: maybe init App & App.Data, as they don't really require a working 2sxc
-
             if (sexy == null)
                 return;
 
-            ViewDataSource data = sexy.Data;
             _sxcInstance = sexy;
-            App = sexy.App;// app;
-            Data = sexy.Data;// data;
+            App = sexy.App;
+            Data = sexy.Data;
 			Sxc = new SxcHelper(sexy);
             Edit = new InPageEditingHelper(sexy);
 
             // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
             // Note that app could be null, if a user is in admin-ui of a module which hasn't actually be configured yet
-            App?.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent, sexy.Environment.PagePublishing /*new Environment.Dnn7.PagePublishing(Log)*/.IsEnabled(module.ModuleID), data.ConfigurationProvider);
-
-            #region Assemble the mapping of the data-stream "default"/Presentation to the List object and the "ListContent" too
-	        List = new List<Element>();
-            if (data != null && sexy.Template != null)
-	        {
-		        if (data.Out.ContainsKey("Default"))
-		        {
-			        var entities = data.List;//.Select(e => e.Value);
-					var elements = entities.Select(GetElementFromEntity).ToList();
-					List = elements;
-
-					if (elements.Any())
-					{
-						Content = elements.First().Content;
-					}
-		        }
-
-		        if (data.Out.ContainsKey(AppConstants.ListContent))
-		        {
-			        var listEntity = data[AppConstants.ListContent].List.FirstOrDefault();// .List.Select(e => e.Value).FirstOrDefault();
-					var listElement = listEntity != null ? GetElementFromEntity(listEntity) : null;
-
-					if (listElement != null)
-					{
-						ListContent = listElement.Content;
-					}
-		        }
-
-	        }
-            #endregion
-
+            App?.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent, sexy.Environment.PagePublishing.IsEnabled(module.ModuleID), Data.ConfigurationProvider);
         }
 
-	    private Element GetElementFromEntity(Eav.Interfaces.IEntity e)
-	    {
-			var el = new Element
-			{
-				EntityId = e.EntityId,
-				Content =AsDynamic(e)
-			};
 
-			if (e is EntityInContentGroup)
-			{
-				var c = ((EntityInContentGroup)e);
-				el.GroupId = c.GroupId;
-				el.Presentation = c.Presentation == null ? null : AsDynamic(c.Presentation);
-				el.SortOrder = c.SortOrder;
-			}
-
-		    return el;
-	    }
 
         /// <summary>
         /// The current app containing the data and read/write commands
@@ -153,13 +101,6 @@ namespace ToSic.SexyContent
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AsDynamic(stream.List);
 
         /// <summary>
-        /// In case AsDynamic is used with Data["name"].List
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        //public IEnumerable<dynamic> AsDynamic(IDictionary<int, Eav.Interfaces.IEntity> list) => list.Select(e => AsDynamic(e.Value));
-
-        /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
         /// </summary>
         /// <param name="dynamicEntity"></param>
@@ -174,10 +115,19 @@ namespace ToSic.SexyContent
         public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => entities.Select(e => AsDynamic(e));
         #endregion
 
+        #region DataSource and ConfigurationProvider (for DS) section
         private IValueCollectionProvider _configurationProvider;
         private IValueCollectionProvider ConfigurationProvider => _configurationProvider ??
                                                                   (_configurationProvider = Data.In["Default"].Source.ConfigurationProvider);
 
+        /// <summary>
+        /// Create a data-source by type-name. Note that it's better to use the typed version
+        /// CreateSource T instead
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <param name="inSource"></param>
+        /// <param name="configurationProvider"></param>
+        /// <returns></returns>
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             if (configurationProvider == null)
@@ -186,10 +136,17 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(Dnn.Portal.PortalId) /* ZoneHelpers.GetZoneId(Dnn.Portal.PortalId).Value*/, App.AppId, _sxcInstance.Environment.Permissions.UserMayEditContent, ConfigurationProvider as ValueCollectionProvider);
+            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(Dnn.Portal.PortalId), App.AppId, _sxcInstance.Environment.Permissions.UserMayEditContent, ConfigurationProvider as ValueCollectionProvider);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
+        /// <summary>
+        /// Create a data-source in code of the expected type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="inSource"></param>
+        /// <param name="configurationProvider"></param>
+        /// <returns></returns>
         public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             if (configurationProvider == null)
@@ -219,21 +176,90 @@ namespace ToSic.SexyContent
             srcDs.In.Add(Eav.Constants.DefaultStreamName, inStream);
             return src;
         }
+        #endregion
 
         #region basic properties like Content, Presentation, ListContent, ListPresentation
 
         /// <summary>
         /// content item of the current view
         /// </summary>
-        public dynamic Content { get; }
+        public dynamic Content {
+            get
+            {
+                if(_content == null) TryToBuildContentAndList();
+                return _content;
+            } 
+        }
+        private dynamic _content;
 
         /// <summary>
         /// List item of the current view
         /// </summary>
-		public dynamic ListContent { get; }
+		public dynamic ListContent {
+            get
+            {
+                if(_listContent == null) TryToBuildListContentObject();
+                return _listContent;
+            } 
+        }
 
+        private dynamic _listContent;
+
+
+        private void TryToBuildListContentObject()
+        {
+            Log.Add("try to build ListContent (header) object");
+            if (Data == null || _sxcInstance.Template == null) return;
+            if (!Data.Out.ContainsKey(AppConstants.ListContent)) return;
+
+            var listEntity = Data[AppConstants.ListContent].List.FirstOrDefault();
+            _listContent = listEntity == null ? null : AsDynamic(listEntity);
+        }
+
+#pragma warning disable 618
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
-        public List<Element> List { get; }
+        public List<Element> List {
+            get
+            {
+                if(_list == null) TryToBuildContentAndList();
+                return _list;
+            } 
+        }
+        private List<Element> _list;
+
+        private void TryToBuildContentAndList()
+        {
+            Log.Add("try to build List and Content objects");
+            _list = new List<Element>();
+
+            if (Data == null || _sxcInstance.Template == null) return;
+            if (!Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
+
+            var entities = Data.List.ToList();
+            if (entities.Any()) _content = AsDynamic(entities.First());
+
+            _list = entities.Select(GetElementFromEntity).ToList();
+
+            Element GetElementFromEntity(Eav.Interfaces.IEntity e)
+            {
+                var el = new Element
+                {
+                    EntityId = e.EntityId,
+                    Content = AsDynamic(e)
+                };
+
+                if (e is EntityInContentGroup c)
+                {
+                    el.GroupId = c.GroupId;
+                    el.Presentation = c.Presentation == null ? null : AsDynamic(c.Presentation);
+                    el.SortOrder = c.SortOrder;
+                }
+
+                return el;
+            }
+        }
+#pragma warning restore 618
+
         #endregion
 
         #region Adam
