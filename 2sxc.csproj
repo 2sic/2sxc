@@ -282,6 +282,8 @@
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".databeta\contenttypes\System.%40entity-query.json" />
+    <Content Include=".databeta\contenttypes\System.%40string-dropdown-query.json" />
     <None Include=".databeta\readme.md" />
     <Content Include=".gitignore" />
     <Content Include="Administration\Export.js" />

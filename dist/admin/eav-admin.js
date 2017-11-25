@@ -53,154 +53,172 @@ if (!String.prototype.endsWith) {
 }());
 (function () {
 
-    contentExportController.$inject = ["appId", "contentType", "itemIds", "contentExportService", "eavAdminDialogs", "eavConfig", "languages", "$uibModalInstance", "$filter", "$translate"];
-    angular.module("ContentExportApp")
-        .controller("ContentExport", contentExportController);
+    contentExportController.$inject = ["appId", "contentType", "itemIds", "contentExportService", "eavAdminDialogs", "eavConfig", "languages", "debugState", "$uibModalInstance", "$filter", "$translate"];
+    angular.module('ContentExportApp')
+        .controller('ContentExport', contentExportController);
 
-    function contentExportController(appId, contentType, itemIds, contentExportService, eavAdminDialogs, eavConfig, languages, $uibModalInstance, $filter, $translate) {
+    function contentExportController(appId, contentType, itemIds, contentExportService, eavAdminDialogs, eavConfig, languages, debugState, $uibModalInstance, $filter, $translate) {
 
-        var vm = this;
-
-        vm.formValues = {};
+        var vm = Object.assign(this,
+            {
+                debug: debugState,
+                formValues: {},
+                formFields: [], // will be populated on activate
+                exportContent: exportContent,
+                exportJson: exportJson,
+                close: close
+            });
 
         // check if we were given some IDs to export only that
         var hasIdList = (Array.isArray(itemIds) && itemIds.length > 0);
-        var cSelection = "Selection";
+        var cSelection = 'Selection';
 
         vm.formFields = [{
-            // Content type
-            key: "AppId",
-            type: "hidden",
+            key: 'AppId',
+            type: 'hidden',
             defaultValue: appId
         }, {
             // Default / fallback language
-            key: "DefaultLanguage",
-            type: "hidden",
-            defaultValue: $filter("isoLangCode")(languages.defaultLanguage)
+            key: 'DefaultLanguage',
+            type: 'hidden',
+            defaultValue: $filter('isoLangCode')(languages.defaultLanguage)
         }, {
             // Content type
-            key: "ContentType",
-            type: "hidden",
+            key: 'ContentType',
+            type: 'hidden',
             defaultValue: contentType
         }, {
-            key: "Language",
-            type: "select",
+            key: 'Language',
+            type: 'select',
             expressionProperties: {
                 "templateOptions.label": "'Content.Export.Fields.Language.Label' | translate",
                 "templateOptions.options": function () {
                     var options = [{
-                        "name": $translate.instant("Content.Export.Fields.Language.Options.All"),
-                        "value": ""
+                        "name": $translate.instant('Content.Export.Fields.Language.Options.All'),
+                        "value": ''
                     }];
                     angular.forEach(languages.languages, function (lang) {
-                        var langCode = $filter("isoLangCode")(lang.key);
+                        var langCode = $filter('isoLangCode')(lang.key);
                         options.push({ "name": langCode, "value": langCode });
                     });
                     return options;
                 }
             },
-            defaultValue: ""
+            defaultValue: ''
         }, {
-            key: "RecordExport",
-            type: "radio",
+            key: 'RecordExport',
+            type: 'radio',
             expressionProperties: {
                 "templateOptions.label": "'Content.Export.Fields.RecordExport.Label' | translate",
                 "templateOptions.options": function () {
                     var opts = [{
-                        "name": $translate.instant("Content.Export.Fields.RecordExport.Options.Blank"),
-                        "value": "Blank"
+                        "name": $translate.instant('Content.Export.Fields.RecordExport.Options.Blank'),
+                        "value": 'Blank'
                     }, {
-                        "name": $translate.instant("Content.Export.Fields.RecordExport.Options.All"),
-                        "value": "All"
+                        "name": $translate.instant('Content.Export.Fields.RecordExport.Options.All'),
+                        "value": 'All'
                     }];
                     if (hasIdList)
                         opts.push({
-                            "name": $translate.instant("Content.Export.Fields.RecordExport.Options.Selection", { count: itemIds.length }), // "todo: selected " + itemIds.length + " items",
+                            "name": $translate.instant('Content.Export.Fields.RecordExport.Options.Selection', { count: itemIds.length }), // "todo: selected " + itemIds.length + " items",
                             "value": cSelection
                         });
                     return opts;
                 }
             },
-            defaultValue: hasIdList ? cSelection : "All"
+            defaultValue: hasIdList ? cSelection : 'All'
         }, {
             // Language references
-            key: "LanguageReferences",
-            type: "radio",
+            key: 'LanguageReferences',
+            type: 'radio',
             expressionProperties: {
                 "templateOptions.label": "'Content.Export.Fields.LanguageReferences.Label' | translate",
                 "templateOptions.disabled": function () {
-                    return vm.formValues.RecordExport === "Blank";
+                    return vm.formValues.RecordExport === 'Blank';
                 },
                 "templateOptions.options": function () {
                     return [{
-                        "name": $translate.instant("Content.Export.Fields.LanguageReferences.Options.Link"),
-                        "value": "Link"
+                        "name": $translate.instant('Content.Export.Fields.LanguageReferences.Options.Link'),
+                        "value": 'Link'
                     }, {
-                        "name": $translate.instant("Content.Export.Fields.LanguageReferences.Options.Resolve"),
-                        "value": "Resolve"
+                        "name": $translate.instant('Content.Export.Fields.LanguageReferences.Options.Resolve'),
+                        "value": 'Resolve'
                     }];
                 }
             },
-            defaultValue: "Link"
+            defaultValue: 'Link'
         }, {
             // File / page references
-            key: "ResourcesReferences",
-            type: "radio",
+            key: 'ResourcesReferences',
+            type: 'radio',
             expressionProperties: {
                 "templateOptions.label": "'Content.Export.Fields.ResourcesReferences.Label' | translate",
                 "templateOptions.disabled": function () {
-                    return vm.formValues.RecordExport === "Blank";
+                    return vm.formValues.RecordExport === 'Blank';
                 },
                 "templateOptions.options": function () {
                     return [{
-                        "name": $translate.instant("Content.Export.Fields.ResourcesReferences.Options.Link"),
-                        "value": "Link"
+                        "name": $translate.instant('Content.Export.Fields.ResourcesReferences.Options.Link'),
+                        "value": 'Link'
                     }, {
-                        "name": $translate.instant("Content.Export.Fields.ResourcesReferences.Options.Resolve"),
-                        "value": "Resolve"
+                        "name": $translate.instant('Content.Export.Fields.ResourcesReferences.Options.Resolve'),
+                        "value": 'Resolve'
                     }];
                 }
             },
-            defaultValue: "Link"
+            defaultValue: 'Link'
         }];
 
 
-        vm.exportContent = function exportContent() {
+        function exportContent() {
             contentExportService.exportContent(vm.formValues, hasIdList && vm.formValues.RecordExport === cSelection ? itemIds : null);
-        };
+        }
 
-        vm.close = function close() {
-            $uibModalInstance.dismiss("cancel");
-        };
+        function exportJson() {
+            contentExportService.exportJson(appId, vm.formValues.ContentType);
+        }
+
+        function close() {
+            $uibModalInstance.dismiss('cancel');
+        }
     }
 }());
 (function () {
 
     contentExportService.$inject = ["$http", "eavConfig"];
-    angular.module("ContentExportApp")
-         .factory("contentExportService", contentExportService);
+    angular.module('ContentExportApp')
+         .factory('contentExportService', contentExportService);
 
 
     function contentExportService($http, eavConfig) {
-        var srvc = {
-            exportContent: exportContent
+        return {
+            exportContent: exportContent,
+            exportJson: exportJson
         };
-        return srvc;
 
         function exportContent(args, selectedIds) {
-            var url = eavConfig.getUrlPrefix("api") + "/eav/ContentExport/ExportContent",
-                addids = selectedIds ? "&selectedids=" + selectedIds.join() : "",
+            var url = eavConfig.getUrlPrefix('api') + '/eav/ContentExport/ExportContent',
+                addids = selectedIds ? '&selectedids=' + selectedIds.join() : '',
                 fullUrl = url
-                    + "?appId=" + args.AppId
-                    + "&language=" + args.Language
-                    + "&defaultLanguage=" + args.DefaultLanguage
-                    + "&contentType=" + args.ContentType
-                    + "&recordExport=" + args.RecordExport
-                    + "&resourcesReferences=" + args.ResourcesReferences
-                    + "&languageReferences=" + args.LanguageReferences
+                    + '?appId=' + args.AppId
+                    + '&language=' + args.Language
+                    + '&defaultLanguage=' + args.DefaultLanguage
+                    + '&contentType=' + args.ContentType
+                    + '&recordExport=' + args.RecordExport
+                    + '&resourcesReferences=' + args.ResourcesReferences
+                    + '&languageReferences=' + args.LanguageReferences
                     + addids;
 
-            window.open(fullUrl, "_blank" /* "_self" */, "");
+            window.open(fullUrl, '_blank', '');
+        }
+
+        function exportJson(appId, typeName) {
+            var url = eavConfig.getUrlPrefix('api')
+                + '/eav/ContentExport/DownloadTypeAsJson'
+                + '?appId=' + appId
+                + '&name=' + typeName;
+
+            window.open(url, '_blank', '');
         }
     }
 }());
@@ -3399,7 +3417,7 @@ angular.module("EavServices")
         return saveWithToaster;
     }])
 ;
-angular.module("eavTemplates", []).run(["$templateCache", function($templateCache) {$templateCache.put("content-import-export/content-export.html","\r\n<div class=\"modal-header\">\r\n    <button class=\"btn btn-default btn-square btn-subtle pull-right\" type=\"button\" icon=\"remove\" ng-click=\"vm.close()\"></button>\r\n    <h3 class=\"modal-title\" translate=\"Content.Export.Title\">cc</h3>\r\n</div>\r\n\r\n<div class=\"modal-body\">\r\n    <div translate=\"Content.Export.Help\"></div>\r\n    <formly-form form=\"vm.form\" model=\"vm.formValues\" fields=\"vm.formFields\">\r\n    </formly-form>\r\n</div>\r\n\r\n<div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-primary pull-left\" ng-click=\"vm.exportContent()\" translate=\"Content.Export.Commands.Export\"></button>\r\n</div>");
+angular.module("eavTemplates", []).run(["$templateCache", function($templateCache) {$templateCache.put("content-import-export/content-export.html","<div ng-click=\"vm.debug.autoEnableAsNeeded($event)\">\r\n\r\n    <div class=\"modal-header\">\r\n        <button class=\"btn btn-default btn-square btn-subtle pull-right\" type=\"button\" icon=\"remove\" ng-click=\"vm.close()\"></button>\r\n        <h3 class=\"modal-title\" translate=\"Content.Export.Title\">cc</h3>\r\n    </div>\r\n\r\n    <div class=\"modal-body\">\r\n        <div translate=\"Content.Export.Help\"></div>\r\n        <formly-form form=\"vm.form\" model=\"vm.formValues\" fields=\"vm.formFields\">\r\n        </formly-form>\r\n    </div>\r\n\r\n    <div class=\"modal-footer\">\r\n        <button type=\"button\" class=\"btn btn-primary pull-left\"\r\n                ng-click=\"vm.exportContent()\"\r\n                translate=\"Content.Export.Commands.Export\"></button>\r\n\r\n        <button type=\"button\" class=\"btn btn-default pull-left\" ng-click=\"vm.exportJson()\"\r\n                not-yet-translate=\"Content.Export.Commands.ExportTypeAsJson\"\r\n                ng-disabled=\"vm.IsExporting\"\r\n                ng-show=\"vm.debug.on\">\r\n            Export Type Definition as Json (for developers)\r\n        </button>\r\n    </div>\r\n    \r\n    <show-debug-availability class=\"pull-right\"></show-debug-availability>\r\n</div>");
 $templateCache.put("content-import-export/content-import.html","<div ng-click=\"vm.debug.autoEnableAsNeeded($event)\">\r\n    <!-- HEADER -->\r\n    <div class=\"modal-header\">\r\n        <button class=\"btn btn-default btn-square btn-subtle pull-right\" type=\"button\" icon=\"remove\" ng-click=\"vm.close()\"></button>\r\n        <h3 class=\"modal-title\"><span  translate=\"Content.Import.Title\"></span> <span ng-show=\"vm.viewStateSelected > 0\" translate=\"Content.Import.TitleSteps\" translate-values=\"{step: vm.viewStateSelected}\"></span></h3>\r\n    </div>\r\n    <!-- END HEADER -->\r\n\r\n    <div ng-switch=\"vm.viewStateSelected\">\r\n\r\n        <!-- FORM -->\r\n        <div ng-switch-when=\"1\">\r\n            <div class=\"modal-body\">\r\n                <div translate=\"Content.Import.Help\"></div>\r\n                <formly-form form=\"vm.form\" model=\"vm.formValues\" fields=\"vm.formFields\"></formly-form>\r\n                <div class=\"text-warning\" translate=\"Content.Import.Messages.BackupContentBefore\"></div>\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn btn-primary pull-left\" ng-click=\"vm.evaluateContent()\" ng-disabled=\"!vm.formValues.File || !vm.formValues.File.filename\" translate=\"Content.Import.Commands.Preview\"></button>\r\n            </div>\r\n        </div>\r\n        <!-- END FORM -->\r\n\r\n\r\n        <!-- WAITING -->\r\n        <div ng-switch-when=\"0\">\r\n            <div class=\"modal-body\"> {{\'Content.Import.Messages.WaitingForResponse\' | translate}}\r\n            </div>\r\n        </div>\r\n        <!-- END WAITING -->\r\n\r\n\r\n        <!-- EVALUATION RESULT -->\r\n        <div ng-switch-when=\"2\">\r\n            <div class=\"modal-body\">\r\n                <!-- DETAILS / STATISTICS -->\r\n                <div ng-if=\"vm.evaluationResult.Succeeded\">\r\n                    <h4 translate=\"Content.Import.Evaluation.Detail.Title\" translate-values=\"{filename: vm.formValues.File.filename}\"></h4>\r\n                    <h5 translate=\"Content.Import.Evaluation.Detail.File.Title\"></h5>\r\n                    <ul>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.File.ElementCount\" translate-values=\"{count: vm.evaluationResult.Detail.DocumentElementsCount}\"></li>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.File.LanguageCount\" translate-values=\"{count: vm.evaluationResult.Detail.LanguagesInDocumentCount}\"></li>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.File.Attributes\" translate-values=\"{count: vm.evaluationResult.Detail.AttributeNamesInDocument.length, attributes: vm.evaluationResult.Detail.AttributeNamesInDocument.join(\', \')}\"></li>\r\n                    </ul>\r\n                    <h5 translate=\"Content.Import.Evaluation.Detail.Entities.Title\"></h5>\r\n                    <ul>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.Entities.Create\" translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesCreated}\"></li>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.Entities.Update\" translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesUpdated}\"></li>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.Entities.Delete\" translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesDeleted}\"></li>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.Entities.AttributesIgnored\" translate-values=\"{count: vm.evaluationResult.Detail.AttributeNamesNotImported.length, attributes: vm.evaluationResult.Detail.AttributeNamesNotImported.join(\', \')}\"></li>\r\n                    </ul>\r\n                    <div class=\"text-warning\" translate=\"Content.Import.Messages.ImportCanTakeSomeTime\"></div>\r\n                </div>\r\n                <!-- END DETAILS / STATISTICS -->\r\n                <!-- ERRORS -->\r\n                <div ng-if=\"!vm.evaluationResult.Succeeded\">\r\n                    <h4 translate=\"Content.Import.Evaluation.Error.Title\" translate-values=\"{filename: vm.formValues.File.filename}\"></h4>\r\n                    <ul>\r\n                        <li ng-repeat=\"error in vm.evaluationResult.Detail\">\r\n                            <div><span translate=\"Content.Import.Evaluation.Error.Codes.{{error.ErrorCode}}\"></span></div>\r\n                            <div ng-if=\"error.ErrorDetail\"><i translate=\"Content.Import.Evaluation.Error.Detail\" translate-values=\"{detail: error.ErrorDetail}\"></i>\r\n                            </div>\r\n                            <div ng-if=\"error.LineNumber\"><i translate=Content.Import.Evaluation.Error.LineNumber\" translate-values=\"{number: error.LineNumber}\"></i>\r\n                            </div>\r\n                            <div ng-if=\"error.LineDetail\"><i translate=\"Content.Import.Evaluation.Error.LineDetail\" translate-values=\"{detail: error.LineDetail}\"></i>\r\n                            </div>\r\n                        </li>\r\n                    </ul>\r\n                </div>\r\n                <!-- END ERRORS -->\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn pull-left\" ng-click=\"vm.back()\" icon=\"arrow-left\"></button>\r\n                <button type=\"button\" class=\"btn btn-default pull-left\" ng-click=\"vm.importContent()\" translate=\"Content.Import.Commands.Import\" ng-disabled=\"!vm.evaluationResult.Succeeded\"></button>\r\n            </div>\r\n        </div>\r\n        <!-- END EVALUATION RESULT -->\r\n\r\n\r\n        <!-- IMPORT RESULT -->\r\n        <div ng-switch-when=\"3\">\r\n            <div class=\"modal-body\">\r\n                <span ng-show=\"vm.importResult.Succeeded\" translate=\"Content.Import.Messages.ImportSucceeded\"></span>\r\n                <span ng-hide=\"vm.importResult.Succeeded\" translate=\"Content.Import.Messages.ImportFailed\"></span>\r\n            </div>\r\n        </div>\r\n        <!-- END IMPORT RESULT -->\r\n\r\n        <div ng-if=\"vm.debug.on\">\r\n            <h3>Debug infos</h3>\r\n            <pre>{{vm.formValues | json}}</pre>\r\n        </div>\r\n    </div>\r\n</div>");
 $templateCache.put("content-items/content-edit.html","<div class=\"modal-header\">\r\n    <button type=\"button\" class=\"btn btn-default btn-subtle\" ng-click=\"vm.history()\">\r\n        <span class=\"glyphicon glyphicon-time\"> history / todo </span>\r\n    </button>\r\n    <h3 class=\"modal-title\">Edit / New Content</h3>\r\n</div>\r\n\r\n<div class=\"modal-body\">\r\n    this is where the edit appears. Would edit entity {{vm.entityId}} or add a {{vm.contentType}} - depending on the mode: {{vm.mode}}\r\n    <h3>Use cases</h3>\r\n    <ol>\r\n        <li>Edit an existing entity with ID</li>\r\n        <li>Create a new entity of a certaint content-type, just save and done (like from a \"new\" button without content-group)</li>\r\n        <li>Create a new entity of a certain type and assign it to a metadata thing (guid, int, string)</li>\r\n\r\n        <li>Create a new entity and put it into a content-group at the right place</li>\r\n        <li>Edit content-group: item + presentation </li>\r\n        <li>Edit multiple IDs/or new/mix: Edit multiple items with IDs</li>\r\n    </ol>\r\n\r\n    init of 1 edit\r\n    - entity-id in storage\r\n    - new-type + optional: assignment-id + assignment-type\r\n\r\n    - array of the above\r\n    --- [{id 17}, {type: \"person\"}, {type: person, asstype: 4, target: 0205}]\r\n\r\n    - content-group\r\n</div>\r\n");
 $templateCache.put("content-items/content-items-agnostic.html","<div ng-click=\"vm.debug.autoEnableAsNeeded($event)\" class=\"content-items-agnostic\">\r\n    <div class=\"modal-header\">\r\n        <button class=\"btn btn-default btn-square btn-subtle pull-right\" type=\"button\" ng-click=\"vm.close()\"><i icon=\"remove\"></i></button>\r\n        <h3 class=\"modal-title\" translate=\"Content.Manage.Title\"></h3>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <button type=\"button\" class=\"btn btn-primary btn-square\" ng-click=\"vm.add()\"><i icon=\"plus\"></i></button>\r\n        <button type=\"button\"\r\n                class=\"btn btn-default btn-square\"\r\n                uib-tooltip=\"{{ \'ContentTypes.Buttons.Export\' | translate }}\"\r\n                ng-click=\"vm.openExport()\">\r\n            <i icon=\"export\"></i>\r\n        </button>\r\n	    <button ng-if=\"vm.debug.on\" type=\"button\" class=\"btn btn-warning btn-square\" ng-click=\"vm.refresh()\"><i icon=\"repeat\"></i></button>\r\n        <button ng-if=\"vm.debug.on\" type=\"button\" class=\"btn btn-warning btn-square\" ng-click=\"vm.debugFilter()\"><i icon=\"filter\"></i></button>\r\n\r\n		<div ag-grid=\"vm.gridOptions\" class=\"ag-grid-wrapper\"></div>\r\n	    \r\n        <show-debug-availability class=\"pull-right\" ></show-debug-availability>\r\n    </div>\r\n</div>");

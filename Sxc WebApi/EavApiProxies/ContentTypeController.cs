@@ -112,5 +112,5 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public void Rename(int appId, int contentTypeId, int attributeId, string newName)
             => _eavCtc.Rename(appId, contentTypeId, attributeId, newName);
 
-    }
+	}
 }
