@@ -805,11 +805,13 @@ $2sxc._contentBlock.manipulator = function (sxc) {
         return cbm.ajaxLoad(sxc, cbm.cUseExistingTemplate, !!preview)
             .then(function () {
                 
-                if (dnn_tabVersioningEnabled) {
-                    dnn.ContentEditorManager.triggerChangeOnPageContentEvent();
-                }
+                // tell Evoq that page has changed if it has changed (Ajax call)
+                if (window.dnn_tabVersioningEnabled) // this only exists in evoq or on new DNNs with tabVersioning
+                    try {
+                        window.dnn.ContentEditorManager.triggerChangeOnPageContentEvent();
+                    }
+                    catch(e) {}
 
-                // ToDo: tell Evoq that page has changed if it has changed (Ajax call)
                 // maybe check if already publish
                 // compare to HTML module
                 // if (publishing is required (FROM CONTENT BLOCK) and publish button not visible) show publish button
