@@ -313,6 +313,16 @@ table.eav-entityselect-table tr.eav-entityselect-item td { padding-top: 2px; pad
 .ui-select-bootstrap .ui-select-choices-row>span { }
 .ui-select-match { outline:0!important; }
 .ui-select-container input { font-size:20px!important; }
+.input-string-dropdown-wrapper .freetext-toggle {
+    width:30px;
+    color:black;
+    border:none;
+    background:none;
+    cursor:pointer;
+}
+.input-string-dropdown-wrapper .freetext-toggle.active { }
+.input-string-dropdown-wrapper { width: 100%; }
+
 .formly-field { position:relative; }
 .eav-localization { position:absolute; top:0; right:0; }
 .eav-localization-lock { float: right; display: inline-block; }
