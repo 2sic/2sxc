@@ -52,5 +52,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	        => PortalSettings.UserInfo.IsInRole(PortalSettings.AdministratorRoleName)
 	            ? _eavCtc.DownloadTypeAsJson(appId, name)
 	            : throw new HttpRequestException("Needs admin permissions to do this");
-	}
+
+	    [HttpGet]
+	    [AllowAnonymous] // will do security check internally
+	    public HttpResponseMessage DownloadEntityAsJson(int appId, int id, string prefix, bool withMetadata)
+            => PortalSettings.UserInfo.IsInRole(PortalSettings.AdministratorRoleName)
+	            ? _eavCtc.DownloadEntityAsJson(appId, id, prefix, withMetadata)
+	            : throw new HttpRequestException("Needs admin permissions to do this");
+
+    }
 }

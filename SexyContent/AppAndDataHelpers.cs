@@ -126,7 +126,7 @@ namespace ToSic.SexyContent
         #region DataSource and ConfigurationProvider (for DS) section
         private IValueCollectionProvider _configurationProvider;
         private IValueCollectionProvider ConfigurationProvider => _configurationProvider ??
-                                                                  (_configurationProvider = Data.In["Default"].Source.ConfigurationProvider);
+                                                                  (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.ConfigurationProvider);
 
         /// <summary>
         /// Create a data-source by type-name. Note that it's better to use the typed version
