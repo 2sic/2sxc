@@ -59,6 +59,33 @@
 		"QuickStart": "For a quick start, we recommend that you install the WebApi demo-app. It contains some WebAPI controllers with various actions and some example views to use these controllers. Download <a href='http://2sxc.org/en/Apps/tag/WebApi' target='_blank'>WebApi demos in the App-Catalog</a> or read more about it in <a href='http://2sxc.org/en/help?tag=webapi' target='_blank'>help</a>",
 		"AddDoesntExist": "there is no automatic add yet - please do it manually in the 'api' folder. Just copy one of an existing project to get started."
 	},
+	"ImportExportOLDRemoveAfter84IsStable": {
+		"Title": "Export or Import <em>parts</em> of this App/Content",
+		"Intro": "Create an xml or zip containing <em>parts</em> of this app, to import into another app or content. Or import such a parts-package.",
+		"FurtherHelp": "For further help visit <a href='http://2sxc.org/en/help?tag=import' target='_blank'>2sxc Help</a>.",
+		"Buttons": {
+			"Import": "import",
+			"Export": "export"
+		},
+		"Import": {
+			"Title": "Import a content export (.zip) or a partial export (.xml)",
+			"Explanation": "This import will add Content-Types, Templates and Content-Items to the current Content or App.",
+			"Select": "select file to import",
+			"Choose": "Choose file"
+		},
+		"Export": {
+			"Title": "Partial Export of Content Types, Template Configuration and Content",
+			"Intro": "This is an advanced export feature to export parts of this Content / App. It will create an XML-file for you which you can import into another site or App",
+			"FurtherHelp": "For further help visit <a href='http://2sxc.org/en/help?tag=export' target='_blank'>2sxc Help</a>.",
+			"Data": {
+				"GroupHeading": "Content Type: {{name}} ({{id}}",
+				"Templates": "Templates",
+				"Items": "Content Items",
+				"SimpleTemplates": "Templates without content type"
+			},
+			"ButtonExport": "Export"
+		}
+	},
 	"Portal": {
 		"Title": "Virtual Database (VDB)",
 		"VdbLabel": "Virtual Database for this Portal",
@@ -139,7 +166,6 @@
 					"Tooltip2": "for help see 2sxc.org/help?tag=adam",
 					"Tooltip3": "ADAM - sponsored with love by 2sic.com",
 					"AdamUploadLabel": "quick-upload using ADAM",
-					"PageLabel": "pick a page",
 					"MenuAdam": "Upload file with Adam",
 					"MenuPage": "Page Picker",
 					"MenuImage": "Image Manager",
@@ -160,13 +186,21 @@
 			"Intro": "click on any snippet to insert"
 		}
 	},
+	"TemplatePicker": {
+		"AppPickerDefault": "&lt;Choose App&gt;",
+		"ContentTypePickerDefault": "&lt;Choose Content Type&gt;",
+		"LayoutElement": "Layout element",
+		"Save": "Save and close",
+		"Cancel": "Cancel change",
+		"Close": "Close",
+		"Install": "install more apps...",
+		"Catalog": "browse app catalog",
+		"App": "configure app",
+		"Zone": "manage all apps"
+	},
 	"ImportExport": {
 		"Title": "Export or Import <em>parts</em> of this App",
 		"Intro": "Create an xml containing parts of the app, e.g. content and templates.<br/>Import parts from such an xml into this app.",
-		"Buttons": {
-			"Export": "export parts",
-			"Import": "import parts"
-		},
 		"ImportContent": {
 			"Title": "Import Content and Templates into this App",
 			"Intro": "Import content and templates from a content export (zip) or partial export (xml) to this app. The entire content of the selected file will be imported. If you want to import an entire app, go to the <em>App-Management</em>.",
@@ -236,31 +270,8 @@
 				"ResetAppGuid": "Reset the app GUID to zero. You only need this option for special tutorial apps, and usually must not select it."
 			},
 			"Commands": {
-				"Export": "Export App",
-				"ExportForVersionControl": "Export Data for Github versioning"
+				"Export": "Export"
 			}
-		}
-	},
-	"TemplatePicker": {
-		"AppPickerDefault": "Choose App",
-		"ContentTypePickerDefault": "Choose Content Type",
-		"LayoutElement": "Layout element",
-		"ChangeView": "Change view",
-		"Save": "Save and close",
-		"Cancel": "Cancel change",
-		"Close": "Close",
-		"Install": "install apps",
-		"Catalog": "browse app catalog",
-		"App": "configure app",
-		"Zone": "manage all apps"
-	},
-	"ItemHistory": {
-		"Title": "History of this item",
-		"Version": "Version {{version}}",
-		"NoHistory": "No previous versions of this item found",
-		"Buttons": {
-			"RestoreLive": "Restore",
-			"RestoreDraft": "Restore as draft"
 		}
 	}
 }
