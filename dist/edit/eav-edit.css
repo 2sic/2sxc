@@ -313,6 +313,52 @@ table.eav-entityselect-table tr.eav-entityselect-item td { padding-top: 2px; pad
 .ui-select-bootstrap .ui-select-choices-row>span { }
 .ui-select-match { outline:0!important; }
 .ui-select-container input { font-size:20px!important; }
+.eav-entityselect { margin-top: 1px; font-size: 20px; padding-top: 12px; }
+.eav-entityselect .btn { font-size:20px; }
+.eav-entityselect-table tr, table.eav-entityselect-table tr td { border: 0; padding-left: 0; }
+.eav-entityselect ol { list-style-type: none; margin: 0; padding: 0; }
+
+.eav-entityselect-item-actions {
+    display: inline-block;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0;
+    list-style-type:none;
+    line-height:14px;
+    margin:0;
+}
+.eav-entityselect-item:hover .eav-entityselect-item-actions { opacity: 1; }
+.eav-entityselect-item-actions li { float:left;}
+.eav-entityselect-item-actions li a {}
+.eav-entityselect-item-actions li a i { color:#434a54; }
+
+.eav-entityselect-item > div { padding: 5px 4px 5px 0; position: relative; line-height: 25px; }
+.eav-entityselect-item > div:hover { background: #8DCAFA; }
+.eav-entityselect-item-title { display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; font-weight: normal; }
+
+.eav-entityselect-table tr th:first-child { width:32px; }
+.eav-entityselect-table tr th:last-child { width: 110px; text-align: right; }
+.eav-entityselect-table th { padding:0!important; line-height:0!important; border:0!important; }
+
+.eav-entityselect-selector option[disabled], .eav-entityselect-selector option:disabled { color: #dddddd; }
+.angular-ui-tree-placeholder { margin: 0; border:1px dotted #DDD; background:#EFEFEF }
+
+table.eav-entityselect-table { width: 100%; }
+table.eav-entityselect-table tr.eav-entityselect-item td { padding-top: 2px; padding-bottom: 4px; line-height: 24px; }
+
+.subtle-till-mouseover { opacity: 0.2; }
+.subtle-till-mouseover:hover { opacity: 1; }
+
+.eav-entityselect-actions { position:relative; padding-top:3px; }
+.eav-entityselect-actions.no-add { border-bottom:1px solid #ddd!important; }
+.eav-entityselect-action-create { width:100px; position:absolute; right:0; top:0; }
+.eav-entityselect-action-addexisting { padding-right:47px;  }
+.eav-entityselect-action-addexisting .ui-select-toggle { border:0; border-bottom:1px solid #ddd!important; border-radius:0; padding:2px 0 0 0; color:#777; }
+
+.eav-entityselect .dropdown-menu { background:white; border: 1px solid rgba(0,0,0,.15); border-radius:4px; box-shadow:0 6px 12px rgba(0,0,0,.175); }
+.ui-select-bootstrap .ui-select-choices-row>span { }
+.ui-select-match { outline:0!important; }
+.ui-select-container input { font-size:20px!important; }
 .input-string-dropdown-wrapper .freetext-toggle {
     width:30px;
     color:black;
