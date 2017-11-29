@@ -6,7 +6,9 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using Newtonsoft.Json.Linq;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -32,7 +34,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         /// Get a Pipeline with DataSources
         /// </summary>
         [HttpGet]
-		public Dictionary<string, object> GetPipeline(int appId, int? id = null) => _controller.GetPipeline(appId, id);
+		public QueryDefinitionInfo GetPipeline(int appId, int? id = null) => _controller.GetPipeline(appId, id);
 
 	    /// <summary>
 		/// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
@@ -47,7 +49,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    /// <param name="appId">AppId this Pipeline belogs to</param>
 	    /// <param name="id">PipelineEntityId</param>
 	    [HttpPost]
-	    public Dictionary<string, object> SavePipeline([FromBody] dynamic data, int appId, int? id = null)
+	    public QueryDefinitionInfo SavePipeline([FromBody] QueryDefinitionInfo data, int appId, int id)
 	        => _controller.SavePipeline(data, appId, id);
 
 

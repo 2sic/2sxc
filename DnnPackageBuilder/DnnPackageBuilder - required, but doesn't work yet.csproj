@@ -13,6 +13,11 @@
     <Configurations>Debug;Release;Dbg Testing</Configurations>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="SqlDataProvider\**" />
+    <EmbeddedResource Remove="SqlDataProvider\**" />
+    <None Remove="SqlDataProvider\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <Content Include="icon-app.png" />
@@ -34,17 +39,6 @@
     <None Include="2sic_2SexyContent.dnn">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="SqlDataProvider\00.99.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\07.00.03.SqlDataProvider" />
-    <Content Include="SqlDataProvider\07.02.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\07.02.02.SqlDataProvider" />
-    <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
-    <Content Include="SqlDataProvider\07.03.03.SqlDataProvider" />
-    <Content Include="SqlDataProvider\08.00.06.SqlDataProvider" />
-    <Content Include="SqlDataProvider\08.01.00.SqlDataProvider" />
-    <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
-    <Content Include="SqlDataProvider\08.05.02.SqlDataProvider" />
-    <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Properties\Settings.settings">
