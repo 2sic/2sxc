@@ -30,7 +30,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
         [ValidateAntiForgeryToken]                                          // currently only available for modules, so always require the security token
-        public dynamic Query([FromUri] string name)
+        public dynamic Query([FromUri] string name, [FromUri] bool includeGuid = false)
         {
             Log.Add($"query name:{name}");
             // use the previously defined query, or just get it from the request (module-mode)
@@ -53,7 +53,9 @@ namespace ToSic.SexyContent.WebApi
                     ReasonPhrase = "Request not allowed"
                 });
 
-            return new Serializer().Prepare(query);
+            var serializer = new Serializer();
+            serializer.IncludeGuid = includeGuid;
+            return serializer.Prepare(query);
         }
 
         [AllowAnonymous]
