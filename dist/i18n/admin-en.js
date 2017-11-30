@@ -1,16 +1,20 @@
 {
 	"General": {
+		"Note2Translator": "these are the main keys for buttons and short messages, used in various dialogs",
 		"Buttons": {
 			"Add": "add",
-			"Refresh": "refresh",
-			"System": "advanced system functions",
-			"Save": "save",
 			"Cancel": "cancel",
-			"Permissions": "permissions",
-			"Edit": "edit",
-			"Delete": "delete",
 			"Copy": "copy",
-			"Rename": "rename"
+			"Delete": "delete",
+			"Edit": "edit",
+			"ForceDelete": "force delete",
+			"NotSave": "not save",
+			"Permissions": "permissions",
+			"Refresh": "refresh",
+			"Rename": "rename",
+			"Save": "save",
+			"System": "advanced system functions",
+			"Metadata": "metadata"
 		},
 		"Messages": {
 			"Loading": "loading...",
@@ -19,8 +23,10 @@
 		},
 		"Questions": {
 			"Delete": "are you sure you want to delete {{target}}?",
-			"DeleteEntity": "delete '{{title}}' ({{id}}?",
-			"SystemInput": "This is for very advanced operations. Only use this if you know what you're doing. \n\n Enter admin commands:"
+			"DeleteEntity": "delete '{{title}}' ({{id}})?",
+			"Rename": "what new name would you like for {{target}}?",
+			"SystemInput": "This is for very advanced operations. Only use this if you know what you're doing. \n\n Enter admin commands:",
+			"ForceDelete": "do you want to force delete '{{title}}' ({{id}})?"
 		},
 		"Terms": {
 			"Title": "title"
@@ -85,7 +91,8 @@
 			"Name": "Name",
 			"Description": "Description",
 			"Fields": "Fields",
-			"Items": "Items"
+			"Items": "Items",
+			"Actions": "Actions"
 		},
 		"TitleExportImport": "Export / Import",
 		"Buttons": {
@@ -127,7 +134,8 @@
 			"Name": "Name",
 			"Id": "ID",
 			"Condition": "Condition",
-			"Grant": "Grant"
+			"Grant": "Grant",
+			"Actions": "Actions"
 		}
 	},
 	"Pipeline": {
@@ -137,7 +145,8 @@
 			"Table": {
 				"Id": "ID",
 				"Name": "Name",
-				"Description": "Description"
+				"Description": "Description",
+				"Actions": ""
 			}
 		},
 		"Designer": {},
@@ -211,7 +220,8 @@
 					"Label": "Export data",
 					"Options": {
 						"Blank": "No, just export blank data schema (for new data import)",
-						"All": "Yes, export all content-items"
+						"All": "Yes, export all content-items",
+						"Selection": "Export selected {{count}} items"
 					}
 				}
 			}

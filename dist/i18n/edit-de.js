@@ -9,6 +9,11 @@
 		"Published": "Veröffentlicht",
 		"Unpublished": "Nicht veröffentlicht / Entwurf"
 	},
+	"SaveMode": {
+		"show": "element anzeigen",
+		"hide": "element ausblenden",
+		"branch": "nur änderungen ausblenden"
+	},
 	"Message": {
 		"Saving": "Speichern...",
 		"Saved": "Gespeichert",
@@ -22,7 +27,8 @@
 		"UnclearError": "Da lief was falsch - vielleicht funktioniert ein Teil, vielleicht auch nicht. Entschuldigung :(",
 		"InnerControlMustOverride": "Inner control must override this function.",
 		"UnsavedChanges": "Du hast nicht gespeicherte Änderungen.",
-		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for"
+		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for",
+		"AdamUploadError": "Der Upload der Datei ist fehlgeschlagen. Möglicherweise ist die Datei zu gross."
 	},
 	"General": {},
 	"EditEntity": {
@@ -32,7 +38,7 @@
 	},
 	"FieldType": {
 		"Entity": {
-			"Choose": "-- Element hinzufügen --",
+			"Choose": "-- Element auswählen --",
 			"New": "-- Neues Element erstellen --",
 			"EntityNotFound": "(Element nicht gefunden)",
 			"DragMove": "Ziehen um die Liste neu anzuordnen",
@@ -52,13 +58,19 @@
 		"GoogleTranslate": "Online Übersetzung (Google)",
 		"Copy": "Kopieren von",
 		"Use": "Verwenden von",
-		"Share": "Teilen mit"
+		"Share": "Teilen mit",
+		"AllFields": "alle Felder"
 	},
 	"LangWrapper": {
 		"CreateValueInDefFirst": "Bitte das Feld '{{fieldname}}' zuerst in der Standardsprache befüllen vor dem Übersetzen."
 	},
 	"Dialog1": {},
 	"dialog2": {},
+	"CalendarPopup": {
+		"ClearButton": "Löschen",
+		"CloseButton": "Fertig",
+		"CurrentButton": "Heute"
+	},
 	"Extension.TinyMce": {
 		"Link.AdamFile": "ADAM-Datei (empfohlen)",
 		"Link.AdamFile.Tooltip": "ADAM-Dateien verlinken - Dateien einfach hierhin ziehen - verwendet den Automatic Digital Assets Manager",
@@ -76,6 +88,7 @@
 		"H1": "Ü1",
 		"H2": "Ü2",
 		"H3": "Ü3",
-		"Remove": "Entfernen"
+		"Remove": "Entfernen",
+		"ContentBlock.Add": "App oder Inhaltsbaustein einfügen"
 	}
 }

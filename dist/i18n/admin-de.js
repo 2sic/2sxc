@@ -2,15 +2,17 @@
 	"General": {
 		"Buttons": {
 			"Add": "Hinzufügen",
-			"Refresh": "Aktualisieren",
-			"System": "Erweitere System-Funktionen",
-			"Save": "Speichern",
 			"Cancel": "Abbrechen",
-			"Permissions": "Berechtigungen",
-			"Edit": "Bearbeiten",
-			"Delete": "Löschen",
 			"Copy": "Kopieren",
-			"Rename": "Umbenennen"
+			"Delete": "Löschen",
+			"Edit": "Bearbeiten",
+			"ForceDelete": "zwangs-löschen",
+			"NotSave": "Nicht speichern",
+			"Permissions": "Berechtigungen",
+			"Refresh": "Aktualisieren",
+			"Rename": "Umbenennen",
+			"Save": "Speichern",
+			"System": "Erweitere System-Funktionen"
 		},
 		"Messages": {
 			"Loading": "wird geladen...",
@@ -19,8 +21,9 @@
 		},
 		"Questions": {
 			"Delete": "Wirklich löschen? {{target}}",
-			"DeleteEntity": "Löschen '{{title}}' ({{id}}?",
-			"SystemInput": "Das ist für fortgeschrittene Benutzer. Benutze es nur, wenn du weisst, was du machst. \n\n Befehl eingeben:"
+			"DeleteEntity": "'{{title}}' ({{id}}) löschen?",
+			"SystemInput": "Das ist für fortgeschrittene Benutzer. Benutze es nur, wenn du weisst, was du machst. \n\n Befehl eingeben:",
+			"ForceDelete": "möchtest du '{{title}}' ({{id}}) zwangs-löschen?"
 		},
 		"Terms": {
 			"Title": "Titel"
@@ -215,7 +218,8 @@
 					"Label": "Daten exportieren",
 					"Options": {
 						"Blank": "Nein, nur Schema exportieren (für den Import von neuen Datensätzen)",
-						"All": "Ja, alle Inhalte exportieren"
+						"All": "Ja, alle Inhalte exportieren",
+						"Selection": "Nur ausgewählte {{count}} Elemente"
 					}
 				}
 			}

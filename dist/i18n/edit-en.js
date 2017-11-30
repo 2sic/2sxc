@@ -9,6 +9,11 @@
 		"Published": "published",
 		"Unpublished": "unpublished / draft"
 	},
+	"SaveMode": {
+		"show": "show this item",
+		"hide": "hide this item",
+		"branch": "hide changes as draft"
+	},
 	"Message": {
 		"Saving": "saving...",
 		"Saved": "saved",
@@ -28,7 +33,8 @@
 		"UnclearError": "Something went wrong - maybe parts worked, maybe not. Sorry :(",
 		"InnerControlMustOverride": "Inner control must override this function.",
 		"UnsavedChanges": "You have unsaved changes.",
-		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for"
+		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for",
+		"AdamUploadError": "The upload failed. The most likely cause is that the file you were trying to upload is bigger than the maximum upload size."
 	},
 	"General": {},
 	"EditEntity": {
@@ -58,10 +64,16 @@
 		"GoogleTranslate": "machine-translate (Google)",
 		"Copy": "copy from",
 		"Use": "use from",
-		"Share": "share from"
+		"Share": "share from",
+		"AllFields": "all fields"
 	},
 	"LangWrapper": {
 		"CreateValueInDefFirst": "Please create the value for '{{fieldname}}' in the default language before translating it."
+	},
+	"CalendarPopup": {
+		"ClearButton": "Clear",
+		"CloseButton": "Done",
+		"CurrentButton": "Today"
 	},
 	"Extension.TinyMce": {
 		"Link.AdamFile": "Link ADAM-file (recommended)",
@@ -80,6 +92,7 @@
 		"H1": "H1",
 		"H2": "H2",
 		"H3": "H3",
-		"Remove": "Remove"
+		"Remove": "Remove",
+		"ContentBlock.Add": "add app or content-block"
 	}
 }
