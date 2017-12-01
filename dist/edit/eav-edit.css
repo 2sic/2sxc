@@ -306,13 +306,22 @@ table.eav-entityselect-table tr.eav-entityselect-item td { padding-top: 2px; pad
 .eav-entityselect-actions { position:relative; padding-top:3px; }
 .eav-entityselect-actions.no-add { border-bottom:1px solid #ddd!important; }
 .eav-entityselect-action-create { width:100px; position:absolute; right:0; top:0; }
-.eav-entityselect-action-addexisting { padding-right:47px;  }
+.eav-entityselect-reload { width:40px; position:absolute; right:35px; top:7px; }
+.eav-entityselect-action-addexisting { padding-right:81px;  }
 .eav-entityselect-action-addexisting .ui-select-toggle { border:0; border-bottom:1px solid #ddd!important; border-radius:0; padding:2px 0 0 0; color:#777; }
 
 .eav-entityselect .dropdown-menu { background:white; border: 1px solid rgba(0,0,0,.15); border-radius:4px; box-shadow:0 6px 12px rgba(0,0,0,.175); }
 .ui-select-bootstrap .ui-select-choices-row>span { }
 .ui-select-match { outline:0!important; }
 .ui-select-container input { font-size:20px!important; }
+.eav-entityselect-reload { color:#DDD; cursor:pointer; }
+    .eav-entityselect-reload.active {
+        color: #0088f4;
+    }
+.eav-entityselect-reload { color:#DDD; cursor:pointer; }
+    .eav-entityselect-reload.active {
+        color: #0088f4;
+    }
 .input-string-dropdown-wrapper .freetext-toggle {
     width:30px;
     color:black;

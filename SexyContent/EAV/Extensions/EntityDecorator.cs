@@ -67,6 +67,12 @@ namespace ToSic.SexyContent.EAVExtensions
 
         public int Version => _baseEntity.Version;
 
+        public IMetadataOfItem Metadata => _baseEntity.Metadata;
+
+        #endregion
+
+        #region metadata
+
         #endregion
     }
 }

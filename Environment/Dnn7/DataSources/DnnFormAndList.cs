@@ -2,7 +2,7 @@
 using DotNetNuke.Modules.UserDefinedTable;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Attributes;
+using ToSic.Eav.DataSources.VisualQuery;
 
 namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 {
@@ -10,8 +10,8 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
     /// <summary>
     /// Delivers UDT-data (now known as Form and List) to the templating engine
     /// </summary>
-    [PipelineDesigner]
-    [DataSourceProperties(Type = DataSourceType.Source, DynamicOut = true,
+    //[PipelineDesigner]
+    [VisualQuery(Type = DataSourceType.Source, DynamicOut = true,
         ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnFormAndList")]
 
     public class DnnFormAndList : BaseDataSource

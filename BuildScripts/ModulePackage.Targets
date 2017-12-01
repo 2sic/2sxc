@@ -34,6 +34,7 @@
       <DefaultExclude Include="ModulePackages\**" />
       <DefaultExclude Include="DnnPackageBuilder\**" />
       <DefaultExclude Include="xSqlDataProvider\**" />
+      <DefaultExclude Include=".databeta\**" />
       <DefaultExclude Include="2Sexy Content Testing\**" />
 			<DefaultExclude Include=".git\**" />
       <DefaultExclude Include="**\node_modules\**" />

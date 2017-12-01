@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Attributes;
+using ToSic.Eav.DataSources.VisualQuery;
 
 namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 {
-	[PipelineDesigner]
-	[DataSourceProperties(Type = DataSourceType.Source, DynamicOut = false,
+
+	[VisualQuery(Type = DataSourceType.Source, DynamicOut = false,
         Icon = "database",
 	    HelpLink = "https://github.com/2sic/2sxc/wiki/DotNet-DataSource-DnnSqlDataSource",
 	    ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnSqlDataSource")]

@@ -7,6 +7,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -19,26 +20,26 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     [SxcWebApiExceptionHandling]
 	public class PipelineDesignerController : DnnApiControllerWithFixes
 	{
-		private Eav.WebApi.PipelineDesignerController _controller;
+		private Eav.WebApi.PipelineDesignerController _eavCont;
 
 	    protected override void Initialize(HttpControllerContext controllerContext)
 	    {
 	        base.Initialize(controllerContext); // very important!!!
 	        Log.Rename("2sPipC");
-			_controller = new Eav.WebApi.PipelineDesignerController(Log);
+			_eavCont = new Eav.WebApi.PipelineDesignerController(Log);
 	    }
 
         /// <summary>
         /// Get a Pipeline with DataSources
         /// </summary>
         [HttpGet]
-		public Dictionary<string, object> GetPipeline(int appId, int? id = null) => _controller.GetPipeline(appId, id);
+		public QueryDefinitionInfo GetPipeline(int appId, int? id = null) => _eavCont.GetPipeline(appId, id);
 
 	    /// <summary>
 		/// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
 		/// </summary>
 		[HttpGet]
-		public IEnumerable<QueryRuntime.DataSourceInfo> GetInstalledDataSources() => _controller.GetInstalledDataSources();
+		public IEnumerable<QueryRuntime.DataSourceInfo> GetInstalledDataSources() => _eavCont.GetInstalledDataSources();
 
 	    /// <summary>
 	    /// Save Pipeline
@@ -47,23 +48,21 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    /// <param name="appId">AppId this Pipeline belogs to</param>
 	    /// <param name="id">PipelineEntityId</param>
 	    [HttpPost]
-	    public Dictionary<string, object> SavePipeline([FromBody] dynamic data, int appId, int? id = null)
-	        => _controller.SavePipeline(data, appId, id);
+	    public QueryDefinitionInfo SavePipeline([FromBody] QueryDefinitionInfo data, int appId, int id)
+	        => _eavCont.SavePipeline(data, appId, id);
 
 
 	    /// <summary>
 	    /// Query the Result of a Pipline using Test-Parameters
 	    /// </summary>
 	    [HttpGet]
-	    public dynamic QueryPipeline(int appId, int id)
-	        => _controller.QueryPipeline(appId, id);
+	    public dynamic QueryPipeline(int appId, int id) => _eavCont.QueryPipeline(appId, id);
 
 	    /// <summary>
 	    /// Clone a Pipeline with all DataSources and their configurations
 	    /// </summary>
 	    [HttpGet]
-	    public void ClonePipeline(int appId, int id)
-	        => _controller.ClonePipeline(appId, id);
+	    public void ClonePipeline(int appId, int id) => _eavCont.ClonePipeline(appId, id);
 	
 
 		/// <summary>
@@ -80,7 +79,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 				throw new Exception(
 				        $"Pipeline is used by Templates and cant be deleted. Pipeline EntityId: {id}. TemplateIds: {string.Join(", ", templatesUsingPipeline)}");
 
-			return _controller.DeletePipeline(appId, id);
+			return _eavCont.DeletePipeline(appId, id);
 		}
+
+	    [HttpPost]
+	    public bool ImportQuery(QueryImport args) => _eavCont.ImportQuery(args);
 	}
 }

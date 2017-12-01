@@ -5,14 +5,14 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Attributes;
+using ToSic.Eav.DataSources.VisualQuery;
 using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent.DataSources
 {
-	[PipelineDesigner]
-    [DataSourceProperties(Type = DataSourceType.Source, 
+
+    [VisualQuery(Type = DataSourceType.Source, 
         EnableConfig = true,
         ExpectsDataOfType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
         HelpLink = "https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ModuleDataSource")]
