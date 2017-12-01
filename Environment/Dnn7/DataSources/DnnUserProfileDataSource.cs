@@ -5,12 +5,12 @@ using System.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Attributes;
+using ToSic.Eav.DataSources.VisualQuery;
 
 namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 {
-	[PipelineDesigner]
-	[DataSourceProperties(Type = DataSourceType.Source, DynamicOut = true,
+
+	[VisualQuery(Type = DataSourceType.Source, DynamicOut = true,
 	    ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource")]
 	public class DnnUserProfileDataSource : ExternalDataDataSource
 	{
