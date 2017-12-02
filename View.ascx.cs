@@ -176,7 +176,7 @@ namespace ToSic.SexyContent
 
                 // App management
                 if (appIsKnown)
-                    actions.Add(GetNextActionID(), "Admin" + (SxcI.IsContentApp ? "" : " " + SxcI.App.Name), "",
+                    actions.Add(GetNextActionID(), "Admin" + (SxcI.IsContentApp ? "" : " " + SxcI.App?.Name), "",
                         "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
                         SecurityAccessLevel.Admin, true, false);
 
