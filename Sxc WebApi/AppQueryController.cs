@@ -29,7 +29,8 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
-        [ValidateAntiForgeryToken]                                          // currently only available for modules, so always require the security token
+        // todo warning: had to disable this temporarily, because of a bug in DNN 9.1 which incorrectly handled this!
+        // [ValidateAntiForgeryToken]                                          // currently only available for modules, so always require the security token
         public dynamic Query([FromUri] string name, [FromUri] bool includeGuid = false)
         {
             Log.Add($"query name:{name}");
