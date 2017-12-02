@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Web;
 using System.Web.Http;
 using System.Web.UI;
@@ -103,14 +102,7 @@ namespace ToSic.SexyContent
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
-        private string HtmlLog()
-        {
-            return Log.Dump(" - ", "<!-- 2sxc extensive log for " + ModuleId + "\n", "-->");
-            //var lg = new StringBuilder("<!-- 2sxc extensive log for " + ModuleId + "\n");
-            //Log.Entries.ForEach(e => lg.AppendLine(e.Source + " - " + e.Message));
-            //lg.Append("-->");
-            //return lg.ToString();
-        }
+        private string HtmlLog() => Log.Dump(" - ", "<!-- 2sxc extensive log for " + ModuleId + "\n", "-->");
 
 
         #region Security Check
@@ -150,7 +142,7 @@ namespace ToSic.SexyContent
         {
             _moduleActions = new ModuleActionCollection();
             var actions = _moduleActions;
-            var appIsKnown = (SxcI.AppId.HasValue);
+            var appIsKnown = SxcI.AppId > 0;
 
             if (appIsKnown)
             {
@@ -184,7 +176,7 @@ namespace ToSic.SexyContent
 
                 // App management
                 if (appIsKnown)
-                    actions.Add(GetNextActionID(), "Admin" + (SxcI.IsContentApp ? "" : " " + SxcI.App.Name), "",
+                    actions.Add(GetNextActionID(), "Admin" + (SxcI.IsContentApp ? "" : " " + SxcI.App?.Name), "",
                         "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
                         SecurityAccessLevel.Admin, true, false);
 
@@ -195,6 +187,7 @@ namespace ToSic.SexyContent
                         SecurityAccessLevel.Admin, true, false);
             }
         }
+
         #endregion
 
     }

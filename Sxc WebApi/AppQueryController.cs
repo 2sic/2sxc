@@ -29,7 +29,8 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
-        [ValidateAntiForgeryToken]                                          // currently only available for modules, so always require the security token
+        // todo warning: had to disable this temporarily, because of a bug in DNN 9.1 which incorrectly handled this!
+        //[ValidateAntiForgeryToken]                                          // currently only available for modules, so always require the security token
         public dynamic Query([FromUri] string name, [FromUri] bool includeGuid = false)
         {
             Log.Add($"query name:{name}");
@@ -82,8 +83,7 @@ namespace ToSic.SexyContent.WebApi
                 throw new Exception("Can't find Query with name '" + name + "'");
 
             // Get query, check what permissions were assigned to the query-definition
-            var query = _queryApp.Query[name] as DeferredPipelineQuery;
-            if (query == null)
+            if (!(_queryApp.Query[name] is DeferredPipelineQuery query))
                 throw new Exception("can't find query with name '" + name + "'");
             return query;
         }
