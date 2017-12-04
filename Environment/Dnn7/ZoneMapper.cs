@@ -11,7 +11,7 @@ using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class ZoneMapper : HasLog, IZoneMapper
+    public class ZoneMapper<T> : HasLog, IZoneMapper<T> where T: PortalSettings
     {
         public ZoneMapper(Log parentLog = null) : base("DNN.ZoneMp", parentLog)
         {
@@ -47,6 +47,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return zoneId;
         }
 
+        public int GetZoneId(Tennant<T> tennant) => GetZoneId(tennant.Settings.PortalId);
+
 
         /// <summary>
         /// Returns all DNN Cultures with active / inactive state
@@ -75,5 +77,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 .ThenBy(c => c.Key).ToList();
 
         }
+
+        public List<TempTempCulture> CulturesWithState(T tennant, int zoneId) => CulturesWithState(tennant.PortalId, zoneId);
     }
 }

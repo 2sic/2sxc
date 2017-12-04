@@ -6,6 +6,8 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Queries;
+using ToSic.Eav.Types;
 using ToSic.SexyContent.Security;
 using ToSic.SexyContent.Serializers;
 
@@ -78,11 +80,19 @@ namespace ToSic.SexyContent.WebApi
 
         private DeferredPipelineQuery GetQueryByName(string name)
         {
+            // BETA - TEST-SUPPORT FOR GLOBAL QUERIES
+            var tempglobid = "global-beta-";
+            if (name.StartsWith(tempglobid))
+            {
+                var innername = name.Substring(tempglobid.Length);
+                return _queryApp.GlobalQueryBeta(innername);
+            }
+
             // Try to find the query, abort if not found
             if (!_queryApp.Query.ContainsKey(name))
                 throw new Exception("Can't find Query with name '" + name + "'");
 
-            // Get query, check what permissions were assigned to the query-definition
+            // Get query, make suer it's the right type...
             if (!(_queryApp.Query[name] is DeferredPipelineQuery query))
                 throw new Exception("can't find query with name '" + name + "'");
             return query;

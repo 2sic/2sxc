@@ -33,11 +33,13 @@ namespace ToSic.SexyContent
         public static readonly string WebConfigFileName = "web.config";
         public static readonly string SexyContentGroupName = "2sxc designers";
         public static readonly string AttributeSetScope = "2SexyContent";
-        public static readonly string AttributeSetScopeApps = "2SexyContent-App";
+        //public static readonly string AttributeSetScopeApps = "2SexyContent-App";
         public static readonly string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
-        public static readonly string AttributeSetStaticNameApps = "2SexyContent-App";
-        public static readonly string AttributeSetStaticNameAppResources = "App-Resources";
-        public static readonly string AttributeSetStaticNameAppSettings = "App-Settings";
+
+        //public static readonly string AttributeSetStaticNameApps = "2SexyContent-App";
+        //public static readonly string AttributeSetStaticNameAppResources = "App-Resources";
+        //public static readonly string AttributeSetStaticNameAppSettings = "App-Settings";
+
         internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
 
         internal static readonly int DataIsMissingInDb = -100;

@@ -43,7 +43,7 @@ namespace ToSic.SexyContent.DataSources
                 log.Add($"override template, & pipe#{overrideTemplate.Pipeline?.EntityId}");
                 // Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
                 if (overrideTemplate.Pipeline != null)
-                    new DataPipelineFactory(parentLog).GetDataSource(sxc.AppId ?? -999, overrideTemplate.Pipeline.EntityId,
+                    new DataPipelineFactory(parentLog).GetDataSource(sxc.AppId ?? -999, overrideTemplate.Pipeline/*.EntityId*/,
                         configurationProvider, viewDataSource, showDrafts: showDrafts);
 
             }

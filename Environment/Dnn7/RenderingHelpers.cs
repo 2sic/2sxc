@@ -211,7 +211,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             Current = System.Threading.Thread.CurrentThread.CurrentCulture.Name.ToLower(); // 2016-05-09 had to ignore the Portalsettings, as that is wrong ps.CultureCode.ToLower();
             Primary = ps.DefaultLanguage.ToLower();
-            All = new ZoneMapper().CulturesWithState(ps.PortalId, zoneId) // ZoneHelpers.CulturesWithState(ps.PortalId, zoneId)
+            All = new ZoneMapper<PortalSettings>().CulturesWithState(ps.PortalId, zoneId) // ZoneHelpers.CulturesWithState(ps.PortalId, zoneId)
                     .Where(c => c.Active)
                     .Select(c => new ClientInfoLanguage { key = c.Key.ToLower(), name = c.Text });
         }
