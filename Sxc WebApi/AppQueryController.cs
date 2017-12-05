@@ -6,8 +6,6 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Queries;
-using ToSic.Eav.Types;
 using ToSic.SexyContent.Security;
 using ToSic.SexyContent.Serializers;
 
@@ -32,7 +30,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
         // todo warning: had to disable this temporarily, because of a bug in DNN 9.1 which incorrectly handled this!
-        //[ValidateAntiForgeryToken]                                          // currently only available for modules, so always require the security token
+        // [ValidateAntiForgeryToken]                                          // currently only available for modules, so always require the security token
         public dynamic Query([FromUri] string name, [FromUri] bool includeGuid = false)
         {
             Log.Add($"query name:{name}");
@@ -43,21 +41,20 @@ namespace ToSic.SexyContent.WebApi
             var query = GetQueryByName(name);
 
             var queryConf = query.QueryDefinition;
-            var permissionChecker = new PermissionController(_queryApp.ZoneId, _queryApp.AppId, queryConf.EntityGuid, _useModuleAndCheckModulePermissions ? Dnn.Module : null);
-            var readAllowed = permissionChecker.UserMay(PermissionGrant.Read);
+            var permissionChecker = new PermissionController(queryConf, Log, _useModuleAndCheckModulePermissions ? Dnn.Module : null);
+            var readExplicitlyAllowed = permissionChecker.UserMay(PermissionGrant.Read);
 
             var isAdmin = _useModuleAndCheckModulePermissions && DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(Dnn.Module);
 
             // Only return query if permissions ok
-            if (!(readAllowed || isAdmin))
+            if (!(readExplicitlyAllowed || isAdmin))
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Unauthorized)
                 {
                     Content = new StringContent("Request not allowed. User does not have read permissions for query '" + name + "'"),
                     ReasonPhrase = "Request not allowed"
                 });
 
-            var serializer = new Serializer();
-            serializer.IncludeGuid = includeGuid;
+            var serializer = new Serializer {IncludeGuid = includeGuid};
             return serializer.Prepare(query);
         }
 
@@ -81,12 +78,9 @@ namespace ToSic.SexyContent.WebApi
         private DeferredPipelineQuery GetQueryByName(string name)
         {
             // BETA - TEST-SUPPORT FOR GLOBAL QUERIES
-            var tempglobid = "global-beta-";
+            var tempglobid = "Eav-Queries-Global-";
             if (name.StartsWith(tempglobid))
-            {
-                var innername = name.Substring(tempglobid.Length);
-                return _queryApp.GlobalQueryBeta(innername);
-            }
+                return _queryApp.GlobalQueryBeta(name.Replace('-', '.')); // this is a DNN/MVC-Routing bug, must use - instead of . for now...
 
             // Try to find the query, abort if not found
             if (!_queryApp.Query.ContainsKey(name))

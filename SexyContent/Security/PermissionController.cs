@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
-using ToSic.Eav;
+using ToSic.Eav.Interfaces;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Security
 {
@@ -10,37 +13,30 @@ namespace ToSic.SexyContent.Security
     /// Permissions object which checks if the user is allowed to do soemthing based on specific permission
     /// This checks permissions based on EAV data related to an entity - so pure EAV, no DNN
     /// </summary>
-    public class PermissionController
+    public class PermissionController: HasLog
     {
         // todo: move consts to Constants
-        public const int AssignmentObjectId = 4;
-        public const string ContentTypeName = "PermissionConfiguration";
+        //public const int AssignmentObjectId = Eav.Constants.MetadataForEntity; //was 4
+        public const string PermissionTypeName = "PermissionConfiguration";
         public const string Condition = "Condition";
         public const string Grant = "Grant";
         public string CustomPermissionKey = ""; // "CONTENT";
         readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
-        private readonly string _keyOwner = "Owner";
+        private const string KeyOwner = "Owner";
 
-        private int AppId { get; }
-        private int? ZoneId { get; }
-        private Guid TypeGuid { get; }
+        //private int AppId { get; }
+        //private int? ZoneId { get; }
+        //private Guid TypeGuid { get; }
 
-        public ToSic.Eav.Interfaces.IEntity TargetItem { get; set; }
+        private IContentType TargetType { get; }
 
-        private IEnumerable<ToSic.Eav.Interfaces.IEntity> _permissionList;
+        public IEntity TargetItem { get; set; }
 
-        public IEnumerable<ToSic.Eav.Interfaces.IEntity> PermissionList
-        {
-            get
-            {
-                if (_permissionList == null)
-                {
-                    var ds = DataSource.GetMetaDataSource(ZoneId, AppId);
-                    _permissionList = ds.GetMetadata(AssignmentObjectId, TypeGuid, ContentTypeName);
-                }
-                return _permissionList;
-            }
-        }
+
+        public IEnumerable<IEntity> PermissionList => _permissionList ?? (_permissionList =
+                                                          (TargetType?.Metadata ?? TargetItem.Metadata).Where(md => md.Type.StaticName == PermissionTypeName));
+
+        private IEnumerable<IEntity> _permissionList;
 
         public ModuleInfo Module { get; }
 
@@ -48,25 +44,28 @@ namespace ToSic.SexyContent.Security
         /// Initialize this object so it can then give information regarding the permissions of an entity.
         /// Uses a GUID as identifier because that survives export/import. 
         /// </summary>
-        /// <param name="zoneId">EAV Zone</param>
-        /// <param name="appId">EAV APP</param>
-        /// <param name="typeGuid">Entity GUID to check permissions against</param>
+        /// <param name="targetItem"></param>
+        /// <param name="parentLog"></param>
         /// <param name="module">DNN Module - necessary for SecurityAccessLevel checks</param>
-        public PermissionController(int? zoneId, int appId, Guid typeGuid, ModuleInfo module = null)
+        public PermissionController(/*int? zoneId, int appId,*/ IEntity targetItem /*Guid typeGuid*/, Log parentLog, ModuleInfo module = null)
+            : base("App.PermCk", parentLog, $"init for itm:{targetItem.EntityGuid} ({targetItem.EntityId})")
         {
-            ZoneId = zoneId;
-            AppId = appId;
-            TypeGuid = typeGuid;
+            //ZoneId = zoneId;
+            //AppId = appId;
+            TargetItem = targetItem;
+            TargetType = null; // important that it doesn't exist, otherwise the security check will use that instead of the item
+            //TypeGuid = typeGuid;
             Module = module;
         }
 
-        public PermissionController(int? zoneId, int appId, Guid typeGuid, ToSic.Eav.Interfaces.IEntity targetItem, ModuleInfo module = null)
+        public PermissionController(/*int? zoneId, int appId,*/ IContentType targetType, /*Guid typeGuid,*/ IEntity targetItem, Log parentLog, ModuleInfo module = null)
+            : base("App.PermCk", parentLog, $"init for type:{targetType.StaticName}, itm:{targetItem.EntityGuid} ({targetItem.EntityId})")
         {
-            ZoneId = zoneId;
-            AppId = appId;
-            TypeGuid = typeGuid;
-            if (targetItem != null)
-                TargetItem = targetItem;
+            //ZoneId = zoneId;
+            //AppId = appId;
+            TargetType = targetType;
+            //TypeGuid = typeGuid;
+            TargetItem = targetItem;
             Module = module;
         }
 
@@ -76,15 +75,9 @@ namespace ToSic.SexyContent.Security
         /// </summary>
         /// <param name="actionCode">Short-code for r=read, u=update etc.</param>
         /// <returns></returns>
-        public bool UserMay(char actionCode)
-        {
-            return DoesPermissionsListAllow(actionCode);
-        }
+        public bool UserMay(char actionCode) => DoesPermissionsListAllow(actionCode);
 
-        public bool UserMay(PermissionGrant action)
-        {
-            return DoesPermissionsListAllow((Char)action);
-        }
+        public bool UserMay(PermissionGrant action) => DoesPermissionsListAllow((Char)action);
 
         /// <summary>
         /// Check if the permission-list would allow such an action
@@ -93,14 +86,9 @@ namespace ToSic.SexyContent.Security
         /// <returns></returns>
         private bool DoesPermissionsListAllow(char desiredActionCode)
         {
-            var allow = false;
             foreach (var perm in PermissionList)
-            {
-                allow = DoesPermissionAllow(perm, desiredActionCode);
-                if (allow) // stop checking if permission ok
-                    break;
-            }
-            return allow;
+                if (DoesPermissionAllow(perm, desiredActionCode)) return true;
+            return false;
         }
 
         /// <summary>
@@ -109,7 +97,7 @@ namespace ToSic.SexyContent.Security
         /// <param name="permissionEntity">The entity describing a permission</param>
         /// <param name="desiredActionCode">A key like r (for read), u (for update) etc. which is the level you want to check</param>
         /// <returns></returns>
-        private bool DoesPermissionAllow(ToSic.Eav.Interfaces.IEntity permissionEntity, char desiredActionCode)
+        private bool DoesPermissionAllow(IEntity permissionEntity, char desiredActionCode)
         {
 
             // Check if it's a grant-read permission - otherwise stop here
@@ -131,15 +119,18 @@ namespace ToSic.SexyContent.Security
                         return true;
                     
                     // check within module context
-                    if(Module == null)
+                    if (Module == null)
+                    {
+                        Log.Add("trying to check permission " + _salPrefix + ", but don't have module in context");
                         throw new Exception("trying to check permission " + _salPrefix + ", but don't have module in context");
+                    }
 
                     return DotNetNuke.Security.Permissions.ModulePermissionController
                         .HasModuleAccess(sal, CustomPermissionKey, Module);
                 }
 
                 // check owner conditions
-                if (condition == _keyOwner)
+                if (condition == KeyOwner)
                     // if it's an entity, possibly also check owner-permissions
                     if (TargetItem != null && TargetItem.Owner == Environment.Dnn7.UserIdentity.CurrentUserIdentityToken)
                         return true;

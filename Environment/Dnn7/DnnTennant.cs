@@ -11,6 +11,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public override int Id => Settings.PortalId;
 
+        public override string Name => Settings.PortalName;
+
         public override string RootPath => Path.Combine(Settings.HomeDirectory, SexyContent.Settings.TemplateFolder);
 
         public DnnTennant(PortalSettings settings) : base(settings) {}

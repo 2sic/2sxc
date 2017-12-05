@@ -11,12 +11,14 @@ using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class ZoneMapper<T> : HasLog, IZoneMapper<T> where T: PortalSettings
+    public class ZoneMapper : HasLog, IZoneMapper<PortalSettings>
     {
+        /// <inheritdoc />
         public ZoneMapper(Log parentLog = null) : base("DNN.ZoneMp", parentLog)
         {
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Will get the EAV ZoneId for the current tennant
         /// Always returns a valid value, as it will otherwise create one if it was missing
@@ -31,7 +33,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 throw new Exception("Can't get zone for invalid portal ID: " + tennantId);
 
             var zoneSettingKey = Settings.PortalSettingsPrefix + "ZoneID";
-            var c = PortalController.Instance.GetPortalSettings(tennantId);//.GetPortalSettingsDictionary(tennantId);
+            var c = PortalController.Instance.GetPortalSettings(tennantId);
             var portalSettings = new PortalSettings(tennantId);
 
             int zoneId;
@@ -47,7 +49,22 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return zoneId;
         }
 
-        public int GetZoneId(Tennant<T> tennant) => GetZoneId(tennant.Settings.PortalId);
+        public int GetZoneId(Tennant<PortalSettings> tennant) => GetZoneId(tennant.Settings.PortalId);
+
+        public ITennant Tennant(int zoneId)
+        {
+            var pinst = PortalController.Instance;
+            var portals = pinst.GetPortals();
+            var found = portals.Cast<PortalInfo>().Select(p =>
+                {
+                    var set = pinst.GetPortalSettings(p.PortalID);
+                    if (!set.TryGetValue(Settings.PortalSettingZoneId, out string portalZonId)) return null;
+                    if (!int.TryParse(portalZonId, out int zid)) return null;
+                    return zid == zoneId ? new PortalSettings(p) : null;
+                })
+                .FirstOrDefault(f => f != null);
+            return found != null ? new DnnTennant(found) : null;
+        }
 
 
         /// <summary>
@@ -66,18 +83,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     select new TempTempCulture(
                         c.Value.Code,
                         c.Value.Text,
-                        availableEavLanguages.Any(a => a.Active && a.Matches(c.Value.Code))
-                        //,
-                        //string.Equals(c.Value.Code, defaultLanguageCode, StringComparison.InvariantCultureIgnoreCase) && !defaultLanguageIsActive ||
-                        //defaultLanguageIsActive && !string.Equals(c.Value.Code, defaultLanguageCode,
-                        //    StringComparison.InvariantCultureIgnoreCase)
-                            )
+                        availableEavLanguages.Any(a => a.Active && a.Matches(c.Value.Code)))
                 )
                 .OrderByDescending(c => c.Key == defaultLanguageCode)
                 .ThenBy(c => c.Key).ToList();
-
         }
 
-        public List<TempTempCulture> CulturesWithState(T tennant, int zoneId) => CulturesWithState(tennant.PortalId, zoneId);
+        public List<TempTempCulture> CulturesWithState(PortalSettings tennant, int zoneId) => CulturesWithState(tennant.PortalId, zoneId);
     }
 }
