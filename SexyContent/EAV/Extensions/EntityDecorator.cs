@@ -29,8 +29,6 @@ namespace ToSic.SexyContent.EAVExtensions
         public int EntityId => _baseEntity.EntityId;
         public int RepositoryId => _baseEntity.RepositoryId;
         public Guid EntityGuid => _baseEntity.EntityGuid;
-        // 2017-06-13 2dm - try to disable this - I assume it's only used internally
-        //public int AssignmentObjectTypeId => _baseEntity.Metadata.TargetType;
 
         public IMetadataFor MetadataFor => _baseEntity.MetadataFor;
 
@@ -59,8 +57,6 @@ namespace ToSic.SexyContent.EAVExtensions
         public string GetBestTitle(string[] dimensions)
             => _baseEntity.GetBestTitle(dimensions);
 
-        //Dictionary<string, object> IEntityLight.Attributes => ((IEntityLight) _baseEntity).Attributes;
-
         object IEntityLight.Title => ((IEntityLight) _baseEntity).Title;
 
         object IEntityLight.this[string attributeName] => ((IEntityLight) _baseEntity)[attributeName];
@@ -71,7 +67,9 @@ namespace ToSic.SexyContent.EAVExtensions
 
         #endregion
 
-        #region metadata
+        #region breaking changes
+
+        public object Value => _baseEntity.Value;
 
         #endregion
     }
