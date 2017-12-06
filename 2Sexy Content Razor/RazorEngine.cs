@@ -73,8 +73,6 @@ namespace ToSic.SexyContent.Engines
 
         private static void ProvideSpecialErrorOnIEntityIssues(Exception maybeIEntityCast)
         {
-            const string ient = "ToSic.Eav.IEntity";
-
             if (maybeIEntityCast is HttpCompileException || maybeIEntityCast is InvalidCastException)
                 if (maybeIEntityCast.Message.IndexOf(IentityErrDetection, StringComparison.Ordinal) > 0)
                     throw new Exception(IentityErrorMessage, maybeIEntityCast);
