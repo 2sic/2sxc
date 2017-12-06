@@ -77,6 +77,8 @@ namespace ToSic.SexyContent.WebApi
             // App-Query routes - to access designed queries
             // new routes, v08.10+
             mapRouteManager.MapHttpRoute("2sxc", "app-query-auto", appAuto + "query/{name}", new { controller = "AppQuery" }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto", appAuto + "query/{name}/", new { controller = "AppQuery" }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto", appAuto + "query/{name}/{stream}", new { controller = "AppQuery" }, stdNsWebApi);
             mapRouteManager.MapHttpRoute("2sxc", "app-query-public", appPath + "query/{name}", new { controller = "AppQuery" }, stdNsWebApi);
             #endregion
 
