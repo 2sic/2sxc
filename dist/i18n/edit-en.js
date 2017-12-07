@@ -50,6 +50,11 @@
 			"DragMove": "drag to re-order the list",
 			"Edit": "edit this item",
 			"Remove": "remove from list"
+		},
+		"EntityQuery": {
+			"QueryNoItems": "No items found",
+			"QueryError": "Error: An error occurred while executing the query. See the console for more information.",
+			"QueryStreamNotFound": "Error: The query did not return a stream named "
 		}
 	},
 	"LangMenu": {

@@ -328,10 +328,14 @@ table.eav-entityselect-table tr.eav-entityselect-item td { padding-top: 2px; pad
 .ui-select-container input { font-size:20px!important; }
 
 .eav-entityselect input.material { margin-top:0; padding-top:0;}
+
+.ui-select-bootstrap > .ui-select-choices, .ui-select-bootstrap > .ui-select-no-choice { margin-top:34px; }
 .eav-entityselect-reload { color:#DDD; cursor:pointer; }
     .eav-entityselect-reload.active {
         color: #0088f4;
     }
+.ui-select-no-choice {
+    background: #fcf8e3!important; padding-left:7px;}
 .eav-entityselect-reload { color:#DDD; cursor:pointer; }
     .eav-entityselect-reload.active {
         color: #0088f4;
