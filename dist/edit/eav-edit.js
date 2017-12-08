@@ -643,10 +643,14 @@ angular.module("eavFieldTemplates")
                     var o = options.templateOptions.settings.merged.DropdownValues;
                     o = o.replace(/\r/g, "").split("\n");
                     o = o.map(function (e, i) {
-                        var s = e.split(":");
+                        var s = e.split(":"),
+                            maybeWantedEmptyVal = s[1],
+                            key = s.shift(), // take first, shrink the array
+                            val = s.join(":");
+
                         return {
-                            name: s[0],
-                            value: (s[1] || s[1] === '') ? s[1] : s[0]
+                            name: key,
+                            value: (val || maybeWantedEmptyVal === '') ? val : key
                         };
                     });
                     options.templateOptions.options = o;
