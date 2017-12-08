@@ -87,8 +87,8 @@
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.WebApi.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.pdb" />
+      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.pdb" />-->
       
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.pdb" />

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1252"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!-- WARNING - this file is not in use!!! -->
 
@@ -92,8 +92,8 @@
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.WebApi.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.pdb" />
+      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.pdb" />-->
 
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.pdb" />
