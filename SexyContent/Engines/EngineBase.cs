@@ -142,7 +142,7 @@ namespace ToSic.SexyContent.Engines
         {
             // 2015-05-19 2dm: new: do security check if security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
-            var permissionsOnThisTemplate = new PermissionController(App.ZoneId, App.AppId, Template.Guid, ModuleInfo);
+            var permissionsOnThisTemplate = new PermissionController(/*App.ZoneId, App.AppId,*/ Template.Entity /*.Guid*/, Log, ModuleInfo);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
             if (!portalSettings.UserInfo.IsInRole(portalSettings.AdministratorRoleName) && permissionsOnThisTemplate.PermissionList.Any())

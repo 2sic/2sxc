@@ -33,11 +33,13 @@ namespace ToSic.SexyContent
         public static readonly string WebConfigFileName = "web.config";
         public static readonly string SexyContentGroupName = "2sxc designers";
         public static readonly string AttributeSetScope = "2SexyContent";
-        public static readonly string AttributeSetScopeApps = "2SexyContent-App";
+        //public static readonly string AttributeSetScopeApps = "2SexyContent-App";
         public static readonly string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
-        public static readonly string AttributeSetStaticNameApps = "2SexyContent-App";
-        public static readonly string AttributeSetStaticNameAppResources = "App-Resources";
-        public static readonly string AttributeSetStaticNameAppSettings = "App-Settings";
+
+        //public static readonly string AttributeSetStaticNameApps = "2SexyContent-App";
+        //public static readonly string AttributeSetStaticNameAppResources = "App-Resources";
+        //public static readonly string AttributeSetStaticNameAppSettings = "App-Settings";
+
         internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
 
         internal static readonly int DataIsMissingInDb = -100;
@@ -65,7 +67,7 @@ namespace ToSic.SexyContent
                 "08.05.00", "08.05.01", "08.05.02", "08.05.03", "08.05.04", "08.05.05", "08.05.06", "08.06.00", "08.07.00", "08.08.00", "08.08.01", "08.08.02","08.09.00","08.09.01","08.10.00","08.10.01",
                 // new installer starting in 08.11.00!
                 "08.11.00", "08.12.00", "09.00.00", "09.00.01", "09.00.02", "09.01.00", /* note 09.01.01 was never released */ "09.01.02", "09.01.03", "09.02.00", "09.03.00", "09.03.01", "09.03.02", "09.03.03", "09.04.00", "09.04.01", "09.04.02", "09.04.03", "09.05.00", "09.05.01", "09.05.02",
-                "09.06.00", "09.06.01", "09.07.00", "09.08.00", "09.09.00", "09.10.00", "09.11.00", "09.11.01"
+                "09.06.00", "09.06.01", "09.07.00", "09.08.00", "09.09.00", "09.10.00", "09.11.00", "09.11.01", "09.12.00"
             };
 
             // this is the last version which must run server-side change-code

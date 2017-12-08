@@ -49,7 +49,7 @@ namespace ToSic.SexyContent.Internal
                         var mds = DataSource.GetMetaDataSource(zoneId, p.Key);
                         var appMetaData = mds
                             .GetMetadata(SystemRuntime.MetadataType(Constants.AppAssignmentName), p.Key,
-                                Settings.AttributeSetStaticNameApps)
+                                AppConstants.AttributeSetStaticNameApps)
                             .FirstOrDefault();
                         string folder = appMetaData?.GetBestValue("Folder").ToString();
                     if (!IsNullOrEmpty(folder) && folder.ToLower() == nameLower)
@@ -61,7 +61,7 @@ namespace ToSic.SexyContent.Internal
         }
 
 
-        internal static void SetAppIdForModule(ModuleInfo module, IEnvironment env, int? appId, Log parentLog)
+        internal static void SetAppIdForModule(ModuleInfo module, IEnvironment<PortalSettings> env, int? appId, Log parentLog)
         {
             // Reset temporary template
             ContentGroupManager.DeletePreviewTemplateId(module.ModuleID);

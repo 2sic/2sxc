@@ -1,19 +1,26 @@
-﻿using ToSic.Eav.Apps.Interfaces;
+﻿using System.Web.Hosting;
+using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.Environment
 {
-    public class DnnEnvironment: HasLog, IEnvironment
+    public class DnnEnvironment: HasLog, IEnvironment<PortalSettings>
     {
         public IPermissions Permissions { get; internal set; }
 
-        public IZoneMapper ZoneMapper { get;  } = new ZoneMapper();
+        public IZoneMapper<PortalSettings> ZoneMapper { get;  } = new ZoneMapper();
+        IZoneMapper IEnvironment.ZoneMapper => ZoneMapper;
 
         public IUser User { get; } = new UserIdentity();
 
         public IPagePublishing PagePublishing {get ; }
+
+
+        public string MapPath(string virtualPath) => HostingEnvironment.MapPath(virtualPath);
+
 
         public  DnnEnvironment() : base("DNN.Enviro") { }
 

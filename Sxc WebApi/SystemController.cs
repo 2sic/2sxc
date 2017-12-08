@@ -104,7 +104,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpPost]
         public void App(int zoneId, string name)
         {
-            AppManagement.AddBrandNewApp(zoneId, name, new PortalSettings(ActiveModule.OwnerPortalID), Log);
+            AppManager.AddBrandNewApp(zoneId, name, Log);
         }
 
         #endregion

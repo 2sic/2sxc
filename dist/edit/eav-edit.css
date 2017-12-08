@@ -61,6 +61,8 @@
     border-radius: 4px;
 }
 
+.input-group-addon { background:none; border:none; color:#000; }
+
 /* This should make sure the entity-edit dialog is always 100% screen width on small screens, but not lager than 1000px */
 .modal-ent-edit { 
     max-width: 1000px;
@@ -74,24 +76,36 @@
 
 
 /* the new round buttons on any field */
-button.icon-field-button {
+.icon-field-button {
+    position:relative;
     width: 44px;
     height: 44px;
-    border-radius: 22px;
-    padding-right: 10px;
-    padding-left: 8px;
+    border-radius: 50%!important;
+    padding-right: 0;
+    padding-left: 0;
     border-color: transparent!important;
     background-color: transparent!important;
     font-size: 24px;
-    text-indent: -3px;
 }
-button.icon-field-button:hover, button.icon-field-button:focus{
+
+.icon-field-button:hover, .icon-field-button:focus{
     border-color: transparent !important;
     background-color: #0087F4!important;
     color: white!important;
 }
-
-button.icon-field-button.btn-primary {
+.icon-field-button-small, .icon-field-button-small:hover, .icon-field-button-small:focus {
+    font-size: 17px;
+    width: 44px;
+    height: 38px;
+    background: none !important;
+    color:#000!important;
+}
+    .icon-field-button-small:hover, .icon-field-button-small:focus {
+        color: #0087F4 !important;
+    }
+    
+    
+.icon-field-button.btn-primary {
     color: #0087F4;
 }
 
@@ -275,7 +289,7 @@ textarea.material {
 .eav-entityselect-item-actions {
     display: inline-block;
     cursor: pointer;
-    padding: 0;
+    padding: 0 45px 0 0;
     opacity: 0;
     list-style-type:none;
     line-height:14px;
@@ -303,35 +317,31 @@ table.eav-entityselect-table tr.eav-entityselect-item td { padding-top: 2px; pad
 .subtle-till-mouseover { opacity: 0.2; }
 .subtle-till-mouseover:hover { opacity: 1; }
 
-.eav-entityselect-actions { position:relative; padding-top:3px; }
-.eav-entityselect-actions.no-add { border-bottom:1px solid #ddd!important; }
-.eav-entityselect-action-create { width:100px; position:absolute; right:0; top:0; }
-.eav-entityselect-reload { width:40px; position:absolute; right:35px; top:7px; }
-.eav-entityselect-action-addexisting { padding-right:81px;  }
-.eav-entityselect-action-addexisting .ui-select-toggle { border:0; border-bottom:1px solid #ddd!important; border-radius:0; padding:2px 0 0 0; color:#777; }
+.eav-entityselect-actions { width:100%; position:relative; padding-top:3px; }
+/*.eav-entityselect-actions.no-add { border-bottom:1px solid #ddd!important; }*/
+.input-group .ui-select-toggle { border:0; border-bottom:1px solid #ddd!important; border-radius:0; padding:2px 0 0 0; color:#777; }
+.input-group .form-control-nostyle { border: 0; padding: 0; border-radius: 0; z-index:auto; }
 
 .eav-entityselect .dropdown-menu { background:white; border: 1px solid rgba(0,0,0,.15); border-radius:4px; box-shadow:0 6px 12px rgba(0,0,0,.175); }
 .ui-select-bootstrap .ui-select-choices-row>span { }
 .ui-select-match { outline:0!important; }
 .ui-select-container input { font-size:20px!important; }
-.eav-entityselect-reload { color:#DDD; cursor:pointer; }
-    .eav-entityselect-reload.active {
-        color: #0088f4;
-    }
-.eav-entityselect-reload { color:#DDD; cursor:pointer; }
-    .eav-entityselect-reload.active {
-        color: #0088f4;
-    }
-.input-string-dropdown-wrapper .freetext-toggle {
-    width:30px;
-    color:black;
-    border:none;
-    background:none;
-    cursor:pointer;
-}
-.input-string-dropdown-wrapper .freetext-toggle.active { }
-.input-string-dropdown-wrapper { width: 100%; }
 
+.eav-entityselect input.material { margin-top:0; padding-top:0;}
+
+.ui-select-bootstrap > .ui-select-choices, .ui-select-bootstrap > .ui-select-no-choice { margin-top:34px; }
+.eav-entityselect-reload { color:#DDD; cursor:pointer; }
+    .eav-entityselect-reload.active {
+        color: #0088f4;
+    }
+.ui-select-no-choice {
+    background: #fcf8e3!important; padding-left:7px;}
+.eav-entityselect-reload { color:#DDD; cursor:pointer; }
+    .eav-entityselect-reload.active {
+        color: #0088f4;
+    }
+.input-string-dropdown-wrapper { width: 100%; }
+/*.eav-entityselect-actions.freetext { border-bottom:0; }*/
 .formly-field { position:relative; }
 .eav-localization { position:absolute; top:0; right:0; }
 .eav-localization-lock { float: right; display: inline-block; }

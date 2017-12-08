@@ -12,6 +12,7 @@ using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Engines
 {
     public class RazorEngine : EngineBase
@@ -51,7 +52,30 @@ namespace ToSic.SexyContent.Engines
         public void Render(TextWriter writer)
         {
             Log.Add("will render into textwriter");
-            Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, null), writer, Webpage);
+            try
+            {
+                Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, null), writer, Webpage);
+            }
+            catch (Exception maybeIEntityCast)
+            {
+                ProvideSpecialErrorOnIEntityIssues(maybeIEntityCast);
+                throw;
+            }
+        }
+
+        private const string IentityErrDetection = "error CS0234: The type or namespace name 'IEntity' does not exist in the namespace 'ToSic.Eav'";
+        private const string IentityErrorMessage =
+            "Error in your razor template. " +
+            "You are seeing this because 2sxc 9.3 has a breaking change on ToSic.Eav.IEntity. " +
+            "It's easy to fix - please read " +
+            "https://2sxc.org/en/blog/post/fixing-the-breaking-change-on-tosic-eav-ientity-in-2sxc-9-3 " +
+            ". What follows is the internal error: ";
+
+        private static void ProvideSpecialErrorOnIEntityIssues(Exception maybeIEntityCast)
+        {
+            if (maybeIEntityCast is HttpCompileException || maybeIEntityCast is InvalidCastException)
+                if (maybeIEntityCast.Message.IndexOf(IentityErrDetection, StringComparison.Ordinal) > 0)
+                    throw new Exception(IentityErrorMessage, maybeIEntityCast);
         }
 
         /// <summary>
@@ -68,13 +92,19 @@ namespace ToSic.SexyContent.Engines
 
         private object CreateWebPageInstance()
         {
-            var compiledType = BuildManager.GetCompiledType(TemplatePath);
-            object objectValue = null;
-            if (compiledType != null)
+            try
             {
-                objectValue = RuntimeHelpers.GetObjectValue(Activator.CreateInstance(compiledType));
+                var compiledType = BuildManager.GetCompiledType(TemplatePath);
+                object objectValue = null;
+                if (compiledType != null)
+                    objectValue = RuntimeHelpers.GetObjectValue(Activator.CreateInstance(compiledType));
+                return objectValue;
             }
-            return objectValue;
+            catch (Exception ex)
+            {
+                ProvideSpecialErrorOnIEntityIssues(ex);
+                throw;
+            }
         }
 
         private void InitHelpers(SexyContentWebPage webPage)
@@ -91,6 +121,7 @@ namespace ToSic.SexyContent.Engines
             if (string.IsNullOrEmpty(TemplatePath)) return;
 
             var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
+            // ReSharper disable once JoinNullCheckWithUsage
             if (objectValue == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", new object[] { TemplatePath }));
 

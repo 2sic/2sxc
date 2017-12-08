@@ -132,6 +132,7 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Environment\Dnn7\DnnTennant.cs" />
     <Compile Include="Environment\Dnn7\Logging.cs" />
     <Compile Include="Environment\Dnn7\ModuleSettingsHelper.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing_ModuleSettings.cs" />
@@ -284,6 +285,8 @@
   <ItemGroup>
     <Content Include=".databeta\contenttypes\System.5461d34d-7dc6-4d38-9250-a0729cc8ead3.json" />
     <Content Include=".databeta\contenttypes\System.fabc849e-b426-42ea-8e1c-c04e69facd9b.json" />
+    <Content Include=".databeta\queries\Query.Apps.json" />
+    <Content Include=".databeta\queries\Query.Zones.json" />
     <None Include=".databeta\readme.md" />
     <Content Include=".gitignore" />
     <Content Include="Administration\Export.js" />

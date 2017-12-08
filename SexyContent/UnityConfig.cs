@@ -5,6 +5,7 @@ using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.Eav.ImportExport.Persistence.File;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Persistence.Interfaces;
+using ToSic.SexyContent.Environment;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
 using ToSic.SexyContent.ImportExport;
@@ -37,6 +38,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IImportExportEnvironment, ImportExportEnvironment>();
 
                 sc.AddTransient<IRuntime, Runtime>();
+                sc.AddTransient<Eav.Apps.Interfaces.IEnvironment, DnnEnvironment>();
 
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);
             });

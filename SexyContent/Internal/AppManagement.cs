@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
@@ -20,87 +18,86 @@ namespace ToSic.SexyContent.Internal
         /// <returns></returns>
         public static List<App> GetApps(int zoneId, bool includeDefaultApp, PortalSettings ownerPs, Log parentLog)
         {
-            var appIds = new ZoneRuntime(zoneId, parentLog).Apps;// State.GetAppList(zoneId);
-            var sexyApps = appIds.Select(eavApp => new App(zoneId, eavApp.Key, ownerPs));
+            var appIds = new ZoneRuntime(zoneId, parentLog).Apps;
+            var builtApps = appIds.Select(eavApp => new App(zoneId, eavApp.Key, ownerPs));
 
             if (!includeDefaultApp)
-                sexyApps = sexyApps.Where(a => a.Name != Constants.ContentAppName);
+                builtApps = builtApps.Where(a => a.Name != Eav.Constants.ContentAppName);
 
-            return sexyApps.OrderBy(a => a.Name).ToList();
+            return builtApps.OrderBy(a => a.Name).ToList();
         }
 
-        /// <summary>
-        /// Create app-describing entity for configuration and add Settings and Resources Content Type
-        /// </summary>
-        internal static void EnsureAppIsConfigured(int zoneId, int appId, Log parentLog, string appName = null)
-        {
-            var appAssignment = SystemRuntime.MetadataType(Constants.AppAssignmentName);
-            var scope = Settings.AttributeSetScopeApps;
-            var mds = DataSource.GetMetaDataSource(zoneId, appId);
-            var appMetaData = mds.GetMetadata(appAssignment, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
-            var appResources = mds.GetMetadata(appAssignment, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
-            var appSettings = mds.GetMetadata(appAssignment, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
+        ///// <summary>
+        ///// Create app-describing entity for configuration and add Settings and Resources Content Type
+        ///// </summary>
+        //internal static void EnsureAppIsConfigured(int zoneId, int appId, Log parentLog, string appName = null)
+        //{
+        //    var appAssignment = SystemRuntime.MetadataType(Eav.Constants.AppAssignmentName);
+        //    var scope = Settings.AttributeSetScopeApps;
+        //    var mds = DataSource.GetMetaDataSource(zoneId, appId);
+        //    var appMetaData = mds.GetMetadata(appAssignment, appId, AppConstants.AttributeSetStaticNameApps).FirstOrDefault();
+        //    var appResources = mds.GetMetadata(appAssignment, appId, AppConstants.AttributeSetStaticNameAppResources).FirstOrDefault();
+        //    var appSettings = mds.GetMetadata(appAssignment, appId, AppConstants.AttributeSetStaticNameAppSettings).FirstOrDefault();
 
-            // Get appName from cache - stop if it's a "Default" app
-            var eavAppName = new ZoneRuntime(zoneId, parentLog).GetName(appId);// State.GetAppName(zoneId, appId); 
+        //    // Get appName from cache - stop if it's a "Default" app
+        //    var eavAppName = new ZoneRuntime(zoneId, parentLog).GetName(appId);
 
-            if (eavAppName == Eav.Constants.DefaultAppName)
-                return;
+        //    if (eavAppName == Eav.Constants.DefaultAppName)
+        //        return;
 
-            var appMan = new AppManager(zoneId, appId);
-            if (appMetaData == null)
-                appMan.MetadataEnsureTypeAndSingleEntity(scope,
-                    Settings.AttributeSetStaticNameApps,
-                    "App Metadata",
-                    appAssignment,
-                    new Dictionary<string, object>()
-                    {
-                        {"DisplayName", IsNullOrEmpty(appName) ? eavAppName : appName},
-                        {"Folder", IsNullOrEmpty(appName) ? eavAppName : RemoveIllegalCharsFromPath(appName)},
-                        {"AllowTokenTemplates", "False"},
-                        {"AllowRazorTemplates", "False"},
-                        {"Version", "00.00.01"},
-                        {"OriginalId", ""}
-                    });
+        //    var appMan = new AppManager(zoneId, appId);
+        //    if (appMetaData == null)
+        //        appMan.MetadataEnsureTypeAndSingleEntity(scope,
+        //            AppConstants.AttributeSetStaticNameApps,
+        //            "App Metadata",
+        //            appAssignment,
+        //            new Dictionary<string, object>()
+        //            {
+        //                {"DisplayName", IsNullOrEmpty(appName) ? eavAppName : appName},
+        //                {"Folder", IsNullOrEmpty(appName) ? eavAppName : RemoveIllegalCharsFromPath(appName)},
+        //                {"AllowTokenTemplates", "False"},
+        //                {"AllowRazorTemplates", "False"},
+        //                {"Version", "00.00.01"},
+        //                {"OriginalId", ""}
+        //            });
 
 
-            // Add new (empty) ContentType for Settings
-            if (appSettings == null)
-                appMan.MetadataEnsureTypeAndSingleEntity(scope,
-                    Settings.AttributeSetStaticNameAppSettings,
-                    "Stores settings for an app",
-                    appAssignment, 
-                    null);
+        //    // Add new (empty) ContentType for Settings
+        //    if (appSettings == null)
+        //        appMan.MetadataEnsureTypeAndSingleEntity(scope,
+        //            AppConstants.AttributeSetStaticNameAppSettings,
+        //            "Stores settings for an app",
+        //            appAssignment, 
+        //            null);
             
-            // add new (empty) ContentType for Resources
-            if (appResources == null)
-                appMan.MetadataEnsureTypeAndSingleEntity(scope,
-                    Settings.AttributeSetStaticNameAppResources,
-                    "Stores resources like translations for an app", 
-                    appAssignment, 
-                    null);
+        //    // add new (empty) ContentType for Resources
+        //    if (appResources == null)
+        //        appMan.MetadataEnsureTypeAndSingleEntity(scope,
+        //            AppConstants.AttributeSetStaticNameAppResources,
+        //            "Stores resources like translations for an app", 
+        //            appAssignment, 
+        //            null);
 
-            if (appMetaData == null || appSettings == null || appResources == null)
-                SystemManager.Purge(zoneId, appId);
-        }
+        //    if (appMetaData == null || appSettings == null || appResources == null)
+        //        SystemManager.Purge(zoneId, appId);
+        //}
 
-        /// <summary>
-        /// Will create a new app in the system and initialize the basic settings incl. the 
-        /// app-definition
-        /// </summary>
-        /// <returns></returns>
-        internal static void AddBrandNewApp(int zoneId, string appName, PortalSettings ownerPs, Log parentLog)
-        {
-            // check if invalid app-name
-            if (appName == Constants.ContentAppName || appName == Eav.Constants.DefaultAppName || IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
-                throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
+        ///// <summary>
+        ///// Will create a new app in the system and initialize the basic settings incl. the 
+        ///// app-definition
+        ///// </summary>
+        ///// <returns></returns>
+        //internal static void AddBrandNewApp(int zoneId, string appName, Log parentLog)
+        //{
+        //    // check if invalid app-name
+        //    if (appName == Eav.Constants.ContentAppName || appName == Eav.Constants.DefaultAppName || IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
+        //        throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
 
-            var appId = new ZoneManager(zoneId, parentLog).CreateApp();// State.AppCreate(zoneId);
+        //    var appId = new ZoneManager(zoneId, parentLog).CreateApp();
+        //    AppManager.EnsureAppIsConfigured(zoneId, appId, parentLog, appName);
+        //}
 
-            EnsureAppIsConfigured(zoneId, appId, parentLog: parentLog, appName: appName);
-        }
-
-        internal static void RemoveAppInDnnAndEav(IEnvironment env, int zoneId, int appId, PortalSettings ps, int userId, Log parentLog)
+        internal static void RemoveAppInDnnAndEav(IEnvironment<PortalSettings> env, int zoneId, int appId, PortalSettings ps, int userId, Log parentLog)
         {
             // check portal assignment and that it's not the default app
             if (zoneId != env.ZoneMapper.GetZoneId(ps.PortalId))
@@ -118,11 +115,11 @@ namespace ToSic.SexyContent.Internal
         }
 
 
-        private static string RemoveIllegalCharsFromPath(string path)
-        {
-            var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            var r = new Regex($"[{Regex.Escape(regexSearch)}]");
-            return r.Replace(path, "");
-        }
+        //private static string RemoveIllegalCharsFromPath(string path)
+        //{
+        //    var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+        //    var r = new Regex($"[{Regex.Escape(regexSearch)}]");
+        //    return r.Replace(path, "");
+        //}
     }
 }

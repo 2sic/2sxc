@@ -66,7 +66,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
             // Ensure we know what portal the stuff is coming from
-            PortalSettings = Parent.App.OwnerPortalSettings;
+            PortalSettings = Parent.App.Tennant.Settings;
 
             ZoneId = Parent.ZoneId;
 
