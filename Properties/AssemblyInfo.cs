@@ -32,3 +32,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("09.12.00.*")]
 //[assembly: AssemblyFileVersion("8.2.*")]
 [assembly: InternalsVisibleTo("ToSic.SexyContent.WebApi")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn")]
