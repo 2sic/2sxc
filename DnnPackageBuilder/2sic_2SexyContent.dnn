@@ -663,7 +663,7 @@
                     <section name="resizer" type="ImageResizer.ResizerSection,ImageResizer"  requirePermission="false" />
                   </node>
 
-                  <node path="/configuration" targetpath="/configuration/resizer" action="update" collision="ignore">
+                  <node path="/configuration" targetpath="/configuration/resizer" action="update" collision="save">
                     <resizer>
                       <plugins>
                         <add name="DiskCache" />
