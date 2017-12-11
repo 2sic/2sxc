@@ -12,8 +12,9 @@ using ToSic.SexyContent.EAVExtensions;
 namespace ToSic.SexyContent.DataSources
 {
 
-    [VisualQuery(Type = DataSourceType.Source, 
-        EnableConfig = true,
+    [VisualQuery(
+        GlobalName = "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent",
+        Type = DataSourceType.Source, 
         ExpectsDataOfType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
         HelpLink = "https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ModuleDataSource")]
     public sealed class ModuleDataSource : BaseDataSource
