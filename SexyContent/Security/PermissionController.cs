@@ -16,17 +16,12 @@ namespace ToSic.SexyContent.Security
     public class PermissionController: HasLog
     {
         // todo: move consts to Constants
-        //public const int AssignmentObjectId = Eav.Constants.MetadataForEntity; //was 4
         public const string PermissionTypeName = "PermissionConfiguration";
         public const string Condition = "Condition";
         public const string Grant = "Grant";
         public string CustomPermissionKey = ""; // "CONTENT";
         readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
         private const string KeyOwner = "Owner";
-
-        //private int AppId { get; }
-        //private int? ZoneId { get; }
-        //private Guid TypeGuid { get; }
 
         private IContentType TargetType { get; }
 
@@ -47,24 +42,18 @@ namespace ToSic.SexyContent.Security
         /// <param name="targetItem"></param>
         /// <param name="parentLog"></param>
         /// <param name="module">DNN Module - necessary for SecurityAccessLevel checks</param>
-        public PermissionController(/*int? zoneId, int appId,*/ IEntity targetItem /*Guid typeGuid*/, Log parentLog, ModuleInfo module = null)
-            : base("App.PermCk", parentLog, $"init for itm:{targetItem.EntityGuid} ({targetItem.EntityId})")
+        public PermissionController(IEntity targetItem, Log parentLog, ModuleInfo module = null)
+            : base("App.PermCk", parentLog, $"init for itm:{targetItem?.EntityGuid} ({targetItem?.EntityId})")
         {
-            //ZoneId = zoneId;
-            //AppId = appId;
             TargetItem = targetItem;
             TargetType = null; // important that it doesn't exist, otherwise the security check will use that instead of the item
-            //TypeGuid = typeGuid;
             Module = module;
         }
 
-        public PermissionController(/*int? zoneId, int appId,*/ IContentType targetType, /*Guid typeGuid,*/ IEntity targetItem, Log parentLog, ModuleInfo module = null)
-            : base("App.PermCk", parentLog, $"init for type:{targetType.StaticName}, itm:{targetItem.EntityGuid} ({targetItem.EntityId})")
+        public PermissionController(IContentType targetType, IEntity targetItem, Log parentLog, ModuleInfo module = null)
+            : base("App.PermCk", parentLog, $"init for type:{targetType?.StaticName}, itm:{targetItem?.EntityGuid} ({targetItem?.EntityId})")
         {
-            //ZoneId = zoneId;
-            //AppId = appId;
             TargetType = targetType;
-            //TypeGuid = typeGuid;
             TargetItem = targetItem;
             Module = module;
         }

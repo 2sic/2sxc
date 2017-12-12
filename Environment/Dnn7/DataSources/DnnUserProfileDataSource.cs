@@ -10,7 +10,10 @@ using ToSic.Eav.DataSources.VisualQuery;
 namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 {
 
-	[VisualQuery(Type = DataSourceType.Source, DynamicOut = true,
+	[VisualQuery(
+        GlobalName = "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent",
+        Type = DataSourceType.Source, 
+        DynamicOut = true,
 	    ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource")]
 	public class DnnUserProfileDataSource : ExternalDataDataSource
 	{

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1252"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!-- WARNING - this file is not in use!!! -->
 
@@ -56,13 +56,19 @@
 
     <ItemGroup>
       <InstallInclude Include="..\**\*.ascx" Exclude="@(DefaultExclude)" />
+      <!--<InstallInclude Include="..\..\..\..\..\2sxc-dnn\ToSic.SexyContent.Dnn\**\*.ascx" Exclude="@(DefaultExclude)" />-->
+
       <InstallInclude Include="..\**\*.asmx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\**\*.css" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\**\*.html" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\**\*.htm" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\**\*.resx" Exclude="@(DefaultExclude)" />
+      <!--<InstallInclude Include="..\..\..\..\..\2sxc-dnn\ToSic.SexyContent.Dnn\**\*.resx" Exclude="@(DefaultExclude)" />-->
+
       <InstallInclude Include="..\**\*.aspx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\**\*.js" Exclude="@(DefaultExclude);gruntfile.js" />
+      <!--<InstallInclude Include="..\..\..\..\..\2sxc-dnn\ToSic.SexyContent.Dnn\**\*.js" Exclude="@(DefaultExclude)" />-->
+
       <InstallInclude Include="..\**\System.*.json" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\**\*.map" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
@@ -86,7 +92,9 @@
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.WebApi.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.pdb" />
-      
+      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.pdb" />-->
+
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Apps.dll" />
