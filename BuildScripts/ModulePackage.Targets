@@ -65,6 +65,7 @@
       <!--<InstallInclude Include="..\..\..\..\2sxc-dnn\ToSic.SexyContent.Dnn\**\*.js" Exclude="@(DefaultExclude)" />-->
 
       <InstallInclude Include="**\System.*.json" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\Query.*.json" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.map" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
       <InstallInclude Include="**\*.ashx" Exclude="@(DefaultExclude)" />

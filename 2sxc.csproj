@@ -286,6 +286,10 @@
     <Content Include=".databeta\queries\Query.Apps.json" />
     <Content Include=".databeta\queries\Query.Zones.json" />
     <None Include=".databeta\readme.md" />
+    <Content Include=".data\ContentTypes\System.38e7822b-1049-4539-bb3f-f99949b1b1d1.json" />
+    <Content Include=".data\ContentTypes\System.7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02.json" />
+    <Content Include=".data\ContentTypes\System.c76901b5-0345-4866-9fa3-6208de7f8543.json" />
+    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.RelationshipFilter.json" />
     <Content Include=".gitignore" />
     <Content Include="API\Services.asmx" />
     <Content Include="ClientScripts\ModuleEditor.js" />
@@ -362,13 +366,25 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".databeta\contenttypes\json.y48d849d6-b83d-4001-96e5-79da0833e84e.json" />
-    <Content Include=".data\ContentTypes\System.c76901b5-0345-4866-9fa3-6208de7f8543.json" />
-    <Content Include=".data\ContentTypes\System.38e7822b-1049-4539-bb3f-f99949b1b1d1.json" />
     <Content Include="BuildScripts\ModulePackage.Targets">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include=".data\ContentTypes\System.7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02.json" />
-    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.RelationshipFilter.json" />
+    <Content Include=".data\ContentTypes\System.37b25044-29bb-4c78-85e4-7b89f0abaa2c.json" />
+    <Content Include=".data\ContentTypes\System.4638668f-d506-4f5c-ae37-aa7fdbbb5540.json" />
+    <Content Include=".data\ContentTypes\System.5461d34d-7dc6-4d38-9250-a0729cc8ead3.json" />
+    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.App.json" />
+    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.Caches.CacheAllStreams.json" />
+    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.CsvDataSource.json" />
+    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.EntityTypeFilter.json" />
+    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.Paging.json" />
+    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.ValueFilter.json" />
+    <Content Include=".data\ContentTypes\System.fabc849e-b426-42ea-8e1c-c04e69facd9b.json" />
+    <Content Include=".data\queries\Query.Eav.Queries.Global.Apps.json" />
+    <Content Include=".data\queries\Query.Eav.Queries.Global.Attributes.json" />
+    <Content Include=".data\queries\Query.Eav.Queries.Global.ContentTypes.json" />
+    <Content Include=".data\queries\Query.Eav.Queries.Global.Queries.json" />
+    <Content Include=".data\queries\Query.Eav.Queries.Global.QueryInfo.json" />
+    <Content Include=".data\queries\Query.Eav.Queries.Global.Zones.json" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>
