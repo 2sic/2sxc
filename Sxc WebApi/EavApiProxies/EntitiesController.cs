@@ -10,9 +10,9 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Persistence.Versions;
+using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Security;
 using ToSic.SexyContent.Serializers;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies

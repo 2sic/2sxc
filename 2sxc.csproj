@@ -234,8 +234,7 @@
     <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEav.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
-    <Compile Include="SexyContent\Security\PermissionController.cs" />
-    <Compile Include="SexyContent\Security\PermissionGrant.cs" />
+    <Compile Include="Environment\Dnn7\DnnPermissionController.cs" />
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\Installer\InstallationController.cs" />
     <Compile Include="SexyContent\DataSources\App.cs" />

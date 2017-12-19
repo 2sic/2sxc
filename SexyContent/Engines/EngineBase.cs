@@ -9,8 +9,9 @@ using DotNetNuke.Entities.Portals;
 using Newtonsoft.Json;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Security.Permissions;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Search;
-using ToSic.SexyContent.Security;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.SexyContent.Engines
@@ -142,7 +143,7 @@ namespace ToSic.SexyContent.Engines
         {
             // 2015-05-19 2dm: new: do security check if security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
-            var permissionsOnThisTemplate = new PermissionController(/*App.ZoneId, App.AppId,*/ Template.Entity /*.Guid*/, Log, ModuleInfo);
+            var permissionsOnThisTemplate = new DnnPermissionController(/*App.ZoneId, App.AppId,*/ Template.Entity /*.Guid*/, Log, ModuleInfo);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
             if (!portalSettings.UserInfo.IsInRole(portalSettings.AdministratorRoleName) && permissionsOnThisTemplate.PermissionList.Any())

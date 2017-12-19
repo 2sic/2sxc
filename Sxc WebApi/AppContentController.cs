@@ -12,9 +12,9 @@ using ToSic.Eav;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Security;
 using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight;
 
