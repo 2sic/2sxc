@@ -1719,7 +1719,7 @@ $(function () {
                 if(newClip.type === $quickE.selectors.cb.id && from + 1 === to)
                     return $quickE.clipboard.clear(); // don't do anything
 
-                if (type === $quickE.selectors.cb.type) {
+                if (type === $quickE.selectors.cb.id) {
                     $2sxc(list).manage._getCbManipulator().move(newClip.parent, newClip.field, from, to);
                 } else {
                     $quickE.cmds.mod.move($quickE.clipboard.data, newClip, from, to);

@@ -385,6 +385,7 @@
     <Content Include=".data\queries\Query.Eav.Queries.Global.Queries.json" />
     <Content Include=".data\queries\Query.Eav.Queries.Global.QueryInfo.json" />
     <Content Include=".data\queries\Query.Eav.Queries.Global.Zones.json" />
+    <Content Include="ClientScripts\readme.md" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>

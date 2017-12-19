@@ -13,7 +13,6 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Installer;
 using ToSic.Eav.Apps.ItemListActions;
@@ -22,11 +21,10 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Interfaces;
 using Assembly = System.Reflection.Assembly;
-using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.WebApi.View
 {
-    // had to disable this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
+    // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ModuleController : SxcApiController
     {
         protected override void Initialize(HttpControllerContext controllerContext)
@@ -36,16 +34,14 @@ namespace ToSic.SexyContent.WebApi.View
             ContentGroupReferenceManager = SxcContext.ContentBlock.Manager;
         }
 
-        //private ContentGroupReferenceManagerBase _cbm;
-
-        private ContentGroupReferenceManagerBase ContentGroupReferenceManager { get; set;  }// => _cbm ?? (_cbm = SxcContext.ContentBlock.Manager);
+        private ContentGroupReferenceManagerBase ContentGroupReferenceManager { get; set;  }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void AddItem([FromUri] int? sortOrder = null)
         {
             Log.Add($"add order:{sortOrder}");
-            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = SxcContext.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.AddItem(sortOrder);
 
@@ -133,9 +129,10 @@ namespace ToSic.SexyContent.WebApi.View
         public void MoveItemInList(int parentId, string field, int indexFrom, int indexTo, [FromUri] bool partOfPage = false)
         {
             Log.Add($"move item in list parent:{parentId}, field:{field}, from:{indexFrom}, to:{indexTo}, partOfpage:{partOfPage}");
-            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = SxcContext.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
+            void InternalSave(VersioningActionInfo args) => new AppManager(SxcContext.App, Log)
+                .Entities.ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
 
             // use dnn versioning if partOfPage
             if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
@@ -148,14 +145,16 @@ namespace ToSic.SexyContent.WebApi.View
         /// <param name="parentId"></param>
         /// <param name="field"></param>
         /// <param name="index"></param>
+        /// <param name="partOfPage"></param>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void RemoveItemInList(int parentId, string field, int index, [FromUri] bool partOfPage = false)
         {
             Log.Add($"remove item: parent{parentId}, field:{field}, index:{index}, partOfPage{partOfPage}");
-            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = SxcContext.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => ModifyItemList(parentId, field, new Remove(index));
+            void InternalSave(VersioningActionInfo args) => new AppManager(SxcContext.App, Log)
+                .Entities.ModifyItemList(parentId, field, new Remove(index));
 
             // use dnn versioning if partOfPage
             if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
@@ -208,7 +207,7 @@ namespace ToSic.SexyContent.WebApi.View
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
             Log.Add($"change order sort:{sortOrder}, dest:{destinationSortOrder}");
-            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = SxcContext.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
 
@@ -229,7 +228,7 @@ namespace ToSic.SexyContent.WebApi.View
         public void RemoveFromList([FromUri] int sortOrder)
         {
             Log.Add($"remove from index:{sortOrder}");
-            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = SxcContext.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.RemoveFromList(sortOrder);
 
@@ -260,7 +259,7 @@ namespace ToSic.SexyContent.WebApi.View
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 try
                 {
-                    var all = SxcContext.App.TemplateManager /*.AppTemplates*/.GetAllTemplates();
+                    var all = SxcContext.App.TemplateManager.GetAllTemplates();
                     if (all.Any())
                         return null;
                 }
@@ -299,7 +298,6 @@ namespace ToSic.SexyContent.WebApi.View
         /// <returns></returns>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public bool FinishInstallation()
         {
             Log.Add("finish installation");
@@ -312,25 +310,5 @@ namespace ToSic.SexyContent.WebApi.View
             return true;
         }
 
-        #region Helpers to get things done
-        // todo: probably should move to the new Eav.Apps section, but for that we must
-        private void ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
-        {
-            Log.Add($"modify item list parent:{parentId}, field:{field}, action:{actionToPerform}");
-            var parentEntity = SxcContext.App.Data.List.One(parentId);
-            var parentField = parentEntity.GetBestValue(field);
-
-            if (!(parentField is EntityRelationship fieldList))
-                throw new Exception("field " + field + " doesn't seem to be a list of content-items, must abort");
-
-            var ids = fieldList.EntityIds.ToList();
-
-            if (!actionToPerform.Change(ids)) return;
-
-            // save
-            var values = new Dictionary<string, object> { { field, ids.ToArray() } };
-            new AppManager(SxcContext.App, Log).Entities.UpdateParts(parentEntity.EntityId, values);
-        }
-        #endregion
     }
 }

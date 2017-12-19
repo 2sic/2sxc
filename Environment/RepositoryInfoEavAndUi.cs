@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.Environment
     /// </remarks>
     public class RepositoryInfoEavAndUi: RepositoryInfoOfFolder
     {
-        public RepositoryInfoEavAndUi() : base(true, true, null) { }
+        //public RepositoryInfoEavAndUi() : base(true, true, null) { }
 
         public override List<string> RootPaths => new List<string>
         {
