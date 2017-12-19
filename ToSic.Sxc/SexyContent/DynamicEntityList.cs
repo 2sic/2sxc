@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web;
 using ToSic.Eav;
+using ToSic.Eav.Interfaces;
 
 namespace ToSic.SexyContent
 {

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ToSic")]
 [assembly: AssemblyProduct("2SexyContent")]
-[assembly: AssemblyCopyright("© 2sic 2016")]
+[assembly: AssemblyCopyright("© 2sic 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: Guid("bd90b92e-79ec-4846-8998-b56277d5b2b4")]
 
