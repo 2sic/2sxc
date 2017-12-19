@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Serializers;
-using ToSic.Eav.WebApi;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Internal;
 
@@ -115,8 +113,8 @@ namespace ToSic.Eav.AppEngine
         {
             var templates = GetAllTemplates().ToList();
             var visible = templates.Where(t => !t.IsHidden).ToList();
-            var mdCache = TemplateDataSource().Cache;
-            var ctc = new ContentTypeController();
+            //var mdCache = TemplateDataSource().Cache;
+            //var ctc = new ContentTypeController();
             var serializer = new Serializer();
 
             return new AppRuntime(ZoneId, AppId, Log).ContentTypes.FromScope(Settings.AttributeSetScope) 
@@ -124,7 +122,7 @@ namespace ToSic.Eav.AppEngine
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
                 {
-                    var metadata = ct.Metadata.FirstOrDefault();
+                    var metadata = ct.Metadata.Description;//.FirstOrDefault();
                     return new ContentTypeUiInfo {
                         StaticName = ct.StaticName,
                         Name = ct.Name,

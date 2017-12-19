@@ -16,12 +16,8 @@ namespace ToSic.SexyContent.Security
     public class PermissionController: HasLog
     {
         // todo: move consts to Constants
-        public const string PermissionTypeName = "PermissionConfiguration";
-        public const string Condition = "Condition";
-        public const string Grant = "Grant";
         public string CustomPermissionKey = ""; // "CONTENT";
         readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
-        private const string KeyOwner = "Owner";
 
         private IContentType TargetType { get; }
 
@@ -29,7 +25,7 @@ namespace ToSic.SexyContent.Security
 
 
         public IEnumerable<IEntity> PermissionList => _permissionList ?? (_permissionList =
-                                                          (TargetType?.Metadata ?? TargetItem.Metadata).Where(md => md.Type.StaticName == PermissionTypeName));
+                                                          (TargetType?.Metadata ?? TargetItem.Metadata).Where(md => md.Type.StaticName == Constants.PermissionTypeName));
 
         private IEnumerable<IEntity> _permissionList;
 
@@ -90,7 +86,7 @@ namespace ToSic.SexyContent.Security
         {
 
             // Check if it's a grant-read permission - otherwise stop here
-            var grnt = permissionEntity.GetBestValue(Grant).ToString();
+            var grnt = permissionEntity.GetBestValue(Constants.PermissionGrant).ToString();
             if (grnt.IndexOf(desiredActionCode) == -1) // Grant doesn't contain read, so stop here
                 return false;
 
@@ -98,7 +94,7 @@ namespace ToSic.SexyContent.Security
             try
             {   
                 // check general permissions
-                var condition = permissionEntity.GetBestValue(Condition).ToString();
+                var condition = permissionEntity.GetBestValue(Constants.PermissionCondition).ToString();
                 if (condition.ToLower().StartsWith(_salPrefix))
                 {
                     var salWord = condition.Substring(_salPrefix.Length);
@@ -119,7 +115,7 @@ namespace ToSic.SexyContent.Security
                 }
 
                 // check owner conditions
-                if (condition == KeyOwner)
+                if (condition == Constants.PermissionKeyOwner)
                     // if it's an entity, possibly also check owner-permissions
                     if (TargetItem != null && TargetItem.Owner == Environment.Dnn7.UserIdentity.CurrentUserIdentityToken)
                         return true;
