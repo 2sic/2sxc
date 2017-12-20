@@ -49,22 +49,4 @@
     <PackageName>2sic_2SexyContent</PackageName>
     <MSBuildCommunityTasksPath>$(SolutionDir)\BuildScripts</MSBuildCommunityTasksPath>
   </PropertyGroup>
-  <!-- <Import Project="$(SolutionDir)\BuildScripts\ModulePackage.Targets" /> -->
-  <!--
-  <Import Project="C:\Projects\2SexyContent\Web\DesktopModules\ToSIC_SexyContent\DnnPackageBuilder\BuildScripts\ModulePackage.Targets" />
-  -->
-  <Import Project="$(MSBuildProjectDirectory)\BuildScripts\ModulePackage.Targets" />
-  <Target Name="AfterBuild" DependsOnTargets="PackageModule">
-  </Target>
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
-  <Import Project="..\..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets'))" />
-  </Target>
 </Project>
