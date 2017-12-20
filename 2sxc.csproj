@@ -172,6 +172,14 @@
     <Content Include=".gitignore" />
     <Content Include="API\Services.asmx" />
     <Content Include="ClientScripts\ModuleEditor.js" />
+    <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.dll" />
+    <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.pdb" />
+    <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.Plugins.DiskCache.dll" />
+    <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.Plugins.DiskCache.pdb" />
+    <Content Include="DnnPackageBuilder\icon-app.png" />
+    <Content Include="DnnPackageBuilder\icon.png" />
+    <Content Include="DnnPackageBuilder\license.txt" />
+    <Content Include="DnnPackageBuilder\ReleaseNotes.txt" />
     <Content Include="DnnWebForms\PagePicker.ascx" />
     <Content Include="DnnWebForms\WebFormsBridge.ascx" />
     <Content Include="DnnWebForms\Wysiwyg.ascx" />
@@ -203,9 +211,7 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Beta\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">
       <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
@@ -262,6 +268,22 @@
     <Content Include=".data\queries\Query.Eav.Queries.Global.QueryInfo.json" />
     <Content Include=".data\queries\Query.Eav.Queries.Global.Zones.json" />
     <Content Include="ClientScripts\readme.md" />
+    <Content Include="DnnPackageBuilder\2sic_2SexyContent.dnn" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\00.99.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\07.00.03.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\07.02.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\07.02.02.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\07.03.01.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\07.03.03.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\08.00.06.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\08.01.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\08.03.02.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\08.05.02.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\09.03.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\09.07.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\readme.md" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>
