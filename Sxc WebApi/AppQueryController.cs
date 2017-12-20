@@ -7,7 +7,8 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Security;
+using ToSic.Eav.Security.Permissions;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
 
 namespace ToSic.SexyContent.WebApi
@@ -55,7 +56,7 @@ namespace ToSic.SexyContent.WebApi
             if (query == null)
                 throw HttpErr(HttpStatusCode.NotFound, "query not found", $"query '{name}' not found");
 
-            var permissionChecker = new PermissionController(query.QueryDefinition, log, module);
+            var permissionChecker = new DnnPermissionController(query.QueryDefinition, log, module);
             var readExplicitlyAllowed = permissionChecker.UserMay(PermissionGrant.Read);
 
             var isAdmin = module != null && DotNetNuke.Security.Permissions

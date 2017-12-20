@@ -7,13 +7,14 @@ using System.Web.Http.Controllers;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.ValueProvider;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Razor.Helpers;
-using ToSic.SexyContent.Security;
 using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi
@@ -202,7 +203,7 @@ namespace ToSic.SexyContent.WebApi
             var staticNameIsGuid = Guid.TryParse(ct.StaticName, out var ctGuid);
             // Check permissions in 2sxc - or check if the user has admin-right (in which case he's always granted access for these types of content)
             if (staticNameIsGuid 
-                && new PermissionController(/*zoneId, appId.Value,*/ ct, /*ctGuid,*/ specificItem, Log, contextMod)
+                && new DnnPermissionController(ct, specificItem, Log, contextMod)
                     .UserMay(grant))
                 return;
 

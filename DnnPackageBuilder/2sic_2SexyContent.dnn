@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="09.13.00">
+    <package name="2SexyContent" type="Module" version="09.14.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -84,7 +84,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>09.13.00</version>
+              <version>09.14.00</version>
             </script>
           </scripts>
         </component>
@@ -138,7 +138,7 @@
             <attributes>
               <businessControllerClass>ToSic.SexyContent.Environment.Dnn7.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00,07.03.01,07.03.02,07.03.03,07.03.04,08.00.00,08.00.01,08.00.02,08.00.03,08.00.04,08.00.05,08.00.06,08.00.07,08.00.08,08.00.09,08.00.10,08.00.11,08.00.12,08.01.00,08.01.01,08.01.02,08.01.03,08.02.00,08.02.01,08.02.02,08.02.03,08.03.00,08.03.01,08.03.02,08.03.03,08.03.04,08.03.05,08.03.06,08.03.07,08.04.00,08.04.01,08.04.02,08.04.03,08.04.04,08.04.05,08.04.06,08.04.07,08.04.08,08.05.00,08.05.01,08.05.02,08.05.03,08.05.04,08.05.05,08.05.06,08.06.00,08.07.00,08.08.00,08.08.01,08.08.02,08.09.00,08.09.01,08.10.00,08.10.01,08.11.00,08.12.00,09.00.00,09.00.01,09.00.02,09.01.00,09.01.02,09.01.03,09.02.00,09.03.00,09.03.01,09.03.02,09.03.03,09.04.00,09.04.01,09.04.02,09.04.03,09.05.00,09.05.01,09.05.02,09.06.00,09.06.01,09.07.00,09.08.00,09.09.00,09.10.00,09.11.00,09.11.01,09.12.00,09.13.00</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00,07.03.01,07.03.02,07.03.03,07.03.04,08.00.00,08.00.01,08.00.02,08.00.03,08.00.04,08.00.05,08.00.06,08.00.07,08.00.08,08.00.09,08.00.10,08.00.11,08.00.12,08.01.00,08.01.01,08.01.02,08.01.03,08.02.00,08.02.01,08.02.02,08.02.03,08.03.00,08.03.01,08.03.02,08.03.03,08.03.04,08.03.05,08.03.06,08.03.07,08.04.00,08.04.01,08.04.02,08.04.03,08.04.04,08.04.05,08.04.06,08.04.07,08.04.08,08.05.00,08.05.01,08.05.02,08.05.03,08.05.04,08.05.05,08.05.06,08.06.00,08.07.00,08.08.00,08.08.01,08.08.02,08.09.00,08.09.01,08.10.00,08.10.01,08.11.00,08.12.00,09.00.00,09.00.01,09.00.02,09.01.00,09.01.02,09.01.03,09.02.00,09.03.00,09.03.01,09.03.02,09.03.03,09.04.00,09.04.01,09.04.02,09.04.03,09.05.00,09.05.01,09.05.02,09.06.00,09.06.01,09.07.00,09.08.00,09.09.00,09.10.00,09.11.00,09.11.01,09.12.00,09.13.00,09.14.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -148,6 +148,9 @@
             <basePath>bin</basePath>
             <assembly>
               <name>ToSic.SexyContent.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.dll</name>
             </assembly>
             <!-- trying to include pdb - not possible because the installer will skip anything other than dlls -->
             <!--<assembly>
@@ -484,7 +487,7 @@
             </file>
           </files>
         </component>
-        <component type="Cleanup" version="09.13.00">
+        <component type="Cleanup" version="09.14.00">
           <files>
             <file>
               <path>bin</path>
@@ -496,7 +499,7 @@
         </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="09.13.00">
+    <package name="2SexyContent-App" type="Module" version="09.14.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>

@@ -18,4 +18,6 @@ This is just one repo of 2sxc - the full software also has another ca. 5 for
 1. icons
 1. languages
 
-The full list is maintained on the [2sxc.org/github](https://2sxc.org/en/github) site
+
+The full list with repo-links is maintained on the [2sxc github wiki setup-contribute](https://github.com/2sic/2sxc/wiki/contribute-setup) site. 
+
