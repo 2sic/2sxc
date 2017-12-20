@@ -18,8 +18,6 @@
     <None Remove="SqlDataProvider\**" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
-    <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
     <Content Include="license.txt" />
