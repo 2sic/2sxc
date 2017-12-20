@@ -7,7 +7,7 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
     {
         bool Enabled { get; }
         HtmlString Toolbar(DynamicEntity target = null, 
-            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
+            string dontRelyOnParameterOrder = SexyContent.Constants.RandomProtectionParameter, 
             string actions = null, 
             string contentType = null, 
             object prefill = null,
