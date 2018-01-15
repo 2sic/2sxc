@@ -36,18 +36,18 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// get a full app-object for accessing data of the app from outside
         /// </summary>
         /// <returns></returns>
-        public static IApp App(int appId, bool versioningEnabled)
+        public static IApp App(int appId, bool versioningEnabled = false, bool showDrafts = false)
         {
-            return App(appId, PortalSettings.Current, versioningEnabled);
+            return App(appId, PortalSettings.Current, versioningEnabled, showDrafts);
         }
 
-        public static IApp App(int appId, PortalSettings ownerPortalSettings, bool versioningEnabled)
+        public static IApp App(int appId, PortalSettings ownerPortalSettings, bool versioningEnabled = false, bool showDrafts = false)
         {
             var appStuff = new App(ownerPortalSettings, appId);
 
             var provider = new ValueCollectionProvider(); // use blank provider for now
 
-            appStuff.InitData(false, versioningEnabled, provider);
+            appStuff.InitData(showDrafts, versioningEnabled, provider);
 
             return appStuff;
         }
