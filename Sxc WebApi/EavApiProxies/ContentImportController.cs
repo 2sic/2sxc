@@ -28,5 +28,9 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
 	    [HttpPost]
         public ContentImportResult ImportContent(ContentImportArgs args) => _eavCtc.ImportContent(args);
+
+	    [HttpPost]
+        public bool Import(EntityImport args) => _eavCtc.Import(args);
+
 	}
 }

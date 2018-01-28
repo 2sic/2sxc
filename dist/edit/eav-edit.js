@@ -1193,6 +1193,10 @@ angular.module("eavFieldTemplates")
 		        });
 		};
 
+		/**
+		 * this is for something very secret :) - running js code which an input-field supplies - don't touch without asking Daniel
+		 * @param {*} field 
+		 */
 	    vm.initCustomJavaScript = function(field) {
 	        var jsobject,
                 cjs = field.Metadata.merged.CustomJavaScript;

@@ -83,6 +83,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		}
 
 	    [HttpPost]
-	    public bool ImportQuery(QueryImport args) => _eavCont.ImportQuery(args);
+	    public bool ImportQuery(EntityImport args) => _eavCont.ImportQuery(args);
 	}
 }
