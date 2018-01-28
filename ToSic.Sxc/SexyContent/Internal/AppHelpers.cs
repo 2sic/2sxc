@@ -30,9 +30,9 @@ namespace ToSic.SexyContent.Internal
         internal static int GetAppIdFromGuidName(int zoneId, string appName, bool alsoCheckFolderName = false)
         {
             // ToDo: Fix issue in EAV (cache is only ensured when a CacheItem-Property is accessed like LastRefresh)
-            var baseCache = ((BaseCache) DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId));
+            var baseCache = (BaseCache) DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId);
             // ReSharper disable once UnusedVariable
-            var dummy = baseCache.CacheLastRefresh;
+            var dummy = baseCache.CacheTimestamp;
 
             if (IsNullOrEmpty(appName))
                 return 0; 
