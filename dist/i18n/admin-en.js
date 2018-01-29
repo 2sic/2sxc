@@ -14,7 +14,9 @@
 			"Rename": "rename",
 			"Save": "save",
 			"System": "advanced system functions",
-			"Metadata": "metadata"
+			"Metadata": "metadata",
+			"Export": "export",
+			"Import": "import"
 		},
 		"Messages": {
 			"Loading": "loading...",
