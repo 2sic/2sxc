@@ -103,17 +103,10 @@
     <Compile Include="Edit\ClientContextInfo\ClientInfoContentBlock.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfoContentGroup.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfoEntity.cs" />
-    <Compile Include="Environment\Dnn7\ClientInfosAll.cs" />
-    <Compile Include="Environment\Dnn7\ClientInfosEnvironment.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfosError.cs" />
-    <Compile Include="Environment\Dnn7\ClientInfosLanguages.cs" />
-    <Compile Include="Environment\Dnn7\ClientInfosUser.cs" />
-    <Compile Include="Environment\Dnn7\DnnInstanceInfo.cs" />
     <Compile Include="Environment\Dnn7\DnnTennant.cs" />
-    <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
+    <Compile Include="Interfaces\IRenderingHelpers.cs" />
     <Compile Include="Environment\Dnn7\Permissions.cs" />
-    <Compile Include="Environment\Dnn7\RenderingHelpers.cs" />
-    <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
     <Compile Include="Environment\Interfaces\IClientDependencyManager.cs" />
     <Compile Include="Interfaces\IApp.cs" />
     <Compile Include="Interfaces\IAppData.cs" />
@@ -234,6 +227,8 @@
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
     <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Sxc\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

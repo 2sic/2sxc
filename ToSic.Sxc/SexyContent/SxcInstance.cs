@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Portals;
-using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
@@ -14,6 +13,7 @@ using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent
 {
@@ -157,7 +157,7 @@ namespace ToSic.SexyContent
         public HtmlString Render()
         {
             Log.Add("render");
-            var renderHelp = new RenderingHelpers(this, Log);
+            var renderHelp = Factory.Resolve<IRenderingHelpers>().Init(this, Log);//  new DnnRenderingHelpers(this, Log);
             
             try
             {
@@ -217,7 +217,7 @@ namespace ToSic.SexyContent
                 #endregion
 
                 #region Wrap it all up into a nice wrapper tag
-                var editInfos = JsonConvert.SerializeObject(renderHelp.GetClientInfosAll());
+                var editInfos = renderHelp.GetClientInfosAll();
                 var editHelper = new InPageEditingHelper(this);
                 var startTag = !RenderWithDiv
                     ? ""

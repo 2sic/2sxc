@@ -73,14 +73,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Environment\Dnn7\ClientDependencyManager.cs" />
+    <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosAll.cs" />
+    <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosEnvironment.cs" />
+    <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosLanguages.cs" />
+    <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosUser.cs" />
     <Compile Include="Environment\Dnn7\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="Environment\Dnn7\DataSources\DnnUserProfileDataSource.cs" />
     <Compile Include="Environment\Dnn7\Deprecated\DnnSqlDataSource.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
+    <Compile Include="Environment\Dnn7\DnnInstanceInfo.cs" />
     <Compile Include="Environment\Dnn7\DnnPermissionController.cs" />
+    <Compile Include="Environment\Dnn7\DnnRenderingHelpers.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
     <Compile Include="Environment\Dnn7\Factory.cs" />
+    <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
     <Compile Include="Environment\Dnn7\Logging.cs" />
     <Compile Include="Environment\Dnn7\ModuleSettingsHelper.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing.cs" />
@@ -89,6 +96,7 @@
     <Compile Include="Environment\Dnn7\Search\SearchIndexException.cs" />
     <Compile Include="Environment\Dnn7\Security\DnnEnvironmentFactory.cs" />
     <Compile Include="Environment\Dnn7\UserIdentity.cs" />
+    <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
     <Compile Include="Environment\DnnEnvironment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -121,5 +129,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

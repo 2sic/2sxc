@@ -5,25 +5,35 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Client.ClientResourceManagement;
+using Newtonsoft.Json;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Sxc.Interfaces;
 
 // ReSharper disable InconsistentNaming
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    internal class RenderingHelpers: HasLog
+    public class DnnRenderingHelpers : IHasLog, IRenderingHelpers
     {
-        private readonly SxcInstance _sxcInstance;
-        private readonly PortalSettings _portalSettings;
-        private readonly UserInfo _userInfo;
-        private readonly string _applicationRoot;
-        private readonly IInstanceInfo _moduleInfo;
+        private SxcInstance _sxcInstance;
+        private PortalSettings _portalSettings;
+        private UserInfo _userInfo;
+        private string _applicationRoot;
+        private IInstanceInfo _moduleInfo;
 
-        internal RenderingHelpers(SxcInstance sxc, Log parentLog): base("DN.Render", parentLog)
+        public Log Log = new Log("Dnn.Render");
+
+        // Blank constructor for IoC
+        public DnnRenderingHelpers() { }
+
+        public DnnRenderingHelpers(SxcInstance sxc, Log parentLog) => Init(sxc, parentLog);
+
+        public IRenderingHelpers Init(SxcInstance sxc, Log parentLog)
         {
-            string appRoot = VirtualPathUtility.ToAbsolute("~/");
+            LinkLog(parentLog);
+            var appRoot = VirtualPathUtility.ToAbsolute("~/");
             _moduleInfo = sxc?.InstanceInfo;
             _sxcInstance = sxc;
             _portalSettings = PortalSettings.Current;
@@ -31,6 +41,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             _userInfo = PortalSettings.Current.UserInfo;
             _applicationRoot = appRoot;
 
+            return this;
         }
 
         /// <summary>
@@ -40,7 +51,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// <returns></returns>
         internal static bool IsDebugUrl(HttpRequest request) => string.IsNullOrEmpty(request.QueryString["debug"]);
 
-        internal void RegisterClientDependencies(Page page)
+        public void RegisterClientDependencies(Page page)
         {
             Log.Add("will auto-register client dependencies (js/css");
             var root = "~/desktopmodules/tosic_sexycontent/";
@@ -58,20 +69,20 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         #region add scripts / css with bypassing the official ClientResourceManager
 
-        private void RegisterJs(Page page, string version, string path)
+        private static void RegisterJs(Page page, string version, string path)
         {
             var url = $"{path}{(path.IndexOf('?') > 0 ? '&' : '?')}v={version}";
             page.ClientScript.RegisterClientScriptInclude(typeof(Page), path, url);
         }
 
-        private void RegisterCss(Page page, string path) => ClientResourceManager.RegisterStyleSheet(page, path);
+        private static void RegisterCss(Page page, string path) => ClientResourceManager.RegisterStyleSheet(page, path);
 
         #endregion
 
         // new
-        public ClientInfosAll GetClientInfosAll()
-            => new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, _sxcInstance, _userInfo,
-                _sxcInstance.ZoneId ?? 0, _sxcInstance.ContentBlock.ContentGroupExists, Log);
+        public string GetClientInfosAll()
+            => JsonConvert.SerializeObject(new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, _sxcInstance, _userInfo,
+                _sxcInstance.ZoneId ?? 0, _sxcInstance.ContentBlock.ContentGroupExists, Log));
 
         public string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError, bool addMinimalWrapper, bool encodeMessage)
         {
@@ -94,6 +105,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 msg = "<div class='sc-content-block' data-cb-instance='" + _moduleInfo.Id + "' data-cb-id='" + _moduleInfo.Id + "'>" + msg + "</div>";
 
             return msg;
+        }
+
+        public void LinkLog(Log parentLog)
+        {
+            Log.LinkTo(parentLog);
         }
     }
 

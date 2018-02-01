@@ -14,6 +14,7 @@ using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
 using ToSic.SexyContent.Environment.Dnn7.Security;
 using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.ImportExport;
+using ToSic.Sxc.Interfaces;
 using Configuration = ToSic.Eav.Configuration;
 
 namespace ToSic.SexyContent
@@ -65,6 +66,7 @@ namespace ToSic.SexyContent
 
                 sc.AddTransient<IClientDependencyManager, ClientDependencyManager>();
                 sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();
+                sc.AddTransient<IRenderingHelpers, DnnRenderingHelpers>();
 
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);
             });
