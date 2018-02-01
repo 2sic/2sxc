@@ -240,9 +240,17 @@
       <Project>{cf3b9349-8c66-4901-8edb-a4ec1d75326b}</Project>
       <Name>ToSic.Eav</Name>
     </ProjectReference>
+    <ProjectReference Include="2Sexy Content Razor\2sxc Razor.csproj">
+      <Project>{78a558af-f274-4e3c-95fe-8de9226e0ebc}</Project>
+      <Name>2sxc Razor</Name>
+    </ProjectReference>
     <ProjectReference Include="2sxc Dnn\2sxc Dnn.csproj">
       <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
       <Name>2sxc Dnn</Name>
+    </ProjectReference>
+    <ProjectReference Include="Sxc WebApi\2sxc Dnn WebApi.csproj">
+      <Project>{2f0610de-2518-4fc8-823e-7228dd17c04f}</Project>
+      <Name>2sxc Dnn WebApi</Name>
     </ProjectReference>
     <ProjectReference Include="ToSic.Sxc\2sxc core %28ToSic.Sxc%29.csproj">
       <Project>{66318f76-3d43-406c-8de6-94b46c22f776}</Project>

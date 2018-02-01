@@ -100,6 +100,14 @@
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
     <Compile Include="Environment\Base\ClientDepedencyManager.cs" />
+    <Compile Include="Edit\ClientContextInfo\ClientInfoContentBlock.cs" />
+    <Compile Include="Edit\ClientContextInfo\ClientInfoContentGroup.cs" />
+    <Compile Include="Edit\ClientContextInfo\ClientInfoEntity.cs" />
+    <Compile Include="Environment\Dnn7\ClientInfosAll.cs" />
+    <Compile Include="Environment\Dnn7\ClientInfosEnvironment.cs" />
+    <Compile Include="Edit\ClientContextInfo\ClientInfosError.cs" />
+    <Compile Include="Environment\Dnn7\ClientInfosLanguages.cs" />
+    <Compile Include="Environment\Dnn7\ClientInfosUser.cs" />
     <Compile Include="Environment\Dnn7\DnnInstanceInfo.cs" />
     <Compile Include="Environment\Dnn7\DnnTennant.cs" />
     <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
