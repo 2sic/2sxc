@@ -9,6 +9,10 @@ using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
+    /// <summary>
+    /// This is the connector-class which DNN consults when it needs to know things about a module
+    /// It's used in the background, not when the page is loading
+    /// </summary>
     public class DnnBusinessController : ModuleSearchBase, IUpgradeable, IVersionable
     {
         private Log Log { get; }
@@ -48,13 +52,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
 
-        public void DeleteVersion(int moduleId, int version)
-        {
-            Log.Add("delete version is not supported");
-            //versioning.DoInsideDeleteLatestVersion(moduleId, (args) => {
-            //    // NOTE for 2dm: If we want to support delete, reset any item in draft state of the content-block
-            //});
-        }
+        public void DeleteVersion(int moduleId, int version) 
+            => Log.Add("delete version is not supported");
 
         public int RollBackVersion(int moduleId, int version)
         {
@@ -82,7 +81,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             try
             {
-                return new SearchController(Log).GetModifiedSearchDocuments(moduleInfo, beginDate);
+                return new SearchController(Log).GetModifiedSearchDocuments(new DnnInstanceInfo(moduleInfo), beginDate);
             }
             catch (Exception e)
             {

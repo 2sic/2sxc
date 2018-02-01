@@ -5,11 +5,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 using Newtonsoft.Json;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Search;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
@@ -38,7 +39,7 @@ namespace ToSic.SexyContent.Engines
 
             // Throw Exception if Template does not exist
             if (!File.Exists(HostingEnvironment.MapPath(templatePath)))
-                // todo: rendering exception
+                // todo: change to some kind of "rendering exception"
                 throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
 
             Template = template;
@@ -90,18 +91,14 @@ namespace ToSic.SexyContent.Engines
                 return AlternateRendering;
 
             var renderedTemplate = RenderTemplate();
-            var depMan = Eav.Factory.Resolve<IClientDependencyManager>();
+            var depMan = Factory.Resolve<IClientDependencyManager>();
             return depMan.Process(renderedTemplate);
         }
 
 
-        // todo: i18n
         private void CheckExpectedTemplateErrors()
         {
-            //#region Check if everything has values and return if not
-
             if (Template == null)
-                //{
                 throw new RenderingException("Template Configuration Missing");
 
             if (Template.ContentTypeStaticName != "" &&
@@ -138,12 +135,12 @@ namespace ToSic.SexyContent.Engines
             }
         }
 
-        // todo: make permission controller injectable
         private void CheckTemplatePermissions(ITennant tennant)
         {
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
-            var permissionsOnThisTemplate = new DnnPermissionController(Template.Entity, Log, ModuleInfo);
+            var permissionsOnThisTemplate = Factory.Resolve<IEnvironmentFactory>()
+                .ItemPermissions(Template.Entity, Log, ModuleInfo);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
             if (tennant.RefactorUserIsAdmin || !permissionsOnThisTemplate.PermissionList.Any()) return;

@@ -59,7 +59,8 @@ namespace ToSic.SexyContent
         /// </summary>
         public Environment.DnnEnvironment Environment { get; }
 
-        internal ModuleInfo ModuleInfo { get; }
+        //internal ModuleInfo ModuleInfo { get; }
+        internal IInstanceInfo InstanceInfo { get; }
 
         internal IContentBlock ContentBlock { get; }
 
@@ -132,7 +133,7 @@ namespace ToSic.SexyContent
 
         #region Constructor
         internal SxcInstance(IContentBlock  cb, 
-            ModuleInfo runtimeModuleInfo, 
+            IInstanceInfo /*ModuleInfo*/ runtimeModuleInfo, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
             IPermissions permissions = null,
             Log parentLog = null)
@@ -140,16 +141,19 @@ namespace ToSic.SexyContent
             Log = new Log("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
             Environment = new Environment.DnnEnvironment(Log);
             ContentBlock = cb;
-            ModuleInfo = runtimeModuleInfo;
+            //ModuleInfo = runtimeModuleInfo;
+            InstanceInfo = runtimeModuleInfo;// new DnnInstanceInfo(runtimeModuleInfo);
 
             // keep url parameters, because we may need them later for view-switching and more
             Parameters = urlparams;
 
             // modinfo is null in cases where things are not known yet, portalsettings are null in search-scenarios
             Environment.Permissions = permissions
-                                      ?? (ModuleInfo != null && PortalSettings.Current != null
-                                          ? (IPermissions) new Permissions(ModuleInfo)
-                                          : new Environment.None.Permissions());
+                    ?? (InstanceInfo != null && PortalSettings.Current != null ? new Permissions(InstanceInfo) as IPermissions : new Environment.None.Permissions());
+
+                                      //?? (ModuleInfo != null && PortalSettings.Current != null
+                                      //    ? (IPermissions) new Permissions(ModuleInfo)
+                                      //    : new Environment.None.Permissions());
         }
 
         #endregion
@@ -246,7 +250,7 @@ namespace ToSic.SexyContent
         public IEngine GetRenderingEngine(InstancePurposes renderingPurpose)
         {
             var engine = EngineFactory.CreateEngine(Template);
-            engine.Init(Template, App, new DnnInstanceInfo(ModuleInfo), Data, renderingPurpose, this, Log);
+            engine.Init(Template, App, InstanceInfo/* new DnnInstanceInfo(ModuleInfo)*/, Data, renderingPurpose, this, Log);
             return engine;
         }
 

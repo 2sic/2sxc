@@ -12,5 +12,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public override int Id => Info.ModuleID;
 
         public override int PageId => Info.TabID;
+
+        public override int TennantId => Info.PortalID;
     }
 }

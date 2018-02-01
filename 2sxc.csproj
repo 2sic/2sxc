@@ -159,6 +159,7 @@
     <Compile Include="Environment\Dnn7\Factory.cs" />
     <Compile Include="Environment\Dnn7\Search\SearchController.cs" />
     <Compile Include="Environment\Dnn7\Search\SearchIndexException.cs" />
+    <Compile Include="Environment\Dnn7\Security\DnnEnvironmentFactory.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

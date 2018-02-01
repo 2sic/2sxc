@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
-using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Exceptions;
@@ -12,6 +11,7 @@ using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 using ToSic.Eav.Apps.Enums;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 
@@ -25,12 +25,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private readonly PortalSettings _portalSettings;
         private readonly UserInfo _userInfo;
         private readonly string _applicationRoot;
-        private readonly ModuleInfo _moduleInfo;
+        private readonly IInstanceInfo /*ModuleInfo*/ _moduleInfo;
 
         internal RenderingHelpers(SxcInstance sxc, Log parentLog): base("DN.Render", parentLog)
         {
             string appRoot = VirtualPathUtility.ToAbsolute("~/");
-            _moduleInfo = sxc?.ModuleInfo;
+            _moduleInfo = sxc?.InstanceInfo;//.ModuleInfo;
             _sxcInstance = sxc;
             _portalSettings = PortalSettings.Current;
 
@@ -106,7 +106,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             // add another, minimal id-wrapper for those cases where the rendering-wrapper is missing
             if (addMinimalWrapper)
-                msg = "<div class='sc-content-block' data-cb-instance='" + _moduleInfo.ModuleID + "' data-cb-id='" + _moduleInfo.ModuleID + "'>" + msg + "</div>";
+                msg = "<div class='sc-content-block' data-cb-instance='" + _moduleInfo.Id/*.ModuleID */+ "' data-cb-id='" + _moduleInfo.Id/*.ModuleID*/ + "'>" + msg + "</div>";
 
             return msg;
         }
@@ -124,7 +124,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         // ReSharper disable once InconsistentNaming
         public ClientInfosError error;
 
-        public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated, Log parentLog)
+        public ClientInfosAll(string systemRootUrl, PortalSettings ps, /*ModuleInfo*/IInstanceInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated, Log parentLog)
         : base("Sxc.CliInf", parentLog, "building entire client-context")
         {
             var versioning = sxc.Environment.PagePublishing;
@@ -133,7 +133,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Language = new ClientInfosLanguages(ps, zoneId);
             User = new ClientInfosUser(uinfo);
 
-            ContentBlock = new ClientInfoContentBlock(sxc.ContentBlock, null, 0, versioning.Requirements(mic.ModuleID));
+            ContentBlock = new ClientInfoContentBlock(sxc.ContentBlock, null, 0, versioning.Requirements(mic.Id/*.ModuleID*/));
             ContentGroup = new ClientInfoContentGroup(sxc, isCreated);
             error = new ClientInfosError(sxc.ContentBlock);
         }
@@ -167,16 +167,16 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public bool IsEditable;
 
-        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc)
+        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, /*ModuleInfo*/IInstanceInfo mic, SxcInstance sxc)
         {
             WebsiteId = ps.PortalId;
             
             WebsiteUrl = "//" + ps.PortalAlias.HTTPAlias + "/";
 
-            PageId = mic.TabID;
+            PageId = mic.PageId/*.TabID*/;
             PageUrl = ps.ActiveTab.FullUrl;
 
-            InstanceId = mic.ModuleID;
+            InstanceId = mic.Id/*.ModuleID*/;
 
             SxcVersion = Settings.Version.ToString();
 

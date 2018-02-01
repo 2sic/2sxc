@@ -126,8 +126,8 @@ namespace ToSic.SexyContent.WebApi
             else
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
-                { ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(SxcContext.ModuleInfo.ModuleID,
-                    SxcContext.ModuleInfo.ModuleTitle)});
+                { ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(SxcContext.InstanceInfo.Id/*.ModuleInfo.ModuleID,
+                    SxcContext.ModuleInfo.ModuleTitle*/)});
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(json, Encoding.UTF8, "application/json");

@@ -15,7 +15,7 @@ namespace ToSic.SexyContent.ContentBlocks
             => SxcContext.App.ContentGroupManager.SetModulePreviewTemplateId(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
-            => AppHelpers.SetAppIdForModule(SxcContext.ModuleInfo, SxcContext.Environment, appId, Log);
+            => AppHelpers.SetAppIdForModule(SxcContext.InstanceInfo/*.ModuleInfo*/, SxcContext.Environment, appId, Log);
         
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
@@ -26,12 +26,12 @@ namespace ToSic.SexyContent.ContentBlocks
         {
             Log.Add("update title");
 
-            var languages = SxcContext.Environment.ZoneMapper.CulturesWithState(SxcContext.ModuleInfo.PortalID,
+            var languages = SxcContext.Environment.ZoneMapper.CulturesWithState(SxcContext.InstanceInfo.TennantId/*.ModuleInfo.PortalID*/,
                 SxcContext.ZoneId.Value);
 
             // Find Module for default language
             var moduleController = new DotNetNuke.Entities.Modules.ModuleController();
-            var originalModule = moduleController.GetModule(SxcContext.ModuleInfo.ModuleID);
+            var originalModule = moduleController.GetModule(SxcContext.InstanceInfo.Id/*.ModuleInfo.ModuleID*/);
 
             foreach (var dimension in languages)
             {
@@ -49,7 +49,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
                     // Find module for given Culture
                     var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
-                        originalModule.TabID, SxcContext.ModuleInfo.PortalID,
+                        originalModule.TabID, SxcContext.InstanceInfo.TennantId/*.ModuleInfo.PortalID*/,
                         DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
 
                     // Break if no title module found

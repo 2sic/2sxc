@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.ContentBlocks
         internal ContentGroupReferenceManagerBase(SxcInstance sxc): base("CG.RefMan", sxc.Log)
         {
             SxcContext = sxc;
-            ModuleId = SxcContext.ModuleInfo.ModuleID;
+            ModuleId = SxcContext.InstanceInfo.Id/*.ModuleInfo.ModuleID*/;
         }
 
 

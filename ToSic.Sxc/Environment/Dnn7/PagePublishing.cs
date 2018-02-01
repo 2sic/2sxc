@@ -104,7 +104,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
             {
                 // publish all entites of this content block
                 var moduleInfo = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
-                var cb = new ModuleContentBlock(moduleInfo, Log);
+                var instanceInfo = new DnnInstanceInfo(moduleInfo);
+                var cb = new ModuleContentBlock(instanceInfo /*moduleInfo*/, Log);
 
                 if (cb.ContentGroupExists)
                 {

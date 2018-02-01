@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -12,7 +13,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
     /// Permissions object which checks if the user is allowed to do soemthing based on specific permission
     /// This checks permissions based on EAV data related to an entity - so pure EAV, no DNN
     /// </summary>
-    public class DnnPermissionController: Eav.Security.Permissions.PermissionController
+    public class DnnPermissionController: PermissionController
     {
         public string CustomPermissionKey = ""; // "CONTENT";
 

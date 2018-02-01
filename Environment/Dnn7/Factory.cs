@@ -1,8 +1,9 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.ContentBlocks;
-using ToSic.SexyContent.Interfaces;
+using IApp = ToSic.SexyContent.Interfaces.IApp;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -15,11 +16,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public static ISxcInstance SxcInstanceForModule(int modId, int tabId)
         {
             var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
-
-            return SxcInstanceForModule(moduleInfo);
+            var instance = new DnnInstanceInfo(moduleInfo);
+            return SxcInstanceForModule(instance/*moduleInfo*/);
         }
 
-        public static ISxcInstance SxcInstanceForModule(ModuleInfo moduleInfo) 
+        public static ISxcInstance SxcInstanceForModule(/*ModuleInfo*/ IInstanceInfo moduleInfo) 
             => new ModuleContentBlock(moduleInfo, parentLog: null).SxcInstance;
 
         public static IAppAndDataHelpers CodingHelpers(ISxcInstance sxc) 

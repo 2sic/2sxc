@@ -6,6 +6,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -24,9 +25,9 @@ namespace ToSic.SexyContent
     {
         private readonly SxcInstance _sxcInstance;
 
-        public AppAndDataHelpers(SxcInstance sexy) : this(sexy, sexy.ModuleInfo, null) {}
+        public AppAndDataHelpers(SxcInstance sexy) : this(sexy, sexy.InstanceInfo/*.ModuleInfo*/, null) {}
 
-        public AppAndDataHelpers(SxcInstance sexy, ModuleInfo module, Log parentLog): base("Sxc.AppHlp", parentLog ?? sexy?.Log)
+        public AppAndDataHelpers(SxcInstance sexy, /*ModuleInfo*/IInstanceInfo module, Log parentLog): base("Sxc.AppHlp", parentLog ?? sexy?.Log)
         {
             // Init things than require module-info or similar, but not 2sxc
             Dnn = new DnnHelper(module);
@@ -45,7 +46,7 @@ namespace ToSic.SexyContent
             // But in search mode, it shouldn't show drafts, so this is ok.
             // Note that app could be null, if a user is in admin-ui of a module which hasn't actually be configured yet
             App?.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent,
-                PortalSettings.Current != null && sexy.Environment.PagePublishing.IsEnabled(module.ModuleID), 
+                PortalSettings.Current != null && sexy.Environment.PagePublishing.IsEnabled(module.Id/*.ModuleID*/), 
                 Data.ConfigurationProvider);
         }
 

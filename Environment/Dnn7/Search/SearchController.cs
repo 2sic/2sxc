@@ -7,6 +7,8 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
@@ -24,11 +26,10 @@ namespace ToSic.SexyContent.Search
         /// <summary>
         /// Get search info for each dnn module containing 2sxc data
         /// </summary>
-        /// <param name="moduleInfo"></param>
-        /// <param name="beginDate"></param>
         /// <returns></returns>
-        public IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
+        public IList<SearchDocument> GetModifiedSearchDocuments(/*ModuleInfo*/IInstanceInfo instanceInfo, DateTime beginDate)
         {
+            var moduleInfo = (instanceInfo as InstanceInfo<ModuleInfo>).Info;
             // always log with method, to ensure errors are cought
             Log.Add(() => $"start search for mod#{moduleInfo.ModuleID}");
             var searchDocuments = new List<SearchDocument>();
@@ -46,7 +47,7 @@ namespace ToSic.SexyContent.Search
 		            return searchDocuments;
             }
 
-            var mcb = new ModuleContentBlock(moduleInfo, Log);
+            var mcb = new ModuleContentBlock(/*moduleInfo*/instanceInfo, Log);
             var sexy = mcb.SxcInstance;
 
             var language = moduleInfo.CultureCode;

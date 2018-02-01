@@ -17,7 +17,7 @@ namespace ToSic.SexyContent
     public partial class View : PortalModuleBase, IActionable
     {
         private SxcInstance _sxci;
-        protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(ModuleConfiguration, Log).SxcInstance);
+        protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(new DnnInstanceInfo(ModuleConfiguration), Log).SxcInstance);
 
         private Log Log { get; } = new Log("Sxc.View");
 

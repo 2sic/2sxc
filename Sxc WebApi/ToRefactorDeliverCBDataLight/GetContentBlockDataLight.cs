@@ -10,14 +10,14 @@ namespace ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight
         private SxcInstance _sxci;
         // todo i18n in the client - probably just use a code, and use the json translation
         private string errorText =
-            "A module (contet-block) is trying to retrieve data from the server as JSON. If you see this message, it is because Data Publishing is not enabled on the appropriate view. Please enable it in the view settings. \\nThis is happening on the module {0} (the module with the title \"{1}\").";
+            "A module (contet-block) is trying to retrieve data from the server as JSON. If you see this message, it is because Data Publishing is not enabled on the appropriate view. Please enable it in the view settings. \\nThis is happening on the module {0}.";
         public GetContentBlockDataLight(SxcInstance sxc)
         {
             _sxci = sxc;
         }
 
-        internal string GeneratePleaseEnableDataError(int instanceId, string moduleTitle)
-            => "2sxc Content (" + instanceId + "): " + string.Format(errorText, instanceId, moduleTitle);
+        internal string GeneratePleaseEnableDataError(int instanceId/*, string moduleTitle*/)
+            => "2sxc Content (" + instanceId + "): " + string.Format(errorText, instanceId/*, moduleTitle*/);
 
         /// <summary>
         /// Returns a JSON string for the elements

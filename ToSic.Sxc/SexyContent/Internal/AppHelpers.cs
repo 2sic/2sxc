@@ -4,6 +4,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Logging.Simple;
@@ -61,8 +62,9 @@ namespace ToSic.SexyContent.Internal
         }
 
 
-        internal static void SetAppIdForModule(ModuleInfo module, IEnvironment env, int? appId, Log parentLog)
+        internal static void SetAppIdForModule(/*ModuleInfo module*/IInstanceInfo instanceInfo, IEnvironment env, int? appId, Log parentLog)
         {
+            var module = (instanceInfo as InstanceInfo<ModuleInfo>).Info;
             // Reset temporary template
             ContentGroupManager.DeletePreviewTemplateId(module.ModuleID);
 

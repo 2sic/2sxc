@@ -1,6 +1,8 @@
 ﻿using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Implementations.UserInformation;
 using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.Eav.ImportExport.Persistence.File;
@@ -10,6 +12,7 @@ using ToSic.Eav.Plumbing.Booting;
 using ToSic.SexyContent.Environment;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
+using ToSic.SexyContent.Environment.Dnn7.Security;
 using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.ImportExport;
 using Configuration = ToSic.Eav.Configuration;
@@ -63,6 +66,7 @@ namespace ToSic.Sxc.Dnn.Boot
                 sc.AddTransient<Eav.Apps.Interfaces.IEnvironment, DnnEnvironment>();
 
                 sc.AddTransient<IClientDependencyManager, ClientDependencyManager>();
+                sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();
 
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);
             });
