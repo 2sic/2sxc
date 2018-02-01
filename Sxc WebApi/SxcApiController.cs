@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using ToSic.Eav;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
@@ -16,6 +17,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.WebApi.Dnn;
+using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -63,7 +65,8 @@ namespace ToSic.SexyContent.WebApi
                 var routeAppPath = Request.GetRouteData().Values["apppath"]?.ToString();
                 var appId = GetCurrentAppIdFromPath(routeAppPath);
                 // Look up if page publishing is enabled - if module context is not availabe, always false
-                var publishingEnabled = Dnn.Module != null && new PagePublishing(Log).IsEnabled(Dnn.Module.ModuleID);
+                var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
+                var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);
                 return _app = (App) Environment.Dnn7.Factory.App(appId, publishingEnabled);
             }
         }

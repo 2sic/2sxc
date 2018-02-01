@@ -1,4 +1,5 @@
 ﻿using System.Web.Hosting;
+using ToSic.Eav;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -8,7 +9,7 @@ namespace ToSic.SexyContent.Environment
 {
     public class DnnEnvironment: HasLog, IEnvironment
     {
-        public IPermissions Permissions { get; internal set; }
+        public IPermissions Permissions { get; set; }
 
         public IZoneMapper ZoneMapper { get;  } = new ZoneMapper();
 
@@ -22,9 +23,7 @@ namespace ToSic.SexyContent.Environment
 
         public  DnnEnvironment() : base("DNN.Enviro") { }
 
-        public DnnEnvironment(Log parentLog = null) : base("DNN.Enviro", parentLog)
-        {
-            PagePublishing = new PagePublishing(Log);
-        }
+        public DnnEnvironment(Log parentLog = null) : base("DNN.Enviro", parentLog) 
+            => PagePublishing =  Eav.Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
     }
 }

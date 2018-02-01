@@ -8,11 +8,11 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -118,7 +118,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
 
-            var versioning = new PagePublishing(Log);
+            var versioning = Eav.Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
             Dictionary<Guid, int> postSaveIds = null;
 
             void InternalSave(VersioningActionInfo args)

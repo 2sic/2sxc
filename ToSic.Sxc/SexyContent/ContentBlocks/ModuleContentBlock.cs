@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
@@ -52,7 +53,8 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
             // important: don't use the SxcInstance.Environment, as it would try to init the Sxc-object before the app is known, causing various side-effects
-            ZoneId = new Environment.DnnEnvironment(Log).ZoneMapper.GetZoneId(_dnnModule.OwnerPortalID);
+            var tempEnv = Factory.Resolve<IEnvironmentFactory>().Environment(parentLog);
+            ZoneId = tempEnv/*new Environment.DnnEnvironment(Log)*/.ZoneMapper.GetZoneId(_dnnModule.OwnerPortalID);
             
             AppId = AppHelpers.GetAppIdFromModule(_dnnModule, ZoneId) ?? 0;// fallback/undefined YET
 

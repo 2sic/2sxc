@@ -16,8 +16,7 @@ using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.ImportExport;
 using Configuration = ToSic.Eav.Configuration;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Dnn.Boot
+namespace ToSic.SexyContent
 {
     /// <inheritdoc />
     /// <summary>

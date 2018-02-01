@@ -2,7 +2,7 @@
 using System.Web;
 using ToSic.Eav.Repositories;
 
-namespace ToSic.SexyContent.Environment
+namespace ToSic.SexyContent
 {
     /// <summary>
     /// Provides global information about where the folders are which should be loaded in this environment

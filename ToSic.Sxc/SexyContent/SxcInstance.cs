@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using Newtonsoft.Json;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
@@ -52,7 +53,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Environment - should be the place to refactor everything into, which is the host around 2sxc
         /// </summary>
-        public Environment.DnnEnvironment Environment { get; }
+        public IEnvironment Environment { get; }
 
         internal IInstanceInfo InstanceInfo { get; }
 
@@ -133,7 +134,7 @@ namespace ToSic.SexyContent
             Log parentLog = null)
         {
             Log = new Log("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
-            Environment = new Environment.DnnEnvironment(Log);
+            Environment = Factory.Resolve<IEnvironmentFactory>().Environment(parentLog);//new Environment.DnnEnvironment(Log);
             ContentBlock = cb;
             InstanceInfo = runtimeModuleInfo;
 
@@ -142,7 +143,7 @@ namespace ToSic.SexyContent
 
             // modinfo is null in cases where things are not known yet, portalsettings are null in search-scenarios
             Environment.Permissions = permissions
-                    ?? (InstanceInfo != null && PortalSettings.Current != null ? new Permissions(InstanceInfo) as IPermissions : new Environment.None.Permissions());
+                    ?? (InstanceInfo != null && PortalSettings.Current != null ? new Permissions(InstanceInfo) as IPermissions : new Eav.Apps.Security.Permissions());
                                       //?? (ModuleInfo != null && PortalSettings.Current != null
                                       //    ? (IPermissions) new Permissions(ModuleInfo)
                                       //    : new Environment.None.Permissions());

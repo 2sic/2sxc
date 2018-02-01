@@ -9,6 +9,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Interfaces;
@@ -168,8 +169,9 @@ namespace ToSic.SexyContent.WebApi
             // try to create
             var currentApp = new App(PortalSettings, appId);
             //currentApp.InitData(false, new ValueCollectionProvider());
+            var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
             currentApp.InitData(false, 
-                new Environment.Dnn7.PagePublishing(Log).IsEnabled(ActiveModule.ModuleID), 
+                publish.IsEnabled(ActiveModule.ModuleID), 
                 Data.ConfigurationProvider);
             if (id == null)
             {

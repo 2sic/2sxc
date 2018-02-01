@@ -8,10 +8,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
     {
         public ModuleInfo ModuleInfo;
 
-        //public Permissions(ModuleInfo moduleInfo)
-        //{
-        //    ModuleInfo = moduleInfo;
-        //}
         public Permissions(IInstanceInfo instanceInfo)
         {
             ModuleInfo = (instanceInfo as InstanceInfo<ModuleInfo>)?.Info;

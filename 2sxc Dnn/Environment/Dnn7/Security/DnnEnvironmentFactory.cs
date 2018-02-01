@@ -12,5 +12,9 @@ namespace ToSic.SexyContent.Environment.Dnn7.Security
 
         public PermissionController TypePermissions(IContentType targetType, IEntity targetItem, Log parentLog, IInstanceInfo module = null) 
             => new DnnPermissionController(targetType, targetItem, parentLog, module);
+
+        public IPagePublishing PagePublisher(Log parentLog) => new PagePublishing(parentLog);
+
+        public IEnvironment Environment(Log parentLog) => new DnnEnvironment(parentLog);
     }
 }
