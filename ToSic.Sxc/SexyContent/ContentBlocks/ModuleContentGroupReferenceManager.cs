@@ -11,16 +11,8 @@ namespace ToSic.SexyContent.ContentBlocks
 
         #region methods which the entity-implementation must customize - so it's virtual
 
-        protected override void SavePreviewTemplateId(Guid templateGuid)//, bool? newTemplateChooserState = null)
-        {
-            SxcContext.App.ContentGroupManager./*AppContentGroups.*/SetModulePreviewTemplateId(ModuleId, templateGuid);
-            //if(newTemplateChooserState.HasValue)
-            //    SetTemplateChooserState(newTemplateChooserState.Value);
-        }
-
-        //internal override void SetTemplateChooserState(bool state)
-        //    => DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(ModuleId, Settings.SettingsShowTemplateChooser, state.ToString());
-        
+        protected override void SavePreviewTemplateId(Guid templateGuid) 
+            => SxcContext.App.ContentGroupManager.SetModulePreviewTemplateId(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
             => AppHelpers.SetAppIdForModule(SxcContext.ModuleInfo, SxcContext.Environment, appId, Log);
@@ -30,18 +22,11 @@ namespace ToSic.SexyContent.ContentBlocks
             => SxcContext.ContentBlock.App.ContentGroupManager.PersistContentGroupAndBlankTemplateToModule(ModuleId,
                 true, cgGuid);
 
-        internal override void UpdateTitle(ToSic.Eav.Interfaces.IEntity titleItem)
+        internal override void UpdateTitle(Eav.Interfaces.IEntity titleItem)
         {
             Log.Add("update title");
-            // todo: this should probably do the more complex stuff
-            // to ensure that it happens on all versions of this module (all languages)
-            // used to work once...
-            //if (titleItem?.GetBestValue("EntityTitle") != null)
-            //    SxcContext.ModuleInfo.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
 
-            // 2017-04-01 2dm before:
-            // var languages =  ZoneHelpers.CulturesWithState(SxcContext.ModuleInfo.PortalID, SxcContext.ZoneId.Value);
-            var languages = SxcContext.Environment /*new Environment.DnnEnvironment(Log)*/.ZoneMapper.CulturesWithState(SxcContext.ModuleInfo.PortalID,
+            var languages = SxcContext.Environment.ZoneMapper.CulturesWithState(SxcContext.ModuleInfo.PortalID,
                 SxcContext.ZoneId.Value);
 
             // Find Module for default language

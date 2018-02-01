@@ -62,15 +62,12 @@ namespace ToSic.SexyContent.ContentBlocks
             Parent = parent;
             ParseContentBlockDefinition(cbDefinition);
             ParentId = parent.ParentId;
-            ContentBlockId = -cbDefinition.EntityId; // "mod:" + ParentId +  "-ent:" + cbDefinition.EntityId;
-
+            ContentBlockId = -cbDefinition.EntityId; 
 
             // Ensure we know what portal the stuff is coming from
-            //PortalSettings = Parent.App.Tennant.Settings;
             Tennant = Parent.App.Tennant;
 
             ZoneId = Parent.ZoneId;
-
 
             AppId = AppHelpers.GetAppIdFromGuidName(ZoneId, _appName); // should be 0 if unknown, must test
 
@@ -80,36 +77,33 @@ namespace ToSic.SexyContent.ContentBlocks
                 return;
             }
 
-            if (AppId != 0)
+            if (AppId == 0) return;
+
+            // try to load the app - if possible
+            App = new App(ZoneId, AppId, Tennant);
+
+            Configuration = ConfigurationProvider.GetConfigProviderForModule(ParentId, App, SxcInstance);
+
+            // maybe ensure that App.Data is ready
+            App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, SxcInstance.Environment.PagePublishing.IsEnabled(Parent.SxcInstance.ModuleInfo.ModuleID), Configuration);
+
+            ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
+
+            // handle cases where the content group is missing - usually because of uncomplete import
+            if (ContentGroup.DataIsMissing)
             {
-                // try to load the app - if possible
-                App = new App(ZoneId, AppId, Tennant /* PortalSettings*/);
-
-                Configuration = ConfigurationProvider.GetConfigProviderForModule(ParentId, App, SxcInstance);
-
-                // maybe ensure that App.Data is ready
-                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, SxcInstance.Environment.PagePublishing /*new Environment.Dnn7.PagePublishing(Log)*/.IsEnabled(Parent.SxcInstance.ModuleInfo.ModuleID), Configuration/* Data.ConfigurationProvider*/);
-
-                ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
-
-                // handle cases where the content group is missing - usually because of uncomplete import
-                if (ContentGroup.DataIsMissing)
-                {
-                    _dataIsMissing = true;
-                    App = null;
-                    return;
-                }
-
-                // use the content-group template, which already covers stored data + module-level stored settings
-                //Template = ContentGroup.Template;
-                SxcInstance.SetTemplateOrOverrideFromUrl(ContentGroup.Template);
-
+                _dataIsMissing = true;
+                App = null;
+                return;
             }
+
+            // use the content-group template, which already covers stored data + module-level stored settings
+            SxcInstance.SetTemplateOrOverrideFromUrl(ContentGroup.Template);
         }
 
 
-        public override SxcInstance SxcInstance => _sxcInstance ??
-                                          (_sxcInstance = new SxcInstance(this, Parent.SxcInstance));
+        public override SxcInstance SxcInstance
+            => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, Parent.SxcInstance.ModuleInfo, Parent.SxcInstance.Parameters, Parent.SxcInstance.Environment.Permissions, Log));
 
 
         public override bool IsContentApp => _appName == Eav.Constants.DefaultAppName;

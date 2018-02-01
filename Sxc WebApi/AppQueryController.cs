@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging.Simple;

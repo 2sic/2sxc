@@ -56,8 +56,8 @@ namespace ToSic.SexyContent.Internal
         {
             var rootFolder = locationId == Settings.TemplateLocations.HostFileSystem
                 ? Settings.PortalHostDirectory + Settings.TemplateFolder
-                : app.Tennant.RootPath;//.Settings.HomeDirectory;
-            rootFolder += /*Settings.TemplateFolder +*/ "/" + app.Folder;
+                : app.Tennant.RootPath;
+            rootFolder += "/" + app.Folder;
             return rootFolder;
         }
 

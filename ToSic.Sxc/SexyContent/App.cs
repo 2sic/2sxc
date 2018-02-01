@@ -2,7 +2,6 @@
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.AppEngine;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -12,7 +11,7 @@ namespace ToSic.SexyContent
     /// <summary>
     /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
     /// </summary>
-    public class App : Eav.Apps.App<PortalSettings>, Interfaces.IApp
+    public class App : Eav.Apps.App, Interfaces.IApp
     {
         #region Dynamic Properties: Configuration, Settings, Resources
         public dynamic Configuration

@@ -53,7 +53,7 @@ namespace ToSic.SexyContent.Engines
             CheckExpectedTemplateErrors();
 
             // check access permissions - before initializing or running data-code in the template
-            CheckTemplatePermissions(sxcInstance.Tennant/*.AppPortalSettings*/);
+            CheckTemplatePermissions(sxcInstance.Tennant);
 
             // Run engine-internal init stuff
             Init();
@@ -91,7 +91,7 @@ namespace ToSic.SexyContent.Engines
 
             var renderedTemplate = RenderTemplate();
             var depMan = Eav.Factory.Resolve<IClientDependencyManager>();
-            return depMan /*new Environment.Dnn7.ClientDependencyManager()*/.Process(renderedTemplate);
+            return depMan.Process(renderedTemplate);
         }
 
 
@@ -120,8 +120,6 @@ namespace ToSic.SexyContent.Engines
                 PreRenderStatus = RenderStatusType.MissingData;
 
                 AlternateRendering = ToolbarForEmptyTemplate;
-                //var toolbar = ToolbarForEmptyTemplate;
-                //throw new RenderingException(RenderStatusType.MissingData, "No demo item found ");// /*LocalizeString("NoDemoItem.Text")*/+ " " + toolbar);
             }
         }
 
@@ -140,17 +138,15 @@ namespace ToSic.SexyContent.Engines
             }
         }
 
-        // todo: move to DnnPermission-Thingy
-        private void CheckTemplatePermissions(/*PortalSettings portalSettings */ ITennant tennant)
+        // todo: make permission controller injectable
+        private void CheckTemplatePermissions(ITennant tennant)
         {
-            // 2015-05-19 2dm: new: do security check if security exists
+            // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
             var permissionsOnThisTemplate = new DnnPermissionController(Template.Entity, Log, ModuleInfo);
 
-            //var portalSettings = tennant.Settings;
             // Views only use permissions to prevent access, so only check if there are any configured permissions
-            if (tennant.RefactorUserIsAdmin || // portalSettings.UserInfo.IsInRole(portalSettings.AdministratorRoleName) ||
-                !permissionsOnThisTemplate.PermissionList.Any()) return;
+            if (tennant.RefactorUserIsAdmin || !permissionsOnThisTemplate.PermissionList.Any()) return;
             if (!permissionsOnThisTemplate.UserMay(PermissionGrant.Read))
                 throw new RenderingException(new UnauthorizedAccessException(
                     "This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions"));

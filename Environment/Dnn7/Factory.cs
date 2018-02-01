@@ -19,27 +19,18 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return SxcInstanceForModule(moduleInfo);
         }
 
-        public static ISxcInstance SxcInstanceForModule(ModuleInfo moduleInfo)
-        {
-            ModuleContentBlock mcb = new ModuleContentBlock(moduleInfo, parentLog: null);
-            return mcb.SxcInstance;
-        }
+        public static ISxcInstance SxcInstanceForModule(ModuleInfo moduleInfo) 
+            => new ModuleContentBlock(moduleInfo, parentLog: null).SxcInstance;
 
-        public static IAppAndDataHelpers CodingHelpers(ISxcInstance sxc)
-        {
-            var appAndDataHelpers = new AppAndDataHelpers(sxc as SxcInstance);
-
-            return appAndDataHelpers;
-        }
+        public static IAppAndDataHelpers CodingHelpers(ISxcInstance sxc) 
+            => new AppAndDataHelpers(sxc as SxcInstance);
 
         /// <summary>
         /// get a full app-object for accessing data of the app from outside
         /// </summary>
         /// <returns></returns>
-        public static IApp App(int appId, bool versioningEnabled = false, bool showDrafts = false)
-        {
-            return App(appId, PortalSettings.Current, versioningEnabled, showDrafts);
-        }
+        public static IApp App(int appId, bool versioningEnabled = false, bool showDrafts = false) 
+            => App(appId, PortalSettings.Current, versioningEnabled, showDrafts);
 
         public static IApp App(int appId, PortalSettings ownerPortalSettings, bool versioningEnabled = false, bool showDrafts = false)
         {

@@ -35,6 +35,5 @@ namespace ToSic.SexyContent.WebApi.ImportExport
 
         public string GetNameWithoutSpecialChars() => Regex.Replace(App.Name, "[^a-zA-Z0-9-_]", "");
 
-        //public string GetCultureCode() => App.Tennant.Settings.CultureCode;
     }
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
@@ -38,9 +37,6 @@ namespace ToSic.SexyContent.Search
             // New Context because PortalSettings.Current is null
             var zoneId = new Environment.DnnEnvironment(Log).ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);
 
-            //if (!zoneId.HasValue)
-            //    return searchDocuments;
-
             int? appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
 
             if (!isContentModule)
@@ -50,13 +46,10 @@ namespace ToSic.SexyContent.Search
 		            return searchDocuments;
             }
 
-            // new 2016-03-27
             var mcb = new ModuleContentBlock(moduleInfo, Log);
             var sexy = mcb.SxcInstance;
 
-            // old 2016-03-27
             var language = moduleInfo.CultureCode;
-            //var contentGroup = sexy.App.ContentGroupManager./*AppContentGroups.*/GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
             var res = sexy.App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
             var contentGroupGuid = res.Item1;
             var previewTemplateGuid = res.Item2;
@@ -65,8 +58,7 @@ namespace ToSic.SexyContent.Search
             var template = contentGroup.Template;
 
             // This list will hold all EAV entities to be indexed
-            // before 2016-02-27 2dm: var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false, template);
-            var dataSource = sexy.Data;// ViewDataSource.ForModule(moduleInfo.ModuleID, false, template, sexy);
+            var dataSource = sexy.Data;
 			
             if (template == null)
                 return searchDocuments;
@@ -91,7 +83,7 @@ namespace ToSic.SexyContent.Search
             foreach (var stream in dataSource.Out.Where(p => p.Key != AppConstants.Presentation && p.Key != AppConstants.ListPresentation))
             {
                 
-                var entities = stream.Value.List;//.Select(p => p.Value);
+                var entities = stream.Value.List;
                 var searchInfoList = searchInfoDictionary[stream.Key] = new List<ISearchInfo>();
 
                 searchInfoList.AddRange(entities.Select(entity =>
@@ -102,7 +94,7 @@ namespace ToSic.SexyContent.Search
                         Url = "",
                         Description = "",
                         Body = GetJoinedAttributes(entity, language),
-                        Title = entity.Title != null && entity.Title[language] != null ? entity.Title[language].ToString() : "(no title)",
+                        Title = entity.Title?[language]?.ToString() ?? "(no title)",
                         ModifiedTimeUtc = (entity.Modified == DateTime.MinValue ? DateTime.Now.Date.AddHours(DateTime.Now.Hour) : entity.Modified).ToUniversalTime(),
                         UniqueKey = "2sxc-" + moduleInfo.ModuleID + "-" + (entity.EntityGuid != new Guid() ? entity.EntityGuid.ToString() : (stream.Key + "-" + entity.EntityId)),
                         IsActive = true,
@@ -111,9 +103,9 @@ namespace ToSic.SexyContent.Search
                     };
 
                     // Take the newest value (from ContentGroupItem and Entity)
-                    if (entity is IHasEditingData)
+                    if (entity is IHasEditingData typed)
                     {
-                        var contentGroupItemModifiedUtc = ((IHasEditingData) entity).ContentGroupItemModified.ToUniversalTime();
+                        var contentGroupItemModifiedUtc = typed.ContentGroupItemModified.ToUniversalTime();
                         searchInfo.ModifiedTimeUtc = searchInfo.ModifiedTimeUtc > contentGroupItemModifiedUtc
                             ? searchInfo.ModifiedTimeUtc
                             : contentGroupItemModifiedUtc;
@@ -156,7 +148,7 @@ namespace ToSic.SexyContent.Search
         /// <returns></returns>
         private string GetJoinedAttributes(Eav.Interfaces.IEntity entity, string language)
         {
-            return String.Join(", ",
+            return string.Join(", ",
                 entity.Attributes.Where(x => x.Value.Type == "String" || x.Value.Type == "Number").Select(x => x.Value[language])
                     .Where(a => a != null)
                     .Select(a => StripHtmlAndHtmlDecode(a.ToString()))

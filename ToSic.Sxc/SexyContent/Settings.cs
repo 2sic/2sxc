@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Configuration;
-using System.Linq;
 using System.Reflection;
 using ToSic.Eav.Plumbing.Booting;
-using Configuration = ToSic.Eav.Configuration;
 
 namespace ToSic.SexyContent
 {

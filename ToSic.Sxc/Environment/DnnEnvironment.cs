@@ -1,5 +1,4 @@
 ﻿using System.Web.Hosting;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -7,12 +6,11 @@ using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.Environment
 {
-    public class DnnEnvironment: HasLog, IEnvironment<PortalSettings>
+    public class DnnEnvironment: HasLog, IEnvironment
     {
         public IPermissions Permissions { get; internal set; }
 
-        public IZoneMapper<PortalSettings> ZoneMapper { get;  } = new ZoneMapper();
-        IZoneMapper IEnvironment.ZoneMapper => ZoneMapper;
+        public IZoneMapper ZoneMapper { get;  } = new ZoneMapper();
 
         public IUser User { get; } = new UserIdentity();
 

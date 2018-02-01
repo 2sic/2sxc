@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
@@ -69,7 +68,6 @@ namespace ToSic.SexyContent
         /// This returns the PS of the original module. When a module is mirrored across portals,
         /// then this will be different from the PortalSettingsOfVisitedPage, otherwise they are the same
         /// </summary>
-        //internal PortalSettings AppPortalSettings => ContentBlock.PortalSettings; // maybe pass in
         internal ITennant Tennant => ContentBlock.Tennant;
 
         public ViewDataSource Data => ContentBlock.Data;
@@ -154,10 +152,6 @@ namespace ToSic.SexyContent
                                           : new Environment.None.Permissions());
         }
 
-        // todo: remove this, move the call to the only use
-        internal SxcInstance(IContentBlock cb, SxcInstance runtimeInstance): this(cb, runtimeInstance.ModuleInfo, runtimeInstance.Parameters, runtimeInstance.Environment.Permissions)
-        {
-        }
         #endregion
 
         #region RenderEngine

@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -60,7 +59,6 @@ namespace ToSic.SexyContent.ContentBlocks
 
         #endregion
 
-        //public PortalSettings PortalSettings { get; protected set; }
         public ITennant Tennant { get; protected set; }
 
         public ValueCollectionProvider Configuration { get; protected set; }

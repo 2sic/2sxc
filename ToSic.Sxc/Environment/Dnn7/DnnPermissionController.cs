@@ -28,16 +28,16 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// <param name="targetItem"></param>
         /// <param name="parentLog"></param>
         /// <param name="module">DNN Module - necessary for SecurityAccessLevel checks</param>
-        public DnnPermissionController(IEntity targetItem, Log parentLog, /*ModuleInfo*/ IInstanceInfo module = null)
+        public DnnPermissionController(IEntity targetItem, Log parentLog, IInstanceInfo module = null)
             : base(targetItem, parentLog)
         {
-            Module = ((InstanceInfo<ModuleInfo>)module).Info/* module*/;
+            Module = ((InstanceInfo<ModuleInfo>)module)?.Info;
         }
 
         public DnnPermissionController(IContentType targetType, IEntity targetItem, Log parentLog, IInstanceInfo module = null)
             : base(targetType, targetItem, parentLog)
         {
-            Module = ((InstanceInfo<ModuleInfo>)module).Info/* module*/;
+            Module = ((InstanceInfo<ModuleInfo>)module)?.Info;
         }
 
         protected override string CurrentUser 

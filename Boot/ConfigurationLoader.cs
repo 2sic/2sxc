@@ -1,5 +1,4 @@
 ﻿using System.Configuration;
-using DotNetNuke.Entities.Portals;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Implementations.UserInformation;
@@ -18,6 +17,7 @@ using Configuration = ToSic.Eav.Configuration;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Dnn.Boot
 {
+    /// <inheritdoc />
     /// <summary>
     /// this configures unity (the IoC container)
     /// Never call this directly! always go through Settings.Ensure...

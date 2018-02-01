@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -39,21 +38,16 @@ namespace ToSic.SexyContent.ContentBlocks
 
             // url-params
             _urlParams = overrideParams ?? DnnWebForms.Helpers.SystemWeb.GetUrlParams();
-            
 
             // Ensure we know what portal the stuff is coming from
             // PortalSettings is null, when in search mode
-            //PortalSettings = PortalSettings.Current == null || moduleInfo.OwnerPortalID != moduleInfo.PortalID
-            //    ? new PortalSettings(moduleInfo.OwnerPortalID)
-            //    : PortalSettings.Current;
-
             Tennant = new DnnTennant(PortalSettings.Current == null || moduleInfo.OwnerPortalID != moduleInfo.PortalID
                 ? new PortalSettings(moduleInfo.OwnerPortalID)
                 : PortalSettings.Current);
 
 
             // important: don't use the SxcInstance.Environment, as it would try to init the Sxc-object before the app is known, causing various side-effects
-            ZoneId = new Environment.DnnEnvironment(Log).ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);// ZoneHelpers.GetZoneId(moduleInfo.OwnerPortalID) ?? 0; // new
+            ZoneId = new Environment.DnnEnvironment(Log).ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);
             
             AppId = AppHelpers.GetAppIdFromModule(moduleInfo, ZoneId) ?? 0;// fallback/undefined YET
 
@@ -96,8 +90,8 @@ namespace ToSic.SexyContent.ContentBlocks
         }
 
 
-        public override SxcInstance SxcInstance => _sxcInstance ??
-                                          (_sxcInstance = new SxcInstance(this, ModuleInfo, _urlParams, parentLog:Log));
+        public override SxcInstance SxcInstance
+            => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, ModuleInfo, _urlParams, parentLog: Log));
 
         public override bool IsContentApp => ModuleInfo.DesktopModule.ModuleName == "2sxc";
 

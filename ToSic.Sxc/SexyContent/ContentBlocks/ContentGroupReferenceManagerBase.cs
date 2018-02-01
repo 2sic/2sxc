@@ -86,9 +86,9 @@ namespace ToSic.SexyContent.ContentBlocks
             Log.Add("get selectable apps");
             try
             {
-                var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.Tennant.Id/*.PortalSettings.PortalId*/);
+                var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.Tennant.Id);
                 return
-                    AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.Tennant /*.PortalSettings*/, Log)
+                    AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.Tennant, Log)
                         .Where(a => !a.Hidden)
                         .Select(a => new AppUiInfo {
                             Name = a.Name,
@@ -176,7 +176,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         internal void UpdateTitle()
         {
-            Log.Add($"update title");
+            Log.Add("update title");
             // check the contentGroup as to what should be the module title, then try to set it
             // technically it could have multiple different groups to save in, 
             // ...but for now we'll just update the current modules title

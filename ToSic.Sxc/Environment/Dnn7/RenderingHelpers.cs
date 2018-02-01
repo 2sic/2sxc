@@ -12,7 +12,6 @@ using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 using ToSic.Eav.Apps.Enums;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 
@@ -114,9 +113,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
     }
 
     #region ClientInfos Objects to generate the json-attribute
-    public class ClientInfosAll
+    public class ClientInfosAll:HasLog
     {
-        private readonly Log Log;
 
         public ClientInfosEnvironment Environment;
         public ClientInfosUser User;
@@ -127,9 +125,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public ClientInfosError error;
 
         public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated, Log parentLog)
+        : base("Sxc.CliInf", parentLog, "building entire client-context")
         {
-            Log = new Log("Sxc.CliInf", parentLog, "building entire client-context");
-            IPagePublishing versioning = sxc.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = sxc.Environment.PagePublishing;
 
             Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic, sxc);
             Language = new ClientInfosLanguages(ps, zoneId);

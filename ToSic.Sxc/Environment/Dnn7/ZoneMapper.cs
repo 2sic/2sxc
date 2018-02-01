@@ -11,7 +11,7 @@ using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class ZoneMapper : HasLog, IZoneMapper<PortalSettings>
+    public class ZoneMapper : HasLog, IZoneMapper
     {
         /// <inheritdoc />
         public ZoneMapper(Log parentLog = null) : base("DNN.ZoneMp", parentLog)
@@ -67,6 +67,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         }
 
 
+        /// <inheritdoc />
         /// <summary>
         /// Returns all DNN Cultures with active / inactive state
         /// </summary>
@@ -75,9 +76,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // note: 
             var availableEavLanguages = new ZoneRuntime(zoneId, Log).Languages(true); 
             var defaultLanguageCode = new PortalSettings(tennantId).DefaultLanguage;
-            var defaultLanguage = availableEavLanguages
-                .FirstOrDefault(p => p.Matches(defaultLanguageCode));
-            //var defaultLanguageIsActive = defaultLanguage?.Active == true;
 
             return (from c in LocaleController.Instance.GetLocales(tennantId)
                     select new TempTempCulture(

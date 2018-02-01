@@ -61,14 +61,14 @@ namespace ToSic.SexyContent.Internal
         }
 
 
-        internal static void SetAppIdForModule(ModuleInfo module, IEnvironment<PortalSettings> env, int? appId, Log parentLog)
+        internal static void SetAppIdForModule(ModuleInfo module, IEnvironment env, int? appId, Log parentLog)
         {
             // Reset temporary template
             ContentGroupManager.DeletePreviewTemplateId(module.ModuleID);
 
             // ToDo: Should throw exception if a real ContentGroup exists
 
-            var zoneId = /*new Environment.DnnEnvironment(parentLog)*/env.ZoneMapper.GetZoneId(module.OwnerPortalID);// ZoneHelpers.GetZoneId(module.OwnerPortalID);
+            var zoneId = env.ZoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == 0 || !appId.HasValue)
                 DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, Settings.AppNameString, null);
@@ -82,7 +82,7 @@ namespace ToSic.SexyContent.Internal
             if (appId.HasValue)
             {
                 var app = new App(zoneId, appId.Value, PortalSettings.Current);
-                var templateGuid = app.TemplateManager.GetAllTemplates().FirstOrDefault(t => !t.IsHidden)?.Guid;// .GetFirstTemplateGuid(module.ModuleID, module.TabID, app.ContentGroupManager);
+                var templateGuid = app.TemplateManager.GetAllTemplates().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue)
                     app.ContentGroupManager.SetModulePreviewTemplateId(module.ModuleID, templateGuid.Value);
             }

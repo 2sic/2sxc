@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Web;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 
 namespace ToSic.SexyContent.Internal
@@ -16,7 +15,7 @@ namespace ToSic.SexyContent.Internal
         /// </summary>
         public void EnsurePortalIsConfigured(SxcInstance sxc, HttpServerUtility server, string controlPath)
         {
-            var sexyFolder = new DirectoryInfo(server.MapPath(sxc.Tennant.RootPath /*Path.Combine(sxc.AppPortalSettings.HomeDirectory, Settings.TemplateFolder)*/));
+            var sexyFolder = new DirectoryInfo(server.MapPath(sxc.Tennant.RootPath));
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Constants.ContentAppName));
             var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))

@@ -13,15 +13,15 @@ namespace ToSic.SexyContent.DataSources
 
         public DataPublishing Publish = new DataPublishing();
 
-        internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, ValueCollectionProvider configurationProvider, Log parentLog, int moduleId = 0)
+        internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, ValueCollectionProvider configurationProvider, Log parentLog, int instanceId = 0)
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
             var showDrafts = sxc.Environment.Permissions.UserMayEditContent;
-            log.Add($"mid#{moduleId}, draft:{showDrafts}, template:{overrideTemplate?.Name}");
+            log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{overrideTemplate?.Name}");
             // Get ModuleDataSource
             var initialSource = DataSource.GetInitialDataSource(sxc.ZoneId, sxc.AppId, showDrafts, configurationProvider, parentLog);
             var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(sxc.ZoneId, sxc.AppId, initialSource, configurationProvider, parentLog);
-            moduleDataSource.InstanceId = moduleId;
+            moduleDataSource.InstanceId = instanceId;
 
             moduleDataSource.OverrideTemplate = overrideTemplate; // new
             moduleDataSource.UseSxcInstanceContentGroup = true; // new
@@ -43,7 +43,7 @@ namespace ToSic.SexyContent.DataSources
                 log.Add($"override template, & pipe#{overrideTemplate.Pipeline?.EntityId}");
                 // Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
                 if (overrideTemplate.Pipeline != null)
-                    new DataPipelineFactory(parentLog).GetDataSource(sxc.AppId ?? -999, overrideTemplate.Pipeline/*.EntityId*/,
+                    new DataPipelineFactory(parentLog).GetDataSource(sxc.AppId ?? -999, overrideTemplate.Pipeline,
                         configurationProvider, viewDataSource, showDrafts: showDrafts);
 
             }
