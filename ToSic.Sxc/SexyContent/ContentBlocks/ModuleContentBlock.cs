@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks
@@ -41,9 +43,14 @@ namespace ToSic.SexyContent.ContentBlocks
 
             // Ensure we know what portal the stuff is coming from
             // PortalSettings is null, when in search mode
-            PortalSettings = PortalSettings.Current == null || moduleInfo.OwnerPortalID != moduleInfo.PortalID
+            //PortalSettings = PortalSettings.Current == null || moduleInfo.OwnerPortalID != moduleInfo.PortalID
+            //    ? new PortalSettings(moduleInfo.OwnerPortalID)
+            //    : PortalSettings.Current;
+
+            Tennant = new DnnTennant(PortalSettings.Current == null || moduleInfo.OwnerPortalID != moduleInfo.PortalID
                 ? new PortalSettings(moduleInfo.OwnerPortalID)
-                : PortalSettings.Current;
+                : PortalSettings.Current);
+
 
             // important: don't use the SxcInstance.Environment, as it would try to init the Sxc-object before the app is known, causing various side-effects
             ZoneId = new Environment.DnnEnvironment(Log).ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);// ZoneHelpers.GetZoneId(moduleInfo.OwnerPortalID) ?? 0; // new
@@ -63,22 +70,19 @@ namespace ToSic.SexyContent.ContentBlocks
             {
                 Log.Add("real app, will load data");
                 // try to load the app - if possible
-                App = new App(ZoneId, AppId, PortalSettings, parentLog: Log);
+                App = new App(ZoneId, AppId, /*PortalSettings*/ Tennant, parentLog: Log);
 
                 Configuration = ConfigurationProvider.GetConfigProviderForModule(moduleInfo.ModuleID, App, SxcInstance);
 
                 // maybe ensure that App.Data is ready
                 App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent,
-                    SxcInstance.Environment.PagePublishing
-                    /*new Environment.Dnn7.PagePublishing(Log)*/.IsEnabled(moduleInfo.ModuleID), 
+                    SxcInstance.Environment.PagePublishing.IsEnabled(moduleInfo.ModuleID), 
                     Configuration);
 
                 var res = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
                 var contentGroupGuid = res.Item1;
                 var previewTemplateGuid = res.Item2;
                 ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid);
-
-                //ContentGroup = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
 
                 if (ContentGroup.DataIsMissing)
                 {
@@ -87,21 +91,7 @@ namespace ToSic.SexyContent.ContentBlocks
                     return;
                 }
 
-                // use the content-group template, which already covers stored data + module-level stored settings
-                //Template = ContentGroup.Template;
-
-                SxcInstance.SetTemplateOrOverrideFromUrl(ContentGroup.Template);
-
-                //SxcInstance.CheckTemplateOverrides();
-
-                // 2017-09-14 2dm disabled, as the TemplateChooser State isn't a thing any more
-                // set show-status of the template/view picker
-                //var showStatus = moduleInfo.ModuleSettings[Settings.SettingsShowTemplateChooser];
-                //bool show;
-                //if (bool.TryParse((showStatus ?? true).ToString(), out show))
-                //    ShowTemplateChooser = show;
-
-                
+                SxcInstance.SetTemplateOrOverrideFromUrl(ContentGroup.Template);                
             }
         }
 

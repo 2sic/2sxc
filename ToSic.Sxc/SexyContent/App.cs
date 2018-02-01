@@ -2,6 +2,8 @@
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.AppEngine;
+using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment.Dnn7;
 
@@ -71,6 +73,8 @@ namespace ToSic.SexyContent
         public App(int zoneId, int appId, PortalSettings portalSettings, bool allowSideEffects = true, Log parentLog = null)
             : base(new Environment.DnnEnvironment(parentLog), zoneId, appId, new DnnTennant(portalSettings), allowSideEffects, parentLog) { }
 
+        public App(int zoneId, int appId, ITennant tennant, bool allowSideEffects = true, Log parentLog = null)
+            : base(new Environment.DnnEnvironment(parentLog), zoneId, appId, tennant, allowSideEffects, parentLog) { }
         
 
         #region Paths

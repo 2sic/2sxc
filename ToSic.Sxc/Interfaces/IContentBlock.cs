@@ -1,5 +1,6 @@
-﻿using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
@@ -26,7 +27,8 @@ namespace ToSic.SexyContent.Interfaces
         #region Values related to the current unit of content / the view
         int AppId { get; }
         int ZoneId { get; }
-        PortalSettings PortalSettings { get; }
+        //PortalSettings PortalSettings { get; }
+        ITennant/*<PortalSettings*/ Tennant { get; }
 
         Template Template { get; set; }
 

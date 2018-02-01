@@ -49,7 +49,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return zoneId;
         }
 
-        public int GetZoneId(Tennant<PortalSettings> tennant) => GetZoneId(tennant.Settings.PortalId);
+        public int GetZoneId(ITennant tennant) => GetZoneId(tennant.Id/*.Settings.PortalId*/);
 
         public ITennant Tennant(int zoneId)
         {

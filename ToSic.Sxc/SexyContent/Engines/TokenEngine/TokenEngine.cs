@@ -78,8 +78,8 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 
         private void InitTokenReplace()
         {
-            var confProv = ConfigurationProvider.GetConfigProviderForModule(ModuleInfo.ModuleID, Sexy.App, Sexy);
-            _tokenReplace = new TokenReplaceEav(App, ModuleInfo.ModuleID, PortalSettings.Current, confProv);
+            var confProv = ConfigurationProvider.GetConfigProviderForModule(ModuleInfo.Id/*.ModuleID*/, Sexy.App, Sexy);
+            _tokenReplace = new TokenReplaceEav(App, ModuleInfo.Id/* ModuleID*/, PortalSettings.Current, confProv);
             
             // Add the Content and ListContent property sources used always
             _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new DynamicEntityPropertyAccess(SourcePropertyName.ListContent, _dataHelper.ListContent));

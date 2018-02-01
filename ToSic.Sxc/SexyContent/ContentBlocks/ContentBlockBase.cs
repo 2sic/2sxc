@@ -1,5 +1,6 @@
-﻿using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.ValueProvider;
@@ -8,7 +9,7 @@ using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
-    internal abstract class ContentBlockBase: HasLog, IContentBlock
+    internal abstract class ContentBlockBase : HasLog, IContentBlock
     {
         protected ContentBlockBase(Log parentLog, string logName) : base(logName, parentLog) { }
 
@@ -59,7 +60,8 @@ namespace ToSic.SexyContent.ContentBlocks
 
         #endregion
 
-        public PortalSettings PortalSettings { get; protected set; }
+        //public PortalSettings PortalSettings { get; protected set; }
+        public ITennant Tennant { get; protected set; }
 
         public ValueCollectionProvider Configuration { get; protected set; }
 

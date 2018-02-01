@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
@@ -139,7 +141,7 @@ namespace ToSic.SexyContent.Engines
         public override void CustomizeData() 
             => Webpage?.CustomizeData();
 
-        public override void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate) 
-            => Webpage?.CustomizeSearch(searchInfos, moduleInfo, beginDate);
+        public override void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, IInstanceInfo moduleInfo, DateTime beginDate) 
+            => Webpage?.CustomizeSearch(searchInfos, ((InstanceInfo<ModuleInfo>)moduleInfo).Info /*moduleInfo*/, beginDate);
     }
 }

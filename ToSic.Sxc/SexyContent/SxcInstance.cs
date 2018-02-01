@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
+using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
@@ -68,7 +69,8 @@ namespace ToSic.SexyContent
         /// This returns the PS of the original module. When a module is mirrored across portals,
         /// then this will be different from the PortalSettingsOfVisitedPage, otherwise they are the same
         /// </summary>
-        internal PortalSettings AppPortalSettings => ContentBlock.PortalSettings; // maybe pass in
+        //internal PortalSettings AppPortalSettings => ContentBlock.PortalSettings; // maybe pass in
+        internal ITennant Tennant => ContentBlock.Tennant;
 
         public ViewDataSource Data => ContentBlock.Data;
 
@@ -131,7 +133,7 @@ namespace ToSic.SexyContent
         #endregion
 
         #region Constructor
-        internal SxcInstance(IContentBlock cb, 
+        internal SxcInstance(IContentBlock  cb, 
             ModuleInfo runtimeModuleInfo, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
             IPermissions permissions = null,
@@ -150,24 +152,11 @@ namespace ToSic.SexyContent
                                       ?? (ModuleInfo != null && PortalSettings.Current != null
                                           ? (IPermissions) new Permissions(ModuleInfo)
                                           : new Environment.None.Permissions());
-
-            // url-override of view / data
-            // 2017-09-07 2dm/2rm - disabled this for now, will only use this if the sxc-instance cares about the current template - so when actually rendering a view
-            //CheckTemplateOverrides();   // allow view change on apps
         }
 
         // todo: remove this, move the call to the only use
         internal SxcInstance(IContentBlock cb, SxcInstance runtimeInstance): this(cb, runtimeInstance.ModuleInfo, runtimeInstance.Parameters, runtimeInstance.Environment.Permissions)
         {
-            //ContentBlock = cb;
-            //// Inherit various context information from the original SxcInstance
-            //ModuleInfo = runtimeInstance.ModuleInfo;
-            //Parameters = runtimeInstance.Parameters;
-            //Environment.Permissions = runtimeInstance.Environment.Permissions;
-
-            // url-override of view / data
-            // 2017-09-07 2dm/2rm - disabled this for now, will only use this if the sxc-instance cares about the current template - so when actually rendering a view
-            //CheckTemplateOverrides();   // allow view change on apps
         }
         #endregion
 
@@ -263,7 +252,7 @@ namespace ToSic.SexyContent
         public IEngine GetRenderingEngine(InstancePurposes renderingPurpose)
         {
             var engine = EngineFactory.CreateEngine(Template);
-            engine.Init(Template, App, ModuleInfo, Data, renderingPurpose, this, Log);
+            engine.Init(Template, App, new DnnInstanceInfo(ModuleInfo), Data, renderingPurpose, this, Log);
             return engine;
         }
 

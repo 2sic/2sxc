@@ -63,7 +63,7 @@ namespace ToSic.SexyContent.WebApi
                 var routeAppPath = Request.GetRouteData().Values["apppath"]?.ToString();
                 var appId = GetCurrentAppIdFromPath(routeAppPath);
                 // Look up if page publishing is enabled - if module context is not availabe, always false
-                var publishingEnabled = Dnn.Module != null ? new Environment.Dnn7.PagePublishing(Log).IsEnabled(Dnn.Module.ModuleID) : false;
+                var publishingEnabled = Dnn.Module != null && new PagePublishing(Log).IsEnabled(Dnn.Module.ModuleID);
                 return _app = (App) Environment.Dnn7.Factory.App(appId, publishingEnabled);
             }
         }
@@ -203,7 +203,7 @@ namespace ToSic.SexyContent.WebApi
             var staticNameIsGuid = Guid.TryParse(ct.StaticName, out var ctGuid);
             // Check permissions in 2sxc - or check if the user has admin-right (in which case he's always granted access for these types of content)
             if (staticNameIsGuid 
-                && new DnnPermissionController(ct, specificItem, Log, contextMod)
+                && new DnnPermissionController(ct, specificItem, Log, new DnnInstanceInfo(contextMod))
                     .UserMay(grant))
                 return;
 

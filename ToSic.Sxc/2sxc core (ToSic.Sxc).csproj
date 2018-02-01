@@ -91,8 +91,6 @@
     <Compile Include="Adam\GuidHelpers.cs" />
     <Compile Include="Adam\IAdamItem.cs" />
     <Compile Include="Adam\UploadResult.cs" />
-    <Compile Include="Class1.cs" />
-    <Compile Include="DependencyInjection.cs" />
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\DnnLinkHelper.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
@@ -102,15 +100,11 @@
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
     <Compile Include="Environment\Base\ClientDepedencyManager.cs" />
-    <Compile Include="Environment\Dnn7\ClientDependencyManager.cs" />
-    <Compile Include="Environment\Dnn7\DataSources\DnnSqlDataSource.cs" />
-    <Compile Include="Environment\Dnn7\DataSources\DnnUserProfileDataSource.cs" />
-    <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
+    <Compile Include="Environment\Dnn7\DnnInstanceInfo.cs" />
     <Compile Include="Environment\Dnn7\DnnPermissionController.cs" />
     <Compile Include="Environment\Dnn7\DnnTennant.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
-    <Compile Include="Environment\Dnn7\Factory.cs" />
     <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
     <Compile Include="Environment\Dnn7\Logging.cs" />
     <Compile Include="Environment\Dnn7\ModuleSettingsHelper.cs" />
@@ -149,7 +143,6 @@
     <Compile Include="SexyContent\DataPublishing.cs" />
     <Compile Include="SexyContent\DataSources\App.cs" />
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
-    <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
     <Compile Include="SexyContent\DataSources\SxcInstanceValueProvider.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
@@ -195,8 +188,6 @@
     <Compile Include="SexyContent\Internal\TemplateHelpers.cs" />
     <Compile Include="SexyContent\ISxcInstance.cs" />
     <Compile Include="SexyContent\Search\ISearchInfo.cs" />
-    <Compile Include="SexyContent\Search\SearchController.cs" />
-    <Compile Include="SexyContent\Search\SearchIndexException.cs" />
     <Compile Include="SexyContent\Search\SearchInfo.cs" />
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\Settings.cs" />
@@ -246,5 +237,6 @@
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
     <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

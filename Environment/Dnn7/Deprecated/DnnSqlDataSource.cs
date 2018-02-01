@@ -1,5 +1,6 @@
 ﻿using System;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.DataSources
 {
     [Obsolete("This class was moved / to the Environment.Dnn7.DataSources namespace, use that instead.")]

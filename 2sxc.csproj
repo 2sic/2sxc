@@ -122,6 +122,7 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Boot\ConfigurationLoader.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -150,6 +151,14 @@
     <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.designer.cs">
       <DependentUpon>QuickEdit.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Environment\Dnn7\ClientDependencyManager.cs" />
+    <Compile Include="Environment\Dnn7\DataSources\DnnSqlDataSource.cs" />
+    <Compile Include="Environment\Dnn7\DataSources\DnnUserProfileDataSource.cs" />
+    <Compile Include="Environment\Dnn7\Deprecated\DnnSqlDataSource.cs" />
+    <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
+    <Compile Include="Environment\Dnn7\Factory.cs" />
+    <Compile Include="Environment\Dnn7\Search\SearchController.cs" />
+    <Compile Include="Environment\Dnn7\Search\SearchIndexException.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -281,6 +290,7 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\readme.md" />
+    <Content Include="API\readme.md" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>

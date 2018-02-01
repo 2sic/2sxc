@@ -86,9 +86,9 @@ namespace ToSic.SexyContent.ContentBlocks
             Log.Add("get selectable apps");
             try
             {
-                var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.PortalSettings.PortalId);
+                var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.Tennant.Id/*.PortalSettings.PortalId*/);
                 return
-                    AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.PortalSettings, Log)
+                    AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.Tennant /*.PortalSettings*/, Log)
                         .Where(a => !a.Hidden)
                         .Select(a => new AppUiInfo {
                             Name = a.Name,

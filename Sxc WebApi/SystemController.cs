@@ -74,7 +74,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic Apps(int zoneId)
         {
-            var list = AppManagement.GetApps(zoneId, true, new PortalSettings(ActiveModule.OwnerPortalID), Log);
+            var list = AppManagement.GetApps(zoneId, true, new DnnTennant( new PortalSettings(ActiveModule.OwnerPortalID)), Log);
             return list.Select(a => new
             {
                 Id = a.AppId,
@@ -98,7 +98,7 @@ namespace ToSic.SexyContent.WebApi
         public void DeleteApp(int zoneId, int appId)
         {
             var userId = PortalSettings.Current.UserId;
-            AppManagement.RemoveAppInDnnAndEav(Env, zoneId, appId, PortalSettings, userId, Log);
+            AppManagement.RemoveAppInDnnAndEav(Env, zoneId, appId, new DnnTennant(PortalSettings), userId, Log);
         }
 
         [HttpPost]

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Configuration;
+using System.Linq;
 using System.Reflection;
+using ToSic.Eav.Plumbing.Booting;
 using Configuration = ToSic.Eav.Configuration;
 
 namespace ToSic.SexyContent
@@ -96,12 +98,7 @@ namespace ToSic.SexyContent
         /// It is automatically executed when the first variable on this class (contstant, static, etc.)
         /// is accessed. 
         /// </summary>
-        static Settings()
-        {
-            var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
-            Configuration.SetConnectionString(connectionString);
-            new UnityConfig().Configure();
-        }
+        static Settings() => Boot.RunBootSequence();
 
         #endregion
     }
