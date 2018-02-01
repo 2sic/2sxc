@@ -174,6 +174,7 @@
     <Compile Include="SexyContent\Internal\AppHelpers.cs" />
     <Compile Include="SexyContent\Internal\AppManagement.cs" />
     <Compile Include="SexyContent\Internal\DnnStuffToRefactor.cs" />
+    <Compile Include="Interfaces\IMapAppToInstance.cs" />
     <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
     <Compile Include="SexyContent\Internal\TemplateHelpers.cs" />
     <Compile Include="SexyContent\ISxcInstance.cs" />

@@ -80,6 +80,7 @@
     <Compile Include="Environment\Dnn7\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="Environment\Dnn7\DataSources\DnnUserProfileDataSource.cs" />
     <Compile Include="Environment\Dnn7\Deprecated\DnnSqlDataSource.cs" />
+    <Compile Include="Environment\Dnn7\DnnMapAppToInstance.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
     <Compile Include="Environment\Dnn7\DnnInstanceInfo.cs" />
     <Compile Include="Environment\Dnn7\DnnPermissionController.cs" />
