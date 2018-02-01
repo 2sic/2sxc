@@ -9,7 +9,7 @@ namespace ToSic.SexyContent.Environment
 {
     public class DnnEnvironment: HasLog, IEnvironment
     {
-        public IPermissions Permissions { get; set; }
+        //public IPermissions Permissions { get; set; }
 
         public IZoneMapper ZoneMapper { get;  } = new ZoneMapper();
 

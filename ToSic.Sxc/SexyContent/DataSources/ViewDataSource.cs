@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Pipeline;
 using ToSic.Eav.Logging.Simple;
@@ -16,7 +17,9 @@ namespace ToSic.SexyContent.DataSources
         internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, ValueCollectionProvider configurationProvider, Log parentLog, int instanceId = 0)
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
-            var showDrafts = sxc.Environment.Permissions.UserMayEditContent;
+            var showDrafts = Factory.Resolve<IPermissions>().UserMayEditContent(sxc.InstanceInfo);
+            //var showDrafts = sxc.Environment.Permissions.UserMayEditContent;
+
             log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{overrideTemplate?.Name}");
             // Get ModuleDataSource
             var initialSource = DataSource.GetInitialDataSource(sxc.ZoneId, sxc.AppId, showDrafts, configurationProvider, parentLog);

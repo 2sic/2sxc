@@ -14,6 +14,8 @@ using ToSic.SexyContent.WebApi;
 using System.Configuration;
 using System.Web.Configuration;
 using System.Web.Http.Controllers;
+using ToSic.Eav;
+using ToSic.Eav.Apps.Interfaces;
 
 namespace ToSic.SexyContent.Adam
 {
@@ -206,7 +208,9 @@ namespace ToSic.SexyContent.Adam
         private void ExplicitlyRecheckEditPermissions()
         {
             Log.Add("explicitly recheck permissions, will throw if not ok");
-            if(!SxcContext.Environment.Permissions.UserMayEditContent)
+            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
+
+            if (!userMayEdit)// SxcContext.Environment.Permissions.UserMayEditContent)
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 

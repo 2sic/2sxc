@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
@@ -44,7 +45,10 @@ namespace ToSic.SexyContent.WebApi
             if (allowNoContextFound & moduleInfo == null)
                 return null;
 
-            IContentBlock contentBlock = new ModuleContentBlock(new DnnInstanceInfo(moduleInfo), log, urlParams);
+            var tennant = moduleInfo == null
+                ? new DnnTennant(null)
+                : new DnnTennant(new PortalSettings(moduleInfo.OwnerPortalID));
+            IContentBlock contentBlock = new ModuleContentBlock(new DnnInstanceInfo(moduleInfo), log, tennant, urlParams);
 
             // check if we need an inner block
             if (request.Headers.Contains(cbidHeader)) { 

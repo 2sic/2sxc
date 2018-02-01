@@ -55,7 +55,7 @@ namespace ToSic.SexyContent
         /// </summary>
         public IEnvironment Environment { get; }
 
-        internal IInstanceInfo InstanceInfo { get; }
+        public IInstanceInfo InstanceInfo { get; }
 
         internal IContentBlock ContentBlock { get; }
 
@@ -130,7 +130,7 @@ namespace ToSic.SexyContent
         internal SxcInstance(IContentBlock  cb, 
             IInstanceInfo runtimeModuleInfo, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
-            IPermissions permissions = null,
+            //IPermissions permissions = null,
             Log parentLog = null)
         {
             Log = new Log("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
@@ -142,8 +142,8 @@ namespace ToSic.SexyContent
             Parameters = urlparams;
 
             // modinfo is null in cases where things are not known yet, portalsettings are null in search-scenarios
-            Environment.Permissions = permissions
-                    ?? (InstanceInfo != null && PortalSettings.Current != null ? new Permissions(InstanceInfo) as IPermissions : new Eav.Apps.Security.Permissions());
+            //Environment.Permissions = permissions
+            //        ?? (InstanceInfo != null && PortalSettings.Current != null ? new DnnPermissions(InstanceInfo) as IPermissions : new Eav.Apps.Security.Permissions());
                                       //?? (ModuleInfo != null && PortalSettings.Current != null
                                       //    ? (IPermissions) new Permissions(ModuleInfo)
                                       //    : new Environment.None.Permissions());
@@ -153,7 +153,7 @@ namespace ToSic.SexyContent
 
         #region RenderEngine
         internal bool RenderWithDiv = true;
-        private bool RenderWithEditMetadata => Environment.Permissions.UserMayEditContent;
+        private bool UserMayEdit => Factory.Resolve<IPermissions>().UserMayEditContent(InstanceInfo); //Environment.Permissions.UserMayEditContent;
         public HtmlString Render()
         {
             Log.Add("render");
@@ -182,7 +182,7 @@ namespace ToSic.SexyContent
                     if (ContentBlock.DataIsMissing)
                     {
                         Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
-                        if (Environment.Permissions.UserMayEditContent)
+                        if (UserMayEdit)// Environment.Permissions.UserMayEditContent)
                         {
                             body = ""; // stop further processing
                         }
@@ -223,7 +223,7 @@ namespace ToSic.SexyContent
                     ? ""
                     : $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
                       $" data-cb-id=\"{ContentBlock.ContentBlockId}\""
-                      + (RenderWithEditMetadata
+                      + (UserMayEdit
                           ? editHelper.Attribute("data-edit-context", editInfos)
                           : null)
                       + ">\n";

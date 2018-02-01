@@ -44,7 +44,8 @@ namespace ToSic.SexyContent
             // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
             // Note that app could be null, if a user is in admin-ui of a module which hasn't actually be configured yet
-            App?.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent,
+            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance?.InstanceInfo);
+            App?.InitData(PortalSettings.Current != null && userMayEdit,// sexy.Environment.Permissions.UserMayEditContent,
                 PortalSettings.Current != null && sexy.Environment.PagePublishing.IsEnabled(module.Id), 
                 Data.ConfigurationProvider);
         }
@@ -144,7 +145,11 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(Dnn.Portal.PortalId), App.AppId, _sxcInstance.Environment.Permissions.UserMayEditContent, ConfigurationProvider as ValueCollectionProvider);
+            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
+
+            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(Dnn.Portal.PortalId), App.AppId,
+                userMayEdit,// _sxcInstance.Environment.Permissions.UserMayEditContent, 
+                ConfigurationProvider as ValueCollectionProvider);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
@@ -163,7 +168,11 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider, Log);
 
-            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(Dnn.Portal.PortalId), App.AppId, _sxcInstance.Environment.Permissions.UserMayEditContent, ConfigurationProvider as ValueCollectionProvider);
+            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
+
+            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(Dnn.Portal.PortalId), App.AppId,
+                userMayEdit,// _sxcInstance.Environment.Permissions.UserMayEditContent, 
+                ConfigurationProvider as ValueCollectionProvider);
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider, Log);
         }
 

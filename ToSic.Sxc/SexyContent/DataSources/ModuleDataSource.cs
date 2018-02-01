@@ -85,11 +85,13 @@ namespace ToSic.SexyContent.DataSources
                         throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
                     var tabId = ModuleController.Instance.GetTabModulesByModule(InstanceId.Value)[0].TabID;
                     var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
+                    var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext?.InstanceInfo);
+
                     var cgm = new ContentGroupManager(ZoneId, AppId,
-                        HasSxcContext && SxcContext.Environment.Permissions.UserMayEditContent,
+                        HasSxcContext && userMayEdit, // SxcContext.Environment.Permissions.UserMayEditContent,
                         publish.IsEnabled(InstanceId.Value),
                         Log);
-                    var res = cgm.GetContentGroupForModule(InstanceId.Value, tabId);
+                    var res = cgm.GetInstanceContentGroup(InstanceId.Value, tabId);
                     var contentGroupGuid = res.Item1;
                     var previewTemplateGuid = res.Item2;
                     _contentGroup = cgm.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid); 

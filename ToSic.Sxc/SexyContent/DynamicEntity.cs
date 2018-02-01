@@ -3,7 +3,9 @@ using System.Dynamic;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.Toolbar;
 using ToSic.SexyContent.Interfaces;
@@ -22,30 +24,13 @@ namespace ToSic.SexyContent
                     return new HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                if (!SxcInstance.Environment.Permissions.UserMayEditContent)
+                var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance?.InstanceInfo);
+
+                if (!userMayEdit)// SxcInstance.Environment.Permissions.UserMayEditContent)
                     return new HtmlString("");
 
                 var toolbar = new ItemToolbar(this).Toolbar;
                 return new HtmlString(toolbar);
-
-                //if (Entity is IHasEditingData)
-                //    return new HtmlString("<ul class=\"sc-menu\" data-toolbar='"
-                //                          + JsonConvert.SerializeObject(new
-                //                          {
-                //                              sortOrder = ((IHasEditingData) Entity).SortOrder,
-                //                              useModuleList = true,
-                //                              isPublished = Entity.IsPublished
-                //                          }) 
-                //                          + "'></ul>");
-
-                //return new HtmlString("<ul class=\"sc-menu\" data-toolbar='"
-                //                      + JsonConvert.SerializeObject(new
-                //                      {
-                //                          entityId = Entity.EntityId,
-                //                          isPublished = Entity.IsPublished,
-                //                          contentType = Entity.Type.Name
-                //                      })
-                //                      + "'></ul>");
             }
         }
         private readonly string[] _dimensions;

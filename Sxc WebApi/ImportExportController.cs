@@ -142,7 +142,7 @@ namespace ToSic.SexyContent.WebApi
             var appRuntime = new AppRuntime(appId, Log);
 
             var fileName = $"2sxcContentExport_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}.xml";
-            var fileXml = new ToSxcXmlExporter().Init(zoneId, appId, appRuntime, false,
+            var fileXml = new DnnXmlExporter().Init(zoneId, appId, appRuntime, false,
                 contentTypeIdsString?.Split(';') ?? new string[0],
                 entityIdsString?.Split(';') ?? new string[0],
                 Log

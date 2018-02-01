@@ -14,5 +14,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public override int PageId => Info.TabID;
 
         public override int TennantId => Info.PortalID;
+
+        public override bool IsPrimary => Info.DesktopModule.ModuleName == "2sxc";
     }
 }

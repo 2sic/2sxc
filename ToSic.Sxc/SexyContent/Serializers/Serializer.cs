@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent.EAVExtensions;
 
@@ -114,7 +116,9 @@ namespace ToSic.SexyContent.Serializers
 	    internal void AddEditInfo(ToSic.Eav.Interfaces.IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add additional information in case we're in edit mode
-	        if (DotNetNuke.Common.Globals.IsEditMode() || (Sxc?.Environment?.Permissions?.UserMayEditContent ?? false))
+	        var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(Sxc?.InstanceInfo);
+
+            if (DotNetNuke.Common.Globals.IsEditMode() || userMayEdit)// (Sxc?.Environment?.Permissions?.UserMayEditContent ?? false))
 	        {
 	            dictionary.Add(Constants.JsonModifiedNodeName, entity.Modified);
 	            var title = entity.GetBestTitle(Languages);

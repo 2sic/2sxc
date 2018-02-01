@@ -193,10 +193,16 @@
     <Content Include="README.md" />
     <Content Include="package.json" />
     <Content Include="packages.config" />
+    <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
+    <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
+    <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <Content Include="web-Deploy.config" />
     <Content Include="web.config" />
+    <Content Include="SexyContent\ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
+    <Content Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
+    <Content Include="SexyContent\readme.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\View.ascx.resx" />
@@ -296,6 +302,7 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\readme.md" />
     <Content Include="API\readme.md" />
+    <Content Include="BuildScripts\readme.md" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>

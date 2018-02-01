@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Web;
 using Newtonsoft.Json;
+using ToSic.Eav;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Edit.Toolbar;
 
@@ -18,7 +20,7 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             _sxcInstance = sxc;
         }
 
-        public bool Enabled => _sxcInstance?.Environment?.Permissions?.UserMayEditContent ?? false;
+        public bool Enabled => Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance?.InstanceInfo);// _sxcInstance?.Environment?.Permissions?.UserMayEditContent ?? false;
 
         public HtmlString Toolbar(DynamicEntity target = null,
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 

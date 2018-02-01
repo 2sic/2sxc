@@ -36,7 +36,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             SxcRootUrl = systemRootUrl;
 
-            IsEditable = sxc?.Environment?.Permissions.UserMayEditContent ?? false;
+            var userMayEdit = Eav.Factory.Resolve<IPermissions>().UserMayEditContent(sxc?.InstanceInfo);
+
+            IsEditable = userMayEdit;// sxc?.Environment?.Permissions.UserMayEditContent ?? false;
             parameters = sxc?.Parameters;
         }
     }

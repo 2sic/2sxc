@@ -60,7 +60,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IEavValueConverter, DnnValueConverter>();
                 sc.AddTransient<IEavUserInformation, DnnUserInformation>();
 
-                sc.AddTransient<XmlExporter, ToSxcXmlExporter>();
+                sc.AddTransient<XmlExporter, DnnXmlExporter>();
                 sc.AddTransient<IImportExportEnvironment, ImportExportEnvironment>();
 
                 sc.AddTransient<IRuntime, Runtime>();
@@ -70,6 +70,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();
                 sc.AddTransient<IRenderingHelpers, DnnRenderingHelpers>();
                 sc.AddTransient<IMapAppToInstance, DnnMapAppToInstance>();
+                sc.AddTransient<IPermissions, DnnPermissions>();
 
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);
             });

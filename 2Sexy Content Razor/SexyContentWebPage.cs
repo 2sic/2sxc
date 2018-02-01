@@ -12,9 +12,11 @@ using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
+using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.Razor
 {
@@ -79,7 +81,16 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public ViewDataSource Data => AppAndDataHelpers.Data;
 
-        public IPermissions Permissions => Sexy.Environment.Permissions;
+        public IPermissions Permissions => new RazorPermissions(Sexy); // Sexy.Environment.Permissions;
+
+        // temp - should be elsewhere, but quickly need it so Permissions-object still works after refactoring
+        internal class RazorPermissions: DnnPermissions
+        {
+            private readonly SxcInstance _sxcInstance;
+            public RazorPermissions(SxcInstance sxc) => _sxcInstance = sxc;
+            public bool UserMayEdit => Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
+
+        }
 
         #region AsDynamic in many variations
         /// <inheritdoc />

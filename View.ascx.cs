@@ -4,9 +4,11 @@ using System.Web.Http;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Modules.Actions;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -17,7 +19,12 @@ namespace ToSic.SexyContent
     public partial class View : PortalModuleBase, IActionable
     {
         private SxcInstance _sxci;
-        protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(new DnnInstanceInfo(ModuleConfiguration), Log).SxcInstance);
+
+        protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(
+                                              new DnnInstanceInfo(ModuleConfiguration),
+                                              Log,
+                                              new DnnTennant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
+                                          .SxcInstance);
 
         private Log Log { get; } = new Log("Sxc.View");
 
@@ -60,7 +67,7 @@ namespace ToSic.SexyContent
                 // check things if it's a module of this portal (ensure everything is ok, etc.)
                 var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
                 if (!isSharedModule && !SxcI.ContentBlock.ContentGroupExists && SxcI.App != null)
-                    new DnnStuffToRefactor().EnsurePortalIsConfigured(SxcI, Server, ControlPath);
+                    new DnnStuffToRefactor().EnsureTennantIsConfigured(SxcI, Server, ControlPath);
 
                 var renderNaked = Request.QueryString["standalone"] == "true";
                 if (renderNaked)
@@ -106,7 +113,8 @@ namespace ToSic.SexyContent
 
 
         #region Security Check
-        protected bool UserMayEditThisModule => SxcI?.Environment?.Permissions.UserMayEditContent ?? false;
+        protected bool UserMayEditThisModule => Eav.Factory.Resolve<IPermissions>().UserMayEditContent(SxcI?.InstanceInfo);
+        //SxcI?.Environment?.Permissions.UserMayEditContent ?? false;
         #endregion
 
 

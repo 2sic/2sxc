@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.ContentBlocks;
@@ -20,8 +21,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return SxcInstanceForModule(instance);
         }
 
-        public static ISxcInstance SxcInstanceForModule(IInstanceInfo moduleInfo) 
-            => new ModuleContentBlock(moduleInfo, parentLog: null).SxcInstance;
+        public static ISxcInstance SxcInstanceForModule(ModuleInfo moduleInfo)
+            => SxcInstanceForModule(new DnnInstanceInfo(moduleInfo));
+
+        public static ISxcInstance SxcInstanceForModule(IInstanceInfo moduleInfo)
+        {
+            var dnnModule = ((InstanceInfo<ModuleInfo>) moduleInfo).Info;
+            var tennant = new DnnTennant(new PortalSettings(dnnModule.OwnerPortalID));
+            return new ModuleContentBlock(moduleInfo, parentLog: null, tennant: tennant).SxcInstance;
+        }
 
         public static IAppAndDataHelpers CodingHelpers(ISxcInstance sxc) 
             => new AppAndDataHelpers(sxc as SxcInstance);

@@ -1,4 +1,6 @@
 ﻿using System;
+using ToSic.Eav;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
@@ -85,7 +87,10 @@ namespace ToSic.SexyContent.ContentBlocks
             Configuration = ConfigurationProvider.GetConfigProviderForModule(ParentId, App, SxcInstance);
 
             // maybe ensure that App.Data is ready
-            App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, SxcInstance.Environment.PagePublishing.IsEnabled(Parent.SxcInstance.InstanceInfo.Id/*.ModuleInfo.ModuleID*/), Configuration);
+            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
+
+            App.InitData(userMayEdit,// SxcInstance.Environment.Permissions.UserMayEditContent, 
+                SxcInstance.Environment.PagePublishing.IsEnabled(Parent.SxcInstance.InstanceInfo.Id), Configuration);
 
             ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 
@@ -103,7 +108,11 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
         public override SxcInstance SxcInstance
-            => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, Parent.SxcInstance.InstanceInfo, Parent.SxcInstance.Parameters, Parent.SxcInstance.Environment.Permissions, Log));
+            => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, 
+                Parent.SxcInstance.InstanceInfo, 
+                Parent.SxcInstance.Parameters, 
+                //Parent.SxcInstance.Environment.Permissions, 
+                Log));
 
 
         public override bool IsContentApp => _appName == Eav.Constants.DefaultAppName;

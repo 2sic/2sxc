@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Interfaces;
-using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
     internal sealed class ModuleContentBlock: ContentBlockBase
     {
-
-        private ModuleInfo _dnnModule;
         public IInstanceInfo InstanceInfo;
 
         public override ContentGroupReferenceManagerBase Manager => new ModuleContentGroupReferenceManager(SxcInstance);
@@ -34,12 +29,11 @@ namespace ToSic.SexyContent.ContentBlocks
         /// </summary>
         /// <param name="instanceInfo">the dnn module-info</param>
         /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
+        /// <param name="tennant"></param>
         /// <param name="overrideParams">optional override parameters</param>
-        public ModuleContentBlock(IInstanceInfo instanceInfo, Log parentLog, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
+        public ModuleContentBlock(IInstanceInfo instanceInfo, Log parentLog, ITennant tennant = null, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
         {
             InstanceInfo = instanceInfo ?? throw new Exception("Need valid Instance/ModuleInfo / ModuleConfiguration of runtime");
-            _dnnModule = (instanceInfo as InstanceInfo<ModuleInfo>)?.Info
-                          ?? throw new Exception("Need valid ModuleInfo / ModuleConfiguration of runtime");
             ParentId = instanceInfo.Id;
             ContentBlockId = ParentId;
 
@@ -48,14 +42,15 @@ namespace ToSic.SexyContent.ContentBlocks
 
             // Ensure we know what portal the stuff is coming from
             // PortalSettings is null, when in search mode
-            Tennant = new DnnTennant(PortalSettings.Current == null || _dnnModule.OwnerPortalID != _dnnModule.PortalID
-                ? new PortalSettings(_dnnModule.OwnerPortalID)
-                : PortalSettings.Current);
+            Tennant = tennant;
+            //new DnnTennant(PortalSettings.Current == null || _dnnModule.OwnerPortalID != _dnnModule.PortalID
+            //    ? new PortalSettings(_dnnModule.OwnerPortalID)
+            //    : PortalSettings.Current);
 
 
             // important: don't use the SxcInstance.Environment, as it would try to init the Sxc-object before the app is known, causing various side-effects
             var tempEnv = Factory.Resolve<IEnvironmentFactory>().Environment(parentLog);
-            ZoneId = tempEnv.ZoneMapper.GetZoneId(_dnnModule.OwnerPortalID);
+            ZoneId = tempEnv.ZoneMapper.GetZoneId(tennant.Id); // use tennant as reference, as it can be different from instance.TennantId
             
             AppId = Factory.Resolve<IMapAppToInstance>().GetAppIdFromInstance(instanceInfo, ZoneId) ?? 0;// fallback/undefined YET
 
@@ -77,11 +72,12 @@ namespace ToSic.SexyContent.ContentBlocks
                 Configuration = ConfigurationProvider.GetConfigProviderForModule(InstanceInfo.Id, App, SxcInstance);
 
                 // maybe ensure that App.Data is ready
-                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent,
+                var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
+                App.InitData(userMayEdit,// SxcInstance.Environment.Permissions.UserMayEditContent,
                     SxcInstance.Environment.PagePublishing.IsEnabled(InstanceInfo.Id), 
                     Configuration);
 
-                var res = App.ContentGroupManager.GetContentGroupForModule(instanceInfo.Id, instanceInfo.PageId);
+                var res = App.ContentGroupManager.GetInstanceContentGroup(instanceInfo.Id, instanceInfo.PageId);
                 var contentGroupGuid = res.Item1;
                 var previewTemplateGuid = res.Item2;
                 ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid);
@@ -101,7 +97,7 @@ namespace ToSic.SexyContent.ContentBlocks
         public override SxcInstance SxcInstance
             => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, InstanceInfo, _urlParams, parentLog: Log));
 
-        public override bool IsContentApp => _dnnModule.DesktopModule.ModuleName == "2sxc";
+        public override bool IsContentApp => InstanceInfo.IsPrimary;
 
     }
 }

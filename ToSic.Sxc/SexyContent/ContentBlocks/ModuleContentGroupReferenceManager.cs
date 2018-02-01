@@ -1,7 +1,6 @@
 ﻿using System;
 using ToSic.Eav;
 using ToSic.SexyContent.Interfaces;
-using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
@@ -14,15 +13,14 @@ namespace ToSic.SexyContent.ContentBlocks
         #region methods which the entity-implementation must customize - so it's virtual
 
         protected override void SavePreviewTemplateId(Guid templateGuid) 
-            => SxcContext.App.ContentGroupManager.SetModulePreviewTemplateId(ModuleId, templateGuid);
+            => ContentGroupManager.SetPreviewTemplate(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
             => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(SxcContext.InstanceInfo, SxcContext.Environment, appId, Log);
         
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
-            => SxcContext.ContentBlock.App.ContentGroupManager.PersistContentGroupAndBlankTemplateToModule(ModuleId,
-                true, cgGuid);
+            => Factory.Resolve<IMapAppToInstance>().SetContentGroupAndBlankTemplate(ModuleId, true, cgGuid);
 
         internal override void UpdateTitle(Eav.Interfaces.IEntity titleItem)
         {

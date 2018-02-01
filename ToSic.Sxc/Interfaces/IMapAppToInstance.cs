@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Interfaces;
+﻿using System;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Interfaces
@@ -7,5 +8,12 @@ namespace ToSic.SexyContent.Interfaces
     {
         int? GetAppIdFromInstance(IInstanceInfo instance, int zoneId);
         void SetAppIdForInstance(IInstanceInfo instance, IEnvironment env, int? appId, Log parentLog);
+
+
+        void ClearPreviewTemplate(int instanceId);
+
+        void SetPreviewTemplate(int instanceId, Guid previewTemplateGuid);
+
+        void SetContentGroupAndBlankTemplate(int instanceId, bool wasCreated, Guid guid);
     }
 }

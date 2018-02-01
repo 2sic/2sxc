@@ -99,15 +99,13 @@
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelperBase.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
-    <Compile Include="Environment\Base\ClientDepedencyManager.cs" />
+    <Compile Include="Environment.Base\ClientDepedencyManager.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfoContentBlock.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfoContentGroup.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfoEntity.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfosError.cs" />
-    <Compile Include="Environment\Dnn7\DnnTennant.cs" />
     <Compile Include="Interfaces\IRenderingHelpers.cs" />
-    <Compile Include="Environment\Dnn7\Permissions.cs" />
-    <Compile Include="Environment\Interfaces\IClientDependencyManager.cs" />
+    <Compile Include="Interfaces\IClientDependencyManager.cs" />
     <Compile Include="Interfaces\IApp.cs" />
     <Compile Include="Interfaces\IAppData.cs" />
     <Compile Include="Interfaces\IContentBlock.cs" />
@@ -162,7 +160,6 @@
     <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
-    <Compile Include="SexyContent\ImportExport\ToSxcXmlExporter.cs" />
     <Compile Include="SexyContent\Installer\Helpers.cs" />
     <Compile Include="SexyContent\Installer\InstallationController.cs" />
     <Compile Include="SexyContent\Installer\Lock.cs" />
@@ -173,7 +170,6 @@
     <Compile Include="SexyContent\Installer\VersionBase.cs" />
     <Compile Include="SexyContent\Internal\AppHelpers.cs" />
     <Compile Include="SexyContent\Internal\AppManagement.cs" />
-    <Compile Include="SexyContent\Internal\DnnStuffToRefactor.cs" />
     <Compile Include="Interfaces\IMapAppToInstance.cs" />
     <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
     <Compile Include="SexyContent\Internal\TemplateHelpers.cs" />
@@ -220,13 +216,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="SexyContent\ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
-    <None Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
-    <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
-    <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Sxc\" />

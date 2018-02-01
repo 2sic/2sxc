@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
@@ -47,11 +48,13 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
 		            return searchDocuments;
             }
 
-            var mcb = new ModuleContentBlock(instance, Log);
+            // must find tennant through module, as the PortalSettings.Current is null in search mode
+            var tennant = new DnnTennant(new PortalSettings(dnnModule.OwnerPortalID));
+            var mcb = new ModuleContentBlock(instance, Log, tennant);
             var sexy = mcb.SxcInstance;
 
             var language = dnnModule.CultureCode;
-            var res = sexy.App.ContentGroupManager.GetContentGroupForModule(dnnModule.ModuleID, dnnModule.TabID);
+            var res = sexy.App.ContentGroupManager.GetInstanceContentGroup(dnnModule.ModuleID, dnnModule.TabID);
             var contentGroupGuid = res.Item1;
             var previewTemplateGuid = res.Item2;
             var contentGroup = sexy.App.ContentGroupManager.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid);

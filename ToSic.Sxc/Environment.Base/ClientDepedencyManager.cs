@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using ToSic.SexyContent.Environment.Interfaces;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Base
 {

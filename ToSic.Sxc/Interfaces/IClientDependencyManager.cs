@@ -1,4 +1,4 @@
-﻿namespace ToSic.SexyContent.Environment.Interfaces
+﻿namespace ToSic.SexyContent.Interfaces
 {
     internal interface IClientDependencyManager
     {

@@ -15,6 +15,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
+using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -56,7 +57,9 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // go through all the groups, assign relevant info so that we can then do get-many
             var app = new App(new DnnTennant(PortalSettings.Current), appId, Log);
-            app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, 
+            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
+
+            app.InitData(userMayEdit,// SxcContext.Environment.Permissions.UserMayEditContent, 
                 SxcContext.Environment.PagePublishing /*new PagePublishing(Log)*/ .IsEnabled(ActiveModule.ModuleID), 
                 Data.ConfigurationProvider);
 
@@ -151,7 +154,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             var myLog = new Log("2Ap.GrpPrc", Log, "start");
             var app = new App(new DnnTennant(PortalSettings.Current), appId);
-            app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, SxcContext.Environment.PagePublishing /*new PagePublishing(Log)*/.IsEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
+            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
+
+            app.InitData(userMayEdit,// SxcContext.Environment.Permissions.UserMayEditContent, 
+                SxcContext.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
 
             foreach (var entitySets in groupItems)
             {

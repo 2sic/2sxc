@@ -12,6 +12,7 @@ using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Interfaces;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Search;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 

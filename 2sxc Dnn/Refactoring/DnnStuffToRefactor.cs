@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.Internal
         /// <summary>
         /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
         /// </summary>
-        public void EnsurePortalIsConfigured(SxcInstance sxc, HttpServerUtility server, string controlPath)
+        public void EnsureTennantIsConfigured(SxcInstance sxc, HttpServerUtility server, string controlPath)
         {
             var sexyFolder = new DirectoryInfo(server.MapPath(sxc.Tennant.RootPath));
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Constants.ContentAppName));
@@ -29,15 +29,18 @@ namespace ToSic.SexyContent.Internal
 
         #region Settings
 
+        
+
+        
         /// <summary>
         /// Update a setting for all language-versions of a module
         /// </summary>
-        public static void UpdateModuleSettingForAllLanguages(int moduleId, string key, string value)
+        public static void UpdateInstanceSettingForAllLanguages(int instanceId, string key, string value)
         {
             var moduleController = new ModuleController();
 
             // Find this module in other languages and update contentGroupGuid
-            var originalModule = moduleController.GetModule(moduleId);
+            var originalModule = moduleController.GetModule(instanceId);
             var languages = LocaleController.Instance.GetLocales(originalModule.PortalID);
 
             if (!originalModule.IsDefaultLanguage && originalModule.DefaultLanguageModule != null)
