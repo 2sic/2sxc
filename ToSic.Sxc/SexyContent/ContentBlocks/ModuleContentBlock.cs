@@ -8,6 +8,7 @@ using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks
@@ -54,9 +55,9 @@ namespace ToSic.SexyContent.ContentBlocks
 
             // important: don't use the SxcInstance.Environment, as it would try to init the Sxc-object before the app is known, causing various side-effects
             var tempEnv = Factory.Resolve<IEnvironmentFactory>().Environment(parentLog);
-            ZoneId = tempEnv/*new Environment.DnnEnvironment(Log)*/.ZoneMapper.GetZoneId(_dnnModule.OwnerPortalID);
+            ZoneId = tempEnv.ZoneMapper.GetZoneId(_dnnModule.OwnerPortalID);
             
-            AppId = AppHelpers.GetAppIdFromModule(_dnnModule, ZoneId) ?? 0;// fallback/undefined YET
+            AppId = Factory.Resolve<IMapAppToInstance>().GetAppIdFromInstance(instanceInfo, ZoneId) ?? 0;// fallback/undefined YET
 
             Log.Add($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
 

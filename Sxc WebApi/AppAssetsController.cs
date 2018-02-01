@@ -8,6 +8,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.AppAssets;
+using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -129,7 +130,7 @@ namespace ToSic.SexyContent.WebApi
 
         private string ResolveAppPath(int appId, bool global,  bool allowFullAccess)
         {
-            var thisApp = new App(PortalSettings.Current, appId);
+            var thisApp = new App(new DnnTennant(PortalSettings.Current), appId);
 
             if (global && !allowFullAccess)
                 throw new NotSupportedException("only host user may access global files");
@@ -158,7 +159,7 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"create a#{appId}, path:{path}, global:{global}, cont-length:{content.Content?.Length}");
             path = path.Replace("/", "\\");
 
-            var thisApp = new App(PortalSettings.Current, appId);
+            var thisApp = new App(new DnnTennant(PortalSettings.Current), appId);
 
             if (content.Content == null)
                 content.Content = "";

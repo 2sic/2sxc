@@ -16,8 +16,10 @@ using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight;
+using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -164,10 +166,10 @@ namespace ToSic.SexyContent.WebApi
             // Now create the cleaned up import-dictionary so we can create a new entity
             var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem, appId);
 
-            var userName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+            var userName = UserIdentity.CurrentUserIdentityToken;
 
             // try to create
-            var currentApp = new App(PortalSettings, appId);
+            var currentApp = new App(new DnnTennant(PortalSettings), appId);
             //currentApp.InitData(false, new ValueCollectionProvider());
             var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
             currentApp.InitData(false, 

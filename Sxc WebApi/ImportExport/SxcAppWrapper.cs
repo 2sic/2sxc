@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.WebApi.ImportExport
 {
@@ -19,7 +20,7 @@ namespace ToSic.SexyContent.WebApi.ImportExport
 
         public SxcAppWrapper(int zoneId, int appId)
         {
-            App = new App(zoneId, appId, PortalSettings.Current, false);
+            App = new App(zoneId, appId, new DnnTennant(PortalSettings.Current), false);
         }
 
 

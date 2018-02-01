@@ -30,8 +30,8 @@ namespace ToSic.SexyContent.WebApi
         public HttpResponseMessage InstallPackage(string packageUrl)
         {
             Log.Add("install package:" + packageUrl);
-            var zoneId = Env.ZoneMapper.GetZoneId(ActiveModule.PortalID);// ZoneHelpers.GetZoneId(ActiveModule.PortalID).Value;
-            var appId = AppHelpers.GetAppIdFromModule(ActiveModule, zoneId);
+            var zoneId = Env.ZoneMapper.GetZoneId(ActiveModule.PortalID);
+            var appId = new DnnMapAppToInstance().GetAppIdFromInstance(new DnnInstanceInfo(ActiveModule), zoneId);
             bool success;
 
             // Install package

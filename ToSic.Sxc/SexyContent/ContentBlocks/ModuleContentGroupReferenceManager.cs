@@ -1,4 +1,6 @@
 ﻿using System;
+using ToSic.Eav;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks
@@ -15,7 +17,7 @@ namespace ToSic.SexyContent.ContentBlocks
             => SxcContext.App.ContentGroupManager.SetModulePreviewTemplateId(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
-            => AppHelpers.SetAppIdForModule(SxcContext.InstanceInfo, SxcContext.Environment, appId, Log);
+            => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(SxcContext.InstanceInfo, SxcContext.Environment, appId, Log);
         
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)

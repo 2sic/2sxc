@@ -67,16 +67,19 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        public App(PortalSettings ownerPortalSettings, int appId, Log parentLog = null) 
-            : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog) /*new Environment.DnnEnvironment(parentLog)*/, 
-                  AutoLookup, appId, new DnnTennant(ownerPortalSettings), true, parentLog) { }
+        //public App(PortalSettings portalSettings, int appId, Log parentLog = null) 
+        //    : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog), 
+        //          AutoLookup, appId, new DnnTennant(portalSettings), true, parentLog) { }
+        public App(ITennant tennant, int appId, Log parentLog = null) 
+            : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog), 
+                  AutoLookup, appId, tennant, true, parentLog) { }
 
-        public App(int zoneId, int appId, PortalSettings portalSettings, bool allowSideEffects = true, Log parentLog = null)
-            : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog) /*new Environment.DnnEnvironment(parentLog)*/, 
-                  zoneId, appId, new DnnTennant(portalSettings), allowSideEffects, parentLog) { }
+        //public App(int zoneId, int appId, PortalSettings portalSettings, bool allowSideEffects = true, Log parentLog = null)
+        //    : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog), 
+        //          zoneId, appId, new DnnTennant(portalSettings), allowSideEffects, parentLog) { }
 
         public App(int zoneId, int appId, ITennant tennant, bool allowSideEffects = true, Log parentLog = null)
-            : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog) /*new Environment.DnnEnvironment(parentLog)*/, 
+            : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog), 
                   zoneId, appId, tennant, allowSideEffects, parentLog) { }
         
 

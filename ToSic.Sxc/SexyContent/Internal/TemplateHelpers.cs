@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.Internal
         public void EnsureTemplateFolderExists(string templateLocation)
         {
             var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
-                ? Path.Combine(HostingEnvironment.MapPath(Settings.PortalHostDirectory), Settings.TemplateFolder) 
+                ? Path.Combine(HostingEnvironment.MapPath(Settings.PortalHostDirectory), Settings.AppsRootFolder) 
                 : App.Tennant.RootPath;//.Settings.HomeDirectoryMapPath;
             var sexyFolderPath = portalPath;// Path.Combine(portalPath, Settings.TemplateFolder);
 
@@ -55,7 +55,7 @@ namespace ToSic.SexyContent.Internal
         public static string GetTemplatePathRoot(string locationId, App app)
         {
             var rootFolder = locationId == Settings.TemplateLocations.HostFileSystem
-                ? Settings.PortalHostDirectory + Settings.TemplateFolder
+                ? Settings.PortalHostDirectory + Settings.AppsRootFolder
                 : app.Tennant.RootPath;
             rootFolder += "/" + app.Folder;
             return rootFolder;

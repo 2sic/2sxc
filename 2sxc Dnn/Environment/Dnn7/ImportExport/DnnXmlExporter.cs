@@ -5,19 +5,20 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Adam;
+using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.ImportExport
 {
-    public class ToSxcXmlExporter: XmlExporter
+    public class DnnXmlExporter: XmlExporter
     {
         private readonly IFileManager _dnnFiles = FileManager.Instance;
         internal AdamManager AdamManager;
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, Log parentLog)
         {
-            var app = new App(zoneId, appId, PortalSettings.Current);
+            var app = new App(zoneId, appId, new DnnTennant(null));
             AdamManager = new AdamManager(PortalSettings.Current.PortalId, app);
-            Constructor(zoneId, appRuntime, /*appId, */app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
+            Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
             InitExportXDocument(PortalSettings.Current.DefaultLanguage, Settings.ModuleVersion);

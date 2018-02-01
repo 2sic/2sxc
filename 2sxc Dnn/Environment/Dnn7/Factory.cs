@@ -35,7 +35,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public static IApp App(int appId, PortalSettings ownerPortalSettings, bool versioningEnabled = false, bool showDrafts = false)
         {
-            var appStuff = new App(ownerPortalSettings, appId);
+            var appStuff = new App(new DnnTennant(ownerPortalSettings), appId);
 
             var provider = new ValueCollectionProvider(); // use blank provider for now
 

@@ -27,9 +27,9 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
         /// Get search info for each dnn module containing 2sxc data
         /// </summary>
         /// <returns></returns>
-        public IList<SearchDocument> GetModifiedSearchDocuments(IInstanceInfo instanceInfo, DateTime beginDate)
+        public IList<SearchDocument> GetModifiedSearchDocuments(IInstanceInfo instance, DateTime beginDate)
         {
-            var dnnModule = (instanceInfo as InstanceInfo<ModuleInfo>).Info;
+            var dnnModule = (instance as InstanceInfo<ModuleInfo>).Info;
             // always log with method, to ensure errors are cought
             Log.Add(() => $"start search for mod#{dnnModule.ModuleID}");
             var searchDocuments = new List<SearchDocument>();
@@ -42,12 +42,12 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
 
             if (!isContentModule)
             {
-	            appId = AppHelpers.GetAppIdFromModule(dnnModule, zoneId);
+	            appId = new DnnMapAppToInstance().GetAppIdFromInstance(instance, zoneId);
 				if (!appId.HasValue)
 		            return searchDocuments;
             }
 
-            var mcb = new ModuleContentBlock(instanceInfo, Log);
+            var mcb = new ModuleContentBlock(instance, Log);
             var sexy = mcb.SxcInstance;
 
             var language = dnnModule.CultureCode;

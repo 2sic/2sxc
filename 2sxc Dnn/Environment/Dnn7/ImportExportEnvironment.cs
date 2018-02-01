@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// </summary>
         /// <param name="sourceFolder"></param>
         /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
-        public void TransferFilesToTennant(string sourceFolder, string destinationFolder)//, Boolean overwriteFiles, List<ExportImportMessage> messages)
+        public void TransferFilesToTennant(string sourceFolder, string destinationFolder)
         {
             Log.Add($"transfer files to tennant from:{sourceFolder} to:{destinationFolder}");
             var messages = Messages;
@@ -91,7 +91,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public string TemplatesRoot(int zoneId, int appId)
         {
-            var app = new App(zoneId, appId, PortalSettings.Current, false);
+            var app = new App(zoneId, appId, new DnnTennant(PortalSettings.Current), false);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
             var templateRoot =  HttpContext.Current.Server.MapPath(TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
@@ -100,7 +100,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public string TargetPath(string folder)
         {
-            var appPath = Path.Combine(AppHelpers.AppBasePath(null), folder);
+            var appPath = Path.Combine(DnnMapAppToInstance.AppBasePath(), folder);
 
             return HttpContext.Current.Server.MapPath(appPath);
         }
