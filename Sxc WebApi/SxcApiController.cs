@@ -30,7 +30,7 @@ namespace ToSic.SexyContent.WebApi
             base.Initialize(controllerContext);
             Log.Rename("2sApiC");
             SxcContext = Helpers.GetSxcOfApiRequest(Request, true, Log);
-            AppAndDataHelpers = new AppAndDataHelpers(SxcContext, SxcContext?.InstanceInfo/*.ModuleInfo*/, SxcContext?.Log ?? Log);
+            AppAndDataHelpers = new AppAndDataHelpers(SxcContext, SxcContext?.InstanceInfo, SxcContext?.Log ?? Log);
             controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); // must run after creating AppAndDataHelpers
         }
         #endregion

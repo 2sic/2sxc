@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using Newtonsoft.Json;
 using ToSic.Eav.Apps;
@@ -36,10 +35,6 @@ namespace ToSic.SexyContent
 
         public bool IsContentApp => ContentBlock.IsContentApp;
 
-        // 2016-09-16 deprecated these two shortcuts as mentioned in the todo, found ca. 3 + 4 use cases
-        //public TemplateManager AppTemplates => App.TemplateManager; // todo: remove, use App...
-        //public ContentGroupManager AppContentGroups => App.ContentGroupManager; // todo: remove, use App...
-
         #endregion
 
         public Log Log { get; }
@@ -59,7 +54,6 @@ namespace ToSic.SexyContent
         /// </summary>
         public Environment.DnnEnvironment Environment { get; }
 
-        //internal ModuleInfo ModuleInfo { get; }
         internal IInstanceInfo InstanceInfo { get; }
 
         internal IContentBlock ContentBlock { get; }
@@ -133,7 +127,7 @@ namespace ToSic.SexyContent
 
         #region Constructor
         internal SxcInstance(IContentBlock  cb, 
-            IInstanceInfo /*ModuleInfo*/ runtimeModuleInfo, 
+            IInstanceInfo runtimeModuleInfo, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
             IPermissions permissions = null,
             Log parentLog = null)
@@ -141,8 +135,7 @@ namespace ToSic.SexyContent
             Log = new Log("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
             Environment = new Environment.DnnEnvironment(Log);
             ContentBlock = cb;
-            //ModuleInfo = runtimeModuleInfo;
-            InstanceInfo = runtimeModuleInfo;// new DnnInstanceInfo(runtimeModuleInfo);
+            InstanceInfo = runtimeModuleInfo;
 
             // keep url parameters, because we may need them later for view-switching and more
             Parameters = urlparams;
@@ -150,7 +143,6 @@ namespace ToSic.SexyContent
             // modinfo is null in cases where things are not known yet, portalsettings are null in search-scenarios
             Environment.Permissions = permissions
                     ?? (InstanceInfo != null && PortalSettings.Current != null ? new Permissions(InstanceInfo) as IPermissions : new Environment.None.Permissions());
-
                                       //?? (ModuleInfo != null && PortalSettings.Current != null
                                       //    ? (IPermissions) new Permissions(ModuleInfo)
                                       //    : new Environment.None.Permissions());
@@ -250,7 +242,7 @@ namespace ToSic.SexyContent
         public IEngine GetRenderingEngine(InstancePurposes renderingPurpose)
         {
             var engine = EngineFactory.CreateEngine(Template);
-            engine.Init(Template, App, InstanceInfo/* new DnnInstanceInfo(ModuleInfo)*/, Data, renderingPurpose, this, Log);
+            engine.Init(Template, App, InstanceInfo, Data, renderingPurpose, this, Log);
             return engine;
         }
 

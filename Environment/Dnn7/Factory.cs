@@ -17,10 +17,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
             var instance = new DnnInstanceInfo(moduleInfo);
-            return SxcInstanceForModule(instance/*moduleInfo*/);
+            return SxcInstanceForModule(instance);
         }
 
-        public static ISxcInstance SxcInstanceForModule(/*ModuleInfo*/ IInstanceInfo moduleInfo) 
+        public static ISxcInstance SxcInstanceForModule(IInstanceInfo moduleInfo) 
             => new ModuleContentBlock(moduleInfo, parentLog: null).SxcInstance;
 
         public static IAppAndDataHelpers CodingHelpers(ISxcInstance sxc) 

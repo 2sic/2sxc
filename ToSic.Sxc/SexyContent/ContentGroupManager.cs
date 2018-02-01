@@ -45,7 +45,7 @@ namespace ToSic.SexyContent
 		    Log.Add($"get CG#{contentGroupGuid}");
 			var dataSource = ContentGroupSource();
 			// ToDo: Should use an indexed guid source
-		    var groupEntity = dataSource.List.One(contentGroupGuid);//  .FirstOrDefault(e => e.Value.EntityGuid == contentGroupGuid).Value;
+		    var groupEntity = dataSource.List.One(contentGroupGuid);
 		    return groupEntity != null 
                 ? new ContentGroup(groupEntity, _zoneId, _appId, _showDrafts, _enableVersioning, Log) 
                 : new ContentGroup(Guid.Empty, _zoneId, _appId, _showDrafts, _enableVersioning, Log) {DataIsMissing = true};
@@ -75,10 +75,6 @@ namespace ToSic.SexyContent
 			if(settings[Settings.ContentGroupGuidString] != null)
 				throw new Exception("Preview template id cannot be set for a module that already has content.");
 
-			//var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId);
-			//var previewTemplateGuid = dataSource.List[previewTemplateId].EntityGuid;
-
-            //moduleController.UpdateModuleSetting(moduleId, PreviewTemplateIdString, previewTemplateGuid.ToString());
             DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString());
         }
 

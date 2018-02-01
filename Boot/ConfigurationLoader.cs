@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Interfaces;
-using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Implementations.UserInformation;
 using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.Eav.ImportExport.Persistence.File;
@@ -63,7 +62,7 @@ namespace ToSic.Sxc.Dnn.Boot
                 sc.AddTransient<IImportExportEnvironment, ImportExportEnvironment>();
 
                 sc.AddTransient<IRuntime, Runtime>();
-                sc.AddTransient<Eav.Apps.Interfaces.IEnvironment, DnnEnvironment>();
+                sc.AddTransient<IEnvironment, DnnEnvironment>();
 
                 sc.AddTransient<IClientDependencyManager, ClientDependencyManager>();
                 sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();

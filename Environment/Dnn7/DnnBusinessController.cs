@@ -6,6 +6,7 @@ using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
+using ToSic.SexyContent.Environment.Dnn7.Search;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {

@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.Razor.Helpers
         /// Note that the context can be null, in which case it will have no module context, and default to the current portal
         /// </summary>
         /// <param name="moduleContext"></param>
-        public DnnHelper(/*ModuleInfo*/IInstanceInfo moduleContext)
+        public DnnHelper(IInstanceInfo moduleContext)
         {
             Module = (moduleContext as InstanceInfo<ModuleInfo>).Info;
             Portal = PortalSettings.Current ?? 

@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
         public override ViewDataSource Data => _dataSource 
-            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, Configuration, Log, InstanceInfo.Id/* _moduleInfo.ModuleID*/));
+            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, Configuration, Log, InstanceInfo.Id));
 
         private readonly IEnumerable<KeyValuePair<string, string>> _urlParams;
 
@@ -33,13 +33,12 @@ namespace ToSic.SexyContent.ContentBlocks
         /// <param name="instanceInfo">the dnn module-info</param>
         /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
         /// <param name="overrideParams">optional override parameters</param>
-        public ModuleContentBlock(IInstanceInfo instanceInfo, /*ModuleInfo moduleInfo,*/ Log parentLog, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
+        public ModuleContentBlock(IInstanceInfo instanceInfo, Log parentLog, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
         {
             InstanceInfo = instanceInfo ?? throw new Exception("Need valid Instance/ModuleInfo / ModuleConfiguration of runtime");
-            //ModuleInfo = moduleInfo ?? throw new Exception("Need valid ModuleInfo / ModuleConfiguration of runtime");
             _dnnModule = (instanceInfo as InstanceInfo<ModuleInfo>)?.Info
                           ?? throw new Exception("Need valid ModuleInfo / ModuleConfiguration of runtime");
-            ParentId = instanceInfo.Id;// moduleInfo.ModuleID;
+            ParentId = instanceInfo.Id;
             ContentBlockId = ParentId;
 
             // url-params
@@ -72,14 +71,14 @@ namespace ToSic.SexyContent.ContentBlocks
                 // try to load the app - if possible
                 App = new App(ZoneId, AppId, /*PortalSettings*/ Tennant, parentLog: Log);
 
-                Configuration = ConfigurationProvider.GetConfigProviderForModule(_dnnModule.ModuleID, App, SxcInstance);
+                Configuration = ConfigurationProvider.GetConfigProviderForModule(InstanceInfo.Id, App, SxcInstance);
 
                 // maybe ensure that App.Data is ready
                 App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent,
-                    SxcInstance.Environment.PagePublishing.IsEnabled(_dnnModule.ModuleID), 
+                    SxcInstance.Environment.PagePublishing.IsEnabled(InstanceInfo.Id), 
                     Configuration);
 
-                var res = App.ContentGroupManager.GetContentGroupForModule(_dnnModule.ModuleID, _dnnModule.TabID);
+                var res = App.ContentGroupManager.GetContentGroupForModule(instanceInfo.Id, instanceInfo.PageId);
                 var contentGroupGuid = res.Item1;
                 var previewTemplateGuid = res.Item2;
                 ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid);
@@ -97,7 +96,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
         public override SxcInstance SxcInstance
-            => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, InstanceInfo /*ModuleInfo*/, _urlParams, parentLog: Log));
+            => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, InstanceInfo, _urlParams, parentLog: Log));
 
         public override bool IsContentApp => _dnnModule.DesktopModule.ModuleName == "2sxc";
 

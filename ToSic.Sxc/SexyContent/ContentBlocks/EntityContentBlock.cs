@@ -103,7 +103,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
         public override SxcInstance SxcInstance
-            => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, Parent.SxcInstance.InstanceInfo/*.ModuleInfo*/, Parent.SxcInstance.Parameters, Parent.SxcInstance.Environment.Permissions, Log));
+            => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, Parent.SxcInstance.InstanceInfo, Parent.SxcInstance.Parameters, Parent.SxcInstance.Environment.Permissions, Log));
 
 
         public override bool IsContentApp => _appName == Eav.Constants.DefaultAppName;

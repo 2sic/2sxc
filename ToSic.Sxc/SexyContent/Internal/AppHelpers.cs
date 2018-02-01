@@ -62,22 +62,22 @@ namespace ToSic.SexyContent.Internal
         }
 
 
-        internal static void SetAppIdForModule(/*ModuleInfo module*/IInstanceInfo instanceInfo, IEnvironment env, int? appId, Log parentLog)
+        internal static void SetAppIdForModule(IInstanceInfo instanceInfo, IEnvironment env, int? appId, Log parentLog)
         {
-            var module = (instanceInfo as InstanceInfo<ModuleInfo>).Info;
             // Reset temporary template
-            ContentGroupManager.DeletePreviewTemplateId(module.ModuleID);
+            ContentGroupManager.DeletePreviewTemplateId(instanceInfo.Id);
 
             // ToDo: Should throw exception if a real ContentGroup exists
 
+            var module = (instanceInfo as InstanceInfo<ModuleInfo>).Info;
             var zoneId = env.ZoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == 0 || !appId.HasValue)
-                DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, Settings.AppNameString, null);
+                DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(instanceInfo.Id, Settings.AppNameString, null);
             else
             {
                 var appName = ((BaseCache)DataSource.GetCache(0, 0)).ZoneApps[zoneId].Apps[appId.Value];
-                DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, Settings.AppNameString, appName);
+                DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(instanceInfo.Id, Settings.AppNameString, appName);
             }
 
             // Change to 1. available template if app has been set
@@ -86,11 +86,12 @@ namespace ToSic.SexyContent.Internal
                 var app = new App(zoneId, appId.Value, PortalSettings.Current);
                 var templateGuid = app.TemplateManager.GetAllTemplates().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue)
-                    app.ContentGroupManager.SetModulePreviewTemplateId(module.ModuleID, templateGuid.Value);
+                    app.ContentGroupManager.SetModulePreviewTemplateId(instanceInfo.Id, templateGuid.Value);
             }
         }
 
 
+        // todo: remove this, replace with calls to the current tennant -> RootPath
         public static string AppBasePath(PortalSettings ownerPS )
         {
             if (ownerPS == null)

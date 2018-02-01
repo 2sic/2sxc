@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.ContentBlocks
         internal ContentGroupReferenceManagerBase(SxcInstance sxc): base("CG.RefMan", sxc.Log)
         {
             SxcContext = sxc;
-            ModuleId = SxcContext.InstanceInfo.Id/*.ModuleInfo.ModuleID*/;
+            ModuleId = SxcContext.InstanceInfo.Id;
         }
 
 
@@ -69,7 +69,7 @@ namespace ToSic.SexyContent.ContentBlocks
                 // only set preview / content-group-reference - but must use the guid
                 var dataSource = SxcContext.App.Data;
                 var templateGuid = dataSource.List.One(templateId).EntityGuid;
-                SavePreviewTemplateId(templateGuid);//, newTemplateChooserState);
+                SavePreviewTemplateId(templateGuid);
                 result = null; // send null back
             }
 

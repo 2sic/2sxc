@@ -14,10 +14,10 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
+using ToSic.SexyContent.Search;
 
-namespace ToSic.SexyContent.Search
+namespace ToSic.SexyContent.Environment.Dnn7.Search
 {
     internal class SearchController: HasLog
     {
@@ -27,31 +27,31 @@ namespace ToSic.SexyContent.Search
         /// Get search info for each dnn module containing 2sxc data
         /// </summary>
         /// <returns></returns>
-        public IList<SearchDocument> GetModifiedSearchDocuments(/*ModuleInfo*/IInstanceInfo instanceInfo, DateTime beginDate)
+        public IList<SearchDocument> GetModifiedSearchDocuments(IInstanceInfo instanceInfo, DateTime beginDate)
         {
-            var moduleInfo = (instanceInfo as InstanceInfo<ModuleInfo>).Info;
+            var dnnModule = (instanceInfo as InstanceInfo<ModuleInfo>).Info;
             // always log with method, to ensure errors are cought
-            Log.Add(() => $"start search for mod#{moduleInfo.ModuleID}");
+            Log.Add(() => $"start search for mod#{dnnModule.ModuleID}");
             var searchDocuments = new List<SearchDocument>();
-            var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
+            var isContentModule = dnnModule.DesktopModule.ModuleName == "2sxc";
 
             // New Context because PortalSettings.Current is null
-            var zoneId = new Environment.DnnEnvironment(Log).ZoneMapper.GetZoneId(moduleInfo.OwnerPortalID);
+            var zoneId = new DnnEnvironment(Log).ZoneMapper.GetZoneId(dnnModule.OwnerPortalID);
 
             int? appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
 
             if (!isContentModule)
             {
-	            appId = AppHelpers.GetAppIdFromModule(moduleInfo, zoneId);
+	            appId = AppHelpers.GetAppIdFromModule(dnnModule, zoneId);
 				if (!appId.HasValue)
 		            return searchDocuments;
             }
 
-            var mcb = new ModuleContentBlock(/*moduleInfo*/instanceInfo, Log);
+            var mcb = new ModuleContentBlock(instanceInfo, Log);
             var sexy = mcb.SxcInstance;
 
-            var language = moduleInfo.CultureCode;
-            var res = sexy.App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID, moduleInfo.TabID);
+            var language = dnnModule.CultureCode;
+            var res = sexy.App.ContentGroupManager.GetContentGroupForModule(dnnModule.ModuleID, dnnModule.TabID);
             var contentGroupGuid = res.Item1;
             var previewTemplateGuid = res.Item2;
             var contentGroup = sexy.App.ContentGroupManager.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid);
@@ -65,7 +65,7 @@ namespace ToSic.SexyContent.Search
                 return searchDocuments;
 
             var engine = EngineFactory.CreateEngine(template);
-            engine.Init(template, sexy.App, new DnnInstanceInfo(moduleInfo), dataSource, InstancePurposes.IndexingForSearch, sexy, Log);
+            engine.Init(template, sexy.App, new DnnInstanceInfo(dnnModule), dataSource, InstancePurposes.IndexingForSearch, sexy, Log);
 
             // see if data customization inside the cshtml works
             try
@@ -74,7 +74,7 @@ namespace ToSic.SexyContent.Search
             }
             catch (Exception e) // Catch errors here, because of references to Request etc.
             {
-                Exceptions.LogException(new SearchIndexException(moduleInfo, e));
+                Exceptions.LogException(new SearchIndexException(dnnModule, e));
             }
 
             
@@ -97,10 +97,10 @@ namespace ToSic.SexyContent.Search
                         Body = GetJoinedAttributes(entity, language),
                         Title = entity.Title?[language]?.ToString() ?? "(no title)",
                         ModifiedTimeUtc = (entity.Modified == DateTime.MinValue ? DateTime.Now.Date.AddHours(DateTime.Now.Hour) : entity.Modified).ToUniversalTime(),
-                        UniqueKey = "2sxc-" + moduleInfo.ModuleID + "-" + (entity.EntityGuid != new Guid() ? entity.EntityGuid.ToString() : (stream.Key + "-" + entity.EntityId)),
+                        UniqueKey = "2sxc-" + dnnModule.ModuleID + "-" + (entity.EntityGuid != new Guid() ? entity.EntityGuid.ToString() : (stream.Key + "-" + entity.EntityId)),
                         IsActive = true,
-                        TabId = moduleInfo.TabID,
-                        PortalId = moduleInfo.PortalID
+                        TabId = dnnModule.TabID,
+                        PortalId = dnnModule.PortalID
                     };
 
                     // Take the newest value (from ContentGroupItem and Entity)
@@ -119,11 +119,11 @@ namespace ToSic.SexyContent.Search
             // check if the cshtml has search customizations
             try
             {
-                engine.CustomizeSearch(searchInfoDictionary, new DnnInstanceInfo(moduleInfo), beginDate);
+                engine.CustomizeSearch(searchInfoDictionary, new DnnInstanceInfo(dnnModule), beginDate);
             }
             catch (Exception e)
             {
-                Exceptions.LogException(new SearchIndexException(moduleInfo, e));
+                Exceptions.LogException(new SearchIndexException(dnnModule, e));
             }
 
             // reduce load by only keeping recently modified ites
