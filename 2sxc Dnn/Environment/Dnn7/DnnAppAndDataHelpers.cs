@@ -6,11 +6,11 @@ using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class AppAndDataHelpers : AppAndDataHelpersBase
+    public class DnnAppAndDataHelpers : AppAndDataHelpersBase
     {
-        public AppAndDataHelpers(SxcInstance sexy) : this(sexy, sexy.InstanceInfo, null) {}
+        public DnnAppAndDataHelpers(SxcInstance sexy) : this(sexy, sexy.InstanceInfo, null) {}
 
-        public AppAndDataHelpers(SxcInstance sexy, IInstanceInfo instance, Log parentLog): base(sexy, new DnnTennant(null), parentLog)
+        public DnnAppAndDataHelpers(SxcInstance sexy, IInstanceInfo instance, Log parentLog): base(sexy, new DnnTennant(null), parentLog)
         {
             // Init things than require module-info or similar, but not 2sxc
             Dnn = new DnnHelper(instance);

@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         }
 
         public static IAppAndDataHelpers CodingHelpers(ISxcInstance sxc) 
-            => new AppAndDataHelpers(sxc as SxcInstance);
+            => new DnnAppAndDataHelpers(sxc as SxcInstance);
 
         /// <summary>
         /// get a full app-object for accessing data of the app from outside

@@ -2,7 +2,7 @@
 {
     public interface IWebFactoryTemp
     {
-        IAppAndDataHelpers AppAndDataHelpers(SxcInstance sxc);
+        AppAndDataHelpersBase AppAndDataHelpers(SxcInstance sxc);
 
         //AppAndDataHelpers AppAndDataHelpers(SxcInstance sxc, )
     }

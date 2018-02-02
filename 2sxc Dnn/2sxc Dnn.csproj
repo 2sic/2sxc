@@ -72,7 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Environment\Dnn7\AppAndDataHelpers.cs" />
+    <Compile Include="Environment\Dnn7\DnnAppAndDataHelpers.cs" />
     <Compile Include="Environment\Dnn7\ClientDependencyManager.cs" />
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosAll.cs" />
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosEnvironment.cs" />

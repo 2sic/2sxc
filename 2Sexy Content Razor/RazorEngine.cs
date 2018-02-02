@@ -115,7 +115,7 @@ namespace ToSic.SexyContent.Engines
             webPage.Html = new HtmlHelper();
             webPage.Url = new UrlHelper(ModuleInfo);
             webPage.Sexy = Sexy;
-            webPage.AppAndDataHelpers = new AppAndDataHelpers(Sexy);
+            webPage.DnnAppAndDataHelpers = new DnnAppAndDataHelpers(Sexy);
 
         }
 

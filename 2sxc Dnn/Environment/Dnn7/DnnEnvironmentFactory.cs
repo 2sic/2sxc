@@ -21,6 +21,6 @@ namespace ToSic.SexyContent.Environment.Dnn7.Security
 
 
 
-        public IAppAndDataHelpers AppAndDataHelpers(SxcInstance sxc) => new AppAndDataHelpers(sxc);
+        public AppAndDataHelpersBase AppAndDataHelpers(SxcInstance sxc) => new DnnAppAndDataHelpers(sxc);
     }
 }
