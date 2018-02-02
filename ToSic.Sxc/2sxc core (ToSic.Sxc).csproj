@@ -80,16 +80,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Adam\AdamController.cs.txt" />
     <Compile Include="Adam\AdamFile.cs" />
     <Compile Include="Adam\AdamFolder.cs" />
-    <Compile Include="Adam\AdamItem.cs" />
     <Compile Include="Adam\AdamManager.cs" />
     <Compile Include="Adam\AdamNavigator.cs" />
-    <Compile Include="Adam\EntityBase.cs" />
+    <Compile Include="Adam\AdamBrowseContext.cs" />
     <Compile Include="Adam\Export.cs" />
+    <Compile Include="Adam\FileInfo.cs" />
+    <Compile Include="Adam\FolderInfo.cs" />
     <Compile Include="Adam\GuidHelpers.cs" />
     <Compile Include="Adam\IAdamItem.cs" />
+    <Compile Include="Adam\DnnFileSystem.cs" />
     <Compile Include="Adam\UploadResult.cs" />
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\DnnLinkHelper.cs" />

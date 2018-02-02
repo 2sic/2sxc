@@ -1,29 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DotNetNuke.Services.FileSystem;
+﻿using System.Collections.Generic;
 
 namespace ToSic.SexyContent.Adam
 {
     public class AdamFolder : FolderInfo, IAdamItem
     {
-        public new DateTime CreatedOnDate;
 
-        public EntityBase EntityBase;
+        public AdamBrowseContext AdamBrowseContext;
         public AdamManager Manager;
 
-        private readonly IFolderManager _fldm = FolderManager.Instance;
+        private readonly DnnFileSystem dnnfs = new DnnFileSystem();
 
         /// <summary>
         /// Metadata for this folder
         /// This is usually an entity which has additional information related to this file
         /// </summary>
-        public DynamicEntity Metadata => EntityBase.GetFirstMetadata(FolderID, true);
+        public DynamicEntity Metadata => AdamBrowseContext.GetFirstMetadata(FolderID, true);
 
+        public bool HasMetadata => AdamBrowseContext.GetFirstMetadataEntity(FolderID, false) != null;
 
-        public bool HasMetadata => EntityBase.GetFirstMetadataEntity(FolderID, false) != null;
-
-        public string Url => EntityBase.GenerateWebPath(this);
+        public string Url => AdamBrowseContext.GenerateWebPath(this);
 
         public string Type => "folder";
 
@@ -44,33 +39,8 @@ namespace ToSic.SexyContent.Adam
                 // this is to skip it if it doesn't have subfolders...
                 if (!HasChildren || string.IsNullOrEmpty(FolderName))
                     return _folders = new List<AdamFolder>();
-
-                var firstList = _fldm.GetFolders(this);
-
-                _folders = firstList?.Select(f => new AdamFolder
-                           {
-                               PortalID = f.PortalID,
-                               FolderPath = f.FolderPath,
-                               MappedPath = f.MappedPath,
-                               StorageLocation = f.StorageLocation,
-                               IsProtected = f.IsProtected,
-                               IsCached = f.IsCached,
-                               FolderMappingID = f.FolderMappingID,
-                               LastUpdated = f.LastUpdated,
-                               FolderID = f.FolderID,
-                               DisplayName = f.DisplayName,
-                               DisplayPath = f.DisplayPath,
-                               IsVersioned = f.IsVersioned,
-                               KeyID = (f as FolderInfo)?.KeyID ?? 0,
-                               ParentID = f.ParentID,
-                               UniqueId = f.UniqueId,
-                               VersionGuid = f.VersionGuid,
-                               WorkflowID = f.WorkflowID,
-                               EntityBase = EntityBase,
-                               Name = f.DisplayName,
-                               CreatedOnDate = f.CreatedOnDate
-                           }).ToList()
-                           ?? new List<AdamFolder>();
+                
+                _folders = dnnfs.GetFolders(FolderID, AdamBrowseContext);
                 return _folders;
             }
         }
@@ -81,40 +51,7 @@ namespace ToSic.SexyContent.Adam
         /// <summary>
         /// Get all files in this folder
         /// </summary>
-        public IEnumerable<AdamFile> Files
-        {
-            get
-            {
-                if (_files == null)
-                {
-                    var firstList = _fldm.GetFiles(this);
-
-                    _files = firstList?.Select(f => new AdamFile
-                             {
-                        UniqueId = f.UniqueId,
-                        VersionGuid = f.VersionGuid,
-                        PortalId = f.PortalId,
-                        FileName = f.FileName,
-                        Extension = f.Extension,
-                        Size = f.Size,
-                        Width = f.Width,
-                        Height = f.Height,
-                        ContentType = f.ContentType,
-                        FileId = f.FileId,
-                        Folder = f.Folder,
-                        FolderId = f.FolderId,
-                        StorageLocation = f.StorageLocation,
-                        IsCached = f.IsCached,
-                        SHA1Hash = f.SHA1Hash,
-                        EntityBase = EntityBase,
-
-                        CreatedOnDate = f.CreatedOnDate,
-                        Name = System.IO.Path.GetFileNameWithoutExtension(f.FileName)
-                    }).ToList()
-                    ?? new List<AdamFile>();
-                }
-                return _files;
-            }
-        }
+        public IEnumerable<AdamFile> Files 
+            => _files ?? (_files = dnnfs.GetFiles(FolderID, AdamBrowseContext));
     }
 }

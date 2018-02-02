@@ -5,11 +5,12 @@ namespace ToSic.SexyContent.Adam
 {
     public class Export
     {
-        private readonly IFolderInfo _root;
+        private readonly FolderInfo _root;
         private readonly List<int> _fileIds = new List<int>();
         private readonly List<int> _folderIds = new List<int>();
 
         private readonly IFolderManager _fldm = FolderManager.Instance;
+        private readonly DnnFileSystem _dnnfs = new DnnFileSystem();
 
         public Export(AdamManager adm)
         {
@@ -36,18 +37,18 @@ namespace ToSic.SexyContent.Adam
             }
             
         } 
-        private void AddFolder(IFolderInfo fldr)
+        private void AddFolder(FolderInfo fldr)
         {
             _folderIds.Add(fldr.FolderID);  // track of the folder
             AddFilesInFolder(fldr);         // keep track of the files
 
-            foreach (var f in _fldm.GetFolders(fldr))   // then add subfolders
+            foreach (var f in _dnnfs.GetFolders(fldr.FolderID, null))   // then add subfolders
                 AddFolder(f);
         }
 
-        private void AddFilesInFolder(IFolderInfo fldr)
+        private void AddFilesInFolder(FolderInfo fldr)
         {
-            foreach (var f in _fldm.GetFiles(fldr))
+            foreach (var f in _dnnfs.GetFiles(fldr.FolderID, null))
                 _fileIds.Add(f.FileId);
         }
 

@@ -1,60 +1,38 @@
-﻿using System;
-using System.Data.SqlClient;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using DotNetNuke.Services.FileSystem;
 
 namespace ToSic.SexyContent.Adam
 {
     public class AdamManager
     {
         private readonly App _app;
-        private readonly int _portalId;
+        private readonly int _tennantId;
         public const string AdamAppRootFolder = "adam/[AppFolder]/";
+        private readonly AdamBrowseContext _browseContext;
 
-
-        public AdamManager(int portalId, App app)
+        public AdamManager(int tennantId, App app, AdamBrowseContext browseContext = null)
         {
-            _portalId = portalId;
+            _tennantId = tennantId;
             _app = app;
+            _browseContext = browseContext;
         }
 
         public string RootPath => AdamAppRootFolder.Replace("[AppFolder]", _app.Folder);
 
-        public IFolderInfo Root => Folder(RootPath, true);
+        public FolderInfo Root => Folder(RootPath, true);
 
         #region basic, generic foldor commands -- all internal
-        private readonly IFolderManager _folderManager = FolderManager.Instance;
-        internal bool Exists(string path)
-        {
-            return _folderManager.FolderExists(_portalId, path);
-        }
-        internal void Add(string path)
-        {
-            try
-            {
-                _folderManager.AddFolder(_portalId, path);
-            }
-            catch (SqlException)
-            {
-                // don't do anything - this happens when multiple processes try to add the folder at the same time
-                // like when two fields in a dialog cause the web-api to create the folders in parallel calls
-                // see also https://github.com/2sic/2sxc/issues/811
-            }
-            catch (NullReferenceException)
-            {
-                // also catch this, as it's an additional exception which also happens in the AddFolder when a folder already existed
-            }
-        }
+        //private readonly IFolderManager _folderManager = FolderManager.Instance;
+        private readonly DnnFileSystem dnnfs = new DnnFileSystem();
+        internal bool Exists(string path) => dnnfs.FolderExists(_tennantId, path);
 
-        internal IFolderInfo Get(string path)
-        {
-            return _folderManager.GetFolder(_portalId, path);
-        }
+        internal void Add(string path) => dnnfs.AddFolder(_tennantId, path);
 
-        internal IFolderInfo Folder(string path, bool autoCreate)
+        internal FolderInfo Get(string path) => dnnfs.Get(_tennantId, path, _browseContext);
+
+        internal FolderInfo Folder(string path, bool autoCreate)
         {
             // create all folders to ensure they exist. Must do one-by-one because dnn must have it in the catalog
             var pathParts = path.Split('/');

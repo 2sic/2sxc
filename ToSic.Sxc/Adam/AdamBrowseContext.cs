@@ -7,25 +7,24 @@ using ToSic.Eav.Apps.Interfaces;
 
 namespace ToSic.SexyContent.Adam
 {
-    public class EntityBase
+    public class AdamBrowseContext
     {
         #region constants
-        //public const string AdamRootFolder = "adam/";
         private const string AdamFolderMask = "[AdamRoot]/[Guid22]/[FieldName]/[SubFolder]";
         #endregion
 
         private readonly SxcInstance _sxcInstance;
         private readonly App _app;
-        private readonly AdamManager _adamManager;
+        public readonly AdamManager AdamManager;
         private readonly ITennant _tennant;
         private readonly Guid _entityGuid;
         private readonly string _fieldName;
         private readonly bool _usePortalRoot;
 
-        public EntityBase(SxcInstance sxcInstance, App app, ITennant tennant, Guid eGuid, string fName, bool usePortalRoot)
+        public AdamBrowseContext(SxcInstance sxcInstance, App app, ITennant tennant, Guid eGuid, string fName, bool usePortalRoot)
         {
             _tennant = tennant;
-            _adamManager = new AdamManager(tennant.Id, app);
+            AdamManager = new AdamManager(tennant.Id, app);
             _sxcInstance = sxcInstance;
             _app = app;
             _entityGuid = eGuid;
@@ -35,16 +34,16 @@ namespace ToSic.SexyContent.Adam
 
 
 
-        private IFolderInfo _folder;
+        private FolderInfo _folder;
 
         /// <summary>
         /// Get the folder specified in App.Settings (BasePath) combined with the module's ID
         /// Will create the folder if it does not exist
         /// </summary>
-        internal IFolderInfo Folder(string subFolder, bool autoCreate)
+        internal FolderInfo Folder(string subFolder, bool autoCreate)
         {
             var path = GeneratePath(subFolder);
-            return _adamManager.Folder(path, autoCreate);
+            return AdamManager.Folder(path, autoCreate);
         }
 
         public string EntityRoot => GeneratePath("");
@@ -55,7 +54,7 @@ namespace ToSic.SexyContent.Adam
             if (_usePortalRoot)
                 return (subFolder ?? "").Replace("//", "/");
             var path = AdamFolderMask
-                .Replace("[AdamRoot]", _adamManager.RootPath)
+                .Replace("[AdamRoot]", AdamManager.RootPath)
                 //.Replace("[AppFolder]", App.Folder)
                 .Replace("[Guid22]", GuidHelpers.Compress22(_entityGuid))
                 .Replace("[FieldName]", _fieldName)
@@ -70,7 +69,7 @@ namespace ToSic.SexyContent.Adam
         public string GenerateWebPath(AdamFolder currentFolder) 
             => _tennant.ContentPath + currentFolder.FolderPath;
 
-        internal IFolderInfo Folder() => _folder ?? (_folder = Folder("", true));
+        internal FolderInfo Folder() => _folder ?? (_folder = Folder("", true));
 
         public int GetMetadataId(int id, bool isFolder)
         {
@@ -90,8 +89,7 @@ namespace ToSic.SexyContent.Adam
 
             if (meta == null)
             {
-                var emptyMetadata = new Dictionary<string, object>();
-                emptyMetadata.Add("Title", "");
+                var emptyMetadata = new Dictionary<string, object> {{"Title", ""}};
                 meta = new Eav.Data.Entity(Eav.Constants.TransientAppId, 0, "", emptyMetadata, "Title");
             }
             return new DynamicEntity(meta, new[] {Thread.CurrentThread.CurrentCulture.Name}, _sxcInstance);

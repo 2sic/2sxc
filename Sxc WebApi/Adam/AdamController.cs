@@ -35,19 +35,21 @@ namespace ToSic.SexyContent.Adam
             Log.Rename("AdamCont");
         }
 
-        public EntityBase EntityBase;
+        public AdamBrowseContext AdamBrowseContext;
 
         private void PrepCore(Guid entityGuid, string fieldName, bool usePortalRoot)
         {
-            EntityBase = new EntityBase(SxcContext, App, new DnnTennant(Dnn.Portal), entityGuid, fieldName, usePortalRoot);
+            AdamBrowseContext = new AdamBrowseContext(SxcContext, App, new DnnTennant(Dnn.Portal), entityGuid, fieldName, usePortalRoot);
         }
 
-        public int MaxFileSizeKb => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection)?.MaxRequestLength ?? 1; // if not specified, go to very low value, but not 0, as that could be infinite...
+        public int MaxFileSizeKb 
+            => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection)?.MaxRequestLength ?? 1; // if not specified, go to very low value, but not 0, as that could be infinite...
 
 
         [HttpPost]
         [HttpPut]
-        public UploadResult Upload(string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) => UploadOne(contentType, guid, field, subFolder, usePortalRoot);
+        public UploadResult Upload(string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) 
+            => UploadOne(contentType, guid, field, subFolder, usePortalRoot);
 
         private UploadResult UploadOne(string contentTypeName, Guid guid, string field, string subFolder, bool usePortalRoot)
         {
@@ -73,9 +75,9 @@ namespace ToSic.SexyContent.Adam
 
             try
             {
-                var folder = EntityBase.Folder();
+                var folder = AdamBrowseContext.Folder();
                 if(!string.IsNullOrEmpty(subFolder)) 
-                    folder = EntityBase.Folder(subFolder, false);
+                    folder = AdamBrowseContext.Folder(subFolder, false);
                 var filesCollection = HttpContext.Current.Request.Files;
                 Log.Add($"folder: {folder}, file⋮{filesCollection.Count}");
                 if (filesCollection.Count > 0)
@@ -103,14 +105,16 @@ namespace ToSic.SexyContent.Adam
                     if (fileName != originalFile.FileName)
                         Log.Add($"cleaned file name from'{originalFile.FileName}' to '{fileName}'");
 
+                    var dnnFolder = FolderManager.Instance.GetFolder(folder.FolderID);
+
                     // Make sure the image does not exist yet (change file name)
-                    for (int i = 1; FileManager.Instance.FileExists(folder, Path.GetFileName(fileName)); i++)
+                    for (int i = 1; FileManager.Instance.FileExists(dnnFolder, Path.GetFileName(fileName)); i++)
                         fileName = Path.GetFileNameWithoutExtension(fileName)
                                    + "-" + i +
                                    Path.GetExtension(fileName);
 
                     // Everything is ok, add file
-                    var dnnFile = FileManager.Instance.AddFile(folder, Path.GetFileName(fileName), originalFile.InputStream);
+                    var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName), originalFile.InputStream);
 
                     return new UploadResult
                     {
@@ -119,7 +123,7 @@ namespace ToSic.SexyContent.Adam
                         Name = Path.GetFileName(fileName),
                         Id = dnnFile.FileId,
                         Path = dnnFile.RelativePath,
-                        Type = EntityBase.TypeName(dnnFile.Extension)
+                        Type = AdamBrowseContext.TypeName(dnnFile.Extension)
                     };
                 }
                 Log.Add("upload one complete");
@@ -179,20 +183,21 @@ namespace ToSic.SexyContent.Adam
             var folderManager = FolderManager.Instance;
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            EntityBase.Folder();
+            AdamBrowseContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = EntityBase.Folder(subfolder, false);
+            var currentAdam = AdamBrowseContext.Folder(subfolder, false);
+            var currentDnn = folderManager.GetFolder(currentAdam.FolderID);
 
-            var subfolders = folderManager.GetFolders(current);
-            var files = folderManager.GetFiles(current);
+            var subfolders =  folderManager.GetFolders(currentDnn);
+            var files = folderManager.GetFiles(currentDnn);
 
             var adamFolders =
-                subfolders.Where(s => s.FolderID != current.FolderID)
-                    .Select(f => new AdamItem(f) {MetadataId = EntityBase.GetMetadataId(f.FolderID, true)})
+                subfolders.Where(s => s.FolderID != currentDnn.FolderID)
+                    .Select(f => new AdamItem(f) {MetadataId = AdamBrowseContext.GetMetadataId(f.FolderID, true)})
                     .ToList();
             var adamFiles = files
-                .Select(f => new AdamItem(f) {MetadataId = EntityBase.GetMetadataId(f.FileId, false), Type = EntityBase.TypeName(f.Extension)})
+                .Select(f => new AdamItem(f) {MetadataId = AdamBrowseContext.GetMetadataId(f.FileId, false), Type = AdamBrowseContext.TypeName(f.Extension)})
                 .ToList();
 
             var all = adamFolders.Concat(adamFiles).ToList();
@@ -223,13 +228,13 @@ namespace ToSic.SexyContent.Adam
             PrepCore(guid, field, usePortalRoot);
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            EntityBase.Folder();
+            AdamBrowseContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            EntityBase.Folder(subfolder, false);
+            AdamBrowseContext.Folder(subfolder, false);
 
             // now access the subfolder, creating it if missing (which is what we want
-            EntityBase.Folder(subfolder + "/" + newFolder, true);
+            AdamBrowseContext.Folder(subfolder + "/" + newFolder, true);
 
             return Items(guid, field, subfolder, usePortalRoot);
         }
@@ -242,7 +247,7 @@ namespace ToSic.SexyContent.Adam
             PrepCore(guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = EntityBase.Folder(subfolder, false);
+            var current = AdamBrowseContext.Folder(subfolder, false);
             
             var folderManager = FolderManager.Instance;
             var fileManager = FileManager.Instance;
@@ -276,7 +281,7 @@ namespace ToSic.SexyContent.Adam
             PrepCore(guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = EntityBase.Folder(subfolder, false);
+            var current = AdamBrowseContext.Folder(subfolder, false);
 
             var folderManager = FolderManager.Instance;
             var fileManager = FileManager.Instance;
