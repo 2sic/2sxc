@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.AppAssets
 
         private readonly App _app;
 
-        public AssetEditor(App app, int templateId, UserInfo userInfo, PortalSettings portalSettings)//, bool global = false)
+        public AssetEditor(App app, int templateId, UserInfo userInfo, PortalSettings portalSettings)
         {
             _app = app;
             _userInfo = userInfo;

@@ -12,11 +12,11 @@ namespace ToSic.SexyContent.DataSources
     {
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal static ValueCollectionProvider GetConfigProviderForModule(int moduleId, SexyContent.App app, SxcInstance sxc)
+        internal static ValueCollectionProvider GetConfigProviderForModule(int moduleId, App app, SxcInstance sxc)
         {
             var portalSettings = PortalSettings.Current;
 
-            var provider = new ValueCollectionProvider();//sxc);
+            var provider = new ValueCollectionProvider();
 
             // only add these in running inside an http-context. Otherwise leave them away!
             if (HttpContext.Current != null)
@@ -32,7 +32,6 @@ namespace ToSic.SexyContent.DataSources
                     paramList = request.QueryString;
                 provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", paramList));
                 // old
-                // provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", request.QueryString));
                 provider.Sources.Add("server", new FilteredNameValueCollectionPropertyAccess("server", request.ServerVariables));
                 provider.Sources.Add("form", new FilteredNameValueCollectionPropertyAccess("form", request.Form));
             }

@@ -1,11 +1,9 @@
 ﻿using System.Threading;
 using System.Web;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.AppEngine;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent
 {
@@ -67,16 +65,9 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        //public App(PortalSettings portalSettings, int appId, Log parentLog = null) 
-        //    : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog), 
-        //          AutoLookup, appId, new DnnTennant(portalSettings), true, parentLog) { }
         public App(ITennant tennant, int appId, Log parentLog = null) 
             : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog), 
                   AutoLookup, appId, tennant, true, parentLog) { }
-
-        //public App(int zoneId, int appId, PortalSettings portalSettings, bool allowSideEffects = true, Log parentLog = null)
-        //    : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog), 
-        //          zoneId, appId, new DnnTennant(portalSettings), allowSideEffects, parentLog) { }
 
         public App(int zoneId, int appId, ITennant tennant, bool allowSideEffects = true, Log parentLog = null)
             : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog), 

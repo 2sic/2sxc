@@ -10,7 +10,6 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Interfaces;
