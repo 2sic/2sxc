@@ -5,18 +5,15 @@ namespace ToSic.SexyContent.Adam
 {
     public class Export
     {
-        IFolderInfo _root;
-        private AdamManager _manager;
-        List<int> _fileIds = new List<int>();
-        List<int> _folderIds = new List<int>();
-        List<int> _emptyFolderIds = new List<int>();
+        private readonly IFolderInfo _root;
+        private readonly List<int> _fileIds = new List<int>();
+        private readonly List<int> _folderIds = new List<int>();
 
-        private IFolderManager _fldm = FolderManager.Instance;
+        private readonly IFolderManager _fldm = FolderManager.Instance;
 
         public Export(AdamManager adm)
         {
-            _manager = adm;
-            _root = _manager.Root;
+            _root = adm.Root;
         }
 
         public List<int> AppFiles
@@ -25,8 +22,6 @@ namespace ToSic.SexyContent.Adam
             {
                 if (_fileIds.Count == 0)
                     AddFolder(_root);
-                
-
                 return _fileIds;
             }
         }

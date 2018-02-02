@@ -26,16 +26,16 @@ namespace ToSic.SexyContent.Adam
         public IFolderInfo Root => Folder(RootPath, true);
 
         #region basic, generic foldor commands -- all internal
-        private IFolderManager folderManager = FolderManager.Instance;
+        private readonly IFolderManager _folderManager = FolderManager.Instance;
         internal bool Exists(string path)
         {
-            return folderManager.FolderExists(_portalId, path);
+            return _folderManager.FolderExists(_portalId, path);
         }
         internal void Add(string path)
         {
             try
             {
-                folderManager.AddFolder(_portalId, path);
+                _folderManager.AddFolder(_portalId, path);
             }
             catch (SqlException)
             {
@@ -51,19 +51,15 @@ namespace ToSic.SexyContent.Adam
 
         internal IFolderInfo Get(string path)
         {
-            return folderManager.GetFolder(_portalId, path);
+            return _folderManager.GetFolder(_portalId, path);
         }
 
         internal IFolderInfo Folder(string path, bool autoCreate)
         {
-            IFolderInfo fldr;
-
-            //var path = GeneratePath(subFolder);
-
             // create all folders to ensure they exist. Must do one-by-one because dnn must have it in the catalog
             var pathParts = path.Split('/');
-            var pathToCheck = ""; // pathParts[0];
-            foreach (string part in pathParts.Where(p => !String.IsNullOrEmpty(p)))
+            var pathToCheck = "";
+            foreach (string part in pathParts.Where(p => !string.IsNullOrEmpty(p)))
             {
                 pathToCheck += part + "/";
                 if (Exists(pathToCheck)) continue;
@@ -73,7 +69,7 @@ namespace ToSic.SexyContent.Adam
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "subfolder " + pathToCheck + "not found" });
             }
 
-            fldr = Get(path);
+            var fldr = Get(path);
 
             return fldr;
         }

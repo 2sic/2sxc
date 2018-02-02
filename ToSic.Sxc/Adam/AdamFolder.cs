@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Services.FileSystem;
 
@@ -6,12 +7,12 @@ namespace ToSic.SexyContent.Adam
 {
     public class AdamFolder : FolderInfo, IAdamItem
     {
+        public new DateTime CreatedOnDate;
+
         public EntityBase EntityBase;
         public AdamManager Manager;
-        //public App App;
 
-        private IFolderManager _fldm = FolderManager.Instance;
-        private IFileManager _filem = FileManager.Instance;
+        private readonly IFolderManager _fldm = FolderManager.Instance;
 
         /// <summary>
         /// Metadata for this folder
@@ -19,11 +20,13 @@ namespace ToSic.SexyContent.Adam
         /// </summary>
         public DynamicEntity Metadata => EntityBase.GetFirstMetadata(FolderID, true);
 
-        public string Url => EntityBase.GenerateWebPath(this);
 
         public bool HasMetadata => EntityBase.GetFirstMetadataEntity(FolderID, false) != null;
 
+        public string Url => EntityBase.GenerateWebPath(this);
+
         public string Type => "folder";
+
         public string Name { get; internal set; }
 
 
@@ -36,39 +39,38 @@ namespace ToSic.SexyContent.Adam
         {
             get
             {
-                if (_folders == null)
-                {
-                    // this is to skip it if it doesn't have subfolders...
-                    if (!HasChildren || string.IsNullOrEmpty(FolderName))
-                        return _folders = new List<AdamFolder>();
+                if (_folders != null) return _folders;
 
-                    var firstList = _fldm.GetFolders(this);
+                // this is to skip it if it doesn't have subfolders...
+                if (!HasChildren || string.IsNullOrEmpty(FolderName))
+                    return _folders = new List<AdamFolder>();
 
-                    _folders = firstList?.Select(f => new AdamFolder()
-                    {
-                        PortalID = f.PortalID,
-                        FolderPath = f.FolderPath,
-                        MappedPath = f.MappedPath,
-                        StorageLocation = f.StorageLocation,
-                        IsProtected = f.IsProtected,
-                        IsCached = f.IsCached,
-                        FolderMappingID = f.FolderMappingID,
-                        LastUpdated = f.LastUpdated,
-                        FolderID = f.FolderID,
-                        DisplayName = f.DisplayName,
-                        DisplayPath = f.DisplayPath,
-                        IsVersioned = f.IsVersioned,
-                        KeyID = (f as FolderInfo)?.KeyID ?? 0,
-                        ParentID = f.ParentID,
-                        UniqueId = f.UniqueId,
-                        VersionGuid = f.VersionGuid,
-                        WorkflowID = f.WorkflowID,
-                        //App = App,
-                        EntityBase = EntityBase,
-                        Name = f.DisplayName
-                    }).ToList()
-                               ?? new List<AdamFolder>();
-                }
+                var firstList = _fldm.GetFolders(this);
+
+                _folders = firstList?.Select(f => new AdamFolder
+                           {
+                               PortalID = f.PortalID,
+                               FolderPath = f.FolderPath,
+                               MappedPath = f.MappedPath,
+                               StorageLocation = f.StorageLocation,
+                               IsProtected = f.IsProtected,
+                               IsCached = f.IsCached,
+                               FolderMappingID = f.FolderMappingID,
+                               LastUpdated = f.LastUpdated,
+                               FolderID = f.FolderID,
+                               DisplayName = f.DisplayName,
+                               DisplayPath = f.DisplayPath,
+                               IsVersioned = f.IsVersioned,
+                               KeyID = (f as FolderInfo)?.KeyID ?? 0,
+                               ParentID = f.ParentID,
+                               UniqueId = f.UniqueId,
+                               VersionGuid = f.VersionGuid,
+                               WorkflowID = f.WorkflowID,
+                               EntityBase = EntityBase,
+                               Name = f.DisplayName,
+                               CreatedOnDate = f.CreatedOnDate
+                           }).ToList()
+                           ?? new List<AdamFolder>();
                 return _folders;
             }
         }
@@ -87,8 +89,8 @@ namespace ToSic.SexyContent.Adam
                 {
                     var firstList = _fldm.GetFiles(this);
 
-                    _files = firstList?.Select(f => new AdamFile()
-                    {
+                    _files = firstList?.Select(f => new AdamFile
+                             {
                         UniqueId = f.UniqueId,
                         VersionGuid = f.VersionGuid,
                         PortalId = f.PortalId,
@@ -106,7 +108,7 @@ namespace ToSic.SexyContent.Adam
                         SHA1Hash = f.SHA1Hash,
                         EntityBase = EntityBase,
 
-                        // iAdamItem
+                        CreatedOnDate = f.CreatedOnDate,
                         Name = System.IO.Path.GetFileNameWithoutExtension(f.FileName)
                     }).ToList()
                     ?? new List<AdamFile>();

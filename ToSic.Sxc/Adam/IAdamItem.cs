@@ -1,6 +1,6 @@
 ﻿namespace ToSic.SexyContent.Adam
 {
-    interface IAdamItem
+    internal interface IAdamItem
     {
         #region Metadata
         bool HasMetadata { get; }

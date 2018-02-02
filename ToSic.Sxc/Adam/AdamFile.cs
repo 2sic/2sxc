@@ -1,10 +1,13 @@
-﻿using DotNetNuke.Services.FileSystem;
+﻿using System;
+using DotNetNuke.Services.FileSystem;
 
 namespace ToSic.SexyContent.Adam
 {
     public class AdamFile : FileInfo, IAdamItem
     {
         public EntityBase EntityBase;
+
+        public new DateTime CreatedOnDate;
 
         /// <summary>
         /// Metadata for this file

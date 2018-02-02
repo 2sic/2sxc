@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.Adam
             UniqueId = f.UniqueId;
             VersionGuid = f.VersionGuid;
             WorkflowID = f.WorkflowID;
-//            CreatedOnDate = f.CreatedOnDate;
+            CreatedOnDate = f.CreatedOnDate;
 
             // IAdamItem interface properties
             Name = DisplayName;
