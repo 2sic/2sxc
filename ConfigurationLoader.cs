@@ -68,6 +68,7 @@ namespace ToSic.SexyContent
 
                 sc.AddTransient<IClientDependencyManager, ClientDependencyManager>();
                 sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();
+                sc.AddTransient<IWebFactoryTemp, DnnEnvironmentFactory>();
                 sc.AddTransient<IRenderingHelpers, DnnRenderingHelpers>();
                 sc.AddTransient<IMapAppToInstance, DnnMapAppToInstance>();
                 sc.AddTransient<IPermissions, DnnPermissions>();

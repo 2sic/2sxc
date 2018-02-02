@@ -13,10 +13,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public override string Name => Settings.PortalName;
 
-        public override string RootPath => Path.Combine(Settings.HomeDirectory, SexyContent.Settings.AppsRootFolder);
+        public override string SxcPath => Path.Combine(Settings.HomeDirectory, SexyContent.Settings.AppsRootFolder);
 
         public override bool RefactorUserIsAdmin
             => Settings.UserInfo.IsInRole(Settings.AdministratorRoleName);
+
+        public override string ContentPath => Settings.HomeDirectory;
 
         public DnnTennant(PortalSettings settings) : base(settings ?? PortalSettings.Current) {}
     }

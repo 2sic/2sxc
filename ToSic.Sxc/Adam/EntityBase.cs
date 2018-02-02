@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
+using ToSic.Eav.Apps.Interfaces;
 
 namespace ToSic.SexyContent.Adam
 {
@@ -17,15 +17,15 @@ namespace ToSic.SexyContent.Adam
         private readonly SxcInstance _sxcInstance;
         private readonly App _app;
         private readonly AdamManager _adamManager;
-        private readonly PortalSettings _portalSettings;
+        private readonly ITennant _tennant;
         private readonly Guid _entityGuid;
         private readonly string _fieldName;
         private readonly bool _usePortalRoot;
 
-        public EntityBase(SxcInstance sxcInstance, App app, PortalSettings ps, Guid eGuid, string fName, bool usePortalRoot)
+        public EntityBase(SxcInstance sxcInstance, App app, ITennant tennant, Guid eGuid, string fName, bool usePortalRoot)
         {
-            _portalSettings = ps;
-            _adamManager = new AdamManager(ps.PortalId, app);
+            _tennant = tennant;
+            _adamManager = new AdamManager(tennant.Id, app);
             _sxcInstance = sxcInstance;
             _app = app;
             _entityGuid = eGuid;
@@ -65,10 +65,10 @@ namespace ToSic.SexyContent.Adam
         }
 
         public string GenerateWebPath(AdamFile currentFile) 
-            => _portalSettings.HomeDirectory + currentFile.Folder + currentFile.FileName;
+            => _tennant.ContentPath + currentFile.Folder + currentFile.FileName;
 
         public string GenerateWebPath(AdamFolder currentFolder) 
-            => _portalSettings.HomeDirectory + currentFolder.FolderPath;
+            => _tennant.ContentPath + currentFolder.FolderPath;
 
         internal IFolderInfo Folder() => _folder ?? (_folder = Folder("", true));
 

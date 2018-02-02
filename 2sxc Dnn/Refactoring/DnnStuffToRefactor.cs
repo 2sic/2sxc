@@ -15,7 +15,7 @@ namespace ToSic.SexyContent.Internal
         /// </summary>
         public void EnsureTennantIsConfigured(SxcInstance sxc, HttpServerUtility server, string controlPath)
         {
-            var sexyFolder = new DirectoryInfo(server.MapPath(sxc.Tennant.RootPath));
+            var sexyFolder = new DirectoryInfo(server.MapPath(sxc.Tennant.SxcPath));
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Constants.ContentAppName));
             var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))

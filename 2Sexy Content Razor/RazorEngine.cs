@@ -10,6 +10,7 @@ using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;

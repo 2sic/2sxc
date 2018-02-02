@@ -18,7 +18,6 @@ namespace ToSic.SexyContent.DataSources
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
             var showDrafts = Factory.Resolve<IPermissions>().UserMayEditContent(sxc.InstanceInfo);
-            //var showDrafts = sxc.Environment.Permissions.UserMayEditContent;
 
             log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{overrideTemplate?.Name}");
             // Get ModuleDataSource

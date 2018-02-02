@@ -10,8 +10,8 @@ namespace ToSic.SexyContent.Adam
 {
     public class AdamManager
     {
-        private App _app;
-        private int _portalId;
+        private readonly App _app;
+        private readonly int _portalId;
         public const string AdamAppRootFolder = "adam/[AppFolder]/";
 
 

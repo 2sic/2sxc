@@ -1,22 +1,20 @@
 ﻿using System;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
+using ToSic.Eav.Apps.Interfaces;
 
 namespace ToSic.SexyContent.Adam
 {
     public class AdamNavigator : AdamFolder
     {
-        public AdamNavigator(SxcInstance sexy, App app, PortalSettings ps, Guid entityGuid, string fieldName, bool usePortalRoot)
+        public AdamNavigator(SxcInstance sexy, App app, ITennant tennant, Guid entityGuid, string fieldName, bool usePortalRoot)
         {
-            EntityBase = new EntityBase(sexy, app, ps, entityGuid, fieldName, usePortalRoot);
-            Manager = new AdamManager(ps.PortalId, app);
+            EntityBase = new EntityBase(sexy, app, tennant, entityGuid, fieldName, usePortalRoot);
+            Manager = new AdamManager(tennant.Id, app);
 
             if (!Exists)
                 return;
 
-            var f = Manager.Get(Root) as FolderInfo;
-
-            if (f == null)
+            if (!(Manager.Get(Root) is FolderInfo f))
                 return;
 
             PortalID = f.PortalID;
@@ -36,6 +34,7 @@ namespace ToSic.SexyContent.Adam
             UniqueId = f.UniqueId;
             VersionGuid = f.VersionGuid;
             WorkflowID = f.WorkflowID;
+//            CreatedOnDate = f.CreatedOnDate;
 
             // IAdamItem interface properties
             Name = DisplayName;

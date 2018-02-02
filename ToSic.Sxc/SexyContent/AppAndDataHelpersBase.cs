@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
@@ -12,42 +11,29 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.DnnWebForms.Helpers;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Interfaces;
-using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent
 {
-    public class AppAndDataHelpers : HasLog, IAppAndDataHelpers
+    public abstract class AppAndDataHelpersBase : HasLog, IAppAndDataHelpers
     {
         private readonly SxcInstance _sxcInstance;
 
-        public AppAndDataHelpers(SxcInstance sexy) : this(sexy, sexy.InstanceInfo, null) {}
-
-        public AppAndDataHelpers(SxcInstance sexy, IInstanceInfo module, Log parentLog): base("Sxc.AppHlp", parentLog ?? sexy?.Log)
+        //public AppAndDataHelpersBase(SxcInstance sexy) : this(sexy, sexy.InstanceInfo, null) {}
+        private readonly ITennant _tennant;
+        protected AppAndDataHelpersBase(SxcInstance sexy, ITennant tennant, Log parentLog): base("Sxc.AppHlp", parentLog ?? sexy?.Log)
         {
-            // Init things than require module-info or similar, but not 2sxc
-            Dnn = new DnnHelper(module);
-            Link = new DnnLinkHelper(Dnn);
-
             if (sexy == null)
                 return;
 
             _sxcInstance = sexy;
+            _tennant = tennant;
             App = sexy.App;
             Data = sexy.Data;
 			Sxc = new SxcHelper(sexy);
             Edit = new InPageEditingHelper(sexy);
-
-            // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
-            // But in search mode, it shouldn't show drafts, so this is ok.
-            // Note that app could be null, if a user is in admin-ui of a module which hasn't actually be configured yet
-            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance?.InstanceInfo);
-            App?.InitData(PortalSettings.Current != null && userMayEdit,// sexy.Environment.Permissions.UserMayEditContent,
-                PortalSettings.Current != null && sexy.Environment.PagePublishing.IsEnabled(module.Id), 
-                Data.ConfigurationProvider);
         }
 
 
@@ -62,16 +48,12 @@ namespace ToSic.SexyContent
         /// </summary>
         public ViewDataSource Data { get; }
 
-        /// <summary>
-        /// Dnn context with module, page, portal etc.
-        /// </summary>
-        public DnnHelper Dnn { get; }
 		public SxcHelper Sxc { get; }
 
         /// <summary>
         /// Link helper object to create the correct links
         /// </summary>
-        public ILinkHelper Link { get; }
+        public ILinkHelper Link { get; protected set; }
 
 
         #region AsDynamic overrides
@@ -147,9 +129,8 @@ namespace ToSic.SexyContent
 
             var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
 
-            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(Dnn.Portal.PortalId), App.AppId,
-                userMayEdit,// _sxcInstance.Environment.Permissions.UserMayEditContent, 
-                ConfigurationProvider as ValueCollectionProvider);
+            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(_tennant.Id), App.AppId,
+                userMayEdit, ConfigurationProvider as ValueCollectionProvider);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
@@ -170,9 +151,8 @@ namespace ToSic.SexyContent
 
             var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
 
-            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(Dnn.Portal.PortalId), App.AppId,
-                userMayEdit,// _sxcInstance.Environment.Permissions.UserMayEditContent, 
-                ConfigurationProvider as ValueCollectionProvider);
+            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(_tennant.Id), App.AppId,
+                userMayEdit, ConfigurationProvider as ValueCollectionProvider);
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider, Log);
         }
 
@@ -305,7 +285,7 @@ namespace ToSic.SexyContent
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
         public AdamNavigator AsAdam(Eav.Interfaces.IEntity entity, string fieldName)
-            => new AdamNavigator(_sxcInstance, App, Dnn.Portal, entity.EntityGuid, fieldName, false);
+            => new AdamNavigator(_sxcInstance, App, _tennant /*Dnn.Portal*/, entity.EntityGuid, fieldName, false);
         #endregion
 
 

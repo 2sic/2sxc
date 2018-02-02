@@ -6,9 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Hosting;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
@@ -59,7 +61,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         #endregion
 
 
-        private AppAndDataHelpers _dataHelper;
+        private AppAndDataHelpersBase _dataHelper;
 
         private TokenReplaceEav _tokenReplace;
 
@@ -73,7 +75,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 
         private void InitDataHelper()
         {
-            _dataHelper = new AppAndDataHelpers(Sexy);
+            _dataHelper = Factory.Resolve<IWebFactoryTemp>().AppAndDataHelpers(Sexy) as AppAndDataHelpersBase ;// new AppAndDataHelpers(Sexy);
         }
 
         private void InitTokenReplace()

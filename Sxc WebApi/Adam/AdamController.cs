@@ -14,8 +14,9 @@ using ToSic.SexyContent.WebApi;
 using System.Configuration;
 using System.Web.Configuration;
 using System.Web.Http.Controllers;
-using ToSic.Eav;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.SexyContent.Environment.Dnn7;
+using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.Adam
 {
@@ -38,7 +39,7 @@ namespace ToSic.SexyContent.Adam
 
         private void PrepCore(Guid entityGuid, string fieldName, bool usePortalRoot)
         {
-            EntityBase = new EntityBase(SxcContext, App, Dnn.Portal, entityGuid, fieldName, usePortalRoot);
+            EntityBase = new EntityBase(SxcContext, App, new DnnTennant(Dnn.Portal), entityGuid, fieldName, usePortalRoot);
         }
 
         public int MaxFileSizeKb => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection)?.MaxRequestLength ?? 1; // if not specified, go to very low value, but not 0, as that could be infinite...

@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Environment\Dnn7\AppAndDataHelpers.cs" />
     <Compile Include="Environment\Dnn7\ClientDependencyManager.cs" />
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosAll.cs" />
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosEnvironment.cs" />
@@ -98,7 +99,7 @@
     <Compile Include="Environment\Dnn7\PagePublishing_ModuleSettings.cs" />
     <Compile Include="Environment\Dnn7\Search\SearchController.cs" />
     <Compile Include="Environment\Dnn7\Search\SearchIndexException.cs" />
-    <Compile Include="Environment\Dnn7\Security\DnnEnvironmentFactory.cs" />
+    <Compile Include="Environment\Dnn7\DnnEnvironmentFactory.cs" />
     <Compile Include="Environment\Dnn7\UserIdentity.cs" />
     <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
     <Compile Include="Environment\DnnEnvironment.cs" />
@@ -138,6 +139,8 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Environment\Dnn7\Security\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

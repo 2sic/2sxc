@@ -2,10 +2,11 @@
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7.Security
 {
-    public class DnnEnvironmentFactory : IEnvironmentFactory
+    public class DnnEnvironmentFactory : IEnvironmentFactory, IWebFactoryTemp
     {
         public PermissionController ItemPermissions(IEntity targetItem, Log parentLog, IInstanceInfo module = null) 
             => new DnnPermissionController(targetItem, parentLog, module);
@@ -16,5 +17,10 @@ namespace ToSic.SexyContent.Environment.Dnn7.Security
         public IPagePublishing PagePublisher(Log parentLog) => new PagePublishing(parentLog);
 
         public IEnvironment Environment(Log parentLog) => new DnnEnvironment(parentLog);
+
+
+
+
+        public IAppAndDataHelpers AppAndDataHelpers(SxcInstance sxc) => new AppAndDataHelpers(sxc);
     }
 }

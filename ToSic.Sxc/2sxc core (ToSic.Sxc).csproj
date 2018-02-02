@@ -111,9 +111,10 @@
     <Compile Include="Interfaces\IContentBlock.cs" />
     <Compile Include="Interfaces\IDynamicEntity.cs" />
     <Compile Include="Interfaces\ILinkHelper.cs" />
+    <Compile Include="Interfaces\IWebFactoryTemp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SexyContent\App.cs" />
-    <Compile Include="SexyContent\AppAndDataHelpers.cs" />
+    <Compile Include="SexyContent\AppAndDataHelpersBase.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditor.cs" />
     <Compile Include="SexyContent\Constants.cs" />
@@ -129,12 +130,9 @@
     <Compile Include="SexyContent\ContentGroup.cs" />
     <Compile Include="SexyContent\ContentGroupManager.cs" />
     <Compile Include="SexyContent\DataPublishing.cs" />
-    <Compile Include="SexyContent\DataSources\App.cs" />
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
     <Compile Include="SexyContent\DataSources\SxcInstanceValueProvider.cs" />
-    <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
-    <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
     <Compile Include="SexyContent\DnnHelper.cs" />
     <Compile Include="SexyContent\DynamicEntity.cs" />
