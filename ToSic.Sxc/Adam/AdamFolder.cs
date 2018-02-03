@@ -1,29 +1,27 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Apps.Assets;
 
 namespace ToSic.SexyContent.Adam
 {
-    public class AdamFolder : FolderInfo, IAdamItem
+    public class AdamFolder : Folder, IAdamItem
     {
 
         public AdamBrowseContext AdamBrowseContext;
         public AdamManager Manager;
 
-        private readonly DnnFileSystem dnnfs = new DnnFileSystem();
+        private readonly DnnFileSystem _dnnfs = new DnnFileSystem();
 
         /// <summary>
         /// Metadata for this folder
         /// This is usually an entity which has additional information related to this file
         /// </summary>
-        public DynamicEntity Metadata => AdamBrowseContext.GetFirstMetadata(FolderID, true);
+        public DynamicEntity Metadata => AdamBrowseContext.GetFirstMetadata(Id, true);
 
-        public bool HasMetadata => AdamBrowseContext.GetFirstMetadataEntity(FolderID, false) != null;
+        public bool HasMetadata => AdamBrowseContext.GetFirstMetadataEntity(Id, false) != null;
 
         public string Url => AdamBrowseContext.GenerateWebPath(this);
 
-        public string Type => "folder";
-
-        public string Name { get; internal set; }
-
+        public string Type => Classification.Folder;
 
         private IEnumerable<AdamFolder> _folders;
 
@@ -37,10 +35,10 @@ namespace ToSic.SexyContent.Adam
                 if (_folders != null) return _folders;
 
                 // this is to skip it if it doesn't have subfolders...
-                if (!HasChildren || string.IsNullOrEmpty(FolderName))
+                if (!HasChildren || string.IsNullOrEmpty(((Folder) this).Name))
                     return _folders = new List<AdamFolder>();
                 
-                _folders = dnnfs.GetFolders(FolderID, AdamBrowseContext);
+                _folders = _dnnfs.GetFolders(Id, AdamBrowseContext);
                 return _folders;
             }
         }
@@ -52,6 +50,6 @@ namespace ToSic.SexyContent.Adam
         /// Get all files in this folder
         /// </summary>
         public IEnumerable<AdamFile> Files 
-            => _files ?? (_files = dnnfs.GetFiles(FolderID, AdamBrowseContext));
+            => _files ?? (_files = _dnnfs.GetFiles(Id, AdamBrowseContext));
     }
 }

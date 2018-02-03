@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using DotNetNuke.Services.FileSystem;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Identity;
 
 namespace ToSic.SexyContent.Adam
 {
@@ -34,13 +35,13 @@ namespace ToSic.SexyContent.Adam
 
 
 
-        private FolderInfo _folder;
+        private Folder _folder;
 
         /// <summary>
         /// Get the folder specified in App.Settings (BasePath) combined with the module's ID
         /// Will create the folder if it does not exist
         /// </summary>
-        internal FolderInfo Folder(string subFolder, bool autoCreate)
+        internal Folder Folder(string subFolder, bool autoCreate)
         {
             var path = GeneratePath(subFolder);
             return AdamManager.Folder(path, autoCreate);
@@ -56,7 +57,7 @@ namespace ToSic.SexyContent.Adam
             var path = AdamFolderMask
                 .Replace("[AdamRoot]", AdamManager.RootPath)
                 //.Replace("[AppFolder]", App.Folder)
-                .Replace("[Guid22]", GuidHelpers.Compress22(_entityGuid))
+                .Replace("[Guid22]", Mapper.GuidCompress(_entityGuid))
                 .Replace("[FieldName]", _fieldName)
                 .Replace("[SubFolder]", subFolder) // often blank, so it will just be removed
                 .Replace("//", "/"); // sometimes has duplicate slashes if subfolder blank but sub-sub is given
@@ -69,7 +70,7 @@ namespace ToSic.SexyContent.Adam
         public string GenerateWebPath(AdamFolder currentFolder) 
             => _tennant.ContentPath + currentFolder.FolderPath;
 
-        internal FolderInfo Folder() => _folder ?? (_folder = Folder("", true));
+        internal Folder Folder() => _folder ?? (_folder = Folder("", true));
 
         public int GetMetadataId(int id, bool isFolder)
         {
@@ -98,27 +99,6 @@ namespace ToSic.SexyContent.Adam
         }
 
         #region type information
-        internal string TypeName(string ext)
-        {
-            switch (ext.ToLower())
-            {
-                case "png":
-                case "jpg":
-                case "jpgx":
-                case "jpeg":
-                case "gif":
-                    return "image";
-                case "doc":
-                case "docx":
-                case "txt":
-                case "pdf":
-                case "xls":
-                case "xlsx":
-                    return "document";
-                default:
-                    return "file";
-            }
-        }
         #endregion
 
 

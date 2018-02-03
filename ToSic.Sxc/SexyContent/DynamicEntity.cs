@@ -2,10 +2,10 @@
 using System.Dynamic;
 using System.Linq;
 using System.Web;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Data;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.Toolbar;
 using ToSic.SexyContent.Interfaces;
@@ -15,18 +15,19 @@ namespace ToSic.SexyContent
     public class DynamicEntity : DynamicObject, IDynamicEntity
     {
         public ContentConfiguration Configuration = new ContentConfiguration();
-        public ToSic.Eav.Interfaces.IEntity Entity { get; set; }
+        public Eav.Interfaces.IEntity Entity { get; set; }
         public HtmlString Toolbar {
             get
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
-                if (SxcInstance == null || PortalSettings.Current == null)
-                    return new HtmlString("");
+                // 2018-02-03 2dm: disabled the PortalSettings criteria to decouple from DNN, may have side effects
+                if (SxcInstance == null) // 2018-02-03 || PortalSettings.Current == null)
+                return new HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
                 var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance?.InstanceInfo);
 
-                if (!userMayEdit)// SxcInstance.Environment.Permissions.UserMayEditContent)
+                if (!userMayEdit)
                     return new HtmlString("");
 
                 var toolbar = new ItemToolbar(this).Toolbar;
@@ -39,7 +40,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
-        public DynamicEntity(ToSic.Eav.Interfaces.IEntity entityModel, string[] dimensions, SxcInstance sexy)
+        public DynamicEntity(Eav.Interfaces.IEntity entityModel, string[] dimensions, SxcInstance sexy)
         {
             Entity = entityModel;
             _dimensions = dimensions;
@@ -51,8 +52,7 @@ namespace ToSic.SexyContent
 
         public bool TryGetMember(string memberName, out object result)
         {
-            bool propertyNotFound;
-            result = GetEntityValue(memberName, out propertyNotFound);
+            result = GetEntityValue(memberName, out var propertyNotFound);
 
             if (propertyNotFound)
                 result = null;
@@ -80,9 +80,9 @@ namespace ToSic.SexyContent
             {
                 result = Entity.GetBestValue(attributeName, _dimensions, true);
 
-                if (result is Eav.Data.EntityRelationship)
+                if (result is EntityRelationship rel)
                 {
-                    var relList = ((Eav.Data.EntityRelationship) result).Select(
+                    var relList = rel.Select(
                         p => new DynamicEntity(p, _dimensions, SxcInstance)
                     ).ToList();
                     result = relList;

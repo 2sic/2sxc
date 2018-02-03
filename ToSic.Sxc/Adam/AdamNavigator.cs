@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Interfaces;
 
 namespace ToSic.SexyContent.Adam
@@ -12,35 +13,41 @@ namespace ToSic.SexyContent.Adam
         public AdamNavigator(SxcInstance sexy, App app, ITennant tennant, Guid entityGuid, string fieldName, bool usePortalRoot)
         {
             AdamBrowseContext = new AdamBrowseContext(sexy, app, tennant, entityGuid, fieldName, usePortalRoot);
-            Manager = AdamBrowseContext.AdamManager;// new AdamManager(tennant.Id, app);
+            Manager = AdamBrowseContext.AdamManager;
 
             if (!Exists)
                 return;
 
-            if (!(Manager.Get(Root) is FolderInfo f))
+            // ReSharper disable once PatternAlwaysOfType
+            if (!(Manager.Get(Root) is Folder f))
                 return;
 
-            PortalID = f.PortalID;
             FolderPath = f.FolderPath;
-            MappedPath = f.MappedPath;
-            StorageLocation = f.StorageLocation;
-            IsProtected = f.IsProtected;
-            IsCached = f.IsCached;
-            FolderMappingID = f.FolderMappingID;
             LastUpdated = f.LastUpdated;
-            FolderID = f.FolderID;
-            DisplayName = f.DisplayName;
-            DisplayPath = f.DisplayPath;
-            IsVersioned = f.IsVersioned;
-            KeyID = f.KeyID;
-            ParentID = f.ParentID;
-            UniqueId = f.UniqueId;
-            //VersionGuid = f.VersionGuid;
-            //WorkflowID = f.WorkflowID;
+            Id = f.Id;
             CreatedOnDate = f.CreatedOnDate;
+            LastUpdated = f.LastUpdated;
 
             // IAdamItem interface properties
-            Name = DisplayName;
+            Name = f.Name;
+
+            // commented out stuff is from DNN
+            // but it will probably never be cross-platform
+            //Name = f.DisplayName;            //DisplayName = f.DisplayName;
+            //DisplayPath = f.DisplayPath;
+            //PortalID = f.PortalID;
+            //MappedPath = f.MappedPath;
+            //StorageLocation = f.StorageLocation;
+            //IsProtected = f.IsProtected;
+            //IsCached = f.IsCached;
+            //FolderMappingID = f.FolderMappingID;
+            //IsVersioned = f.IsVersioned;
+            //KeyID = f.KeyID;
+            //ParentID = f.ParentID;
+            //UniqueId = f.UniqueId;
+            //VersionGuid = f.VersionGuid;
+            //WorkflowID = f.WorkflowID;
+
         }
 
         public string Root => AdamBrowseContext.EntityRoot;

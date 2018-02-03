@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adam\AdamItem.cs" />
+    <Compile Include="Adam\UploadResult.cs" />
     <Compile Include="WebApiLogDetails.cs" />
     <Compile Include="Adam\AdamController.cs" />
     <Compile Include="AppApiControllerSelector.cs" />

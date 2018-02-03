@@ -164,7 +164,7 @@ namespace ToSic.SexyContent.Razor
         {
             var path = NormalizePath(relativePath);
 
-            if(!File.Exists(HostingEnvironment.MapPath(path)))
+            if(!System.IO.File.Exists(HostingEnvironment.MapPath(path)))
                 throw new FileNotFoundException("The shared file does not exist.", path);
 
             var webPage = (SexyContentWebPage)CreateInstanceFromVirtualPath(path);

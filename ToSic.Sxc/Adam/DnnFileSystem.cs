@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using DotNetNuke.Services.FileSystem;
+using ToSic.Eav.Apps.Assets;
 
 namespace ToSic.SexyContent.Adam
 {
@@ -31,7 +32,7 @@ namespace ToSic.SexyContent.Adam
 
         }
 
-        internal FolderInfo Get(int tennantId, string path, AdamBrowseContext fsh) 
+        internal Folder Get(int tennantId, string path, AdamBrowseContext fsh) 
             => DnnToAdam(fsh, _folderManager.GetFolder(tennantId, path));
 
 
@@ -51,26 +52,29 @@ namespace ToSic.SexyContent.Adam
 
         private static AdamFolder DnnToAdam(AdamBrowseContext adamBrowseContext, IFolderInfo f) => new AdamFolder
         {
-            PortalID = f.PortalID,
             FolderPath = f.FolderPath,
-            MappedPath = f.MappedPath,
-            StorageLocation = f.StorageLocation,
-            IsProtected = f.IsProtected,
-            IsCached = f.IsCached,
-            FolderMappingID = f.FolderMappingID,
-            LastUpdated = f.LastUpdated,
-            FolderID = f.FolderID,
-            DisplayName = f.DisplayName,
-            DisplayPath = f.DisplayPath,
-            IsVersioned = f.IsVersioned,
-            //KeyID = (f as FolderInfo)?.KeyID ?? 0,
-            ParentID = f.ParentID,
-            UniqueId = f.UniqueId,
-            //VersionGuid = f.VersionGuid,
-            //WorkflowID = f.WorkflowID,
+            Id = f.FolderID,
+
             AdamBrowseContext = adamBrowseContext,
             Name = f.DisplayName,
-            CreatedOnDate = f.CreatedOnDate
+            CreatedOnDate = f.CreatedOnDate,
+            LastUpdated = f.LastUpdated,
+
+            // commented out stuff is from DNN
+            // but it will probably never be cross-platform
+            //DisplayName = f.DisplayName,
+            //DisplayPath = f.DisplayPath,            //PortalID = f.PortalID,
+            //MappedPath = f.MappedPath,
+            //StorageLocation = f.StorageLocation,
+            //IsProtected = f.IsProtected,
+            //IsCached = f.IsCached,
+            //FolderMappingID = f.FolderMappingID,
+            //IsVersioned = f.IsVersioned,
+            //KeyID = (f as FolderInfo)?.KeyID ?? 0,
+            //ParentID = f.ParentID,
+            //UniqueId = f.UniqueId,
+            //VersionGuid = f.VersionGuid,
+            //WorkflowID = f.WorkflowID,
         };
 
 
@@ -86,26 +90,30 @@ namespace ToSic.SexyContent.Adam
 
         private static AdamFile DnnToAdam(AdamBrowseContext adamBrowseContext, IFileInfo f) => new AdamFile
         {
-            UniqueId = f.UniqueId,
-            VersionGuid = f.VersionGuid,
-            PortalId = f.PortalId,
             FileName = f.FileName,
             Extension = f.Extension,
             Size = f.Size,
-            //Width = f.Width,
-            //Height = f.Height,
-            ContentType = f.ContentType,
-            FileId = f.FileId,
+            Id = f.FileId,
             Folder = f.Folder,
             FolderId = f.FolderId,
-            StorageLocation = f.StorageLocation,
-            IsCached = f.IsCached,
-            //SHA1Hash = f.SHA1Hash,
+
             Path = f.RelativePath,
             AdamBrowseContext = adamBrowseContext,
 
             CreatedOnDate = f.CreatedOnDate,
             Name = System.IO.Path.GetFileNameWithoutExtension(f.FileName)
+
+            // commented out stuff is from DNN
+            // but it will probably never be cross-platform
+            //UniqueId = f.UniqueId,
+            //VersionGuid = f.VersionGuid,
+            //PortalId = f.PortalId, 
+            //Width = f.Width,
+            //Height = f.Height,
+            //ContentType = f.ContentType,
+            //StorageLocation = f.StorageLocation,
+            //IsCached = f.IsCached,
+            //SHA1Hash = f.SHA1Hash,
         };
     }
 }

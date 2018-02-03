@@ -14,6 +14,7 @@ using ToSic.SexyContent.WebApi;
 using System.Configuration;
 using System.Web.Configuration;
 using System.Web.Http.Controllers;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.Environment.Dnn7;
 using Factory = ToSic.Eav.Factory;
@@ -105,7 +106,7 @@ namespace ToSic.SexyContent.Adam
                     if (fileName != originalFile.FileName)
                         Log.Add($"cleaned file name from'{originalFile.FileName}' to '{fileName}'");
 
-                    var dnnFolder = FolderManager.Instance.GetFolder(folder.FolderID);
+                    var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
 
                     // Make sure the image does not exist yet (change file name)
                     for (int i = 1; FileManager.Instance.FileExists(dnnFolder, Path.GetFileName(fileName)); i++)
@@ -123,7 +124,7 @@ namespace ToSic.SexyContent.Adam
                         Name = Path.GetFileName(fileName),
                         Id = dnnFile.FileId,
                         Path = dnnFile.RelativePath,
-                        Type = AdamBrowseContext.TypeName(dnnFile.Extension)
+                        Type = Classification.TypeName(dnnFile.Extension)
                     };
                 }
                 Log.Add("upload one complete");
@@ -187,7 +188,7 @@ namespace ToSic.SexyContent.Adam
 
             // try to see if we can get into the subfolder - will throw error if missing
             var currentAdam = AdamBrowseContext.Folder(subfolder, false);
-            var currentDnn = folderManager.GetFolder(currentAdam.FolderID);
+            var currentDnn = folderManager.GetFolder(currentAdam.Id);
 
             var subfolders =  folderManager.GetFolders(currentDnn);
             var files = folderManager.GetFiles(currentDnn);
@@ -197,7 +198,7 @@ namespace ToSic.SexyContent.Adam
                     .Select(f => new AdamItem(f) {MetadataId = AdamBrowseContext.GetMetadataId(f.FolderID, true)})
                     .ToList();
             var adamFiles = files
-                .Select(f => new AdamItem(f) {MetadataId = AdamBrowseContext.GetMetadataId(f.FileId, false), Type = AdamBrowseContext.TypeName(f.Extension)})
+                .Select(f => new AdamItem(f) {MetadataId = AdamBrowseContext.GetMetadataId(f.FileId, false), Type = Classification.TypeName(f.Extension)})
                 .ToList();
 
             var all = adamFolders.Concat(adamFiles).ToList();
@@ -216,7 +217,7 @@ namespace ToSic.SexyContent.Adam
             Log.Add("explicitly recheck permissions, will throw if not ok");
             var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
 
-            if (!userMayEdit)// SxcContext.Environment.Permissions.UserMayEditContent)
+            if (!userMayEdit)
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
@@ -255,7 +256,7 @@ namespace ToSic.SexyContent.Adam
             if (isFolder)
             {
                 var fld = folderManager.GetFolder(id);
-                if (fld.ParentID == current.FolderID)
+                if (fld.ParentID == current.Id)
                     folderManager.DeleteFolder(id);
                 else
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) {ReasonPhrase = "can't delete folder - not found in folder"});
@@ -263,7 +264,7 @@ namespace ToSic.SexyContent.Adam
             else
             {
                 var file = fileManager.GetFile(id);
-                if (file.FolderId == current.FolderID)
+                if (file.FolderId == current.Id)
                     fileManager.DeleteFile(file);
                 else
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) {ReasonPhrase = "can't delete file - not found in folder"});
@@ -289,7 +290,7 @@ namespace ToSic.SexyContent.Adam
             if (isFolder)
             {
                 var fld = folderManager.GetFolder(id);
-                if (fld.ParentID == current.FolderID)
+                if (fld.ParentID == current.Id)
                     folderManager.RenameFolder(fld, newName);
                 else
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "can't rename folder - not found in folder" });
@@ -300,7 +301,7 @@ namespace ToSic.SexyContent.Adam
                 if (file.Extension != newName.Split('.').Last())
                     newName += "." + file.Extension;
 
-                if (file.FolderId != current.FolderID)
+                if (file.FolderId != current.Id)
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "can't rename file - not found in folder" });
 
                 fileManager.RenameFile(file, newName);
