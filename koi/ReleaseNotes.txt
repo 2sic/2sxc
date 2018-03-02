@@ -1,0 +1,7 @@
+﻿<h3>Connect_Koi</h3>
+<p class="Contributor">
+	dnn-connect.org <br />
+	<a href="mailto:info@2sxc.org">info@2sxc.org</a><br />
+	<a href=https://2sxc.org/>https://2sxc.org/</a><br />
+	This extension was created using <a href="http://www.christoc.com">Christoc's</a> Module Development Templates for DNN.
+</p>
