@@ -2,15 +2,15 @@
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 
-namespace ToSic.SexyContent.DnnWebForms.Helpers
+namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class DnnLinkHelper: ILinkHelper
     {
-        private readonly DnnHelper Dnn;
+        private readonly DnnHelper _dnn;
 
         public DnnLinkHelper(DnnHelper dnn)
         {
-            Dnn = dnn;
+            _dnn = dnn;
         }
 
         public string To(string requiresNamedParameters = null, int? pageId = null, string parameters = null)
@@ -19,11 +19,11 @@ namespace ToSic.SexyContent.DnnWebForms.Helpers
             if(requiresNamedParameters != null)
                 throw new Exception("The Link.To can only be used with named parameters. try Link.To( parameters: \"tag=daniel&sort=up\") instead.");
 
-            var targetPage = pageId ?? Dnn.Tab.TabID;
+            var targetPage = pageId ?? _dnn.Tab.TabID;
 
             var parametersToUse = parameters;
             return parametersToUse == null
-                ? Dnn.Tab.FullUrl
+                ? _dnn.Tab.FullUrl
                 : DotNetNuke.Common.Globals.NavigateURL(targetPage, "", parametersToUse);
 
         }

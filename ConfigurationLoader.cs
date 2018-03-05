@@ -8,15 +8,14 @@ using ToSic.Eav.ImportExport.Persistence.File;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Plumbing.Booting;
+using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.Environment;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
 using ToSic.SexyContent.Environment.Dnn7.Installation;
 using ToSic.SexyContent.Environment.Dnn7.Security;
-using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.Interfaces;
-using ToSic.SexyContent.Internal;
 using ToSic.Sxc.Interfaces;
 using Configuration = ToSic.Eav.Configuration;
 
@@ -73,7 +72,8 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IRenderingHelpers, DnnRenderingHelpers>();
                 sc.AddTransient<IMapAppToInstance, DnnMapAppToInstance>();
                 sc.AddTransient<IPermissions, DnnPermissions>();
-                sc.AddTransient<IInstallerEnvironment, InstallationEnvironment>();
+                sc.AddTransient<IInstallerEnvironment, InstallationController>();
+                sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
 
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);
             });

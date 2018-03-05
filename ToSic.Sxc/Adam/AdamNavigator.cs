@@ -10,7 +10,7 @@ namespace ToSic.SexyContent.Adam
     /// </summary>
     public class AdamNavigator : AdamFolder
     {
-        public AdamNavigator(SxcInstance sexy, App app, ITennant tennant, Guid entityGuid, string fieldName, bool usePortalRoot)
+        public AdamNavigator(IEnvironmentFileSystem enfFs, SxcInstance sexy, App app, ITennant tennant, Guid entityGuid, string fieldName, bool usePortalRoot) : base(enfFs)
         {
             AdamBrowseContext = new AdamBrowseContext(sexy, app, tennant, entityGuid, fieldName, usePortalRoot);
             Manager = AdamBrowseContext.AdamManager;

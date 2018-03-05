@@ -7,7 +7,7 @@ using ToSic.Eav.Apps.Assets;
 
 namespace ToSic.SexyContent.Adam
 {
-    public class DnnFileSystem
+    public class DnnFileSystem : IEnvironmentFileSystem
     {
         private readonly IFolderManager _folderManager = FolderManager.Instance;
 
@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.Adam
 
         }
 
-        internal Folder Get(int tennantId, string path, AdamBrowseContext fsh) 
+        public Folder Get(int tennantId, string path, AdamBrowseContext fsh) 
             => DnnToAdam(fsh, _folderManager.GetFolder(tennantId, path));
 
 
@@ -41,7 +41,7 @@ namespace ToSic.SexyContent.Adam
 
         private IFolderInfo GetFolder(int folderId) => _folderManager.GetFolder(folderId);
 
-        public List<AdamFolder> GetFolders(IFolderInfo fldObj, AdamBrowseContext adamBrowseContext = null)
+        private List<AdamFolder> GetFolders(IFolderInfo fldObj, AdamBrowseContext adamBrowseContext = null)
         {
             var firstList = _folderManager.GetFolders(fldObj);
 
@@ -50,7 +50,7 @@ namespace ToSic.SexyContent.Adam
             return folders;
         }
 
-        private static AdamFolder DnnToAdam(AdamBrowseContext adamBrowseContext, IFolderInfo f) => new AdamFolder
+        private AdamFolder DnnToAdam(AdamBrowseContext adamBrowseContext, IFolderInfo f) => new AdamFolder(this)
         {
             FolderPath = f.FolderPath,
             Id = f.FolderID,

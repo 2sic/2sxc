@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using ToSic.Eav;
 using ToSic.Eav.Apps.Assets;
 
 namespace ToSic.SexyContent.Adam
@@ -18,20 +19,21 @@ namespace ToSic.SexyContent.Adam
             _tennantId = tennantId;
             _app = app;
             _browseContext = browseContext;
+            EnvironmentFs = Factory.Resolve<IEnvironmentFileSystem>();
         }
 
         public string RootPath => AdamAppRootFolder.Replace("[AppFolder]", _app.Folder);
 
         public Folder Root => Folder(RootPath, true);
 
-        #region basic, generic foldor commands -- all internal
+        #region basic, generic folder commands -- all internal
         //private readonly IFolderManager _folderManager = FolderManager.Instance;
-        private readonly DnnFileSystem dnnfs = new DnnFileSystem();
-        internal bool Exists(string path) => dnnfs.FolderExists(_tennantId, path);
+        internal readonly IEnvironmentFileSystem EnvironmentFs;// = new DnnFileSystem();
+        internal bool Exists(string path) => EnvironmentFs.FolderExists(_tennantId, path);
 
-        internal void Add(string path) => dnnfs.AddFolder(_tennantId, path);
+        internal void Add(string path) => EnvironmentFs.AddFolder(_tennantId, path);
 
-        internal Folder Get(string path) => dnnfs.Get(_tennantId, path, _browseContext);
+        internal Folder Get(string path) => EnvironmentFs.Get(_tennantId, path, _browseContext);
 
         internal Folder Folder(string path, bool autoCreate)
         {

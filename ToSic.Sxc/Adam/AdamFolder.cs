@@ -9,8 +9,12 @@ namespace ToSic.SexyContent.Adam
         public AdamBrowseContext AdamBrowseContext;
         public AdamManager Manager;
 
-        private readonly DnnFileSystem _dnnfs = new DnnFileSystem();
+        private readonly IEnvironmentFileSystem _dnnfs;// = new DnnFileSystem();
 
+        public AdamFolder(IEnvironmentFileSystem envFs)
+        {
+            _dnnfs = envFs;
+        }
         /// <summary>
         /// Metadata for this folder
         /// This is usually an entity which has additional information related to this file
@@ -35,7 +39,7 @@ namespace ToSic.SexyContent.Adam
                 if (_folders != null) return _folders;
 
                 // this is to skip it if it doesn't have subfolders...
-                if (!HasChildren || string.IsNullOrEmpty(((Folder) this).Name))
+                if (!HasChildren || string.IsNullOrEmpty(Name))
                     return _folders = new List<AdamFolder>();
                 
                 _folders = _dnnfs.GetFolders(Id, AdamBrowseContext);
@@ -45,6 +49,7 @@ namespace ToSic.SexyContent.Adam
 
 
         private IEnumerable<AdamFile> _files;
+
 
         /// <summary>
         /// Get all files in this folder

@@ -11,15 +11,16 @@ using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.SexyContent.ContentBlocks;
-using ToSic.SexyContent.Installer;
 using ToSic.Eav.Apps.ItemListActions;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Interfaces;
+using ToSic.SexyContent.Interfaces;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi.View
@@ -301,11 +302,11 @@ namespace ToSic.SexyContent.WebApi.View
         public bool FinishInstallation()
         {
             Log.Add("finish installation");
-            var ic = new InstallationController();
+            var ic = Factory.Resolve<IInstallerEnvironment>();//  new InstallationController();
             if (ic.IsUpgradeRunning)
                 throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 10 minutes, please restart the web application.");
 
-            ic.FinishAbortedUpgrade();
+            ic.ResumeAbortedUpgrade();
 
             return true;
         }

@@ -75,9 +75,8 @@
     <Compile Include="Adam\AdamBrowseContext.cs" />
     <Compile Include="Adam\Export.cs" />
     <Compile Include="Adam\IAdamItem.cs" />
-    <Compile Include="Adam\DnnFileSystem.cs" />
+    <Compile Include="Adam\IEnvironmentFileSystem.cs" />
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
-    <Compile Include="DnnWebForms\Helpers\DnnLinkHelper.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\InPageEditingSystem\IInPageEditingSystem.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
@@ -144,14 +143,6 @@
     <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
-    <Compile Include="SexyContent\Installer\Helpers.cs" />
-    <Compile Include="SexyContent\Installer\InstallationController.cs" />
-    <Compile Include="SexyContent\Installer\Lock.cs" />
-    <Compile Include="SexyContent\Installer\Logger.cs" />
-    <Compile Include="SexyContent\Installer\Status.cs" />
-    <Compile Include="SexyContent\Installer\V7.cs" />
-    <Compile Include="SexyContent\Installer\V8.cs" />
-    <Compile Include="SexyContent\Installer\VersionBase.cs" />
     <Compile Include="SexyContent\Internal\AppHelpers.cs" />
     <Compile Include="SexyContent\Internal\AppManagement.cs" />
     <Compile Include="Interfaces\IMapAppToInstance.cs" />

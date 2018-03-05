@@ -2,6 +2,10 @@
 {
     public interface IInstallerEnvironment
     {
-        void UpgradeCompleted();
+        string UpgradeMessages();
+
+        bool IsUpgradeRunning { get; }
+
+        void ResumeAbortedUpgrade();
     }
 }

@@ -13,7 +13,7 @@ using ToSic.Eav.Logging.Simple;
 
 //using Microsoft.Practices.Unity;
 
-namespace ToSic.SexyContent.Installer
+namespace ToSic.SexyContent.Environment.Dnn7.Installation
 {
     internal class V7: VersionBase
     {
@@ -114,7 +114,7 @@ namespace ToSic.SexyContent.Installer
                 dsrcSqlDataSource
             };
 
-            var importer = Factory.Resolve<IRepositoryImporter>();
+            var importer = Eav.Factory.Resolve<IRepositoryImporter>();
             importer.Import(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId, attributeSets, null);
 
             // Run EAV Version Upgrade (also ensures Content Type sharing)

@@ -10,7 +10,7 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Installer;
+// using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Interfaces;
 
@@ -163,7 +163,9 @@ namespace ToSic.SexyContent
                 string body = null;
 
                 #region do pre-check to see if system is stable & ready
-                var notReady = new InstallationController().CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
+
+                var installer = Factory.Resolve<IInstallerEnvironment>();
+                var notReady = installer.UpgradeMessages();// new InstallationController().CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
                 if (!string.IsNullOrEmpty(notReady))
                 {
                     Log.Add("system isn't ready,show upgrade message");

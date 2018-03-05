@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
+using DotNetNuke.Entities.Portals;
+using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
-using System.Data.SqlClient;
-using System.Configuration;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Interfaces;
 
-namespace ToSic.SexyContent.Installer
+namespace ToSic.SexyContent.Environment.Dnn7.Installation
 {
-    internal class InstallationController
+    public class InstallationController: IInstallerEnvironment
     {
         public bool SaveUnimportantDetails = true;
 
@@ -170,13 +172,8 @@ namespace ToSic.SexyContent.Installer
                 if (version == Settings.Installation.UpgradeVersionList.Last())
                 {
                     _installLogger.LogStep(version, "ClientResourceManager- seems to be last item in version-list, will clear");
-                    try
-                    {
-                        var envInstaller = Factory.Resolve<IInstallerEnvironment>();
-                        envInstaller.UpgradeCompleted();
-                    }
-                    catch { /* ignore */ }
-                    //ClientResourceManager.UpdateVersion();
+
+                    ClientResourceManager.UpdateVersion();
                     _installLogger.LogStep(version, "ClientResourceManager- done clearing");
 
                     UpdateUpgradeCompleteStatus();
@@ -213,7 +210,7 @@ namespace ToSic.SexyContent.Installer
         }
 
 
-        internal void FinishAbortedUpgrade()
+        public void ResumeAbortedUpgrade()
         {
             _installLogger.LogStep("", "FinishAbortedUpgrade starting", false);
             _installLogger.LogStep("", "Will handle " + Settings.Installation.UpgradeVersionList.Length + " versions");
@@ -232,6 +229,10 @@ namespace ToSic.SexyContent.Installer
             // Restart application
             HttpRuntime.UnloadAppDomain();
         }
+
+
+        public string UpgradeMessages()
+            => CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
 
 
 
@@ -267,12 +268,9 @@ namespace ToSic.SexyContent.Installer
         /// We need the lock file in case another system would try to read the status, which doesn't share
         /// this running static instance
         /// </summary>
-        internal bool IsUpgradeRunning
+        public bool IsUpgradeRunning
         {
-            get
-            {
-                return _running ?? (_running = new Lock().IsSet).Value;
-            }
+            get => _running ?? (_running = new Lock().IsSet).Value;
             private set
             {
                 try

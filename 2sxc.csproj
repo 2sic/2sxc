@@ -216,6 +216,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".databeta\queries\" />
+    <Folder Include="SexyContent\Installer\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">

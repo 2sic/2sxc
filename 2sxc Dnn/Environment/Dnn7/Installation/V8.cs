@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using DotNetNuke.Entities.Modules;
-using System.Data.SqlClient;
-using System.Configuration;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Logging.Simple;
 
-namespace ToSic.SexyContent.Installer
+namespace ToSic.SexyContent.Environment.Dnn7.Installation
 {
 
 

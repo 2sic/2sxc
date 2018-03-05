@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Web.Hosting;
 
-namespace ToSic.SexyContent.Installer
+namespace ToSic.SexyContent.Environment.Dnn7.Installation
 {
     public class Logger
     {

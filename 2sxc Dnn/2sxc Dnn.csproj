@@ -49,6 +49,7 @@
       <HintPath>..\..\..\..\..\eav-server\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
@@ -81,6 +82,8 @@
     <Compile Include="Environment\Dnn7\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="Environment\Dnn7\DataSources\DnnUserProfileDataSource.cs" />
     <Compile Include="Environment\Dnn7\Deprecated\DnnSqlDataSource.cs" />
+    <Compile Include="Environment\Dnn7\DnnFileSystem.cs" />
+    <Compile Include="Environment\Dnn7\DnnLinkHelper.cs" />
     <Compile Include="Environment\Dnn7\DnnMapAppToInstance.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
     <Compile Include="Environment\Dnn7\DnnInstanceInfo.cs" />
@@ -93,7 +96,13 @@
     <Compile Include="Environment\Dnn7\Factory.cs" />
     <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
     <Compile Include="Environment\Dnn7\ImportExport\DnnXmlExporter.cs" />
-    <Compile Include="Environment\Dnn7\Installation\InstallationEnvironment.cs" />
+    <Compile Include="Environment\Dnn7\Installation\Helpers.cs" />
+    <Compile Include="Environment\Dnn7\Installation\InstallationController.cs" />
+    <Compile Include="Environment\Dnn7\Installation\Lock.cs" />
+    <Compile Include="Environment\Dnn7\Installation\Logger.cs" />
+    <Compile Include="Environment\Dnn7\Installation\V7.cs" />
+    <Compile Include="Environment\Dnn7\Installation\V8.cs" />
+    <Compile Include="Environment\Dnn7\Installation\VersionBase.cs" />
     <Compile Include="Environment\Dnn7\Logging.cs" />
     <Compile Include="Environment\Dnn7\ModuleSettingsHelper.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing.cs" />

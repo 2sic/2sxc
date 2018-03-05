@@ -9,11 +9,12 @@ namespace ToSic.SexyContent.Adam
         private readonly List<int> _fileIds = new List<int>();
         private readonly List<int> _folderIds = new List<int>();
 
-        private readonly DnnFileSystem _dnnfs = new DnnFileSystem();
+        private readonly IEnvironmentFileSystem _envFs;// = new DnnFileSystem();
 
         public Export(AdamManager adm)
         {
             _root = adm.Root;
+            _envFs = adm.EnvironmentFs;
         }
 
         public List<int> AppFiles
@@ -41,13 +42,13 @@ namespace ToSic.SexyContent.Adam
             _folderIds.Add(fldr.Id);  // track of the folder
             AddFilesInFolder(fldr);         // keep track of the files
 
-            foreach (var f in _dnnfs.GetFolders(fldr.Id, null))   // then add subfolders
+            foreach (var f in _envFs.GetFolders(fldr.Id, null))   // then add subfolders
                 AddFolder(f);
         }
 
         private void AddFilesInFolder(Folder fldr)
         {
-            foreach (var f in _dnnfs.GetFiles(fldr.Id, null))
+            foreach (var f in _envFs.GetFiles(fldr.Id, null))
                 _fileIds.Add(f.Id);
         }
 
