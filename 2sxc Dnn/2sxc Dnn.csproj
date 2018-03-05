@@ -93,6 +93,7 @@
     <Compile Include="Environment\Dnn7\Factory.cs" />
     <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
     <Compile Include="Environment\Dnn7\ImportExport\DnnXmlExporter.cs" />
+    <Compile Include="Environment\Dnn7\Installation\InstallationEnvironment.cs" />
     <Compile Include="Environment\Dnn7\Logging.cs" />
     <Compile Include="Environment\Dnn7\ModuleSettingsHelper.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing.cs" />

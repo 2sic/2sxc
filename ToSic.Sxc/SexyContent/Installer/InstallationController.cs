@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
-using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
 using System.Data.SqlClient;
 using System.Configuration;
 using ToSic.Eav.Logging.Simple;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.Installer
 {
@@ -170,7 +170,13 @@ namespace ToSic.SexyContent.Installer
                 if (version == Settings.Installation.UpgradeVersionList.Last())
                 {
                     _installLogger.LogStep(version, "ClientResourceManager- seems to be last item in version-list, will clear");
-                    ClientResourceManager.UpdateVersion();
+                    try
+                    {
+                        var envInstaller = Factory.Resolve<IInstallerEnvironment>();
+                        envInstaller.UpgradeCompleted();
+                    }
+                    catch { /* ignore */ }
+                    //ClientResourceManager.UpdateVersion();
                     _installLogger.LogStep(version, "ClientResourceManager- done clearing");
 
                     UpdateUpgradeCompleteStatus();

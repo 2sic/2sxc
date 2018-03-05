@@ -81,14 +81,14 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public ViewDataSource Data => DnnAppAndDataHelpers.Data;
 
-        public IPermissions Permissions => new RazorPermissions(Sexy); // Sexy.Environment.Permissions;
+        public /*IPermissions*/ RazorPermissions Permissions => new RazorPermissions(Sexy); // Sexy.Environment.Permissions;
 
         // temp - should be elsewhere, but quickly need it so Permissions-object still works after refactoring
-        internal class RazorPermissions: DnnPermissions
+        public class RazorPermissions // : DnnPermissions
         {
             private readonly SxcInstance _sxcInstance;
             public RazorPermissions(SxcInstance sxc) => _sxcInstance = sxc;
-            public bool UserMayEdit => Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
+            public bool UserMayEditContent => Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
 
         }
 
