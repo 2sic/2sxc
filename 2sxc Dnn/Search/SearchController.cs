@@ -16,7 +16,6 @@ using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Interfaces;
-using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Environment.Dnn7.Search

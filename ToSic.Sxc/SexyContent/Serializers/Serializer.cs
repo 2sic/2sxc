@@ -5,6 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent.EAVExtensions;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.Serializers
 {

@@ -8,11 +8,10 @@ using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
-using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Interfaces;
+using ToSic.SexyContent.Search;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.SexyContent.Engines

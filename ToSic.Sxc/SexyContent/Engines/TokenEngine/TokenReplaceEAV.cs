@@ -3,7 +3,7 @@ using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class TokenReplaceEav: Eav.Tokens.TokenReplace
+    internal class TokenReplaceEav: Eav.Tokens.TokenReplace
     {
         public int ModuleId;
         //public PortalSettings PortalSettings;

@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.ValueProvider;
 
-namespace ToSic.SexyContent.SexyContent.Engines.TokenEngine
+namespace ToSic.SexyContent.Interfaces
 {
-    public interface IEnvironmentValueProviders
+    internal interface IEnvironmentValueProviders
     {
         ValueCollectionProvider GetProviders(int instanceId);
     }

@@ -13,7 +13,7 @@ using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class TokenEngine : EngineBase
+    internal class TokenEngine : EngineBase
     {
         #region Replacement List to still support old Tokens
         // Version 6 to 7

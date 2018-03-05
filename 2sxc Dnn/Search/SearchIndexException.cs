@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using DotNetNuke.Entities.Modules;
 
 namespace ToSic.SexyContent.Search

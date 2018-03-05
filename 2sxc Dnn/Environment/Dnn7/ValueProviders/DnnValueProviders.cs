@@ -1,8 +1,7 @@
 ﻿using System.Threading;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.ValueProvider;
-using ToSic.SexyContent.Engines.TokenEngine;
-using ToSic.SexyContent.SexyContent.Engines.TokenEngine;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7.ValueProviders
 {

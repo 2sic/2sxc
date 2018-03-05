@@ -1,7 +1,10 @@
 ﻿using System;
 
-namespace ToSic.SexyContent.Interfaces
+namespace ToSic.SexyContent.Search
 {
+    /// <remarks>
+    /// This is part of a public API, so don't touch the name or namespace
+    /// </remarks>
     public interface ISearchInfo
     {
         string UniqueKey { get; set; }

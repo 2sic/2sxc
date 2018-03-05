@@ -4,7 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Interfaces;
+using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Engines
 {

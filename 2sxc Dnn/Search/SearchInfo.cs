@@ -1,5 +1,4 @@
 ﻿using DotNetNuke.Services.Search.Entities;
-using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.Search
 {

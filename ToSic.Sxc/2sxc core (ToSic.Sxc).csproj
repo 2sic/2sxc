@@ -95,6 +95,7 @@
     <Compile Include="Interfaces\ILinkHelper.cs" />
     <Compile Include="Interfaces\IWebFactoryTemp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\App.cs" />
     <Compile Include="SexyContent\AppAndDataHelpersBase.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
@@ -120,10 +121,7 @@
     <Compile Include="SexyContent\DynamicEntityList.cs" />
     <Compile Include="SexyContent\EAV\Extensions\EntityDecorator.cs" />
     <Compile Include="SexyContent\EAV\Extensions\EntityInContentGroup.cs" />
-    <Compile Include="SexyContent\EAV\Extensions\IHasEditingData.cs" />
-    <Content Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs.txt">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
+    <Compile Include="Interfaces\IHasEditingData.cs" />
     <Compile Include="SexyContent\Engines\EngineBase.cs" />
     <Compile Include="SexyContent\Engines\EngineFactory.cs" />
     <Compile Include="SexyContent\Engines\IEngine.cs" />
@@ -133,7 +131,7 @@
     <Compile Include="SexyContent\Engines\TokenEngine\AppPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\IEnvironmentValueProviders.cs" />
+    <Compile Include="Interfaces\IEnvironmentValueProviders.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEAV.cs" />
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
@@ -143,7 +141,6 @@
     <Compile Include="Interfaces\IMapAppToInstance.cs" />
     <Compile Include="SexyContent\Internal\TemplateHelpers.cs" />
     <Compile Include="SexyContent\ISxcInstance.cs" />
-    <Compile Include="Interfaces\ISearchInfo.cs" />
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\Settings.cs" />
     <Compile Include="SexyContent\SexyContentException.cs" />

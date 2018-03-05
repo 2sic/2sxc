@@ -5,7 +5,7 @@ using System.Web.Hosting;
 
 namespace ToSic.SexyContent.Internal
 {
-    public class TemplateHelpers
+    internal class TemplateHelpers
     {
         public const string RazorC = "C# Razor";
         public const string TokenReplace = "Token";

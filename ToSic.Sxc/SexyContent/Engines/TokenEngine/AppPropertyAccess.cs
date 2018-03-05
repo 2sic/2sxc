@@ -3,7 +3,7 @@ using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class AppPropertyAccess : BaseValueProvider//, IPropertyAccess
+    internal class AppPropertyAccess : BaseValueProvider//, IPropertyAccess
     {
         //private readonly DotNetNuke.Services.Tokens.TokenReplace dnnTokenReplace  = new TokenReplace(Scope.NoSettings);
         private readonly App _app;

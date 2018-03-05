@@ -4,13 +4,11 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-//using DotNetNuke.Entities.Users;
-// using DotNetNuke.Services.Tokens;
 using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-	public class DynamicEntityPropertyAccess : /*IPropertyAccess,*/ IValueProvider
+	internal class DynamicEntityPropertyAccess : /*IPropertyAccess,*/ IValueProvider
 	{
         public const string RepeaterSubToken = "Repeater";
 

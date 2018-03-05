@@ -6,7 +6,7 @@ using static System.String;
 
 namespace ToSic.SexyContent.Internal
 {
-    public class AppHelpers
+    internal class AppHelpers
     {
         internal static int GetAppIdFromGuidName(int zoneId, string appName, bool alsoCheckFolderName = false)
         {

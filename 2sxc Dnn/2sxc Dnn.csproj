@@ -109,8 +109,8 @@
     <Compile Include="Environment\Dnn7\ModuleSettingsHelper.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing_ModuleSettings.cs" />
-    <Compile Include="Environment\Dnn7\Search\SearchController.cs" />
-    <Compile Include="Environment\Dnn7\Search\SearchIndexException.cs" />
+    <Compile Include="Search\SearchController.cs" />
+    <Compile Include="Search\SearchIndexException.cs" />
     <Compile Include="Environment\Dnn7\DnnEnvironmentFactory.cs" />
     <Compile Include="Environment\Dnn7\UserIdentity.cs" />
     <Compile Include="Environment\Dnn7\ValueProviders\DnnValueProviders.cs" />
@@ -154,9 +154,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Search\readme.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Environment\Dnn7\Security\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
