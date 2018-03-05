@@ -113,7 +113,7 @@ namespace ToSic.SexyContent.Engines
         private void InitHelpers(SexyContentWebPage webPage)
         {
             webPage.Html = new HtmlHelper();
-            webPage.Url = new UrlHelper(ModuleInfo);
+            webPage.Url = new UrlHelper(InstInfo);
             webPage.Sexy = Sexy;
             webPage.DnnAppAndDataHelpers = new DnnAppAndDataHelpers(Sexy);
 

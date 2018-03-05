@@ -14,8 +14,10 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
 using ToSic.SexyContent.Environment.Dnn7.Installation;
 using ToSic.SexyContent.Environment.Dnn7.Security;
+using ToSic.SexyContent.Environment.Dnn7.ValueProviders;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.Interfaces;
+using ToSic.SexyContent.SexyContent.Engines.TokenEngine;
 using ToSic.Sxc.Interfaces;
 using Configuration = ToSic.Eav.Configuration;
 
@@ -56,7 +58,7 @@ namespace ToSic.SexyContent
         {
             Eav.Factory.ActivateNetCoreDi(sc =>
             {
-                sc.AddTransient<Eav.Serializers.Serializer, SexyContent.Serializers.Serializer>();
+                sc.AddTransient<Eav.Serializers.Serializer, Serializers.Serializer>();
                 sc.AddTransient<IEavValueConverter, DnnValueConverter>();
                 sc.AddTransient<IEavUserInformation, DnnUserInformation>();
 
@@ -74,6 +76,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IPermissions, DnnPermissions>();
                 sc.AddTransient<IInstallerEnvironment, InstallationController>();
                 sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
+                sc.AddTransient<IEnvironmentValueProviders, DnnValueProviders>();
 
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);
             });

@@ -1,4 +1,4 @@
-﻿using DotNetNuke.Entities.Modules;
+﻿//using DotNetNuke.Entities.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,7 +83,8 @@ namespace ToSic.SexyContent.DataSources
                     Log.Add("need content-group, will construct as cannot use context");
                     if (!InstanceId.HasValue)
                         throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
-                    var tabId = ModuleController.Instance.GetTabModulesByModule(InstanceId.Value)[0].TabID;
+                    // 2018-03-05 2dm moved into the contentgroupmanager
+                    //var tabId = ModuleController.Instance.GetTabModulesByModule(InstanceId.Value)[0].TabID;
                     var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                     var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext?.InstanceInfo);
 
@@ -91,7 +92,7 @@ namespace ToSic.SexyContent.DataSources
                         HasSxcContext && userMayEdit, // SxcContext.Environment.Permissions.UserMayEditContent,
                         publish.IsEnabled(InstanceId.Value),
                         Log);
-                    var res = cgm.GetInstanceContentGroup(InstanceId.Value, tabId);
+                    var res = cgm.GetInstanceContentGroup(InstanceId.Value, null/*, tabId*/);
                     var contentGroupGuid = res.Item1;
                     var previewTemplateGuid = res.Item2;
                     _contentGroup = cgm.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid); 

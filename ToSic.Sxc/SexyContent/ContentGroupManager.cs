@@ -95,9 +95,11 @@ namespace ToSic.SexyContent
 		}
 
 	    // todo: this doesn't look right, will have to mostly move to the new content-block
-		public Tuple<Guid,Guid> GetInstanceContentGroup(int moduleId, int tabId)
+		public Tuple<Guid,Guid> GetInstanceContentGroup(int moduleId, int? pageId)
 		{
-		    Log.Add($"find content-group for mid#{moduleId} and tab#{tabId}");
+		    var tabId = pageId ?? ModuleController.Instance.GetTabModulesByModule(moduleId)[0].TabID;
+
+            Log.Add($"find content-group for mid#{moduleId} and tab#{tabId}");
 			var settings = ModuleController.Instance.GetModule(moduleId, tabId, false).ModuleSettings;
 			//var settings = moduleControl.GetModule(moduleId,).ModuleSettings;
 		    var maybeGuid = settings[Settings.ContentGroupGuidString];

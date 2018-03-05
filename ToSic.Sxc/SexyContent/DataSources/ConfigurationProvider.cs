@@ -1,10 +1,10 @@
 ﻿using System.Collections.Specialized;
 using System.Globalization;
-using System.Threading;
 using System.Web;
-using DotNetNuke.Entities.Portals;
+using ToSic.Eav;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Engines.TokenEngine;
+using ToSic.SexyContent.SexyContent.Engines.TokenEngine;
 
 namespace ToSic.SexyContent.DataSources
 {
@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.DataSources
         // will probably move again some day
         internal static ValueCollectionProvider GetConfigProviderForModule(int moduleId, App app, SxcInstance sxc)
         {
-            var portalSettings = PortalSettings.Current;
+            //var portalSettings = PortalSettings.Current;
 
             var provider = new ValueCollectionProvider();
 
@@ -36,17 +36,23 @@ namespace ToSic.SexyContent.DataSources
                 provider.Sources.Add("form", new FilteredNameValueCollectionPropertyAccess("form", request.Form));
             }
 
-            // Add the standard DNN property sources if PortalSettings object is available
-            if (portalSettings != null)
-            {
-                var dnnUsr = portalSettings.UserInfo;
-                var dnnCult = Thread.CurrentThread.CurrentCulture;
-                var dnn = new TokenReplaceDnn(moduleId, portalSettings, dnnUsr);
-                var stdSources = dnn.PropertySources;
-                foreach (var propertyAccess in stdSources)
-                    provider.Sources.Add(propertyAccess.Key,
-                        new ValueProviderWrapperForPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
-            }
+            // Add the standard DNN property sources if PortalSettings object is available (new 2018-03-05)
+            var envProvs = Factory.Resolve<IEnvironmentValueProviders>().GetProviders(moduleId).Sources;
+            foreach (var prov in envProvs)
+                provider.Sources.Add(prov.Key, prov.Value);
+
+            // 2018-03-05 before
+            //// Add the standard DNN property sources if PortalSettings object is available
+            //if (portalSettings != null)
+            //{
+            //    var dnnUsr = portalSettings.UserInfo;
+            //    var dnnCult = Thread.CurrentThread.CurrentCulture;
+            //    var dnn = new TokenReplaceDnn(moduleId, portalSettings, dnnUsr);
+            //    var stdSources = dnn.PropertySources;
+            //    foreach (var propertyAccess in stdSources)
+            //        provider.Sources.Add(propertyAccess.Key,
+            //            new ValueProviderWrapperForPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
+            //}
 
             provider.Sources.Add("app", new AppPropertyAccess("app", app));
 

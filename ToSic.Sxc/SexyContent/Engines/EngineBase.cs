@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.Engines
         protected Template Template;
         protected string TemplatePath;
         protected App App;
-        protected IInstanceInfo ModuleInfo;
+        protected IInstanceInfo InstInfo;
         protected IDataSource DataSource;
         protected InstancePurposes InstancePurposes;
         protected SxcInstance Sexy;
@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.Engines
             Template = template;
             TemplatePath = templatePath;
             App = app;
-            ModuleInfo = hostingModule;
+            InstInfo = hostingModule;
             DataSource = dataSource;
             InstancePurposes = instancePurposes;
             Sexy = sxcInstance;
@@ -141,7 +141,7 @@ namespace ToSic.SexyContent.Engines
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
             var permissionsOnThisTemplate = Factory.Resolve<IEnvironmentFactory>()
-                .ItemPermissions(Template.Entity, Log, ModuleInfo);
+                .ItemPermissions(Template.Entity, Log, InstInfo);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
             if (tennant.RefactorUserIsAdmin || !permissionsOnThisTemplate.PermissionList.Any()) return;

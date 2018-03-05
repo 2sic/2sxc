@@ -137,10 +137,9 @@
     <Compile Include="SexyContent\Engines\TokenEngine\AppPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\IEnvironmentValueProviders.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEAV.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
     <Compile Include="SexyContent\Internal\AppHelpers.cs" />

@@ -4,7 +4,7 @@ using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
 using ToSic.Eav.ValueProvider;
 
-namespace ToSic.SexyContent.Engines.TokenEngine
+namespace ToSic.SexyContent.Environment.Dnn7.ValueProviders
 {
     public class ValueProviderWrapperForPropertyAccess: BaseValueProvider
     {

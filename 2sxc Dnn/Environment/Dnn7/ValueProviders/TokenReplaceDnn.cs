@@ -1,12 +1,13 @@
-﻿using DotNetNuke.Entities.Portals;
+﻿using System.Collections.Generic;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
-using System.Collections.Generic;
 
-namespace ToSic.SexyContent.Engines.TokenEngine
+namespace ToSic.SexyContent.Environment.Dnn7.ValueProviders
 {
-    public class TokenReplaceDnn : TokenReplace
+    public sealed class TokenReplaceDnn : TokenReplace
     {
+
         /// <summary>
         /// This class is mainly here to deliver all standard DNN-token lists to 2sxc. 
         /// So it mainly initializes the normal DNN-Tokenprovider and offers a property called Property-Access which then contains all value-resolvers
