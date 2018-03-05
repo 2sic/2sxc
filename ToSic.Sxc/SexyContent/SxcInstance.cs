@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
@@ -164,7 +163,7 @@ namespace ToSic.SexyContent
 
                 #region do pre-check to see if system is stable & ready
 
-                var installer = Factory.Resolve<IInstallerEnvironment>();
+                var installer = Factory.Resolve<IEnvironmentInstaller>();
                 var notReady = installer.UpgradeMessages();// new InstallationController().CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
                 if (!string.IsNullOrEmpty(notReady))
                 {

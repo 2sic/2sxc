@@ -25,45 +25,46 @@ namespace ToSic.SexyContent.ContentBlocks
         internal override void UpdateTitle(Eav.Interfaces.IEntity titleItem)
         {
             Log.Add("update title");
+            Factory.Resolve<IMapAppToInstance>().UpdateTitle(SxcContext, titleItem);
 
-            var languages = SxcContext.Environment.ZoneMapper.CulturesWithState(SxcContext.InstanceInfo.TennantId,
-                SxcContext.ZoneId.Value);
+            //var languages = SxcContext.Environment.ZoneMapper.CulturesWithState(SxcContext.InstanceInfo.TennantId,
+            //    SxcContext.ZoneId.Value);
 
-            // Find Module for default language
-            var moduleController = new DotNetNuke.Entities.Modules.ModuleController();
-            var originalModule = moduleController.GetModule(SxcContext.InstanceInfo.Id);
+            //// Find Module for default language
+            //var moduleController = new DotNetNuke.Entities.Modules.ModuleController();
+            //var originalModule = moduleController.GetModule(SxcContext.InstanceInfo.Id);
 
-            foreach (var dimension in languages)
-            {
-                if (!originalModule.IsDefaultLanguage)
-                    originalModule = originalModule.DefaultLanguageModule;
+            //foreach (var dimension in languages)
+            //{
+            //    if (!originalModule.IsDefaultLanguage)
+            //        originalModule = originalModule.DefaultLanguageModule;
 
-                try // this can sometimes fail, like if the first item is null - https://github.com/2sic/2sxc/issues/817
-                {
-                    // Break if default language module is null
-                    if (originalModule == null)
-                        return;
+            //    try // this can sometimes fail, like if the first item is null - https://github.com/2sic/2sxc/issues/817
+            //    {
+            //        // Break if default language module is null
+            //        if (originalModule == null)
+            //            return;
 
-                    // Get Title value of Entitiy in current language
-                    var titleValue = titleItem.Title[dimension.Key].ToString();
+            //        // Get Title value of Entitiy in current language
+            //        var titleValue = titleItem.Title[dimension.Key].ToString();
 
-                    // Find module for given Culture
-                    var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
-                        originalModule.TabID, SxcContext.InstanceInfo.TennantId,
-                        DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
+            //        // Find module for given Culture
+            //        var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
+            //            originalModule.TabID, SxcContext.InstanceInfo.TennantId,
+            //            DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
 
-                    // Break if no title module found
-                    if (moduleByCulture == null || titleValue == null)
-                        return;
+            //        // Break if no title module found
+            //        if (moduleByCulture == null || titleValue == null)
+            //            return;
 
-                    moduleByCulture.ModuleTitle = titleValue;
-                    moduleController.UpdateModule(moduleByCulture);
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
+            //        moduleByCulture.ModuleTitle = titleValue;
+            //        moduleController.UpdateModule(moduleByCulture);
+            //    }
+            //    catch
+            //    {
+            //        // ignored
+            //    }
+            //}
         }
 
         

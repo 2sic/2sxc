@@ -13,7 +13,7 @@ using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7.Installation
 {
-    public class InstallationController: IInstallerEnvironment
+    public class InstallationController: IEnvironmentInstaller
     {
         public bool SaveUnimportantDetails = true;
 

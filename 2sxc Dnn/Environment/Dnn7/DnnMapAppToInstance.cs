@@ -77,6 +77,26 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     guid.ToString());
         }
 
+        public ContentGroup GetInstanceContentGroup(ContentGroupManager cgm, Log log, int instanceId, int? pageId)
+        {
+            var mci = ModuleController.Instance;
+
+            var tabId = pageId ?? mci.GetTabModulesByModule(instanceId)[0].TabID;
+
+            log.Add($"find content-group for mid#{instanceId} and tab#{tabId}");
+            var settings = mci.GetModule(instanceId, tabId, false).ModuleSettings;
+
+            var maybeGuid = settings[Settings.ContentGroupGuidString];
+            Guid.TryParse(maybeGuid?.ToString(), out var groupGuid);
+            var previewTemplateString = settings[Settings.PreviewTemplateIdString]?.ToString();
+
+            var templateGuid = !string.IsNullOrEmpty(previewTemplateString)
+                ? Guid.Parse(previewTemplateString)
+                : new Guid();
+
+            return cgm.GetContentGroupOrGeneratePreview(groupGuid, templateGuid);
+        }
+
         /// <summary>
         /// Saves a temporary templateId to the module's settings
         /// This templateId will be used until a contentgroup exists
@@ -95,6 +115,49 @@ namespace ToSic.SexyContent.Environment.Dnn7
             DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString());
         }
 
+        public void UpdateTitle(SxcInstance sxcInstance, Eav.Interfaces.IEntity titleItem)
+        {
+            //Log.Add("update title");
+
+            var languages = sxcInstance.Environment.ZoneMapper.CulturesWithState(sxcInstance.InstanceInfo.TennantId,
+                sxcInstance.ZoneId.Value);
+
+            // Find Module for default language
+            var moduleController = new DotNetNuke.Entities.Modules.ModuleController();
+            var originalModule = moduleController.GetModule(sxcInstance.InstanceInfo.Id);
+
+            foreach (var dimension in languages)
+            {
+                if (!originalModule.IsDefaultLanguage)
+                    originalModule = originalModule.DefaultLanguageModule;
+
+                try // this can sometimes fail, like if the first item is null - https://github.com/2sic/2sxc/issues/817
+                {
+                    // Break if default language module is null
+                    if (originalModule == null)
+                        return;
+
+                    // Get Title value of Entitiy in current language
+                    var titleValue = titleItem.Title[dimension.Key].ToString();
+
+                    // Find module for given Culture
+                    var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
+                        originalModule.TabID, sxcInstance.InstanceInfo.TennantId,
+                        DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
+
+                    // Break if no title module found
+                    if (moduleByCulture == null || titleValue == null)
+                        return;
+
+                    moduleByCulture.ModuleTitle = titleValue;
+                    moduleController.UpdateModule(moduleByCulture);
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+        }
 
         // todo: remove this, replace with calls to the current tennant -> RootPath
         public static string AppBasePath() 

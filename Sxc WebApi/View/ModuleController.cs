@@ -302,7 +302,7 @@ namespace ToSic.SexyContent.WebApi.View
         public bool FinishInstallation()
         {
             Log.Add("finish installation");
-            var ic = Factory.Resolve<IInstallerEnvironment>();//  new InstallationController();
+            var ic = Factory.Resolve<IEnvironmentInstaller>();//  new InstallationController();
             if (ic.IsUpgradeRunning)
                 throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 10 minutes, please restart the web application.");
 

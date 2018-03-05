@@ -11,6 +11,7 @@ using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
+using ToSic.SexyContent.Dnn;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 

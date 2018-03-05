@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Query;
@@ -51,13 +50,6 @@ namespace ToSic.SexyContent
                 : new ContentGroup(Guid.Empty, _zoneId, _appId, _showDrafts, _enableVersioning, Log) {DataIsMissing = true};
 		}
 
-		//public bool IsConfigurationInUse(int templateId, string type)
-		//{
-		//	var contentGroups = GetContentGroups().Where(p => p.Template != null && p.Template.TemplateId == templateId);
-		//	return contentGroups.Any(p => p[type].Any(c => c != null));
-		//}
-
-
 	    /// <summary>
 	    /// Saves a temporary templateId to the module's settings
 	    /// This templateId will be used until a contentgroup exists
@@ -94,26 +86,10 @@ namespace ToSic.SexyContent
 		    }
 		}
 
-	    // todo: this doesn't look right, will have to mostly move to the new content-block
-		public Tuple<Guid,Guid> GetInstanceContentGroup(int moduleId, int? pageId)
-		{
-		    var tabId = pageId ?? ModuleController.Instance.GetTabModulesByModule(moduleId)[0].TabID;
+	    public ContentGroup GetInstanceContentGroup(int instanceId, int? pageId)
+	        => Factory.Resolve<IMapAppToInstance>().GetInstanceContentGroup(this, Log, instanceId, pageId);
 
-            Log.Add($"find content-group for mid#{moduleId} and tab#{tabId}");
-			var settings = ModuleController.Instance.GetModule(moduleId, tabId, false).ModuleSettings;
-			//var settings = moduleControl.GetModule(moduleId,).ModuleSettings;
-		    var maybeGuid = settings[Settings.ContentGroupGuidString];
-		    Guid.TryParse(maybeGuid?.ToString(), out var groupGuid);
-            var previewTemplateString = settings[Settings.PreviewTemplateIdString]?.ToString();
-
-		    var templateGuid = !string.IsNullOrEmpty(previewTemplateString)
-		        ? Guid.Parse(previewTemplateString)
-		        : new Guid();
-
-		    return Tuple.Create(groupGuid, templateGuid);
-		}
-
-	    internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)
+        internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)
 	    {
 	        Log.Add($"get CG or gen preview for grp#{groupGuid}, preview#{previewTemplateGuid}");
 	        // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)

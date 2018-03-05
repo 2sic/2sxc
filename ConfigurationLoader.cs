@@ -74,7 +74,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IRenderingHelpers, DnnRenderingHelpers>();
                 sc.AddTransient<IMapAppToInstance, DnnMapAppToInstance>();
                 sc.AddTransient<IPermissions, DnnPermissions>();
-                sc.AddTransient<IInstallerEnvironment, InstallationController>();
+                sc.AddTransient<IEnvironmentInstaller, InstallationController>();
                 sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
                 sc.AddTransient<IEnvironmentValueProviders, DnnValueProviders>();
 

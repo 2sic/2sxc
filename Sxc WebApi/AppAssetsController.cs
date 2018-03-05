@@ -163,7 +163,9 @@ namespace ToSic.SexyContent.WebApi
 
             if (content.Content == null)
                 content.Content = "";
-            var assetEditor = new AssetEditor(thisApp, path, UserInfo, PortalSettings, global);
+
+            var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
+            var assetEditor = new AssetEditor(thisApp, path, UserInfo.IsSuperUser, isAdmin, global);
             assetEditor.EnsureUserMayEditAsset(path);
             return assetEditor.Create(content.Content);
         }
@@ -192,9 +194,10 @@ namespace ToSic.SexyContent.WebApi
         public AssetEditInfo Asset(int templateId = 0, string path = null, bool global = false)
         {
             Log.Add($"asset templ:{templateId}, path:{path}, global:{global}");
+            var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(SxcContext.App, templateId, UserInfo, PortalSettings)
-                : new AssetEditor(SxcContext.App, path, UserInfo, PortalSettings, global);
+                ? new AssetEditor(SxcContext.App, templateId, UserInfo.IsSuperUser, isAdmin)
+                : new AssetEditor(SxcContext.App, path, UserInfo.IsSuperUser, isAdmin, global);
             assetEditor.EnsureUserMayEditAsset();
             return assetEditor.EditInfoWithSource;
         }
@@ -212,9 +215,10 @@ namespace ToSic.SexyContent.WebApi
         public bool Asset([FromBody] AssetEditInfo template,[FromUri] int templateId = 0, [FromUri] bool global = false, [FromUri] string path = null)
         {
             Log.Add($"asset templ:{templateId}, global:{global}, path:{path}");
+            var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(SxcContext.App, templateId, UserInfo, PortalSettings)
-                : new AssetEditor(SxcContext.App, path, UserInfo, PortalSettings, global);
+                ? new AssetEditor(SxcContext.App, templateId, UserInfo.IsSuperUser, isAdmin)
+                : new AssetEditor(SxcContext.App, path, UserInfo.IsSuperUser, isAdmin, global);
             assetEditor.EnsureUserMayEditAsset();
             assetEditor.Source = template.Code;
             return true;

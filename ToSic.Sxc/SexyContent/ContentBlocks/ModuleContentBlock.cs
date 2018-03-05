@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
@@ -77,10 +75,7 @@ namespace ToSic.SexyContent.ContentBlocks
                     SxcInstance.Environment.PagePublishing.IsEnabled(InstanceInfo.Id), 
                     Configuration);
 
-                var res = App.ContentGroupManager.GetInstanceContentGroup(instanceInfo.Id, instanceInfo.PageId);
-                var contentGroupGuid = res.Item1;
-                var previewTemplateGuid = res.Item2;
-                ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid);
+                ContentGroup = App.ContentGroupManager.GetInstanceContentGroup(instanceInfo.Id, instanceInfo.PageId);
 
                 if (ContentGroup.DataIsMissing)
                 {

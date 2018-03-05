@@ -1,6 +1,6 @@
 ﻿namespace ToSic.SexyContent.Interfaces
 {
-    public interface IInstallerEnvironment
+    public interface IEnvironmentInstaller
     {
         string UpgradeMessages();
 

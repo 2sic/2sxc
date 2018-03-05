@@ -92,11 +92,8 @@ namespace ToSic.SexyContent.DataSources
                         HasSxcContext && userMayEdit, // SxcContext.Environment.Permissions.UserMayEditContent,
                         publish.IsEnabled(InstanceId.Value),
                         Log);
-                    var res = cgm.GetInstanceContentGroup(InstanceId.Value, null/*, tabId*/);
-                    var contentGroupGuid = res.Item1;
-                    var previewTemplateGuid = res.Item2;
-                    _contentGroup = cgm.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid); 
 
+                    _contentGroup = cgm.GetInstanceContentGroup(InstanceId.Value, null);
                 }
                 return _contentGroup;
             }

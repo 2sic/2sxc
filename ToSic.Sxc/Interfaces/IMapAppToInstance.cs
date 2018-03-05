@@ -15,5 +15,9 @@ namespace ToSic.SexyContent.Interfaces
         void SetPreviewTemplate(int instanceId, Guid previewTemplateGuid);
 
         void SetContentGroupAndBlankTemplate(int instanceId, bool wasCreated, Guid guid);
+
+        ContentGroup GetInstanceContentGroup(ContentGroupManager cgm, Log log, int instanceId, int? pageId);
+
+        void UpdateTitle(SxcInstance sxcInstance, Eav.Interfaces.IEntity titleItem);
     }
 }

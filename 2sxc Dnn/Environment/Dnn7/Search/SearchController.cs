@@ -15,6 +15,7 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Search;
 
@@ -54,10 +55,8 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             var sexy = mcb.SxcInstance;
 
             var language = dnnModule.CultureCode;
-            var res = sexy.App.ContentGroupManager.GetInstanceContentGroup(dnnModule.ModuleID, dnnModule.TabID);
-            var contentGroupGuid = res.Item1;
-            var previewTemplateGuid = res.Item2;
-            var contentGroup = sexy.App.ContentGroupManager.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid);
+
+            var contentGroup = sexy.App.ContentGroupManager.GetInstanceContentGroup(dnnModule.ModuleID, dnnModule.TabID);
 
             var template = contentGroup.Template;
 
