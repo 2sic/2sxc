@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Globalization;
-using DotNetNuke.Entities.Users;
-using DotNetNuke.Services.Tokens;
 using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class AppPropertyAccess : BaseValueProvider, IPropertyAccess
+    internal class AppPropertyAccess : BaseValueProvider//, IPropertyAccess
     {
         //private readonly DotNetNuke.Services.Tokens.TokenReplace dnnTokenReplace  = new TokenReplace(Scope.NoSettings);
         private readonly App _app;
@@ -51,25 +48,22 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 			_app = app;
         }
 
-        public CacheLevel Cacheability
-        {
-            get { return CacheLevel.notCacheable; }
-        }
+        //public CacheLevel Cacheability => CacheLevel.notCacheable;
 
-        /// <summary>
-        /// Get Property out of NameValueCollection
-        /// </summary>
-        /// <param name="strPropertyName"></param>
-        /// <param name="strFormat"></param>
-        /// <param name="formatProvider"></param>
-        /// <param name="AccessingUser"></param>
-        /// <param name="AccessLevel"></param>
-        /// <param name="PropertyNotFound"></param>
-        /// <returns></returns>
-        public string GetProperty(string strPropertyName, string strFormat, CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
-        {
-            return Get(strPropertyName, strFormat, ref PropertyNotFound);
-        }
+        ///// <summary>
+        ///// Get Property out of NameValueCollection
+        ///// </summary>
+        ///// <param name="strPropertyName"></param>
+        ///// <param name="strFormat"></param>
+        ///// <param name="formatProvider"></param>
+        ///// <param name="AccessingUser"></param>
+        ///// <param name="AccessLevel"></param>
+        ///// <param name="PropertyNotFound"></param>
+        ///// <returns></returns>
+        //public string GetProperty(string strPropertyName, string strFormat, CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
+        //{
+        //    return Get(strPropertyName, strFormat, ref PropertyNotFound);
+        //}
 
         public override string Get(string strPropertyName, string strFormat, ref bool PropertyNotFound)
         {

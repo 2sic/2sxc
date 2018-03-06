@@ -2,8 +2,6 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Users;
 using ToSic.Eav.Apps;
 
 namespace ToSic.SexyContent.AppAssets
@@ -12,27 +10,27 @@ namespace ToSic.SexyContent.AppAssets
     {
         public AssetEditInfo EditInfo { get; }
 
-        private readonly UserInfo _userInfo;
+        private readonly bool _userIsSuperUser;
+        private readonly bool _userIsAdmin;
 
-        private readonly PortalSettings _portalSettings;
 
         private readonly App _app;
 
-        public AssetEditor(App app, int templateId, UserInfo userInfo, PortalSettings portalSettings)//, bool global = false)
+        public AssetEditor(App app, int templateId, bool isSuperUser, bool isAdmin)
         {
             _app = app;
-            _userInfo = userInfo;
-            _portalSettings = portalSettings;
+            _userIsSuperUser = isSuperUser;
+            _userIsAdmin = isAdmin;
 
             var template = _app.TemplateManager.GetTemplate(templateId);
             EditInfo = TemplateAssetsInfo(template);
         }
 
-        public AssetEditor(App app, string path, UserInfo userInfo, PortalSettings portalSettings, bool global = false)
+        public AssetEditor(App app, string path, bool isSuperUser, bool isAdmin, bool global = false)
         {
             _app = app;
-            _userInfo = userInfo;
-            _portalSettings = portalSettings;
+            _userIsSuperUser = isSuperUser;
+            _userIsAdmin = isAdmin;
 
             EditInfo = new AssetEditInfo(_app.AppId, _app.Name, path, global);
         }
@@ -53,11 +51,11 @@ namespace ToSic.SexyContent.AppAssets
         public void EnsureUserMayEditAsset(string fullPath = null)
         {
             // check super user permissions - then all is allowed
-            if (_userInfo.IsSuperUser)
+            if (_userIsSuperUser)
                 return;
 
             // ensure current user is admin - this is the minimum of not super-user
-            if(!_userInfo.IsInRole(_portalSettings.AdministratorRoleName))
+            if(!_userIsAdmin)
                 throw new AccessViolationException("current user may not edit templates, requires admin rights");
 
             // if not super user, check if razor (not allowed; super user only)
@@ -115,7 +113,7 @@ namespace ToSic.SexyContent.AppAssets
                     return File.ReadAllText(InternalPath);
 
                 throw new FileNotFoundException("could not find file" 
-                    + (_userInfo.IsSuperUser 
+                    + (_userIsSuperUser 
                     ? " for superuser - file tried '" + InternalPath + "'" 
                     : "")
                     );
@@ -128,7 +126,7 @@ namespace ToSic.SexyContent.AppAssets
                     File.WriteAllText(InternalPath, value);
                 else
                     throw new FileNotFoundException("could not find file"
-                        + (_userInfo.IsSuperUser
+                        + (_userIsSuperUser
                         ? " for superuser - file tried '" + InternalPath + "'"
                         : "")
                         );
@@ -140,7 +138,7 @@ namespace ToSic.SexyContent.AppAssets
         {
             // todo: maybe add some security for special dangerous file names like .cs, etc.?
             EditInfo.FileName = Regex.Replace(EditInfo.FileName, @"[?:\/*""<>|]", "");
-            var absolutePath = InternalPath;// server.MapPath(Path.Combine(GetTemplatePathRoot(location, App), templatePath));
+            var absolutePath = InternalPath;
 
             // don't create if it already exits
             if (File.Exists(absolutePath)) return false;
@@ -167,11 +165,5 @@ namespace ToSic.SexyContent.AppAssets
             return true;
         }
 
-        private void EnsureWebConfigExists(App app, string scope)
-        {
-            new Internal.TemplateHelpers(app).EnsureTemplateFolderExists(scope);
-
-            return;
-        }
     }
 }

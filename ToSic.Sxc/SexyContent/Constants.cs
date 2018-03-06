@@ -2,7 +2,7 @@
 
 namespace ToSic.SexyContent
 {
-    internal class Constants : ToSic.Eav.Constants // inherit from EAV constants to make coding easier
+    internal class Constants : Eav.Constants // inherit from EAV constants to make coding easier
     {
         // additional json-node for metadata in serialized entities, if user has edit rights
         public const string JsonEntityEditNodeName = "_2sxcEditInformation";

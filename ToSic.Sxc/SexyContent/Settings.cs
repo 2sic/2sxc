@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Configuration;
 using System.Reflection;
-using Configuration = ToSic.Eav.Configuration;
+using ToSic.Eav.Plumbing.Booting;
 
 namespace ToSic.SexyContent
 {
@@ -20,7 +19,7 @@ namespace ToSic.SexyContent
         //internal static readonly string ContentAppName = "Default";
 
         public static readonly string PortalHostDirectory = "~/Portals/_default/";
-        public static readonly string TemplateFolder = "2sxc";
+        public static readonly string AppsRootFolder = "2sxc";
         public const string PortalSettingsPrefix = "ToSIC_SexyContent_";
         public const string PortalSettingZoneId = PortalSettingsPrefix + "ZoneID";
         public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -96,12 +95,7 @@ namespace ToSic.SexyContent
         /// It is automatically executed when the first variable on this class (contstant, static, etc.)
         /// is accessed. 
         /// </summary>
-        static Settings()
-        {
-            var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
-            Configuration.SetConnectionString(connectionString);
-            new UnityConfig().Configure();
-        }
+        static Settings() => Boot.RunBootSequence();
 
         #endregion
     }

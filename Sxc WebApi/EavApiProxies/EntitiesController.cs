@@ -8,12 +8,14 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
+using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -54,8 +56,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var newItems = new List<ItemIdentifier>();
 
             // go through all the groups, assign relevant info so that we can then do get-many
-            var app = new App(PortalSettings.Current, appId, Log);
-            app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, 
+            var app = new App(new DnnTennant(PortalSettings.Current), appId, Log);
+            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
+
+            app.InitData(userMayEdit,// SxcContext.Environment.Permissions.UserMayEditContent, 
                 SxcContext.Environment.PagePublishing /*new PagePublishing(Log)*/ .IsEnabled(ActiveModule.ModuleID), 
                 Data.ConfigurationProvider);
 
@@ -118,7 +122,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
 
-            var versioning = new PagePublishing(Log);
+            var versioning = Eav.Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
             Dictionary<Guid, int> postSaveIds = null;
 
             void InternalSave(VersioningActionInfo args)
@@ -149,8 +153,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         private void DoAdditionalGroupProcessing(int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeader>> groupItems)
         {
             var myLog = new Log("2Ap.GrpPrc", Log, "start");
-            var app = new App(PortalSettings.Current, appId);
-            app.InitData(SxcContext.Environment.Permissions.UserMayEditContent, SxcContext.Environment.PagePublishing /*new PagePublishing(Log)*/.IsEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
+            var app = new App(new DnnTennant(PortalSettings.Current), appId);
+            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
+
+            app.InitData(userMayEdit,// SxcContext.Environment.Permissions.UserMayEditContent, 
+                SxcContext.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
 
             foreach (var entitySets in groupItems)
             {
@@ -272,7 +279,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    private static void ResolveItemIdOfGroup(int appId, ItemIdentifier item)
 	    {
             if (item.Group == null) return;
-	        var app = new App(PortalSettings.Current, appId);
+	        var app = new App(new DnnTennant(PortalSettings.Current), appId);
 	        var contentGroup = app.ContentGroupManager.GetContentGroup(item.Group.Guid);
 	        var part = contentGroup[item.Group.Part];
 	        item.EntityId = part[item.Group.Index].EntityId;

@@ -8,6 +8,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -73,7 +74,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		{
             Log.Add($"delete pipe:{id} on app:{appId}");
 			// Stop if a Template uses this Pipeline
-            var app = new App(PortalSettings.Current, appId);
+            var app = new App(new DnnTennant(PortalSettings.Current), appId);
 			var templatesUsingPipeline = app.TemplateManager.GetAllTemplates().Where(t => t.Pipeline != null && t.Pipeline.EntityId == id).Select(t => t.TemplateId).ToArray();
 			if (templatesUsingPipeline.Any())
 				throw new Exception(

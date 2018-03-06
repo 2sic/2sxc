@@ -12,9 +12,11 @@ using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
+using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.Razor
 {
@@ -30,11 +32,11 @@ namespace ToSic.SexyContent.Razor
 
         protected internal UrlHelper Url { get; internal set; }
 
-        protected internal ILinkHelper Link => AppAndDataHelpers.Link;
+        protected internal ILinkHelper Link => DnnAppAndDataHelpers.Link;
 
         // <2sic>
         protected internal SxcInstance Sexy { get; set; }
-        protected internal AppAndDataHelpers AppAndDataHelpers { get; set; }
+        protected internal DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
         // </2sic>
 
         #endregion
@@ -59,7 +61,7 @@ namespace ToSic.SexyContent.Razor
             Html = typedParent.Html;
             Url = typedParent.Url;
             Sexy = typedParent.Sexy;
-            AppAndDataHelpers = typedParent.AppAndDataHelpers;
+            DnnAppAndDataHelpers = typedParent.DnnAppAndDataHelpers;
         }
 
         #endregion
@@ -68,54 +70,63 @@ namespace ToSic.SexyContent.Razor
         #region AppAndDataHelpers implementation
 
         /// <inheritdoc />
-        public DnnHelper Dnn => AppAndDataHelpers.Dnn;
+        public DnnHelper Dnn => DnnAppAndDataHelpers.Dnn;
 
         /// <inheritdoc />
-        public SxcHelper Sxc => AppAndDataHelpers.Sxc;
+        public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
 
         /// <inheritdoc />
-        public new App App => AppAndDataHelpers.App;
+        public new App App => DnnAppAndDataHelpers.App;
 
         /// <inheritdoc />
-        public ViewDataSource Data => AppAndDataHelpers.Data;
+        public ViewDataSource Data => DnnAppAndDataHelpers.Data;
 
-        public IPermissions Permissions => Sexy.Environment.Permissions;
+        public /*IPermissions*/ RazorPermissions Permissions => new RazorPermissions(Sexy); // Sexy.Environment.Permissions;
+
+        // temp - should be elsewhere, but quickly need it so Permissions-object still works after refactoring
+        public class RazorPermissions // : DnnPermissions
+        {
+            private readonly SxcInstance _sxcInstance;
+            public RazorPermissions(SxcInstance sxc) => _sxcInstance = sxc;
+            public bool UserMayEditContent => Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
+
+        }
 
         #region AsDynamic in many variations
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => AppAndDataHelpers.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => DnnAppAndDataHelpers.AsDynamic(entity);
         
 
         /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) =>  AppAndDataHelpers.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(dynamic dynamicEntity) =>  DnnAppAndDataHelpers.AsDynamic(dynamicEntity);
 
 
         /// <inheritdoc />
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  AppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
 
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AppAndDataHelpers.AsDynamic(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DnnAppAndDataHelpers.AsDynamic(stream.List);
 
 
         /// <inheritdoc />
-        public IEntity AsEntity(dynamic dynamicEntity) => AppAndDataHelpers.AsEntity(dynamicEntity);
+        public IEntity AsEntity(dynamic dynamicEntity) => DnnAppAndDataHelpers.AsEntity(dynamicEntity);
 
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => AppAndDataHelpers.AsDynamic(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => DnnAppAndDataHelpers.AsDynamic(entities);
 
         #endregion
 
         #region Data Source Stuff
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
-            return AppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
+            return DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
         }
 
         public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
-            return AppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
+            return DnnAppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
         }
 
 		/// <summary>
@@ -124,21 +135,21 @@ namespace ToSic.SexyContent.Razor
 		/// <typeparam name="T"></typeparam>
 		/// <param name="inStream"></param>
 		/// <returns></returns>
-		public T CreateSource<T>(IDataStream inStream) =>  AppAndDataHelpers.CreateSource<T>(inStream);
+		public T CreateSource<T>(IDataStream inStream) =>  DnnAppAndDataHelpers.CreateSource<T>(inStream);
 
         #endregion
 
         #region Content, Presentation, ListContent, ListPresentation and List
-        public dynamic Content => AppAndDataHelpers.Content;
+        public dynamic Content => DnnAppAndDataHelpers.Content;
 
-        public dynamic Presentation => AppAndDataHelpers.Content?.Presentation;
+        public dynamic Presentation => DnnAppAndDataHelpers.Content?.Presentation;
 
-        public dynamic ListContent => AppAndDataHelpers.ListContent;
+        public dynamic ListContent => DnnAppAndDataHelpers.ListContent;
 
-        public dynamic ListPresentation => AppAndDataHelpers.ListContent?.Presentation;
+        public dynamic ListPresentation => DnnAppAndDataHelpers.ListContent?.Presentation;
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
-        public List<Element> List => AppAndDataHelpers.List;
+        public List<Element> List => DnnAppAndDataHelpers.List;
         #endregion
 
         #endregion
@@ -153,7 +164,7 @@ namespace ToSic.SexyContent.Razor
         {
             var path = NormalizePath(relativePath);
 
-            if(!File.Exists(HostingEnvironment.MapPath(path)))
+            if(!System.IO.File.Exists(HostingEnvironment.MapPath(path)))
                 throw new FileNotFoundException("The shared file does not exist.", path);
 
             var webPage = (SexyContentWebPage)CreateInstanceFromVirtualPath(path);
@@ -185,7 +196,7 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AdamNavigator AsAdam(DynamicEntity entity, string fieldName) =>  AppAndDataHelpers.AsAdam(entity, fieldName);
+        public AdamNavigator AsAdam(DynamicEntity entity, string fieldName) =>  DnnAppAndDataHelpers.AsAdam(entity, fieldName);
         
 
         /// <summary>
@@ -194,7 +205,7 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AdamNavigator AsAdam(IEntity entity, string fieldName) =>  AppAndDataHelpers.AsAdam(entity, fieldName);
+        public AdamNavigator AsAdam(IEntity entity, string fieldName) =>  DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
         #endregion
 
@@ -204,7 +215,7 @@ namespace ToSic.SexyContent.Razor
         /// Helper commands to enable in-page editing functionality
         /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
         /// </summary>
-        public IInPageEditingSystem Edit => AppAndDataHelpers.Edit;
+        public IInPageEditingSystem Edit => DnnAppAndDataHelpers.Edit;
 
         #endregion
     }

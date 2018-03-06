@@ -1,5 +1,4 @@
 ﻿using System.Web.Http.Controllers;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
@@ -10,7 +9,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
     [WebApiLogDetails]
     public class DnnApiControllerWithFixes: DnnApiController
     {
-        protected IEnvironment<PortalSettings> Env;
+        protected IEnvironment Env;
         protected Log Log;
 
 	    public DnnApiControllerWithFixes()

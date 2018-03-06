@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -11,7 +10,6 @@ using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Dnn;
 using Assembly = System.Reflection.Assembly;
@@ -39,7 +37,6 @@ namespace ToSic.SexyContent.WebApi
             Log.Add("get langs");
 	        var portalId = PortalSettings.PortalId;
 	        var zoneId = Env.ZoneMapper.GetZoneId(portalId);
-	        // var env = new Environment.DnnEnvironment(Log);
 	        // ReSharper disable once PossibleInvalidOperationException
 	        var cultures = Env.ZoneMapper.CulturesWithState(portalId, zoneId) 
 	            .Select(c => new
@@ -74,7 +71,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic Apps(int zoneId)
         {
-            var list = AppManagement.GetApps(zoneId, true, new PortalSettings(ActiveModule.OwnerPortalID), Log);
+            var list = AppManagement.GetApps(zoneId, true, new DnnTennant(new PortalSettings(ActiveModule.OwnerPortalID)), Log);
             return list.Select(a => new
             {
                 Id = a.AppId,
@@ -90,7 +87,7 @@ namespace ToSic.SexyContent.WebApi
 
         private string GetPath(int zoneId, int appId)
         {
-            var app = new App(zoneId, appId , PortalSettings);
+            var app = new App(zoneId, appId , new DnnTennant(PortalSettings));
             return app.Path;
         }
 
@@ -98,7 +95,7 @@ namespace ToSic.SexyContent.WebApi
         public void DeleteApp(int zoneId, int appId)
         {
             var userId = PortalSettings.Current.UserId;
-            AppManagement.RemoveAppInDnnAndEav(Env, zoneId, appId, PortalSettings, userId, Log);
+            AppManagement.RemoveAppInTennantAndEav(Env, zoneId, appId, new DnnTennant(PortalSettings), userId, Log);
         }
 
         [HttpPost]
@@ -121,7 +118,7 @@ namespace ToSic.SexyContent.WebApi
             App app = null;
             try
             {
-                app = new App(PortalSettings.Current, appId);
+                app = new App(new DnnTennant(PortalSettings.Current), appId);
             }
             catch (KeyNotFoundException) {}
 

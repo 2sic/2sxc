@@ -122,6 +122,7 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ConfigurationLoader.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -150,6 +151,7 @@
     <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.designer.cs">
       <DependentUpon>QuickEdit.ascx</DependentUpon>
     </Compile>
+    <Compile Include="RepositoryInfoEavAndUi.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -191,10 +193,16 @@
     <Content Include="README.md" />
     <Content Include="package.json" />
     <Content Include="packages.config" />
+    <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
+    <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
+    <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <Content Include="web-Deploy.config" />
     <Content Include="web.config" />
+    <Content Include="SexyContent\ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
+    <Content Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
+    <Content Include="SexyContent\readme.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\View.ascx.resx" />
@@ -238,6 +246,18 @@
       <Project>{cf3b9349-8c66-4901-8edb-a4ec1d75326b}</Project>
       <Name>ToSic.Eav</Name>
     </ProjectReference>
+    <ProjectReference Include="2Sexy Content Razor\2sxc Razor.csproj">
+      <Project>{78a558af-f274-4e3c-95fe-8de9226e0ebc}</Project>
+      <Name>2sxc Razor</Name>
+    </ProjectReference>
+    <ProjectReference Include="2sxc Dnn\2sxc Dnn.csproj">
+      <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
+      <Name>2sxc Dnn</Name>
+    </ProjectReference>
+    <ProjectReference Include="Sxc WebApi\2sxc Dnn WebApi.csproj">
+      <Project>{2f0610de-2518-4fc8-823e-7228dd17c04f}</Project>
+      <Name>2sxc Dnn WebApi</Name>
+    </ProjectReference>
     <ProjectReference Include="ToSic.Sxc\2sxc core %28ToSic.Sxc%29.csproj">
       <Project>{66318f76-3d43-406c-8de6-94b46c22f776}</Project>
       <Name>2sxc core %28ToSic.Sxc%29</Name>
@@ -266,21 +286,9 @@
     <Content Include=".data\queries\Query.Eav.Queries.Global.Zones.json" />
     <Content Include="ClientScripts\readme.md" />
     <Content Include="DnnPackageBuilder\2sic_2SexyContent.dnn" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\00.99.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\07.00.03.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\07.02.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\07.02.02.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\07.03.01.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\07.03.03.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\08.00.06.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\08.01.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\08.03.02.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\08.05.02.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\09.03.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\09.07.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\readme.md" />
+    <Content Include="API\readme.md" />
+    <Content Include="BuildScripts\readme.md" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>

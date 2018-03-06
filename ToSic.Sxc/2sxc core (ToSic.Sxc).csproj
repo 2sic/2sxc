@@ -30,22 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotNetNuke, Version=7.4.2.216, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\DotNetNuke.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetNuke.Web, Version=7.4.2.216, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\DotNetNuke.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetNuke.Web.Client, Version=7.4.2.216, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\DotNetNuke.Web.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetNuke.WebUtility, Version=4.2.1.783, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\DotNetNuke.WebUtility.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.Extensions.DependencyInjection.1.1.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
     </Reference>
@@ -80,58 +64,40 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Adam\AdamController.cs.txt" />
     <Compile Include="Adam\AdamFile.cs" />
     <Compile Include="Adam\AdamFolder.cs" />
-    <Compile Include="Adam\AdamItem.cs" />
     <Compile Include="Adam\AdamManager.cs" />
     <Compile Include="Adam\AdamNavigator.cs" />
-    <Compile Include="Adam\EntityBase.cs" />
+    <Compile Include="Adam\AdamBrowseContext.cs" />
     <Compile Include="Adam\Export.cs" />
-    <Compile Include="Adam\GuidHelpers.cs" />
     <Compile Include="Adam\IAdamItem.cs" />
-    <Compile Include="Adam\UploadResult.cs" />
-    <Compile Include="Class1.cs" />
-    <Compile Include="DependencyInjection.cs" />
+    <Compile Include="Adam\IEnvironmentFileSystem.cs" />
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
-    <Compile Include="DnnWebForms\Helpers\DnnLinkHelper.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\InPageEditingSystem\IInPageEditingSystem.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelperBase.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
-    <Compile Include="Environment\Base\ClientDepedencyManager.cs" />
-    <Compile Include="Environment\Dnn7\ClientDependencyManager.cs" />
-    <Compile Include="Environment\Dnn7\DataSources\DnnSqlDataSource.cs" />
-    <Compile Include="Environment\Dnn7\DataSources\DnnUserProfileDataSource.cs" />
-    <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
-    <Compile Include="Environment\Dnn7\DnnPermissionController.cs" />
-    <Compile Include="Environment\Dnn7\DnnTennant.cs" />
-    <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
-    <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
-    <Compile Include="Environment\Dnn7\Factory.cs" />
-    <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
-    <Compile Include="Environment\Dnn7\Logging.cs" />
-    <Compile Include="Environment\Dnn7\ModuleSettingsHelper.cs" />
-    <Compile Include="Environment\Dnn7\PagePublishing.cs" />
-    <Compile Include="Environment\Dnn7\PagePublishing_ModuleSettings.cs" />
-    <Compile Include="Environment\Dnn7\Permissions.cs" />
-    <Compile Include="Environment\Dnn7\RenderingHelpers.cs" />
-    <Compile Include="Environment\Dnn7\UserIdentity.cs" />
-    <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
-    <Compile Include="Environment\DnnEnvironment.cs" />
-    <Compile Include="Environment\Interfaces\IClientDependencyManager.cs" />
-    <Compile Include="Environment\None\Permissions.cs" />
-    <Compile Include="Environment\RepositoryInfoEavAndUi.cs" />
+    <Compile Include="Environment.Base\ClientDepedencyManager.cs" />
+    <Compile Include="Edit\ClientContextInfo\ClientInfoContentBlock.cs" />
+    <Compile Include="Edit\ClientContextInfo\ClientInfoContentGroup.cs" />
+    <Compile Include="Edit\ClientContextInfo\ClientInfoEntity.cs" />
+    <Compile Include="Edit\ClientContextInfo\ClientInfosError.cs" />
+    <Compile Include="Interfaces\IEnvironmentInfo.cs" />
+    <Compile Include="Interfaces\IEnvironmentInstaller.cs" />
+    <Compile Include="Interfaces\IRenderingHelpers.cs" />
+    <Compile Include="Interfaces\IClientDependencyManager.cs" />
     <Compile Include="Interfaces\IApp.cs" />
     <Compile Include="Interfaces\IAppData.cs" />
     <Compile Include="Interfaces\IContentBlock.cs" />
     <Compile Include="Interfaces\IDynamicEntity.cs" />
     <Compile Include="Interfaces\ILinkHelper.cs" />
+    <Compile Include="Interfaces\IWebFactoryTemp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\App.cs" />
-    <Compile Include="SexyContent\AppAndDataHelpers.cs" />
+    <Compile Include="SexyContent\AppAndDataHelpersBase.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditor.cs" />
     <Compile Include="SexyContent\Constants.cs" />
@@ -147,23 +113,15 @@
     <Compile Include="SexyContent\ContentGroup.cs" />
     <Compile Include="SexyContent\ContentGroupManager.cs" />
     <Compile Include="SexyContent\DataPublishing.cs" />
-    <Compile Include="SexyContent\DataSources\App.cs" />
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
-    <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
     <Compile Include="SexyContent\DataSources\SxcInstanceValueProvider.cs" />
-    <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
-    <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
-    <Compile Include="SexyContent\DnnHelper.cs" />
     <Compile Include="SexyContent\DynamicEntity.cs" />
     <Compile Include="SexyContent\DynamicEntityList.cs" />
     <Compile Include="SexyContent\EAV\Extensions\EntityDecorator.cs" />
     <Compile Include="SexyContent\EAV\Extensions\EntityInContentGroup.cs" />
-    <Compile Include="SexyContent\EAV\Extensions\IHasEditingData.cs" />
-    <Content Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs.txt">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
+    <Compile Include="Interfaces\IHasEditingData.cs" />
     <Compile Include="SexyContent\Engines\EngineBase.cs" />
     <Compile Include="SexyContent\Engines\EngineFactory.cs" />
     <Compile Include="SexyContent\Engines\IEngine.cs" />
@@ -173,31 +131,16 @@
     <Compile Include="SexyContent\Engines\TokenEngine\AppPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
+    <Compile Include="Interfaces\IEnvironmentValueProviders.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEAV.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
-    <Compile Include="SexyContent\ImportExport\ToSxcXmlExporter.cs" />
-    <Compile Include="SexyContent\Installer\Helpers.cs" />
-    <Compile Include="SexyContent\Installer\InstallationController.cs" />
-    <Compile Include="SexyContent\Installer\Lock.cs" />
-    <Compile Include="SexyContent\Installer\Logger.cs" />
-    <Compile Include="SexyContent\Installer\Status.cs" />
-    <Compile Include="SexyContent\Installer\V7.cs" />
-    <Compile Include="SexyContent\Installer\V8.cs" />
-    <Compile Include="SexyContent\Installer\VersionBase.cs" />
     <Compile Include="SexyContent\Internal\AppHelpers.cs" />
     <Compile Include="SexyContent\Internal\AppManagement.cs" />
-    <Compile Include="SexyContent\Internal\DnnStuffToRefactor.cs" />
-    <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
+    <Compile Include="Interfaces\IMapAppToInstance.cs" />
     <Compile Include="SexyContent\Internal\TemplateHelpers.cs" />
     <Compile Include="SexyContent\ISxcInstance.cs" />
-    <Compile Include="SexyContent\Search\ISearchInfo.cs" />
-    <Compile Include="SexyContent\Search\SearchController.cs" />
-    <Compile Include="SexyContent\Search\SearchIndexException.cs" />
-    <Compile Include="SexyContent\Search\SearchInfo.cs" />
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\Settings.cs" />
     <Compile Include="SexyContent\SexyContentException.cs" />
@@ -238,13 +181,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="SexyContent\ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
-    <None Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
-    <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
-    <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
+    <Folder Include="Sxc\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

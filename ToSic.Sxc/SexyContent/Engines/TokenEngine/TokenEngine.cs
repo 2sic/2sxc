@@ -1,18 +1,19 @@
-﻿using DotNetNuke.Entities.Portals;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Hosting;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class TokenEngine : EngineBase
+    internal class TokenEngine : EngineBase
     {
         #region Replacement List to still support old Tokens
         // Version 6 to 7
@@ -59,7 +60,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         #endregion
 
 
-        private AppAndDataHelpers _dataHelper;
+        private AppAndDataHelpersBase _dataHelper;
 
         private TokenReplaceEav _tokenReplace;
 
@@ -73,13 +74,13 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 
         private void InitDataHelper()
         {
-            _dataHelper = new AppAndDataHelpers(Sexy);
+            _dataHelper = Factory.Resolve<IWebFactoryTemp>().AppAndDataHelpers(Sexy) as AppAndDataHelpersBase ;// new AppAndDataHelpers(Sexy);
         }
 
         private void InitTokenReplace()
         {
-            var confProv = ConfigurationProvider.GetConfigProviderForModule(ModuleInfo.ModuleID, Sexy.App, Sexy);
-            _tokenReplace = new TokenReplaceEav(App, ModuleInfo.ModuleID, PortalSettings.Current, confProv);
+            var confProv = ConfigurationProvider.GetConfigProviderForModule(InstInfo.Id, Sexy.App, Sexy);
+            _tokenReplace = new TokenReplaceEav(App, InstInfo.Id, /*PortalSettings.Current,*/ confProv);
             
             // Add the Content and ListContent property sources used always
             _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new DynamicEntityPropertyAccess(SourcePropertyName.ListContent, _dataHelper.ListContent));

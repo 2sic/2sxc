@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.WebApi
@@ -26,6 +27,7 @@ namespace ToSic.SexyContent.WebApi
             var cbidHeader = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();
 
+
             // get url parameters and provide override values to ensure all configuration is 
             // preserved in AJAX calls
             List<KeyValuePair<string, string>> urlParams = null;
@@ -43,7 +45,10 @@ namespace ToSic.SexyContent.WebApi
             if (allowNoContextFound & moduleInfo == null)
                 return null;
 
-            IContentBlock contentBlock = new ModuleContentBlock(moduleInfo, log, urlParams);
+            var tennant = moduleInfo == null
+                ? new DnnTennant(null)
+                : new DnnTennant(new PortalSettings(moduleInfo.OwnerPortalID));
+            IContentBlock contentBlock = new ModuleContentBlock(new DnnInstanceInfo(moduleInfo), log, tennant, urlParams);
 
             // check if we need an inner block
             if (request.Headers.Contains(cbidHeader)) { 

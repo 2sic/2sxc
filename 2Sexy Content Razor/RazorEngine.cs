@@ -8,6 +8,10 @@ using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Apps.Interfaces;
+using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
@@ -110,9 +114,9 @@ namespace ToSic.SexyContent.Engines
         private void InitHelpers(SexyContentWebPage webPage)
         {
             webPage.Html = new HtmlHelper();
-            webPage.Url = new UrlHelper(ModuleInfo);
+            webPage.Url = new UrlHelper(InstInfo);
             webPage.Sexy = Sexy;
-            webPage.AppAndDataHelpers = new AppAndDataHelpers(Sexy);
+            webPage.DnnAppAndDataHelpers = new DnnAppAndDataHelpers(Sexy);
 
         }
 
@@ -123,12 +127,12 @@ namespace ToSic.SexyContent.Engines
             var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
             // ReSharper disable once JoinNullCheckWithUsage
             if (objectValue == null)
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", new object[] { TemplatePath }));
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", TemplatePath));
 
             Webpage = objectValue as SexyContentWebPage;
 
             if ((Webpage == null))
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from SexyContentWebPage.", new object[] { TemplatePath }));
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from SexyContentWebPage.", TemplatePath));
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
@@ -139,7 +143,7 @@ namespace ToSic.SexyContent.Engines
         public override void CustomizeData() 
             => Webpage?.CustomizeData();
 
-        public override void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate) 
-            => Webpage?.CustomizeSearch(searchInfos, moduleInfo, beginDate);
+        public override void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, IInstanceInfo moduleInfo, DateTime beginDate) 
+            => Webpage?.CustomizeSearch(searchInfos, ((InstanceInfo<ModuleInfo>)moduleInfo).Info /*moduleInfo*/, beginDate);
     }
 }

@@ -1,31 +1,31 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using DotNetNuke.Services.FileSystem;
+using ToSic.Eav.Apps.Assets;
 
 namespace ToSic.SexyContent.Adam
 {
-    public class AdamFolder : FolderInfo, IAdamItem
+    public class AdamFolder : Folder, IAdamItem
     {
-        public EntityBase EntityBase;
+
+        public AdamBrowseContext AdamBrowseContext;
         public AdamManager Manager;
-        //public App App;
 
-        private IFolderManager _fldm = FolderManager.Instance;
-        private IFileManager _filem = FileManager.Instance;
+        private readonly IEnvironmentFileSystem _dnnfs;// = new DnnFileSystem();
 
+        public AdamFolder(IEnvironmentFileSystem envFs)
+        {
+            _dnnfs = envFs;
+        }
         /// <summary>
         /// Metadata for this folder
         /// This is usually an entity which has additional information related to this file
         /// </summary>
-        public DynamicEntity Metadata => EntityBase.GetFirstMetadata(FolderID, true);
+        public DynamicEntity Metadata => AdamBrowseContext.GetFirstMetadata(Id, true);
 
-        public string Url => EntityBase.GenerateWebPath(this);
+        public bool HasMetadata => AdamBrowseContext.GetFirstMetadataEntity(Id, false) != null;
 
-        public bool HasMetadata => EntityBase.GetFirstMetadataEntity(FolderID, false) != null;
+        public string Url => AdamBrowseContext.GenerateWebPath(this);
 
-        public string Type => "folder";
-        public string Name { get; internal set; }
-
+        public string Type => Classification.Folder;
 
         private IEnumerable<AdamFolder> _folders;
 
@@ -36,39 +36,13 @@ namespace ToSic.SexyContent.Adam
         {
             get
             {
-                if (_folders == null)
-                {
-                    // this is to skip it if it doesn't have subfolders...
-                    if (!HasChildren || string.IsNullOrEmpty(FolderName))
-                        return _folders = new List<AdamFolder>();
+                if (_folders != null) return _folders;
 
-                    var firstList = _fldm.GetFolders(this);
-
-                    _folders = firstList?.Select(f => new AdamFolder()
-                    {
-                        PortalID = f.PortalID,
-                        FolderPath = f.FolderPath,
-                        MappedPath = f.MappedPath,
-                        StorageLocation = f.StorageLocation,
-                        IsProtected = f.IsProtected,
-                        IsCached = f.IsCached,
-                        FolderMappingID = f.FolderMappingID,
-                        LastUpdated = f.LastUpdated,
-                        FolderID = f.FolderID,
-                        DisplayName = f.DisplayName,
-                        DisplayPath = f.DisplayPath,
-                        IsVersioned = f.IsVersioned,
-                        KeyID = (f as FolderInfo)?.KeyID ?? 0,
-                        ParentID = f.ParentID,
-                        UniqueId = f.UniqueId,
-                        VersionGuid = f.VersionGuid,
-                        WorkflowID = f.WorkflowID,
-                        //App = App,
-                        EntityBase = EntityBase,
-                        Name = f.DisplayName
-                    }).ToList()
-                               ?? new List<AdamFolder>();
-                }
+                // this is to skip it if it doesn't have subfolders...
+                if (!HasChildren || string.IsNullOrEmpty(Name))
+                    return _folders = new List<AdamFolder>();
+                
+                _folders = _dnnfs.GetFolders(Id, AdamBrowseContext);
                 return _folders;
             }
         }
@@ -76,43 +50,11 @@ namespace ToSic.SexyContent.Adam
 
         private IEnumerable<AdamFile> _files;
 
+
         /// <summary>
         /// Get all files in this folder
         /// </summary>
-        public IEnumerable<AdamFile> Files
-        {
-            get
-            {
-                if (_files == null)
-                {
-                    var firstList = _fldm.GetFiles(this);
-
-                    _files = firstList?.Select(f => new AdamFile()
-                    {
-                        UniqueId = f.UniqueId,
-                        VersionGuid = f.VersionGuid,
-                        PortalId = f.PortalId,
-                        FileName = f.FileName,
-                        Extension = f.Extension,
-                        Size = f.Size,
-                        Width = f.Width,
-                        Height = f.Height,
-                        ContentType = f.ContentType,
-                        FileId = f.FileId,
-                        Folder = f.Folder,
-                        FolderId = f.FolderId,
-                        StorageLocation = f.StorageLocation,
-                        IsCached = f.IsCached,
-                        SHA1Hash = f.SHA1Hash,
-                        EntityBase = EntityBase,
-
-                        // iAdamItem
-                        Name = System.IO.Path.GetFileNameWithoutExtension(f.FileName)
-                    }).ToList()
-                    ?? new List<AdamFile>();
-                }
-                return _files;
-            }
-        }
+        public IEnumerable<AdamFile> Files 
+            => _files ?? (_files = _dnnfs.GetFiles(Id, AdamBrowseContext));
     }
 }

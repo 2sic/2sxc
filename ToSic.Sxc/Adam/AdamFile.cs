@@ -1,22 +1,22 @@
-﻿using DotNetNuke.Services.FileSystem;
+﻿using ToSic.Eav.Apps.Assets;
 
 namespace ToSic.SexyContent.Adam
 {
-    public class AdamFile : FileInfo, IAdamItem
+    public class AdamFile : File, IAdamItem
     {
-        public EntityBase EntityBase;
+        public AdamBrowseContext AdamBrowseContext;
 
         /// <summary>
         /// Metadata for this file
         /// This is usually an entity which has additional information related to this file
         /// </summary>
-        public DynamicEntity Metadata => EntityBase.GetFirstMetadata(FileId, false);
+        public DynamicEntity Metadata => AdamBrowseContext.GetFirstMetadata(Id, false);
 
-        public bool HasMetadata => EntityBase.GetFirstMetadataEntity(FileId, false) != null;
+        public bool HasMetadata => AdamBrowseContext.GetFirstMetadataEntity(Id, false) != null;
 
-        public  string Url => EntityBase.GenerateWebPath(this);
+        public  string Url => AdamBrowseContext.GenerateWebPath(this);
 
-        public string Type => EntityBase.TypeName(Extension);
+        public string Type => Classification.TypeName(Extension);
         public string Name { get; internal set; }
     }
 }

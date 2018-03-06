@@ -46,13 +46,11 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
                 var likelyGuid = guidMatch.Groups[1].Value;
 
                 // check if guid is valid
-                Guid guid;
-                if (!Guid.TryParse(likelyGuid, out guid))
+                if (!Guid.TryParse(likelyGuid, out var guid))
                     continue;
 
-                object objFound;
                 DynamicEntity subitem = null;
-                var found = parent.TryGetMember(entityField, out objFound);
+                var found = parent.TryGetMember(entityField, out var objFound);
 
                 if (found)
                 {

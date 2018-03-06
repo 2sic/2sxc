@@ -2,18 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
-using Newtonsoft.Json;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent
 {
@@ -36,10 +33,6 @@ namespace ToSic.SexyContent
 
         public bool IsContentApp => ContentBlock.IsContentApp;
 
-        // 2016-09-16 deprecated these two shortcuts as mentioned in the todo, found ca. 3 + 4 use cases
-        //public TemplateManager AppTemplates => App.TemplateManager; // todo: remove, use App...
-        //public ContentGroupManager AppContentGroups => App.ContentGroupManager; // todo: remove, use App...
-
         #endregion
 
         public Log Log { get; }
@@ -57,9 +50,9 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Environment - should be the place to refactor everything into, which is the host around 2sxc
         /// </summary>
-        public Environment.DnnEnvironment Environment { get; }
+        public IEnvironment Environment { get; }
 
-        internal ModuleInfo ModuleInfo { get; }
+        public IInstanceInfo InstanceInfo { get; }
 
         internal IContentBlock ContentBlock { get; }
 
@@ -68,7 +61,7 @@ namespace ToSic.SexyContent
         /// This returns the PS of the original module. When a module is mirrored across portals,
         /// then this will be different from the PortalSettingsOfVisitedPage, otherwise they are the same
         /// </summary>
-        internal PortalSettings AppPortalSettings => ContentBlock.PortalSettings; // maybe pass in
+        internal ITennant Tennant => ContentBlock.Tennant;
 
         public ViewDataSource Data => ContentBlock.Data;
 
@@ -131,60 +124,46 @@ namespace ToSic.SexyContent
         #endregion
 
         #region Constructor
-        internal SxcInstance(IContentBlock cb, 
-            ModuleInfo runtimeModuleInfo, 
+        internal SxcInstance(IContentBlock  cb, 
+            IInstanceInfo runtimeModuleInfo, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
-            IPermissions permissions = null,
+            //IPermissions permissions = null,
             Log parentLog = null)
         {
             Log = new Log("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
-            Environment = new Environment.DnnEnvironment(Log);
+            Environment = Factory.Resolve<IEnvironmentFactory>().Environment(parentLog);//new Environment.DnnEnvironment(Log);
             ContentBlock = cb;
-            ModuleInfo = runtimeModuleInfo;
+            InstanceInfo = runtimeModuleInfo;
 
             // keep url parameters, because we may need them later for view-switching and more
             Parameters = urlparams;
 
             // modinfo is null in cases where things are not known yet, portalsettings are null in search-scenarios
-            Environment.Permissions = permissions
-                                      ?? (ModuleInfo != null && PortalSettings.Current != null
-                                          ? (IPermissions) new Permissions(ModuleInfo)
-                                          : new Environment.None.Permissions());
-
-            // url-override of view / data
-            // 2017-09-07 2dm/2rm - disabled this for now, will only use this if the sxc-instance cares about the current template - so when actually rendering a view
-            //CheckTemplateOverrides();   // allow view change on apps
+            //Environment.Permissions = permissions
+            //        ?? (InstanceInfo != null && PortalSettings.Current != null ? new DnnPermissions(InstanceInfo) as IPermissions : new Eav.Apps.Security.Permissions());
+                                      //?? (ModuleInfo != null && PortalSettings.Current != null
+                                      //    ? (IPermissions) new Permissions(ModuleInfo)
+                                      //    : new Environment.None.Permissions());
         }
 
-        // todo: remove this, move the call to the only use
-        internal SxcInstance(IContentBlock cb, SxcInstance runtimeInstance): this(cb, runtimeInstance.ModuleInfo, runtimeInstance.Parameters, runtimeInstance.Environment.Permissions)
-        {
-            //ContentBlock = cb;
-            //// Inherit various context information from the original SxcInstance
-            //ModuleInfo = runtimeInstance.ModuleInfo;
-            //Parameters = runtimeInstance.Parameters;
-            //Environment.Permissions = runtimeInstance.Environment.Permissions;
-
-            // url-override of view / data
-            // 2017-09-07 2dm/2rm - disabled this for now, will only use this if the sxc-instance cares about the current template - so when actually rendering a view
-            //CheckTemplateOverrides();   // allow view change on apps
-        }
         #endregion
 
         #region RenderEngine
         internal bool RenderWithDiv = true;
-        private bool RenderWithEditMetadata => Environment.Permissions.UserMayEditContent;
+        private bool UserMayEdit => Factory.Resolve<IPermissions>().UserMayEditContent(InstanceInfo); //Environment.Permissions.UserMayEditContent;
         public HtmlString Render()
         {
             Log.Add("render");
-            var renderHelp = new RenderingHelpers(this, Log);
+            var renderHelp = Factory.Resolve<IRenderingHelpers>().Init(this, Log);//  new DnnRenderingHelpers(this, Log);
             
             try
             {
                 string body = null;
 
                 #region do pre-check to see if system is stable & ready
-                var notReady = new InstallationController().CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
+
+                var installer = Factory.Resolve<IEnvironmentInstaller>();
+                var notReady = installer.UpgradeMessages();// new InstallationController().CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
                 if (!string.IsNullOrEmpty(notReady))
                 {
                     Log.Add("system isn't ready,show upgrade message");
@@ -202,7 +181,7 @@ namespace ToSic.SexyContent
                     if (ContentBlock.DataIsMissing)
                     {
                         Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
-                        if (Environment.Permissions.UserMayEditContent)
+                        if (UserMayEdit)// Environment.Permissions.UserMayEditContent)
                         {
                             body = ""; // stop further processing
                         }
@@ -237,13 +216,13 @@ namespace ToSic.SexyContent
                 #endregion
 
                 #region Wrap it all up into a nice wrapper tag
-                var editInfos = JsonConvert.SerializeObject(renderHelp.GetClientInfosAll());
+                var editInfos = renderHelp.GetClientInfosAll();
                 var editHelper = new InPageEditingHelper(this);
                 var startTag = !RenderWithDiv
                     ? ""
                     : $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
                       $" data-cb-id=\"{ContentBlock.ContentBlockId}\""
-                      + (RenderWithEditMetadata
+                      + (UserMayEdit
                           ? editHelper.Attribute("data-edit-context", editInfos)
                           : null)
                       + ">\n";
@@ -263,7 +242,7 @@ namespace ToSic.SexyContent
         public IEngine GetRenderingEngine(InstancePurposes renderingPurpose)
         {
             var engine = EngineFactory.CreateEngine(Template);
-            engine.Init(Template, App, ModuleInfo, Data, renderingPurpose, this, Log);
+            engine.Init(Template, App, InstanceInfo, Data, renderingPurpose, this, Log);
             return engine;
         }
 

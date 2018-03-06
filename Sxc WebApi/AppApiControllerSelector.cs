@@ -7,11 +7,11 @@ using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.Internal;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -68,8 +68,7 @@ namespace ToSic.SexyContent.WebApi
                     appFolder = sexy.App.Folder;
                 }
 
-                var portalSettings = PortalSettings.Current;
-                var controllerPath = Path.Combine(AppHelpers.AppBasePath(portalSettings), appFolder,
+                var controllerPath = Path.Combine(DnnMapAppToInstance.AppBasePath(), appFolder,
                     "api/" + controllerTypeName + ".cs");
 
                 if (File.Exists(HostingEnvironment.MapPath(controllerPath)))

@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.WebApi
 
             var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath, Log);
             var cultCount = Env.ZoneMapper
-                .CulturesWithState(appWrapper.App.Tennant.Settings.PortalId, appWrapper.App.ZoneId)
+                .CulturesWithState(appWrapper.App.Tennant.Id, appWrapper.App.ZoneId)
                 .Count(c => c.Active);
             return new
             {
@@ -142,7 +142,7 @@ namespace ToSic.SexyContent.WebApi
             var appRuntime = new AppRuntime(appId, Log);
 
             var fileName = $"2sxcContentExport_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}.xml";
-            var fileXml = new ToSxcXmlExporter().Init(zoneId, appId, appRuntime, false,
+            var fileXml = new DnnXmlExporter().Init(zoneId, appId, appRuntime, false,
                 contentTypeIdsString?.Split(';') ?? new string[0],
                 entityIdsString?.Split(';') ?? new string[0],
                 Log

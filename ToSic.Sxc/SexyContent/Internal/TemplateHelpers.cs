@@ -5,7 +5,7 @@ using System.Web.Hosting;
 
 namespace ToSic.SexyContent.Internal
 {
-    public class TemplateHelpers
+    internal class TemplateHelpers
     {
         public const string RazorC = "C# Razor";
         public const string TokenReplace = "Token";
@@ -24,9 +24,9 @@ namespace ToSic.SexyContent.Internal
         public void EnsureTemplateFolderExists(string templateLocation)
         {
             var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
-                ? HostingEnvironment.MapPath(Settings.PortalHostDirectory) 
-                : App.Tennant.Settings.HomeDirectoryMapPath;
-            var sexyFolderPath = Path.Combine(portalPath, Settings.TemplateFolder);
+                ? Path.Combine(HostingEnvironment.MapPath(Settings.PortalHostDirectory), Settings.AppsRootFolder) 
+                : App.Tennant.SxcPath;//.Settings.HomeDirectoryMapPath;
+            var sexyFolderPath = portalPath;// Path.Combine(portalPath, Settings.TemplateFolder);
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
 
@@ -55,9 +55,9 @@ namespace ToSic.SexyContent.Internal
         public static string GetTemplatePathRoot(string locationId, App app)
         {
             var rootFolder = locationId == Settings.TemplateLocations.HostFileSystem
-                ? Settings.PortalHostDirectory
-                : app.Tennant.Settings.HomeDirectory;
-            rootFolder += Settings.TemplateFolder + "/" + app.Folder;
+                ? Settings.PortalHostDirectory + Settings.AppsRootFolder
+                : app.Tennant.SxcPath;
+            rootFolder += "/" + app.Folder;
             return rootFolder;
         }
 
