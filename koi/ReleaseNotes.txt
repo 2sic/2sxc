@@ -1,7 +1,8 @@
-﻿<h3>Connect_Koi</h3>
+﻿<h3>Release Notes of Connect.Koi</h3>
+<p>
+	This is Connect.Koi - there are no special release notes.
+</p>
 <p class="Contributor">
-	dnn-connect.org <br />
-	<a href="mailto:info@2sxc.org">info@2sxc.org</a><br />
-	<a href=https://2sxc.org/>https://2sxc.org/</a><br />
-	This extension was created using <a href="http://www.christoc.com">Christoc's</a> Module Development Templates for DNN.
+	By DNN Connect and 2sic<br />
+	Visit <a href="https://connect-koi.net/" target="_blank">https://connect-koi.net/</a> to discover more.
 </p>

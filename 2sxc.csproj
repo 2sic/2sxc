@@ -190,6 +190,10 @@
     <Content Include="icon.png" />
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
+    <Content Include="koi\bin\Connect.Dnn.Koi.dll" />
+    <Content Include="koi\bin\Connect.Koi.dll" />
+    <Content Include="koi\License.txt" />
+    <Content Include="koi\ReleaseNotes.txt" />
     <Content Include="README.md" />
     <Content Include="package.json" />
     <Content Include="packages.config" />
@@ -289,6 +293,7 @@
     <Content Include="DnnPackageBuilder\readme.md" />
     <Content Include="API\readme.md" />
     <Content Include="BuildScripts\readme.md" />
+    <Content Include="koi\Resources.zip" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>

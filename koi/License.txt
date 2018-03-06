@@ -1,9 +1,7 @@
 ﻿<div class="License">
-	<h3>License</h3>
+	<h3>MIT License</h3>
 	<p class="Owner">
-		dnn-connect.org, 2sic.com and 2sxc.org <a href="https://2sxc.org/">https://2sxc.org/</a></br>
-		Copyright (c) 2018</br>	
-		by 2sxc.org</br>
+		Copyright (c) 2018 by DNN Connect and <a href="https://2sic.com/">2sic</a>/<a href="https://2sxc.org/">2sxc</a></br>
 	</p>
     <p>
         Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
