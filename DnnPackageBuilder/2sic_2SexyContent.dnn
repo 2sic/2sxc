@@ -700,5 +700,46 @@
       </components>
     </package>
 
+    
+    <package name="Connect.Dnn.Koi" type="Library" version="01.00.00">
+      <friendlyName>DnnConnect Koi</friendlyName>
+      <description>Koi</description>
+      <iconFile>icon.png</iconFile>
+      <owner>
+        <name>dnn-connect.org</name>
+        <organization>dnn-connect.org</organization>
+        <url>https://2sxc.org/</url>
+        <email>info@2sxc.org</email>
+      </owner>
+      <license src="koi\License.txt"></license>
+      <releaseNotes src="koi\ReleaseNotes.txt"></releaseNotes>
+      <azureCompatible>true</azureCompatible>
+      <dependencies>
+        <dependency type="CoreVersion">07.00.02</dependency>
+      </dependencies>
+
+      <components>
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath>DesktopModules/Connect.Dnn.Koi/</basePath>
+            <resourceFile>
+              <name>koi/Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
+        <component type="Assembly">
+          <assemblies>
+            <assembly>
+              <name>Connect.Dnn.Koi.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Connect.Koi.dll</name>
+              <path>bin</path>
+            </assembly>
+          </assemblies>
+        </component>
+      </components>
+    </package>
   </packages>
 </dotnetnuke>
