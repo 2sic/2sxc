@@ -9,7 +9,7 @@ namespace ToSic.SexyContent
     /// - the .data/
     /// - the dist/edit/.data/
     /// - the dist/sxc-edit/.data/
-    /// - the dev/.data (this is for testing only, will never be in the distribution)
+    /// - the .databeta (this is for testing only, will never be in the distribution)
     /// </summary>
     /// <remarks>
     /// Is used by reflection, so you won't see any direct references to this anywhere
