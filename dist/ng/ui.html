@@ -1,10 +1,19 @@
-<!doctype html><html><head><script>var
+<!doctype html>
+<html>
+
+<head>
+  <script>
+    var
       path = window.location.pathname,
       jsVersionCacheId = window.location.search;
 
     document.write('<base href="' + path + '">');
     document.write('<script src="../../js/2sxc.api.js' + jsVersionCacheId + '"></scr' + 'ipt>');
-    // must now close the script tag, so that the added tag is parsed before all other code</script><script>var apiUrl = $2sxc.urlParams.require('portalroot') + 'desktopmodules/2sxc/api/';
+    // must now close the script tag, so that the added tag is parsed before all other code
+
+  </script>
+  <script>
+    var apiUrl = $2sxc.urlParams.require('portalroot') + 'desktopmodules/2sxc/api/';
     createFakeSf(apiUrl);
 
     // Create a fake DNN Service-Framework, required by $2sxc to work properly
@@ -63,7 +72,28 @@
     window.reboot = function () {
       if (window.bootController)
         window.bootController.restart();
-    }</script><meta charset="utf-8"><title>Quick Dialog</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/x-icon" href="favicon.ico"><link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><!-- <link href="styles.bundle.css" rel="stylesheet"/></head> --></head><body><app-root></app-root><script>var s;
+    }
+
+  </script>
+  <meta charset="utf-8">
+  <title>Quick Dialog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- <link href="styles.bundle.css" rel="stylesheet"/></head> -->
+</head>
+
+<body>
+  <app-root></app-root>
+  <script>
+    var s;
     // now add the scripts as needed
     for (s = 0; s < scripts.length; s++) addScript(scripts[s]);
-    for (s = 0; s < styles.length; s++) addStyle(styles[s]);</script><!-- <script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body> --></body></html>
+    for (s = 0; s < styles.length; s++) addStyle(styles[s]);
+
+  </script>
+  <!-- <script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body> -->
+</body>
+
+</html>

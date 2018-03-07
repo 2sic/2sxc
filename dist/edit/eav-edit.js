@@ -557,9 +557,14 @@ angular.module("eavFieldTemplates")
     }]).controller("FieldTemplate-StringCtrl", ["$scope", function ($scope) {
         var vm = this;
         var validationRegexString = ".*";
-        var stringSettings = $scope.options.templateOptions.settings.merged;
-        if (stringSettings && stringSettings.ValidationRegExJavaScript)
-            validationRegexString = stringSettings.ValidationRegExJavaScript;
+
+        var settings = $scope.options.templateOptions.settings;
+        
+        // Do not use settings.merged here because there is an old (hidden field) that causes
+        // merged.ValidationRegExJavaScript to be always empty
+        if (settings.All && settings.All.ValidationRegExJavaScript)
+            validationRegexString = settings.All.ValidationRegExJavaScript;
+        
         vm.regexPattern = new RegExp(validationRegexString, 'i');
 
         console.log($scope.options.templateOptions);
@@ -953,6 +958,10 @@ angular.module("eavFieldTemplates")
                 if (errors[set].required) {
                     var req = errors[set].required.map(function (itm) { return { field: itm.$name, error: "required" }; });
                     msgs = msgs.concat(req);
+                }
+                if (errors[set].pattern) {
+                    var patt = errors[set].pattern.map(function (itm) { return { field: itm.$name, error: "not valid" }; });
+                    msgs = msgs.concat(patt);
                 }
             }
             var nice = msgs.map(function (err) {
