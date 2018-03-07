@@ -704,7 +704,7 @@
     </package>
 
     
-    <package name="Connect.Dnn.Koi" type="Library" version="01.00.03">
+    <package name="Connect.Dnn.Koi" type="Library" version="01.00.04">
       <friendlyName>DnnConnect Koi</friendlyName>
       <description>Koi</description>
       <iconFile>icon.png</iconFile>
