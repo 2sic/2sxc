@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.VisualQuery;
 
@@ -123,7 +124,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 				}
 
 				// create Entity and add to result
-				var entity = new Eav.Data.Entity(Eav.Constants.TransientAppId, user.UserID, ContentType, values, TitleField);
+				var entity = new Eav.Data.Entity(Eav.Constants.TransientAppId, user.UserID, ContentTypeBuilder.Fake(ContentType) , values, TitleField);
 				result.Add(entity);
 			}
 

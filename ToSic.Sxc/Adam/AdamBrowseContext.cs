@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Data.Builder;
 using ToSic.Eav.Identity;
 
 namespace ToSic.SexyContent.Adam
@@ -91,7 +92,7 @@ namespace ToSic.SexyContent.Adam
             if (meta == null)
             {
                 var emptyMetadata = new Dictionary<string, object> {{"Title", ""}};
-                meta = new Eav.Data.Entity(Eav.Constants.TransientAppId, 0, "", emptyMetadata, "Title");
+                meta = new Eav.Data.Entity(Eav.Constants.TransientAppId, 0, ContentTypeBuilder.Fake(""), emptyMetadata, "Title");
             }
             return new DynamicEntity(meta, new[] {Thread.CurrentThread.CurrentCulture.Name}, _sxcInstance);
 
