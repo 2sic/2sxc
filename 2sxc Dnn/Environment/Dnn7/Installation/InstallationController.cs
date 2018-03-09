@@ -10,6 +10,7 @@ using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Interfaces;
+using Exception = System.Exception;
 
 namespace ToSic.SexyContent.Environment.Dnn7.Installation
 {
@@ -97,72 +98,32 @@ namespace ToSic.SexyContent.Environment.Dnn7.Installation
                         MaybeResetUpgradeLogsToStartAgainFromV1();
                         break;
                     case "07.02.00":
-                        new V7(version, _installLogger, Log).Version070200();
-                        break;
                     case "07.02.02":
-                        // Make sure upgrades FROM BETWEEN 07.00.00 and 07.02.02 do not run again (create log files for each of them)
-                        _installLogger.LogVersionCompletedToPreventRerunningTheUpgrade("07.00.00", false);
-                        _installLogger.LogVersionCompletedToPreventRerunningTheUpgrade("07.00.03", false);
-                        _installLogger.LogVersionCompletedToPreventRerunningTheUpgrade("07.02.00", false);
-                        break;
                     case "07.03.01":
-                        new V7(version, _installLogger, Log).EnsurePipelineDesignerAttributeSets(); // Need to ensure this again because of upgrade problems
-                        break;
                     case "07.03.03":
-                        new V7(version, _installLogger, Log).Version070303();
-                        break;
                     case "08.00.02":
-                        new V8(version, _installLogger, Log).Version080002();
-                        break;
                     case "08.00.04":
-                        new V8(version, _installLogger, Log).Version080004();
-                        break;
                     case "08.00.07":
-                        new V8(version, _installLogger, Log).Version080007();
-                        break;
                     case "08.01.00":
-                        new V8(version, _installLogger, Log).Version080100();
-                        break;
                     case "08.03.00":
-                        break;
                     case "08.03.02":
-                        new V8(version, _installLogger, Log).Version080302();
-                        break;
                     case "08.03.03":
-                        new V8(version, _installLogger, Log).Version080303();
-                        break;
                     case "08.03.05":
-                        Helpers.ImportXmlSchemaOfVersion("08.03.05", false);
-                        break;
                     case "08.04.00":
-                        Helpers.ImportXmlSchemaOfVersion("08.04.00", false);
-                        break;
                     case "08.04.03":
-                        Helpers.ImportXmlSchemaOfVersion("08.04.03", false);
-                        break;
                     case "08.04.05":
-                        Helpers.ImportXmlSchemaOfVersion("08.04.03", false); // this is correct, RE-RUN 08.04.03 as there was a problem in that version number before
-                        break;
                     case "08.05.00":
-                        Helpers.ImportXmlSchemaOfVersion("08.05.00", false);
-                        break;
                     case "08.05.01":
-                        new V8(version, _installLogger, Log).Version080501();
-                        break;
                     case "08.05.02":
-                        Helpers.ImportXmlSchemaOfVersion("08.05.02", false);
-                        break;
                     case "08.05.03":
-                        Helpers.ImportXmlSchemaOfVersion("08.05.03", false);
-                        break;
                     case "08.05.05":
-                        Helpers.ImportXmlSchemaOfVersion("08.05.05", false);
-                        break;
                     case "08.11.00":
-                        new V8(version, _installLogger, Log).Version081100();
-                        break;
+                        throw new Exception("Trying to upgrade a 7 or 8 version - which isn't supported in v9.20+. Please upgrade to the latest 8.12 or 9.15before trying to upgrade to a 9.20+");
 
-                        // warning!!! when you add a new case, make sure you upgrade the version number on Settings.Installation.LastVersionWithServerChanges!!!
+                    // case "09.xx.xx":
+                    //Helpers.ImportXmlSchemaOfVersion("09.xx.xx", false);
+                    //new V9(version, _installLogger, Log).Version09xxxx();
+                    // warning!!! when you add a new case, make sure you upgrade the version number on Settings.Installation.LastVersionWithServerChanges!!!
                 }
                 _installLogger.LogStep(version, "version-list check / switch done", false);
 
