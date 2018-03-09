@@ -102,8 +102,6 @@
     <Compile Include="Environment\Dnn7\Installation\InstallationController.cs" />
     <Compile Include="Environment\Dnn7\Installation\Lock.cs" />
     <Compile Include="Environment\Dnn7\Installation\Logger.cs" />
-    <Compile Include="Environment\Dnn7\Installation\V7.cs" />
-    <Compile Include="Environment\Dnn7\Installation\V8.cs" />
     <Compile Include="Environment\Dnn7\Installation\VersionBase.cs" />
     <Compile Include="Environment\Dnn7\Logging.cs" />
     <Compile Include="Environment\Dnn7\ModuleSettingsHelper.cs" />
