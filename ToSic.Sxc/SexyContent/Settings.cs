@@ -33,7 +33,7 @@ namespace ToSic.SexyContent
         public static readonly string SexyContentGroupName = "2sxc designers";
         public static readonly string AttributeSetScope = "2SexyContent";
         //public static readonly string AttributeSetScopeApps = "2SexyContent-App";
-        public static readonly string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
+        //public static readonly string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
 
         //public static readonly string AttributeSetStaticNameApps = "2SexyContent-App";
         //public static readonly string AttributeSetStaticNameAppResources = "App-Resources";
