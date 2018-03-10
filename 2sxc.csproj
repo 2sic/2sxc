@@ -207,6 +207,7 @@
     <Content Include="SexyContent\ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
     <Content Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
     <Content Include="SexyContent\readme.md" />
+    <Content Include="Upgrade\readme.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\View.ascx.resx" />
@@ -297,6 +298,11 @@
     <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.AttributeFilter.json" />
     <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.EntityIdFilter.json" />
     <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.OwnerFilter.json" />
+    <Content Include=".data\ContentTypes\System.ContentType-InputType.json" />
+    <Content Include=".data\ContentTypes\System.DataPipeline.json" />
+    <Content Include=".data\ContentTypes\System.DataPipelinePart.json" />
+    <Content Include=".data\ContentTypes\System.PermissionConfiguration.json" />
+    <Content Include=".data\ContentTypes\System.ContentType.json" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>
