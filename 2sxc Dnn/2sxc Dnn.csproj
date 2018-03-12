@@ -92,7 +92,7 @@
     <Compile Include="Environment\Dnn7\DnnPermissionController.cs" />
     <Compile Include="Environment\Dnn7\DnnPermissions.cs" />
     <Compile Include="Environment\Dnn7\DnnRenderingHelpers.cs" />
-    <Compile Include="Environment\Dnn7\DnnTennant.cs" />
+    <Compile Include="Environment\Dnn7\DnnTenant.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
     <Compile Include="Environment\Dnn7\Factory.cs" />

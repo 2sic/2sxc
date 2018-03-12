@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.ImportExport
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, Log parentLog)
         {
-            var app = new App(zoneId, appId, new DnnTennant(null));
+            var app = new App(zoneId, appId, new DnnTenant(null));
             AdamManager = new AdamManager(PortalSettings.Current.PortalId, app);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
@@ -67,11 +67,11 @@ namespace ToSic.SexyContent.ImportExport
             return folder?.FolderPath;
         }
 
-        protected override TennantFileItem ResolveFile(int fileId)
+        protected override TenantFileItem ResolveFile(int fileId)
         {
             var fileController = FileManager.Instance;
             var file = fileController.GetFile(fileId);
-            return new TennantFileItem
+            return new TenantFileItem
             {
                 Id = fileId,
                 RelativePath = file?.RelativePath.Replace('/', '\\'),

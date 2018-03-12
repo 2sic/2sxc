@@ -10,7 +10,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
     {
         public DnnAppAndDataHelpers(SxcInstance sexy) : this(sexy, sexy.InstanceInfo, null) {}
 
-        public DnnAppAndDataHelpers(SxcInstance sexy, IInstanceInfo instance, Log parentLog): base(sexy, new DnnTennant(null), parentLog)
+        public DnnAppAndDataHelpers(SxcInstance sexy, IInstanceInfo instance, Log parentLog): base(sexy, new DnnTenant(null), parentLog)
         {
             // Init things than require module-info or similar, but not 2sxc
             Dnn = new DnnHelper(instance);

@@ -18,15 +18,15 @@ namespace ToSic.SexyContent.Adam
         private readonly SxcInstance _sxcInstance;
         private readonly App _app;
         public readonly AdamManager AdamManager;
-        private readonly ITennant _tennant;
+        private readonly ITenant _tenant;
         private readonly Guid _entityGuid;
         private readonly string _fieldName;
         private readonly bool _usePortalRoot;
 
-        public AdamBrowseContext(SxcInstance sxcInstance, App app, ITennant tennant, Guid eGuid, string fName, bool usePortalRoot)
+        public AdamBrowseContext(SxcInstance sxcInstance, App app, ITenant tenant, Guid eGuid, string fName, bool usePortalRoot)
         {
-            _tennant = tennant;
-            AdamManager = new AdamManager(tennant.Id, app);
+            _tenant = tenant;
+            AdamManager = new AdamManager(tenant.Id, app);
             _sxcInstance = sxcInstance;
             _app = app;
             _entityGuid = eGuid;
@@ -66,10 +66,10 @@ namespace ToSic.SexyContent.Adam
         }
 
         public string GenerateWebPath(AdamFile currentFile) 
-            => _tennant.ContentPath + currentFile.Folder + currentFile.FileName;
+            => _tenant.ContentPath + currentFile.Folder + currentFile.FileName;
 
         public string GenerateWebPath(AdamFolder currentFolder) 
-            => _tennant.ContentPath + currentFolder.FolderPath;
+            => _tenant.ContentPath + currentFolder.FolderPath;
 
         internal Folder Folder() => _folder ?? (_folder = Folder("", true));
 

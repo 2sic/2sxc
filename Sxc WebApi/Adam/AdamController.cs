@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.Adam
 
         private void PrepCore(Guid entityGuid, string fieldName, bool usePortalRoot)
         {
-            AdamBrowseContext = new AdamBrowseContext(SxcContext, App, new DnnTennant(Dnn.Portal), entityGuid, fieldName, usePortalRoot);
+            AdamBrowseContext = new AdamBrowseContext(SxcContext, App, new DnnTenant(Dnn.Portal), entityGuid, fieldName, usePortalRoot);
         }
 
         public int MaxFileSizeKb 

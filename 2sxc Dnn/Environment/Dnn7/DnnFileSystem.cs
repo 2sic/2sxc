@@ -11,13 +11,13 @@ namespace ToSic.SexyContent.Adam
     {
         private readonly IFolderManager _folderManager = FolderManager.Instance;
 
-        public bool FolderExists(int tennantId, string path) => _folderManager.FolderExists(tennantId, path);
+        public bool FolderExists(int tenantId, string path) => _folderManager.FolderExists(tenantId, path);
 
-        public void AddFolder(int tennantId, string path)
+        public void AddFolder(int tenantId, string path)
         {
             try
             {
-                _folderManager.AddFolder(tennantId, path);
+                _folderManager.AddFolder(tenantId, path);
             }
             catch (SqlException)
             {
@@ -32,8 +32,8 @@ namespace ToSic.SexyContent.Adam
 
         }
 
-        public Folder Get(int tennantId, string path, AdamBrowseContext fsh) 
-            => DnnToAdam(fsh, _folderManager.GetFolder(tennantId, path));
+        public Folder Get(int tenantId, string path, AdamBrowseContext fsh) 
+            => DnnToAdam(fsh, _folderManager.GetFolder(tenantId, path));
 
 
         public List<AdamFolder> GetFolders(int folderId, AdamBrowseContext adamBrowseContext) 

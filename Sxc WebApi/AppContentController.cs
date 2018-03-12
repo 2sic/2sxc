@@ -169,7 +169,7 @@ namespace ToSic.SexyContent.WebApi
             var userName = UserIdentity.CurrentUserIdentityToken;
 
             // try to create
-            var currentApp = new App(new DnnTennant(PortalSettings), appId);
+            var currentApp = new App(new DnnTenant(PortalSettings), appId);
             //currentApp.InitData(false, new ValueCollectionProvider());
             var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
             currentApp.InitData(false, 

@@ -22,14 +22,14 @@ namespace ToSic.SexyContent
         private readonly SxcInstance _sxcInstance;
 
         //public AppAndDataHelpersBase(SxcInstance sexy) : this(sexy, sexy.InstanceInfo, null) {}
-        private readonly ITennant _tennant;
-        protected AppAndDataHelpersBase(SxcInstance sexy, ITennant tennant, Log parentLog): base("Sxc.AppHlp", parentLog ?? sexy?.Log)
+        private readonly ITenant _tenant;
+        protected AppAndDataHelpersBase(SxcInstance sexy, ITenant tenant, Log parentLog): base("Sxc.AppHlp", parentLog ?? sexy?.Log)
         {
             if (sexy == null)
                 return;
 
             _sxcInstance = sexy;
-            _tennant = tennant;
+            _tenant = tenant;
             App = sexy.App;
             Data = sexy.Data;
 			Sxc = new SxcHelper(sexy);
@@ -129,7 +129,7 @@ namespace ToSic.SexyContent
 
             var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
 
-            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(_tennant.Id), App.AppId,
+            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as ValueCollectionProvider);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
@@ -151,7 +151,7 @@ namespace ToSic.SexyContent
 
             var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
 
-            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(_tennant.Id), App.AppId,
+            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as ValueCollectionProvider);
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider, Log);
         }
@@ -287,7 +287,7 @@ namespace ToSic.SexyContent
         public AdamNavigator AsAdam(Eav.Interfaces.IEntity entity, string fieldName)
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
-            return new AdamNavigator(envFs, _sxcInstance, App, _tennant, entity.EntityGuid, fieldName, false);
+            return new AdamNavigator(envFs, _sxcInstance, App, _tenant, entity.EntityGuid, fieldName, false);
         }
 
         #endregion

@@ -71,7 +71,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic Apps(int zoneId)
         {
-            var list = AppManagement.GetApps(zoneId, true, new DnnTennant(new PortalSettings(ActiveModule.OwnerPortalID)), Log);
+            var list = AppManagement.GetApps(zoneId, true, new DnnTenant(new PortalSettings(ActiveModule.OwnerPortalID)), Log);
             return list.Select(a => new
             {
                 Id = a.AppId,
@@ -87,7 +87,7 @@ namespace ToSic.SexyContent.WebApi
 
         private string GetPath(int zoneId, int appId)
         {
-            var app = new App(zoneId, appId , new DnnTennant(PortalSettings));
+            var app = new App(zoneId, appId , new DnnTenant(PortalSettings));
             return app.Path;
         }
 
@@ -95,7 +95,7 @@ namespace ToSic.SexyContent.WebApi
         public void DeleteApp(int zoneId, int appId)
         {
             var userId = PortalSettings.Current.UserId;
-            AppManagement.RemoveAppInTennantAndEav(Env, zoneId, appId, new DnnTennant(PortalSettings), userId, Log);
+            AppManagement.RemoveAppInTenantAndEav(Env, zoneId, appId, new DnnTenant(PortalSettings), userId, Log);
         }
 
         [HttpPost]
@@ -118,7 +118,7 @@ namespace ToSic.SexyContent.WebApi
             App app = null;
             try
             {
-                app = new App(new DnnTennant(PortalSettings.Current), appId);
+                app = new App(new DnnTenant(PortalSettings.Current), appId);
             }
             catch (KeyNotFoundException) {}
 

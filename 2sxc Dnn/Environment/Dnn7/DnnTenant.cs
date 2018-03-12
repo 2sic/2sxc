@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.Environment;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class DnnTennant: Tennant<PortalSettings>
+    public class DnnTenant: Tenant<PortalSettings>
 
     {
         public override string DefaultLanguage => Settings.DefaultLanguage;
@@ -20,6 +20,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public override string ContentPath => Settings.HomeDirectory;
 
-        public DnnTennant(PortalSettings settings) : base(settings ?? PortalSettings.Current) {}
+        public DnnTenant(PortalSettings settings) : base(settings ?? PortalSettings.Current) {}
     }
 }

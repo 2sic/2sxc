@@ -27,9 +27,9 @@ namespace ToSic.SexyContent.ContentBlocks
         /// </summary>
         /// <param name="instanceInfo">the dnn module-info</param>
         /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
-        /// <param name="tennant"></param>
+        /// <param name="tenant"></param>
         /// <param name="overrideParams">optional override parameters</param>
-        public ModuleContentBlock(IInstanceInfo instanceInfo, Log parentLog, ITennant tennant = null, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
+        public ModuleContentBlock(IInstanceInfo instanceInfo, Log parentLog, ITenant tenant = null, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
         {
             InstanceInfo = instanceInfo ?? throw new Exception("Need valid Instance/ModuleInfo / ModuleConfiguration of runtime");
             ParentId = instanceInfo.Id;
@@ -40,15 +40,11 @@ namespace ToSic.SexyContent.ContentBlocks
 
             // Ensure we know what portal the stuff is coming from
             // PortalSettings is null, when in search mode
-            Tennant = tennant;
-            //new DnnTennant(PortalSettings.Current == null || _dnnModule.OwnerPortalID != _dnnModule.PortalID
-            //    ? new PortalSettings(_dnnModule.OwnerPortalID)
-            //    : PortalSettings.Current);
-
+            Tenant = tenant;
 
             // important: don't use the SxcInstance.Environment, as it would try to init the Sxc-object before the app is known, causing various side-effects
             var tempEnv = Factory.Resolve<IEnvironmentFactory>().Environment(parentLog);
-            ZoneId = tempEnv.ZoneMapper.GetZoneId(tennant.Id); // use tennant as reference, as it can be different from instance.TennantId
+            ZoneId = tempEnv.ZoneMapper.GetZoneId(tenant.Id); // use tenant as reference, as it can be different from instance.TennantId
             
             AppId = Factory.Resolve<IMapAppToInstance>().GetAppIdFromInstance(instanceInfo, ZoneId) ?? 0;// fallback/undefined YET
 
@@ -65,7 +61,7 @@ namespace ToSic.SexyContent.ContentBlocks
             {
                 Log.Add("real app, will load data");
                 // try to load the app - if possible
-                App = new App(ZoneId, AppId, /*PortalSettings*/ Tennant, parentLog: Log);
+                App = new App(ZoneId, AppId, /*PortalSettings*/ Tenant, parentLog: Log);
 
                 Configuration = ConfigurationProvider.GetConfigProviderForModule(InstanceInfo.Id, App, SxcInstance);
 

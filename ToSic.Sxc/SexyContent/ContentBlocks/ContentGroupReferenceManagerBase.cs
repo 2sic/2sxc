@@ -83,9 +83,9 @@ namespace ToSic.SexyContent.ContentBlocks
         public IEnumerable<AppUiInfo> GetSelectableApps()
         {
             Log.Add("get selectable apps");
-            var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.Tennant.Id);
+            var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.Tenant.Id);
             return
-                AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.Tennant, Log)
+                AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.Tenant, Log)
                     .Where(a => !a.Hidden)
                     .Select(a => new AppUiInfo {
                         Name = a.Name,

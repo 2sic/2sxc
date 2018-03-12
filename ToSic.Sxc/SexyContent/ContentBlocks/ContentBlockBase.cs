@@ -59,7 +59,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         #endregion
 
-        public ITennant Tennant { get; protected set; }
+        public ITenant Tenant { get; protected set; }
 
         public ValueCollectionProvider Configuration { get; protected set; }
 

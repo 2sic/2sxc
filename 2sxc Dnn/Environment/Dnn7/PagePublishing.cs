@@ -105,9 +105,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 // publish all entites of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
                 var instanceInfo = new DnnInstanceInfo(dnnModule);
-                // must find tennant through module, as the PortalSettings.Current is null in search mode
-                var tennant = new DnnTennant(new PortalSettings(dnnModule.OwnerPortalID));
-                var cb = new ModuleContentBlock(instanceInfo, Log, tennant);
+                // must find tenant through module, as the PortalSettings.Current is null in search mode
+                var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
+                var cb = new ModuleContentBlock(instanceInfo, Log, tenant);
 
                 if (cb.ContentGroupExists)
                 {

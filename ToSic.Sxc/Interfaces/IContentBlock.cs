@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.Interfaces
         int AppId { get; }
         int ZoneId { get; }
 
-        ITennant Tennant { get; }
+        ITenant Tenant { get; }
 
         Template Template { get; set; }
 

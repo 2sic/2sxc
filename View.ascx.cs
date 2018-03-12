@@ -24,7 +24,7 @@ namespace ToSic.SexyContent
         protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(
                                               new DnnInstanceInfo(ModuleConfiguration),
                                               Log,
-                                              new DnnTennant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
+                                              new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
                                           .SxcInstance);
 
         private Log Log { get; } = new Log("Sxc.View");
@@ -68,7 +68,7 @@ namespace ToSic.SexyContent
                 // check things if it's a module of this portal (ensure everything is ok, etc.)
                 var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
                 if (!isSharedModule && !SxcI.ContentBlock.ContentGroupExists && SxcI.App != null)
-                    new DnnStuffToRefactor().EnsureTennantIsConfigured(SxcI, Server, ControlPath);
+                    new DnnStuffToRefactor().EnsureTenantIsConfigured(SxcI, Server, ControlPath);
 
                 var renderNaked = Request.QueryString["standalone"] == "true";
                 if (renderNaked)

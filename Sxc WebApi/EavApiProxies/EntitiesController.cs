@@ -56,7 +56,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var newItems = new List<ItemIdentifier>();
 
             // go through all the groups, assign relevant info so that we can then do get-many
-            var app = new App(new DnnTennant(PortalSettings.Current), appId, Log);
+            var app = new App(new DnnTenant(PortalSettings.Current), appId, Log);
             var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
 
             app.InitData(userMayEdit,// SxcContext.Environment.Permissions.UserMayEditContent, 
@@ -153,7 +153,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         private void DoAdditionalGroupProcessing(int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeader>> groupItems)
         {
             var myLog = new Log("2Ap.GrpPrc", Log, "start");
-            var app = new App(new DnnTennant(PortalSettings.Current), appId);
+            var app = new App(new DnnTenant(PortalSettings.Current), appId);
             var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
 
             app.InitData(userMayEdit,// SxcContext.Environment.Permissions.UserMayEditContent, 
@@ -279,7 +279,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    private static void ResolveItemIdOfGroup(int appId, ItemIdentifier item)
 	    {
             if (item.Group == null) return;
-	        var app = new App(new DnnTennant(PortalSettings.Current), appId);
+	        var app = new App(new DnnTenant(PortalSettings.Current), appId);
 	        var contentGroup = app.ContentGroupManager.GetContentGroup(item.Group.Guid);
 	        var part = contentGroup[item.Group.Part];
 	        item.EntityId = part[item.Group.Index].EntityId;

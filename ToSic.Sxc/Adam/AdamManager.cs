@@ -10,13 +10,13 @@ namespace ToSic.SexyContent.Adam
     public class AdamManager
     {
         private readonly App _app;
-        private readonly int _tennantId;
+        private readonly int _tenantId;
         public const string AdamAppRootFolder = "adam/[AppFolder]/";
         private readonly AdamBrowseContext _browseContext;
 
-        public AdamManager(int tennantId, App app, AdamBrowseContext browseContext = null)
+        public AdamManager(int tenantId, App app, AdamBrowseContext browseContext = null)
         {
-            _tennantId = tennantId;
+            _tenantId = tenantId;
             _app = app;
             _browseContext = browseContext;
             EnvironmentFs = Factory.Resolve<IEnvironmentFileSystem>();
@@ -29,11 +29,11 @@ namespace ToSic.SexyContent.Adam
         #region basic, generic folder commands -- all internal
         //private readonly IFolderManager _folderManager = FolderManager.Instance;
         internal readonly IEnvironmentFileSystem EnvironmentFs;// = new DnnFileSystem();
-        internal bool Exists(string path) => EnvironmentFs.FolderExists(_tennantId, path);
+        internal bool Exists(string path) => EnvironmentFs.FolderExists(_tenantId, path);
 
-        internal void Add(string path) => EnvironmentFs.AddFolder(_tennantId, path);
+        internal void Add(string path) => EnvironmentFs.AddFolder(_tenantId, path);
 
-        internal Folder Get(string path) => EnvironmentFs.Get(_tennantId, path, _browseContext);
+        internal Folder Get(string path) => EnvironmentFs.Get(_tenantId, path, _browseContext);
 
         internal Folder Folder(string path, bool autoCreate)
         {

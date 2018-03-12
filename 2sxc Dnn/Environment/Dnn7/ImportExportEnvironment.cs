@@ -31,9 +31,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// </summary>
         /// <param name="sourceFolder"></param>
         /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
-        public void TransferFilesToTennant(string sourceFolder, string destinationFolder)
+        public void TransferFilesToTenant(string sourceFolder, string destinationFolder)
         {
-            Log.Add($"transfer files to tennant from:{sourceFolder} to:{destinationFolder}");
+            Log.Add($"transfer files to tenant from:{sourceFolder} to:{destinationFolder}");
             var messages = Messages;
             var files = Directory.GetFiles(sourceFolder, "*.*");
 
@@ -81,17 +81,17 @@ namespace ToSic.SexyContent.Environment.Dnn7
             {
                 Log.Add($"subfolder:{sourceFolderPath}");
                 var newDestinationFolder = Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "").TrimStart('\\')).Replace('\\', '/');
-                TransferFilesToTennant(sourceFolderPath, newDestinationFolder);
+                TransferFilesToTenant(sourceFolderPath, newDestinationFolder);
             }
         }
 
-        public Version TennantVersion => typeof(PortalSettings).Assembly.GetName().Version;
+        public Version TenantVersion => typeof(PortalSettings).Assembly.GetName().Version;
 
         public string DefaultLanguage => PortalSettings.Current.DefaultLanguage;
 
         public string TemplatesRoot(int zoneId, int appId)
         {
-            var app = new App(zoneId, appId, new DnnTennant(PortalSettings.Current), false);
+            var app = new App(zoneId, appId, new DnnTenant(PortalSettings.Current), false);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
             var templateRoot =  HttpContext.Current.Server.MapPath(TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));

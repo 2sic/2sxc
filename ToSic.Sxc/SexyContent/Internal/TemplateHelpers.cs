@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.Internal
         {
             var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
                 ? Path.Combine(HostingEnvironment.MapPath(Settings.PortalHostDirectory), Settings.AppsRootFolder) 
-                : HostingEnvironment.MapPath(App.Tennant.SxcPath);//.Settings.HomeDirectoryMapPath;
+                : HostingEnvironment.MapPath(App.Tenant.SxcPath);//.Settings.HomeDirectoryMapPath;
             var sexyFolderPath = portalPath;// Path.Combine(portalPath, Settings.TemplateFolder);
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.Internal
         {
             var rootFolder = locationId == Settings.TemplateLocations.HostFileSystem
                 ? Settings.PortalHostDirectory + Settings.AppsRootFolder
-                : app.Tennant.SxcPath;
+                : app.Tenant.SxcPath;
             rootFolder += "/" + app.Folder;
             return rootFolder;
         }

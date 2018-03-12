@@ -20,38 +20,38 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         /// <inheritdoc />
         /// <summary>
-        /// Will get the EAV ZoneId for the current tennant
+        /// Will get the EAV ZoneId for the current tenant
         /// Always returns a valid value, as it will otherwise create one if it was missing
         /// </summary>
-        /// <param name="tennantId"></param>
+        /// <param name="tenantId"></param>
         /// <returns></returns>
-        public int GetZoneId(int tennantId)
+        public int GetZoneId(int tenantId)
         {
             // additional protection agains invalid portalid which may come from bad dnn configs and execute in search-index mode
             // see https://github.com/2sic/2sxc/issues/1054
-            if (tennantId < 0)
-                throw new Exception("Can't get zone for invalid portal ID: " + tennantId);
+            if (tenantId < 0)
+                throw new Exception("Can't get zone for invalid portal ID: " + tenantId);
 
             var zoneSettingKey = Settings.PortalSettingsPrefix + "ZoneID";
-            var c = PortalController.Instance.GetPortalSettings(tennantId);
-            var portalSettings = new PortalSettings(tennantId);
+            var c = PortalController.Instance.GetPortalSettings(tenantId);
+            var portalSettings = new PortalSettings(tenantId);
 
             int zoneId;
 
             // Create new zone automatically
             if (!c.ContainsKey(zoneSettingKey))
             {
-                zoneId = ZoneManager.CreateZone(portalSettings.PortalName + " (Portal " + tennantId + ")", Log);
-                PortalController.UpdatePortalSetting(tennantId, Settings.PortalSettingZoneId, zoneId.ToString());
+                zoneId = ZoneManager.CreateZone(portalSettings.PortalName + " (Portal " + tenantId + ")", Log);
+                PortalController.UpdatePortalSetting(tenantId, Settings.PortalSettingZoneId, zoneId.ToString());
             }
             else zoneId = Int32.Parse(c[zoneSettingKey]);
 
             return zoneId;
         }
 
-        public int GetZoneId(ITennant tennant) => GetZoneId(tennant.Id/*.Settings.PortalId*/);
+        public int GetZoneId(ITenant tenant) => GetZoneId(tenant.Id/*.Settings.PortalId*/);
 
-        public ITennant Tennant(int zoneId)
+        public ITenant Tenant(int zoneId)
         {
             var pinst = PortalController.Instance;
             var portals = pinst.GetPortals();
@@ -63,7 +63,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     return zid == zoneId ? new PortalSettings(p) : null;
                 })
                 .FirstOrDefault(f => f != null);
-            return found != null ? new DnnTennant(found) : null;
+            return found != null ? new DnnTenant(found) : null;
         }
 
 
@@ -71,13 +71,13 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// <summary>
         /// Returns all DNN Cultures with active / inactive state
         /// </summary>
-        public List<TempTempCulture> CulturesWithState(int tennantId, int zoneId)
+        public List<TempTempCulture> CulturesWithState(int tenantId, int zoneId)
         {
             // note: 
             var availableEavLanguages = new ZoneRuntime(zoneId, Log).Languages(true); 
-            var defaultLanguageCode = new PortalSettings(tennantId).DefaultLanguage;
+            var defaultLanguageCode = new PortalSettings(tenantId).DefaultLanguage;
 
-            return (from c in LocaleController.Instance.GetLocales(tennantId)
+            return (from c in LocaleController.Instance.GetLocales(tenantId)
                     select new TempTempCulture(
                         c.Value.Code,
                         c.Value.Text,
@@ -87,6 +87,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 .ThenBy(c => c.Key).ToList();
         }
 
-        public List<TempTempCulture> CulturesWithState(PortalSettings tennant, int zoneId) => CulturesWithState(tennant.PortalId, zoneId);
+        public List<TempTempCulture> CulturesWithState(PortalSettings tenant, int zoneId) => CulturesWithState(tenant.PortalId, zoneId);
     }
 }

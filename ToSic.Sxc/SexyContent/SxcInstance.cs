@@ -61,7 +61,7 @@ namespace ToSic.SexyContent
         /// This returns the PS of the original module. When a module is mirrored across portals,
         /// then this will be different from the PortalSettingsOfVisitedPage, otherwise they are the same
         /// </summary>
-        internal ITennant Tennant => ContentBlock.Tennant;
+        internal ITenant Tenant => ContentBlock.Tenant;
 
         public ViewDataSource Data => ContentBlock.Data;
 

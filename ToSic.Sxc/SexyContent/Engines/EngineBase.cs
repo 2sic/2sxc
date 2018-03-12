@@ -53,7 +53,7 @@ namespace ToSic.SexyContent.Engines
             CheckExpectedTemplateErrors();
 
             // check access permissions - before initializing or running data-code in the template
-            CheckTemplatePermissions(sxcInstance.Tennant);
+            CheckTemplatePermissions(sxcInstance.Tenant);
 
             // Run engine-internal init stuff
             Init();
@@ -134,7 +134,7 @@ namespace ToSic.SexyContent.Engines
             }
         }
 
-        private void CheckTemplatePermissions(ITennant tennant)
+        private void CheckTemplatePermissions(ITenant tenant)
         {
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
@@ -142,7 +142,7 @@ namespace ToSic.SexyContent.Engines
                 .ItemPermissions(Template.Entity, Log, InstInfo);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
-            if (tennant.RefactorUserIsAdmin || !permissionsOnThisTemplate.PermissionList.Any()) return;
+            if (tenant.RefactorUserIsAdmin || !permissionsOnThisTemplate.PermissionList.Any()) return;
             if (!permissionsOnThisTemplate.UserMay(PermissionGrant.Read))
                 throw new RenderingException(new UnauthorizedAccessException(
                     "This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions"));

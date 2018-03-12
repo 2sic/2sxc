@@ -67,7 +67,7 @@ namespace ToSic.SexyContent.ContentBlocks
             ContentBlockId = -cbDefinition.EntityId; 
 
             // Ensure we know what portal the stuff is coming from
-            Tennant = Parent.App.Tennant;
+            Tenant = Parent.App.Tenant;
 
             ZoneId = Parent.ZoneId;
 
@@ -82,7 +82,7 @@ namespace ToSic.SexyContent.ContentBlocks
             if (AppId == 0) return;
 
             // try to load the app - if possible
-            App = new App(ZoneId, AppId, Tennant);
+            App = new App(ZoneId, AppId, Tenant);
 
             Configuration = ConfigurationProvider.GetConfigProviderForModule(ParentId, App, SxcInstance);
 

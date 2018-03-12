@@ -45,10 +45,10 @@ namespace ToSic.SexyContent.WebApi
             if (allowNoContextFound & moduleInfo == null)
                 return null;
 
-            var tennant = moduleInfo == null
-                ? new DnnTennant(null)
-                : new DnnTennant(new PortalSettings(moduleInfo.OwnerPortalID));
-            IContentBlock contentBlock = new ModuleContentBlock(new DnnInstanceInfo(moduleInfo), log, tennant, urlParams);
+            var tenant = moduleInfo == null
+                ? new DnnTenant(null)
+                : new DnnTenant(new PortalSettings(moduleInfo.OwnerPortalID));
+            IContentBlock contentBlock = new ModuleContentBlock(new DnnInstanceInfo(moduleInfo), log, tenant, urlParams);
 
             // check if we need an inner block
             if (request.Headers.Contains(cbidHeader)) { 

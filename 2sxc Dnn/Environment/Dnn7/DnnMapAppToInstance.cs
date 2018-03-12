@@ -54,7 +54,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // Change to 1. available template if app has been set
             if (appId.HasValue)
             {
-                var app = new App(zoneId, appId.Value, new DnnTennant(null));
+                var app = new App(zoneId, appId.Value, new DnnTenant(null));
                 var templateGuid = app.TemplateManager.GetAllTemplates().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue)
                     ContentGroupManager.SetPreviewTemplate(instance.Id, templateGuid.Value);
@@ -119,7 +119,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             //Log.Add("update title");
 
-            var languages = sxcInstance.Environment.ZoneMapper.CulturesWithState(sxcInstance.InstanceInfo.TennantId,
+            var languages = sxcInstance.Environment.ZoneMapper.CulturesWithState(sxcInstance.InstanceInfo.TenantId,
                 sxcInstance.ZoneId.Value);
 
             // Find Module for default language
@@ -142,7 +142,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
                     // Find module for given Culture
                     var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
-                        originalModule.TabID, sxcInstance.InstanceInfo.TennantId,
+                        originalModule.TabID, sxcInstance.InstanceInfo.TenantId,
                         DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
 
                     // Break if no title module found
@@ -159,7 +159,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             }
         }
 
-        // todo: remove this, replace with calls to the current tennant -> RootPath
+        // todo: remove this, replace with calls to the current tenant -> RootPath
         public static string AppBasePath() 
             => Path.Combine(PortalSettings.Current.HomeDirectory, Settings.AppsRootFolder);
     }

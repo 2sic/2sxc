@@ -48,9 +48,9 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
 		            return searchDocuments;
             }
 
-            // must find tennant through module, as the PortalSettings.Current is null in search mode
-            var tennant = new DnnTennant(new PortalSettings(dnnModule.OwnerPortalID));
-            var mcb = new ModuleContentBlock(instance, Log, tennant);
+            // must find tenant through module, as the PortalSettings.Current is null in search mode
+            var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
+            var mcb = new ModuleContentBlock(instance, Log, tenant);
             var sexy = mcb.SxcInstance;
 
             var language = dnnModule.CultureCode;

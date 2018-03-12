@@ -13,9 +13,9 @@ namespace ToSic.SexyContent.Internal
         /// <summary>
         /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
         /// </summary>
-        public void EnsureTennantIsConfigured(SxcInstance sxc, HttpServerUtility server, string controlPath)
+        public void EnsureTenantIsConfigured(SxcInstance sxc, HttpServerUtility server, string controlPath)
         {
-            var sexyFolder = new DirectoryInfo(server.MapPath(sxc.Tennant.SxcPath));
+            var sexyFolder = new DirectoryInfo(server.MapPath(sxc.Tenant.SxcPath));
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Constants.ContentAppName));
             var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))

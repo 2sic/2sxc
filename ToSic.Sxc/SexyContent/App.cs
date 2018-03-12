@@ -65,13 +65,13 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        public App(ITennant tennant, int appId, Log parentLog = null) 
+        public App(ITenant tenant, int appId, Log parentLog = null) 
             : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog), 
-                  AutoLookup, appId, tennant, true, parentLog) { }
+                  AutoLookup, appId, tenant, true, parentLog) { }
 
-        public App(int zoneId, int appId, ITennant tennant, bool allowSideEffects = true, Log parentLog = null)
+        public App(int zoneId, int appId, ITenant tenant, bool allowSideEffects = true, Log parentLog = null)
             : base(Factory.Resolve<IEnvironmentFactory>().Environment(parentLog), 
-                  zoneId, appId, tennant, allowSideEffects, parentLog) { }
+                  zoneId, appId, tenant, allowSideEffects, parentLog) { }
         
 
         #region Paths

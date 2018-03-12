@@ -27,8 +27,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public static ISxcInstance SxcInstanceForModule(IInstanceInfo moduleInfo)
         {
             var dnnModule = ((InstanceInfo<ModuleInfo>) moduleInfo).Info;
-            var tennant = new DnnTennant(new PortalSettings(dnnModule.OwnerPortalID));
-            return new ModuleContentBlock(moduleInfo, parentLog: null, tennant: tennant).SxcInstance;
+            var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
+            return new ModuleContentBlock(moduleInfo, parentLog: null, tenant: tenant).SxcInstance;
         }
 
         public static IAppAndDataHelpers CodingHelpers(ISxcInstance sxc) 
@@ -43,7 +43,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public static IApp App(int appId, PortalSettings ownerPortalSettings, bool versioningEnabled = false, bool showDrafts = false)
         {
-            var appStuff = new App(new DnnTennant(ownerPortalSettings), appId);
+            var appStuff = new App(new DnnTenant(ownerPortalSettings), appId);
 
             var provider = new ValueCollectionProvider(); // use blank provider for now
 
