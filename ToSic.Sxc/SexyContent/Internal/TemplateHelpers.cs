@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 
@@ -25,27 +24,23 @@ namespace ToSic.SexyContent.Internal
         {
             var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
                 ? Path.Combine(HostingEnvironment.MapPath(Settings.PortalHostDirectory), Settings.AppsRootFolder) 
-                : App.Tennant.SxcPath;//.Settings.HomeDirectoryMapPath;
+                : HostingEnvironment.MapPath(App.Tennant.SxcPath);//.Settings.HomeDirectoryMapPath;
             var sexyFolderPath = portalPath;// Path.Combine(portalPath, Settings.TemplateFolder);
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
 
             // Create 2sxc folder if it does not exists
-            if (!sexyFolder.Exists)
-                sexyFolder.Create();
+            sexyFolder.Create();
 
             // Create web.config (copy from DesktopModules folder)
-            if (!sexyFolder.GetFiles("web.config").Any())
+            if (!sexyFolder.GetFiles(Settings.WebConfigFileName).Any())
                 File.Copy(HostingEnvironment.MapPath(Settings.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
 
             // Create a Content folder (or App Folder)
-            if (!String.IsNullOrEmpty(App.Folder))
-            {
-                var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, App.Folder));
-                if (!contentFolder.Exists)
-                    contentFolder.Create();
-            }
+            if (string.IsNullOrEmpty(App.Folder)) return;
 
+            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, App.Folder));
+            contentFolder.Create();
         }
         
 

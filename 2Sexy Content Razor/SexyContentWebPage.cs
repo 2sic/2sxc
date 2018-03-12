@@ -69,7 +69,6 @@ namespace ToSic.SexyContent.Razor
 
         #region AppAndDataHelpers implementation
 
-        /// <inheritdoc />
         public DnnHelper Dnn => DnnAppAndDataHelpers.Dnn;
 
         /// <inheritdoc />
@@ -81,7 +80,7 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public ViewDataSource Data => DnnAppAndDataHelpers.Data;
 
-        public /*IPermissions*/ RazorPermissions Permissions => new RazorPermissions(Sexy); // Sexy.Environment.Permissions;
+        public RazorPermissions Permissions => new RazorPermissions(Sexy);
 
         // temp - should be elsewhere, but quickly need it so Permissions-object still works after refactoring
         public class RazorPermissions // : DnnPermissions
@@ -119,23 +118,21 @@ namespace ToSic.SexyContent.Razor
         #endregion
 
         #region Data Source Stuff
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
-        {
-            return DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
-        }
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null) 
+            => DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
 
-        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
-        {
-            return DnnAppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
-        }
+        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null) 
+            => DnnAppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
 
-		/// <summary>
-		/// Create a source with initial stream to attach...
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="inStream"></param>
-		/// <returns></returns>
-		public T CreateSource<T>(IDataStream inStream) =>  DnnAppAndDataHelpers.CreateSource<T>(inStream);
+        /// <inheritdoc />
+        /// <summary>
+        /// Create a source with initial stream to attach...
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="inStream"></param>
+        /// <returns></returns>
+		public T CreateSource<T>(IDataStream inStream) 
+            =>  DnnAppAndDataHelpers.CreateSource<T>(inStream);
 
         #endregion
 
@@ -164,7 +161,7 @@ namespace ToSic.SexyContent.Razor
         {
             var path = NormalizePath(relativePath);
 
-            if(!System.IO.File.Exists(HostingEnvironment.MapPath(path)))
+            if(!File.Exists(HostingEnvironment.MapPath(path)))
                 throw new FileNotFoundException("The shared file does not exist.", path);
 
             var webPage = (SexyContentWebPage)CreateInstanceFromVirtualPath(path);

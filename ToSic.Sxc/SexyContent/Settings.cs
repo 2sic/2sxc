@@ -18,8 +18,8 @@ namespace ToSic.SexyContent
 
         //internal static readonly string ContentAppName = "Default";
 
-        public static readonly string PortalHostDirectory = "~/Portals/_default/";
-        public static readonly string AppsRootFolder = "2sxc";
+        public const string PortalHostDirectory = "~/Portals/_default/";
+        public const string AppsRootFolder = "2sxc";
         public const string PortalSettingsPrefix = "ToSIC_SexyContent_";
         public const string PortalSettingZoneId = PortalSettingsPrefix + "ZoneID";
         public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -28,10 +28,10 @@ namespace ToSic.SexyContent
                                                       + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString("00") + "."
                                                       + Assembly.GetExecutingAssembly().GetName().Version.Build.ToString("00");
 
-        public static readonly string WebConfigTemplatePath = "~/DesktopModules/ToSIC_SexyContent/WebConfigTemplate.config";
-        public static readonly string WebConfigFileName = "web.config";
-        public static readonly string SexyContentGroupName = "2sxc designers";
-        public static readonly string AttributeSetScope = "2SexyContent";
+        public const string WebConfigTemplatePath = "~/DesktopModules/ToSIC_SexyContent/WebConfigTemplate.config";
+        public const string WebConfigFileName = "web.config";
+        public const string SexyContentGroupName = "2sxc designers";
+        public const string AttributeSetScope = "2SexyContent";
         //public static readonly string AttributeSetScopeApps = "2SexyContent-App";
         //public static readonly string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
 
