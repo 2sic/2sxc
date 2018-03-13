@@ -26,51 +26,6 @@
               <name>00.99.00.SqlDataProvider</name>
               <version>00.99.00</version>
             </script>
-						<script type="Install">
-							<path>SqlDataProvider</path>
-							<name>07.00.03.SqlDataProvider</name>
-							<version>07.00.03</version>
-						</script>
-						<script type="Install">
-							<path>SqlDataProvider</path>
-							<name>07.02.00.SqlDataProvider</name>
-							<version>07.02.00</version>
-						</script>
-						<script type="Install">
-							<path>SqlDataProvider</path>
-							<name>07.02.02.SqlDataProvider</name>
-							<version>07.02.02</version>
-						</script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>07.03.01.SqlDataProvider</name>
-              <version>07.03.01</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>07.03.03.SqlDataProvider</name>
-              <version>07.03.03</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>08.00.06.SqlDataProvider</name>
-              <version>08.00.06</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>08.01.00.SqlDataProvider</name>
-              <version>08.01.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>08.03.02.SqlDataProvider</name>
-              <version>08.03.02</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>08.05.02.SqlDataProvider</name>
-              <version>08.05.02</version>
-            </script>
             <script type="Install">
               <path>SqlDataProvider</path>
               <name>09.03.00.SqlDataProvider</name>
