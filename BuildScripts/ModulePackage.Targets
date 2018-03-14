@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1252"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!-- WARNING, WARNING, WARNING -->
 <!-- REMEMBER THAT IF YOU MODIFY THE TARGETS FILE YOU NEED TO CLOSE/OPEN THE PROJECT FOR THE CHANGES TO TAKE EFFECT -->
@@ -36,6 +36,7 @@
       <DefaultExclude Include="DnnPackageBuilder\**" />
       <DefaultExclude Include="xSqlDataProvider\**" />
       <DefaultExclude Include=".databeta\**" />
+      <DefaultExclude Include=".data-custom\**" />
       <DefaultExclude Include="2Sexy Content Testing\**" />
 			<DefaultExclude Include=".git\**" />
       <DefaultExclude Include="**\node_modules\**" />

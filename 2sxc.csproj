@@ -162,6 +162,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".data-custom\readme.md" />
     <None Include=".databeta\readme.md" />
     <Content Include=".gitignore" />
     <Content Include="API\Services.asmx" />
@@ -216,6 +217,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include=".data-custom\contenttypes\" />
     <Folder Include=".databeta\queries\" />
   </ItemGroup>
   <ItemGroup>

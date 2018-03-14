@@ -23,7 +23,8 @@ namespace ToSic.SexyContent
             BuildPath(".data"),
             BuildPath("dist/edit/.data"),
             BuildPath("dist/sxc-edit/.data"),
-            BuildPath(".databeta")
+            BuildPath(".databeta"),
+            BuildPath(".data-custom")
         };
 
         private string BuildPath(string pathEnd) =>
