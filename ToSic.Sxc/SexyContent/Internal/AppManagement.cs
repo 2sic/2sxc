@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.Internal
         public static List<App> GetApps(int zoneId, bool includeDefaultApp, ITenant tenant, Log parentLog)
         {
             var appIds = new ZoneRuntime(zoneId, parentLog).Apps;
-            var builtApps = appIds.Select(eavApp => new App(zoneId, eavApp.Key, tenant));
+            var builtApps = appIds.Select(eavApp => new App(tenant, zoneId, eavApp.Key));
 
             if (!includeDefaultApp)
                 builtApps = builtApps.Where(a => a.Name != Eav.Constants.ContentAppName);
@@ -38,7 +38,7 @@ namespace ToSic.SexyContent.Internal
                 throw new Exception("The default app of a zone cannot be removed.");
 
             // Delete folder in dnn
-            var sexyApp = new App(zoneId, appId, tenant);
+            var sexyApp = new App(tenant, zoneId, appId);
             if (!IsNullOrEmpty(sexyApp.Folder) && Directory.Exists(sexyApp.PhysicalPath))
                 Directory.Delete(sexyApp.PhysicalPath, true);
 

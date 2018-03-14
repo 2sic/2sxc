@@ -61,7 +61,7 @@ namespace ToSic.SexyContent.ContentBlocks
             {
                 Log.Add("real app, will load data");
                 // try to load the app - if possible
-                App = new App(ZoneId, AppId, /*PortalSettings*/ Tenant, parentLog: Log);
+                App = new App(Tenant, ZoneId, /*PortalSettings*/ AppId, parentLog: Log);
 
                 Configuration = ConfigurationProvider.GetConfigProviderForModule(InstanceInfo.Id, App, SxcInstance);
 

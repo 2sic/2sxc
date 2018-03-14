@@ -82,7 +82,7 @@ namespace ToSic.SexyContent.ContentBlocks
             if (AppId == 0) return;
 
             // try to load the app - if possible
-            App = new App(ZoneId, AppId, Tenant);
+            App = new App(Tenant, ZoneId, AppId);
 
             Configuration = ConfigurationProvider.GetConfigProviderForModule(ParentId, App, SxcInstance);
 

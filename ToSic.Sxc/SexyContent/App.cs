@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Web;
-using ToSic.Eav;
 using ToSic.Eav.AppEngine;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
@@ -68,7 +67,7 @@ namespace ToSic.SexyContent
         public App(ITenant tenant, int appId, Log parentLog = null) 
             : base(tenant, AutoLookup, appId, true, parentLog) { }
 
-        public App(int zoneId, int appId, ITenant tenant, bool allowSideEffects = true, Log parentLog = null)
+        public App(ITenant tenant, int zoneId, int appId, bool allowSideEffects = true, Log parentLog = null)
             : base(tenant, zoneId, appId, allowSideEffects, parentLog) { }
         
 

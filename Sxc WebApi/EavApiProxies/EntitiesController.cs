@@ -64,7 +64,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             if (Dnn.User.IsSuperUser)
                 zoneId = SystemManager.ZoneIdOfApp(appId);
 
-            var app = new App(zoneId, appId, tenant, parentLog: Log);
+            var app = new App(tenant, zoneId, appId, parentLog: Log);
 
             // todo: if somehow app-access outside of tennant is allowed, get that app...
 

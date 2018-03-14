@@ -41,16 +41,29 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public static IApp App(int appId, bool versioningEnabled = false, bool showDrafts = false) 
             => App(appId, PortalSettings.Current, versioningEnabled, showDrafts);
 
+        /// <summary>
+        /// get a full app-object for accessing data of the app from outside
+        /// </summary>
+        /// <returns></returns>
+        public static IApp App(int zoneId, int appId, bool versioningEnabled = false, bool showDrafts = false) 
+            => App(zoneId, appId, PortalSettings.Current, versioningEnabled, showDrafts);
+
         public static IApp App(int appId, PortalSettings ownerPortalSettings, bool versioningEnabled = false, bool showDrafts = false)
         {
             var appStuff = new App(new DnnTenant(ownerPortalSettings), appId);
-
-            var provider = new ValueCollectionProvider(); // use blank provider for now
-
-            appStuff.InitData(showDrafts, versioningEnabled, provider);
-
-            return appStuff;
+            return ExtendAppWithDefaultProvider(versioningEnabled, showDrafts, appStuff);
         }
 
+        public static IApp App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool versioningEnabled = false, bool showDrafts = false)
+        {
+            var appStuff = new App(new DnnTenant(ownerPortalSettings), zoneId, appId);
+            return ExtendAppWithDefaultProvider(versioningEnabled, showDrafts, appStuff);
+        }
+        private static IApp ExtendAppWithDefaultProvider(bool versioningEnabled, bool showDrafts, App appStuff)
+        {
+            var provider = new ValueCollectionProvider(); // use blank provider for now
+            appStuff.InitData(showDrafts, versioningEnabled, provider);
+            return appStuff;
+        }
     }
 }

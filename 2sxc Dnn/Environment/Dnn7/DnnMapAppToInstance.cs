@@ -54,7 +54,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // Change to 1. available template if app has been set
             if (appId.HasValue)
             {
-                var app = new App(zoneId, appId.Value, new DnnTenant(null));
+                var app = new App(new DnnTenant(null), zoneId, appId.Value);
                 var templateGuid = app.TemplateManager.GetAllTemplates().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue)
                     ContentGroupManager.SetPreviewTemplate(instance.Id, templateGuid.Value);

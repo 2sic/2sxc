@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.ImportExport
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, Log parentLog)
         {
-            var app = new App(zoneId, appId, new DnnTenant(null));
+            var app = new App(new DnnTenant(null), zoneId, appId);
             AdamManager = new AdamManager(PortalSettings.Current.PortalId, app);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
