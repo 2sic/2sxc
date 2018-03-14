@@ -56,11 +56,22 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var newItems = new List<ItemIdentifier>();
 
             // go through all the groups, assign relevant info so that we can then do get-many
-            var app = new App(new DnnTenant(PortalSettings.Current), appId, Log);
-            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
+            var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
+            var tenant = new DnnTenant(PortalSettings.Current);
+            var zoneId = env.ZoneMapper.GetZoneId(tenant.Id);
 
-            app.InitData(userMayEdit,// SxcContext.Environment.Permissions.UserMayEditContent, 
-                SxcContext.Environment.PagePublishing /*new PagePublishing(Log)*/ .IsEnabled(ActiveModule.ModuleID), 
+            // super-users may also edit apps of other zones
+            if (Dnn.User.IsSuperUser)
+                zoneId = SystemManager.ZoneIdOfApp(appId);
+
+            var app = new App(zoneId, appId, tenant, parentLog: Log);
+
+            // todo: if somehow app-access outside of tennant is allowed, get that app...
+
+            var showDrafts = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
+
+            app.InitData(showDrafts, 
+                SxcContext.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), 
                 Data.ConfigurationProvider);
 
             foreach (var reqItem in items)
@@ -79,37 +90,43 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                 if (contentTypeStaticName == "")
                     continue;
 
-                var part = contentGroup[reqItem.Group.Part];
-                reqItem.ContentTypeName = contentTypeStaticName;
-                if (!reqItem.Group.Add && // not in add-mode
-                              part.Count > reqItem.Group.Index && // has as many items as desired
-                              part[reqItem.Group.Index] != null) // and the slot has something
-                    reqItem.EntityId = part[reqItem.Group.Index].EntityId;
+                ConvertListIndexToEntityIds(contentGroup, reqItem, contentTypeStaticName);
 
-                // tell the UI that it should not actually use this data yet, keep it locked
-                if (reqItem.Group.Part.ToLower().Contains(AppConstants.PresentationLower)) {
-                    reqItem.Group.SlotCanBeEmpty = true;  // all presentations can always be locked
-                    if (reqItem.EntityId == 0)
-                    {
-                        reqItem.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
-                        
-                        reqItem.DuplicateEntity =
-                            reqItem.Group.Part.ToLower() == AppConstants.PresentationLower
-                            ? contentGroup.Template.PresentationDemoEntity?.EntityId
-                            : contentGroup.Template.ListPresentationDemoEntity?.EntityId;
-                    }
-                }
-                
                 newItems.Add(reqItem);
             }
 
             // Now get all
             return EavEntitiesController.GetManyForEditing(appId, newItems);
-
-            // todo: find out how to handle Presentation items
         }
 
-        [HttpPost]
+	    private static void ConvertListIndexToEntityIds(ContentGroup contentGroup, ItemIdentifier reqItem,
+	        string contentTypeStaticName)
+	    {
+	        var part = contentGroup[reqItem.Group.Part];
+	        reqItem.ContentTypeName = contentTypeStaticName;
+	        if (!reqItem.Group.Add && // not in add-mode
+	            part.Count > reqItem.Group.Index && // has as many items as desired
+	            part[reqItem.Group.Index] != null) // and the slot has something
+	            reqItem.EntityId = part[reqItem.Group.Index].EntityId;
+
+	        // tell the UI that it should not actually use this data yet, keep it locked
+	        if (!reqItem.Group.Part.ToLower().Contains(AppConstants.PresentationLower))
+                return;
+
+	        reqItem.Group.SlotCanBeEmpty = true; // all presentations can always be locked
+
+	        if (reqItem.EntityId != 0)
+                return;
+
+	        reqItem.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
+
+	        reqItem.DuplicateEntity =
+	            reqItem.Group.Part.ToLower() == AppConstants.PresentationLower
+	                ? contentGroup.Template.PresentationDemoEntity?.EntityId
+	                : contentGroup.Template.ListPresentationDemoEntity?.EntityId;
+	    }
+
+	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items, [FromUri] bool partOfPage = false)
         {
@@ -122,7 +139,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
 
-            var versioning = Eav.Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
+            var versioning = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
             Dictionary<Guid, int> postSaveIds = null;
 
             void InternalSave(VersioningActionInfo args)
