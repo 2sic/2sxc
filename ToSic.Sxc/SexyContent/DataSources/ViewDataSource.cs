@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.DataSources
             moduleDataSource.UseSxcInstanceContentGroup = true; // new
 
             // If the Template has a Data-Pipeline, use an empty upstream, else use the ModuleDataSource created above
-            var viewDataSourceUpstream = overrideTemplate?.Pipeline == null
+            var viewDataSourceUpstream = overrideTemplate?.Query == null
                 ? moduleDataSource
                 : null;
             log.Add($"use pipeline upstream:{viewDataSourceUpstream != null}");
@@ -42,10 +42,10 @@ namespace ToSic.SexyContent.DataSources
                 viewDataSource.Publish.Enabled = overrideTemplate.PublishData;
                 viewDataSource.Publish.Streams = overrideTemplate.StreamsToPublish;
 
-                log.Add($"override template, & pipe#{overrideTemplate.Pipeline?.EntityId}");
+                log.Add($"override template, & pipe#{overrideTemplate.Query?.EntityId}");
                 // Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
-                if (overrideTemplate.Pipeline != null)
-                    new DataPipelineFactory(parentLog).GetDataSource(sxc.AppId ?? -999, overrideTemplate.Pipeline,
+                if (overrideTemplate.Query != null)
+                    new QueryFactory(parentLog).GetDataSource(sxc.AppId ?? -999, overrideTemplate.Query,
                         configurationProvider, viewDataSource, showDrafts: showDrafts);
 
             }

@@ -35,7 +35,7 @@ namespace ToSic.SexyContent.Edit.ClientContextInfo
 
             ZoneId = sxc.ZoneId ?? 0;
             TemplateId = sxc.Template?.TemplateId ?? 0;
-            QueryId = sxc.Template?.Pipeline?.EntityId; // will be null if not defined
+            QueryId = sxc.Template?.Query?.EntityId; // will be null if not defined
             ContentTypeName = sxc.Template?.ContentTypeStaticName ?? "";
             IsList = sxc.ContentGroup?.Template?.UseForList ?? false;//  isCreated && ((sxc.ContentGroup?.Content?.Count ?? 0) > 1);
             SupportsAjax = sxc.IsContentApp || sxc.App?.Configuration?.SupportsAjaxReload ?? false;
