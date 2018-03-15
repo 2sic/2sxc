@@ -37,7 +37,7 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
         internal static string RenderWithEditContext(DynamicEntity parent, DynamicEntity subItem, string cbFieldName,  Guid? newGuid = null, IInPageEditingSystem edit = null)
         {
             if (edit == null)
-                edit = new InPageEditingHelper(parent.SxcInstance);
+                edit = new InPageEditingHelper(parent.SxcInstance.UserMayEdit, parent.SxcInstance.Log);
 
             var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
             var inner = subItem == null ? "": Render(parent.SxcInstance.ContentBlock, subItem.Entity, parent.SxcInstance.Log).ToString();
@@ -58,7 +58,7 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
 
             // create edit object if missing...to re-use in the wh
             if (edit == null)
-                edit = new InPageEditingHelper(parent.SxcInstance);
+                edit = new InPageEditingHelper(parent.SxcInstance.UserMayEdit, parent.SxcInstance.Log);
 
             return string.Format(WrapperTemplate, new object[]
             {

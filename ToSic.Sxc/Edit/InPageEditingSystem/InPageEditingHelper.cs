@@ -1,7 +1,9 @@
-﻿namespace ToSic.SexyContent.Edit.InPageEditingSystem
+﻿using ToSic.Eav.Logging.Simple;
+
+namespace ToSic.SexyContent.Edit.InPageEditingSystem
 {
-    public class InPageEditingHelper: InPageEditingHelperBase
+    public class InPageEditingHelper : InPageEditingHelperBase
     {
-        public InPageEditingHelper(SxcInstance sxc) : base(sxc) { }
+        public InPageEditingHelper(bool enabled, Log parentLog) : base(enabled, parentLog) { }
     }
 }

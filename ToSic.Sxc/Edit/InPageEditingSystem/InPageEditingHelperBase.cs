@@ -1,26 +1,30 @@
 ﻿using System;
 using System.Web;
 using Newtonsoft.Json;
-using ToSic.Eav;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Edit.Toolbar;
 
 namespace ToSic.SexyContent.Edit.InPageEditingSystem
 {
-    public class InPageEditingHelperBase : HasLog, IInPageEditingSystem
+    public abstract class InPageEditingHelperBase : HasLog, IInPageEditingSystem
     {
         private readonly string _jsonTemplate =
             "data-list-context='{{ `parent`: {0}, `field`: `{1}`, `type`: `{2}`, `guid`: `{3}`}}'".Replace("`", "\"");
 
-        protected readonly SxcInstance SxcInstance;
+        //protected readonly SxcInstance SxcInstance;
 
-        internal InPageEditingHelperBase(SxcInstance sxc) : base("Edt", sxc?.Log)
+        //internal InPageEditingHelperBase(SxcInstance sxc) : base("Edt", sxc?.Log)
+        //{
+        //    SxcInstance = sxc;
+        //}
+        internal InPageEditingHelperBase(bool enabled, Log parentLog) : base("Edt", parentLog)
         {
-            SxcInstance = sxc;
+            Enabled = enabled;
         }
 
-        public bool Enabled => SxcInstance?.UserMayEdit ?? false;// Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance?.InstanceInfo, _sxcInstance?.App);
+        public bool Enabled { get; } //=> SxcInstance?.UserMayEdit ?? false;// Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance?.InstanceInfo, _sxcInstance?.App);
+        
 
         public HtmlString Toolbar(DynamicEntity target = null,
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 

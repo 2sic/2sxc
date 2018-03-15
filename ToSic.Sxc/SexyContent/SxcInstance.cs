@@ -212,7 +212,7 @@ namespace ToSic.SexyContent
 
                 #region Wrap it all up into a nice wrapper tag
                 var editInfos = renderHelp.GetClientInfosAll();
-                var editHelper = new InPageEditingHelper(this);
+                var editHelper = new InPageEditingHelper(UserMayEdit, Log);
                 var startTag = !RenderWithDiv
                     ? ""
                     : $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
