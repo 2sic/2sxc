@@ -25,7 +25,7 @@ namespace ToSic.SexyContent
                 return new HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance?.InstanceInfo);
+                var userMayEdit = SxcInstance?.UserMayEdit ?? false;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance?.InstanceInfo);
 
                 if (!userMayEdit)
                     return new HtmlString("");

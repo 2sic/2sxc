@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public bool IsEditable;
 
-        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, IInstanceInfo mic, SxcInstance sxc)
+        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, IInstanceInfo mic, SxcInstance sxcInstance)
         {
             WebsiteId = ps.PortalId;
 
@@ -36,10 +36,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             SxcRootUrl = systemRootUrl;
 
-            var userMayEdit = Eav.Factory.Resolve<IPermissions>().UserMayEditContent(sxc?.InstanceInfo);
+            var userMayEdit = sxcInstance?.UserMayEdit ?? false;// Eav.Factory.Resolve<IPermissions>().UserMayEditContent(sxc?.InstanceInfo);
 
-            IsEditable = userMayEdit;// sxc?.Environment?.Permissions.UserMayEditContent ?? false;
-            parameters = sxc?.Parameters;
+            IsEditable = userMayEdit;
+            parameters = sxcInstance?.Parameters;
         }
     }
 

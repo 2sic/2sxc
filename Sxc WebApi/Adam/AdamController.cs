@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.Adam
 
         private void PrepCore(Guid entityGuid, string fieldName, bool usePortalRoot)
         {
-            AdamBrowseContext = new AdamBrowseContext(SxcContext, App, new DnnTenant(Dnn.Portal), entityGuid, fieldName, usePortalRoot);
+            AdamBrowseContext = new AdamBrowseContext(SxcInstance, App, new DnnTenant(Dnn.Portal), entityGuid, fieldName, usePortalRoot);
         }
 
         public int MaxFileSizeKb 
@@ -215,7 +215,7 @@ namespace ToSic.SexyContent.Adam
         private void ExplicitlyRecheckEditPermissions()
         {
             Log.Add("explicitly recheck permissions, will throw if not ok");
-            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
+            var userMayEdit = SxcInstance.UserMayEdit; // Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
 
             if (!userMayEdit)
                 throw new HttpResponseException(HttpStatusCode.Forbidden);

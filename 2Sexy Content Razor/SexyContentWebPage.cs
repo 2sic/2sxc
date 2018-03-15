@@ -4,7 +4,6 @@ using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.ValueProvider;
@@ -16,7 +15,6 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
-using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.Razor
 {
@@ -85,9 +83,9 @@ namespace ToSic.SexyContent.Razor
         // temp - should be elsewhere, but quickly need it so Permissions-object still works after refactoring
         public class RazorPermissions // : DnnPermissions
         {
-            private readonly SxcInstance _sxcInstance;
-            public RazorPermissions(SxcInstance sxc) => _sxcInstance = sxc;
-            public bool UserMayEditContent => Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
+            protected readonly SxcInstance SxcInstance;
+            public RazorPermissions(SxcInstance sxc) => SxcInstance = sxc;
+            public bool UserMayEditContent => SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
 
         }
 

@@ -112,13 +112,13 @@ namespace ToSic.SexyContent.WebApi
             // - note that it's really not needed, as you can always use a query or something similar instead
             // - not also that if ever you do support view switching, you will need to ensure security checks
 
-            var dataHandler = new GetContentBlockDataLight(SxcContext);
+            var dataHandler = new GetContentBlockDataLight(SxcInstance);
 
             // must access engine to ensure pre-processing of data has happened, 
             // especially if the cshtml contains a override void CustomizeData()
-            SxcContext.GetRenderingEngine(InstancePurposes.PublishData);  
+            SxcInstance.GetRenderingEngine(InstancePurposes.PublishData);  
 
-            var dataSource = SxcContext.Data;
+            var dataSource = SxcInstance.Data;
             string json;
             if (dataSource.Publish.Enabled)
             {
@@ -129,7 +129,7 @@ namespace ToSic.SexyContent.WebApi
             else
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
-                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(SxcContext.InstanceInfo.Id)});
+                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(SxcInstance.InstanceInfo.Id)});
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -385,7 +385,7 @@ namespace ToSic.SexyContent.WebApi
 
             // only do this if we have a real context - otherwise don't do this
 	        if (!appId.HasValue)
-	            ((Serializer) _entitiesController.Serializer).Sxc = SxcContext;
+	            ((Serializer) _entitiesController.Serializer).Sxc = SxcInstance;
 
 	    }
 

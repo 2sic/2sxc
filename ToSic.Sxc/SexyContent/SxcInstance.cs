@@ -142,11 +142,14 @@ namespace ToSic.SexyContent
 
         #region RenderEngine
         internal bool RenderWithDiv = true;
-        private bool UserMayEdit => Factory.Resolve<IPermissions>().UserMayEditContent(InstanceInfo); //Environment.Permissions.UserMayEditContent;
+        public bool UserMayEdit => _userMayEdit 
+            ?? (_userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(InstanceInfo, App)).Value;
+        private bool? _userMayEdit;
+
         public HtmlString Render()
         {
             Log.Add("render");
-            var renderHelp = Factory.Resolve<IRenderingHelpers>().Init(this, Log);//  new DnnRenderingHelpers(this, Log);
+            var renderHelp = Factory.Resolve<IRenderingHelpers>().Init(this, Log);
             
             try
             {
@@ -155,7 +158,7 @@ namespace ToSic.SexyContent
                 #region do pre-check to see if system is stable & ready
 
                 var installer = Factory.Resolve<IEnvironmentInstaller>();
-                var notReady = installer.UpgradeMessages();// new InstallationController().CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
+                var notReady = installer.UpgradeMessages();
                 if (!string.IsNullOrEmpty(notReady))
                 {
                     Log.Add("system isn't ready,show upgrade message");
@@ -173,7 +176,7 @@ namespace ToSic.SexyContent
                     if (ContentBlock.DataIsMissing)
                     {
                         Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
-                        if (UserMayEdit)// Environment.Permissions.UserMayEditContent)
+                        if (UserMayEdit)
                         {
                             body = ""; // stop further processing
                         }

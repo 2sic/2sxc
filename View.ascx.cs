@@ -8,7 +8,6 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Dnn;
@@ -21,7 +20,7 @@ namespace ToSic.SexyContent
     {
         private SxcInstance _sxci;
 
-        protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(
+        protected SxcInstance SxcInstance => _sxci ?? (_sxci = new ModuleContentBlock(
                                               new DnnInstanceInfo(ModuleConfiguration),
                                               Log,
                                               new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
@@ -46,7 +45,7 @@ namespace ToSic.SexyContent
             // register scripts and css
             try
             {
-                new DnnRenderingHelpers(SxcI, Log).RegisterClientDependencies(Page);
+                new DnnRenderingHelpers(SxcInstance, Log).RegisterClientDependencies(Page);
             }
             catch (Exception ex)
             {
@@ -66,13 +65,13 @@ namespace ToSic.SexyContent
             {
                 // check things if it's a module of this portal (ensure everything is ok, etc.)
                 var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
-                if (!isSharedModule && !SxcI.ContentBlock.ContentGroupExists && SxcI.App != null)
-                    new DnnStuffToRefactor().EnsureTenantIsConfigured(SxcI, Server, ControlPath);
+                if (!isSharedModule && !SxcInstance.ContentBlock.ContentGroupExists && SxcInstance.App != null)
+                    new DnnStuffToRefactor().EnsureTenantIsConfigured(SxcInstance, Server, ControlPath);
 
                 var renderNaked = Request.QueryString["standalone"] == "true";
                 if (renderNaked)
-                    SxcI.RenderWithDiv = false;
-                var renderedTemplate = SxcI.Render().ToString();
+                    SxcInstance.RenderWithDiv = false;
+                var renderedTemplate = SxcInstance.Render().ToString();
 
                 // optional detailed logging
                 try
@@ -115,8 +114,7 @@ namespace ToSic.SexyContent
         #region Security Check
 
         protected bool UserMayEditThisModule
-            => Eav.Factory.Resolve<IPermissions>()
-                .UserMayEditContent(SxcI?.InstanceInfo, SxcI?.App);
+            => SxcInstance?.UserMayEdit ?? false;// Eav.Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance?.InstanceInfo, SxcInstance?.App);
         #endregion
 
 
@@ -152,18 +150,18 @@ namespace ToSic.SexyContent
         {
             _moduleActions = new ModuleActionCollection();
             var actions = _moduleActions;
-            var appIsKnown = SxcI.AppId > 0;
+            var appIsKnown = SxcInstance.AppId > 0;
 
             if (appIsKnown)
             {
                 // Edit item
-                if (!SxcI.Template?.UseForList ?? false)
+                if (!SxcInstance.Template?.UseForList ?? false)
                     actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif",
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").edit();", "test", true,
                         SecurityAccessLevel.Edit, true, false);
 
                 // Add Item
-                if (SxcI.Template?.UseForList ?? false)
+                if (SxcInstance.Template?.UseForList ?? false)
                     actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif",
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").addItem();", true, SecurityAccessLevel.Edit, true,
                         false);
@@ -178,7 +176,7 @@ namespace ToSic.SexyContent
                 SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo))
             {
                 // Edit Template Button
-                if (appIsKnown && SxcI.Template != null)
+                if (appIsKnown && SxcInstance.Template != null)
                     actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
                         "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").develop();", "test",
                         true,
@@ -186,12 +184,12 @@ namespace ToSic.SexyContent
 
                 // App management
                 if (appIsKnown)
-                    actions.Add(GetNextActionID(), "Admin" + (SxcI.IsContentApp ? "" : " " + SxcI.App?.Name), "",
+                    actions.Add(GetNextActionID(), "Admin" + (SxcInstance.IsContentApp ? "" : " " + SxcInstance.App?.Name), "",
                         "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
                         SecurityAccessLevel.Admin, true, false);
 
                 // Zone management (app list)
-                if (!SxcI.IsContentApp)
+                if (!SxcInstance.IsContentApp)
                     actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action", "", "action_settings.gif",
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminZone();", "", true,
                         SecurityAccessLevel.Admin, true, false);

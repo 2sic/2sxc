@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.DataSources
         }
 
 
-        internal SxcInstance SxcContext
+        internal SxcInstance SxcInstance
         {
             get
             {
@@ -76,7 +76,7 @@ namespace ToSic.SexyContent.DataSources
                 if (UseSxcInstanceContentGroup)
                 {
                     Log.Add("need content-group, will use from sxc-context");
-                    _contentGroup = SxcContext.ContentGroup;
+                    _contentGroup = SxcInstance.ContentGroup;
                 }
                 else
                 {
@@ -86,11 +86,10 @@ namespace ToSic.SexyContent.DataSources
                     // 2018-03-05 2dm moved into the contentgroupmanager
                     //var tabId = ModuleController.Instance.GetTabModulesByModule(InstanceId.Value)[0].TabID;
                     var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
-                    var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext?.InstanceInfo);
+                    var userMayEdit = SxcInstance?.UserMayEdit ?? false;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance?.InstanceInfo);
 
                     var cgm = new ContentGroupManager(ZoneId, AppId,
-                        HasSxcContext && userMayEdit, // SxcContext.Environment.Permissions.UserMayEditContent,
-                        publish.IsEnabled(InstanceId.Value),
+                        HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value),
                         Log);
 
                     _contentGroup = cgm.GetInstanceContentGroup(InstanceId.Value, null);

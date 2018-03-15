@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.WebApi.View
         {
             base.Initialize(controllerContext); // very important!!!
             Log.Rename("2sModC");
-            ContentGroupReferenceManager = SxcContext.ContentBlock.Manager;
+            ContentGroupReferenceManager = SxcInstance.ContentBlock.Manager;
         }
 
         private ContentGroupReferenceManagerBase ContentGroupReferenceManager { get; set;  }
@@ -42,7 +42,7 @@ namespace ToSic.SexyContent.WebApi.View
         public void AddItem([FromUri] int? sortOrder = null)
         {
             Log.Add($"add order:{sortOrder}");
-            var versioning = SxcContext.Environment.PagePublishing;
+            var versioning = SxcInstance.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.AddItem(sortOrder);
 
@@ -93,7 +93,7 @@ namespace ToSic.SexyContent.WebApi.View
             var entityId = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, newGuid);
 
             // now return a rendered instance
-            var newContentBlock = new EntityContentBlock(SxcContext.ContentBlock, entityId, Log);
+            var newContentBlock = new EntityContentBlock(SxcInstance.ContentBlock, entityId, Log);
             return newContentBlock.SxcInstance.Render().ToString();
 
         }
@@ -101,14 +101,14 @@ namespace ToSic.SexyContent.WebApi.View
         private int CreateItemAndAddToList(int parentId, string field, int sortOrder, string contentTypeName,
             Dictionary<string, object> values, Guid newGuid)
         {
-            var cgApp = SxcContext.App;
+            var cgApp = SxcInstance.App;
 
             // create the new entity 
             var entityId = new AppManager(cgApp, Log).Entities.GetOrCreate(newGuid, contentTypeName, values);
 
             #region attach to the current list of items
 
-            var cbEnt = SxcContext.App.Data.List.One(parentId);
+            var cbEnt = SxcInstance.App.Data.List.One(parentId);
             var blockList = ((EntityRelationship) cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
@@ -130,9 +130,9 @@ namespace ToSic.SexyContent.WebApi.View
         public void MoveItemInList(int parentId, string field, int indexFrom, int indexTo, [FromUri] bool partOfPage = false)
         {
             Log.Add($"move item in list parent:{parentId}, field:{field}, from:{indexFrom}, to:{indexTo}, partOfpage:{partOfPage}");
-            var versioning = SxcContext.Environment.PagePublishing;
+            var versioning = SxcInstance.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => new AppManager(SxcContext.App, Log)
+            void InternalSave(VersioningActionInfo args) => new AppManager(SxcInstance.App, Log)
                 .Entities.ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
 
             // use dnn versioning if partOfPage
@@ -152,9 +152,9 @@ namespace ToSic.SexyContent.WebApi.View
         public void RemoveItemInList(int parentId, string field, int index, [FromUri] bool partOfPage = false)
         {
             Log.Add($"remove item: parent{parentId}, field:{field}, index:{index}, partOfPage{partOfPage}");
-            var versioning = SxcContext.Environment.PagePublishing;
+            var versioning = SxcInstance.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => new AppManager(SxcContext.App, Log)
+            void InternalSave(VersioningActionInfo args) => new AppManager(SxcInstance.App, Log)
                 .Entities.ModifyItemList(parentId, field, new Remove(index));
 
             // use dnn versioning if partOfPage
@@ -179,7 +179,7 @@ namespace ToSic.SexyContent.WebApi.View
                     // Fallback / ignore if the language specified has not been found
                     catch (System.Globalization.CultureNotFoundException) { }
 
-                var cbToRender = SxcContext.ContentBlock;
+                var cbToRender = SxcInstance.ContentBlock;
 
                 // if a real templateid was specified, swap to that
                 if (templateId > 0)
@@ -208,7 +208,7 @@ namespace ToSic.SexyContent.WebApi.View
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
             Log.Add($"change order sort:{sortOrder}, dest:{destinationSortOrder}");
-            var versioning = SxcContext.Environment.PagePublishing;
+            var versioning = SxcInstance.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
 
@@ -229,7 +229,7 @@ namespace ToSic.SexyContent.WebApi.View
         public void RemoveFromList([FromUri] int sortOrder)
         {
             Log.Add($"remove from index:{sortOrder}");
-            var versioning = SxcContext.Environment.PagePublishing;
+            var versioning = SxcInstance.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.RemoveFromList(sortOrder);
 
@@ -260,7 +260,7 @@ namespace ToSic.SexyContent.WebApi.View
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 try
                 {
-                    var all = SxcContext.App.TemplateManager.GetAllTemplates();
+                    var all = SxcInstance.App.TemplateManager.GetAllTemplates();
                     if (all.Any())
                         return null;
                 }

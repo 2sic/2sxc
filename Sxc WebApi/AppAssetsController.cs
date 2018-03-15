@@ -196,8 +196,8 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"asset templ:{templateId}, path:{path}, global:{global}");
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(SxcContext.App, templateId, UserInfo.IsSuperUser, isAdmin)
-                : new AssetEditor(SxcContext.App, path, UserInfo.IsSuperUser, isAdmin, global);
+                ? new AssetEditor(SxcInstance.App, templateId, UserInfo.IsSuperUser, isAdmin)
+                : new AssetEditor(SxcInstance.App, path, UserInfo.IsSuperUser, isAdmin, global);
             assetEditor.EnsureUserMayEditAsset();
             return assetEditor.EditInfoWithSource;
         }
@@ -217,8 +217,8 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"asset templ:{templateId}, global:{global}, path:{path}");
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(SxcContext.App, templateId, UserInfo.IsSuperUser, isAdmin)
-                : new AssetEditor(SxcContext.App, path, UserInfo.IsSuperUser, isAdmin, global);
+                ? new AssetEditor(SxcInstance.App, templateId, UserInfo.IsSuperUser, isAdmin)
+                : new AssetEditor(SxcInstance.App, path, UserInfo.IsSuperUser, isAdmin, global);
             assetEditor.EnsureUserMayEditAsset();
             assetEditor.Source = template.Code;
             return true;

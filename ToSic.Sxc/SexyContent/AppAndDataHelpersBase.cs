@@ -19,21 +19,20 @@ namespace ToSic.SexyContent
 {
     public abstract class AppAndDataHelpersBase : HasLog, IAppAndDataHelpers
     {
-        private readonly SxcInstance _sxcInstance;
+        protected readonly SxcInstance SxcInstance;
 
-        //public AppAndDataHelpersBase(SxcInstance sexy) : this(sexy, sexy.InstanceInfo, null) {}
         private readonly ITenant _tenant;
-        protected AppAndDataHelpersBase(SxcInstance sexy, ITenant tenant, Log parentLog): base("Sxc.AppHlp", parentLog ?? sexy?.Log)
+        protected AppAndDataHelpersBase(SxcInstance sxcInstance, ITenant tenant, Log parentLog): base("Sxc.AppHlp", parentLog ?? sxcInstance?.Log)
         {
-            if (sexy == null)
+            if (sxcInstance == null)
                 return;
 
-            _sxcInstance = sexy;
+            SxcInstance = sxcInstance;
             _tenant = tenant;
-            App = sexy.App;
-            Data = sexy.Data;
-			Sxc = new SxcHelper(sexy);
-            Edit = new InPageEditingHelper(sexy);
+            App = sxcInstance.App;
+            Data = sxcInstance.Data;
+			Sxc = new SxcHelper(sxcInstance);
+            Edit = new InPageEditingHelper(sxcInstance);
         }
 
 
@@ -63,7 +62,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, _sxcInstance);
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, SxcInstance);
         
 
         /// <inheritdoc />
@@ -127,9 +126,9 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
+            var userMayEdit = SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
 
-            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
+            var initialSource = DataSource.GetInitialDataSource(SxcInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as ValueCollectionProvider);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
@@ -149,9 +148,9 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider, Log);
 
-            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance.InstanceInfo);
+            var userMayEdit = SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
 
-            var initialSource = DataSource.GetInitialDataSource(_sxcInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
+            var initialSource = DataSource.GetInitialDataSource(SxcInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as ValueCollectionProvider);
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider, Log);
         }
@@ -209,7 +208,7 @@ namespace ToSic.SexyContent
         private void TryToBuildListContentObject()
         {
             Log.Add("try to build ListContent (header) object");
-            if (Data == null || _sxcInstance.Template == null) return;
+            if (Data == null || SxcInstance.Template == null) return;
             if (!Data.Out.ContainsKey(AppConstants.ListContent)) return;
 
             var listEntity = Data[AppConstants.ListContent].List.FirstOrDefault();
@@ -236,7 +235,7 @@ namespace ToSic.SexyContent
             Log.Add("try to build List and Content objects");
             _list = new List<Element>();
 
-            if (Data == null || _sxcInstance.Template == null) return;
+            if (Data == null || SxcInstance.Template == null) return;
             if (!Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
             var entities = Data.List.ToList();
@@ -287,7 +286,7 @@ namespace ToSic.SexyContent
         public AdamNavigator AsAdam(Eav.Interfaces.IEntity entity, string fieldName)
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
-            return new AdamNavigator(envFs, _sxcInstance, App, _tenant, entity.EntityGuid, fieldName, false);
+            return new AdamNavigator(envFs, SxcInstance, App, _tenant, entity.EntityGuid, fieldName, false);
         }
 
         #endregion

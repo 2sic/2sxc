@@ -117,7 +117,7 @@ namespace ToSic.SexyContent.Serializers
 	    internal void AddEditInfo(Eav.Interfaces.IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add additional information in case we're in edit mode
-	        var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(Sxc?.InstanceInfo);
+	        var userMayEdit = Sxc?.UserMayEdit ?? false;// Factory.Resolve<IPermissions>().UserMayEditContent(Sxc?.InstanceInfo);
 
 	        if (!userMayEdit) return;
 

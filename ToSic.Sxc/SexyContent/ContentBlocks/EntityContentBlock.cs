@@ -87,10 +87,9 @@ namespace ToSic.SexyContent.ContentBlocks
             Configuration = ConfigurationProvider.GetConfigProviderForModule(ParentId, App, SxcInstance);
 
             // maybe ensure that App.Data is ready
-            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
+            var userMayEdit = SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
 
-            App.InitData(userMayEdit,// SxcInstance.Environment.Permissions.UserMayEditContent, 
-                SxcInstance.Environment.PagePublishing.IsEnabled(Parent.SxcInstance.InstanceInfo.Id), Configuration);
+            App.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(Parent.SxcInstance.InstanceInfo.Id), Configuration);
 
             ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 

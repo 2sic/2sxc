@@ -61,14 +61,13 @@ namespace ToSic.SexyContent.ContentBlocks
             {
                 Log.Add("real app, will load data");
                 // try to load the app - if possible
-                App = new App(Tenant, ZoneId, /*PortalSettings*/ AppId, parentLog: Log);
+                App = new App(Tenant, ZoneId, AppId, parentLog: Log);
 
                 Configuration = ConfigurationProvider.GetConfigProviderForModule(InstanceInfo.Id, App, SxcInstance);
 
                 // maybe ensure that App.Data is ready
-                var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
-                App.InitData(userMayEdit,// SxcInstance.Environment.Permissions.UserMayEditContent,
-                    SxcInstance.Environment.PagePublishing.IsEnabled(InstanceInfo.Id), 
+                var userMayEdit = SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
+                App.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(InstanceInfo.Id), 
                     Configuration);
 
                 ContentGroup = App.ContentGroupManager.GetInstanceContentGroup(instanceInfo.Id, instanceInfo.PageId);

@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	        base.Initialize(controllerContext); // very important!!!
             Log.Rename("2sEntC");
             EavEntitiesController = new Eav.WebApi.EntitiesController(Log);
-	        ((Serializer)EavEntitiesController.Serializer).Sxc = SxcContext;
+	        ((Serializer)EavEntitiesController.Serializer).Sxc = SxcInstance;
         }
 
         [HttpGet]
@@ -68,10 +68,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // todo: if somehow app-access outside of tennant is allowed, get that app...
 
-            var showDrafts = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
+            var showDrafts = SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
 
             app.InitData(showDrafts, 
-                SxcContext.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), 
+                SxcInstance.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), 
                 Data.ConfigurationProvider);
 
             foreach (var reqItem in items)
@@ -171,10 +171,9 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             var myLog = new Log("2Ap.GrpPrc", Log, "start");
             var app = new App(new DnnTenant(PortalSettings.Current), appId);
-            var userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(SxcContext.InstanceInfo);
+            var userMayEdit = SxcInstance.UserMayEdit ;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
 
-            app.InitData(userMayEdit,// SxcContext.Environment.Permissions.UserMayEditContent, 
-                SxcContext.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
+            app.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
 
             foreach (var entitySets in groupItems)
             {
@@ -221,7 +220,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             }
 
             // update-module-title
-            SxcContext.ContentBlock.Manager.UpdateTitle();
+            SxcInstance.ContentBlock.Manager.UpdateTitle();
         }
 
         /// <summary>

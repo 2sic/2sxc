@@ -31,8 +31,8 @@ namespace ToSic.SexyContent.WebApi
         {
             base.Initialize(controllerContext);
             Log.Rename("2sApiC");
-            SxcContext = Helpers.GetSxcOfApiRequest(Request, true, Log);
-            DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcContext, SxcContext?.InstanceInfo, SxcContext?.Log ?? Log);
+            SxcInstance = Helpers.GetSxcOfApiRequest(Request, true, Log);
+            DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcInstance, SxcInstance?.InstanceInfo, SxcInstance?.Log ?? Log);
             controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); // must run after creating AppAndDataHelpers
         }
         #endregion
@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.WebApi
         private DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
 
 	    // Sexy object should not be accessible for other assemblies - just internal use
-        internal SxcInstance SxcContext { get; private set; }
+        internal SxcInstance SxcInstance { get; private set; }
 
         #region AppAndDataHelpers implementation
 
@@ -59,7 +59,7 @@ namespace ToSic.SexyContent.WebApi
                     return _app;
 
                 // try "normal" case with instance context
-                if (SxcContext != null)
+                if (SxcInstance != null)
                     return _app = DnnAppAndDataHelpers.App;
 
                 var routeAppPath = Request.GetRouteData().Values["apppath"]?.ToString();
