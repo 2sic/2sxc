@@ -35,14 +35,32 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Module = ((InstanceInfo<ModuleInfo>)module)?.Info;
         }
 
-        public DnnPermissionController(IContentType targetType, IEntity targetItem, Log parentLog, IInstanceInfo module = null)
-            : base(targetType, targetItem, parentLog)
+        public DnnPermissionController(
+            IContentType targetType, 
+            IEntity targetItem, 
+            Log parentLog, 
+            IInstanceInfo module = null,
+            IMetadataOfItem addMeta1 = null, // optional additional metadata, like of an app
+            IMetadataOfItem addMeta2 = null  // optional additional metadata, like of a zone
+            )
+            : base(targetType, targetItem, parentLog, addMeta1, addMeta2)
         {
             Module = ((InstanceInfo<ModuleInfo>)module)?.Info;
         }
 
-        protected override string CurrentUser 
-            => UserIdentity.CurrentUserIdentityToken;
+        public DnnPermissionController(
+            IInstanceInfo module = null,
+            IMetadataOfItem meta1 = null, // optional additional metadata, like of an app
+            IMetadataOfItem meta2 = null, // optional additional metadata, like of a zone
+            Log parentLog = null
+        ) : base(meta1, meta2, parentLog)
+        {
+            Module = ((InstanceInfo<ModuleInfo>)module)?.Info;
+        }
+
+
+        //protected override string CurrentUser => new DnnUser().IdentityToken;
+        protected override IUser User => new DnnUser();
 
         protected override bool EnvironmentGivesPermission(string condition)
         {

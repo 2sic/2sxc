@@ -127,23 +127,15 @@ namespace ToSic.SexyContent
         internal SxcInstance(IContentBlock  cb, 
             IInstanceInfo runtimeModuleInfo, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
-            //IPermissions permissions = null,
             Log parentLog = null)
         {
             Log = new Log("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
-            Environment = Factory.Resolve<IEnvironmentFactory>().Environment(parentLog);//new Environment.DnnEnvironment(Log);
+            Environment = Factory.Resolve<IEnvironmentFactory>().Environment(parentLog);
             ContentBlock = cb;
             InstanceInfo = runtimeModuleInfo;
 
             // keep url parameters, because we may need them later for view-switching and more
             Parameters = urlparams;
-
-            // modinfo is null in cases where things are not known yet, portalsettings are null in search-scenarios
-            //Environment.Permissions = permissions
-            //        ?? (InstanceInfo != null && PortalSettings.Current != null ? new DnnPermissions(InstanceInfo) as IPermissions : new Eav.Apps.Security.Permissions());
-                                      //?? (ModuleInfo != null && PortalSettings.Current != null
-                                      //    ? (IPermissions) new Permissions(ModuleInfo)
-                                      //    : new Environment.None.Permissions());
         }
 
         #endregion

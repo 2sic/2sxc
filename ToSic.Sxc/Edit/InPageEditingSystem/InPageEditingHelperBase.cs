@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             _sxcInstance = sxc;
         }
 
-        public bool Enabled => Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance?.InstanceInfo);// _sxcInstance?.Environment?.Permissions?.UserMayEditContent ?? false;
+        public bool Enabled => Factory.Resolve<IPermissions>().UserMayEditContent(_sxcInstance?.InstanceInfo, _sxcInstance?.App);
 
         public HtmlString Toolbar(DynamicEntity target = null,
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 

@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using DotNetNuke.Entities.Users;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Interfaces;
@@ -59,7 +60,8 @@ namespace ToSic.SexyContent
             {
                 sc.AddTransient<Eav.Serializers.Serializer, Serializers.Serializer>();
                 sc.AddTransient<IEavValueConverter, DnnValueConverter>();
-                sc.AddTransient<IEavUserInformation, DnnUserInformation>();
+                //sc.AddTransient<IEavUserInformation, DnnUserInformation>();
+                sc.AddTransient<IUser, DnnUser>();
 
                 sc.AddTransient<XmlExporter, DnnXmlExporter>();
                 sc.AddTransient<IImportExportEnvironment, ImportExportEnvironment>();

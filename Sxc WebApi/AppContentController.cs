@@ -166,7 +166,7 @@ namespace ToSic.SexyContent.WebApi
             // Now create the cleaned up import-dictionary so we can create a new entity
             var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem, appId);
 
-            var userName = UserIdentity.CurrentUserIdentityToken;
+            var userName = new DnnUser().IdentityToken;
 
             // try to create
             var currentApp = new App(new DnnTenant(PortalSettings), appId);

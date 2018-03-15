@@ -1,6 +1,7 @@
 ﻿using System.Web.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -13,7 +14,7 @@ namespace ToSic.SexyContent.Environment
 
         public IZoneMapper ZoneMapper { get;  } = new ZoneMapper();
 
-        public IUser User { get; } = new UserIdentity();
+        public IUser User { get; } = new DnnUser();
 
         public IPagePublishing PagePublishing {get ; }
 

@@ -57,6 +57,7 @@
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
       <Private>True</Private>
@@ -93,7 +94,6 @@
     <Compile Include="Environment\Dnn7\DnnPermissions.cs" />
     <Compile Include="Environment\Dnn7\DnnRenderingHelpers.cs" />
     <Compile Include="Environment\Dnn7\DnnTenant.cs" />
-    <Compile Include="Environment\Dnn7\EavImplementation\DnnUserInformation.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
     <Compile Include="Environment\Dnn7\Factory.cs" />
     <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
@@ -110,7 +110,7 @@
     <Compile Include="Search\SearchController.cs" />
     <Compile Include="Search\SearchIndexException.cs" />
     <Compile Include="Environment\Dnn7\DnnEnvironmentFactory.cs" />
-    <Compile Include="Environment\Dnn7\UserIdentity.cs" />
+    <Compile Include="Environment\Dnn7\DnnUser.cs" />
     <Compile Include="Environment\Dnn7\ValueProviders\DnnValueProviders.cs" />
     <Compile Include="Environment\Dnn7\ValueProviders\TokenReplaceDnn.cs" />
     <Compile Include="Environment\Dnn7\ValueProviders\ValueProviderWrapperForPropertyAccess.cs" />

@@ -46,7 +46,6 @@ namespace ToSic.SexyContent
             // register scripts and css
             try
             {
-                //var renderHelp = new RenderingHelpers(SxcI);
                 new DnnRenderingHelpers(SxcI, Log).RegisterClientDependencies(Page);
             }
             catch (Exception ex)
@@ -114,8 +113,10 @@ namespace ToSic.SexyContent
 
 
         #region Security Check
-        protected bool UserMayEditThisModule => Eav.Factory.Resolve<IPermissions>().UserMayEditContent(SxcI?.InstanceInfo);
-        //SxcI?.Environment?.Permissions.UserMayEditContent ?? false;
+
+        protected bool UserMayEditThisModule
+            => Eav.Factory.Resolve<IPermissions>()
+                .UserMayEditContent(SxcI?.InstanceInfo, SxcI?.App);
         #endregion
 
 
