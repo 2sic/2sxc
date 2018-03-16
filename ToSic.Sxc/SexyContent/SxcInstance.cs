@@ -7,7 +7,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Interfaces;
@@ -26,11 +25,8 @@ namespace ToSic.SexyContent
         #region App-level information
 
         internal int? ZoneId => ContentBlock.ZoneId;
-
         internal int? AppId => ContentBlock.AppId;
-
         public App App => ContentBlock.App;
-
         public bool IsContentApp => ContentBlock.IsContentApp;
 
         #endregion
@@ -177,9 +173,7 @@ namespace ToSic.SexyContent
                     {
                         Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
                         if (UserMayEdit)
-                        {
                             body = ""; // stop further processing
-                        }
                         else // end users should see server error as no js-side processing will happen
                         {
                             var ex =
@@ -211,25 +205,31 @@ namespace ToSic.SexyContent
                 #endregion
 
                 #region Wrap it all up into a nice wrapper tag
-                var editInfos = renderHelp.GetClientInfosAll();
-                var editHelper = new InPageEditingHelper(UserMayEdit, Log);
-                var startTag = !RenderWithDiv
-                    ? ""
-                    : $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
-                      $" data-cb-id=\"{ContentBlock.ContentBlockId}\""
-                      + (UserMayEdit
-                          ? editHelper.Attribute("data-edit-context", editInfos)
-                          : null)
-                      + ">\n";
-                var endTag = !RenderWithDiv ? "" : "\n</div>";
-                var result = startTag + body + endTag;
+                //var editInfos = renderHelp.GetClientInfosAll();
+                //var editHelper = new InPageEditingHelper(UserMayEdit, Log);
+                //var startTag = !RenderWithDiv
+                //    ? ""
+                //    : $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
+                //      $" data-cb-id=\"{ContentBlock.ContentBlockId}\""
+                //      + (UserMayEdit
+                //          ? editHelper.Attribute("data-edit-context", editInfos)
+                //          : null)
+                //      + ">\n";
+                //var endTag = !RenderWithDiv ? "" : "\n</div>";
+                //var result = startTag + body + endTag;
+
+                var result = RenderWithDiv
+                    ? renderHelp.WrapInContext(body,
+                        instanceId: ContentBlock.ParentId,
+                        contentBlockId: ContentBlock.ContentBlockId,
+                        includeEditInfos: UserMayEdit)
+                    : body;
                 #endregion
 
                 return new HtmlString(result);
             }
             catch (Exception ex)
             {
-                // todo: i18n
                 return new HtmlString(renderHelp.DesignErrorMessage(ex, true, null, true, true));
             }
         }

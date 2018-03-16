@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 using System.Web.Http.Controllers;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Security.Permissions;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.ValueProvider;
-using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -44,7 +44,6 @@ namespace ToSic.SexyContent.WebApi
 
         #region AppAndDataHelpers implementation
 
-        /// <inheritdoc />
         public DnnHelper Dnn => DnnAppAndDataHelpers.Dnn;
 
 	    public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
@@ -164,46 +163,50 @@ namespace ToSic.SexyContent.WebApi
         #endregion
 
         #region Security Checks 
+
         /// <summary>
         /// Check if a user may do something - and throw an error if the permission is not given
         /// </summary>
+        /// <param name="appId"></param>
         /// <param name="contentType"></param>
         /// <param name="grant"></param>
-        /// <param name="autoAllowAdmin"></param>
         /// <param name="specificItem"></param>
         /// <param name="useContext"></param>
-        /// <param name="appId"></param>
-        internal void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false, IEntity specificItem = null, bool useContext = true, int? appId = null)
+        internal void PerformSecurityCheck(int appId, string contentType, PermissionGrant grant,
+            ModuleInfo module, IEntity specificItem = null)
         {
-            Log.Add($"security check for type:{contentType}, grant:{grant}, autoAdmin:{autoAllowAdmin}, useContext:{useContext}, app:{appId}, item:{specificItem?.EntityId}");
+            PerformSecurityCheck(appId, contentType, new List<PermissionGrant> { grant },
+                specificItem, module);
+        }
+
+        /// <summary>
+        /// Check if a user may do something - and throw an error if the permission is not given
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="contentType"></param>
+        /// <param name="grant"></param>
+        /// <param name="specificItem"></param>
+        /// <param name="useContext"></param>
+        internal void PerformSecurityCheck(int appId, string contentType, List<PermissionGrant> grant, IEntity specificItem, ModuleInfo module)
+        {
+            Log.Add($"security check for type:{contentType}, grant:{grant}, useContext:{module != null}, app:{appId}, item:{specificItem?.EntityId}");
             // make sure we have the right appId, zoneId and module-context
-            var contextMod = useContext ? Dnn.Module : null;
-            var zoneId = useContext ? App?.ZoneId : null;   // App is null, when accessing admin-ui from un-initialized module
-            if (useContext) appId = App?.AppId ?? appId;
-            if (!useContext) autoAllowAdmin = false; // auto-check not possible when not using context
+            var contextMod = ResolveModuleAndIDsOrThrow(module, App, appId, out var zoneId, out appId);
 
-
-            if (!appId.HasValue)
-                throw new Exception("app id doesn't have value, and apparently didn't get it from context either");
-
-            // Check if we can find this content-type
-            var ctc = new ContentTypeController();
-            ctc.SetAppIdAndUser(appId.Value);
-
+            // Ensure that we can find this content-type 
             var cache = DataSource.GetCache(zoneId, appId);
             var ct = cache.GetContentType(contentType);
-
             if (ct == null)
-            {
-                ThrowHttpError(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.",
+                throw Errors.Http.WithLink(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.",
                     "content-types");
+
+            // give ok for all host-users
+            if (UserInfo.IsSuperUser)
                 return;
-            }
 
             // Check if the content-type has a GUID as name - only these can have permission assignments
-
             // only check permissions on type if the type has a GUID as static-id
-            var staticNameIsGuid = Guid.TryParse(ct.StaticName, out var ctGuid);
+            var staticNameIsGuid = Guid.TryParse(ct.StaticName, out var _);
             // Check permissions in 2sxc - or check if the user has admin-right (in which case he's always granted access for these types of content)
             if (staticNameIsGuid 
                 && new DnnPermissionController(ct, specificItem, Log, new DnnInstanceInfo(contextMod))
@@ -211,36 +214,30 @@ namespace ToSic.SexyContent.WebApi
                 return;
 
             // if initial test couldn't be done (non-guid) or failed, test for admin-specifically
-            if (autoAllowAdmin 
-                && DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(contextMod))
+            // note that auto-check not possible when not using context
+            if (contextMod != null && ModulePermissionController.CanAdminModule(contextMod))
                 return;
 
-            // if the cause was not-admin and not testable, report better error
-            if (!staticNameIsGuid)
-                ThrowHttpError(HttpStatusCode.Unauthorized,
-                    "Content Type '" + contentType + "' is not a standard Content Type - no permissions possible.");
-
-            // final case: simply not allowed
-            ThrowHttpError(HttpStatusCode.Unauthorized,
-                "Request not allowed. User needs permissions to " + grant + " for Content Type '" + contentType + "'.",
-                "permissions");
+            throw Errors.Http.InformativeErrorForTypeAccessDenied(contentType, grant, staticNameIsGuid);
         }
 
-        /// <summary>
-        /// Throw a correct HTTP error with the right error-numbr. This is important for the JavaScript which changes behavior & error messages based on http status code
-        /// </summary>
-        /// <param name="httpStatusCode"></param>
-        /// <param name="message"></param>
-        /// <param name="tags"></param>
-        private static void ThrowHttpError(HttpStatusCode httpStatusCode, string message, string tags = "")
+
+
+        private static ModuleInfo ResolveModuleAndIDsOrThrow(/*bool useContext,*/ ModuleInfo module, App app, int? appIdOpt, out int? zoneId, out int appId)
         {
-            var helpText = " See http://2sxc.org/help" + (tags == "" ? "" : "?tag=" + tags);
-            throw new HttpResponseException(new HttpResponseMessage(httpStatusCode)
-            {
-                Content = new StringContent(message + helpText),
-                ReasonPhrase = "Error in 2sxc Content API - not allowed"
-            });
+            var useContext = module != null;
+            var contextMod = useContext ? module : null;
+            zoneId = useContext ? app?.ZoneId : null;
+            if (useContext) appIdOpt = app?.AppId ?? appIdOpt;
+
+            if (!appIdOpt.HasValue)
+                throw new Exception("app id doesn't have value, and apparently didn't get it from context either");
+
+            appId = appIdOpt.Value;
+            return contextMod;
         }
+
+
 
         #endregion
 

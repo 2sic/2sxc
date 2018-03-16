@@ -4,13 +4,13 @@ namespace ToSic.SexyContent
 {
 	public class SxcHelper
 	{
-		private readonly SxcInstance _sexy;
-		public SxcHelper(SxcInstance sexy)
+		public readonly SxcInstance SxcInstance;
+		public SxcHelper(SxcInstance sxcInstance)
 		{
-			_sexy = sexy;
+			SxcInstance = sxcInstance;
 		}
 
 		private Serializer _serializer;
-		public Serializer Serializer => _serializer ?? (_serializer = new Serializer(_sexy));
+		public Serializer Serializer => _serializer ?? (_serializer = new Serializer(SxcInstance));
 	}
 }

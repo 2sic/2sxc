@@ -9,10 +9,10 @@ using Newtonsoft.Json;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.Sxc.Interfaces;
 
 // ReSharper disable InconsistentNaming
-
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class DnnRenderingHelpers : IHasLog, IRenderingHelpers
@@ -44,12 +44,41 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return this;
         }
 
+        public string WrapInContext(string content, 
+            IRenderingHelpers dontUseThis = null, 
+            int instanceId = 0, 
+            int contentBlockId = 0, 
+            bool includeEditInfos = false,
+            string moreAttribs = null, 
+            string moreClasses = null)
+        {
+            var head = $"<div class='sc-content-block {moreClasses}'";
+            if (instanceId != 0) head += $" data-cb-instance='{instanceId}'";
+
+            if (contentBlockId != 0) head += $" data-cb-id='{contentBlockId}'";
+
+            if (moreAttribs != null) head += $" {moreAttribs}";
+
+            // optionally add editing infos
+            if (includeEditInfos)
+            {
+                var editHelper = new InPageEditingHelper(includeEditInfos, Log);
+                head += editHelper.Attribute("data-edit-context", GetClientInfosAll());
+            }
+
+            head += ">\n";
+
+            return head + content + "</div>";
+        }
+
         /// <summary>
         /// Return true if the URL is a debug URL
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static bool IsDebugUrl(HttpRequest request) => string.IsNullOrEmpty(request.QueryString["debug"]);
+
+
 
         public void RegisterClientDependencies(Page page)
         {
@@ -84,9 +113,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
             => JsonConvert.SerializeObject(new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, _sxcInstance, _userInfo,
                 _sxcInstance.ZoneId ?? 0, _sxcInstance.ContentBlock.ContentGroupExists, Log));
 
+
+
         public string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError, bool addMinimalWrapper, bool encodeMessage)
         {
-            var intro = "Error"; // LocalizeString("TemplateError.Text") - todo i18n
+            var intro = "Error";
             var msg = intro + ": " + ex;
             if (addToEventLog)
                 Exceptions.LogException(ex);
@@ -102,15 +133,13 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             // add another, minimal id-wrapper for those cases where the rendering-wrapper is missing
             if (addMinimalWrapper)
-                msg = "<div class='sc-content-block' data-cb-instance='" + _moduleInfo.Id + "' data-cb-id='" + _moduleInfo.Id + "'>" + msg + "</div>";
+                msg = WrapInContext(msg, instanceId: _moduleInfo.Id, contentBlockId: _moduleInfo.Id);
+                // msg = "<div class='sc-content-block' data-cb-instance='" + _moduleInfo.Id + "' data-cb-id='" + _moduleInfo.Id + "'>" + msg + "</div>";
 
             return msg;
         }
 
-        public void LinkLog(Log parentLog)
-        {
-            Log.LinkTo(parentLog);
-        }
+        public void LinkLog(Log parentLog) => Log.LinkTo(parentLog);
     }
 
 }

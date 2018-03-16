@@ -89,6 +89,8 @@
   <ItemGroup>
     <Compile Include="Adam\AdamItem.cs" />
     <Compile Include="Adam\UploadResult.cs" />
+    <Compile Include="Errors\Http.cs" />
+    <Compile Include="Security.cs" />
     <Compile Include="WebApiLogDetails.cs" />
     <Compile Include="Adam\AdamController.cs" />
     <Compile Include="AppApiControllerSelector.cs" />
@@ -159,6 +161,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

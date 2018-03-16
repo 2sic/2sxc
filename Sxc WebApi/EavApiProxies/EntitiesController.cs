@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
@@ -40,7 +41,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
             // check if admin rights, then ok
-            PerformSecurityCheck(contentType, PermissionGrant.Read, true, useContext: true, appId: appId);
+            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, Dnn.Module);
 
             // note that the culture-code isn't actually used...
             return EavEntitiesController.GetOne(contentType, id, appId, cultureCode);
@@ -48,7 +49,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
 
         [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public dynamic GetManyForEditing([FromBody] List<ItemIdentifier> items, int appId)
         {
             Log.Add($"get many a#{appId}, items⋮{items.Count}");
@@ -58,17 +59,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // go through all the groups, assign relevant info so that we can then do get-many
             var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
             var tenant = new DnnTenant(PortalSettings.Current);
-            var zoneId = env.ZoneMapper.GetZoneId(tenant.Id);
+            var uiZoneId = env.ZoneMapper.GetZoneId(tenant.Id);
 
-            // super-users may also edit apps of other zones
-            if (Dnn.User.IsSuperUser)
-                zoneId = SystemManager.ZoneIdOfApp(appId);
+            // now do relevant security checks
+            var app = EnsureUserMayWriteOrThrowError(appId, tenant, uiZoneId);
 
-            var app = new App(tenant, zoneId, appId, parentLog: Log);
-
-            // todo: if somehow app-access outside of tennant is allowed, get that app...
-
-            var showDrafts = SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
+            var showDrafts = true;
 
             app.InitData(showDrafts, 
                 SxcInstance.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), 
@@ -98,6 +94,42 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // Now get all
             return EavEntitiesController.GetManyForEditing(appId, newItems);
         }
+
+	    private App EnsureUserMayWriteOrThrowError(int appId, DnnTenant tenant, int uiZoneId)
+	    {
+	        var zoneId = SystemManager.ZoneIdOfApp(appId);
+	        var app = new App(tenant, zoneId, appId, parentLog: Log);
+
+
+	        var secOk =
+	            // is host-user
+	            Dnn.User.IsSuperUser
+	            // or is admin of the current portal, or has edit-permissions on the instance
+	            || (
+	                uiZoneId == tenant.Id
+	                && PortalSettings.UserInfo.IsInRole(PortalSettings.Current.AdministratorRoleName)
+	                || appId == SxcInstance.App.AppId && SxcInstance.UserMayEdit
+	            );
+
+	        //var permissionFromMetadata = false;
+	        if (!secOk)
+	        {
+	            secOk =
+	                // user has edit permissions on this app, and it's the same app as the user is coming from
+	                new DnnPermissionController(SxcInstance.InstanceInfo, app.Metadata).UserMay(new List<PermissionGrant>
+	                {
+	                    PermissionGrant.Create,
+	                    PermissionGrant.CreateDraft,
+	                    PermissionGrant.Update,
+	                    PermissionGrant.Full
+	                });
+	            //permissionFromMetadata = secOk;
+	        }
+
+	        if (!secOk)
+	            throw new HttpResponseException(HttpStatusCode.Forbidden);
+	        return app;
+	    }
 
 	    private static void ConvertListIndexToEntityIds(ContentGroup contentGroup, ItemIdentifier reqItem,
 	        string contentTypeStaticName)
@@ -236,7 +268,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
             // check if admin rights, then ok
-            PerformSecurityCheck(contentType, PermissionGrant.Read, true, useContext: true, appId: appId);
+            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, Dnn.Module);
 
             return EavEntitiesController.GetAllOfTypeForAdmin(appId, contentType);
 	    }
@@ -248,7 +280,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
             // check if admin rights, then ok
-            PerformSecurityCheck(contentType, PermissionGrant.Delete, true, useContext: true, appId: appId);
+            PerformSecurityCheck(appId, contentType, PermissionGrant.Delete, Dnn.Module);
 
             EavEntitiesController.Delete(contentType, id, appId, force);
         }
@@ -258,7 +290,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
             // check if admin rights, then ok
-            PerformSecurityCheck(contentType, PermissionGrant.Delete, true, useContext: true, appId: appId);
+            PerformSecurityCheck(appId, contentType, PermissionGrant.Delete, Dnn.Module);
 
             EavEntitiesController.Delete(contentType, guid, appId, force);
         }

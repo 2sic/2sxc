@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.WebApi
             // if app-path specified, use that app, otherwise use from context
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
-            PerformSecurityCheck(contentType, PermissionGrant.Read, true, useContext: appPath == null, appId: appId);
+            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, appPath == null ? Dnn.Module : null);
             return _entitiesController.GetEntities(contentType, cultureCode);
         }
 
@@ -64,7 +64,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
             => GetAndSerializeOneAfterSecurityChecks(contentType,
-                appId => _entitiesController.GetEntityOrThrowError(contentType, id/*, appId*/),
+                appId => _entitiesController.GetEntityOrThrowError(contentType, id),
                 appPath);
 
 
@@ -92,7 +92,7 @@ namespace ToSic.SexyContent.WebApi
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
             IEntity itm = getOne(appId);
-            PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm, useContext: appPath == null, appId: appId);
+            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, appPath == null ? Dnn.Module : null, itm);
             return _entitiesController.Serializer.Prepare(itm);
         }
 
@@ -158,7 +158,7 @@ namespace ToSic.SexyContent.WebApi
                 ? PermissionGrant.Create 
                 : PermissionGrant.Update;
 
-            PerformSecurityCheck(contentType, perm, true, itm, appPath == null, appId);
+            PerformSecurityCheck(appId, contentType, perm, appPath == null ? Dnn.Module : null, itm);
 
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
@@ -330,17 +330,11 @@ namespace ToSic.SexyContent.WebApi
             if (contentType == "any")
                 throw new Exception("type any not allowed with id-only, requires guid");
 
-            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id/*, appId*/);
-            //var autoAllowAdmin = contentType != "any"; // only auto-allow-admin, if a type is clearly specified (protection from deleting other types)
-            //Delete_SharedCode(itm, appPath == null, appId, autoAllowAdmin);
-            PerformSecurityCheck(itm.Type.Name, PermissionGrant.Delete, true, itm, appPath == null, appId);
+            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id);
+            PerformSecurityCheck(appId, itm.Type.Name, PermissionGrant.Delete, appPath == null ? Dnn.Module : null, itm);
             _entitiesController.Delete(itm.Type.Name, id, appId);
         }
 
-	    //private void Delete_SharedCode(IEntity itm, bool useContext, int appId, bool autoAllowAdmin)
-	    //{
-	    //    PerformSecurityCheck(itm.Type.Name, PermissionGrant.Delete, true, itm, useContext, appId);
-	    //}
 
 	    [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
@@ -351,9 +345,7 @@ namespace ToSic.SexyContent.WebApi
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 	        IEntity itm = _entitiesController.GetEntityOrThrowError(contentType == "any" ? null : contentType, guid, appId);
 
-            //var autoAllowAdmin = true; // with guid, admins are allowed to delete
-            //   Delete_SharedCode(itm, appPath == null, appId, autoAllowAdmin);
-            PerformSecurityCheck(itm.Type.Name, PermissionGrant.Delete, true, itm, appPath == null, appId);
+            PerformSecurityCheck(appId, itm.Type.Name, PermissionGrant.Delete, appPath == null ? Dnn.Module : null, itm);
             _entitiesController.Delete(itm.Type.Name, guid, appId);
         }
 
