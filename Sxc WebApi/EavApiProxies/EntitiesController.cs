@@ -41,7 +41,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
             // check if admin rights, then ok
-            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, Dnn.Module);
+            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, Dnn.Module, App);
 
             // note that the culture-code isn't actually used...
             return EavEntitiesController.GetOne(contentType, id, appId, cultureCode);
@@ -116,7 +116,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	        {
 	            secOk =
 	                // user has edit permissions on this app, and it's the same app as the user is coming from
-	                new DnnPermissionController(SxcInstance.InstanceInfo, app.Metadata).UserMay(new List<PermissionGrant>
+	                new DnnPermissionCheck(null, instance: SxcInstance.InstanceInfo, meta1: app.Metadata).UserMay(new List<PermissionGrant>
 	                {
 	                    PermissionGrant.Create,
 	                    PermissionGrant.CreateDraft,
@@ -268,7 +268,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
             // check if admin rights, then ok
-            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, Dnn.Module);
+            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, Dnn.Module, App);
 
             return EavEntitiesController.GetAllOfTypeForAdmin(appId, contentType);
 	    }
@@ -280,7 +280,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
             // check if admin rights, then ok
-            PerformSecurityCheck(appId, contentType, PermissionGrant.Delete, Dnn.Module);
+            PerformSecurityCheck(appId, contentType, PermissionGrant.Delete, Dnn.Module, App);
 
             EavEntitiesController.Delete(contentType, id, appId, force);
         }
@@ -290,7 +290,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
             // check if admin rights, then ok
-            PerformSecurityCheck(appId, contentType, PermissionGrant.Delete, Dnn.Module);
+            PerformSecurityCheck(appId, contentType, PermissionGrant.Delete, Dnn.Module, App);
 
             EavEntitiesController.Delete(contentType, guid, appId, force);
         }

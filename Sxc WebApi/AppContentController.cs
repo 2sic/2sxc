@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.WebApi
             // if app-path specified, use that app, otherwise use from context
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
-            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, appPath == null ? Dnn.Module : null);
+            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, appPath == null ? Dnn.Module : null, App);
             return _entitiesController.GetEntities(contentType, cultureCode);
         }
 
@@ -92,7 +92,7 @@ namespace ToSic.SexyContent.WebApi
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
             IEntity itm = getOne(appId);
-            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, appPath == null ? Dnn.Module : null, itm);
+            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, appPath == null ? Dnn.Module : null, App, itm);
             return _entitiesController.Serializer.Prepare(itm);
         }
 
@@ -158,7 +158,7 @@ namespace ToSic.SexyContent.WebApi
                 ? PermissionGrant.Create 
                 : PermissionGrant.Update;
 
-            PerformSecurityCheck(appId, contentType, perm, appPath == null ? Dnn.Module : null, itm);
+            PerformSecurityCheck(appId, contentType, perm, appPath == null ? Dnn.Module : null, App, itm);
 
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
@@ -331,7 +331,7 @@ namespace ToSic.SexyContent.WebApi
                 throw new Exception("type any not allowed with id-only, requires guid");
 
             IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id);
-            PerformSecurityCheck(appId, itm.Type.Name, PermissionGrant.Delete, appPath == null ? Dnn.Module : null, itm);
+            PerformSecurityCheck(appId, itm.Type.Name, PermissionGrant.Delete, appPath == null ? Dnn.Module : null, App, itm);
             _entitiesController.Delete(itm.Type.Name, id, appId);
         }
 
@@ -345,7 +345,7 @@ namespace ToSic.SexyContent.WebApi
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 	        IEntity itm = _entitiesController.GetEntityOrThrowError(contentType == "any" ? null : contentType, guid, appId);
 
-            PerformSecurityCheck(appId, itm.Type.Name, PermissionGrant.Delete, appPath == null ? Dnn.Module : null, itm);
+            PerformSecurityCheck(appId, itm.Type.Name, PermissionGrant.Delete, appPath == null ? Dnn.Module : null, App, itm);
             _entitiesController.Delete(itm.Type.Name, guid, appId);
         }
 

@@ -1,9 +1,7 @@
 ﻿using System.Configuration;
-using DotNetNuke.Entities.Users;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Interfaces;
-using ToSic.Eav.Implementations.UserInformation;
 using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.Eav.ImportExport.Persistence.File;
 using ToSic.Eav.Interfaces;
@@ -14,7 +12,6 @@ using ToSic.SexyContent.Environment;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
 using ToSic.SexyContent.Environment.Dnn7.Installation;
-using ToSic.SexyContent.Environment.Dnn7.Security;
 using ToSic.SexyContent.Environment.Dnn7.ValueProviders;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.Interfaces;
@@ -33,7 +30,7 @@ namespace ToSic.SexyContent
         private static bool _alreadyConfigured;
 
         /// <summary>
-        /// Configure Unity for 2sxc. If it's already configured, do nothing.
+        /// Configure IoC for 2sxc. If it's already configured, do nothing.
         /// </summary>
         public void Configure()
         {
@@ -60,7 +57,6 @@ namespace ToSic.SexyContent
             {
                 sc.AddTransient<Eav.Serializers.Serializer, Serializers.Serializer>();
                 sc.AddTransient<IEavValueConverter, DnnValueConverter>();
-                //sc.AddTransient<IEavUserInformation, DnnUserInformation>();
                 sc.AddTransient<IUser, DnnUser>();
 
                 sc.AddTransient<XmlExporter, DnnXmlExporter>();
@@ -74,7 +70,6 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IWebFactoryTemp, DnnEnvironmentFactory>();
                 sc.AddTransient<IRenderingHelpers, DnnRenderingHelpers>();
                 sc.AddTransient<IMapAppToInstance, DnnMapAppToInstance>();
-                sc.AddTransient<IPermissions, DnnPermissions>();
                 sc.AddTransient<IEnvironmentInstaller, InstallationController>();
                 sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
                 sc.AddTransient<IEnvironmentValueProviders, DnnValueProviders>();

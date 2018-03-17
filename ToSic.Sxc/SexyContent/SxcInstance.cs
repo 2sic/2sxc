@@ -6,6 +6,7 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Interfaces;
@@ -47,6 +48,8 @@ namespace ToSic.SexyContent
         /// Environment - should be the place to refactor everything into, which is the host around 2sxc
         /// </summary>
         public IEnvironment Environment { get; }
+
+        public IEnvironmentFactory EnvFac { get; }
 
         public IInstanceInfo InstanceInfo { get; }
 
@@ -126,7 +129,8 @@ namespace ToSic.SexyContent
             Log parentLog = null)
         {
             Log = new Log("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
-            Environment = Factory.Resolve<IEnvironmentFactory>().Environment(parentLog);
+            EnvFac = Factory.Resolve<IEnvironmentFactory>();
+            Environment = EnvFac.Environment(parentLog);
             ContentBlock = cb;
             InstanceInfo = runtimeModuleInfo;
 
@@ -139,7 +143,7 @@ namespace ToSic.SexyContent
         #region RenderEngine
         internal bool RenderWithDiv = true;
         public bool UserMayEdit => _userMayEdit 
-            ?? (_userMayEdit = Factory.Resolve<IPermissions>().UserMayEditContent(InstanceInfo, App)).Value;
+            ?? (_userMayEdit = EnvFac.InstancePermissions(Log, InstanceInfo, App).UserMay(PermissionGrant.Full)).Value;
         private bool? _userMayEdit;
 
         public HtmlString Render()
@@ -205,19 +209,6 @@ namespace ToSic.SexyContent
                 #endregion
 
                 #region Wrap it all up into a nice wrapper tag
-                //var editInfos = renderHelp.GetClientInfosAll();
-                //var editHelper = new InPageEditingHelper(UserMayEdit, Log);
-                //var startTag = !RenderWithDiv
-                //    ? ""
-                //    : $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
-                //      $" data-cb-id=\"{ContentBlock.ContentBlockId}\""
-                //      + (UserMayEdit
-                //          ? editHelper.Attribute("data-edit-context", editInfos)
-                //          : null)
-                //      + ">\n";
-                //var endTag = !RenderWithDiv ? "" : "\n</div>";
-                //var result = startTag + body + endTag;
-
                 var result = RenderWithDiv
                     ? renderHelp.WrapInContext(body,
                         instanceId: ContentBlock.ParentId,

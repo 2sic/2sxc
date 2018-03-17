@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public int? GetAppIdFromInstance(IInstanceInfo instance, int zoneId)
         {
-            var module = (instance as InstanceInfo<ModuleInfo>).Info;
+            var module = (instance as EnvironmentInstance<ModuleInfo>).Original;
 
             if (module.DesktopModule.ModuleName == "2sxc")
                 return new ZoneRuntime(zoneId, null).DefaultAppId;
@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             // ToDo: Should throw exception if a real ContentGroup exists
 
-            var module = (instance as InstanceInfo<ModuleInfo>).Info;
+            var module = (instance as EnvironmentInstance<ModuleInfo>).Original;
             var zoneId = env.ZoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == 0 || !appId.HasValue)
@@ -123,7 +123,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 sxcInstance.ZoneId.Value);
 
             // Find Module for default language
-            var moduleController = new DotNetNuke.Entities.Modules.ModuleController();
+            var moduleController = new ModuleController();
             var originalModule = moduleController.GetModule(sxcInstance.InstanceInfo.Id);
 
             foreach (var dimension in languages)

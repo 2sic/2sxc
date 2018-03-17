@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Security.Permissions;
-using ToSic.Eav;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
@@ -171,71 +168,15 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="contentType"></param>
         /// <param name="grant"></param>
         /// <param name="specificItem"></param>
-        /// <param name="useContext"></param>
         internal void PerformSecurityCheck(int appId, string contentType, PermissionGrant grant,
-            ModuleInfo module, IEntity specificItem = null)
+            ModuleInfo module, App app, IEntity specificItem = null)
         {
-            PerformSecurityCheck(appId, contentType, new List<PermissionGrant> { grant },
-                specificItem, module);
+            new Security(UserInfo, Log).PerformSecurityCheck(appId, 
+                contentType, 
+                new List<PermissionGrant> { grant },
+                specificItem, module, app);
         }
 
-        /// <summary>
-        /// Check if a user may do something - and throw an error if the permission is not given
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="contentType"></param>
-        /// <param name="grant"></param>
-        /// <param name="specificItem"></param>
-        /// <param name="useContext"></param>
-        internal void PerformSecurityCheck(int appId, string contentType, List<PermissionGrant> grant, IEntity specificItem, ModuleInfo module)
-        {
-            Log.Add($"security check for type:{contentType}, grant:{grant}, useContext:{module != null}, app:{appId}, item:{specificItem?.EntityId}");
-            // make sure we have the right appId, zoneId and module-context
-            var contextMod = ResolveModuleAndIDsOrThrow(module, App, appId, out var zoneId, out appId);
-
-            // Ensure that we can find this content-type 
-            var cache = DataSource.GetCache(zoneId, appId);
-            var ct = cache.GetContentType(contentType);
-            if (ct == null)
-                throw Errors.Http.WithLink(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.",
-                    "content-types");
-
-            // give ok for all host-users
-            if (UserInfo.IsSuperUser)
-                return;
-
-            // Check if the content-type has a GUID as name - only these can have permission assignments
-            // only check permissions on type if the type has a GUID as static-id
-            var staticNameIsGuid = Guid.TryParse(ct.StaticName, out var _);
-            // Check permissions in 2sxc - or check if the user has admin-right (in which case he's always granted access for these types of content)
-            if (staticNameIsGuid 
-                && new DnnPermissionController(ct, specificItem, Log, new DnnInstanceInfo(contextMod))
-                    .UserMay(grant))
-                return;
-
-            // if initial test couldn't be done (non-guid) or failed, test for admin-specifically
-            // note that auto-check not possible when not using context
-            if (contextMod != null && ModulePermissionController.CanAdminModule(contextMod))
-                return;
-
-            throw Errors.Http.InformativeErrorForTypeAccessDenied(contentType, grant, staticNameIsGuid);
-        }
-
-
-
-        private static ModuleInfo ResolveModuleAndIDsOrThrow(/*bool useContext,*/ ModuleInfo module, App app, int? appIdOpt, out int? zoneId, out int appId)
-        {
-            var useContext = module != null;
-            var contextMod = useContext ? module : null;
-            zoneId = useContext ? app?.ZoneId : null;
-            if (useContext) appIdOpt = app?.AppId ?? appIdOpt;
-
-            if (!appIdOpt.HasValue)
-                throw new Exception("app id doesn't have value, and apparently didn't get it from context either");
-
-            appId = appIdOpt.Value;
-            return contextMod;
-        }
 
 
 

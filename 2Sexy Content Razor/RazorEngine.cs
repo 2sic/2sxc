@@ -144,6 +144,6 @@ namespace ToSic.SexyContent.Engines
             => Webpage?.CustomizeData();
 
         public override void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, IInstanceInfo moduleInfo, DateTime beginDate) 
-            => Webpage?.CustomizeSearch(searchInfos, ((InstanceInfo<ModuleInfo>)moduleInfo).Info /*moduleInfo*/, beginDate);
+            => Webpage?.CustomizeSearch(searchInfos, ((EnvironmentInstance<ModuleInfo>)moduleInfo).Original /*moduleInfo*/, beginDate);
     }
 }

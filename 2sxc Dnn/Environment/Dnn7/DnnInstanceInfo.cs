@@ -3,18 +3,18 @@ using ToSic.Eav.Apps.Environment;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class DnnInstanceInfo: InstanceInfo<ModuleInfo>
+    public class DnnInstanceInfo: EnvironmentInstance<ModuleInfo>
     {
         public DnnInstanceInfo(ModuleInfo item) : base(item)
         {
         }
 
-        public override int Id => Info.ModuleID;
+        public override int Id => Original.ModuleID;
 
-        public override int PageId => Info.TabID;
+        public override int PageId => Original.TabID;
 
-        public override int TenantId => Info.PortalID;
+        public override int TenantId => Original.PortalID;
 
-        public override bool IsPrimary => Info.DesktopModule.ModuleName == "2sxc";
+        public override bool IsPrimary => Original.DesktopModule.ModuleName == "2sxc";
     }
 }

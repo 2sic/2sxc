@@ -13,7 +13,6 @@ using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
-using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Search;
@@ -30,16 +29,18 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
         /// <returns></returns>
         public IList<SearchDocument> GetModifiedSearchDocuments(IInstanceInfo instance, DateTime beginDate)
         {
-            var dnnModule = (instance as InstanceInfo<ModuleInfo>).Info;
-            // always log with method, to ensure errors are cought
-            Log.Add(() => $"start search for mod#{dnnModule.ModuleID}");
             var searchDocuments = new List<SearchDocument>();
+            var dnnModule = (instance as EnvironmentInstance<ModuleInfo>)?.Original;
+            // always log with method, to ensure errors are cought
+            Log.Add($"start search for mod#{dnnModule?.ModuleID}");
+            if (dnnModule == null) return searchDocuments;
+
             var isContentModule = dnnModule.DesktopModule.ModuleName == "2sxc";
 
             // New Context because PortalSettings.Current is null
             var zoneId = new DnnEnvironment(Log).ZoneMapper.GetZoneId(dnnModule.OwnerPortalID);
 
-            int? appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
+            int? appId;// = new ZoneRuntime(zoneId, Log).DefaultAppId;
 
             if (!isContentModule)
             {

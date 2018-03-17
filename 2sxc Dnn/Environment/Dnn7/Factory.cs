@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public static ISxcInstance SxcInstanceForModule(IInstanceInfo moduleInfo)
         {
-            var dnnModule = ((InstanceInfo<ModuleInfo>) moduleInfo).Info;
+            var dnnModule = ((EnvironmentInstance<ModuleInfo>) moduleInfo).Original;
             var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
             return new ModuleContentBlock(moduleInfo, parentLog: null, tenant: tenant).SxcInstance;
         }

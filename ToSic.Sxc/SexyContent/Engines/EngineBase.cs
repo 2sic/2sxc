@@ -138,12 +138,14 @@ namespace ToSic.SexyContent.Engines
         {
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
-            var permissionsOnThisTemplate = Factory.Resolve<IEnvironmentFactory>()
+            var templatePermissions = Factory.Resolve<IEnvironmentFactory>()
                 .ItemPermissions(Template.Entity, Log, InstInfo);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
-            if (tenant.RefactorUserIsAdmin || !permissionsOnThisTemplate.PermissionList.Any()) return;
-            if (!permissionsOnThisTemplate.UserMay(PermissionGrant.Read))
+            if (tenant.RefactorUserIsAdmin || !templatePermissions.HasPermissions)
+                return;
+
+            if (!templatePermissions.UserMay(PermissionGrant.Read))
                 throw new RenderingException(new UnauthorizedAccessException(
                     "This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions"));
         }

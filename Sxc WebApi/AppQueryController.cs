@@ -56,7 +56,7 @@ namespace ToSic.SexyContent.WebApi
             if (query == null)
                 throw HttpErr(HttpStatusCode.NotFound, "query not found", $"query '{name}' not found");
 
-            var permissionChecker = new DnnPermissionController(query.QueryDefinition, log, new DnnInstanceInfo(module));
+            var permissionChecker = new DnnPermissionCheck(log, targetItem: query.QueryDefinition, instance: new DnnInstanceInfo(module));
             var readExplicitlyAllowed = permissionChecker.UserMay(PermissionGrant.Read);
 
             var isAdmin = module != null && DotNetNuke.Security.Permissions
