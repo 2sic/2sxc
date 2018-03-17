@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
@@ -57,12 +56,9 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var newItems = new List<ItemIdentifier>();
 
             // go through all the groups, assign relevant info so that we can then do get-many
-            var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
-            var tenant = new DnnTenant(PortalSettings.Current);
-            var uiZoneId = env.ZoneMapper.GetZoneId(tenant.Id);
+            var app = GetAppForWritingOrThrow(appId);
 
-            // now do relevant security checks
-            var app = EnsureUserMayWriteOrThrowError(appId, tenant, uiZoneId);
+            // todo: change to only show drafts if permissions allow more than just create
 
             var showDrafts = true;
 
@@ -95,41 +91,17 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             return EavEntitiesController.GetManyForEditing(appId, newItems);
         }
 
-	    private App EnsureUserMayWriteOrThrowError(int appId, DnnTenant tenant, int uiZoneId)
-	    {
-	        var zoneId = SystemManager.ZoneIdOfApp(appId);
-	        var app = new App(tenant, zoneId, appId, parentLog: Log);
+	    //private App GetAppAndCheckWriteSecurity(int appId)
+	    //{
+	    //    var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
+	    //    var tenant = new DnnTenant(PortalSettings.Current);
+	    //    var uiZoneId = env.ZoneMapper.GetZoneId(tenant.Id);
 
+	    //    // now do relevant security checks
+	    //    var app = GetAppForWritingOrThrow(appId, tenant, uiZoneId);
+	    //    return app;
+	    //}
 
-	        var secOk =
-	            // is host-user
-	            Dnn.User.IsSuperUser
-	            // or is admin of the current portal, or has edit-permissions on the instance
-	            || (
-	                uiZoneId == tenant.Id
-	                && PortalSettings.UserInfo.IsInRole(PortalSettings.Current.AdministratorRoleName)
-	                || appId == SxcInstance.App.AppId && SxcInstance.UserMayEdit
-	            );
-
-	        //var permissionFromMetadata = false;
-	        if (!secOk)
-	        {
-	            secOk =
-	                // user has edit permissions on this app, and it's the same app as the user is coming from
-	                new DnnPermissionCheck(null, instance: SxcInstance.InstanceInfo, meta1: app.Metadata).UserMay(new List<PermissionGrant>
-	                {
-	                    PermissionGrant.Create,
-	                    PermissionGrant.CreateDraft,
-	                    PermissionGrant.Update,
-	                    PermissionGrant.Full
-	                });
-	            //permissionFromMetadata = secOk;
-	        }
-
-	        if (!secOk)
-	            throw new HttpResponseException(HttpStatusCode.Forbidden);
-	        return app;
-	    }
 
 	    private static void ConvertListIndexToEntityIds(ContentGroup contentGroup, ItemIdentifier reqItem,
 	        string contentTypeStaticName)
@@ -159,12 +131,15 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    }
 
 	    [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items, [FromUri] bool partOfPage = false)
         {
+            // start with full security check
+            var app = GetAppForWritingOrThrow(appId);
+
             // if it's new, it has to be added to a group
             // only add if the header wants it, AND we started with ID unknown
-            // var allowAddGroup = items.First().Entity.Id == 0;
+
 
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed

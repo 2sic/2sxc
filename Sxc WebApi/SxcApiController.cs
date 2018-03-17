@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
+using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
@@ -164,20 +168,47 @@ namespace ToSic.SexyContent.WebApi
         /// <summary>
         /// Check if a user may do something - and throw an error if the permission is not given
         /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="contentType"></param>
-        /// <param name="grant"></param>
-        /// <param name="specificItem"></param>
         internal void PerformSecurityCheck(int appId, string contentType, PermissionGrant grant,
             ModuleInfo module, App app, IEntity specificItem = null)
+            => new Security(PortalSettings, Log).FindCtCheckSecurityOrThrow(appId,
+                contentType,
+                new List<PermissionGrant> {grant},
+                specificItem,
+                module,
+                app);
+
+
+        protected App GetAppForWritingOrThrow(int appId)
         {
-            new Security(UserInfo, Log).PerformSecurityCheck(appId, 
-                contentType, 
-                new List<PermissionGrant> { grant },
-                specificItem, module, app);
+
+            var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
+            var tenant = new DnnTenant(PortalSettings.Current);
+            var uiZoneId = env.ZoneMapper.GetZoneId(tenant.Id);
+
+            // now do relevant security checks
+
+            var zoneId = SystemManager.ZoneIdOfApp(appId);
+            var app = new App(tenant, zoneId, appId, parentLog: Log);
+
+            var samePortal = uiZoneId == tenant.Id;
+            var portalToUseInSecCheck = samePortal ? PortalSettings.Current : null;
+
+            // user has edit permissions on this app, and it's the same app as the user is coming from
+            var secOk = new DnnPermissionCheck(Log,
+                    instance: SxcInstance.InstanceInfo,
+                    app: app,
+                    portal: portalToUseInSecCheck)
+                .UserMay(new List<PermissionGrant>
+                {
+                    PermissionGrant.Create,
+                    PermissionGrant.CreateDraft,
+                    PermissionGrant.Update,
+                    PermissionGrant.Full
+                });
+
+
+            return secOk ? app : throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
-
-
 
 
         #endregion

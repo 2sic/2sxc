@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
+using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Interfaces;
@@ -24,6 +25,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         protected IInstanceInfo Instance { get; }
         protected ModuleInfo Module => ((EnvironmentInstance<ModuleInfo>) Instance)?.Original;
+        protected PortalSettings Portal { get; }
+
         protected IApp App { get; }
 
         public DnnPermissionCheck(
@@ -33,12 +36,14 @@ namespace ToSic.SexyContent.Environment.Dnn7
             IInstanceInfo instance = null,
             IApp app = null,
             IMetadataOfItem meta1 = null, // optional additional metadata, like of an app
-            IMetadataOfItem meta2 = null  // optional additional metadata, like of a zone
+            //IMetadataOfItem meta2 = null, // optional additional metadata, like of a zone
+            PortalSettings portal = null
             )
-            : base(parentLog, targetType, targetItem, meta1, meta2)
+            : base(parentLog, targetType, targetItem, meta1, app?.Metadata)
         {
             App = app;
             Instance = instance;
+            Portal = portal;
         }
 
 
@@ -46,13 +51,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
         protected override IUser User => new DnnUser();
 
         protected override bool EnvironmentAllows(List<PermissionGrant> grants) 
-            => UserIsSuperuser() 
-            || UserMayEditModule();
+            => UserIsSuperuser() // superusers are always ok
+            || UserIsTenantAdmin()
+            || UserIsModuleAdmin()
+            || UserIsModuleEditor();
 
-        private static bool UserIsSuperuser()
-        {
-            return PortalSettings.Current?.UserInfo.IsSuperUser ?? false;
-        }
 
         protected override bool EnvironmentApprovesCondition(string condition)
         {
@@ -66,7 +69,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             // check within module context
             if (Module != null)
-                return DotNetNuke.Security.Permissions.ModulePermissionController
+                return ModulePermissionController
                     .HasModuleAccess(sal, CustomPermissionKey, Module);
 
             Log.Add("trying to check permission " + _salPrefix + ", but don't have module in context");
@@ -74,13 +77,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
         }
 
 
-        private bool UserMayEditModule()
-        {
-            if (Module == null)
-                return false;
+        private bool UserIsSuperuser() => Portal?.UserInfo?.IsSuperUser ?? false;
 
-            return DotNetNuke.Security.Permissions.ModulePermissionController
-                .HasModuleAccess(SecurityAccessLevel.Edit, "" /*"EDIT"*/, Module);
-        }
+        public bool UserIsTenantAdmin() => Portal?.UserInfo?.IsInRole(Portal?.AdministratorRoleName) ?? false;
+
+        private bool UserIsModuleEditor()
+            => Module != null && ModulePermissionController
+                   .HasModuleAccess(SecurityAccessLevel.Edit, "" /*"EDIT"*/, Module);
+
+        private bool UserIsModuleAdmin() 
+            => Module != null && ModulePermissionController.CanAdminModule(Module);
     }
 }

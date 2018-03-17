@@ -113,8 +113,7 @@ namespace ToSic.SexyContent
 
         #region Security Check
 
-        protected bool UserMayEditThisModule
-            => SxcInstance?.UserMayEdit ?? false;// Eav.Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance?.InstanceInfo, SxcInstance?.App);
+        protected bool UserMayEditThisModule => SxcInstance?.UserMayEdit ?? false;
         #endregion
 
 

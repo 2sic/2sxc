@@ -35,9 +35,14 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             => _eavCtc.GetSingle(appId, contentTypeId, scope);
 
 	    [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null) 
-            => _eavCtc.GetSingle(appId, contentTypeStaticName, scope);
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
+	    {
+	        GetAppForWritingOrThrow(appId);
+
+            // if we got this far, permissions are ok
+            return _eavCtc.GetSingle(appId, contentTypeStaticName, scope);
+	    }
 
 	    [HttpGet]
         [HttpDelete]
@@ -64,9 +69,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         /// Returns the configuration for a content type
         /// </summary>
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName) 
-            => _eavCtc.GetFields(appId, staticName);
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName)
+	    {
+	        GetAppForWritingOrThrow(appId);
+            return _eavCtc.GetFields(appId, staticName);
+	    }
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
