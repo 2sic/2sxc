@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
                 return textTemplate;
 
             // create edit-object which is necessary for context attributes
-            var edit = new InPageEditingHelper(parent.SxcInstance.UserMayEdit, parent.SxcInstance.Log);
+            var edit = new InPageEditingHelper(parent.SxcInstance, parent.SxcInstance.Log);
 
             foreach (Match curMatch in matches)
             {

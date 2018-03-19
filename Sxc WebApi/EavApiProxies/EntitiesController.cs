@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
             // check if admin rights, then ok
-            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, Dnn.Module, App);
+            PerformSecurityCheck(appId, contentType, Grants.Read, Dnn.Module, App);
 
             // note that the culture-code isn't actually used...
             return EavEntitiesController.GetOne(contentType, id, appId, cultureCode);
@@ -56,11 +56,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var newItems = new List<ItemIdentifier>();
 
             // go through all the groups, assign relevant info so that we can then do get-many
-            var app = GetAppForWritingOrThrow(appId);
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
+            var app = set.Item1;
 
-            // todo: change to only show drafts if permissions allow more than just create
-
-            var showDrafts = true;
+            var showDrafts = set.Item2.UserMay(GrantSets.ReadDrafts);
 
             app.InitData(showDrafts, 
                 SxcInstance.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), 
@@ -90,17 +89,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // Now get all
             return EavEntitiesController.GetManyForEditing(appId, newItems);
         }
-
-	    //private App GetAppAndCheckWriteSecurity(int appId)
-	    //{
-	    //    var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
-	    //    var tenant = new DnnTenant(PortalSettings.Current);
-	    //    var uiZoneId = env.ZoneMapper.GetZoneId(tenant.Id);
-
-	    //    // now do relevant security checks
-	    //    var app = GetAppForWritingOrThrow(appId, tenant, uiZoneId);
-	    //    return app;
-	    //}
 
 
 	    private static void ConvertListIndexToEntityIds(ContentGroup contentGroup, ItemIdentifier reqItem,
@@ -135,7 +123,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items, [FromUri] bool partOfPage = false)
         {
             // start with full security check
-            var app = GetAppForWritingOrThrow(appId);
+            GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
 
             // if it's new, it has to be added to a group
             // only add if the header wants it, AND we started with ID unknown
@@ -178,7 +166,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             var myLog = new Log("2Ap.GrpPrc", Log, "start");
             var app = new App(new DnnTenant(PortalSettings.Current), appId);
-            var userMayEdit = SxcInstance.UserMayEdit ;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
+            var userMayEdit = SxcInstance.UserMayEdit ;
 
             app.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
 
@@ -243,7 +231,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
             // check if admin rights, then ok
-            PerformSecurityCheck(appId, contentType, PermissionGrant.Read, Dnn.Module, App);
+            PerformSecurityCheck(appId, contentType, Grants.Read, Dnn.Module, App);
 
             return EavEntitiesController.GetAllOfTypeForAdmin(appId, contentType);
 	    }
@@ -255,7 +243,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
             // check if admin rights, then ok
-            PerformSecurityCheck(appId, contentType, PermissionGrant.Delete, Dnn.Module, App);
+            PerformSecurityCheck(appId, contentType, Grants.Delete, Dnn.Module, App);
 
             EavEntitiesController.Delete(contentType, id, appId, force);
         }
@@ -265,18 +253,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
             // check if admin rights, then ok
-            PerformSecurityCheck(appId, contentType, PermissionGrant.Delete, Dnn.Module, App);
+            PerformSecurityCheck(appId, contentType, Grants.Delete, Dnn.Module, App);
 
             EavEntitiesController.Delete(contentType, guid, appId, force);
         }
 
-
-	    [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public Dictionary<string, object> CreateOrUpdate(string contentType, int id = 0)
-	    {
-	        throw new NotImplementedException();
-	    }
 
         #region Content Types
         /// <summary>

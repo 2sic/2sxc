@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.WebApi.Errors
         }
 
 
-        internal static HttpResponseException InformativeErrorForTypeAccessDenied(string contentType, List<PermissionGrant> grant, bool staticNameIsGuid)
+        internal static HttpResponseException InformativeErrorForTypeAccessDenied(string contentType, List<Grants> grant, bool staticNameIsGuid)
         {
             var grantCodes = string.Join(",", grant);
 

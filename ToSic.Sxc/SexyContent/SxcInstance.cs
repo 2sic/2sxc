@@ -51,7 +51,7 @@ namespace ToSic.SexyContent
 
         public IEnvironmentFactory EnvFac { get; }
 
-        public IInstanceInfo InstanceInfo { get; }
+        public IInstanceInfo EnvInstance { get; }
 
         internal IContentBlock ContentBlock { get; }
 
@@ -124,7 +124,7 @@ namespace ToSic.SexyContent
 
         #region Constructor
         internal SxcInstance(IContentBlock  cb, 
-            IInstanceInfo runtimeModuleInfo, 
+            IInstanceInfo envInstance, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
             Log parentLog = null)
         {
@@ -132,7 +132,7 @@ namespace ToSic.SexyContent
             EnvFac = Factory.Resolve<IEnvironmentFactory>();
             Environment = EnvFac.Environment(parentLog);
             ContentBlock = cb;
-            InstanceInfo = runtimeModuleInfo;
+            EnvInstance = envInstance;
 
             // keep url parameters, because we may need them later for view-switching and more
             Parameters = urlparams;
@@ -143,13 +143,18 @@ namespace ToSic.SexyContent
         #region RenderEngine
         internal bool RenderWithDiv = true;
         public bool UserMayEdit => _userMayEdit 
-            ?? (_userMayEdit = EnvFac.InstancePermissions(Log, InstanceInfo, App).UserMay(PermissionGrant.Full)).Value;
+            ?? (_userMayEdit = EnvFac.InstancePermissions(Log, EnvInstance, App).UserMay(Grants.Full)).Value;
         private bool? _userMayEdit;
+
+
+        internal IRenderingHelpers RenderingHelper =>
+            _rendHelp ?? (_rendHelp = Factory.Resolve<IRenderingHelpers>().Init(this, Log));
+        private IRenderingHelpers _rendHelp;
+
 
         public HtmlString Render()
         {
             Log.Add("render");
-            var renderHelp = Factory.Resolve<IRenderingHelpers>().Init(this, Log);
             
             try
             {
@@ -162,7 +167,7 @@ namespace ToSic.SexyContent
                 if (!string.IsNullOrEmpty(notReady))
                 {
                     Log.Add("system isn't ready,show upgrade message");
-                    body = renderHelp.DesignErrorMessage(new Exception(notReady), true,
+                    body = RenderingHelper.DesignErrorMessage(new Exception(notReady), true,
                         "Error - needs admin to fix this", false, false);
                 }
                 Log.Add("system is ready, no upgrade-message to show");
@@ -183,7 +188,7 @@ namespace ToSic.SexyContent
                             var ex =
                                 new Exception(
                                     "Data is missing - usually when a site is copied but the content / apps have not been imported yet - check 2sxc.org/help?tag=export-import");
-                            body = renderHelp.DesignErrorMessage(ex, true,
+                            body = RenderingHelper.DesignErrorMessage(ex, true,
                                 "Error - needs admin to fix", false, true);
                         }
                     }
@@ -204,13 +209,13 @@ namespace ToSic.SexyContent
                     }
                     catch (Exception ex)
                     {
-                        body = renderHelp.DesignErrorMessage(ex, true, "Error rendering template", false, true);
+                        body = RenderingHelper.DesignErrorMessage(ex, true, "Error rendering template", false, true);
                     }
                 #endregion
 
                 #region Wrap it all up into a nice wrapper tag
                 var result = RenderWithDiv
-                    ? renderHelp.WrapInContext(body,
+                    ? RenderingHelper.WrapInContext(body,
                         instanceId: ContentBlock.ParentId,
                         contentBlockId: ContentBlock.ContentBlockId,
                         includeEditInfos: UserMayEdit)
@@ -221,14 +226,14 @@ namespace ToSic.SexyContent
             }
             catch (Exception ex)
             {
-                return new HtmlString(renderHelp.DesignErrorMessage(ex, true, null, true, true));
+                return new HtmlString(RenderingHelper.DesignErrorMessage(ex, true, null, true, true));
             }
         }
 
         public IEngine GetRenderingEngine(InstancePurposes renderingPurpose)
         {
             var engine = EngineFactory.CreateEngine(Template);
-            engine.Init(Template, App, InstanceInfo, Data, renderingPurpose, this, Log);
+            engine.Init(Template, App, EnvInstance, Data, renderingPurpose, this, Log);
             return engine;
         }
 

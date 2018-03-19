@@ -30,7 +30,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="specificItem"></param>
         /// <param name="module"></param>
         /// <param name="app"></param>
-        internal void FindCtCheckSecurityOrThrow(int appId, string contentType, List<PermissionGrant> grant, IEntity specificItem, ModuleInfo module, App app)
+        internal void FindCtCheckSecurityOrThrow(int appId, string contentType, List<Grants> grant, IEntity specificItem, ModuleInfo module, App app)
         {
             Log.Add($"security check for type:{contentType}, grant:{grant}, useContext:{module != null}, app:{appId}, item:{specificItem?.EntityId}");
             // make sure we have the right appId, zoneId and module-context

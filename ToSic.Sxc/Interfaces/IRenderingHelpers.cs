@@ -9,13 +9,18 @@ namespace ToSic.Sxc.Interfaces
     {
         IRenderingHelpers Init(SxcInstance sxc, Log parentLog);
 
-        string WrapInContext(string content, 
-            IRenderingHelpers dontUseThis = null, 
+        string WrapInContext(string content,
+            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             int instanceId = 0, 
             int contentBlockId = 0, 
             bool includeEditInfos = false, 
-            string moreClasses = null, 
-            string moreAttribs = null);
+            //string moreClasses = null, 
+            //string moreAttribs = null,
+            string tag = "div");
+
+        string ContextAttributes(int instanceId, 
+            int contentBlockId, 
+            bool includeEditInfos);
 
         string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError, bool addMinimalWrapper, bool encodeMessage);
 

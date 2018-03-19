@@ -33,7 +33,7 @@ namespace ToSic.SexyContent.WebApi
             base.Initialize(controllerContext);
             Log.Rename("2sApiC");
             SxcInstance = Helpers.GetSxcOfApiRequest(Request, true, Log);
-            DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcInstance, SxcInstance?.InstanceInfo, SxcInstance?.Log ?? Log);
+            DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcInstance, SxcInstance?.EnvInstance, SxcInstance?.Log ?? Log);
             controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); // must run after creating AppAndDataHelpers
         }
         #endregion
@@ -168,19 +168,25 @@ namespace ToSic.SexyContent.WebApi
         /// <summary>
         /// Check if a user may do something - and throw an error if the permission is not given
         /// </summary>
-        internal void PerformSecurityCheck(int appId, string contentType, PermissionGrant grant,
+        internal void PerformSecurityCheck(int appId, string contentType, Grants grant,
             ModuleInfo module, App app, IEntity specificItem = null)
             => new Security(PortalSettings, Log).FindCtCheckSecurityOrThrow(appId,
                 contentType,
-                new List<PermissionGrant> {grant},
+                new List<Grants> {grant},
                 specificItem,
                 module,
                 app);
 
 
-        protected App GetAppForWritingOrThrow(int appId)
+        protected Tuple<App, DnnPermissionCheck> GetAppRequiringPermissionsOrThrow(int appId, List<Grants> grants = null)
         {
+            var set = AppAndPermissionChecker(appId);
 
+            return set.Item2.UserMay(grants) ? set : throw new HttpResponseException(HttpStatusCode.Forbidden);
+        }
+
+        private Tuple<App, DnnPermissionCheck> AppAndPermissionChecker(int appId)
+        {
             var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
             var tenant = new DnnTenant(PortalSettings.Current);
             var uiZoneId = env.ZoneMapper.GetZoneId(tenant.Id);
@@ -194,22 +200,12 @@ namespace ToSic.SexyContent.WebApi
             var portalToUseInSecCheck = samePortal ? PortalSettings.Current : null;
 
             // user has edit permissions on this app, and it's the same app as the user is coming from
-            var secOk = new DnnPermissionCheck(Log,
-                    instance: SxcInstance.InstanceInfo,
-                    app: app,
-                    portal: portalToUseInSecCheck)
-                .UserMay(new List<PermissionGrant>
-                {
-                    PermissionGrant.Create,
-                    PermissionGrant.CreateDraft,
-                    PermissionGrant.Update,
-                    PermissionGrant.Full
-                });
-
-
-            return secOk ? app : throw new HttpResponseException(HttpStatusCode.Forbidden);
+            var checker = new DnnPermissionCheck(Log,
+                instance: SxcInstance.EnvInstance,
+                app: app,
+                portal: portalToUseInSecCheck);
+            return new Tuple<App, DnnPermissionCheck>(app, checker); 
         }
-
 
         #endregion
 

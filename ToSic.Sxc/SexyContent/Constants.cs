@@ -24,5 +24,8 @@ namespace ToSic.SexyContent
                 throw new Exception("when using the command " + protectedMethod + ", please use named parameters - otherwise you are relying on the parameter order staying the same.");
         }
 
+
+        public const string DefaultContextTag = "div";
+        public const string ClassToMarkContentBlock = "sc-content-block";
     }
 }

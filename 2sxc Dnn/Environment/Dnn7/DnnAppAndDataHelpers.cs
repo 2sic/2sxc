@@ -8,7 +8,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class DnnAppAndDataHelpers : AppAndDataHelpersBase
     {
-        public DnnAppAndDataHelpers(SxcInstance sxcInstance) : this(sxcInstance, sxcInstance.InstanceInfo, null) {}
+        public DnnAppAndDataHelpers(SxcInstance sxcInstance) : this(sxcInstance, sxcInstance.EnvInstance, null) {}
 
         public DnnAppAndDataHelpers(SxcInstance sxcInstance, IInstanceInfo instance, Log parentLog): base(sxcInstance, new DnnTenant(null), parentLog)
         {

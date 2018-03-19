@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.ContentBlocks
             => ContentGroupManager.SetPreviewTemplate(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
-            => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(SxcContext.InstanceInfo, SxcContext.Environment, appId, Log);
+            => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(SxcContext.EnvInstance, SxcContext.Environment, appId, Log);
         
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)

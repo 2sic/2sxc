@@ -50,7 +50,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         protected override IUser User => new DnnUser();
 
-        protected override bool EnvironmentAllows(List<PermissionGrant> grants) 
+        protected override bool EnvironmentAllows(List<Grants> grants) 
             => UserIsSuperuser() // superusers are always ok
             || UserIsTenantAdmin()
             || UserIsModuleAdmin()

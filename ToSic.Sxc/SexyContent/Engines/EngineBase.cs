@@ -145,7 +145,7 @@ namespace ToSic.SexyContent.Engines
             if (tenant.RefactorUserIsAdmin || !templatePermissions.HasPermissions)
                 return;
 
-            if (!templatePermissions.UserMay(PermissionGrant.Read))
+            if (!templatePermissions.UserMay(Grants.Read))
                 throw new RenderingException(new UnauthorizedAccessException(
                     "This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions"));
         }

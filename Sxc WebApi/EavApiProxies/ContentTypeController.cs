@@ -4,6 +4,7 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -38,7 +39,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
 	    {
-	        GetAppForWritingOrThrow(appId);
+	        GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
 
             // if we got this far, permissions are ok
             return _eavCtc.GetSingle(appId, contentTypeStaticName, scope);
@@ -72,7 +73,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName)
 	    {
-	        GetAppForWritingOrThrow(appId);
+	        GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
             return _eavCtc.GetFields(appId, staticName);
 	    }
 

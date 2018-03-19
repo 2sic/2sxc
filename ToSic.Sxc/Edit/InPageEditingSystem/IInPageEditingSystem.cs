@@ -20,6 +20,15 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             string contentType = null,
             Guid? newGuid = null);
 
+        HtmlString WrapInContext(object content,
+            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
+            string tag = Constants.DefaultContextTag,
+            bool full = false,
+            bool? enableEdit = null,
+            int instanceId = 0,
+            int contentBlockId = 0
+        );
+
         HtmlString Attribute(string name, string value);
 
         HtmlString Attribute(string name, object value);

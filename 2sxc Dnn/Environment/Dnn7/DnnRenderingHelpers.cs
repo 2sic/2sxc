@@ -9,10 +9,8 @@ using Newtonsoft.Json;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.Sxc.Interfaces;
 
-// ReSharper disable InconsistentNaming
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class DnnRenderingHelpers : IHasLog, IRenderingHelpers
@@ -34,7 +32,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             LinkLog(parentLog);
             var appRoot = VirtualPathUtility.ToAbsolute("~/");
-            _moduleInfo = sxc?.InstanceInfo;
+            _moduleInfo = sxc?.EnvInstance;
             _sxcInstance = sxc;
             _portalSettings = PortalSettings.Current;
 
@@ -44,39 +42,44 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return this;
         }
 
-        public string WrapInContext(string content, 
-            IRenderingHelpers dontUseThis = null, 
+
+
+        public string WrapInContext(string content,
+            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             int instanceId = 0, 
             int contentBlockId = 0, 
             bool includeEditInfos = false,
-            string moreAttribs = null, 
-            string moreClasses = null)
+            //string moreAttribs = null, 
+            //string moreClasses = null,
+            string tag = Constants.DefaultContextTag)
         {
-            var head = $"<div class='sc-content-block {moreClasses}'";
-            if (instanceId != 0) head += $" data-cb-instance='{instanceId}'";
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes");
 
-            if (contentBlockId != 0) head += $" data-cb-id='{contentBlockId}'";
+            var contextAttribs = ContextAttributes(instanceId, contentBlockId, includeEditInfos);
 
-            if (moreAttribs != null) head += $" {moreAttribs}";
+            // return $"<{tag} class='{ClassToMarkContentBlock} {moreClasses}' {contextAttribs}  {moreAttribs}>\n" +
+            return $"<{tag} class='{Constants.ClassToMarkContentBlock}' {contextAttribs}>\n" +
+                   $"{content}" +
+                   $"</{tag}>";
+        }
+
+
+        public string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos)
+        {
+            var contextAttribs = "";
+            if (instanceId != 0) contextAttribs += $" data-cb-instance='{instanceId}'";
+
+            if (contentBlockId != 0) contextAttribs += $" data-cb-id='{contentBlockId}'";
 
             // optionally add editing infos
-            if (includeEditInfos)
-            {
-                var editHelper = new InPageEditingHelper(includeEditInfos, Log);
-                head += editHelper.Attribute("data-edit-context", GetClientInfosAll());
-            }
-
-            head += ">\n";
-
-            return head + content + "</div>";
+            if (includeEditInfos) contextAttribs += Html.Build.Attribute("data-edit-context", GetClientInfosAll());
+            return contextAttribs;
         }
 
         /// <summary>
         /// Return true if the URL is a debug URL
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        internal static bool IsDebugUrl(HttpRequest request) => string.IsNullOrEmpty(request.QueryString["debug"]);
+        private static bool IsDebugUrl(HttpRequest request) => string.IsNullOrEmpty(request.QueryString["debug"]);
 
 
 
@@ -134,7 +137,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // add another, minimal id-wrapper for those cases where the rendering-wrapper is missing
             if (addMinimalWrapper)
                 msg = WrapInContext(msg, instanceId: _moduleInfo.Id, contentBlockId: _moduleInfo.Id);
-                // msg = "<div class='sc-content-block' data-cb-instance='" + _moduleInfo.Id + "' data-cb-id='" + _moduleInfo.Id + "'>" + msg + "</div>";
 
             return msg;
         }

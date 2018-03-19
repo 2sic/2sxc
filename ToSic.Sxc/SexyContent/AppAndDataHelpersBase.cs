@@ -32,7 +32,7 @@ namespace ToSic.SexyContent
             App = sxcInstance.App;
             Data = sxcInstance.Data;
 			Sxc = new SxcHelper(sxcInstance);
-            Edit = new InPageEditingHelper(sxcInstance.UserMayEdit, Log);
+            Edit = new InPageEditingHelper(sxcInstance, Log);
         }
 
 

@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.ContentBlocks
         internal ContentGroupReferenceManagerBase(SxcInstance sxc): base("CG.RefMan", sxc.Log)
         {
             SxcContext = sxc;
-            ModuleId = SxcContext.InstanceInfo.Id;
+            ModuleId = SxcContext.EnvInstance.Id;
         }
 
 

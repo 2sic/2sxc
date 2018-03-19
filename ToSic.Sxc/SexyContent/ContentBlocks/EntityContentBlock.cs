@@ -89,7 +89,7 @@ namespace ToSic.SexyContent.ContentBlocks
             // maybe ensure that App.Data is ready
             var userMayEdit = SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
 
-            App.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(Parent.SxcInstance.InstanceInfo.Id), Configuration);
+            App.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(Parent.SxcInstance.EnvInstance.Id), Configuration);
 
             ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 
@@ -108,7 +108,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         public override SxcInstance SxcInstance
             => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, 
-                Parent.SxcInstance.InstanceInfo, 
+                Parent.SxcInstance.EnvInstance, 
                 Parent.SxcInstance.Parameters, 
                 //Parent.SxcInstance.Environment.Permissions, 
                 Log));

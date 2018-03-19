@@ -119,12 +119,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             //Log.Add("update title");
 
-            var languages = sxcInstance.Environment.ZoneMapper.CulturesWithState(sxcInstance.InstanceInfo.TenantId,
+            var languages = sxcInstance.Environment.ZoneMapper.CulturesWithState(sxcInstance.EnvInstance.TenantId,
                 sxcInstance.ZoneId.Value);
 
             // Find Module for default language
             var moduleController = new ModuleController();
-            var originalModule = moduleController.GetModule(sxcInstance.InstanceInfo.Id);
+            var originalModule = moduleController.GetModule(sxcInstance.EnvInstance.Id);
 
             foreach (var dimension in languages)
             {
@@ -142,7 +142,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
                     // Find module for given Culture
                     var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
-                        originalModule.TabID, sxcInstance.InstanceInfo.TenantId,
+                        originalModule.TabID, sxcInstance.EnvInstance.TenantId,
                         DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
 
                     // Break if no title module found
