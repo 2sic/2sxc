@@ -7,7 +7,6 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Persistence.Versions;
@@ -122,53 +121,61 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items, [FromUri] bool partOfPage = false)
         {
-            // start with full security check
-            GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
-
-            // if it's new, it has to be added to a group
-            // only add if the header wants it, AND we started with ID unknown
-
-
-            // first, save all to do it in 1 transaction
-            // note that it won't save the SlotIsEmpty ones, as these won't be needed
-
+            // log and do security check
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
 
-            var versioning = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
+            // list of saved IDs
             Dictionary<Guid, int> postSaveIds = null;
-
-            void InternalSave(VersioningActionInfo args)
-            {
-                postSaveIds = EavEntitiesController.SaveMany(appId, items, partOfPage);
-
-                Log.Add("check groupings");
-                // now assign all content-groups as needed
-                var groupItems = items.Where(i => i.Header.Group != null)
-                    .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add)
-                    .ToList();
-
-                if (groupItems.Any())
-                    DoAdditionalGroupProcessing(appId, postSaveIds, groupItems);
-            }
 
             // use dnn versioning if partOfPage
             if (partOfPage)
             {
+                var versioning = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 Log.Add("save with publishing");
-                versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
+                versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, 
+                    args => postSaveIds = SaveAndProcessGroups(set.Item2, appId, items, partOfPage));
             }
-            else InternalSave(null);
+            else
+            {
+                Log.Add("save without publishing");
+                postSaveIds = SaveAndProcessGroups(set.Item2, appId, items, partOfPage);
+            }
 
             return postSaveIds;
         }
 
-        private void DoAdditionalGroupProcessing(int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeader>> groupItems)
-        {
-            var myLog = new Log("2Ap.GrpPrc", Log, "start");
-            var app = new App(new DnnTenant(PortalSettings.Current), appId);
-            var userMayEdit = SxcInstance.UserMayEdit ;
+	    private Dictionary<Guid, int> SaveAndProcessGroups(DnnPermissionCheck permChecker, int appId, List<EntityWithHeader> items, bool partOfPage)
+	    {
+	        var allowWriteLive = permChecker.UserMay(GrantSets.WritePublished);
 
-            app.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), Data.ConfigurationProvider);
+            var forceDraft = !allowWriteLive;
+
+	        // first, save all to do it in 1 transaction
+	        // note that it won't save the SlotIsEmpty ones, as these won't be needed
+	        var ids = EavEntitiesController.SaveMany(appId, items, partOfPage, forceDraft);
+
+	        Log.Add("check groupings");
+	        // now assign all content-groups as needed
+	        var groupItems = items.Where(i => i.Header.Group != null)
+	            .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add)
+	            .ToList();
+
+	        // if it's new, it has to be added to a group
+	        // only add if the header wants it, AND we started with ID unknown
+	        if (groupItems.Any())
+	            DoAdditionalGroupProcessing(SxcInstance, Log, appId, ids, groupItems);
+
+	        return ids;
+	    }
+
+        private static void DoAdditionalGroupProcessing(SxcInstance sxcInstance, Log log, int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeader>> groupItems)
+        {
+            var myLog = new Log("2Ap.GrpPrc", log, "start");
+            var app = new App(new DnnTenant(PortalSettings.Current), appId);
+            var userMayEdit = sxcInstance.UserMayEdit ;
+
+            app.InitData(userMayEdit, sxcInstance.Environment.PagePublishing.IsEnabled(sxcInstance.EnvInstance.Id /*ActiveModule.ModuleID*/), sxcInstance.Data.ConfigurationProvider);
 
             foreach (var entitySets in groupItems)
             {
@@ -194,7 +201,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                 if (!postSaveIds.ContainsKey(contItem.Entity.Guid))
                     throw new Exception("Saved entity not found - not able to update ContentGroup");
 
-                int postSaveId = postSaveIds[contItem.Entity.Guid];
+                var postSaveId = postSaveIds[contItem.Entity.Guid];
 
                 int? presentationId = null;
 
@@ -215,7 +222,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             }
 
             // update-module-title
-            SxcInstance.ContentBlock.Manager.UpdateTitle();
+            sxcInstance.ContentBlock.Manager.UpdateTitle();
         }
 
         /// <summary>

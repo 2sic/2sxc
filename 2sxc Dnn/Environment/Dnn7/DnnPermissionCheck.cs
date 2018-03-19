@@ -36,7 +36,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
             IInstanceInfo instance = null,
             IApp app = null,
             IMetadataOfItem meta1 = null, // optional additional metadata, like of an app
-            //IMetadataOfItem meta2 = null, // optional additional metadata, like of a zone
             PortalSettings portal = null
             )
             : base(parentLog, targetType, targetItem, meta1, app?.Metadata)
@@ -50,14 +49,18 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         protected override IUser User => new DnnUser();
 
-        protected override bool EnvironmentAllows(List<Grants> grants) 
-            => UserIsSuperuser() // superusers are always ok
-            || UserIsTenantAdmin()
-            || UserIsModuleAdmin()
-            || UserIsModuleEditor();
+        protected override bool EnvironmentAllows(List<Grants> grants)
+        {
+            var ok = UserIsSuperuser() // superusers are always ok
+                     || UserIsTenantAdmin()
+                     || UserIsModuleAdmin()
+                     || UserIsModuleEditor();
+            if (ok) GrantedBecause = ConditionType.EnvironmentGlobal;
+            return ok;
+        }
 
 
-        protected override bool EnvironmentApprovesCondition(string condition)
+        protected override bool DoesConditionApplyInEnvironment(string condition)
         {
             if (!condition.ToLower().StartsWith(_salPrefix)) return false;
 

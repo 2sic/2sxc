@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -221,22 +222,19 @@ namespace ToSic.SexyContent.WebApi
 	                        ThrowValueMappingError(attrDef, foundValue);
 	                    break;
 	                case "boolean":
-	                    bool bolValue;
-	                    if (bool.TryParse(foundValue.ToString(), out bolValue))
+	                    if (bool.TryParse(foundValue.ToString(), out var bolValue))
 	                        cleanedNewItem.Add(attrName, bolValue);
 	                    else
 	                        ThrowValueMappingError(attrDef, foundValue);
 	                    break;
 	                case "datetime":
-	                    DateTime dtm;
-	                    if (DateTime.TryParse(foundValue.ToString(), out dtm))
+	                    if (DateTime.TryParse(foundValue.ToString(), out var dtm))
 	                        cleanedNewItem.Add(attrName, dtm);
 	                    else
 	                        ThrowValueMappingError(attrDef, foundValue);
 	                    break;
 	                case "number":
-	                    decimal dec;
-	                    if (decimal.TryParse(foundValue.ToString(), out dec))
+	                    if (decimal.TryParse(foundValue.ToString(), out var dec))
 	                        cleanedNewItem.Add(attrName, dec);
 	                    else
 	                        ThrowValueMappingError(attrDef, foundValue);
@@ -244,8 +242,7 @@ namespace ToSic.SexyContent.WebApi
 	                case "entity":
 	                    var relationships = new List<int>();
 
-	                    var foundEnum = foundValue as System.Collections.IEnumerable;
-	                    if (foundEnum != null) // it's a list!
+	                    if (foundValue is IEnumerable foundEnum) // it's a list!
 	                        foreach (var item in foundEnum)
 	                            relationships.Add(CreateSingleRelationshipItem(item));
 	                    else // not a list

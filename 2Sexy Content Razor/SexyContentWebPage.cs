@@ -85,7 +85,7 @@ namespace ToSic.SexyContent.Razor
         {
             protected readonly SxcInstance SxcInstance;
             public RazorPermissions(SxcInstance sxc) => SxcInstance = sxc;
-            public bool UserMayEditContent => SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
+            public bool UserMayEditContent => SxcInstance.UserMayEdit;
 
         }
 
