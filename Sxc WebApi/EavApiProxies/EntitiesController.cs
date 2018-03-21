@@ -145,7 +145,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             return postSaveIds;
         }
 
-	    private Dictionary<Guid, int> SaveAndProcessGroups(DnnPermissionCheck permChecker, int appId, List<EntityWithHeader> items, bool partOfPage)
+	    private Dictionary<Guid, int> SaveAndProcessGroups(PermissionCheckBase permChecker, int appId, List<EntityWithHeader> items, bool partOfPage)
 	    {
 	        var allowWriteLive = permChecker.UserMay(GrantSets.WritePublished);
 

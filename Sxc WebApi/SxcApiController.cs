@@ -178,14 +178,14 @@ namespace ToSic.SexyContent.WebApi
                 app);
 
 
-        protected Tuple<App, DnnPermissionCheck> GetAppRequiringPermissionsOrThrow(int appId, List<Grants> grants = null)
+        protected Tuple<App, PermissionCheckBase> GetAppRequiringPermissionsOrThrow(int appId, List<Grants> grants = null)
         {
             var set = AppAndPermissionChecker(appId);
 
             return set.Item2.UserMay(grants) ? set : throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        private Tuple<App, DnnPermissionCheck> AppAndPermissionChecker(int appId)
+        private Tuple<App, PermissionCheckBase> AppAndPermissionChecker(int appId)
         {
             var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
             var tenant = new DnnTenant(PortalSettings.Current);
@@ -204,7 +204,7 @@ namespace ToSic.SexyContent.WebApi
                 instance: SxcInstance.EnvInstance,
                 app: app,
                 portal: portalToUseInSecCheck);
-            return new Tuple<App, DnnPermissionCheck>(app, checker); 
+            return new Tuple<App, PermissionCheckBase>(app, checker); 
         }
 
         #endregion
