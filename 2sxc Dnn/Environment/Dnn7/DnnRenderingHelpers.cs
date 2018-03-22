@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private string _applicationRoot;
         private IInstanceInfo _moduleInfo;
 
-        public Log Log = new Log("Dnn.Render");
+        public Log Log { get; } = new Log("Dnn.Render");
 
         // Blank constructor for IoC
         public DnnRenderingHelpers() { }
