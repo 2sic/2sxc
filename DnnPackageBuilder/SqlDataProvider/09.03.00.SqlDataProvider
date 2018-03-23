@@ -1,10 +1,12 @@
-﻿-- Make sure code-upgrade to 07.00.03 has finished before continuing upgrade
--- This is done by checking existence of attribute-set PermissionConfiguration
-IF NOT EXISTS (SELECT * FROM ToSIC_EAV_AttributeSets WHERE StaticName = 'PermissionConfiguration')
+﻿-- Ensure either at least 2sxc 08.12.00+ is installed or it's a clean install (no upgrade)
+-- Make sure code-upgrade to 08.12.00 has finished before continuing upgrade
+-- This is done by checking existence of the SexyContent_Templates table
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'ToSIC_SexyContent_Templates')
 BEGIN
-	RAISERROR(N'It looks like the last upgrade has not finished yet. Please insert 2sxc on a page to check the status. Read more: http://2sxc.org/en/help?tag=upgrade ****************************************************************************************************************************************************************************************************************************************************************************************************************************************************', 16, 1)
+	RAISERROR(N'This version of 2sxc requires at least 2sxc 08.12.00 to be installed (or a clean install). Direct upgrades are not supported. Please upgrade to 2sxc 08.12.00 before upgrading to this version. Read more: http://2sxc.org/en/help?tag=upgrade ****************************************************************************************************************************************************************************************************************************************************************************************************************************************************', 16, 1)
 	RETURN
 END
+
 
 /* 2017-06-29 2dm: Enhance DataTimeline with new content column */
 
