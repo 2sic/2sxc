@@ -1,6 +1,8 @@
 ﻿using ToSic.Eav.Apps.Assets;
+using ToSic.SexyContent;
 
-namespace ToSic.SexyContent.Adam
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Adam
 {
     public class AdamFile : File, IAdamItem
     {

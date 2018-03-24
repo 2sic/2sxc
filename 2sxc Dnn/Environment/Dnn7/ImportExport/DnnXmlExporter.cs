@@ -4,7 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Adam;
+using ToSic.Sxc.Adam;
 using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.ImportExport

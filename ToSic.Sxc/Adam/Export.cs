@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Assets;
 
-namespace ToSic.SexyContent.Adam
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Adam
 {
     public class Export
     {
@@ -9,7 +10,7 @@ namespace ToSic.SexyContent.Adam
         private readonly List<int> _fileIds = new List<int>();
         private readonly List<int> _folderIds = new List<int>();
 
-        private readonly IEnvironmentFileSystem _envFs;// = new DnnFileSystem();
+        private readonly IEnvironmentFileSystem _envFs;
 
         public Export(AdamManager adm)
         {

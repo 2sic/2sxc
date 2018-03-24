@@ -7,7 +7,7 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.ValueProvider;
-using ToSic.SexyContent.Adam;
+using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;

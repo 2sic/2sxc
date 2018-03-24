@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Assets;
 
-namespace ToSic.SexyContent.Adam
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Adam
 {
     public interface IEnvironmentFileSystem
     {

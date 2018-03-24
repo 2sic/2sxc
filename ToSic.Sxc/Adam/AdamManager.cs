@@ -4,8 +4,10 @@ using System.Net.Http;
 using System.Web.Http;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Assets;
+using ToSic.SexyContent;
 
-namespace ToSic.SexyContent.Adam
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Adam
 {
     public class AdamManager
     {
@@ -27,8 +29,8 @@ namespace ToSic.SexyContent.Adam
         public Folder Root => Folder(RootPath, true);
 
         #region basic, generic folder commands -- all internal
-        //private readonly IFolderManager _folderManager = FolderManager.Instance;
-        internal readonly IEnvironmentFileSystem EnvironmentFs;// = new DnnFileSystem();
+
+        internal readonly IEnvironmentFileSystem EnvironmentFs;
         internal bool Exists(string path) => EnvironmentFs.FolderExists(_tenantId, path);
 
         internal void Add(string path) => EnvironmentFs.AddFolder(_tenantId, path);
@@ -37,7 +39,7 @@ namespace ToSic.SexyContent.Adam
 
         internal Folder Folder(string path, bool autoCreate)
         {
-            // create all folders to ensure they exist. Must do one-by-one because dnn must have it in the catalog
+            // create all folders to ensure they exist. Must do one-by-one because the environment must have it in the catalog
             var pathParts = path.Split('/');
             var pathToCheck = "";
             foreach (string part in pathParts.Where(p => !string.IsNullOrEmpty(p)))

@@ -15,11 +15,10 @@ using System.Configuration;
 using System.Web.Configuration;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Apps.Assets;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent.Environment.Dnn7;
-using Factory = ToSic.Eav.Factory;
 
-namespace ToSic.SexyContent.Adam
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Adam.WebApi
 {
     /// <summary>
     /// Direct access to app-content items, simple manipulations etc.
@@ -215,7 +214,7 @@ namespace ToSic.SexyContent.Adam
         private void ExplicitlyRecheckEditPermissions()
         {
             Log.Add("explicitly recheck permissions, will throw if not ok");
-            var userMayEdit = SxcInstance.UserMayEdit; // Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
+            var userMayEdit = SxcInstance.UserMayEdit;
 
             if (!userMayEdit)
                 throw new HttpResponseException(HttpStatusCode.Forbidden);

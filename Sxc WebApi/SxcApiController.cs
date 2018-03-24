@@ -12,7 +12,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.ValueProvider;
-using ToSic.SexyContent.Adam;
+using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;

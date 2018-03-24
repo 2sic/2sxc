@@ -7,7 +7,7 @@ using ToSic.Eav.ImportExport.Persistence.File;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Plumbing.Booting;
-using ToSic.SexyContent.Adam;
+using ToSic.Sxc.Adam;
 using ToSic.SexyContent.Environment;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;

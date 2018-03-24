@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.WebApi
 
             var stdNsWebApi = new[] {"ToSic.SexyContent.WebApi"};
             var stdNsApps = new[] {"ToSic.SexyContent.Apps"};
-            var stdNsAdam = new[] {"ToSic.SexyContent.Adam"};
+            var stdNsAdam = new[] {"ToSic.Sxc.Adam.WebApi"};
 
             #region EAV and View-routes
             mapRouteManager.MapHttpRoute("2sxc", "EAV", "EAV/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi.EavApiProxies" });

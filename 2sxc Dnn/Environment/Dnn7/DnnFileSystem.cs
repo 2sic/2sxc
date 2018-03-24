@@ -5,7 +5,7 @@ using System.Linq;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps.Assets;
 
-namespace ToSic.SexyContent.Adam
+namespace ToSic.Sxc.Adam
 {
     public class DnnFileSystem : IEnvironmentFileSystem
     {

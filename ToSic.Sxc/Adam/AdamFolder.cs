@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Assets;
+using ToSic.SexyContent;
 
-namespace ToSic.SexyContent.Adam
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Adam
 {
     public class AdamFolder : Folder, IAdamItem
     {
@@ -9,11 +11,11 @@ namespace ToSic.SexyContent.Adam
         public AdamBrowseContext AdamBrowseContext;
         public AdamManager Manager;
 
-        private readonly IEnvironmentFileSystem _dnnfs;// = new DnnFileSystem();
+        private readonly IEnvironmentFileSystem _fs;
 
         public AdamFolder(IEnvironmentFileSystem envFs)
         {
-            _dnnfs = envFs;
+            _fs = envFs;
         }
         /// <summary>
         /// Metadata for this folder
@@ -42,7 +44,7 @@ namespace ToSic.SexyContent.Adam
                 if (!HasChildren || string.IsNullOrEmpty(Name))
                     return _folders = new List<AdamFolder>();
                 
-                _folders = _dnnfs.GetFolders(Id, AdamBrowseContext);
+                _folders = _fs.GetFolders(Id, AdamBrowseContext);
                 return _folders;
             }
         }
@@ -55,6 +57,6 @@ namespace ToSic.SexyContent.Adam
         /// Get all files in this folder
         /// </summary>
         public IEnumerable<AdamFile> Files 
-            => _files ?? (_files = _dnnfs.GetFiles(Id, AdamBrowseContext));
+            => _files ?? (_files = _fs.GetFiles(Id, AdamBrowseContext));
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.SexyContent;
 
-namespace ToSic.SexyContent.Adam
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Adam
 {
     /// <summary>
     /// The ADAM Navigator creates a folder object for an entity/field combination
@@ -30,24 +32,6 @@ namespace ToSic.SexyContent.Adam
 
             // IAdamItem interface properties
             Name = f.Name;
-
-            // commented out stuff is from DNN
-            // but it will probably never be cross-platform
-            //Name = f.DisplayName;            //DisplayName = f.DisplayName;
-            //DisplayPath = f.DisplayPath;
-            //PortalID = f.PortalID;
-            //MappedPath = f.MappedPath;
-            //StorageLocation = f.StorageLocation;
-            //IsProtected = f.IsProtected;
-            //IsCached = f.IsCached;
-            //FolderMappingID = f.FolderMappingID;
-            //IsVersioned = f.IsVersioned;
-            //KeyID = f.KeyID;
-            //ParentID = f.ParentID;
-            //UniqueId = f.UniqueId;
-            //VersionGuid = f.VersionGuid;
-            //WorkflowID = f.WorkflowID;
-
         }
 
         public string Root => AdamBrowseContext.EntityRoot;

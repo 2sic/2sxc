@@ -1,4 +1,7 @@
-﻿namespace ToSic.SexyContent.Adam
+﻿using ToSic.SexyContent;
+
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Adam
 {
     internal interface IAdamItem
     {

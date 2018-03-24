@@ -1,4 +1,4 @@
-﻿namespace ToSic.SexyContent.Adam
+﻿namespace ToSic.Sxc.Adam.WebApi
 {
     public class UploadResult
     {

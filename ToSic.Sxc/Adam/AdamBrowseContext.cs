@@ -6,8 +6,10 @@ using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.Identity;
+using ToSic.SexyContent;
 
-namespace ToSic.SexyContent.Adam
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Adam
 {
     public class AdamBrowseContext
     {
