@@ -143,7 +143,7 @@ namespace ToSic.SexyContent
         #region RenderEngine
         internal bool RenderWithDiv = true;
         public bool UserMayEdit => _userMayEdit 
-            ?? (_userMayEdit = EnvFac.InstancePermissions(Log, EnvInstance, App).UserMay(Grants.Full)).Value;
+            ?? (_userMayEdit = EnvFac.InstancePermissions(Log, EnvInstance, App).UserMay(GrantSets.WriteSomething)).Value;
         private bool? _userMayEdit;
 
 

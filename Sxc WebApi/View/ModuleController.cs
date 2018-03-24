@@ -20,6 +20,7 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Interfaces;
 using Assembly = System.Reflection.Assembly;
 
@@ -52,9 +53,13 @@ namespace ToSic.SexyContent.WebApi.View
         }
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup) 
-            => ContentGroupReferenceManager.SaveTemplateId(templateId, forceCreateContentGroup);
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
+        {
+            GetAppRequiringPermissionsOrThrow(App.AppId, GrantSets.WriteSomething);
+
+            return ContentGroupReferenceManager.SaveTemplateId(templateId, forceCreateContentGroup);
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -302,7 +307,7 @@ namespace ToSic.SexyContent.WebApi.View
         public bool FinishInstallation()
         {
             Log.Add("finish installation");
-            var ic = Factory.Resolve<IEnvironmentInstaller>();//  new InstallationController();
+            var ic = Factory.Resolve<IEnvironmentInstaller>();
             if (ic.IsUpgradeRunning)
                 throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 10 minutes, please restart the web application.");
 

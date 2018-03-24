@@ -22,56 +22,76 @@
             };
         });
 })();
-angular.module("Adam")
+window.angular.module('Adam')
     /*@ngInject*/
-    .factory("adamSvc", ["$http", "eavConfig", "sxc", "svcCreator", "appRoot", function ($http, eavConfig, sxc, svcCreator, appRoot) {
+    .factory('adamSvc', function ($http, eavConfig, sxc, svcCreator, appRoot, appId) {
+
+        console.log('using new cahnged adam');
 
         // Construct a service for this specific appId
         return function createSvc(contentType, entityGuid, field, subfolder, serviceConfig) {
             var svc = {
-                url: sxc.resolveServiceUrl("app-content/" + contentType + "/" + entityGuid + "/" + field),
+                url: sxc.resolveServiceUrl('app-content/' + contentType + '/' + entityGuid + '/' + field),
                 subfolder: subfolder,
                 folders: [],
-                adamRoot: appRoot.substr(0, appRoot.indexOf("2sxc"))
+                adamRoot: appRoot.substr(0, appRoot.indexOf('2sxc'))
             };
 
             // get the correct url for uploading as it is needed by external services (dropzone)
             svc.uploadUrl = function(targetSubfolder) {
-                var url = (targetSubfolder === "")
+                var url = (targetSubfolder === '')
                     ? svc.url
-                    : svc.url + "?subfolder=" + targetSubfolder;
-                url += (url.indexOf("?") == -1 ? "?" : "&") + "usePortalRoot=" + serviceConfig.usePortalRoot;
+                    : svc.url + '?subfolder=' + targetSubfolder;
+                url += (url.indexOf('?') === -1 ? '?' : '&')
+                    + 'usePortalRoot=' + serviceConfig.usePortalRoot
+                    + '&appId=' + appId;
                 return url;
             };
 
             // extend a json-response with a path (based on the adam-root) to also have a fullPath
-            svc.addFullPath = function addFullPath(value, key) {
+            svc.addFullPath = function(value, key) {
                 value.fullPath = svc.adamRoot + value.Path;
             };
 
-            svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get(svc.url + "/items", { params: { subfolder: svc.subfolder, usePortalRoot: serviceConfig.usePortalRoot } })
-                    .then(function (result) {
-                        angular.forEach(result.data, svc.addFullPath);
+            svc = window.angular.extend(svc, svcCreator.implementLiveList(function getAll() {
+                return $http.get(svc.url + '/items',
+                        {
+                            params: {
+                                subfolder: svc.subfolder,
+                                usePortalRoot: serviceConfig.usePortalRoot,
+                                appId: appId
+                            }
+                        })
+                    .then(function(result) {
+                        window.angular.forEach(result.data, svc.addFullPath);
                         return result;
                     });
             }));
 
             // create folder
-            svc.addFolder = function add(newfolder) {
-                return $http.post(svc.url + "/folder", {}, { params: { subfolder: svc.subfolder, newFolder: newfolder, usePortalRoot: serviceConfig.usePortalRoot } })
+            svc.addFolder = function (newfolder) {
+                return $http.post(svc.url + '/folder',
+                        {},
+                        {
+                            params: {
+                                subfolder: svc.subfolder,
+                                newFolder: newfolder,
+                                usePortalRoot: serviceConfig.usePortalRoot,
+                                appId: appId
+                            }
+                        })
                     .then(svc.liveListReload);
             };
 
             svc.goIntoFolder = function(childFolder) {
                 svc.folders.push(childFolder);
-                var pathParts = childFolder.Path.split("/");
-                var subPath = "";
+                var pathParts = childFolder.Path.split('/');
+                var subPath = '';
                 for (var c = 0; c < svc.folders.length; c++)
-                    subPath = pathParts[pathParts.length - c - 2] + "/" + subPath;
+                    subPath = pathParts[pathParts.length - c - 2] + '/' + subPath;
 
-                subPath = subPath.replace("//", "/");
-                if (subPath[subPath.length - 1] === "/")
+                subPath = subPath.replace('//', '/');
+                if (subPath[subPath.length - 1] === '/')
                     subPath = subPath.substr(0, subPath.length - 1);
 
                 childFolder.Subfolder = subPath;
@@ -88,7 +108,7 @@ angular.module("Adam")
                 if (svc.folders.length > 0) {
                     svc.subfolder = svc.folders[svc.folders.length - 1].Subfolder;
                 } else {
-                    svc.subfolder = "";
+                    svc.subfolder = '';
                 }
                 svc.liveListReload();
                 return svc.subfolder;
@@ -96,14 +116,33 @@ angular.module("Adam")
 
             // delete, then reload
             // IF verb DELETE fails, so I'm using get for now
-            svc.delete = function del(item) {
-                return $http.get(svc.url + "/delete", { params: { subfolder: svc.subfolder, isFolder: item.IsFolder, id: item.Id, usePortalRoot: serviceConfig.usePortalRoot  } })
+            svc.delete = function (item) {
+                return $http.get(svc.url + '/delete',
+                        {
+                            params: {
+                                subfolder: svc.subfolder,
+                                isFolder: item.IsFolder,
+                                id: item.Id,
+                                usePortalRoot: serviceConfig.usePortalRoot,
+                                appId: appId
+                            }
+                        })
                     .then(svc.liveListReload);
             };
 
             // rename, then reload
-            svc.rename = function rename(item, newName) {
-                return $http.get(svc.url + "/rename", { params: { subfolder: svc.subfolder, isFolder: item.IsFolder, id: item.Id, usePortalRoot: serviceConfig.usePortalRoot, newName: newName } })
+            svc.rename = function (item, newName) {
+                return $http.get(svc.url + '/rename',
+                        {
+                            params: {
+                                subfolder: svc.subfolder,
+                                isFolder: item.IsFolder,
+                                id: item.Id,
+                                usePortalRoot: serviceConfig.usePortalRoot,
+                                newName: newName,
+                                appId: appId
+                            }
+                        })
                     .then(svc.liveListReload);
             };
             
@@ -111,7 +150,7 @@ angular.module("Adam")
 
             return svc;
         };
-    }]);
+    });
 (function () {
     /* jshint laxbreak:true */
     "use strict";

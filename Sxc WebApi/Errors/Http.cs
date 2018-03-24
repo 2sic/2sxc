@@ -25,6 +25,11 @@ namespace ToSic.SexyContent.WebApi.Errors
             return err;
         }
 
+        internal static HttpResponseException BadRequest(string message)
+            => new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                ReasonPhrase = "can't delete folder - not found in folder"
+            });
 
         internal static HttpResponseException InformativeErrorForTypeAccessDenied(string contentType, List<Grants> grant, bool staticNameIsGuid)
         {

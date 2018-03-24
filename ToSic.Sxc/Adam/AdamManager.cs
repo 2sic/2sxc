@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+﻿using System;
+using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Assets;
 using ToSic.SexyContent;
@@ -49,7 +47,7 @@ namespace ToSic.Sxc.Adam
                 if (autoCreate)
                     Add(pathToCheck);
                 else
-                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "subfolder " + pathToCheck + "not found" });
+                    throw new Exception("subfolder " + pathToCheck + "not found");
             }
 
             var fldr = Get(path);
