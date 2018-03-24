@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.ContentBlocks
         protected SxcInstance SxcContext;
         protected int ModuleId;
 
-        protected ContentGroup CGroup;
+        private ContentGroup _cGroup;
 
         internal ContentGroupReferenceManagerBase(SxcInstance sxc): base("CG.RefMan", sxc.Log)
         {
@@ -39,7 +39,7 @@ namespace ToSic.SexyContent.ContentBlocks
         #region methods which are fairly stable / the same across content-block implementations
 
         protected ContentGroup ContentGroup
-            => CGroup ?? (CGroup = SxcContext.ContentGroup);
+            => _cGroup ?? (_cGroup = SxcContext.ContentGroup);
 
         public void AddItem(int? sortOrder = null)
             => ContentGroup.AddContentAndPresentationEntity(AppConstants.ContentLower, sortOrder, null, null);

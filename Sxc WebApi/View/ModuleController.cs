@@ -222,12 +222,22 @@ namespace ToSic.SexyContent.WebApi.View
         }
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool Publish(string part, int sortOrder) => ContentGroupReferenceManager.Publish(part, sortOrder);
-        
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public bool Publish(string part, int sortOrder)
+        {
+            Log.Add($"try to publish #{sortOrder} on '{part}'");
+            GetAppRequiringPermissionsOrThrow(App.AppId, GrantSets.WritePublished);
+            return ContentGroupReferenceManager.Publish(part, sortOrder);
+        }
+
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool Publish(int id) => ContentGroupReferenceManager.Publish(id, true);
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public bool Publish(int id)
+        {
+            Log.Add($"try to publish id #{id}");
+            GetAppRequiringPermissionsOrThrow(App.AppId, GrantSets.WritePublished);
+            return ContentGroupReferenceManager.Publish(id, true);
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
