@@ -437,12 +437,12 @@ window.angular.module('Adam')
 })();
 /* js/fileAppDirectives */
 (function() {
-    angular.module("Adam")
+    angular.module('Adam')
         /*@ngInject*/
-        .directive("dropzone", ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
+        .directive('dropzone', ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
 
             return {
-                restrict: "C",
+                restrict: 'C',
                 link: postLink,
 
                 // This controller is needed, because it needs an API which can talk to other directives
@@ -455,14 +455,14 @@ window.angular.module('Adam')
                 var header = scope.$parent.to.header;
                 var field = scope.$parent.options.key;
                 var entityGuid = header.Guid;
-                var svc = adamSvc(header.ContentTypeName, entityGuid, field, "", scope.$parent.vm.adamModeConfig);
+                var svc = adamSvc(header.ContentTypeName, entityGuid, field, '', scope.$parent.vm.adamModeConfig);
                 var url = svc.url;
 
                 var config = {
                     url: url,
                     urlRoot: url,
                     maxFilesize: 10000, // 10'000 MB = 10 GB, note that it will also be stopped on the server if it's larger than the really allowed sized
-                    paramName: "uploadfile",
+                    paramName: 'uploadfile',
                     maxThumbnailFilesize: 10,
 
                     headers: {
@@ -471,11 +471,11 @@ window.angular.module('Adam')
                         "ContentBlockId": ContentBlockId
                     },
 
-                    dictDefaultMessage: "",
+                    dictDefaultMessage: '',
                     addRemoveLinks: false,
-                    previewsContainer: ".field-" + field.toLowerCase() + " .dropzone-previews",
+                    previewsContainer: '.field-' + field.toLowerCase() + ' .dropzone-previews',
                     // we need a clickable, because otherwise the entire area is clickable. so i'm just making the preview clickable, as it's not important
-                    clickable: ".field-" + field.toLowerCase() + " .invisible-clickable" // " .dropzone-adam"
+                    clickable: '.field-' + field.toLowerCase() + ' .invisible-clickable' // " .dropzone-adam"
                 };
 
 
@@ -498,11 +498,11 @@ window.angular.module('Adam')
                             svc.addFullPath(response); // calculate additional infos
                             scope.$parent.afterUpload(response);
                         } else {
-                            alert("Upload failed because: " + response.Error);
+                            alert('Upload failed because: ' + response.Error);
                         }
                     },
                     'error': function (file, error, xhr) {
-                        alert($translate.instant("Errors.AdamUploadError"));
+                        alert($translate.instant('Errors.AdamUploadError'));
                     },
 
                     "queuecomplete": function (file) {
@@ -533,7 +533,7 @@ window.angular.module('Adam')
                 var vm = this;
                 vm.adam = {
                     show: false,
-                    subFolder: "",
+                    subFolder: '',
                     refresh: function () { }
                 };
 

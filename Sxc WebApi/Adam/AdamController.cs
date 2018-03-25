@@ -16,6 +16,8 @@ using System.Web.Configuration;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.ValueProvider;
+using ToSic.SexyContent;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Errors;
 
@@ -34,13 +36,13 @@ namespace ToSic.Sxc.Adam.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext); // very important!!!
-            Log.Rename("AdamCont");
+            Log.Rename("Api.Adam");
         }
 
         public AdamBrowseContext AdamBrowseContext;
 
-        private void PrepCore(Guid entityGuid, string fieldName, bool usePortalRoot) 
-            => AdamBrowseContext = new AdamBrowseContext(SxcInstance, App, new DnnTenant(Dnn.Portal), entityGuid, fieldName, usePortalRoot);
+        private void PrepCore(App app,  Guid entityGuid, string fieldName, bool usePortalRoot) 
+            => AdamBrowseContext = new AdamBrowseContext(SxcInstance, app, new DnnTenant(Dnn.Portal), entityGuid, fieldName, usePortalRoot);
 
         public int MaxFileSizeKb 
             => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection)?.MaxRequestLength ?? 1; // if not specified, go to very low value, but not 0, as that could be infinite...
@@ -61,7 +63,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
             var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
 
-            PrepCore(guid, field, usePortalRoot);
+            PrepCore(set.Item1, guid, field, usePortalRoot);
 
             // Get the content-type definition
             var cache = App.Data.Cache;
@@ -191,8 +193,14 @@ namespace ToSic.Sxc.Adam.WebApi
             Log.Add($"adam items a:{App?.AppId}, i:{guid}, field:{field}, subfold:{subfolder}, useRoot:{usePortalRoot}");
             var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
             var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
+            var app = App;
+            if(app.AppId != appId)
+            {
+                app = set.Item1;
+                app.InitData(true, false, new ValueCollectionProvider());
+            }
 
-            PrepCore(guid, field, usePortalRoot);
+            PrepCore(app, guid, field, usePortalRoot);
             var folderManager = FolderManager.Instance;
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
@@ -249,7 +257,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Log.Add($"get folders for a:{App?.AppId}, i:{guid}, field:{field}, subfld:{subfolder}, new:{newFolder}, useRoot:{usePortalRoot}");
             var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
             var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
-            PrepCore(guid, field, usePortalRoot);
+            PrepCore(set.Item1, guid, field, usePortalRoot);
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
             AdamBrowseContext.Folder();
@@ -269,7 +277,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Log.Add($"delete from a:{App?.AppId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
             var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
             var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
-            PrepCore(guid, field, usePortalRoot);
+            PrepCore(set.Item1, guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
             var current = AdamBrowseContext.Folder(subfolder, false);
@@ -304,7 +312,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Log.Add($"rename a:{App?.AppId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
             var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
             var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
-            PrepCore(guid, field, usePortalRoot);
+            PrepCore(set.Item1, guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
             var current = AdamBrowseContext.Folder(subfolder, false);

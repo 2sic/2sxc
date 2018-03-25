@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Assets;
 using ToSic.SexyContent;
@@ -26,18 +24,11 @@ namespace ToSic.Sxc.Adam
 
         public string RootPath
             => _rootPath ?? (_rootPath =
-                   AppReplacementMap.Aggregate(Configuration.AdamAppRootFolder, (current, dicItem)
-                       => Regex.Replace(current, Regex.Escape(dicItem.Key), dicItem.Value)));
-
+                   Configuration.AppReplacementMap(_app)
+                       .ReplaceInsensitive(Configuration.AdamAppRootFolder));
         private string _rootPath;
 
-        private Dictionary<string, string> AppReplacementMap => new Dictionary<string, string>
-        {
-            {"[AppFolder]", _app.Folder},
-            {"[ZoneId]", _app.ZoneId.ToString()},
-            {"[AppId]", _app.AppId.ToString()},
-            {"[AppGuid]", _app.AppGuid}
-        };
+
 
         public Folder Root => Folder(RootPath, true);
 

@@ -70,9 +70,9 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var expand_button_config_1 = __webpack_require__(9);
-var command_definition_1 = __webpack_require__(42);
-var commands_1 = __webpack_require__(5);
+var expand_button_config_1 = __webpack_require__(10);
+var command_definition_1 = __webpack_require__(43);
+var commands_1 = __webpack_require__(6);
 var CommandBase = /** @class */ (function () {
     function CommandBase() {
         this.commandDefinition = new command_definition_1.CommandDefinition();
@@ -103,10 +103,10 @@ exports.CommandBase = CommandBase;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var instance_config_1 = __webpack_require__(20);
-var ng_dialog_params_1 = __webpack_require__(43);
-var qucik_dialog_config_1 = __webpack_require__(44);
-var user_of_edit_context_1 = __webpack_require__(45);
+var instance_config_1 = __webpack_require__(19);
+var ng_dialog_params_1 = __webpack_require__(44);
+var qucik_dialog_config_1 = __webpack_require__(45);
+var user_of_edit_context_1 = __webpack_require__(46);
 /**
  * Get a html tag of the current sxc instance
  * @param {SxcInstanceWithInternals} sxci
@@ -183,7 +183,7 @@ exports.buildNgDialogParams = buildNgDialogParams;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var positioning_1 = __webpack_require__(24);
+var positioning_1 = __webpack_require__(23);
 /**
  * the quick-edit object
  * the quick-insert object
@@ -246,18 +246,167 @@ exports.prepareToolbarInDom = prepareToolbarInDom;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var entry_1 = __webpack_require__(42);
+var maxScopeLen = 3;
+var maxNameLen = 6;
+var liveDump = false;
+var Log = /** @class */ (function () {
+    /**
+     * Create a logger and optionally attach it to a parent logger
+     * @param string name this logger should use
+     * @param Log optional parrent logger to attach to
+     * @param string optional initial message to log
+     */
+    function Log(name, parent, initialMessage) {
+        var _this = this;
+        /**
+         * all log-entries on this logger
+         */
+        this.entries = new Array();
+        /**
+         * Full identifier of this log-object, with full hierarchy
+         */
+        this.fullIdentifier = function () {
+            return "" + (_this.parent ? _this.parent.fullIdentifier() : '') + _this.identifier();
+        };
+        /**
+         * link this log to a parent
+         * usually happens in constructor, but in rare cases
+         * this must be called manually
+         */
+        this.linkLog = function (parent) {
+            _this.parent = parent || _this.parent; // if new parent isn't defined, don't replace
+        };
+        /**
+         * scope of this logger - to easily see which ones
+         * are about the same topic
+         */
+        this.scope = 'tdo';
+        /**
+         * name of this logger
+         */
+        this.name = 'unknwn';
+        /**
+         * Unique 2-character ID of this specific log object
+         */
+        this.id = function () { return _this.idCache || (_this.idCache = _this.randomString(2)); };
+        /**
+         * Unique identifier of this log object, with name and ID
+         */
+        this.identifier = function () { return "" + _this.scope + _this.name + "(" + _this.id() + ")"; };
+        this.rename(name);
+        this.linkLog(parent);
+        if (initialMessage != null)
+            this.add(initialMessage);
+    }
+    /**
+     * give this logger a new name
+     * usually happens in constructor, but in rare cases
+     * it's called manually
+     * @param name
+     */
+    Log.prototype.rename = function (name) {
+        try {
+            var dot = name.indexOf('.');
+            this.scope = dot > 0 ? name.substr(0, Math.min(dot, maxScopeLen)) + '.' : '';
+            var rest = dot > 0 ? name.substr(dot + 1) : name;
+            this.name = rest.substr(0, Math.min(rest.length, maxNameLen));
+            this.name = this.name.substr(0, Math.min(this.name.length, maxNameLen));
+        }
+        catch (e) {
+            /* ignore */
+        }
+    };
+    /**
+     * add a message to the log-list
+     * @param message
+     */
+    Log.prototype.add = function (message) {
+        var messageText;
+        if (message instanceof Function) {
+            try {
+                messageText = (message()).toString();
+            }
+            catch (e) {
+                messageText = 'undefined';
+            }
+        }
+        else {
+            messageText = message.toString();
+        }
+        var entry = new entry_1.Entry(this, messageText);
+        this.addEntry(entry);
+        if (liveDump)
+            console.log(this.dump(undefined, undefined, undefined, entry));
+        return messageText;
+    };
+    /**
+     * helper to create a text-output of the log info
+     * @param separator
+     * @param start
+     * @param end
+     */
+    Log.prototype.dump = function (separator, start, end, one) {
+        if (separator === void 0) { separator = ' - '; }
+        if (start === void 0) { start = ''; }
+        if (end === void 0) { end = ''; }
+        if (one === void 0) { one = null; }
+        var lg = start;
+        var dumpOne = function (e) { return lg += e.source() + separator + e.message + '\n'; };
+        if (one)
+            dumpOne(one);
+        else
+            this.entries.forEach(dumpOne);
+        lg += end;
+        return lg;
+    };
+    /**
+     * add an entry-object to this logger
+     * this is often called by sub-loggers to add to parent
+     * @param entry
+     */
+    Log.prototype.addEntry = function (entry) {
+        this.entries.push(entry);
+        if (this.parent)
+            this.parent.addEntry(entry);
+    };
+    /**
+     * helper to generate a random 2-char ID
+     * @param stringLength
+     */
+    Log.prototype.randomString = function (stringLength) {
+        var chars = '0123456789abcdefghiklmnopqrstuvwxyz';
+        var randomstring = '';
+        for (var i = 0; i < stringLength; i++) {
+            var rnum = Math.floor(Math.random() * chars.length);
+            randomstring += chars.substring(rnum, rnum + 1);
+        }
+        return randomstring;
+    };
+    return Log;
+}());
+exports.Log = Log;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var api_1 = __webpack_require__(1);
-var sxc_1 = __webpack_require__(6);
-var system_context_1 = __webpack_require__(46);
-var tenant_context_1 = __webpack_require__(47);
-var user_context_1 = __webpack_require__(48);
-var content_block_context_1 = __webpack_require__(49);
-var context_of_button_1 = __webpack_require__(50);
-var app_context_1 = __webpack_require__(58);
-var instance_context_1 = __webpack_require__(59);
-var sxc_context_1 = __webpack_require__(60);
-var item_context_1 = __webpack_require__(61);
-var page_context_1 = __webpack_require__(62);
+var sxc_1 = __webpack_require__(7);
+var system_context_1 = __webpack_require__(47);
+var tenant_context_1 = __webpack_require__(48);
+var user_context_1 = __webpack_require__(49);
+var content_block_context_1 = __webpack_require__(50);
+var context_of_button_1 = __webpack_require__(51);
+var app_context_1 = __webpack_require__(59);
+var instance_context_1 = __webpack_require__(60);
+var sxc_context_1 = __webpack_require__(61);
+var item_context_1 = __webpack_require__(62);
+var page_context_1 = __webpack_require__(63);
 /**
  * Primary API to get the context
  * @param htmlElement
@@ -265,6 +414,13 @@ var page_context_1 = __webpack_require__(62);
 function context(htmlElement) {
     var sxc = sxc_1.getSxcInstance(htmlElement);
     var editContext = api_1.getEditContext(sxc);
+    var contextOfButton = getContextFromEditContext(editContext);
+    contextOfButton.sxc.sxc = sxc; // stv: this is temp
+    contextOfButton.element = htmlElement; // HTMLElement
+    return contextOfButton;
+}
+exports.context = context;
+function getContextFromEditContext(editContext) {
     var contextOfButton = new context_of_button_1.ContextOfButton();
     // *** ContextOf ***
     // this will be everything about the current system, like system / api -paths etc.
@@ -301,7 +457,6 @@ function context(htmlElement) {
         contextOfButton.sxc.sxcRootUrl = editContext.Environment.SxcRootUrl;
     }
     // temp
-    contextOfButton.sxc.sxc = sxc; // stv: this is temp
     contextOfButton.sxc.editContext = editContext; // stv: this is temp
     // information related to the current DNN module, incl.instanceId, etc.
     contextOfButton.instance = new instance_context_1.InstanceContext();
@@ -358,18 +513,17 @@ function context(htmlElement) {
     // *** ContextOfToolbar ***
     // fill externally
     // *** ContextOfButton ***
-    contextOfButton.element = htmlElement; // HTMLElement
     // contextOfButton.button = ButtonConfig; // todo: stv....
     // contextOfButton.cmdSpec = cmdSpec;
     // contextOfButton.enableTools = editContext.User.CanDesign;
     // contextOfButton.isContent = editContext.ContentGroup.IsContent;
     return contextOfButton;
 }
-exports.context = context;
+exports.getContextFromEditContext = getContextFromEditContext;
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -400,13 +554,13 @@ exports.selectors = {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(19);
+var engine_1 = __webpack_require__(18);
 var Commands = /** @class */ (function () {
     function Commands() {
         var _this = this;
@@ -438,7 +592,7 @@ exports.Commands = Commands;
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -452,7 +606,7 @@ exports.getSxcInstance = getSxcInstance;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -470,13 +624,13 @@ exports.translate = translate;
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var render_1 = __webpack_require__(11);
+var render_1 = __webpack_require__(12);
 /*
  * this is a content block in the browser
  *
@@ -555,13 +709,13 @@ exports.publishId = publishId;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var log_1 = __webpack_require__(17);
+var log_1 = __webpack_require__(3);
 // takes an object like "actionname" or { action: "actionname", ... } and changes it to a { command: { action: "actionname" }, ... }
 // ReSharper disable once UnusedParameter
 function expandButtonConfig(original, sharedProps, parentLog) {
@@ -666,7 +820,8 @@ function evalPropOrFunction(propOrFunction, context, settings, config, fallback)
  * @param actions
  */
 function addDefaultBtnSettings(btn, group, fullToolbarConfig, actions, log) {
-    log.add("adding default btn settings for " + btn.action.name);
+    // log.add(`adding default btn settings for ${btn.action.name}`);
+    log.add("adding default btn settings for " + function () { return btn.action.name; });
     for (var d = 0; d < btnProperties.length; d++) {
         fallbackBtnSetting(btn, group, fullToolbarConfig, actions, btnProperties[d]);
     }
@@ -736,16 +891,16 @@ exports.customize = customize;
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var main_content_block_1 = __webpack_require__(22);
-var render_1 = __webpack_require__(11);
-var templates_1 = __webpack_require__(13);
-var context_1 = __webpack_require__(3);
+var main_content_block_1 = __webpack_require__(21);
+var render_1 = __webpack_require__(12);
+var templates_1 = __webpack_require__(14);
+var context_1 = __webpack_require__(4);
 var api_1 = __webpack_require__(1);
 /**
  * this is a dialog manager which is in charge of all quick-dialogues
@@ -981,17 +1136,17 @@ function watchForResize(keepWatching) {
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var api_1 = __webpack_require__(1);
-var quick_dialog_1 = __webpack_require__(10);
-var start_1 = __webpack_require__(23);
-var build_toolbars_1 = __webpack_require__(12);
-var main_content_block_1 = __webpack_require__(22);
+var quick_dialog_1 = __webpack_require__(11);
+var start_1 = __webpack_require__(22);
+var build_toolbars_1 = __webpack_require__(13);
+var main_content_block_1 = __webpack_require__(21);
 var web_api_promises_1 = __webpack_require__(34);
 /*
  * this is the content block manager in the browser
@@ -1080,19 +1235,19 @@ exports.reloadAndReInitialize = reloadAndReInitialize;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var context_1 = __webpack_require__(3);
+var context_1 = __webpack_require__(4);
 var api_1 = __webpack_require__(1);
-var render_toolbar_1 = __webpack_require__(14);
-var toolbar_manager_1 = __webpack_require__(26);
+var render_toolbar_1 = __webpack_require__(15);
+var toolbar_manager_1 = __webpack_require__(25);
 var toolbar_expand_config_1 = __webpack_require__(29);
 var toolbar_settings_1 = __webpack_require__(33);
-var log_1 = __webpack_require__(17);
+var log_1 = __webpack_require__(3);
 // quick debug - set to false if not needed for production
 var dbg = false;
 // generate an empty / fallback toolbar tag
@@ -1100,13 +1255,15 @@ function generateFallbackToolbar() {
     var settingsString = JSON.stringify(toolbar_settings_1.settingsForEmptyToolbar);
     return $("<ul class='sc-menu' toolbar='' settings='" + settingsString + "'/>");
 }
+exports.generateFallbackToolbar = generateFallbackToolbar;
 // find current toolbars inside this wrapper-tag
 function getToolbarTags(parentTag) {
     var allInner = $('.sc-menu[toolbar],.sc-menu[data-toolbar]', parentTag);
     // return only those, which don't belong to a sub-item
     var res = allInner.filter(function (i, e) { return $(e).closest('.sc-content-block')[0] === parentTag[0]; });
-    if (dbg)
+    if (dbg) {
         console.log('found toolbars for parent', parentTag, res);
+    }
     return res;
 }
 // create a process-toolbar command to generate toolbars inside a tag
@@ -1114,8 +1271,9 @@ function buildToolbars(parentLog, parentTag, optionalId) {
     var log = new log_1.Log('Tlb.BldAll', parentLog);
     parentTag = $(parentTag || '.DnnModule-' + optionalId);
     // if something says the toolbars are disabled, then skip
-    if (parentTag.attr(toolbar_manager_1.disableToolbarAttribute))
+    if (parentTag.attr(toolbar_manager_1.disableToolbarAttribute)) {
         return;
+    }
     // todo: change mechanism to not render toolbar, this uses a secret class name which the toolbar shouldn't know
     // don't add, if it is has un-initialized content
     // 2017-09-08 2dm disabled this, I believe the bootstrapping should never call this any more, if sc-uninitialized. if ok, then delete this in a few days
@@ -1123,8 +1281,9 @@ function buildToolbars(parentLog, parentTag, optionalId) {
     var toolbars = getToolbarTags(parentTag);
     // no toolbars found, must help a bit because otherwise editing is hard
     if (toolbars.length === 0) {
-        if (dbg)
+        if (dbg) {
             console.log("didn't find toolbar, so will auto-create", parentTag);
+        }
         var outsideCb = !parentTag.hasClass($2sxc.c.cls.scCb); // "sc-content-block");
         var contentTag = outsideCb ? parentTag.find('div.sc-content-block') : parentTag;
         contentTag.addClass($2sxc.c.cls.scElm); // "sc-element");
@@ -1186,15 +1345,15 @@ exports.isDisabled = isDisabled;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var quick_dialog_1 = __webpack_require__(10);
-var build_toolbars_1 = __webpack_require__(12);
-var render_1 = __webpack_require__(11);
+var quick_dialog_1 = __webpack_require__(11);
+var build_toolbars_1 = __webpack_require__(13);
+var render_1 = __webpack_require__(12);
 var web_api_promises_1 = __webpack_require__(34);
 /**
  * prepare the instance so content can be added
@@ -1264,14 +1423,14 @@ exports.updateTemplate = updateTemplate;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var render_groups_1 = __webpack_require__(67);
-var render_helpers_1 = __webpack_require__(25);
+var render_groups_1 = __webpack_require__(68);
+var render_helpers_1 = __webpack_require__(24);
 function renderToolbar(context) {
     // render groups of buttons
     var groups = render_groups_1.renderGroups(context);
@@ -1298,14 +1457,14 @@ exports.renderToolbar = renderToolbar;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var old_parameters_adapter_1 = __webpack_require__(68);
-var render_helpers_1 = __webpack_require__(25);
+var old_parameters_adapter_1 = __webpack_require__(69);
+var render_helpers_1 = __webpack_require__(24);
 /**
  * generate the html for a button
  * @param sxc instance sxc
@@ -1313,7 +1472,6 @@ var render_helpers_1 = __webpack_require__(25);
  * @param groupIndex group-index in which the button is shown
  */
 function renderButton(context, buttonConfig, groupIndex) {
-    var sxc = context.sxc.sxc;
     // if the button belongs to a content-item, move the specs up to the item into the settings-object
     flattenActionDefinition(buttonConfig);
     // retrieve configuration for this button
@@ -1321,7 +1479,7 @@ function renderButton(context, buttonConfig, groupIndex) {
     var onclick = '';
     if (!buttonConfig.disabled) {
         // `$2sxc(${sxc.id}, ${sxc.cbid}).manage.run(${JSON.stringify(oldParamsAdapter)}, event);`;
-        onclick = "$2sxc(" + sxc.id + ", " + sxc.cbid + ").manage.run2($2sxc.context(this), " + JSON.stringify(oldParamsAdapter) + ", event);";
+        onclick = "$2sxc(" + context.instance.id + ", " + context.contentBlock.id + ").manage.run2($2sxc.context(this), " + JSON.stringify(oldParamsAdapter) + ", event);";
     }
     var button = document.createElement('a');
     if (buttonConfig.action) {
@@ -1371,195 +1529,17 @@ function flattenActionDefinition(actDef) {
 
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var log_1 = __webpack_require__(17);
-var HasLog = /** @class */ (function () {
-    /**
-     * initialize the logger
-     * ideally it has a parent-logger to attach to
-     * @param logName name to show in the logger
-     * @param parentLog parent-logger to attach to
-     * @param initialMessage optional start-message to log
-     */
-    function HasLog(logName, parentLog, initialMessage) {
-        var _this = this;
-        this.parentLog = parentLog;
-        this.initLog = function (name, parentLog, initialMessage) { return _this.initLogInternal(name, parentLog, initialMessage); };
-        this.logId = 'unknwn';
-        this.linkLog = function (parentLog) { return _this.log.linkLog(parentLog); };
-        this.initLogInternal(logName, parentLog, initialMessage);
-    }
-    HasLog.prototype.initLogInternal = function (name, parentLog, initialMessage) {
-        if (this.log == null)
-            // standard & most common case: just create log
-            this.log = new log_1.Log(name, parentLog, initialMessage);
-        else {
-            // late-init case, where the log was already created - just reconfig keeping what was in it
-            this.log.rename(name);
-            this.linkLog(parentLog);
-            if (initialMessage != null)
-                this.log.add(initialMessage);
-        }
-    };
-    return HasLog;
-}());
-exports.HasLog = HasLog;
-
-
-/***/ }),
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var entry_1 = __webpack_require__(71);
-var maxScopeLen = 3;
-var maxNameLen = 6;
-var liveDump = false;
-var Log = /** @class */ (function () {
-    /**
-     * Create a logger and optionally attach it to a parent logger
-     * @param string name this logger should use
-     * @param Log optional parrent logger to attach to
-     * @param string optional initial message to log
-     */
-    function Log(name, parent, initialMessage) {
-        var _this = this;
-        /**
-         * all log-entries on this logger
-         */
-        this.entries = new Array();
-        /**
-         * Full identifier of this log-object, with full hierarchy
-         */
-        this.fullIdentifier = function () {
-            return "" + (_this.parent ? _this.parent.fullIdentifier() : '') + _this.identifier();
-        };
-        /**
-         * link this log to a parent
-         * usually happens in constructor, but in rare cases
-         * this must be called manually
-         */
-        this.linkLog = function (parent) {
-            _this.parent = parent || _this.parent; // if new parent isn't defined, don't replace
-        };
-        /**
-         * scope of this logger - to easily see which ones
-         * are about the same topic
-         */
-        this.scope = 'tdo';
-        /**
-         * name of this logger
-         */
-        this.name = 'unknwn';
-        /**
-         * Unique 2-character ID of this specific log object
-         */
-        this.id = function () { return _this.idCache || (_this.idCache = _this.randomString(2)); };
-        /**
-         * Unique identifier of this log object, with name and ID
-         */
-        this.identifier = function () { return "" + _this.scope + _this.name + "(" + _this.id() + ")"; };
-        this.rename(name);
-        this.linkLog(parent);
-        if (initialMessage != null)
-            this.add(initialMessage);
-    }
-    /**
-     * give this logger a new name
-     * usually happens in constructor, but in rare cases
-     * it's called manually
-     * @param name
-     */
-    Log.prototype.rename = function (name) {
-        try {
-            var dot = name.indexOf('.');
-            this.scope = dot > 0 ? name.substr(0, Math.min(dot, maxScopeLen)) + '.' : '';
-            var rest = dot > 0 ? name.substr(dot + 1) : name;
-            this.name = rest.substr(0, Math.min(rest.length, maxNameLen));
-            this.name = this.name.substr(0, Math.min(this.name.length, maxNameLen));
-        }
-        catch (e) {
-            /* ignore */
-        }
-    };
-    /**
-     * add a messag to the log-list
-     * @param message
-     */
-    Log.prototype.add = function (message) {
-        var entry = new entry_1.Entry(this, message);
-        this.addEntry(entry);
-        if (liveDump)
-            console.log(this.dump(undefined, undefined, undefined, entry));
-        return message;
-    };
-    /**
-     * helper to create a text-output of the log info
-     * @param separator
-     * @param start
-     * @param end
-     */
-    Log.prototype.dump = function (separator, start, end, one) {
-        if (separator === void 0) { separator = ' - '; }
-        if (start === void 0) { start = ''; }
-        if (end === void 0) { end = ''; }
-        if (one === void 0) { one = null; }
-        var lg = start;
-        var dumpOne = function (e) { return lg += e.source() + separator + e.message + '\n'; };
-        if (one)
-            dumpOne(one);
-        else
-            this.entries.forEach(dumpOne);
-        lg += end;
-        return lg;
-    };
-    /**
-     * add an entry-object to this logger
-     * this is often called by sub-loggers to add to parent
-     * @param entry
-     */
-    Log.prototype.addEntry = function (entry) {
-        this.entries.push(entry);
-        if (this.parent)
-            this.parent.addEntry(entry);
-    };
-    /**
-     * helper to generate a random 2-char ID
-     * @param stringLength
-     */
-    Log.prototype.randomString = function (stringLength) {
-        var chars = '0123456789abcdefghiklmnopqrstuvwxyz';
-        var randomstring = '';
-        for (var i = 0; i < stringLength; i++) {
-            var rnum = Math.floor(Math.random() * chars.length);
-            randomstring += chars.substring(rnum, rnum + 1);
-        }
-        return randomstring;
-    };
-    return Log;
-}());
-exports.Log = Log;
-
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var sxc_1 = __webpack_require__(6);
+var sxc_1 = __webpack_require__(7);
 var cmds_strategy_factory_1 = __webpack_require__(85);
 var mod_1 = __webpack_require__(37);
 var quick_e_1 = __webpack_require__(2);
-var selectors_instance_1 = __webpack_require__(4);
+var selectors_instance_1 = __webpack_require__(5);
 /** add a clipboard to the quick edit */
 /**
  * perform copy and paste commands - needs the clipboard
@@ -1674,17 +1654,17 @@ $('a', quick_e_1.$quickE.selected).click(function () {
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var context_1 = __webpack_require__(3);
+var context_1 = __webpack_require__(4);
 var api_1 = __webpack_require__(1);
-var command_create_1 = __webpack_require__(21);
-var command_execute_action_1 = __webpack_require__(64);
-var commands_1 = __webpack_require__(5);
+var command_create_1 = __webpack_require__(20);
+var command_execute_action_1 = __webpack_require__(65);
+var commands_1 = __webpack_require__(6);
 var Engine = /** @class */ (function () {
     function Engine(sxc) {
         var _this = this;
@@ -1713,7 +1693,7 @@ exports.instanceEngine = instanceEngine;
 
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1743,13 +1723,13 @@ exports.InstanceConfig = InstanceConfig;
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var command_1 = __webpack_require__(63);
+var command_1 = __webpack_require__(64);
 /**
  * assemble an object which will store the configuration and execute it
  * @param sxc
@@ -1770,13 +1750,13 @@ exports.commandCreate = commandCreate;
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var templates_1 = __webpack_require__(13);
+var templates_1 = __webpack_require__(14);
 /*
  * this is a content block in the browser
  *
@@ -1811,16 +1791,16 @@ exports._contentBlock = new MainContentBlock();
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var config_1 = __webpack_require__(65);
-var positioning_1 = __webpack_require__(24);
+var config_1 = __webpack_require__(66);
+var positioning_1 = __webpack_require__(23);
 var quick_e_1 = __webpack_require__(2);
-var selectors_instance_1 = __webpack_require__(4);
+var selectors_instance_1 = __webpack_require__(5);
 function enable() {
     // build all toolbar html-elements
     quick_e_1.prepareToolbarInDom();
@@ -1886,15 +1866,15 @@ exports.reset = reset;
 
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var coords_1 = __webpack_require__(66);
+var coords_1 = __webpack_require__(67);
 var quick_e_1 = __webpack_require__(2);
-var selectors_instance_1 = __webpack_require__(4);
+var selectors_instance_1 = __webpack_require__(5);
 /**
  * Module with everything related to positioning the quick-edit in-page editing
  */
@@ -2049,7 +2029,7 @@ exports.getCoordinates = getCoordinates;
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2075,7 +2055,7 @@ exports.addClasses = addClasses;
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2091,12 +2071,12 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var build_toolbars_1 = __webpack_require__(12);
-var render_button_1 = __webpack_require__(15);
-var render_toolbar_1 = __webpack_require__(14);
-var toolbar_config_templates_1 = __webpack_require__(27);
+var build_toolbars_1 = __webpack_require__(13);
+var render_button_1 = __webpack_require__(16);
+var render_toolbar_1 = __webpack_require__(15);
+var toolbar_config_templates_1 = __webpack_require__(26);
 var toolbar_standard_buttons_1 = __webpack_require__(28);
-var has_log_1 = __webpack_require__(16);
+var has_log_1 = __webpack_require__(27);
 /**
  * Toolbar manager for the whole page - basically a set of APIs
  * the toolbar manager is an internal helper taking care of toolbars, buttons etc.
@@ -2133,7 +2113,7 @@ exports._toolbarManager = sharedTbm; // new ToolbarManager();
 
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2149,9 +2129,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var default_toolbar_template_1 = __webpack_require__(69);
-var left_toolbar_template_1 = __webpack_require__(70);
-var has_log_1 = __webpack_require__(16);
+var default_toolbar_template_1 = __webpack_require__(70);
+var left_toolbar_template_1 = __webpack_require__(71);
+var has_log_1 = __webpack_require__(27);
 var ToolbarConfigTemplates = /** @class */ (function (_super) {
     __extends(ToolbarConfigTemplates, _super);
     function ToolbarConfigTemplates(parentLog) {
@@ -2176,14 +2156,55 @@ exports.ToolbarConfigTemplates = ToolbarConfigTemplates;
 
 
 /***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var log_1 = __webpack_require__(3);
+var HasLog = /** @class */ (function () {
+    /**
+     * initialize the logger
+     * ideally it has a parent-logger to attach to
+     * @param logName name to show in the logger
+     * @param parentLog parent-logger to attach to
+     * @param initialMessage optional start-message to log
+     */
+    function HasLog(logName, parentLog, initialMessage) {
+        var _this = this;
+        this.parentLog = parentLog;
+        this.initLog = function (name, parentLog, initialMessage) { return _this.initLogInternal(name, parentLog, initialMessage); };
+        this.logId = 'unknwn';
+        this.linkLog = function (parentLog) { return _this.log.linkLog(parentLog); };
+        this.initLogInternal(logName, parentLog, initialMessage);
+    }
+    HasLog.prototype.initLogInternal = function (name, parentLog, initialMessage) {
+        if (this.log == null)
+            // standard & most common case: just create log
+            this.log = new log_1.Log(name, parentLog, initialMessage);
+        else {
+            // late-init case, where the log was already created - just reconfig keeping what was in it
+            this.log.rename(name);
+            this.linkLog(parentLog);
+            if (initialMessage != null)
+                this.log.add(initialMessage);
+        }
+    };
+    return HasLog;
+}());
+exports.HasLog = HasLog;
+
+
+/***/ }),
 /* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var toolbar_config_templates_1 = __webpack_require__(27);
-var log_1 = __webpack_require__(17);
+var toolbar_config_templates_1 = __webpack_require__(26);
+var log_1 = __webpack_require__(3);
 /**
  * the toolbar manager is an internal helper
  * taking care of toolbars, buttons etc.
@@ -2212,13 +2233,13 @@ exports.toolbarStandardButtons = toolbarStandardButtons;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var instance_config_1 = __webpack_require__(20);
-var expand_button_config_1 = __webpack_require__(9);
+var instance_config_1 = __webpack_require__(19);
+var expand_button_config_1 = __webpack_require__(10);
 var expand_group_config_1 = __webpack_require__(72);
 var toolbar_config_1 = __webpack_require__(74);
 var toolbar_settings_1 = __webpack_require__(33);
 var toolbar_standard_buttons_1 = __webpack_require__(28);
-var log_1 = __webpack_require__(17);
+var log_1 = __webpack_require__(3);
 function expandToolbarConfig(context, toolbarData, toolbarSettings, parentLog) {
     var log = new log_1.Log('Tlb.ExpTop', parentLog, 'expand start');
     var editContext = context.sxc.editContext;
@@ -2513,8 +2534,8 @@ exports.getPreviewWithTemplate = getPreviewWithTemplate;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var render_1 = __webpack_require__(11);
-var quick_dialog_1 = __webpack_require__(10);
+var render_1 = __webpack_require__(12);
+var quick_dialog_1 = __webpack_require__(11);
 var command_link_to_ng_dialog_1 = __webpack_require__(75);
 /**
  * open a new dialog of the angular-ui
@@ -2547,7 +2568,7 @@ exports.commandOpenNgDialog = commandOpenNgDialog;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var sxc_1 = __webpack_require__(6);
+var sxc_1 = __webpack_require__(7);
 /**
  * extend the quick edit with the core commands
  */
@@ -2576,7 +2597,7 @@ exports.Cb = Cb;
 Object.defineProperty(exports, "__esModule", { value: true });
 var mod_manage_1 = __webpack_require__(38);
 var quick_e_1 = __webpack_require__(2);
-var selectors_instance_1 = __webpack_require__(4);
+var selectors_instance_1 = __webpack_require__(5);
 var Mod = /** @class */ (function () {
     function Mod() {
     }
@@ -2613,7 +2634,7 @@ exports.Mod = Mod;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var clipboard_1 = __webpack_require__(18);
+var clipboard_1 = __webpack_require__(17);
 var quick_e_1 = __webpack_require__(2);
 /**
  * module specific stuff
@@ -2773,6 +2794,25 @@ void this.loadResources(t)):t()},t.prototype.dir=function(e){e||(e=this.language
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var Entry = /** @class */ (function () {
+    function Entry(log, message) {
+        var _this = this;
+        this.log = log;
+        this.message = message;
+        this.source = function () { return _this.log.fullIdentifier(); };
+    }
+    return Entry;
+}());
+exports.Entry = Entry;
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var CommandDefinition = /** @class */ (function () {
     function CommandDefinition() {
     }
@@ -2782,7 +2822,7 @@ exports.CommandDefinition = CommandDefinition;
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2816,7 +2856,7 @@ exports.NgDialogParams = NgDialogParams;
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2841,7 +2881,7 @@ exports.QucikDialogConfig = QucikDialogConfig;
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2858,7 +2898,7 @@ exports.UserOfEditContext = UserOfEditContext;
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2876,7 +2916,7 @@ exports.SystemContext = SystemContext;
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2894,7 +2934,7 @@ exports.TenantContext = TenantContext;
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2912,7 +2952,7 @@ exports.UserContext = UserContext;
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2927,34 +2967,6 @@ var ContentBlockContext = /** @class */ (function () {
     return ContentBlockContext;
 }());
 exports.ContentBlockContext = ContentBlockContext;
-
-
-/***/ }),
-/* 50 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var context_of_toolbar_1 = __webpack_require__(51);
-var ContextOfButton = /** @class */ (function (_super) {
-    __extends(ContextOfButton, _super);
-    function ContextOfButton() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return ContextOfButton;
-}(context_of_toolbar_1.ContextOfToolbar));
-exports.ContextOfButton = ContextOfButton;
 
 
 /***/ }),
@@ -2974,15 +2986,15 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var context_of_item_1 = __webpack_require__(52);
-var ContextOfToolbar = /** @class */ (function (_super) {
-    __extends(ContextOfToolbar, _super);
-    function ContextOfToolbar() {
+var context_of_toolbar_1 = __webpack_require__(52);
+var ContextOfButton = /** @class */ (function (_super) {
+    __extends(ContextOfButton, _super);
+    function ContextOfButton() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    return ContextOfToolbar;
-}(context_of_item_1.ContextOfItem));
-exports.ContextOfToolbar = ContextOfToolbar;
+    return ContextOfButton;
+}(context_of_toolbar_1.ContextOfToolbar));
+exports.ContextOfButton = ContextOfButton;
 
 
 /***/ }),
@@ -3002,15 +3014,15 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var context_of_content_block_1 = __webpack_require__(53);
-var ContextOfItem = /** @class */ (function (_super) {
-    __extends(ContextOfItem, _super);
-    function ContextOfItem() {
+var context_of_item_1 = __webpack_require__(53);
+var ContextOfToolbar = /** @class */ (function (_super) {
+    __extends(ContextOfToolbar, _super);
+    function ContextOfToolbar() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    return ContextOfItem;
-}(context_of_content_block_1.ContextOfContentBlock));
-exports.ContextOfItem = ContextOfItem;
+    return ContextOfToolbar;
+}(context_of_item_1.ContextOfItem));
+exports.ContextOfToolbar = ContextOfToolbar;
 
 
 /***/ }),
@@ -3030,15 +3042,15 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var context_of_instance_1 = __webpack_require__(54);
-var ContextOfContentBlock = /** @class */ (function (_super) {
-    __extends(ContextOfContentBlock, _super);
-    function ContextOfContentBlock() {
+var context_of_content_block_1 = __webpack_require__(54);
+var ContextOfItem = /** @class */ (function (_super) {
+    __extends(ContextOfItem, _super);
+    function ContextOfItem() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    return ContextOfContentBlock;
-}(context_of_instance_1.ContextOfInstance));
-exports.ContextOfContentBlock = ContextOfContentBlock;
+    return ContextOfItem;
+}(context_of_content_block_1.ContextOfContentBlock));
+exports.ContextOfItem = ContextOfItem;
 
 
 /***/ }),
@@ -3058,15 +3070,15 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var context_of_page_1 = __webpack_require__(55);
-var ContextOfInstance = /** @class */ (function (_super) {
-    __extends(ContextOfInstance, _super);
-    function ContextOfInstance() {
+var context_of_instance_1 = __webpack_require__(55);
+var ContextOfContentBlock = /** @class */ (function (_super) {
+    __extends(ContextOfContentBlock, _super);
+    function ContextOfContentBlock() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    return ContextOfInstance;
-}(context_of_page_1.ContextOfPage));
-exports.ContextOfInstance = ContextOfInstance;
+    return ContextOfContentBlock;
+}(context_of_instance_1.ContextOfInstance));
+exports.ContextOfContentBlock = ContextOfContentBlock;
 
 
 /***/ }),
@@ -3086,15 +3098,15 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var context_of_1 = __webpack_require__(56);
-var ContextOfPage = /** @class */ (function (_super) {
-    __extends(ContextOfPage, _super);
-    function ContextOfPage() {
+var context_of_page_1 = __webpack_require__(56);
+var ContextOfInstance = /** @class */ (function (_super) {
+    __extends(ContextOfInstance, _super);
+    function ContextOfInstance() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    return ContextOfPage;
-}(context_of_1.ContextOf));
-exports.ContextOfPage = ContextOfPage;
+    return ContextOfInstance;
+}(context_of_page_1.ContextOfPage));
+exports.ContextOfInstance = ContextOfInstance;
 
 
 /***/ }),
@@ -3114,7 +3126,35 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var base_context_1 = __webpack_require__(57);
+var context_of_1 = __webpack_require__(57);
+var ContextOfPage = /** @class */ (function (_super) {
+    __extends(ContextOfPage, _super);
+    function ContextOfPage() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return ContextOfPage;
+}(context_of_1.ContextOf));
+exports.ContextOfPage = ContextOfPage;
+
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var base_context_1 = __webpack_require__(58);
 var ContextOf = /** @class */ (function (_super) {
     __extends(ContextOf, _super);
     function ContextOf() {
@@ -3126,7 +3166,7 @@ exports.ContextOf = ContextOf;
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3141,7 +3181,7 @@ exports.BaseContext = BaseContext;
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3159,7 +3199,7 @@ exports.AppContext = AppContext;
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3177,7 +3217,7 @@ exports.InstanceContext = InstanceContext;
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3195,7 +3235,7 @@ exports.SxcContext = SxcContext;
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3213,7 +3253,7 @@ exports.ItemContext = ItemContext;
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3231,13 +3271,13 @@ exports.PageContext = PageContext;
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var _2sxc_translate_1 = __webpack_require__(7);
+var _2sxc_translate_1 = __webpack_require__(8);
 var Command = /** @class */ (function () {
     function Command(context, settings, ngDialogUrl, isDebug) {
         var _this = this;
@@ -3300,8 +3340,6 @@ var Command = /** @class */ (function () {
             }
             _this.params.items = JSON.stringify(_this.items); // Serialize/json-ify the complex items-list
             // clone the params and adjust parts based on partOfPage settings...
-            // debugger;
-            // console.log('stv: context', context);
             var sharedParams = Object.assign({}, _this.sxc.manage._dialogParameters);
             // console.log('stv: sharedParams', sharedParams);
             if (!_this.settings.partOfPage) {
@@ -3331,15 +3369,15 @@ exports.Command = Command;
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var templates_1 = __webpack_require__(13);
+var templates_1 = __webpack_require__(14);
 var command_open_ng_dialog_1 = __webpack_require__(35);
-var commands_1 = __webpack_require__(5);
+var commands_1 = __webpack_require__(6);
 // ToDo: remove dead code
 function commandExecuteAction(context, nameOrSettings, eventOrSettings, event) {
     var sxc = context.sxc.sxc;
@@ -3377,14 +3415,14 @@ exports.commandExecuteAction = commandExecuteAction;
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var quick_e_1 = __webpack_require__(2);
-var selectors_instance_1 = __webpack_require__(4);
+var selectors_instance_1 = __webpack_require__(5);
 var configAttr = 'quick-edit-config';
 /**
  * the initial configuration
@@ -3431,7 +3469,7 @@ exports._readPageConfig = _readPageConfig;
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3451,13 +3489,13 @@ exports.Coords = Coords;
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var render_button_1 = __webpack_require__(15);
+var render_button_1 = __webpack_require__(16);
 /**
  * render groups of buttons in toolbar
  * @param sxc
@@ -3483,7 +3521,7 @@ exports.renderGroups = renderGroups;
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3505,7 +3543,7 @@ exports.oldParametersAdapter = oldParametersAdapter;
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3547,7 +3585,7 @@ exports.defaultToolbarTemplate = {
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3589,38 +3627,19 @@ exports.leftToolbarTemplate = {
 
 
 /***/ }),
-/* 71 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Entry = /** @class */ (function () {
-    function Entry(log, message) {
-        var _this = this;
-        this.log = log;
-        this.message = message;
-        this.source = function () { return _this.log.fullIdentifier(); };
-    }
-    return Entry;
-}());
-exports.Entry = Entry;
-
-
-/***/ }),
 /* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var commands_1 = __webpack_require__(5);
+var commands_1 = __webpack_require__(6);
 var parameters_adapter_1 = __webpack_require__(30);
 var settings_adapter_1 = __webpack_require__(73);
 var button_action_1 = __webpack_require__(31);
 var button_config_1 = __webpack_require__(32);
-var expand_button_config_1 = __webpack_require__(9);
-var log_1 = __webpack_require__(17);
+var expand_button_config_1 = __webpack_require__(10);
+var log_1 = __webpack_require__(3);
 /**
  * this will traverse a groups-tree and expand each group
  * so if groups were just strings like "edit,new" or compact buttons, they will be expanded afterwards
@@ -3804,7 +3823,7 @@ exports.ToolbarConfig = ToolbarConfig;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var command_create_1 = __webpack_require__(21);
+var command_create_1 = __webpack_require__(20);
 /**
  * create a dialog link
  * @param sxc
@@ -3835,7 +3854,7 @@ exports.commandLinkToNgDialog = commandLinkToNgDialog;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var _2sxc_translate_1 = __webpack_require__(7);
+var _2sxc_translate_1 = __webpack_require__(8);
 /**
  * this enhances the $2sxc client controller with stuff only needed when logged in
  */
@@ -3872,9 +3891,9 @@ exports.contentItems = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var toolbar_manager_1 = __webpack_require__(26);
-var _2sxc_translate_1 = __webpack_require__(7);
-var sxc_1 = __webpack_require__(6);
+var toolbar_manager_1 = __webpack_require__(25);
+var _2sxc_translate_1 = __webpack_require__(8);
+var sxc_1 = __webpack_require__(7);
 /** contains commands to create/move/delete a contentBlock in a page */
 var sxcInstance;
 /**
@@ -4006,11 +4025,11 @@ exports._manage = new Manage();
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(19);
+var engine_1 = __webpack_require__(18);
 var manipulate_1 = __webpack_require__(77);
-var context_1 = __webpack_require__(3);
-var render_button_1 = __webpack_require__(15);
-var render_toolbar_1 = __webpack_require__(14);
+var context_1 = __webpack_require__(4);
+var render_button_1 = __webpack_require__(16);
+var render_toolbar_1 = __webpack_require__(15);
 var toolbar_expand_config_1 = __webpack_require__(29);
 var api_1 = __webpack_require__(1);
 var local_storage_helper_1 = __webpack_require__(80);
@@ -4197,10 +4216,10 @@ exports.LocalStorageHelper = LocalStorageHelper;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var commands_1 = __webpack_require__(5);
+var commands_1 = __webpack_require__(6);
 var button_action_1 = __webpack_require__(31);
 var button_config_1 = __webpack_require__(32);
-var expand_button_config_1 = __webpack_require__(9);
+var expand_button_config_1 = __webpack_require__(10);
 var mod_config_1 = __webpack_require__(82);
 var parameters_adapter_1 = __webpack_require__(30);
 function buttonConfigAdapter(context, actDef, groupIndex) {
@@ -4349,13 +4368,13 @@ exports._translateInit = _translateInit;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var context_1 = __webpack_require__(3);
+var context_1 = __webpack_require__(4);
 var api_1 = __webpack_require__(1);
-var quick_dialog_1 = __webpack_require__(10);
-var build_toolbars_1 = __webpack_require__(12);
-var _2sxc_translate_1 = __webpack_require__(7);
-var sxc_1 = __webpack_require__(6);
-var log_1 = __webpack_require__(17);
+var quick_dialog_1 = __webpack_require__(11);
+var build_toolbars_1 = __webpack_require__(13);
+var _2sxc_translate_1 = __webpack_require__(8);
+var sxc_1 = __webpack_require__(7);
+var log_1 = __webpack_require__(3);
 // import '/2sxc-api/js/2sxc.api';
 /**
  * module & toolbar bootstrapping (initialize all toolbars after loading page)
@@ -4500,12 +4519,12 @@ __webpack_require__(41);
 __webpack_require__(87);
 __webpack_require__(88);
 __webpack_require__(0);
-__webpack_require__(21);
-__webpack_require__(42);
-__webpack_require__(64);
+__webpack_require__(20);
+__webpack_require__(43);
+__webpack_require__(65);
 __webpack_require__(75);
 __webpack_require__(35);
-__webpack_require__(63);
+__webpack_require__(64);
 __webpack_require__(89);
 __webpack_require__(90);
 __webpack_require__(91);
@@ -4531,38 +4550,38 @@ __webpack_require__(110);
 __webpack_require__(111);
 __webpack_require__(112);
 __webpack_require__(113);
-__webpack_require__(5);
+__webpack_require__(6);
 __webpack_require__(114);
-__webpack_require__(19);
+__webpack_require__(18);
 __webpack_require__(115);
 __webpack_require__(116);
 __webpack_require__(117);
-__webpack_require__(8);
-__webpack_require__(22);
+__webpack_require__(9);
+__webpack_require__(21);
 __webpack_require__(118);
 __webpack_require__(77);
-__webpack_require__(11);
-__webpack_require__(13);
+__webpack_require__(12);
+__webpack_require__(14);
 __webpack_require__(119);
 __webpack_require__(34);
-__webpack_require__(57);
-__webpack_require__(46);
+__webpack_require__(58);
 __webpack_require__(47);
 __webpack_require__(48);
 __webpack_require__(49);
 __webpack_require__(50);
-__webpack_require__(53);
-__webpack_require__(54);
-__webpack_require__(52);
-__webpack_require__(55);
 __webpack_require__(51);
+__webpack_require__(54);
+__webpack_require__(55);
+__webpack_require__(53);
 __webpack_require__(56);
-__webpack_require__(3);
-__webpack_require__(58);
+__webpack_require__(52);
+__webpack_require__(57);
+__webpack_require__(4);
 __webpack_require__(59);
 __webpack_require__(60);
 __webpack_require__(61);
 __webpack_require__(62);
+__webpack_require__(63);
 __webpack_require__(120);
 __webpack_require__(121);
 __webpack_require__(122);
@@ -4584,73 +4603,73 @@ __webpack_require__(136);
 __webpack_require__(137);
 __webpack_require__(138);
 __webpack_require__(139);
-__webpack_require__(71);
-__webpack_require__(16);
+__webpack_require__(42);
+__webpack_require__(27);
 __webpack_require__(140);
-__webpack_require__(17);
+__webpack_require__(3);
 __webpack_require__(1);
 __webpack_require__(79);
-__webpack_require__(20);
+__webpack_require__(19);
 __webpack_require__(80);
 __webpack_require__(78);
-__webpack_require__(43);
 __webpack_require__(44);
 __webpack_require__(45);
+__webpack_require__(46);
 __webpack_require__(141);
 __webpack_require__(142);
-__webpack_require__(10);
+__webpack_require__(11);
 __webpack_require__(143);
 __webpack_require__(36);
-__webpack_require__(18);
+__webpack_require__(17);
 __webpack_require__(85);
 __webpack_require__(144);
-__webpack_require__(65);
-__webpack_require__(145);
 __webpack_require__(66);
+__webpack_require__(145);
+__webpack_require__(67);
 __webpack_require__(146);
 __webpack_require__(147);
 __webpack_require__(38);
 __webpack_require__(37);
 __webpack_require__(148);
-__webpack_require__(24);
+__webpack_require__(23);
 __webpack_require__(2);
-__webpack_require__(4);
+__webpack_require__(5);
 __webpack_require__(149);
 __webpack_require__(150);
-__webpack_require__(23);
+__webpack_require__(22);
 __webpack_require__(81);
-__webpack_require__(68);
+__webpack_require__(69);
 __webpack_require__(30);
 __webpack_require__(73);
-__webpack_require__(12);
+__webpack_require__(13);
 __webpack_require__(31);
 __webpack_require__(32);
 __webpack_require__(151);
-__webpack_require__(9);
+__webpack_require__(10);
 __webpack_require__(72);
 __webpack_require__(152);
 __webpack_require__(82);
 __webpack_require__(153);
+__webpack_require__(16);
+__webpack_require__(68);
+__webpack_require__(24);
 __webpack_require__(15);
-__webpack_require__(67);
-__webpack_require__(25);
-__webpack_require__(14);
 __webpack_require__(154);
 __webpack_require__(155);
-__webpack_require__(26);
+__webpack_require__(25);
 __webpack_require__(156);
-__webpack_require__(69);
 __webpack_require__(70);
+__webpack_require__(71);
 __webpack_require__(157);
-__webpack_require__(27);
+__webpack_require__(26);
 __webpack_require__(74);
 __webpack_require__(29);
 __webpack_require__(33);
 __webpack_require__(28);
 __webpack_require__(83);
-__webpack_require__(7);
+__webpack_require__(8);
 __webpack_require__(84);
-module.exports = __webpack_require__(6);
+module.exports = __webpack_require__(7);
 
 
 /***/ }),
@@ -4732,7 +4751,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var actions_1 = __webpack_require__(8);
+var actions_1 = __webpack_require__(9);
 var command_base_1 = __webpack_require__(0);
 /**
  * add brings no dialog, just add an empty item
@@ -5429,7 +5448,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var actions_1 = __webpack_require__(8);
+var actions_1 = __webpack_require__(9);
 var command_base_1 = __webpack_require__(0);
 /**
  * import this module to commands.ts
@@ -5474,7 +5493,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var actions_1 = __webpack_require__(8);
+var actions_1 = __webpack_require__(9);
 var command_base_1 = __webpack_require__(0);
 /**
  * import this module to commands.ts
@@ -5577,8 +5596,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var actions_1 = __webpack_require__(8);
-var _2sxc_translate_1 = __webpack_require__(7);
+var actions_1 = __webpack_require__(9);
+var _2sxc_translate_1 = __webpack_require__(8);
 var command_base_1 = __webpack_require__(0);
 /**
  * todo: shouldn't be available if changes are not allowed
@@ -5633,8 +5652,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var actions_1 = __webpack_require__(8);
-var _2sxc_translate_1 = __webpack_require__(7);
+var actions_1 = __webpack_require__(9);
+var _2sxc_translate_1 = __webpack_require__(8);
 var command_base_1 = __webpack_require__(0);
 /**
  * remove an item from the placeholder (usually for lists)
@@ -6111,9 +6130,9 @@ exports.User = User;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var context_1 = __webpack_require__(3);
+var context_1 = __webpack_require__(4);
 var api_1 = __webpack_require__(1);
-var sxc_1 = __webpack_require__(6);
+var sxc_1 = __webpack_require__(7);
 /**
  * Maps actions of the module menu to JS actions - needed because onclick event can't be set (actually, a bug in DNN)
  */
@@ -6174,11 +6193,11 @@ window.$2sxcActionMenuMapper = function (moduleId) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var commands_1 = __webpack_require__(5);
-var context_1 = __webpack_require__(3);
+var commands_1 = __webpack_require__(6);
+var context_1 = __webpack_require__(4);
 var manage_1 = __webpack_require__(78);
 var quick_e_1 = __webpack_require__(2);
-var start_1 = __webpack_require__(23);
+var start_1 = __webpack_require__(22);
 var _2sxc__translateInit_1 = __webpack_require__(83);
 __webpack_require__(84);
 $2sxc.context = context_1.context; // primary API to get the context
@@ -6404,9 +6423,9 @@ exports.Conf = Conf;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var cb_1 = __webpack_require__(36);
-var clipboard_1 = __webpack_require__(18);
+var clipboard_1 = __webpack_require__(17);
 var quick_e_1 = __webpack_require__(2);
-var selectors_instance_1 = __webpack_require__(4);
+var selectors_instance_1 = __webpack_require__(5);
 /**
  * content-block specific stuff like actions
  */
@@ -6451,10 +6470,10 @@ quick_e_1.$quickE.cbActions.click(onCbButtonClick);
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var clipboard_1 = __webpack_require__(18);
+var clipboard_1 = __webpack_require__(17);
 var mod_manage_1 = __webpack_require__(38);
 var quick_e_1 = __webpack_require__(2);
-var selectors_instance_1 = __webpack_require__(4);
+var selectors_instance_1 = __webpack_require__(5);
 /**
  * module specific stuff
  */
