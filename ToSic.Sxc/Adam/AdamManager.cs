@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Adam
             // create all folders to ensure they exist. Must do one-by-one because the environment must have it in the catalog
             var pathParts = path.Split('/');
             var pathToCheck = "";
-            foreach (string part in pathParts.Where(p => !string.IsNullOrEmpty(p)))
+            foreach (var part in pathParts.Where(p => !string.IsNullOrEmpty(p)))
             {
                 pathToCheck += part + "/";
                 if (Exists(pathToCheck)) continue;

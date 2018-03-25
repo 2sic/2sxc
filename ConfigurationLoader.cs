@@ -16,7 +16,6 @@ using ToSic.SexyContent.Environment.Dnn7.ValueProviders;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Interfaces;
-using Configuration = ToSic.Eav.Configuration;
 
 namespace ToSic.SexyContent
 {
@@ -47,7 +46,7 @@ namespace ToSic.SexyContent
         private void ConfigureConnectionString()
         {
             var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
-            Configuration.SetConnectionString(connectionString);
+            ToSic.Eav.Repository.Efc.Implementations.Configuration.SetConnectionString(connectionString);
         }
 
 

@@ -58,7 +58,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
             var app = set.Item1;
 
-            var showDrafts = set.Item2.UserMay(GrantSets.ReadDrafts);
+            var showDrafts = set.Item2.UserMay(GrantSets.ReadDraft);
 
             app.InitData(showDrafts, 
                 SxcInstance.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), 
