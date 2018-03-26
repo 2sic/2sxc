@@ -4,13 +4,13 @@ using ToSic.SexyContent;
 
 namespace ToSic.Sxc.Adam
 {
-    public class AssetFolder : Folder, IAsset
+    public class Folder : Eav.Apps.Assets.Folder, IAsset
     {
         protected AdamAppContext AppContext { get; set; }
 
         private readonly IEnvironmentFileSystem _fileSystem;
 
-        public AssetFolder(AdamAppContext appContext, IEnvironmentFileSystem fileSystem)
+        public Folder(AdamAppContext appContext, IEnvironmentFileSystem fileSystem)
         {
             AppContext = appContext;
             _fileSystem = fileSystem;
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         ///  Get all subfolders
         /// </summary>
-        public IEnumerable<AssetFolder> Folders
+        public IEnumerable<Folder> Folders
         {
             get
             {
@@ -40,13 +40,13 @@ namespace ToSic.Sxc.Adam
 
                 // this is to skip it if it doesn't have subfolders...
                 if (!HasChildren || string.IsNullOrEmpty(Name))
-                    return _folders = new List<AssetFolder>();
+                    return _folders = new List<Folder>();
                 
                 _folders = _fileSystem.GetFolders(Id, AppContext);
                 return _folders;
             }
         }
-        private IEnumerable<AssetFolder> _folders;
+        private IEnumerable<Folder> _folders;
 
 
 
@@ -54,8 +54,8 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Get all files in this folder
         /// </summary>
-        public IEnumerable<AssetFile> Files 
+        public IEnumerable<File> Files 
             => _files ?? (_files = _fileSystem.GetFiles(Id, AppContext));
-        private IEnumerable<AssetFile> _files;
+        private IEnumerable<File> _files;
     }
 }

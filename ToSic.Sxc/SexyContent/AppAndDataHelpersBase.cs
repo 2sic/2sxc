@@ -275,7 +275,7 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AssetFolderOfField AsAdam(DynamicEntity entity, string fieldName)
+        public FolderOfField AsAdam(DynamicEntity entity, string fieldName)
             => AsAdam(AsEntity(entity), fieldName);
 
 
@@ -285,12 +285,12 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AssetFolderOfField AsAdam(Eav.Interfaces.IEntity entity, string fieldName)
+        public FolderOfField AsAdam(Eav.Interfaces.IEntity entity, string fieldName)
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
             if (_adamAppContext == null)
                 _adamAppContext = new AdamAppContext(_tenant, App, SxcInstance);
-            return new AssetFolderOfField(envFs, _adamAppContext, entity.EntityGuid, fieldName);
+            return new FolderOfField(envFs, _adamAppContext, entity.EntityGuid, fieldName);
         }
         private AdamAppContext _adamAppContext;
 

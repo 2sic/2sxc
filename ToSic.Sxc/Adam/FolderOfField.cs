@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav.Apps.Assets;
 
 namespace ToSic.Sxc.Adam
 {
@@ -7,10 +6,10 @@ namespace ToSic.Sxc.Adam
     /// The ADAM Navigator creates a folder object for an entity/field combination
     /// This is the root folder where all files for this field are stored
     /// </summary>
-    public class AssetFolderOfField : AssetFolder
+    public class FolderOfField : Folder
     {
         protected ContainerOfField Container { get; set; }
-        public AssetFolderOfField(IEnvironmentFileSystem enfFileSystem, AdamAppContext appContext, Guid entityGuid, string fieldName) : base(appContext, enfFileSystem)
+        public FolderOfField(IEnvironmentFileSystem enfFileSystem, AdamAppContext appContext, Guid entityGuid, string fieldName) : base(appContext, enfFileSystem)
         {
             Container = new ContainerOfField(AppContext, entityGuid, fieldName);
 
@@ -18,7 +17,7 @@ namespace ToSic.Sxc.Adam
                 return;
 
             // ReSharper disable once PatternAlwaysOfType
-            if (!(AppContext.Folder(Container.Root) is Folder f))
+            if (!(AppContext.Folder(Container.Root) is Eav.Apps.Assets.Folder f))
                 return;
 
             FolderPath = f.FolderPath;

@@ -14,12 +14,13 @@ using ToSic.SexyContent.WebApi;
 using System.Configuration;
 using System.Web.Configuration;
 using System.Web.Http.Controllers;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.ValueProvider;
-using ToSic.SexyContent;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Errors;
+using App = ToSic.SexyContent.App;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Adam.WebApi
@@ -60,22 +61,24 @@ namespace ToSic.Sxc.Adam.WebApi
         public UploadResult Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) 
             => UploadOne(appId, contentType, guid, field, subFolder, usePortalRoot);
 
-        private UploadResult UploadOne(int appId, string contentTypeName, Guid guid, string field, string subFolder, bool usePortalRoot)
+        private UploadResult UploadOne(int appId, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot)
         {
             Log.Add($"upload one a:{App?.AppId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
             var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
 
             PrepCore(set.Item1, guid, field, usePortalRoot);
 
+            var appRead = new AppRuntime(set.Item1, Log);
+
             // Get the content-type definition
-            var cache = App.Data.Cache;
-            var contentType = cache.GetContentType(contentTypeName);
-            var fieldDef = contentType[field];
+            //var cache = App.Data.Cache;
+            var typeDef = appRead.ContentTypes.Get(contentType);//  cache.GetContentType(contentType);
+            var fieldDef = typeDef[field];
 
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
             if (fieldDef == null || !(fieldDef.Type != "Hyperlink" || fieldDef.Type != "String"))
@@ -195,10 +198,10 @@ namespace ToSic.Sxc.Adam.WebApi
         #region adam-file manager
 
         [HttpGet]
-        public IEnumerable<AdamItem> Items(int appId, Guid guid, string field, string subfolder, bool usePortalRoot = false)
+        public IEnumerable<AdamItem> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
             Log.Add($"adam items a:{App?.AppId}, i:{guid}, field:{field}, subfold:{subfolder}, useRoot:{usePortalRoot}");
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
             var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
             var app = App;
             if(app.AppId != appId)
@@ -235,10 +238,10 @@ namespace ToSic.Sxc.Adam.WebApi
         }
 
         [HttpPost]
-        public IEnumerable<AdamItem> Folder(int appId, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
+        public IEnumerable<AdamItem> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
         {
             Log.Add($"get folders for a:{App?.AppId}, i:{guid}, field:{field}, subfld:{subfolder}, new:{newFolder}, useRoot:{usePortalRoot}");
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
             var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
             PrepCore(set.Item1, guid, field, usePortalRoot);
 
@@ -251,14 +254,14 @@ namespace ToSic.Sxc.Adam.WebApi
             // now access the subfolder, creating it if missing (which is what we want
             ContainerContext.Folder(subfolder + "/" + newFolder, true);
 
-            return Items(appId, guid, field, subfolder, usePortalRoot);
+            return Items(appId, contentType, guid, field, subfolder, usePortalRoot);
         }
 
         [HttpGet]
-        public bool Delete(int appId, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
+        public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
         {
             Log.Add($"delete from a:{App?.AppId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
             var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
             PrepCore(set.Item1, guid, field, usePortalRoot);
 
@@ -290,10 +293,10 @@ namespace ToSic.Sxc.Adam.WebApi
         }
 
         [HttpGet]
-        public bool Rename(int appId, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
+        public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
         {
             Log.Add($"rename a:{App?.AppId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
             var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
             PrepCore(set.Item1, guid, field, usePortalRoot);
 

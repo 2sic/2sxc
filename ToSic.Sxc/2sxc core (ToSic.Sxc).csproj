@@ -64,10 +64,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adam\AssetFile.cs" />
-    <Compile Include="Adam\AssetFolder.cs" />
+    <Compile Include="Adam\File.cs" />
+    <Compile Include="Adam\Folder.cs" />
     <Compile Include="Adam\AdamAppContext.cs" />
-    <Compile Include="Adam\AssetFolderOfField.cs" />
+    <Compile Include="Adam\FolderOfField.cs" />
     <Compile Include="Adam\ContainerBase.cs" />
     <Compile Include="Adam\ContainerOfTenant.cs" />
     <Compile Include="Adam\ContainerOfField.cs" />

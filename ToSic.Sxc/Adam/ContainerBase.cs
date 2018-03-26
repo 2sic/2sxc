@@ -18,30 +18,28 @@ namespace ToSic.Sxc.Adam
         /// <remarks>
         /// Will create the folder if it does not exist
         /// </remarks>
-        internal Folder Folder(string subFolder, bool autoCreate) 
+        internal Eav.Apps.Assets.Folder Folder(string subFolder, bool autoCreate) 
             => AppContext.Folder(GeneratePath(subFolder), autoCreate);
 
+        /// <summary>
+        /// Root of this container
+        /// </summary>
         public string Root => GeneratePath("");
 
 
+        /// <summary>
+        /// Figure out the path to a subfolder within this container
+        /// </summary>
+        /// <param name="subFolder"></param>
+        /// <returns></returns>
         protected abstract string GeneratePath(string subFolder);
-        //{
-        //    // Enable portal browsing if requested
-        //    if (_usePortalRoot)
-        //        return (subFolder ?? "").Replace("//", "/");
-        //    var path = Configuration.ItemFolderMask
-        //        .Replace("[AdamRoot]", AppContext.Path)
-        //        .Replace("[Guid22]", Mapper.GuidCompress(_entityGuid))
-        //        .Replace("[FieldName]", _fieldName)
-        //        .Replace("[SubFolder]", subFolder) // often blank, so it will just be removed
-        //        .Replace("//", "/"); // sometimes has duplicate slashes if subfolder blank but sub-sub is given
-        //    return path;
-        //}
 
-
-
-        internal Folder Folder() => _folder ?? (_folder = Folder("", true));
-        private Folder _folder;
+        /// <summary>
+        /// Get a (root) folder object for this container
+        /// </summary>
+        /// <returns></returns>
+        internal Eav.Apps.Assets.Folder Folder() => _folder ?? (_folder = Folder("", true));
+        private Eav.Apps.Assets.Folder _folder;
         
     }
 }

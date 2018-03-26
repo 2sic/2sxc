@@ -54,8 +54,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // this will contain the list of the items we'll really return
             var newItems = new List<ItemIdentifier>();
 
-            // go through all the groups, assign relevant info so that we can then do get-many
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
+            // to do full security check, we'll have to see what content-type is requested
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, items);
             var app = set.Item1;
 
             var showDrafts = set.Item2.UserMay(GrantSets.ReadDraft);
@@ -88,6 +88,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // Now get all
             return EavEntitiesController.GetManyForEditing(appId, newItems);
         }
+
 
 
 	    private static void ConvertListIndexToEntityIds(ContentGroup contentGroup, ItemIdentifier reqItem,
@@ -123,7 +124,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             // log and do security check
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, items.Select(i => i.Header).ToList());
 
             // list of saved IDs
             Dictionary<Guid, int> postSaveIds = null;

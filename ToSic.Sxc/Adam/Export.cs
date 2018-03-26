@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class Export
     {
-        private readonly Folder _root;
+        private readonly Eav.Apps.Assets.Folder _root;
         private readonly List<int> _fileIds = new List<int>();
         private readonly List<int> _folderIds = new List<int>();
 
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Adam
             }
             
         } 
-        private void AddFolder(Folder fldr)
+        private void AddFolder(Eav.Apps.Assets.Folder fldr)
         {
             _folderIds.Add(fldr.Id);  // track of the folder
             AddFilesInFolder(fldr);         // keep track of the files
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Adam
                 AddFolder(f);
         }
 
-        private void AddFilesInFolder(Folder fldr) 
+        private void AddFilesInFolder(Eav.Apps.Assets.Folder fldr) 
             => _envFs.GetFiles(fldr.Id, null).ForEach(f => _fileIds.Add(f.Id));
     }
 }

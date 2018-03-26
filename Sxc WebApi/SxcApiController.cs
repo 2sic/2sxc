@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -12,6 +13,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.ValueProvider;
+using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -137,7 +139,7 @@ namespace ToSic.SexyContent.WebApi
 	    /// <param name="entity">The entity, often Content or similar</param>
 	    /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
 	    /// <returns>An Adam object for navigating the assets</returns>
-	    public AssetFolderOfField AsAdam(DynamicEntity entity, string fieldName)
+	    public FolderOfField AsAdam(DynamicEntity entity, string fieldName)
 	        => DnnAppAndDataHelpers.AsAdam(AsEntity(entity), fieldName);
 
         /// <summary>
@@ -146,7 +148,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AssetFolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public FolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
         #endregion
 
         #region App-Helpers for anonyous access APIs
@@ -178,14 +180,14 @@ namespace ToSic.SexyContent.WebApi
                 app);
 
 
-        protected Tuple<App, PermissionCheckBase> GetAppRequiringPermissionsOrThrow(int appId, List<Grants> grants = null)
+        protected Tuple<App, PermissionCheckBase> GetAppRequiringPermissionsOrThrow(int appId, List<Grants> grants = null, string typeName = null)
         {
-            var set = AppAndPermissionChecker(appId);
+            var set = AppAndPermissionChecker(appId, typeName);
 
             return set.Item2.UserMay(grants) ? set : throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        private Tuple<App, PermissionCheckBase> AppAndPermissionChecker(int appId)
+        private Tuple<App, PermissionCheckBase> AppAndPermissionChecker(int appId, string typeName)
         {
             var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
             var tenant = new DnnTenant(PortalSettings.Current);
@@ -196,6 +198,11 @@ namespace ToSic.SexyContent.WebApi
             var zoneId = SystemManager.ZoneIdOfApp(appId);
             var app = new App(tenant, zoneId, appId, parentLog: Log);
 
+            var type = typeName == null
+                ? null
+                : new AppRuntime(zoneId, appId, Log)
+                    .ContentTypes.Get(typeName);
+
             var samePortal = uiZoneId == tenant.Id;
             var portalToUseInSecCheck = samePortal ? PortalSettings.Current : null;
 
@@ -203,10 +210,40 @@ namespace ToSic.SexyContent.WebApi
             var checker = new DnnPermissionCheck(Log,
                 instance: SxcInstance.EnvInstance,
                 app: app,
-                portal: portalToUseInSecCheck);
+                portal: portalToUseInSecCheck, 
+                targetType: type);
             return new Tuple<App, PermissionCheckBase>(app, checker); 
         }
 
+
+
+        protected Tuple<App, PermissionCheckBase> GetAppRequiringPermissionsOrThrow(int appId, List<Grants> grants, List<ItemIdentifier> items)
+        {
+            var appMan = new AppRuntime(appId, Log);
+
+            // build list of type names
+            var typeNames = items.Select(item => {
+                var typeName = item.ContentTypeName;
+                if (string.IsNullOrEmpty(typeName) && item.EntityId != 0)
+                {
+                    var existing = appMan.Entities.Get(item.EntityId);
+                    typeName = existing.Type.StaticName;
+                }
+                return typeName;
+            }).ToList();
+
+            // make sure we have at least one entry, so the checks will work
+            if (typeNames.Count == 0)
+                typeNames.Add(null);
+
+            // go through all the groups, assign relevant info so that we can then do get-many
+            Tuple<App, PermissionCheckBase> set = null;
+
+            // this will run at least once with null, and the last one will be returned in the set
+            typeNames.ForEach(tn => set = GetAppRequiringPermissionsOrThrow(appId, grants, tn));
+
+            return set;
+        }
         #endregion
 
     }

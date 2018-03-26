@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Root folder object of the app assets
         /// </summary>
-        public Folder RootFolder => Folder(Path, true);
+        public Eav.Apps.Assets.Folder RootFolder => Folder(Path, true);
 
         #region basic, generic folder commands -- all internal
 
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Adam
         internal void Add(string path) => EnvironmentFs.AddFolder(Tenant.Id, path);
 
 
-        internal Folder Folder(string path, bool autoCreate)
+        internal Eav.Apps.Assets.Folder Folder(string path, bool autoCreate)
         {
             // create all folders to ensure they exist. Must do one-by-one because the environment must have it in the catalog
             var pathParts = path.Split('/');
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Adam
         }
 
 
-        internal Folder Folder(string path) => EnvironmentFs.Get(Tenant.Id, path, this);
+        internal Eav.Apps.Assets.Folder Folder(string path) => EnvironmentFs.Get(Tenant.Id, path, this);
 
 
         #endregion

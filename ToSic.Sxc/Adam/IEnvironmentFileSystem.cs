@@ -7,9 +7,9 @@ namespace ToSic.Sxc.Adam
     {
         void AddFolder(int tenantId, string path);
         bool FolderExists(int tenantId, string path);
-        List<AssetFile> GetFiles(int folderId, AdamAppContext appContext);
-        List<AssetFolder> GetFolders(int folderId, AdamAppContext appContext);
+        List<File> GetFiles(int folderId, AdamAppContext appContext);
+        List<Folder> GetFolders(int folderId, AdamAppContext appContext);
 
-        Folder Get(int tenantId, string path, AdamAppContext appContext);
+        Eav.Apps.Assets.Folder Get(int tenantId, string path, AdamAppContext appContext);
     }
 }

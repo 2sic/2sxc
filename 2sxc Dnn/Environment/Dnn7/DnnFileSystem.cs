@@ -33,26 +33,26 @@ namespace ToSic.Sxc.Adam
 
         }
 
-        public Folder Get(int tenantId, string path, AdamAppContext appContext) 
+        public Eav.Apps.Assets.Folder Get(int tenantId, string path, AdamAppContext appContext) 
             => DnnToAdam( appContext, _folderManager.GetFolder(tenantId, path));
 
 
-        public List<AssetFolder> GetFolders(int folderId, AdamAppContext appContext) 
+        public List<Folder> GetFolders(int folderId, AdamAppContext appContext) 
             => GetFolders(GetFolder(folderId), appContext);
 
         private IFolderInfo GetFolder(int folderId) => _folderManager.GetFolder(folderId);
 
-        private List<AssetFolder> GetFolders(IFolderInfo fldObj, AdamAppContext appContext = null)
+        private List<Folder> GetFolders(IFolderInfo fldObj, AdamAppContext appContext = null)
         {
             var firstList = _folderManager.GetFolders(fldObj);
 
             var folders = firstList?.Select(f => DnnToAdam(appContext, f)).ToList()
-                          ?? new List<AssetFolder>();
+                          ?? new List<Folder>();
             return folders;
         }
 
-        private AssetFolder DnnToAdam(AdamAppContext appContext, IFolderInfo f) 
-            => new AssetFolder(appContext, this)
+        private Folder DnnToAdam(AdamAppContext appContext, IFolderInfo f) 
+            => new Folder(appContext, this)
         {
             FolderPath = f.FolderPath,
             Id = f.FolderID,
@@ -79,18 +79,18 @@ namespace ToSic.Sxc.Adam
         };
 
 
-        public List<AssetFile> GetFiles(int folderId, AdamAppContext appContext)
+        public List<File> GetFiles(int folderId, AdamAppContext appContext)
         {
             var fldObj = _folderManager.GetFolder(folderId);
             var firstList = _folderManager.GetFiles(fldObj);
 
             var files = firstList?.Select(f => DnnToAdam(appContext, f)).ToList()
-                     ?? new List<AssetFile>();
+                     ?? new List<File>();
             return files;
         }
 
-        private static AssetFile DnnToAdam(AdamAppContext appContext, IFileInfo f) 
-            => new AssetFile(appContext)
+        private static File DnnToAdam(AdamAppContext appContext, IFileInfo f) 
+            => new File(appContext)
         {
             FileName = f.FileName,
             Extension = f.Extension,
@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Adam
 
             Path = f.RelativePath,
 
-            CreatedOnDate = f.CreatedOnDate,
+            Created = f.CreatedOnDate,
             Name = System.IO.Path.GetFileNameWithoutExtension(f.FileName)
 
             // commented out stuff is from DNN

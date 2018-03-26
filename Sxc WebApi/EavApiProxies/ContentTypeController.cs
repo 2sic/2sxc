@@ -39,7 +39,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
 	    {
-	        GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
+	        GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentTypeStaticName);
 
             // if we got this far, permissions are ok
             return _eavCtc.GetSingle(appId, contentTypeStaticName, scope);
@@ -73,7 +73,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName)
 	    {
-	        GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
+	        GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, staticName);
             return _eavCtc.GetFields(appId, staticName);
 	    }
 

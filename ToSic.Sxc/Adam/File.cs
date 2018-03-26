@@ -3,11 +3,11 @@ using ToSic.SexyContent;
 
 namespace ToSic.Sxc.Adam
 {
-    public class AssetFile : File, IAsset
+    public class File : Eav.Apps.Assets.File, IAsset
     {
         private AdamAppContext AppContext { get; }
 
-        public AssetFile(AdamAppContext appContext)
+        public File(AdamAppContext appContext)
         {
             AppContext = appContext;
         }

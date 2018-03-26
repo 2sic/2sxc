@@ -15,6 +15,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
+using File = System.IO.File;
 
 namespace ToSic.SexyContent.Razor
 {
@@ -191,7 +192,7 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AssetFolderOfField AsAdam(DynamicEntity entity, string fieldName) =>  DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public FolderOfField AsAdam(DynamicEntity entity, string fieldName) =>  DnnAppAndDataHelpers.AsAdam(entity, fieldName);
         
 
         /// <summary>
@@ -200,7 +201,7 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AssetFolderOfField AsAdam(IEntity entity, string fieldName) =>  DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public FolderOfField AsAdam(IEntity entity, string fieldName) =>  DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
         #endregion
 
