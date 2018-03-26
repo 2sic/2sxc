@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Assets;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Adam
 {
+    /// <summary>
+    /// Export helper
+    /// provides a list of all files / folders in ADAM for export
+    /// </summary>
     public class Export
     {
         private readonly Folder _root;
@@ -12,9 +15,9 @@ namespace ToSic.Sxc.Adam
 
         private readonly IEnvironmentFileSystem _envFs;
 
-        public Export(AdamManager adm)
+        public Export(AdamAppContext adm)
         {
-            _root = adm.Root;
+            _root = adm.RootFolder;
             _envFs = adm.EnvironmentFs;
         }
 
@@ -47,12 +50,7 @@ namespace ToSic.Sxc.Adam
                 AddFolder(f);
         }
 
-        private void AddFilesInFolder(Folder fldr)
-        {
-            foreach (var f in _envFs.GetFiles(fldr.Id, null))
-                _fileIds.Add(f.Id);
-        }
-
-        
+        private void AddFilesInFolder(Folder fldr) 
+            => _envFs.GetFiles(fldr.Id, null).ForEach(f => _fileIds.Add(f.Id));
     }
 }

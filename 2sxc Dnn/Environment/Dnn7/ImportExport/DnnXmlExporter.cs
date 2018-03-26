@@ -12,12 +12,13 @@ namespace ToSic.SexyContent.ImportExport
     public class DnnXmlExporter: XmlExporter
     {
         private readonly IFileManager _dnnFiles = FileManager.Instance;
-        internal AdamManager AdamManager;
+        internal AdamAppContext AdamAppContext;
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, Log parentLog)
         {
-            var app = new App(new DnnTenant(null), zoneId, appId);
-            AdamManager = new AdamManager(PortalSettings.Current.PortalId, app);
+            var tenant = new DnnTenant(PortalSettings.Current);
+            var app = new App(tenant, zoneId, appId);
+            AdamAppContext = new AdamAppContext(tenant, app, null);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
@@ -29,11 +30,11 @@ namespace ToSic.SexyContent.ImportExport
         public override void AddFilesToExportQueue()
         {
             // Add Adam Files To Export Queue
-            var adamIds = AdamManager.Export.AppFiles;
+            var adamIds = AdamAppContext.Export.AppFiles;
             adamIds.ForEach(AddFileAndFolderToQueue);
 
             // also add folders in adam - because empty folders may also have metadata assigned
-            var adamFolders = AdamManager.Export.AppFolders;
+            var adamFolders = AdamAppContext.Export.AppFolders;
             adamFolders.ForEach(ReferencedFolderIds.Add);
         }
 

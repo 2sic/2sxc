@@ -107,8 +107,10 @@ namespace ToSic.SexyContent
 
         #region DataSource and ConfigurationProvider (for DS) section
         private IValueCollectionProvider _configurationProvider;
-        private IValueCollectionProvider ConfigurationProvider => _configurationProvider ??
-                                                                  (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.ConfigurationProvider);
+
+        private IValueCollectionProvider ConfigurationProvider
+            => _configurationProvider ??
+               (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.ConfigurationProvider);
 
         /// <summary>
         /// Create a data-source by type-name. Note that it's better to use the typed version
@@ -126,7 +128,7 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var userMayEdit = SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
+            var userMayEdit = SxcInstance.UserMayEdit;
 
             var initialSource = DataSource.GetInitialDataSource(SxcInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as ValueCollectionProvider);
@@ -148,7 +150,7 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider, Log);
 
-            var userMayEdit = SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
+            var userMayEdit = SxcInstance.UserMayEdit;
 
             var initialSource = DataSource.GetInitialDataSource(SxcInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as ValueCollectionProvider);
@@ -273,7 +275,7 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AdamNavigator AsAdam(DynamicEntity entity, string fieldName)
+        public AssetFolderOfField AsAdam(DynamicEntity entity, string fieldName)
             => AsAdam(AsEntity(entity), fieldName);
 
 
@@ -283,11 +285,14 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AdamNavigator AsAdam(Eav.Interfaces.IEntity entity, string fieldName)
+        public AssetFolderOfField AsAdam(Eav.Interfaces.IEntity entity, string fieldName)
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
-            return new AdamNavigator(envFs, SxcInstance, App, _tenant, entity.EntityGuid, fieldName, false);
+            if (_adamAppContext == null)
+                _adamAppContext = new AdamAppContext(_tenant, App, SxcInstance);
+            return new AssetFolderOfField(envFs, _adamAppContext, entity.EntityGuid, fieldName);
         }
+        private AdamAppContext _adamAppContext;
 
         #endregion
 

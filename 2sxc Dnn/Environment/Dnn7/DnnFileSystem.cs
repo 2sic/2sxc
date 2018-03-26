@@ -5,6 +5,7 @@ using System.Linq;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps.Assets;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Adam
 {
     public class DnnFileSystem : IEnvironmentFileSystem
@@ -32,30 +33,30 @@ namespace ToSic.Sxc.Adam
 
         }
 
-        public Folder Get(int tenantId, string path, AdamBrowseContext fsh) 
-            => DnnToAdam(fsh, _folderManager.GetFolder(tenantId, path));
+        public Folder Get(int tenantId, string path, AdamAppContext appContext) 
+            => DnnToAdam( appContext, _folderManager.GetFolder(tenantId, path));
 
 
-        public List<AdamFolder> GetFolders(int folderId, AdamBrowseContext adamBrowseContext) 
-            => GetFolders(GetFolder(folderId), adamBrowseContext);
+        public List<AssetFolder> GetFolders(int folderId, AdamAppContext appContext) 
+            => GetFolders(GetFolder(folderId), appContext);
 
         private IFolderInfo GetFolder(int folderId) => _folderManager.GetFolder(folderId);
 
-        private List<AdamFolder> GetFolders(IFolderInfo fldObj, AdamBrowseContext adamBrowseContext = null)
+        private List<AssetFolder> GetFolders(IFolderInfo fldObj, AdamAppContext appContext = null)
         {
             var firstList = _folderManager.GetFolders(fldObj);
 
-            var folders = firstList?.Select(f => DnnToAdam(adamBrowseContext, f)).ToList()
-                          ?? new List<AdamFolder>();
+            var folders = firstList?.Select(f => DnnToAdam(appContext, f)).ToList()
+                          ?? new List<AssetFolder>();
             return folders;
         }
 
-        private AdamFolder DnnToAdam(AdamBrowseContext adamBrowseContext, IFolderInfo f) => new AdamFolder(this)
+        private AssetFolder DnnToAdam(AdamAppContext appContext, IFolderInfo f) 
+            => new AssetFolder(appContext, this)
         {
             FolderPath = f.FolderPath,
             Id = f.FolderID,
 
-            AdamBrowseContext = adamBrowseContext,
             Name = f.DisplayName,
             CreatedOnDate = f.CreatedOnDate,
             LastUpdated = f.LastUpdated,
@@ -78,17 +79,18 @@ namespace ToSic.Sxc.Adam
         };
 
 
-        public List<AdamFile> GetFiles(int folderId, AdamBrowseContext adamBrowseContext)
+        public List<AssetFile> GetFiles(int folderId, AdamAppContext appContext)
         {
             var fldObj = _folderManager.GetFolder(folderId);
             var firstList = _folderManager.GetFiles(fldObj);
 
-            var files = firstList?.Select(f => DnnToAdam(adamBrowseContext, f)).ToList()
-                     ?? new List<AdamFile>();
+            var files = firstList?.Select(f => DnnToAdam(appContext, f)).ToList()
+                     ?? new List<AssetFile>();
             return files;
         }
 
-        private static AdamFile DnnToAdam(AdamBrowseContext adamBrowseContext, IFileInfo f) => new AdamFile
+        private static AssetFile DnnToAdam(AdamAppContext appContext, IFileInfo f) 
+            => new AssetFile(appContext)
         {
             FileName = f.FileName,
             Extension = f.Extension,
@@ -98,7 +100,6 @@ namespace ToSic.Sxc.Adam
             FolderId = f.FolderId,
 
             Path = f.RelativePath,
-            AdamBrowseContext = adamBrowseContext,
 
             CreatedOnDate = f.CreatedOnDate,
             Name = System.IO.Path.GetFileNameWithoutExtension(f.FileName)

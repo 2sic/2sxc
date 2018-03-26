@@ -2,9 +2,7 @@
 using System.Dynamic;
 using System.Linq;
 using System.Web;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.Toolbar;
@@ -21,11 +19,11 @@ namespace ToSic.SexyContent
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
                 // 2018-02-03 2dm: disabled the PortalSettings criteria to decouple from DNN, may have side effects
-                if (SxcInstance == null) // 2018-02-03 || PortalSettings.Current == null)
-                return new HtmlString("");
+                if (SxcInstance == null)
+                    return new HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = SxcInstance?.UserMayEdit ?? false;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance?.InstanceInfo);
+                var userMayEdit = SxcInstance?.UserMayEdit ?? false;
 
                 if (!userMayEdit)
                     return new HtmlString("");
@@ -95,10 +93,11 @@ namespace ToSic.SexyContent
         }
 
         private DynamicEntity _presentation;
-        private DynamicEntity Presentation => _presentation ??
-                                              (_presentation = (Entity is EntityInContentGroup)
-                                                  ? new DynamicEntity(((EntityInContentGroup) Entity).Presentation, _dimensions, SxcInstance)
-                                                  : null);
+
+        private DynamicEntity Presentation
+            => _presentation ?? (_presentation = Entity is EntityInContentGroup
+                   ? new DynamicEntity(((EntityInContentGroup) Entity).Presentation, _dimensions, SxcInstance)
+                   : null);
 
         /// <summary>
         /// Configuration class for this expando
@@ -106,11 +105,8 @@ namespace ToSic.SexyContent
         public class ContentConfiguration
         {
             public string ErrorKeyMissing {
-                get { return null; }
-                set
-                {
-                    throw new Exception("Obsolete: Do not use ErrorKeyMissing anymore. Check if the value is null instead.");
-                }
+                get => null;
+                set => throw new Exception("Obsolete: Do not use ErrorKeyMissing anymore. Check if the value is null instead.");
             }
         }
 

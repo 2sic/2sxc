@@ -4,12 +4,14 @@ using System.Text.RegularExpressions;
 using ToSic.Eav.Configuration;
 using ToSic.SexyContent;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Adam
 {
     public static class Configuration
     {
         public const string TypeName = "AdamConfiguration";
+
+        public const string ItemFolderMask = "[AdamRoot]/[Guid22]/[FieldName]/[SubFolder]";
+
 
         public static string AdamAppRootFolder =>
             _adamAppRootFolder ?? (_adamAppRootFolder =

@@ -1,0 +1,61 @@
+﻿using System.Collections.Generic;
+using ToSic.Eav.Apps.Assets;
+using ToSic.SexyContent;
+
+namespace ToSic.Sxc.Adam
+{
+    public class AssetFolder : Folder, IAsset
+    {
+        protected AdamAppContext AppContext { get; set; }
+
+        private readonly IEnvironmentFileSystem _fileSystem;
+
+        public AssetFolder(AdamAppContext appContext, IEnvironmentFileSystem fileSystem)
+        {
+            AppContext = appContext;
+            _fileSystem = fileSystem;
+        }
+
+        /// <inheritdoc />
+        public DynamicEntity Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true);
+
+        /// <inheritdoc />
+        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.App, Id, false) != null;
+
+        /// <inheritdoc />
+        public string Url => AppContext.Tenant.ContentPath + FolderPath;
+
+        /// <inheritdoc />
+       public string Type => Classification.Folder;
+
+
+        /// <summary>
+        ///  Get all subfolders
+        /// </summary>
+        public IEnumerable<AssetFolder> Folders
+        {
+            get
+            {
+                if (_folders != null) return _folders;
+
+                // this is to skip it if it doesn't have subfolders...
+                if (!HasChildren || string.IsNullOrEmpty(Name))
+                    return _folders = new List<AssetFolder>();
+                
+                _folders = _fileSystem.GetFolders(Id, AppContext);
+                return _folders;
+            }
+        }
+        private IEnumerable<AssetFolder> _folders;
+
+
+
+
+        /// <summary>
+        /// Get all files in this folder
+        /// </summary>
+        public IEnumerable<AssetFile> Files 
+            => _files ?? (_files = _fileSystem.GetFiles(Id, AppContext));
+        private IEnumerable<AssetFile> _files;
+    }
+}

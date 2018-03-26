@@ -39,10 +39,17 @@ namespace ToSic.Sxc.Adam.WebApi
             Log.Rename("Api.Adam");
         }
 
-        public AdamBrowseContext AdamBrowseContext;
+        internal ContainerBase ContainerContext;
+        internal AdamAppContext AdamAppContext;
 
-        private void PrepCore(App app,  Guid entityGuid, string fieldName, bool usePortalRoot) 
-            => AdamBrowseContext = new AdamBrowseContext(SxcInstance, app, new DnnTenant(Dnn.Portal), entityGuid, fieldName, usePortalRoot);
+        private void PrepCore(App app,  Guid entityGuid, string fieldName, bool usePortalRoot)
+        {
+            var tenant = new DnnTenant(Dnn.Portal);
+            AdamAppContext = new AdamAppContext(tenant, app, SxcInstance);
+            ContainerContext = usePortalRoot 
+                ? new ContainerOfTenant(AdamAppContext) as ContainerBase
+                : new ContainerOfField(AdamAppContext, entityGuid, fieldName);
+        }
 
         public int MaxFileSizeKb 
             => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection)?.MaxRequestLength ?? 1; // if not specified, go to very low value, but not 0, as that could be infinite...
@@ -79,9 +86,9 @@ namespace ToSic.Sxc.Adam.WebApi
 
             try
             {
-                var folder = AdamBrowseContext.Folder();
+                var folder = ContainerContext.Folder();
                 if(!string.IsNullOrEmpty(subFolder)) 
-                    folder = AdamBrowseContext.Folder(subFolder, false);
+                    folder = ContainerContext.Folder(subFolder, false);
                 var filesCollection = HttpContext.Current.Request.Files;
                 Log.Add($"folder: {folder}, file⋮{filesCollection.Count}");
                 if (filesCollection.Count > 0)
@@ -204,10 +211,10 @@ namespace ToSic.Sxc.Adam.WebApi
             var folderManager = FolderManager.Instance;
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            AdamBrowseContext.Folder();
+            ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var currentAdam = AdamBrowseContext.Folder(subfolder, false);
+            var currentAdam = ContainerContext.Folder(subfolder, false);
             var currentDnn = folderManager.GetFolder(currentAdam.Id);
 
             var subfolders =  folderManager.GetFolders(currentDnn);
@@ -215,10 +222,10 @@ namespace ToSic.Sxc.Adam.WebApi
 
             var adamFolders =
                 subfolders.Where(s => s.FolderID != currentDnn.FolderID)
-                    .Select(f => new AdamItem(f) {MetadataId = AdamBrowseContext.GetMetadataId(f.FolderID, true)})
+                    .Select(f => new AdamItem(f) {MetadataId = Metadata.GetMetadataId(AdamAppContext, f.FolderID, true)})
                     .ToList();
             var adamFiles = files
-                .Select(f => new AdamItem(f) {MetadataId = AdamBrowseContext.GetMetadataId(f.FileId, false), Type = Classification.TypeName(f.Extension)})
+                .Select(f => new AdamItem(f) {MetadataId = Metadata.GetMetadataId(AdamAppContext, f.FileId, false), Type = Classification.TypeName(f.Extension)})
                 .ToList();
 
             var all = adamFolders.Concat(adamFiles).ToList();
@@ -226,30 +233,6 @@ namespace ToSic.Sxc.Adam.WebApi
             Log.Add($"items complete - will return fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{all.Count}");
             return all;
         }
-
-        ///// <summary>
-        ///// Explicitly re-check dnn security
-        ///// The user needs edit (not read) permissions even in read-scenarios
-        ///// because there is no other reason to access these assets
-        ///// </summary>
-        //private PermissionCheckBase CheckWritePermissionsOrThrow(SexyContent.App app, int appId)
-        //{
-        //    Log.Add("explicitly recheck permissions, will throw if not ok");
-
-        //    if (app == null)
-        //        throw Http.BadRequest("don't have app/sxc context to work with - must cancel");
-
-        //    var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething);
-
-        //    return set.Item2;
-
-        //    //var userMayEdit = true;// SxcInstance.UserMayEdit;
-
-        //    //if (userMayEdit) return;
-
-        //    //Log.Add("user may not edit anything - throw");
-        //    //throw new HttpResponseException(HttpStatusCode.Forbidden);
-        //}
 
         [HttpPost]
         public IEnumerable<AdamItem> Folder(int appId, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
@@ -260,13 +243,13 @@ namespace ToSic.Sxc.Adam.WebApi
             PrepCore(set.Item1, guid, field, usePortalRoot);
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            AdamBrowseContext.Folder();
+            ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            AdamBrowseContext.Folder(subfolder, false);
+            ContainerContext.Folder(subfolder, false);
 
             // now access the subfolder, creating it if missing (which is what we want
-            AdamBrowseContext.Folder(subfolder + "/" + newFolder, true);
+            ContainerContext.Folder(subfolder + "/" + newFolder, true);
 
             return Items(appId, guid, field, subfolder, usePortalRoot);
         }
@@ -280,7 +263,7 @@ namespace ToSic.Sxc.Adam.WebApi
             PrepCore(set.Item1, guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = AdamBrowseContext.Folder(subfolder, false);
+            var current = ContainerContext.Folder(subfolder, false);
             
             var folderManager = FolderManager.Instance;
             var fileManager = FileManager.Instance;
@@ -315,7 +298,7 @@ namespace ToSic.Sxc.Adam.WebApi
             PrepCore(set.Item1, guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = AdamBrowseContext.Folder(subfolder, false);
+            var current = ContainerContext.Folder(subfolder, false);
 
             var folderManager = FolderManager.Instance;
             var fileManager = FileManager.Instance;

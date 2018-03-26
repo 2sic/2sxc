@@ -7,7 +7,7 @@
     <ProjectGuid>{66318F76-3D43-406C-8DE6-94B46C22F776}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ToSic.SexyContent</RootNamespace>
+    <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -64,15 +64,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adam\AdamFile.cs" />
-    <Compile Include="Adam\AdamFolder.cs" />
-    <Compile Include="Adam\AdamManager.cs" />
-    <Compile Include="Adam\AdamNavigator.cs" />
-    <Compile Include="Adam\AdamBrowseContext.cs" />
+    <Compile Include="Adam\AssetFile.cs" />
+    <Compile Include="Adam\AssetFolder.cs" />
+    <Compile Include="Adam\AdamAppContext.cs" />
+    <Compile Include="Adam\AssetFolderOfField.cs" />
+    <Compile Include="Adam\ContainerBase.cs" />
+    <Compile Include="Adam\ContainerOfTenant.cs" />
+    <Compile Include="Adam\ContainerOfField.cs" />
     <Compile Include="Adam\Configuration.cs" />
     <Compile Include="Adam\Export.cs" />
-    <Compile Include="Adam\IAdamItem.cs" />
+    <Compile Include="Adam\IAsset.cs" />
     <Compile Include="Adam\IEnvironmentFileSystem.cs" />
+    <Compile Include="Adam\Metadata.cs" />
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\InPageEditingSystem\IInPageEditingSystem.cs" />

@@ -137,7 +137,7 @@ namespace ToSic.SexyContent.WebApi
 	    /// <param name="entity">The entity, often Content or similar</param>
 	    /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
 	    /// <returns>An Adam object for navigating the assets</returns>
-	    public AdamNavigator AsAdam(DynamicEntity entity, string fieldName)
+	    public AssetFolderOfField AsAdam(DynamicEntity entity, string fieldName)
 	        => DnnAppAndDataHelpers.AsAdam(AsEntity(entity), fieldName);
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AdamNavigator AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public AssetFolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
         #endregion
 
         #region App-Helpers for anonyous access APIs
