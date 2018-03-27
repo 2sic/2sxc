@@ -76,8 +76,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var appRead = new AppRuntime(set.Item1, Log);
 
             // Get the content-type definition
-            //var cache = App.Data.Cache;
-            var typeDef = appRead.ContentTypes.Get(contentType);//  cache.GetContentType(contentType);
+            var typeDef = appRead.ContentTypes.Get(contentType);
             var fieldDef = typeDef[field];
 
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
