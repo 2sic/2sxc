@@ -77,11 +77,11 @@ namespace ToSic.SexyContent.WebApi
                         t.Name
                     }),
                     Entities = entities
-                        .Where(e => e/*.Value*/.Type.ContentTypeId == c.ContentTypeId)
+                        .Where(e => e.Type.ContentTypeId == c.ContentTypeId)
                         .Select(e => new
                         {
-                            Title = e/*.Value*/.GetBestTitle(),
-                            Id = e/*.Value*/.EntityId
+                            Title = e.GetBestTitle(),
+                            Id = e.EntityId
                         })
                 }),
                 TemplatesWithoutContentTypes = templates.Where(t => !string.IsNullOrEmpty(t.ContentTypeStaticName)).Select(t => new
@@ -172,7 +172,7 @@ namespace ToSic.SexyContent.WebApi
 
                 // Increase script timeout to prevent timeouts
                 HttpContext.Current.Server.ScriptTimeout = 300;
-                result.Succeeded = zipImport.ImportZip(request.Files[0].InputStream, temporaryDirectory);// HttpContext.Current.Server);
+                result.Succeeded = zipImport.ImportZip(request.Files[0].InputStream, temporaryDirectory);
                 result.Messages = helper.Messages;
             }
             catch (Exception ex)

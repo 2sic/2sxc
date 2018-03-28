@@ -34,12 +34,12 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
         {
             // note: this can always use the current context, because this should happen
             // when saving etc. - which is always expected to happen in the owning portal
-            var portalInfo = PortalSettings.Current; //PortalController.Instance.GetCurrentPortalSettings();
+            var portalInfo = PortalSettings.Current;
 
             // Try file reference
             var fileInfo = FileManager.Instance.GetFile(portalInfo.PortalId, potentialFilePath);
             if (fileInfo != null)
-                return "File:" + fileInfo.FileId;
+                return "file:" + fileInfo.FileId;
 
             // Try page / tab ID
             var tabController = new TabController();
@@ -48,7 +48,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
                                        .FirstOrDefault(tab => tab.TabPath == potentialFilePath);
 
             if (tabInfo != null)
-                return "Page:" + tabInfo.TabID;
+                return "fage:" + tabInfo.TabID;
 
             return potentialFilePath;
         }
@@ -113,7 +113,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
         {
             var tabController = new TabController();
 
-            var tabInfo = tabController.GetTab(id);
+            var tabInfo = tabController.GetTab(id, 0); // older, obselete API: tabController.GetTab(id);
             if (tabInfo == null) return defaultValue;
 
             var portalSettings = PortalSettings.Current;

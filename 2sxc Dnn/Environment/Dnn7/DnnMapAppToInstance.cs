@@ -106,7 +106,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // todo: 2rm - I believe you are accidentally using uncached module settings access - pls check and probably change
             // todo: note: this is done ca. 3x in this class
             var moduleController = new ModuleController();
-            var settings = moduleController.GetModuleSettings(instanceId);
+            var settings = moduleController.GetModule(instanceId).ModuleSettings;// older, deprecated api: .GetModuleSettings(instanceId);
 
             // Do not allow saving the temporary template id if a contentgroup exists for this module
             if (settings[Settings.ContentGroupGuidString] != null)
