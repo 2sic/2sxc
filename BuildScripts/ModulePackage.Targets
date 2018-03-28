@@ -135,6 +135,9 @@
       <AssemblyInclude Include="$(ProjectDir)BuildScripts\Binary Dependencies\ImageResizer.Plugins.DiskCache.dll" />
 
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\CsvHelper.dll" />
+      
+      <!--include latest version of SharpZipLib -->
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ICSharpCode.SharpZipLib.dll" />
     </ItemGroup>
     
     <CreateItem Include="DnnPackageBuilder/$(DNNFileName).dnn">
