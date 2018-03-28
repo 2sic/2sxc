@@ -137,7 +137,7 @@ namespace ToSic.Sxc.Adam.WebApi
                         Error = "",
                         Name = Path.GetFileName(fileName),
                         Id = dnnFile.FileId,
-                        Path = dnnFile.RelativePath,
+                        Path = PortalSettings.HomeDirectory + dnnFile.RelativePath,
                         Type = Classification.TypeName(dnnFile.Extension)
                     };
                 }
