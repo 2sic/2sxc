@@ -117,11 +117,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\SecurityContext.cs" />
-    <Compile Include="API\Services.asmx.cs">
-      <DependentUpon>Services.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="ConfigurationLoader.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
@@ -165,7 +160,6 @@
     <Content Include=".data-custom\readme.md" />
     <None Include=".databeta\readme.md" />
     <Content Include=".gitignore" />
-    <Content Include="API\Services.asmx" />
     <Content Include="ClientScripts\ModuleEditor.js" />
     <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.dll" />
     <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.pdb" />
@@ -274,7 +268,6 @@
     <Content Include="ClientScripts\readme.md" />
     <Content Include="DnnPackageBuilder\2sic_2SexyContent.dnn" />
     <Content Include="DnnPackageBuilder\readme.md" />
-    <Content Include="API\readme.md" />
     <Content Include="BuildScripts\readme.md" />
     <Content Include="koi\Resources.zip" />
     <Content Include=".data\readme.md" />
