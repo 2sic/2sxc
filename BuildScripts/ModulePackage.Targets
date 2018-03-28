@@ -63,8 +63,9 @@
       <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.js" Exclude="@(DefaultExclude);gruntfile.js" />
 
-      <InstallInclude Include="**\System.*.json" Exclude="@(DefaultExclude)" />
-      <InstallInclude Include="**\Query.*.json" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\.data\**\*.json" Exclude="@(DefaultExclude)" />
+      <!--<InstallInclude Include="**\System.*.json" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\Query.*.json" Exclude="@(DefaultExclude)" />-->
       <InstallInclude Include="**\*.map" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
       <InstallInclude Include="**\*.ashx" Exclude="@(DefaultExclude)" />
