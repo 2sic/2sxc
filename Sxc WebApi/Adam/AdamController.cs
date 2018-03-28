@@ -120,11 +120,13 @@ namespace ToSic.Sxc.Adam.WebApi
 
                     var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
 
-                    // Make sure the image does not exist yet (change file name)
-                    for (int i = 1; FileManager.Instance.FileExists(dnnFolder, Path.GetFileName(fileName)); i++)
-                        fileName = Path.GetFileNameWithoutExtension(fileName)
-                                   + "-" + i +
-                                   Path.GetExtension(fileName);
+
+                    // Make sure the image does not exist yet, cycle through numbers (change file name)
+                    var numberedFile = fileName;
+                    for (var i = 1; FileManager.Instance.FileExists(dnnFolder, Path.GetFileName(numberedFile)) && i < 1000; i++)
+                        numberedFile = Path.GetFileNameWithoutExtension(fileName)
+                                   + "-" + i + Path.GetExtension(fileName);
+                    fileName = numberedFile;
 
                     // Everything is ok, add file
                     var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName), originalFile.InputStream);
