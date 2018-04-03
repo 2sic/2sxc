@@ -2988,7 +2988,7 @@ var Engine = /** @class */ (function (_super) {
             settings = (nameOrSettings || {});
         }
         else
-            settings = (eventOrSettings || {});
+            settings = Object.assign(eventOrSettings || {}, { action: nameOrSettings });
         // ensure we have the right event despite browser differences
         event = event || window.event;
         return this.run(context, settings, event);
