@@ -1,2 +1,425 @@
-.DNNEmptyPane{disablednote:"temporary disabled as it has side-effects";special-instructions:"read more on 2sxc.org/help?tag=quick-edit"}.sc-element{position:relative}.sc-element .sc-menu.sc-tb-hover-right{position:absolute;left:auto;right:5px;top:5px}.sc-element .sc-menu.sc-tb-hover-left{position:absolute;left:5px;right:auto;top:5px}.sc-element .sc-menu.sc-tb-hover-center{position:absolute;margin-left:0;margin-right:0;top:5px;display:inline-block}.sc-element .sc-menu.sc-tb-hover-none{position:static;right:auto;top:auto}.sc-element .sc-menu.sc-tb-show-always,.sc-element:hover .sc-menu.sc-tb-show-always{display:initial}.sc-element .sc-menu.sc-tb-show-hover{display:none}body.sc-tb-show-all .sc-element .sc-menu{display:initial!important}.sc-element:hover .sc-menu.sc-tb-show-hover{display:block}.sc-element:hover .sc-element:not(:hover) .sc-menu.sc-tb-show-hover{display:none}.sc-menu{margin:0;padding:0;z-index:1499}.sc-menu,.sc-menu li{list-style-type:none;display:inline}.sc-menu li{padding:0!important;margin:0!important}.sc-menu a{margin-right:4px!important;cursor:pointer;margin-left:0!important}.sc-menu li a.disabled i,.sc-menu li a.empty i{opacity:.4}.sc-menu a div{width:28px!important;height:28px!important;line-height:28px!important;background-color:#0088f4;border-style:solid;box-sizing:content-box;border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;color:#fff;text-align:center;font-size:15px;box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);transition:all .3s cubic-bezier(.25,.8,.25,1)}.sc-menu a div:hover{box-shadow:0 10px 28px rgba(0,0,0,.25),0 6px 10px rgba(0,0,0,.22)}.sc-menu a div i{margin-left:auto;margin-right:auto;vertical-align:text-bottom}.sc-menu.group-0 a,.sc-menu.group-1 a,.sc-menu.group-2 a,.sc-menu.group-3 a,.sc-menu.group-4 a,.sc-menu.group-5 a{display:none}.sc-menu.group-0 a.group-0,.sc-menu.group-1 a.group-1,.sc-menu.group-2 a.group-2,.sc-menu.group-3 a.group-3,.sc-menu.group-4 a.group-4,.sc-menu.group-5 a.group-5{display:inline-block}.sc-menu a.group-default div{background-color:#0088f4}.sc-menu a.group-pro div{background-color:#96d500}.sc-menu a.group-alert div{background-color:red}.sc-menu span.disabled{color:#aaa}.group-1 i.btn-mode:before,.group-5 i.btn-mode:before{transform:rotate(45deg);-ms-transform:rotate(45deg)}.group-2 i.btn-mode:before,.group-6 i.btn-mode:before{transform:rotate(90deg);-ms-transform:rotate(90deg)}.group-3 i.btn-mode:before,.group-7 i.btn-mode:before{transform:rotate(135deg);-ms-transform:rotate(135deg)}.sxc-popup-open{overflow:hidden}@font-face{font-family:inpage-icons;src:url(assets/inpage-icons.woff?9.20.00) format("woff"),url(assets/inpage-icons.eot?9.20.00#iefix) format("embedded-opentype"),url(assets/inpage-icons.ttf?9.20.00) format("truetype");font-weight:400;font-style:normal}[class*=" icon-sxc-"]:before,[class^=icon-sxc-]:before{font-family:inpage-icons;font-style:normal;font-weight:400;speak:none;display:inline-block;text-decoration:inherit;width:1em;margin-right:.3em;text-align:center;font-variant:normal;text-transform:none;line-height:28px;margin-left:.2em;font-size:125%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.inpage-frame-wrapper .inpage-frame{width:100%;height:100%;text-align:center;-moz-user-select:none;-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none}.inpage-frame-wrapper .inpage-frame iframe{width:100%;height:100%;vertical-align:top;box-sizing:content-box;left:0;top:0}.inpage-frame-wrapper{transform:translate3d(0,100%,0);transition:transform .2s ease-out;display:block;position:fixed;left:0;bottom:0;width:100%;z-index:9999}.DNNModuleContent .sc-uninitialized{cursor:pointer;width:100%;display:inline-block;text-align:center}.DNNModuleContent .sc-uninitialized div{margin:5px auto;color:#fff;background:#028bff;font-size:48px;margin:5px;width:100px;height:100px;border-radius:50px;text-align:center;vertical-align:middle;line-height:100px;display:inline-block}.inpage-frame-wrapper.dia-select{transform:translateZ(0);min-height:16px}.dnnEditState .DnnModule{opacity:1!important}.no-live-preview-available{display:block;background:rgba(0,0,0,.04);color:#111;line-height:80px;height:80px;border:1px solid rgba(0,0,0,.1);text-align:center;font-size:14px;font-family:Roboto,sans-serif}.sc-content-block-menu{height:40px;line-height:35px;margin:-20px 0 0;opacity:.8;padding:0;pointer-events:none;position:absolute;text-align:center;z-index:999}.sc-content-block-menu a{cursor:pointer;display:inline-block;font-size:18px;height:32px;margin:0 3px!important;padding:0!important;pointer-events:auto;text-indent:-9999px;width:32px}.sc-content-block-quick-insert:after,.sc-content-block-quick-insert:before{background:#0088f4;content:" ";display:block;height:2px;left:50%;position:absolute;top:19px;width:60px}.sc-content-block-quick-insert:before{margin-left:-150px}.sc-content-block-quick-insert:after{margin-left:90px}.sc-content-block-menu select{text-indent:0!important}.sc-content-block-menu #paneList a{text-indent:0!important;width:auto}.sc-content-block-menu-addcontent{background:url(../../icon.png);background-size:32px 32px}.sc-content-block-menu-addcontent.sc-content-block-menu-module{background:url(../../icon-black.png);background-size:32px 32px}.sc-content-block-menu-addapp{background:url(../../icon-app.png);background-size:32px 32px}.sc-content-block-menu-addapp.sc-content-block-menu-module{background:url(../../icon-app-black.png);background-size:32px 32px}a.sc-content-block-menu-btn{background:#2f9bf2;border-bottom-right-radius:10px;border-top-left-radius:10px;color:#fff;text-indent:0!important}div.sc-content-block-list.show-placeholder:empty{background-color:rgba(47,155,242,.1);height:20px}.sc-invisible{display:none!important}.sc-cb-action{-webkit-filter:grayscale(75%);filter:grayscale(75%)}.sc-cb-is-selected{-webkit-filter:blur(5px);filter:blur(5px)}.sc-cb-pane-glow,div.sc-content-block-list{transition:background-color .3s linear 0s}.sc-cb-highlight-for-insert{background-color:hsla(0,0%,50%,.1);transition-delay:1s}div.sc-content-block-list.sc-cb-highlight-for-insert{background-color:rgba(47,155,242,.1);transition-delay:1s}.sc-unavailable{display:none!important}.sc-content-block-selected-menu{display:none}a.sc-content-block-selected-menu.sc-content-block-menu-btn{-webkit-filter:grayscale(0);filter:grayscale(0)}.icon-sxc-cancel:before{content:"\E800"}.icon-sxc-eye-off:before{content:"\E801"}.icon-sxc-eye:before{content:"\E802"}.icon-sxc-glasses:before{content:"\E803"}.icon-sxc-scissors:before{content:"\E804"}.icon-sxc-paste:before{content:"\E805"}.icon-sxc-bomb:before{content:"\E806"}.icon-sxc-export:before{content:"\E807"}.icon-sxc-code:before{content:"\E808"}.icon-sxc-pencil:before{content:"\E809"}.icon-sxc-replace:before{content:"\E80A"}.icon-sxc-language:before{content:"\E80B"}.icon-sxc-table:before{content:"\E80C"}.icon-sxc-fields:before{content:"\E80D"}.icon-sxc-list-numbered:before{content:"\E80E"}.icon-sxc-th-list:before{content:"\F00B"}.icon-sxc-ok:before{content:"\F00C"}.icon-sxc-settings:before{content:"\F013"}.icon-sxc-clock:before{content:"\F017"}.icon-sxc-tag:before{content:"\F02B"}.icon-sxc-plus-circled:before{content:"\F055"}.icon-sxc-minus-circled:before{content:"\F056"}.icon-sxc-plus:before{content:"\F067"}.icon-sxc-minus:before{content:"\F068"}.icon-sxc-manage:before{content:"\F085"}.icon-sxc-filter:before{content:"\F0B0"}.icon-sxc-list:before{content:"\F0CA"}.icon-sxc-spinner:before{content:"\F110"}.icon-sxc-options:before{content:"\F141"}.icon-sxc-move-up:before{content:"\F148"}.icon-sxc-move-down:before{content:"\F149"}.icon-sxc-sliders:before{content:"\F1DE"}.icon-sxc-share-alt:before{content:"\F1E0"}.icon-sxc-cart-arrow-down:before{content:"\F218"}.icon-sxc-trash-empty:before{content:"\F2ED"}
-/*# sourceMappingURL=inpage.min.css.map*/
+/*
+    These are all the styles that end up going in-page
+    They should all have the prefix sc (short for sxc) to ensure that they never conflict with other styles in the page
+*/
+
+/* enable DNNEmptyPane for Quick-Edit */
+.DNNEmptyPane { 
+    /*width: auto;*/
+    disablednote: "temporary disabled as it has side-effects";
+    special-instructions: "read more on 2sxc.org/help?tag=quick-edit"
+}
+
+
+/****** the in-page toolbar and positioning / visibility thereof */
+.sc-element { position:relative; }
+.sc-element .sc-menu.sc-tb-hover-right { position:absolute; left: auto; right: 5px;top: 5px; }
+.sc-element .sc-menu.sc-tb-hover-left { position:absolute; left: 5px;right: auto;top: 5px; }
+.sc-element .sc-menu.sc-tb-hover-center { position:absolute;margin-left: 0;margin-right: 0; top: 5px; display: inline-block }
+.sc-element .sc-menu.sc-tb-hover-none { position:static; right:auto;top: auto; }
+
+
+.sc-element .sc-menu.sc-tb-show-always, 
+    .sc-element:hover .sc-menu.sc-tb-show-always  { display: initial; }
+.sc-element .sc-menu.sc-tb-show-hover { display: none; }
+body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
+.sc-element:hover .sc-menu.sc-tb-show-hover { display: block; }
+.sc-element:hover .sc-element:not(:hover) .sc-menu.sc-tb-show-hover { display: none; }   /* prevent hover of a parent, when the item itself is not hovered */
+
+.sc-menu { list-style-type:none; margin:0; padding:0;display: inline;z-index: 1499; }
+.sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
+.sc-menu a {
+  margin-right: 4px !important;
+  cursor: pointer;
+  margin-left: 0 !important;
+}
+
+/* this one is for buttons which can have a full/empty state */
+.sc-menu li a.empty i {
+  opacity: 0.4
+} 
+/* this one is for buttons which can be disabled, like publish */
+.sc-menu li a.disabled i {opacity: 0.4}
+
+  .sc-menu a div {
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  background-color:  #0088f4;
+  border-style: solid;
+  box-sizing: content-box;
+  border-radius: 20px; /*3px;*/
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  color: #fff;
+  text-align: center;
+  font-size: 15px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.sc-menu a div:hover {
+    box-shadow: 0 10px 28px rgba(0,0,0,.25), 0 6px 10px rgba(0,0,0,.22);
+}
+
+.sc-menu a div i {
+  margin-left: auto;
+  margin-right: auto;
+  vertical-align: text-bottom;
+}
+
+/* 2018-04-04 sbs new show/hide */
+/* Because of IE11 issue with cascading class there need to be .sc-menu.group-X on each group declaration */
+/* hide all links by default */
+.sc-menu.group-0 a,
+.sc-menu.group-1 a,
+.sc-menu.group-2 a,
+.sc-menu.group-3 a,
+.sc-menu.group-4 a,
+.sc-menu.group-5 a {
+  display: none;
+}
+
+/* show them group-wise */
+.sc-menu.group-0 a.group-0 {
+  display: inline-block;
+}
+.sc-menu.group-1 a.group-1 {
+  display: inline-block;
+}
+.sc-menu.group-2 a.group-2 {
+  display: inline-block;
+}
+.sc-menu.group-3 a.group-3 {
+  display: inline-block;
+}
+.sc-menu.group-4 a.group-4 {
+  display: inline-block;
+}
+.sc-menu.group-5 a.group-5 {
+  display: inline-block;
+}
+
+.sc-menu a.group-default div {
+  background-color: #0088f4
+}
+.sc-menu a.group-pro div {background-color: #96D500}
+.sc-menu a.group-alert div {background-color: #ff0000}
+
+.sc-menu span.disabled { color: #aaa}
+
+.group-1 i.btn-mode:before, .group-5 i.btn-mode:before { 
+    transform: rotate(45deg);
+    -ms-transform: rotate(45deg); /* IE 9 */
+}
+.group-2 i.btn-mode:before, .group-6 i.btn-mode:before { 
+    transform: rotate(90deg);
+    -ms-transform: rotate(90deg); /* IE 9 */
+}
+.group-3 i.btn-mode:before, .group-7 i.btn-mode:before { 
+    transform: rotate(135deg);
+    -ms-transform: rotate(135deg); /* IE 9 */
+}
+
+
+
+
+
+
+
+
+
+/****** Prevent scrolling when sxc popup is open */
+.sxc-popup-open { overflow:hidden; }
+
+
+
+
+/* The font icons we use for the inpage buttons */
+/* only use the WOFF, as all modern browsers support that */
+@font-face {
+  font-family: 'inpage-icons';
+  src: url(assets/inpage-icons.woff?9.20.00) format('woff'),
+       url(assets/inpage-icons.eot?9.20.00#iefix) format('embedded-opentype'),
+       url(assets/inpage-icons.ttf?9.20.00) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+ [class^="icon-sxc-"]:before, [class*=" icon-sxc-"]:before {
+  font-family: "inpage-icons";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+ 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .3em;
+  text-align: center;
+  /* opacity: .8; */
+ 
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+ 
+  /* fix buttons height, for twitter bootstrap */
+     line-height: 28px; /*1em;*/
+ 
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+ 
+  /* you can be more comfortable with increased icons size */
+     font-size: 125%; /*130%;*/ 
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+ 
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+.inpage-frame-wrapper .inpage-frame {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.inpage-frame-wrapper .inpage-frame iframe {
+    width: 100%;
+    height: 100%;
+    vertical-align: top;
+    box-sizing: content-box;
+    left: 0;
+    top: 0;
+}
+
+.inpage-frame-wrapper {
+    transform: translate3d(0, 100%, 0);
+    transition: transform .2s ease-out;
+    display: block;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 9999;
+}
+
+.DNNModuleContent .sc-uninitialized {
+    cursor: pointer;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+}
+
+.DNNModuleContent .sc-uninitialized div {
+    margin: 5px auto;
+    color: #fff;
+    background: rgb(2, 139, 255);
+    font-size: 48px;
+    margin: 5px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 100px;
+    display: inline-block;
+}
+
+.inpage-frame-wrapper.dia-select {
+    transform: translate3d(0, 0, 0);
+}
+
+.inpage-frame-wrapper.dia-select {
+    min-height: 16px;
+}
+
+.dnnEditState .DnnModule {
+    opacity: 1 !important;
+}
+
+.no-live-preview-available {
+    display: block;
+    background: rgba(0, 0, 0, .04);
+    color: #111;
+    line-height: 80px;
+    height: 80px;
+    border: 1px solid rgba(0, 0, 0, .1);
+    text-align: center;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+}/****** Content block menu */
+
+.sc-content-block-menu {
+    height: 40px;
+    line-height: 35px;
+    margin: -20px 0 0 0;
+    opacity: 0.8;
+    padding: 0;
+    pointer-events: none;
+    position: absolute;
+    text-align: center;
+    z-index: 999;
+}
+
+.sc-content-block-menu a {
+    cursor: pointer;
+    display: inline-block;
+    font-size: 18px;
+    height: 32px;
+    margin: 0 3px !important;
+    padding: 0 !important;
+    pointer-events: auto;
+    text-indent: -9999px;
+    width: 32px;
+}
+
+.sc-content-block-quick-insert:before, .sc-content-block-quick-insert:after {
+    background: #0088f4;
+    content: ' ';
+    display: block;
+    height: 2px;
+    left: 50%;
+    position: absolute;
+    top: 19px;
+    width: 60px;
+}
+
+.sc-content-block-quick-insert:before { margin-left: -150px; }
+
+.sc-content-block-quick-insert:after { margin-left: 90px; }
+
+
+
+/* select dropdowns */
+.sc-content-block-menu select { text-indent: 0 !important; }
+.sc-content-block-menu #paneList a { text-indent: 0 !important;width: initial;}
+
+
+
+/*#region icons */
+.sc-content-block-menu-addcontent {
+    background: url(../../icon.png);
+    background-size: 32px 32px;
+}
+
+  .sc-content-block-menu-addcontent.sc-content-block-menu-module {
+    background: url(../../icon-black.png);
+    background-size: 32px 32px;
+  }
+
+.sc-content-block-menu-addapp {
+  background: url(../../icon-app.png);
+  background-size: 32px 32px;
+}
+
+  .sc-content-block-menu-addapp.sc-content-block-menu-module {
+    background: url(../../icon-app-black.png);
+    background-size: 32px 32px;
+  }
+/*#endregion */
+
+
+a.sc-content-block-menu-btn {
+    background: #2F9BF2;
+    border-bottom-right-radius: 10px;
+    border-top-left-radius: 10px;
+    color: white;
+    text-indent: 0 !important;
+}
+
+/* show in-text placeholders when they are still empty */
+
+
+div.sc-content-block-list.show-placeholder:empty {
+    background-color: rgba(47, 155, 242, 0.1);
+    height: 20px;
+}
+
+.sc-invisible { display: none !important; }
+
+.sc-cb-action {
+    -webkit-filter: grayscale(75%);
+    filter: grayscale(75%);
+}
+
+.sc-cb-is-selected {
+    -webkit-filter: blur(5px);
+    filter: blur(5px);
+}
+
+/* prepare panes and content-block lists for background animations */
+div.sc-content-block-list, .sc-cb-pane-glow {
+    transition: background-color 0.3s linear 0s;
+}
+
+/* highlight pane / content-block-list if mouse stays over toolbar for a bit */
+
+.sc-cb-highlight-for-insert {
+    background-color: rgba(128, 128, 128, 0.1);
+    transition-delay: 1s;
+}
+
+div.sc-content-block-list.sc-cb-highlight-for-insert {
+    background-color: rgba(47, 155, 242, 0.1);
+    transition-delay: 1s;
+}
+
+
+
+
+/* this is needed to disable the paste button till it can be used */
+.sc-unavailable { display: none !important; }
+
+.sc-content-block-selected-menu { display: none; }
+
+a.sc-content-block-selected-menu.sc-content-block-menu-btn {
+    -webkit-filter: grayscale(0);
+    filter: grayscale(0);
+}
+
+
+.icon-sxc-cancel:before { content: '\E800'; } /* '' */
+.icon-sxc-eye-off:before { content: '\E801'; } /* '' */
+.icon-sxc-eye:before { content: '\E802'; } /* '' */
+.icon-sxc-glasses:before { content: '\E803'; } /* '' */
+.icon-sxc-scissors:before { content: '\E804'; } /* '' */
+.icon-sxc-paste:before { content: '\E805'; } /* '' */
+.icon-sxc-bomb:before { content: '\E806'; } /* '' */
+.icon-sxc-export:before { content: '\E807'; } /* '' */
+.icon-sxc-code:before { content: '\E808'; } /* '' */
+.icon-sxc-pencil:before { content: '\E809'; } /* '' */
+.icon-sxc-replace:before { content: '\E80A'; } /* '' */
+.icon-sxc-language:before { content: '\E80B'; } /* '' */
+.icon-sxc-table:before { content: '\E80C'; } /* '' */
+.icon-sxc-fields:before { content: '\E80D'; } /* '' */
+.icon-sxc-list-numbered:before { content: '\E80E'; } /* '' */
+.icon-sxc-th-list:before { content: '\F00B'; } /* '' */
+.icon-sxc-ok:before { content: '\F00C'; } /* '' */
+.icon-sxc-settings:before { content: '\F013'; } /* '' */
+.icon-sxc-clock:before { content: '\F017'; } /* '' */
+.icon-sxc-tag:before { content: '\F02B'; } /* '' */
+.icon-sxc-plus-circled:before { content: '\F055'; } /* '' */
+.icon-sxc-minus-circled:before { content: '\F056'; } /* '' */
+.icon-sxc-plus:before { content: '\F067'; } /* '' */
+.icon-sxc-minus:before { content: '\F068'; } /* '' */
+.icon-sxc-manage:before { content: '\F085'; } /* '' */
+.icon-sxc-filter:before { content: '\F0B0'; } /* '' */
+.icon-sxc-list:before { content: '\F0CA'; } /* '' */
+.icon-sxc-spinner:before { content: '\F110'; } /* '' */
+.icon-sxc-options:before { content: '\F141'; } /* '' */
+.icon-sxc-move-up:before { content: '\F148'; } /* '' */
+.icon-sxc-move-down:before { content: '\F149'; } /* '' */
+.icon-sxc-sliders:before { content: '\F1DE'; } /* '' */
+.icon-sxc-share-alt:before { content: '\F1E0'; } /* '' */
+.icon-sxc-cart-arrow-down:before { content: '\F218'; } /* '' */
+.icon-sxc-trash-empty:before { content: '\F2ED'; } /* '' */
+/*# sourceMappingURL=inpage.css.map*/
