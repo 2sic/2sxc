@@ -21,10 +21,10 @@ namespace ToSic.Sxc.Adam
                 return;
 
             FolderPath = f.FolderPath;
-            LastUpdated = f.LastUpdated;
+            Modified = f.Modified;
             Id = f.Id;
-            CreatedOnDate = f.CreatedOnDate;
-            LastUpdated = f.LastUpdated;
+            Created = f.Created;
+            Modified = f.Modified;
 
             // IAdamItem interface properties
             Name = f.Name;
