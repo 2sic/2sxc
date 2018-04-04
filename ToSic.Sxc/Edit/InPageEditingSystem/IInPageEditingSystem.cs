@@ -7,7 +7,7 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
     {
         bool Enabled { get; }
         HtmlString Toolbar(DynamicEntity target = null, 
-            string dontRelyOnParameterOrder = SexyContent.Constants.RandomProtectionParameter, 
+            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
             string actions = null, 
             string contentType = null, 
             object prefill = null,
@@ -19,6 +19,15 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             string field = null, 
             string contentType = null,
             Guid? newGuid = null);
+
+        HtmlString WrapInContext(object content,
+            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
+            string tag = Constants.DefaultContextTag,
+            bool full = false,
+            bool? enableEdit = null,
+            int instanceId = 0,
+            int contentBlockId = 0
+        );
 
         HtmlString Attribute(string name, string value);
 

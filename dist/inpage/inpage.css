@@ -28,47 +28,81 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 
 .sc-menu { list-style-type:none; margin:0; padding:0;display: inline;z-index: 1499; }
 .sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
-/* hide all links by default, later show them group-wise*/
-.sc-menu a { display:none; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
+.sc-menu a {
+  margin-right: 4px !important;
+  cursor: pointer;
+  margin-left: 0 !important;
+}
 
 /* this one is for buttons which can have a full/empty state */
-.sc-menu li a.empty i {opacity: 0.4} 
+.sc-menu li a.empty i {
+  opacity: 0.4
+} 
 /* this one is for buttons which can be disabled, like publish */
-.sc-menu li a.disabled i {opacity: 0.4} 
+.sc-menu li a.disabled i {opacity: 0.4}
 
-.sc-menu a div { 
-    width: 28px!important;
-    height: 28px!important;
-    line-height:28px!important;
-    background-color: #0088f4;
-    border-style: solid; 
-    box-sizing: content-box;
-    border-radius: 20px; /*3px;*/
-    -webkit-border-radius: 20px; 
-    -moz-border-radius: 20px;
-    color: #fff; 
-    text-align: center; 
-    font-size: 15px ;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  .sc-menu a div {
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  background-color:  #0088f4;
+  border-style: solid;
+  box-sizing: content-box;
+  border-radius: 20px; /*3px;*/
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  color: #fff;
+  text-align: center;
+  font-size: 15px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 }
+
 .sc-menu a div:hover {
     box-shadow: 0 10px 28px rgba(0,0,0,.25), 0 6px 10px rgba(0,0,0,.22);
 }
+
 .sc-menu a div i {
-    margin-left: auto;
-    margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
+  vertical-align: text-bottom;
 }
 
-/* 2016-10-11 new show/hide */
-.group-0 a.group-0 {display: inline-block}
-.group-1 a.group-1 {display: inline-block}
-.group-2 a.group-2 {display: inline-block}
-.group-3 a.group-3 {display: inline-block}
-.group-4 a.group-4 {display: inline-block}
-.group-5 a.group-5 {display: inline-block}
+/* 2018-04-04 sbs new show/hide */
+/* Because of IE11 issue with cascading class there need to be .sc-menu.group-X on each group declaration */
+/* hide all links by default */
+.sc-menu.group-0 a,
+.sc-menu.group-1 a,
+.sc-menu.group-2 a,
+.sc-menu.group-3 a,
+.sc-menu.group-4 a,
+.sc-menu.group-5 a {
+  display: none;
+}
 
-.sc-menu a.group-default div {background-color: #0088f4}
+/* show them group-wise */
+.sc-menu.group-0 a.group-0 {
+  display: inline-block;
+}
+.sc-menu.group-1 a.group-1 {
+  display: inline-block;
+}
+.sc-menu.group-2 a.group-2 {
+  display: inline-block;
+}
+.sc-menu.group-3 a.group-3 {
+  display: inline-block;
+}
+.sc-menu.group-4 a.group-4 {
+  display: inline-block;
+}
+.sc-menu.group-5 a.group-5 {
+  display: inline-block;
+}
+
+.sc-menu a.group-default div {
+  background-color: #0088f4
+}
 .sc-menu a.group-pro div {background-color: #96D500}
 .sc-menu a.group-alert div {background-color: #ff0000}
 
@@ -105,9 +139,9 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 /* only use the WOFF, as all modern browsers support that */
 @font-face {
   font-family: 'inpage-icons';
-  src: url('../lib/fonts/inpage-icons.woff?09.10.00') format('woff'),
-       url('../lib/fonts/inpage-icons.eot?09.10.00#iefix') format('embedded-opentype'),
-       url('../lib/fonts/inpage-icons.ttf?09.10.00') format('truetype');
+  src: url(assets/inpage-icons.woff?9.20.00) format('woff'),
+       url(assets/inpage-icons.eot?9.20.00#iefix) format('embedded-opentype'),
+       url(assets/inpage-icons.ttf?9.20.00) format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -122,7 +156,7 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
   display: inline-block;
   text-decoration: inherit;
   width: 1em;
-  margin-right: .2em;
+  margin-right: .3em;
   text-align: center;
   /* opacity: .8; */
  
@@ -147,43 +181,6 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
-
-
-.icon-sxc-list-numbered:before { content: '\e800'; } /* '' */
-.icon-sxc-ok:before { content: '\e801'; } /* '' */
-.icon-sxc-plus:before { content: '\e802'; } /* '' */
-.icon-sxc-plus-circled:before { content: '\e803'; } /* '' */
-.icon-sxc-minus:before { content: '\e804'; } /* '' */
-.icon-sxc-minus-circled:before { content: '\e805'; } /* '' */
-.icon-sxc-cancel:before { content: '\e806'; } /* '' */
-.icon-sxc-spinner:before { content: '\e807'; } /* '' */
-.icon-sxc-replace:before { content: '\e808'; } /* '' */
-.icon-sxc-eye:before { content: '\e809'; } /* '' */
-.icon-sxc-eye-off:before { content: '\e80a'; } /* '' */
-.icon-sxc-move-down:before { content: '\e80b'; } /* '' */
-.icon-sxc-move-up:before { content: '\e80c'; } /* '' */
-.icon-sxc-code:before { content: '\e80d'; } /* '' */
-.icon-sxc-settings:before { content: '\e80e'; } /* '' */
-.icon-sxc-manage:before { content: '\e80f'; } /* '' */
-.icon-sxc-pencil:before { content: '\e810'; } /* '' */
-.icon-sxc-options:before { content: '\e811'; } /* '' */
-.icon-sxc-th-list:before { content: '\e812'; } /* '' */
-.icon-sxc-table:before { content: '\e813'; } /* '' */
-.icon-sxc-fields:before { content: '\e814'; } /* '' */
-.icon-sxc-filter:before { content: '\e815'; } /* '' */
-.icon-sxc-list:before { content: '\e816'; } /* '' */
-.icon-sxc-tag:before { content: '\e817'; } /* '' */
-.icon-sxc-sliders:before { content: '\e818'; } /* '' */
-.icon-sxc-glasses:before { content: '\e819'; } /* '' */
-.icon-sxc-language:before { content: '\e81a'; } /* '' */
-.icon-sxc-scissors:before { content: '\e81b'; } /* '' */
-.icon-sxc-paste:before { content: '\e81c'; } /* '' */
-.icon-sxc-trash-empty:before { content: '\e81d'; } /* '' */
-.icon-sxc-export:before { content: '\e81e'; } /* '' */
-.icon-sxc-cart-arrow-down:before { content: '\e81f'; } /* '' */
-.icon-sxc-share:before { content: '\e820'; } /* '' */
-.icon-sxc-clock:before { content: '\e821'; } /* '' */
-.icon-sxc-bomb:before { content: '\f1e2'; } /* '' */
 .inpage-frame-wrapper .inpage-frame {
     width: 100%;
     height: 100%;
@@ -259,8 +256,7 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
     text-align: center;
     font-size: 14px;
     font-family: 'Roboto', sans-serif;
-}
-/****** Content block menu */
+}/****** Content block menu */
 
 .sc-content-block-menu {
     height: 40px;
@@ -315,20 +311,20 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
     background-size: 32px 32px;
 }
 
-.sc-content-block-menu-addcontent.sc-content-block-menu-module {
+  .sc-content-block-menu-addcontent.sc-content-block-menu-module {
     background: url(../../icon-black.png);
     background-size: 32px 32px;
-}
+  }
 
 .sc-content-block-menu-addapp {
-    background: url(../../icon-app.png);
-    background-size: 32px 32px;
+  background: url(../../icon-app.png);
+  background-size: 32px 32px;
 }
 
-.sc-content-block-menu-addapp.sc-content-block-menu-module {
+  .sc-content-block-menu-addapp.sc-content-block-menu-module {
     background: url(../../icon-app-black.png);
     background-size: 32px 32px;
-}
+  }
 /*#endregion */
 
 
@@ -390,3 +386,40 @@ a.sc-content-block-selected-menu.sc-content-block-menu-btn {
     filter: grayscale(0);
 }
 
+
+.icon-sxc-cancel:before { content: '\E800'; } /* '' */
+.icon-sxc-eye-off:before { content: '\E801'; } /* '' */
+.icon-sxc-eye:before { content: '\E802'; } /* '' */
+.icon-sxc-glasses:before { content: '\E803'; } /* '' */
+.icon-sxc-scissors:before { content: '\E804'; } /* '' */
+.icon-sxc-paste:before { content: '\E805'; } /* '' */
+.icon-sxc-bomb:before { content: '\E806'; } /* '' */
+.icon-sxc-export:before { content: '\E807'; } /* '' */
+.icon-sxc-code:before { content: '\E808'; } /* '' */
+.icon-sxc-pencil:before { content: '\E809'; } /* '' */
+.icon-sxc-replace:before { content: '\E80A'; } /* '' */
+.icon-sxc-language:before { content: '\E80B'; } /* '' */
+.icon-sxc-table:before { content: '\E80C'; } /* '' */
+.icon-sxc-fields:before { content: '\E80D'; } /* '' */
+.icon-sxc-list-numbered:before { content: '\E80E'; } /* '' */
+.icon-sxc-th-list:before { content: '\F00B'; } /* '' */
+.icon-sxc-ok:before { content: '\F00C'; } /* '' */
+.icon-sxc-settings:before { content: '\F013'; } /* '' */
+.icon-sxc-clock:before { content: '\F017'; } /* '' */
+.icon-sxc-tag:before { content: '\F02B'; } /* '' */
+.icon-sxc-plus-circled:before { content: '\F055'; } /* '' */
+.icon-sxc-minus-circled:before { content: '\F056'; } /* '' */
+.icon-sxc-plus:before { content: '\F067'; } /* '' */
+.icon-sxc-minus:before { content: '\F068'; } /* '' */
+.icon-sxc-manage:before { content: '\F085'; } /* '' */
+.icon-sxc-filter:before { content: '\F0B0'; } /* '' */
+.icon-sxc-list:before { content: '\F0CA'; } /* '' */
+.icon-sxc-spinner:before { content: '\F110'; } /* '' */
+.icon-sxc-options:before { content: '\F141'; } /* '' */
+.icon-sxc-move-up:before { content: '\F148'; } /* '' */
+.icon-sxc-move-down:before { content: '\F149'; } /* '' */
+.icon-sxc-sliders:before { content: '\F1DE'; } /* '' */
+.icon-sxc-share-alt:before { content: '\F1E0'; } /* '' */
+.icon-sxc-cart-arrow-down:before { content: '\F218'; } /* '' */
+.icon-sxc-trash-empty:before { content: '\F2ED'; } /* '' */
+/*# sourceMappingURL=inpage.css.map*/

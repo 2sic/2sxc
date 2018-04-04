@@ -1,21 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using ToSic.Eav;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.ValueProvider;
-using ToSic.Eav.WebApi;
-using ToSic.SexyContent.Adam;
+using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.WebApi.Dnn;
+using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -29,23 +34,22 @@ namespace ToSic.SexyContent.WebApi
         {
             base.Initialize(controllerContext);
             Log.Rename("2sApiC");
-            SxcContext = Helpers.GetSxcOfApiRequest(Request, true, Log);
-            AppAndDataHelpers = new AppAndDataHelpers(SxcContext, SxcContext?.ModuleInfo, SxcContext?.Log ?? Log);
+            SxcInstance = Helpers.GetSxcOfApiRequest(Request, true, Log);
+            DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcInstance, SxcInstance?.EnvInstance, SxcInstance?.Log ?? Log);
             controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); // must run after creating AppAndDataHelpers
         }
         #endregion
 
-        private AppAndDataHelpers AppAndDataHelpers { get; set; }
+        private DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
 
 	    // Sexy object should not be accessible for other assemblies - just internal use
-        internal SxcInstance SxcContext { get; private set; }
+        internal SxcInstance SxcInstance { get; private set; }
 
         #region AppAndDataHelpers implementation
 
-        /// <inheritdoc />
-        public DnnHelper Dnn => AppAndDataHelpers.Dnn;
+        public DnnHelper Dnn => DnnAppAndDataHelpers.Dnn;
 
-	    public SxcHelper Sxc => AppAndDataHelpers.Sxc;
+	    public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
 
         /// <inheritdoc />
         public App App
@@ -57,71 +61,72 @@ namespace ToSic.SexyContent.WebApi
                     return _app;
 
                 // try "normal" case with instance context
-                if (SxcContext != null)
-                    return _app = AppAndDataHelpers.App;
+                if (SxcInstance != null)
+                    return _app = DnnAppAndDataHelpers.App;
 
                 var routeAppPath = Request.GetRouteData().Values["apppath"]?.ToString();
                 var appId = GetCurrentAppIdFromPath(routeAppPath);
                 // Look up if page publishing is enabled - if module context is not availabe, always false
-                var publishingEnabled = Dnn.Module != null ? new Environment.Dnn7.PagePublishing(Log).IsEnabled(Dnn.Module.ModuleID) : false;
+                var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
+                var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);
                 return _app = (App) Environment.Dnn7.Factory.App(appId, publishingEnabled);
             }
         }
         private App _app;
 
         /// <inheritdoc />
-        public ViewDataSource Data => AppAndDataHelpers.Data;
+        public ViewDataSource Data => DnnAppAndDataHelpers.Data;
 
 	    /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => AppAndDataHelpers.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => DnnAppAndDataHelpers.AsDynamic(entity);
 
 
         /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) =>  AppAndDataHelpers.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(dynamic dynamicEntity) =>  DnnAppAndDataHelpers.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  AppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  AppAndDataHelpers.AsDynamic(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  DnnAppAndDataHelpers.AsDynamic(stream.List);
 
         /// <inheritdoc />
-        public IEntity AsEntity(dynamic dynamicEntity) =>  AppAndDataHelpers.AsEntity(dynamicEntity);
+        public IEntity AsEntity(dynamic dynamicEntity) =>  DnnAppAndDataHelpers.AsEntity(dynamicEntity);
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  AppAndDataHelpers.AsDynamic(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DnnAppAndDataHelpers.AsDynamic(entities);
 
 	    public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
 	        IValueCollectionProvider configurationProvider = null)
-	        => AppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
+	        => DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
 
         public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
-            =>  AppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
+            =>  DnnAppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
 
 	    /// <inheritdoc />
-	    public T CreateSource<T>(IDataStream inStream) => AppAndDataHelpers.CreateSource<T>(inStream);
+	    public T CreateSource<T>(IDataStream inStream) => DnnAppAndDataHelpers.CreateSource<T>(inStream);
 
         /// <summary>
         /// content item of the current view
         /// </summary>
-        public dynamic Content => AppAndDataHelpers.Content;
+        public dynamic Content => DnnAppAndDataHelpers.Content;
 
         /// <summary>
         /// presentation item of the content-item. 
         /// </summary>
         [Obsolete("please use Content.Presentation instead")]
-        public dynamic Presentation => AppAndDataHelpers.Content?.Presentation;
+        public dynamic Presentation => DnnAppAndDataHelpers.Content?.Presentation;
 
-	    public dynamic ListContent => AppAndDataHelpers.ListContent;
+	    public dynamic ListContent => DnnAppAndDataHelpers.ListContent;
 
         /// <summary>
         /// presentation item of the content-item. 
         /// </summary>
         [Obsolete("please use ListContent.Presentation instead")]
-	    public dynamic ListPresentation => AppAndDataHelpers.ListContent?.Presentation;
+	    public dynamic ListPresentation => DnnAppAndDataHelpers.ListContent?.Presentation;
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
-        public List<Element> List => AppAndDataHelpers.List;
+        public List<Element> List => DnnAppAndDataHelpers.List;
 
 	    #endregion
 
@@ -134,8 +139,8 @@ namespace ToSic.SexyContent.WebApi
 	    /// <param name="entity">The entity, often Content or similar</param>
 	    /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
 	    /// <returns>An Adam object for navigating the assets</returns>
-	    public AdamNavigator AsAdam(DynamicEntity entity, string fieldName)
-	        => AppAndDataHelpers.AsAdam(AsEntity(entity), fieldName);
+	    public FolderOfField AsAdam(DynamicEntity entity, string fieldName)
+	        => DnnAppAndDataHelpers.AsAdam(AsEntity(entity), fieldName);
 
         /// <summary>
         /// Provides an Adam instance for this item and field
@@ -143,7 +148,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AdamNavigator AsAdam(IEntity entity, string fieldName) => AppAndDataHelpers.AsAdam(entity, fieldName);
+        public FolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
         #endregion
 
         #region App-Helpers for anonyous access APIs
@@ -161,84 +166,84 @@ namespace ToSic.SexyContent.WebApi
         #endregion
 
         #region Security Checks 
+
         /// <summary>
         /// Check if a user may do something - and throw an error if the permission is not given
         /// </summary>
-        /// <param name="contentType"></param>
-        /// <param name="grant"></param>
-        /// <param name="autoAllowAdmin"></param>
-        /// <param name="specificItem"></param>
-        /// <param name="useContext"></param>
-        /// <param name="appId"></param>
-        internal void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false, IEntity specificItem = null, bool useContext = true, int? appId = null)
+        internal void PerformSecurityCheck(int appId, string contentType, Grants grant,
+            ModuleInfo module, App app, IEntity specificItem = null)
+            => new Security(PortalSettings, Log).FindCtCheckSecurityOrThrow(appId,
+                contentType,
+                new List<Grants> {grant},
+                specificItem,
+                module,
+                app);
+
+
+        protected Tuple<App, PermissionCheckBase> GetAppRequiringPermissionsOrThrow(int appId, List<Grants> grants = null, string typeName = null)
         {
-            Log.Add($"security check for type:{contentType}, grant:{grant}, autoAdmin:{autoAllowAdmin}, useContext:{useContext}, app:{appId}, item:{specificItem?.EntityId}");
-            // make sure we have the right appId, zoneId and module-context
-            var contextMod = useContext ? Dnn.Module : null;
-            var zoneId = useContext ? App?.ZoneId : null;   // App is null, when accessing admin-ui from un-initialized module
-            if (useContext) appId = App?.AppId ?? appId;
-            if (!useContext) autoAllowAdmin = false; // auto-check not possible when not using context
+            var set = AppAndPermissionChecker(appId, typeName);
 
-
-            if (!appId.HasValue)
-                throw new Exception("app id doesn't have value, and apparently didn't get it from context either");
-
-            // Check if we can find this content-type
-            var ctc = new ContentTypeController();
-            ctc.SetAppIdAndUser(appId.Value);
-
-            var cache = DataSource.GetCache(zoneId, appId);
-            var ct = cache.GetContentType(contentType);
-
-            if (ct == null)
-            {
-                ThrowHttpError(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.",
-                    "content-types");
-                return;
-            }
-
-            // Check if the content-type has a GUID as name - only these can have permission assignments
-
-            // only check permissions on type if the type has a GUID as static-id
-            var staticNameIsGuid = Guid.TryParse(ct.StaticName, out var ctGuid);
-            // Check permissions in 2sxc - or check if the user has admin-right (in which case he's always granted access for these types of content)
-            if (staticNameIsGuid 
-                && new DnnPermissionController(ct, specificItem, Log, contextMod)
-                    .UserMay(grant))
-                return;
-
-            // if initial test couldn't be done (non-guid) or failed, test for admin-specifically
-            if (autoAllowAdmin 
-                && DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(contextMod))
-                return;
-
-            // if the cause was not-admin and not testable, report better error
-            if (!staticNameIsGuid)
-                ThrowHttpError(HttpStatusCode.Unauthorized,
-                    "Content Type '" + contentType + "' is not a standard Content Type - no permissions possible.");
-
-            // final case: simply not allowed
-            ThrowHttpError(HttpStatusCode.Unauthorized,
-                "Request not allowed. User needs permissions to " + grant + " for Content Type '" + contentType + "'.",
-                "permissions");
+            return set.Item2.UserMay(grants) ? set : throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        /// <summary>
-        /// Throw a correct HTTP error with the right error-numbr. This is important for the JavaScript which changes behavior & error messages based on http status code
-        /// </summary>
-        /// <param name="httpStatusCode"></param>
-        /// <param name="message"></param>
-        /// <param name="tags"></param>
-        private static void ThrowHttpError(HttpStatusCode httpStatusCode, string message, string tags = "")
+        private Tuple<App, PermissionCheckBase> AppAndPermissionChecker(int appId, string typeName)
         {
-            var helpText = " See http://2sxc.org/help" + (tags == "" ? "" : "?tag=" + tags);
-            throw new HttpResponseException(new HttpResponseMessage(httpStatusCode)
-            {
-                Content = new StringContent(message + helpText),
-                ReasonPhrase = "Error in 2sxc Content API - not allowed"
-            });
+            var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
+            var tenant = new DnnTenant(PortalSettings.Current);
+            var uiZoneId = env.ZoneMapper.GetZoneId(tenant.Id);
+
+            // now do relevant security checks
+
+            var zoneId = SystemManager.ZoneIdOfApp(appId);
+            var app = new App(tenant, zoneId, appId, parentLog: Log);
+
+            var type = typeName == null
+                ? null
+                : new AppRuntime(zoneId, appId, Log)
+                    .ContentTypes.Get(typeName);
+
+            var samePortal = uiZoneId == tenant.Id;
+            var portalToUseInSecCheck = samePortal ? PortalSettings.Current : null;
+
+            // user has edit permissions on this app, and it's the same app as the user is coming from
+            var checker = new DnnPermissionCheck(Log,
+                instance: SxcInstance.EnvInstance,
+                app: app,
+                portal: portalToUseInSecCheck, 
+                targetType: type);
+            return new Tuple<App, PermissionCheckBase>(app, checker); 
         }
 
+
+
+        protected Tuple<App, PermissionCheckBase> GetAppRequiringPermissionsOrThrow(int appId, List<Grants> grants, List<ItemIdentifier> items)
+        {
+            var appMan = new AppRuntime(appId, Log);
+
+            // build list of type names
+            var typeNames = items.Select(item => {
+                var typeName = item.ContentTypeName;
+                if (string.IsNullOrEmpty(typeName) && item.EntityId != 0)
+                {
+                    var existing = appMan.Entities.Get(item.EntityId);
+                    typeName = existing.Type.StaticName;
+                }
+                return typeName;
+            }).ToList();
+
+            // make sure we have at least one entry, so the checks will work
+            if (typeNames.Count == 0)
+                typeNames.Add(null);
+
+            // go through all the groups, assign relevant info so that we can then do get-many
+            Tuple<App, PermissionCheckBase> set = null;
+
+            // this will run at least once with null, and the last one will be returned in the set
+            typeNames.ForEach(tn => set = GetAppRequiringPermissionsOrThrow(appId, grants, tn));
+
+            return set;
+        }
         #endregion
 
     }

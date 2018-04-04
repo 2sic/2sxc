@@ -1,16 +1,15 @@
 ﻿using System.Threading;
 using System.Web;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav.AppEngine;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent
 {
     /// <summary>
     /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
     /// </summary>
-    public class App : Eav.Apps.App<PortalSettings>, Interfaces.IApp
+    public class App : Eav.Apps.App, Interfaces.IApp
     {
         #region Dynamic Properties: Configuration, Settings, Resources
         public dynamic Configuration
@@ -65,12 +64,11 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        public App(PortalSettings ownerPortalSettings, int appId, Log parentLog = null) 
-            : base(new Environment.DnnEnvironment(parentLog), AutoLookup, appId, new DnnTennant(ownerPortalSettings), true, parentLog) { }
+        public App(ITenant tenant, int appId, Log parentLog = null) 
+            : base(tenant, AutoLookup, appId, true, parentLog) { }
 
-        public App(int zoneId, int appId, PortalSettings portalSettings, bool allowSideEffects = true, Log parentLog = null)
-            : base(new Environment.DnnEnvironment(parentLog), zoneId, appId, new DnnTennant(portalSettings), allowSideEffects, parentLog) { }
-
+        public App(ITenant tenant, int zoneId, int appId, bool allowSideEffects = true, Log parentLog = null)
+            : base(tenant, zoneId, appId, allowSideEffects, parentLog) { }
         
 
         #region Paths

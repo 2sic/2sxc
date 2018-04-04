@@ -2,8 +2,8 @@
 using System.Dynamic;
 using System.Linq;
 using System.Web;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.Toolbar;
 using ToSic.SexyContent.Interfaces;
@@ -13,39 +13,23 @@ namespace ToSic.SexyContent
     public class DynamicEntity : DynamicObject, IDynamicEntity
     {
         public ContentConfiguration Configuration = new ContentConfiguration();
-        public ToSic.Eav.Interfaces.IEntity Entity { get; set; }
+        public Eav.Interfaces.IEntity Entity { get; set; }
         public HtmlString Toolbar {
             get
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
-                if (SxcInstance == null || PortalSettings.Current == null)
+                // 2018-02-03 2dm: disabled the PortalSettings criteria to decouple from DNN, may have side effects
+                if (SxcInstance == null)
                     return new HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                if (!SxcInstance.Environment.Permissions.UserMayEditContent)
+                var userMayEdit = SxcInstance?.UserMayEdit ?? false;
+
+                if (!userMayEdit)
                     return new HtmlString("");
 
                 var toolbar = new ItemToolbar(this).Toolbar;
                 return new HtmlString(toolbar);
-
-                //if (Entity is IHasEditingData)
-                //    return new HtmlString("<ul class=\"sc-menu\" data-toolbar='"
-                //                          + JsonConvert.SerializeObject(new
-                //                          {
-                //                              sortOrder = ((IHasEditingData) Entity).SortOrder,
-                //                              useModuleList = true,
-                //                              isPublished = Entity.IsPublished
-                //                          }) 
-                //                          + "'></ul>");
-
-                //return new HtmlString("<ul class=\"sc-menu\" data-toolbar='"
-                //                      + JsonConvert.SerializeObject(new
-                //                      {
-                //                          entityId = Entity.EntityId,
-                //                          isPublished = Entity.IsPublished,
-                //                          contentType = Entity.Type.Name
-                //                      })
-                //                      + "'></ul>");
             }
         }
         private readonly string[] _dimensions;
@@ -54,7 +38,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
-        public DynamicEntity(ToSic.Eav.Interfaces.IEntity entityModel, string[] dimensions, SxcInstance sexy)
+        public DynamicEntity(Eav.Interfaces.IEntity entityModel, string[] dimensions, SxcInstance sexy)
         {
             Entity = entityModel;
             _dimensions = dimensions;
@@ -66,8 +50,7 @@ namespace ToSic.SexyContent
 
         public bool TryGetMember(string memberName, out object result)
         {
-            bool propertyNotFound;
-            result = GetEntityValue(memberName, out propertyNotFound);
+            result = GetEntityValue(memberName, out var propertyNotFound);
 
             if (propertyNotFound)
                 result = null;
@@ -95,9 +78,9 @@ namespace ToSic.SexyContent
             {
                 result = Entity.GetBestValue(attributeName, _dimensions, true);
 
-                if (result is Eav.Data.EntityRelationship)
+                if (result is EntityRelationship rel)
                 {
-                    var relList = ((Eav.Data.EntityRelationship) result).Select(
+                    var relList = rel.Select(
                         p => new DynamicEntity(p, _dimensions, SxcInstance)
                     ).ToList();
                     result = relList;
@@ -110,10 +93,11 @@ namespace ToSic.SexyContent
         }
 
         private DynamicEntity _presentation;
-        private DynamicEntity Presentation => _presentation ??
-                                              (_presentation = (Entity is EntityInContentGroup)
-                                                  ? new DynamicEntity(((EntityInContentGroup) Entity).Presentation, _dimensions, SxcInstance)
-                                                  : null);
+
+        private DynamicEntity Presentation
+            => _presentation ?? (_presentation = Entity is EntityInContentGroup
+                   ? new DynamicEntity(((EntityInContentGroup) Entity).Presentation, _dimensions, SxcInstance)
+                   : null);
 
         /// <summary>
         /// Configuration class for this expando
@@ -121,11 +105,8 @@ namespace ToSic.SexyContent
         public class ContentConfiguration
         {
             public string ErrorKeyMissing {
-                get { return null; }
-                set
-                {
-                    throw new Exception("Obsolete: Do not use ErrorKeyMissing anymore. Check if the value is null instead.");
-                }
+                get => null;
+                set => throw new Exception("Obsolete: Do not use ErrorKeyMissing anymore. Check if the value is null instead.");
             }
         }
 

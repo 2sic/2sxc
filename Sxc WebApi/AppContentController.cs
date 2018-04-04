@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -9,14 +10,17 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight;
+using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -48,7 +52,7 @@ namespace ToSic.SexyContent.WebApi
             // if app-path specified, use that app, otherwise use from context
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
-            PerformSecurityCheck(contentType, PermissionGrant.Read, true, useContext: appPath == null, appId: appId);
+            PerformSecurityCheck(appId, contentType, Grants.Read, appPath == null ? Dnn.Module : null, App);
             return _entitiesController.GetEntities(contentType, cultureCode);
         }
 
@@ -61,7 +65,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
             => GetAndSerializeOneAfterSecurityChecks(contentType,
-                appId => _entitiesController.GetEntityOrThrowError(contentType, id/*, appId*/),
+                appId => _entitiesController.GetEntityOrThrowError(contentType, id),
                 appPath);
 
 
@@ -89,7 +93,7 @@ namespace ToSic.SexyContent.WebApi
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
             IEntity itm = getOne(appId);
-            PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm, useContext: appPath == null, appId: appId);
+            PerformSecurityCheck(appId, contentType, Grants.Read, appPath == null ? Dnn.Module : null, App, itm);
             return _entitiesController.Serializer.Prepare(itm);
         }
 
@@ -109,13 +113,13 @@ namespace ToSic.SexyContent.WebApi
             // - note that it's really not needed, as you can always use a query or something similar instead
             // - not also that if ever you do support view switching, you will need to ensure security checks
 
-            var dataHandler = new GetContentBlockDataLight(SxcContext);
+            var dataHandler = new GetContentBlockDataLight(SxcInstance);
 
             // must access engine to ensure pre-processing of data has happened, 
             // especially if the cshtml contains a override void CustomizeData()
-            SxcContext.GetRenderingEngine(InstancePurposes.PublishData);  
+            SxcInstance.GetRenderingEngine(InstancePurposes.PublishData);  
 
-            var dataSource = SxcContext.Data;
+            var dataSource = SxcInstance.Data;
             string json;
             if (dataSource.Publish.Enabled)
             {
@@ -126,8 +130,7 @@ namespace ToSic.SexyContent.WebApi
             else
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
-                { ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(SxcContext.ModuleInfo.ModuleID,
-                    SxcContext.ModuleInfo.ModuleTitle)});
+                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(SxcInstance.EnvInstance.Id)});
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -153,10 +156,10 @@ namespace ToSic.SexyContent.WebApi
                 : _entitiesController.GetEntityOrThrowError(contentType, id.Value);
 
             var perm = id == null 
-                ? PermissionGrant.Create 
-                : PermissionGrant.Update;
+                ? Grants.Create 
+                : Grants.Update;
 
-            PerformSecurityCheck(contentType, perm, true, itm, appPath == null, appId);
+            PerformSecurityCheck(appId, contentType, perm, appPath == null ? Dnn.Module : null, App, itm);
 
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
@@ -164,13 +167,14 @@ namespace ToSic.SexyContent.WebApi
             // Now create the cleaned up import-dictionary so we can create a new entity
             var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem, appId);
 
-            var userName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+            var userName = new DnnUser().IdentityToken;
 
             // try to create
-            var currentApp = new App(PortalSettings, appId);
+            var currentApp = new App(new DnnTenant(PortalSettings), appId);
             //currentApp.InitData(false, new ValueCollectionProvider());
+            var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
             currentApp.InitData(false, 
-                new Environment.Dnn7.PagePublishing(Log).IsEnabled(ActiveModule.ModuleID), 
+                publish.IsEnabled(ActiveModule.ModuleID), 
                 Data.ConfigurationProvider);
             if (id == null)
             {
@@ -218,22 +222,19 @@ namespace ToSic.SexyContent.WebApi
 	                        ThrowValueMappingError(attrDef, foundValue);
 	                    break;
 	                case "boolean":
-	                    bool bolValue;
-	                    if (bool.TryParse(foundValue.ToString(), out bolValue))
+	                    if (bool.TryParse(foundValue.ToString(), out var bolValue))
 	                        cleanedNewItem.Add(attrName, bolValue);
 	                    else
 	                        ThrowValueMappingError(attrDef, foundValue);
 	                    break;
 	                case "datetime":
-	                    DateTime dtm;
-	                    if (DateTime.TryParse(foundValue.ToString(), out dtm))
+	                    if (DateTime.TryParse(foundValue.ToString(), out var dtm))
 	                        cleanedNewItem.Add(attrName, dtm);
 	                    else
 	                        ThrowValueMappingError(attrDef, foundValue);
 	                    break;
 	                case "number":
-	                    decimal dec;
-	                    if (decimal.TryParse(foundValue.ToString(), out dec))
+	                    if (decimal.TryParse(foundValue.ToString(), out var dec))
 	                        cleanedNewItem.Add(attrName, dec);
 	                    else
 	                        ThrowValueMappingError(attrDef, foundValue);
@@ -241,8 +242,7 @@ namespace ToSic.SexyContent.WebApi
 	                case "entity":
 	                    var relationships = new List<int>();
 
-	                    var foundEnum = foundValue as System.Collections.IEnumerable;
-	                    if (foundEnum != null) // it's a list!
+	                    if (foundValue is IEnumerable foundEnum) // it's a list!
 	                        foreach (var item in foundEnum)
 	                            relationships.Add(CreateSingleRelationshipItem(item));
 	                    else // not a list
@@ -327,17 +327,11 @@ namespace ToSic.SexyContent.WebApi
             if (contentType == "any")
                 throw new Exception("type any not allowed with id-only, requires guid");
 
-            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id/*, appId*/);
-            //var autoAllowAdmin = contentType != "any"; // only auto-allow-admin, if a type is clearly specified (protection from deleting other types)
-            //Delete_SharedCode(itm, appPath == null, appId, autoAllowAdmin);
-            PerformSecurityCheck(itm.Type.Name, PermissionGrant.Delete, true, itm, appPath == null, appId);
+            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id);
+            PerformSecurityCheck(appId, itm.Type.Name, Grants.Delete, appPath == null ? Dnn.Module : null, App, itm);
             _entitiesController.Delete(itm.Type.Name, id, appId);
         }
 
-	    //private void Delete_SharedCode(IEntity itm, bool useContext, int appId, bool autoAllowAdmin)
-	    //{
-	    //    PerformSecurityCheck(itm.Type.Name, PermissionGrant.Delete, true, itm, useContext, appId);
-	    //}
 
 	    [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
@@ -348,9 +342,7 @@ namespace ToSic.SexyContent.WebApi
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 	        IEntity itm = _entitiesController.GetEntityOrThrowError(contentType == "any" ? null : contentType, guid, appId);
 
-            //var autoAllowAdmin = true; // with guid, admins are allowed to delete
-            //   Delete_SharedCode(itm, appPath == null, appId, autoAllowAdmin);
-            PerformSecurityCheck(itm.Type.Name, PermissionGrant.Delete, true, itm, appPath == null, appId);
+            PerformSecurityCheck(appId, itm.Type.Name, Grants.Delete, appPath == null ? Dnn.Module : null, App, itm);
             _entitiesController.Delete(itm.Type.Name, guid, appId);
         }
 
@@ -382,7 +374,7 @@ namespace ToSic.SexyContent.WebApi
 
             // only do this if we have a real context - otherwise don't do this
 	        if (!appId.HasValue)
-	            ((Serializer) _entitiesController.Serializer).Sxc = SxcContext;
+	            ((Serializer) _entitiesController.Serializer).Sxc = SxcInstance;
 
 	    }
 

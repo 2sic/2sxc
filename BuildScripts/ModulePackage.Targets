@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1252"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!-- WARNING, WARNING, WARNING -->
 <!-- REMEMBER THAT IF YOU MODIFY THE TARGETS FILE YOU NEED TO CLOSE/OPEN THE PROJECT FOR THE CHANGES TO TAKE EFFECT -->
@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <DefaultExclude Include="**\bin\**" />
+      <DefaultExclude Include="**\koi\**" />
       <DefaultExclude Include="**\*.user" />
       <DefaultExclude Include="**\*.suo" />
       <DefaultExclude Include="**\*.zip" />
@@ -35,6 +36,7 @@
       <DefaultExclude Include="DnnPackageBuilder\**" />
       <DefaultExclude Include="xSqlDataProvider\**" />
       <DefaultExclude Include=".databeta\**" />
+      <DefaultExclude Include=".data-custom\**" />
       <DefaultExclude Include="2Sexy Content Testing\**" />
 			<DefaultExclude Include=".git\**" />
       <DefaultExclude Include="**\node_modules\**" />
@@ -61,8 +63,9 @@
       <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.js" Exclude="@(DefaultExclude);gruntfile.js" />
 
-      <InstallInclude Include="**\System.*.json" Exclude="@(DefaultExclude)" />
-      <InstallInclude Include="**\Query.*.json" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\.data\**\*.json" Exclude="@(DefaultExclude)" />
+      <!--<InstallInclude Include="**\System.*.json" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\Query.*.json" Exclude="@(DefaultExclude)" />-->
       <InstallInclude Include="**\*.map" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
       <InstallInclude Include="**\*.ashx" Exclude="@(DefaultExclude)" />
@@ -87,7 +90,9 @@
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.pdb" />
-      
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.pdb" />
+
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Apps.dll" />
@@ -131,6 +136,9 @@
       <AssemblyInclude Include="$(ProjectDir)BuildScripts\Binary Dependencies\ImageResizer.Plugins.DiskCache.dll" />
 
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\CsvHelper.dll" />
+      
+      <!--include latest version of SharpZipLib -->
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ICSharpCode.SharpZipLib.dll" />
     </ItemGroup>
     
     <CreateItem Include="DnnPackageBuilder/$(DNNFileName).dnn">
@@ -159,8 +167,17 @@
     <Copy SourceFiles="@(PackageManifestFiles)" DestinationFolder="$(TempPackageFolder)" />
     <Copy SourceFiles="@(PackageModuleIcon)" DestinationFolder="$(TempPackageFolder)" />
     <Copy SourceFiles="@(PackageTxtFiles)" DestinationFolder="$(TempPackageFolder)" />
-    
-    
+
+    <!-- include koi folder -->
+    <ItemGroup>
+      <KoiFiles Include="$(MSBuildProjectDirectory)/koi/*.*" Exclude="**\*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(KoiFiles)" DestinationFolder="$(TempPackageFolder)\koi\%(RecursiveDir)" />
+    <ItemGroup>
+      <KoiDllFiles Include="$(MSBuildProjectDirectory)/koi/bin/*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(KoiDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
+
     <!-- create the INSTALL RESOURCES.ZIP file -->
     <Copy SourceFiles="@(InstallInclude)" DestinationFolder="$(TempPackageResourcesFolder)\%(RecursiveDir)" />
 

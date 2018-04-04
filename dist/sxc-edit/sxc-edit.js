@@ -22,56 +22,83 @@
             };
         });
 })();
-angular.module("Adam")
+// note: don't prefix angular with window - something fails in production build if you do that
+// ReSharper disable PossiblyUnassignedProperty
+angular.module('Adam')
     /*@ngInject*/
-    .factory("adamSvc", ["$http", "eavConfig", "sxc", "svcCreator", "appRoot", function ($http, eavConfig, sxc, svcCreator, appRoot) {
+    .factory('adamSvc', ["$http", "eavConfig", "sxc", "svcCreator", "appRoot", "appId", function ($http, eavConfig, sxc, svcCreator, appRoot, appId) {
 
         // Construct a service for this specific appId
         return function createSvc(contentType, entityGuid, field, subfolder, serviceConfig) {
             var svc = {
-                url: sxc.resolveServiceUrl("app-content/" + contentType + "/" + entityGuid + "/" + field),
+                url: sxc.resolveServiceUrl('app-content/' + contentType + '/' + entityGuid + '/' + field),
                 subfolder: subfolder,
                 folders: [],
-                adamRoot: appRoot.substr(0, appRoot.indexOf("2sxc"))
+                adamRoot: appRoot.substr(0, appRoot.indexOf('2sxc'))
             };
 
             // get the correct url for uploading as it is needed by external services (dropzone)
             svc.uploadUrl = function(targetSubfolder) {
-                var url = (targetSubfolder === "")
+                var url = (targetSubfolder === '')
                     ? svc.url
-                    : svc.url + "?subfolder=" + targetSubfolder;
-                url += (url.indexOf("?") == -1 ? "?" : "&") + "usePortalRoot=" + serviceConfig.usePortalRoot;
+                    : svc.url + '?subfolder=' + targetSubfolder;
+                url += (url.indexOf('?') === -1 ? '?' : '&')
+                    + 'usePortalRoot=' + serviceConfig.usePortalRoot
+                    + '&appId=' + appId;
                 return url;
             };
 
             // extend a json-response with a path (based on the adam-root) to also have a fullPath
-            svc.addFullPath = function addFullPath(value, key) {
-                value.fullPath = svc.adamRoot + value.Path;
-            };
+          svc.addFullPath = function(value, key) {
+            // 2dm 2018-03-29 special fix - sometimes the path already has the full path, sometimes not
+            // it should actually be resolved properly, but because I don't have time
+            // ATM (data comes from different web-services, which are also used in other places
+            // I'll just check if it's already in there
+            value.fullPath = value.Path;
+            debugger;
+            if(value.Path && value.Path.toLowerCase().indexOf(svc.adamRoot.toLowerCase()) === -1)
+              value.fullPath = svc.adamRoot + value.Path;
+          };
 
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get(svc.url + "/items", { params: { subfolder: svc.subfolder, usePortalRoot: serviceConfig.usePortalRoot } })
-                    .then(function (result) {
+                return $http.get(svc.url + '/items',
+                        {
+                            params: {
+                                subfolder: svc.subfolder,
+                                usePortalRoot: serviceConfig.usePortalRoot,
+                                appId: appId
+                            }
+                        })
+                    .then(function(result) {
                         angular.forEach(result.data, svc.addFullPath);
                         return result;
                     });
             }));
 
             // create folder
-            svc.addFolder = function add(newfolder) {
-                return $http.post(svc.url + "/folder", {}, { params: { subfolder: svc.subfolder, newFolder: newfolder, usePortalRoot: serviceConfig.usePortalRoot } })
+            svc.addFolder = function (newfolder) {
+                return $http.post(svc.url + '/folder',
+                        {},
+                        {
+                            params: {
+                                subfolder: svc.subfolder,
+                                newFolder: newfolder,
+                                usePortalRoot: serviceConfig.usePortalRoot,
+                                appId: appId
+                            }
+                        })
                     .then(svc.liveListReload);
             };
 
             svc.goIntoFolder = function(childFolder) {
                 svc.folders.push(childFolder);
-                var pathParts = childFolder.Path.split("/");
-                var subPath = "";
+                var pathParts = childFolder.Path.split('/');
+                var subPath = '';
                 for (var c = 0; c < svc.folders.length; c++)
-                    subPath = pathParts[pathParts.length - c - 2] + "/" + subPath;
+                    subPath = pathParts[pathParts.length - c - 2] + '/' + subPath;
 
-                subPath = subPath.replace("//", "/");
-                if (subPath[subPath.length - 1] === "/")
+                subPath = subPath.replace('//', '/');
+                if (subPath[subPath.length - 1] === '/')
                     subPath = subPath.substr(0, subPath.length - 1);
 
                 childFolder.Subfolder = subPath;
@@ -88,7 +115,7 @@ angular.module("Adam")
                 if (svc.folders.length > 0) {
                     svc.subfolder = svc.folders[svc.folders.length - 1].Subfolder;
                 } else {
-                    svc.subfolder = "";
+                    svc.subfolder = '';
                 }
                 svc.liveListReload();
                 return svc.subfolder;
@@ -96,14 +123,33 @@ angular.module("Adam")
 
             // delete, then reload
             // IF verb DELETE fails, so I'm using get for now
-            svc.delete = function del(item) {
-                return $http.get(svc.url + "/delete", { params: { subfolder: svc.subfolder, isFolder: item.IsFolder, id: item.Id, usePortalRoot: serviceConfig.usePortalRoot  } })
+            svc.delete = function (item) {
+                return $http.get(svc.url + '/delete',
+                        {
+                            params: {
+                                subfolder: svc.subfolder,
+                                isFolder: item.IsFolder,
+                                id: item.Id,
+                                usePortalRoot: serviceConfig.usePortalRoot,
+                                appId: appId
+                            }
+                        })
                     .then(svc.liveListReload);
             };
 
             // rename, then reload
-            svc.rename = function rename(item, newName) {
-                return $http.get(svc.url + "/rename", { params: { subfolder: svc.subfolder, isFolder: item.IsFolder, id: item.Id, usePortalRoot: serviceConfig.usePortalRoot, newName: newName } })
+            svc.rename = function (item, newName) {
+                return $http.get(svc.url + '/rename',
+                        {
+                            params: {
+                                subfolder: svc.subfolder,
+                                isFolder: item.IsFolder,
+                                id: item.Id,
+                                usePortalRoot: serviceConfig.usePortalRoot,
+                                newName: newName,
+                                appId: appId
+                            }
+                        })
                     .then(svc.liveListReload);
             };
             
@@ -112,6 +158,8 @@ angular.module("Adam")
             return svc;
         };
     }]);
+// ReSharper restore PossiblyUnassignedProperty
+
 (function () {
     /* jshint laxbreak:true */
     "use strict";
@@ -398,12 +446,12 @@ angular.module("Adam")
 })();
 /* js/fileAppDirectives */
 (function() {
-    angular.module("Adam")
+    angular.module('Adam')
         /*@ngInject*/
-        .directive("dropzone", ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
+        .directive('dropzone', ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
 
             return {
-                restrict: "C",
+                restrict: 'C',
                 link: postLink,
 
                 // This controller is needed, because it needs an API which can talk to other directives
@@ -416,14 +464,14 @@ angular.module("Adam")
                 var header = scope.$parent.to.header;
                 var field = scope.$parent.options.key;
                 var entityGuid = header.Guid;
-                var svc = adamSvc(header.ContentTypeName, entityGuid, field, "", scope.$parent.vm.adamModeConfig);
+                var svc = adamSvc(header.ContentTypeName, entityGuid, field, '', scope.$parent.vm.adamModeConfig);
                 var url = svc.url;
 
                 var config = {
                     url: url,
                     urlRoot: url,
                     maxFilesize: 10000, // 10'000 MB = 10 GB, note that it will also be stopped on the server if it's larger than the really allowed sized
-                    paramName: "uploadfile",
+                    paramName: 'uploadfile',
                     maxThumbnailFilesize: 10,
 
                     headers: {
@@ -432,11 +480,11 @@ angular.module("Adam")
                         "ContentBlockId": ContentBlockId
                     },
 
-                    dictDefaultMessage: "",
+                    dictDefaultMessage: '',
                     addRemoveLinks: false,
-                    previewsContainer: ".field-" + field.toLowerCase() + " .dropzone-previews",
+                    previewsContainer: '.field-' + field.toLowerCase() + ' .dropzone-previews',
                     // we need a clickable, because otherwise the entire area is clickable. so i'm just making the preview clickable, as it's not important
-                    clickable: ".field-" + field.toLowerCase() + " .invisible-clickable" // " .dropzone-adam"
+                    clickable: '.field-' + field.toLowerCase() + ' .invisible-clickable' // " .dropzone-adam"
                 };
 
 
@@ -459,11 +507,11 @@ angular.module("Adam")
                             svc.addFullPath(response); // calculate additional infos
                             scope.$parent.afterUpload(response);
                         } else {
-                            alert("Upload failed because: " + response.Error);
+                            alert('Upload failed because: ' + response.Error);
                         }
                     },
                     'error': function (file, error, xhr) {
-                        alert($translate.instant("Errors.AdamUploadError"));
+                        alert($translate.instant('Errors.AdamUploadError'));
                     },
 
                     "queuecomplete": function (file) {
@@ -494,7 +542,7 @@ angular.module("Adam")
                 var vm = this;
                 vm.adam = {
                     show: false,
-                    subFolder: "",
+                    subFolder: '',
                     refresh: function () { }
                 };
 
@@ -568,21 +616,9 @@ angular.module("sxcFieldTemplates")
             return connector.modalInstance;
         };
 
-        // 2017-08-12 2dm looks unused now
-        // convert the url to a Id-code
-        //svc.convertPathToId = function(path, type) {
-        //    var pathWithoutVersion = path.replace(/\?ver=[0-9\-]*$/gi, "");
-        //    // todo: working on https://github.com/2sic/2sxc/issues/656 but can't reproduce error
-        //    // this is why I tried ignoreErrors and promisetoaster, but atm there is nothing to work on...
-        //    var promise = $http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(pathWithoutVersion),
-        //    {
-        //        //ignoreErrors: true
-        //    });
-        //    return promiseToastr(promise, "Edit.Field.Hyperlink.Message.Loading", "Edit.Field.Hyperlink.Message.Ok", "Edit.Field.Hyperlink.Message.Error", 0, 0, 1000);
-        //};
 
         // handle short-ID links like file:17
-        svc.getUrlOfId = function(idCode) {
+        svc.getUrlOfId = function(idCode, entityId) {
             var linkLowered = idCode.toLowerCase();
             if (linkLowered.indexOf("file:") !== -1 || linkLowered.indexOf("page:") !== -1)
                 return $http.get("dnn/Hyperlink/ResolveHyperlink?hyperlink=" + encodeURIComponent(idCode));
@@ -706,38 +742,38 @@ angular.module("sxcFieldTemplates")
 })();
 
 (function() {
-    "use strict";
+    'use strict';
 
-    angular.module("sxcFieldTemplates")
+    angular.module('sxcFieldTemplates')
         .config(["formlyConfigProvider", "fieldWrappersWithPreview", function (formlyConfigProvider, fieldWrappersWithPreview) {
 
             formlyConfigProvider.setType({
-                name: "hyperlink-default",
-                templateUrl: "fields/hyperlink/hyperlink-default.html",
+                name: 'hyperlink-default',
+                templateUrl: 'fields/hyperlink/hyperlink-default.html',
                 wrapper: fieldWrappersWithPreview,
-                controller: "FieldTemplate-HyperlinkCtrl as vm"
+                controller: 'FieldTemplate-HyperlinkCtrl as vm'
             });
         }])
         /*@ngInject*/
-        .controller("FieldTemplate-HyperlinkCtrl", ["$uibModal", "$scope", "$http", "sxc", "adamSvc", "debugState", "dnnBridgeSvc", "fileType", function ($uibModal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc, fileType) {
+        .controller('FieldTemplate-HyperlinkCtrl', ["$uibModal", "$scope", "$http", "sxc", "adamSvc", "debugState", "dnnBridgeSvc", "fileType", function ($uibModal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc, fileType) {
 
             var vm = this;
             vm.debug = debugState;
-            vm.testLink = "";
+            vm.testLink = '';
 
             vm.isImage = function () { return fileType.isImage(vm.testLink); };
             vm.thumbnailUrl = function thumbnailUrl(size, quote) {
                 var result = vm.testLink;
                 if (size === 1)
-                    result = result + "?w=64&h=64&mode=crop";
+                    result = result + '?w=64&h=64&mode=crop';
                 if (size === 2)
-                    result = result + "?w=500&h=400&mode=max";
-                var qt = quote ? "\"" : "";
+                    result = result + '?w=500&h=400&mode=max';
+                var qt = quote ? '"' : '';
                 return qt + result + qt;
             };
 
             vm.icon = function () { return fileType.getIconClass(vm.testLink); };
-            vm.tooltipUrl = function (str) { return str.replace(/\//g, "/&#8203;"); };
+            vm.tooltipUrl = function (str) { return str.replace(/\//g, '/&#8203;'); };
             vm.adamModeConfig = {
                 usePortalRoot: false
             };
@@ -745,13 +781,13 @@ angular.module("sxcFieldTemplates")
             function ensureDefaultConfig() {
                 var merged = $scope.to.settings.merged;
                 if (merged.ShowAdam === undefined || merged.ShowAdam === null) merged.ShowAdam = true;
-                if (merged.Buttons === undefined || merged.Buttons === null) merged.Buttons = "adam,more";
+                if (merged.Buttons === undefined || merged.Buttons === null) merged.Buttons = 'adam,more';
             }
 
             ensureDefaultConfig();
 
             // Update test-link if necessary - both when typing or if link was set by dialogs
-            $scope.$watch("value.Value", function(newValue, oldValue) {
+            $scope.$watch('value.Value', function(newValue, oldValue) {
                 if (!newValue)
                     return;
 
@@ -773,7 +809,7 @@ angular.module("sxcFieldTemplates")
                 $scope.$apply(function() {
                     // Convert to page:xyz format (if it wasn't cancelled)
                     if (value)
-                        $scope.value.Value = "page:" + value.id;
+                        $scope.value.Value = 'page:' + value.id;
                 });
             };
 
@@ -782,20 +818,27 @@ angular.module("sxcFieldTemplates")
                 dnnBridgeSvc.open(
                     $scope.value.Value,
                     {
-                        Paths: $scope.to.settings.merged ? $scope.to.settings.merged.Paths : "",
-                        FileFilter: $scope.to.settings.merged ? $scope.to.settings.merged.FileFilter : ""
+                        Paths: $scope.to.settings.merged ? $scope.to.settings.merged.Paths : '',
+                        FileFilter: $scope.to.settings.merged ? $scope.to.settings.merged.FileFilter : ''
                     },
                     vm.processResultOfPagePicker);
             };
             //#endregion dnn page picker
 
-            //#region new adam: callbacks only
-            vm.registerAdam = function(adam) {
-                vm.adam = adam;
-            };
-            vm.setValue = function(fileItem) {
-                $scope.value.Value = "File:" + fileItem.Id;
-            };
+          //#region new adam: callbacks only
+          vm.registerAdam = function(adam) {
+              vm.adam = adam;
+          };
+
+          vm.setValue = function (fileItem) {
+            // depending on settings, use the id or not
+            if ($scope.to.settings.merged.ServerResourceMapping &&
+              $scope.to.settings.merged.ServerResourceMapping === 'url')
+              $scope.value.Value = fileItem.fullPath // this is the one coming from the adam-browser
+                || fileItem.Path; // or the server request
+            else
+              $scope.value.Value = 'file:' + fileItem.Id;
+          };
 
             $scope.afterUpload = vm.setValue;   // binding for dropzone
 
@@ -1379,9 +1422,9 @@ angular.module("sxcFieldTemplates")
 
 
 
-angular.module("sxcFieldTemplates")
+angular.module('sxcFieldTemplates')
     /*@ngInject*/
-    .factory("tinyMceAdam", function () {
+    .factory('tinyMceAdam', function () {
         return {
             attachAdam: attachAdam,
             addButtons: addAdamButtons
@@ -1393,21 +1436,21 @@ angular.module("sxcFieldTemplates")
             };
 
             vm.setValue = function (fileItem, modeImage) {
-                if (modeImage === undefined)        // if not supplied, use the setting in the adam
-                    modeImage = vm.adamModeImage;
-                vm.editor.insertContent(modeImage
-                    ? "<img src=\"" + fileItem.fullPath + "\">"
-                    : "<a href=\"" + fileItem.fullPath + "\">" + fileItem.Name.substr(0, fileItem.Name.lastIndexOf(".")) + "</a>");
+              if (modeImage === undefined) // if not supplied, use the setting in the adam
+                modeImage = vm.adamModeImage;
+              var fileName = fileItem.Name.substr(0, fileItem.Name.lastIndexOf('.'));
+              vm.editor.insertContent(modeImage
+                ? '<img src="' + fileItem.fullPath + '" + alt="' + fileName + '">'
+                : '<a href="' + fileItem.fullPath + '">' + fileName + '</a>');
             };
 
             // this is the event called by dropzone as something is dropped
             $scope.afterUpload = function (fileItem) {
-                vm.setValue(fileItem, fileItem.Type === "image");
+                vm.setValue(fileItem, fileItem.Type === 'image');
             };
 
             vm.toggleAdam = function toggle(imagesOnly, usePortalRoot) {
                 vm.adamModeImage = imagesOnly;
-                //vm.adamModeConfig.usePortalRoot = !!usePortalRoot;
                 vm.adam.toggle({
                     showImagesOnly: imagesOnly,
                     usePortalRoot: usePortalRoot
@@ -1419,25 +1462,25 @@ angular.module("sxcFieldTemplates")
         function addAdamButtons(vm) {
             var e = vm.editor;
             // group with adam-link, dnn-link
-            e.addButton("linkfiles", {
-                type: "splitbutton",
-                icon: " eav-icon-file-pdf",
-                title: "Link.AdamFile.Tooltip",
+            e.addButton('linkfiles', {
+                type: 'splitbutton',
+                icon: ' eav-icon-file-pdf',
+                title: 'Link.AdamFile.Tooltip',
                 onclick: function () {
                     vm.toggleAdam(false);
                 },
                 menu: [
                     {
-                        text: "Link.AdamFile",
-                        tooltip: "Link.AdamFile.Tooltip",
-                        icon: " eav-icon-file-pdf",
+                        text: 'Link.AdamFile',
+                        tooltip: 'Link.AdamFile.Tooltip',
+                        icon: ' eav-icon-file-pdf',
                         onclick: function () {
                             vm.toggleAdam(false, false);
                         }
                     }, {
-                        text: "Link.DnnFile",
-                        tooltip: "Link.DnnFile.Tooltip",
-                        icon: " eav-icon-file",
+                        text: 'Link.DnnFile',
+                        tooltip: 'Link.DnnFile.Tooltip',
+                        icon: ' eav-icon-file',
                         onclick: function () {
                             vm.toggleAdam(false, true);
                         }
@@ -1447,34 +1490,34 @@ angular.module("sxcFieldTemplates")
 
 
             // group with images (adam) - only in PRO mode
-            e.addButton("images", {
-                type: "splitbutton",
-                text: "",
-                icon: "image",
+            e.addButton('images', {
+                type: 'splitbutton',
+                text: '',
+                icon: 'image',
                 onclick: function () {
                     vm.toggleAdam(true);
                 },
                 menu: [
                     {
-                        text: "Image.AdamImage",
-                        tooltip: "Image.AdamImage.Tooltip",
-                        icon: "image",
+                        text: 'Image.AdamImage',
+                        tooltip: 'Image.AdamImage.Tooltip',
+                        icon: 'image',
                         onclick: function () { vm.toggleAdam(true); }
                     }, {
-                        text: "Image.DnnImage",
-                        tooltip: "Image.DnnImage.Tooltip",
-                        icon: "image",
+                        text: 'Image.DnnImage',
+                        tooltip: 'Image.DnnImage.Tooltip',
+                        icon: 'image',
                         onclick: function () { vm.toggleAdam(true, true); }
                     }, {
-                        text: "Insert\/edit image", // i18n tinyMce standard
-                        icon: "image",
-                        onclick: function () { e.execCommand("mceImage"); }
+                        text: 'Insert\/edit image', // i18n tinyMce standard
+                        icon: 'image',
+                        onclick: function () { e.execCommand('mceImage'); }
 
                     },
                     // note: all these use i18n from tinyMce standard
-                    { icon: "alignleft", tooltip: "Align left", onclick: function () { e.execCommand("JustifyLeft"); } },
-                    { icon: "aligncenter", tooltip: "Align center", onclick: function () { e.execCommand("JustifyCenter"); } },
-                    { icon: "alignright", tooltip: "Align right", onclick: function () { e.execCommand("JustifyRight"); } }
+                    { icon: 'alignleft', tooltip: 'Align left', onclick: function () { e.execCommand('JustifyLeft'); } },
+                    { icon: 'aligncenter', tooltip: 'Align center', onclick: function () { e.execCommand('JustifyCenter'); } },
+                    { icon: 'alignright', tooltip: 'Align right', onclick: function () { e.execCommand('JustifyRight'); } }
                 ]
             });
 

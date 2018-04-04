@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Globalization;
-using DotNetNuke.Entities.Users;
-using DotNetNuke.Services.Tokens;
 using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class AppPropertyAccess : BaseValueProvider, IPropertyAccess
+    internal class AppPropertyAccess : BaseValueProvider
     {
-        //private readonly DotNetNuke.Services.Tokens.TokenReplace dnnTokenReplace  = new TokenReplace(Scope.NoSettings);
         private readonly App _app;
 
         #region Internal stuff to be able to supply sub-properties
@@ -51,26 +47,6 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 			_app = app;
         }
 
-        public CacheLevel Cacheability
-        {
-            get { return CacheLevel.notCacheable; }
-        }
-
-        /// <summary>
-        /// Get Property out of NameValueCollection
-        /// </summary>
-        /// <param name="strPropertyName"></param>
-        /// <param name="strFormat"></param>
-        /// <param name="formatProvider"></param>
-        /// <param name="AccessingUser"></param>
-        /// <param name="AccessLevel"></param>
-        /// <param name="PropertyNotFound"></param>
-        /// <returns></returns>
-        public string GetProperty(string strPropertyName, string strFormat, CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
-        {
-            return Get(strPropertyName, strFormat, ref PropertyNotFound);
-        }
-
         public override string Get(string strPropertyName, string strFormat, ref bool PropertyNotFound)
         {
             strPropertyName = strPropertyName.ToLower();
@@ -97,16 +73,17 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             PropertyNotFound = true;
             return string.Empty;
         }
-        /// <summary>
-        /// Shorthand version, will return the string value or a null if not found. 
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        public virtual string Get(string property)
-        {
-            var temp = false;
-            return Get(property, "", ref temp);
-        }
+
+        ///// <summary>
+        ///// Shorthand version, will return the string value or a null if not found. 
+        ///// </summary>
+        ///// <param name="property"></param>
+        ///// <returns></returns>
+        //public virtual string Get(string property)
+        //{
+        //    var temp = false;
+        //    return Get(property, "", ref temp);
+        //}
 
 
         public override bool Has(string property)

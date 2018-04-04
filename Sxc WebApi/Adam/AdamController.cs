@@ -14,8 +14,16 @@ using ToSic.SexyContent.WebApi;
 using System.Configuration;
 using System.Web.Configuration;
 using System.Web.Http.Controllers;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Assets;
+using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.ValueProvider;
+using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.SexyContent.WebApi.Errors;
+using App = ToSic.SexyContent.App;
 
-namespace ToSic.SexyContent.Adam
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Adam.WebApi
 {
     /// <summary>
     /// Direct access to app-content items, simple manipulations etc.
@@ -23,43 +31,53 @@ namespace ToSic.SexyContent.Adam
     /// Then we can reduce security access level to anonymous, because each method will do the security check
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
    public class AdamController: SxcApiController
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext); // very important!!!
-            Log.Rename("AdamCont");
+            Log.Rename("Api.Adam");
         }
 
-        public EntityBase EntityBase;
+        internal ContainerBase ContainerContext;
+        internal AdamAppContext AdamAppContext;
 
-        private void PrepCore(Guid entityGuid, string fieldName, bool usePortalRoot)
+        private void PrepCore(App app,  Guid entityGuid, string fieldName, bool usePortalRoot)
         {
-            EntityBase = new EntityBase(SxcContext, App, Dnn.Portal, entityGuid, fieldName, usePortalRoot);
+            var tenant = new DnnTenant(Dnn.Portal);
+            AdamAppContext = new AdamAppContext(tenant, app, SxcInstance);
+            ContainerContext = usePortalRoot 
+                ? new ContainerOfTenant(AdamAppContext) as ContainerBase
+                : new ContainerOfField(AdamAppContext, entityGuid, fieldName);
         }
 
-        public int MaxFileSizeKb => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection)?.MaxRequestLength ?? 1; // if not specified, go to very low value, but not 0, as that could be infinite...
+        public int MaxFileSizeKb 
+            => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection)?.MaxRequestLength ?? 1; // if not specified, go to very low value, but not 0, as that could be infinite...
 
 
         [HttpPost]
         [HttpPut]
-        public UploadResult Upload(string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) => UploadOne(contentType, guid, field, subFolder, usePortalRoot);
+        public UploadResult Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) 
+            => UploadOne(appId, contentType, guid, field, subFolder, usePortalRoot);
 
-        private UploadResult UploadOne(string contentTypeName, Guid guid, string field, string subFolder, bool usePortalRoot)
+        private UploadResult UploadOne(int appId, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot)
         {
             Log.Add($"upload one a:{App?.AppId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
-            ExplicitlyRecheckEditPermissions();
-            PrepCore(guid, field, usePortalRoot);
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
+
+            PrepCore(set.Item1, guid, field, usePortalRoot);
+
+            var appRead = new AppRuntime(set.Item1, Log);
 
             // Get the content-type definition
-            var cache = App.Data.Cache;
-            var contentType = cache.GetContentType(contentTypeName);
-            var fieldDef = contentType[field];
+            var typeDef = appRead.ContentTypes.Get(contentType);
+            var fieldDef = typeDef[field];
 
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
             if (fieldDef == null || !(fieldDef.Type != "Hyperlink" || fieldDef.Type != "String"))
@@ -70,9 +88,9 @@ namespace ToSic.SexyContent.Adam
 
             try
             {
-                var folder = EntityBase.Folder();
+                var folder = ContainerContext.Folder();
                 if(!string.IsNullOrEmpty(subFolder)) 
-                    folder = EntityBase.Folder(subFolder, false);
+                    folder = ContainerContext.Folder(subFolder, false);
                 var filesCollection = HttpContext.Current.Request.Files;
                 Log.Add($"folder: {folder}, file⋮{filesCollection.Count}");
                 if (filesCollection.Count > 0)
@@ -100,14 +118,18 @@ namespace ToSic.SexyContent.Adam
                     if (fileName != originalFile.FileName)
                         Log.Add($"cleaned file name from'{originalFile.FileName}' to '{fileName}'");
 
-                    // Make sure the image does not exist yet (change file name)
-                    for (int i = 1; FileManager.Instance.FileExists(folder, Path.GetFileName(fileName)); i++)
-                        fileName = Path.GetFileNameWithoutExtension(fileName)
-                                   + "-" + i +
-                                   Path.GetExtension(fileName);
+                    var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
+
+
+                    // Make sure the image does not exist yet, cycle through numbers (change file name)
+                    var numberedFile = fileName;
+                    for (var i = 1; FileManager.Instance.FileExists(dnnFolder, Path.GetFileName(numberedFile)) && i < 1000; i++)
+                        numberedFile = Path.GetFileNameWithoutExtension(fileName)
+                                   + "-" + i + Path.GetExtension(fileName);
+                    fileName = numberedFile;
 
                     // Everything is ok, add file
-                    var dnnFile = FileManager.Instance.AddFile(folder, Path.GetFileName(fileName), originalFile.InputStream);
+                    var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName), originalFile.InputStream);
 
                     return new UploadResult
                     {
@@ -115,8 +137,8 @@ namespace ToSic.SexyContent.Adam
                         Error = "",
                         Name = Path.GetFileName(fileName),
                         Id = dnnFile.FileId,
-                        Path = dnnFile.RelativePath,
-                        Type = EntityBase.TypeName(dnnFile.Extension)
+                        Path = PortalSettings.HomeDirectory + dnnFile.RelativePath,
+                        Type = Classification.TypeName(dnnFile.Extension)
                     };
                 }
                 Log.Add("upload one complete");
@@ -164,32 +186,50 @@ namespace ToSic.SexyContent.Adam
             #endregion
         }
 
+        private static bool UserMayWriteEverywhereOrThrowIfAttempted(bool usePortalRoot,
+            PermissionCheckBase permCheck)
+        {
+            var everywhereOk = permCheck.UserMay(GrantSets.WritePublished);
+            if (usePortalRoot && !everywhereOk)
+                throw Http.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
+            return everywhereOk;
+        }
+
 
         #region adam-file manager
 
         [HttpGet]
-        public IEnumerable<AdamItem> Items(Guid guid, string field, string subfolder, bool usePortalRoot = false)
+        public IEnumerable<AdamItem> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
             Log.Add($"adam items a:{App?.AppId}, i:{guid}, field:{field}, subfold:{subfolder}, useRoot:{usePortalRoot}");
-            ExplicitlyRecheckEditPermissions();
-            PrepCore(guid, field, usePortalRoot);
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
+            var app = App;
+            if(app.AppId != appId)
+            {
+                app = set.Item1;
+                app.InitData(true, false, new ValueCollectionProvider());
+            }
+
+            PrepCore(app, guid, field, usePortalRoot);
             var folderManager = FolderManager.Instance;
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            EntityBase.Folder();
+            ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = EntityBase.Folder(subfolder, false);
+            var currentAdam = ContainerContext.Folder(subfolder, false);
+            var currentDnn = folderManager.GetFolder(currentAdam.Id);
 
-            var subfolders = folderManager.GetFolders(current);
-            var files = folderManager.GetFiles(current);
+            var subfolders =  folderManager.GetFolders(currentDnn);
+            var files = folderManager.GetFiles(currentDnn);
 
             var adamFolders =
-                subfolders.Where(s => s.FolderID != current.FolderID)
-                    .Select(f => new AdamItem(f) {MetadataId = EntityBase.GetMetadataId(f.FolderID, true)})
+                subfolders.Where(s => s.FolderID != currentDnn.FolderID)
+                    .Select(f => new AdamItem(f) {MetadataId = Metadata.GetMetadataId(AdamAppContext, f.FolderID, true)})
                     .ToList();
             var adamFiles = files
-                .Select(f => new AdamItem(f) {MetadataId = EntityBase.GetMetadataId(f.FileId, false), Type = EntityBase.TypeName(f.Extension)})
+                .Select(f => new AdamItem(f) {MetadataId = Metadata.GetMetadataId(AdamAppContext, f.FileId, false), Type = Classification.TypeName(f.Extension)})
                 .ToList();
 
             var all = adamFolders.Concat(adamFiles).ToList();
@@ -198,46 +238,36 @@ namespace ToSic.SexyContent.Adam
             return all;
         }
 
-        /// <summary>
-        /// Explicitly re-check dnn security
-        /// The user needs edit (not read) permissions even in read-scenarios
-        /// because there is no other reason to access these assets
-        /// </summary>
-        private void ExplicitlyRecheckEditPermissions()
-        {
-            Log.Add("explicitly recheck permissions, will throw if not ok");
-            if(!SxcContext.Environment.Permissions.UserMayEditContent)
-                throw new HttpResponseException(HttpStatusCode.Forbidden);
-        }
-
         [HttpPost]
-        public IEnumerable<AdamItem> Folder(Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
+        public IEnumerable<AdamItem> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
         {
             Log.Add($"get folders for a:{App?.AppId}, i:{guid}, field:{field}, subfld:{subfolder}, new:{newFolder}, useRoot:{usePortalRoot}");
-            ExplicitlyRecheckEditPermissions();
-            PrepCore(guid, field, usePortalRoot);
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
+            PrepCore(set.Item1, guid, field, usePortalRoot);
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            EntityBase.Folder();
+            ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            EntityBase.Folder(subfolder, false);
+            ContainerContext.Folder(subfolder, false);
 
             // now access the subfolder, creating it if missing (which is what we want
-            EntityBase.Folder(subfolder + "/" + newFolder, true);
+            ContainerContext.Folder(subfolder + "/" + newFolder, true);
 
-            return Items(guid, field, subfolder, usePortalRoot);
+            return Items(appId, contentType, guid, field, subfolder, usePortalRoot);
         }
 
         [HttpGet]
-        public bool Delete(Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
+        public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
         {
             Log.Add($"delete from a:{App?.AppId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
-            ExplicitlyRecheckEditPermissions();
-            PrepCore(guid, field, usePortalRoot);
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
+            PrepCore(set.Item1, guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = EntityBase.Folder(subfolder, false);
+            var current = ContainerContext.Folder(subfolder, false);
             
             var folderManager = FolderManager.Instance;
             var fileManager = FileManager.Instance;
@@ -245,18 +275,18 @@ namespace ToSic.SexyContent.Adam
             if (isFolder)
             {
                 var fld = folderManager.GetFolder(id);
-                if (fld.ParentID == current.FolderID)
+                if (fld.ParentID == current.Id)
                     folderManager.DeleteFolder(id);
                 else
-                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) {ReasonPhrase = "can't delete folder - not found in folder"});
+                    throw Http.BadRequest("can't delete folder - not found in folder");
             }
             else
             {
                 var file = fileManager.GetFile(id);
-                if (file.FolderId == current.FolderID)
+                if (file.FolderId == current.Id)
                     fileManager.DeleteFile(file);
                 else
-                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) {ReasonPhrase = "can't delete file - not found in folder"});
+                    throw Http.BadRequest("can't delete file - not found in folder");
             }
 
             Log.Add("delete complete");
@@ -264,14 +294,15 @@ namespace ToSic.SexyContent.Adam
         }
 
         [HttpGet]
-        public bool Rename(Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
+        public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
         {
             Log.Add($"rename a:{App?.AppId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
-            ExplicitlyRecheckEditPermissions();
-            PrepCore(guid, field, usePortalRoot);
+            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
+            PrepCore(set.Item1, guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = EntityBase.Folder(subfolder, false);
+            var current = ContainerContext.Folder(subfolder, false);
 
             var folderManager = FolderManager.Instance;
             var fileManager = FileManager.Instance;
@@ -279,10 +310,10 @@ namespace ToSic.SexyContent.Adam
             if (isFolder)
             {
                 var fld = folderManager.GetFolder(id);
-                if (fld.ParentID == current.FolderID)
+                if (fld.ParentID == current.Id)
                     folderManager.RenameFolder(fld, newName);
                 else
-                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "can't rename folder - not found in folder" });
+                    throw Http.BadRequest("can't rename folder - not found in folder");
             }
             else
             {
@@ -290,8 +321,8 @@ namespace ToSic.SexyContent.Adam
                 if (file.Extension != newName.Split('.').Last())
                     newName += "." + file.Extension;
 
-                if (file.FolderId != current.FolderID)
-                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "can't rename file - not found in folder" });
+                if (file.FolderId != current.Id)
+                    throw Http.BadRequest("can't rename file - not found in folder");
 
                 fileManager.RenameFile(file, newName);
             }

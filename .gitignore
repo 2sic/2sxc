@@ -5,6 +5,7 @@
 *.suo
 *.user
 *.sln.docstates
+.vs
 
 # Build results
 
@@ -13,6 +14,8 @@
 x64/
 build/
 [Bb]in/
+# include bin files from koi
+!koi/bin/
 [Oo]bj/
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets

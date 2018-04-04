@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent
 {
@@ -13,7 +12,7 @@ namespace ToSic.SexyContent
         App App { get; }
         [Obsolete("This is now obsolete, please use the data-property of the SxcInstance")]
         ViewDataSource Data { get; }
-        DnnHelper Dnn { get; }
+        //DnnHelper Dnn { get; }
 
         SxcHelper Sxc { get; }
 

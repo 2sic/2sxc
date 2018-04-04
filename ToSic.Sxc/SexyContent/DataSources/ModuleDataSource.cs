@@ -1,8 +1,10 @@
-﻿using DotNetNuke.Entities.Modules;
+﻿//using DotNetNuke.Entities.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.VisualQuery;
@@ -44,7 +46,7 @@ namespace ToSic.SexyContent.DataSources
         }
 
 
-        internal SxcInstance SxcContext
+        internal SxcInstance SxcInstance
         {
             get
             {
@@ -74,23 +76,23 @@ namespace ToSic.SexyContent.DataSources
                 if (UseSxcInstanceContentGroup)
                 {
                     Log.Add("need content-group, will use from sxc-context");
-                    _contentGroup = SxcContext.ContentGroup;
+                    _contentGroup = SxcInstance.ContentGroup;
                 }
                 else
                 {
                     Log.Add("need content-group, will construct as cannot use context");
                     if (!InstanceId.HasValue)
                         throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
-                    var tabId = ModuleController.Instance.GetTabModulesByModule(InstanceId.Value)[0].TabID;
-                    var cgm = new ContentGroupManager(ZoneId, AppId,
-                        HasSxcContext && SxcContext.Environment.Permissions.UserMayEditContent,
-                        new Environment.Dnn7.PagePublishing(Log).IsEnabled(InstanceId.Value),
-                        Log);
-                    var res = cgm.GetContentGroupForModule(InstanceId.Value, tabId);
-                    var contentGroupGuid = res.Item1;
-                    var previewTemplateGuid = res.Item2;
-                    _contentGroup = cgm.GetContentGroupOrGeneratePreview(contentGroupGuid, previewTemplateGuid); 
+                    // 2018-03-05 2dm moved into the contentgroupmanager
+                    //var tabId = ModuleController.Instance.GetTabModulesByModule(InstanceId.Value)[0].TabID;
+                    var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
+                    var userMayEdit = SxcInstance?.UserMayEdit ?? false;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance?.InstanceInfo);
 
+                    var cgm = new ContentGroupManager(ZoneId, AppId,
+                        HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value),
+                        Log);
+
+                    _contentGroup = cgm.GetInstanceContentGroup(InstanceId.Value, null);
                 }
                 return _contentGroup;
             }

@@ -1,0 +1,1 @@
+{"_":{"V":1},"Entity":{"Id":46377,"Version":1,"Guid":"888bca62-8384-4d96-8c75-1fa0267f602a","Type":{"Name":"AdamConfiguration","Id":"d0888633-4551-4d4e-bc5d-f8672c9dff15"},"Attributes":{"String":{"AppRootFolder":{"*":"tenant/[ZoneId]/adam/[AppFolder]/"},"Notes":{"*":""},"Title":{"*":"Include zone in folder pattern"}}},"Owner":"dnn:userid=1"}}

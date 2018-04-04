@@ -4,6 +4,7 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -35,9 +36,14 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             => _eavCtc.GetSingle(appId, contentTypeId, scope);
 
 	    [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null) 
-            => _eavCtc.GetSingle(appId, contentTypeStaticName, scope);
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
+	    {
+	        GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentTypeStaticName);
+
+            // if we got this far, permissions are ok
+            return _eavCtc.GetSingle(appId, contentTypeStaticName, scope);
+	    }
 
 	    [HttpGet]
         [HttpDelete]
@@ -64,9 +70,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         /// Returns the configuration for a content type
         /// </summary>
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName) 
-            => _eavCtc.GetFields(appId, staticName);
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName)
+	    {
+	        GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, staticName);
+            return _eavCtc.GetFields(appId, staticName);
+	    }
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]

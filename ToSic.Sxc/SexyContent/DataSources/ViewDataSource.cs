@@ -13,21 +13,22 @@ namespace ToSic.SexyContent.DataSources
 
         public DataPublishing Publish = new DataPublishing();
 
-        internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, ValueCollectionProvider configurationProvider, Log parentLog, int moduleId = 0)
+        internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, ValueCollectionProvider configurationProvider, Log parentLog, int instanceId = 0)
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
-            var showDrafts = sxc.Environment.Permissions.UserMayEditContent;
-            log.Add($"mid#{moduleId}, draft:{showDrafts}, template:{overrideTemplate?.Name}");
+            var showDrafts = sxc.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(sxc.InstanceInfo);
+
+            log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{overrideTemplate?.Name}");
             // Get ModuleDataSource
             var initialSource = DataSource.GetInitialDataSource(sxc.ZoneId, sxc.AppId, showDrafts, configurationProvider, parentLog);
             var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(sxc.ZoneId, sxc.AppId, initialSource, configurationProvider, parentLog);
-            moduleDataSource.InstanceId = moduleId;
+            moduleDataSource.InstanceId = instanceId;
 
             moduleDataSource.OverrideTemplate = overrideTemplate; // new
             moduleDataSource.UseSxcInstanceContentGroup = true; // new
 
             // If the Template has a Data-Pipeline, use an empty upstream, else use the ModuleDataSource created above
-            var viewDataSourceUpstream = overrideTemplate?.Pipeline == null
+            var viewDataSourceUpstream = overrideTemplate?.Query == null
                 ? moduleDataSource
                 : null;
             log.Add($"use pipeline upstream:{viewDataSourceUpstream != null}");
@@ -40,10 +41,10 @@ namespace ToSic.SexyContent.DataSources
                 viewDataSource.Publish.Enabled = overrideTemplate.PublishData;
                 viewDataSource.Publish.Streams = overrideTemplate.StreamsToPublish;
 
-                log.Add($"override template, & pipe#{overrideTemplate.Pipeline?.EntityId}");
+                log.Add($"override template, & pipe#{overrideTemplate.Query?.EntityId}");
                 // Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
-                if (overrideTemplate.Pipeline != null)
-                    new DataPipelineFactory(parentLog).GetDataSource(sxc.AppId ?? -999, overrideTemplate.Pipeline/*.EntityId*/,
+                if (overrideTemplate.Query != null)
+                    new QueryFactory(parentLog).GetDataSource(sxc.AppId ?? -999, overrideTemplate.Query,
                         configurationProvider, viewDataSource, showDrafts: showDrafts);
 
             }

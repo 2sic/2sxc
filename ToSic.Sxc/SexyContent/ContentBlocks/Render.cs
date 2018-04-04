@@ -49,7 +49,7 @@ namespace ToSic.SexyContent.ContentBlocks
             if (field == null)
                 throw new ArgumentNullException(nameof(field));
 
-            return (merge == null)
+            return merge == null
                 ? new HtmlString(Simple.RenderListWithContext(context, field))
                 : new HtmlString(InTextContentBlocks.Render(context, field, merge));
         }

@@ -8,6 +8,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -20,13 +21,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     [SxcWebApiExceptionHandling]
 	public class PipelineDesignerController : DnnApiControllerWithFixes
 	{
-		private Eav.WebApi.PipelineDesignerController _eavCont;
+		private Eav.WebApi.QueryController _eavCont;
 
 	    protected override void Initialize(HttpControllerContext controllerContext)
 	    {
 	        base.Initialize(controllerContext); // very important!!!
 	        Log.Rename("2sPipC");
-			_eavCont = new Eav.WebApi.PipelineDesignerController(Log);
+			_eavCont = new Eav.WebApi.QueryController(Log);
 	    }
 
         /// <summary>
@@ -73,8 +74,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		{
             Log.Add($"delete pipe:{id} on app:{appId}");
 			// Stop if a Template uses this Pipeline
-            var app = new App(PortalSettings.Current, appId);
-			var templatesUsingPipeline = app.TemplateManager.GetAllTemplates().Where(t => t.Pipeline != null && t.Pipeline.EntityId == id).Select(t => t.TemplateId).ToArray();
+            var app = new App(new DnnTenant(PortalSettings.Current), appId);
+			var templatesUsingPipeline = app.TemplateManager.GetAllTemplates().Where(t => t.Query != null && t.Query.EntityId == id).Select(t => t.TemplateId).ToArray();
 			if (templatesUsingPipeline.Any())
 				throw new Exception(
 				        $"Pipeline is used by Templates and cant be deleted. Pipeline EntityId: {id}. TemplateIds: {string.Join(", ", templatesUsingPipeline)}");
@@ -83,6 +84,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		}
 
 	    [HttpPost]
-	    public bool ImportQuery(QueryImport args) => _eavCont.ImportQuery(args);
+	    public bool ImportQuery(EntityImport args) => _eavCont.ImportQuery(args);
 	}
 }

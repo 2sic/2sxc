@@ -117,11 +117,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\SecurityContext.cs" />
-    <Compile Include="API\Services.asmx.cs">
-      <DependentUpon>Services.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ConfigurationLoader.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -150,6 +146,7 @@
     <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.designer.cs">
       <DependentUpon>QuickEdit.ascx</DependentUpon>
     </Compile>
+    <Compile Include="RepositoryInfoEavAndUi.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -160,13 +157,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".data-custom\readme.md" />
     <None Include=".databeta\readme.md" />
-    <Content Include=".data\ContentTypes\System.38e7822b-1049-4539-bb3f-f99949b1b1d1.json" />
-    <Content Include=".data\ContentTypes\System.7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02.json" />
-    <Content Include=".data\ContentTypes\System.c76901b5-0345-4866-9fa3-6208de7f8543.json" />
-    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.RelationshipFilter.json" />
     <Content Include=".gitignore" />
-    <Content Include="API\Services.asmx" />
     <Content Include="ClientScripts\ModuleEditor.js" />
     <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.dll" />
     <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.pdb" />
@@ -188,13 +181,24 @@
     <Content Include="icon.png" />
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
+    <Content Include="koi\bin\Connect.Dnn.Koi.dll" />
+    <Content Include="koi\bin\Connect.Koi.dll" />
+    <Content Include="koi\License.txt" />
+    <Content Include="koi\ReleaseNotes.txt" />
     <Content Include="README.md" />
     <Content Include="package.json" />
     <Content Include="packages.config" />
+    <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
+    <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
+    <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <Content Include="web-Deploy.config" />
     <Content Include="web.config" />
+    <Content Include="SexyContent\ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
+    <Content Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
+    <Content Include="SexyContent\readme.md" />
+    <Content Include="Upgrade\readme.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\View.ascx.resx" />
@@ -207,6 +211,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include=".data-custom\contenttypes\" />
     <Folder Include=".databeta\queries\" />
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +243,18 @@
       <Project>{cf3b9349-8c66-4901-8edb-a4ec1d75326b}</Project>
       <Name>ToSic.Eav</Name>
     </ProjectReference>
+    <ProjectReference Include="2Sexy Content Razor\2sxc Razor.csproj">
+      <Project>{78a558af-f274-4e3c-95fe-8de9226e0ebc}</Project>
+      <Name>2sxc Razor</Name>
+    </ProjectReference>
+    <ProjectReference Include="2sxc Dnn\2sxc Dnn.csproj">
+      <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
+      <Name>2sxc Dnn</Name>
+    </ProjectReference>
+    <ProjectReference Include="Sxc WebApi\2sxc Dnn WebApi.csproj">
+      <Project>{2f0610de-2518-4fc8-823e-7228dd17c04f}</Project>
+      <Name>2sxc Dnn WebApi</Name>
+    </ProjectReference>
     <ProjectReference Include="ToSic.Sxc\2sxc core %28ToSic.Sxc%29.csproj">
       <Project>{66318f76-3d43-406c-8de6-94b46c22f776}</Project>
       <Name>2sxc core %28ToSic.Sxc%29</Name>
@@ -248,39 +265,12 @@
     <Content Include="BuildScripts\ModulePackage.Targets">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include=".data\ContentTypes\System.37b25044-29bb-4c78-85e4-7b89f0abaa2c.json" />
-    <Content Include=".data\ContentTypes\System.4638668f-d506-4f5c-ae37-aa7fdbbb5540.json" />
-    <Content Include=".data\ContentTypes\System.5461d34d-7dc6-4d38-9250-a0729cc8ead3.json" />
-    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.App.json" />
-    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.Caches.CacheAllStreams.json" />
-    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.CsvDataSource.json" />
-    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.EntityTypeFilter.json" />
-    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.Paging.json" />
-    <Content Include=".data\ContentTypes\System.Config ToSic.Eav.DataSources.ValueFilter.json" />
-    <Content Include=".data\ContentTypes\System.fabc849e-b426-42ea-8e1c-c04e69facd9b.json" />
-    <Content Include=".data\queries\Query.Eav.Queries.Global.Apps.json" />
-    <Content Include=".data\queries\Query.Eav.Queries.Global.Attributes.json" />
-    <Content Include=".data\queries\Query.Eav.Queries.Global.ContentTypes.json" />
-    <Content Include=".data\queries\Query.Eav.Queries.Global.Queries.json" />
-    <Content Include=".data\queries\Query.Eav.Queries.Global.QueryInfo.json" />
-    <Content Include=".data\queries\Query.Eav.Queries.Global.Zones.json" />
     <Content Include="ClientScripts\readme.md" />
     <Content Include="DnnPackageBuilder\2sic_2SexyContent.dnn" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\00.99.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\07.00.03.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\07.02.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\07.02.02.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\07.03.01.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\07.03.03.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\08.00.06.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\08.01.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\08.03.02.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\08.05.02.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\09.03.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\09.07.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\readme.md" />
+    <Content Include="BuildScripts\readme.md" />
+    <Content Include="koi\Resources.zip" />
+    <Content Include=".data\readme.md" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>
@@ -342,7 +332,7 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PostBuildEvent>
-xcopy "C:\Projects\2SexyContent\Web\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I</PostBuildEvent>
+xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <Extension>zip</Extension>

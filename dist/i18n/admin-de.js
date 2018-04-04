@@ -12,7 +12,9 @@
 			"Refresh": "Aktualisieren",
 			"Rename": "Umbenennen",
 			"Save": "Speichern",
-			"System": "Erweitere System-Funktionen"
+			"System": "Erweitere System-Funktionen",
+			"Export": "export",
+			"Import": "import"
 		},
 		"Messages": {
 			"Loading": "wird geladen...",

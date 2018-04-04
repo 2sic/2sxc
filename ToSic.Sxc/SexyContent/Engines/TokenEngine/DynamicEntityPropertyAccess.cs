@@ -4,13 +4,11 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using DotNetNuke.Entities.Users;
-using DotNetNuke.Services.Tokens;
 using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-	public class DynamicEntityPropertyAccess : IPropertyAccess, IValueProvider
+	internal class DynamicEntityPropertyAccess : /*IPropertyAccess,*/ IValueProvider
 	{
         public const string RepeaterSubToken = "Repeater";
 
@@ -29,10 +27,10 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 		    RepeaterTotal = repeaterTotal;
 		}
 
-		public CacheLevel Cacheability
-		{
-			get { return CacheLevel.notCacheable; }
-		}
+		//public CacheLevel Cacheability
+		//{
+		//	get { return CacheLevel.notCacheable; }
+		//}
 
 		/// <summary>
 		/// Get Property out of NameValueCollection
@@ -44,7 +42,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 		/// <param name="AccessLevel"></param>
 		/// <param name="PropertyNotFound"></param>
 		/// <returns></returns>
-		public string GetProperty(string strPropertyName, string strFormat, CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
+		public string GetProperty(string strPropertyName, string strFormat, CultureInfo formatProvider, /*UserInfo AccessingUser,*/ /*Scope AccessLevel,*/ ref bool PropertyNotFound)
 		{
 			// Return empty string if Entity is null
 			if (_entity == null)
@@ -102,7 +100,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 				switch (valueObject.GetType().Name)
 				{
 					case "String":
-						return PropertyAccess.FormatString((string)valueObject, strFormat);
+						return BaseValueProvider.FormatString((string)valueObject, strFormat);
 					case "Boolean":
 						return ((bool)valueObject).ToString(formatProvider).ToLower();
 					case "DateTime":
@@ -111,9 +109,9 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 					case "Int32":
 					case "Int64":
 					case "Decimal":
-						return (((IFormattable)valueObject).ToString(outputFormat, formatProvider));
+						return ((IFormattable)valueObject).ToString(outputFormat, formatProvider);
 					default:
-						return PropertyAccess.FormatString(valueObject.ToString(), strFormat);
+						return BaseValueProvider.FormatString(valueObject.ToString(), strFormat);
 				}
 			}
 
@@ -135,7 +133,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                             entity = valueObject as DynamicEntity;
 
 						if (entity != null)
-                            return new DynamicEntityPropertyAccess(null, entity).GetProperty(propertyMatch.Groups[2].Value, string.Empty, formatProvider, AccessingUser, AccessLevel, ref propertyNotFound);
+                            return new DynamicEntityPropertyAccess(null, entity).GetProperty(propertyMatch.Groups[2].Value, string.Empty, formatProvider, /*AccessingUser,*/ /*AccessLevel,*/ ref propertyNotFound);
 
 						#endregion
 
@@ -151,8 +149,9 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 
 		public string Get(string strPropertyName, string strFormat, ref bool PropertyNotFound)
 		{
-			return GetProperty(strPropertyName, strFormat, Thread.CurrentThread.CurrentCulture, null, Scope.DefaultSettings, ref PropertyNotFound);
+			return GetProperty(strPropertyName, strFormat, Thread.CurrentThread.CurrentCulture, /*null,*/ /*Scope.DefaultSettings,*/ ref PropertyNotFound);
 		}
+
         /// <summary>
         /// Shorthand version, will return the string value or a null if not found. 
         /// </summary>

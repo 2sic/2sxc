@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.WebApi
         private ContentGroup GetContentGroup(Guid contentGroupGuid)
         {
             Log.Add($"get group:{contentGroupGuid}");
-            var contentGroup = SxcContext.App.ContentGroupManager.GetContentGroup(contentGroupGuid);
+            var contentGroup = SxcInstance.App.ContentGroupManager.GetContentGroup(contentGroupGuid);
 
             if (contentGroup == null)
                 throw new Exception("ContentGroup with Guid " + contentGroupGuid + " does not exist.");
@@ -99,10 +99,10 @@ namespace ToSic.SexyContent.WebApi
         public void Replace(Guid guid, string part, int index, int entityId)
         {
             Log.Add($"replace target:{guid}, part:{part}, index:{index}, id:{entityId}");
-            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = SxcInstance.Environment.PagePublishing;// new PagePublishing(Log);
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
-                var contentGroup = SxcContext.App.ContentGroupManager.GetContentGroup(guid);
+                var contentGroup = SxcInstance.App.ContentGroupManager.GetContentGroup(guid);
                 contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
             };
 
@@ -135,7 +135,7 @@ namespace ToSic.SexyContent.WebApi
         public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> list)
         {
             Log.Add($"list for:{guid}, items:{list?.Count}");
-            var versioning = SxcContext.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = SxcInstance.Environment.PagePublishing;// new PagePublishing(Log);
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
                 var cg = GetContentGroup(guid);

@@ -1,25 +1,21 @@
 ﻿using DotNetNuke.Common;
-using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Apps.Interfaces;
 
 namespace ToSic.SexyContent.Razor.Helpers
 {
     public class UrlHelper
     {
-        private readonly ModuleInfo _context;
+        private readonly IInstanceInfo _context;
 
-        public UrlHelper(ModuleInfo context)
+        public UrlHelper(IInstanceInfo context)
         {
             _context = context;
         }
 
-        public string NavigateToControl()
-        {
-            return Globals.NavigateURL(_context.TabID);
-        }
+        public string NavigateToControl() 
+            => Globals.NavigateURL(_context.PageId);
 
-        public string NavigateToControl(string controlKey)
-        {
-            return Globals.NavigateURL(_context.TabID, controlKey, "mid=" + _context.ModuleID);
-        }
+        public string NavigateToControl(string controlKey) 
+            => Globals.NavigateURL(_context.PageId, controlKey, $"mid={_context.Id}");
     }
 }

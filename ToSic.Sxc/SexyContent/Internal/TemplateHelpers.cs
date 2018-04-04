@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 
 namespace ToSic.SexyContent.Internal
 {
-    public class TemplateHelpers
+    internal class TemplateHelpers
     {
         public const string RazorC = "C# Razor";
         public const string TokenReplace = "Token";
@@ -24,28 +23,24 @@ namespace ToSic.SexyContent.Internal
         public void EnsureTemplateFolderExists(string templateLocation)
         {
             var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
-                ? HostingEnvironment.MapPath(Settings.PortalHostDirectory) 
-                : App.Tennant.Settings.HomeDirectoryMapPath;
-            var sexyFolderPath = Path.Combine(portalPath, Settings.TemplateFolder);
+                ? Path.Combine(HostingEnvironment.MapPath(Settings.PortalHostDirectory), Settings.AppsRootFolder) 
+                : HostingEnvironment.MapPath(App.Tenant.SxcPath);//.Settings.HomeDirectoryMapPath;
+            var sexyFolderPath = portalPath;// Path.Combine(portalPath, Settings.TemplateFolder);
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
 
             // Create 2sxc folder if it does not exists
-            if (!sexyFolder.Exists)
-                sexyFolder.Create();
+            sexyFolder.Create();
 
             // Create web.config (copy from DesktopModules folder)
-            if (!sexyFolder.GetFiles("web.config").Any())
+            if (!sexyFolder.GetFiles(Settings.WebConfigFileName).Any())
                 File.Copy(HostingEnvironment.MapPath(Settings.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
 
             // Create a Content folder (or App Folder)
-            if (!String.IsNullOrEmpty(App.Folder))
-            {
-                var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, App.Folder));
-                if (!contentFolder.Exists)
-                    contentFolder.Create();
-            }
+            if (string.IsNullOrEmpty(App.Folder)) return;
 
+            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, App.Folder));
+            contentFolder.Create();
         }
         
 
@@ -55,9 +50,9 @@ namespace ToSic.SexyContent.Internal
         public static string GetTemplatePathRoot(string locationId, App app)
         {
             var rootFolder = locationId == Settings.TemplateLocations.HostFileSystem
-                ? Settings.PortalHostDirectory
-                : app.Tennant.Settings.HomeDirectory;
-            rootFolder += Settings.TemplateFolder + "/" + app.Folder;
+                ? Settings.PortalHostDirectory + Settings.AppsRootFolder
+                : app.Tenant.SxcPath;
+            rootFolder += "/" + app.Folder;
             return rootFolder;
         }
 

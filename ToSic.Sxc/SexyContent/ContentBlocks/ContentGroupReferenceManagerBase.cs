@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data.Query;
@@ -17,12 +16,12 @@ namespace ToSic.SexyContent.ContentBlocks
         protected SxcInstance SxcContext;
         protected int ModuleId;
 
-        protected ContentGroup CGroup;
+        private ContentGroup _cGroup;
 
         internal ContentGroupReferenceManagerBase(SxcInstance sxc): base("CG.RefMan", sxc.Log)
         {
             SxcContext = sxc;
-            ModuleId = SxcContext.ModuleInfo.ModuleID;
+            ModuleId = SxcContext.EnvInstance.Id;
         }
 
 
@@ -40,7 +39,7 @@ namespace ToSic.SexyContent.ContentBlocks
         #region methods which are fairly stable / the same across content-block implementations
 
         protected ContentGroup ContentGroup
-            => CGroup ?? (CGroup = SxcContext.ContentGroup);
+            => _cGroup ?? (_cGroup = SxcContext.ContentGroup);
 
         public void AddItem(int? sortOrder = null)
             => ContentGroup.AddContentAndPresentationEntity(AppConstants.ContentLower, sortOrder, null, null);
@@ -69,7 +68,7 @@ namespace ToSic.SexyContent.ContentBlocks
                 // only set preview / content-group-reference - but must use the guid
                 var dataSource = SxcContext.App.Data;
                 var templateGuid = dataSource.List.One(templateId).EntityGuid;
-                SavePreviewTemplateId(templateGuid);//, newTemplateChooserState);
+                SavePreviewTemplateId(templateGuid);
                 result = null; // send null back
             }
 
@@ -84,24 +83,16 @@ namespace ToSic.SexyContent.ContentBlocks
         public IEnumerable<AppUiInfo> GetSelectableApps()
         {
             Log.Add("get selectable apps");
-            try
-            {
-                var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.PortalSettings.PortalId);
-                return
-                    AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.PortalSettings, Log)
-                        .Where(a => !a.Hidden)
-                        .Select(a => new AppUiInfo {
-                            Name = a.Name,
-                            AppId = a.AppId,
-                            SupportsAjaxReload = a.Configuration.SupportsAjaxReload ?? false,
-                            Thumbnail = a.Thumbnail
-                        });
-            }
-            catch (Exception e)
-            {
-                Exceptions.LogException(e);
-                throw;
-            }
+            var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.Tenant.Id);
+            return
+                AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.Tenant, Log)
+                    .Where(a => !a.Hidden)
+                    .Select(a => new AppUiInfo {
+                        Name = a.Name,
+                        AppId = a.AppId,
+                        SupportsAjaxReload = a.Configuration.SupportsAjaxReload ?? false,
+                        Thumbnail = a.Thumbnail
+                    });
         }
 
         public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes()
@@ -110,15 +101,7 @@ namespace ToSic.SexyContent.ContentBlocks
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
             Log.Add($"change order orig:{sortOrder}, dest:{destinationSortOrder}");
-            try
-            {
-                ContentGroup.ReorderEntities(sortOrder, destinationSortOrder);
-            }
-            catch (Exception e)
-            {
-                Exceptions.LogException(e);
-                throw;
-            }
+            ContentGroup.ReorderEntities(sortOrder, destinationSortOrder);
         }
 
         public bool Publish(int repositoryId, bool state)
@@ -127,56 +110,40 @@ namespace ToSic.SexyContent.ContentBlocks
         public bool Publish(string part, int sortOrder)
         {
             Log.Add($"publish part{part}, order:{sortOrder}");
-            try
+            var contentGroup = ContentGroup;
+            var contEntity = contentGroup[part][sortOrder];
+            var presKey = part.ToLower() == AppConstants.ContentLower ? AppConstants.PresentationLower : "listpresentation";
+            var presEntity = contentGroup[presKey][sortOrder];
+
+            var hasPresentation = presEntity != null;
+
+            // make sure we really have the draft item an not the live one
+            var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
+            if (!contDraft.IsPublished)
+                Publish(contDraft.RepositoryId, !hasPresentation);
+
+            if (hasPresentation)
             {
-                var contentGroup = ContentGroup;
-                var contEntity = contentGroup[part][sortOrder];
-                var presKey = part.ToLower() == AppConstants.ContentLower ? AppConstants.PresentationLower : "listpresentation";
-                var presEntity = contentGroup[presKey][sortOrder];
-
-                var hasPresentation = presEntity != null;
-
-                // make sure we really have the draft item an not the live one
-                var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
-                if (!contDraft.IsPublished)
-                    Publish(contDraft.RepositoryId, !hasPresentation);
-
-                if (hasPresentation)
-                {
-                    var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
-                    if (!presDraft.IsPublished)
-                        Publish(presDraft.RepositoryId, true);
-                }
-
-                return true;
+                var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
+                if (!presDraft.IsPublished)
+                    Publish(presDraft.RepositoryId, true);
             }
-            catch (Exception e)
-            {
-                Exceptions.LogException(e);
-                throw;
-            }
+
+            return true;
         }
 
         public void RemoveFromList([FromUri] int sortOrder)
         {
             Log.Add($"remove from list order:{sortOrder}");
-            try
-            {
-                var contentGroup = ContentGroup;
-                contentGroup.RemoveContentAndPresentationEntities(AppConstants.ContentLower, sortOrder);
-            }
-            catch (Exception e)
-            {
-                Exceptions.LogException(e);
-                throw;
-            }
+            var contentGroup = ContentGroup;
+            contentGroup.RemoveContentAndPresentationEntities(AppConstants.ContentLower, sortOrder);
         }
 
         #endregion
 
         internal void UpdateTitle()
         {
-            Log.Add($"update title");
+            Log.Add("update title");
             // check the contentGroup as to what should be the module title, then try to set it
             // technically it could have multiple different groups to save in, 
             // ...but for now we'll just update the current modules title

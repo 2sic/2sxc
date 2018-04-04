@@ -11,10 +11,6 @@
             Streams = "";
         }
 
-        //public string GetPublishedData()
-        //{
-        //    return "";
-        //}
     }
 
     

@@ -18,13 +18,6 @@ namespace ToSic.SexyContent
         /// </summary>
          ViewDataSource Data { get; }
 
-
-        /// <summary>
-        /// this is the internally assigned content-group to this instance
-        /// it can be null, when no content group has been created yet
-        /// </summary>
-        //ContentGroup ContentGroup { get; }
-
         Template Template { get; }
 
 

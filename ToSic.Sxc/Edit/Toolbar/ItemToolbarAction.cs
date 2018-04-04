@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using ToSic.SexyContent.EAVExtensions;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.Edit.Toolbar
 {

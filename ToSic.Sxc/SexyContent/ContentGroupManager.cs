@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Internal;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent
 {
@@ -45,49 +44,23 @@ namespace ToSic.SexyContent
 		    Log.Add($"get CG#{contentGroupGuid}");
 			var dataSource = ContentGroupSource();
 			// ToDo: Should use an indexed guid source
-		    var groupEntity = dataSource.List.One(contentGroupGuid);//  .FirstOrDefault(e => e.Value.EntityGuid == contentGroupGuid).Value;
+		    var groupEntity = dataSource.List.One(contentGroupGuid);
 		    return groupEntity != null 
                 ? new ContentGroup(groupEntity, _zoneId, _appId, _showDrafts, _enableVersioning, Log) 
                 : new ContentGroup(Guid.Empty, _zoneId, _appId, _showDrafts, _enableVersioning, Log) {DataIsMissing = true};
 		}
 
-		public bool IsConfigurationInUse(int templateId, string type)
-		{
-			var contentGroups = GetContentGroups().Where(p => p.Template != null && p.Template.TemplateId == templateId);
-			return contentGroups.Any(p => p[type].Any(c => c != null));
-		}
-
-
 	    /// <summary>
 	    /// Saves a temporary templateId to the module's settings
 	    /// This templateId will be used until a contentgroup exists
 	    /// </summary>
-	    /// <param name="moduleId"></param>
-	    /// <param name="previewTemplateGuid"></param>
-	    public void SetModulePreviewTemplateId(int moduleId, Guid previewTemplateGuid)
-		{
-            // todo: 2rm - I believe you are accidentally using uncached module settings access - pls check and probably change
-            // todo: note: this is done ca. 3x in this class
-			var moduleController = new ModuleController();
-			var settings = moduleController.GetModuleSettings(moduleId);
+	    public static void SetPreviewTemplate(int instanceId, Guid previewTemplateGuid) 
+            => Factory.Resolve<IMapAppToInstance>().SetPreviewTemplate(instanceId, previewTemplateGuid);
 
-			// Do not allow saving the temporary template id if a contentgroup exists for this module
-			if(settings[Settings.ContentGroupGuidString] != null)
-				throw new Exception("Preview template id cannot be set for a module that already has content.");
+	    public static void ClearPreviewTemplate(int instanceId) 
+            => Factory.Resolve<IMapAppToInstance>().ClearPreviewTemplate(instanceId);
 
-			//var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId);
-			//var previewTemplateGuid = dataSource.List[previewTemplateId].EntityGuid;
-
-            //moduleController.UpdateModuleSetting(moduleId, PreviewTemplateIdString, previewTemplateGuid.ToString());
-            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString());
-        }
-
-		public static void DeletePreviewTemplateId(int moduleId)
-		{
-            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, Settings.PreviewTemplateIdString, null);
-		}
-
-		public Guid UpdateOrCreateContentGroup(ContentGroup contentGroup, int templateId)
+	    public Guid UpdateOrCreateContentGroup(ContentGroup contentGroup, int templateId)
 		{
 		    var appMan = new AppManager(_zoneId, _appId, Log);
 
@@ -113,35 +86,10 @@ namespace ToSic.SexyContent
 		    }
 		}
 
-	    internal void PersistContentGroupAndBlankTemplateToModule(int moduleId, bool wasCreated, Guid guid)
-	    {
-            // Remove the previewTemplateId (because it's not needed as soon Content is inserted)
-	        DeletePreviewTemplateId(moduleId);
-	        // Update contentGroup Guid for this module
-	        if (wasCreated)
-	            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, Settings.ContentGroupGuidString,
-	                guid.ToString());
-	    }
+	    public ContentGroup GetInstanceContentGroup(int instanceId, int? pageId)
+	        => Factory.Resolve<IMapAppToInstance>().GetInstanceContentGroup(this, Log, instanceId, pageId);
 
-	    // todo: this doesn't look right, will have to mostly move to the new content-block
-		public Tuple<Guid,Guid> GetContentGroupForModule(int moduleId, int tabId)
-		{
-		    Log.Add($"find content-group for mid#{moduleId} and tab#{tabId}");
-			var settings = ModuleController.Instance.GetModule(moduleId, tabId, false).ModuleSettings;
-			//var settings = moduleControl.GetModule(moduleId,).ModuleSettings;
-		    var maybeGuid = settings[Settings.ContentGroupGuidString];
-		    Guid.TryParse(maybeGuid?.ToString(), out var groupGuid);
-            var previewTemplateString = settings[Settings.PreviewTemplateIdString]?.ToString();
-
-		    var templateGuid = !string.IsNullOrEmpty(previewTemplateString)
-		        ? Guid.Parse(previewTemplateString)
-		        : new Guid();
-
-		    return Tuple.Create(groupGuid, templateGuid);
-            //return GetContentGroupOrGeneratePreview(groupGuid, templateGuid);
-		}
-
-	    internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)
+        internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)
 	    {
 	        Log.Add($"get CG or gen preview for grp#{groupGuid}, preview#{previewTemplateGuid}");
 	        // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)

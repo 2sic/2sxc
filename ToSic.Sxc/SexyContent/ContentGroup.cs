@@ -179,7 +179,7 @@ namespace ToSic.SexyContent
 
             // 2017-04-01 2dm centralizing eav access
             var dicObj = values.ToDictionary(x => x.Key, x => x.Value as object);
-            var newEnt = new Entity(_appId, 0, "", dicObj);
+            var newEnt = new Entity(_appId, 0, _contentGroupEntity.Type, dicObj);
             var saveOpts = SaveOptions.Build(_zoneId);
             saveOpts.PreserveUntouchedAttributes = true;
 
