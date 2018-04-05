@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Eav.Apps.Assets;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Adam

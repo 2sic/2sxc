@@ -1,9 +1,11 @@
-﻿using ToSic.Eav.Apps.Assets;
+﻿using System;
+using ToSic.Eav.Apps.Assets;
 using ToSic.SexyContent;
+using ToSic.SexyContent.Adam;
 
 namespace ToSic.Sxc.Adam
 {
-    public class File : Eav.Apps.Assets.File, IAsset
+    public class File : Eav.Apps.Assets.File, IAsset, IFile, AdamFile
     {
         private AdamAppContext AppContext { get; }
 
@@ -26,5 +28,14 @@ namespace ToSic.Sxc.Adam
 
          /// <inheritdoc />
        public string Name { get; internal set; }
+
+
+        #region Obsolete properties, included to ensure old stuff still works because of refactoring in 2sxc 9.20
+        public string FileName => FullName;
+
+        public DateTime CreatedOnDate => Created;
+
+        public int FileId => Id;
+        #endregion
     }
 }

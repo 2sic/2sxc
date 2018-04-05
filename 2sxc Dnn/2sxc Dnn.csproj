@@ -106,6 +106,9 @@
     <Compile Include="Environment\Dnn7\ModuleSettingsHelper.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing.cs" />
     <Compile Include="Environment\Dnn7\PagePublishing_ModuleSettings.cs" />
+    <Compile Include="Obsolete\Adam\AdamFile.cs" />
+    <Compile Include="Obsolete\Adam\AdamFolder.cs" />
+    <Compile Include="Obsolete\Adam\FolderOfFieldCompatibility.cs" />
     <Compile Include="Search\SearchController.cs" />
     <Compile Include="Search\SearchIndexException.cs" />
     <Compile Include="Environment\Dnn7\DnnEnvironmentFactory.cs" />

@@ -75,6 +75,9 @@
     <Compile Include="Adam\Export.cs" />
     <Compile Include="Adam\IAsset.cs" />
     <Compile Include="Adam\IEnvironmentFileSystem.cs" />
+    <Compile Include="Adam\IFile.cs" />
+    <Compile Include="Adam\IFolder.cs" />
+    <Compile Include="Adam\IFolderOfField.cs" />
     <Compile Include="Adam\Metadata.cs" />
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
@@ -188,6 +191,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Adam\Obsolete\" />
     <Folder Include="Sxc\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

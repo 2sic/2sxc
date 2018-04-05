@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Adam
     /// The ADAM Navigator creates a folder object for an entity/field combination
     /// This is the root folder where all files for this field are stored
     /// </summary>
-    public class FolderOfField : Folder
+    public class FolderOfField : Folder, IFolderOfField
     {
         protected ContainerOfField Container { get; set; }
         public FolderOfField(IEnvironmentFileSystem enfFileSystem, AdamAppContext appContext, Guid entityGuid, string fieldName) : base(appContext, enfFileSystem)
