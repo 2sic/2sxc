@@ -266,7 +266,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="ClientScripts\readme.md" />
-    <Content Include="DnnPackageBuilder\2sic_2SexyContent.dnn" />
+    <Content Include="DnnPackageBuilder\2sic_2SexyContent.dnn">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="DnnPackageBuilder\readme.md" />
     <Content Include="BuildScripts\readme.md" />
     <Content Include="koi\Resources.zip" />
