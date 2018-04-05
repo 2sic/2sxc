@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Adam
 {
-    public interface IFile
+    public interface IFile : Eav.Apps.Assets.IFile
     {
         bool HasMetadata { get; }
         DynamicEntity Metadata { get; }

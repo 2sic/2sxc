@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Adam
             if (!(AppContext.Folder(Container.Root) is Eav.Apps.Assets.Folder f))
                 return;
 
-            FolderPath = f.FolderPath;
+            Path = f.Path;
             Modified = f.Modified;
             Id = f.Id;
             Created = f.Created;

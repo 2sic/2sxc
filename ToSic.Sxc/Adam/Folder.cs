@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Adam
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.App, Id, false) != null;
 
         /// <inheritdoc />
-        public string Url => AppContext.Tenant.ContentPath + FolderPath;
+        public string Url => AppContext.Tenant.ContentPath + Path;
 
         /// <inheritdoc />
        public string Type => Classification.Folder;

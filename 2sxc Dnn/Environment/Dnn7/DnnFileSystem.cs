@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Adam
         private Folder DnnToAdam(AdamAppContext appContext, IFolderInfo f) 
             => new Folder(appContext, this)
         {
-            FolderPath = f.FolderPath,
+            Path = f.FolderPath,
             Id = f.FolderID,
 
             Name = f.DisplayName,
