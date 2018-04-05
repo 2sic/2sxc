@@ -20,11 +20,11 @@ namespace ToSic.Sxc.Adam
             if (!(AppContext.Folder(Container.Root) is Eav.Apps.Assets.Folder f))
                 return;
 
-            FolderPath = f.FolderPath;
-            LastUpdated = f.LastUpdated;
+            Path = f.Path;
+            Modified = f.Modified;
             Id = f.Id;
-            CreatedOnDate = f.CreatedOnDate;
-            LastUpdated = f.LastUpdated;
+            Created = f.Created;
+            Modified = f.Modified;
 
             // IAdamItem interface properties
             Name = f.Name;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Eav.Apps.Assets;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Adam
@@ -54,12 +53,12 @@ namespace ToSic.Sxc.Adam
         private Folder DnnToAdam(AdamAppContext appContext, IFolderInfo f) 
             => new Folder(appContext, this)
         {
-            FolderPath = f.FolderPath,
+            Path = f.FolderPath,
             Id = f.FolderID,
 
             Name = f.DisplayName,
-            CreatedOnDate = f.CreatedOnDate,
-            LastUpdated = f.LastUpdated,
+            Created = f.CreatedOnDate,
+            Modified = f.LastUpdated,
 
             // commented out stuff is from DNN
             // but it will probably never be cross-platform
@@ -92,7 +91,7 @@ namespace ToSic.Sxc.Adam
         private static File DnnToAdam(AdamAppContext appContext, IFileInfo f) 
             => new File(appContext)
         {
-            FileName = f.FileName,
+            FullName = f.FileName,
             Extension = f.Extension,
             Size = f.Size,
             Id = f.FileId,
