@@ -76,9 +76,8 @@
     <Compile Include="Adam\IAsset.cs" />
     <Compile Include="Adam\IEnvironmentFileSystem.cs" />
     <Compile Include="Adam\IFile.cs" />
-    <Compile Include="Adam\IFolder.cs" />
-    <Compile Include="Adam\IFolderOfField.cs" />
     <Compile Include="Adam\Metadata.cs" />
+    <Compile Include="Adam\Obsolete\AdamFile.cs" />
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\InPageEditingSystem\IInPageEditingSystem.cs" />
@@ -191,7 +190,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Adam\Obsolete\" />
     <Folder Include="Sxc\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

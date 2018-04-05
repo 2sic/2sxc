@@ -5,7 +5,7 @@ using ToSic.SexyContent;
 namespace ToSic.Sxc.Adam
 {
 
-    public class Folder : Eav.Apps.Assets.Folder, IAsset, IFolder
+    public class Folder : Eav.Apps.Assets.Folder, IAsset
     {
         protected AdamAppContext AppContext { get; set; }
 

@@ -5,7 +5,7 @@ using ToSic.SexyContent.Adam;
 
 namespace ToSic.Sxc.Adam
 {
-    public class File : Eav.Apps.Assets.File, IAsset, IFile, AdamFile
+    public class File : Eav.Apps.Assets.File, IAsset, AdamFile, IFile
     {
         private AdamAppContext AppContext { get; }
 
