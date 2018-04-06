@@ -7,6 +7,7 @@ using ToSic.Eav.ImportExport.Persistence.File;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Plumbing.Booting;
+using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.Environment;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -38,6 +39,7 @@ namespace ToSic.SexyContent
 
             ConfigureConnectionString();
             ConfigureIoC();
+            SharpZipLibRedirect.RegisterSharpZipLibRedirect();
 
             _alreadyConfigured = true;
         }
@@ -46,7 +48,7 @@ namespace ToSic.SexyContent
         private void ConfigureConnectionString()
         {
             var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
-            ToSic.Eav.Repository.Efc.Implementations.Configuration.SetConnectionString(connectionString);
+            Eav.Repository.Efc.Implementations.Configuration.SetConnectionString(connectionString);
         }
 
 
