@@ -157,6 +157,16 @@
 			"InnerContent.Title": "Inner Content / Very-Rich-Text",
 			"Headers.Title": "Page headers / titles"
 		},
+		"Koi": {
+			"Title": "Koi - Multi-CSS Framework Views",
+			"Using.Title": "Using statement",
+			"CssFramework.Title": "Detect CSS Framework",
+			"IsUnknown.Title": "Handle Unknown Frameworks",
+			"GetFromCdn.Title": "Load missing CSS framework from CDN",
+			"Class.Title": "Generate Class Attributes",
+			"If.Title": "If Statements",
+			"Include.Title": "Include CSS Files"
+		},
 		"Html": {
 			"Title": "Html snippets",
 			"Resources.Title": "Resources like javascripts and css",
