@@ -57,7 +57,8 @@ namespace ToSic.SexyContent.WebApi
             // this is not the case in certain API-calls, then context-access shouldn't happen
             var useContext = module != null;
             var zoneId = useContext ? app?.ZoneId : null;
-            if (useContext) appId = app?.AppId ?? appId;
+            // 2018-04-10 disabled this - should always check for the app provided in the request
+            //if (appId <= 0 && useContext) appId = app?.AppId ?? appId;
 
             // Ensure that we can find this content-type 
             var cache = DataSource.GetCache(zoneId, appId);
