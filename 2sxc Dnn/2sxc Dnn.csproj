@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dnn920\SharpZipLibRedirect.cs" />
     <Compile Include="DnnHelper.cs" />
     <Compile Include="Dnn\SecurityHelpers.cs" />
     <Compile Include="Environment\Dnn7\DnnAppAndDataHelpers.cs" />
