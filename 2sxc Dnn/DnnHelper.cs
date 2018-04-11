@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.Razor.Helpers
         /// <param name="moduleContext"></param>
         public DnnHelper(IInstanceInfo moduleContext)
         {
-            Module = (moduleContext as EnvironmentInstance<ModuleInfo>).Original;
+            Module = (moduleContext as EnvironmentInstance<ModuleInfo>)?.Original;
             Portal = PortalSettings.Current ?? 
                 (moduleContext != null ? new PortalSettings(Module.PortalID): null);
         }

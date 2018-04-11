@@ -45,7 +45,7 @@ namespace ToSic.SexyContent.WebApi
         /// Get all Entities of specified Type
         /// </summary>
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+        [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null, string cultureCode = null)
         {
             Log.Add($"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
@@ -62,7 +62,7 @@ namespace ToSic.SexyContent.WebApi
         #region GetOne by ID / GUID
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+        [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
             => GetAndSerializeOneAfterSecurityChecks(contentType,
                 appId => _entitiesController.GetEntityOrThrowError(contentType, id),
@@ -70,7 +70,7 @@ namespace ToSic.SexyContent.WebApi
 
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+        [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, object> GetOne(string contentType, Guid guid, string appPath = null)
             => GetAndSerializeOneAfterSecurityChecks(contentType,
                 appId => _entitiesController.GetEntityOrThrowError(contentType, guid, appId),
@@ -142,7 +142,7 @@ namespace ToSic.SexyContent.WebApi
 
         #region Create
         [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+        [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, object> CreateOrUpdate([FromUri] string contentType, [FromBody] Dictionary<string, object> newContentItem, [FromUri] int? id = null, [FromUri] string appPath = null)
         {
             Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
@@ -316,7 +316,7 @@ namespace ToSic.SexyContent.WebApi
         #region Delete
 
         [HttpDelete]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+        [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, int id, [FromUri] string appPath = null)
         {
             Log.Add($"delete id:{id}, type:{contentType}, path:{appPath}");
@@ -334,7 +334,7 @@ namespace ToSic.SexyContent.WebApi
 
 
 	    [HttpDelete]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+	    [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, Guid guid, [FromUri] string appPath = null)
         {
             Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
