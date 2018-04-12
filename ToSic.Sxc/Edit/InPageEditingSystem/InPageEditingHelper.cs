@@ -120,13 +120,13 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         #region Scripts and CSS includes
 
-        public string EnableUi(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
-            bool js = true, 
+        public string Enable(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
+            bool api = true, 
             bool context = false, 
             bool styles = false)
         {
             // only update the values if true, otherwise leave untouched
-            if (js)
+            if (api)
                 SxcInstance.UiAddEditApi = true;
 
             if (styles)

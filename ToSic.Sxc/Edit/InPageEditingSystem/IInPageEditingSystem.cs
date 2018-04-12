@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         /// <param name="context">If context should be added, to ensure in-instance data editing</param>
         /// <param name="styles"></param>
         /// <returns>null - but we wanted to make sure it returns something, so you can use it in razor like @Edit.EnableUi()</returns>
-        string EnableUi(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
+        string Enable(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             bool api = true, 
             bool context = false,
             bool styles = false);
