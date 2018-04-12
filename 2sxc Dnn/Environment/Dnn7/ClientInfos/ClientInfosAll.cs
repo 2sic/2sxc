@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Edit.ClientContextInfo;
+using ToSic.Sxc.Edit.ClientContextInfo;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -18,7 +19,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
         // ReSharper disable once InconsistentNaming
         public ClientInfosError error;
 
-        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IInstanceInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated, Log parentLog)
+        public Ui Ui;
+
+        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IInstanceInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated, bool autoToolbar, Log parentLog)
             : base("Sxc.CliInf", parentLog, "building entire client-context")
         {
             var versioning = sxc.Environment.PagePublishing;
@@ -29,6 +32,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             ContentBlock = new ClientInfoContentBlock(sxc.ContentBlock, null, 0, versioning.Requirements(mic.Id));
             ContentGroup = new ClientInfoContentGroup(sxc, isCreated);
+            Ui = new Ui(true);
+
             error = new ClientInfosError(sxc.ContentBlock);
         }
     }

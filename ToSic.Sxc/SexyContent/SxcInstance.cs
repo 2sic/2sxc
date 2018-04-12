@@ -218,7 +218,8 @@ namespace ToSic.SexyContent
                     ? RenderingHelper.WrapInContext(body,
                         instanceId: ContentBlock.ParentId,
                         contentBlockId: ContentBlock.ContentBlockId,
-                        includeEditInfos: UserMayEdit)
+                        includeEditInfos: UserMayEdit,
+                        autoToolbar: true)
                     : body;
                 #endregion
 

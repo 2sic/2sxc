@@ -51,11 +51,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
             bool includeEditInfos = false,
             //string moreAttribs = null, 
             //string moreClasses = null,
-            string tag = Constants.DefaultContextTag)
+            string tag = Constants.DefaultContextTag,
+            bool autoToolbar = false)
         {
             Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes");
 
-            var contextAttribs = ContextAttributes(instanceId, contentBlockId, includeEditInfos);
+            var contextAttribs = ContextAttributes(instanceId, contentBlockId, includeEditInfos, autoToolbar);
 
             // return $"<{tag} class='{ClassToMarkContentBlock} {moreClasses}' {contextAttribs}  {moreAttribs}>\n" +
             return $"<{tag} class='{Constants.ClassToMarkContentBlock}' {contextAttribs}>\n" +
@@ -64,7 +65,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         }
 
 
-        public string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos)
+        public string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos, bool autoToolbar)
         {
             var contextAttribs = "";
             if (instanceId != 0) contextAttribs += $" data-cb-instance='{instanceId}'";
@@ -72,7 +73,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             if (contentBlockId != 0) contextAttribs += $" data-cb-id='{contentBlockId}'";
 
             // optionally add editing infos
-            if (includeEditInfos) contextAttribs += Html.Build.Attribute("data-edit-context", GetClientInfosAll());
+            if (includeEditInfos) contextAttribs += Html.Build.Attribute("data-edit-context", UiContextInfos(autoToolbar));
             return contextAttribs;
         }
 
@@ -112,9 +113,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
         #endregion
 
         // new
-        public string GetClientInfosAll()
+        public string UiContextInfos(bool autoToolbars)
             => JsonConvert.SerializeObject(new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, _sxcInstance, _userInfo,
-                _sxcInstance.ZoneId ?? 0, _sxcInstance.ContentBlock.ContentGroupExists, Log));
+                _sxcInstance.ZoneId ?? 0, _sxcInstance.ContentBlock.ContentGroupExists, autoToolbars, Log));
 
 
 
