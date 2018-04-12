@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null) 
-            => BuildQueryAndRun(App, name, stream, includeGuid, Dnn.Module, Log);
+            => BuildQueryAndRun(App, name, stream, includeGuid, Dnn.Module, Log, SxcInstance);
 
 
         [HttpGet]
@@ -44,11 +44,11 @@ namespace ToSic.SexyContent.WebApi
             queryApp.InitData(false, false, config);
 
             // now just run the default query check and serializer
-            return BuildQueryAndRun(queryApp, name, stream, false, null, Log);
+            return BuildQueryAndRun(queryApp, name, stream, false, null, Log, SxcInstance);
         }
 
 
-        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(App app, string name, string stream, bool includeGuid, ModuleInfo module, Log log)
+        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(App app, string name, string stream, bool includeGuid, ModuleInfo module, Log log, SxcInstance sxc)
         {
             log.Add($"build and run query name:{name}, with module:{module?.ModuleID}");
             var query = app.GetQuery(name);
@@ -65,8 +65,8 @@ namespace ToSic.SexyContent.WebApi
             // Only return query if permissions ok
             if (!(readExplicitlyAllowed || isAdmin))
                 throw HttpErr(HttpStatusCode.Unauthorized, "Request not allowed", $"Request not allowed. User does not have read permissions for query '{name}'");
-
-            var serializer = new Serializer { IncludeGuid = includeGuid };
+            
+            var serializer = new Serializer(sxc) { IncludeGuid = includeGuid };
             return serializer.Prepare(query, stream?.Split(','));
         }
 
