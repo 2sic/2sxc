@@ -45,7 +45,7 @@ namespace ToSic.SexyContent.ContentBlocks
             string field = null, 
             string merge = null)
         {
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "All");
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "All", $"{nameof(field)},{nameof(merge)}");
             if (field == null)
                 throw new ArgumentNullException(nameof(field));
 
