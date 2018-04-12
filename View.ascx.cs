@@ -37,21 +37,6 @@ namespace ToSic.SexyContent
         {
             // always do this, part of the guarantee that everything will work
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-
-            if (!UserMayEditThisModule) return;
-
-            Log.Add("user is editor, will add context");
-            #region If logged in, inject Edit JavaScript, and delete / add items
-            // register scripts and css
-            try
-            {
-                new DnnRenderingHelpers(SxcInstance, Log).RegisterClientDependencies(Page);
-            }
-            catch (Exception ex)
-            {
-                Exceptions.ProcessModuleLoadException(this, ex);
-            }
-            #endregion
         }
 
         /// <summary>s
@@ -72,6 +57,9 @@ namespace ToSic.SexyContent
                 if (renderNaked)
                     SxcInstance.RenderWithDiv = false;
                 var renderedTemplate = SxcInstance.Render().ToString();
+
+                // call this after rendering templates, because the template may change what resources are registered
+                RegisterResources();
 
                 // optional detailed logging
                 try
@@ -113,8 +101,38 @@ namespace ToSic.SexyContent
 
         #region Security Check
 
-        protected bool UserMayEditThisModule => SxcInstance?.UserMayEdit ?? false;
+        //protected bool UserMayEditThisModule => SxcInstance?.UserMayEdit ?? false;
         #endregion
+
+
+        /// <summary>
+        /// Register all client parts (css/js, anti-forgery-token)
+        /// to enable editing or data work
+        /// </summary>
+        private void RegisterResources()
+        {
+            var loadJs = SxcInstance?.UiAddEditApi ?? false;
+            var loadCss = SxcInstance?.UiAddEditUi ?? false;
+
+            if (!loadJs && !loadCss) return;
+
+            Log.Add("user is editor, or template requested js/css, will add client material");
+
+            #region If logged in, inject Edit JavaScript, and delete / add items
+
+            // register scripts and css
+            try
+            {
+                new DnnRenderingHelpers(SxcInstance, Log).RegisterClientDependencies(Page, loadJs, loadCss);
+            }
+            catch (Exception ex)
+            {
+                Exceptions.ProcessModuleLoadException(this, ex);
+            }
+
+            #endregion
+        }
+
 
 
         #region ModuleActions on THIS DNN-Module

@@ -3,9 +3,10 @@ using System.Web;
 using Newtonsoft.Json;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.SexyContent;
 using ToSic.SexyContent.Edit.Toolbar;
 
-namespace ToSic.SexyContent.Edit.InPageEditingSystem
+namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
     public class InPageEditingHelper : HasLog, IInPageEditingSystem
     {
@@ -14,13 +15,14 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
 
         internal InPageEditingHelper(SxcInstance sxcInstance, Log parentLog) : base("Edt", parentLog)
         {
-            Enabled = sxcInstance.UserMayEdit;// enabled;
+            Enabled = sxcInstance.UserMayEdit;
             SxcInstance = sxcInstance;
         }
 
         public bool Enabled { get; }
         protected SxcInstance SxcInstance;
 
+        #region Toolbar
 
         public HtmlString Toolbar(DynamicEntity target = null,
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
@@ -38,7 +40,11 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
 
             return new HtmlString(itmToolbar.Toolbar);
         }
-        
+
+        #endregion Toolbar
+
+        #region Context Attributes
+
         /// <summary>
         /// Get html-attributes to mark the current context
         /// these will be added to a wrapper tag (usually a div)
@@ -88,22 +94,50 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
                     contentBlockId: contentBlockId > 0
                         ? contentBlockId
                         : SxcInstance?.ContentBlock?.ContentBlockId ?? 0,
-                    includeEditInfos: enableEdit ?? Enabled)
+                    editContext: enableEdit ?? Enabled)
             );
         }
+
+        #endregion Context Attributes
+
+        #region Attribute-helper
 
         /// <summary>
         /// Generate an HTML attribute 
         /// - but only if in edit mode
         /// </summary>
         public HtmlString Attribute(string name, string value)
-            => !Enabled ? null : Html.Build.Attribute(name, value);
+            => !Enabled ? null : SexyContent.Html.Build.Attribute(name, value);
 
         /// <summary>
         /// Generate an HTML attribute by converting the value to JSON 
         /// - but only in edit mode
         /// </summary>
         public HtmlString Attribute(string name, object value)
-            => !Enabled ? null : Html.Build.Attribute(name, JsonConvert.SerializeObject(value));
+            => !Enabled ? null : SexyContent.Html.Build.Attribute(name, JsonConvert.SerializeObject(value));
+
+        #endregion Attribute Helper
+
+        #region Scripts and CSS includes
+
+        public string EnableUi(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
+            bool js = true, 
+            bool context = false, 
+            bool styles = false)
+        {
+            // only update the values if true, otherwise leave untouched
+            if (js)
+                SxcInstance.UiAddEditApi = true;
+
+            if (styles)
+                SxcInstance.UiAddEditUi = true;
+
+            if (context)
+                SxcInstance.UiAddEditContext = true;
+
+            return null;
+        }
+
+        #endregion Scripts and CSS includes
     }
 }

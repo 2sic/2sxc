@@ -9,12 +9,12 @@ using ToSic.Eav.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Edit.InPageEditingSystem;
 using File = System.IO.File;
 
 namespace ToSic.SexyContent.Razor

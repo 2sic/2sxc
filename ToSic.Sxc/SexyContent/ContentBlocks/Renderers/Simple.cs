@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Web;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Edit.InPageEditingSystem;
 
 namespace ToSic.SexyContent.ContentBlocks.Renderers
 {

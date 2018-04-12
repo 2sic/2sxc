@@ -13,11 +13,12 @@ namespace ToSic.Sxc.Interfaces
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             int instanceId = 0, 
             int contentBlockId = 0, 
-            bool includeEditInfos = false, 
+            bool editContext = false, 
             //string moreClasses = null, 
             //string moreAttribs = null,
             string tag = "div",
-            bool autoToolbar = false);
+            bool autoToolbar = false,
+            bool addLineBreaks = true);
 
         string ContextAttributes(int instanceId, 
             int contentBlockId, 

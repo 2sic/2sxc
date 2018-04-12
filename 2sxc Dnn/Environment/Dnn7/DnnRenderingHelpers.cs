@@ -48,20 +48,22 @@ namespace ToSic.SexyContent.Environment.Dnn7
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             int instanceId = 0, 
             int contentBlockId = 0, 
-            bool includeEditInfos = false,
+            bool editContext = false,
             //string moreAttribs = null, 
             //string moreClasses = null,
             string tag = Constants.DefaultContextTag,
-            bool autoToolbar = false)
+            bool autoToolbar = false,
+            bool addLineBreaks = true)
         {
             Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes");
 
-            var contextAttribs = ContextAttributes(instanceId, contentBlockId, includeEditInfos, autoToolbar);
+            var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext, autoToolbar);
 
-            // return $"<{tag} class='{ClassToMarkContentBlock} {moreClasses}' {contextAttribs}  {moreAttribs}>\n" +
-            return $"<{tag} class='{Constants.ClassToMarkContentBlock}' {contextAttribs}>\n" +
+            var lineBreaks = addLineBreaks ? "\n" : "";
+
+            return $"<{tag} class='{Constants.ClassToMarkContentBlock}' {contextAttribs}>{lineBreaks}"  +
                    $"{content}" +
-                   $"</{tag}>";
+                   $"{lineBreaks}</{tag}>";
         }
 
 
@@ -84,7 +86,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
 
-        public void RegisterClientDependencies(Page page)
+        public void RegisterClientDependencies(Page page, bool js, bool css)
         {
             Log.Add("will auto-register client dependencies (js/css");
             var root = "~/desktopmodules/tosic_sexycontent/";
@@ -94,10 +96,14 @@ namespace ToSic.SexyContent.Environment.Dnn7
             var ver = Settings.Version.ToString();
 
             // add edit-mode CSS
-            RegisterCss(page, root + "dist/inpage/inpage.min.css");
+            if (css)
+                RegisterCss(page, root + "dist/inpage/inpage.min.css");
 
-            RegisterJs(page, ver, root + "js/2sxc.api" + ext);
-            RegisterJs(page, ver, root + "dist/inpage/inpage" + ext);
+            if (js)
+            {
+                RegisterJs(page, ver, root + "js/2sxc.api" + ext);
+                RegisterJs(page, ver, root + "dist/inpage/inpage" + ext);
+            }
         }
 
         #region add scripts / css with bypassing the official ClientResourceManager

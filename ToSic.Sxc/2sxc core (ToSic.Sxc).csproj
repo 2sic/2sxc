@@ -154,6 +154,9 @@
     <Compile Include="SexyContent\SexyContentException.cs" />
     <Compile Include="SexyContent\SxcHelper.cs" />
     <Compile Include="SexyContent\SxcInstance.cs" />
+    <Compile Include="SexyContent\SxcInstance_Render.cs" />
+    <Compile Include="SexyContent\SxcInstance_Template.cs" />
+    <Compile Include="SexyContent\SxcInstance_EditUi.cs" />
     <Compile Include="SexyContent\TemplateManager.cs" />
   </ItemGroup>
   <ItemGroup>

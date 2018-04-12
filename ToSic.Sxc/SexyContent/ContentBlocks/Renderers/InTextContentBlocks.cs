@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using ToSic.SexyContent.Edit.InPageEditingSystem;
+using ToSic.Sxc.Edit.InPageEditingSystem;
 
 namespace ToSic.SexyContent.ContentBlocks.Renderers
 {

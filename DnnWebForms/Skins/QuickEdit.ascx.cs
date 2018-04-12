@@ -8,7 +8,7 @@ namespace ToSic.SexyContent.DnnWebForms.Skins
         protected void Page_Load(object sender, EventArgs e)
         {
             if(DotNetNuke.Security.Permissions.TabPermissionController.HasTabPermission("EDIT"))
-                new DnnRenderingHelpers(null, null).RegisterClientDependencies(Page);
+                new DnnRenderingHelpers(null, null).RegisterClientDependencies(Page, true, true);
         }
     }
 }
