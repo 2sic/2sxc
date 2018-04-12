@@ -78,7 +78,7 @@ namespace ToSic.SexyContent
                         instanceId: ContentBlock.ParentId,
                         contentBlockId: ContentBlock.ContentBlockId,
                         editContext: UiAddEditContext,
-                        autoToolbar: true)
+                        autoToolbar: UiAutoToolbar)
                     : body;
                 #endregion
 

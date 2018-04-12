@@ -55,7 +55,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             bool autoToolbar = false,
             bool addLineBreaks = true)
         {
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes");
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(autoToolbar)},{nameof(addLineBreaks)}");
 
             var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext, autoToolbar);
 

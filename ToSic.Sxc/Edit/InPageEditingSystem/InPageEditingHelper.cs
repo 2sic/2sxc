@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         {
             Log.Add("ctx toolbar - enabled:{Enabled}");
             if (!Enabled) return null;
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar");
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar", $"{nameof(actions)},{nameof(contentType)},{nameof(prefill)},{nameof(toolbar)},{nameof(settings)}");
 
             var itmToolbar = new ItemToolbar(target, actions, contentType, prefill, toolbar, settings);
 
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         {
             Log.Add("ctx attribs - enabled:{Enabled}");
             if (!Enabled) return null;
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes");
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
 
             if (field == null) throw new Exception("need parameter 'field'");
 
@@ -86,6 +86,8 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             int contentBlockId = 0
         )
         {
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "WrapInContext", $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
+
             return new HtmlString(
                 SxcInstance.RenderingHelper.WrapInContext(content.ToString(),
                     instanceId: instanceId > 0
@@ -120,20 +122,22 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         #region Scripts and CSS includes
 
-        public string Enable(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
-            bool api = true, 
-            bool context = false, 
-            bool styles = false)
+        public string Enable(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, bool? api = null, bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
         {
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Enable", $"{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
+
             // only update the values if true, otherwise leave untouched
-            if (api)
-                SxcInstance.UiAddEditApi = true;
+            if (api.HasValue || forms.HasValue)
+                SxcInstance.UiAddEditApi = api ?? forms.Value;
 
-            if (styles)
-                SxcInstance.UiAddEditUi = true;
+            if (styles.HasValue)
+                SxcInstance.UiAddEditUi = styles.Value;
 
-            if (context)
-                SxcInstance.UiAddEditContext = true;
+            if (context.HasValue)
+                SxcInstance.UiAddEditContext = context.Value;
+
+            if (autoToolbar.HasValue)
+                SxcInstance.UiAutoToolbar = autoToolbar.Value;
 
             return null;
         }
