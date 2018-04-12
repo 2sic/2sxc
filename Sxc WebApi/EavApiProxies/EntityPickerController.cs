@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
-using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
 
@@ -11,13 +10,15 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     {
         [HttpGet]
         [HttpPost]
- 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        [AllowAnonymous]
+ 		//[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public IEnumerable<dynamic> GetAvailableEntities([FromUri]int appId, [FromBody] string[] items, [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
         {
             // do security check
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.ReadSomething);
+            GetAppRequiringPermissionsOrThrow(appId, GrantSets.ReadSomething, contentTypeName);
 
-            var withDrafts = set.Item2.UserMay(GrantSets.ReadDraft);
+            // maybe in the future, ATM not relevant
+            //var withDrafts = set.Item2.UserMay(GrantSets.ReadDraft);
 
             return new Eav.WebApi.EntityPickerController(Log)
                 .GetAvailableEntities(appId, items, contentTypeName, dimensionId);
