@@ -92,10 +92,11 @@ if (window.angular) // needed because the file is also included in older non-ang
                     },
                     testParameters: "[Module:ModuleID]=" + AppInstanceId
                 },
-                metadataOfEntity: 4,
                 metadataOfAttribute: 2,
-                metadataOfContentType: 5,
                 metadataOfApp: 3,
+                metadataOfEntity: 4,
+                metadataOfContentType: 5,
+                metadataOfZone: 6,
                 metadataOfCmsObject: 10,
 
                 versionInfo: "v" + $2sxc.urlParams.get("sxcver"),

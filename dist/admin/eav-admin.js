@@ -1384,42 +1384,66 @@ angular.module("EavDirectives", [])
 
 
 })();
-(function () { 
+(function() {
 
-    permissionListController.$inject = ["permissionsSvc", "eavAdminDialogs", "eavConfig", "appId", "targetGuid", "$uibModalInstance"];
-    angular.module("PermissionsApp", [
-        "EavServices",
-        "EavConfiguration",
-        "EavAdminUi"])
-        .controller("PermissionList", permissionListController)
-        ;
+  permissionListController.$inject = ["permissionsSvc", "eavAdminDialogs", "eavConfig", "appId", "targetKey", "targetType", "keyType", "$uibModalInstance"];
+  angular.module('PermissionsApp',
+      [
+        'EavServices',
+        'EavConfiguration',
+        'EavAdminUi'
+      ])
+    .controller('PermissionList', permissionListController);
 
-    function permissionListController(permissionsSvc, eavAdminDialogs, eavConfig, appId, targetGuid, $uibModalInstance /* $location */) {
-        var vm = this;
-        var svc = permissionsSvc(appId, targetGuid);
+  function permissionListController(permissionsSvc,
+    eavAdminDialogs,
+    eavConfig,
+    appId,
+    targetKey,
+    targetType,
+    keyType,
+    $uibModalInstance) {
+    var vm = this;
+    var svc = permissionsSvc(appId, targetType, keyType, targetKey);
 
-        vm.edit = function edit(item) {
-            eavAdminDialogs.openItemEditWithEntityId(item.Id, svc.liveListReload);
-        };
+    vm.edit = function edit(item) {
+      eavAdminDialogs.openItemEditWithEntityId(item.Id, svc.liveListReload);
+    };
 
-        vm.add = function add() {
-            eavAdminDialogs.openMetadataNew(appId, "entity", svc.PermissionTargetGuid, svc.ctName, svc.liveListReload);
-        };
+    vm.add = function add() {
+      vm.openMetadata(svc.targetType, svc.keyType, svc.key, svc.ctName, svc.liveListReload);
+    };
 
-        vm.items = svc.liveList();
-        vm.refresh = svc.liveListReload;
-        
-        vm.tryToDelete = function tryToDelete(item) {
-            if (confirm("Delete '" + item.Title + "' (" + item.Id + ") ?")) // todo: probably change .Title to ._Title
-                svc.delete(item.Id);
-        };
+    vm.items = svc.liveList();
+    vm.refresh = svc.liveListReload;
 
-        vm.close = function () {
-            $uibModalInstance.dismiss("cancel");
-        };
-    }
+    vm.tryToDelete = function tryToDelete(item) {
+      if (confirm("Delete '" + item.Title + "' (" + item.Id + ') ?')) // todo: probably change .Title to ._Title
+        svc.delete(item.Id);
+    };
 
-} ());
+    vm.close = function() {
+      $uibModalInstance.dismiss('cancel');
+    };
+
+    vm.openMetadata = function (targetType, keyType, key, contentType, closeCallback) {
+      var items = [
+        {
+          ContentTypeName: contentType,
+          Metadata: {
+            TargetType: targetType,
+            KeyType: keyType,
+            Key: key
+          }
+        }
+      ];
+
+      eavAdminDialogs.openEditItems(items, closeCallback, { partOfPage: false });
+    };
+    
+  }
+
+}());
 angular.module('PipelineDesigner',
     [
         'PipelineDesigner.filters',
@@ -2768,16 +2792,16 @@ angular.module("EavServices")
 // 1. Import / Export
 // 2. Pipeline Designer
 
-angular.module("EavAdminUi", ["ng",
-    "ui.bootstrap",         // for the $uibModal etc.
-    "EavServices",
-    "eavTemplates",         // Provides all cached templates
-    "PermissionsApp",       // Permissions dialogs to manage permissions
-    "ContentItemsAppAgnostic", 
-    "PipelineManagement",   // Manage pipelines
-    "ContentImportApp",
-    "ContentExportApp",
-    "HistoryApp",            // the item-history app
+angular.module('EavAdminUi', ['ng',
+    'ui.bootstrap',         // for the $uibModal etc.
+    'EavServices',
+    'eavTemplates',         // Provides all cached templates
+    'PermissionsApp',       // Permissions dialogs to manage permissions
+    'ContentItemsAppAgnostic', 
+    'PipelineManagement',   // Manage pipelines
+    'ContentImportApp',
+    'ContentExportApp',
+    'HistoryApp',            // the item-history app
 
     // big todo: currently removed dependency to eavEditentity (much faster) but it actually does...
     // ...need it to initialize this class, so ATM this only works in a system where the other dependency
@@ -2786,7 +2810,7 @@ angular.module("EavAdminUi", ["ng",
     // the correct clean up would be to create an edit-dialogs class or something (todo)
     // "eavEditEntity"			// the edit-app
 ])
-    .factory("eavAdminDialogs", ["$uibModal", "eavConfig", "$window", "entitiesSvc", "contentTypeSvc", "appId", function ($uibModal, eavConfig, $window,
+    .factory('eavAdminDialogs', ["$uibModal", "eavConfig", "$window", "entitiesSvc", "contentTypeSvc", "appId", function ($uibModal, eavConfig, $window,
         // these are needed just for simple access to some dialogs
         entitiesSvc,    // warning: this only works ATM when called in 2sxc, because it needs the eavEditEntity dependency
         contentTypeSvc,
@@ -2798,19 +2822,19 @@ angular.module("EavAdminUi", ["ng",
         //#region List of Content Items dialogs
         svc.openContentItems = function oci(appId, staticName, itemId, closeCallback) {
             var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, contentTypeId: itemId });
-            return svc.OpenModal("content-items/content-items-agnostic.html", "ContentItemsList as vm", "fullscreen", resolve, closeCallback);
+            return svc.OpenModal('content-items/content-items-agnostic.html', 'ContentItemsList as vm', 'fullscreen', resolve, closeCallback);
         };
         //#endregion
 
         //#region content import export
         svc.openContentImport = function ocimp(appId, staticName, closeCallback) {
             var resolve = svc.CreateResolve({ appId: appId, contentType: staticName });
-            return svc.OpenModal("content-import-export/content-import.html", "ContentImport as vm", "lg", resolve, closeCallback);
+            return svc.OpenModal('content-import-export/content-import.html', 'ContentImport as vm', 'lg', resolve, closeCallback);
         };
 
         svc.openContentExport = function ocexp(appId, staticName, closeCallback, optionalIds) {
             var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, itemIds: optionalIds });
-            return svc.OpenModal("content-import-export/content-export.html", "ContentExport as vm", "lg", resolve, closeCallback);
+            return svc.OpenModal('content-import-export/content-export.html', 'ContentExport as vm', 'lg', resolve, closeCallback);
         };
 
         //#endregion
@@ -2818,12 +2842,12 @@ angular.module("EavAdminUi", ["ng",
         //#region ContentType dialogs
         svc.openContentTypeEdit = function octe(item, closeCallback) {
             var resolve = svc.CreateResolve({ item: item });
-            return svc.OpenModal("content-types/content-types-edit.html", "Edit as vm", "", resolve, closeCallback);
+            return svc.OpenModal('content-types/content-types-edit.html', 'Edit as vm', '', resolve, closeCallback);
         };
 
         svc.openContentTypeFields = function octf(item, closeCallback) {
             var resolve = svc.CreateResolve({ contentType: item });
-            return svc.OpenModal("content-types/content-types-fields.html", "FieldList as vm", "xlg", resolve, closeCallback);
+            return svc.OpenModal('content-types/content-types-fields.html', 'FieldList as vm', 'xlg', resolve, closeCallback);
         };
 
         // this one assumes we have a content-item, but must first retrieve content-type-infos
@@ -2853,54 +2877,35 @@ angular.module("EavAdminUi", ["ng",
             var merged = angular.extend({ items: items }, moreResolves || {});
             merged.partOfPage = Boolean(merged.partOfPage);
             merged.publishing = merged.publishing || null;
-            console.log("openEditItems: partOfPage: " + merged.partOfPage, " publishing: " + merged.publishing);
+            console.log('openEditItems: partOfPage: ' + merged.partOfPage, ' publishing: ' + merged.publishing);
             var resolve = svc.CreateResolve(merged);
-            return svc.OpenModal("form/main-form.html", "EditEntityWrapperCtrl as vm", "ent-edit", resolve, closeCallback);
+            return svc.OpenModal('form/main-form.html', 'EditEntityWrapperCtrl as vm', 'ent-edit', resolve, closeCallback);
         };
 
         svc.openItemHistory = function ioh(entityId, closeCallback) {
-            return svc.OpenModal("content-items/history.html", "History as vm", "lg",
+            return svc.OpenModal('content-items/history.html', 'History as vm', 'lg',
                 svc.CreateResolve({ entityId: entityId }),
                 closeCallback);
         };
         //#endregion
 
-        //#region Metadata - mainly new
-        svc.openMetadataNew = function omdn(appId, targetType, targetId, metadataType, closeCallback) {
-            var metadata = {};
-            switch (targetType) {
-                case "entity":
-                    metadata.Key = targetId;
-                    metadata.KeyType = "guid";
-                    metadata.TargetType = eavConfig.metadataOfEntity;
-                    break;
-                case "attribute":
-                    metadata.Key = targetId;
-                    metadata.KeyType = "number";
-                    metadata.TargetType = eavConfig.metadataOfAttribute;
-                    break;
-                default: throw "targetType unknown, only accepts entity or attribute for now";
-            }
-            var items = [{
-                ContentTypeName: metadataType,
-                Metadata: metadata
-            }];
-
-            svc.openEditItems(items, closeCallback, { partOfPage: false });
-        };
-        //#endregion
-
         //#region Permissions Dialog
-        svc.openPermissionsForGuid = function opfg(appId, targetGuid, closeCallback) {
-            var resolve = svc.CreateResolve({ appId: appId, targetGuid: targetGuid });
-            return svc.OpenModal("permissions/permissions.html", "PermissionList as vm", "lg", resolve, closeCallback);
-        };
+      svc.openPermissionsForGuid = function opfg(appId, targetKey, closeCallback) {
+        var resolve = svc.CreateResolve({ appId: appId, targetKey: targetKey, targetType: 4, keyType: 'guid' });
+            return svc.OpenModal('permissions/permissions.html', 'PermissionList as vm', 'lg', resolve, closeCallback);
+      };
+
+      svc.openPermissions = function opfg(appId, targetType, keyType, targetKey, closeCallback) {
+        var resolve = svc.CreateResolve({ appId: appId, targetKey: targetKey, targetType: targetType, keyType: keyType });
+        return svc.OpenModal('permissions/permissions.html', 'PermissionList as vm', 'lg', resolve, closeCallback);
+      };
+
         //#endregion
 
         //#region Pipeline Designer
         svc.editPipeline = function ep(appId, pipelineId, closeCallback) {
             var url = svc.derivedUrl({
-                dialog: "pipeline-designer",
+                dialog: 'pipeline-designer',
                 pipelineId: pipelineId
             });
             $window.open(url);
@@ -2916,26 +2921,22 @@ angular.module("EavAdminUi", ["ng",
                     url = svc.replaceOrAddOneParam(url, prop, varsToReplace[prop]);
 
             return url;
-            //url = url
-            //    .replace(new RegExp("appid=[0-9]*", "i"), "appid=" + item.Id) // note: sometimes it doesn't have an appid, so it's [0-9]* instead of [0-9]+
-            //    .replace(/approot=[^&]*/, "approot=" + item.AppRoot + "/")
-            //    .replace("dialog=zone", "dialog=app");
         };
 
         svc.replaceOrAddOneParam = function replaceOneParam(original, param, value) {
-            var rule = new RegExp("(" + param + "=).*?(&)", "i");
+            var rule = new RegExp('(' + param + '=).*?(&)', 'i');
             var newText = rule.test(original)
-                ? original.replace(rule, "$1" + value + "$2")
-                : original + "&" + param + "=" + value;
+                ? original.replace(rule, '$1' + value + '$2')
+                : original + '&' + param + '=' + value;
             return newText;
         };
         //#endregion
 
         //#region Internal helpers
         svc._attachCallbacks = function attachCallbacks(promise, callbacks) {
-            if (typeof (callbacks) === "undefined")
+            if (typeof (callbacks) === 'undefined')
                 return null;
-            if (typeof (callbacks) === "function") // if it's only one callback, use it for all close-cases
+            if (typeof (callbacks) === 'function') // if it's only one callback, use it for all close-cases
                 callbacks = { close: callbacks };
             return promise.result.then(callbacks.success || callbacks.close, callbacks.error || callbacks.close, callbacks.notify || callbacks.close);
         };
@@ -2953,7 +2954,7 @@ angular.module("EavAdminUi", ["ng",
         };
 
         svc.OpenModal = function openModal(templateUrl, controller, size, resolveValues, callbacks) {
-            var foundAs = controller.indexOf(" as ");
+            var foundAs = controller.indexOf(' as ');
             var contAs = foundAs > 0 ?
                 controller.substring(foundAs + 4)
                 : null;
@@ -3216,58 +3217,77 @@ angular.module("EavServices")
 // metadata
 // retrieves metadata for an entity or an attribute
 
-angular.module("EavServices")
-    /// Management actions which are rather advanced metadata kind of actions
-    .factory("metadataSvc", ["$http", "appId", function($http, appId) {
-        var svc = {};
+angular.module('EavServices')
+  // Management actions which are rather advanced metadata kind of actions
+  .factory('metadataSvc',
+    ["$http", "appId", function($http, appId) {
+      var svc = {};
 
-        // Find all items assigned to a GUID
-        svc.getMetadata = function getMetadata(assignedToId, keyGuid, contentTypeName) {
-            return $http.get("eav/metadata/getassignedentities", {
-                params: {
-                    appId: appId,
-                    assignmentObjectTypeId: assignedToId,
-                    keyType: "guid",
-                    key: keyGuid,
-                    contentType: contentTypeName
-                }
-            });
-        };
-        return svc;
+      // Find all items assigned to a GUID
+      svc.getMetadata = function getMetadata(typeId, keyGuid, contentTypeName) {
+        console.log('using deprecated getMetadata - try to migrate code to get2');
+        return $http.get('eav/metadata/getassignedentities',
+          {
+            params: {
+              appId: appId,
+              assignmentObjectTypeId: typeId,
+              keyType: 'guid',
+              key: keyGuid,
+              contentType: contentTypeName
+            }
+          });
+      };
+
+
+      svc.getMetadata2 = function(typeId, keyType, key, contentTypeName) {
+        return $http.get('eav/metadata/getassignedentities',
+          {
+            params: {
+              appId: appId,
+              assignmentObjectTypeId: typeId,
+              keyType: keyType, //"guid",
+              key: key,
+              contentType: contentTypeName
+            }
+          });
+      };
+      return svc;
     }]);
 
-angular.module("EavServices")
-    .factory("permissionsSvc", ["$http", "eavConfig", "entitiesSvc", "metadataSvc", "svcCreator", "contentTypeSvc", function($http, eavConfig, entitiesSvc, metadataSvc, svcCreator, contentTypeSvc) {
-        var eavConf = eavConfig;
+angular.module('EavServices')
+  .factory('permissionsSvc',
+    ["$http", "eavConfig", "entitiesSvc", "metadataSvc", "svcCreator", "contentTypeSvc", function($http, eavConfig, entitiesSvc, metadataSvc, svcCreator, contentTypeSvc) {
 
-        // Construct a service for this specific targetGuid
-        return function createSvc(appId, permissionTargetGuid) {
-            var svc = {
-                PermissionTargetGuid: permissionTargetGuid,
-                ctName: "PermissionConfiguration",
-                ctId: 0,
-                EntityAssignment: eavConf.metadataOfEntity,
-                ctSvc: contentTypeSvc(appId)
-            };
-
-            svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                // todo: refactor this - get out of the eavmanagemnetsvc
-                return metadataSvc.getMetadata(svc.EntityAssignment, svc.PermissionTargetGuid, svc.ctName).then(svc.updateLiveAll);
-            }));
-
-            // 2016-02-14 2dm commented out, don't think the ctId is ever used...
-            // Get ID of this content-type 
-            svc.ctSvc.getDetails(svc.ctName).then(function (result) {
-                svc.ctId = result.data.Id; // 2016-02-14 previously AttributeSetId;
-            });
-
-            // delete, then reload
-            svc.delete = function del(id) {
-                return entitiesSvc.delete(svc.ctName, id)
-                    .then(svc.liveListReload);
-            };
-            return svc;
+      // Construct a service for this specific targetGuid
+      return function createSvc(appId, targetType, keyType, targetId) {
+        var svc = {
+          key: targetId,
+          targetId: targetId,
+          ctName: 'PermissionConfiguration',
+          ctId: 0,
+          targetType: targetType,
+          keyType: keyType,
+          ctSvc: contentTypeSvc(appId)
         };
+
+        svc = angular.extend(svc,
+          svcCreator.implementLiveList(function getAll() {
+            return metadataSvc.getMetadata2(svc.targetType, svc.keyType, svc.key, svc.ctName)
+              .then(svc.updateLiveAll);
+          }));
+
+        // Get ID of this content-type 
+        svc.ctSvc.getDetails(svc.ctName).then(function(result) {
+          svc.ctId = result.data.Id;
+        });
+
+        // delete, then reload
+        svc.delete = function del(id) {
+          return entitiesSvc.delete(svc.ctName, id)
+            .then(svc.liveListReload);
+        };
+        return svc;
+      };
     }]);
 // PipelineService provides an interface to the Server Backend storing Pipelines and their Pipeline Parts
 
