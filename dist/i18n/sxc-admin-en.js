@@ -88,6 +88,11 @@
 			"Edit": "edit app resources",
 			"Config": "configure app resources"
 		},
+		"Permissions": {
+			"Title": "App Permissions",
+			"Intro": "Permissions give access to people to the entire app (all content-types / data), so use with care.",
+			"Edit": "edit permissions"
+		},
 		"Definition": {
 			"Title": "App Package Definition",
 			"Intro": "The app-package definition is important when exporting/importing this app.",
