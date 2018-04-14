@@ -14,6 +14,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
+using ToSic.SexyContent.WebApi.Permissions;
 using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -52,43 +53,50 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             Log.Add($"get many a#{appId}, items⋮{items.Count}");
             // this will contain the list of the items we'll really return
-            var newItems = new List<ItemIdentifier>();
 
             // to do full security check, we'll have to see what content-type is requested
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, items);
-            var app = set.Item1;
+            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
+            
+            /*var set =*/ permCheck.EnsureOrThrow(GrantSets.WriteSomething, items);
+            var app = permCheck.App;
 
-            var showDrafts = set.Item2.UserMay(GrantSets.ReadDraft);
+            var showDrafts = permCheck.Checker.UserMay(GrantSets.ReadDraft);
 
             app.InitData(showDrafts, 
                 SxcInstance.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), 
                 Data.ConfigurationProvider);
 
-            foreach (var reqItem in items)
-            {
-                // only do special processing if it's a "group" item
-                if (reqItem.Group == null)
-                {
-                    newItems.Add(reqItem);
-                    continue;
-                }
-                
-                var contentGroup = app.ContentGroupManager.GetContentGroup(reqItem.Group.Guid);
-                var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(reqItem.Group.Part);
-
-                // if there is no content-type for this, then skip it (don't deliver anything)
-                if (contentTypeStaticName == "")
-                    continue;
-
-                ConvertListIndexToEntityIds(contentGroup, reqItem, contentTypeStaticName);
-
-                newItems.Add(reqItem);
-            }
+            var newItems = ConvertListIndexToId(items, app);
 
             // Now get all
             return EavEntitiesController.GetManyForEditing(appId, newItems);
         }
 
+	    internal static List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> items, App app)
+	    {
+	        var newItems = new List<ItemIdentifier>();
+	        foreach (var reqItem in items)
+	        {
+	            // only do special processing if it's a "group" item
+	            if (reqItem.Group == null)
+	            {
+	                newItems.Add(reqItem);
+	                continue;
+	            }
+
+	            var contentGroup = app.ContentGroupManager.GetContentGroup(reqItem.Group.Guid);
+	            var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(reqItem.Group.Part);
+
+	            // if there is no content-type for this, then skip it (don't deliver anything)
+	            if (contentTypeStaticName == "")
+	                continue;
+
+	            ConvertListIndexToEntityIds(contentGroup, reqItem, contentTypeStaticName);
+
+	            newItems.Add(reqItem);
+	        }
+	        return newItems;
+	    }
 
 
 	    private static void ConvertListIndexToEntityIds(ContentGroup contentGroup, ItemIdentifier reqItem,
@@ -124,7 +132,9 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             // log and do security check
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, items.Select(i => i.Header).ToList());
+            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
+
+            /*var set =*/ permCheck.EnsureOrThrow(GrantSets.WriteSomething, items.Select(i => i.Header).ToList());
 
             // list of saved IDs
             Dictionary<Guid, int> postSaveIds = null;
@@ -135,12 +145,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                 var versioning = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 Log.Add("save with publishing");
                 versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, 
-                    args => postSaveIds = SaveAndProcessGroups(set.Item2, appId, items, partOfPage));
+                    args => postSaveIds = SaveAndProcessGroups(permCheck.Checker, appId, items, partOfPage));
             }
             else
             {
                 Log.Add("save without publishing");
-                postSaveIds = SaveAndProcessGroups(set.Item2, appId, items, partOfPage);
+                postSaveIds = SaveAndProcessGroups(permCheck.Checker, appId, items, partOfPage);
             }
 
             return postSaveIds;

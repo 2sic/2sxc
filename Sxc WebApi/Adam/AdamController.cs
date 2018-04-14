@@ -20,6 +20,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Errors;
+using ToSic.SexyContent.WebApi.Permissions;
 using App = ToSic.SexyContent.App;
 
 // ReSharper disable once CheckNamespace
@@ -68,12 +69,14 @@ namespace ToSic.Sxc.Adam.WebApi
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
-            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
+            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
 
-            PrepCore(set.Item1, guid, field, usePortalRoot);
+            permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Checker);
 
-            var appRead = new AppRuntime(set.Item1, Log);
+            PrepCore(permCheck.App, guid, field, usePortalRoot);
+
+            var appRead = new AppRuntime(permCheck.App, Log);
 
             // Get the content-type definition
             var typeDef = appRead.ContentTypes.Get(contentType);
@@ -202,12 +205,14 @@ namespace ToSic.Sxc.Adam.WebApi
         public IEnumerable<AdamItem> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
             Log.Add($"adam items a:{App?.AppId}, i:{guid}, field:{field}, subfold:{subfolder}, useRoot:{usePortalRoot}");
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
-            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
+            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
+
+            permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Checker);
             var app = App;
             if(app.AppId != appId)
             {
-                app = set.Item1;
+                app = permCheck.App;
                 app.InitData(true, false, new ValueCollectionProvider());
             }
 
@@ -242,9 +247,11 @@ namespace ToSic.Sxc.Adam.WebApi
         public IEnumerable<AdamItem> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
         {
             Log.Add($"get folders for a:{App?.AppId}, i:{guid}, field:{field}, subfld:{subfolder}, new:{newFolder}, useRoot:{usePortalRoot}");
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
-            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
-            PrepCore(set.Item1, guid, field, usePortalRoot);
+            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
+
+            permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Checker);
+            PrepCore(permCheck.App, guid, field, usePortalRoot);
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
             ContainerContext.Folder();
@@ -262,9 +269,10 @@ namespace ToSic.Sxc.Adam.WebApi
         public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
         {
             Log.Add($"delete from a:{App?.AppId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
-            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
-            PrepCore(set.Item1, guid, field, usePortalRoot);
+            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
+            permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Checker);
+            PrepCore(permCheck.App, guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
             var current = ContainerContext.Folder(subfolder, false);
@@ -297,9 +305,11 @@ namespace ToSic.Sxc.Adam.WebApi
         public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
         {
             Log.Add($"rename a:{App?.AppId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentType);
-            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, set.Item2);
-            PrepCore(set.Item1, guid, field, usePortalRoot);
+
+            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
+            permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Checker);
+            PrepCore(permCheck.App, guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
             var current = ContainerContext.Folder(subfolder, false);

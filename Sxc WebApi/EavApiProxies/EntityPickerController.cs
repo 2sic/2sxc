@@ -2,6 +2,7 @@
 using System.Web.Http;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
+using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -15,7 +16,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public IEnumerable<dynamic> GetAvailableEntities([FromUri]int appId, [FromBody] string[] items, [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
         {
             // do security check
-            GetAppRequiringPermissionsOrThrow(appId, GrantSets.ReadSomething, contentTypeName);
+            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
+            permCheck.EnsureOrThrow(GrantSets.ReadSomething, contentTypeName);
 
             // maybe in the future, ATM not relevant
             //var withDrafts = set.Item2.UserMay(GrantSets.ReadDraft);

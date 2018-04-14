@@ -22,6 +22,7 @@ using ToSic.Eav.Data.Query;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Interfaces;
+using ToSic.SexyContent.WebApi.Permissions;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi.View
@@ -56,7 +57,8 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
-            GetAppRequiringPermissionsOrThrow(App.AppId, GrantSets.WriteSomething);
+            var permCheck = new AppAndPermissions(SxcInstance, App.AppId, Log);
+            permCheck.EnsureOrThrow(GrantSets.WriteSomething);
 
             return ContentGroupReferenceManager.SaveTemplateId(templateId, forceCreateContentGroup);
         }
@@ -226,7 +228,8 @@ namespace ToSic.SexyContent.WebApi.View
         public bool Publish(string part, int sortOrder)
         {
             Log.Add($"try to publish #{sortOrder} on '{part}'");
-            GetAppRequiringPermissionsOrThrow(App.AppId, GrantSets.WritePublished);
+            new AppAndPermissions(SxcInstance, App.AppId, Log).
+            EnsureOrThrow(GrantSets.WritePublished);
             return ContentGroupReferenceManager.Publish(part, sortOrder);
         }
 
@@ -235,7 +238,8 @@ namespace ToSic.SexyContent.WebApi.View
         public bool Publish(int id)
         {
             Log.Add($"try to publish id #{id}");
-            GetAppRequiringPermissionsOrThrow(App.AppId, GrantSets.WritePublished);
+            new AppAndPermissions(SxcInstance, App.AppId, Log).
+            EnsureOrThrow(GrantSets.WritePublished);
             return ContentGroupReferenceManager.Publish(id, true);
         }
 

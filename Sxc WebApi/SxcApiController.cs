@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.ValueProvider;
-using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -179,71 +173,6 @@ namespace ToSic.SexyContent.WebApi
                 module,
                 app);
 
-
-        protected Tuple<App, PermissionCheckBase> GetAppRequiringPermissionsOrThrow(int appId, List<Grants> grants = null, string typeName = null)
-        {
-            var set = AppAndPermissionChecker(appId, typeName);
-
-            return set.Item2.UserMay(grants) ? set : throw new HttpResponseException(HttpStatusCode.Forbidden);
-        }
-
-        protected Tuple<App, PermissionCheckBase> AppAndPermissionChecker(int appId, string typeName)
-        {
-            var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
-            var tenant = new DnnTenant(PortalSettings.Current);
-            var uiZoneId = env.ZoneMapper.GetZoneId(tenant.Id);
-
-            // now do relevant security checks
-
-            var zoneId = SystemManager.ZoneIdOfApp(appId);
-            var app = new App(tenant, zoneId, appId, parentLog: Log);
-
-            var type = typeName == null
-                ? null
-                : new AppRuntime(zoneId, appId, Log)
-                    .ContentTypes.Get(typeName);
-
-            var samePortal = uiZoneId == tenant.Id;
-            var portalToUseInSecCheck = samePortal ? PortalSettings.Current : null;
-
-            // user has edit permissions on this app, and it's the same app as the user is coming from
-            var checker = new DnnPermissionCheck(Log,
-                instance: SxcInstance.EnvInstance,
-                app: app,
-                portal: portalToUseInSecCheck, 
-                targetType: type);
-            return new Tuple<App, PermissionCheckBase>(app, checker); 
-        }
-
-
-
-        protected Tuple<App, PermissionCheckBase> GetAppRequiringPermissionsOrThrow(int appId, List<Grants> grants, List<ItemIdentifier> items)
-        {
-            var appMan = new AppRuntime(appId, Log);
-
-            // build list of type names
-            var typeNames = items.Select(item => {
-                var typeName = item.ContentTypeName;
-                if (string.IsNullOrEmpty(typeName) && item.EntityId != 0)
-                {
-                    var existing = appMan.Entities.Get(item.EntityId);
-                    typeName = existing.Type.StaticName;
-                }
-                return typeName;
-            }).ToList();
-
-            // make sure we have at least one entry, so the checks will work
-            if (typeNames.Count == 0)
-                typeNames.Add(null);
-
-            // go through all the groups, assign relevant info so that we can then do get-many
-            Tuple<App, PermissionCheckBase> set = null;
-
-            // this will run at least once with null, and the last one will be returned in the set
-            typeNames.ForEach(tn => set = GetAppRequiringPermissionsOrThrow(appId, grants, tn));
-
-            return set;
-        }
         #endregion
 
     }

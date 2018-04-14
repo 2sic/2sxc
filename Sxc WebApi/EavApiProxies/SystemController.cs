@@ -4,6 +4,7 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Security.Permissions;
+using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -20,8 +21,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    {
             // if the user has full edit permissions, he may also get the unpublic features
             // otherwise just the public Ui features
-	        var set = AppAndPermissionChecker(appId, null);
-	        var includeNonPublic = set.Item2.UserMay(GrantSets.WritePublished);
+	        var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
+
+            var set = permCheck.TypeChecker(null);
+	        var includeNonPublic = set.UserMay(GrantSets.WritePublished);
 
 	        return new Eav.WebApi.SystemController()
                 .Features(appId)

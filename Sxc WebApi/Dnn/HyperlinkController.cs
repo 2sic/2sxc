@@ -7,6 +7,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
+using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
@@ -33,14 +34,16 @@ namespace ToSic.SexyContent.WebApi.Dnn
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
 		public string ResolveHyperlink(string hyperlink)
 		{
-		    var set = GetAppRequiringPermissionsOrThrow(App.AppId, GrantSets.WriteSomething);
+		    var permCheck = new AppAndPermissions(SxcInstance, App.AppId, Log);
+
+		    permCheck.EnsureOrThrow(GrantSets.WriteSomething);
 
             var conv = new DnnValueConverter();
 		    var fullLink = conv.Convert(ConversionScenario.GetFriendlyValue, "Hyperlink", hyperlink);
 		    
             // if the user may only create drafts, then he/she may only see stuff from the adam folder
-		    var permCheck = set.Item2;
-		    if (permCheck.UserMay(GrantSets.WritePublished))
+		    //var permCheck = set;
+		    if (permCheck.Checker.UserMay(GrantSets.WritePublished))
                 return fullLink;
 
 		    return !(fullLink.IndexOf("/adam/", StringComparison.Ordinal) > 0) 
