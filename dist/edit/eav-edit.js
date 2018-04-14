@@ -1433,11 +1433,10 @@ angular.module("eavFieldTemplates")
     featuresSvc) {
 
     // testing featuresSvc
-    console.log('testing features svc');
-    featuresSvc.enabled('f6b8d6da-4744-453b-9543-0de499aa2352').then(
-      function(enabled) {
-        console.log('async: ' + enabled);
-      });
+    //featuresSvc.enabled('f6b8d6da-4744-453b-9543-0de499aa2352').then(
+    //  function(enabled) {
+    //    console.log('async: ' + enabled);
+    //  });
 
 
 
