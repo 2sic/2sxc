@@ -187,7 +187,7 @@ namespace ToSic.SexyContent.WebApi
             return set.Item2.UserMay(grants) ? set : throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        private Tuple<App, PermissionCheckBase> AppAndPermissionChecker(int appId, string typeName)
+        protected Tuple<App, PermissionCheckBase> AppAndPermissionChecker(int appId, string typeName)
         {
             var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
             var tenant = new DnnTenant(PortalSettings.Current);

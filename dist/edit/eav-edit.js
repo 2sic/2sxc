@@ -1419,11 +1419,32 @@ angular.module("eavFieldTemplates")
 	var app = angular.module("eavEditEntity");
 
 	// The controller for the main form directive
-	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$uibModalInstance", "$window", "$translate", "toastr", "partOfPage", "publishing", function editEntityCtrl($q, $http, $scope, items, $uibModalInstance, $window, $translate, toastr, partOfPage, publishing) {
+  app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$uibModalInstance", "$window", "$translate", "toastr", "partOfPage", "publishing", "featuresSvc", function editEntityCtrl(
+    $q,
+    $http,
+    $scope,
+    items,
+    $uibModalInstance,
+    $window,
+    $translate,
+    toastr,
+    partOfPage,
+    publishing,
+    featuresSvc) {
+
+    // testing featuresSvc
+    console.log('testing features svc');
+    featuresSvc.enabled('f6b8d6da-4744-453b-9543-0de499aa2352').then(
+      function(enabled) {
+        console.log('async: ' + enabled);
+      });
+
+
+
 		var vm = this;
 		
-        vm.partOfPage = partOfPage;
-	    vm.publishing = publishing;
+    vm.partOfPage = partOfPage;
+	  vm.publishing = publishing;
 		vm.itemList = items;
 
 	    // this is the callback after saving - needed to close everything

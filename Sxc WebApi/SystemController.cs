@@ -9,6 +9,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Dnn;
@@ -29,7 +30,6 @@ namespace ToSic.SexyContent.WebApi
             base.Initialize(controllerContext); // very important!!!
             Log.Rename("2sSysC");
         }
-
 
         [HttpGet]
 	    public dynamic GetLanguages()
