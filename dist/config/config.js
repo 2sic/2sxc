@@ -118,7 +118,7 @@ if (window.angular) // needed because the file is also included in older non-ang
                         var applyChanges = false;
                         switch (field.InputType) {
                             case "string-wysiwyg-tinymce":
-                                config.Assets = "//cdn.tinymce.com/4/tinymce.min.js\n" +
+                                config.Assets = "//cdn.tinymce.com/4.6/tinymce.min.js\n" +
                                     "../edit/extensions/field-string-wysiwyg-tinymce/set.js";
                                 applyChanges = true;
                                 break;
