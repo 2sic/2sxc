@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
 
             permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
-            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Checker);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Permissions);
 
             PrepCore(permCheck.App, guid, field, usePortalRoot);
 
@@ -208,7 +208,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
 
             permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
-            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Checker);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Permissions);
             var app = App;
             if(app.AppId != appId)
             {
@@ -250,7 +250,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
 
             permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
-            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Checker);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Permissions);
             PrepCore(permCheck.App, guid, field, usePortalRoot);
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
@@ -271,7 +271,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Log.Add($"delete from a:{App?.AppId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
             permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
-            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Checker);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Permissions);
             PrepCore(permCheck.App, guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing
@@ -308,7 +308,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
             permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
-            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Checker);
+            var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Permissions);
             PrepCore(permCheck.App, guid, field, usePortalRoot);
 
             // try to see if we can get into the subfolder - will throw error if missing

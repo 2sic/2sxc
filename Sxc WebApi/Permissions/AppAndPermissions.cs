@@ -8,6 +8,7 @@ using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.ValueProvider;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
 using Factory = ToSic.Eav.Factory;
@@ -17,28 +18,34 @@ namespace ToSic.SexyContent.WebApi.Permissions
     public class AppAndPermissions: HasLog
     {
         public App App { get; }
+        public PermissionCheckBase Permissions { get; private set; }
 
-        protected SxcInstance SxcInstance;
-
-        private DnnTenant Tenant => new DnnTenant(PortalSettings.Current);
-        private IEnvironment Environment => Factory.Resolve<IEnvironmentFactory>().Environment(Log);
-
-        private int ContextZoneId => Environment.ZoneMapper.GetZoneId(Tenant.Id);
+        public SxcInstance SxcInstance { get; }
 
         private int ZoneId { get; }
         private readonly PortalSettings _portalForSecurityCheck;
 
-        public PermissionCheckBase Checker;
 
         public AppAndPermissions(SxcInstance sxcInstance, int appId, Log parentLog) : base("Api.Perms", parentLog, "init")
         {
             SxcInstance = sxcInstance;
+            var tenant = new DnnTenant(PortalSettings.Current);
+            var environment = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
+            var contextZoneId = environment.ZoneMapper.GetZoneId(tenant.Id);
             ZoneId = SystemManager.ZoneIdOfApp(appId);
-            App = new App(Tenant, ZoneId, appId, parentLog: Log);
-            var samePortal = ContextZoneId == Tenant.Id;
+            App = new App(tenant, ZoneId, appId, parentLog: Log);
+            var samePortal = contextZoneId == tenant.Id;
             _portalForSecurityCheck = samePortal ? PortalSettings.Current : null;
         }
 
+        public void InitAppData()
+        {
+            var showDrafts = Permissions.UserMay(GrantSets.ReadDraft);
+
+            App.InitData(showDrafts,
+                SxcInstance.Environment.PagePublishing.IsEnabled(SxcInstance.EnvInstance.Id),
+                SxcInstance?.Data?.ConfigurationProvider);
+        }
 
 
         internal void EnsureOrThrow(List<Grants> grants, List<ItemIdentifier> items)
@@ -59,8 +66,6 @@ namespace ToSic.SexyContent.WebApi.Permissions
                 typeNames.Add(null);
 
             // go through all the groups, assign relevant info so that we can then do get-many
-            //PermissionCheckBase set = null;
-
             // this will run at least once with null, and the last one will be returned in the set
             typeNames.ForEach(tn => EnsureOrThrow(grants, tn));
 
@@ -70,8 +75,8 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
         internal void EnsureOrThrow(List<Grants> grants = null, string typeName = null)
         {
-            var set = TypeChecker(typeName);
-            if(!set.UserMay(grants))
+            /*var set =*/ BuildPermissionChecker(typeName);
+            if(!Permissions.UserMay(grants))
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
@@ -83,7 +88,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         /// </summary>
         /// <param name="typeName"></param>
         /// <returns></returns>
-        internal PermissionCheckBase TypeChecker(string typeName)
+        internal void BuildPermissionChecker(string typeName)
         {
             // now do relevant security checks
             var type = typeName == null
@@ -92,14 +97,11 @@ namespace ToSic.SexyContent.WebApi.Permissions
                     .ContentTypes.Get(typeName);
 
             // user has edit permissions on this app, and it's the same app as the user is coming from
-            var checker = new DnnPermissionCheck(Log,
+            Permissions = new DnnPermissionCheck(Log,
                 instance: SxcInstance.EnvInstance,
                 app: App,
                 portal: _portalForSecurityCheck,
                 targetType: type);
-
-            Checker = checker;
-            return checker;
         }
     }
 }

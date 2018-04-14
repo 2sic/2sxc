@@ -43,7 +43,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
 		    
             // if the user may only create drafts, then he/she may only see stuff from the adam folder
 		    //var permCheck = set;
-		    if (permCheck.Checker.UserMay(GrantSets.WritePublished))
+		    if (permCheck.Permissions.UserMay(GrantSets.WritePublished))
                 return fullLink;
 
 		    return !(fullLink.IndexOf("/adam/", StringComparison.Ordinal) > 0) 

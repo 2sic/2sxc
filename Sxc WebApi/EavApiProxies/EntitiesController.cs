@@ -52,21 +52,14 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public dynamic GetManyForEditing([FromBody] List<ItemIdentifier> items, int appId)
         {
             Log.Add($"get many a#{appId}, items⋮{items.Count}");
-            // this will contain the list of the items we'll really return
 
             // to do full security check, we'll have to see what content-type is requested
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-            
-            /*var set =*/ permCheck.EnsureOrThrow(GrantSets.WriteSomething, items);
-            var app = permCheck.App;
+            permCheck.EnsureOrThrow(GrantSets.WriteSomething, items);
 
-            var showDrafts = permCheck.Checker.UserMay(GrantSets.ReadDraft);
+            permCheck.InitAppData();
 
-            app.InitData(showDrafts, 
-                SxcInstance.Environment.PagePublishing.IsEnabled(ActiveModule.ModuleID), 
-                Data.ConfigurationProvider);
-
-            var newItems = ConvertListIndexToId(items, app);
+            var newItems = ConvertListIndexToId(items, permCheck.App);
 
             // Now get all
             return EavEntitiesController.GetManyForEditing(appId, newItems);
@@ -133,8 +126,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // log and do security check
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-
-            /*var set =*/ permCheck.EnsureOrThrow(GrantSets.WriteSomething, items.Select(i => i.Header).ToList());
+            permCheck.EnsureOrThrow(GrantSets.WriteSomething, items.Select(i => i.Header).ToList());
 
             // list of saved IDs
             Dictionary<Guid, int> postSaveIds = null;
@@ -145,12 +137,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                 var versioning = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 Log.Add("save with publishing");
                 versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, 
-                    args => postSaveIds = SaveAndProcessGroups(permCheck.Checker, appId, items, partOfPage));
+                    args => postSaveIds = SaveAndProcessGroups(permCheck.Permissions, appId, items, partOfPage));
             }
             else
             {
                 Log.Add("save without publishing");
-                postSaveIds = SaveAndProcessGroups(permCheck.Checker, appId, items, partOfPage);
+                postSaveIds = SaveAndProcessGroups(permCheck.Permissions, appId, items, partOfPage);
             }
 
             return postSaveIds;

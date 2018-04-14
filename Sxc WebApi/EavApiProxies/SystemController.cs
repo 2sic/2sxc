@@ -22,9 +22,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // if the user has full edit permissions, he may also get the unpublic features
             // otherwise just the public Ui features
 	        var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-
-            var set = permCheck.TypeChecker(null);
-	        var includeNonPublic = set.UserMay(GrantSets.WritePublished);
+	        permCheck.BuildPermissionChecker(null);
+	        var includeNonPublic = permCheck.Permissions.UserMay(GrantSets.WritePublished);
 
 	        return new Eav.WebApi.SystemController()
                 .Features(appId)
