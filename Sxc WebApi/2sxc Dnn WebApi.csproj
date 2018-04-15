@@ -90,6 +90,7 @@
     <Compile Include="Adam\AdamItem.cs" />
     <Compile Include="Adam\UploadResult.cs" />
     <Compile Include="EavApiProxies\SystemController.cs" />
+    <Compile Include="EavApiProxies\AllInOne.cs" />
     <Compile Include="EavApiProxies\UiController.cs" />
     <Compile Include="Errors\Http.cs" />
     <Compile Include="Permissions\AppAndPermissions.cs" />

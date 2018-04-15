@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.ImportExport.Json.Format;
 using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -7,14 +9,14 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     {
         public List<EntityWithHeader2> Items;
 
-        public List<dynamic> ContentTypes;
+        public List<JsonContentType> ContentTypes;
 
-        public List<dynamic> InputTypes;
+        public List<InputTypeInfo> InputTypes;
     }
 
     public class EntityWithHeader2
     {
         public ItemIdentifier Header { get; set; }
-        public dynamic Entity { get; set; }
+        public JsonEntity Entity { get; set; }
     }
 }
