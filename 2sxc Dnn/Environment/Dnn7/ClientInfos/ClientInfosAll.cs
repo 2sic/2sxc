@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             ContentBlock = new ClientInfoContentBlock(sxc.ContentBlock, null, 0, versioning.Requirements(mic.Id));
             ContentGroup = new ClientInfoContentGroup(sxc, isCreated);
-            Ui = new Ui(true);
+            Ui = new Ui(sxc.UiAutoToolbar);
 
             error = new ClientInfosError(sxc.ContentBlock);
         }
