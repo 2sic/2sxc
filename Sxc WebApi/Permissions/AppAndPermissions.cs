@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -40,11 +41,14 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
         public void InitAppData()
         {
+            if(SxcInstance?.Data == null)
+                throw new Exception("Can't use app-data at the moment, because it requires an instance context");
+
             var showDrafts = Permissions.UserMay(GrantSets.ReadDraft);
 
             App.InitData(showDrafts,
                 SxcInstance.Environment.PagePublishing.IsEnabled(SxcInstance.EnvInstance.Id),
-                SxcInstance?.Data?.ConfigurationProvider);
+                SxcInstance.Data.ConfigurationProvider);
         }
 
 

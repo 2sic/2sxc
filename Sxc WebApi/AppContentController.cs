@@ -53,7 +53,8 @@ namespace ToSic.SexyContent.WebApi
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
 
             PerformSecurityCheck(appId, contentType, Grants.Read, appPath == null ? Dnn.Module : null, App);
-            return _entitiesController.GetEntities(contentType, cultureCode);
+            return new EntityApi(appId, Log).GetEntities(contentType, cultureCode);
+            // return _entitiesController.GetEntities(contentType, appId, cultureCode);
         }
 
         #endregion
@@ -65,7 +66,7 @@ namespace ToSic.SexyContent.WebApi
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
             => GetAndSerializeOneAfterSecurityChecks(contentType,
-                appId => _entitiesController.GetEntityOrThrowError(contentType, id),
+                appId => new EntityApi(_entitiesController.AppId, Log).GetOrThrow(contentType, id), // _entitiesController.GetEntityOrThrowError(contentType, id),
                 appPath);
 
 
@@ -73,7 +74,8 @@ namespace ToSic.SexyContent.WebApi
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, object> GetOne(string contentType, Guid guid, string appPath = null)
             => GetAndSerializeOneAfterSecurityChecks(contentType,
-                appId => _entitiesController.GetEntityOrThrowError(contentType, guid, appId),
+                appId => new EntityApi(appId, Log).GetOrThrow(contentType, guid),
+                // appId => _entitiesController.GetEntityOrThrowError(contentType, guid, appId),
                 appPath);
         
 
@@ -151,9 +153,10 @@ namespace ToSic.SexyContent.WebApi
 
             // Check that this ID is actually of this content-type,
             // this throws an error if it's not the correct type
-            var itm = id == null 
-                ? null 
-                : _entitiesController.GetEntityOrThrowError(contentType, id.Value);
+            var itm = id == null
+                ? null
+                : new EntityApi(appId, Log).GetOrThrow(contentType, id.Value);
+                // _entitiesController.GetEntityOrThrowError(contentType, id.Value);
 
             var perm = id == null 
                 ? Grants.Create 
@@ -327,9 +330,11 @@ namespace ToSic.SexyContent.WebApi
             if (contentType == "any")
                 throw new Exception("type any not allowed with id-only, requires guid");
 
-            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id);
+            // var itm = _entitiesController.GetEntityOrThrowError(contentType, id);
+            var itm = new EntityApi(appId, Log).GetOrThrow(contentType, id);
             PerformSecurityCheck(appId, itm.Type.Name, Grants.Delete, appPath == null ? Dnn.Module : null, App, itm);
-            _entitiesController.Delete(itm.Type.Name, id, appId);
+            new EntityApi(appId, Log).Delete(itm.Type.Name, id);
+            //_entitiesController.Delete(itm.Type.Name, id, appId);
         }
 
 
@@ -340,10 +345,12 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
             var appId = GetAppIdFromPathOrContext_AndInitEavAndSerializer(appPath);
-	        IEntity itm = _entitiesController.GetEntityOrThrowError(contentType == "any" ? null : contentType, guid, appId);
+	        IEntity itm = new EntityApi(appId, Log).GetOrThrow(contentType == "any" ? null : contentType, guid);
+            // IEntity itm = _entitiesController.GetEntityOrThrowError(contentType == "any" ? null : contentType, guid, appId);
 
             PerformSecurityCheck(appId, itm.Type.Name, Grants.Delete, appPath == null ? Dnn.Module : null, App, itm);
-            _entitiesController.Delete(itm.Type.Name, guid, appId);
+            new EntityApi(appId, Log).Delete(itm.Type.Name, guid);
+            //_entitiesController.Delete(itm.Type.Name, guid, appId);
         }
 
         #endregion

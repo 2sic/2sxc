@@ -11,6 +11,7 @@ using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
@@ -43,7 +44,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             PerformSecurityCheck(appId, contentType, Grants.Read, Dnn.Module, App);
 
             // note that the culture-code isn't actually used...
-            return EavEntitiesController.GetOne(contentType, id, appId, cultureCode);
+            return new EntityApi(appId, Log).GetOne(contentType, id, cultureCode);
+            // return EavEntitiesController.GetOne(contentType, id, appId, cultureCode);
         }
 
 
@@ -59,10 +61,21 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             permCheck.InitAppData();
 
-            var newItems = ConvertListIndexToId(items, permCheck.App);
+            items = ConvertListIndexToId(items, permCheck.App);
 
-            // Now get all
-            return EavEntitiesController.GetManyForEditing(appId, newItems);
+            var list = new EntityApi(appId, Log).GetEntitiesForEditing(appId, items);
+
+            // Reformat to the Entity-WithLanguage setup
+            var listAsEwH = list.Select(p => new EntityWithHeaderOldFormat
+            {
+                Header = p.Header,
+                Entity = p.Entity != null
+                    ? EntityWithLanguages.Build(appId, p.Entity)
+                    : null
+            }).ToList();
+
+            Log.Add($"will return items⋮{list.Count}");
+            return listAsEwH;
         }
 
 	    internal static List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> items, App app)
@@ -121,7 +134,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
 	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items, [FromUri] bool partOfPage = false)
+        public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeaderOldFormat> items, [FromUri] bool partOfPage = false)
         {
             // log and do security check
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
@@ -148,7 +161,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             return postSaveIds;
         }
 
-	    private Dictionary<Guid, int> SaveAndProcessGroups(PermissionCheckBase permChecker, int appId, List<EntityWithHeader> items, bool partOfPage)
+	    private Dictionary<Guid, int> SaveAndProcessGroups(PermissionCheckBase permChecker, int appId, List<EntityWithHeaderOldFormat> items, bool partOfPage)
 	    {
 	        var allowWriteLive = permChecker.UserMay(GrantSets.WritePublished);
 
@@ -172,7 +185,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	        return ids;
 	    }
 
-        private static void DoAdditionalGroupProcessing(SxcInstance sxcInstance, Log log, int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeader>> groupItems)
+        private static void DoAdditionalGroupProcessing(SxcInstance sxcInstance, Log log, int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeaderOldFormat>> groupItems)
         {
             var myLog = new Log("2Ap.GrpPrc", log, "start");
             var app = new App(new DnnTenant(PortalSettings.Current), appId);
@@ -228,22 +241,25 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             sxcInstance.ContentBlock.Manager.UpdateTitle();
         }
 
-        /// <summary>
-        /// Get all Entities of specified Type
-        /// </summary>
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, int appId, string cultureCode = null) 
-            => EavEntitiesController.GetEntities(contentType, cultureCode, appId);
-
+	    /// <summary>
+	    /// Get all Entities of specified Type
+	    /// </summary>
 	    [HttpGet]
+	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+	    public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, int appId,
+	        string cultureCode = null)
+	        => new EntityApi(appId, Log).GetEntities(contentType, cultureCode);
+	        // => EavEntitiesController.GetEntities(contentType, appId, cultureCode);
+
+        [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
             // check if admin rights, then ok
             PerformSecurityCheck(appId, contentType, Grants.Read, Dnn.Module, App);
 
-            return EavEntitiesController.GetAllOfTypeForAdmin(appId, contentType);
+            return new EntityApi(appId, Log).GetEntitiesForAdmin(contentType);
+            // return EavEntitiesController.GetAllOfTypeForAdmin(appId, contentType);
 	    }
 
 
@@ -255,7 +271,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // check if admin rights, then ok
             PerformSecurityCheck(appId, contentType, Grants.Delete, Dnn.Module, App);
 
-            EavEntitiesController.Delete(contentType, id, appId, force);
+            new EntityApi(appId, Log).Delete(contentType, id, force);
+            //EavEntitiesController.Delete(contentType, id, appId, force);
         }
         [HttpDelete]
         [HttpGet]
@@ -264,8 +281,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             // check if admin rights, then ok
             PerformSecurityCheck(appId, contentType, Grants.Delete, Dnn.Module, App);
-
-            EavEntitiesController.Delete(contentType, guid, appId, force);
+            new EntityApi(appId, Log).Delete(contentType, guid, force);
+            //EavEntitiesController.Delete(contentType, guid, appId, force);
         }
 
 
@@ -287,7 +304,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public List<ItemHistory> History(int appId, [FromBody]ItemIdentifier item)
 	    {
             ResolveItemIdOfGroup(appId, item);
-            return EavEntitiesController.History(appId, item.EntityId);
+	        return new AppManager(appId, Log).Entities.VersionHistory(item.EntityId);
+            //return EavEntitiesController.History(appId, item.EntityId);
         }
 
 	    private static void ResolveItemIdOfGroup(int appId, ItemIdentifier item)
@@ -304,7 +322,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public bool Restore(int appId, int changeId, [FromBody]ItemIdentifier item)
 	    {
             ResolveItemIdOfGroup(appId, item);
-            return EavEntitiesController.Restore(appId, item.EntityId, changeId);
+            new AppManager(appId, Log).Entities.VersionRestore(item.EntityId, changeId);
+	        return true;
+
+            //return EavEntitiesController.Restore(appId, item.EntityId, changeId);
 	    }
         #endregion
     }
