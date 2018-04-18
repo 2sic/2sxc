@@ -95,6 +95,7 @@
     <Compile Include="Errors\Http.cs" />
     <Compile Include="Permissions\AppAndPermissions.cs" />
     <Compile Include="Security.cs" />
+    <Compile Include="SxcApiControllerBase.cs" />
     <Compile Include="WebApiLogDetails.cs" />
     <Compile Include="Adam\AdamController.cs" />
     <Compile Include="AppApiControllerSelector.cs" />

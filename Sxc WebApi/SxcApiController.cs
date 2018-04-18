@@ -13,22 +13,26 @@ using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Razor.Helpers;
-using ToSic.SexyContent.WebApi.Dnn;
 using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi
 {
-	// this is accessible from many non-2sxc modules so no [SupportedModules("2sxc,2sxc-app")]
+    /// <inheritdoc cref="SxcApiControllerBase" />
+    /// <summary>
+    /// This is the base class for API Controllers which need the full context
+    /// incl. the current App, DNN, Data, etc.
+    /// For others, please use the SxiApiControllerBase, which doesn't have all that, and is usually then
+    /// safer because it can't accidentally mix the App with a different appId in the params
+    /// </summary>
     [SxcWebApiExceptionHandling]
-    public abstract class SxcApiController : DnnApiControllerWithFixes, IAppAndDataHelpers
+    public abstract class SxcApiController : SxcApiControllerBase, IAppAndDataHelpers
     {
         #region constructor
 
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            Log.Rename("2sApiC");
-            SxcInstance = Helpers.GetSxcOfApiRequest(Request, true, Log);
+            // Note that the SxcInstance is created by the BaseClass, if it's detectable. Otherwise it's null
             DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcInstance, SxcInstance?.EnvInstance, SxcInstance?.Log ?? Log);
             controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); // must run after creating AppAndDataHelpers
         }
@@ -36,14 +40,11 @@ namespace ToSic.SexyContent.WebApi
 
         private DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
 
-	    // Sexy object should not be accessible for other assemblies - just internal use
-        internal SxcInstance SxcInstance { get; private set; }
-
         #region AppAndDataHelpers implementation
 
         public DnnHelper Dnn => DnnAppAndDataHelpers.Dnn;
 
-	    public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
+        public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
 
         /// <inheritdoc />
         public App App

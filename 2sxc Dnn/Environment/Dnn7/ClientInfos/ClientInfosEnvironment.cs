@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps.Interfaces;
-// ReSharper disable InconsistentNaming
 
+// ReSharper disable InconsistentNaming
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class ClientInfosEnvironment
@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             SxcRootUrl = systemRootUrl;
 
-            var userMayEdit = sxcInstance?.UserMayEdit ?? false;// Eav.Factory.Resolve<IPermissions>().UserMayEditContent(sxc?.InstanceInfo);
+            var userMayEdit = sxcInstance?.UserMayEdit ?? false;
 
             IsEditable = userMayEdit;
             parameters = sxcInstance?.Parameters;

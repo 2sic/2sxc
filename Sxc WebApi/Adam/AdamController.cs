@@ -10,15 +10,18 @@ using DotNetNuke.Entities.Host;
 using DotNetNuke.Security;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.WebApi;
 using System.Configuration;
 using System.Web.Configuration;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets;
+using ToSic.Eav.Identity;
+using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.SexyContent.Razor.Helpers;
+using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.Errors;
 using ToSic.SexyContent.WebApi.Permissions;
 using App = ToSic.SexyContent.App;
@@ -33,7 +36,7 @@ namespace ToSic.Sxc.Adam.WebApi
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
-   public class AdamController: SxcApiController
+   public class AdamController: SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -44,13 +47,26 @@ namespace ToSic.Sxc.Adam.WebApi
         internal ContainerBase ContainerContext;
         internal AdamAppContext AdamAppContext;
 
+        internal IAttributeDefinition CurrentAttribute;
+
         private void PrepCore(App app,  Guid entityGuid, string fieldName, bool usePortalRoot)
         {
-            var tenant = new DnnTenant(Dnn.Portal);
+            var dnn = new DnnHelper(SxcInstance?.EnvInstance);
+
+            var tenant = new DnnTenant(dnn.Portal);
             AdamAppContext = new AdamAppContext(tenant, app, SxcInstance);
             ContainerContext = usePortalRoot 
                 ? new ContainerOfTenant(AdamAppContext) as ContainerBase
                 : new ContainerOfField(AdamAppContext, entityGuid, fieldName);
+
+            // try to find attribute definition - for later extra security checks
+            // WIP
+            if (usePortalRoot) return;
+            var appRead = new AppRuntime(app.AppId, Log);
+            var ent = appRead.Entities.Get(entityGuid);
+            var type = ent.Type;
+            var attrDef = type.Attributes.FirstOrDefault(a => a.Name == fieldName);
+            CurrentAttribute = attrDef;
         }
 
         public int MaxFileSizeKb 
@@ -64,7 +80,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
         private UploadResult UploadOne(int appId, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot)
         {
-            Log.Add($"upload one a:{App?.AppId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
+            Log.Add($"upload one a:{appId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
@@ -92,13 +108,19 @@ namespace ToSic.Sxc.Adam.WebApi
             try
             {
                 var folder = ContainerContext.Folder();
-                if(!string.IsNullOrEmpty(subFolder)) 
+
+                if (!string.IsNullOrEmpty(subFolder)) 
                     folder = ContainerContext.Folder(subFolder, false);
                 var filesCollection = HttpContext.Current.Request.Files;
                 Log.Add($"folder: {folder}, file⋮{filesCollection.Count}");
                 if (filesCollection.Count > 0)
                 {
                     var originalFile = filesCollection[0];
+
+                    // start with a security check - so we only upload into valid adam if that's the scenario
+                    var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
+                    if (onlyInsideAdam)
+                        EnsureItIsInItemOrThrow(guid, field, dnnFolder.PhysicalPath);
 
                     #region check content-type extensions...
 
@@ -111,7 +133,7 @@ namespace ToSic.Sxc.Adam.WebApi
                     #endregion
 
                     if (originalFile.ContentLength > (1024 * MaxFileSizeKb))
-                        return new UploadResult { Success = false, Error = App.Resources.UploadFileSizeLimitExceeded };
+                        return new UploadResult { Success = false, Error = $"file too large - more than {MaxFileSizeKb}Kb"};
 
                     // remove forbidden / troubling file name characters
                     var fileName = originalFile.FileName
@@ -120,8 +142,6 @@ namespace ToSic.Sxc.Adam.WebApi
 
                     if (fileName != originalFile.FileName)
                         Log.Add($"cleaned file name from'{originalFile.FileName}' to '{fileName}'");
-
-                    var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
 
 
                     // Make sure the image does not exist yet, cycle through numbers (change file name)
@@ -204,17 +224,13 @@ namespace ToSic.Sxc.Adam.WebApi
         [HttpGet]
         public IEnumerable<AdamItem> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
-            Log.Add($"adam items a:{App?.AppId}, i:{guid}, field:{field}, subfold:{subfolder}, useRoot:{usePortalRoot}");
+            Log.Add($"adam items a:{appId}, i:{guid}, field:{field}, subfold:{subfolder}, useRoot:{usePortalRoot}");
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
 
             permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
             var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Permissions);
-            var app = App;
-            if(app.AppId != appId)
-            {
-                app = permCheck.App;
-                app.InitData(true, false, new ValueCollectionProvider());
-            }
+            var app = permCheck.App;
+            app.InitData(true, false, new ValueCollectionProvider());
 
             PrepCore(app, guid, field, usePortalRoot);
             var folderManager = FolderManager.Instance;
@@ -225,6 +241,9 @@ namespace ToSic.Sxc.Adam.WebApi
             // try to see if we can get into the subfolder - will throw error if missing
             var currentAdam = ContainerContext.Folder(subfolder, false);
             var currentDnn = folderManager.GetFolder(currentAdam.Id);
+
+            if (onlyInsideAdam)
+                EnsureItIsInItemOrThrow(guid, field, currentDnn.PhysicalPath);
 
             var subfolders =  folderManager.GetFolders(currentDnn);
             var files = folderManager.GetFiles(currentDnn);
@@ -246,7 +265,7 @@ namespace ToSic.Sxc.Adam.WebApi
         [HttpPost]
         public IEnumerable<AdamItem> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
         {
-            Log.Add($"get folders for a:{App?.AppId}, i:{guid}, field:{field}, subfld:{subfolder}, new:{newFolder}, useRoot:{usePortalRoot}");
+            Log.Add($"get folders for a:{appId}, i:{guid}, field:{field}, subfld:{subfolder}, new:{newFolder}, useRoot:{usePortalRoot}");
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
 
             permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
@@ -268,7 +287,7 @@ namespace ToSic.Sxc.Adam.WebApi
         [HttpGet]
         public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
         {
-            Log.Add($"delete from a:{App?.AppId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
+            Log.Add($"delete from a:{appId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
             permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
             var onlyInsideAdam = !UserMayWriteEverywhereOrThrowIfAttempted(usePortalRoot, permCheck.Permissions);
@@ -283,6 +302,10 @@ namespace ToSic.Sxc.Adam.WebApi
             if (isFolder)
             {
                 var fld = folderManager.GetFolder(id);
+
+                if (onlyInsideAdam)
+                    EnsureItIsInItemOrThrow(guid, field, fld.PhysicalPath);
+
                 if (fld.ParentID == current.Id)
                     folderManager.DeleteFolder(id);
                 else
@@ -291,6 +314,10 @@ namespace ToSic.Sxc.Adam.WebApi
             else
             {
                 var file = fileManager.GetFile(id);
+
+                if (onlyInsideAdam)
+                    EnsureItIsInItemOrThrow(guid, field, file.PhysicalPath);
+
                 if (file.FolderId == current.Id)
                     fileManager.DeleteFile(file);
                 else
@@ -304,7 +331,7 @@ namespace ToSic.Sxc.Adam.WebApi
         [HttpGet]
         public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
         {
-            Log.Add($"rename a:{App?.AppId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
+            Log.Add($"rename a:{appId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
 
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
             permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentType);
@@ -320,6 +347,10 @@ namespace ToSic.Sxc.Adam.WebApi
             if (isFolder)
             {
                 var fld = folderManager.GetFolder(id);
+
+                if (onlyInsideAdam)
+                    EnsureItIsInItemOrThrow(guid, field, fld.PhysicalPath);
+
                 if (fld.ParentID == current.Id)
                     folderManager.RenameFolder(fld, newName);
                 else
@@ -327,13 +358,17 @@ namespace ToSic.Sxc.Adam.WebApi
             }
             else
             {
+                // note: never allow to change the extension
                 var file = fileManager.GetFile(id);
-                if (file.Extension != newName.Split('.').Last())
-                    newName += "." + file.Extension;
+
+                if (onlyInsideAdam)
+                    EnsureItIsInItemOrThrow(guid, field, file.PhysicalPath);
 
                 if (file.FolderId != current.Id)
                     throw Http.BadRequest("can't rename file - not found in folder");
 
+                if (file.Extension != newName.Split('.').Last())
+                    newName += "." + file.Extension;
                 fileManager.RenameFile(file, newName);
             }
 
@@ -342,6 +377,14 @@ namespace ToSic.Sxc.Adam.WebApi
         }
 
 
+        private static void EnsureItIsInItemOrThrow(Guid guid, string field, string path)
+        {
+            var shortGuid = Mapper.GuidCompress(guid);
+            var expectedPathPart = shortGuid + "\\" + field;
+            if (path.IndexOf(expectedPathPart, StringComparison.Ordinal) == -1)
+                throw new AccessViolationException(
+                    "Trying to access a file/folder in a path which is not part of this item - access denied.");
+        }
 
         #endregion
 
@@ -351,10 +394,6 @@ namespace ToSic.Sxc.Adam.WebApi
         private static bool IsAllowedDnnExtension(string fileName)
         {
             var extension = Path.GetExtension(fileName);
-
-            //regex matches a dot followed by 1 or more chars followed by a semi-colon
-            //regex is meant to block files like "foo.asp;.png" which can take advantage
-            //of a vulnerability in IIS6 which treasts such files as .asp, not .png
             return !string.IsNullOrEmpty(extension)
                    && Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLower());
         }
