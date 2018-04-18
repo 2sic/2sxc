@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http.Controllers;
-using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.ValueProvider;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Razor.Helpers;
 using Factory = ToSic.Eav.Factory;
 
@@ -33,7 +30,7 @@ namespace ToSic.SexyContent.WebApi
         {
             base.Initialize(controllerContext);
             // Note that the SxcInstance is created by the BaseClass, if it's detectable. Otherwise it's null
-            DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcInstance, SxcInstance?.EnvInstance, SxcInstance?.Log ?? Log);
+            DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcInstance, SxcInstance?.Log ?? Log);
             controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); // must run after creating AppAndDataHelpers
         }
         #endregion
@@ -146,35 +143,9 @@ namespace ToSic.SexyContent.WebApi
         public FolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
         #endregion
 
-        #region App-Helpers for anonyous access APIs
 
-        internal int GetCurrentAppIdFromPath(string appPath)
-        {
-            // check zone
-            var zid = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
 
-            // get app from appname
-            var aid = AppHelpers.GetAppIdFromGuidName(zid, appPath, true);
-            Log.Add($"find app by path:{appPath}, found a:{aid}");
-            return aid;
-        }
-        #endregion
 
-        #region Security Checks 
-
-        /// <summary>
-        /// Check if a user may do something - and throw an error if the permission is not given
-        /// </summary>
-        internal void PerformSecurityCheck(int appId, string contentType, Grants grant,
-            ModuleInfo module, App app, IEntity specificItem = null)
-            => new Security(PortalSettings, Log).FindCtCheckSecurityOrThrow(appId,
-                contentType,
-                new List<Grants> {grant},
-                specificItem,
-                module,
-                app);
-
-        #endregion
 
     }
 }

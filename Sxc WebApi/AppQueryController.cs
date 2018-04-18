@@ -4,8 +4,6 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -18,7 +16,7 @@ namespace ToSic.SexyContent.WebApi
     /// They will only be delivered if the security is confirmed - it must be publicly available
     /// </summary>
     [AllowAnonymous]
-    public class AppQueryController : SxcApiController
+    public class AppQueryController : SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -28,8 +26,11 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null) 
-            => BuildQueryAndRun(App, name, stream, includeGuid, Dnn.Module, Log, SxcInstance);
+        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null)
+        {
+            var context = GetContext(SxcInstance, Log);
+            return BuildQueryAndRun(SxcInstance.App, name, stream, includeGuid, context.Dnn.Module, Log, SxcInstance);
+        }
 
 
         [HttpGet]

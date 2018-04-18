@@ -7,7 +7,7 @@ using ToSic.SexyContent.WebApi.Permissions;
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
     [SupportedModules("2sxc,2sxc-app")]
-    public class EntityPickerController : SxcApiController
+    public class EntityPickerController : SxcApiControllerBase
     {
         [HttpGet]
         [HttpPost]

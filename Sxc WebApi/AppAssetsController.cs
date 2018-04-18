@@ -18,12 +18,8 @@ namespace ToSic.SexyContent.WebApi
 	[SupportedModules("2sxc,2sxc-app")]
     [SxcWebApiExceptionHandling]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class AppAssetsController : SxcApiController
+    public class AppAssetsController : SxcApiControllerBase
     {
-        // todo: Create the create-api
-        // todo: create the delete-file/folder api
-        // todo: create the copy file api
-
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext); // very important!!!
@@ -32,9 +28,8 @@ namespace ToSic.SexyContent.WebApi
 
         #region Public API
 
-        // private bool _allowFullAccess;
         [HttpGet]
-        public new List<string> List(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
+        public List<string> List(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {
             Log.Add($"list a#{appId}, global:{global}, path:{path}, mask:{mask}, withSub:{withSubfolders}, withFld:{returnFolders}");
             // set global access security if ok...

@@ -12,15 +12,16 @@ using ToSic.SexyContent.WebApi.Permissions;
 namespace ToSic.SexyContent.WebApi.Dnn
 {
 	[SupportedModules("2sxc,2sxc-app")]
-	public class HyperlinkController : SxcApiController
+	public class HyperlinkController : SxcApiControllerBase
 	{
 
 		[HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 		public object GetFileByPath(string relativePath)
 		{
-			relativePath = relativePath.Replace(Dnn.Portal.HomeDirectory, "");
-			var file = FileManager.Instance.GetFile(Dnn.Portal.PortalId, relativePath);
+		    var context = GetContext(SxcInstance, Log);
+            relativePath = relativePath.Replace(context.Dnn.Portal.HomeDirectory, "");
+			var file = FileManager.Instance.GetFile(context.Dnn.Portal.PortalId, relativePath);
 			if (CanUserViewFile(file))
 				return new
 				{
@@ -34,7 +35,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
 		public string ResolveHyperlink(string hyperlink)
 		{
-		    var permCheck = new AppAndPermissions(SxcInstance, App.AppId, Log);
+		    var permCheck = new AppAndPermissions(SxcInstance, SxcInstance.App.AppId, Log);
 
 		    permCheck.EnsureOrThrow(GrantSets.WriteSomething);
 
@@ -51,7 +52,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
                 : fullLink;
 		}
 
-		private bool CanUserViewFile(IFileInfo file)
+		private static bool CanUserViewFile(IFileInfo file)
 		{
 		    if (file == null) return false;
 		    var folder = (FolderInfo)FolderManager.Instance.GetFolder(file.FolderId);

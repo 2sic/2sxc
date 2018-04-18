@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
     [AllowAnonymous]
-    public class SystemController : SxcApiController
+    public class SystemController : SxcApiControllerBase
 	{
 
 	    [HttpGet]

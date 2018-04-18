@@ -29,12 +29,12 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="grant"></param>
         /// <param name="specificItem"></param>
         /// <param name="module"></param>
-        /// <param name="app"></param>
-        internal void FindCtCheckSecurityOrThrow(int appId, string contentType, List<Grants> grant, IEntity specificItem, ModuleInfo module, App app)
+        /// <param name="zoneId">Optional zone-id, will enforce that the app must be in the current zone</param>
+        internal void FindCtCheckSecurityOrThrow(int appId, string contentType, List<Grants> grant, IEntity specificItem, ModuleInfo module, /*App app, */int? zoneId)
         {
             Log.Add($"security check for type:{contentType}, grant:{grant}, useContext:{module != null}, app:{appId}, item:{specificItem?.EntityId}");
             // make sure we have the right appId, zoneId and module-context
-            var ct = FindContentTypeOrThrow(appId, contentType, module, app);
+            var ct = FindContentTypeOrThrow(appId, contentType, module, /*app?.ZoneId*/zoneId);
 
             // Check if the content-type has a GUID as name - only these can have permission assignments
             // only check permissions on type if the type has a GUID as static-id
@@ -50,18 +50,18 @@ namespace ToSic.SexyContent.WebApi
             throw Errors.Http.InformativeErrorForTypeAccessDenied(contentType, grant, staticNameIsGuid);
         }
 
-        private static IContentType FindContentTypeOrThrow(int appId, string contentType, ModuleInfo module, App app)
+        private static IContentType FindContentTypeOrThrow(int appId, string contentType, ModuleInfo module, int? zoneId)
         {
             // accessing the app for the ID only works if we have a context
             // from the module
             // this is not the case in certain API-calls, then context-access shouldn't happen
             var useContext = module != null;
-            var zoneId = useContext ? app?.ZoneId : null;
+            var usedZoneId = useContext ? /*app?.ZoneId*/ zoneId : null;
             // 2018-04-10 disabled this - should always check for the app provided in the request
             //if (appId <= 0 && useContext) appId = app?.AppId ?? appId;
 
             // Ensure that we can find this content-type 
-            var cache = DataSource.GetCache(zoneId, appId);
+            var cache = DataSource.GetCache(usedZoneId, appId);
             var ct = cache.GetContentType(contentType);
             if (ct == null)
                 throw Errors.Http.WithLink(HttpStatusCode.NotFound, 
