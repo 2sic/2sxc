@@ -25,10 +25,8 @@
     "url": "https://github.com/2sic/2sxc/issues"
   },
   "homepage": "https://github.com/2sic/2sxc",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "jshintConfig": {
     "laxbreak": true
   }
-
 }

@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Interfaces;
+﻿using DotNetNuke.Application;
+using ToSic.Eav.Interfaces;
+using System.Data.SqlClient;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -6,22 +8,26 @@ namespace ToSic.SexyContent.Environment.Dnn7
     {
         public string GetSystemFingerprint()
         {
-            // todo: find host-guid
-            var hostGuid = "todo";
+            var hostGuid = DotNetNuke.Entities.Host.Host.GUID;
 
-            // todo: find dnn version
-            var mainVersionDnn = "9"; // todo
+            var mainVersionDnn = DotNetNukeContext.Current.Application.Version.ToString(1);
 
-            // todo: find 2sxc version
-            var mainVersion2Sxc = "9"; // todo
+            var mainVersion2Sxc = Settings.Version.ToString(1);
 
-            // todo: find db-name
-            var dbName = "db-todo"; // todo
+            var dbName = getDbName();
 
-            // todo: connect together
             var fingerprint = $"guid={hostGuid}&dnnv={mainVersionDnn}&2sxcv={mainVersion2Sxc}&db={dbName}";
 
             return fingerprint;
+        }
+
+        private string getDbName()
+        {
+            SqlConnectionStringBuilder connBuilder = new SqlConnectionStringBuilder
+            {
+                ConnectionString = DotNetNuke.Common.Utilities.Config.GetConnectionString()
+            };
+            return connBuilder.InitialCatalog;
         }
     }
 }
