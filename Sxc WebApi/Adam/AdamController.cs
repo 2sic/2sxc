@@ -11,8 +11,10 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
 using System.Configuration;
+using System.Linq.Expressions;
 using System.Web.Configuration;
 using System.Web.Http.Controllers;
+using JetBrains.Annotations;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Identity;
@@ -64,8 +66,8 @@ namespace ToSic.Sxc.Adam.WebApi
             if (usePortalRoot) return;
             var appRead = new AppRuntime(app.AppId, Log);
             var ent = appRead.Entities.Get(entityGuid);
-            var type = ent.Type;
-            var attrDef = type.Attributes.FirstOrDefault(a => a.Name == fieldName);
+            var type = ent?.Type;
+            var attrDef = type?.Attributes.FirstOrDefault(a => a.Name == fieldName);
             CurrentAttribute = attrDef;
         }
 
@@ -109,7 +111,7 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 var folder = ContainerContext.Folder();
 
-                if (!string.IsNullOrEmpty(subFolder)) 
+                if (!string.IsNullOrEmpty(subFolder))
                     folder = ContainerContext.Folder(subFolder, false);
                 var filesCollection = HttpContext.Current.Request.Files;
                 Log.Add($"folder: {folder}, file⋮{filesCollection.Count}");
@@ -125,18 +127,26 @@ namespace ToSic.Sxc.Adam.WebApi
                     #region check content-type extensions...
 
                     // Check file size and extension
-                    if(!IsAllowedDnnExtension(originalFile.FileName))
-                        throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+                    var fileName = originalFile.FileName;
+                    if (!IsAllowedDnnExtension(fileName))
+                        throw Http.NotAllowedFileType(fileName, "Not in whitelisted CMS file types.");
+
+                    if (IsKnownRiskyExtension(fileName))
+                        throw Http.NotAllowedFileType(fileName, "This is a known risky file type.");
 
                     // todo: check metadata of the FieldDef to see if still allowed
 
                     #endregion
 
                     if (originalFile.ContentLength > (1024 * MaxFileSizeKb))
-                        return new UploadResult { Success = false, Error = $"file too large - more than {MaxFileSizeKb}Kb"};
+                        return new UploadResult
+                        {
+                            Success = false,
+                            Error = $"file too large - more than {MaxFileSizeKb}Kb"
+                        };
 
                     // remove forbidden / troubling file name characters
-                    var fileName = originalFile.FileName
+                    fileName = fileName
                         .Replace("%", "per")
                         .Replace("#", "hash");
 
@@ -146,13 +156,16 @@ namespace ToSic.Sxc.Adam.WebApi
 
                     // Make sure the image does not exist yet, cycle through numbers (change file name)
                     var numberedFile = fileName;
-                    for (var i = 1; FileManager.Instance.FileExists(dnnFolder, Path.GetFileName(numberedFile)) && i < 1000; i++)
+                    for (var i = 1;
+                        FileManager.Instance.FileExists(dnnFolder, Path.GetFileName(numberedFile)) && i < 1000;
+                        i++)
                         numberedFile = Path.GetFileNameWithoutExtension(fileName)
-                                   + "-" + i + Path.GetExtension(fileName);
+                                       + "-" + i + Path.GetExtension(fileName);
                     fileName = numberedFile;
 
                     // Everything is ok, add file
-                    var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName), originalFile.InputStream);
+                    var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName),
+                        originalFile.InputStream);
 
                     return new UploadResult
                     {
@@ -165,9 +178,13 @@ namespace ToSic.Sxc.Adam.WebApi
                     };
                 }
                 Log.Add("upload one complete");
-                return new UploadResult { Success = false, Error = "No image was uploaded." };
+                return new UploadResult {Success = false, Error = "No image was uploaded."};
             }
-            catch (Exception e)
+            catch (HttpResponseException he)
+            {
+                return new UploadResult { Success = false, Error = he.Response.ReasonPhrase };
+            }
+            catch(Exception e)
             {
                 return new UploadResult { Success = false, Error = e.Message };
             }
@@ -207,15 +224,6 @@ namespace ToSic.Sxc.Adam.WebApi
             //    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             //}
             #endregion
-        }
-
-        private static bool UserMayWriteEverywhereOrThrowIfAttempted(bool usePortalRoot,
-            PermissionCheckBase permCheck)
-        {
-            var everywhereOk = permCheck.UserMay(GrantSets.WritePublished);
-            if (usePortalRoot && !everywhereOk)
-                throw Http.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
-            return everywhereOk;
         }
 
 
@@ -377,6 +385,13 @@ namespace ToSic.Sxc.Adam.WebApi
         }
 
 
+        #endregion
+
+
+        #region Security checks
+
+
+        [AssertionMethod]
         private static void EnsureItIsInItemOrThrow(Guid guid, string field, string path)
         {
             var shortGuid = Mapper.GuidCompress(guid);
@@ -386,17 +401,42 @@ namespace ToSic.Sxc.Adam.WebApi
                     "Trying to access a file/folder in a path which is not part of this item - access denied.");
         }
 
-        #endregion
 
-
-        #region Helper to check extension based on DNN settings
-        // mostly a copy from https://github.com/dnnsoftware/Dnn.Platform/blob/115ae75da6b152f77ad36312eb76327cdc55edd7/DNN%20Platform/Modules/Journal/FileUploadController.cs#L72
+        /// <summary>
+        /// Helper to check extension based on DNN settings
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// mostly a copy from https://github.com/dnnsoftware/Dnn.Platform/blob/115ae75da6b152f77ad36312eb76327cdc55edd7/DNN%20Platform/Modules/Journal/FileUploadController.cs#L72
+        /// </remarks>
+        [AssertionMethod]
         private static bool IsAllowedDnnExtension(string fileName)
         {
             var extension = Path.GetExtension(fileName);
             return !string.IsNullOrEmpty(extension)
                    && Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLower());
         }
+
+        [AssertionMethod]
+        private static bool IsKnownRiskyExtension(string fileName)
+        {
+            var extension = Path.GetExtension(fileName);
+            return !string.IsNullOrEmpty(extension)
+                   && Security.BadExtensions.IsMatch(extension);
+        }
+
+        [AssertionMethod]
+        private static bool UserMayWriteEverywhereOrThrowIfAttempted(bool usePortalRoot,
+            PermissionCheckBase permCheck)
+        {
+            var everywhereOk = permCheck.UserMay(GrantSets.WritePublished);
+            if (usePortalRoot && !everywhereOk)
+                throw Http.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
+            return everywhereOk;
+        }
+
+
         #endregion
 
     }

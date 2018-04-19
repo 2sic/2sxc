@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adam\Security.cs" />
     <Compile Include="Adam\File.cs" />
     <Compile Include="Adam\Folder.cs" />
     <Compile Include="Adam\AdamAppContext.cs" />
@@ -190,6 +191,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Adam\Assets\Helper Excel to build list of all bad file extensions.xlsx" />
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
