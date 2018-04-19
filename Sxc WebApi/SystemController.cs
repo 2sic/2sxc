@@ -15,6 +15,7 @@ using DotNetNuke.Web.Api;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
@@ -141,15 +142,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public object Features()
         {
-            var features = Eav.Configuration.Features.All;
-            return features.Select(f => new
-            {
-                Id = f.Id,
-                Enabled = f.Enabled,
-                Expires = f.Expires,
-                Public =f.Public,
-                Ui = f.Ui
-            }).ToList();
+            return Eav.Configuration.Features.All;
         }
 
         [HttpGet]
