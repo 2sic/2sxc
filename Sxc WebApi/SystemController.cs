@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using DotNetNuke.Application;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Portals;
@@ -10,8 +12,10 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
+using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.WebApi.Dnn;
 using Assembly = System.Reflection.Assembly;
 
@@ -152,17 +156,20 @@ namespace ToSic.SexyContent.WebApi
         {
             // todo: STV
             // todo: if it's not the host, just return an error-string
+            if (!UserInfo.IsSuperUser)
+            {
+                // throw new AccessViolationException("error: user needs host permissions");
+                return "error: user needs host permissions";
+            }
             // the js will then have to mention that it needs host permissions
 
-            // if it's the host, return a url similar to IntroductionToAppUrl
-            // with 
-            // DnnVersion=[full dnn version]
-            // 2SexyContentVersion=[full 2sxc version]
-            // fp=[fingerprint]
-            // dnnguid=[dnn guid]
-            // moduleid=[moduleid] - get this from Dnn.Module.ModuleID or something - needed for callback later on
-            // destination=features
-            throw new NotImplementedException();
+            return "//gettingstarted.2sxc.org/router.aspx?" // change to use protocoll neutral base URL, also change to 2sxc
+                + $"DnnVersion={DotNetNukeContext.Current.Application.Version.ToString(4)}"
+                + $"&2SexyContentVersion={Settings.ModuleVersion}"
+                + $"&fp={HttpUtility.UrlEncode(Eav.Configuration.Fingerprint.System)}"
+                + $"&DnnGuid={DotNetNuke.Entities.Host.Host.GUID}"
+                + $"&ModuleId={Request.FindModuleInfo().ModuleID}" // needed for callback later on
+                + "&destination=features";
         }
 
         [HttpPost]

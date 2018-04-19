@@ -150,11 +150,24 @@
 
 
         // todo STV
-        vm.features = function() {
+        vm.features = function () {
+
+            featureService.getManageFeaturesUrl().then((result) => {
+                console.log(result);
+                return result.data;
+            }).catch((result) => {
+                console.log(result);
+            });
             // todo: first do a call to system-ManageFeaturesUrl api
             // call is: app-sys/system/managefeaturesurl
             // then show the iframe
             // and give it the url
+
+            // todo: if it's not the host, just return an error-string
+            //if (!UserInfo.IsSuperUser) {
+            //    return "error: user needs host permissions";
+            //}
+            // the js will then have to mention that it needs host permissions
 
             // also register this 
         };
@@ -1109,6 +1122,11 @@ angular.module("SxcServices")
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
                 return $http.get("app-sys/system/features");
             }));
+
+            // this will retrieve an advanced getting-started url to use in an the iframe
+            svc.getManageFeaturesUrl = function gettingManageFeaturesUrl() {
+                return $http.get("app-sys/system/managefeaturesurl");
+            };
 
             return svc;
         };
