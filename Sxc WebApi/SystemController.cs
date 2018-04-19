@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -11,6 +12,8 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -138,8 +141,6 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public object Features()
         {
-            // todo STV
-            // return all the features from the Configuration.Features for the UI to visualize
             var features = Eav.Configuration.Features.All;
             return features.Select(f => new
             {
@@ -154,14 +155,11 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public string ManageFeaturesUrl()
         {
-            // todo: STV
-            // todo: if it's not the host, just return an error-string
             if (!UserInfo.IsSuperUser)
             {
                 // throw new AccessViolationException("error: user needs host permissions");
                 return "error: user needs host permissions";
             }
-            // the js will then have to mention that it needs host permissions
 
             return "//gettingstarted.2sxc.org/router.aspx?" // change to use protocoll neutral base URL, also change to 2sxc
                 + $"DnnVersion={DotNetNukeContext.Current.Application.Version.ToString(4)}"
@@ -176,18 +174,71 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public bool SaveFeatures(string features)
         {
-            // todo STV
             // first do a validity check 
             // 1. valid json? 
             // - ensure signature is valid
+            if (!IsValidJson(features)) return false;
 
-            
             // then take the newFeatures (it should be a json)
             // and save to /desktopmodules/.data-custom/configurations/features.json
+            if (!SaveFeature(features)) return false;
 
             // when done, reset features
             Eav.Configuration.Features.Reset();
-            throw new NotImplementedException();
+
+            return true;
+        }
+
+        private static bool IsValidJson(string strInput)
+        {
+            strInput = strInput.Trim();
+            if (!(strInput.StartsWith("{") && strInput.EndsWith("}")) &&
+                !(strInput.StartsWith("[") && strInput.EndsWith("]")))
+            {
+                // it is not js Object and not js Array
+                return false;
+            }
+
+            try
+            {
+                var obj = JToken.Parse(strInput);
+            }
+            catch (JsonReaderException jex)
+            {
+                //  exception in parsing json
+                return false;
+            }
+            catch (Exception ex) 
+            {
+                // some other exception
+                return false;
+            }
+
+            // todo: stv
+            // ensure signature is valid
+
+            // json is valid
+            return true;
+        }
+
+        private static bool SaveFeature(string features)
+        {
+            bool fileSaved;
+            string featureFilePath =
+                HttpContext.Current.Server.MapPath(
+                    "~/DesktopModules/ToSIC_SexyContent/.data-custom/configurations/features.json");
+            try
+            {
+                File.WriteAllText(featureFilePath, features);
+                fileSaved = true;
+            }
+            catch (Exception e)
+            {
+                // throw;
+                fileSaved = false;
+            }
+
+            return fileSaved;
         }
 
         // build a getting-started url which is used to correctly show the user infos like
