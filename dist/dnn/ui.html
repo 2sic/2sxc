@@ -4,6 +4,7 @@
 <head>
     <title>Content Editing UI</title>
     <meta charset="utf-8" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
     <script>
         var jsVersionCacheId = window.location.search;    // use this to prevent
         document.write('<script src="../../js/2sxc.api.min.js' + jsVersionCacheId + '"></scr' + 'ipt>');
@@ -78,7 +79,7 @@
             '../i18n/lib/angular-i18n/angular-locale_' + langTwoLetter + '.js',
             '../../js/angularjs/2sxc4ng.min.js',    // 2sxc stuff like bootloader, configuration
             '../config/config.min.js',
-            '../admin/eav-admin.min.js',            // Main parts like eav-admin, sxc-admin and eav-edit 
+            '../admin/eav-admin.min.js',            // Main parts like eav-admin, sxc-admin and eav-edit
             '../sxc-admin/sxc-admin.min.js'
         ];
         var editScripts = [
@@ -112,6 +113,7 @@
         for (var s = 0; s < styles.length; s++)
             addStyle(styles[s]);
     </script>
+
     <script>
         // special packages only used by certain dialogs...
 
@@ -129,6 +131,7 @@
             addScript("../sxc-develop/sxc-develop.min.js");
         }
     </script>
+
 </head>
 
 <body style="background-color:transparent">

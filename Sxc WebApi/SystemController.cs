@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -9,7 +10,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Dnn;
@@ -129,6 +129,52 @@ namespace ToSic.SexyContent.WebApi
                 LanguageDefault = PortalSettings.Current.DefaultLanguage,
                 GettingStartedUrl = app == null ? "" : IntroductionToAppUrl(app)
             };
+        }
+
+        [HttpGet]
+        public object Features()
+        {
+            // todo STV
+            
+            // return all the features from the Configuration.Features for the UI to visualize
+
+            throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        public string ManageFeaturesUrl()
+        {
+            // todo: STV
+            // todo: if it's not the host, just return an error-string
+            // the js will then have to mention that it needs host permissions
+
+            // if it's the host, return a url similar to IntroductionToAppUrl
+            // with 
+            // DnnVersion=[full dnn version]
+            // 2SexyContentVersion=[full 2sxc version]
+            // fp=[fingerprint]
+            // dnnguid=[dnn guid]
+            // moduleid=[moduleid] - get this from Dnn.Module.ModuleID or something - needed for callback later on
+            // destination=features
+            throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+        public bool SaveFeatures(string features)
+        {
+            // todo STV
+            // first do a validity check 
+            // 1. valid json? 
+            // - ensure signature is valid
+
+            
+            // then take the newFeatures (it should be a json)
+            // and save to /desktopmodules/.data-custom/configurations/features.json
+
+            // when done, reset features
+            Eav.Configuration.Features.Reset();
+            throw new NotImplementedException();
         }
 
         // build a getting-started url which is used to correctly show the user infos like

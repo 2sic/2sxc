@@ -247,7 +247,8 @@ angular.module('Adam')
                 vm.get();
         };
 
-        vm.openUpload = function() {
+        vm.openUpload = function () {
+            // debugger;
             vm.dropzone.openUpload();
         };
 
@@ -377,6 +378,7 @@ angular.module('Adam')
         };
 
         vm.activate();
+
     }
 
 })();
@@ -445,10 +447,10 @@ angular.module('Adam')
         });
 })();
 /* js/fileAppDirectives */
-(function() {
+(function () {
     angular.module('Adam')
         /*@ngInject*/
-        .directive('dropzone', ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
+        .directive('dropzone', ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", "featuresSvc", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate, featuresSvc) {
 
             return {
                 restrict: 'C',
@@ -490,6 +492,7 @@ angular.module('Adam')
 
                 var eventHandlers = {
                     'addedfile': function (file) {
+                        // debugger;
                         $timeout(function () {
                             // anything you want can go here and will safely be run on the next digest.
                             scope.$apply(function () { // this must run in a timeout
@@ -498,11 +501,18 @@ angular.module('Adam')
                         });
                     },
 
+                    'drop': function (event) {
+                        // debugger;
+                        console.log('stv: drop', event);
+                    },
+
                     "processing": function (file) {
+                        // debugger;
                         this.options.url = svc.uploadUrl(controller.adam.subFolder);
                     },
 
                     'success': function (file, response) {
+                        // debugger;
                         if (response.Success) {
                             svc.addFullPath(response); // calculate additional infos
                             scope.$parent.afterUpload(response);
@@ -526,15 +536,119 @@ angular.module('Adam')
                 $timeout(function () {
                     var dropzone = new Dropzone(element[0], config);
 
-                    angular.forEach(eventHandlers, function(handler, event) {
+                    angular.forEach(eventHandlers, function (handler, event) {
                         dropzone.on(event, handler);
                     });
 
-                    scope.processDropzone = function() { dropzone.processQueue(); };
-                    scope.resetDropzone = function() { dropzone.removeAllFiles(); };
-                    controller.openUpload = function() { dropzone.hiddenFileInput.click(); };
+                    scope.processDropzone = function () { dropzone.processQueue(); };
+                    scope.resetDropzone = function () { dropzone.removeAllFiles(); };
+                    controller.openUpload = function () { dropzone.hiddenFileInput.click(); };
+                    controller.processFile = function (file) { dropzone.processFile(file); }; // needed for clipboard paste
+
+                    clipboardPasteImageFeature(element[0], dropzone); // add clipboard paste image feature if enabled
 
                 }, 0);
+
+
+                /**
+                 * add clipboard paste image feature if enabled
+                 * @param {any} element
+                 * @param {any} dropzone
+                 */
+                function clipboardPasteImageFeature(element, dropzone) {
+                    featuresSvc.enabled('f6b8d6da-4744-453b-9543-0de499aa2352').then(
+                        function(enabled) {
+                            if (enabled) {
+                                clipboardPasteImageFunctionalityEnable(element, dropzone);
+                            }
+                        });
+                }
+
+
+                /**
+                 * attach paste functionality to UI elements in dropzone
+                 * @param {any} element
+                 * @param {any} dropzone
+                 */
+                function clipboardPasteImageFunctionalityEnable(element, dropzone) {
+
+                    var pasteInstance;
+
+                    // pastableTextarea - for adam input
+                    pasteInstance = element.querySelector('div > div.after-preview > div > input');
+                    if (pasteInstance) {
+                        pasteInstance.pastableTextarea();
+                        pasteInstance.addEventListener('pasteImage', function (ev, data) {
+                            pasteImageInDropzone(ev, data, dropzone);
+                        });
+
+                        // pastableNonInputable
+                        pasteInstance = element; // whole dropzone
+                        pasteInstance.pastableNonInputable();
+                        pasteInstance.addEventListener('pasteImage', function (ev, data) {
+                            pasteImageInDropzone(ev, data, dropzone);
+                        });
+                    }
+
+                    // pastableContenteditable - for tinymce
+                    pasteInstance = element.querySelector('div > div[contenteditable]');
+                    if (pasteInstance) {
+                        pasteInstance.pastableContenteditable();
+                        pasteInstance.addEventListener('pasteImage', function (ev, data) {
+                            pasteImageInDropzone(ev, data, dropzone);
+                        });
+                    }
+
+                }
+
+
+                /**
+                 * handle clipboard image after paste and prompt for new image filename
+                 * @param {any} ev event
+                 * @param {any} data clipboard image data
+                 * @param {any} dropzone
+                 */
+                function pasteImageInDropzone(ev, data, dropzone) {
+
+                    if (ev.detail && !data) {
+                        data = ev.detail;
+                    }
+
+                    // todo: generate hash sha256 for file name and avoid duplicate files
+                    var imageFileName = 'image.png';
+                    imageFileName = window.prompt('Enter clipboard image file name: ', imageFileName); // todo: i18n 
+
+                    // todo: convert png to jpg to reduce file size
+                    var img = getFile(data, imageFileName);
+
+                    dropzone.processFile(img);
+                }
+
+                /**
+                 * creates new file with custom fileName
+                 * @param {File} file
+                 * @param {string} fileName
+                 */
+                function getFile(data, fileName) {
+                    var newFile = data.file; // for fallback
+
+                    try {
+                        if (!document.documentMode && !/Edge/.test(navigator.userAgent)) {
+                            // File.name is readonly so we do this
+                            var formData = new FormData();
+                            formData.append('file', data.file, fileName);
+                            newFile = formData.get('file');
+                        } else {
+                            // fix this for Edge and IE
+                            newFile = new Blob([data.file], { type: data.file.type });
+                            newFile.lastModifiedDate = data.file.lastModifiedDate;
+                            newFile.name = fileName;
+                        }
+                    } catch (e) {
+                        console.log('paste image error', e);
+                    }
+                    return newFile;
+                }
             }
 
             /*@ngInject*/
@@ -552,6 +666,286 @@ angular.module('Adam')
 
 
 })();
+/*
+paste.js is an interface to read image from clipboard in different browsers. It also contains several hacks.
+implementation is based on https://github.com/layerssss/paste.js
+*/
+
+(function () {
+
+    var matches = function (el, selector) {
+        return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
+    };
+
+    function createHiddenEditable() {
+        var hiddenEditable = document.createElement('div');
+        hiddenEditable.setAttribute('contenteditable', true);
+        hiddenEditable.setAttribute('aria-hidden', true);
+        hiddenEditable.setAttribute('tabindex', -1);
+        hiddenEditable.style.width = 1;
+        hiddenEditable.style.height = 1;
+        hiddenEditable.style.position = 'fixed';
+        hiddenEditable.style.left = -100;
+        hiddenEditable.style.overflow = 'hidden';
+        hiddenEditable.style.opacity = 1e-17;
+        return hiddenEditable;
+    }
+
+    var isFocusable = function (element, hasTabindex) {
+        var fieldset;
+        var focusableIfVisible;
+        var nodeName = element.nodeName.toLowerCase();
+
+        if (/^(input|select|textarea|button|object)$/.test(nodeName)) {
+            focusableIfVisible = !element.disabled;
+            if (focusableIfVisible) {
+                fieldset = element.closest('fieldset');
+                if (fieldset) {
+                    focusableIfVisible = !fieldset.disabled;
+                }
+            }
+        } else if ('a' === nodeName) {
+            focusableIfVisible = element.href || hasTabindex;
+        } else {
+            focusableIfVisible = hasTabindex;
+        }
+        focusableIfVisible = focusableIfVisible || matches(element, '[contenteditable]');
+        return focusableIfVisible;
+    };
+
+    var Paste = (function () {
+        Paste.prototype._target = null;
+        Paste.prototype._container = null;
+
+        Paste.mountNonInputable = function (nonInputable) {
+            var hiddenEditable = createHiddenEditable();
+            nonInputable.appendChild(hiddenEditable);
+            var paste = new Paste(hiddenEditable, nonInputable);
+
+            nonInputable.addEventListener('click', (function (_this) {
+                return function (ev) {
+                    if (!isFocusable(ev.target, false)) {
+                        paste._container.focus();
+                        return;
+                    }
+                };
+            })(this));
+
+            paste._container.addEventListener('focus', (function (_this) {
+                return function () {
+                    nonInputable.classList.add('pastable-focus');
+                    return;
+                };
+            })(this));
+
+            paste._container.addEventListener('blur', (function (_this) {
+                return function () {
+                    nonInputable.classList.remove('pastable-focus');
+                    return;
+                };
+            })(this));
+
+            return paste;
+        };
+
+        Paste.mountTextarea = function (textarea) {
+            var ref, ref1;
+            if (((DataTransfer) ? DataTransfer.prototype : undefined) &&
+                ((ref = Object.getOwnPropertyDescriptor) ? (ref1 = ref.call(Object, DataTransfer.prototype, 'items')) ? ref1.get : undefined : undefined)) {
+                this.mountContenteditable(textarea);
+                return;
+            }
+
+            var paste = new Paste(createHiddenEditable().insertBefore(textarea), textarea);
+            var ctlDown = false;
+
+            textarea.addEventListener('keyup', function (ev) {
+                if (ev.keyCode === 17 || ev.keyCode === 224) {
+                    ctlDown = false;
+                }
+                return;
+            });
+
+            textarea.addEventListener('keydown', function (ev) {
+                if (ev.keyCode === 17 || ev.keyCode === 224) {
+                    ctlDown = true;
+                }
+                if ((ev.ctrlKey) && (ev.metaKey)) {
+                    ctlDown = ev.ctrlKey || ev.metaKey;
+                }
+                if (ctlDown && ev.keyCode === 86) {
+                    paste._textarea_focus_stolen = true;
+                    paste._container.focus();
+                    paste._paste_event_fired = false;
+                    setTimeout((function (_this) {
+                        return function () {
+                            if (!paste._paste_event_fired) {
+                                textarea.focus();
+                                paste._textarea_focus_stolen = false;
+                                return;
+                            }
+                        };
+                    })(this), 1);
+                }
+                return;
+            });
+
+            textarea.addEventListener('paste', (function (_this) {
+                return function () { };
+            })(this));
+
+            textarea.addEventListener('focus', (function (_this) {
+                return function () {
+                    if (!paste._textarea_focus_stolen) {
+                        textarea.classList.add('pastable-focus');
+                        return;
+                    }
+                };
+            })(this));
+
+            textarea.addEventListener('blur', (function (_this) {
+                return function () {
+                    if (!paste._textarea_focus_stolen) {
+                        textarea.classList.remove('pastable-focus');
+                        return;
+                    }
+                };
+            })(this));
+
+            return paste;
+        };
+
+        Paste.mountContenteditable = function (contenteditable) {
+            var paste = new Paste(contenteditable, contenteditable);
+
+            contenteditable.addEventListener('focus', (function (_this) {
+                return function () {
+                    contenteditable.classList.add('pastable-focus');
+                    return;
+                };
+            })(this));
+
+            contenteditable.addEventListener('blur', (function (_this) {
+                return function () {
+                    contenteditable.classList.remove('pastable-focus');
+                    return;
+                };
+            })(this));
+
+            return paste;
+        };
+
+        function Paste(_container, _target) {
+            this._container = _container;
+            this._target = _target;
+
+            this._target.classList.add('pastable');
+
+            this._container.addEventListener('paste', (function (_this) {
+                return function (ev) {
+
+                    var _i, clipboardData, file, item, k, l, len1, len2, pastedFilename, ref2, ref4;
+                    _this.originalEvent = ev;
+                    _this._paste_event_fired = true;
+
+                    if (ev.clipboardData) {
+                        clipboardData = ev.clipboardData;
+                        if (clipboardData.items) {
+                            pastedFilename = null;
+                            _this.originalEvent.pastedTypes = [];
+                            ref2 = clipboardData.items;
+                            for (_i = k = 0, len1 = ref2.length; k < len1; _i = ++k) {
+                                item = ref2[_i];
+                                if (item.type.match(/^image\//)) {
+                                    try {
+                                        var clipboardImageAsFile = item.getAsFile();
+                                        triggerCustomEvent(
+                                            _this._target, 'pasteImage', {
+                                                file: clipboardImageAsFile,
+                                                originalEvent: _this.originalEvent
+                                            });
+                                        ev.stopImmediatePropagation();
+                                    } catch (error) {
+                                        console.log('clipboard paste image error', error);
+                                    }
+                                    ev.preventDefault();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (window.clipboardData) {
+                        ref4 = window.clipboardData.files;
+                        for (l = 0, len2 = ref4.length; l < len2; l++) {
+                            ev.stopImmediatePropagation();
+                            file = ref4[l];
+                            triggerCustomEvent(
+                                _this._target, 'pasteImage', {
+                                    file: file,
+                                    originalEvent: _this.originalEvent
+                                });
+                            ev.preventDefault();
+                        }
+                    }
+                    return;
+                };
+            })(this));
+
+            function triggerCustomEvent(el, eventName, data) {
+                var event;
+                if (window.CustomEvent) {
+                    event = new CustomEvent(eventName, { detail: data });
+                } else {
+                    event = document.createEvent('CustomEvent');
+                    event.initCustomEvent(eventName, true, true, data);
+                }
+
+                el.dispatchEvent(event);
+            }
+
+        }
+
+        return Paste;
+
+    })();
+
+    Element.prototype.paste = function (pasteContainer) {
+        var pm = Paste.mountNonInputable(pasteContainer);
+        return pm._container;
+    };
+
+    Element.prototype.pastableNonInputable = function () {
+        var el = this;
+        if (el._pastable || matches(el, 'textarea, input, [contenteditable]')) {
+            return;
+        }
+        Paste.mountNonInputable(el);
+        el._pastable = true;
+        return;
+    };
+
+    Element.prototype.pastableTextarea = function () {
+        var el = this;
+        if (el._pastable || matches(el, 'textarea, input') === false) {
+            return;
+        }
+        Paste.mountTextarea(el);
+        el._pastable = true;
+        return;
+    };
+
+    Element.prototype.pastableContenteditable = function () {
+        var el = this;
+        if (el._pastable || matches(el, '[contenteditable]') === false) {
+            return;
+        }
+        Paste.mountContenteditable(el);
+        el._pastable = true;
+        return;
+    };
+
+}).call(this);
+
 
 (function () {
 	"use strict";
@@ -1481,6 +1875,7 @@ angular.module('sxcFieldTemplates')
 
             // this is the event called by dropzone as something is dropped
             $scope.afterUpload = function (fileItem) {
+                // debugger;
                 vm.setValue(fileItem, fileItem.Type === 'image');
             };
 
@@ -1660,6 +2055,16 @@ angular.module("sxcFieldTemplates")
                 language: svc.defaultLanguage,
 
                 debounce: false // DONT slow-down model updates - otherwise we sometimes miss the last changes
+
+                //paste_preprocess: function (plugin, args) {
+                //    console.log(args.content);
+                //    args.content += ' preprocess';
+                //},
+
+                //paste_postprocess: function (plugin, args) {
+                //    console.log(args.node);
+                //    args.node.setAttribute('id', '42');
+                //}
             };
         };
 

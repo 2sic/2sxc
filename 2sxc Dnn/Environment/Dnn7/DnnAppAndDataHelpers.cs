@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             if (sxcInstance == null)
                 return;
 
-            app.InitData(portalSettings != null && sxcInstance.UserMayEdit,
+            app?.InitData(portalSettings != null && sxcInstance.UserMayEdit,
                 portalSettings != null && sxcInstance.Environment.PagePublishing.IsEnabled(sxcInstance.EnvInstance.Id),
                 sxcInstance.Data.ConfigurationProvider);
         }
