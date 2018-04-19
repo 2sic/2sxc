@@ -53,5 +53,15 @@ namespace ToSic.SexyContent.WebApi.Errors
                 ReasonPhrase = $"file {filename} has an unsupported file type. {message}"
             });
         }
+
+        internal static HttpResponseException PermissionDenied(string message = null)
+        {
+            return new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
+            {
+                ReasonPhrase = $"Permission denied. {message}"
+            });
+        }
+
+
     }
 }

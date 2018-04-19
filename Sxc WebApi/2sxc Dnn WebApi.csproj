@@ -90,7 +90,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adam\AdamSecureState.cs" />
+    <Compile Include="Adam\AdamController_Helpers.cs" />
     <Compile Include="Adam\AdamItem.cs" />
+    <Compile Include="Adam\SecurityChecks.cs" />
     <Compile Include="Adam\UploadResult.cs" />
     <Compile Include="EavApiProxies\SystemController.cs" />
     <Compile Include="EavApiProxies\AllInOne.cs" />
