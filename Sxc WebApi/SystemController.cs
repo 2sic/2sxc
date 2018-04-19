@@ -135,10 +135,16 @@ namespace ToSic.SexyContent.WebApi
         public object Features()
         {
             // todo STV
-            
             // return all the features from the Configuration.Features for the UI to visualize
-
-            throw new NotImplementedException();
+            var features = Eav.Configuration.Features.All;
+            return features.Select(f => new
+            {
+                Id = f.Id,
+                Enabled = f.Enabled,
+                Expires = f.Expires,
+                Public =f.Public,
+                Ui = f.Ui
+            }).ToList();
         }
 
         [HttpGet]
