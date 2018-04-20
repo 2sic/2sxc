@@ -165,73 +165,23 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public bool SaveFeatures(string features)
+        public bool SaveFeatures([FromBody] FeaturesManagementUtils.FeaturesManagementResponse featuresManagementResponse)
         {
             // first do a validity check 
+            if (featuresManagementResponse?.Msg?.Features == null) return false;
+
             // 1. valid json? 
             // - ensure signature is valid
-            if (!IsValidJson(features)) return false;
+            if (!FeaturesManagementUtils.IsValidJson(featuresManagementResponse.Msg.Features)) return false;
 
             // then take the newFeatures (it should be a json)
             // and save to /desktopmodules/.data-custom/configurations/features.json
-            if (!SaveFeature(features)) return false;
+            if (!FeaturesManagementUtils.SaveFeature(featuresManagementResponse.Msg.Features)) return false;
 
             // when done, reset features
             Eav.Configuration.Features.Reset();
 
             return true;
-        }
-
-        private static bool IsValidJson(string strInput)
-        {
-            strInput = strInput.Trim();
-            if (!(strInput.StartsWith("{") && strInput.EndsWith("}")) &&
-                !(strInput.StartsWith("[") && strInput.EndsWith("]")))
-            {
-                // it is not js Object and not js Array
-                return false;
-            }
-
-            try
-            {
-                var obj = JToken.Parse(strInput);
-            }
-            catch (JsonReaderException jex)
-            {
-                //  exception in parsing json
-                return false;
-            }
-            catch (Exception ex) 
-            {
-                // some other exception
-                return false;
-            }
-
-            // todo: stv
-            // ensure signature is valid
-
-            // json is valid
-            return true;
-        }
-
-        private static bool SaveFeature(string features)
-        {
-            bool fileSaved;
-            string featureFilePath =
-                HttpContext.Current.Server.MapPath(
-                    "~/DesktopModules/ToSIC_SexyContent/.data-custom/configurations/features.json");
-            try
-            {
-                File.WriteAllText(featureFilePath, features);
-                fileSaved = true;
-            }
-            catch (Exception e)
-            {
-                // throw;
-                fileSaved = false;
-            }
-
-            return fileSaved;
         }
 
         // build a getting-started url which is used to correctly show the user infos like
