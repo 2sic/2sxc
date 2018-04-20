@@ -93,6 +93,7 @@
     <Compile Include="EavApiProxies\AllInOne.cs" />
     <Compile Include="EavApiProxies\UiController.cs" />
     <Compile Include="Errors\Http.cs" />
+    <Compile Include="FeaturesManagementUtils.cs" />
     <Compile Include="Permissions\AppAndPermissions.cs" />
     <Compile Include="Security.cs" />
     <Compile Include="SxcApiControllerBase.cs" />
