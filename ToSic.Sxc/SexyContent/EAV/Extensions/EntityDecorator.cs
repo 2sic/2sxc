@@ -64,6 +64,7 @@ namespace ToSic.SexyContent.EAVExtensions
         public int Version => _baseEntity.Version;
 
         public IMetadataOfItem Metadata => _baseEntity.Metadata;
+        public IEnumerable<IEntity> Permissions => _baseEntity.Permissions;
 
         #endregion
 

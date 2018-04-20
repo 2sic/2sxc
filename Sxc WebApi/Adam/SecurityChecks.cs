@@ -67,20 +67,6 @@ namespace ToSic.SexyContent.WebApi.Adam
         }
 
 
-        /// <summary>
-        /// This will check if the field-definition grants additional rights
-        /// Should only be called if the user doesn't have full edit-rights
-        /// </summary>
 
-        [AssertionMethod]
-        internal static void CheckFieldPermissions(IAttributeDefinition fieldDef, List<Grants> requiredGrant, SxcInstance sxcInstance, Log log)
-        {
-            var fieldPermissions = new DnnPermissionCheck(log,
-                instance: sxcInstance.EnvInstance,
-                meta1: fieldDef.Metadata);
-
-            if (!fieldPermissions.UserMay(requiredGrant))
-                throw Http.PermissionDenied("this field is not configured to allow uploads by the current user");
-        }
     }
 }

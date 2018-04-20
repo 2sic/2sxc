@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
@@ -21,6 +22,9 @@ namespace ToSic.SexyContent.WebApi.Adam
         internal AdamAppContext AdamAppContext;
         internal IAttributeDefinition Attribute;
 
+        /// <summary>
+        /// Initializes the object and performs all the initial security checks
+        /// </summary>
         public AdamSecureState(SxcInstance sxcInstance, int appId, string contentType, string field, Guid guid, bool usePortalRoot, Log log)
             : base(sxcInstance, appId, log)
         {
@@ -30,8 +34,11 @@ namespace ToSic.SexyContent.WebApi.Adam
             UserIsRestricted = !SecurityChecks.ThrowIfUserMayNotWriteEverywhere(usePortalRoot, Permissions);
 
             PrepCore(App, guid, field, usePortalRoot);
-            
-            Attribute = usePortalRoot ? null : Definition(appId, contentType, field);
+
+            if (usePortalRoot) return;
+
+            Attribute = Definition(appId, contentType, field);
+            ThrowIfWrongFieldType();
         }
 
         private void PrepCore(App app, Guid entityGuid, string fieldName, bool usePortalRoot)
@@ -52,7 +59,7 @@ namespace ToSic.SexyContent.WebApi.Adam
             return type[fieldName];
         }
 
-        public void ThrowIfFieldTypeWrongOrExtraPermissionsMissing(List<Grants> requiredPermissions)
+        public void ThrowIfWrongFieldType()
         {
             var fieldDef = Attribute;
 
@@ -60,13 +67,34 @@ namespace ToSic.SexyContent.WebApi.Adam
             if (fieldDef == null || !(fieldDef.Type != Eav.Constants.DataTypeHyperlink || fieldDef.Type != Eav.Constants.DataTypeString))
                 throw Http.BadRequest("Requested field '" + Field + "' type doesn't allow upload");
             Log.Add($"field type:{fieldDef.Type}");
-
-            // check field permissions, but only for non-publish-data
-            if (UserIsRestricted)
-                SecurityChecks.CheckFieldPermissions(fieldDef, requiredPermissions, SxcInstance, Log);
         }
 
-        public void ThrowIfUserAccessIsOutsideOfPermittedRange(string path)
+        [AssertionMethod]
+        public void ThrowIfRestrictedUserIsntPermitted(List<Grants> requiredPermissions)
+        {
+            // check field permissions, but only for non-publish-data
+            if (UserIsRestricted && !FieldPermissionOk(requiredPermissions))
+                throw Http.PermissionDenied("this field is not configured to allow uploads by the current user");
+        }
+
+        public bool IsExplicitlyPermittedAtFieldLevel(List<Grants> requiredPermissions) 
+            => FieldPermissionOk(requiredPermissions);
+
+
+        /// <summary>
+        /// This will check if the field-definition grants additional rights
+        /// Should only be called if the user doesn't have full edit-rights
+        /// </summary>
+        public bool FieldPermissionOk(List<Grants> requiredGrant)
+        {
+            var fieldPermissions = new DnnPermissionCheck(Log,
+                instance: SxcInstance.EnvInstance,
+                permissions1: Attribute.Permissions);
+
+            return fieldPermissions.UserMay(requiredGrant);
+        }
+
+        public void ThrowIfOutsidePermittedFolders(string path)
         {
             if (UserIsRestricted)
                 SecurityChecks.ThrowIfDestNotInItem(Guid, Field, path);
