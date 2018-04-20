@@ -7,6 +7,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
+using ToSic.SexyContent.WebApi.Adam;
 using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.Dnn
@@ -33,23 +34,41 @@ namespace ToSic.SexyContent.WebApi.Dnn
 
 		[HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-		public string ResolveHyperlink(string hyperlink)
+		public string ResolveHyperlink(string hyperlink, int appId, string contentType, Guid guid, string field)
 		{
-		    var permCheck = new AppAndPermissions(SxcInstance, SxcInstance.App.AppId, Log);
+		    try
+		    {
+		        // different security checks depending on the link-type
+		        var lookupPage = hyperlink.Trim().StartsWith("page", StringComparison.OrdinalIgnoreCase);
 
-		    permCheck.EnsureOrThrow(GrantSets.WriteSomething);
+		        // look it up first, because we need to know if the result is in ADAM or not (different security scenario)
+		        var conv = new DnnValueConverter();
+		        var resolved = conv.Convert(ConversionScenario.GetFriendlyValue, "Hyperlink", hyperlink);
 
-            var conv = new DnnValueConverter();
-		    var fullLink = conv.Convert(ConversionScenario.GetFriendlyValue, "Hyperlink", hyperlink);
-		    
-            // if the user may only create drafts, then he/she may only see stuff from the adam folder
-		    //var permCheck = set;
-		    if (permCheck.Permissions.UserMay(GrantSets.WritePublished))
-                return fullLink;
+		        if (lookupPage)
+		        {
+                    // page link - only resolve if the user has edit-permissions
+		            // only people who have some full edit permissions may actually look up pages
+		            var permCheckPage = new AppAndPermissions(SxcInstance, appId, Log);
+		            permCheckPage.EnsureOrThrow(GrantSets.WritePublished);
+		            return resolved;
+		        }
 
-		    return !(fullLink.IndexOf("/adam/", StringComparison.Ordinal) > 0) 
-                ? hyperlink 
-                : fullLink;
+		        var isOutsideOfAdam = !(resolved.IndexOf("/adam/", StringComparison.Ordinal) > 0);
+
+		        // file-check, more abilities to allow
+		        // this will already do a ensure-or-throw inside it if outside of adam
+		        var adamCheck = new AdamSecureState(SxcInstance, appId, contentType, field, guid, isOutsideOfAdam, Log);
+                adamCheck.ThrowIfRestrictedUserIsOutsidePermittedFolders(resolved);
+                adamCheck.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.ReadSomething);
+
+		        // if everythig worked till now, it's ok to return the result
+		        return resolved;
+		    }
+		    catch
+		    {
+		        return hyperlink;
+		    }
 		}
 
 		private static bool CanUserViewFile(IFileInfo file)

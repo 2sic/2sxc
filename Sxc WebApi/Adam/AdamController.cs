@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Adam.WebApi
                     throw Http.NotAllowedFileType("unknown", "doesn't look like a file-upload");
 
                 var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
-                state.ThrowIfRestrictedUserIsntPermitted(GrantSets.WriteSomething);
+                state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.WriteSomething);
 
                 var folder = state.ContainerContext.Folder();
 
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
                     // start with a security check - so we only upload into valid adam if that's the scenario
                     var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
-                    state.ThrowIfOutsidePermittedFolders(dnnFolder.PhysicalPath);
+                    state.ThrowIfRestrictedUserIsOutsidePermittedFolders(dnnFolder.PhysicalPath);
 
                     #region check content-type extensions...
 
@@ -143,7 +143,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var currentAdam = state.ContainerContext.Folder(subfolder, false);
             var currentDnn = folderManager.GetFolder(currentAdam.Id);
 
-            state.ThrowIfOutsidePermittedFolders(currentDnn.PhysicalPath);
+            state.ThrowIfRestrictedUserIsOutsidePermittedFolders(currentDnn.PhysicalPath);
 
             var subfolders = folderManager.GetFolders(currentDnn);
             var files = folderManager.GetFiles(currentDnn);
@@ -195,7 +195,7 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             Log.Add($"delete from a:{appId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
-            state.ThrowIfRestrictedUserIsntPermitted(GrantSets.DeleteSomething);
+            state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.DeleteSomething);
 
             // try to see if we can get into the subfolder - will throw error if missing
             var current = state.ContainerContext.Folder(subfolder, false);
@@ -206,7 +206,7 @@ namespace ToSic.Sxc.Adam.WebApi
                 var folderManager = FolderManager.Instance;
                 var fld = folderManager.GetFolder(id);
 
-                state.ThrowIfOutsidePermittedFolders(fld.PhysicalPath);
+                state.ThrowIfRestrictedUserIsOutsidePermittedFolders(fld.PhysicalPath);
 
                 if (fld.ParentID != current.Id)
                     throw Http.BadRequest("can't delete folder - not found in folder");
@@ -217,7 +217,7 @@ namespace ToSic.Sxc.Adam.WebApi
                 var fileManager = FileManager.Instance;
                 var file = fileManager.GetFile(id);
 
-                state.ThrowIfOutsidePermittedFolders(file.PhysicalPath);
+                state.ThrowIfRestrictedUserIsOutsidePermittedFolders(file.PhysicalPath);
 
                 if (file.FolderId != current.Id)
                     throw Http.BadRequest("can't delete file - not found in folder");
@@ -234,7 +234,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Log.Add($"rename a:{appId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
 
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
-            state.ThrowIfRestrictedUserIsntPermitted(GrantSets.WriteSomething);
+            state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.WriteSomething);
 
             // try to see if we can get into the subfolder - will throw error if missing
             var current = state.ContainerContext.Folder(subfolder, false);
@@ -243,7 +243,7 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 var folderManager = FolderManager.Instance;
                 var fld = folderManager.GetFolder(id);
-                state.ThrowIfOutsidePermittedFolders(fld.PhysicalPath);
+                state.ThrowIfRestrictedUserIsOutsidePermittedFolders(fld.PhysicalPath);
 
                 if (fld.ParentID != current.Id)
                     throw Http.BadRequest("can't rename folder - not found in folder");
@@ -253,7 +253,7 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 var fileManager = FileManager.Instance;
                 var file = fileManager.GetFile(id);
-                state.ThrowIfOutsidePermittedFolders(file.PhysicalPath);
+                state.ThrowIfRestrictedUserIsOutsidePermittedFolders(file.PhysicalPath);
 
                 if (file.FolderId != current.Id)
                     throw Http.BadRequest("can't rename file - not found in folder");

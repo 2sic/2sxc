@@ -83,7 +83,7 @@
 }());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
-    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "$uibModalInstance", "$window", "$translate", "featuresConfigSvc"];
+    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "$uibModalInstance", "$translate", "featuresConfigSvc"];
     angular.module("AppsManagementApp", [
         "EavServices",
         "EavConfiguration",
@@ -102,7 +102,7 @@
         ;
 
     /*@ngInject*/
-    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, appId, zoneId, $uibModalInstance, $window, $translate, featuresConfigSvc) {
+    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, appId, zoneId, $uibModalInstance, $translate, featuresConfigSvc) {
         var vm = this;
 
         function blankCallback() { }
@@ -164,7 +164,7 @@
                 }
             }).then(function() {
                 vm.featuresShow = false;
-                // sxcDialogs.openTotal(vm.manageFeaturesUrl, vm.featuresCallback);
+                sxcDialogs.openTotal(vm.manageFeaturesUrl, vm.featuresCallback);
             }).catch(function(error) {
                 console.log('error', error);
                 alert(error);
@@ -172,14 +172,6 @@
 
             // also register this 
         };
-
-        $window.addEventListener('message', function(event) {
-            if (typeof (event.data) !== 'undefined') {
-                debugger;
-                // handle message
-                vm.featuresCallback(event.data);
-            }
-        });
 
         // todo STV
         vm.featuresCallback = function (features) {
@@ -1142,7 +1134,7 @@ angular.module("SxcServices")
             };
 
             svc.saveFeatures = function saveFeatures(features) {
-                return $http.post("app-sys/system/SaveFeatures", features )
+                return $http.post("app-sys/system/savefeatures", { params: { features: features } })
                     .then(function (result) {
                         if (result.data === false) // must check for an explicit false, to avoid undefineds
                             alert("server reported that save feature failed"); // todo: i18n

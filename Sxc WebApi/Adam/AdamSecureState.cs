@@ -35,7 +35,7 @@ namespace ToSic.SexyContent.WebApi.Adam
 
             PrepCore(App, guid, field, usePortalRoot);
 
-            if (usePortalRoot) return;
+            if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(field)) return;
 
             Attribute = Definition(appId, contentType, field);
             ThrowIfWrongFieldType();
@@ -70,15 +70,12 @@ namespace ToSic.SexyContent.WebApi.Adam
         }
 
         [AssertionMethod]
-        public void ThrowIfRestrictedUserIsntPermitted(List<Grants> requiredPermissions)
+        public void ThrowIfRestrictedUserIsntPermittedOnField(List<Grants> requiredPermissions)
         {
             // check field permissions, but only for non-publish-data
             if (UserIsRestricted && !FieldPermissionOk(requiredPermissions))
                 throw Http.PermissionDenied("this field is not configured to allow uploads by the current user");
         }
-
-        public bool IsExplicitlyPermittedAtFieldLevel(List<Grants> requiredPermissions) 
-            => FieldPermissionOk(requiredPermissions);
 
 
         /// <summary>
@@ -94,7 +91,7 @@ namespace ToSic.SexyContent.WebApi.Adam
             return fieldPermissions.UserMay(requiredGrant);
         }
 
-        public void ThrowIfOutsidePermittedFolders(string path)
+        public void ThrowIfRestrictedUserIsOutsidePermittedFolders(string path)
         {
             if (UserIsRestricted)
                 SecurityChecks.ThrowIfDestNotInItem(Guid, Field, path);

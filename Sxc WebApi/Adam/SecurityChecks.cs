@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using DotNetNuke.Entities.Host;
 using JetBrains.Annotations;
 using ToSic.Eav.Identity;
-using ToSic.Eav.Interfaces;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Errors;
 
 namespace ToSic.SexyContent.WebApi.Adam
@@ -22,10 +18,9 @@ namespace ToSic.SexyContent.WebApi.Adam
         internal static void ThrowIfDestNotInItem(Guid guid, string field, string path)
         {
             var shortGuid = Mapper.GuidCompress(guid);
-            var expectedPathPart = shortGuid + "\\" + field;
-            if (path.IndexOf(expectedPathPart, StringComparison.Ordinal) == -1)
-                throw new AccessViolationException(
-                    "Trying to access a file/folder in a path which is not part of this item - access denied.");
+            // will do check, case-sensitive because the compressed guid is case-sensitive
+            if (!path.Replace('\\', '/').Contains(shortGuid + "/" + field)) 
+                throw Http.PermissionDenied("Can't access a resource which is not part of this item.");
         }
 
 

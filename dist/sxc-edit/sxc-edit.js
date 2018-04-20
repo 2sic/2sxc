@@ -1007,7 +1007,7 @@ angular.module('eavFieldTemplates')
 
 angular.module("sxcFieldTemplates")
     /*@ngInject*/
-    .factory("dnnBridgeSvc", ["$uibModal", "$http", "promiseToastr", function ($uibModal, $http, promiseToastr) {
+    .factory("dnnBridgeSvc", ["$uibModal", "$http", "appId", "promiseToastr", function ($uibModal, $http, appId, promiseToastr) {
         var svc = {};
         svc.open = function open(oldValue, params, callback) {
             var type = "pagepicker";
@@ -1047,10 +1047,15 @@ angular.module("sxcFieldTemplates")
 
 
         // handle short-ID links like file:17
-        svc.getUrlOfId = function(idCode, entityId) {
+        svc.getUrlOfId = function(idCode, contentType, guid, field) {
             var linkLowered = idCode.toLowerCase();
             if (linkLowered.indexOf("file:") !== -1 || linkLowered.indexOf("page:") !== -1)
-                return $http.get("dnn/Hyperlink/ResolveHyperlink?hyperlink=" + encodeURIComponent(idCode));
+                return $http.get("dnn/Hyperlink/ResolveHyperlink?hyperlink="
+                    + encodeURIComponent(idCode)
+                    + "&guid=" + guid
+                    + "&contentType=" + contentType
+                    + "&field=" + field
+                    + "&appId=" + appId);
             return null;
         };
 
@@ -1184,7 +1189,7 @@ angular.module("sxcFieldTemplates")
             });
         }])
         /*@ngInject*/
-        .controller('FieldTemplate-HyperlinkCtrl', ["$uibModal", "$scope", "$http", "sxc", "adamSvc", "debugState", "dnnBridgeSvc", "fileType", function ($uibModal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc, fileType) {
+        .controller('FieldTemplate-HyperlinkCtrl', ["$uibModal", "$scope", "$http", "appId", "sxc", "adamSvc", "debugState", "dnnBridgeSvc", "fileType", function ($uibModal, $scope, $http, appId, sxc, adamSvc, debugState, dnnBridgeSvc, fileType) {
 
             var vm = this;
             vm.debug = debugState;
@@ -1213,6 +1218,9 @@ angular.module("sxcFieldTemplates")
                 if (merged.Buttons === undefined || merged.Buttons === null) merged.Buttons = 'adam,more';
             }
 
+            // test to get correct infos
+            console.log('debug from hyperlink', $scope);
+
             ensureDefaultConfig();
 
             // Update test-link if necessary - both when typing or if link was set by dialogs
@@ -1221,10 +1229,12 @@ angular.module("sxcFieldTemplates")
                     return;
 
                 // handle short-ID links like file:17
-                var promise = dnnBridgeSvc.getUrlOfId(newValue);
+                var promise = dnnBridgeSvc.getUrlOfId(newValue,
+                    $scope.to.header.ContentTypeName, $scope.to.header.Guid, $scope.options.key);
+
                 if(promise)
                     promise.then(function (result) {
-                        if (result.data) 
+                        if (result.data)
                             vm.testLink = result.data;
                     });
                 else 
