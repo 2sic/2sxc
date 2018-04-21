@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Web;
 using Newtonsoft.Json;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Edit.Toolbar;
+using Feats = ToSic.Eav.Configuration.Features;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
@@ -122,9 +124,15 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         #region Scripts and CSS includes
 
+
         public string Enable(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, bool? api = null, bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
         {
             Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Enable", $"{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
+
+            // check if feature enabled
+            var feats = new[] {FeatureIds.PublicForms};
+            if (!Feats.Enabled(feats))
+                throw new Exception($"public forms not available - {Feats.MsgMissingSome(feats)}");
 
             // only update the values if true, otherwise leave untouched
             if (api.HasValue || forms.HasValue)

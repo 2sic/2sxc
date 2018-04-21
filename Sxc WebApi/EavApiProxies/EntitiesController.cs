@@ -136,6 +136,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
             permCheck.EnsureOrThrow(GrantSets.WriteSomething, items.Select(i => i.Header).ToList());
+            permCheck.ThrowIfUserIsRestrictedAndFeatureNotEnabled();
 
             // list of saved IDs
             Dictionary<Guid, int> postSaveIds = null;

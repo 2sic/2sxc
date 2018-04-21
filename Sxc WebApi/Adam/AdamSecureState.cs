@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Interfaces;
@@ -10,6 +13,8 @@ using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.WebApi.Errors;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Adam;
+using SysConf = ToSic.Eav.Configuration;
+using Feats = ToSic.Eav.Configuration.Features;
 
 namespace ToSic.SexyContent.WebApi.Adam
 {
@@ -22,6 +27,12 @@ namespace ToSic.SexyContent.WebApi.Adam
         internal AdamAppContext AdamAppContext;
         internal IAttributeDefinition Attribute;
 
+        public readonly Guid[] FeaturesForRestrictedUsers =
+            {
+                SysConf.FeatureIds.PublicUpload,
+                SysConf.FeatureIds.PublicForms
+            };
+
         /// <summary>
         /// Initializes the object and performs all the initial security checks
         /// </summary>
@@ -32,6 +43,10 @@ namespace ToSic.SexyContent.WebApi.Adam
             Guid = guid;
             EnsureOrThrow(GrantSets.WriteSomething, contentType);
             UserIsRestricted = !SecurityChecks.ThrowIfUserMayNotWriteEverywhere(usePortalRoot, Permissions);
+
+
+                if (UserIsRestricted && !Feats.Enabled(FeaturesForRestrictedUsers))
+                    throw Http.PermissionDenied($"low-permission users may not access this - {Feats.MsgMissingSome(FeaturesForRestrictedUsers)}");
 
             PrepCore(App, guid, field, usePortalRoot);
 
@@ -105,6 +120,54 @@ namespace ToSic.SexyContent.WebApi.Adam
             if (SecurityChecks.IsKnownRiskyExtension(fileName))
                 throw Http.NotAllowedFileType(fileName, "This is a known risky file type.");
 
+        }
+
+        internal bool CustomFileFilterOk(string additionalFilter, string fileName)
+        {
+            var extension = Path.GetExtension(fileName)?.TrimStart('.') ?? "";
+            var hasNonAzChars = new Regex("[^a-z]", RegexOptions.IgnoreCase);
+
+            Log.Add($"found additional file filter: {additionalFilter}");
+            var filters = additionalFilter.Split(',').Select(f => f.Trim()).ToList();
+            Log.Add($"found {filters.Count} filters in {additionalFilter}, will test on {fileName} with ext {extension}");
+
+            foreach (var f in filters)
+            {
+                // just a-z characters
+                if (!hasNonAzChars.IsMatch(f))
+                    if (extension == f)
+                    {
+                        Log.Add($"filter {f} matched filename {fileName}");
+                        return true;
+                    }
+                    else continue;
+
+                // could be regex or simple *.ext
+                if (f.StartsWith("*."))
+                    if (string.Equals(extension, f.Substring(2), StringComparison.OrdinalIgnoreCase))
+                    {
+                        Log.Add($"filter {f} matched filename {fileName}");
+                        return true;
+                    }
+                    else continue;
+
+                // it's a regex
+                try
+                {
+                    if (new Regex(f, RegexOptions.IgnoreCase).IsMatch(fileName))
+                    {
+                        Log.Add($"filter {f} matched filename {fileName}");
+                        return true;
+                    }
+                }
+                catch
+                {
+                    Log.Add($"filter {f} was detected as reg-ex but threw error");
+                }
+
+            }
+
+            return false;
         }
     }
 }

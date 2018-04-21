@@ -74,7 +74,12 @@ namespace ToSic.Sxc.Adam.WebApi
                     state.ThrowIfBadExtension(fileName);
 
                     // todo: check metadata of the FieldDef to see if still allowed extension
-                    // note 2018-04-20 2dm: can't do this yet, because wysiwy doesn't have a setting for allowed file-uploads
+                    var additionalFilter = state.Attribute.Metadata.GetBestValue<string>("FileFilter");
+                    if (!string.IsNullOrWhiteSpace(additionalFilter)
+                        && !state.CustomFileFilterOk(additionalFilter, fileName))
+                        throw Http.NotAllowedFileType(fileName, "field has custom file-filter, which doesn't match");
+
+                    // note 2018-04-20 2dm: can't do this for wysiwyg, as it doesn't have a setting for allowed file-uploads
 
                     #endregion
 
@@ -118,7 +123,9 @@ namespace ToSic.Sxc.Adam.WebApi
 
         }
 
-        
+
+
+
         #region adam-file manager
 
         [HttpGet]

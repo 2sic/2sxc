@@ -6,12 +6,14 @@ using System.Web.Http;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.ValueProvider;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.SexyContent.WebApi.Errors;
 using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi.Permissions
@@ -79,9 +81,21 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
         internal void EnsureOrThrow(List<Grants> grants = null, string typeName = null)
         {
-            /*var set =*/ BuildPermissionChecker(typeName);
+            BuildPermissionChecker(typeName);
             if(!Permissions.UserMay(grants))
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
+        }
+
+        internal void ThrowIfUserIsRestrictedAndFeatureNotEnabled()
+        {
+            // 1. check if user is restricted
+            var userIsRestricted = !Permissions.UserMay(GrantSets.WritePublished);
+
+            // 2. check if feature is enabled
+            var feats = new[] { FeatureIds.PublicForms };
+            if (userIsRestricted && !Features.Enabled(feats))
+                throw Http.PermissionDenied($"low-permission users may not access this - {Features.MsgMissingSome(feats)}");
+
         }
 
 

@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.EAVExtensions
 
         public IEntity GetPublished() => _baseEntity.GetPublished();
 
-        public string GetBestTitle() => _baseEntity.GetBestTitle();
+
 
 
         public int AppId => _baseEntity.AppId;
@@ -53,6 +53,10 @@ namespace ToSic.SexyContent.EAVExtensions
 
         public object GetBestValue(string attributeName, string[] languages, bool resolveHyperlinks = false)
             => _baseEntity.GetBestValue(attributeName, languages, resolveHyperlinks);
+        public TVal GetBestValue<TVal>(string name, bool resolveHyperlinks = false)
+            => _baseEntity.GetBestValue<TVal>(name, resolveHyperlinks);
+
+        public string GetBestTitle() => _baseEntity.GetBestTitle();
 
         public string GetBestTitle(string[] dimensions)
             => _baseEntity.GetBestTitle(dimensions);
