@@ -117,12 +117,40 @@
 			"Browse": "more apps",
 			"Import": "import app",
 			"Create": "create",
-			"Export": "export app"
+			"Export": "export app",
+			"Languages": "languages",
+			"Features": "features"
 		},
 		"Prompt": {
 			"NewApp": "Enter App Name (will also be used for folder)",
 			"DeleteApp": "This cannot be undone. To really delete this app, type (or copy/paste) the app-name here: sure you want to delete '{{name}}' ({{id}}) ?",
 			"FailedDelete": "input did not match - will not delete"
+		},
+		"Tab": {
+			"Apps": "Apps",
+			"Settings": "Settings"
+		},
+		"Features": {
+			"Tab": "Features",
+			"Tab.Help": "These settings apply to all zones/portals",
+			"Intro": "These are the system features - they apply to all zones / apps.",
+			"Manage": "manage features",
+			"Manage.Help": "enable / disable features as needed",
+			"Table": {
+				"Enabled.Help": "Feature is enabled",
+				"Name": "Name",
+				"Name.Help": "The name doesn't work yet - it needs to be retrieved from the global features catalog",
+				"Id": "Feature GUID",
+				"Id.Help": "The global ID for this feature",
+				"Expires": "Expires",
+				"Expires.Help": "Features can expire - like when testing for a day or two",
+				"Ui": "UI",
+				"Ui.Help": "UI features are passed to the user interface (like the edit form) to adapt it as needed",
+				"Public": "Public",
+				"Public.Help": "Public feature will let the UI know about their status even for users who have low priviledges. This is off for many features as a security precaution",
+				"Security": "Security",
+				"Security.Help": "This is the security status as reported by 2sxc.org - it doesn't work yet - still work-in-progress"
+			}
 		}
 	},
 	"ReplaceContent": {
