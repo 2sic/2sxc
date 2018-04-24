@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -12,14 +10,10 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
-using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.WebApi.Dnn;
 using Assembly = System.Reflection.Assembly;
 
@@ -140,8 +134,10 @@ namespace ToSic.SexyContent.WebApi
         }
 
         [HttpGet]
-        public object Features()
+        public IEnumerable<Feature> Features(bool reload = false)
         {
+            if(reload)
+                Eav.Configuration.Features.Reset();
             return Eav.Configuration.Features.All;
         }
 
@@ -157,7 +153,7 @@ namespace ToSic.SexyContent.WebApi
             return "//gettingstarted.2sxc.org/router.aspx?" // change to use protocoll neutral base URL, also change to 2sxc
                 + $"DnnVersion={DotNetNukeContext.Current.Application.Version.ToString(4)}"
                 + $"&2SexyContentVersion={Settings.ModuleVersion}"
-                + $"&fp={HttpUtility.UrlEncode(Eav.Configuration.Fingerprint.System)}"
+                + $"&fp={HttpUtility.UrlEncode(Fingerprint.System)}"
                 + $"&DnnGuid={DotNetNuke.Entities.Host.Host.GUID}"
                 + $"&ModuleId={Request.FindModuleInfo().ModuleID}" // needed for callback later on
                 + "&destination=features";
@@ -183,6 +179,7 @@ namespace ToSic.SexyContent.WebApi
 
             return true;
         }
+
 
         // build a getting-started url which is used to correctly show the user infos like
         // warnings related to his dnn or 2sxc version
