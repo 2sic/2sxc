@@ -14,6 +14,7 @@ using Factory = ToSic.Eav.Factory;
 using ToSic.Sxc.Adam.WebApi;
 using System.IO;
 using DotNetNuke.Services.FileSystem;
+using File = ToSic.Sxc.Adam.File;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -145,8 +146,23 @@ namespace ToSic.SexyContent.WebApi
         /// <returns>An Adam object for navigating the assets</returns>
         public FolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
-        public IFileInfo UploadOne(Stream stream, string fileName, string contentType, Guid guid, string field, string subFolder = "")
-            => new ToSic.SexyContent.WebApi.Adam.AdamUploadRequestHandler().UploadOne(stream, fileName, SxcInstance, Log, SxcInstance.AppId.Value, contentType, guid, field, subFolder, false);
+        public File SaveInAdam(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
+            Stream stream = null, 
+            string fileName = null, 
+            string contentType = null, 
+            Guid? guid = null, 
+            string field = null,
+            string subFolder = "")
+        {
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam", 
+                $"{nameof(stream)},{nameof(fileName)},{nameof(contentType)},{nameof(guid)},{nameof(field)},{nameof(subFolder)} (optional)");
+
+            if(stream == null || fileName == null || contentType == null || guid == null || field == null)
+                throw new Exception();
+
+            return new AdamUploader(SxcInstance, SxcInstance.AppId.Value, Log)
+                .UploadOne(stream, fileName, contentType, guid.Value, field, subFolder, false);
+        }
 
         #endregion
 

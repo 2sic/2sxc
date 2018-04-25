@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Adam.WebApi
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
-   public partial class AdamController: SxcApiControllerBase
+   public class AdamController: SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -53,7 +53,8 @@ namespace ToSic.Sxc.Adam.WebApi
                 if (filesCollection.Count > 0)
                 {
                     var originalFile = filesCollection[0];
-                    var file = new AdamUploadRequestHandler().UploadOne(originalFile.InputStream, originalFile.FileName, SxcInstance, Log, appId, contentType, guid, field, subFolder, usePortalRoot);
+                    var file = new AdamUploader(SxcInstance, appId, Log)
+                        .UploadOne(originalFile.InputStream, originalFile.FileName, contentType, guid, field, subFolder, usePortalRoot);
 
                     return new UploadResult
                     {
@@ -61,7 +62,7 @@ namespace ToSic.Sxc.Adam.WebApi
                         Error = "",
                         Name = Path.GetFileName(file.FileName),
                         Id = file.FileId,
-                        Path = PortalSettings.HomeDirectory + file.RelativePath,
+                        Path = /*PortalSettings.HomeDirectory +*/ file.Url,//.RelativePath,
                         Type = Classification.TypeName(file.Extension)
                     };
                 }

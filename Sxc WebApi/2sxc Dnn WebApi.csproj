@@ -92,7 +92,7 @@
   <ItemGroup>
     <Compile Include="Adam\AdamSecureState.cs" />
     <Compile Include="Adam\AdamItem.cs" />
-    <Compile Include="Adam\AdamUploadRequestHandler.cs" />
+    <Compile Include="Adam\AdamUploader.cs" />
     <Compile Include="Adam\SecurityChecks.cs" />
     <Compile Include="Adam\UploadResult.cs" />
     <Compile Include="EavApiProxies\SystemController.cs" />

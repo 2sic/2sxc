@@ -2,25 +2,34 @@
 using System;
 using System.Configuration;
 using System.IO;
-using System.Net.Http;
-using System.Web;
 using System.Web.Configuration;
-using System.Web.Http;
-using ToSic.Eav.Apps.Assets;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
+using ToSic.SexyContent;
+using ToSic.SexyContent.WebApi.Adam;
 using ToSic.SexyContent.WebApi.Errors;
-using ToSic.Sxc.Adam.WebApi;
 
 
-namespace ToSic.SexyContent.WebApi.Adam
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Adam.WebApi
 {
-    public class AdamUploadRequestHandler
+    internal class AdamUploader: HasLog
     {
-        public IFileInfo UploadOne(Stream stream, string originalFileName, SxcInstance sxcInstance, Eav.Logging.Simple.Log log, int appId, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot)
+        protected readonly SxcInstance SxcInstance;
+        private readonly int _appId;
+
+        public AdamUploader(SxcInstance sxcInstance, int appId, Log parentLog) : base("Api.AdmUpl", parentLog)
         {
-            log.Add($"upload one a:{appId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
+            SxcInstance = sxcInstance;
+            _appId = appId;
+        }
+
+        public File UploadOne(Stream stream, string originalFileName, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot)
+        {
+            Log.Add($"upload one a:{_appId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
             
-            var state = new AdamSecureState(sxcInstance, appId, contentType, field, guid, usePortalRoot, log);
+            var state = new AdamSecureState(SxcInstance, _appId, contentType, field, guid, usePortalRoot, Log);
             state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.WriteSomething);
 
             var folder = state.ContainerContext.Folder();
@@ -38,7 +47,7 @@ namespace ToSic.SexyContent.WebApi.Adam
             var fileName = String.Copy(originalFileName);
             state.ThrowIfBadExtension(fileName);
 
-            // todo: check metadata of the FieldDef to see if still allowed extension
+            // check metadata of the FieldDef to see if still allowed extension
             var additionalFilter = state.Attribute.Metadata.GetBestValue<string>("FileFilter");
             if (!string.IsNullOrWhiteSpace(additionalFilter)
                 && !state.CustomFileFilterOk(additionalFilter, originalFileName))
@@ -55,7 +64,7 @@ namespace ToSic.SexyContent.WebApi.Adam
             fileName = fileName.Replace("%", "per").Replace("#", "hash");
 
             if (fileName != originalFileName)
-                log.Add($"cleaned file name from'{originalFileName}' to '{fileName}'");
+                Log.Add($"cleaned file name from'{originalFileName}' to '{fileName}'");
 
             // Make sure the image does not exist yet, cycle through numbers (change file name)
             fileName = RenameFileToNotOverwriteExisting(fileName, dnnFolder);
@@ -64,7 +73,19 @@ namespace ToSic.SexyContent.WebApi.Adam
             var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName),
                 stream);
 
-            return dnnFile;
+            var adamcontext = new AdamAppContext(SxcInstance.Tenant, state.App, SxcInstance);
+            var eavFile = new File(adamcontext)
+            {
+                Created = dnnFile.CreatedOnDate,
+                Extension = dnnFile.Extension,
+                FullName = dnnFile.FileName,
+                Folder = dnnFile.Folder,
+                FolderId = dnnFile.FolderId,
+                Id = dnnFile.FileId,
+                Modified = dnnFile.LastModificationTime
+            };
+
+            return eavFile;
         }
 
         /// <summary>
@@ -77,27 +98,6 @@ namespace ToSic.SexyContent.WebApi.Adam
             => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection)
                ?.MaxRequestLength ?? 1;
 
-
-        //internal ContainerBase ContainerContext;
-        //internal AdamAppContext AdamAppContext;
-
-        //private void PrepCore(App app, Guid entityGuid, string fieldName, bool usePortalRoot)
-        //{
-        //    var dnn = new DnnHelper(SxcInstance?.EnvInstance);
-        //    var tenant = new DnnTenant(dnn.Portal);
-        //    AdamAppContext = new AdamAppContext(tenant, app, SxcInstance);
-        //    ContainerContext = usePortalRoot
-        //        ? new ContainerOfTenant(AdamAppContext) as ContainerBase
-        //        : new ContainerOfField(AdamAppContext, entityGuid, fieldName);
-        //}
-
-        //private IAttributeDefinition Definition(int appId, string contentType, string fieldName)
-        //{
-        //    // try to find attribute definition - for later extra security checks
-        //    var appRead = new AppRuntime(appId, Log);
-        //    var type = appRead.ContentTypes.Get(contentType);
-        //    return type[fieldName];
-        //}
 
 
         public static string RenameFileToNotOverwriteExisting(string fileName, IFolderInfo dnnFolder)
@@ -114,5 +114,7 @@ namespace ToSic.SexyContent.WebApi.Adam
             return fileName;
         }
 
+
     }
 }
+
