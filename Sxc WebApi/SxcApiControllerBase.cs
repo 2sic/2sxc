@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using DotNetNuke.Entities.Modules;
+using System.Collections.Generic;
 using System.Web.Http.Controllers;
-using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
@@ -26,6 +26,7 @@ namespace ToSic.SexyContent.WebApi
         }
 
         internal SxcInstance SxcInstance { get; private set; }
+        
 
         protected static DnnAppAndDataHelpers GetContext(SxcInstance sxcInstance, Log log) => new DnnAppAndDataHelpers(sxcInstance, sxcInstance?.Log ?? log);
 

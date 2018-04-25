@@ -11,6 +11,9 @@ using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor.Helpers;
 using Factory = ToSic.Eav.Factory;
+using ToSic.Sxc.Adam.WebApi;
+using System.IO;
+using DotNetNuke.Services.FileSystem;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -141,6 +144,10 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
         public FolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+
+        public IFileInfo UploadOne(Stream stream, string fileName, string contentType, Guid guid, string field, string subFolder = "")
+            => new ToSic.SexyContent.WebApi.Adam.AdamUploadRequestHandler().UploadOne(stream, fileName, SxcInstance, Log, SxcInstance.AppId.Value, contentType, guid, field, subFolder, false);
+
         #endregion
 
 

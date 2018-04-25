@@ -41,8 +41,6 @@ namespace ToSic.Sxc.Adam.WebApi
 
         private UploadResult UploadOne(int appId, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot)
         {
-            Log.Add($"upload one a:{appId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
-
             // wrap all of it in try/catch, to reformat error in better way for js to tell the user
             try
             {
@@ -50,81 +48,36 @@ namespace ToSic.Sxc.Adam.WebApi
                 if (!Request.Content.IsMimeMultipartContent())
                     throw Http.NotAllowedFileType("unknown", "doesn't look like a file-upload");
 
-                var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
-                state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.WriteSomething);
 
-                var folder = state.ContainerContext.Folder();
-
-                if (!string.IsNullOrEmpty(subFolder))
-                    folder = state.ContainerContext.Folder(subFolder, false);
                 var filesCollection = HttpContext.Current.Request.Files;
-                Log.Add($"folder: {folder}, file⋮{filesCollection.Count}");
                 if (filesCollection.Count > 0)
                 {
                     var originalFile = filesCollection[0];
-
-                    // start with a security check - so we only upload into valid adam if that's the scenario
-                    var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
-                    state.ThrowIfRestrictedUserIsOutsidePermittedFolders(dnnFolder.PhysicalPath);
-
-                    #region check content-type extensions...
-
-                    // Check file size and extension
-                    var fileName = originalFile.FileName;
-                    state.ThrowIfBadExtension(fileName);
-
-                    // todo: check metadata of the FieldDef to see if still allowed extension
-                    var additionalFilter = state.Attribute.Metadata.GetBestValue<string>("FileFilter");
-                    if (!string.IsNullOrWhiteSpace(additionalFilter)
-                        && !state.CustomFileFilterOk(additionalFilter, fileName))
-                        throw Http.NotAllowedFileType(fileName, "field has custom file-filter, which doesn't match");
-
-                    // note 2018-04-20 2dm: can't do this for wysiwyg, as it doesn't have a setting for allowed file-uploads
-
-                    #endregion
-
-                    if (originalFile.ContentLength > 1024 * MaxFileSizeKb)
-                        return new UploadResult { Success = false, Error = $"file too large - more than {MaxFileSizeKb}Kb" };
-
-                    // remove forbidden / troubling file name characters
-                    fileName = fileName.Replace("%", "per").Replace("#", "hash");
-
-                    if (fileName != originalFile.FileName)
-                        Log.Add($"cleaned file name from'{originalFile.FileName}' to '{fileName}'");
-
-                    // Make sure the image does not exist yet, cycle through numbers (change file name)
-                    fileName = RenameFileToNotOverwriteExisting(fileName, dnnFolder);
-
-                    // Everything is ok, add file
-                    var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName),
-                        originalFile.InputStream);
+                    var file = new AdamUploadRequestHandler().UploadOne(originalFile.InputStream, originalFile.FileName, SxcInstance, Log, appId, contentType, guid, field, subFolder, usePortalRoot);
 
                     return new UploadResult
                     {
                         Success = true,
                         Error = "",
-                        Name = Path.GetFileName(fileName),
-                        Id = dnnFile.FileId,
-                        Path = PortalSettings.HomeDirectory + dnnFile.RelativePath,
-                        Type = Classification.TypeName(dnnFile.Extension)
+                        Name = Path.GetFileName(file.FileName),
+                        Id = file.FileId,
+                        Path = PortalSettings.HomeDirectory + file.RelativePath,
+                        Type = Classification.TypeName(file.Extension)
                     };
                 }
+
                 Log.Add("upload one complete");
-                return new UploadResult {Success = false, Error = "No image was uploaded."};
+                return new UploadResult { Success = false, Error = "No image was uploaded." };
             }
             catch (HttpResponseException he)
             {
                 return new UploadResult { Success = false, Error = he.Response.ReasonPhrase };
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return new UploadResult { Success = false, Error = e.Message };
             }
-
         }
-
-
-
 
         #region adam-file manager
 
