@@ -131,8 +131,10 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
             // check if feature enabled
             var feats = new[] {FeatureIds.PublicForms};
-            if (!Feats.Enabled(feats))
-                throw new Exception($"public forms not available - {Feats.MsgMissingSome(feats)}");
+            if (!Feats.EnabledOrException(feats, "public forms not available", out var exp))
+                throw exp;
+            //if (!Feats.Enabled(feats))
+            //    throw new Exception($"public forms not available - {Feats.MsgMissingSome(feats)}");
 
             // only update the values if true, otherwise leave untouched
             if (api.HasValue || forms.HasValue)

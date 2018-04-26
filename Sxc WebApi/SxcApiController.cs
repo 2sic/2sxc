@@ -172,8 +172,10 @@ namespace ToSic.SexyContent.WebApi
                 throw new Exception();
 
             var feats = new[]{FeatureIds.UseAdamInWebApi, FeatureIds.PublicUpload};
-            if(!Features.Enabled(feats))
-                throw new Exception(Features.MsgMissingSome(feats));
+            if (!Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
+                throw exp;
+            //if(!Features.Enabled(feats))
+            //    throw new Exception(Features.MsgMissingSome(feats));
 
             return new AdamUploader(SxcInstance, 
                 SxcInstance.AppId ?? throw new Exception("can't save in adam - full context not available"), 

@@ -617,6 +617,7 @@ angular.module('Adam')
                     // todo: generate hash sha256 for file name and avoid duplicate files
                     var imageFileName = 'image';
                     imageFileName = window.prompt('Enter clipboard image file name: ', imageFileName); // todo: i18n
+                    if (!imageFileName || imageFileName.trim().length === 0) imageFileName = 'image';
                     if (imageFileName.endsWith('.png') === false) imageFileName = imageFileName + '.png';
 
                     // todo: convert png to jpg to reduce file size

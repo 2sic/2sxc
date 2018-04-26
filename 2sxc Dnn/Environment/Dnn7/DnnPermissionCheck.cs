@@ -35,11 +35,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
             IEntity targetItem = null,
             IInstanceInfo instance = null,
             IApp app = null,
-            //IMetadataOfItem meta1 = null, // optional additional metadata, like of an app
             IEnumerable<IEntity> permissions1 = null,
             PortalSettings portal = null
             )
-            : base(parentLog, targetType, targetItem, /*meta1,*/ permissions1: app?.Metadata.Permissions, permissions2: permissions1)
+            : base(parentLog, targetType, targetItem, app?.Metadata.Permissions, permissions1)
         {
             App = app;
             Instance = instance;
@@ -87,7 +86,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         private bool UserIsModuleEditor()
             => Module != null && ModulePermissionController
-                   .HasModuleAccess(SecurityAccessLevel.Edit, "" /*"EDIT"*/, Module);
+                   .HasModuleAccess(SecurityAccessLevel.Edit, "", Module);
 
         private bool UserIsModuleAdmin() 
             => Module != null && ModulePermissionController.CanAdminModule(Module);
