@@ -65,11 +65,21 @@ namespace ToSic.SexyContent.WebApi
         public static bool SaveFeature(string features)
         {
             bool fileSaved;
-            string featureFilePath =
-                HttpContext.Current.Server.MapPath(
-                    "~/DesktopModules/ToSIC_SexyContent/.data-custom/configurations/features.json");
+
+
+
+
             try
             {
+                string configurationsPath = HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/.data-custom/configurations/");
+
+                if (!Directory.Exists(configurationsPath))
+                {
+                    Directory.CreateDirectory(configurationsPath);
+                }
+
+                string featureFilePath = Path.Combine(configurationsPath, "features.json");
+
                 File.WriteAllText(featureFilePath, features);
                 fileSaved = true;
             }
