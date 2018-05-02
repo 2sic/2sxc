@@ -180,7 +180,7 @@ namespace ToSic.SexyContent.WebApi
             return new AdamUploader(SxcInstance, 
                 SxcInstance.AppId ?? throw new Exception("can't save in adam - full context not available"), 
                 Log)
-                .UploadOne(stream, fileName, contentType, guid.Value, field, subFolder, false);
+                .UploadOne(stream, fileName, contentType, guid.Value, field, subFolder, false, true);
         }
 
         #endregion

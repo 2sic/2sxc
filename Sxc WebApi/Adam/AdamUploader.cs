@@ -25,12 +25,15 @@ namespace ToSic.Sxc.Adam.WebApi
             _appId = appId;
         }
 
-        public File UploadOne(Stream stream, string originalFileName, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot)
+        public File UploadOne(Stream stream, string originalFileName, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot, bool skipFieldAndContentTypePermissionCheck)
         {
             Log.Add($"upload one a:{_appId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
             
             var state = new AdamSecureState(SxcInstance, _appId, contentType, field, guid, usePortalRoot, Log);
-            state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.WriteSomething);
+            if (!skipFieldAndContentTypePermissionCheck)
+            {
+                state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.WriteSomething);
+            }
 
             var folder = state.ContainerContext.Folder();
 

@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Adam.WebApi
                 {
                     var originalFile = filesCollection[0];
                     var file = new AdamUploader(SxcInstance, appId, Log)
-                        .UploadOne(originalFile.InputStream, originalFile.FileName, contentType, guid, field, subFolder, usePortalRoot);
+                        .UploadOne(originalFile.InputStream, originalFile.FileName, contentType, guid, field, subFolder, usePortalRoot, false);
 
                     return new UploadResult
                     {
