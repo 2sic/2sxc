@@ -248,7 +248,6 @@ angular.module('Adam')
         };
 
         vm.openUpload = function () {
-            // debugger;
             vm.dropzone.openUpload();
         };
 
@@ -492,7 +491,6 @@ angular.module('Adam')
 
                 var eventHandlers = {
                     'addedfile': function (file) {
-                        // debugger;
                         $timeout(function () {
                             // anything you want can go here and will safely be run on the next digest.
                             scope.$apply(function () { // this must run in a timeout
@@ -502,17 +500,14 @@ angular.module('Adam')
                     },
 
                     'drop': function (event) {
-                        // debugger;
-                        console.log('stv: drop', event);
+                        // console.log('stv: drop', event);
                     },
 
                     "processing": function (file) {
-                        // debugger;
                         this.options.url = svc.uploadUrl(controller.adam.subFolder);
                     },
 
                     'success': function (file, response) {
-                        // debugger;
                         if (response.Success) {
                             svc.addFullPath(response); // calculate additional infos
                             scope.$parent.afterUpload(response);
@@ -609,14 +604,15 @@ angular.module('Adam')
                  * @param {any} dropzone
                  */
                 function pasteImageInDropzone(ev, data, dropzone) {
-
                     if (ev.detail && !data) {
                         data = ev.detail;
                     }
 
                     // todo: generate hash sha256 for file name and avoid duplicate files
                     var imageFileName = 'image';
-                    imageFileName = window.prompt('Enter clipboard image file name: ', imageFileName); // todo: i18n
+                    if (!/MSIE/.test(navigator.userAgent) && !/rv:11/.test(navigator.userAgent)) {
+                        imageFileName = window.prompt('Enter clipboard image file name: ', imageFileName); // todo: i18n
+                    }
                     if (!imageFileName || imageFileName.trim().length === 0) imageFileName = 'image';
                     if (imageFileName.endsWith('.png') === false) imageFileName = imageFileName + '.png';
 
@@ -635,7 +631,7 @@ angular.module('Adam')
                     var newFile = data.file; // for fallback
 
                     try {
-                        if (!document.documentMode && !/Edge/.test(navigator.userAgent)) {
+                        if (!document.documentMode && !/Edge/.test(navigator.userAgent) && !/MSIE/.test(navigator.userAgent) && !/rv:11/.test(navigator.userAgent)) {
                             // File.name is readonly so we do this
                             var formData = new FormData();
                             formData.append('file', data.file, fileName);
@@ -693,28 +689,6 @@ implementation is based on https://github.com/layerssss/paste.js
         return hiddenEditable;
     }
 
-    var isFocusable = function (element, hasTabindex) {
-        var fieldset;
-        var focusableIfVisible;
-        var nodeName = element.nodeName.toLowerCase();
-
-        if (/^(input|select|textarea|button|object)$/.test(nodeName)) {
-            focusableIfVisible = !element.disabled;
-            if (focusableIfVisible) {
-                fieldset = element.closest('fieldset');
-                if (fieldset) {
-                    focusableIfVisible = !fieldset.disabled;
-                }
-            }
-        } else if ('a' === nodeName) {
-            focusableIfVisible = element.href || hasTabindex;
-        } else {
-            focusableIfVisible = hasTabindex;
-        }
-        focusableIfVisible = focusableIfVisible || matches(element, '[contenteditable]');
-        return focusableIfVisible;
-    };
-
     var Paste = (function () {
         Paste.prototype._target = null;
         Paste.prototype._container = null;
@@ -723,30 +697,6 @@ implementation is based on https://github.com/layerssss/paste.js
             var hiddenEditable = createHiddenEditable();
             nonInputable.appendChild(hiddenEditable);
             var paste = new Paste(hiddenEditable, nonInputable);
-
-            nonInputable.addEventListener('click', (function (_this) {
-                return function (ev) {
-                    if (!isFocusable(ev.target, false)) {
-                        paste._container.focus();
-                        return;
-                    }
-                };
-            })(this));
-
-            paste._container.addEventListener('focus', (function (_this) {
-                return function () {
-                    nonInputable.classList.add('pastable-focus');
-                    return;
-                };
-            })(this));
-
-            paste._container.addEventListener('blur', (function (_this) {
-                return function () {
-                    nonInputable.classList.remove('pastable-focus');
-                    return;
-                };
-            })(this));
-
             return paste;
         };
 
@@ -759,59 +709,9 @@ implementation is based on https://github.com/layerssss/paste.js
             }
 
             var paste = new Paste(createHiddenEditable().insertBefore(textarea), textarea);
-            var ctlDown = false;
-
-            textarea.addEventListener('keyup', function (ev) {
-                if (ev.keyCode === 17 || ev.keyCode === 224) {
-                    ctlDown = false;
-                }
-                return;
-            });
-
-            textarea.addEventListener('keydown', function (ev) {
-                if (ev.keyCode === 17 || ev.keyCode === 224) {
-                    ctlDown = true;
-                }
-                if ((ev.ctrlKey) && (ev.metaKey)) {
-                    ctlDown = ev.ctrlKey || ev.metaKey;
-                }
-                if (ctlDown && ev.keyCode === 86) {
-                    paste._textarea_focus_stolen = true;
-                    paste._container.focus();
-                    paste._paste_event_fired = false;
-                    setTimeout((function (_this) {
-                        return function () {
-                            if (!paste._paste_event_fired) {
-                                textarea.focus();
-                                paste._textarea_focus_stolen = false;
-                                return;
-                            }
-                        };
-                    })(this), 1);
-                }
-                return;
-            });
 
             textarea.addEventListener('paste', (function (_this) {
                 return function () { };
-            })(this));
-
-            textarea.addEventListener('focus', (function (_this) {
-                return function () {
-                    if (!paste._textarea_focus_stolen) {
-                        textarea.classList.add('pastable-focus');
-                        return;
-                    }
-                };
-            })(this));
-
-            textarea.addEventListener('blur', (function (_this) {
-                return function () {
-                    if (!paste._textarea_focus_stolen) {
-                        textarea.classList.remove('pastable-focus');
-                        return;
-                    }
-                };
             })(this));
 
             return paste;
@@ -820,20 +720,6 @@ implementation is based on https://github.com/layerssss/paste.js
         Paste.mountContenteditable = function (contenteditable) {
             var paste = new Paste(contenteditable, contenteditable);
 
-            contenteditable.addEventListener('focus', (function (_this) {
-                return function () {
-                    contenteditable.classList.add('pastable-focus');
-                    return;
-                };
-            })(this));
-
-            contenteditable.addEventListener('blur', (function (_this) {
-                return function () {
-                    contenteditable.classList.remove('pastable-focus');
-                    return;
-                };
-            })(this));
-
             return paste;
         };
 
@@ -841,15 +727,12 @@ implementation is based on https://github.com/layerssss/paste.js
             this._container = _container;
             this._target = _target;
 
-            this._target.classList.add('pastable');
-
             this._container.addEventListener('paste', (function (_this) {
                 return function (ev) {
 
                     var _i, clipboardData, file, item, k, l, len1, len2, pastedFilename, ref2, ref4;
                     _this.originalEvent = ev;
                     _this._paste_event_fired = true;
-
                     if (ev.clipboardData) {
                         clipboardData = ev.clipboardData;
                         if (clipboardData.items) {
@@ -866,38 +749,41 @@ implementation is based on https://github.com/layerssss/paste.js
                                                 file: clipboardImageAsFile,
                                                 originalEvent: _this.originalEvent
                                             });
-                                        ev.stopImmediatePropagation();
+                                        // ev.stopImmediatePropagation();
+                                        ev.stopPropagation();
                                     } catch (error) {
                                         console.log('clipboard paste image error', error);
                                     }
-                                    ev.preventDefault();
+                                    // ev.preventDefault();
                                     break;
                                 }
                             }
                         }
                     }
-                    if (window.clipboardData) {
-                        ref4 = window.clipboardData.files;
-                        for (l = 0, len2 = ref4.length; l < len2; l++) {
-                            ev.stopImmediatePropagation();
-                            file = ref4[l];
-                            triggerCustomEvent(
-                                _this._target, 'pasteImage', {
-                                    file: file,
-                                    originalEvent: _this.originalEvent
-                                });
-                            ev.preventDefault();
-                        }
-                    }
+                    // IE code not working
+                    //if (window.clipboardData) {
+                    //    ref4 = window.clipboardData.files;
+                    //    for (l = 0, len2 = ref4.length; l < len2; l++) {
+                    //        // ev.stopImmediatePropagation();
+                    //        ev.stopPropagation();
+                    //        file = ref4[l];
+                    //        triggerCustomEvent(
+                    //            _this._target, 'pasteImage', {
+                    //                file: file,
+                    //                originalEvent: _this.originalEvent
+                    //            });
+                    //        ev.preventDefault();
+                    //    }
+                    //}
                     return;
                 };
             })(this));
 
             function triggerCustomEvent(el, eventName, data) {
                 var event;
-                if (window.CustomEvent) {
+                if (!/MSIE/.test(navigator.userAgent) && !/rv:11/.test(navigator.userAgent)) {
                     event = new CustomEvent(eventName, { detail: data });
-                } else {
+                } else { // fix for IE
                     event = document.createEvent('CustomEvent');
                     event.initCustomEvent(eventName, true, true, data);
                 }
@@ -1887,7 +1773,6 @@ angular.module('sxcFieldTemplates')
 
             // this is the event called by dropzone as something is dropped
             $scope.afterUpload = function (fileItem) {
-                // debugger;
                 vm.setValue(fileItem, fileItem.Type === 'image');
             };
 
