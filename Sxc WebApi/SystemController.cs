@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using DotNetNuke.Application;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Portals;
@@ -9,6 +11,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Dnn;
@@ -29,7 +32,6 @@ namespace ToSic.SexyContent.WebApi
             base.Initialize(controllerContext); // very important!!!
             Log.Rename("2sSysC");
         }
-
 
         [HttpGet]
 	    public dynamic GetLanguages()
@@ -130,6 +132,54 @@ namespace ToSic.SexyContent.WebApi
                 GettingStartedUrl = app == null ? "" : IntroductionToAppUrl(app)
             };
         }
+
+        [HttpGet]
+        public IEnumerable<Feature> Features(bool reload = false)
+        {
+            if(reload)
+                Eav.Configuration.Features.Reset();
+            return Eav.Configuration.Features.All;
+        }
+
+        [HttpGet]
+        public string ManageFeaturesUrl()
+        {
+            if (!UserInfo.IsSuperUser)
+            {
+                // throw new AccessViolationException("error: user needs host permissions");
+                return "error: user needs host permissions";
+            }
+
+            return "//gettingstarted.2sxc.org/router.aspx?" // change to use protocoll neutral base URL, also change to 2sxc
+                + $"DnnVersion={DotNetNukeContext.Current.Application.Version.ToString(4)}"
+                + $"&2SexyContentVersion={Settings.ModuleVersion}"
+                + $"&fp={HttpUtility.UrlEncode(Fingerprint.System)}"
+                + $"&DnnGuid={DotNetNuke.Entities.Host.Host.GUID}"
+                + $"&ModuleId={Request.FindModuleInfo().ModuleID}" // needed for callback later on
+                + "&destination=features";
+        }
+
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+        public bool SaveFeatures([FromBody] FeaturesManagementUtils.FeaturesManagementResponse featuresManagementResponse)
+        {
+            // first do a validity check 
+            if (featuresManagementResponse?.Msg?.Features == null) return false;
+
+            // 1. valid json? 
+            // - ensure signature is valid
+            if (!FeaturesManagementUtils.IsValidJson(featuresManagementResponse.Msg.Features)) return false;
+
+            // then take the newFeatures (it should be a json)
+            // and save to /desktopmodules/.data-custom/configurations/features.json
+            if (!FeaturesManagementUtils.SaveFeature(featuresManagementResponse.Msg.Features)) return false;
+
+            // when done, reset features
+            Eav.Configuration.Features.Reset();
+
+            return true;
+        }
+
 
         // build a getting-started url which is used to correctly show the user infos like
         // warnings related to his dnn or 2sxc version

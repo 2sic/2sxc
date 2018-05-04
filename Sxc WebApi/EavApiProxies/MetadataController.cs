@@ -10,7 +10,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class MetadataController : SxcApiController
+    public class MetadataController : SxcApiControllerBase
 	{
 
         #region Content-Type Get, Delete, Save

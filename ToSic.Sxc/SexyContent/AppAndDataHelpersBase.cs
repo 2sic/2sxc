@@ -12,8 +12,8 @@ using ToSic.Eav.ValueProvider;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
-using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Edit.InPageEditingSystem;
 
 namespace ToSic.SexyContent
 {

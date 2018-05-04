@@ -96,6 +96,7 @@
     <Compile Include="Environment\Dnn7\DnnTenant.cs" />
     <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
     <Compile Include="Environment\Dnn7\Factory.cs" />
+    <Compile Include="Environment\Dnn7\FingerprintProvider.cs" />
     <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
     <Compile Include="Environment\Dnn7\ImportExport\DnnXmlExporter.cs" />
     <Compile Include="Environment\Dnn7\Installation\Helpers.cs" />

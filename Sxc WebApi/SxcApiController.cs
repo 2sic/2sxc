@@ -1,55 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 using System.Web.Http.Controllers;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.ValueProvider;
-using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Razor.Helpers;
-using ToSic.SexyContent.WebApi.Dnn;
 using Factory = ToSic.Eav.Factory;
+using ToSic.Sxc.Adam.WebApi;
+using System.IO;
+using ToSic.Eav.Configuration;
+using File = ToSic.Sxc.Adam.File;
 
 namespace ToSic.SexyContent.WebApi
 {
-	// this is accessible from many non-2sxc modules so no [SupportedModules("2sxc,2sxc-app")]
+    /// <inheritdoc cref="SxcApiControllerBase" />
+    /// <summary>
+    /// This is the base class for API Controllers which need the full context
+    /// incl. the current App, DNN, Data, etc.
+    /// For others, please use the SxiApiControllerBase, which doesn't have all that, and is usually then
+    /// safer because it can't accidentally mix the App with a different appId in the params
+    /// </summary>
     [SxcWebApiExceptionHandling]
-    public abstract class SxcApiController : DnnApiControllerWithFixes, IAppAndDataHelpers
+    public abstract class SxcApiController : SxcApiControllerBase, IAppAndDataHelpers
     {
         #region constructor
 
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            Log.Rename("2sApiC");
-            SxcInstance = Helpers.GetSxcOfApiRequest(Request, true, Log);
-            DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcInstance, SxcInstance?.EnvInstance, SxcInstance?.Log ?? Log);
+            // Note that the SxcInstance is created by the BaseClass, if it's detectable. Otherwise it's null
+            DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcInstance, SxcInstance?.Log ?? Log);
             controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); // must run after creating AppAndDataHelpers
         }
         #endregion
 
         private DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
 
-	    // Sexy object should not be accessible for other assemblies - just internal use
-        internal SxcInstance SxcInstance { get; private set; }
-
         #region AppAndDataHelpers implementation
 
         public DnnHelper Dnn => DnnAppAndDataHelpers.Dnn;
 
-	    public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
+        public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
 
         /// <inheritdoc />
         public App App
@@ -149,102 +145,49 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
         public FolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
-        #endregion
 
-        #region App-Helpers for anonyous access APIs
-
-        internal int GetCurrentAppIdFromPath(string appPath)
-        {
-            // check zone
-            var zid = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
-
-            // get app from appname
-            var aid = AppHelpers.GetAppIdFromGuidName(zid, appPath, true);
-            Log.Add($"find app by path:{appPath}, found a:{aid}");
-            return aid;
-        }
-        #endregion
-
-        #region Security Checks 
 
         /// <summary>
-        /// Check if a user may do something - and throw an error if the permission is not given
+        /// Save a file from a stream (usually an upload from the browser) into an adam-field
         /// </summary>
-        internal void PerformSecurityCheck(int appId, string contentType, Grants grant,
-            ModuleInfo module, App app, IEntity specificItem = null)
-            => new Security(PortalSettings, Log).FindCtCheckSecurityOrThrow(appId,
-                contentType,
-                new List<Grants> {grant},
-                specificItem,
-                module,
-                app);
-
-
-        protected Tuple<App, PermissionCheckBase> GetAppRequiringPermissionsOrThrow(int appId, List<Grants> grants = null, string typeName = null)
+        /// <param name="stream">the stream</param>
+        /// <param name="fileName">file name to save to</param>
+        /// <param name="contentType">content-type of the target item (important for security checks)</param>
+        /// <param name="guid"></param>
+        /// <param name="field"></param>
+        /// <param name="subFolder"></param>
+        /// <returns></returns>
+        public File SaveInAdam(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
+            Stream stream = null, 
+            string fileName = null, 
+            string contentType = null, 
+            Guid? guid = null, 
+            string field = null,
+            string subFolder = "")
         {
-            var set = AppAndPermissionChecker(appId, typeName);
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam", 
+                $"{nameof(stream)},{nameof(fileName)},{nameof(contentType)},{nameof(guid)},{nameof(field)},{nameof(subFolder)} (optional)");
 
-            return set.Item2.UserMay(grants) ? set : throw new HttpResponseException(HttpStatusCode.Forbidden);
+            if(stream == null || fileName == null || contentType == null || guid == null || field == null)
+                throw new Exception();
+
+            var feats = new[]{FeatureIds.UseAdamInWebApi, FeatureIds.PublicUpload};
+            if (!Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
+                throw exp;
+            //if(!Features.Enabled(feats))
+            //    throw new Exception(Features.MsgMissingSome(feats));
+
+            return new AdamUploader(SxcInstance, 
+                SxcInstance.AppId ?? throw new Exception("can't save in adam - full context not available"), 
+                Log)
+                .UploadOne(stream, fileName, contentType, guid.Value, field, subFolder, false, true);
         }
 
-        private Tuple<App, PermissionCheckBase> AppAndPermissionChecker(int appId, string typeName)
-        {
-            var env = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
-            var tenant = new DnnTenant(PortalSettings.Current);
-            var uiZoneId = env.ZoneMapper.GetZoneId(tenant.Id);
-
-            // now do relevant security checks
-
-            var zoneId = SystemManager.ZoneIdOfApp(appId);
-            var app = new App(tenant, zoneId, appId, parentLog: Log);
-
-            var type = typeName == null
-                ? null
-                : new AppRuntime(zoneId, appId, Log)
-                    .ContentTypes.Get(typeName);
-
-            var samePortal = uiZoneId == tenant.Id;
-            var portalToUseInSecCheck = samePortal ? PortalSettings.Current : null;
-
-            // user has edit permissions on this app, and it's the same app as the user is coming from
-            var checker = new DnnPermissionCheck(Log,
-                instance: SxcInstance.EnvInstance,
-                app: app,
-                portal: portalToUseInSecCheck, 
-                targetType: type);
-            return new Tuple<App, PermissionCheckBase>(app, checker); 
-        }
-
-
-
-        protected Tuple<App, PermissionCheckBase> GetAppRequiringPermissionsOrThrow(int appId, List<Grants> grants, List<ItemIdentifier> items)
-        {
-            var appMan = new AppRuntime(appId, Log);
-
-            // build list of type names
-            var typeNames = items.Select(item => {
-                var typeName = item.ContentTypeName;
-                if (string.IsNullOrEmpty(typeName) && item.EntityId != 0)
-                {
-                    var existing = appMan.Entities.Get(item.EntityId);
-                    typeName = existing.Type.StaticName;
-                }
-                return typeName;
-            }).ToList();
-
-            // make sure we have at least one entry, so the checks will work
-            if (typeNames.Count == 0)
-                typeNames.Add(null);
-
-            // go through all the groups, assign relevant info so that we can then do get-many
-            Tuple<App, PermissionCheckBase> set = null;
-
-            // this will run at least once with null, and the last one will be returned in the set
-            typeNames.ForEach(tn => set = GetAppRequiringPermissionsOrThrow(appId, grants, tn));
-
-            return set;
-        }
         #endregion
+
+
+
+
 
     }
 }

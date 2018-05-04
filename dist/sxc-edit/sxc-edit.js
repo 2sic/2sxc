@@ -55,7 +55,7 @@ angular.module('Adam')
             // ATM (data comes from different web-services, which are also used in other places
             // I'll just check if it's already in there
             value.fullPath = value.Path;
-            debugger;
+
             if(value.Path && value.Path.toLowerCase().indexOf(svc.adamRoot.toLowerCase()) === -1)
               value.fullPath = svc.adamRoot + value.Path;
           };
@@ -247,7 +247,7 @@ angular.module('Adam')
                 vm.get();
         };
 
-        vm.openUpload = function() {
+        vm.openUpload = function () {
             vm.dropzone.openUpload();
         };
 
@@ -377,6 +377,7 @@ angular.module('Adam')
         };
 
         vm.activate();
+
     }
 
 })();
@@ -445,10 +446,10 @@ angular.module('Adam')
         });
 })();
 /* js/fileAppDirectives */
-(function() {
+(function () {
     angular.module('Adam')
         /*@ngInject*/
-        .directive('dropzone', ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
+        .directive('dropzone', ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", "featuresSvc", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate, featuresSvc) {
 
             return {
                 restrict: 'C',
@@ -498,6 +499,10 @@ angular.module('Adam')
                         });
                     },
 
+                    'drop': function (event) {
+                        // console.log('stv: drop', event);
+                    },
+
                     "processing": function (file) {
                         this.options.url = svc.uploadUrl(controller.adam.subFolder);
                     },
@@ -526,15 +531,122 @@ angular.module('Adam')
                 $timeout(function () {
                     var dropzone = new Dropzone(element[0], config);
 
-                    angular.forEach(eventHandlers, function(handler, event) {
+                    angular.forEach(eventHandlers, function (handler, event) {
                         dropzone.on(event, handler);
                     });
 
-                    scope.processDropzone = function() { dropzone.processQueue(); };
-                    scope.resetDropzone = function() { dropzone.removeAllFiles(); };
-                    controller.openUpload = function() { dropzone.hiddenFileInput.click(); };
+                    scope.processDropzone = function () { dropzone.processQueue(); };
+                    scope.resetDropzone = function () { dropzone.removeAllFiles(); };
+                    controller.openUpload = function () { dropzone.hiddenFileInput.click(); };
+                    controller.processFile = function (file) { dropzone.processFile(file); }; // needed for clipboard paste
+
+                    clipboardPasteImageFeature(element[0], dropzone); // add clipboard paste image feature if enabled
 
                 }, 0);
+
+
+                /**
+                 * add clipboard paste image feature if enabled
+                 * @param {any} element
+                 * @param {any} dropzone
+                 */
+                function clipboardPasteImageFeature(element, dropzone) {
+                    featuresSvc.enabled('f6b8d6da-4744-453b-9543-0de499aa2352').then(
+                        function(enabled) {
+                            if (enabled) {
+                                clipboardPasteImageFunctionalityEnable(element, dropzone);
+                            }
+                        });
+                }
+
+
+                /**
+                 * attach paste functionality to UI elements in dropzone
+                 * @param {any} element
+                 * @param {any} dropzone
+                 */
+                function clipboardPasteImageFunctionalityEnable(element, dropzone) {
+
+                    var pasteInstance;
+
+                    // pastableTextarea - for adam input
+                    pasteInstance = element.querySelector('div > div.after-preview > div > input');
+                    if (pasteInstance) {
+                        pasteInstance.pastableTextarea();
+                        pasteInstance.addEventListener('pasteImage', function (ev, data) {
+                            pasteImageInDropzone(ev, data, dropzone);
+                        });
+
+                        // pastableNonInputable
+                        pasteInstance = element; // whole dropzone
+                        pasteInstance.pastableNonInputable();
+                        pasteInstance.addEventListener('pasteImage', function (ev, data) {
+                            pasteImageInDropzone(ev, data, dropzone);
+                        });
+                    }
+
+                    // pastableContenteditable - for tinymce
+                    pasteInstance = element.querySelector('div > div[contenteditable]');
+                    if (pasteInstance) {
+                        pasteInstance.pastableContenteditable();
+                        pasteInstance.addEventListener('pasteImage', function (ev, data) {
+                            pasteImageInDropzone(ev, data, dropzone);
+                        });
+                    }
+
+                }
+
+
+                /**
+                 * handle clipboard image after paste and prompt for new image filename
+                 * @param {any} ev event
+                 * @param {any} data clipboard image data
+                 * @param {any} dropzone
+                 */
+                function pasteImageInDropzone(ev, data, dropzone) {
+                    if (ev.detail && !data) {
+                        data = ev.detail;
+                    }
+
+                    // todo: generate hash sha256 for file name and avoid duplicate files
+                    var imageFileName = 'image';
+                    if (!/MSIE/.test(navigator.userAgent) && !/rv:11/.test(navigator.userAgent)) {
+                        imageFileName = window.prompt('Enter clipboard image file name: ', imageFileName); // todo: i18n
+                    }
+                    if (!imageFileName || imageFileName.trim().length === 0) imageFileName = 'image';
+                    if (imageFileName.endsWith('.png') === false) imageFileName = imageFileName + '.png';
+
+                    // todo: convert png to jpg to reduce file size
+                    var img = getFile(data, imageFileName);
+
+                    dropzone.processFile(img);
+                }
+
+                /**
+                 * creates new file with custom fileName
+                 * @param {File} file
+                 * @param {string} fileName
+                 */
+                function getFile(data, fileName) {
+                    var newFile = data.file; // for fallback
+
+                    try {
+                        if (!document.documentMode && !/Edge/.test(navigator.userAgent) && !/MSIE/.test(navigator.userAgent) && !/rv:11/.test(navigator.userAgent)) {
+                            // File.name is readonly so we do this
+                            var formData = new FormData();
+                            formData.append('file', data.file, fileName);
+                            newFile = formData.get('file');
+                        } else {
+                            // fix this for Edge and IE
+                            newFile = new Blob([data.file], { type: data.file.type });
+                            newFile.lastModifiedDate = data.file.lastModifiedDate;
+                            newFile.name = fileName;
+                        }
+                    } catch (e) {
+                        console.log('paste image error', e);
+                    }
+                    return newFile;
+                }
             }
 
             /*@ngInject*/
@@ -552,6 +664,176 @@ angular.module('Adam')
 
 
 })();
+/*
+paste.js is an interface to read image from clipboard in different browsers. It also contains several hacks.
+implementation is based on https://github.com/layerssss/paste.js
+*/
+
+(function () {
+
+    var matches = function (el, selector) {
+        return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
+    };
+
+    function createHiddenEditable() {
+        var hiddenEditable = document.createElement('div');
+        hiddenEditable.setAttribute('contenteditable', true);
+        hiddenEditable.setAttribute('aria-hidden', true);
+        hiddenEditable.setAttribute('tabindex', -1);
+        hiddenEditable.style.width = 1;
+        hiddenEditable.style.height = 1;
+        hiddenEditable.style.position = 'fixed';
+        hiddenEditable.style.left = -100;
+        hiddenEditable.style.overflow = 'hidden';
+        hiddenEditable.style.opacity = 1e-17;
+        return hiddenEditable;
+    }
+
+    var Paste = (function () {
+        Paste.prototype._target = null;
+        Paste.prototype._container = null;
+
+        Paste.mountNonInputable = function (nonInputable) {
+            var hiddenEditable = createHiddenEditable();
+            nonInputable.appendChild(hiddenEditable);
+            var paste = new Paste(hiddenEditable, nonInputable);
+            return paste;
+        };
+
+        Paste.mountTextarea = function (textarea) {
+            var ref, ref1;
+            if (((DataTransfer) ? DataTransfer.prototype : undefined) &&
+                ((ref = Object.getOwnPropertyDescriptor) ? (ref1 = ref.call(Object, DataTransfer.prototype, 'items')) ? ref1.get : undefined : undefined)) {
+                this.mountContenteditable(textarea);
+                return;
+            }
+
+            var paste = new Paste(createHiddenEditable().insertBefore(textarea), textarea);
+
+            textarea.addEventListener('paste', (function (_this) {
+                return function () { };
+            })(this));
+
+            return paste;
+        };
+
+        Paste.mountContenteditable = function (contenteditable) {
+            var paste = new Paste(contenteditable, contenteditable);
+
+            return paste;
+        };
+
+        function Paste(_container, _target) {
+            this._container = _container;
+            this._target = _target;
+
+            this._container.addEventListener('paste', (function (_this) {
+                return function (ev) {
+
+                    var _i, clipboardData, file, item, k, l, len1, len2, pastedFilename, ref2, ref4;
+                    _this.originalEvent = ev;
+                    _this._paste_event_fired = true;
+                    if (ev.clipboardData) {
+                        clipboardData = ev.clipboardData;
+                        if (clipboardData.items) {
+                            pastedFilename = null;
+                            _this.originalEvent.pastedTypes = [];
+                            ref2 = clipboardData.items;
+                            for (_i = k = 0, len1 = ref2.length; k < len1; _i = ++k) {
+                                item = ref2[_i];
+                                if (item.type.match(/^image\//)) {
+                                    try {
+                                        var clipboardImageAsFile = item.getAsFile();
+                                        triggerCustomEvent(
+                                            _this._target, 'pasteImage', {
+                                                file: clipboardImageAsFile,
+                                                originalEvent: _this.originalEvent
+                                            });
+                                        // ev.stopImmediatePropagation();
+                                        ev.stopPropagation();
+                                    } catch (error) {
+                                        console.log('clipboard paste image error', error);
+                                    }
+                                    // ev.preventDefault();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    // IE code not working
+                    //if (window.clipboardData) {
+                    //    ref4 = window.clipboardData.files;
+                    //    for (l = 0, len2 = ref4.length; l < len2; l++) {
+                    //        // ev.stopImmediatePropagation();
+                    //        ev.stopPropagation();
+                    //        file = ref4[l];
+                    //        triggerCustomEvent(
+                    //            _this._target, 'pasteImage', {
+                    //                file: file,
+                    //                originalEvent: _this.originalEvent
+                    //            });
+                    //        ev.preventDefault();
+                    //    }
+                    //}
+                    return;
+                };
+            })(this));
+
+            function triggerCustomEvent(el, eventName, data) {
+                var event;
+                if (!/MSIE/.test(navigator.userAgent) && !/rv:11/.test(navigator.userAgent)) {
+                    event = new CustomEvent(eventName, { detail: data });
+                } else { // fix for IE
+                    event = document.createEvent('CustomEvent');
+                    event.initCustomEvent(eventName, true, true, data);
+                }
+
+                el.dispatchEvent(event);
+            }
+
+        }
+
+        return Paste;
+
+    })();
+
+    Element.prototype.paste = function (pasteContainer) {
+        var pm = Paste.mountNonInputable(pasteContainer);
+        return pm._container;
+    };
+
+    Element.prototype.pastableNonInputable = function () {
+        var el = this;
+        if (el._pastable || matches(el, 'textarea, input, [contenteditable]')) {
+            return;
+        }
+        Paste.mountNonInputable(el);
+        el._pastable = true;
+        return;
+    };
+
+    Element.prototype.pastableTextarea = function () {
+        var el = this;
+        if (el._pastable || matches(el, 'textarea, input') === false) {
+            return;
+        }
+        Paste.mountTextarea(el);
+        el._pastable = true;
+        return;
+    };
+
+    Element.prototype.pastableContenteditable = function () {
+        var el = this;
+        if (el._pastable || matches(el, '[contenteditable]') === false) {
+            return;
+        }
+        Paste.mountContenteditable(el);
+        el._pastable = true;
+        return;
+    };
+
+}).call(this);
+
 
 (function () {
 	"use strict";
@@ -574,11 +856,46 @@ angular.module('Adam')
     ]);
 
 })();
+/* 
+ * Field: String - Default
+ */
+
+angular.module('eavFieldTemplates')
+    .config(["formlyConfigProvider", "defaultFieldWrappers", function (formlyConfigProvider, defaultFieldWrappers) {
+
+        formlyConfigProvider.setType({
+            name: 'custom-json-editor',
+            template: '<div>Warning: this is still work-in-progres, there is no json validation, use at own risk.' +
+            '<textarea rows="{{vm.settings.Rows}}" class="form-control material" ng-model="value.Value" style="white-space: pre"></textarea>'
+            + '</div>',
+            wrapper: defaultFieldWrappers, 
+          controller: 'FieldTemplate-CustomJson as vm'
+        });
+
+  }]).controller('FieldTemplate-CustomJson', ["$scope", function ($scope) {
+
+    var vm = this;
+    var settings = vm.settings = $scope.options.templateOptions.settings.merged;
+    settings.Rows = settings.Rows || 10;
+
+    // todo: later extend with json validation
+    //var validationRegexString = '.*';
+
+
+    //// Do not use settings.merged here because there is an old (hidden field) that causes
+    //// merged.ValidationRegExJavaScript to be always empty
+    //if (settings.All && settings.All.ValidationRegExJavaScript)
+    //    validationRegexString = settings.All.ValidationRegExJavaScript;
+
+    //vm.regexPattern = new RegExp(validationRegexString, 'i');
+
+    //console.log($scope.options.templateOptions);
+  }]);
 // This is the service which allows opening dnn-bridge dialogs and processes the results
 
 angular.module("sxcFieldTemplates")
     /*@ngInject*/
-    .factory("dnnBridgeSvc", ["$uibModal", "$http", "promiseToastr", function ($uibModal, $http, promiseToastr) {
+    .factory("dnnBridgeSvc", ["$uibModal", "$http", "appId", "promiseToastr", function ($uibModal, $http, appId, promiseToastr) {
         var svc = {};
         svc.open = function open(oldValue, params, callback) {
             var type = "pagepicker";
@@ -618,10 +935,15 @@ angular.module("sxcFieldTemplates")
 
 
         // handle short-ID links like file:17
-        svc.getUrlOfId = function(idCode, entityId) {
+        svc.getUrlOfId = function(idCode, contentType, guid, field) {
             var linkLowered = idCode.toLowerCase();
             if (linkLowered.indexOf("file:") !== -1 || linkLowered.indexOf("page:") !== -1)
-                return $http.get("dnn/Hyperlink/ResolveHyperlink?hyperlink=" + encodeURIComponent(idCode));
+                return $http.get("dnn/Hyperlink/ResolveHyperlink?hyperlink="
+                    + encodeURIComponent(idCode)
+                    + "&guid=" + guid
+                    + "&contentType=" + contentType
+                    + "&field=" + field
+                    + "&appId=" + appId);
             return null;
         };
 
@@ -755,7 +1077,7 @@ angular.module("sxcFieldTemplates")
             });
         }])
         /*@ngInject*/
-        .controller('FieldTemplate-HyperlinkCtrl', ["$uibModal", "$scope", "$http", "sxc", "adamSvc", "debugState", "dnnBridgeSvc", "fileType", function ($uibModal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc, fileType) {
+        .controller('FieldTemplate-HyperlinkCtrl', ["$uibModal", "$scope", "$http", "appId", "sxc", "adamSvc", "debugState", "dnnBridgeSvc", "fileType", function ($uibModal, $scope, $http, appId, sxc, adamSvc, debugState, dnnBridgeSvc, fileType) {
 
             var vm = this;
             vm.debug = debugState;
@@ -784,6 +1106,9 @@ angular.module("sxcFieldTemplates")
                 if (merged.Buttons === undefined || merged.Buttons === null) merged.Buttons = 'adam,more';
             }
 
+            // test to get correct infos
+            console.log('debug from hyperlink', $scope);
+
             ensureDefaultConfig();
 
             // Update test-link if necessary - both when typing or if link was set by dialogs
@@ -792,10 +1117,12 @@ angular.module("sxcFieldTemplates")
                     return;
 
                 // handle short-ID links like file:17
-                var promise = dnnBridgeSvc.getUrlOfId(newValue);
+                var promise = dnnBridgeSvc.getUrlOfId(newValue,
+                    $scope.to.header.ContentTypeName, $scope.to.header.Guid, $scope.options.key);
+
                 if(promise)
                     promise.then(function (result) {
-                        if (result.data) 
+                        if (result.data)
                             vm.testLink = result.data;
                     });
                 else 
@@ -1625,6 +1952,16 @@ angular.module("sxcFieldTemplates")
                 language: svc.defaultLanguage,
 
                 debounce: false // DONT slow-down model updates - otherwise we sometimes miss the last changes
+
+                //paste_preprocess: function (plugin, args) {
+                //    console.log(args.content);
+                //    args.content += ' preprocess';
+                //},
+
+                //paste_postprocess: function (plugin, args) {
+                //    console.log(args.node);
+                //    args.node.setAttribute('id', '42');
+                //}
             };
         };
 

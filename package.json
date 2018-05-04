@@ -1,6 +1,6 @@
 {
   "name": "2sic-2sxc",
-  "version": "09.22.00",
+  "version": "09.30.00",
   "description": "Create awesome, responsive content for DNN",
   "main": "index.js",
   "scripts": {
@@ -25,10 +25,8 @@
     "url": "https://github.com/2sic/2sxc/issues"
   },
   "homepage": "https://github.com/2sic/2sxc",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "jshintConfig": {
     "laxbreak": true
   }
-
 }

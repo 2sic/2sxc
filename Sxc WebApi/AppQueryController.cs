@@ -4,8 +4,6 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -18,7 +16,7 @@ namespace ToSic.SexyContent.WebApi
     /// They will only be delivered if the security is confirmed - it must be publicly available
     /// </summary>
     [AllowAnonymous]
-    public class AppQueryController : SxcApiController
+    public class AppQueryController : SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -27,13 +25,16 @@ namespace ToSic.SexyContent.WebApi
         }
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null) 
-            => BuildQueryAndRun(App, name, stream, includeGuid, Dnn.Module, Log);
+        [AllowAnonymous]   // will check security internally, so assume no requirements
+        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null)
+        {
+            var context = GetContext(SxcInstance, Log);
+            return BuildQueryAndRun(SxcInstance.App, name, stream, includeGuid, context.Dnn.Module, Log, SxcInstance);
+        }
 
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
+        [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery([FromUri] string appPath, [FromUri] string name, [FromUri] string stream = null)
         {
             Log.Add($"public query path:{appPath}, name:{name}");
@@ -44,11 +45,11 @@ namespace ToSic.SexyContent.WebApi
             queryApp.InitData(false, false, config);
 
             // now just run the default query check and serializer
-            return BuildQueryAndRun(queryApp, name, stream, false, null, Log);
+            return BuildQueryAndRun(queryApp, name, stream, false, null, Log, SxcInstance);
         }
 
 
-        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(App app, string name, string stream, bool includeGuid, ModuleInfo module, Log log)
+        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(App app, string name, string stream, bool includeGuid, ModuleInfo module, Log log, SxcInstance sxc)
         {
             log.Add($"build and run query name:{name}, with module:{module?.ModuleID}");
             var query = app.GetQuery(name);
@@ -65,8 +66,8 @@ namespace ToSic.SexyContent.WebApi
             // Only return query if permissions ok
             if (!(readExplicitlyAllowed || isAdmin))
                 throw HttpErr(HttpStatusCode.Unauthorized, "Request not allowed", $"Request not allowed. User does not have read permissions for query '{name}'");
-
-            var serializer = new Serializer { IncludeGuid = includeGuid };
+            
+            var serializer = new Serializer(sxc) { IncludeGuid = includeGuid };
             return serializer.Prepare(query, stream?.Split(','));
         }
 

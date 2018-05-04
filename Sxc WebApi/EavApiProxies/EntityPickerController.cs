@@ -1,23 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
-using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
+using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
     [SupportedModules("2sxc,2sxc-app")]
-    public class EntityPickerController : SxcApiController
+    public class EntityPickerController : SxcApiControllerBase
     {
         [HttpGet]
         [HttpPost]
- 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        [AllowAnonymous]
+ 		//[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public IEnumerable<dynamic> GetAvailableEntities([FromUri]int appId, [FromBody] string[] items, [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
         {
             // do security check
-            var set = GetAppRequiringPermissionsOrThrow(appId, GrantSets.ReadSomething);
+            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
+            permCheck.EnsureOrThrow(GrantSets.ReadSomething, contentTypeName);
 
-            var withDrafts = set.Item2.UserMay(GrantSets.ReadDraft);
+            // maybe in the future, ATM not relevant
+            //var withDrafts = set.Item2.UserMay(GrantSets.ReadDraft);
 
             return new Eav.WebApi.EntityPickerController(Log)
                 .GetAvailableEntities(appId, items, contentTypeName, dimensionId);

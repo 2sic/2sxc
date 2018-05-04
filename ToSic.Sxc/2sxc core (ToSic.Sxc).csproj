@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adam\Security.cs" />
     <Compile Include="Adam\File.cs" />
     <Compile Include="Adam\Folder.cs" />
     <Compile Include="Adam\AdamAppContext.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Adam\Obsolete\AdamFile.cs" />
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
+    <Compile Include="Edit\ClientContextInfo\Ui.cs" />
     <Compile Include="Edit\InPageEditingSystem\IInPageEditingSystem.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelperx.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
@@ -153,6 +155,9 @@
     <Compile Include="SexyContent\SexyContentException.cs" />
     <Compile Include="SexyContent\SxcHelper.cs" />
     <Compile Include="SexyContent\SxcInstance.cs" />
+    <Compile Include="SexyContent\SxcInstance_Render.cs" />
+    <Compile Include="SexyContent\SxcInstance_Template.cs" />
+    <Compile Include="SexyContent\SxcInstance_EditUi.cs" />
     <Compile Include="SexyContent\TemplateManager.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +191,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Adam\Assets\Helper Excel to build list of all bad file extensions.xlsx" />
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

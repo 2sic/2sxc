@@ -48,23 +48,26 @@ namespace ToSic.SexyContent.Environment.Dnn7
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             int instanceId = 0, 
             int contentBlockId = 0, 
-            bool includeEditInfos = false,
+            bool editContext = false,
             //string moreAttribs = null, 
             //string moreClasses = null,
-            string tag = Constants.DefaultContextTag)
+            string tag = Constants.DefaultContextTag,
+            bool autoToolbar = false,
+            bool addLineBreaks = true)
         {
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes");
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(autoToolbar)},{nameof(addLineBreaks)}");
 
-            var contextAttribs = ContextAttributes(instanceId, contentBlockId, includeEditInfos);
+            var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext, autoToolbar);
 
-            // return $"<{tag} class='{ClassToMarkContentBlock} {moreClasses}' {contextAttribs}  {moreAttribs}>\n" +
-            return $"<{tag} class='{Constants.ClassToMarkContentBlock}' {contextAttribs}>\n" +
+            var lineBreaks = addLineBreaks ? "\n" : "";
+
+            return $"<{tag} class='{Constants.ClassToMarkContentBlock}' {contextAttribs}>{lineBreaks}"  +
                    $"{content}" +
-                   $"</{tag}>";
+                   $"{lineBreaks}</{tag}>";
         }
 
 
-        public string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos)
+        public string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos, bool autoToolbar)
         {
             var contextAttribs = "";
             if (instanceId != 0) contextAttribs += $" data-cb-instance='{instanceId}'";
@@ -72,7 +75,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             if (contentBlockId != 0) contextAttribs += $" data-cb-id='{contentBlockId}'";
 
             // optionally add editing infos
-            if (includeEditInfos) contextAttribs += Html.Build.Attribute("data-edit-context", GetClientInfosAll());
+            if (includeEditInfos) contextAttribs += Html.Build.Attribute("data-edit-context", UiContextInfos(autoToolbar));
             return contextAttribs;
         }
 
@@ -83,7 +86,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
 
-        public void RegisterClientDependencies(Page page)
+        public void RegisterClientDependencies(Page page, bool js, bool css)
         {
             Log.Add("will auto-register client dependencies (js/css");
             var root = "~/desktopmodules/tosic_sexycontent/";
@@ -93,10 +96,14 @@ namespace ToSic.SexyContent.Environment.Dnn7
             var ver = Settings.Version.ToString();
 
             // add edit-mode CSS
-            RegisterCss(page, root + "dist/inpage/inpage.min.css");
+            if (css)
+                RegisterCss(page, root + "dist/inpage/inpage.min.css");
 
-            RegisterJs(page, ver, root + "js/2sxc.api" + ext);
-            RegisterJs(page, ver, root + "dist/inpage/inpage" + ext);
+            if (js)
+            {
+                RegisterJs(page, ver, root + "js/2sxc.api" + ext);
+                RegisterJs(page, ver, root + "dist/inpage/inpage" + ext);
+            }
         }
 
         #region add scripts / css with bypassing the official ClientResourceManager
@@ -112,9 +119,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
         #endregion
 
         // new
-        public string GetClientInfosAll()
+        public string UiContextInfos(bool autoToolbars)
             => JsonConvert.SerializeObject(new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, _sxcInstance, _userInfo,
-                _sxcInstance.ZoneId ?? 0, _sxcInstance.ContentBlock.ContentGroupExists, Log));
+                _sxcInstance.ZoneId ?? 0, _sxcInstance.ContentBlock.ContentGroupExists, autoToolbars, Log));
 
 
 

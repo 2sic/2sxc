@@ -11,7 +11,7 @@ using ToSic.Eav.Interfaces;
 namespace ToSic.SexyContent.WebApi
 {
 	[SupportedModules("2sxc,2sxc-app")]
-	public class TemplateController : SxcApiController
+	public class TemplateController : SxcApiControllerBase
 	{
 
 	    protected override void Initialize(HttpControllerContext controllerContext)

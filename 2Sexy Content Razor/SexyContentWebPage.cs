@@ -9,12 +9,12 @@ using ToSic.Eav.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Edit.InPageEditingSystem;
 using File = System.IO.File;
 
 namespace ToSic.SexyContent.Razor
@@ -38,6 +38,13 @@ namespace ToSic.SexyContent.Razor
         protected internal DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
         // </2sic>
 
+        /// <summary>
+        /// Helper commands to enable in-page editing functionality
+        /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
+        /// </summary>
+        public IInPageEditingSystem Edit => DnnAppAndDataHelpers.Edit;
+
+
         #endregion
 
         #region BaseClass Overrides
@@ -50,12 +57,7 @@ namespace ToSic.SexyContent.Razor
             Context = parentPage.Context;
 
             // Return if parent page is not a SexyContentWebPage
-
-            // 2016-05-02 if (!(parentPage is SexyContentWebPage)) return;    // 2016-02-22 believe this is necessary with dnn 8 because this razor uses a more complex inheritance with Type<T>
-            //if (parentPage.GetType().BaseType != typeof(SexyContentWebPage)) return;
-
-            var typedParent = parentPage as SexyContentWebPage;
-            if (typedParent == null) return;
+            if (!(parentPage is SexyContentWebPage typedParent)) return;
 
             Html = typedParent.Html;
             Url = typedParent.Url;
@@ -205,15 +207,6 @@ namespace ToSic.SexyContent.Razor
 
         #endregion
 
-        #region Edit
-
-        /// <summary>
-        /// Helper commands to enable in-page editing functionality
-        /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
-        /// </summary>
-        public IInPageEditingSystem Edit => DnnAppAndDataHelpers.Edit;
-
-        #endregion
     }
 
 

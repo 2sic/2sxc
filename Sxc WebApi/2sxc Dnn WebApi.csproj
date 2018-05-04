@@ -63,6 +63,9 @@
     <Reference Include="DotNetNuke.Web">
       <HintPath>..\..\..\bin\DotNetNuke.Web.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\eav-server\packages\JetBrains.Annotations.10.2.1\lib\net\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -87,10 +90,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adam\AdamSecureState.cs" />
     <Compile Include="Adam\AdamItem.cs" />
+    <Compile Include="Adam\AdamUploader.cs" />
+    <Compile Include="Adam\SecurityChecks.cs" />
     <Compile Include="Adam\UploadResult.cs" />
+    <Compile Include="EavApiProxies\SystemController.cs" />
+    <Compile Include="EavApiProxies\AllInOne.cs" />
+    <Compile Include="EavApiProxies\UiController.cs" />
     <Compile Include="Errors\Http.cs" />
+    <Compile Include="FeaturesManagementUtils.cs" />
+    <Compile Include="Permissions\AppAndPermissions.cs" />
     <Compile Include="Security.cs" />
+    <Compile Include="SxcApiControllerBase.cs" />
     <Compile Include="WebApiLogDetails.cs" />
     <Compile Include="Adam\AdamController.cs" />
     <Compile Include="AppApiControllerSelector.cs" />

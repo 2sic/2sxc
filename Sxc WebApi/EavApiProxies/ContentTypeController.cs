@@ -6,6 +6,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -13,7 +14,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     /// Web API Controller for Content-Type structures, fields etc.
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
-    public class ContentTypeController : SxcApiController
+    public class ContentTypeController : SxcApiControllerBase
 	{
         private Eav.WebApi.ContentTypeController _eavCtc;
 
@@ -39,7 +40,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
 	    {
-	        GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, contentTypeStaticName);
+	        var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
+            permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentTypeStaticName);
+
+            permCheck.ThrowIfUserIsRestrictedAndFeatureNotEnabled();
 
             // if we got this far, permissions are ok
             return _eavCtc.GetSingle(appId, contentTypeStaticName, scope);
@@ -73,7 +77,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName)
 	    {
-	        GetAppRequiringPermissionsOrThrow(appId, GrantSets.WriteSomething, staticName);
+	        var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
+	        permCheck.EnsureOrThrow(GrantSets.WriteSomething, staticName);
+            permCheck.ThrowIfUserIsRestrictedAndFeatureNotEnabled();
+
             return _eavCtc.GetFields(appId, staticName);
 	    }
 

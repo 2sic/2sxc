@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Web;
+using ToSic.SexyContent;
 
-namespace ToSic.SexyContent.Edit.InPageEditingSystem
+namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
     public interface IInPageEditingSystem
     {
@@ -28,6 +29,23 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             int instanceId = 0,
             int contentBlockId = 0
         );
+
+        /// <summary>
+        /// Ensure that the UI will load the correct assets to enable editing
+        /// </summary>
+        /// <param name="dontRelyOnParameterOrder"></param>
+        /// <param name="api">if JS etc. should be included to enable editing API</param>
+        /// <param name="forms"></param>
+        /// <param name="context">If context should be added, to ensure in-instance data editing</param>
+        /// <param name="autoToolbar"></param>
+        /// <param name="styles"></param>
+        /// <returns>null - but we wanted to make sure it returns something, so you can use it in razor like @Edit.EnableUi()</returns>
+        string Enable(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
+            bool? api = null, 
+            bool? forms = null,
+            bool? context = null,
+            bool? autoToolbar = null,
+            bool? styles = null);
 
         HtmlString Attribute(string name, string value);
 

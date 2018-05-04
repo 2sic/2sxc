@@ -28,7 +28,7 @@ namespace ToSic.SexyContent.WebApi.Errors
         internal static HttpResponseException BadRequest(string message)
             => new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
             {
-                ReasonPhrase = "can't delete folder - not found in folder"
+                ReasonPhrase = message
             });
 
         internal static HttpResponseException InformativeErrorForTypeAccessDenied(string contentType, List<Grants> grant, bool staticNameIsGuid)
@@ -45,5 +45,23 @@ namespace ToSic.SexyContent.WebApi.Errors
                 "Request not allowed. User needs permissions to " + grantCodes + " for Content Type '" + contentType + "'.",
                 "permissions");
         }
+
+        internal static HttpResponseException NotAllowedFileType(string filename, string message = null)
+        {
+            return new HttpResponseException(new HttpResponseMessage(HttpStatusCode.UnsupportedMediaType)
+            {
+                ReasonPhrase = $"file {filename} has an unsupported file type. {message}"
+            });
+        }
+
+        internal static HttpResponseException PermissionDenied(string message = null)
+        {
+            return new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
+            {
+                ReasonPhrase = $"Permission denied. {message}"
+            });
+        }
+
+
     }
 }

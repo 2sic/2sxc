@@ -49,6 +49,7 @@ namespace ToSic.SexyContent
         {
             var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
             Eav.Repository.Efc.Implementations.Configuration.SetConnectionString(connectionString);
+            Eav.Repository.Efc.Implementations.Configuration.SetFeaturesHelpLink("https://2sxc.org/help?tag=features", "https://2sxc.org/r/f/");
         }
 
 
@@ -74,6 +75,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IEnvironmentInstaller, InstallationController>();
                 sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
                 sc.AddTransient<IEnvironmentValueProviders, DnnValueProviders>();
+                sc.AddTransient<IFingerprintProvider, FingerprintProvider>();
 
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);
             });

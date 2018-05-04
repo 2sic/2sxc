@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Web;
 using Newtonsoft.Json;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.SexyContent;
 using ToSic.SexyContent.Edit.Toolbar;
+using Feats = ToSic.Eav.Configuration.Features;
 
-namespace ToSic.SexyContent.Edit.InPageEditingSystem
+namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
     public class InPageEditingHelper : HasLog, IInPageEditingSystem
     {
@@ -14,13 +17,14 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
 
         internal InPageEditingHelper(SxcInstance sxcInstance, Log parentLog) : base("Edt", parentLog)
         {
-            Enabled = sxcInstance.UserMayEdit;// enabled;
+            Enabled = sxcInstance.UserMayEdit;
             SxcInstance = sxcInstance;
         }
 
         public bool Enabled { get; }
         protected SxcInstance SxcInstance;
 
+        #region Toolbar
 
         public HtmlString Toolbar(DynamicEntity target = null,
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
@@ -32,13 +36,17 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
         {
             Log.Add("ctx toolbar - enabled:{Enabled}");
             if (!Enabled) return null;
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar");
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar", $"{nameof(actions)},{nameof(contentType)},{nameof(prefill)},{nameof(toolbar)},{nameof(settings)}");
 
             var itmToolbar = new ItemToolbar(target, actions, contentType, prefill, toolbar, settings);
 
             return new HtmlString(itmToolbar.Toolbar);
         }
-        
+
+        #endregion Toolbar
+
+        #region Context Attributes
+
         /// <summary>
         /// Get html-attributes to mark the current context
         /// these will be added to a wrapper tag (usually a div)
@@ -58,7 +66,7 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
         {
             Log.Add("ctx attribs - enabled:{Enabled}");
             if (!Enabled) return null;
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes");
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
 
             if (field == null) throw new Exception("need parameter 'field'");
 
@@ -80,6 +88,8 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             int contentBlockId = 0
         )
         {
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "WrapInContext", $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
+
             return new HtmlString(
                 SxcInstance.RenderingHelper.WrapInContext(content.ToString(),
                     instanceId: instanceId > 0
@@ -88,22 +98,60 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
                     contentBlockId: contentBlockId > 0
                         ? contentBlockId
                         : SxcInstance?.ContentBlock?.ContentBlockId ?? 0,
-                    includeEditInfos: enableEdit ?? Enabled)
+                    editContext: enableEdit ?? Enabled)
             );
         }
+
+        #endregion Context Attributes
+
+        #region Attribute-helper
 
         /// <summary>
         /// Generate an HTML attribute 
         /// - but only if in edit mode
         /// </summary>
         public HtmlString Attribute(string name, string value)
-            => !Enabled ? null : Html.Build.Attribute(name, value);
+            => !Enabled ? null : SexyContent.Html.Build.Attribute(name, value);
 
         /// <summary>
         /// Generate an HTML attribute by converting the value to JSON 
         /// - but only in edit mode
         /// </summary>
         public HtmlString Attribute(string name, object value)
-            => !Enabled ? null : Html.Build.Attribute(name, JsonConvert.SerializeObject(value));
+            => !Enabled ? null : SexyContent.Html.Build.Attribute(name, JsonConvert.SerializeObject(value));
+
+        #endregion Attribute Helper
+
+        #region Scripts and CSS includes
+
+
+        public string Enable(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, bool? api = null, bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
+        {
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Enable", $"{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
+
+            // check if feature enabled
+            var feats = new[] {FeatureIds.PublicForms};
+            if (!Feats.EnabledOrException(feats, "public forms not available", out var exp))
+                throw exp;
+            //if (!Feats.Enabled(feats))
+            //    throw new Exception($"public forms not available - {Feats.MsgMissingSome(feats)}");
+
+            // only update the values if true, otherwise leave untouched
+            if (api.HasValue || forms.HasValue)
+                SxcInstance.UiAddEditApi = api ?? forms.Value;
+
+            if (styles.HasValue)
+                SxcInstance.UiAddEditUi = styles.Value;
+
+            if (context.HasValue)
+                SxcInstance.UiAddEditContext = context.Value;
+
+            if (autoToolbar.HasValue)
+                SxcInstance.UiAutoToolbar = autoToolbar.Value;
+
+            return null;
+        }
+
+        #endregion Scripts and CSS includes
     }
 }

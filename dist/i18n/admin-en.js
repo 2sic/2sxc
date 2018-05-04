@@ -32,6 +32,23 @@
 		},
 		"Terms": {
 			"Title": "title"
+		},
+		"State": {
+			"OnOff": {
+				"true": "on",
+				"false": "off",
+				"undefined": "?"
+			},
+			"TrueFalse": {
+				"true": "true",
+				"false": "false",
+				"undefined": "?"
+			},
+			"YesNo": {
+				"true": "yes",
+				"false": "no",
+				"undefinde": "?"
+			}
 		}
 	},
 	"DataType": {

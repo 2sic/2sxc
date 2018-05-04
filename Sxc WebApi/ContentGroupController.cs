@@ -6,42 +6,18 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
-using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.Eav.Apps.Environment;
 
 namespace ToSic.SexyContent.WebApi
 {
     [SupportedModules("2sxc,2sxc-app")]
-    public class ContentGroupController : SxcApiController
+    public class ContentGroupController : SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext); // very important!!!
             Log.Rename("2sCoGr");
         }
-
-        // ToDo 2rm: Check if this is needed somewhere...
-        //[HttpGet]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        //public object Get([FromUri] Guid contentGroupGuid)
-        //{
-        //    var contentGroup = GetContentGroup(contentGroupGuid);
-
-        //    return new
-        //	{
-        //		Guid = contentGroup.ContentGroupGuid,
-        //		Content = contentGroup.Content.Select(e => e == null ? new int?() : e.EntityId).ToArray(),
-        //		Presentation = contentGroup.Presentation.Select(e => e == null ? new int?() : e.EntityId).ToArray(),
-        //		ListContent = contentGroup.ListContent.Select(e => e.EntityId).ToArray(),
-        //		ListPresentation = contentGroup.ListPresentation.Select(e => e.EntityId).ToArray(),
-        //		Template = contentGroup.Template == null ? null : new {
-        //			contentGroup.Template.Name,
-        //			contentGroup.Template.ContentTypeStaticName,
-        //			contentGroup.Template.PresentationTypeStaticName,
-        //			contentGroup.Template.ListContentTypeStaticName,
-        //			contentGroup.Template.ListPresentationTypeStaticName
-        //		}
-        //	};
-        //}
 
         private ContentGroup GetContentGroup(Guid contentGroupGuid)
         {
@@ -77,10 +53,12 @@ namespace ToSic.SexyContent.WebApi
             if (string.IsNullOrEmpty(attributeSetName))
                 return null;
 
-            var cache = App.Data.Cache; 
+            var context = GetContext(SxcInstance, Log);
+
+            var cache = context.App.Data.Cache; 
             var ct = cache.GetContentType(attributeSetName);
 
-            var dataSource = App.Data[ct.Name]; 
+            var dataSource = context.App.Data[ct.Name]; 
             var results = dataSource.List.ToDictionary(p => p.EntityId,
                 p => p.GetBestTitle() ?? "");
 
@@ -107,7 +85,8 @@ namespace ToSic.SexyContent.WebApi
             };
 
             // use dnn versioning - this is always part of page
-            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            var context = GetContext(SxcInstance, Log);
+            versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, internalSave);
         }
 
         [HttpGet]
@@ -137,17 +116,18 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"list for:{guid}, items:{list?.Count}");
             var versioning = SxcInstance.Environment.PagePublishing;// new PagePublishing(Log);
 
-            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
+            void InternalSave(VersioningActionInfo args)
+            {
                 var cg = GetContentGroup(guid);
 
                 var sequence = list.Select(i => i.Index).ToArray();
 
                 cg.ReorderAll(sequence);
-                
-            };
+            }
 
             // use dnn versioning - items here are always part of list
-            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, internalSave);
+            var context = GetContext(SxcInstance, Log);
+            versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
 
             return true;
 

@@ -92,10 +92,11 @@ if (window.angular) // needed because the file is also included in older non-ang
                     },
                     testParameters: "[Module:ModuleID]=" + AppInstanceId
                 },
-                metadataOfEntity: 4,
                 metadataOfAttribute: 2,
-                metadataOfContentType: 5,
                 metadataOfApp: 3,
+                metadataOfEntity: 4,
+                metadataOfContentType: 5,
+                metadataOfZone: 6,
                 metadataOfCmsObject: 10,
 
                 versionInfo: "v" + $2sxc.urlParams.get("sxcver"),
@@ -117,7 +118,7 @@ if (window.angular) // needed because the file is also included in older non-ang
                         var applyChanges = false;
                         switch (field.InputType) {
                             case "string-wysiwyg-tinymce":
-                                config.Assets = "//cdn.tinymce.com/4/tinymce.min.js\n" +
+                                config.Assets = "//cdn.tinymce.com/4.6/tinymce.min.js\n" +
                                     "../edit/extensions/field-string-wysiwyg-tinymce/set.js";
                                 applyChanges = true;
                                 break;

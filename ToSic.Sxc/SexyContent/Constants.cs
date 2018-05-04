@@ -18,10 +18,12 @@ namespace ToSic.SexyContent
         public const string AdvancedLoggingTillKey = "2sxc-extended-logging-expires";
 
         // ReSharper disable once UnusedParameter.Local
-        internal static void ProtectAgainstMissingParameterNames(string criticalParameter, string protectedMethod)
+        internal static void ProtectAgainstMissingParameterNames(string criticalParameter, string protectedMethod, string paramNames)
         {
             if (criticalParameter == null || criticalParameter != RandomProtectionParameter)
-                throw new Exception("when using the command " + protectedMethod + ", please use named parameters - otherwise you are relying on the parameter order staying the same.");
+                throw new Exception($"when using '{protectedMethod}' you must use named parameters " +
+                                    "- otherwise you are relying on the parameter order staying the same. " +
+                                    $"this command experts params like {paramNames}");
         }
 
 

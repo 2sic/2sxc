@@ -13,17 +13,20 @@ namespace ToSic.Sxc.Interfaces
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             int instanceId = 0, 
             int contentBlockId = 0, 
-            bool includeEditInfos = false, 
+            bool editContext = false, 
             //string moreClasses = null, 
             //string moreAttribs = null,
-            string tag = "div");
+            string tag = "div",
+            bool autoToolbar = false,
+            bool addLineBreaks = true);
 
         string ContextAttributes(int instanceId, 
             int contentBlockId, 
-            bool includeEditInfos);
+            bool includeEditInfos,
+            bool autoToolbar);
 
         string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError, bool addMinimalWrapper, bool encodeMessage);
 
-        string GetClientInfosAll();
+        string UiContextInfos(bool autoToolbars);
     }
 }
