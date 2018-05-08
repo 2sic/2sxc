@@ -256,7 +256,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    {
             // check if admin rights, then ok
 	        var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(appId, contentType, Grants.Read, context.Dnn.Module, context.App?.ZoneId);
+	        var zoneId = context.App?.ZoneId;
+            PerformSecurityCheck(appId, contentType, Grants.Read, context.Dnn.Module, zoneId);
 
             return new EntityApi(appId, Log).GetEntitiesForAdmin(contentType);
 	    }

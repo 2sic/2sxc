@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="zoneId">Optional zone-id, will enforce that the app must be in the current zone</param>
         internal void FindCtCheckSecurityOrThrow(int appId, string contentType, List<Grants> grant, IEntity specificItem, ModuleInfo module, /*App app, */int? zoneId)
         {
-            Log.Add($"security check for type:{contentType}, grant:{grant}, useContext:{module != null}, app:{appId}, item:{specificItem?.EntityId}");
+            Log.Add($"security check for type:{contentType}, grant:{grant}, useContext:{module != null}, zone/app:{zoneId}/{appId}, item:{specificItem?.EntityId}");
             // make sure we have the right appId, zoneId and module-context
             var ct = FindContentTypeOrThrow(appId, contentType, module, /*app?.ZoneId*/zoneId);
 
@@ -52,6 +52,7 @@ namespace ToSic.SexyContent.WebApi
 
         private static IContentType FindContentTypeOrThrow(int appId, string contentType, ModuleInfo module, int? zoneId)
         {
+            
             // accessing the app for the ID only works if we have a context
             // from the module
             // this is not the case in certain API-calls, then context-access shouldn't happen

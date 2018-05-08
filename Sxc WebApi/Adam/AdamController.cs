@@ -11,7 +11,6 @@ using DotNetNuke.Web.Api;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.Adam;
 using ToSic.SexyContent.WebApi.Errors;
@@ -89,11 +88,13 @@ namespace ToSic.Sxc.Adam.WebApi
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
             if (state.UserIsRestricted && !state.FieldPermissionOk(GrantSets.ReadSomething))
             {
+                Log.Add("user is restricted, and doesn't have permissions on field - return null");
                 return null;
             }
 
-            var app = state.App;
-            app.InitData(true, false, new ValueCollectionProvider());
+            // check that if the user should only see drafts, he doesn't see items of published data
+            if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var ignore))
+                return null;
 
             var folderManager = FolderManager.Instance;
 
@@ -112,13 +113,13 @@ namespace ToSic.Sxc.Adam.WebApi
             var adamFolders = subfolders.Where(s => s.FolderID != currentDnn.FolderID)
                 .Select(f => new AdamItem(f)
                 {
-                    MetadataId = Metadata.GetMetadataId(state.AdamAppContext, f.FolderID, true)
+                    MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.FolderID, true)
                 })
                 .ToList();
             var adamFiles = files
                 .Select(f => new AdamItem(f)
                 {
-                    MetadataId = Metadata.GetMetadataId(state.AdamAppContext, f.FileId, false),
+                    MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.FileId, false),
                     Type = Classification.TypeName(f.Extension)
                 })
                 .ToList();
@@ -158,6 +159,10 @@ namespace ToSic.Sxc.Adam.WebApi
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
             state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.DeleteSomething);
 
+            // check that if the user should only see drafts, he doesn't see items of published data
+            if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
+                throw permissionException;
+
             // try to see if we can get into the subfolder - will throw error if missing
             var current = state.ContainerContext.Folder(subfolder, false);
             
@@ -196,6 +201,10 @@ namespace ToSic.Sxc.Adam.WebApi
 
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
             state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.WriteSomething);
+
+            // check that if the user should only see drafts, he doesn't see items of published data
+            if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
+                throw permissionException;
 
             // try to see if we can get into the subfolder - will throw error if missing
             var current = state.ContainerContext.Folder(subfolder, false);

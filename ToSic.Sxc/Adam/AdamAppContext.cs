@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav;
-using ToSic.Eav.Apps.Assets;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent;
+using App = ToSic.SexyContent.App;
 
 namespace ToSic.Sxc.Adam
 {
@@ -11,18 +14,25 @@ namespace ToSic.Sxc.Adam
     /// The app-context of ADAM
     /// In charge of managing assets inside this app
     /// </summary>
-    public class AdamAppContext
+    public class AdamAppContext: HasLog
     {
-        public readonly App App;
+        /// <summary>
+        /// the app is only used to get folder / guid etc.
+        /// don't use it to access data! as the data should never have to be initialized for this to work
+        /// always use the AppRuntime instead
+        /// </summary>
+        private readonly App _app;
+        public readonly AppRuntime AppRuntime;
         public readonly ITenant Tenant;
         public readonly SxcInstance SxcInstance;
         internal readonly IEnvironmentFileSystem EnvironmentFs;
 
 
-        public AdamAppContext(ITenant tenant, App app, SxcInstance sxcInstance)
+        public AdamAppContext(ITenant tenant, App app, SxcInstance sxcInstance, Log parentLog) : base("Adm.ApCntx", parentLog, "starting")
         {
             Tenant = tenant;
-            App = app;
+            _app = app;
+            AppRuntime = new AppRuntime(app, null);
             SxcInstance = sxcInstance;
             EnvironmentFs = Factory.Resolve<IEnvironmentFileSystem>();
         }
@@ -32,7 +42,7 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         public string Path
             => _path ?? (_path =
-                   Configuration.AppReplacementMap(App)
+                   Configuration.AppReplacementMap(_app)
                        .ReplaceInsensitive(Configuration.AdamAppRootFolder));
         private string _path;
 

@@ -33,6 +33,11 @@ namespace ToSic.Sxc.Adam.WebApi
             if (!skipFieldAndContentTypePermissionCheck)
             {
                 state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.WriteSomething);
+
+                // check that if the user should only see drafts, he doesn't see items of published data
+                if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
+                    throw permissionException;
+
             }
 
             var folder = state.ContainerContext.Folder();
@@ -76,7 +81,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName),
                 stream);
 
-            var adamcontext = new AdamAppContext(SxcInstance.Tenant, state.App, SxcInstance);
+            var adamcontext = new AdamAppContext(SxcInstance.Tenant, state.App, SxcInstance, Log);
             var eavFile = new File(adamcontext)
             {
                 Created = dnnFile.CreatedOnDate,

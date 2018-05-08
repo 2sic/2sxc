@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web.Http;
 using JetBrains.Annotations;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Interfaces;
@@ -60,10 +61,28 @@ namespace ToSic.SexyContent.WebApi.Adam
         {
             var dnn = new DnnHelper(SxcInstance?.EnvInstance);
             var tenant = new DnnTenant(dnn.Portal);
-            AdamAppContext = new AdamAppContext(tenant, app, SxcInstance);
+            AdamAppContext = new AdamAppContext(tenant, app, SxcInstance, Log);
             ContainerContext = usePortalRoot
                 ? new ContainerOfTenant(AdamAppContext) as ContainerBase
                 : new ContainerOfField(AdamAppContext, entityGuid, fieldName);
+        }
+
+        /// <summary>
+        /// Returns true if user isn't restricted, or if the retricted user is accessing a draft item
+        /// </summary>
+        internal bool UserIsNotRestrictedOrItemIsDraft(Guid guid, out HttpResponseException exp)
+        {
+            Log.Add($"check if user is restricted ({UserIsRestricted}) or if the item '{guid}' is draft");
+            exp = null;
+            // check that if the user should only see drafts, he doesn't see items of normal data
+            if (!UserIsRestricted || FieldPermissionOk(GrantSets.ReadPublished)) return true;
+
+            // check if the data is public
+            var itm = AdamAppContext.AppRuntime.Entities.Get(guid);
+            if (!(itm?.IsPublished ?? false)) return true;
+
+            exp = Http.PermissionDenied(Log.Add("user is restricted and may not see published, but item exists and is published - not allowed"));
+            return false;
         }
 
         private IAttributeDefinition Definition(int appId, string contentType, string fieldName)
