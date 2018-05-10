@@ -38,7 +38,7 @@ namespace ToSic.SexyContent.WebApi
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery([FromUri] string appPath, [FromUri] string name, [FromUri] string stream = null)
         {
             Log.Add($"public query path:{appPath}, name:{name}");
-            var queryApp = new App(new DnnTenant(PortalSettings), GetCurrentAppIdFromPath(appPath));
+            var queryApp = new App(new DnnTenant(PortalSettings), GetCurrentAppIdFromPath(appPath).AppId);
 
             // ensure the queries can be executed (needs configuration provider, usually given in SxcInstance, but we don't hav that here)
             var config = DataSources.ConfigurationProvider.GetConfigProviderForModule(0, queryApp, null);
@@ -57,7 +57,8 @@ namespace ToSic.SexyContent.WebApi
             if (query == null)
                 throw HttpErr(HttpStatusCode.NotFound, "query not found", $"query '{name}' not found");
 
-            var permissionChecker = new DnnPermissionCheck(log, targetItem: query.QueryDefinition, instance: new DnnInstanceInfo(module));
+            var permissionChecker = new DnnPermissionCheck(log, targetItem: query.QueryDefinition, 
+                instance: new DnnInstanceInfo(module), zone: app);
             var readExplicitlyAllowed = permissionChecker.UserMay(Grants.Read);
 
             var isAdmin = module != null && DotNetNuke.Security.Permissions

@@ -61,7 +61,7 @@ namespace ToSic.SexyContent.WebApi
                     return _app = DnnAppAndDataHelpers.App;
 
                 var routeAppPath = Request.GetRouteData().Values["apppath"]?.ToString();
-                var appId = GetCurrentAppIdFromPath(routeAppPath);
+                var appId = GetCurrentAppIdFromPath(routeAppPath).AppId;
                 // Look up if page publishing is enabled - if module context is not availabe, always false
                 var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);

@@ -10,6 +10,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources.Caches;
@@ -50,11 +51,11 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
             // if app-path specified, use that app, otherwise use from context
-            var appId = GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
 
             var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(appId, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null, context.App?.ZoneId);
-            return new EntityApi(appId, Log).GetEntities(contentType, cultureCode);
+            PerformSecurityCheck(/*context.App,*/ appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null);
+            return new EntityApi(appIdentity.AppId, Log).GetEntities(contentType, cultureCode);
         }
 
         #endregion
@@ -92,12 +93,12 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"get and serialie after security check type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appId = GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
 
-            var itm = getOne(appId);
+            var itm = getOne(appIdentity.AppId);
             var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(appId, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null, context.App?.ZoneId, itm);
-            return /*_entitiesController*/InitEavAndSerializer(appId).Serializer.Prepare(itm);
+            PerformSecurityCheck(/*context.App,*/ appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null, itm);
+            return /*_entitiesController*/InitEavAndSerializer(appIdentity.AppId).Serializer.Prepare(itm);
         }
 
         #endregion
@@ -151,31 +152,31 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appId = GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
 
             // Check that this ID is actually of this content-type,
             // this throws an error if it's not the correct type
             var itm = id == null
                 ? null
-                : new EntityApi(appId, Log).GetOrThrow(contentType, id.Value);
+                : new EntityApi(appIdentity.AppId, Log).GetOrThrow(contentType, id.Value);
 
             var perm = id == null 
                 ? Grants.Create 
                 : Grants.Update;
 
             var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(appId, contentType, perm, appPath == null ? context.Dnn.Module : null, context.App?.ZoneId, itm);
+            PerformSecurityCheck(/*context.App,*/ appIdentity, contentType, perm, appPath == null ? context.Dnn.Module : null, itm);
 
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
 
             // Now create the cleaned up import-dictionary so we can create a new entity
-            var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem, appId);
+            var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem, appIdentity.AppId);
 
             var userName = new DnnUser().IdentityToken;
 
             // try to create
-            var currentApp = new App(new DnnTenant(PortalSettings), appId);
+            var currentApp = new App(new DnnTenant(PortalSettings), appIdentity.AppId);
             //currentApp.InitData(false, new ValueCollectionProvider());
             var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
             currentApp.InitData(false, 
@@ -190,7 +191,7 @@ namespace ToSic.SexyContent.WebApi
             else
             {
                 currentApp.Data.Update(id.Value, cleanedNewItem, userName);
-                return /*_entitiesController*/InitEavAndSerializer(appId).Serializer.Prepare(currentApp.Data.List.One(id.Value));
+                return /*_entitiesController*/InitEavAndSerializer(appIdentity.AppId).Serializer.Prepare(currentApp.Data.List.One(id.Value));
             }
         }
 
@@ -325,16 +326,16 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"delete id:{id}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appId = GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
 
             // don't allow type "any" on this
             if (contentType == "any")
                 throw new Exception("type any not allowed with id-only, requires guid");
 
-            var itm = new EntityApi(appId, Log).GetOrThrow(contentType, id);
+            var itm = new EntityApi(appIdentity.AppId, Log).GetOrThrow(contentType, id);
             var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(appId, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, context.App?.ZoneId, itm);
-            new EntityApi(appId, Log).Delete(itm.Type.Name, id);
+            PerformSecurityCheck(/*context.App,*/ appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
+            new EntityApi(appIdentity.AppId, Log).Delete(itm.Type.Name, id);
         }
 
 
@@ -344,12 +345,13 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appId = GetAppIdFromPathOrContext(appPath, SxcInstance);
-	        var itm = new EntityApi(appId, Log).GetOrThrow(contentType == "any" ? null : contentType, guid);
+            var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var entityApi = new EntityApi(appIdentity.AppId, Log);
+	        var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
             var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(appId, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, context.App?.ZoneId, itm);
-            new EntityApi(appId, Log).Delete(itm.Type.Name, guid);
+            PerformSecurityCheck(/*context.App,*/ appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
+            entityApi.Delete(itm.Type.Name, guid);
         }
 
         #endregion
@@ -391,11 +393,12 @@ namespace ToSic.SexyContent.WebApi
         /// Note that this will fail, if both appPath and context are missing
         /// </summary>
         /// <returns></returns>
-        private int GetAppIdFromPathOrContext(string appPath, SxcInstance sxcInstance)
+        private IAppIdentity GetAppIdFromPathOrContext(string appPath, SxcInstance sxcInstance)
         {
             Log.Add($"auto detect app and init eav - path:{appPath}, context null: {sxcInstance == null}");
             var appId = appPath == null || appPath == "auto"
-                ? (/* App.AppId*/ sxcInstance?.AppId ?? throw new ArgumentException("trying to use app-id from context, but none found"))
+                ? new AppIdentity(sxcInstance?.ZoneId ?? throw new ArgumentException("trying to use app-id from context, but none found"),
+                sxcInstance?.AppId ?? 0)
                 : GetCurrentAppIdFromPath(appPath);
             // 2018-04-18 2dm disabled init-serializer, don't think it's actually ever used!
             //InitEavAndSerializer(appId);

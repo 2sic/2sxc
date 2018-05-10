@@ -29,6 +29,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         protected IApp App { get; }
 
+        protected IZoneIdentity Zone;
+
         public DnnPermissionCheck(
             Log parentLog,
             IContentType targetType = null,
@@ -36,10 +38,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
             IInstanceInfo instance = null,
             IApp app = null,
             IEnumerable<IEntity> permissions1 = null,
-            PortalSettings portal = null
+            PortalSettings portal = null,
+            IZoneIdentity zone = null
             )
             : base(parentLog, targetType, targetItem, app?.Metadata.Permissions, permissions1)
         {
+            Zone = zone ?? app;
             App = app;
             Instance = instance;
             Portal = portal;
@@ -82,7 +86,16 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         private bool UserIsSuperuser() => Portal?.UserInfo?.IsSuperUser ?? false;
 
-        public bool UserIsTenantAdmin() => Portal?.UserInfo?.IsInRole(Portal?.AdministratorRoleName) ?? false;
+        public bool UserIsTenantAdmin()
+        {
+            // is it the current admin?
+            if (!(Portal?.UserInfo?.IsInRole(Portal?.AdministratorRoleName) ?? false)) return false;
+
+            // but is the current portal also the one we're asking about?
+            var env = Eav.Factory.Resolve<IEnvironment>();
+            var pZone = env.ZoneMapper.GetZoneId(Portal.PortalId);
+            return pZone == (Zone?.ZoneId ?? 0); // must match, to accept user as admin
+        }
 
         private bool UserIsModuleEditor()
             => Module != null && ModulePermissionController

@@ -120,7 +120,8 @@ namespace ToSic.SexyContent.WebApi.Adam
         {
             var fieldPermissions = new DnnPermissionCheck(Log,
                 instance: SxcInstance.EnvInstance,
-                permissions1: Attribute.Permissions);
+                permissions1: Attribute.Permissions,
+                zone: SxcInstance.App);
 
             return fieldPermissions.UserMay(requiredGrant);
         }
