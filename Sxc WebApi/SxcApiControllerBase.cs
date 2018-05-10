@@ -34,6 +34,14 @@ namespace ToSic.SexyContent.WebApi
         protected static DnnAppAndDataHelpers GetContext(SxcInstance sxcInstance, Log log) 
             => new DnnAppAndDataHelpers(sxcInstance, sxcInstance?.Log ?? log);
 
+        /// <summary>
+        /// Retrieve an AppIdentity object for an app, based on the context and alternate appId
+        /// Will only allow apps outside of current zone if it's a superuser
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="appId"></param>
+        /// <param name="superUser"></param>
+        /// <returns></returns>
         protected static IAppIdentity GetAppIdentity(DnnAppAndDataHelpers context, int appId, bool superUser)
         {
             IAppIdentity appIdentity;
@@ -60,19 +68,21 @@ namespace ToSic.SexyContent.WebApi
         /// <summary>
         /// Check if a user may do something - and throw an error if the permission is not given
         /// </summary>
-        internal void PerformSecurityCheck(IAppIdentity zaId, /*int appId,*/ string contentType,
+        internal void PerformSecurityCheck(IAppIdentity appIdentity, string contentType,
             Grants grant, ModuleInfo module, IEntity specificItem = null)
-            => new Security(PortalSettings, Log).FindCtCheckSecurityOrThrow(zaId,
-                //appId,
-                contentType,
-                new List<Grants> { grant },
-                specificItem,
-                module);
+            => new Security(PortalSettings, Log)
+                .FindCtCheckSecurityOrThrow(appIdentity, contentType, new List<Grants> {grant},
+                    specificItem, module);
 
         #endregion
 
         #region App-Helpers for anonyous access APIs
 
+        /// <summary>
+        /// find the AppIdentity of an app which is referenced by a path
+        /// </summary>
+        /// <param name="appPath"></param>
+        /// <returns></returns>
         internal IAppIdentity GetCurrentAppIdFromPath(string appPath)
         {
             // check zone
@@ -81,7 +91,7 @@ namespace ToSic.SexyContent.WebApi
             // get app from appname
             var aid = AppHelpers.GetAppIdFromGuidName(zid, appPath, true);
             Log.Add($"find app by path:{appPath}, found a:{aid}");
-            return new AppIdentity(zid, aid);
+            return new AppIdentity(zid, aid, Log);
         }
         #endregion
     }

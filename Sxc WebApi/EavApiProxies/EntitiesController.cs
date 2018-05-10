@@ -15,12 +15,12 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
-using ToSic.SexyContent.WebApi.Errors;
 using ToSic.SexyContent.WebApi.Permissions;
 using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
+	/// <inheritdoc />
 	/// <summary>
 	/// Proxy Class to the EAV EntitiesController (Web API Controller)
 	/// </summary>
@@ -39,8 +39,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             // check if admin rights, then ok
             var context = GetContext(SxcInstance, Log);
-            var zaId = new AppIdentity(context.App.ZoneId, appId);
-            PerformSecurityCheck(zaId, /*appId,*/ contentType, Grants.Read, context.Dnn.Module);
+            var zaId = new AppIdentity(context.App.ZoneId, appId, Log);
+            PerformSecurityCheck(zaId, contentType, Grants.Read, context.Dnn.Module);
 
             // note that the culture-code isn't actually used...
             return new EntityApi(appId, Log).GetOne(contentType, id, cultureCode);
@@ -261,7 +261,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             var zaId = GetAppIdentity(context, appId, PortalSettings.UserInfo.IsSuperUser);
 
-            PerformSecurityCheck(zaId, /*appId, */contentType, Grants.Read, context.Dnn.Module);
+            PerformSecurityCheck(zaId, contentType, Grants.Read, context.Dnn.Module);
 
             return new EntityApi(zaId.AppId, Log).GetEntitiesForAdmin(contentType);
 	    }
@@ -274,8 +274,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             // check if admin rights, then ok
             var context = GetContext(SxcInstance, Log);
-            var zaId = new AppIdentity(context.App.ZoneId, appId);
-            PerformSecurityCheck(zaId, /*appId,*/ contentType, Grants.Delete, context.Dnn.Module);
+            var zaId = new AppIdentity(context.App.ZoneId, appId, Log);
+            PerformSecurityCheck(zaId, contentType, Grants.Delete, context.Dnn.Module);
 
             new EntityApi(appId, Log).Delete(contentType, id, force);
         }
@@ -286,8 +286,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             // check if admin rights, then ok
             var context = GetContext(SxcInstance, Log);
-            var zaId = new AppIdentity(context.App.ZoneId, appId);
-            PerformSecurityCheck(zaId, /*appId,*/ contentType, Grants.Delete, context.Dnn.Module);
+            var zaId = new AppIdentity(context.App.ZoneId, appId, Log);
+            PerformSecurityCheck(zaId, contentType, Grants.Delete, context.Dnn.Module);
             new EntityApi(appId, Log).Delete(contentType, guid, force);
         }
 
@@ -311,7 +311,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    {
             ResolveItemIdOfGroup(appId, item);
 	        return new AppManager(appId, Log).Entities.VersionHistory(item.EntityId);
-            //return EavEntitiesController.History(appId, item.EntityId);
         }
 
 	    private static void ResolveItemIdOfGroup(int appId, ItemIdentifier item)
@@ -330,8 +329,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             ResolveItemIdOfGroup(appId, item);
             new AppManager(appId, Log).Entities.VersionRestore(item.EntityId, changeId);
 	        return true;
-
-            //return EavEntitiesController.Restore(appId, item.EntityId, changeId);
 	    }
         #endregion
     }

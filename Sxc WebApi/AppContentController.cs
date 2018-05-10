@@ -25,6 +25,7 @@ using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi
 {
+    /// <inheritdoc />
     /// <summary>
     /// Direct access to app-content items, simple manipulations etc.
     /// Should check for security at each standard call - to see if the current user may do this
@@ -54,7 +55,7 @@ namespace ToSic.SexyContent.WebApi
             var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
 
             var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(/*context.App,*/ appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null);
+            PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null);
             return new EntityApi(appIdentity.AppId, Log).GetEntities(contentType, cultureCode);
         }
 
@@ -67,9 +68,8 @@ namespace ToSic.SexyContent.WebApi
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
             => GetAndSerializeOneAfterSecurityChecks(contentType,
-                appId => new EntityApi(SxcInstance.AppId ?? throw new ArgumentException("trying to use appid from context, but none found")
-                    /*_entitiesController.AppId*/, Log).GetOrThrow(contentType, id), // _entitiesController.GetEntityOrThrowError(contentType, id),
-                appPath);
+                appId => new EntityApi(SxcInstance.AppId 
+                    ?? throw new ArgumentException("trying to use appid from context, but none found"), Log).GetOrThrow(contentType, id), appPath);
 
 
         [HttpGet]
@@ -165,7 +165,7 @@ namespace ToSic.SexyContent.WebApi
                 : Grants.Update;
 
             var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(/*context.App,*/ appIdentity, contentType, perm, appPath == null ? context.Dnn.Module : null, itm);
+            PerformSecurityCheck(appIdentity, contentType, perm, appPath == null ? context.Dnn.Module : null, itm);
 
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
@@ -177,7 +177,6 @@ namespace ToSic.SexyContent.WebApi
 
             // try to create
             var currentApp = new App(new DnnTenant(PortalSettings), appIdentity.AppId);
-            //currentApp.InitData(false, new ValueCollectionProvider());
             var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
             currentApp.InitData(false, 
                 publish.IsEnabled(ActiveModule.ModuleID), 
@@ -191,7 +190,7 @@ namespace ToSic.SexyContent.WebApi
             else
             {
                 currentApp.Data.Update(id.Value, cleanedNewItem, userName);
-                return /*_entitiesController*/InitEavAndSerializer(appIdentity.AppId).Serializer.Prepare(currentApp.Data.List.One(id.Value));
+                return InitEavAndSerializer(appIdentity.AppId).Serializer.Prepare(currentApp.Data.List.One(id.Value));
             }
         }
 
@@ -376,16 +375,16 @@ namespace ToSic.SexyContent.WebApi
         #region helpers / initializers to prep the EAV and Serializer
 
         // 2018-04-18 2dm disabled init-serializer, don't think it's actually ever used!
-        private EntitiesController InitEavAndSerializer(int appId/*int? appId = null*/)
+        private EntitiesController InitEavAndSerializer(int appId)
         {
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-            var _entitiesController = new EntitiesController(appId /*?? App.AppId*/);
+            var entitiesController = new EntitiesController(appId);
 
             // only do this if we have a real context - otherwise don't do this
             //if (!appId.HasValue)
-                ((Serializer)_entitiesController.Serializer).Sxc = SxcInstance;
-            return _entitiesController;
+                ((Serializer)entitiesController.Serializer).Sxc = SxcInstance;
+            return entitiesController;
         }
 
         /// <summary>
@@ -397,11 +396,11 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"auto detect app and init eav - path:{appPath}, context null: {sxcInstance == null}");
             var appId = appPath == null || appPath == "auto"
-                ? new AppIdentity(sxcInstance?.ZoneId ?? throw new ArgumentException("trying to use app-id from context, but none found"),
-                sxcInstance?.AppId ?? 0)
+                ? new AppIdentity(
+                    sxcInstance?.ZoneId ??
+                        throw new ArgumentException("try to get app-id from context, but none found"),
+                    sxcInstance.AppId ?? 0, Log)
                 : GetCurrentAppIdFromPath(appPath);
-            // 2018-04-18 2dm disabled init-serializer, don't think it's actually ever used!
-            //InitEavAndSerializer(appId);
             return appId;
         }
 

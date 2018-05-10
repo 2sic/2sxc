@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.WebApi
                     specificItem,
                     new DnnInstanceInfo(module),
                     portal: Portal,
-                    zone: appIdentity
+                    appIdentity: appIdentity
                 ).UserMay(grant))
                 return;
 

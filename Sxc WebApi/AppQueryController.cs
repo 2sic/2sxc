@@ -11,6 +11,7 @@ using ToSic.SexyContent.Serializers;
 
 namespace ToSic.SexyContent.WebApi
 {
+    /// <inheritdoc />
     /// <summary>
     /// In charge of delivering Pipeline-Queries on the fly
     /// They will only be delivered if the security is confirmed - it must be publicly available
@@ -58,7 +59,7 @@ namespace ToSic.SexyContent.WebApi
                 throw HttpErr(HttpStatusCode.NotFound, "query not found", $"query '{name}' not found");
 
             var permissionChecker = new DnnPermissionCheck(log, targetItem: query.QueryDefinition, 
-                instance: new DnnInstanceInfo(module), zone: app);
+                instance: new DnnInstanceInfo(module), appIdentity: app);
             var readExplicitlyAllowed = permissionChecker.UserMay(Grants.Read);
 
             var isAdmin = module != null && DotNetNuke.Security.Permissions

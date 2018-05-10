@@ -9,11 +9,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class DnnEnvironmentFactory : IEnvironmentFactory, IWebFactoryTemp
     {
-        public PermissionCheckBase ItemPermissions(IZoneIdentity zone, IEntity targetItem, Log parentLog, IInstanceInfo module = null) 
-            => new DnnPermissionCheck(parentLog, targetItem: targetItem, instance: module, zone: zone);
+        public PermissionCheckBase ItemPermissions(IAppIdentity appIdentity, IEntity targetItem, Log parentLog, IInstanceInfo module = null) 
+            => new DnnPermissionCheck(parentLog, targetItem: targetItem, instance: module, appIdentity: appIdentity);
 
-        public PermissionCheckBase TypePermissions(IZoneIdentity zone, IContentType targetType, IEntity targetItem, Log parentLog, IInstanceInfo module = null) 
-            => new DnnPermissionCheck(parentLog, targetType, targetItem, module, zone: zone);
+        public PermissionCheckBase TypePermissions(IAppIdentity appIdentity, IContentType targetType, IEntity targetItem, Log parentLog, IInstanceInfo module = null) 
+            => new DnnPermissionCheck(parentLog, targetType, targetItem, module, appIdentity: appIdentity);
 
         public PermissionCheckBase InstancePermissions(Log parentLog, IInstanceInfo module, IApp app)
             => new DnnPermissionCheck(parentLog, instance: module, app: app);
