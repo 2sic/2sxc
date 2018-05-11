@@ -55,7 +55,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // to do full security check, we'll have to see what content-type is requested
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-            permCheck.EnsureOrThrow(GrantSets.WriteSomething, items);
+            if(!permCheck.EnsureAll(GrantSets.WriteSomething, items, out var exp))
+                throw exp;
 
             permCheck.InitAppData();
 
@@ -137,8 +138,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // log and do security check
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-            permCheck.EnsureOrThrow(GrantSets.WriteSomething, items.Select(i => i.Header).ToList());
-            permCheck.ThrowIfUserIsRestrictedAndFeatureNotEnabled();
+            if(!permCheck.EnsureAll(GrantSets.WriteSomething, items.Select(i => i.Header).ToList(), out var exp))
+                throw exp;
+            if(!permCheck.UserUnrestrictedAndFeatureEnabled(out exp))
+                throw exp;
 
             // list of saved IDs
             Dictionary<Guid, int> postSaveIds = null;

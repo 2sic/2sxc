@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Web.Http;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
@@ -36,7 +35,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
             var contextZoneId = environment.ZoneMapper.GetZoneId(tenant.Id);
             ZoneId = SystemManager.ZoneIdOfApp(appId);
             App = new App(tenant, ZoneId, appId, parentLog: Log);
-            var samePortal = contextZoneId == ZoneId;// tenant.Id;
+            var samePortal = contextZoneId == ZoneId;
             _portalForSecurityCheck = samePortal ? PortalSettings.Current : null;
             Log.Add($"AppAndPermissions for z/a:{ZoneId}/{appId} t/z:{tenant.Id}/{contextZoneId} same:{samePortal}");
         }
@@ -54,7 +53,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         }
 
 
-        internal void EnsureOrThrow(List<Grants> grants, List<ItemIdentifier> items)
+        internal bool EnsureAll(List<Grants> grants, List<ItemIdentifier> items, out HttpResponseException preparedException)
         {
             var appMan = new AppRuntime(App.AppId, Log);
 
@@ -73,36 +72,47 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
             // go through all the groups, assign relevant info so that we can then do get-many
             // this will run at least once with null, and the last one will be returned in the set
-            typeNames.ForEach(tn => EnsureOrThrow(grants, tn));
+            foreach (var tn in typeNames)
+                if (!Ensure(grants, tn, out preparedException))
+                    return false;
 
+            preparedException = null;
+            return true;
             //return set;
         }
 
 
-        internal void EnsureOrThrow(List<Grants> grants = null, string typeName = null)
+        internal bool Ensure(List<Grants> grants, string typeName, out HttpResponseException preparedException)
         {
             Log.Add($"ensure / throw for type:{typeName}");
             BuildPermissionChecker(typeName);
             if (!Permissions.UserMay(grants))
             {
                 Log.Add("permissions not ok");
-                throw new HttpResponseException(HttpStatusCode.Forbidden);
+                preparedException = Http.PermissionDenied("required permissions for this type are not given");
+                throw preparedException;
             }
             Log.Add("ensure was ok");
+            preparedException = null;
+            return true;
         }
 
-        internal void ThrowIfUserIsRestrictedAndFeatureNotEnabled()
+        internal bool UserUnrestrictedAndFeatureEnabled(out HttpResponseException preparedException)
         {
-            Log.Add("ThrowIfUserIsRestrictedAndFeatureNotEnabled");
+            Log.Add("check UserUnrestrictedAndFeatureEnabled");
             // 1. check if user is restricted
             var userIsRestricted = !Permissions.UserMay(GrantSets.WritePublished);
 
             // 2. check if feature is enabled
             var feats = new[] { FeatureIds.PublicForms };
             if (userIsRestricted && !Features.Enabled(feats))
-                throw Http.PermissionDenied($"low-permission users may not access this - {Features.MsgMissingSome(feats)}");
-
-            Log.Add("ThrowIfUserIsRestrictedAndFeatureNotEnabled ok");
+            {
+                preparedException = Http.PermissionDenied($"low-permission users may not access this - {Features.MsgMissingSome(feats)}");
+                return false;
+            }
+            Log.Add("UserUnrestrictedAndFeatureEnabled ok");
+            preparedException = null;
+            return true;
         }
 
 

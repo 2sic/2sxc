@@ -9,6 +9,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
 using ToSic.SexyContent.WebApi.Adam;
 using ToSic.SexyContent.WebApi.Permissions;
+using Type = ToSic.Eav.WebApi.Formats.Type;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
@@ -50,7 +51,8 @@ namespace ToSic.SexyContent.WebApi.Dnn
                     // page link - only resolve if the user has edit-permissions
 		            // only people who have some full edit permissions may actually look up pages
 		            var permCheckPage = new AppAndPermissions(SxcInstance, appId, Log);
-		            permCheckPage.EnsureOrThrow(GrantSets.WritePublished);
+		            if (!permCheckPage.Ensure(GrantSets.WritePublished, null, out var exp))
+		                throw exp;
 		            return resolved;
 		        }
 
