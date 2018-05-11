@@ -43,6 +43,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             )
             : base(parentLog, targetType, targetItem, app?.Metadata.Permissions, permissions1)
         {
+            Log.Add("constructor");
             AppIdentity = appIdentity ?? app;
             App = app;
             Instance = instance;
@@ -55,12 +56,14 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         protected override bool EnvironmentAllows(List<Grants> grants)
         {
+            Log.Add("Env allows...");
             var ok = UserIsSuperuser(); // superusers are always ok
             if (!ok && CurrentZoneMatchesTenantZone())
                 ok = UserIsTenantAdmin()
                      || UserIsModuleAdmin()
                      || UserIsModuleEditor();
             if (ok) GrantedBecause = ConditionType.EnvironmentGlobal;
+            Log.Add($"ok: {ok} because:{GrantedBecause}");
             return ok;
         }
 
@@ -88,7 +91,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// Check if user is super user
         /// </summary>
         /// <returns></returns>
-        private bool UserIsSuperuser() => Portal?.UserInfo?.IsSuperUser ?? false;
+        private bool UserIsSuperuser() => PortalSettings.Current?.UserInfo?.IsSuperUser ?? false;
 
         /// <summary>
         /// Check if user is valid admin of current portal / zone

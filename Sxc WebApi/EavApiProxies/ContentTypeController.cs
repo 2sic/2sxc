@@ -76,7 +76,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName)
-	    {
+        {
+            Log.Add($"get fields for a:{appId} type:{staticName}");
 	        var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
 	        permCheck.EnsureOrThrow(GrantSets.WriteSomething, staticName);
             permCheck.ThrowIfUserIsRestrictedAndFeatureNotEnabled();

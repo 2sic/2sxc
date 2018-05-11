@@ -10,7 +10,6 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.ValueProvider;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Errors;
@@ -37,8 +36,9 @@ namespace ToSic.SexyContent.WebApi.Permissions
             var contextZoneId = environment.ZoneMapper.GetZoneId(tenant.Id);
             ZoneId = SystemManager.ZoneIdOfApp(appId);
             App = new App(tenant, ZoneId, appId, parentLog: Log);
-            var samePortal = contextZoneId == tenant.Id;
+            var samePortal = contextZoneId == ZoneId;// tenant.Id;
             _portalForSecurityCheck = samePortal ? PortalSettings.Current : null;
+            Log.Add($"AppAndPermissions for z/a:{ZoneId}/{appId} t/z:{tenant.Id}/{contextZoneId} same:{samePortal}");
         }
 
         public void InitAppData()
@@ -81,13 +81,19 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
         internal void EnsureOrThrow(List<Grants> grants = null, string typeName = null)
         {
+            Log.Add($"ensure / throw for type:{typeName}");
             BuildPermissionChecker(typeName);
-            if(!Permissions.UserMay(grants))
+            if (!Permissions.UserMay(grants))
+            {
+                Log.Add("permissions not ok");
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
+            }
+            Log.Add("ensure was ok");
         }
 
         internal void ThrowIfUserIsRestrictedAndFeatureNotEnabled()
         {
+            Log.Add("ThrowIfUserIsRestrictedAndFeatureNotEnabled");
             // 1. check if user is restricted
             var userIsRestricted = !Permissions.UserMay(GrantSets.WritePublished);
 
@@ -96,6 +102,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
             if (userIsRestricted && !Features.Enabled(feats))
                 throw Http.PermissionDenied($"low-permission users may not access this - {Features.MsgMissingSome(feats)}");
 
+            Log.Add("ThrowIfUserIsRestrictedAndFeatureNotEnabled ok");
         }
 
 
@@ -108,6 +115,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         /// <returns></returns>
         internal void BuildPermissionChecker(string typeName)
         {
+            Log.Add("build permission check");
             // now do relevant security checks
             var type = typeName == null
                 ? null

@@ -1,18 +1,19 @@
-﻿using System.Web.Http.Controllers;
+﻿using System;
+using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
     [WebApiLogDetails]
-    public class DnnApiControllerWithFixes: DnnApiController
+    public class DnnApiControllerWithFixes: DnnApiController, IHasLog
     {
         protected IEnvironment Env;
-        protected Log Log;
 
-	    public DnnApiControllerWithFixes()
+	    public DnnApiControllerWithFixes() 
 	    {
             // ensure that the sql connection string is correct
             // this is technically only necessary, when dnn just restarted and didn't already set this
@@ -34,5 +35,11 @@ namespace ToSic.SexyContent.WebApi.Dnn
         }
 
 
+        public Log Log { get; }
+
+        public void LinkLog(Log parentLog)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
