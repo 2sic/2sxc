@@ -3,6 +3,7 @@ using System;
 using System.Configuration;
 using System.IO;
 using System.Web.Configuration;
+using System.Web.Http;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
@@ -30,14 +31,15 @@ namespace ToSic.Sxc.Adam.WebApi
             Log.Add($"upload one a:{_appId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
             
             var state = new AdamSecureState(SxcInstance, _appId, contentType, field, guid, usePortalRoot, Log);
+            HttpResponseException exp;
             if (!skipFieldAndContentTypePermissionCheck)
             {
-                state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.WriteSomething);
+                if(!state.UserIsPermittedOnField(GrantSets.WriteSomething, out exp))
+                    throw exp;
 
                 // check that if the user should only see drafts, he doesn't see items of published data
                 if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
                     throw permissionException;
-
             }
 
             var folder = state.ContainerContext.Folder();
@@ -47,13 +49,15 @@ namespace ToSic.Sxc.Adam.WebApi
             
             // start with a security check - so we only upload into valid adam if that's the scenario
             var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
-            state.ThrowIfRestrictedUserIsOutsidePermittedFolders(dnnFolder.PhysicalPath);
+            if(!state.UserMayWriteToFolder(dnnFolder.PhysicalPath, out exp))
+                throw exp;
 
             #region check content-type extensions...
 
             // Check file size and extension
             var fileName = String.Copy(originalFileName);
-            state.ThrowIfBadExtension(fileName);
+            if(!state.ExtensionIsOk(fileName, out exp))
+                throw exp;
 
             // check metadata of the FieldDef to see if still allowed extension
             var additionalFilter = state.Attribute.Metadata.GetBestValue<string>("FileFilter");

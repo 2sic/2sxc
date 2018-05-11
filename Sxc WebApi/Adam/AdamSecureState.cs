@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Http;
-using JetBrains.Annotations;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
@@ -46,16 +45,17 @@ namespace ToSic.SexyContent.WebApi.Adam
                 throw exp;
             UserIsRestricted = !SecurityChecks.ThrowIfUserMayNotWriteEverywhere(usePortalRoot, Permissions);
 
-
-                if (UserIsRestricted && !Feats.Enabled(FeaturesForRestrictedUsers))
-                    throw Http.PermissionDenied($"low-permission users may not access this - {Feats.MsgMissingSome(FeaturesForRestrictedUsers)}");
+            if (UserIsRestricted && !Feats.Enabled(FeaturesForRestrictedUsers))
+                throw Http.PermissionDenied(
+                    $"low-permission users may not access this - {Feats.MsgMissingSome(FeaturesForRestrictedUsers)}");
 
             PrepCore(App, guid, field, usePortalRoot);
 
             if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(field)) return;
 
             Attribute = Definition(appId, contentType, field);
-            ThrowIfWrongFieldType();
+            if(!FileTypeIsOkForThisField(out exp))
+                throw exp;
         }
 
         private void PrepCore(App app, Guid entityGuid, string fieldName, bool usePortalRoot)
@@ -94,22 +94,32 @@ namespace ToSic.SexyContent.WebApi.Adam
             return type[fieldName];
         }
 
-        public void ThrowIfWrongFieldType()
+        public bool FileTypeIsOkForThisField(out HttpResponseException preparedException)
         {
             var fieldDef = Attribute;
 
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
-            if (fieldDef == null || !(fieldDef.Type != Eav.Constants.DataTypeHyperlink || fieldDef.Type != Eav.Constants.DataTypeString))
-                throw Http.BadRequest("Requested field '" + Field + "' type doesn't allow upload");
+            if (fieldDef == null || !(fieldDef.Type != Eav.Constants.DataTypeHyperlink ||
+                                      fieldDef.Type != Eav.Constants.DataTypeString))
+            {
+                preparedException = Http.BadRequest("Requested field '" + Field + "' type doesn't allow upload");
+                return false;
+            }
             Log.Add($"field type:{fieldDef.Type}");
+            preparedException = null;
+            return true;
         }
 
-        [AssertionMethod]
-        public void ThrowIfRestrictedUserIsntPermittedOnField(List<Grants> requiredPermissions)
+        public bool UserIsPermittedOnField(List<Grants> requiredPermissions, out HttpResponseException preparedException)
         {
             // check field permissions, but only for non-publish-data
             if (UserIsRestricted && !FieldPermissionOk(requiredPermissions))
-                throw Http.PermissionDenied("this field is not configured to allow uploads by the current user");
+            {
+                preparedException = Http.PermissionDenied("this field is not configured to allow uploads by the current user");
+                return false;
+            }
+            preparedException = null;
+            return true;
         }
 
 
@@ -127,20 +137,27 @@ namespace ToSic.SexyContent.WebApi.Adam
             return fieldPermissions.UserMay(requiredGrant);
         }
 
-        public void ThrowIfRestrictedUserIsOutsidePermittedFolders(string path)
+        public bool UserMayWriteToFolder(string path, out HttpResponseException preparedException)
         {
-            if (UserIsRestricted)
-                SecurityChecks.ThrowIfDestNotInItem(Guid, Field, path);
+            preparedException = null;
+            return !UserIsRestricted || !SecurityChecks.DestinationIsInItem(Guid, Field, path, out preparedException);
         }
 
-        public void ThrowIfBadExtension(string fileName)
+        public bool ExtensionIsOk(string fileName, out HttpResponseException preparedException)
         {
             if (!SecurityChecks.IsAllowedDnnExtension(fileName))
-                throw Http.NotAllowedFileType(fileName, "Not in whitelisted CMS file types.");
+            {
+                preparedException = Http.NotAllowedFileType(fileName, "Not in whitelisted CMS file types.");
+                return false;
+            }
 
             if (SecurityChecks.IsKnownRiskyExtension(fileName))
-                throw Http.NotAllowedFileType(fileName, "This is a known risky file type.");
-
+            {
+                preparedException = Http.NotAllowedFileType(fileName, "This is a known risky file type.");
+                return false;
+            }
+            preparedException = null;
+            return true;
         }
 
         internal bool CustomFileFilterOk(string additionalFilter, string fileName)

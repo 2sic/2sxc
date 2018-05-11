@@ -105,7 +105,8 @@ namespace ToSic.Sxc.Adam.WebApi
             var currentAdam = state.ContainerContext.Folder(subfolder, false);
             var currentDnn = folderManager.GetFolder(currentAdam.Id);
 
-            state.ThrowIfRestrictedUserIsOutsidePermittedFolders(currentDnn.PhysicalPath);
+            if(!state.UserMayWriteToFolder(currentDnn.PhysicalPath, out var exp))
+                throw exp;
 
             var subfolders = folderManager.GetFolders(currentDnn);
             var files = folderManager.GetFiles(currentDnn);
@@ -157,7 +158,8 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             Log.Add($"delete from a:{appId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
-            state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.DeleteSomething);
+            if(!state.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
+                throw exp;
 
             // check that if the user should only see drafts, he doesn't see items of published data
             if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
@@ -172,7 +174,8 @@ namespace ToSic.Sxc.Adam.WebApi
                 var folderManager = FolderManager.Instance;
                 var fld = folderManager.GetFolder(id);
 
-                state.ThrowIfRestrictedUserIsOutsidePermittedFolders(fld.PhysicalPath);
+                if(!state.UserMayWriteToFolder(fld.PhysicalPath, out exp))
+                    throw exp;
 
                 if (fld.ParentID != current.Id)
                     throw Http.BadRequest("can't delete folder - not found in folder");
@@ -183,7 +186,8 @@ namespace ToSic.Sxc.Adam.WebApi
                 var fileManager = FileManager.Instance;
                 var file = fileManager.GetFile(id);
 
-                state.ThrowIfRestrictedUserIsOutsidePermittedFolders(file.PhysicalPath);
+                if(!state.UserMayWriteToFolder(file.PhysicalPath, out exp))
+                    throw exp;
 
                 if (file.FolderId != current.Id)
                     throw Http.BadRequest("can't delete file - not found in folder");
@@ -200,7 +204,8 @@ namespace ToSic.Sxc.Adam.WebApi
             Log.Add($"rename a:{appId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
 
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
-            state.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.WriteSomething);
+            if(!state.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
+                throw exp;
 
             // check that if the user should only see drafts, he doesn't see items of published data
             if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
@@ -213,7 +218,8 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 var folderManager = FolderManager.Instance;
                 var fld = folderManager.GetFolder(id);
-                state.ThrowIfRestrictedUserIsOutsidePermittedFolders(fld.PhysicalPath);
+                if(!state.UserMayWriteToFolder(fld.PhysicalPath, out exp))
+                    throw exp;
 
                 if (fld.ParentID != current.Id)
                     throw Http.BadRequest("can't rename folder - not found in folder");
@@ -223,7 +229,8 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 var fileManager = FileManager.Instance;
                 var file = fileManager.GetFile(id);
-                state.ThrowIfRestrictedUserIsOutsidePermittedFolders(file.PhysicalPath);
+                if(!state.UserMayWriteToFolder(file.PhysicalPath, out exp))
+                    throw exp;
 
                 if (file.FolderId != current.Id)
                     throw Http.BadRequest("can't rename file - not found in folder");
