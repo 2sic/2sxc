@@ -4,10 +4,12 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.SexyContent.WebApi.Errors;
 using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -57,6 +59,43 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // done - return
             return result;
+        }
+
+        [HttpPost]
+        public string Save([FromBody] AllInOne package, int appId, bool partOfPage)
+        {
+            // perform some basic validation checks
+            if (package.ContentTypes != null)
+                throw Http.BadRequest("package contained content-types, unexpected");
+            if (package.InputTypes != null)
+                throw Http.BadRequest("package contained input types, unexpected");
+            if (package.Items == null || package.Items.Count == 0)
+                throw Http.BadRequest("package didn't contain items, unexpected");
+
+            var appMan = new AppRuntime(appId, Log);
+            var ser = new JsonSerializer(appMan.Package, Log);
+
+            var count = 0;
+            foreach (var item in package.Items)
+            {
+                if (item.Header == null || item.Entity == null)
+                    throw Http.BadRequest($"item {count} header or entity is missing");
+
+                var ent = ser.Deserialize(item.Entity, false, false);
+                if (ent == null)
+                    throw Http.BadRequest($"entity {count} couldn't deserialize");
+                if (ent.Attributes.Count == 0)
+                    throw Http.BadRequest($"entity {count} doesn't have attributes (or they are invalid)");
+
+                var original = appMan.Entities.Get(ent.EntityId);
+                if (original != null && original.Attributes.Count != ent.Attributes.Count)
+                    throw Http.BadRequest(
+                        $"entity {count} has different amount of attributes {ent.Attributes.Count} than the original {original.Attributes.Count}");
+
+                count++;
+            }
+
+            return "call to save worked - save doesn't work yet";
         }
     }
 }
