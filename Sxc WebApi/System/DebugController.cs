@@ -1,16 +1,21 @@
-﻿using System.Linq;
+﻿using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.Dnn;
 using ToSic.SexyContent.WebApi.Errors;
 
-namespace ToSic.SexyContent.WebApi
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.WebApi.System
 {
     [SxcWebApiExceptionHandling]
     [AllowAnonymous]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public partial class DebugController : DnnApiControllerWithFixes
     {
         protected override void Initialize(HttpControllerContext controllerContext)
@@ -68,22 +73,34 @@ namespace ToSic.SexyContent.WebApi
             var msg = h1("Apps In Cache");
             var cache = (BaseCache) DataSource.GetCache(null);
 
-            var zones = cache.ZoneApps.GroupBy(z => z.Value).OrderBy(z => z.Key.ZoneId);
+            var zones = cache.ZoneApps.OrderBy(z => z.Key);
 
-            msg += "<ol>";
+            msg += "<table id='table'><thead>"
+                + tr(new []{"Zone", "App", "InCache", "Details", "Actions"}, true)
+                + "</thead>"
+                + "<tbody>";
             foreach (var zone in zones)
             {
-                var aList = "<ol>";
-                var apps = zone.Key.Apps.Select(a => a.Key).OrderBy(a => a);
+                var apps = zone.Value.Apps
+                    .Select(a => new { Id = a.Key, InCache = cache.HasCacheItem(zone.Value.ZoneId, a.Key)})
+                    .OrderBy(a => a.Id);
                 foreach (var app in apps)
                 {
-                    aList += li($"App: {app} - {a("stats", $"stats?appid={app}")} | {a("load log", $"loadlog?appid={app}")} | {a("types", $"types?appid={app}")}");
+                    msg += tr(new[]
+                    {
+                        zone.Key.ToString(),
+                        app.Id.ToString(),
+                        app.InCache ? "yes" : "no",
+                        $"{a("stats", $"stats?appid={app.Id}")} | {a("load log", $"loadlog?appid={app.Id}")} | {a("types", $"types?appid={app.Id}")}",
+                        summary("show actions",
+                            $"{a("purge", $"purge?appid={app.Id}")}"
+                        )
+                    });
                 }
-                aList += "</ol>";
-
-                msg += li($"Zone:{zone.Key.ZoneId} Default App:{zone.Key.DefaultAppId} {aList}");
             }
-            msg += "</ol>";
+            msg += "</tbody>"
+                   + "</table>"
+                   + JsTableSort();
             return msg;
         }
 
@@ -131,9 +148,18 @@ namespace ToSic.SexyContent.WebApi
             try
             {
                 Log.Add("getting content-type stats");
-                var types = pkg.ContentTypes.ToList();
+                var types = pkg.ContentTypes
+                    .OrderBy(t => t.RepositoryType)
+                    .ThenBy(t => t.Scope)
+                    .ThenBy(t => t.StaticName)
+                    .ToList();
                 msg += p($"types: {types.Count}\n");
-                msg += "<ol>";
+                msg += "<table id='table'><thead>" 
+                    + tr(new[] { "#", "Scope", "StaticName", "Name", "AttCount", "IsDyn", "Repo", "Items" }, true)
+                    + "</thead>"
+                    + "<tbody>";
+                var totalItems = 0;
+                var count = 0;
                 foreach (var type in types)
                 {
                     int? itemCount = null;
@@ -141,14 +167,26 @@ namespace ToSic.SexyContent.WebApi
                     {
                         var itms = pkg.List.Where(e => e.Type == type);
                         itemCount = itms.Count();
+                        totalItems += itemCount.Value;
                     }
                     catch {  /*ignore*/ }
-                    msg = msg + li($"Type: {type.Scope}.{type.StaticName} ({type.Name}) " +
-                          $"with {type.Attributes.Count} attribs " +
-                          $"- dyn:{type.IsDynamic} glob:{type.RepositoryType} items:{itemCount}\n");
+                    msg = msg + tr(new[] {
+                        (++count).ToString(),
+                        type.Scope,
+                        type.StaticName,
+                        type.Name,
+                        type.Attributes.Count.ToString(),
+                        type.IsDynamic.ToString(),
+                        type.RepositoryType.ToString(),
+                        itemCount.ToString()
+                          });
                 }
-
-                msg += "</ol>\n\n";
+                msg += "</tbody>";
+                msg += tr(new[] {"", "", "", "", "", "", "", totalItems.ToString()}, true);
+                msg += "</table>";
+                msg += "\n\n";
+                msg += p($"Total item in system: {pkg.List.Count()} - in types: {totalItems} - numbers {em("should")} match!");
+                msg += JsTableSort();
             }
             catch
             {

@@ -92,6 +92,7 @@ namespace ToSic.SexyContent.WebApi
             mapRouteManager.MapHttpRoute("2sxc", "app-sys", "app-sys/{controller}/{action}", stdNsWebApi);  
 			mapRouteManager.MapHttpRoute("2sxc", "dnn", "dnn/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi.Dnn" });
             mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "system", "sys/{controller}/{action}", new[] {"ToSic.Sxc.WebApi.System"});
             #endregion
 
             // Add custom service locator into the chain of service-locators
