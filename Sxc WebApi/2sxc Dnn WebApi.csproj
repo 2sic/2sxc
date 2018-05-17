@@ -95,11 +95,13 @@
     <Compile Include="Adam\AdamUploader.cs" />
     <Compile Include="Adam\SecurityChecks.cs" />
     <Compile Include="Adam\UploadResult.cs" />
+    <Compile Include="DebugController_Html.cs" />
     <Compile Include="EavApiProxies\SystemController.cs" />
     <Compile Include="EavApiProxies\AllInOne.cs" />
     <Compile Include="EavApiProxies\UiController.cs" />
     <Compile Include="Errors\Http.cs" />
     <Compile Include="FeaturesManagementUtils.cs" />
+    <Compile Include="DebugController.cs" />
     <Compile Include="Permissions\AppAndPermissions.cs" />
     <Compile Include="Security.cs" />
     <Compile Include="SxcApiControllerBase.cs" />
