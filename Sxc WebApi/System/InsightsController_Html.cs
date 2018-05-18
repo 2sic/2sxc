@@ -10,7 +10,7 @@ namespace ToSic.Sxc.WebApi.System
         // ReSharper disable InconsistentNaming
         private static string h1(string content) => Tag("h1", content);
         private static string li(string content) => Tag("li", content);
-        private static string a(string content, string link) => Tag("a", content, Atr("href", link));
+        private static string a(string content, string link, bool newWindow = false) => Tag("a", content, Atr("href", link) + (newWindow ? Atr("target", "_blank"):""));
 
         private static string p(string content) => Tag("p", content);
 

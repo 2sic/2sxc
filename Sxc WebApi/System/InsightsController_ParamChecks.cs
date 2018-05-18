@@ -26,6 +26,9 @@ namespace ToSic.Sxc.WebApi.System
             => UrlParamsIncomplete(appId, type, out message)
                || UrlParamIncomplete("attribute", attribute, out message);
 
+        private bool UrlParamsIncomplete(int? appId, int? entity, out string message)
+            => UrlParamsIncomplete(appId, out message)
+               || UrlParamIncomplete("entity", entity, out message);
 
         /// <summary>
         /// verify hat a value is not null, otherwise give a reasonable message back

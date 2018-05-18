@@ -1,8 +1,11 @@
-﻿using DotNetNuke.Security;
+﻿using System.Collections.Generic;
+using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using System.Linq;
 using System.Web.Http;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Interfaces;
+using ToSic.Eav.Types;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
@@ -22,20 +25,32 @@ namespace ToSic.Sxc.WebApi.System
             var appRead = new AppRuntime(appId.Value, Log);
             var pkg = appRead.Package;
 
+            var msg = TypesTable(appId.Value, pkg.ContentTypes, pkg.List.ToList());
+
+            return msg;
+        }
+
+        private string TypesTable(int appId, IEnumerable<IContentType> typesA, List<IEntity> items)
+        {
             var msg = h1($"App types for {appId}\n");
             try
             {
                 Log.Add("getting content-type stats");
-                var types = pkg.ContentTypes
+                var types = typesA
                     .OrderBy(t => t.RepositoryType)
                     .ThenBy(t => t.Scope)
                     .ThenBy(t => t.StaticName)
                     .ToList();
                 msg += p($"types: {types.Count}\n");
-                msg += "<table id='table'><thead>" 
-                    + tr(new[] { "#", "Scope", "StaticName", "Name", "Attribs", "Metadata", "Permissions", "IsDyn", "Repo", "Items" }, true)
-                    + "</thead>"
-                    + "<tbody>";
+                msg += "<table id='table'><thead>"
+                       + tr(
+                           new[]
+                           {
+                               "#", "Scope", "StaticName", "Name", "Attribs", "Metadata", "Permissions", "IsDyn",
+                               "Repo", "Items"
+                           }, true)
+                       + "</thead>"
+                       + "<tbody>";
                 var totalItems = 0;
                 var count = 0;
                 foreach (var type in types)
@@ -43,11 +58,14 @@ namespace ToSic.Sxc.WebApi.System
                     int? itemCount = null;
                     try
                     {
-                        var itms = pkg.List.Where(e => e.Type == type);
-                        itemCount = itms.Count();
-                        totalItems += itemCount.Value;
+                        var itms = items?.Where(e => e.Type == type);
+                        itemCount = itms?.Count();
+                        totalItems += itemCount ?? 0;
                     }
-                    catch {  /*ignore*/ }
+                    catch
+                    {
+                        /*ignore*/
+                    }
                     msg = msg + tr(new[]
                     {
                         (++count).ToString(),
@@ -60,14 +78,17 @@ namespace ToSic.Sxc.WebApi.System
                             $"typepermissions?appid={appId}&type={type.StaticName}"),
                         type.IsDynamic.ToString(),
                         type.RepositoryType.ToString(),
-                        itemCount.ToString()
+                        a($"{itemCount}", $"entities?appid={appId}&type={type.StaticName}")
                     });
                 }
                 msg += "</tbody>";
-                msg += tr(new[] {"", "", "", "", "", "", "", "", "", totalItems.ToString()}, true);
+                msg += tr(
+                    new[] {"", "", "", "", "", "", "", "", "", a($"{totalItems}", $"entities?appid={appId}&type=all")},
+                    true);
                 msg += "</table>";
                 msg += "\n\n";
-                msg += p($"Total item in system: {pkg.List.Count()} - in types: {totalItems} - numbers {em("should")} match!");
+                msg += p(
+                    $"Total item in system: {items?.Count} - in types: {totalItems} - numbers {em("should")} match!");
                 msg += JsTableSort();
             }
             catch
@@ -78,6 +99,18 @@ namespace ToSic.Sxc.WebApi.System
             return msg;
         }
 
+        [HttpGet]
+        public string GlobalTypes()
+        {
+            var globTypes = Global.AllContentTypes().Values;
+            return TypesTable(0, globTypes, null);
+        }
+
+        [HttpGet]
+        public string GlobalTypesLog()
+        {
+            return ToBr(Global.Log.Dump(" - ", h1($"2sxc load log for global types") + "\n", "end of log"));
+        }
 
         [HttpGet]
         public string TypeMetadata(int? appId = null, string type = null)

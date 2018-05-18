@@ -15,11 +15,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string Attributes(int? appId = null, string type = null)
         {
-            ThrowIfNotSuperuser();
-            if (appId == null)
-                return "please add appid to the url parameters";
-            if (type == null)
-                return "please add type to the url parameters";
+            if (UrlParamsIncomplete(appId, type, out var message))
+                return message;
 
             Log.Add($"debug app attributes for {appId} and {type}");
             var appRead = new AppRuntime(appId.Value, Log);
