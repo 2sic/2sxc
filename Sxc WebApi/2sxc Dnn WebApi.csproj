@@ -95,6 +95,9 @@
     <Compile Include="Adam\AdamUploader.cs" />
     <Compile Include="Adam\SecurityChecks.cs" />
     <Compile Include="Adam\UploadResult.cs" />
+    <Compile Include="System\DebugController_Metadata.cs" />
+    <Compile Include="System\DebugController_Attributes.cs" />
+    <Compile Include="System\DebugController_Types.cs" />
     <Compile Include="System\DebugController_Actions.cs" />
     <Compile Include="System\DebugController_Html.cs" />
     <Compile Include="EavApiProxies\SystemController.cs" />

@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.Interfaces
 
         void SetPreviewTemplate(int instanceId, Guid previewTemplateGuid);
 
-        void SetContentGroupAndBlankTemplate(int instanceId, bool wasCreated, Guid guid);
+        void SetContentGroup(int instanceId, bool wasCreated, Guid guid);
 
         ContentGroup GetInstanceContentGroup(ContentGroupManager cgm, Log log, int instanceId, int? pageId);
 
