@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
 {
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public partial class InsightsController
     {
 

@@ -1,13 +1,16 @@
-﻿using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
+﻿using ToSic.SexyContent.WebApi.Errors;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
 {
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public partial class InsightsController 
     {
-        
+        private void ThrowIfNotSuperuser()
+        {
+            if (!PortalSettings.UserInfo.IsSuperUser)
+                throw Http.PermissionDenied("requires Superuser permissions");
+        }
+
 
         private bool UrlParamsIncomplete(int? appId, out string message)
         {

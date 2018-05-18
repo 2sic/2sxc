@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using System.Linq;
 using System.Web.Http;
 using ToSic.Eav.Apps;
@@ -10,7 +8,6 @@ using ToSic.Eav.Types;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
 {
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public partial class InsightsController 
     {
 
@@ -102,6 +99,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string GlobalTypes()
         {
+            ThrowIfNotSuperuser();
+
             var globTypes = Global.AllContentTypes().Values;
             return TypesTable(0, globTypes, null);
         }
@@ -109,6 +108,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string GlobalTypesLog()
         {
+            ThrowIfNotSuperuser();
+
             return ToBr(Global.Log.Dump(" - ", h1($"2sxc load log for global types") + "\n", "end of log"));
         }
 

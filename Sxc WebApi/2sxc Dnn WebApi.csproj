@@ -98,6 +98,8 @@
     <Compile Include="Adam\AdamUploader.cs" />
     <Compile Include="Adam\SecurityChecks.cs" />
     <Compile Include="Adam\UploadResult.cs" />
+    <Compile Include="System\InsightsController_App.cs" />
+    <Compile Include="System\InsightsController_Help.cs" />
     <Compile Include="System\InsightsController_Entities.cs" />
     <Compile Include="System\InsightsController_Metadata.cs" />
     <Compile Include="System\InsightsController_Attributes.cs" />
