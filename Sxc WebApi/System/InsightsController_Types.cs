@@ -8,7 +8,7 @@ using ToSic.Eav.Apps;
 namespace ToSic.Sxc.WebApi.System
 {
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public partial class DebugController 
+    public partial class InsightsController 
     {
 
         [HttpGet]
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.WebApi.System
                     .ToList();
                 msg += p($"types: {types.Count}\n");
                 msg += "<table id='table'><thead>" 
-                    + tr(new[] { "#", "Scope", "StaticName", "Name", "Arribs", "Metadata", "IsDyn", "Repo", "Items" }, true)
+                    + tr(new[] { "#", "Scope", "StaticName", "Name", "Attribs", "Metadata", "Permissions", "IsDyn", "Repo", "Items" }, true)
                     + "</thead>"
                     + "<tbody>";
                 var totalItems = 0;
@@ -48,20 +48,23 @@ namespace ToSic.Sxc.WebApi.System
                         totalItems += itemCount.Value;
                     }
                     catch {  /*ignore*/ }
-                    msg = msg + tr(new[] {
+                    msg = msg + tr(new[]
+                    {
                         (++count).ToString(),
                         type.Scope,
                         type.StaticName,
                         type.Name,
-                        a(type.Attributes.Count.ToString(), $"attributes?appid={appId}&type={type.StaticName}"),
-                        a(type.Metadata.Count().ToString(), $"typemetadata?appid={appId}&type={type.StaticName}"),
+                        a($"{type.Attributes.Count}", $"attributes?appid={appId}&type={type.StaticName}"),
+                        a($"{type.Metadata.Count()}", $"typepermissions?appid={appId}&type={type.StaticName}"),
+                        a($"{type.Metadata.Permissions.Count()}",
+                            $"typepermissions?appid={appId}&type={type.StaticName}"),
                         type.IsDynamic.ToString(),
                         type.RepositoryType.ToString(),
                         itemCount.ToString()
-                          });
+                    });
                 }
                 msg += "</tbody>";
-                msg += tr(new[] {"", "", "", "", "", "", "", totalItems.ToString()}, true);
+                msg += tr(new[] {"", "", "", "", "", "", "", "", "", totalItems.ToString()}, true);
                 msg += "</table>";
                 msg += "\n\n";
                 msg += p($"Total item in system: {pkg.List.Count()} - in types: {totalItems} - numbers {em("should")} match!");
@@ -79,20 +82,34 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string TypeMetadata(int? appId = null, string type = null)
         {
-            ThrowIfNotSuperuser();
-            if (appId == null)
-                return "please add appid to the url parameters";
-            if (type == null)
-                return "please add type to the url parameters";
+            if (UrlParamsIncomplete(appId, type, out var message))
+                return message;
 
             Log.Add($"debug app metadata for {appId} and {type}");
             var appRead = new AppRuntime(appId.Value, Log);
             var typ = appRead.ContentTypes.Get(type);
 
             var msg = h1($"Metadata for {typ.Name} ({typ.StaticName}) in {appId}\n");
-            var metadata = typ.Metadata;
+            var metadata = typ.Metadata.ToList();
 
             return MetadataTable(msg, metadata);
         }
+
+        [HttpGet]
+        public string TypePermissions(int? appId = null, string type = null)
+        {
+            if (UrlParamsIncomplete(appId, type, out var message))
+                return message;
+
+            Log.Add($"debug app metadata for {appId} and {type}");
+            var appRead = new AppRuntime(appId.Value, Log);
+            var typ = appRead.ContentTypes.Get(type);
+
+            var msg = h1($"Permissions for {typ.Name} ({typ.StaticName}) in {appId}\n");
+            var metadata = typ.Metadata.Permissions.ToList();
+
+            return MetadataTable(msg, metadata);
+        }
+        
     }
 }

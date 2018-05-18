@@ -1,41 +1,45 @@
-﻿using DotNetNuke.Security;
+﻿using System.Collections.Generic;
+using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using System.Linq;
-using System.Web.Http;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
+using ToSic.Eav.Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
 {
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public partial class DebugController
+    public partial class InsightsController
     {
 
 
 
-        private static string MetadataTable(string msg, ContentTypeMetadata metadata)
+        private static string MetadataTable(string msg, List<IEntity> metadata)
         {
             try
             {
-                msg += p($"Metadata: {metadata.Count()}\n");
+                msg += p($"Assigned Items: {metadata.Count}\n");
                 msg += "<table id='table'><thead>"
-                       + tr(new[] {"#", "Id", "Title", "Type", "Input", "MDTarget", "Key"}, true)
+                       + tr(new[] {"#", "Id", "Title", "Content-Type", "Target", "Key"}, true)
                        + "</thead>"
                        + "<tbody>";
                 var count = 0;
                 foreach (var md in metadata)
                 {
-                    var key = md.MetadataFor.KeyString + md.MetadataFor.KeyNumber + md.MetadataFor.KeyGuid;
-                    if (string.IsNullOrEmpty(key))
-                        key = "(directly attached)";
+                    var mdFor = md.MetadataFor;
+                    var key = !string.IsNullOrEmpty(mdFor.KeyString)
+                        ? "\"" + mdFor.KeyString + "\""
+                        : mdFor.KeyNumber != null
+                            ? "#" + mdFor.KeyNumber
+                            : mdFor.KeyGuid != null
+                                ? "{" + mdFor.KeyGuid + "}"
+                                : "(directly attached)";
+
                     msg = msg + tr(new[]
                     {
                         (++count).ToString(),
                         md.EntityId.ToString(),
-                        md.Type.Name,
                         md.GetBestTitle(),
-                        md.MetadataFor.TargetType.ToString(),
+                        md.Type.Name,
+                        mdFor.TargetType.ToString(),
                         key
                     });
                 }

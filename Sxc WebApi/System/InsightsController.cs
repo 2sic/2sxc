@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi.System
     [SxcWebApiExceptionHandling]
     [AllowAnonymous]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public partial class DebugController : DnnApiControllerWithFixes
+    public partial class InsightsController : DnnApiControllerWithFixes
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string Help()
         {
-            return h1("Commands")
+            return h1("2sxc Insights - Commands")
                    + "<ol>"
                    + li(a("cache", "cache"))
                    + "<li><a href='help'>help</a></li>"
@@ -56,9 +56,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string LoadLog(int? appId = null)
         {
-            ThrowIfNotSuperuser();
-            if (appId == null)
-                return "please add appid to the url parameters";
+            if (UrlParamsIncomplete(appId, out var message))
+                return message;
 
             Log.Add($"debug app-load {appId}");
             var appRead = new AppRuntime(appId.Value, Log);
@@ -107,9 +106,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string Stats(int? appId = null)
         {
-            ThrowIfNotSuperuser();
-            if (appId == null)
-                return "please add appid to the url parameters";
+            if (UrlParamsIncomplete(appId, out var message))
+                return message;
 
             Log.Add($"debug app-internals for {appId}");
             var appRead = new AppRuntime(appId.Value, Log);

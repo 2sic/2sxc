@@ -3,7 +3,7 @@
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
 {
-    public partial class DebugController
+    public partial class InsightsController
     {
         private static string Tag(string tag, string content, string attributes = null) => $"<{tag}{attributes}>{content}</{tag}>";
         private static string Atr(string attribute, string content) => $" {attribute}={content} ";
