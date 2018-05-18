@@ -38,7 +38,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 if (prio <= 0) continue;    // don't register/remove if not within specs
 
                 // Register, then remember to remove later on
-                ClientResourceManager.RegisterScript(page, match.Groups["Src"].Value, prio, providerName);
+                var url = FixUrlWithSpaces(match.Groups["Src"].Value);
+                ClientResourceManager.RegisterScript(page, url, prio, providerName);
                 scriptMatchesToRemove.Add(match);
             }
 
@@ -68,7 +69,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 if (prio <= 0) continue;    // don't register/remove if not within specs
 
                 // Register, then remember to remove later on
-                ClientResourceManager.RegisterStyleSheet(page, match.Groups["Src"].Value, prio, providerName);
+                var url = FixUrlWithSpaces(match.Groups["Src"].Value);
+                ClientResourceManager.RegisterStyleSheet(page, url, prio, providerName);
                 styleMatchesToRemove.Add(match);
             }
 
@@ -79,6 +81,20 @@ namespace ToSic.SexyContent.Environment.Dnn7
             #endregion
 
             return renderedTemplate;
+        }
+
+        /// <summary>
+        /// Because of an issue with spaces, prepend tilde to urls that start at root
+        /// and contain spaces: https://github.com/2sic/2sxc/issues/1566
+        /// </summary>
+        /// <returns></returns>
+        private string FixUrlWithSpaces(string url)
+        {
+            if (!url.Contains(" "))
+                return url;
+            if (!url.StartsWith("/") || url.StartsWith("//"))
+                return url;
+            return "~" + url;
         }
 
         private int GetPriority(Match optMatch, int defValue)
