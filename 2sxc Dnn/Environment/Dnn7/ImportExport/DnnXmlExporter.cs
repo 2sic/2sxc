@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.ImportExport
         {
             var tenant = new DnnTenant(PortalSettings.Current);
             var app = new App(tenant, zoneId, appId);
-            AdamAppContext = new AdamAppContext(tenant, app, null);
+            AdamAppContext = new AdamAppContext(tenant, app, null, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally

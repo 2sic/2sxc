@@ -32,7 +32,16 @@ namespace ToSic.SexyContent.WebApi.Dnn
 			return null;
 		}
 
-		[HttpGet]
+        /// <summary>
+        /// This overload is only for resolving page-references, which need fewer parameters
+        /// </summary>
+        /// <returns></returns>
+	    [HttpGet]
+	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+	    public string ResolveHyperlink(string hyperlink, int appId) 
+            => ResolveHyperlink(hyperlink, appId, null, default(Guid), null);
+
+	    [HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
 		public string ResolveHyperlink(string hyperlink, int appId, string contentType, Guid guid, string field)
 		{
@@ -50,17 +59,24 @@ namespace ToSic.SexyContent.WebApi.Dnn
                     // page link - only resolve if the user has edit-permissions
 		            // only people who have some full edit permissions may actually look up pages
 		            var permCheckPage = new AppAndPermissions(SxcInstance, appId, Log);
-		            permCheckPage.EnsureOrThrow(GrantSets.WritePublished);
-		            return resolved;
+		            return permCheckPage.Ensure(GrantSets.WritePublished, null, out var _) 
+                        ? resolved 
+                        : hyperlink;
 		        }
+
+                // for file, we need guid & field - otherwise return the original unmodified
+		        if (guid == default(Guid) || string.IsNullOrEmpty(field) || string.IsNullOrEmpty(contentType))
+		            return hyperlink;
 
 		        var isOutsideOfAdam = !(resolved.IndexOf("/adam/", StringComparison.Ordinal) > 0);
 
 		        // file-check, more abilities to allow
 		        // this will already do a ensure-or-throw inside it if outside of adam
 		        var adamCheck = new AdamSecureState(SxcInstance, appId, contentType, field, guid, isOutsideOfAdam, Log);
-                adamCheck.ThrowIfRestrictedUserIsOutsidePermittedFolders(resolved);
-                adamCheck.ThrowIfRestrictedUserIsntPermittedOnField(GrantSets.ReadSomething);
+		        if (!adamCheck.UserMayWriteToFolder(resolved, out var exp))
+		            throw exp;
+                if(!adamCheck.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))
+                    throw exp;
 
 		        // if everythig worked till now, it's ok to return the result
 		        return resolved;

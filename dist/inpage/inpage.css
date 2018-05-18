@@ -21,10 +21,10 @@
 
 .sc-element .sc-menu.sc-tb-show-always, 
     .sc-element:hover .sc-menu.sc-tb-show-always  { display: initial; }
-.sc-element .sc-menu.sc-tb-show-hover { display: none; }
+.sc-element .sc-menu.sc-tb-show-hover { opacity: 0; }
 body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
-.sc-element:hover .sc-menu.sc-tb-show-hover { display: block; }
-.sc-element:hover .sc-element:not(:hover) .sc-menu.sc-tb-show-hover { display: none; }   /* prevent hover of a parent, when the item itself is not hovered */
+.sc-element:hover .sc-menu.sc-tb-show-hover { display: block; opacity: 1; }
+.sc-element:hover .sc-element:not(:hover) .sc-menu.sc-tb-show-hover { opacity: 0; }   /* prevent hover of a parent, when the item itself is not hovered */
 
 .sc-menu { list-style-type:none; margin:0; padding:0;display: inline;z-index: 1499; }
 .sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }

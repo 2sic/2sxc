@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
+using System.Web.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
@@ -41,29 +41,49 @@ namespace ToSic.SexyContent.WebApi.Adam
         {
             Field = field;
             Guid = guid;
-            EnsureOrThrow(GrantSets.WriteSomething, contentType);
+            if(!Ensure(GrantSets.WriteSomething, contentType, out var exp))
+                throw exp;
             UserIsRestricted = !SecurityChecks.ThrowIfUserMayNotWriteEverywhere(usePortalRoot, Permissions);
 
-
-                if (UserIsRestricted && !Feats.Enabled(FeaturesForRestrictedUsers))
-                    throw Http.PermissionDenied($"low-permission users may not access this - {Feats.MsgMissingSome(FeaturesForRestrictedUsers)}");
+            if (UserIsRestricted && !Feats.Enabled(FeaturesForRestrictedUsers))
+                throw Http.PermissionDenied(
+                    $"low-permission users may not access this - {Feats.MsgMissingSome(FeaturesForRestrictedUsers)}");
 
             PrepCore(App, guid, field, usePortalRoot);
 
             if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(field)) return;
 
             Attribute = Definition(appId, contentType, field);
-            ThrowIfWrongFieldType();
+            if(!FileTypeIsOkForThisField(out exp))
+                throw exp;
         }
 
         private void PrepCore(App app, Guid entityGuid, string fieldName, bool usePortalRoot)
         {
             var dnn = new DnnHelper(SxcInstance?.EnvInstance);
             var tenant = new DnnTenant(dnn.Portal);
-            AdamAppContext = new AdamAppContext(tenant, app, SxcInstance);
+            AdamAppContext = new AdamAppContext(tenant, app, SxcInstance, Log);
             ContainerContext = usePortalRoot
                 ? new ContainerOfTenant(AdamAppContext) as ContainerBase
                 : new ContainerOfField(AdamAppContext, entityGuid, fieldName);
+        }
+
+        /// <summary>
+        /// Returns true if user isn't restricted, or if the retricted user is accessing a draft item
+        /// </summary>
+        internal bool UserIsNotRestrictedOrItemIsDraft(Guid guid, out HttpResponseException exp)
+        {
+            Log.Add($"check if user is restricted ({UserIsRestricted}) or if the item '{guid}' is draft");
+            exp = null;
+            // check that if the user should only see drafts, he doesn't see items of normal data
+            if (!UserIsRestricted || FieldPermissionOk(GrantSets.ReadPublished)) return true;
+
+            // check if the data is public
+            var itm = AdamAppContext.AppRuntime.Entities.Get(guid);
+            if (!(itm?.IsPublished ?? false)) return true;
+
+            exp = Http.PermissionDenied(Log.Add("user is restricted and may not see published, but item exists and is published - not allowed"));
+            return false;
         }
 
         private IAttributeDefinition Definition(int appId, string contentType, string fieldName)
@@ -74,22 +94,32 @@ namespace ToSic.SexyContent.WebApi.Adam
             return type[fieldName];
         }
 
-        public void ThrowIfWrongFieldType()
+        public bool FileTypeIsOkForThisField(out HttpResponseException preparedException)
         {
             var fieldDef = Attribute;
 
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
-            if (fieldDef == null || !(fieldDef.Type != Eav.Constants.DataTypeHyperlink || fieldDef.Type != Eav.Constants.DataTypeString))
-                throw Http.BadRequest("Requested field '" + Field + "' type doesn't allow upload");
+            if (fieldDef == null || !(fieldDef.Type != Eav.Constants.DataTypeHyperlink ||
+                                      fieldDef.Type != Eav.Constants.DataTypeString))
+            {
+                preparedException = Http.BadRequest("Requested field '" + Field + "' type doesn't allow upload");
+                return false;
+            }
             Log.Add($"field type:{fieldDef.Type}");
+            preparedException = null;
+            return true;
         }
 
-        [AssertionMethod]
-        public void ThrowIfRestrictedUserIsntPermittedOnField(List<Grants> requiredPermissions)
+        public bool UserIsPermittedOnField(List<Grants> requiredPermissions, out HttpResponseException preparedException)
         {
             // check field permissions, but only for non-publish-data
             if (UserIsRestricted && !FieldPermissionOk(requiredPermissions))
-                throw Http.PermissionDenied("this field is not configured to allow uploads by the current user");
+            {
+                preparedException = Http.PermissionDenied("this field is not configured to allow uploads by the current user");
+                return false;
+            }
+            preparedException = null;
+            return true;
         }
 
 
@@ -101,25 +131,33 @@ namespace ToSic.SexyContent.WebApi.Adam
         {
             var fieldPermissions = new DnnPermissionCheck(Log,
                 instance: SxcInstance.EnvInstance,
-                permissions1: Attribute.Permissions);
+                permissions1: Attribute.Permissions,
+                appIdentity: SxcInstance.App);
 
             return fieldPermissions.UserMay(requiredGrant);
         }
 
-        public void ThrowIfRestrictedUserIsOutsidePermittedFolders(string path)
+        public bool UserMayWriteToFolder(string path, out HttpResponseException preparedException)
         {
-            if (UserIsRestricted)
-                SecurityChecks.ThrowIfDestNotInItem(Guid, Field, path);
+            preparedException = null;
+            return !UserIsRestricted || !SecurityChecks.DestinationIsInItem(Guid, Field, path, out preparedException);
         }
 
-        public void ThrowIfBadExtension(string fileName)
+        public bool ExtensionIsOk(string fileName, out HttpResponseException preparedException)
         {
             if (!SecurityChecks.IsAllowedDnnExtension(fileName))
-                throw Http.NotAllowedFileType(fileName, "Not in whitelisted CMS file types.");
+            {
+                preparedException = Http.NotAllowedFileType(fileName, "Not in whitelisted CMS file types.");
+                return false;
+            }
 
             if (SecurityChecks.IsKnownRiskyExtension(fileName))
-                throw Http.NotAllowedFileType(fileName, "This is a known risky file type.");
-
+            {
+                preparedException = Http.NotAllowedFileType(fileName, "This is a known risky file type.");
+                return false;
+            }
+            preparedException = null;
+            return true;
         }
 
         internal bool CustomFileFilterOk(string additionalFilter, string fileName)

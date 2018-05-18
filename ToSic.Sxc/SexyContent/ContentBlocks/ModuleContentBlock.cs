@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.ContentBlocks
         /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
         /// <param name="tenant"></param>
         /// <param name="overrideParams">optional override parameters</param>
-        public ModuleContentBlock(IInstanceInfo instanceInfo, Log parentLog, ITenant tenant = null, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
+        public ModuleContentBlock(IInstanceInfo instanceInfo, Log parentLog, ITenant tenant, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
         {
             InstanceInfo = instanceInfo ?? throw new Exception("Need valid Instance/ModuleInfo / ModuleConfiguration of runtime");
             ParentId = instanceInfo.Id;

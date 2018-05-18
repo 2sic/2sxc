@@ -41,9 +41,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
 	    {
 	        var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-            permCheck.EnsureOrThrow(GrantSets.WriteSomething, contentTypeStaticName);
+            if(!permCheck.Ensure(GrantSets.WriteSomething, contentTypeStaticName, out var exp))
+                throw exp;
 
-            permCheck.ThrowIfUserIsRestrictedAndFeatureNotEnabled();
+            if(!permCheck.UserUnrestrictedAndFeatureEnabled(out exp))
+                throw exp;
 
             // if we got this far, permissions are ok
             return _eavCtc.GetSingle(appId, contentTypeStaticName, scope);
@@ -76,10 +78,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName)
-	    {
+        {
+            Log.Add($"get fields for a:{appId} type:{staticName}");
 	        var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-	        permCheck.EnsureOrThrow(GrantSets.WriteSomething, staticName);
-            permCheck.ThrowIfUserIsRestrictedAndFeatureNotEnabled();
+            if (!permCheck.Ensure(GrantSets.WriteSomething, staticName, out var exp))
+                throw exp;
+            if(!permCheck.UserUnrestrictedAndFeatureEnabled(out exp))
+                throw exp;
 
             return _eavCtc.GetFields(appId, staticName);
 	    }

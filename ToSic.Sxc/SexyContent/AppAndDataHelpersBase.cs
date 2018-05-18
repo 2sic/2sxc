@@ -289,7 +289,7 @@ namespace ToSic.SexyContent
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
             if (_adamAppContext == null)
-                _adamAppContext = new AdamAppContext(_tenant, App, SxcInstance);
+                _adamAppContext = new AdamAppContext(_tenant, App, SxcInstance, Log);
             return new FolderOfField(envFs, _adamAppContext, entity.EntityGuid, fieldName);
         }
         private AdamAppContext _adamAppContext;

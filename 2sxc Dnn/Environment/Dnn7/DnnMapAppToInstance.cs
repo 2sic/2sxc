@@ -8,6 +8,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
@@ -15,19 +16,34 @@ using ToSic.SexyContent.Internal;
 namespace ToSic.SexyContent.Environment.Dnn7
 {
 
-    public class DnnMapAppToInstance : IMapAppToInstance
+    public class DnnMapAppToInstance : HasLog, IMapAppToInstance
     {
+        public DnnMapAppToInstance() : base("Dnn.MapA2I") { }
+
+        public DnnMapAppToInstance(Log parentLog) : base("Dnn.MapA2I", parentLog) { }
 
         public int? GetAppIdFromInstance(IInstanceInfo instance, int zoneId)
         {
-            var module = (instance as EnvironmentInstance<ModuleInfo>).Original;
+            var module = (instance as EnvironmentInstance<ModuleInfo>)?.Original
+                ?? throw new Exception("instance is not of type ModuleInfo");
 
+            var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
             if (module.DesktopModule.ModuleName == "2sxc")
-                return new ZoneRuntime(zoneId, null).DefaultAppId;
+            {
+                var appId = new ZoneRuntime(zoneId, null).DefaultAppId;
+                Log.Add($"{msg} - use def app: {appId}");
+                return appId;
+            }
 
-            if(module.ModuleSettings.ContainsKey(Settings.AppNameString))
-                return AppHelpers.GetAppIdFromGuidName(zoneId, module.ModuleSettings[Settings.AppNameString].ToString());
-            
+            if (module.ModuleSettings.ContainsKey(Settings.AppNameString))
+            {
+                var guid = module.ModuleSettings[Settings.AppNameString].ToString();
+                var appId = AppHelpers.GetAppIdFromGuidName(zoneId, guid);
+                Log.Add($"{msg} AppG:{guid} = app:{appId}");
+                return appId;
+            }
+
+            Log.Add($"{msg} not found = null");
             return null;
         }
 
@@ -35,6 +51,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         
         public void SetAppIdForInstance(IInstanceInfo instance, IEnvironment env, int? appId, Log parentLog)
         {
+            Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
             ContentGroupManager.ClearPreviewTemplate(instance.Id);
 
@@ -44,11 +61,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
             var zoneId = env.ZoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == 0 || !appId.HasValue)
-                DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, null);
+                DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, null, Log);
             else
             {
                 var appName = ((BaseCache)DataSource.GetCache(0, 0)).ZoneApps[zoneId].Apps[appId.Value];
-                DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, appName);
+                DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, appName, Log);
             }
 
             // Change to 1. available template if app has been set
@@ -64,17 +81,19 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void ClearPreviewTemplate(int instanceId)
         {
-            DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, null);
+            Log.Add($"ClearPreviewTemplate(iid: {instanceId})");
+            DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, null, Log);
         }
 
-        public void SetContentGroupAndBlankTemplate(int instanceId, bool wasCreated, Guid guid)
+        public void SetContentGroup(int instanceId, bool wasCreated, Guid guid)
         {
+            Log.Add($"SetContentGroup(iid: {instanceId}, wasCreated: {wasCreated}, guid: {guid})");
             // Remove the previewTemplateId (because it's not needed as soon Content is inserted)
             ClearPreviewTemplate(instanceId);
             // Update contentGroup Guid for this module
             if (wasCreated)
                 DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instanceId, Settings.ContentGroupGuidString,
-                    guid.ToString());
+                    guid.ToString(), Log);
         }
 
         public ContentGroup GetInstanceContentGroup(ContentGroupManager cgm, Log log, int instanceId, int? pageId)
@@ -112,12 +131,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
             if (settings[Settings.ContentGroupGuidString] != null)
                 throw new Exception("Preview template id cannot be set for a module that already has content.");
 
-            DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString());
+            DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString(), Log);
         }
 
         public void UpdateTitle(SxcInstance sxcInstance, Eav.Interfaces.IEntity titleItem)
         {
-            //Log.Add("update title");
+            Log.Add("update title");
 
             var languages = sxcInstance.Environment.ZoneMapper.CulturesWithState(sxcInstance.EnvInstance.TenantId,
                 sxcInstance.ZoneId.Value);
@@ -162,5 +181,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
         // todo: remove this, replace with calls to the current tenant -> RootPath
         public static string AppBasePath() 
             => Path.Combine(PortalSettings.Current.HomeDirectory, Settings.AppsRootFolder);
+
     }
 }

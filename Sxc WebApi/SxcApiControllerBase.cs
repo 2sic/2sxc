@@ -1,12 +1,15 @@
 ﻿using DotNetNuke.Entities.Modules;
 using System.Collections.Generic;
 using System.Web.Http.Controllers;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Dnn;
+using ToSic.SexyContent.WebApi.Errors;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -28,27 +31,59 @@ namespace ToSic.SexyContent.WebApi
         internal SxcInstance SxcInstance { get; private set; }
         
 
-        protected static DnnAppAndDataHelpers GetContext(SxcInstance sxcInstance, Log log) => new DnnAppAndDataHelpers(sxcInstance, sxcInstance?.Log ?? log);
+        protected static DnnAppAndDataHelpers GetContext(SxcInstance sxcInstance, Log log) 
+            => new DnnAppAndDataHelpers(sxcInstance, sxcInstance?.Log ?? log);
+
+        /// <summary>
+        /// Retrieve an AppIdentity object for an app, based on the context and alternate appId
+        /// Will only allow apps outside of current zone if it's a superuser
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="appId"></param>
+        /// <param name="superUser"></param>
+        /// <returns></returns>
+        protected static IAppIdentity GetAppIdentity(DnnAppAndDataHelpers context, int appId, bool superUser)
+        {
+            IAppIdentity appIdentity;
+
+            if (context.App.AppId == appId)
+                appIdentity = context.App;
+            else
+            {
+                // check if app is in current zone - allow switching zones for host users
+                var appRun = new AppRuntime(appId, context.Log);
+                if (appRun.ZoneId == context.App.ZoneId)
+                    appIdentity = appRun;
+                else if (superUser)
+                    appIdentity = appRun;
+                else
+                    throw Http.PermissionDenied(
+                        $"accessing app {appId} in zone {appRun.ZoneId} is not allowed for this user");
+            }
+            return appIdentity;
+        }
 
         #region Security Checks 
 
         /// <summary>
         /// Check if a user may do something - and throw an error if the permission is not given
         /// </summary>
-        internal void PerformSecurityCheck(int appId, string contentType, Grants grant,
-            ModuleInfo module, int? zoneId, IEntity specificItem = null)
-            => new Security(PortalSettings, Log).FindCtCheckSecurityOrThrow(appId,
-                contentType,
-                new List<Grants> { grant },
-                specificItem,
-                module, 
-                zoneId);
+        internal void PerformSecurityCheck(IAppIdentity appIdentity, string contentType,
+            Grants grant, ModuleInfo module, IEntity specificItem = null)
+            => new Security(PortalSettings, Log)
+                .FindCtCheckSecurityOrThrow(appIdentity, contentType, new List<Grants> {grant},
+                    specificItem, module);
 
         #endregion
 
         #region App-Helpers for anonyous access APIs
 
-        internal int GetCurrentAppIdFromPath(string appPath)
+        /// <summary>
+        /// find the AppIdentity of an app which is referenced by a path
+        /// </summary>
+        /// <param name="appPath"></param>
+        /// <returns></returns>
+        internal IAppIdentity GetCurrentAppIdFromPath(string appPath)
         {
             // check zone
             var zid = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
@@ -56,7 +91,7 @@ namespace ToSic.SexyContent.WebApi
             // get app from appname
             var aid = AppHelpers.GetAppIdFromGuidName(zid, appPath, true);
             Log.Add($"find app by path:{appPath}, found a:{aid}");
-            return aid;
+            return new AppIdentity(zid, aid, Log);
         }
         #endregion
     }
