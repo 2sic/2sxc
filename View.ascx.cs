@@ -8,6 +8,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Dnn;
@@ -37,6 +38,7 @@ namespace ToSic.SexyContent
         {
             // always do this, part of the guarantee that everything will work
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+            History.Add("module", Log);
         }
 
         /// <summary>s

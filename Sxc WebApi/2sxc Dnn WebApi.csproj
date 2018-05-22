@@ -101,6 +101,7 @@
     <Compile Include="System\InsightsController_App.cs" />
     <Compile Include="System\InsightsController_Help.cs" />
     <Compile Include="System\InsightsController_Entities.cs" />
+    <Compile Include="System\InsightsController_Log.cs" />
     <Compile Include="System\InsightsController_Metadata.cs" />
     <Compile Include="System\InsightsController_Attributes.cs" />
     <Compile Include="System\InsightsController_ParamChecks.cs" />

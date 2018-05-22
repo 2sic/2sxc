@@ -24,6 +24,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
 	        Helpers.RemoveLanguageChangingCookie();
 
             Log = new Log("DNN.WebApi");
+	        History.Add("web-api", Log);
             Env = new DnnEnvironment(Log);
         }
 
