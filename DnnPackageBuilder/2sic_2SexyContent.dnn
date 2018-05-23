@@ -659,7 +659,7 @@
     </package>
 
     
-    <package name="Connect.Dnn.Koi" type="Library" version="01.03.00">
+    <package name="Connect.Dnn.Koi" type="Library" version="01.03.00.01">
       <friendlyName>DnnConnect Koi</friendlyName>
       <description>Koi</description>
       <iconFile>icon.png</iconFile>
