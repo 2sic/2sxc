@@ -1,5 +1,4 @@
-﻿using System.Web.Http;
-using System.Web.Http.Controllers;
+﻿using System.Web.Http.Controllers;
 using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.Dnn;
 
@@ -14,14 +13,13 @@ namespace ToSic.Sxc.WebApi.System
             base.Initialize(controllerContext); // very important!!!
             Log.Rename("Api.Debug");
         }
-        
-        [HttpGet]
-        public bool IsAlive()
-        {
-            ThrowIfNotSuperuser();
-            return true;
-        }
-        
+
+        /// <summary>
+        /// Make sure that these requests don't land in the normal api-log.
+        /// Otherwise each log-access would re-number what item we're looking at
+        /// </summary>
+        protected override string LogHistorySetName { get; set; } = "web-api.insights";
+
 
     }
 }

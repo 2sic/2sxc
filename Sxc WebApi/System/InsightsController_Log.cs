@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Http;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.WebApi.System
         {
             ThrowIfNotSuperuser();
             Log.Add("debug log load");
-            return LogHeader() + LogHistoryOverview();
+            return LogHeader("Overview") + LogHistoryOverview();
         }
 
         [HttpGet]
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.WebApi.System
         {
             ThrowIfNotSuperuser();
             Log.Add($"debug log load for {key}");
-            return LogHeader() + LogHistory(key);
+            return LogHeader(key) + LogHistory(key);
         }
 
         [HttpGet]
@@ -37,8 +38,7 @@ namespace ToSic.Sxc.WebApi.System
                     var log = set.Take(position).LastOrDefault();
                     msg += log == null
                         ? p("log is null")
-                        : ToBr(log.Dump(" - ", h1($"Log for {key}[{position}]") + "\n",
-                            "end of log"));
+                        : FormatLog($"Log for {key}[{position}]", log);
                 }
                 else
                     msg += $"position ({position}) > count ({set.Count})";
@@ -66,9 +66,9 @@ namespace ToSic.Sxc.WebApi.System
             return $"flushed log history for {key}";
         }
 
-        private static string LogHeader()
+        private static string LogHeader(string key = null)
         {
-            var msg = h1("Log")
+            var msg = h1($"Log {key}")
                       + p($"Status: {(History.Pause ? "paused" : "running")} collecting #{History.Count} of max {History.MaxCollect} (keep max {History.Size} per set, then FIFO) - "
                           + a("change", $"logs?pause={!History.Pause}")
                           + " (pause to see details of the log)\n");
@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.System
                        + "</thead>"
                        + "<tbody>";
                 var count = 0;
-                foreach (var log in logs)
+                foreach (var log in logs.OrderBy(l => l.Key))
                 {
                     msg = msg + tr(new[]
                     {
@@ -119,7 +119,7 @@ namespace ToSic.Sxc.WebApi.System
                 {
                     msg += p($"Logs Overview: {set.Count}\n");
                     msg += "<table id='table'><thead>"
-                           + tr(new[] {"#", "Key", "TopLevel Name", "Lines", "First Message"}, true)
+                           + tr(new[] {"#", "Timestamp", "Key", "TopLevel Name", "Lines", "First Message"}, true)
                            + "</thead>"
                            + "<tbody>";
                     var count = 0;
@@ -129,6 +129,7 @@ namespace ToSic.Sxc.WebApi.System
                         msg = msg + tr(new[]
                         {
                             $"{count}",
+                            log.Created.ToString("O"),
                             $"{key}",
                             a(log.FullIdentifier, $"logs?key={key}&position={count}"),
                             $"{log.Entries.Count}",
@@ -154,5 +155,8 @@ namespace ToSic.Sxc.WebApi.System
             return msg;
         }
 
+        private static string FormatLog(string title, Log log)
+            => ToBr(log.Dump(" - ", h1($"{title}") + "\n",
+                "end of log")).Replace("⋮", "&vellip;");
     }
 }

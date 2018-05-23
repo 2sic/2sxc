@@ -143,32 +143,37 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             if(!permCheck.UserUnrestrictedAndFeatureEnabled(out exp))
                 throw exp;
 
+            Log.Add("passed security checks");
+
             // list of saved IDs
             Dictionary<Guid, int> postSaveIds = null;
 
             // use dnn versioning if partOfPage
             if (partOfPage)
             {
+                Log.Add("partOfPage - save with publishing");
                 var versioning = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
-                Log.Add("save with publishing");
                 var context = GetContext(SxcInstance, Log);
                 versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, 
                     args => postSaveIds = SaveAndProcessGroups(permCheck.Permissions, appId, items, partOfPage));
             }
             else
             {
-                Log.Add("save without publishing");
+                Log.Add("partOfPage false, save without publishing");
                 postSaveIds = SaveAndProcessGroups(permCheck.Permissions, appId, items, partOfPage);
             }
-
+            Log.Add(() => $"post save IDs: {string.Join(",", postSaveIds.Select(psi => psi.Key + "(" + psi.Value + ")"))}");
             return postSaveIds;
         }
 
 	    private Dictionary<Guid, int> SaveAndProcessGroups(PermissionCheckBase permChecker, int appId, List<EntityWithHeaderOldFormat> items, bool partOfPage)
 	    {
+	        Log.Add($"SaveAndProcessGroups(..., appId:{appId}, items:{items?.Count}), partOfPage:{partOfPage}");
+
 	        var allowWriteLive = permChecker.UserMay(GrantSets.WritePublished);
 
             var forceDraft = !allowWriteLive;
+	        Log.Add($"allowWriteLive: {allowWriteLive}, forceDraft: {forceDraft}");
 
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
@@ -186,6 +191,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	        // only add if the header wants it, AND we started with ID unknown
 	        if (groupItems.Any())
 	            DoAdditionalGroupProcessing(SxcInstance, Log, appId, ids, groupItems);
+	        else
+	            Log.Add("no additional group processing necessary");
 
 	        return ids;
 	    }

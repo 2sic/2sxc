@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Interfaces;
@@ -23,8 +24,13 @@ namespace ToSic.SexyContent.WebApi.Dnn
 	        // this is a dnn-bug
 	        Helpers.RemoveLanguageChangingCookie();
 
-            Log = new Log("DNN.WebApi");
-	        History.Add("web-api", Log);
+            Log = new Log("DNN.WebApi", null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
+	        
+            // ReSharper disable VirtualMemberCallInConstructor
+	        if (LogHistorySetName != null)
+	            History.Add(LogHistorySetName, Log);
+            // ReSharper restore VirtualMemberCallInConstructor
+
             Env = new DnnEnvironment(Log);
         }
 
@@ -42,5 +48,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
         {
             throw new NotImplementedException();
         }
+
+        protected virtual string LogHistorySetName { get; set; } = "web-api";
     }
 }
