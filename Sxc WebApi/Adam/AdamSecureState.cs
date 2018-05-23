@@ -140,7 +140,7 @@ namespace ToSic.SexyContent.WebApi.Adam
         public bool UserMayWriteToFolder(string path, out HttpResponseException preparedException)
         {
             preparedException = null;
-            return !UserIsRestricted || !SecurityChecks.DestinationIsInItem(Guid, Field, path, out preparedException);
+            return !UserIsRestricted || SecurityChecks.DestinationIsInItem(Guid, Field, path, out preparedException);
         }
 
         public bool ExtensionIsOk(string fileName, out HttpResponseException preparedException)

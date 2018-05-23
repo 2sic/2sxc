@@ -1,5 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Web;
 using System.Web.Http;
+using System.Web.UI;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 
@@ -156,7 +161,28 @@ namespace ToSic.Sxc.WebApi.System
         }
 
         private static string FormatLog(string title, Log log)
-            => ToBr(log.Dump(" - ", h1($"{title}") + "\n",
-                "end of log")).Replace("⋮", "&vellip;");
+        {
+            var dump = log.Dump(" - ", h1($"{title}") + "\n",
+                "end of log");
+            var htmlEnc = HtmlEncode(dump);
+            return ToBr(htmlEnc);//.Replace("⋮", "&vellip;");
+        }
+
+        public static string HtmlEncode(string text)
+        {
+            char[] chars = HttpUtility.HtmlEncode(text).ToCharArray();
+            var result = new StringBuilder(text.Length + (int)(text.Length * 0.1));
+
+            foreach (char c in chars)
+            {
+                int value = Convert.ToInt32(c);
+                if (value > 127)
+                    result.AppendFormat("&#{0};", value);
+                else
+                    result.Append(c);
+            }
+
+            return result.ToString();
+        }
     }
 }
