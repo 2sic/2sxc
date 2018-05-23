@@ -658,8 +658,10 @@
       </components>
     </package>
 
-    
-    <package name="Connect.Dnn.Koi" type="Library" version="01.03.00">
+    <!-- Keep the 4th version number part as it is needed to prevent "repair install" message that DNN
+      shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
+      -->
+    <package name="Connect.Dnn.Koi" type="Library" version="01.03.00.01">
       <friendlyName>DnnConnect Koi</friendlyName>
       <description>Koi</description>
       <iconFile>icon.png</iconFile>
