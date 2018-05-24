@@ -329,7 +329,7 @@ angular.module("eavFieldTemplates")
         $scope.getEntityText = function (entityId) {
             if (entityId === null)
                 return "empty slot"; // todo: i18n
-            var entities = $filter("filter")($scope.availableEntities, { Value: entityId });
+            var entities = $filter("filter")($scope.availableEntities, { Value: entityId }, true); // 'true' enforce exact match, before was 'contain'
             return entities.length > 0 ? entities[0].Text :
                 $scope.entityTextDefault ? $scope.entityTextDefault : entityId; 
         };

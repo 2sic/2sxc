@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Adam
         public DynamicEntity Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true);
 
         /// <inheritdoc />
-        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.App, Id, false) != null;
+        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
 
         /// <inheritdoc />
         public string Url => AppContext.Tenant.ContentPath + Path;

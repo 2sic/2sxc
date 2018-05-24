@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.ContentBlocks
         
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
-            => Factory.Resolve<IMapAppToInstance>().SetContentGroupAndBlankTemplate(ModuleId, true, cgGuid);
+            => Factory.Resolve<IMapAppToInstance>().SetContentGroup(ModuleId, true, cgGuid);
 
         internal override void UpdateTitle(Eav.Interfaces.IEntity titleItem)
         {

@@ -70,6 +70,9 @@
       <HintPath>..\..\..\..\..\eav-server\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\eav-server\packages\System.Collections.Immutable.1.3.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -95,11 +98,23 @@
     <Compile Include="Adam\AdamUploader.cs" />
     <Compile Include="Adam\SecurityChecks.cs" />
     <Compile Include="Adam\UploadResult.cs" />
+    <Compile Include="System\InsightsController_IsAlive.cs" />
+    <Compile Include="System\InsightsController_App.cs" />
+    <Compile Include="System\InsightsController_Help.cs" />
+    <Compile Include="System\InsightsController_Entities.cs" />
+    <Compile Include="System\InsightsController_Log.cs" />
+    <Compile Include="System\InsightsController_Metadata.cs" />
+    <Compile Include="System\InsightsController_Attributes.cs" />
+    <Compile Include="System\InsightsController_ParamChecks.cs" />
+    <Compile Include="System\InsightsController_Types.cs" />
+    <Compile Include="System\InsightsController_AppActions.cs" />
+    <Compile Include="System\InsightsController_Html.cs" />
     <Compile Include="EavApiProxies\SystemController.cs" />
     <Compile Include="EavApiProxies\AllInOne.cs" />
     <Compile Include="EavApiProxies\UiController.cs" />
     <Compile Include="Errors\Http.cs" />
     <Compile Include="FeaturesManagementUtils.cs" />
+    <Compile Include="System\InsightsController.cs" />
     <Compile Include="Permissions\AppAndPermissions.cs" />
     <Compile Include="Security.cs" />
     <Compile Include="SxcApiControllerBase.cs" />

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.SexyContent;
@@ -32,9 +33,9 @@ namespace ToSic.Sxc.Adam
         /// <param name="id">the id of the file/folder</param>
         /// <param name="isFolder">if it's a file or a folder</param>
         /// <returns></returns>
-        internal static Eav.Interfaces.IEntity GetFirstMetadata(App app, int id, bool isFolder)
-            => app.Data.Metadata
-                .GetMetadata(Eav.Constants.MetadataForCmsObject,
+        internal static Eav.Interfaces.IEntity GetFirstMetadata(/*App*/AppRuntime app, int id, bool isFolder)
+            => app/*.Data*/.Metadata
+                .Get/*Metadata*/(Eav.Constants.MetadataForCmsObject,
                     (isFolder ? "folder:" : "file:") + id)
                 .FirstOrDefault();
 
@@ -43,12 +44,12 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         internal static DynamicEntity GetFirstOrFake(AdamAppContext appContext, int id, bool isFolder)
         {
-            var meta = GetFirstMetadata(appContext.App, id, isFolder) ?? CreateFakeMetadata();
+            var meta = GetFirstMetadata(appContext.AppRuntime, id, isFolder) ?? CreateFakeMetadata();
             return new DynamicEntity(meta, new[] { Thread.CurrentThread.CurrentCulture.Name }, appContext.SxcInstance);
         }
 
-        public static int GetMetadataId(AdamAppContext appContext, int id, bool isFolder)
-            => GetFirstMetadata(appContext.App, id, isFolder)?.EntityId ?? 0;
+        public static int GetMetadataId(AppRuntime appRuntime, int id, bool isFolder)
+            => GetFirstMetadata(appRuntime, id, isFolder)?.EntityId ?? 0;
 
 
     }

@@ -31,7 +31,7 @@
 
 .adam-tag {
     cursor: pointer;
-font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
+    font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
     z-index: 30;
 }
 
@@ -75,8 +75,6 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
     -webkit-filter:blur(8px);
     filter:blur(8px)
 }
-
-
 
 /*label under the icon*/
 .adam-short-label  {

@@ -164,6 +164,12 @@ namespace ToSic.SexyContent.WebApi
             var zoneId  = int.Parse(request["ZoneId"]);
             if (request.Files.Count <= 0) return result;
 
+            var name = request["Name"];
+            if (!string.IsNullOrEmpty(name))
+            {
+                Log.Add($"new app name: {name}");
+            }
+
             var helper = new ImportExportEnvironment(Log);
             try
             {
@@ -172,7 +178,7 @@ namespace ToSic.SexyContent.WebApi
 
                 // Increase script timeout to prevent timeouts
                 HttpContext.Current.Server.ScriptTimeout = 300;
-                result.Succeeded = zipImport.ImportZip(request.Files[0].InputStream, temporaryDirectory);
+                result.Succeeded = zipImport.ImportZip(request.Files[0].InputStream, temporaryDirectory, name);
                 result.Messages = helper.Messages;
             }
             catch (Exception ex)

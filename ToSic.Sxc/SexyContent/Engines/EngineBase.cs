@@ -139,7 +139,7 @@ namespace ToSic.SexyContent.Engines
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
             var templatePermissions = Factory.Resolve<IEnvironmentFactory>()
-                .ItemPermissions(Template.Entity, Log, InstInfo);
+                .ItemPermissions(App, Template.Entity, Log, InstInfo);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
             if (tenant.RefactorUserIsAdmin || !templatePermissions.HasPermissions)

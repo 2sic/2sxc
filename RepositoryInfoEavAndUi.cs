@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Web;
+using System.Web.Hosting;
 using ToSic.Eav.Repositories;
 
 namespace ToSic.SexyContent
@@ -16,8 +16,6 @@ namespace ToSic.SexyContent
     /// </remarks>
     public class RepositoryInfoEavAndUi: RepositoryInfoOfFolder
     {
-        //public RepositoryInfoEavAndUi() : base(true, true, null) { }
-
         public override List<string> RootPaths => new List<string>
         {
             BuildPath(".data"),
@@ -28,7 +26,7 @@ namespace ToSic.SexyContent
         };
 
         private string BuildPath(string pathEnd) =>
-            HttpContext.Current.Server.MapPath(System.IO.Path.Combine(Eav.ImportExport.Settings.ModuleDirectory,
+            HostingEnvironment.MapPath(System.IO.Path.Combine(Eav.ImportExport.Settings.ModuleDirectory,
                 pathEnd));
     }
 }

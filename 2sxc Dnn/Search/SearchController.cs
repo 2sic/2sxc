@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
 
             if (!isContentModule)
             {
-	            appId = new DnnMapAppToInstance().GetAppIdFromInstance(instance, zoneId);
+	            appId = new DnnMapAppToInstance(Log).GetAppIdFromInstance(instance, zoneId);
 				if (!appId.HasValue)
 		            return searchDocuments;
             }

@@ -29,6 +29,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         protected IApp App { get; }
 
+        protected IAppIdentity AppIdentity;
+
         public DnnPermissionCheck(
             Log parentLog,
             IContentType targetType = null,
@@ -36,10 +38,13 @@ namespace ToSic.SexyContent.Environment.Dnn7
             IInstanceInfo instance = null,
             IApp app = null,
             IEnumerable<IEntity> permissions1 = null,
-            PortalSettings portal = null
+            PortalSettings portal = null,
+            IAppIdentity appIdentity = null
             )
             : base(parentLog, targetType, targetItem, app?.Metadata.Permissions, permissions1)
         {
+            Log.Add("constructor");
+            AppIdentity = appIdentity ?? app;
             App = app;
             Instance = instance;
             Portal = portal;
@@ -51,11 +56,14 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         protected override bool EnvironmentAllows(List<Grants> grants)
         {
-            var ok = UserIsSuperuser() // superusers are always ok
-                     || UserIsTenantAdmin()
+            Log.Add("Env allows...");
+            var ok = UserIsSuperuser(); // superusers are always ok
+            if (!ok && CurrentZoneMatchesTenantZone())
+                ok = UserIsTenantAdmin()
                      || UserIsModuleAdmin()
                      || UserIsModuleEditor();
             if (ok) GrantedBecause = ConditionType.EnvironmentGlobal;
+            Log.Add($"ok: {ok} because:{GrantedBecause}");
             return ok;
         }
 
@@ -79,10 +87,30 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return false;
         }
 
+        /// <summary>
+        /// Check if user is super user
+        /// </summary>
+        /// <returns></returns>
+        private bool UserIsSuperuser() => PortalSettings.Current?.UserInfo?.IsSuperUser ?? false;
 
-        private bool UserIsSuperuser() => Portal?.UserInfo?.IsSuperUser ?? false;
-
+        /// <summary>
+        /// Check if user is valid admin of current portal / zone
+        /// </summary>
+        /// <returns></returns>
         public bool UserIsTenantAdmin() => Portal?.UserInfo?.IsInRole(Portal?.AdministratorRoleName) ?? false;
+
+        /// <summary>
+        /// Verify that we're in the same zone, allowing admin/module checks
+        /// </summary>
+        /// <returns></returns>
+        private bool CurrentZoneMatchesTenantZone()
+        {
+            // but is the current portal also the one we're asking about?
+            var env = Eav.Factory.Resolve<IEnvironment>();
+            if (Portal == null || AppIdentity == null) return false;
+            var pZone = env.ZoneMapper.GetZoneId(Portal.PortalId);
+            return pZone == AppIdentity.ZoneId; // must match, to accept user as admin
+        }
 
         private bool UserIsModuleEditor()
             => Module != null && ModulePermissionController

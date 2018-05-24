@@ -2,6 +2,7 @@
 using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Localization;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Internal
 {
@@ -35,8 +36,9 @@ namespace ToSic.SexyContent.Internal
         /// <summary>
         /// Update a setting for all language-versions of a module
         /// </summary>
-        public static void UpdateInstanceSettingForAllLanguages(int instanceId, string key, string value)
+        public static void UpdateInstanceSettingForAllLanguages(int instanceId, string key, string value, Log log)
         {
+            log?.Add($"UpdateInstanceSettingForAllLanguages(iid: {instanceId}, key: {key}, val: {value})");
             var moduleController = new ModuleController();
 
             // Find this module in other languages and update contentGroupGuid

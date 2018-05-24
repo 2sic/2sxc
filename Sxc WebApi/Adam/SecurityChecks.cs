@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Web.Http;
 using DotNetNuke.Entities.Host;
 using JetBrains.Annotations;
 using ToSic.Eav.Identity;
@@ -14,13 +15,17 @@ namespace ToSic.SexyContent.WebApi.Adam
 
 
 
-        [AssertionMethod]
-        internal static void ThrowIfDestNotInItem(Guid guid, string field, string path)
+        internal static bool DestinationIsInItem(Guid guid, string field, string path, out HttpResponseException preparedException)
         {
             var shortGuid = Mapper.GuidCompress(guid);
             // will do check, case-sensitive because the compressed guid is case-sensitive
-            if (!path.Replace('\\', '/').Contains(shortGuid + "/" + field)) 
-                throw Http.PermissionDenied("Can't access a resource which is not part of this item.");
+            if (!path.Replace('\\', '/').Contains(shortGuid + "/" + field))
+            {
+                preparedException = Http.PermissionDenied("Can't access a resource which is not part of this item.");
+                return false;
+            }
+            preparedException = null;
+            return true;
         }
 
 

@@ -1111,7 +1111,7 @@ exports.ajaxLoad = ajaxLoad;
 function reloadAndReInitialize(context, forceAjax, preview) {
     // if ajax is not supported, we must reload the whole page
     if (!forceAjax && !context.app.supportsAjax) {
-        window_in_page_1.windowInPage.location.reload();
+        return window_in_page_1.windowInPage.location.reload();
     }
     // ReSharper disable once DoubleNegationOfBoolean
     ajaxLoad(context, main_content_block_1.MainContentBlock.cUseExistingTemplate, !!preview)
@@ -5319,26 +5319,27 @@ __webpack_require__(44);
 __webpack_require__(46);
 __webpack_require__(43);
 __webpack_require__(45);
+__webpack_require__(155);
 __webpack_require__(47);
 __webpack_require__(12);
-__webpack_require__(155);
+__webpack_require__(156);
 __webpack_require__(40);
 __webpack_require__(23);
 __webpack_require__(96);
-__webpack_require__(156);
-__webpack_require__(49);
 __webpack_require__(157);
-__webpack_require__(50);
+__webpack_require__(49);
 __webpack_require__(158);
+__webpack_require__(50);
 __webpack_require__(159);
+__webpack_require__(160);
 __webpack_require__(42);
 __webpack_require__(41);
-__webpack_require__(160);
+__webpack_require__(161);
 __webpack_require__(27);
 __webpack_require__(2);
 __webpack_require__(5);
-__webpack_require__(161);
 __webpack_require__(162);
+__webpack_require__(163);
 __webpack_require__(26);
 __webpack_require__(38);
 __webpack_require__(86);
@@ -5349,23 +5350,23 @@ __webpack_require__(34);
 __webpack_require__(14);
 __webpack_require__(20);
 __webpack_require__(21);
-__webpack_require__(163);
+__webpack_require__(164);
 __webpack_require__(16);
 __webpack_require__(75);
-__webpack_require__(164);
-__webpack_require__(87);
 __webpack_require__(165);
+__webpack_require__(87);
+__webpack_require__(166);
 __webpack_require__(19);
 __webpack_require__(68);
 __webpack_require__(29);
 __webpack_require__(18);
-__webpack_require__(166);
 __webpack_require__(167);
-__webpack_require__(30);
 __webpack_require__(168);
+__webpack_require__(30);
+__webpack_require__(169);
 __webpack_require__(71);
 __webpack_require__(72);
-__webpack_require__(169);
+__webpack_require__(170);
 __webpack_require__(31);
 __webpack_require__(76);
 __webpack_require__(32);
@@ -8444,6 +8445,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 /***/ }),
 /* 155 */
+/***/ (function(module, exports) {
+
+/**
+ * Symbol polyfill for es5 from lib.es6
+ * https://github.com/Microsoft/TypeScript/blob/f17bf54bfe3f1e02e47af7660336a88f9ed2a316/lib/lib.es6.d.ts#L5501
+ */
+
+
+/***/ }),
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8461,7 +8472,7 @@ exports.CbOrMod = CbOrMod;
 
 
 /***/ }),
-/* 156 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8476,7 +8487,7 @@ exports.Conf = Conf;
 
 
 /***/ }),
-/* 157 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8512,12 +8523,6 @@ quick_e_1.$quickE.cbActions.click(onCbButtonClick);
 
 
 /***/ }),
-/* 158 */
-/***/ (function(module, exports) {
-
-
-
-/***/ }),
 /* 159 */
 /***/ (function(module, exports) {
 
@@ -8525,6 +8530,12 @@ quick_e_1.$quickE.cbActions.click(onCbButtonClick);
 
 /***/ }),
 /* 160 */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8557,7 +8568,7 @@ quick_e_1.$quickE.modActions.click(onModuleButtonClick);
 
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8575,7 +8586,7 @@ exports.Selectors = Selectors;
 
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8590,7 +8601,7 @@ exports.Specs = Specs;
 
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8609,7 +8620,7 @@ exports.ButtonDefinition = ButtonDefinition;
 
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8633,7 +8644,7 @@ exports.GroupConfig = GroupConfig;
 
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8648,7 +8659,7 @@ exports.ItemRender = ItemRender;
 
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports) {
 
 /*
@@ -8751,7 +8762,7 @@ exports.ItemRender = ItemRender;
 
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8763,7 +8774,7 @@ $(sxc_controller_in_page_1.$2sxcInPage.c.sel.scMenu /*".sc-menu"*/).click(functi
 
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports) {
 
 // enable shake detection on all toolbars
@@ -8778,7 +8789,7 @@ $(function () {
 
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

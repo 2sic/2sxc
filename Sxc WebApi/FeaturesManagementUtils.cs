@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -42,14 +38,14 @@ namespace ToSic.SexyContent.WebApi
 
             try
             {
-                var obj = JToken.Parse(strInput);
+                JToken.Parse(strInput);
             }
-            catch (JsonReaderException jex)
+            catch (JsonReaderException)
             {
                 //  exception in parsing json
                 return false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // some other exception
                 return false;
@@ -71,19 +67,19 @@ namespace ToSic.SexyContent.WebApi
 
             try
             {
-                string configurationsPath = HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/.data-custom/configurations/");
+                var configurationsPath = HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/.data-custom/configurations/");
 
                 if (!Directory.Exists(configurationsPath))
                 {
                     Directory.CreateDirectory(configurationsPath);
                 }
 
-                string featureFilePath = Path.Combine(configurationsPath, "features.json");
+                var featureFilePath = Path.Combine(configurationsPath, "features.json");
 
                 File.WriteAllText(featureFilePath, features);
                 fileSaved = true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // throw;
                 fileSaved = false;
