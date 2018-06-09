@@ -104,9 +104,6 @@ namespace ToSic.SexyContent.ContentBlocks
             ContentGroup.ReorderEntities(sortOrder, destinationSortOrder);
         }
 
-        public bool Publish(int repositoryId, bool state)
-            => new AppManager(SxcContext.App.ZoneId, SxcContext.App.AppId).Entities.Publish(repositoryId, state);
-
         public bool Publish(string part, int sortOrder)
         {
             Log.Add($"publish part{part}, order:{sortOrder}");
@@ -117,16 +114,16 @@ namespace ToSic.SexyContent.ContentBlocks
 
             var hasPresentation = presEntity != null;
 
+            var appMan = new AppManager(SxcContext.App.ZoneId, SxcContext.App.AppId);
+
             // make sure we really have the draft item an not the live one
             var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
-            if (!contDraft.IsPublished)
-                Publish(contDraft.RepositoryId, !hasPresentation);
+            appMan.Entities.Publish(contDraft.RepositoryId);
 
             if (hasPresentation)
             {
                 var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
-                if (!presDraft.IsPublished)
-                    Publish(presDraft.RepositoryId, true);
+                appMan.Entities.Publish(presDraft.RepositoryId);
             }
 
             return true;

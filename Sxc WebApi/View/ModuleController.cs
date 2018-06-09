@@ -244,7 +244,8 @@ namespace ToSic.SexyContent.WebApi.View
                 new AppAndPermissions(SxcInstance, App.AppId, Log).Ensure(GrantSets.WritePublished, null,
                     out var exp))
                 throw exp;
-            return ContentGroupReferenceManager.Publish(id, true);
+            new AppManager(App.ZoneId, App.AppId).Entities.Publish(id);
+            return true;
         }
 
         [HttpGet]
