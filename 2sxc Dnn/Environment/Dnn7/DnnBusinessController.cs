@@ -4,6 +4,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment.Dnn7.Installation;
 using ToSic.SexyContent.Environment.Dnn7.Search;
@@ -20,7 +21,20 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         #region DNN Interface Members - search, upgrade, versionable
 
-        private IPagePublishing Publishing { get; }
+        private IPagePublishing Publishing
+        {
+            get
+            {
+                if (_publishing != null) return Publishing;
+
+                // if publishing is used, make sure it's in the log-history
+                _publishing = new PagePublishing(Log);
+                History.Add("dnn-publishing", Log);
+                return _publishing;
+            }
+        }
+
+        private IPagePublishing _publishing;
 
         /// <summary>
         /// Constructor overload for DotNetNuke
@@ -29,7 +43,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public DnnBusinessController()
         {
             Log = new Log("DNN.BusCon", null, "starting the business controller");
-            Publishing = new PagePublishing(Log);
         }
 
         public int GetLatestVersion(int moduleId) => Publishing.GetLatestVersion(moduleId);

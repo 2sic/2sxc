@@ -109,6 +109,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
                 var cb = new ModuleContentBlock(instanceInfo, Log, tenant);
 
+                Log.Add($"found dnn mod {instanceInfo.Id}, tenant {tenant.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
                 {
                     Log.Add("cb exists");
