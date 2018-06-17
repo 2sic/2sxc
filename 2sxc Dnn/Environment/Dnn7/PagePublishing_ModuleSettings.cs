@@ -1,10 +1,12 @@
 ﻿using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     internal partial class PagePublishing
     {
-        internal class ModuleVersions
+        internal class ModuleVersions: HasLog
         {
             private const string LatestVersionSettingsKey = "LatestVersion";
 
@@ -16,7 +18,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             public ModuleInfo ModuleInfo => _settingsHelper.ModuleInfo;
 
 
-            public ModuleVersions(int moduleId)
+            public ModuleVersions(int moduleId, Log parentLog): base("Dnn.ModVer", parentLog, "()")
             {
                 _settingsHelper = new ModuleSettingsHelper(moduleId);
             }

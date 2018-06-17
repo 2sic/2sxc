@@ -4972,7 +4972,6 @@ var build_toolbars_1 = __webpack_require__(14);
 var sxc_1 = __webpack_require__(7);
 var log_1 = __webpack_require__(8);
 var log_utils_1 = __webpack_require__(93);
-// import '/2sxc-api/js/2sxc.api';
 /**
  * module & toolbar bootstrapping (initialize all toolbars after loading page)
  * this will run onReady...
@@ -4980,7 +4979,12 @@ var log_utils_1 = __webpack_require__(93);
 var initializedModules = [];
 var openedTemplatePickerOnce = false;
 var cancelledDialog;
-// const builder = new Build(null);
+// callback function to execute when mutations are observed
+var initAllModulesCallback = function (mutationsList) {
+    initAllModules(false);
+};
+// create an observer instance linked to the callback function
+var observer = new MutationObserver(initAllModulesCallback);
 $(document).ready(function () {
     cancelledDialog = localStorage.getItem('cancelled-dialog');
     if (cancelledDialog) {
@@ -4988,9 +4992,8 @@ $(document).ready(function () {
     }
     ;
     initAllModules(true);
-    // watch for ajax reloads on edit or view-changes, to re-init the toolbars etc.
-    // ReSharper disable once UnusedParameter
-    document.body.addEventListener('DOMSubtreeModified', function (event) { return initAllModules(false); }, false);
+    // start observing the body for configured mutations
+    observer.observe(document.body, { attributes: false, childList: true, subtree: true });
 });
 function initAllModules(isFirstRun) {
     $('div[data-edit-context]').each(function () {
