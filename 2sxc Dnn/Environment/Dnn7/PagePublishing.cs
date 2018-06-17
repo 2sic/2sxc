@@ -10,6 +10,7 @@ using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
@@ -17,16 +18,10 @@ using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    internal partial class PagePublishing : IPagePublishing
+    internal partial class PagePublishing : HasLog, IPagePublishing
     {
-        #region logging
-
-        private Log Log { get; }
-        #endregion
-
-        public PagePublishing(Log parentLog)
+        public PagePublishing(Log parentLog): base("Dnn.Publsh", parentLog, "()")
         {
-            Log = new Log("DNN.Publsh", parentLog);
         }
 
         public bool Supported => true;
@@ -37,20 +32,29 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             if (_cache.ContainsKey(moduleId)) return _cache[moduleId];
 
-            Log.Add($"checking requirements first time for mod:{moduleId}");
-            var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
-            PublishingMode decision;
-            var versioningEnabled = TabChangeSettings.Instance.IsChangeControlEnabled(moduleInfo.PortalID, moduleInfo.TabID);
-            if (!versioningEnabled)
-                decision = PublishingMode.DraftOptional;
-            else if (!new PortalSettings(moduleInfo.PortalID).UserInfo.IsSuperUser)
-                decision = PublishingMode.DraftRequired;
-            else
-                decision = PublishingMode.DraftRequired;
+            Log.Add($"Requirements(mod:{moduleId}) - checking first time (others will be cached)");
+            try
+            {
+                var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
+                PublishingMode decision;
+                var versioningEnabled =
+                    TabChangeSettings.Instance.IsChangeControlEnabled(moduleInfo.PortalID, moduleInfo.TabID);
+                if (!versioningEnabled)
+                    decision = PublishingMode.DraftOptional;
+                else if (!new PortalSettings(moduleInfo.PortalID).UserInfo.IsSuperUser)
+                    decision = PublishingMode.DraftRequired;
+                else
+                    decision = PublishingMode.DraftRequired;
 
-            Log.Add($"decision: {decision}");
-            _cache.Add(moduleId, decision);
-            return decision;
+                Log.Add($"decision: {decision}");
+                _cache.Add(moduleId, decision);
+                return decision;
+            }
+            catch
+            {
+                Log.Add("Requirements had exception!");
+                throw;
+            }
         }
         
         public bool IsEnabled(int moduleId) => Requirements(moduleId) != PublishingMode.DraftOptional;
@@ -58,10 +62,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public void DoInsidePublishing(int moduleId, int userId, Action<VersioningActionInfo> action)
         {
             var enabled = IsEnabled(moduleId);
-            Log.Add($"do inside publishing - module:{moduleId}, user:{userId}, enabled:{enabled}");
+            Log.Add($"DoInsidePublishing(module:{moduleId}, user:{userId}, enabled:{enabled})");
             if (enabled)
             {
-                var moduleVersionSettings = new ModuleVersions(moduleId);
+                var moduleVersionSettings = new ModuleVersions(moduleId, Log);
                 
                 // Get an new version number and submit it to DNN
                 // The submission must be made every time something changes, because a "discard" could have happened
@@ -75,31 +79,31 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             var versioningActionInfo = new VersioningActionInfo();
             action.Invoke(versioningActionInfo);
-            Log.Add("do inside publishing - completed");
+            Log.Add("/DoInsidePublishing");
         }
 
 
 
         public int GetLatestVersion(int moduleId)
         {
-            var moduleVersionSettings = new ModuleVersions(moduleId);
+            var moduleVersionSettings = new ModuleVersions(moduleId, Log);
             var ver = moduleVersionSettings.GetLatestVersion();
-            Log.Add($"get latest for m:{moduleId} ver:{ver}");
+            Log.Add($"GetLatestVersion(m:{moduleId}) = ver:{ver}");
             return ver;
         }
 
         public int GetPublishedVersion(int moduleId)
         {
-            var moduleVersionSettings = new ModuleVersions(moduleId);
+            var moduleVersionSettings = new ModuleVersions(moduleId, Log);
             var publ = moduleVersionSettings.GetPublishedVersion();
-            Log.Add($"get latest for m:{moduleId} pub:{publ}");
+            Log.Add($"GetPublishedVersion(m:{moduleId}) = pub:{publ}");
             return publ;
         }
 
 
         public void Publish(int instanceId, int version)
         {
-            Log.Add($"publish started m:{instanceId}, v:{version}");
+            Log.Add($"Publish(m:{instanceId}, v:{version})");
             try
             {
                 // publish all entites of this content block
@@ -148,7 +152,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 }
 
                 // Set published version
-                new ModuleVersions(instanceId).PublishLatestVersion();
+                new ModuleVersions(instanceId, Log).PublishLatestVersion();
                 Log.Add("publish completed");
             }
             catch (Exception ex)
@@ -163,7 +167,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, ViewDataSource data, string key)
         {
             var cont = data.Out.ContainsKey(key) ? data[key]?.List?.ToList() : null;
-            Log.Add($"try to add stream:{key}, found:{cont != null} add⋮{cont?.Count ?? 0}" );
+            Log.Add($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );
             if (cont != null) list = list.Concat(cont);
             return list;
         }

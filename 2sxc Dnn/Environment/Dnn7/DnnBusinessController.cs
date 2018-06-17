@@ -17,6 +17,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
     /// </summary>
     public class DnnBusinessController : ModuleSearchBase, IUpgradeable, IVersionable
     {
+        /// <summary>
+        /// Constructor overload for DotNetNuke
+        /// (BusinessController needs a parameterless constructor)
+        /// </summary>
+        public DnnBusinessController()
+        {
+            Log = new Log("DNN.BusCon", null, "starting");
+        }
+
         private Log Log { get; }
 
         #region DNN Interface Members - search, upgrade, versionable
@@ -29,21 +38,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
                 // if publishing is used, make sure it's in the log-history
                 _publishing = new PagePublishing(Log);
-                History.Add("dnn-publishing", Log);
+                ToSic.Eav.Logging.History.Add("dnn-publishing", Log);
                 return _publishing;
             }
         }
-
         private IPagePublishing _publishing;
 
-        /// <summary>
-        /// Constructor overload for DotNetNuke
-        /// (BusinessController needs a parameterless constructor)
-        /// </summary>
-        public DnnBusinessController()
-        {
-            Log = new Log("DNN.BusCon", null, "starting the business controller");
-        }
 
         public int GetLatestVersion(int moduleId) => Publishing.GetLatestVersion(moduleId);
 
@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public void PublishVersion(int moduleId, int version)
         {
-            Log.Add("publish m#{moduleId}, v:{version}");
+            Log.Add($"publish m#{moduleId}, v:{version}");
             Publishing.Publish(moduleId, version);
 
             try
