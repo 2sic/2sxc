@@ -2139,7 +2139,7 @@ angular.module("sxcFieldTemplates")
             paste_postprocess: function (plugin, args) {
                 var anchors = args.node.getElementsByTagName('a');
                 for (var i = 0; i < anchors.length; i++) {
-                    if (anchors[i].hostname != window.location.hostname) {
+                    if (anchors[i].element.hasAttribute('target') === false) {
                         anchors[i].setAttribute('target', '_blank');
                     }
                 }
