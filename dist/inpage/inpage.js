@@ -5150,9 +5150,14 @@ exports.contentItems = {
         if (!ok) {
             return Promise.resolve();
         }
-        // convert jQuery ajax promise object to ES6 promise
+        var params = {
+            lang: context.app.currentLanguage,
+            cbisentity: context.contentBlock.isEntity,
+            cbid: context.contentBlock.id,
+            originalparameters: JSON.stringify(context.instance.parameters),
+        };
         return new Promise(function (resolve, reject) {
-            context.sxc.webApi.delete("app-content/any/" + itemGuid, null, null, true)
+            context.sxc.webApi.delete("app-content/any/" + itemGuid, params, null, true)
                 .done(function (data, textStatus, jqXHR) {
                 if (jqXHR.status === 204 || jqXHR.status === 200) {
                     // resolve the promise with the response text
