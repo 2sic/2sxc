@@ -1804,7 +1804,7 @@ angular.module("sxcFieldTemplates")
 	"use strict";
 
     // Register in Angular Formly
-    FieldWysiwygTinyMceController.$inject = ["$scope", "languages", "tinyMceHelpers", "tinyMceToolbars", "tinyMceConfig", "tinyMceAdam", "tinyMceDnnBridge"];
+    FieldWysiwygTinyMceController.$inject = ["$scope", "languages", "tinyMceHelpers", "tinyMceToolbars", "tinyMceConfig", "tinyMceAdam", "tinyMceDnnBridge", "featuresSvc"];
     angular.module("sxcFieldTemplates")
         .config(["formlyConfigProvider", "defaultFieldWrappers", function (formlyConfigProvider, defaultFieldWrappers) {
             formlyConfigProvider.setType({
@@ -1818,7 +1818,7 @@ angular.module("sxcFieldTemplates")
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
     /*@ngInject*/
-    function FieldWysiwygTinyMceController($scope, languages, tinyMceHelpers, tinyMceToolbars, tinyMceConfig, tinyMceAdam, tinyMceDnnBridge) {
+    function FieldWysiwygTinyMceController($scope, languages, tinyMceHelpers, tinyMceToolbars, tinyMceConfig, tinyMceAdam, tinyMceDnnBridge, featuresSvc) {
         var vm = this;
         vm.enableContentBlocks = true;
 
@@ -1839,22 +1839,36 @@ angular.module("sxcFieldTemplates")
                 setup: tinyMceInitCallback
             });
 
-            // add ADAM definition, so that the callback will be able to link up to this
-            tinyMceAdam.attachAdam(vm, $scope);
+            // add paste wysiwyg ability feature if enabled
+            featuresSvc.enabled('1b13e0e6-a346-4454-a1e6-2fb18c047d20').then(
+                function (enabled) {
+                    if (enabled) {
+                        $scope.tinymceOptions = angular.extend($scope.tinymceOptions, tinyMceConfig.getPasteWysiwygAbilityOption);
+                    }
+                }
+            ).catch(function () {
+                // failed
+            }).then(function () {
+                // always do this
 
-            // add DNN Bridge, needed for webforms dnn-dialogs
-            tinyMceDnnBridge.attach(vm, $scope);
+                // add ADAM definition, so that the callback will be able to link up to this
+                tinyMceAdam.attachAdam(vm, $scope);
 
-            // check if it's an additionally translated language and load the translations
-            var lang2 = /* "de" */ languages.currentLanguage.substr(0, 2);
-            if (tinyMceConfig.languages.indexOf(lang2) >= 0)
-                angular.extend($scope.tinymceOptions, {
-                    language: lang2,
-                    language_url: "../i18n/lib/tinymce/" + lang2 + ".js"
-                });
+                // add DNN Bridge, needed for webforms dnn-dialogs
+                tinyMceDnnBridge.attach(vm, $scope);
 
-            watchDisabled($scope);
+                // check if it's an additionally translated language and load the translations
+                var lang2 = /* "de" */ languages.currentLanguage.substr(0, 2);
+                if (tinyMceConfig.languages.indexOf(lang2) >= 0)
+                    angular.extend($scope.tinymceOptions, {
+                        language: lang2,
+                        language_url: "../i18n/lib/tinymce/" + lang2 + ".js"
+                    });
+
+                watchDisabled($scope);
+            });
         };
+
         vm.activate();
 
         // callback event which tinyMce will execute when it's built the editor
@@ -1919,11 +1933,6 @@ angular.module('sxcFieldTemplates')
                     ? '<img src="' + fileItem.fullPath + '" + alt="' + fileName + '">'
                     : '<a href="' + fileItem.fullPath + '">' + fileName + '</a>';
 
-                //var body = vm.editor.getBody();
-                //vm.editor.selection.setCursorLocation(body, 0);
-                //debugger;
-                //var range = window.savedRange;
-                //vm.editor.selection.setCursorLocation(range.startContainer, range.startOffset);
                 vm.editor.insertContent(content);
             };
 
@@ -2009,6 +2018,7 @@ angular.module('sxcFieldTemplates')
 angular.module("sxcFieldTemplates")
     /*@ngInject*/
     .factory("tinyMceConfig", ["beta", function (beta) {
+
         var svc = {
             // cdn root
             cdnRoot: "//cdn.tinymce.com/4",
@@ -2108,32 +2118,32 @@ angular.module("sxcFieldTemplates")
 
                 debounce: false, // DONT slow-down model updates - otherwise we sometimes miss the last changes
 
-                paste_as_text: false,
-                paste_enable_default_filters: true,
-                paste_create_paragraphs: true,
-                paste_create_linebreaks: false,
-                paste_force_cleanup_wordpaste: true,
-                paste_use_dialog: true,
-                paste_auto_cleanup_on_paste: true,
-                paste_convert_middot_lists: true,
-                paste_convert_headers_to_strong: false,
-                paste_remove_spans: true,
-                paste_remove_styles: true,
+                paste_as_text: true
+            };
+        };
 
-                //paste_preprocess: function (plugin, args) {
-                //    console.log(args.content);
-                //    args.content += ' preprocess';
-                //},
+        // add paste wysiwyg ability feature if enabled
+        svc.getPasteWysiwygAbilityOption = {
+            paste_as_text: false,
+            paste_enable_default_filters: true,
+            paste_create_paragraphs: true,
+            paste_create_linebreaks: false,
+            paste_force_cleanup_wordpaste: true,
+            paste_use_dialog: true,
+            paste_auto_cleanup_on_paste: true,
+            paste_convert_middot_lists: true,
+            paste_convert_headers_to_strong: false,
+            paste_remove_spans: true,
+            paste_remove_styles: true,
 
-                paste_postprocess: function (plugin, args) {
-                    var anchors = args.node.getElementsByTagName('a');
-                    for (var i = 0; i < anchors.length; i++) {
-                        if (anchors[i].hostname != window.location.hostname) {
-                            anchors[i].setAttribute('target', '_blank');
-                        }
+            paste_postprocess: function (plugin, args) {
+                var anchors = args.node.getElementsByTagName('a');
+                for (var i = 0; i < anchors.length; i++) {
+                    if (anchors[i].element.hasAttribute('target') === false) {
+                        anchors[i].setAttribute('target', '_blank');
                     }
                 }
-            };
+            }
         };
 
         return svc;
