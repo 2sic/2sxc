@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -341,7 +342,7 @@ namespace ToSic.SexyContent.WebApi
 	    [HttpDelete]
 	    [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, Guid guid, [FromUri] string appPath = null)
-        {
+	    {
             Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
@@ -394,6 +395,18 @@ namespace ToSic.SexyContent.WebApi
         /// <returns></returns>
         private IAppIdentity GetAppIdFromPathOrContext(string appPath, SxcInstance sxcInstance)
         {
+            Log.Add($"detect app from query string parameters");
+            var allUrlKeyValues = ControllerContext.Request.GetQueryNameValuePairs();
+            int zoneIdFromQueryString = -1;
+            int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == "zoneId").Value, out zoneIdFromQueryString);
+            int appIdFromQueryString = -100;
+            int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == "appId").Value, out appIdFromQueryString);
+            if (zoneIdFromQueryString != -1 && appIdFromQueryString != -100)
+            {
+                Log.Add($"query string parameters detected - appId:{appIdFromQueryString}, zoneId:{zoneIdFromQueryString}");
+                return new AppIdentity(zoneIdFromQueryString, appIdFromQueryString, Log);
+            }
+
             Log.Add($"auto detect app and init eav - path:{appPath}, context null: {sxcInstance == null}");
             var appId = appPath == null || appPath == "auto"
                 ? new AppIdentity(

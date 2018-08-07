@@ -720,7 +720,11 @@ function getAndReload(context, url, params) {
  * @returns {any}
  */
 function removeFromList(context, sortOrder) {
-    return getAndReload(context, 'view/module/removefromlist', { sortOrder: sortOrder });
+    return getAndReload(context, 'view/module/removefromlist', {
+        sortOrder: sortOrder,
+        zoneId: context.app.zoneId,
+        appId: context.app.id,
+    });
 }
 exports.removeFromList = removeFromList;
 /**
@@ -731,7 +735,12 @@ exports.removeFromList = removeFromList;
  * @returns {any}
  */
 function changeOrder(context, initOrder, newOrder) {
-    return getAndReload(context, 'view/module/changeorder', { sortOrder: initOrder, destinationSortOrder: newOrder });
+    return getAndReload(context, 'view/module/changeorder', {
+        sortOrder: initOrder,
+        destinationSortOrder: newOrder,
+        zoneId: context.app.zoneId,
+        appId: context.app.id,
+    });
 }
 exports.changeOrder = changeOrder;
 /**
@@ -741,7 +750,11 @@ exports.changeOrder = changeOrder;
  * @returns {any}
  */
 function addItem(context, sortOrder) {
-    return getAndReload(context, 'view/module/additem', { sortOrder: sortOrder });
+    return getAndReload(context, 'view/module/additem', {
+        sortOrder: sortOrder,
+        zoneId: context.app.zoneId,
+        appId: context.app.id,
+    });
 }
 exports.addItem = addItem;
 /**
@@ -752,7 +765,12 @@ exports.addItem = addItem;
  * @returns {any}
  */
 function publish(context, part, sortOrder) {
-    return getAndReload(context, 'view/module/publish', { part: part, sortOrder: sortOrder });
+    return getAndReload(context, 'view/module/publish', {
+        part: part,
+        sortOrder: sortOrder,
+        zoneId: context.app.zoneId,
+        appId: context.app.id,
+    });
 }
 exports.publish = publish;
 /**
@@ -762,7 +780,11 @@ exports.publish = publish;
  * @returns {any}
  */
 function publishId(context, entityId) {
-    return getAndReload(context, 'view/module/publish', { id: entityId });
+    return getAndReload(context, 'view/module/publish', {
+        id: entityId,
+        zoneId: context.app.zoneId,
+        appId: context.app.id,
+    });
 }
 exports.publishId = publishId;
 
@@ -5151,6 +5173,8 @@ exports.contentItems = {
             return Promise.resolve();
         }
         var params = {
+            zoneId: context.app.zoneId,
+            appId: context.app.id,
             lang: context.app.currentLanguage,
             cbisentity: context.contentBlock.isEntity,
             cbid: context.contentBlock.id,
