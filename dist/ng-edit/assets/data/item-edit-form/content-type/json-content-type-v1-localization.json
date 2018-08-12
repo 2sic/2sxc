@@ -1,0 +1,255 @@
+{
+    "_": {
+        "V": 1
+    },
+    "ContentType": {
+        "Id": "a99ddf25-fc0c-4f04-9721-26bb91848566",
+        "Name": "Localization",
+        "Scope": "2SexyContent",
+        "Description": "",
+        "Attributes": [
+            {
+                "Name": "engString",
+                "Type": "String",
+                "IsTitle": true,
+                "Metadata": [
+                    {
+                        "Id": 1513,
+                        "Version": 5,
+                        "Guid": "dd491665-6f23-4558-95e3-3326a1674a7b",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "CustomJavaScript": {
+                                    "en-us": ""
+                                },
+                                "DefaultValue": {
+                                    "en-us": ""
+                                },
+                                "InputType": {
+                                    "en-us": "string-default"
+                                },
+                                "Name": {
+                                    "en-us": "engString",
+                                    "es-es,de-de": "esdeString",
+                                    "hr-hr": "hrString",
+                                    "fr-fr": "frString"
+                                },
+                                "Notes": {
+                                    "en-us": ""
+                                },
+                                "ValidationRegExJavaScript": {
+                                    "en-us": ""
+                                }
+                            },
+                            "Boolean": {
+                                "Disabled": {
+                                    "en-us": false
+                                },
+                                "Required": {
+                                    "en-us": false
+                                },
+                                "VisibleInEditUI": {
+                                    "en-us": true
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1517,
+                        "Version": 4,
+                        "Guid": "a008032a-0633-42c9-b81f-6981b6031b33",
+                        "Type": {
+                            "Name": "@String",
+                            "Id": "@String"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "DropdownValues": {
+                                    "en-us": ""
+                                },
+                                "InputType": {
+                                    "en-us": ""
+                                },
+                                "ValidationAutomatic": {
+                                    "en-us": ""
+                                },
+                                "ValidationRegEx": {
+                                    "en-us": ""
+                                },
+                                "ValidationRegExJavaScript": {
+                                    "en-us": ""
+                                }
+                            },
+                            "Number": {
+                                "RowCount": {
+                                    "en-us": 1.0
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1518,
+                        "Version": 4,
+                        "Guid": "2f08f038-6d89-4995-b574-1936d30460ef",
+                        "Type": {
+                            "Name": "@string-default",
+                            "Id": "@string-default"
+                        },
+                        "Attributes": {},
+                        "Owner": "dnn:userid=1"
+                    }
+                ]
+            },
+            {
+                "Name": "engDropdown",
+                "Type": "String",
+                "IsTitle": false,
+                "Metadata": [
+                    {
+                        "Id": 1514,
+                        "Version": 3,
+                        "Guid": "3d199952-66c2-4443-be5a-a3f1cd09c276",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "InputType": {
+                                    "en-us": "string-dropdown-query"
+                                },
+                                "Name": {
+                                    "de-de": "deDropdown",
+                                    "en-us": "engDropdown",
+                                    "es-es": "espDropdown"
+                                }
+                            },
+                            "Boolean": {
+                                "VisibleInEditUI": {
+                                    "en-us": true
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1519,
+                        "Version": 2,
+                        "Guid": "2fbdf31a-0fd8-49c0-994e-0b9b9886fe6d",
+                        "Type": {
+                            "Name": "@String",
+                            "Id": "@String"
+                        },
+                        "Attributes": {},
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1520,
+                        "Version": 2,
+                        "Guid": "3815b194-83dd-4ab0-a0f8-c9ab4fbc689a",
+                        "Type": {
+                            "Name": "@string-dropdown-query",
+                            "Id": "@string-dropdown-query"
+                        },
+                        "Attributes": {}
+                    }
+                ]
+            },
+            {
+                "Name": "engBoolean",
+                "Type": "Boolean",
+                "IsTitle": false,
+                "Metadata": [
+                    {
+                        "Id": 1515,
+                        "Version": 2,
+                        "Guid": "d0f4beb2-fa28-4cc1-bf56-b4e15a2473c7",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "InputType": {
+                                    "en-us": "boolean-default"
+                                },
+                                "Name": {
+                                    "de-de": "deBoolean",
+                                    "en-us": "engBoolean"
+                                }
+                            },
+                            "Boolean": {
+                                "VisibleInEditUI": {
+                                    "en-us": true
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1521,
+                        "Version": 1,
+                        "Guid": "b6073956-4321-4868-9f01-a41ae798addf",
+                        "Type": {
+                            "Name": "@Boolean",
+                            "Id": "@Boolean"
+                        },
+                        "Attributes": {},
+                        "Owner": "dnn:userid=1"
+                    }
+                ]
+            },
+            {
+                "Name": "engNumber",
+                "Type": "Number",
+                "IsTitle": false,
+                "Metadata": [
+                    {
+                        "Id": 1516,
+                        "Version": 2,
+                        "Guid": "3e6e836a-b266-46ef-b69d-e7a2b38aa532",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "InputType": {
+                                    "en-us": "number-default"
+                                },
+                                "Name": {
+                                    "en-us,de-de": "endeNumber",
+                                    "es-es,fr-fr": "esfrNumber"
+                                }
+                            },
+                            "Boolean": {
+                                "VisibleInEditUI": {
+                                    "en-us": true
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1522,
+                        "Version": 1,
+                        "Guid": "044519d9-c8ca-4699-a83a-67889fbbba0e",
+                        "Type": {
+                            "Name": "@Number",
+                            "Id": "@Number"
+                        },
+                        "Attributes": {},
+                        "Owner": "dnn:userid=1"
+                    }
+                ]
+            }
+        ],
+        "Metadata": []
+    }
+}

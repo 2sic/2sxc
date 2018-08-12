@@ -1,0 +1,42 @@
+{
+    "_": {
+        "V": 1
+    },
+    "Entity": {
+        "Id": 1452,
+        "Version": 1,
+        "Guid": "fc8caa5c-6b46-4961-9a13-9fbf5f1526c5",
+        "Type": {
+            "Name": "Person",
+            "Id": "09ad77bb-66e8-4a1c-92ac-27253afb251d"
+        },
+        "Attributes": {
+            "String": {
+                "Description": {
+                    "*": "<p>Description value</p>"
+                },
+                "Email": {
+                    "*": "ante@sistemi.hr"
+                },
+                "FullName": {
+                    "*": "Pere Peric"
+                },
+                "Mobile": {
+                    "*": "+234 32423"
+                },
+                "Phone": {
+                    "*": "+32423 234 2342"
+                },
+                "Position": {
+                    "*": "Position"
+                }
+            },
+            "Hyperlink": {
+                "Photo": {
+                    "*": ""
+                }
+            }
+        },
+        "Owner": "dnn:userid=1"
+    }
+}

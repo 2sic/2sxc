@@ -1,0 +1,29 @@
+{
+    "_": {
+        "V": 1
+    },
+    "Entity": {
+        "Id": 1996,
+        "Version": 3,
+        "Guid": "482299db-fdaf-4a5f-9169-4217784520a1",
+        "Type": {
+            "Name": "Books",
+            "Id": "75ecf500-7e45-4998-b683-60f01ac49f3b"
+        },
+        "Attributes": {
+            "String": {
+                "Name": {
+                    "en-us": "Second book"
+                }
+            },
+            "Entity": {
+                "Author": {
+                    "*": [
+                        "9a145645-cf38-48eb-b51d-33c2d48e48fd"
+                    ]
+                }
+            }
+        },
+        "Owner": "dnn:userid=1"
+    }
+}

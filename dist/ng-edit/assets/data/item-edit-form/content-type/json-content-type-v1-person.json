@@ -1,0 +1,62 @@
+{
+    "_": {
+        "V": 1
+    },
+    "ContentType": {
+        "Id": "09ad77bb-66e8-4a1c-92ac-27253afb251d",
+        "Name": "Person",
+        "Scope": "2SexyContent",
+        "Description": "Person",
+        "Attributes": [
+            {
+                "Name": "FullName",
+                "Type": "String",
+                "IsTitle": true,
+                "Metadata": []
+            },
+            {
+                "Name": "Position",
+                "Type": "String",
+                "IsTitle": false,
+                "Metadata": []
+            },
+            {
+                "Name": "Description",
+                "Type": "String",
+                "IsTitle": false,
+                "Metadata": []
+            },
+            {
+                "Name": "Photo",
+                "Type": "Hyperlink",
+                "IsTitle": false,
+                "Metadata": []
+            },
+            {
+                "Name": "ContactInfoGroup",
+                "Type": "Empty",
+                "IsTitle": false,
+                "Metadata": []
+            },
+            {
+                "Name": "Phone",
+                "Type": "String",
+                "IsTitle": false,
+                "Metadata": []
+            },
+            {
+                "Name": "Mobile",
+                "Type": "String",
+                "IsTitle": false,
+                "Metadata": []
+            },
+            {
+                "Name": "Email",
+                "Type": "String",
+                "IsTitle": false,
+                "Metadata": []
+            }
+        ],
+        "Metadata": []
+    }
+}

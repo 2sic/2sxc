@@ -1,0 +1,220 @@
+{
+    "Header": {
+        "V": 1,
+        "ContentTypeName": "09ad77bb-66e8-4a1c-92ac-27253afb251d",
+        "DuplicateEntity": null,
+        "EntityId": 42900,
+        "Group": null,
+        "Guid": "e8a702d2-eccd-4b0f-83bd-600d8a8449d9",
+        "Metadata": null,
+        "Prefill": null,
+        "Title": null
+    },
+    "Entity": {
+        "Id": 1814,
+        "Version": 1,
+        "Guid": "97051b00-40f7-4d3e-8f77-bda09b815063",
+        "Type": {
+            "Name": "DataPipeline",
+            "Id": "DataPipeline"
+        },
+        "Attributes": {
+            "String": {
+                "Description": {
+                    "*": ""
+                },
+                "Name": {
+                    "*": "All News Sorted"
+                },
+                "StreamsOut": {
+                    "*": "ListContent,Default"
+                },
+                "StreamWiring": {
+                    "*": "b0a69101-430a-45c8-b5fa-4040cd015b28:Default>dd525ee0-cb88-4693-983f-c403d160ae9d:Default\r\nb0a69101-430a-45c8-b5fa-4040cd015b28:Drafts>dd525ee0-cb88-4693-983f-c403d160ae9d:Drafts\r\nb0a69101-430a-45c8-b5fa-4040cd015b28:Published>dd525ee0-cb88-4693-983f-c403d160ae9d:Published\r\ndd525ee0-cb88-4693-983f-c403d160ae9d:Default>ebd20e9c-ded5-45ae-ba86-899eed61df24:Default\r\nebd20e9c-ded5-45ae-ba86-899eed61df24:Default>f897860d-5d31-42ba-b866-1d093ed46954:Default\r\nf897860d-5d31-42ba-b866-1d093ed46954:Default>Out:Default"
+                },
+                "TestParameters": {
+                    "*": "[Module:ModuleID]=434"
+                }
+            },
+            "Boolean": {
+                "AllowEdit": {
+                    "*": true
+                }
+            }
+        },
+        "Owner": "dnn:userid=1",
+        "For": {
+            "Target": "Entity"
+        },
+        "Metadata": [
+            {
+                "Id": 1815,
+                "Version": 1,
+                "Guid": "b0a69101-430a-45c8-b5fa-4040cd015b28",
+                "Type": {
+                    "Name": "DataPipelinePart",
+                    "Id": "DataPipelinePart"
+                },
+                "Attributes": {
+                    "String": {
+                        "Description": {
+                            "*": ""
+                        },
+                        "Name": {
+                            "*": "ICache"
+                        },
+                        "PartAssemblyAndType": {
+                            "*": "ToSic.Eav.DataSources.Caches.ICache, ToSic.Eav"
+                        },
+                        "VisualDesignerData": {
+                            "*": "{\r\n  \"Top\": 800,\r\n  \"Left\": 440\r\n}"
+                        }
+                    }
+                },
+                "Owner": "dnn:userid=1",
+                "For": {
+                    "Target": "Entity",
+                    "Guid": "97051b00-40f7-4d3e-8f77-bda09b815063"
+                }
+            },
+            {
+                "Id": 1816,
+                "Version": 1,
+                "Guid": "dd525ee0-cb88-4693-983f-c403d160ae9d",
+                "Type": {
+                    "Name": "DataPipelinePart",
+                    "Id": "DataPipelinePart"
+                },
+                "Attributes": {
+                    "String": {
+                        "Description": {
+                            "*": ""
+                        },
+                        "Name": {
+                            "*": "PublishingFilter"
+                        },
+                        "PartAssemblyAndType": {
+                            "*": "ToSic.Eav.DataSources.PublishingFilter, ToSic.Eav"
+                        },
+                        "VisualDesignerData": {
+                            "*": "{\r\n  \"Top\": 620,\r\n  \"Left\": 440\r\n}"
+                        }
+                    }
+                },
+                "Owner": "dnn:userid=1",
+                "For": {
+                    "Target": "Entity",
+                    "Guid": "97051b00-40f7-4d3e-8f77-bda09b815063"
+                }
+            },
+            {
+                "Id": 1817,
+                "Version": 1,
+                "Guid": "ebd20e9c-ded5-45ae-ba86-899eed61df24",
+                "Type": {
+                    "Name": "DataPipelinePart",
+                    "Id": "DataPipelinePart"
+                },
+                "Attributes": {
+                    "String": {
+                        "Description": {
+                            "*": ""
+                        },
+                        "Name": {
+                            "*": "EntityTypeFilter"
+                        },
+                        "PartAssemblyAndType": {
+                            "*": "ToSic.Eav.DataSources.EntityTypeFilter, ToSic.Eav"
+                        },
+                        "VisualDesignerData": {
+                            "*": "{\r\n  \"Top\": 440,\r\n  \"Left\": 440\r\n}"
+                        }
+                    }
+                },
+                "Owner": "dnn:userid=1",
+                "For": {
+                    "Target": "Entity",
+                    "Guid": "97051b00-40f7-4d3e-8f77-bda09b815063"
+                },
+                "Metadata": [
+                    {
+                        "Id": 1818,
+                        "Version": 1,
+                        "Guid": "51dbc154-103d-41ac-920a-5e30fbec655d",
+                        "Type": {
+                            "Name": "|Config ToSic.Eav.DataSources.EntityTypeFilter",
+                            "Id": "|Config ToSic.Eav.DataSources.EntityTypeFilter"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "TypeName": {
+                                    "*": "News"
+                                }
+                            }
+                        },
+                        "For": {
+                            "Target": "Entity",
+                            "Guid": "ebd20e9c-ded5-45ae-ba86-899eed61df24"
+                        }
+                    }
+                ]
+            },
+            {
+                "Id": 1819,
+                "Version": 1,
+                "Guid": "f897860d-5d31-42ba-b866-1d093ed46954",
+                "Type": {
+                    "Name": "DataPipelinePart",
+                    "Id": "DataPipelinePart"
+                },
+                "Attributes": {
+                    "String": {
+                        "Description": {
+                            "*": ""
+                        },
+                        "Name": {
+                            "*": "ValueSort"
+                        },
+                        "PartAssemblyAndType": {
+                            "*": "ToSic.Eav.DataSources.ValueSort, ToSic.Eav"
+                        },
+                        "VisualDesignerData": {
+                            "*": "{\r\n  \"Top\": 280,\r\n  \"Left\": 440\r\n}"
+                        }
+                    }
+                },
+                "Owner": "dnn:userid=1",
+                "For": {
+                    "Target": "Entity",
+                    "Guid": "97051b00-40f7-4d3e-8f77-bda09b815063"
+                },
+                "Metadata": [
+                    {
+                        "Id": 1820,
+                        "Version": 1,
+                        "Guid": "958cd8c0-6c17-401e-aa1b-0e4130e945b6",
+                        "Type": {
+                            "Name": "|Config ToSic.Eav.DataSources.ValueSort",
+                            "Id": "|Config ToSic.Eav.DataSources.ValueSort"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "Attributes": {
+                                    "*": "Date"
+                                },
+                                "Directions": {
+                                    "*": "Desc"
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1",
+                        "For": {
+                            "Target": "Entity",
+                            "Guid": "f897860d-5d31-42ba-b866-1d093ed46954"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "_": {
+        "V": 1
+    },
+    "Entity": {
+        "Id": 924,
+        "Version": 5,
+        "Guid": "8b531990-16b1-47ef-8469-c7cbe4d92ec9",
+        "Type": {
+            "Name": "Album",
+            "Id": "6f3d1eed-994e-4c93-82f0-011a4ca08f53"
+        },
+        "Attributes": {
+            "String": {
+                "Introduction": {
+                    "en-us": "<p>You are currently looking at this gallery with demo-data. Click on edit to fill it with your pictures, descriptions and more. You can also re-design everything as you want to.&nbsp;</p>",
+                    "de-ch": "<p>Ovo njemacki prijevod</p>"
+                },
+                "Path": {
+                    "en-us": "this-is-a-demo"
+                },
+                "Title": {
+                    "en-us": "Demo - click the edit on this title to create your own...",
+                    "de-ch": "Nemacki prijevod",
+                    "es-es": "naslov espanjol"
+                }
+            },
+            "Hyperlink": {
+                "AlbumThumbnail": {
+                    "en-us": "file:194"
+                },
+                "Images": {
+                    "en-us": ""
+                }
+            }
+        },
+        "Owner": "dnn:userid=1"
+    }
+}

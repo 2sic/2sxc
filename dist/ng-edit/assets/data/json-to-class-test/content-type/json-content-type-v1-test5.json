@@ -1,0 +1,301 @@
+{
+    "Id": "884e65b4-8f1c-4bc9-897f-147dcabeb941",
+    "Name": "Accordion",
+    "Scope": "2SexyContent",
+    "Description": "Accordion section",
+    "Attributes": [
+        {
+            "Name": "Title",
+            "Type": "String",
+            "IsTitle": true,
+            "Metadata": [
+                {
+                    "Id": 1453,
+                    "Version": 1,
+                    "Guid": "efa399ae-1451-47f6-ab8b-d2c2ce6e8478",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-default"
+                            },
+                            "Name": {
+                                "*": "Title"
+                            },
+                            "Notes": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": true
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1454,
+                    "Version": 1,
+                    "Guid": "69659c1a-7ef5-4000-b70c-cd2c4d6c7fd6",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1455,
+                    "Version": 1,
+                    "Guid": "2aaf4e9a-3ed0-47cb-91d6-8d7c38c56110",
+                    "Type": {
+                        "Name": "@string-default",
+                        "Id": "@string-default"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Icon",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1456,
+                    "Version": 1,
+                    "Guid": "f685c5a3-ebcd-40e4-9a80-5d03e67b5895",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-font-icon-picker"
+                            },
+                            "Name": {
+                                "*": "Icon"
+                            },
+                            "Notes": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1457,
+                    "Version": 1,
+                    "Guid": "da97204d-fbae-4f6c-a9d4-5a74e14f61b4",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1458,
+                    "Version": 1,
+                    "Guid": "c388f144-05ec-4711-a8ac-1a83ed48d905",
+                    "Type": {
+                        "Name": "@string-font-icon-picker",
+                        "Id": "@string-font-icon-picker"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "CssPrefix": {
+                                "*": ".glyphicon-"
+                            },
+                            "Files": {
+                                "*": "[App:Path]/dist/bootstrap-glyphicons.css"
+                            },
+                            "PreviewCss": {
+                                "*": "glyphicon"
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "DesignedContent",
+            "Type": "Entity",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1459,
+                    "Version": 1,
+                    "Guid": "fc0ea3df-b4a4-44a1-9ce9-3dc5851d336f",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "entity-content-blocks"
+                            },
+                            "Name": {
+                                "*": "Inhalte"
+                            },
+                            "Notes": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": false
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1460,
+                    "Version": 1,
+                    "Guid": "5846d679-b6b8-4582-95c3-a8f6e887964e",
+                    "Type": {
+                        "Name": "@Entity",
+                        "Id": "@Entity"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "EntityType": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "AllowMultiValue": {
+                                "*": true
+                            },
+                            "EnableAddExisting": {
+                                "*": true
+                            },
+                            "EnableCreate": {
+                                "*": true
+                            },
+                            "EnableDelete": {
+                                "*": false
+                            },
+                            "EnableEdit": {
+                                "*": true
+                            },
+                            "EnableRemove": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "InitiallyExpanded",
+            "Type": "Boolean",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1461,
+                    "Version": 1,
+                    "Guid": "27de0339-c7af-4a0c-955f-d6cac7e4e735",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "boolean-default"
+                            },
+                            "Name": {
+                                "*": "Initially expanded"
+                            },
+                            "Notes": {
+                                "*": "<p>this section of the accordion is openend by default</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1462,
+                    "Version": 1,
+                    "Guid": "c7a17a24-3dd1-4450-9c24-3b76ae8a6e28",
+                    "Type": {
+                        "Name": "@Boolean",
+                        "Id": "@Boolean"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        }
+    ],
+    "Metadata": []
+}

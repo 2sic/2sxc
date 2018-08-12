@@ -1,0 +1,31 @@
+{
+    "_": {
+        "V": 1
+    },
+    "Entity": {
+        "Id": 1954,
+        "Version": 1,
+        "Guid": "ab897114-7e7d-4eeb-8693-baa2b6af106a",
+        "Type": {
+            "Name": "TestStringInputType",
+            "Id": "e1ae1bcc-1adb-4b7f-bc58-9136de033dd5"
+        },
+        "Attributes": {
+            "String": {
+                "StringDefault": {
+                    "*": "string default data 2"
+                },
+                "StringDropDown": {
+                    "*": "Second"
+                },
+                "StringFontIconPicker": {
+                    "*": ""
+                },
+                "StringURLPath": {
+                    "*": "string-url-data-2"
+                }
+            }
+        },
+        "Owner": "dnn:userid=1"
+    }
+}

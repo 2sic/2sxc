@@ -1,0 +1,154 @@
+{
+    "_": {
+        "V": 1
+    },
+    "ContentType": {
+        "Id": "|Config ToSic.Eav.DataSources.SqlDataSource",
+        "Name": "|Config ToSic.Eav.DataSources.SqlDataSource",
+        "Scope": "System",
+        "Description": "todo description",
+        "Attributes": [
+            {
+                "Name": "Title",
+                "Type": "String",
+                "IsTitle": true,
+                "Metadata": [
+                    {
+                        "Id": 0,
+                        "Version": 1,
+                        "Guid": "00000000-0000-0000-0000-000000000000",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "DefaultValue": {
+                                    "*": "Sql Query"
+                                },
+                                "InputType": {
+                                    "*": "string-default"
+                                }
+                            },
+                            "Boolean": {
+                                "VisibleInEditUI": {
+                                    "*": true
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "Name": "ConnectionGroup",
+                "Type": "Empty",
+                "IsTitle": false,
+                "Metadata": [
+                    {
+                        "Id": 0,
+                        "Version": 1,
+                        "Guid": "00000000-0000-0000-0000-000000000000",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "DefaultValue": {
+                                    "*": ""
+                                },
+                                "InputType": {
+                                    "*": "empty-default"
+                                }
+                            },
+                            "Boolean": {
+                                "VisibleInEditUI": {
+                                    "*": true
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "Name": "ConnectionStringName",
+                "Type": "String",
+                "IsTitle": false,
+                "Metadata": [
+                    {
+                        "Id": 0,
+                        "Version": 1,
+                        "Guid": "00000000-0000-0000-0000-000000000000",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "DefaultValue": {
+                                    "*": "SiteSqlServer"
+                                },
+                                "InputType": {
+                                    "*": "string-default"
+                                }
+                            },
+                            "Boolean": {
+                                "VisibleInEditUI": {
+                                    "*": true
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "Name": "SelectCommand",
+                "Type": "String",
+                "IsTitle": false,
+                "Metadata": [
+                    {
+                        "Id": 0,
+                        "Version": 1,
+                        "Guid": "00000000-0000-0000-0000-000000000000",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "DefaultValue": {
+                                    "*": "/****** Script for SelectTopNRows command from SSMS  ******/\r\nSELECT TOP (1000) PortalId as EntityId, HomeDirectory as EntityTitle\r\n      ,[PortalID]\r\n      ,[ExpiryDate]\r\n      ,[AdministratorRoleId]\r\n      ,[GUID]\r\n      ,[DefaultLanguage]\r\n      ,[HomeDirectory]\r\n      ,[CreatedOnDate]\r\n      ,[PortalGroupID]\r\n  FROM [Portals]\r\n  Where ExpiryDate is null"
+                                },
+                                "InputType": {
+                                    "*": "string-default"
+                                }
+                            },
+                            "Boolean": {
+                                "VisibleInEditUI": {
+                                    "*": true
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "Id": 0,
+                        "Version": 1,
+                        "Guid": "00000000-0000-0000-0000-000000000000",
+                        "Type": {
+                            "Name": "@string-default",
+                            "Id": "@string-default"
+                        },
+                        "Attributes": {
+                            "Number": {
+                                "RowCount": {
+                                    "*": 10.0
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        ],
+        "Metadata": []
+    }
+}

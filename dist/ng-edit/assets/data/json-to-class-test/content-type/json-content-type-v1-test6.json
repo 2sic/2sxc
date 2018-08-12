@@ -1,0 +1,1404 @@
+{
+    "Id": "ed31a7c6-e76c-4874-958f-d67f33c02c34",
+    "Name": "BlogPost",
+    "Scope": "2SexyContent",
+    "Description": "A post for this blog",
+    "Attributes": [
+        {
+            "Name": "Content",
+            "Type": "Empty",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1614,
+                    "Version": 1,
+                    "Guid": "c57d5f47-a09f-4dc6-b315-09ac98bf66ab",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "empty-default"
+                            },
+                            "Name": {
+                                "*": "Content"
+                            },
+                            "Notes": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1615,
+                    "Version": 1,
+                    "Guid": "e2c4526e-f0f1-4c8d-9048-af5a247ce05e",
+                    "Type": {
+                        "Name": "@empty-default",
+                        "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                        "Boolean": {
+                            "DefaultCollapsed": {
+                                "*": false
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Title",
+            "Type": "String",
+            "IsTitle": true,
+            "Metadata": [
+                {
+                    "Id": 1616,
+                    "Version": 1,
+                    "Guid": "34454745-f586-45c5-bc93-ef6b773eaddc",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-default"
+                            },
+                            "Name": {
+                                "*": "Title"
+                            },
+                            "Notes": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": true
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1617,
+                    "Version": 1,
+                    "Guid": "bddee681-4382-4de9-baa7-205a62ed6ce9",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1618,
+                    "Version": 1,
+                    "Guid": "f415cb43-0063-4e8e-a41b-28f237a20e04",
+                    "Type": {
+                        "Name": "@string-default",
+                        "Id": "@string-default"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "UrlKey",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1619,
+                    "Version": 1,
+                    "Guid": "5e39fc4f-44b6-419f-a804-406e6c4b7f7e",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-url-path"
+                            },
+                            "Name": {
+                                "*": "Url Key"
+                            },
+                            "Notes": {
+                                "*": "<p>Create a google-optimized chain of words for your URL. Typically you would use the title and some keywords, then add some hyphens + use lower case. Example would be <em>create-simple-blog-app-in-15-minutes-video</em>.&nbsp;</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": true
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1620,
+                    "Version": 1,
+                    "Guid": "790de917-c468-45e0-8c67-7200773af87d",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1621,
+                    "Version": 1,
+                    "Guid": "3063bcd4-40fb-41f3-8d11-3c1e8aa7a5fa",
+                    "Type": {
+                        "Name": "@string-url-path",
+                        "Id": "@string-url-path"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "AutoGenerateMask": {
+                                "*": "[Title]"
+                            }
+                        },
+                        "Boolean": {
+                            "AllowSlashes": {
+                                "*": false
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "PublicationMoment",
+            "Type": "DateTime",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1622,
+                    "Version": 1,
+                    "Guid": "9f939c6a-7a01-4996-bd65-347e5bccad14",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "datetime-default"
+                            },
+                            "Name": {
+                                "*": "Date"
+                            },
+                            "Notes": {
+                                "*": "<p>This is when this post is released - date/time. It won't be shown on lists before this time, and this also affects sorting in most cases.&nbsp;</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": true
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1623,
+                    "Version": 1,
+                    "Guid": "18c32c3d-7c4b-47b4-ab77-b459ef2d994f",
+                    "Type": {
+                        "Name": "@DateTime",
+                        "Id": "@DateTime"
+                    },
+                    "Attributes": {
+                        "Boolean": {
+                            "UseTimePicker": {
+                                "*": false
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Body",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1624,
+                    "Version": 1,
+                    "Guid": "acdd176a-fb74-40d5-9b47-9bae21b2b135",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-wysiwyg"
+                            },
+                            "Name": {
+                                "*": "Post Body"
+                            },
+                            "Notes": {
+                                "*": "<p>This is the main part of your post.&nbsp;</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": true
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1625,
+                    "Version": 1,
+                    "Guid": "d4490fe6-b7e5-4fd7-b43c-527fdcafdc49",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DropdownValues": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "wysiwyg"
+                            },
+                            "ValidationAutomatic": {
+                                "*": ""
+                            },
+                            "ValidationRegEx": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Number": {
+                            "RowCount": {
+                                "*": 1.0
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "DesignedContent",
+            "Type": "Entity",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1626,
+                    "Version": 1,
+                    "Guid": "c2743ace-3488-41e1-a0f9-1952d054c774",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "entity-content-blocks"
+                            },
+                            "Name": {
+                                "*": "Designed Content"
+                            },
+                            "Notes": {
+                                "*": "<p>This contains all the designed content-elements like galleries, responsively layouted elements, qr-codes, sliders or whatever. Usually you edit all this from the details-page of the post, this is just here in case you want to do something more complex with the data.&nbsp;</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": false
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1627,
+                    "Version": 1,
+                    "Guid": "fe9b9721-2fd7-43e9-880a-f8711aa95ddb",
+                    "Type": {
+                        "Name": "@Entity",
+                        "Id": "@Entity"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "EntityType": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "AllowMultiValue": {
+                                "*": false
+                            },
+                            "EnableAddExisting": {
+                                "*": true
+                            },
+                            "EnableCreate": {
+                                "*": true
+                            },
+                            "EnableDelete": {
+                                "*": false
+                            },
+                            "EnableEdit": {
+                                "*": true
+                            },
+                            "EnableRemove": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Preview",
+            "Type": "Empty",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1628,
+                    "Version": 1,
+                    "Guid": "3a2bfe11-aa29-4e37-b16d-59387ba67e80",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "empty-default"
+                            },
+                            "Name": {
+                                "*": "Preview"
+                            },
+                            "Notes": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1629,
+                    "Version": 1,
+                    "Guid": "3af0cedd-96b4-4693-9347-0d7067c727a5",
+                    "Type": {
+                        "Name": "@empty-default",
+                        "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                        "Boolean": {
+                            "DefaultCollapsed": {
+                                "*": false
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Teaser",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1630,
+                    "Version": 1,
+                    "Guid": "b1502edb-5979-45d3-b604-baeb35607306",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-wysiwyg"
+                            },
+                            "Name": {
+                                "*": "Teaser"
+                            },
+                            "Notes": {
+                                "*": "<p>Short text for use in most list-views.&nbsp;</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": true
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1631,
+                    "Version": 1,
+                    "Guid": "4483c59d-648d-4fb3-9ce8-b2f9b50914e2",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DropdownValues": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "wysiwyg"
+                            },
+                            "ValidationAutomatic": {
+                                "*": ""
+                            },
+                            "ValidationRegEx": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Number": {
+                            "RowCount": {
+                                "*": 4.0
+                            },
+                            "WysiwygHeight": {
+                                "*": 200.0
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Image",
+            "Type": "Hyperlink",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1632,
+                    "Version": 1,
+                    "Guid": "5cf642bc-5ccd-4720-bd2c-c68dd52156b1",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "hyperlink-default"
+                            },
+                            "Name": {
+                                "*": "Image"
+                            },
+                            "Notes": {
+                                "*": "<p>The main image for this post - commonly used in list-views etc.</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1633,
+                    "Version": 1,
+                    "Guid": "dc2eeeba-36c9-4252-82d5-fa8ed3d80127",
+                    "Type": {
+                        "Name": "@Hyperlink",
+                        "Id": "@Hyperlink"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "Buttons": {
+                                "*": "adam,more"
+                            },
+                            "DefaultDialog": {
+                                "*": "ImageManager"
+                            },
+                            "FileFilter": {
+                                "*": ""
+                            },
+                            "Paths": {
+                                "*": "Blog"
+                            }
+                        },
+                        "Boolean": {
+                            "ShowAdam": {
+                                "*": true
+                            },
+                            "ShowFileManager": {
+                                "*": false
+                            },
+                            "ShowImageManager": {
+                                "*": true
+                            },
+                            "ShowPagePicker": {
+                                "*": false
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "ImageSquare",
+            "Type": "Boolean",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1634,
+                    "Version": 1,
+                    "Guid": "1edb9fbd-aa6f-4e99-aef8-306b496e9be1",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "boolean-default"
+                            },
+                            "Name": {
+                                "*": "Image square/tall?"
+                            },
+                            "Notes": {
+                                "*": "<p>If it's square or tall, the preview will resize differently</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1635,
+                    "Version": 1,
+                    "Guid": "a15b4dc5-a6c9-4168-b3d9-bcaa394d46cb",
+                    "Type": {
+                        "Name": "@Boolean",
+                        "Id": "@Boolean"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "CategoriesGroup",
+            "Type": "Empty",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1636,
+                    "Version": 1,
+                    "Guid": "b3565291-0570-4833-a5eb-e7f269381d22",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "empty-default"
+                            },
+                            "Name": {
+                                "*": "Categories, Tags and Author"
+                            },
+                            "Notes": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1637,
+                    "Version": 1,
+                    "Guid": "6f3ea11f-c166-436e-a426-ecf6c6c94198",
+                    "Type": {
+                        "Name": "@empty-default",
+                        "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                        "Boolean": {
+                            "DefaultCollapsed": {
+                                "*": false
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Categories",
+            "Type": "Entity",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1638,
+                    "Version": 1,
+                    "Guid": "144924d0-9515-4b80-87c7-d2e921ed9fd0",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "CustomJavaScript": {
+                                "*": ""
+                            },
+                            "DefaultValue": {
+                                "*": "3595bd17-99db-4197-b390-6c4fe6894ea7"
+                            },
+                            "InputType": {
+                                "*": "entity-default"
+                            },
+                            "Name": {
+                                "*": "Categories"
+                            },
+                            "Notes": {
+                                "*": "<p>The post category - one is required. Note that&nbsp;categories&nbsp;rarely change, and if they do, the site-admin usually wants to add new pages listing just the items of this category etc. This is why&nbsp;creating new categories is disabled in this dialog.&nbsp;</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": true
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1639,
+                    "Version": 1,
+                    "Guid": "ae15727e-fad5-4e87-ba5a-40f565737b03",
+                    "Type": {
+                        "Name": "@Entity",
+                        "Id": "@Entity"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "EntityType": {
+                                "*": "Category"
+                            }
+                        },
+                        "Boolean": {
+                            "AllowMultiValue": {
+                                "*": true
+                            },
+                            "EnableAddExisting": {
+                                "*": true
+                            },
+                            "EnableCreate": {
+                                "*": false
+                            },
+                            "EnableDelete": {
+                                "*": false
+                            },
+                            "EnableEdit": {
+                                "*": false
+                            },
+                            "EnableRemove": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Tags",
+            "Type": "Entity",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1640,
+                    "Version": 1,
+                    "Guid": "c490d170-12e0-4cde-aa96-dfcd13f35b5a",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "CustomJavaScript": {
+                                "*": ""
+                            },
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "entity-default"
+                            },
+                            "Name": {
+                                "*": "Tags"
+                            },
+                            "Notes": {
+                                "*": "<p>Tags which give this post more meaning and help connect it to other posts.&nbsp;</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1641,
+                    "Version": 1,
+                    "Guid": "2b14db64-24e6-4126-aa03-9eecf8e18155",
+                    "Type": {
+                        "Name": "@Entity",
+                        "Id": "@Entity"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "EntityType": {
+                                "*": "Tag"
+                            }
+                        },
+                        "Boolean": {
+                            "AllowMultiValue": {
+                                "*": true
+                            },
+                            "EnableAddExisting": {
+                                "*": true
+                            },
+                            "EnableCreate": {
+                                "*": true
+                            },
+                            "EnableDelete": {
+                                "*": false
+                            },
+                            "EnableEdit": {
+                                "*": true
+                            },
+                            "EnableRemove": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Author",
+            "Type": "Entity",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1642,
+                    "Version": 1,
+                    "Guid": "064a219a-13ef-43a7-a933-a45f21e5a95d",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "CustomJavaScript": {
+                                "*": ""
+                            },
+                            "DefaultValue": {
+                                "*": "81a38949-78b1-428c-ba0d-27a2acf4e2d3"
+                            },
+                            "InputType": {
+                                "*": "entity-default"
+                            },
+                            "Name": {
+                                "*": "Author"
+                            },
+                            "Notes": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1643,
+                    "Version": 1,
+                    "Guid": "06afe518-4a0a-41cb-80cf-ddd01010bf42",
+                    "Type": {
+                        "Name": "@Entity",
+                        "Id": "@Entity"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "EntityType": {
+                                "*": "Author"
+                            }
+                        },
+                        "Boolean": {
+                            "AllowMultiValue": {
+                                "*": false
+                            },
+                            "EnableAddExisting": {
+                                "*": true
+                            },
+                            "EnableCreate": {
+                                "*": true
+                            },
+                            "EnableDelete": {
+                                "*": false
+                            },
+                            "EnableEdit": {
+                                "*": true
+                            },
+                            "EnableRemove": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "SEO",
+            "Type": "Empty",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1644,
+                    "Version": 1,
+                    "Guid": "7ae9b826-2c06-4f28-a1ca-99bb81320e9f",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "empty-default"
+                            },
+                            "Name": {
+                                "*": "SEO (optional)"
+                            },
+                            "Notes": {
+                                "*": "<p>Optional values - if not specified, will automatically use title, teaser etc.</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1645,
+                    "Version": 1,
+                    "Guid": "2c878e92-f418-4490-846d-09222ba4b71c",
+                    "Type": {
+                        "Name": "@empty-default",
+                        "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                        "Boolean": {
+                            "DefaultCollapsed": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "MetaTitle",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1646,
+                    "Version": 1,
+                    "Guid": "aa73cadd-d20b-4f56-a2c1-0001d62876fc",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-default"
+                            },
+                            "Name": {
+                                "*": "Meta Title"
+                            },
+                            "Notes": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1647,
+                    "Version": 1,
+                    "Guid": "ad8e2028-0a76-4135-908c-e58a735a90a9",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1648,
+                    "Version": 1,
+                    "Guid": "c839f819-de40-4559-bcdf-932d157ce766",
+                    "Type": {
+                        "Name": "@string-default",
+                        "Id": "@string-default"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "MetaDescription",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1649,
+                    "Version": 1,
+                    "Guid": "1c2be23f-9da0-4427-9736-c705e2ae50b4",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-default"
+                            },
+                            "Name": {
+                                "*": "Meta Description"
+                            },
+                            "Notes": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1650,
+                    "Version": 1,
+                    "Guid": "5cffc8b1-bc7d-43c9-b347-6e2966759f6f",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1651,
+                    "Version": 1,
+                    "Guid": "519bf6fe-84f3-4eae-9ab2-f89c972488b3",
+                    "Type": {
+                        "Name": "@string-default",
+                        "Id": "@string-default"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "SharingGroup",
+            "Type": "Empty",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1652,
+                    "Version": 1,
+                    "Guid": "74d17b23-fbe4-4648-b112-c16198009a9d",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "empty-default"
+                            },
+                            "Name": {
+                                "*": "Sharing on Facebook, Twitter, ... (optional)"
+                            },
+                            "Notes": {
+                                "*": "<p>The following information is used in sharing scenarios. If you would like to know more, read about it at <a href=\"http://ogp.me/\" target=\"_blank\" rel=\"noopener noreferrer\">Open Graph</a>. If you leave these fields empty, other fields like the teaser will be used automatically.&nbsp;</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1653,
+                    "Version": 1,
+                    "Guid": "0a445140-24f3-471b-89af-0e3121e7b7ee",
+                    "Type": {
+                        "Name": "@empty-default",
+                        "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                        "Boolean": {
+                            "DefaultCollapsed": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "SharingDescription",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1654,
+                    "Version": 1,
+                    "Guid": "7c283b54-5909-4e39-81a5-bc316875c3a3",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-default"
+                            },
+                            "Name": {
+                                "*": "Sharing Description"
+                            },
+                            "Notes": {
+                                "*": "<p>Max. 140 characters because this is what twitter would pick up</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1655,
+                    "Version": 1,
+                    "Guid": "95ece516-c675-43c8-8b23-126bef42e070",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1656,
+                    "Version": 1,
+                    "Guid": "1181b3d4-9ae4-4721-b536-4d774f4d96da",
+                    "Type": {
+                        "Name": "@string-default",
+                        "Id": "@string-default"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        }
+    ],
+    "Metadata": []
+}

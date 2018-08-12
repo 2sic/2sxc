@@ -1,0 +1,454 @@
+{
+    "Id": "52a0ca29-f24a-423d-b04e-5254efa117e1",
+    "Name": "Tile",
+    "Scope": "2SexyContent",
+    "Description": "Tile",
+    "Attributes": [
+        {
+            "Name": "Title",
+            "Type": "String",
+            "IsTitle": true,
+            "Metadata": [
+                {
+                    "Id": 1833,
+                    "Version": 1,
+                    "Guid": "be8991f1-152c-4d18-8909-74f4917dcd8e",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-default"
+                            },
+                            "Name": {
+                                "*": "Title"
+                            },
+                            "Notes": {
+                                "*": "<p>This is the large text&nbsp;in the tile</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": true
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1834,
+                    "Version": 1,
+                    "Guid": "63bbaa47-2029-4b7e-bf82-dd30ac0bc136",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1835,
+                    "Version": 1,
+                    "Guid": "53193bcb-6330-4501-88df-90bf5ebadfd2",
+                    "Type": {
+                        "Name": "@string-default",
+                        "Id": "@string-default"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Description",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1836,
+                    "Version": 1,
+                    "Guid": "f40b2ed6-2f15-462b-9c14-31f1ed7c330a",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-default"
+                            },
+                            "Name": {
+                                "*": "Description"
+                            },
+                            "Notes": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1837,
+                    "Version": 1,
+                    "Guid": "5147f9d5-ab1f-4b75-ac58-55495b80e560",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1838,
+                    "Version": 1,
+                    "Guid": "102c76b4-60f4-4013-91b1-17429660f8fe",
+                    "Type": {
+                        "Name": "@string-default",
+                        "Id": "@string-default"
+                    },
+                    "Attributes": {
+                        "Number": {
+                            "RowCount": {
+                                "*": 1.0
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Icon",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1839,
+                    "Version": 1,
+                    "Guid": "bea95bfe-7fb3-4221-af10-f1368e370892",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": "glyphicon-star"
+                            },
+                            "InputType": {
+                                "*": "string-font-icon-picker"
+                            },
+                            "Name": {
+                                "*": "Choose either the Icon from Glyphicons..."
+                            },
+                            "Notes": {
+                                "*": "<p><a href=\"http://getbootstrap.com/components/\" target=\"_blank\">Glyphicons Halflings</a> is the basic&nbsp;icon library included in&nbsp;bootstrap</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1840,
+                    "Version": 1,
+                    "Guid": "cd7870cf-3c61-48f2-a582-557e951db8eb",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1841,
+                    "Version": 1,
+                    "Guid": "f8a03f22-15db-41be-8dd9-9ddc00c11fe1",
+                    "Type": {
+                        "Name": "@string-font-icon-picker",
+                        "Id": "@string-font-icon-picker"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "CssPrefix": {
+                                "*": ".glyphicon-"
+                            },
+                            "Files": {
+                                "*": "[App:Path]/dist/bootstrap-glyphicons.css"
+                            },
+                            "PreviewCss": {
+                                "*": "glyphicon"
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "IconFA",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1842,
+                    "Version": 1,
+                    "Guid": "336098b8-3f66-41fc-8440-0036074ab8e6",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-font-icon-picker"
+                            },
+                            "Name": {
+                                "*": "...or the Icon from Font Awesome"
+                            },
+                            "Notes": {
+                                "*": "<p><a href=\"http://fontawesome.io/\" target=\"_blank\">Font Awesome</a> is a much&nbsp;larger&nbsp;set of icons</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1843,
+                    "Version": 1,
+                    "Guid": "4e4f8bb9-79a7-47a8-9576-ca761767886d",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1844,
+                    "Version": 1,
+                    "Guid": "7b7061eb-757f-46b5-9ec1-d8244d2544e7",
+                    "Type": {
+                        "Name": "@string-font-icon-picker",
+                        "Id": "@string-font-icon-picker"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "CssPrefix": {
+                                "*": ".fa-"
+                            },
+                            "Files": {
+                                "*": "[App:Path]/dist/font-awesome.min.css"
+                            },
+                            "PreviewCss": {
+                                "*": "fa"
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Link",
+            "Type": "Hyperlink",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1845,
+                    "Version": 1,
+                    "Guid": "51fb4288-41ad-4ce1-94be-ede3f34d6d24",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "hyperlink-default"
+                            },
+                            "Name": {
+                                "*": "Link (optional)"
+                            },
+                            "Notes": {
+                                "*": "<p>A link for the entire tile. Optional - so if no link is set, then the tile can be used to list features or something and will not be clickable</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1846,
+                    "Version": 1,
+                    "Guid": "22a33711-6f41-4e00-be1a-7687eab09dee",
+                    "Type": {
+                        "Name": "@Hyperlink",
+                        "Id": "@Hyperlink"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultDialog": {
+                                "*": ""
+                            },
+                            "FileFilter": {
+                                "*": ""
+                            },
+                            "Paths": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "ShowFileManager": {
+                                "*": false
+                            },
+                            "ShowImageManager": {
+                                "*": false
+                            },
+                            "ShowPagePicker": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "TargetBlank",
+            "Type": "Boolean",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1847,
+                    "Version": 1,
+                    "Guid": "bca0d949-2835-445f-839e-fa3249584708",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": "False"
+                            },
+                            "InputType": {
+                                "*": "boolean-default"
+                            },
+                            "Name": {
+                                "*": "Open link in a new window"
+                            },
+                            "Notes": {
+                                "*": "<p>This is only recommended&nbsp;links going to other websites or to&nbsp;files / images</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1848,
+                    "Version": 1,
+                    "Guid": "b54a1044-8b23-4f61-8bc6-ea788aa754ab",
+                    "Type": {
+                        "Name": "@Boolean",
+                        "Id": "@Boolean"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        }
+    ],
+    "Metadata": []
+}

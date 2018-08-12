@@ -1,0 +1,139 @@
+{
+    "Id": "14ce1b3c-e00b-46de-8ae3-2819a6ea7a33",
+    "Name": "Link",
+    "Scope": "2SexyContent",
+    "Description": "Link",
+    "Attributes": [
+        {
+            "Name": "Title",
+            "Type": "String",
+            "IsTitle": true,
+            "Metadata": [
+                {
+                    "Id": 1764,
+                    "Version": 1,
+                    "Guid": "5de9c126-4272-4649-af6e-a9f8d1206ac3",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "InputType": {
+                                "*": ""
+                            },
+                            "Name": {
+                                "*": "Title"
+                            }
+                        },
+                        "Boolean": {
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Link",
+            "Type": "Hyperlink",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1765,
+                    "Version": 1,
+                    "Guid": "ecf47a8a-2e4b-4eac-b4e9-743c7d8981b8",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "InputType": {
+                                "*": ""
+                            },
+                            "Name": {
+                                "*": "Link"
+                            }
+                        },
+                        "Boolean": {
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Description",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1766,
+                    "Version": 1,
+                    "Guid": "c28fa6ee-9153-4a1e-bcd1-805c60ee1b28",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "InputType": {
+                                "*": ""
+                            },
+                            "Name": {
+                                "*": "Description"
+                            }
+                        },
+                        "Boolean": {
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1767,
+                    "Version": 1,
+                    "Guid": "94560dfb-1f18-4649-930b-5363c11b10e4",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DropdownValues": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "wysiwyg"
+                            },
+                            "ValidationAutomatic": {
+                                "*": ""
+                            },
+                            "ValidationRegEx": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Number": {
+                            "RowCount": {
+                                "*": 1.0
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        }
+    ],
+    "Metadata": []
+}
