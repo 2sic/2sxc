@@ -48,6 +48,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                 Entity = JsonSerializer.ToJson(e.Entity)
             }).ToList();
 
+            // set published if some data already exists
+            if (list.Any())
+                result.IsPublished = list.First().Entity.IsPublished;
+
             // load content-types
             var types = list.Select(i => i.Entity.Type).ToList();
             result.ContentTypes = types.Select(JsonSerializer.ToJson).ToList();

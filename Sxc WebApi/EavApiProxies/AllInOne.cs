@@ -12,6 +12,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public List<JsonContentType> ContentTypes;
 
         public List<InputTypeInfo> InputTypes;
+
+        public bool IsPublished = true;
     }
 
     public class EntityWithHeader2
