@@ -40,6 +40,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // load items - similar
             var result = new AllInOne();
             var entityApi = new EntityApi(appId, Log);
+            var typeRead = entityApi.AppManager.Read.ContentTypes;
             items = EntitiesController.ConvertListIndexToId(items, permCheck.App);
             var list = entityApi.GetEntitiesForEditing(appId, items);
             result.Items = list.Select(e => new EntityWithHeader2
@@ -50,15 +51,19 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // set published if some data already exists
             if (list.Any())
-                result.IsPublished = list.First().Entity.IsPublished;
+                result.IsPublished = list.First().Entity?.IsPublished ?? true; // Entity could be null (new), then true
 
             // load content-types
-            var types = list.Select(i => i.Entity.Type).ToList();
+            var types = list.Select(i
+                    // try to get the entity type, but if there is none (new), look it up according to the header
+                    => i.Entity?.Type
+                       ?? typeRead.Get(i.Header.ContentTypeName))
+                .ToList();
             result.ContentTypes = types.Select(JsonSerializer.ToJson).ToList();
 
             // load input-field configurations
-            var fields = types.SelectMany(t => t.Attributes).Select(a => a.InputType).Distinct();
-            var appInputTypes = entityApi.AppManager.Read.ContentTypes.GetInputTypes();
+            var fields = types.SelectMany(t => t.Attributes).Select(a => a.InputTypeTempBetterForNewUi).Distinct();
+            var appInputTypes = typeRead.GetInputTypes();
             result.InputTypes = appInputTypes.Where(it => fields.Contains(it.Type)).ToList();
 
             // done - return

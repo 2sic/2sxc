@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.System
                         att.AttributeId.ToString(),
                         att.Name,
                         att.Type,
-                        att.InputType,
+                        att.InputTypeTempBetterForNewUi,
                         att.IsTitle.ToString(),
                         a($"{att.Metadata.Count()}", $"attributemetadata?appid={appId}&type={type}&attribute={att.Name}"),
                         a($"{att.Metadata.Permissions.Count()}", $"attributepermissions?appid={appId}&type={type}&attribute={att.Name}")
