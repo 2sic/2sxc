@@ -27,7 +27,19 @@ import { attachAdam } from './tinymce-adam-service.js'
             console.log('myComponent initialize', this.host);
 
             // Attach adam
-            attachAdam(this)
+            attachAdam(this);
+            // Set Adam configuration
+            this.setAdamConfig({
+                adamModeConfig: { usePortalRoot: false },
+                allowAssetsInRoot: true,
+                autoLoad: false,
+                enableSelect: true,
+                folderDepth: 0,
+                fileFilter: '',
+                metadataContentTypes: '',
+                subFolder: '',
+                showImagesOnly: false  //adamModeImage?
+            });
         }
 
         render(container) {

@@ -721,9 +721,7 @@ function getAndReload(context, url, params) {
  */
 function removeFromList(context, sortOrder) {
     return getAndReload(context, 'view/module/removefromlist', {
-        sortOrder: sortOrder,
-        zoneId: context.app.zoneId,
-        appId: context.app.id,
+        sortOrder: sortOrder
     });
 }
 exports.removeFromList = removeFromList;
@@ -737,9 +735,7 @@ exports.removeFromList = removeFromList;
 function changeOrder(context, initOrder, newOrder) {
     return getAndReload(context, 'view/module/changeorder', {
         sortOrder: initOrder,
-        destinationSortOrder: newOrder,
-        zoneId: context.app.zoneId,
-        appId: context.app.id,
+        destinationSortOrder: newOrder
     });
 }
 exports.changeOrder = changeOrder;
@@ -751,9 +747,7 @@ exports.changeOrder = changeOrder;
  */
 function addItem(context, sortOrder) {
     return getAndReload(context, 'view/module/additem', {
-        sortOrder: sortOrder,
-        zoneId: context.app.zoneId,
-        appId: context.app.id,
+        sortOrder: sortOrder
     });
 }
 exports.addItem = addItem;
@@ -767,9 +761,7 @@ exports.addItem = addItem;
 function publish(context, part, sortOrder) {
     return getAndReload(context, 'view/module/publish', {
         part: part,
-        sortOrder: sortOrder,
-        zoneId: context.app.zoneId,
-        appId: context.app.id,
+        sortOrder: sortOrder
     });
 }
 exports.publish = publish;
@@ -781,9 +773,7 @@ exports.publish = publish;
  */
 function publishId(context, entityId) {
     return getAndReload(context, 'view/module/publish', {
-        id: entityId,
-        zoneId: context.app.zoneId,
-        appId: context.app.id,
+        id: entityId
     });
 }
 exports.publishId = publishId;
@@ -956,7 +946,23 @@ function extendIFrameWithSxcState(iFrame) {
     function getContext() {
         return context_1.context(api_1.getTag(reSxc()));
     }
-    var newFrm = Object.assign(iFrame, {
+    var frameElement = {
+        getAdditionalDashboardConfig: function () { return quick_dialog_config_1.QuickDialogConfig.fromContext(reSxc().manage.context); },
+        scrollToTarget: function () {
+            $('body').animate({
+                scrollTop: tagModule.offset().top - scrollTopOffset,
+            });
+        },
+        persistDia: function () { return persistDialog(getContext()); },
+        toggle: function (show) { return toggle(show); },
+        run: function (verb) { return reSxc().manage.run(verb); },
+        getManageInfo: function () { return ng_dialog_params_1.NgDialogParams.fromContext(reSxc().manage.context); },
+        showMessage: function (message) { return render_1.showMessage(getContext(), "<p class=\"no-live-preview-available\">" + message + "</p>"); },
+        reloadAndReInit: function () { return render_1.reloadAndReInitialize(getContext(), true, true); },
+        saveTemplate: function (templateId) { return templates_1.updateTemplateFromDia(getContext(), templateId, false); },
+        previewTemplate: function (templateId) { return render_1.ajaxLoad(getContext(), templateId, true); },
+    };
+    var newFrm = Object.assign(iFrame, frameElement, {
         closeCallback: null,
         rewire: function (sxc, callback, dialogName) {
             hiddenSxc = sxc;
@@ -967,15 +973,6 @@ function extendIFrameWithSxcState(iFrame) {
                 newFrm.dialogName = dialogName;
             }
         },
-        getManageInfo: function () { return ng_dialog_params_1.NgDialogParams.fromContext(reSxc().manage.context); },
-        getAdditionalDashboardConfig: function () { return quick_dialog_config_1.QuickDialogConfig.fromContext(reSxc().manage.context); },
-        persistDia: function () { return persistDialog(getContext()); },
-        scrollToTarget: function () {
-            $('body').animate({
-                scrollTop: tagModule.offset().top - scrollTopOffset,
-            });
-        },
-        toggle: function (show) { return toggle(show); },
         cancel: function () {
             newFrm.toggle(false);
             // todo: only re-init if something was changed?
@@ -984,11 +981,6 @@ function extendIFrameWithSxcState(iFrame) {
             localStorage.setItem('cancelled-dialog', 'true');
             return newFrm.closeCallback();
         },
-        run: function (verb) { return reSxc().manage.run(verb); },
-        showMessage: function (message) { return render_1.showMessage(getContext(), "<p class=\"no-live-preview-available\">" + message + "</p>"); },
-        reloadAndReInit: function () { return render_1.reloadAndReInitialize(getContext(), true, true); },
-        saveTemplate: function (templateId) { return templates_1.updateTemplateFromDia(getContext(), templateId, false); },
-        previewTemplate: function (templateId) { return render_1.ajaxLoad(getContext(), templateId, true); },
     });
     return newFrm;
 }
@@ -1133,10 +1125,10 @@ exports.ajaxLoad = ajaxLoad;
 function reloadAndReInitialize(context, forceAjax, preview) {
     // if ajax is not supported, we must reload the whole page
     if (!forceAjax && !context.app.supportsAjax) {
-        return window_in_page_1.windowInPage.location.reload();
+        window_in_page_1.windowInPage.location.reload();
+        return Promise.resolve();
     }
-    // ReSharper disable once DoubleNegationOfBoolean
-    ajaxLoad(context, main_content_block_1.MainContentBlock.cUseExistingTemplate, !!preview)
+    return ajaxLoad(context, main_content_block_1.MainContentBlock.cUseExistingTemplate, preview)
         .then(function (rez) {
         // tell Evoq that page has changed if it has changed (Ajax call)
         if (window_in_page_1.windowInPage.dnn_tabVersioningEnabled) { // this only exists in evoq or on new DNNs with tabVersioning
@@ -3281,10 +3273,10 @@ var Engine = /** @class */ (function (_super) {
         if (thirdParamIsEvent) { // no event param, but settings contains the event-object
             this.log.add('cycling parameters as event was missing & eventOrSettings seems to be an event; settings must be empty');
             event = eventOrSettings; // move it to the correct variable
-            settings = this.nameOrSettingsAddapter(nameOrSettings);
+            settings = this.nameOrSettingsAdapter(nameOrSettings);
         }
         else {
-            settings = Object.assign(eventOrSettings || {}, this.nameOrSettingsAddapter(nameOrSettings));
+            settings = Object.assign(eventOrSettings || {}, this.nameOrSettingsAdapter(nameOrSettings));
         }
         // ensure we have the right event despite browser differences
         event = event || window.event;
@@ -3298,7 +3290,7 @@ var Engine = /** @class */ (function (_super) {
      * @param event
      */
     Engine.prototype.run = function (context, nameOrSettings, event) {
-        var settings = this.nameOrSettingsAddapter(nameOrSettings);
+        var settings = this.nameOrSettingsAdapter(nameOrSettings);
         settings = this.expandSettingsWithDefaults(settings);
         var origEvent = event;
         var name = settings.action;
@@ -3338,7 +3330,7 @@ var Engine = /** @class */ (function (_super) {
      * @param nameOrSettings
      * @returns settings
      */
-    Engine.prototype.nameOrSettingsAddapter = function (nameOrSettings) {
+    Engine.prototype.nameOrSettingsAdapter = function (nameOrSettings) {
         var settings;
         // check if nameOrString is name (string) or object (settings)
         var nameIsString = typeof nameOrSettings === 'string';
@@ -5014,6 +5006,7 @@ $(document).ready(function () {
     }
     ;
     initAllModules(true);
+    // document.body.addEventListener('DOMSubtreeModified', (event) => initAllModules(false), false);
     // start observing the body for configured mutations
     observer.observe(document.body, { attributes: false, childList: true, subtree: true });
 });
@@ -5172,13 +5165,15 @@ exports.contentItems = {
         if (!ok) {
             return Promise.resolve();
         }
+        /**
+         * ZoneId and AppId are sent becase of rare, special case that is not default
+         * (default is that 2sxc is finding ZoneId and AppId on server side from ModuleId)
+         * when we need to delete entity from other app or zone, than current one.
+         * TODO: send this params, only when is necesary (value change detection for ZoneId, AppId)
+         */
         var params = {
             zoneId: context.app.zoneId,
-            appId: context.app.id,
-            lang: context.app.currentLanguage,
-            cbisentity: context.contentBlock.isEntity,
-            cbid: context.contentBlock.id,
-            originalparameters: JSON.stringify(context.instance.parameters),
+            appId: context.app.id
         };
         return new Promise(function (resolve, reject) {
             context.sxc.webApi.delete("app-content/any/" + itemGuid, params, null, true)
@@ -7255,7 +7250,7 @@ var Custom = /** @class */ (function (_super) {
     function Custom() {
         var _this = _super.call(this) || this;
         _this.makeDef('custom', 'Custom', 'bomb', true, false, {
-            code: function (context) {
+            code: function (context, event) {
                 return new Promise(function (resolve, reject) {
                     console.log('custom action with code - BETA feature, may change');
                     if (!context.button.action.params.customCode) {
@@ -7591,8 +7586,6 @@ var More = /** @class */ (function (_super) {
                     fullMenu2.classList.add("group-" + newState2);
                     fullMenu2.setAttribute('data-state', String(newState2));
                     event.preventDefault();
-                    // because of issue in Chrome we need to override CSS rules in edit.css for toolbar toggle on mouse hover
-                    var scElement = fullMenu2.closest('.sc-element');
                     function mouseenterHandler(e) {
                         fullMenu2.style.opacity = '1';
                     }
@@ -7605,11 +7598,13 @@ var More = /** @class */ (function (_super) {
                             // this is fix for Chrome issue
                             // ensure to show toolbar because X=0 and Y=0
                             fullMenu2.style.opacity = '1';
-                            console.log('workaround for toolbar hide onmouseleave issue', e.screenX, e.screenY, e.target);
+                            console.warn('workaround for toolbar hide onmouseleave issue', e.screenX, e.screenY, e.target);
                         }
                     }
+                    // because of issue in Chrome we need to override CSS rules in edit.css for toolbar toggle on mouse hover
+                    var scElement = fullMenu2.closest('.sc-element');
                     // add mouseenter and mouseleave events to parent sc-element if not already added
-                    if (fullMenu2.getAttribute('listener') !== 'true') {
+                    if (scElement && fullMenu2.getAttribute('listener') !== 'true') {
                         scElement.addEventListener('mouseenter', mouseenterHandler);
                         scElement.addEventListener('mouseleave', mouseleaveHandler);
                         fullMenu2.setAttribute('listener', 'true'); // flag that events are added

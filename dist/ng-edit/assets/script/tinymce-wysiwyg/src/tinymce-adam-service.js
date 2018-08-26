@@ -32,6 +32,11 @@ export function attachAdam(vm) {
             usePortalRoot: usePortalRoot
         })
     };
+
+    vm.setAdamConfig = function (adamConfig) {
+        console.log('tinymce setAdamConfig', adamConfig);
+        vm.adam.setAdamConfig(adamConfig)
+    };
 }
 
 
