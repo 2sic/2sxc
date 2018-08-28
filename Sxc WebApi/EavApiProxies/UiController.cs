@@ -5,7 +5,10 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json;
+using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
@@ -46,7 +49,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             result.Items = list.Select(e => new EntityWithHeader2
             {
                 Header = e.Header,
-                Entity = JsonSerializer.ToJson(e.Entity)
+                Entity = JsonSerializer.ToJson(e.Entity ?? ConstructEmptyEntity(appId, e, typeRead))
             }).ToList();
 
             // set published if some data already exists
@@ -68,6 +71,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // done - return
             return result;
+        }
+
+        private static IEntity ConstructEmptyEntity(int appId, HeaderAndEntity e, ContentTypeRuntime typeRead)
+        {
+            var type = typeRead.Get(e.Header.ContentTypeName);
+            return EntityBuilder.EntityWithAttributes(appId, e.Header.Guid, e.Header.EntityId, 0, type);
         }
 
         [HttpPost]
