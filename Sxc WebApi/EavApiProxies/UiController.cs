@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var typeRead = entityApi.AppManager.Read.ContentTypes;
             items = EntitiesController.ConvertListIndexToId(items, permCheck.App);
             var list = entityApi.GetEntitiesForEditing(appId, items);
-            result.Items = list.Select(e => new EntityWithHeader2
+            result.Items = list.Select(e => new EntityWithHeader
             {
                 Header = e.Header,
                 Entity = JsonSerializer.ToJson(e.Entity ?? ConstructEmptyEntity(appId, e, typeRead))
@@ -54,20 +54,28 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // set published if some data already exists
             if (list.Any())
-                result.IsPublished = list.First().Entity?.IsPublished ?? true; // Entity could be null (new), then true
+                result.IsPublished = list.First().Entity.IsPublished; // Entity could be null (new), then true
 
             // load content-types
             var types = list.Select(i
-                    // try to get the entity type, but if there is none (new), look it up according to the header
-                    => i.Entity?.Type
-                       ?? typeRead.Get(i.Header.ContentTypeName))
+                        // try to get the entity type, but if there is none (new), look it up according to the header
+                        => i.Entity /*?*/.Type
+                    //?? typeRead.Get(i.Header.ContentTypeName)
+                )
                 .ToList();
             result.ContentTypes = types.Select(JsonSerializer.ToJson).ToList();
 
             // load input-field configurations
-            var fields = types.SelectMany(t => t.Attributes).Select(a => a.InputTypeTempBetterForNewUi).Distinct();
-            var appInputTypes = typeRead.GetInputTypes();
-            result.InputTypes = appInputTypes.Where(it => fields.Contains(it.Type)).ToList();
+            var fields = types
+                .SelectMany(t => t.Attributes)
+                .Select(a => a.InputTypeTempBetterForNewUi)
+                .Distinct();
+            result.InputTypes = typeRead.GetInputTypes()
+                .Where(it => fields.Contains(it.Type))
+                .ToList();
+
+            // also deliver features
+            result.Features = SystemController.FeatureListWithPermissionCheck(appId, permCheck);
 
             // done - return
             return result;

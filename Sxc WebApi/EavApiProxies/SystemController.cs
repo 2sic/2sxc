@@ -8,27 +8,31 @@ using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Web API Controller for the Pipeline Designer UI
+    /// Web API Controller Which Delivers System Information
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
     [AllowAnonymous]
     public class SystemController : SxcApiControllerBase
-	{
+    {
 
-	    [HttpGet]
-	    public IEnumerable<Feature> Features(int appId)
+        [HttpGet]
+        public IEnumerable<Feature> Features(int appId)
+            => FeatureListWithPermissionCheck(appId,
+                new AppAndPermissions(SxcInstance, appId, Log));
+
+	    internal static IEnumerable<Feature> FeatureListWithPermissionCheck(int appId, AppAndPermissions permCheck)
 	    {
             // if the user has full edit permissions, he may also get the unpublic features
             // otherwise just the public Ui features
-	        var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-	        permCheck.BuildPermissionChecker(null);
+            //var permCheck = new AppAndPermissions(sxcInstance, appId, log);
+	        if (permCheck.Permissions == null)
+	            permCheck.BuildPermissionChecker(null);
 	        var includeNonPublic = permCheck.Permissions.UserMay(GrantSets.WritePublished);
 
-	        return new Eav.WebApi.SystemController()
-                .Features(appId)
-                .Where(f => includeNonPublic || f.Public == true);
+	        return Eav.WebApi.SystemController.GetFeatures(appId)
+	            .Where(f => includeNonPublic || f.Public == true);
 	    }
-        
-    }
+	}
 }
