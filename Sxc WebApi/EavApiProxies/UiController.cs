@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -9,6 +10,7 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Persistence;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
@@ -49,20 +51,14 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             result.Items = list.Select(e => new EntityWithHeader
             {
                 Header = e.Header,
-                Entity = JsonSerializer.ToJson(e.Entity ?? ConstructEmptyEntity(appId, e, typeRead))
+                Entity = JsonSerializer.ToJson(e.Entity ?? ConstructEmptyEntity(appId, e.Header, typeRead))
             }).ToList();
 
             // set published if some data already exists
-            if (list.Any())
-                result.IsPublished = list.First().Entity.IsPublished; // Entity could be null (new), then true
+            result.IsPublished = list.First()?.Entity.IsPublished ?? true; // Entity could be null (new), then true
 
             // load content-types
-            var types = list.Select(i
-                        // try to get the entity type, but if there is none (new), look it up according to the header
-                        => i.Entity /*?*/.Type
-                    //?? typeRead.Get(i.Header.ContentTypeName)
-                )
-                .ToList();
+            var types = list.Select(i => i.Entity.Type).ToList();
             result.ContentTypes = types.Select(JsonSerializer.ToJson).ToList();
 
             // load input-field configurations
@@ -81,10 +77,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             return result;
         }
 
-        private static IEntity ConstructEmptyEntity(int appId, HeaderAndEntity e, ContentTypeRuntime typeRead)
+        private static IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, ContentTypeRuntime typeRead)
         {
-            var type = typeRead.Get(e.Header.ContentTypeName);
-            return EntityBuilder.EntityWithAttributes(appId, e.Header.Guid, e.Header.EntityId, 0, type);
+            var type = typeRead.Get(header.ContentTypeName);
+            var ent = EntityBuilder.EntityWithAttributes(appId, header.Guid, header.EntityId, 0, type);
+            return ent;
         }
 
         [HttpPost]
@@ -98,8 +95,9 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             if (package.Items == null || package.Items.Count == 0)
                 throw Http.BadRequest("package didn't contain items, unexpected");
 
-            var appMan = new AppRuntime(appId, Log);
-            var ser = new JsonSerializer(appMan.Package, Log);
+            var appMan = new AppManager(appId, Log);
+            var appRead = appMan.Read;// new AppRuntime(appId, Log);
+            var ser = new JsonSerializer(appRead.Package, Log);
 
             var count = 0;
             foreach (var item in package.Items)
@@ -113,10 +111,26 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                 if (ent.Attributes.Count == 0)
                     throw Http.BadRequest($"entity {count} doesn't have attributes (or they are invalid)");
 
-                var original = appMan.Entities.Get(ent.EntityId);
+                var original = appRead.Entities.Get(ent.EntityId);
                 if (original != null && original.Attributes.Count != ent.Attributes.Count)
                     throw Http.BadRequest(
                         $"entity {count} has different amount of attributes {ent.Attributes.Count} than the original {original.Attributes.Count}");
+
+                // todo: check how to handle (save/not-save) presentation and other virtual items
+
+                // Temp solution - this should be a real entity
+                if (ent.EntityGuid != Guid.Empty)
+                {
+                    var saveOptions = SaveOptions.Build(appMan.ZoneId);
+                    saveOptions.DiscardattributesNotInType = true;
+                    saveOptions.DraftShouldBranch = package.DraftShouldBranch;
+                    saveOptions.PreserveUntouchedAttributes = true;
+                    saveOptions.PreserveExistingLanguages = true;
+
+                    // 2018-08-30 disable, not working yet
+                    //appMan.Entities.Save(ent, saveOptions);
+
+                }
 
                 count++;
             }

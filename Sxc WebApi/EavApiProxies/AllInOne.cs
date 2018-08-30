@@ -16,6 +16,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
         public bool IsPublished = true;
 
+        public bool DraftShouldBranch = false;
+
         public IEnumerable<Feature> Features;
     }
 
