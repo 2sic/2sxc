@@ -48,17 +48,23 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var typeRead = entityApi.AppManager.Read.ContentTypes;
             items = EntitiesController.ConvertListIndexToId(items, permCheck.App);
             var list = entityApi.GetEntitiesForEditing(appId, items);
-            result.Items = list.Select(e => new EntityWithHeader
+            result.Items = list.Select(e => new HeaderAndJsonEntity
             {
                 Header = e.Header,
                 Entity = JsonSerializer.ToJson(e.Entity ?? ConstructEmptyEntity(appId, e.Header, typeRead))
             }).ToList();
 
             // set published if some data already exists
-            result.IsPublished = list.First()?.Entity.IsPublished ?? true; // Entity could be null (new), then true
+            if(list.Any())
+                result.IsPublished = list.First().Entity?.IsPublished ?? true; // Entity could be null (new), then true
 
             // load content-types
-            var types = list.Select(i => i.Entity.Type).ToList();
+            var types = 
+                list.Select(i
+                    // try to get the entity type, but if there is none (new), look it up according to the header
+                    => i.Entity?.Type
+                       ?? typeRead.Get(i.Header.ContentTypeName))
+                .ToList();
             result.ContentTypes = types.Select(JsonSerializer.ToJson).ToList();
 
             // load input-field configurations
@@ -117,6 +123,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                         $"entity {count} has different amount of attributes {ent.Attributes.Count} than the original {original.Attributes.Count}");
 
                 // todo: check how to handle (save/not-save) presentation and other virtual items
+                // - seems to use .Group.SlotIsEmpty and .Group.Add as reference
 
                 // Temp solution - this should be a real entity
                 if (ent.EntityGuid != Guid.Empty)

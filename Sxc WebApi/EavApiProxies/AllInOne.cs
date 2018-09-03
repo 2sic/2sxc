@@ -8,7 +8,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
     public class AllInOne
     {
-        public List<EntityWithHeader> Items;
+        public List<HeaderAndJsonEntity> Items;
 
         public List<JsonContentType> ContentTypes;
 
@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public IEnumerable<Feature> Features;
     }
 
-    public class EntityWithHeader
+    public class HeaderAndJsonEntity
     {
         public ItemIdentifier Header { get; set; }
         public JsonEntity Entity { get; set; }
