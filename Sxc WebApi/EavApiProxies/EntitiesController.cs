@@ -65,7 +65,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var list = new EntityApi(appId, Log).GetEntitiesForEditing(appId, items);
 
             // Reformat to the Entity-WithLanguage setup
-            var listAsEwH = list.Select(p => new EntityWithHeaderOldFormat
+            var listAsEwH = list.Select(p => new BundleEntityWithLanguages
             {
                 Header = p.Header,
                 Entity = p.Entity != null
@@ -133,7 +133,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
 	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeaderOldFormat> items, [FromUri] bool partOfPage = false)
+        public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<BundleEntityWithLanguages> items, [FromUri] bool partOfPage = false)
         {
             // log and do security check
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
@@ -166,7 +166,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             return postSaveIds;
         }
 
-	    private Dictionary<Guid, int> SaveAndProcessGroups(PermissionCheckBase permChecker, int appId, List<EntityWithHeaderOldFormat> items, bool partOfPage)
+	    private Dictionary<Guid, int> SaveAndProcessGroups(PermissionCheckBase permChecker, int appId, List<BundleEntityWithLanguages> items, bool partOfPage)
 	    {
 	        Log.Add($"SaveAndProcessGroups(..., appId:{appId}, items:{items?.Count}), partOfPage:{partOfPage}");
 
@@ -179,7 +179,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
 	        var eavEntitiesController = new Eav.WebApi.EntitiesController(Log);
 	        ((Serializer)eavEntitiesController.Serializer).Sxc = SxcInstance;
-	        var ids = eavEntitiesController.SaveMany(appId, items, partOfPage, forceDraft);
+	        var ids = eavEntitiesController.SaveManyBundles(appId, items, partOfPage, forceDraft);
 
 	        Log.Add("check groupings");
 	        // now assign all content-groups as needed
@@ -197,7 +197,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	        return ids;
 	    }
 
-        private static void DoAdditionalGroupProcessing(SxcInstance sxcInstance, Log log, int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeaderOldFormat>> groupItems)
+        private static void DoAdditionalGroupProcessing(SxcInstance sxcInstance, Log log, int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, BundleEntityWithLanguages>> groupItems)
         {
             var myLog = new Log("2Ap.GrpPrc", log, "start");
             var app = new App(new DnnTenant(PortalSettings.Current), appId);

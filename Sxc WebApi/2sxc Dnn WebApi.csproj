@@ -98,6 +98,8 @@
     <Compile Include="Adam\AdamUploader.cs" />
     <Compile Include="Adam\SecurityChecks.cs" />
     <Compile Include="Adam\UploadResult.cs" />
+    <Compile Include="EavApiProxies\ValidatorBase.cs" />
+    <Compile Include="EavApiProxies\SaveDataValidator.cs" />
     <Compile Include="System\InsightsController_IsAlive.cs" />
     <Compile Include="System\InsightsController_App.cs" />
     <Compile Include="System\InsightsController_Help.cs" />

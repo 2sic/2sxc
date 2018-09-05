@@ -14,7 +14,6 @@ using ToSic.Eav.Persistence;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.SexyContent.WebApi.Errors;
 using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -93,56 +92,73 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [HttpPost]
         public string Save([FromBody] AllInOne package, int appId, bool partOfPage)
         {
+            var validator = new SaveDataValidator(package, Log);
             // perform some basic validation checks
-            if (package.ContentTypes != null)
-                throw Http.BadRequest("package contained content-types, unexpected");
-            if (package.InputTypes != null)
-                throw Http.BadRequest("package contained input types, unexpected");
-            if (package.Items == null || package.Items.Count == 0)
-                throw Http.BadRequest("package didn't contain items, unexpected");
+            if (!validator.ContainsOnlyExpectedNodes(out var exp))
+                throw exp;
+
+            // todo: check contentblockappid in group-header, because this is where it should be saved!
+            var contextAppId = appId;
+            var targetAppId = package.Items.First().Header.Group.ContentBlockAppId;
+            if (targetAppId != 0)
+            {
+                Log.Add($"detected content-block app to use: {targetAppId}; in context of app {contextAppId}");
+                appId = targetAppId;
+            }
 
             var appMan = new AppManager(appId, Log);
-            var appRead = appMan.Read;// new AppRuntime(appId, Log);
+            var appRead = appMan.Read;
             var ser = new JsonSerializer(appRead.Package, Log);
+            validator.PrepareForEntityChecks(appRead);
+
+            #region permission checks
+            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
+            if (!permCheck.EnsureAll(GrantSets.WriteSomething, package.Items.Select(i => i.Header).ToList(), out exp))
+                throw exp;
+            if (!permCheck.UserUnrestrictedAndFeatureEnabled(out exp))
+                throw exp;
+            #endregion
 
             var count = 0;
-            foreach (var item in package.Items)
+            var itemsToSave = package.Items.Select(i => new HeaderJsonAndEntity(i));
+            foreach (var item in itemsToSave)
             {
-                if (item.Header == null || item.Entity == null)
-                    throw Http.BadRequest($"item {count} header or entity is missing");
+                item.RealEntity = ser.Deserialize(item.Entity, false, false);
+                if (!validator.EntityIsOk(count, item.RealEntity, out exp))
+                    throw exp;
 
-                var ent = ser.Deserialize(item.Entity, false, false);
-                if (ent == null)
-                    throw Http.BadRequest($"entity {count} couldn't deserialize");
-                if (ent.Attributes.Count == 0)
-                    throw Http.BadRequest($"entity {count} doesn't have attributes (or they are invalid)");
-
-                var original = appRead.Entities.Get(ent.EntityId);
-                if (original != null && original.Attributes.Count != ent.Attributes.Count)
-                    throw Http.BadRequest(
-                        $"entity {count} has different amount of attributes {ent.Attributes.Count} than the original {original.Attributes.Count}");
 
                 // todo: check how to handle (save/not-save) presentation and other virtual items
                 // - seems to use .Group.SlotIsEmpty and .Group.Add as reference
+                Log.Add("all data tests passed");
 
                 // Temp solution - this should be a real entity
-                if (ent.EntityGuid != Guid.Empty)
+                if (!item.Header.Group.SlotIsEmpty)
                 {
+                    Log.Add("Will save...");
                     var saveOptions = SaveOptions.Build(appMan.ZoneId);
                     saveOptions.DiscardattributesNotInType = true;
                     saveOptions.DraftShouldBranch = package.DraftShouldBranch;
                     saveOptions.PreserveUntouchedAttributes = true;
                     saveOptions.PreserveExistingLanguages = true;
 
-                    // 2018-08-30 disable, not working yet
-                    //appMan.Entities.Save(ent, saveOptions);
+                    // can't save yet - too many pieces missing
+                    //appMan.Entities.Save(item.RealEntity, saveOptions);
 
+                }
+                else // slot is empty, may need to remove
+                {
+                    Log.Add("will not save - maybe remove item if it already existed (slot should be empty");
+                    // todo: handle this
                 }
 
                 count++;
             }
 
+            // todo: update group if this was added / changed
+
             return "call to save worked - save doesn't work yet";
         }
+        
     }
 }

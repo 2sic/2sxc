@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.ImportExport.Json.Format;
+using ToSic.Eav.Interfaces;
 using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -21,9 +22,20 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public IEnumerable<Feature> Features;
     }
 
-    public class HeaderAndJsonEntity
+    public class HeaderAndJsonEntity: BundleWithHeader<JsonEntity>
     {
-        public ItemIdentifier Header { get; set; }
-        public JsonEntity Entity { get; set; }
+        //public ItemIdentifier Header { get; set; }
+        //public JsonEntity Entity { get; set; }
+    }
+
+    public class HeaderJsonAndEntity : HeaderAndJsonEntity
+    {
+        public IEntity RealEntity;
+
+        public HeaderJsonAndEntity(HeaderAndJsonEntity original)
+        {
+            Header = original.Header;
+            Entity = original.Entity;
+        }
     }
 }
