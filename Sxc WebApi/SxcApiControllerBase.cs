@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.WebApi
         internal SxcInstance SxcInstance { get; private set; }
         
 
-        protected static DnnAppAndDataHelpers GetContext(SxcInstance sxcInstance, Log log) 
+        internal static DnnAppAndDataHelpers GetContext(SxcInstance sxcInstance, Log log) 
             => new DnnAppAndDataHelpers(sxcInstance, sxcInstance?.Log ?? log);
 
         /// <summary>

@@ -17,6 +17,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi.Permissions;
 using Factory = ToSic.Eav.Factory;
+using Guid = System.Guid;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -65,7 +66,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var list = new EntityApi(appId, Log).GetEntitiesForEditing(appId, items);
 
             // Reformat to the Entity-WithLanguage setup
-            var listAsEwH = list.Select(p => new BundleEntityWithLanguages
+            var listAsEwH = list.Select(p => new BundleWithHeader<EntityWithLanguages>
             {
                 Header = p.Header,
                 Entity = p.Entity != null
@@ -133,125 +134,46 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
 	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<BundleEntityWithLanguages> items, [FromUri] bool partOfPage = false)
+        public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<BundleWithHeader<EntityWithLanguages>> items, [FromUri] bool partOfPage = false)
         {
             // log and do security check
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
-            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-            if(!permCheck.EnsureAll(GrantSets.WriteSomething, items.Select(i => i.Header).ToList(), out var exp))
-                throw exp;
-            if(!permCheck.UserUnrestrictedAndFeatureEnabled(out exp))
-                throw exp;
+            var permCheck = SaveHelpers.Security.DoSaveSecurityCheck(SxcInstance, appId, items, Log);
 
-            Log.Add("passed security checks");
+            Dictionary<Guid, int> SaveOldWithGroups(bool forceSaveAsDraft) => 
+                SaveOldFormatKeepTillReplaced(appId, items, partOfPage, forceSaveAsDraft);
 
-            // list of saved IDs
-            Dictionary<Guid, int> postSaveIds = null;
-
-            // use dnn versioning if partOfPage
-            if (partOfPage)
-            {
-                Log.Add("partOfPage - save with publishing");
-                var versioning = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
-                var context = GetContext(SxcInstance, Log);
-                versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, 
-                    args => postSaveIds = SaveAndProcessGroups(permCheck.Permissions, appId, items, partOfPage));
-            }
-            else
-            {
-                Log.Add("partOfPage false, save without publishing");
-                postSaveIds = SaveAndProcessGroups(permCheck.Permissions, appId, items, partOfPage);
-            }
-            Log.Add(() => $"post save IDs: {string.Join(",", postSaveIds.Select(psi => psi.Key + "(" + psi.Value + ")"))}");
-            return postSaveIds;
+            return SaveHelpers.DnnPublishing
+                .SaveWithinDnnPagePublishing(SxcInstance, appId, items, partOfPage, 
+                SaveOldWithGroups, permCheck, Log);
         }
 
-	    private Dictionary<Guid, int> SaveAndProcessGroups(PermissionCheckBase permChecker, int appId, List<BundleEntityWithLanguages> items, bool partOfPage)
+
+
+
+
+
+	    private Dictionary<Guid, int> SaveOldFormatKeepTillReplaced(int appId, 
+            List<BundleWithHeader<EntityWithLanguages>> items, 
+            bool partOfPage,
+            bool forceDraft)
 	    {
 	        Log.Add($"SaveAndProcessGroups(..., appId:{appId}, items:{items?.Count}), partOfPage:{partOfPage}");
-
-	        var allowWriteLive = permChecker.UserMay(GrantSets.WritePublished);
-
-            var forceDraft = !allowWriteLive;
-	        Log.Add($"allowWriteLive: {allowWriteLive}, forceDraft: {forceDraft}");
 
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
 	        var eavEntitiesController = new Eav.WebApi.EntitiesController(Log);
 	        ((Serializer)eavEntitiesController.Serializer).Sxc = SxcInstance;
-	        var ids = eavEntitiesController.SaveManyBundles(appId, items, partOfPage, forceDraft);
+	        var ids = eavEntitiesController.SaveMany(appId, items, partOfPage, forceDraft);
 
-	        Log.Add("check groupings");
 	        // now assign all content-groups as needed
-	        var groupItems = items.Where(i => i.Header.Group != null)
-	            .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add)
-	            .ToList();
-
-	        // if it's new, it has to be added to a group
-	        // only add if the header wants it, AND we started with ID unknown
-	        if (groupItems.Any())
-	            DoAdditionalGroupProcessing(SxcInstance, Log, appId, ids, groupItems);
-	        else
-	            Log.Add("no additional group processing necessary");
+            //new SaveHelpers.ContentGroup(SxcInstance, Log)
+            //    .DoGroupProcessingIfNecessary(appId, items, ids);
 
 	        return ids;
 	    }
 
-        private static void DoAdditionalGroupProcessing(SxcInstance sxcInstance, Log log, int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, BundleEntityWithLanguages>> groupItems)
-        {
-            var myLog = new Log("2Ap.GrpPrc", log, "start");
-            var app = new App(new DnnTenant(PortalSettings.Current), appId);
-            var userMayEdit = sxcInstance.UserMayEdit ;
 
-            app.InitData(userMayEdit, sxcInstance.Environment.PagePublishing.IsEnabled(sxcInstance.EnvInstance.Id /*ActiveModule.ModuleID*/), sxcInstance.Data.ConfigurationProvider);
-
-            foreach (var entitySets in groupItems)
-            {
-                myLog.Add("processing:" + entitySets.Key);
-                var contItem =
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ContentLower) ??
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ListContentLower);
-                if (contItem == null)
-                    throw new Exception("unexpected group-entity assigment, cannot figure it out");
-
-                var presItem =
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.PresentationLower) ??
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ListPresentationLower);
-
-                // Get group to assign to and parameters
-                var contentGroup = app.ContentGroupManager.GetContentGroup(contItem.Header.Group.Guid);
-                var partName = contItem.Header.Group.Part;
-
-                // var part = contentGroup[partName];
-                var index = contItem.Header.Group.Index;
-
-                // Get saved entity (to get its ID)
-                if (!postSaveIds.ContainsKey(contItem.Entity.Guid))
-                    throw new Exception("Saved entity not found - not able to update ContentGroup");
-
-                var postSaveId = postSaveIds[contItem.Entity.Guid];
-
-                int? presentationId = null;
-
-                if (presItem != null)
-                {
-                    if (postSaveIds.ContainsKey(presItem.Entity.Guid))
-                        presentationId = postSaveIds[presItem.Entity.Guid];
-
-                    presentationId = presItem.Header.Group.SlotIsEmpty ? null : presentationId;
-                    // use null if it shouldn't have one
-                }
-                // add or update slots
-                var reallyAddGroup = contItem.Entity.Id == 0; // only really add if it's really new
-                if (contItem.Header.Group.Add && reallyAddGroup) // this cannot be auto-detected, it must be specified
-                    contentGroup.AddContentAndPresentationEntity(partName, index, postSaveId, presentationId);
-                else // if (part.Count <= index || part[index] == null)
-                    contentGroup.UpdateEntityIfChanged(partName, index, postSaveId, true, presentationId);
-            }
-
-            // update-module-title
-            sxcInstance.ContentBlock.Manager.UpdateTitle();
-        }
 
 	    /// <summary>
 	    /// Get all Entities of specified Type
