@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var result = new AllInOne();
             var entityApi = new EntityApi(appId, Log);
             var typeRead = entityApi.AppManager.Read.ContentTypes;
-            items = new SaveHelpers.ContentGroup(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);
+            items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);
             var list = entityApi.GetEntitiesForEditing(appId, items);
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {

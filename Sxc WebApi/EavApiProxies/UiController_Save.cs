@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     {
         // todo: replace object with Dictionary<Guid, int> when ready
         [HttpPost]
-        public object Save([FromBody] AllInOne package, int appId, bool partOfPage)
+        public Dictionary<Guid, int> Save([FromBody] AllInOne package, int appId, bool partOfPage)
         {
             Log.Add($"save started with a#{appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 
@@ -57,33 +57,24 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             })
             .ToList();
 
-            Log.Add("itemsToSave generated, all data tests passed");
-
-            //Dictionary<Guid, int> SaveOldWithGroups(bool forceSaveAsDraft) =>
-            //    SaveNewWrapper(appMan, items, forceSaveAsDraft);
+            Log.Add("items to save generated, all data tests passed");
 
             return new SaveHelpers.DnnPublishing(SxcInstance, Log)
                 .SaveWithinDnnPagePublishing(appId, items, partOfPage,
-                    forceSaveAsDraft => SaveNewWrapper(appMan, items, forceSaveAsDraft),
+                    forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);
-
-
-
-            // todo: update group if this was added / changed
-
-            return "call to save worked - save doesn't work yet";
         }
 
-        public Dictionary<Guid, int> SaveNewWrapper(AppManager appMan, List<BundleWithHeader<IEntity>> items, bool draftOnly)
+        public Dictionary<Guid, int> DoSave(AppManager appMan, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
         {
             var entitySetToImport = items
                 .Where(entity => entity.Header.Group == null || !entity.Header.Group.SlotIsEmpty)
                 .ToList();
 
-            var eavEntitiesController = new Eav.WebApi.EntitiesController(Log);
+            var save = new Eav.WebApi.SaveHelpers.SaveEntities(Log);
+            save.UpdateGuidAndPublishedAndSaveMany(appMan, entitySetToImport, forceSaveAsDraft);
 
-            return eavEntitiesController
-                .UpdateGuidAndPublishedAndSaveMany(appMan, items, entitySetToImport, draftOnly);
+            return save.GenerateIdList(appMan.Read.Entities, items);
 
         }
 

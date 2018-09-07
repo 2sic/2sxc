@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             permCheck.InitAppData();
 
-            items = new SaveHelpers.ContentGroup(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);
+            items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);
 
             var list = new EntityApi(appId, Log).GetEntitiesForEditing(appId, items);
 

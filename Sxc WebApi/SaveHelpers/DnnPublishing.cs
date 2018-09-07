@@ -34,8 +34,8 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             {
                 var ids = call.Invoke(forceSaveAsDraft);
                 // now assign all content-groups as needed
-                new ContentGroup(SxcInstance, Log)
-                    .DoGroupProcessingIfNecessary(appId, items, ids);
+                new ContentGroupList(SxcInstance, Log)
+                    .IfInListUpdateList(appId, items, ids);
                 return ids;
             }
 
@@ -47,12 +47,12 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
                 var versioning = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 var context = SxcApiControllerBase.GetContext(SxcInstance, Log);
                 versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID,
-                    args => postSaveIds = SaveAndSaveGroups(internalSaveMethod, forceDraft));// SaveAndProcessGroups(appId, items, partOfPage, forceDraft));
+                    args => postSaveIds = SaveAndSaveGroups(internalSaveMethod, forceDraft));
             }
             else
             {
                 Log.Add("partOfPage false, save without publishing");
-                postSaveIds = SaveAndSaveGroups(internalSaveMethod, forceDraft);// SaveAndProcessGroups(appId, items, partOfPage, forceDraft);
+                postSaveIds = SaveAndSaveGroups(internalSaveMethod, forceDraft);
             }
 
             Log.Add(() => $"post save IDs: {string.Join(",", postSaveIds.Select(psi => psi.Key + "(" + psi.Value + ")"))}");
