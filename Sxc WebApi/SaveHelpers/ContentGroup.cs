@@ -3,21 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.WebApi.SaveHelpers
 {
-    internal class ContentGroup: HasLog
+    internal class ContentGroup: SaveHelperBase
     {
-        internal SxcInstance SxcInstance;
-
-        public ContentGroup(SxcInstance sxcInstance, Log parentLog = null) : base("Api.GrpPrc", parentLog)
-        {
-            SxcInstance = sxcInstance;
-        }
+        public ContentGroup(SxcInstance sxcInstance, Log parentLog) : base(sxcInstance, parentLog, "Api.GrpPrc") {}
 
         internal void DoGroupProcessingIfNecessary<T>(int appId, List<BundleWithHeader<T>> items, Dictionary<Guid, int> ids)
         {
@@ -29,23 +23,21 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             // if it's new, it has to be added to a group
             // only add if the header wants it, AND we started with ID unknown
             if (groupItems.Any())
-                DoAdditionalGroupProcessing(SxcInstance, Log, appId, ids, groupItems);
+                DoAdditionalGroupProcessing(appId, ids, groupItems);
             else
                 Log.Add("no additional group processing necessary");
         }
 
-        private static void DoAdditionalGroupProcessing<T>(
-            SxcInstance sxcInstance,
-            Log log,
+        private void DoAdditionalGroupProcessing<T>(
             int appId,
             Dictionary<Guid, int> postSaveIds,
-            IEnumerable<IGrouping<string, BundleWithHeader<T>/*<EntityWithLanguages>*/>> groupItems)
+            IEnumerable<IGrouping<string, BundleWithHeader<T>>> groupItems)
         {
-            var myLog = new Log("2Ap.GrpPrc", log, "start");
+            var myLog = new Log("2Ap.GrpPrc", Log, "start");
             var app = new App(new DnnTenant(PortalSettings.Current), appId);
-            var userMayEdit = sxcInstance.UserMayEdit;
+            var userMayEdit = SxcInstance.UserMayEdit;
 
-            app.InitData(userMayEdit, sxcInstance.Environment.PagePublishing.IsEnabled(sxcInstance.EnvInstance.Id), sxcInstance.Data.ConfigurationProvider);
+            app.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(SxcInstance.EnvInstance.Id), SxcInstance.Data.ConfigurationProvider);
 
             foreach (var entitySets in groupItems)
             {
@@ -92,7 +84,62 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             }
 
             // update-module-title
-            sxcInstance.ContentBlock.Manager.UpdateTitle();
+            SxcInstance.ContentBlock.Manager.UpdateTitle();
+        }
+
+        internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> items, App app)
+        {
+            Log.Add("ConvertListIndexToId()");
+            var newItems = new List<ItemIdentifier>();
+            foreach (var reqItem in items)
+            {
+                // only do special processing if it's a "group" item
+                if (reqItem.Group == null)
+                {
+                    newItems.Add(reqItem);
+                    continue;
+                }
+
+                var contentGroup = app.ContentGroupManager.GetContentGroup(reqItem.Group.Guid);
+                var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(reqItem.Group.Part);
+
+                // if there is no content-type for this, then skip it (don't deliver anything)
+                if (contentTypeStaticName == "")
+                    continue;
+
+                ConvertListIndexToEntityIds(contentGroup, reqItem, contentTypeStaticName);
+
+                newItems.Add(reqItem);
+            }
+            return newItems;
+        }
+
+
+        private static void ConvertListIndexToEntityIds(SexyContent.ContentGroup contentGroup, ItemIdentifier reqItem,
+            string contentTypeStaticName)
+        {
+            var part = contentGroup[reqItem.Group.Part];
+            reqItem.ContentTypeName = contentTypeStaticName;
+            if (!reqItem.Group.Add && // not in add-mode
+                part.Count > reqItem.Group.Index && // has as many items as desired
+                part[reqItem.Group.Index] != null) // and the slot has something
+                reqItem.EntityId = part[reqItem.Group.Index].EntityId;
+
+            // tell the UI that it should not actually use this data yet, keep it locked
+            if (!reqItem.Group.Part.ToLower().Contains(AppConstants.PresentationLower))
+                return;
+
+            reqItem.Group.SlotCanBeEmpty = true; // all presentations can always be locked
+
+            if (reqItem.EntityId != 0)
+                return;
+
+            reqItem.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
+
+            reqItem.DuplicateEntity =
+                reqItem.Group.Part.ToLower() == AppConstants.PresentationLower
+                    ? contentGroup.Template.PresentationDemoEntity?.EntityId
+                    : contentGroup.Template.ListPresentationDemoEntity?.EntityId;
         }
 
     }

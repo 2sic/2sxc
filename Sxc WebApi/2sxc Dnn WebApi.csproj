@@ -104,6 +104,7 @@
     <Compile Include="EavApiProxies\SaveDataValidator.cs" />
     <Compile Include="SaveHelpers\ContentGroup.cs" />
     <Compile Include="SaveHelpers\DnnPublishing.cs" />
+    <Compile Include="SaveHelpers\SaveHelperBase.cs" />
     <Compile Include="SaveHelpers\Security.cs" />
     <Compile Include="System\InsightsController_IsAlive.cs" />
     <Compile Include="System\InsightsController_App.cs" />

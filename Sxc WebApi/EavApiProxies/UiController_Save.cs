@@ -41,7 +41,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             validator.PrepareForEntityChecks(appRead);
 
             // permission checks
-            var permCheck = SaveHelpers.Security.DoSaveSecurityCheck(SxcInstance, appId, package.Items, Log);
+            var permCheck = new SaveHelpers.Security(SxcInstance, Log).DoSaveSecurityCheck(appId, package.Items);
 
             var items = package.Items.Select(i =>
             {
@@ -59,12 +59,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             Log.Add("itemsToSave generated, all data tests passed");
 
-            Dictionary<Guid, int> SaveOldWithGroups(bool forceSaveAsDraft) =>
-                SaveNewWrapper(appMan, items, forceSaveAsDraft);
+            //Dictionary<Guid, int> SaveOldWithGroups(bool forceSaveAsDraft) =>
+            //    SaveNewWrapper(appMan, items, forceSaveAsDraft);
 
-            //return SaveHelpers.DnnPublishing
-            //    .SaveWithinDnnPagePublishing(SxcInstance, appId, items, partOfPage,
-            //        SaveOldWithGroups, permCheck, Log);
+            return new SaveHelpers.DnnPublishing(SxcInstance, Log)
+                .SaveWithinDnnPagePublishing(appId, items, partOfPage,
+                    forceSaveAsDraft => SaveNewWrapper(appMan, items, forceSaveAsDraft),
+                    permCheck);
 
 
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -7,8 +6,6 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Interfaces;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -16,7 +13,6 @@ using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi.Permissions;
-using Factory = ToSic.Eav.Factory;
 using Guid = System.Guid;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -61,7 +57,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             permCheck.InitAppData();
 
-            items = ConvertListIndexToId(items, permCheck.App);
+            items = new SaveHelpers.ContentGroup(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);
 
             var list = new EntityApi(appId, Log).GetEntitiesForEditing(appId, items);
 
@@ -78,59 +74,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             return listAsEwH;
         }
 
-	    internal static List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> items, App app)
-	    {
-	        var newItems = new List<ItemIdentifier>();
-	        foreach (var reqItem in items)
-	        {
-	            // only do special processing if it's a "group" item
-	            if (reqItem.Group == null)
-	            {
-	                newItems.Add(reqItem);
-	                continue;
-	            }
 
-	            var contentGroup = app.ContentGroupManager.GetContentGroup(reqItem.Group.Guid);
-	            var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(reqItem.Group.Part);
-
-	            // if there is no content-type for this, then skip it (don't deliver anything)
-	            if (contentTypeStaticName == "")
-	                continue;
-
-	            ConvertListIndexToEntityIds(contentGroup, reqItem, contentTypeStaticName);
-
-	            newItems.Add(reqItem);
-	        }
-	        return newItems;
-	    }
-
-
-	    private static void ConvertListIndexToEntityIds(ContentGroup contentGroup, ItemIdentifier reqItem,
-	        string contentTypeStaticName)
-	    {
-	        var part = contentGroup[reqItem.Group.Part];
-	        reqItem.ContentTypeName = contentTypeStaticName;
-	        if (!reqItem.Group.Add && // not in add-mode
-	            part.Count > reqItem.Group.Index && // has as many items as desired
-	            part[reqItem.Group.Index] != null) // and the slot has something
-	            reqItem.EntityId = part[reqItem.Group.Index].EntityId;
-
-	        // tell the UI that it should not actually use this data yet, keep it locked
-	        if (!reqItem.Group.Part.ToLower().Contains(AppConstants.PresentationLower))
-                return;
-
-	        reqItem.Group.SlotCanBeEmpty = true; // all presentations can always be locked
-
-	        if (reqItem.EntityId != 0)
-                return;
-
-	        reqItem.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
-
-	        reqItem.DuplicateEntity =
-	            reqItem.Group.Part.ToLower() == AppConstants.PresentationLower
-	                ? contentGroup.Template.PresentationDemoEntity?.EntityId
-	                : contentGroup.Template.ListPresentationDemoEntity?.EntityId;
-	    }
 
 	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
@@ -138,18 +82,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             // log and do security check
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
-            var permCheck = SaveHelpers.Security.DoSaveSecurityCheck(SxcInstance, appId, items, Log);
+            var permCheck = new SaveHelpers.Security(SxcInstance, Log).DoSaveSecurityCheck(appId, items);
 
-            Dictionary<Guid, int> SaveOldWithGroups(bool forceSaveAsDraft) => 
-                SaveOldFormatKeepTillReplaced(appId, items, partOfPage, forceSaveAsDraft);
-
-            return SaveHelpers.DnnPublishing
-                .SaveWithinDnnPagePublishing(SxcInstance, appId, items, partOfPage, 
-                SaveOldWithGroups, permCheck, Log);
+            return new SaveHelpers.DnnPublishing(SxcInstance, Log)
+                .SaveWithinDnnPagePublishing(appId, items, partOfPage,
+                    forceSaveAsDraft => SaveOldFormatKeepTillReplaced(appId, items, partOfPage, forceSaveAsDraft),
+                    permCheck);
         }
-
-
-
 
 
 
@@ -164,13 +103,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
 	        var eavEntitiesController = new Eav.WebApi.EntitiesController(Log);
 	        ((Serializer)eavEntitiesController.Serializer).Sxc = SxcInstance;
-	        var ids = eavEntitiesController.SaveMany(appId, items, partOfPage, forceDraft);
-
-	        // now assign all content-groups as needed
-            //new SaveHelpers.ContentGroup(SxcInstance, Log)
-            //    .DoGroupProcessingIfNecessary(appId, items, ids);
-
-	        return ids;
+	        return eavEntitiesController.SaveMany(appId, items, partOfPage, forceDraft);
 	    }
 
 
