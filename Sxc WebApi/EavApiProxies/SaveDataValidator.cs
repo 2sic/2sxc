@@ -54,8 +54,14 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             {
                 if (item.Header == null || item.Entity == null)
                     Add($"item {list.IndexOf(item)} header or entity is missing");
-                else if (!item.Header.Group.SlotIsEmpty && item.Header.Guid != item.Entity.Guid)
-                    Add($"item {list.IndexOf(item)} header / entity guid missmatch");
+                else if(item.Header.Guid != item.Entity.Guid) // check this first (because .Group may not exist)
+                {
+                    if(item.Header.Group == null)
+                        Add($"item {list.IndexOf(item)} has guid missmatch on header/entity, and doesn't have a group");
+                    else if (!item.Header.Group.SlotIsEmpty)
+                        Add($"item {list.IndexOf(item)} header / entity guid missmatch");
+                    // otherwise we're fine
+                }
             }
         }
 
