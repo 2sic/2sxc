@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Web.Http;
 using ToSic.Eav.Apps;
+using ToSic.Eav.ImportExport.Json.Format;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -34,24 +36,52 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                 Add("package didn't contain items, unexpected!");
             else
             {
-                var list = Package.Items;
-
-                // ensure all want to save to the same app
-                var firstInnerContentAppId = list.First().Header.Group.ContentBlockAppId;
-                if(list.Any(i => i.Header.Group.ContentBlockAppId != firstInnerContentAppId))
-                    Add("not all items have the same Group.ContentBlockAppId - this is required");
-
-                foreach (var item in list)
-                {
-                    if (item.Header == null || item.Entity == null)
-                        Add($"item {list.IndexOf(item)} header or entity is missing");
-                    else if (!item.Header.Group.SlotIsEmpty && item.Header.Guid != item.Entity.Guid)
-                        Add($"item {list.IndexOf(item)} header / entity guid missmatch");
-                }
-                
+                // do various validity tests on items
+                VerifyAllGroupAssignmentsValid(Package.Items);
+                ValidateEachItemInBundle(Package.Items);
             }
 
             return BuildTrueIfOk(out preparedException, "ContainsOnlyExpectedNodes() done");
+        }
+
+        /// <summary>
+        /// Do various validity checks on each item
+        /// </summary>
+        private void ValidateEachItemInBundle(IList<BundleWithHeader<JsonEntity>> list)
+        {
+            Log.Add($"ValidateEachItemInBundle({list.Count})");
+            foreach (var item in list)
+            {
+                if (item.Header == null || item.Entity == null)
+                    Add($"item {list.IndexOf(item)} header or entity is missing");
+                else if (!item.Header.Group.SlotIsEmpty && item.Header.Guid != item.Entity.Guid)
+                    Add($"item {list.IndexOf(item)} header / entity guid missmatch");
+            }
+        }
+
+        /// <summary>
+        /// ensure all want to save to the same assignment type - either in group or not!
+        /// </summary>
+        private void VerifyAllGroupAssignmentsValid(IReadOnlyCollection<BundleWithHeader<JsonEntity>> list)
+        {
+            Log.Add($"VerifyAllGroupAssignmentsValid({list.Count})");
+            var groupAssignments = list.Select(i => i.Header.Group).Where(g => g != null).ToList();
+            if (groupAssignments.Count == 0)
+            {
+                Log.Add("none of the items is part of a list/group");
+                return;
+            }
+
+            if (groupAssignments.Count != list.Count)
+                Add($"Items in package with group: {groupAssignments} " +
+                    $"- should be 0 or {list.Count} (items in list) " +
+                    "- must stop, never expect items to come from different sources");
+            else
+            {
+                var firstInnerContentAppId = groupAssignments.First().ContentBlockAppId;
+                if (list.Any(i => i.Header.Group.ContentBlockAppId != firstInnerContentAppId))
+                    Add("not all items have the same Group.ContentBlockAppId - this is required when using groups");
+            }
         }
 
 
