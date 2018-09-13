@@ -14,6 +14,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
+using ToSic.SexyContent.WebApi.Permissions;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi
@@ -116,7 +117,8 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            var appIdentity = GetAppIdOrThrowIfNotAllowed(SxcInstance, appId, Log);
+            var appIdentity = new AppPermissionBeforeUsing(SxcInstance, Log)
+                .GetAppIdentityOrThrowIfNotAllowed(appId);
 
             App app = null;
             try

@@ -1,6 +1,7 @@
 ﻿using DotNetNuke.Entities.Modules;
 using System.Collections.Generic;
 using System.Web.Http.Controllers;
+using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Interfaces;
@@ -9,7 +10,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Dnn;
-using ToSic.SexyContent.WebApi.Errors;
+using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -34,51 +35,16 @@ namespace ToSic.SexyContent.WebApi
         internal static DnnAppAndDataHelpers GetContext(SxcInstance sxcInstance, Log log) 
             => new DnnAppAndDataHelpers(sxcInstance, sxcInstance?.Log ?? log);
 
-        /// <summary>
-        /// Retrieve an AppIdentity object for an app, based on the context and alternate appId
-        /// Will only allow apps outside of current zone if it's a superuser
-        /// </summary>
-        /// <returns></returns>
-        protected static IAppIdentity GetAppIdOrThrowIfNotAllowed(DnnAppAndDataHelpers context, int appId/*, bool superUser*/)
-        {
-            IAppIdentity appIdentity;
-            var superUser = context.Dnn.Portal.UserInfo.IsSuperUser;
 
-            if (context.App.AppId == appId)
-                appIdentity = context.App;
-            else
-            {
-                // check if app is in current zone - allow switching zones for host users
-                var appRun = new AppRuntime(appId, context.Log);
-                if (appRun.ZoneId == context.App.ZoneId)
-                    appIdentity = appRun;
-                else if (superUser)
-                    appIdentity = appRun;
-                else
-                    throw Http.PermissionDenied(
-                        $"accessing app {appId} in zone {appRun.ZoneId} is not allowed for this user");
-            }
-            return appIdentity;
-        }
-
-        /// <summary>
-        /// Retrieve an AppIdentity object for an app, based on the context and alternate appId
-        /// Will only allow apps outside of current zone if it's a superuser
-        /// </summary>
-        /// <returns></returns>
-        protected static IAppIdentity GetAppIdOrThrowIfNotAllowed(SxcInstance sxcInstance, int appId, Log log) 
-            => GetAppIdOrThrowIfNotAllowed(GetContext(sxcInstance, log), appId);
 
         #region Security Checks 
 
-        /// <summary>
-        /// Check if a user may do something - and throw an error if the permission is not given
-        /// </summary>
         internal void PerformSecurityCheck(IAppIdentity appIdentity, string contentType,
             Grants grant, ModuleInfo module, IEntity specificItem = null)
-            => new Security(PortalSettings, Log)
-                .FindCtCheckSecurityOrThrow(appIdentity, contentType, new List<Grants> {grant},
-                    specificItem, module);
+            => new AppPermissionBeforeUsing(SxcInstance, Log)
+                .PerformSecurityCheck(PortalSettings, appIdentity, contentType, grant, module, specificItem);
+
+
 
         #endregion
 

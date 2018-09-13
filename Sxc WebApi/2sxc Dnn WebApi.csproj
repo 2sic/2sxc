@@ -102,6 +102,7 @@
     <Compile Include="EavApiProxies\UiController_Load.cs" />
     <Compile Include="EavApiProxies\ValidatorBase.cs" />
     <Compile Include="EavApiProxies\SaveDataValidator.cs" />
+    <Compile Include="Permissions\AppPermissionBeforeUsing.cs" />
     <Compile Include="SaveHelpers\ContentGroupList.cs" />
     <Compile Include="SaveHelpers\DnnPublishing.cs" />
     <Compile Include="SaveHelpers\SaveHelperBase.cs" />

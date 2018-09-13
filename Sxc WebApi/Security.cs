@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.WebApi
         protected PortalSettings Portal;
 
         public Security(PortalSettings portal, Log parentLog) 
-            : base("Api.SecChk", parentLog) 
+            : base("Api.SecChk", parentLog, null, "Security") 
             => Portal = portal;
 
 
@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.WebApi
             IEntity specificItem,
             ModuleInfo module)
         {
-            Log.Add($"security check for type:{contentType}, grant:{grant}, useContext:{module != null}, zone/app:{appIdentity.ZoneId}/{appIdentity.AppId}, item:{specificItem?.EntityId}");
+            Log.Add(() => $"security check for type:{contentType}, grants:[{string.Join(",", grant)}], useContext:{module != null}, zone/app:{appIdentity.ZoneId}/{appIdentity.AppId}, item:{specificItem?.EntityId}");
             // make sure we have the right appId, zoneId and module-context
             var ct = FindContentTypeOrThrow(appIdentity.ZoneId, appIdentity.AppId, contentType/*, module*/);
 
@@ -54,18 +54,10 @@ namespace ToSic.SexyContent.WebApi
             throw Errors.Http.InformativeErrorForTypeAccessDenied(contentType, grant, staticNameIsGuid);
         }
 
-        private static IContentType FindContentTypeOrThrow(int? zoneId, int appId, string contentType/*, ModuleInfo module*/)
+        private static IContentType FindContentTypeOrThrow(int? zoneId, int appId, string contentType)
         {
-            // accessing the app for the ID only works if we have a context
-            // from the module
-            // this is not the case in certain API-calls, then context-access shouldn't happen
-            //var useContext = module != null;
-            //var usedZoneId = useContext ? zoneId : null;
-            // 2018-04-10 disabled this - should always check for the app provided in the request
-            //if (appId <= 0 && useContext) appId = app?.AppId ?? appId;
-
             // Ensure that we can find this content-type 
-            var cache = DataSource.GetCache(/*usedZoneId,*/zoneId, appId);
+            var cache = DataSource.GetCache(zoneId, appId);
             var ct = cache.GetContentType(contentType);
             if (ct == null)
                 throw Errors.Http.WithLink(HttpStatusCode.NotFound, 

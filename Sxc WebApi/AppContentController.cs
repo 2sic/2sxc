@@ -35,8 +35,6 @@ namespace ToSic.SexyContent.WebApi
     [AllowAnonymous]
     public class AppContentController : SxcApiControllerBase
 	{
-	    //private EntitiesController _entitiesController;
-
 	    protected override void Initialize(HttpControllerContext controllerContext)
 	    {
 	        base.Initialize(controllerContext); // very important!!!
@@ -98,8 +96,8 @@ namespace ToSic.SexyContent.WebApi
 
             var itm = getOne(appIdentity.AppId);
             var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(/*context.App,*/ appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null, itm);
-            return /*_entitiesController*/InitEavAndSerializer(appIdentity.AppId).Serializer.Prepare(itm);
+            PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null, itm);
+            return InitEavAndSerializer(appIdentity.AppId).Serializer.Prepare(itm);
         }
 
         #endregion
@@ -334,7 +332,7 @@ namespace ToSic.SexyContent.WebApi
 
             var itm = new EntityApi(appIdentity.AppId, Log).GetOrThrow(contentType, id);
             var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(/*context.App,*/ appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
+            PerformSecurityCheck(appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
             new EntityApi(appIdentity.AppId, Log).Delete(itm.Type.Name, id);
         }
 
@@ -346,11 +344,13 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
+
             var entityApi = new EntityApi(appIdentity.AppId, Log);
 	        var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
             var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(/*context.App,*/ appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
+            PerformSecurityCheck(appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
+
             entityApi.Delete(itm.Type.Name, guid);
         }
 
@@ -387,7 +387,9 @@ namespace ToSic.SexyContent.WebApi
                 ((Serializer)entitiesController.Serializer).Sxc = SxcInstance;
             return entitiesController;
         }
+        #endregion
 
+        #region Detect current app based on stuff in the path or query parameters
         /// <summary>
         /// Retrieve the appId - either based on the parameter, or if missing, use context
         /// Note that this will fail, if both appPath and context are missing
@@ -395,31 +397,41 @@ namespace ToSic.SexyContent.WebApi
         /// <returns></returns>
         private IAppIdentity GetAppIdFromPathOrContext(string appPath, SxcInstance sxcInstance)
         {
-            Log.Add($"detect app from query string parameters");
-            var allUrlKeyValues = ControllerContext.Request.GetQueryNameValuePairs();
-            int zoneIdFromQueryString = -1;
-            int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == "zoneId").Value, out zoneIdFromQueryString);
-            int appIdFromQueryString = -100;
-            int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == "appId").Value, out appIdFromQueryString);
-            if (zoneIdFromQueryString != -1 && appIdFromQueryString != -100)
+            var wrapLog = Log.Call("GetAppIdFromPathOrContext", $"{appPath}, ...", "detect app from query string parameters");
+
+            // try to override detection based on additional zone/app-id in urls
+            var appId = GetAppIdentityFromQueryAppZone();
+            
+            if(appId == null)
             {
-                Log.Add($"query string parameters detected - appId:{appIdFromQueryString}, zoneId:{zoneIdFromQueryString}");
-                return new AppIdentity(zoneIdFromQueryString, appIdFromQueryString, Log);
+                Log.Add($"auto detect app and init eav - path:{appPath}, context null: {sxcInstance == null}");
+                appId = appPath == null || appPath == "auto"
+                    ? new AppIdentity(
+                        sxcInstance?.ZoneId ??
+                        throw new ArgumentException("try to get app-id from context, but none found"),
+                        sxcInstance.AppId ?? 0, Log)
+                    : GetCurrentAppIdFromPath(appPath);
             }
 
-            Log.Add($"auto detect app and init eav - path:{appPath}, context null: {sxcInstance == null}");
-            var appId = appPath == null || appPath == "auto"
-                ? new AppIdentity(
-                    sxcInstance?.ZoneId ??
-                        throw new ArgumentException("try to get app-id from context, but none found"),
-                    sxcInstance.AppId ?? 0, Log)
-                : GetCurrentAppIdFromPath(appPath);
+            wrapLog(appId.LogState);
+
             return appId;
         }
 
-        #endregion
+	    private IAppIdentity GetAppIdentityFromQueryAppZone()
+	    {
+	        var allUrlKeyValues = ControllerContext.Request.GetQueryNameValuePairs().ToList();
+	        var ok1 = int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == "zoneId").Value, out var zoneIdFromQueryString);
+	        var ok2 = int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == "appId").Value, out var appIdFromQueryString);
+	        if (ok1 && ok2)
+	        {
+	            Log.Add($"Params in URL detected - will use appId:{appIdFromQueryString}, zoneId:{zoneIdFromQueryString}");
+	            return new AppIdentity(zoneIdFromQueryString, appIdFromQueryString, Log);
+	        }
+	        return null;
+	    }
 
-       
+        #endregion
 
     }
 }

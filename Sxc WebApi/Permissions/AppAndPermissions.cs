@@ -26,19 +26,23 @@ namespace ToSic.SexyContent.WebApi.Permissions
         private int ZoneId { get; }
         private readonly PortalSettings _portalForSecurityCheck;
 
+        public bool SamePortal { get; }
 
-        public AppAndPermissions(SxcInstance sxcInstance, int appId, Log parentLog) : base("Api.Perms", parentLog, "init")
+        public AppAndPermissions(SxcInstance sxcInstance, int appId, Log parentLog) : base("Api.Perms", parentLog)
         {
+            var wrapLog = Log.New("AppAndPermissions", $"..., appId: {appId}, ...");
             SxcInstance = sxcInstance;
             var tenant = new DnnTenant(PortalSettings.Current);
             var environment = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
             var contextZoneId = environment.ZoneMapper.GetZoneId(tenant.Id);
             ZoneId = SystemManager.ZoneIdOfApp(appId);
             App = new App(tenant, ZoneId, appId, parentLog: Log);
-            var samePortal = contextZoneId == ZoneId;
-            _portalForSecurityCheck = samePortal ? PortalSettings.Current : null;
-            Log.Add($"AppAndPermissions for z/a:{ZoneId}/{appId} t/z:{tenant.Id}/{contextZoneId} same:{samePortal}");
+            SamePortal = contextZoneId == ZoneId;
+            _portalForSecurityCheck = SamePortal ? PortalSettings.Current : null;
+            wrapLog($"ready for z/a:{ZoneId}/{appId} t/z:{tenant.Id}/{contextZoneId} same:{SamePortal}");
         }
+
+        //public void ThrowIfPortalSwitchWithoutSuperUserAccess
 
         public void InitAppData()
         {
@@ -55,6 +59,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
         internal bool EnsureAll(List<Grants> grants, List<ItemIdentifier> items, out HttpResponseException preparedException)
         {
+            Log.Add(() => $"EnsureAll([{string.Join(",", grants)}], ...)");
             var appMan = new AppRuntime(App.AppId, Log);
 
             // build list of type names
@@ -77,14 +82,14 @@ namespace ToSic.SexyContent.WebApi.Permissions
                     return false;
 
             preparedException = null;
+            Log.Add("EnsureAll(): ok");
             return true;
-            //return set;
         }
 
 
         internal bool Ensure(List<Grants> grants, string typeName, out HttpResponseException preparedException)
         {
-            Log.Add($"ensure / throw for type:{typeName}");
+            Log.Add(() => $"Ensure([{string.Join(",", grants)}], {typeName}) or throw");
             BuildPermissionChecker(typeName);
             if (!Permissions.UserMay(grants))
             {
@@ -92,14 +97,14 @@ namespace ToSic.SexyContent.WebApi.Permissions
                 preparedException = Http.PermissionDenied("required permissions for this type are not given");
                 throw preparedException;
             }
-            Log.Add("ensure was ok");
+            Log.Add("Ensure(...): ok");
             preparedException = null;
             return true;
         }
 
         internal bool UserUnrestrictedAndFeatureEnabled(out HttpResponseException preparedException)
         {
-            Log.Add("check UserUnrestrictedAndFeatureEnabled");
+            var wrapLog = Log.Call("UserUnrestrictedAndFeatureEnabled", "");
             // 1. check if user is restricted
             var userIsRestricted = !Permissions.UserMay(GrantSets.WritePublished);
 
@@ -110,7 +115,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
                 preparedException = Http.PermissionDenied($"low-permission users may not access this - {Features.MsgMissingSome(feats)}");
                 return false;
             }
-            Log.Add("UserUnrestrictedAndFeatureEnabled ok");
+            wrapLog("ok");
             preparedException = null;
             return true;
         }
@@ -125,7 +130,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         /// <returns></returns>
         internal void BuildPermissionChecker(string typeName)
         {
-            Log.Add("build permission check");
+            Log.Add($"BuildPermissionChecker({typeName})");
             // now do relevant security checks
             var type = typeName == null
                 ? null

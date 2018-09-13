@@ -34,7 +34,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
-            ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
+            new AppPermissionBeforeUsing(SxcInstance, Log)
+                .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
             return new EntityApi(appId, Log).GetOne(contentType, id, cultureCode);  // note that the culture-code isn't actually used...
         }
 
@@ -43,7 +44,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public dynamic GetManyForEditing([FromBody] List<ItemIdentifier> items, int appId)
         {
-            Log.Add($"get many a#{appId}, items⋮{items.Count}");
+            var wrapLog = Log.Call("GetManyForEditing", $"get many a#{appId}, items⋮{items.Count}");
 
             // to do full security check, we'll have to see what content-type is requested
             var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
@@ -65,7 +66,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                     : null
             }).ToList();
 
-            Log.Add($"will return items⋮{list.Count}");
+            wrapLog($"will return items⋮{list.Count}");
             return listAsEwH;
         }
 
@@ -116,7 +117,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
-	        ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
+	        new AppPermissionBeforeUsing(SxcInstance, Log)
+                .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
             return new EntityApi(appId, Log).GetEntitiesForAdmin(contentType);
 	    }
 
@@ -126,7 +128,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
-            ConfirmPermissionsOrThrow(contentType, appId, Grants.Delete);
+            new AppPermissionBeforeUsing(SxcInstance, Log)
+                .ConfirmPermissionsOrThrow(contentType, appId, GrantSets.DeleteSomething);
             new EntityApi(appId, Log).Delete(contentType, id, force);
         }
 
@@ -135,17 +138,14 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
-            ConfirmPermissionsOrThrow(contentType, appId, Grants.Delete);
+            new AppPermissionBeforeUsing(SxcInstance, Log)
+                .ConfirmPermissionsOrThrow(contentType, appId, GrantSets.DeleteSomething);
             new EntityApi(appId, Log).Delete(contentType, guid, force);
         }
 
-	    private void ConfirmPermissionsOrThrow(string contentType, int appId, Grants grant)
-	    {
-            // check if admin rights, then ok
-	        var context = GetContext(SxcInstance, Log);
-	        var zaId = GetAppIdOrThrowIfNotAllowed(context, appId); 
-	        PerformSecurityCheck(zaId, contentType, grant, context.Dnn.Module);
-	    }
+
+
+
 
         #region Content Types
         /// <summary>

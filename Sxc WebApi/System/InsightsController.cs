@@ -12,6 +12,7 @@ namespace ToSic.Sxc.WebApi.System
         {
             base.Initialize(controllerContext); // very important!!!
             Log.Rename("Api.Debug");
+            Log.New("InsightsController");
         }
 
         /// <summary>
