@@ -34,13 +34,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
-            // check if admin rights, then ok
-            var context = GetContext(SxcInstance, Log);
-            var zaId = new AppIdentity(context.App.ZoneId, appId, Log);
-            PerformSecurityCheck(zaId, contentType, Grants.Read, context.Dnn.Module);
-
-            // note that the culture-code isn't actually used...
-            return new EntityApi(appId, Log).GetOne(contentType, id, cultureCode);
+            ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
+            return new EntityApi(appId, Log).GetOne(contentType, id, cultureCode);  // note that the culture-code isn't actually used...
         }
 
 
@@ -121,14 +116,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
-            //   // check if admin rights, then ok
-            var context = GetContext(SxcInstance, Log);
-
-            var zaId = GetAppIdentity(context, appId, PortalSettings.UserInfo.IsSuperUser);
-
-            PerformSecurityCheck(zaId, contentType, Grants.Read, context.Dnn.Module);
-
-            return new EntityApi(zaId.AppId, Log).GetEntitiesForAdmin(contentType);
+	        ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
+            return new EntityApi(appId, Log).GetEntitiesForAdmin(contentType);
 	    }
 
 
@@ -137,25 +126,26 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
-            // check if admin rights, then ok
-            var context = GetContext(SxcInstance, Log);
-            var zaId = new AppIdentity(context.App.ZoneId, appId, Log);
-            PerformSecurityCheck(zaId, contentType, Grants.Delete, context.Dnn.Module);
-
+            ConfirmPermissionsOrThrow(contentType, appId, Grants.Delete);
             new EntityApi(appId, Log).Delete(contentType, id, force);
         }
-        [HttpDelete]
+
+	    [HttpDelete]
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
-            // check if admin rights, then ok
-            var context = GetContext(SxcInstance, Log);
-            var zaId = new AppIdentity(context.App.ZoneId, appId, Log);
-            PerformSecurityCheck(zaId, contentType, Grants.Delete, context.Dnn.Module);
+            ConfirmPermissionsOrThrow(contentType, appId, Grants.Delete);
             new EntityApi(appId, Log).Delete(contentType, guid, force);
         }
 
+	    private void ConfirmPermissionsOrThrow(string contentType, int appId, Grants grant)
+	    {
+            // check if admin rights, then ok
+	        var context = GetContext(SxcInstance, Log);
+	        var zaId = GetAppIdOrThrowIfNotAllowed(context, appId); 
+	        PerformSecurityCheck(zaId, contentType, grant, context.Dnn.Module);
+	    }
 
         #region Content Types
         /// <summary>

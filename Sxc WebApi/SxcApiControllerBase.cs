@@ -38,13 +38,11 @@ namespace ToSic.SexyContent.WebApi
         /// Retrieve an AppIdentity object for an app, based on the context and alternate appId
         /// Will only allow apps outside of current zone if it's a superuser
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="appId"></param>
-        /// <param name="superUser"></param>
         /// <returns></returns>
-        protected static IAppIdentity GetAppIdentity(DnnAppAndDataHelpers context, int appId, bool superUser)
+        protected static IAppIdentity GetAppIdOrThrowIfNotAllowed(DnnAppAndDataHelpers context, int appId/*, bool superUser*/)
         {
             IAppIdentity appIdentity;
+            var superUser = context.Dnn.Portal.UserInfo.IsSuperUser;
 
             if (context.App.AppId == appId)
                 appIdentity = context.App;
@@ -62,6 +60,14 @@ namespace ToSic.SexyContent.WebApi
             }
             return appIdentity;
         }
+
+        /// <summary>
+        /// Retrieve an AppIdentity object for an app, based on the context and alternate appId
+        /// Will only allow apps outside of current zone if it's a superuser
+        /// </summary>
+        /// <returns></returns>
+        protected static IAppIdentity GetAppIdOrThrowIfNotAllowed(SxcInstance sxcInstance, int appId, Log log) 
+            => GetAppIdOrThrowIfNotAllowed(GetContext(sxcInstance, log), appId);
 
         #region Security Checks 
 
