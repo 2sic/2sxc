@@ -4,7 +4,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Logging;
+using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -13,7 +13,7 @@ using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi.Permissions
 {
-    internal class PermissionsForApp: HasLog, IContextPermissionCheck
+    internal class PermissionsForApp: MultiPermissionCheck
     {
         /// <summary>
         /// The current app which will be used and can be re-used externally
@@ -29,7 +29,8 @@ namespace ToSic.SexyContent.WebApi.Permissions
         public PermissionsForApp(SxcInstance sxcInstance, int appId, Log parentLog) :
             this(sxcInstance, SystemManager.ZoneIdOfApp(appId), appId, parentLog) { }
 
-        protected PermissionsForApp(SxcInstance sxcInstance, int zoneId, int appId, Log parentLog) : base("Api.Perms", parentLog)
+        protected PermissionsForApp(SxcInstance sxcInstance, int zoneId, int appId, Log parentLog) 
+            : base("Api.Perms", parentLog)
         {
             var wrapLog = Log.New("AppAndPermissions", $"..., appId: {appId}, ...");
             SxcInstance = sxcInstance;
@@ -42,7 +43,13 @@ namespace ToSic.SexyContent.WebApi.Permissions
             wrapLog($"ready for z/a:{zoneId}/{appId} t/z:{tenant.Id}/{contextZoneId} same:{SamePortal}");
         }
 
-        public bool ZoneChangedAndNotSuperUser(out HttpResponseException exp)
+        protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks()
+            => new Dictionary<string, IPermissionCheck>
+            {
+                {"App", BuildPermissionChecker()}
+            };
+
+        public override bool ZoneChangedAndNotSuperUser(out HttpResponseException exp)
         {
             var wrapLog = Log.Call("ZoneChangedAndNotSuperUser()");
             var zoneSameOrSuperUser = SamePortal || PortalSettings.Current.UserInfo.IsSuperUser;
@@ -54,11 +61,11 @@ namespace ToSic.SexyContent.WebApi.Permissions
             return !zoneSameOrSuperUser;
         }
 
-        internal bool UserUnrestrictedAndFeatureEnabled(out HttpResponseException preparedException)
+        internal bool UserCanWriteAndPublicFormsEnabled(out HttpResponseException preparedException)
         {
             var wrapLog = Log.Call("UserUnrestrictedAndFeatureEnabled", "");
             // 1. check if user is restricted
-            var userIsRestricted = !PermissionChecker.UserMay(GrantSets.WritePublished);
+            var userIsRestricted = !Ensure(GrantSets.WritePublished, out var _);
 
             // 2. check if feature is enabled
             var feats = new[] { FeatureIds.PublicForms };
@@ -72,44 +79,52 @@ namespace ToSic.SexyContent.WebApi.Permissions
             return true;
         }
 
-        public IPermissionCheck PermissionChecker => _permissionCheck ?? (_permissionCheck = BuildPermissionChecker());
-        private IPermissionCheck _permissionCheck;
-
-
         /// <summary>
         /// Creates a permission checker for an app
         /// Optionally you can provide a type-name, which will be 
         /// included in the permission check
         /// </summary>
         /// <returns></returns>
-        private IPermissionCheck BuildPermissionChecker()
+        protected IPermissionCheck BuildPermissionChecker(IContentType type = null, IEntity item = null)
         {
-            Log.Call("AppPermissionChecker");
+            Log.Call("BuildPermissionChecker");
 
             // user has edit permissions on this app, and it's the same app as the user is coming from
             return new DnnPermissionCheck(Log,
                 instance: SxcInstance.EnvInstance,
                 app: App,
-                portal: PortalForSecurityCheck);
+                portal: PortalForSecurityCheck,
+                targetType: type,
+                targetItem: item);
         }
 
-        /// <summary>
-        /// Ensure for this app only!
-        /// </summary>
-        /// <param name="grants"></param>
-        /// <param name="preparedException"></param>
-        /// <returns></returns>
-        public bool Ensure(List<Grants> grants, out HttpResponseException preparedException)
-        {
-            if (!BuildPermissionChecker().UserMay(grants))
-            {
-                Log.Add("permissions not ok");
-                preparedException = Http.PermissionDenied("required permissions for this type are not given");
-                throw preparedException;
-            }
-            Log.Add("Ensure(...): ok");
-            preparedException = null;
-            return true;
-        }
+        ///// <summary>
+        ///// Ensure for this app only!
+        ///// </summary>
+        ///// <param name="grants"></param>
+        ///// <param name="preparedException"></param>
+        ///// <returns></returns>
+        //public bool Ensure(List<Grants> grants, out HttpResponseException preparedException)
+        //{
+        //    if (!BuildAppPermissionChecker().UserMay(grants))
+        //    {
+        //        Log.Add("permissions not ok");
+        //        preparedException = Http.PermissionDenied("required permissions for this type are not given");
+        //        throw preparedException;
+        //    }
+        //    Log.Add("Ensure(...): ok");
+        //    preparedException = null;
+        //    return true;
+        //}
+
+        //public bool SameAppOrIsSuperUserAndEnsure(List<Grants> grants, out HttpResponseException preparedException)
+        //{
+        //    if (!ZoneChangedAndNotSuperUser(out preparedException))
+        //        return false;
+        //    if (!Ensure(grants, out preparedException))
+        //        return false;
+        //    preparedException = null;
+        //    return true;
+        //}
     }
 }

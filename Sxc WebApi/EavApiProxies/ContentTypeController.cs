@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             if(!permCheck.Ensure(GrantSets.WriteSomething, /*contentTypeStaticName,*/ out var exp))
                 throw exp;
 
-            if(!permCheck.UserUnrestrictedAndFeatureEnabled(out exp))
+            if(!permCheck.UserCanWriteAndPublicFormsEnabled(out exp))
                 throw exp;
 
             // if we got this far, permissions are ok
@@ -83,7 +83,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	        var permCheck = new PermissionsForAppAndTypes(SxcInstance, appId, staticName, Log);
             if (!permCheck.Ensure(GrantSets.WriteSomething, /*staticName,*/ out var exp))
                 throw exp;
-            if(!permCheck.UserUnrestrictedAndFeatureEnabled(out exp))
+            if(!permCheck.UserCanWriteAndPublicFormsEnabled(out exp))
                 throw exp;
 
             return _eavCtc.GetFields(appId, staticName);

@@ -104,11 +104,13 @@
     <Compile Include="EavApiProxies\ValidatorBase.cs" />
     <Compile Include="EavApiProxies\SaveDataValidator.cs" />
     <Compile Include="AutoDetectContext\AppFinder.cs" />
-    <Compile Include="Permissions\IContextPermissionCheck.cs" />
+    <Compile Include="Permissions\IMultiPermissionCheck.cs" />
+    <Compile Include="Permissions\MultiPermissionCheck.cs" />
     <Compile Include="Permissions\PermissionsForApp.cs" />
     <Compile Include="Permissions\AppPermissionBeforeUsing.cs" />
     <Compile Include="Permissions\PermissionsForAppAndTypes.cs" />
     <Compile Include="Permissions\PermissionsForAppWithData.cs" />
+    <Compile Include="Permissions\PermissionsForAppAndItems.cs" />
     <Compile Include="SaveHelpers\ContentGroupList.cs" />
     <Compile Include="SaveHelpers\DnnPublishing.cs" />
     <Compile Include="SaveHelpers\SaveHelperBase.cs" />
@@ -130,7 +132,6 @@
     <Compile Include="Errors\Http.cs" />
     <Compile Include="FeaturesManagementUtils.cs" />
     <Compile Include="System\InsightsController.cs" />
-    <Compile Include="Permissions\AppAndPermissions.cs" />
     <Compile Include="Security.cs" />
     <Compile Include="SxcApiControllerBase.cs" />
     <Compile Include="WebApiLogDetails.cs" />

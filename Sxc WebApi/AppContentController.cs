@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json.Linq;
@@ -19,6 +20,7 @@ using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
+using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight;
 using Factory = ToSic.Eav.Factory;
 
@@ -39,6 +41,19 @@ namespace ToSic.SexyContent.WebApi
 	        Log.Rename("2sApCo");
 	    }
 
+	    #region Security Checks 
+
+	    // todo: replace this call with the PermissionsForApp - try to call it directly, 
+	    // then find out what is still missing!
+	    internal void PerformSecurityCheck(IAppIdentity appIdentity, string contentType,
+	        Grants grant, ModuleInfo module, IEntity specificItem = null)
+	        => new AppPermissionBeforeUsing(SxcInstance, Log)
+	            .PerformSecurityCheck(PortalSettings, appIdentity, contentType, grant, module, specificItem);
+
+
+
+	    #endregion
+
         #region Get List / all of a certain content-type
         /// <summary>
         /// Get all Entities of specified Type
@@ -48,11 +63,17 @@ namespace ToSic.SexyContent.WebApi
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null, string cultureCode = null)
         {
             Log.Add($"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
+
+
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
 
-            var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null);
+            var permCheck = new PermissionsForAppAndTypes(SxcInstance, appIdentity.AppId, contentType, Log);
+            if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.ReadSomething, out var exp))
+                throw exp;
+            //2018-09-15 2dm replaced
+            //var context = GetContext(SxcInstance, Log);
+            //PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null);
             return new EntityApi(appIdentity.AppId, Log).GetEntities(contentType, cultureCode);
         }
 

@@ -26,16 +26,22 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // Security check
             Log.Add($"load many a#{appId}, items⋮{items.Count}");
 
-            // to do full security check, we'll have to see what content-type is requested
-            var permCheck = new PermissionsForAppWithData(SxcInstance, appId, items, Log);
-            if(!permCheck.Ensure(GrantSets.WriteSomething, /*items,*/ out var exp))
+            // do early permission check - but at this time it may be that we don't have the types yet
+            // because they may be group/id combinations, without type information which we'll look up afterwards
+            var permCheck = new PermissionsForApp(SxcInstance, appId, Log);
+            if(!permCheck.Ensure(GrantSets.WriteSomething, out var exp))
+                throw exp;
+
+            // now look up the types, and repeat security check with type-names
+            items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);
+            permCheck = new PermissionsForAppWithData(SxcInstance, appId, items, Log);
+            if(!permCheck.Ensure(GrantSets.WriteSomething, out exp))
                 throw exp;
 
             // load items - similar
             var result = new AllInOne();
             var entityApi = new EntityApi(appId, Log);
             var typeRead = entityApi.AppManager.Read.ContentTypes;
-            items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);
             var list = entityApi.GetEntitiesForEditing(appId, items);
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {

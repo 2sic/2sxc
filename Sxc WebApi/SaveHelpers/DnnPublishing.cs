@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             List<BundleWithHeader<T>> items,
             bool partOfPage,
             Func<bool, Dictionary<Guid, int>> internalSaveMethod,
-            IContextPermissionCheck permCheck
+            IMultiPermissionCheck permCheck
             )
         {
             var allowWriteLive = permCheck.Ensure(GrantSets.WritePublished, out var _);

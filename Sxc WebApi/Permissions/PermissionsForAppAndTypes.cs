@@ -1,109 +1,63 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.WebApi.Errors;
 
 namespace ToSic.SexyContent.WebApi.Permissions
 {
-    internal class PermissionsForAppAndTypes: PermissionsForApp, IContextPermissionCheck
+    internal class PermissionsForAppAndTypes: PermissionsForApp
     {
-        public Dictionary<string, IPermissionCheck> PermissionCheckers { get; protected set; }
+        protected IEnumerable<string> ContentTypes;
 
         public PermissionsForAppAndTypes(SxcInstance sxcInstance, int appId, string contentType, Log parentLog) 
             : this(sxcInstance, appId, new []{contentType}, parentLog)
         {
         }
 
-        public PermissionsForAppAndTypes(SxcInstance sxcInstance, int appId, string[] contentTypes, Log parentLog) : base(sxcInstance, appId, parentLog)
+        public PermissionsForAppAndTypes(SxcInstance sxcInstance, int appId, IEnumerable<string> contentTypes, Log parentLog) 
+            : base(sxcInstance, appId, parentLog)
         {
-            BuildPermissionCheckers(contentTypes);
+            ContentTypes = contentTypes;
         }
 
-        public PermissionsForAppAndTypes(SxcInstance sxcInstance, int appId, List<ItemIdentifier> items, Log parentLog) : base(sxcInstance, appId, parentLog)
+        public PermissionsForAppAndTypes(SxcInstance sxcInstance, int appId, List<ItemIdentifier> items, Log parentLog) 
+            : base(sxcInstance, appId, parentLog)
         {
-            var contentTypes = ExtractTypeNamesFromItems(items);
-            BuildPermissionCheckers(contentTypes);
+            ContentTypes = ExtractTypeNamesFromItems(items);
         }
 
 
-        private void BuildPermissionCheckers(IEnumerable<string> contentTypes) 
-            => PermissionCheckers = contentTypes.ToDictionary(t => t, TypePermissionChecker);
+        protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks()
+            => ContentTypes.Distinct().ToDictionary(t => t, BuildTypePermissionChecker);
 
 
-        public new bool Ensure(List<Grants> grants, out HttpResponseException preparedException)
+        private IEnumerable<string> ExtractTypeNamesFromItems(IEnumerable<ItemIdentifier> items)
         {
-            foreach (var set in PermissionCheckers)
-                if (!Ensure(grants, set.Value, set.Key, out preparedException))
-                    return false;
-
-            preparedException = null;
-            return true;
-        }
-
-        protected bool Ensure(List<Grants> grants, IPermissionCheck permChecker, string typeName, out HttpResponseException preparedException)
-        {
-            var wrapLog = Log.Call("Ensure", () => $"[{string.Join(",", grants)}], {typeName}", () => "or throw");
-            // temp!!!
-            //_lastChecker = permChecker;
-            //var permChecker = _lastChecker = TypePermissionChecker(typeName);
-
-            if (!permChecker.UserMay(grants))
-            {
-                Log.Add("permissions not ok");
-                preparedException = Http.PermissionDenied("required permissions for this type are not given");
-                throw preparedException;
-            }
-            wrapLog("ok");
-            preparedException = null;
-            return true;
-        }
-
-        protected List<string> ExtractTypeNamesFromItems(List<ItemIdentifier> items)
-        {
-            var appMan = new AppRuntime(App, Log);
-
             // build list of type names
             var typeNames = items.Select(item =>
-            {
-                var typeName = item.ContentTypeName;
-                return !string.IsNullOrEmpty(typeName) || item.EntityId == 0
-                    ? typeName
-                    : appMan.Entities.Get(item.EntityId).Type.StaticName;
-            }).ToList();
+                !string.IsNullOrEmpty(item.ContentTypeName) || item.EntityId == 0
+                    ? item.ContentTypeName
+                    : AppRuntime.Entities.Get(item.EntityId).Type.StaticName);
 
-            // make sure we have at least one entry, so the checks will work
-            if (typeNames.Count == 0)
-                typeNames.Add(null);
             return typeNames;
         }
+
+        protected AppRuntime AppRuntime => _appRuntime ?? (_appRuntime = new AppRuntime(App, Log));
+        private AppRuntime _appRuntime;
         
 
         /// <summary>
-        /// Creates a permission checker for an app
-        /// Optionally you can provide a type-name, which will be 
-        /// included in the permission check
+        /// Creates a permission checker for an type in this app
         /// </summary>
         /// <param name="typeName"></param>
         /// <returns></returns>
-        internal IPermissionCheck TypePermissionChecker(string typeName)
+        protected IPermissionCheck BuildTypePermissionChecker(string typeName)
         {
-            Log.Call("TypePermissionChecker", $"{typeName}");
+            Log.Call("BuildTypePermissionChecker", $"{typeName}");
             // now do relevant security checks
-            var type = typeName == null
-                ? null
-                : new AppRuntime(App, Log).ContentTypes.Get(typeName);
-
-            // user has edit permissions on this app, and it's the same app as the user is coming from
-            return new DnnPermissionCheck(Log,
-                instance: SxcInstance.EnvInstance,
-                app: App,
-                portal: PortalForSecurityCheck,
-                targetType: type);
+            return BuildPermissionChecker(AppRuntime.ContentTypes.Get(typeName));
         }
 
 

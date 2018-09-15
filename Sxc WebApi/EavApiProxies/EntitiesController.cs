@@ -34,8 +34,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
-            new AppPermissionBeforeUsing(SxcInstance, Log)
-                .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
+            var permCheck = new PermissionsForAppAndTypes(SxcInstance, appId, contentType, Log);
+            if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.ReadSomething, out var exp))
+                throw exp;
+            // 2018-09-15 old code, should have checked the same stuff mostly...
+            //new AppPermissionBeforeUsing(SxcInstance, Log)
+            //    .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
             return new EntityApi(appId, Log).GetOne(contentType, id, cultureCode);  // note that the culture-code isn't actually used...
         }
 
@@ -48,8 +52,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // to do full security check, we'll have to see what content-type is requested
             var permCheck = new PermissionsForAppWithData(SxcInstance, appId, items, Log);
-            if(!permCheck.Ensure(GrantSets.WriteSomething, /*items,*/ out var exp))
+            if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.WriteSomething, out var exp))
                 throw exp;
+            // 2018-09-15 old code, should have checked the same stuff mostly...
+            //if (!permCheck.Ensure(GrantSets.WriteSomething, /*items,*/ out var exp))
+            //    throw exp;
 
             //permCheck.InitAppData();
 
@@ -117,8 +124,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
-	        new AppPermissionBeforeUsing(SxcInstance, Log)
-                .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
+	        var permCheck = new PermissionsForAppAndTypes(SxcInstance, appId, contentType, Log);
+	        if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.ReadSomething, out var exp))
+	            throw exp;
+	        // 2018-09-15 old code, should have checked the same stuff mostly...
+	        //new AppPermissionBeforeUsing(SxcInstance, Log)
+         //       .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
             return new EntityApi(appId, Log).GetEntitiesForAdmin(contentType);
 	    }
 
@@ -128,8 +139,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
-            new AppPermissionBeforeUsing(SxcInstance, Log)
-                .ConfirmPermissionsOrThrow(contentType, appId, GrantSets.DeleteSomething);
+            var permCheck = new PermissionsForAppAndTypes(SxcInstance, appId, contentType, Log);
+            if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.DeleteSomething, out var exp))
+                throw exp;
+            // 2018-09-15 old code, should have checked the same stuff mostly...
+            //new AppPermissionBeforeUsing(SxcInstance, Log)
+            //    .ConfirmPermissionsOrThrow(contentType, appId, GrantSets.DeleteSomething);
             new EntityApi(appId, Log).Delete(contentType, id, force);
         }
 
@@ -138,8 +153,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
-            new AppPermissionBeforeUsing(SxcInstance, Log)
-                .ConfirmPermissionsOrThrow(contentType, appId, GrantSets.DeleteSomething);
+            var permCheck = new PermissionsForAppAndTypes(SxcInstance, appId, contentType, Log);
+            if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.DeleteSomething, out var exp))
+                throw exp;
+            // 2018-09-15 old code, should have checked the same stuff mostly...
+            //new AppPermissionBeforeUsing(SxcInstance, Log)
+            //    .ConfirmPermissionsOrThrow(contentType, appId, GrantSets.DeleteSomething);
             new EntityApi(appId, Log).Delete(contentType, guid, force);
         }
 

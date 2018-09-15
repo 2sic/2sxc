@@ -60,7 +60,7 @@ namespace ToSic.SexyContent.WebApi
 
             var permissionChecker = new DnnPermissionCheck(log, targetItem: query.QueryDefinition, 
                 instance: new DnnInstanceInfo(module), appIdentity: app);
-            var readExplicitlyAllowed = permissionChecker.UserMay(Grants.Read);
+            var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 
             var isAdmin = module != null && DotNetNuke.Security.Permissions
                               .ModulePermissionController.CanAdminModule(module);

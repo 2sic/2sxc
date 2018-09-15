@@ -1,13 +1,8 @@
-﻿using DotNetNuke.Entities.Modules;
-using System.Web.Http.Controllers;
-using ToSic.Eav.Apps.Interfaces;
-using ToSic.Eav.Interfaces;
+﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.SexyContent.WebApi.Dnn;
-using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -32,18 +27,6 @@ namespace ToSic.SexyContent.WebApi
         internal static DnnAppAndDataHelpers GetContext(SxcInstance sxcInstance, Log log) 
             => new DnnAppAndDataHelpers(sxcInstance, sxcInstance?.Log ?? log);
 
-
-
-        #region Security Checks 
-
-        internal void PerformSecurityCheck(IAppIdentity appIdentity, string contentType,
-            Grants grant, ModuleInfo module, IEntity specificItem = null)
-            => new AppPermissionBeforeUsing(SxcInstance, Log)
-                .PerformSecurityCheck(PortalSettings, appIdentity, contentType, grant, module, specificItem);
-
-
-
-        #endregion
 
         #region App-Helpers for anonyous access APIs
 

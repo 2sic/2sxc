@@ -6,7 +6,7 @@ using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.WebApi.Permissions
 {
-    internal class PermissionsForAppWithData: PermissionsForAppAndTypes
+    internal class PermissionsForAppWithData : PermissionsForAppAndTypes
     {
         public PermissionsForAppWithData(SxcInstance sxcInstance, int appId, List<ItemIdentifier> items, Log parentLog) 
             : base(sxcInstance, appId, items, parentLog)
@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
             if (SxcInstance?.Data == null)
                 throw new Exception("Can't use app-data at the moment, because it requires an instance context");
 
-            var showDrafts = PermissionChecker.UserMay(GrantSets.ReadDraft);
+            var showDrafts = Ensure(GrantSets.ReadDraft, out var _);
 
             App.InitData(showDrafts,
                 SxcInstance.Environment.PagePublishing.IsEnabled(SxcInstance.EnvInstance.Id),
