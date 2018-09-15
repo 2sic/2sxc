@@ -41,7 +41,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
 	    {
 	        var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentTypeStaticName, Log);
-            if(!permCheck.Ensure(GrantSets.WriteSomething, /*contentTypeStaticName,*/ out var exp))
+            if(!permCheck.Ensure(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
             if(!permCheck.UserCanWriteAndPublicFormsEnabled(out exp))
@@ -81,7 +81,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             Log.Add($"get fields for a:{appId} type:{staticName}");
 	        var permCheck = new MultiPermissionsTypes(SxcInstance, appId, staticName, Log);
-            if (!permCheck.Ensure(GrantSets.WriteSomething, /*staticName,*/ out var exp))
+            if (!permCheck.Ensure(GrantSets.WriteSomething, out var exp))
                 throw exp;
             if(!permCheck.UserCanWriteAndPublicFormsEnabled(out exp))
                 throw exp;

@@ -41,7 +41,7 @@ namespace ToSic.SexyContent.WebApi.Adam
         {
             Field = field;
             Guid = guid;
-            if(!Ensure(GrantSets.WriteSomething, /*contentType,*/ out var exp))
+            if(!Ensure(GrantSets.WriteSomething, out var exp))
                 throw exp;
             UserIsRestricted = !SecurityChecks.ThrowIfUserMayNotWriteEverywhere(usePortalRoot, PermissionCheckers.First().Value);
 

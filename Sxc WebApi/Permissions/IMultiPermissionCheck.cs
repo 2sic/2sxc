@@ -6,6 +6,8 @@ namespace ToSic.SexyContent.WebApi.Permissions
 {
     internal interface IMultiPermissionCheck
     {
+        bool UserMay(List<Grants> grants);
+
         bool Ensure(List<Grants> grants, out HttpResponseException preparedException);
 
         bool SameAppOrIsSuperUserAndEnsure(List<Grants> grants, out HttpResponseException preparedException);

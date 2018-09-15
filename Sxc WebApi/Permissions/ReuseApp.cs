@@ -10,7 +10,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
             if (mpa.SxcInstance?.Data == null)
                 throw new Exception("Can't use app-data at the moment, because it requires an instance context");
 
-            var showDrafts = mpa.Ensure(GrantSets.ReadDraft, out var _);
+            var showDrafts = mpa.UserMay(GrantSets.ReadDraft);
 
             mpa.App.InitData(showDrafts,
                 mpa.SxcInstance.Environment.PagePublishing.IsEnabled(mpa.SxcInstance.EnvInstance.Id),

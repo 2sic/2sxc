@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             IMultiPermissionCheck permCheck
             )
         {
-            var allowWriteLive = permCheck.Ensure(GrantSets.WritePublished, out var _);
+            var allowWriteLive = permCheck.UserMay(GrantSets.WritePublished);
             var forceDraft = !allowWriteLive;
             Log.Add($"allowWrite: {allowWriteLive} forceDraft: {forceDraft}");
 

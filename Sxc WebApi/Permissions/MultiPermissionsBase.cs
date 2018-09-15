@@ -31,6 +31,14 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
         #endregion
 
+
+        /// <summary>
+        /// Verify that all checks pass
+        /// </summary>
+        /// <param name="grants"></param>
+        /// <returns>True if all pass, false if any one fails</returns>
+        public bool UserMay(List<Grants> grants) => Ensure(grants, out var _);
+
         /// <summary>
         /// Ensure that all checks pass
         /// </summary>
