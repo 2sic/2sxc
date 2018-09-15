@@ -98,6 +98,7 @@
     <Compile Include="Adam\AdamUploader.cs" />
     <Compile Include="Adam\SecurityChecks.cs" />
     <Compile Include="Adam\UploadResult.cs" />
+    <Compile Include="AppContentEntityBuilder.cs" />
     <Compile Include="AutoDetectContext\Route.cs" />
     <Compile Include="EavApiProxies\UiController_Save.cs" />
     <Compile Include="EavApiProxies\UiController_Load.cs" />
@@ -107,9 +108,7 @@
     <Compile Include="Permissions\IMultiPermissionCheck.cs" />
     <Compile Include="Permissions\MultiPermissionsBase.cs" />
     <Compile Include="Permissions\MultiPermissionsApp.cs" />
-    <Compile Include="Permissions\AppPermissionBeforeUsing.cs" />
     <Compile Include="Permissions\MultiPermissionsTypes.cs" />
-    <Compile Include="Permissions\MultiPermissionsAppWithInitializedData.cs" />
     <Compile Include="Permissions\MultiPermissionsItems.cs" />
     <Compile Include="Permissions\PublicFormsPermissions.cs" />
     <Compile Include="Permissions\ReuseApp.cs" />
@@ -134,7 +133,6 @@
     <Compile Include="Errors\Http.cs" />
     <Compile Include="FeaturesManagementUtils.cs" />
     <Compile Include="System\InsightsController.cs" />
-    <Compile Include="Security.cs" />
     <Compile Include="SxcApiControllerBase.cs" />
     <Compile Include="WebApiLogDetails.cs" />
     <Compile Include="Adam\AdamController.cs" />

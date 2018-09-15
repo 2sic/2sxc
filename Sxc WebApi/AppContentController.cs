@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using Newtonsoft.Json.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data.Query;
-using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -41,18 +36,6 @@ namespace ToSic.SexyContent.WebApi
 	        Log.Rename("2sApCo");
 	    }
 
-	    #region Security Checks 
-
-	    // todo: replace this call with the PermissionsForApp - try to call it directly, 
-	    // then find out what is still missing!
-	    //internal void PerformSecurityCheck(IAppIdentity appIdentity, string contentType,
-	    //    Grants grant, ModuleInfo module, IEntity specificItem = null)
-	    //    => new AppPermissionBeforeUsing(SxcInstance, Log)
-	    //        .PerformSecurityCheck(PortalSettings, appIdentity, contentType, grant, module, specificItem);
-
-
-
-	    #endregion
 
         #region Get List / all of a certain content-type
         /// <summary>
@@ -63,7 +46,6 @@ namespace ToSic.SexyContent.WebApi
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null, string cultureCode = null)
         {
             Log.Add($"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
-
 
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
@@ -129,8 +111,6 @@ namespace ToSic.SexyContent.WebApi
 	    public HttpResponseMessage GetContentBlockData()
         {
             Log.Add("get content block data");
-            // 2018-04-18 2dm disabled init-serializer, don't think it's actually ever used!
-            //InitEavAndSerializer();
             // Important note: we are NOT supporting url-view switch at the moment for this
             // reason is, that this kind of data-access is fairly special
             // and not recommended for future use cases, where we have the query etc.
@@ -180,8 +160,6 @@ namespace ToSic.SexyContent.WebApi
                 ? null
                 : new EntityApi(appIdentity.AppId, Log).GetOrThrow(contentType, id.Value);
 
-            //var perms = new List<Grants> {id == null ? Grants.Create : Grants.Update};
-
             var ok = itm == null
                 ? new MultiPermissionsTypes(SxcInstance, appIdentity.AppId, contentType, Log)
                     .Ensure(Grants.Create.AsSet(), out var exp)
@@ -198,7 +176,8 @@ namespace ToSic.SexyContent.WebApi
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
 
             // Now create the cleaned up import-dictionary so we can create a new entity
-            var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem, appIdentity.AppId);
+            var cleanedNewItem = new AppContentEntityBuilder(Log)
+                .CreateEntityDictionary(contentType, newContentItem, appIdentity.AppId);
 
             var userName = new DnnUser().IdentityToken;
 
@@ -214,131 +193,10 @@ namespace ToSic.SexyContent.WebApi
                 // Todo: try to return the newly created object 
                 return null;
             }
-            else
-            {
-                currentApp.Data.Update(id.Value, cleanedNewItem, userName);
-                return InitEavAndSerializer(appIdentity.AppId).Serializer.Prepare(currentApp.Data.List.One(id.Value));
-            }
+
+            currentApp.Data.Update(id.Value, cleanedNewItem, userName);
+            return InitEavAndSerializer(appIdentity.AppId).Serializer.Prepare(currentApp.Data.List.One(id.Value));
         }
-
-        /// <summary>
-        /// Construct an import-friedly, type-controlled value-dictionary to create or update an entity
-        /// </summary>
-        /// <param name="contentType"></param>
-        /// <param name="newContentItem"></param>
-        /// <param name="appId"></param>
-        /// <returns></returns>
-        private Dictionary<string, object> CreateEntityDictionary(string contentType, Dictionary<string, object> newContentItem, int appId)
-        {
-            Log.Add($"create ent dic a#{appId}, type:{contentType}");
-            // Retrieve content-type definition and check all the fields that this content-type has
-	        var cache = (BaseCache) DataSource.GetCache(null, appId);
-	        var listOfTypes = cache.GetContentType(contentType);
-	        var attribs = listOfTypes.Attributes;
-
-
-	        var cleanedNewItem = new Dictionary<string, object>();
-	        foreach (var attrDef in attribs)
-	        {
-	            var attrName = attrDef.Name;
-	            if (!newContentItem.ContainsKey(attrName)) continue;
-	            var foundValue = newContentItem[attrName];
-	            switch (attrDef.Type.ToLower())
-	            {
-	                case "string":
-	                case "hyperlink":
-	                    if (foundValue is string)
-	                        cleanedNewItem.Add(attrName, foundValue.ToString());
-	                    else
-	                        ThrowValueMappingError(attrDef, foundValue);
-	                    break;
-	                case "boolean":
-	                    if (bool.TryParse(foundValue.ToString(), out var bolValue))
-	                        cleanedNewItem.Add(attrName, bolValue);
-	                    else
-	                        ThrowValueMappingError(attrDef, foundValue);
-	                    break;
-	                case "datetime":
-	                    if (DateTime.TryParse(foundValue.ToString(), out var dtm))
-	                        cleanedNewItem.Add(attrName, dtm);
-	                    else
-	                        ThrowValueMappingError(attrDef, foundValue);
-	                    break;
-	                case "number":
-	                    if (decimal.TryParse(foundValue.ToString(), out var dec))
-	                        cleanedNewItem.Add(attrName, dec);
-	                    else
-	                        ThrowValueMappingError(attrDef, foundValue);
-	                    break;
-	                case "entity":
-	                    var relationships = new List<int>();
-
-	                    if (foundValue is IEnumerable foundEnum) // it's a list!
-	                        foreach (var item in foundEnum)
-	                            relationships.Add(CreateSingleRelationshipItem(item));
-	                    else // not a list
-	                        relationships.Add(CreateSingleRelationshipItem(foundValue));
-
-	                    cleanedNewItem.Add(attrName, relationships);
-
-	                    break;
-	                default:
-	                    throw new Exception("Tried to create attribute '" + attrName + "' but the type is not known: '" +
-	                                        attrDef.Type + "'");
-	            }
-
-	            // todo: maybe one day get default-values and insert them if not supplied by JS
-	        }
-	        return cleanedNewItem;
-	    }
-
-        /// <summary>
-        /// In case of an error, show a nicer, consistent message
-        /// </summary>
-        /// <param name="attributeDefinition"></param>
-        /// <param name="foundValue"></param>
-	    private static void ThrowValueMappingError(IAttributeBase attributeDefinition, object foundValue)
-	    {
-	        throw new Exception("Tried to create " + attributeDefinition.Name + " and couldn't convert to correct " + attributeDefinition.Type + ": '" +
-	                            foundValue + "'");
-	    }
-
-	    /// <summary>
-	    /// Takes input from JSON which could be in many formats like Category=ID or Category={id=#} 
-	    /// and then converts it to an item in the relationships-list
-	    /// </summary>
-	    /// <param name="foundValue"></param>
-	    private int CreateSingleRelationshipItem(object foundValue)
-	    {
-	        Log.Add("create relationship");
-	        try
-	        {
-	            // the object foundNumber is either just an Id, or an Id/Title combination
-                // Try to see if it's already a number, else check if it's a JSON property
-	            if (!int.TryParse(foundValue.ToString(), out var foundNumber))
-	            {
-	                if(foundValue is JProperty jp)
-	                    foundNumber = (int) jp.Value;
-                    else
-                    {
-                        var jo = foundValue as JObject;
-                        // ReSharper disable once PossibleNullReferenceException
-                        if (jo.TryGetValue("Id", out var foundId))
-                            foundNumber = (int) foundId;
-                        else if (jo.TryGetValue("id", out foundId))
-                            foundNumber = (int) foundId;
-                    }
-	            }
-	            Log.Add($"relationship found:{foundNumber}");
-	            return foundNumber;
-	        }
-	        catch
-	        {
-                throw new Exception("Tried to find Id of a relationship - but only found " + foundValue);
-	        }
-	    }
-
-
 
         #endregion
 
@@ -402,8 +260,6 @@ namespace ToSic.SexyContent.WebApi
 		public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, [FromUri] string appPath = null)
         {
             Log.Add($"get assigned for assigmentType#{assignmentObjectTypeId}, guid:{keyGuid}, type:{contentType}, path:{appPath}");
-            // 2018-04-18 2dm disabled init-serializer, don't think it's actually ever used!
-            //InitEavAndSerializer();
 	        return new MetadataController().GetAssignedEntities(assignmentObjectTypeId, "guid", keyGuid.ToString(), contentType);
 		}
         #endregion
