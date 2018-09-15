@@ -184,9 +184,9 @@ namespace ToSic.SexyContent.WebApi
 
             var ok = itm == null
                 ? new MultiPermissionsTypes(SxcInstance, appIdentity.AppId, contentType, Log)
-                    .Ensure(new List<Grants> {Grants.Create}, out var exp)
+                    .Ensure(Grants.Create.AsSet(), out var exp)
                 : new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log)
-                    .Ensure(new List<Grants> {Grants.Update}, out exp);
+                    .Ensure(Grants.Update.AsSet(), out exp);
             if (!ok)
                 throw exp;
 
@@ -360,7 +360,7 @@ namespace ToSic.SexyContent.WebApi
 
             var itm = new EntityApi(appIdentity.AppId, Log).GetOrThrow(contentType, id);
             var permCheck = new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log);
-            if (!permCheck.SameAppOrIsSuperUserAndEnsure(new List<Grants>{ Grants.Delete}, out var exp))
+            if (!permCheck.SameAppOrIsSuperUserAndEnsure(Grants.Delete.AsSet(), out var exp))
                 throw exp;
             //2018-09-15 2dm moved/disabled
             //var context = GetContext(SxcInstance, Log);
@@ -381,7 +381,7 @@ namespace ToSic.SexyContent.WebApi
 	        var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
 	        var permCheck = new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log);
-	        if (!permCheck.SameAppOrIsSuperUserAndEnsure(new List<Grants>{Grants.Delete}, out var exp))
+	        if (!permCheck.SameAppOrIsSuperUserAndEnsure(Grants.Delete.AsSet(), out var exp))
 	            throw exp;
 	        //2018-09-15 2dm moved/disabled
             //var context = GetContext(SxcInstance, Log);
