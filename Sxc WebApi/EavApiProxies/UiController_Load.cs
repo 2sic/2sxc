@@ -27,10 +27,9 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             Log.Add($"load many a#{appId}, items⋮{items.Count}");
 
             // to do full security check, we'll have to see what content-type is requested
-            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-            if(!permCheck.EnsureAll(GrantSets.WriteSomething, items, out var exp))
+            var permCheck = new PermissionsForAppWithData(SxcInstance, appId, items, Log);
+            if(!permCheck.Ensure(GrantSets.WriteSomething, /*items,*/ out var exp))
                 throw exp;
-            permCheck.InitAppData();
 
             // load items - similar
             var result = new AllInOne();

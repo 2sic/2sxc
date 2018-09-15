@@ -12,6 +12,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {

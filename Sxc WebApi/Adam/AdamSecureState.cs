@@ -18,7 +18,7 @@ using Feats = ToSic.Eav.Configuration.Features;
 
 namespace ToSic.SexyContent.WebApi.Adam
 {
-    internal class AdamSecureState: AppAndPermissions
+    internal class AdamSecureState: PermissionsForAppAndTypes
     {
         public string Field;
         public bool UserIsRestricted;
@@ -37,13 +37,13 @@ namespace ToSic.SexyContent.WebApi.Adam
         /// Initializes the object and performs all the initial security checks
         /// </summary>
         public AdamSecureState(SxcInstance sxcInstance, int appId, string contentType, string field, Guid guid, bool usePortalRoot, Log log)
-            : base(sxcInstance, appId, log)
+            : base(sxcInstance, appId, contentType, log)
         {
             Field = field;
             Guid = guid;
-            if(!Ensure(GrantSets.WriteSomething, contentType, out var exp))
+            if(!Ensure(GrantSets.WriteSomething, /*contentType,*/ out var exp))
                 throw exp;
-            UserIsRestricted = !SecurityChecks.ThrowIfUserMayNotWriteEverywhere(usePortalRoot, Permissions);
+            UserIsRestricted = !SecurityChecks.ThrowIfUserMayNotWriteEverywhere(usePortalRoot, PermissionCheckers.First().Value);
 
             if (UserIsRestricted && !Feats.Enabled(FeaturesForRestrictedUsers))
                 throw Http.PermissionDenied(

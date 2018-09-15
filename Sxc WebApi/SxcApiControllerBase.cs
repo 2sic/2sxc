@@ -1,14 +1,11 @@
 ﻿using DotNetNuke.Entities.Modules;
-using System.Collections.Generic;
 using System.Web.Http.Controllers;
-using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Internal;
+using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.SexyContent.WebApi.Dnn;
 using ToSic.SexyContent.WebApi.Permissions;
 
@@ -50,21 +47,9 @@ namespace ToSic.SexyContent.WebApi
 
         #region App-Helpers for anonyous access APIs
 
-        /// <summary>
-        /// find the AppIdentity of an app which is referenced by a path
-        /// </summary>
-        /// <param name="appPath"></param>
-        /// <returns></returns>
-        internal IAppIdentity GetCurrentAppIdFromPath(string appPath)
-        {
-            // check zone
-            var zid = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
+        internal AppFinder AppFinder => _appFinder ?? (_appFinder = new AppFinder(PortalSettings, Env.ZoneMapper, ControllerContext, Log));
+        private AppFinder _appFinder;
 
-            // get app from appname
-            var aid = AppHelpers.GetAppIdFromGuidName(zid, appPath, true);
-            Log.Add($"find app by path:{appPath}, found a:{aid}");
-            return new AppIdentity(zid, aid, Log);
-        }
         #endregion
     }
 }

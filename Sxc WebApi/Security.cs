@@ -38,7 +38,7 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add(() => $"security check for type:{contentType}, grants:[{string.Join(",", grant)}], useContext:{module != null}, zone/app:{appIdentity.ZoneId}/{appIdentity.AppId}, item:{specificItem?.EntityId}");
             // make sure we have the right appId, zoneId and module-context
-            var ct = FindContentTypeOrThrow(appIdentity.ZoneId, appIdentity.AppId, contentType/*, module*/);
+            var ct = FindContentTypeOrThrow(appIdentity.ZoneId, appIdentity.AppId, contentType);
 
             // Check permissions in 2sxc - or check if the user has admin-right (in which case he's always granted access for these types of content)
             if (new DnnPermissionCheck(Log, 

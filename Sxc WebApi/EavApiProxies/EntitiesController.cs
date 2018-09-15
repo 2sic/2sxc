@@ -47,11 +47,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var wrapLog = Log.Call("GetManyForEditing", $"get many a#{appId}, items⋮{items.Count}");
 
             // to do full security check, we'll have to see what content-type is requested
-            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-            if(!permCheck.EnsureAll(GrantSets.WriteSomething, items, out var exp))
+            var permCheck = new PermissionsForAppWithData(SxcInstance, appId, items, Log);
+            if(!permCheck.Ensure(GrantSets.WriteSomething, /*items,*/ out var exp))
                 throw exp;
 
-            permCheck.InitAppData();
+            //permCheck.InitAppData();
 
             items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);
 

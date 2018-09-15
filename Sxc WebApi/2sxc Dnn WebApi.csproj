@@ -98,11 +98,17 @@
     <Compile Include="Adam\AdamUploader.cs" />
     <Compile Include="Adam\SecurityChecks.cs" />
     <Compile Include="Adam\UploadResult.cs" />
+    <Compile Include="AutoDetectContext\Route.cs" />
     <Compile Include="EavApiProxies\UiController_Save.cs" />
     <Compile Include="EavApiProxies\UiController_Load.cs" />
     <Compile Include="EavApiProxies\ValidatorBase.cs" />
     <Compile Include="EavApiProxies\SaveDataValidator.cs" />
+    <Compile Include="AutoDetectContext\AppFinder.cs" />
+    <Compile Include="Permissions\IContextPermissionCheck.cs" />
+    <Compile Include="Permissions\PermissionsForApp.cs" />
     <Compile Include="Permissions\AppPermissionBeforeUsing.cs" />
+    <Compile Include="Permissions\PermissionsForAppAndTypes.cs" />
+    <Compile Include="Permissions\PermissionsForAppWithData.cs" />
     <Compile Include="SaveHelpers\ContentGroupList.cs" />
     <Compile Include="SaveHelpers\DnnPublishing.cs" />
     <Compile Include="SaveHelpers\SaveHelperBase.cs" />

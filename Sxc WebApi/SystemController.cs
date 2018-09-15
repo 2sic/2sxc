@@ -97,7 +97,7 @@ namespace ToSic.SexyContent.WebApi
         public void DeleteApp(int zoneId, int appId)
         {
             var userId = PortalSettings.Current.UserId;
-            AppManagement.RemoveAppInTenantAndEav(Env, zoneId, appId, new DnnTenant(PortalSettings), userId, Log);
+            AppManagement.RemoveAppInTenantAndEav(Env.ZoneMapper, zoneId, appId, new DnnTenant(PortalSettings), userId, Log);
         }
 
         [HttpPost]
@@ -117,16 +117,21 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            var appIdentity = new AppPermissionBeforeUsing(SxcInstance, Log)
-                .GetAppIdentityOrThrowIfNotAllowed(appId);
+            var appAndPerms = new PermissionsForApp(SxcInstance, appId, Log);
+            if (appAndPerms.ZoneChangedAndNotSuperUser(out var exp))
+                throw exp;
 
-            App app = null;
-            try
-            {
-                //app = new App(new DnnTenant(PortalSettings.Current), appId);
-                app = new App(new DnnTenant(PortalSettings.Current), appIdentity.ZoneId, appIdentity.AppId, false, Log);
-            }
-            catch (KeyNotFoundException) {}
+            //var appIdentity = new AppPermissionBeforeUsing(SxcInstance, Log)
+            //    .GetAppIdentityOrThrowIfNotAllowed(appId);
+
+            var app = appAndPerms.App;
+
+            //App app = null;
+            //try
+            //{
+            //    app = new App(new DnnTenant(PortalSettings.Current), appIdentity.ZoneId, appIdentity.AppId, false, Log);
+            //}
+            //catch (KeyNotFoundException) {}
 
             return new
             {

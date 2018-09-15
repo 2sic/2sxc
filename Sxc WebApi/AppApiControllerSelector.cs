@@ -12,6 +12,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.SexyContent.WebApi.AutoDetectContext;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -60,7 +61,7 @@ namespace ToSic.SexyContent.WebApi
             // Handle the app-api queries
             try
             {
-                var appFolder = routeData.Values["apppath"]?.ToString();
+                var appFolder = Route.AppPathOrNull(routeData); //routeData.Values["apppath"]?.ToString();
 
                 if(appFolder == null)
                 {

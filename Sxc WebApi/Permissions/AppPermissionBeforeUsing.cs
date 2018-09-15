@@ -28,8 +28,8 @@ namespace ToSic.SexyContent.WebApi.Permissions
             var context = SxcApiControllerBase.GetContext(_sxcInstance, Log);
             GetAppIdentityOrThrowIfNotAllowed(context, appId);
 
-            var permCheck = new AppAndPermissions(_sxcInstance, appId, Log);
-            if (!permCheck.Ensure(grants, contentType, out var exp))
+            var permCheck = new PermissionsForAppAndTypes(_sxcInstance, appId, contentType, Log);
+            if (!permCheck.Ensure(grants, /*contentType,*/ out var exp))
                 throw exp;
             wrapLog("ok");
         }
@@ -80,9 +80,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         {
             var wrapLog = Log.Call("ThrowIfZoneChangeWithoutSuperUser");
             IAppIdentity appIdentity;
-            if (appRun.ZoneId == context.App.ZoneId)
-                appIdentity = appRun;
-            else if (superUser)
+            if (appRun.ZoneId == context.App.ZoneId || superUser)
                 appIdentity = appRun;
             else
                 throw Http.PermissionDenied(

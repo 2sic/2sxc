@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -11,7 +10,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources.Caches;
@@ -51,7 +49,7 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
 
             var context = GetContext(SxcInstance, Log);
             PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null);
@@ -92,7 +90,7 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"get and serialie after security check type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
 
             var itm = getOne(appIdentity.AppId);
             var context = GetContext(SxcInstance, Log);
@@ -151,7 +149,7 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
 
             // Check that this ID is actually of this content-type,
             // this throws an error if it's not the correct type
@@ -205,7 +203,7 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"create ent dic a#{appId}, type:{contentType}");
             // Retrieve content-type definition and check all the fields that this content-type has
 	        var cache = (BaseCache) DataSource.GetCache(null, appId);
-	        var listOfTypes = cache.GetContentType(contentType);// as ContentType;
+	        var listOfTypes = cache.GetContentType(contentType);
 	        var attribs = listOfTypes.Attributes;
 
 
@@ -324,7 +322,7 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"delete id:{id}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
 
             // don't allow type "any" on this
             if (contentType == "any")
@@ -343,7 +341,7 @@ namespace ToSic.SexyContent.WebApi
 	    {
             Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
 
             var entityApi = new EntityApi(appIdentity.AppId, Log);
 	        var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
@@ -387,50 +385,6 @@ namespace ToSic.SexyContent.WebApi
                 ((Serializer)entitiesController.Serializer).Sxc = SxcInstance;
             return entitiesController;
         }
-        #endregion
-
-        #region Detect current app based on stuff in the path or query parameters
-        /// <summary>
-        /// Retrieve the appId - either based on the parameter, or if missing, use context
-        /// Note that this will fail, if both appPath and context are missing
-        /// </summary>
-        /// <returns></returns>
-        private IAppIdentity GetAppIdFromPathOrContext(string appPath, SxcInstance sxcInstance)
-        {
-            var wrapLog = Log.Call("GetAppIdFromPathOrContext", $"{appPath}, ...", "detect app from query string parameters");
-
-            // try to override detection based on additional zone/app-id in urls
-            var appId = GetAppIdentityFromQueryAppZone();
-            
-            if(appId == null)
-            {
-                Log.Add($"auto detect app and init eav - path:{appPath}, context null: {sxcInstance == null}");
-                appId = appPath == null || appPath == "auto"
-                    ? new AppIdentity(
-                        sxcInstance?.ZoneId ??
-                        throw new ArgumentException("try to get app-id from context, but none found"),
-                        sxcInstance.AppId ?? 0, Log)
-                    : GetCurrentAppIdFromPath(appPath);
-            }
-
-            wrapLog(appId.LogState);
-
-            return appId;
-        }
-
-	    private IAppIdentity GetAppIdentityFromQueryAppZone()
-	    {
-	        var allUrlKeyValues = ControllerContext.Request.GetQueryNameValuePairs().ToList();
-	        var ok1 = int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == "zoneId").Value, out var zoneIdFromQueryString);
-	        var ok2 = int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == "appId").Value, out var appIdFromQueryString);
-	        if (ok1 && ok2)
-	        {
-	            Log.Add($"Params in URL detected - will use appId:{appIdFromQueryString}, zoneId:{zoneIdFromQueryString}");
-	            return new AppIdentity(zoneIdFromQueryString, appIdFromQueryString, Log);
-	        }
-	        return null;
-	    }
-
         #endregion
 
     }

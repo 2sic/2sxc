@@ -28,10 +28,10 @@ namespace ToSic.SexyContent.Internal
             return builtApps.OrderBy(a => a.Name).ToList();
         }
 
-        internal static void RemoveAppInTenantAndEav(IEnvironment env, int zoneId, int appId, ITenant tenant, int userId, Log parentLog)
+        internal static void RemoveAppInTenantAndEav(IZoneMapper zoneMapper, int zoneId, int appId, ITenant tenant, int userId, Log parentLog)
         {
             // check portal assignment and that it's not the default app
-            if (zoneId != env.ZoneMapper.GetZoneId(tenant.Id))
+            if (zoneId != zoneMapper.GetZoneId(tenant.Id))
                 throw new Exception("This app does not belong to portal " + tenant.Id);
 
             if (appId == new ZoneRuntime(zoneId, parentLog).DefaultAppId)

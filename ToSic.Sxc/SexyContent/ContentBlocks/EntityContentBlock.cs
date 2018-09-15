@@ -6,6 +6,7 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks
 {

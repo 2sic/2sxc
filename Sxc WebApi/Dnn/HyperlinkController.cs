@@ -58,8 +58,8 @@ namespace ToSic.SexyContent.WebApi.Dnn
 		        {
                     // page link - only resolve if the user has edit-permissions
 		            // only people who have some full edit permissions may actually look up pages
-		            var permCheckPage = new AppAndPermissions(SxcInstance, appId, Log);
-		            return permCheckPage.Ensure(GrantSets.WritePublished, null, out var _) 
+		            var permCheckPage = new PermissionsForApp(SxcInstance, appId, Log);
+		            return permCheckPage.Ensure(GrantSets.WritePublished, /*null,*/ out var _) 
                         ? resolved 
                         : hyperlink;
 		        }

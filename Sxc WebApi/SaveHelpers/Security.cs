@@ -12,10 +12,10 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
         public Security(SxcInstance sxcInstance, Log parentLog) : base(sxcInstance, parentLog, "Api.SavSec") { }
 
 
-        public AppAndPermissions DoSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)
+        public IContextPermissionCheck DoSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)
         {
-            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-            if (!permCheck.EnsureAll(GrantSets.WriteSomething, items.Select(i => i.Header).ToList(), out var exp))
+            var permCheck = new PermissionsForAppAndTypes(SxcInstance, appId, items.Select(i => i.Header).ToList(), Log);
+            if (!permCheck.Ensure(GrantSets.WriteSomething,  out var exp))
                 throw exp;
             if (!permCheck.UserUnrestrictedAndFeatureEnabled(out exp))
                 throw exp;

@@ -16,8 +16,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public IEnumerable<dynamic> GetAvailableEntities([FromUri]int appId, [FromBody] string[] items, [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
         {
             // do security check
-            var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-            if(!permCheck.Ensure(GrantSets.ReadSomething, contentTypeName, out var exp))
+            var permCheck = new PermissionsForAppAndTypes(SxcInstance, appId, contentTypeName, Log);
+            if(!permCheck.Ensure(GrantSets.ReadSomething, /*contentTypeName,*/ out var exp))
                 throw exp;
 
             // maybe in the future, ATM not relevant

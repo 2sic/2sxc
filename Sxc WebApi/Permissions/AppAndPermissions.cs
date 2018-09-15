@@ -1,148 +1,101 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Http;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Interfaces;
-using ToSic.Eav.Configuration;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Errors;
-using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi.Permissions
 {
-    public class AppAndPermissions: HasLog
+    internal class AppAndPermissions: PermissionsForApp
     {
-        public App App { get; }
-        public PermissionCheckBase Permissions { get; private set; }
+        //public IPermissionCheck Permissions => _lastChecker;
+        //private IPermissionCheck _lastChecker;
 
-        public SxcInstance SxcInstance { get; }
-
-        private int ZoneId { get; }
-        private readonly PortalSettings _portalForSecurityCheck;
-
-        public bool SamePortal { get; }
-
-        public AppAndPermissions(SxcInstance sxcInstance, int appId, Log parentLog) : base("Api.Perms", parentLog)
-        {
-            var wrapLog = Log.New("AppAndPermissions", $"..., appId: {appId}, ...");
-            SxcInstance = sxcInstance;
-            var tenant = new DnnTenant(PortalSettings.Current);
-            var environment = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
-            var contextZoneId = environment.ZoneMapper.GetZoneId(tenant.Id);
-            ZoneId = SystemManager.ZoneIdOfApp(appId);
-            App = new App(tenant, ZoneId, appId, parentLog: Log);
-            SamePortal = contextZoneId == ZoneId;
-            _portalForSecurityCheck = SamePortal ? PortalSettings.Current : null;
-            wrapLog($"ready for z/a:{ZoneId}/{appId} t/z:{tenant.Id}/{contextZoneId} same:{SamePortal}");
-        }
-
-        //public void ThrowIfPortalSwitchWithoutSuperUserAccess
-
-        public void InitAppData()
-        {
-            if(SxcInstance?.Data == null)
-                throw new Exception("Can't use app-data at the moment, because it requires an instance context");
-
-            var showDrafts = Permissions.UserMay(GrantSets.ReadDraft);
-
-            App.InitData(showDrafts,
-                SxcInstance.Environment.PagePublishing.IsEnabled(SxcInstance.EnvInstance.Id),
-                SxcInstance.Data.ConfigurationProvider);
-        }
+        public AppAndPermissions(SxcInstance sxcInstance, int appId, Log parentLog) :
+            base(sxcInstance, SystemManager.ZoneIdOfApp(appId), appId, parentLog) { }
 
 
-        internal bool EnsureAll(List<Grants> grants, List<ItemIdentifier> items, out HttpResponseException preparedException)
-        {
-            Log.Add(() => $"EnsureAll([{string.Join(",", grants)}], ...)");
-            var appMan = new AppRuntime(App.AppId, Log);
 
-            // build list of type names
-            var typeNames = items.Select(item =>
-            {
-                var typeName = item.ContentTypeName;
-                return !string.IsNullOrEmpty(typeName) || item.EntityId == 0
-                    ? typeName
-                    : appMan.Entities.Get(item.EntityId).Type.StaticName;
-            }).ToList();
+        //internal bool EnsureAll(List<Grants> grants, List<ItemIdentifier> items, out HttpResponseException preparedException)
+        //{
+        //    Log.Add(() => $"EnsureAll([{string.Join(",", grants)}], ...)");
+        //    var typeNames = ExtractTypeNamesFromItems(items);
 
-            // make sure we have at least one entry, so the checks will work
-            if (typeNames.Count == 0)
-                typeNames.Add(null);
+        //    // go through all the groups, assign relevant info so that we can then do get-many
+        //    // this will run at least once with null, and the last one will be returned in the set
+        //    foreach (var tn in typeNames)
+        //        if (!Ensure(grants, tn, out preparedException))
+        //            return false;
 
-            // go through all the groups, assign relevant info so that we can then do get-many
-            // this will run at least once with null, and the last one will be returned in the set
-            foreach (var tn in typeNames)
-                if (!Ensure(grants, tn, out preparedException))
-                    return false;
-
-            preparedException = null;
-            Log.Add("EnsureAll(): ok");
-            return true;
-        }
+        //    preparedException = null;
+        //    Log.Add("EnsureAll(): ok");
+        //    return true;
+        //}
 
 
-        internal bool Ensure(List<Grants> grants, string typeName, out HttpResponseException preparedException)
-        {
-            Log.Add(() => $"Ensure([{string.Join(",", grants)}], {typeName}) or throw");
-            BuildPermissionChecker(typeName);
-            if (!Permissions.UserMay(grants))
-            {
-                Log.Add("permissions not ok");
-                preparedException = Http.PermissionDenied("required permissions for this type are not given");
-                throw preparedException;
-            }
-            Log.Add("Ensure(...): ok");
-            preparedException = null;
-            return true;
-        }
 
-        internal bool UserUnrestrictedAndFeatureEnabled(out HttpResponseException preparedException)
-        {
-            var wrapLog = Log.Call("UserUnrestrictedAndFeatureEnabled", "");
-            // 1. check if user is restricted
-            var userIsRestricted = !Permissions.UserMay(GrantSets.WritePublished);
+        //[Obsolete("get out of this... WIP")]
+        //internal bool Ensure(List<Grants> grants, string typeName, out HttpResponseException preparedException)
+        //{
+        //    return Ensure(grants, TypePermissionChecker(typeName), typeName, out preparedException);
+        //    //Log.Add(() => $"Ensure([{string.Join(",", grants)}], {typeName}) or throw");
+        //    //var permChecker = _lastChecker = TypePermissionChecker(typeName);
 
-            // 2. check if feature is enabled
-            var feats = new[] { FeatureIds.PublicForms };
-            if (userIsRestricted && !Features.Enabled(feats))
-            {
-                preparedException = Http.PermissionDenied($"low-permission users may not access this - {Features.MsgMissingSome(feats)}");
-                return false;
-            }
-            wrapLog("ok");
-            preparedException = null;
-            return true;
-        }
+        //    //if (!permChecker.UserMay(grants))
+        //    //{
+        //    //    Log.Add("permissions not ok");
+        //    //    preparedException = Http.PermissionDenied("required permissions for this type are not given");
+        //    //    throw preparedException;
+        //    //}
+        //    //Log.Add("Ensure(...): ok");
+        //    //preparedException = null;
+        //    //return true;
+        //}
+
+        //protected bool Ensure(List<Grants> grants, IPermissionCheck permChecker, string typeName, out HttpResponseException preparedException)
+        //{
+        //    var wrapLog = Log.Call("Ensure", () => $"[{string.Join(",", grants)}], {typeName}", () => "or throw");
+        //    // temp!!!
+        //    //_lastChecker = permChecker;
+        //    //var permChecker = _lastChecker = TypePermissionChecker(typeName);
+            
+        //    if (!permChecker.UserMay(grants))
+        //    {
+        //        Log.Add("permissions not ok");
+        //        preparedException = Http.PermissionDenied("required permissions for this type are not given");
+        //        throw preparedException;
+        //    }
+        //    wrapLog("ok");
+        //    preparedException = null;
+        //    return true;
+        //}
+
+        ///// <summary>
+        ///// Creates a permission checker for an app
+        ///// Optionally you can provide a type-name, which will be 
+        ///// included in the permission check
+        ///// </summary>
+        ///// <param name="typeName"></param>
+        ///// <returns></returns>
+        //internal IPermissionCheck TypePermissionChecker(string typeName)
+        //{
+        //    Log.Call("TypePermissionChecker", $"{typeName}");
+        //    // now do relevant security checks
+        //    var type = typeName == null
+        //        ? null
+        //        : new AppRuntime(App, Log).ContentTypes.Get(typeName);
+
+        //    // user has edit permissions on this app, and it's the same app as the user is coming from
+        //    return new DnnPermissionCheck(Log,
+        //        instance: SxcInstance.EnvInstance,
+        //        app: App,
+        //        portal: PortalForSecurityCheck,
+        //        targetType: type);
+        //}
 
 
-        /// <summary>
-        /// Creates a permission checker for an app
-        /// Optionally you can provide a type-name, which will be 
-        /// included in the permission check
-        /// </summary>
-        /// <param name="typeName"></param>
-        /// <returns></returns>
-        internal void BuildPermissionChecker(string typeName)
-        {
-            Log.Add($"BuildPermissionChecker({typeName})");
-            // now do relevant security checks
-            var type = typeName == null
-                ? null
-                : new AppRuntime(ZoneId, App.AppId, Log)
-                    .ContentTypes.Get(typeName);
-
-            // user has edit permissions on this app, and it's the same app as the user is coming from
-            Permissions = new DnnPermissionCheck(Log,
-                instance: SxcInstance.EnvInstance,
-                app: App,
-                portal: _portalForSecurityCheck,
-                targetType: type);
-        }
     }
 }
