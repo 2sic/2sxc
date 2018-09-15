@@ -11,17 +11,16 @@ namespace ToSic.SexyContent.WebApi.Permissions
     /// A permission checker which is initialized with various items which must be checked
     /// Calling Ensure or similar will verify that all permission checks succeed
     /// </summary>
-    internal abstract class MultiPermissionCheck: HasLog, IMultiPermissionCheck
+    internal abstract class MultiPermissionsBase: HasLog, IMultiPermissionCheck
     {
         /// <summary>
         /// All the permission checks that will be used
         /// </summary>
         public Dictionary<string, IPermissionCheck> PermissionCheckers
             => _permissionCheckers ?? (_permissionCheckers = InitializePermissionChecks());
-
         private Dictionary<string, IPermissionCheck> _permissionCheckers;
 
-        protected MultiPermissionCheck(string logName, Log parentLog) : base(logName, parentLog)
+        protected MultiPermissionsBase(string logName, Log parentLog) : base(logName, parentLog)
         {}
 
         #region abstract methods
@@ -71,8 +70,6 @@ namespace ToSic.SexyContent.WebApi.Permissions
             return true;
         }
 
-
-
         public bool SameAppOrIsSuperUserAndEnsure(List<Grants> grants, out HttpResponseException preparedException)
         {
             if (!ZoneChangedAndNotSuperUser(out preparedException))
@@ -82,6 +79,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
             preparedException = null;
             return true;
         }
+
 
 
 

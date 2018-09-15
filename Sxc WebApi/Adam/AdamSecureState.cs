@@ -18,7 +18,7 @@ using Feats = ToSic.Eav.Configuration.Features;
 
 namespace ToSic.SexyContent.WebApi.Adam
 {
-    internal class AdamSecureState: PermissionsForAppAndTypes
+    internal class AdamSecureState: MultiPermissionsTypes
     {
         public string Field;
         public bool UserIsRestricted;

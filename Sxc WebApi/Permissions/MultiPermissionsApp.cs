@@ -3,7 +3,6 @@ using System.Web.Http;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
@@ -13,23 +12,23 @@ using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent.WebApi.Permissions
 {
-    internal class PermissionsForApp: MultiPermissionCheck
+    internal class MultiPermissionsApp: MultiPermissionsBase
     {
         /// <summary>
         /// The current app which will be used and can be re-used externally
         /// </summary>
         public App App { get; }
 
-        public SxcInstance SxcInstance { get; }
+        internal readonly SxcInstance SxcInstance;
 
         protected readonly PortalSettings PortalForSecurityCheck;
 
-        public bool SamePortal { get; }
+        protected readonly bool SamePortal;
 
-        public PermissionsForApp(SxcInstance sxcInstance, int appId, Log parentLog) :
+        public MultiPermissionsApp(SxcInstance sxcInstance, int appId, Log parentLog) :
             this(sxcInstance, SystemManager.ZoneIdOfApp(appId), appId, parentLog) { }
 
-        protected PermissionsForApp(SxcInstance sxcInstance, int zoneId, int appId, Log parentLog) 
+        protected MultiPermissionsApp(SxcInstance sxcInstance, int zoneId, int appId, Log parentLog) 
             : base("Api.Perms", parentLog)
         {
             var wrapLog = Log.New("AppAndPermissions", $"..., appId: {appId}, ...");
@@ -61,23 +60,6 @@ namespace ToSic.SexyContent.WebApi.Permissions
             return !zoneSameOrSuperUser;
         }
 
-        internal bool UserCanWriteAndPublicFormsEnabled(out HttpResponseException preparedException)
-        {
-            var wrapLog = Log.Call("UserUnrestrictedAndFeatureEnabled", "");
-            // 1. check if user is restricted
-            var userIsRestricted = !Ensure(GrantSets.WritePublished, out var _);
-
-            // 2. check if feature is enabled
-            var feats = new[] { FeatureIds.PublicForms };
-            if (userIsRestricted && !Features.Enabled(feats))
-            {
-                preparedException = Http.PermissionDenied($"low-permission users may not access this - {Features.MsgMissingSome(feats)}");
-                return false;
-            }
-            wrapLog("ok");
-            preparedException = null;
-            return true;
-        }
 
         /// <summary>
         /// Creates a permission checker for an app
@@ -98,33 +80,5 @@ namespace ToSic.SexyContent.WebApi.Permissions
                 targetItem: item);
         }
 
-        ///// <summary>
-        ///// Ensure for this app only!
-        ///// </summary>
-        ///// <param name="grants"></param>
-        ///// <param name="preparedException"></param>
-        ///// <returns></returns>
-        //public bool Ensure(List<Grants> grants, out HttpResponseException preparedException)
-        //{
-        //    if (!BuildAppPermissionChecker().UserMay(grants))
-        //    {
-        //        Log.Add("permissions not ok");
-        //        preparedException = Http.PermissionDenied("required permissions for this type are not given");
-        //        throw preparedException;
-        //    }
-        //    Log.Add("Ensure(...): ok");
-        //    preparedException = null;
-        //    return true;
-        //}
-
-        //public bool SameAppOrIsSuperUserAndEnsure(List<Grants> grants, out HttpResponseException preparedException)
-        //{
-        //    if (!ZoneChangedAndNotSuperUser(out preparedException))
-        //        return false;
-        //    if (!Ensure(grants, out preparedException))
-        //        return false;
-        //    preparedException = null;
-        //    return true;
-        //}
     }
 }

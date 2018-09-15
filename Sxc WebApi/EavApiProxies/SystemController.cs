@@ -20,9 +20,9 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [HttpGet]
         public IEnumerable<Feature> Features(int appId)
             => FeatureListWithPermissionCheck(appId,
-                new PermissionsForApp(SxcInstance, appId, Log));
+                new MultiPermissionsApp(SxcInstance, appId, Log));
 
-	    internal static IEnumerable<Feature> FeatureListWithPermissionCheck(int appId, PermissionsForApp permCheck)
+	    internal static IEnumerable<Feature> FeatureListWithPermissionCheck(int appId, MultiPermissionsApp permCheck)
 	    {
             // if the user has full edit permissions, he may also get the unpublic features
             // otherwise just the public Ui features

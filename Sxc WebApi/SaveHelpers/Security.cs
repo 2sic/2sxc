@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
 
         public IMultiPermissionCheck DoSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)
         {
-            var permCheck = new PermissionsForAppAndTypes(SxcInstance, appId, items.Select(i => i.Header).ToList(), Log);
+            var permCheck = new MultiPermissionsTypes(SxcInstance, appId, items.Select(i => i.Header).ToList(), Log);
             if (!permCheck.Ensure(GrantSets.WriteSomething,  out var exp))
                 throw exp;
             if (!permCheck.UserCanWriteAndPublicFormsEnabled(out exp))

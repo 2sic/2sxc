@@ -45,10 +45,10 @@ namespace ToSic.SexyContent.WebApi
 
 	    // todo: replace this call with the PermissionsForApp - try to call it directly, 
 	    // then find out what is still missing!
-	    internal void PerformSecurityCheck(IAppIdentity appIdentity, string contentType,
-	        Grants grant, ModuleInfo module, IEntity specificItem = null)
-	        => new AppPermissionBeforeUsing(SxcInstance, Log)
-	            .PerformSecurityCheck(PortalSettings, appIdentity, contentType, grant, module, specificItem);
+	    //internal void PerformSecurityCheck(IAppIdentity appIdentity, string contentType,
+	    //    Grants grant, ModuleInfo module, IEntity specificItem = null)
+	    //    => new AppPermissionBeforeUsing(SxcInstance, Log)
+	    //        .PerformSecurityCheck(PortalSettings, appIdentity, contentType, grant, module, specificItem);
 
 
 
@@ -68,7 +68,7 @@ namespace ToSic.SexyContent.WebApi
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
 
-            var permCheck = new PermissionsForAppAndTypes(SxcInstance, appIdentity.AppId, contentType, Log);
+            var permCheck = new MultiPermissionsTypes(SxcInstance, appIdentity.AppId, contentType, Log);
             if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.ReadSomething, out var exp))
                 throw exp;
             //2018-09-15 2dm replaced
@@ -82,20 +82,18 @@ namespace ToSic.SexyContent.WebApi
 
         #region GetOne by ID / GUID
 
-        [HttpGet]
-        [AllowAnonymous]   // will check security internally, so assume no requirements
-        public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
-            => GetAndSerializeOneAfterSecurityChecks(contentType,
-                appId => new EntityApi(SxcInstance.AppId 
-                    ?? throw new ArgumentException("trying to use appid from context, but none found"), Log).GetOrThrow(contentType, id), appPath);
+	    [HttpGet]
+	    [AllowAnonymous] // will check security internally, so assume no requirements
+	    public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
+	        => GetAndSerializeOneAfterSecurityChecks(contentType,
+	            appId => new EntityApi(appId, Log).GetOrThrow(contentType, id), appPath);
 
 
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, object> GetOne(string contentType, Guid guid, string appPath = null)
             => GetAndSerializeOneAfterSecurityChecks(contentType,
-                appId => new EntityApi(appId, Log).GetOrThrow(contentType, guid),
-                appPath);
+                appId => new EntityApi(appId, Log).GetOrThrow(contentType, guid), appPath);
         
 
 
@@ -114,8 +112,12 @@ namespace ToSic.SexyContent.WebApi
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
 
             var itm = getOne(appIdentity.AppId);
-            var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null, itm);
+            var permCheck = new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log);
+            if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.ReadSomething, out var exp))
+                throw exp;
+            //2018-09-15 2dm moved/disabled
+            //var context = GetContext(SxcInstance, Log);
+            //PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null, itm);
             return InitEavAndSerializer(appIdentity.AppId).Serializer.Prepare(itm);
         }
 
@@ -178,12 +180,19 @@ namespace ToSic.SexyContent.WebApi
                 ? null
                 : new EntityApi(appIdentity.AppId, Log).GetOrThrow(contentType, id.Value);
 
-            var perm = id == null 
-                ? Grants.Create 
-                : Grants.Update;
+            //var perms = new List<Grants> {id == null ? Grants.Create : Grants.Update};
 
-            var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(appIdentity, contentType, perm, appPath == null ? context.Dnn.Module : null, itm);
+            var ok = itm == null
+                ? new MultiPermissionsTypes(SxcInstance, appIdentity.AppId, contentType, Log)
+                    .Ensure(new List<Grants> {Grants.Create}, out var exp)
+                : new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log)
+                    .Ensure(new List<Grants> {Grants.Update}, out exp);
+            if (!ok)
+                throw exp;
+
+            //2018-09-15 2dm moved/disabled
+            //var context = GetContext(SxcInstance, Log);
+            //PerformSecurityCheck(appIdentity, contentType, perm, appPath == null ? context.Dnn.Module : null, itm);
 
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
@@ -350,8 +359,12 @@ namespace ToSic.SexyContent.WebApi
                 throw new Exception("type any not allowed with id-only, requires guid");
 
             var itm = new EntityApi(appIdentity.AppId, Log).GetOrThrow(contentType, id);
-            var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
+            var permCheck = new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log);
+            if (!permCheck.SameAppOrIsSuperUserAndEnsure(new List<Grants>{ Grants.Delete}, out var exp))
+                throw exp;
+            //2018-09-15 2dm moved/disabled
+            //var context = GetContext(SxcInstance, Log);
+            //PerformSecurityCheck(appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
             new EntityApi(appIdentity.AppId, Log).Delete(itm.Type.Name, id);
         }
 
@@ -367,8 +380,12 @@ namespace ToSic.SexyContent.WebApi
             var entityApi = new EntityApi(appIdentity.AppId, Log);
 	        var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
-            var context = GetContext(SxcInstance, Log);
-            PerformSecurityCheck(appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
+	        var permCheck = new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log);
+	        if (!permCheck.SameAppOrIsSuperUserAndEnsure(new List<Grants>{Grants.Delete}, out var exp))
+	            throw exp;
+	        //2018-09-15 2dm moved/disabled
+            //var context = GetContext(SxcInstance, Log);
+            //PerformSecurityCheck(appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
 
             entityApi.Delete(itm.Type.Name, guid);
         }

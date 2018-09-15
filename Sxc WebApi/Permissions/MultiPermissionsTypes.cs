@@ -7,22 +7,22 @@ using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.WebApi.Permissions
 {
-    internal class PermissionsForAppAndTypes: PermissionsForApp
+    internal class MultiPermissionsTypes: MultiPermissionsApp
     {
         protected IEnumerable<string> ContentTypes;
 
-        public PermissionsForAppAndTypes(SxcInstance sxcInstance, int appId, string contentType, Log parentLog) 
+        public MultiPermissionsTypes(SxcInstance sxcInstance, int appId, string contentType, Log parentLog) 
             : this(sxcInstance, appId, new []{contentType}, parentLog)
         {
         }
 
-        public PermissionsForAppAndTypes(SxcInstance sxcInstance, int appId, IEnumerable<string> contentTypes, Log parentLog) 
+        public MultiPermissionsTypes(SxcInstance sxcInstance, int appId, IEnumerable<string> contentTypes, Log parentLog) 
             : base(sxcInstance, appId, parentLog)
         {
             ContentTypes = contentTypes;
         }
 
-        public PermissionsForAppAndTypes(SxcInstance sxcInstance, int appId, List<ItemIdentifier> items, Log parentLog) 
+        public MultiPermissionsTypes(SxcInstance sxcInstance, int appId, List<ItemIdentifier> items, Log parentLog) 
             : base(sxcInstance, appId, parentLog)
         {
             ContentTypes = ExtractTypeNamesFromItems(items);

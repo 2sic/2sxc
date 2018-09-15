@@ -117,7 +117,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            var appAndPerms = new PermissionsForApp(SxcInstance, appId, Log);
+            var appAndPerms = new MultiPermissionsApp(SxcInstance, appId, Log);
             if (appAndPerms.ZoneChangedAndNotSuperUser(out var exp))
                 throw exp;
 

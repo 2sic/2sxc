@@ -6,12 +6,12 @@ using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.SexyContent.WebApi.Permissions
 {
-    internal class PermissionsForAppTypesAndItems: PermissionsForAppAndTypes
+    internal class MultiPermissionsItems: MultiPermissionsApp
     {
         protected List<IEntity> Items;
 
-        public PermissionsForAppTypesAndItems(SxcInstance sxcInstance, int appId, IEntity item, Log parentLog) 
-            : base(sxcInstance, appId, item.Type.StaticName, parentLog)
+        public MultiPermissionsItems(SxcInstance sxcInstance, int appId, IEntity item, Log parentLog) 
+            : base(sxcInstance, appId, parentLog)
         {
             Items = new List<IEntity> {item};
         }
