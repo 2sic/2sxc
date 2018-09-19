@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
         protected abstract Dictionary<string, IPermissionCheck> InitializePermissionChecks();
 
-        public abstract bool ZoneChangedAndNotSuperUser(out HttpResponseException exp);
+        public abstract bool ZoneAsInContextOrSuperUser(out HttpResponseException exp);
 
         #endregion
 
@@ -80,7 +80,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
         public bool SameAppOrIsSuperUserAndEnsure(List<Grants> grants, out HttpResponseException preparedException)
         {
-            if (!ZoneChangedAndNotSuperUser(out preparedException))
+            if (!ZoneAsInContextOrSuperUser(out preparedException))
                 return false;
             if (!Ensure(grants, out preparedException))
                 return false;

@@ -48,7 +48,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
                 {"App", BuildPermissionChecker()}
             };
 
-        public override bool ZoneChangedAndNotSuperUser(out HttpResponseException exp)
+        public override bool ZoneAsInContextOrSuperUser(out HttpResponseException exp)
         {
             var wrapLog = Log.Call("ZoneChangedAndNotSuperUser()");
             var zoneSameOrSuperUser = SamePortal || PortalSettings.Current.UserInfo.IsSuperUser;
@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
             wrapLog(zoneSameOrSuperUser ? $"sameportal:{SamePortal} - ok": "not ok, generate error");
 
-            return !zoneSameOrSuperUser;
+            return zoneSameOrSuperUser;
         }
 
 
