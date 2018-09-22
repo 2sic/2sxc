@@ -11,7 +11,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         {
             var wrapLog = mpa.Log.Call("UserCanWriteAndPublicFormsEnabled", "");
             // 1. check if user is restricted
-            var userIsRestricted = !mpa.UserMay(GrantSets.WritePublished);
+            var userIsRestricted = !mpa.UserMayOnAll(GrantSets.WritePublished);
 
             // 2. check if feature is enabled
             var feats = new[] { FeatureIds.PublicForms };

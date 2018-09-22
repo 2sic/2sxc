@@ -29,14 +29,14 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
             var permCheck = new MultiPermissionsApp(SxcInstance, appId, Log);
-            if(!permCheck.Ensure(GrantSets.WriteSomething, out var exp))
+            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
             permCheck.InitializeData();
 
             // now look up the types, and repeat security check with type-names
             items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);
             permCheck = new MultiPermissionsTypes(SxcInstance, appId, items, Log);
-            if(!permCheck.Ensure(GrantSets.WriteSomething, out exp))
+            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out exp))
                 throw exp;
 
             // load items - similar

@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Interfaces;
@@ -50,8 +51,14 @@ namespace ToSic.SexyContent.WebApi
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
 
+            // 2018-09-19 2dm testing
+            var appMan = new AppRuntime(appIdentity, Log);
+            var appPerms = appMan.Metadata.Get(Eav.Constants.MetadataForApp, Eav.Constants.PermissionTypeName);
+
+            throw new Exception("2dm working on this - trying to get permission check to work without initializing app!");
+
             var permCheck = new MultiPermissionsTypes(SxcInstance, appIdentity.AppId, contentType, Log);
-            if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.ReadSomething, out var exp))
+            if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exp))
                 throw exp;
             //2018-09-15 2dm replaced
             //var context = GetContext(SxcInstance, Log);
@@ -162,9 +169,9 @@ namespace ToSic.SexyContent.WebApi
 
             var ok = itm == null
                 ? new MultiPermissionsTypes(SxcInstance, appIdentity.AppId, contentType, Log)
-                    .Ensure(Grants.Create.AsSet(), out var exp)
+                    .EnsureAll(Grants.Create.AsSet(), out var exp)
                 : new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log)
-                    .Ensure(Grants.Update.AsSet(), out exp);
+                    .EnsureAll(Grants.Update.AsSet(), out exp);
             if (!ok)
                 throw exp;
 

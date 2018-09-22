@@ -69,7 +69,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         }
 
 
-        protected override bool DoesConditionApplyInEnvironment(string condition)
+        protected override bool VerifyConditionOfEnvironment(string condition)
         {
             if (!condition.ToLower().StartsWith(_salPrefix)) return false;
 
@@ -124,7 +124,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                    .HasModuleAccess(SecurityAccessLevel.Edit, "", Module));
 
         private bool UserIsModuleAdmin()
-            => Log.Intercept("UserIsModuleEditor", 
+            => Log.Intercept("UserIsModuleAdmin", 
                 () => Module != null && ModulePermissionController.CanAdminModule(Module));
     }
 }

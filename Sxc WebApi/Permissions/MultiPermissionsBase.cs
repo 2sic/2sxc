@@ -37,7 +37,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         /// </summary>
         /// <param name="grants"></param>
         /// <returns>True if all pass, false if any one fails</returns>
-        public bool UserMay(List<Grants> grants) => Ensure(grants, out var _);
+        public bool UserMayOnAll(List<Grants> grants) => EnsureAll(grants, out var _);
 
         /// <summary>
         /// Ensure that all checks pass
@@ -45,7 +45,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         /// <param name="grants"></param>
         /// <param name="preparedException">Out variable to use to throw upstream</param>
         /// <returns>True if all pass, false if any one fails</returns>
-        public bool Ensure(List<Grants> grants, out HttpResponseException preparedException)
+        public bool EnsureAll(List<Grants> grants, out HttpResponseException preparedException)
         {
             Log.Call("Ensure");
             foreach (var set in PermissionCheckers)
@@ -82,7 +82,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         {
             if (!ZoneAsInContextOrSuperUser(out preparedException))
                 return false;
-            if (!Ensure(grants, out preparedException))
+            if (!EnsureAll(grants, out preparedException))
                 return false;
             preparedException = null;
             return true;

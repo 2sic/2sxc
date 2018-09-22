@@ -110,6 +110,7 @@
     <Compile Include="Permissions\MultiPermissionsApp.cs" />
     <Compile Include="Permissions\MultiPermissionsTypes.cs" />
     <Compile Include="Permissions\MultiPermissionsItems.cs" />
+    <Compile Include="Permissions\PermissionCheckWithEnsure.cs" />
     <Compile Include="Permissions\PublicFormsPermissions.cs" />
     <Compile Include="Permissions\ReuseApp.cs" />
     <Compile Include="SaveHelpers\ContentGroupList.cs" />

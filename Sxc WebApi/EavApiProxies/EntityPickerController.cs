@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             // do security check
             var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentTypeName, Log);
-            if(!permCheck.Ensure(GrantSets.ReadSomething, out var exp))
+            if(!permCheck.EnsureAll(GrantSets.ReadSomething, out var exp))
                 throw exp;
 
             // maybe in the future, ATM not relevant

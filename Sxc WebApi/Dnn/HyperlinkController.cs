@@ -59,7 +59,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
                     // page link - only resolve if the user has edit-permissions
 		            // only people who have some full edit permissions may actually look up pages
 		            var permCheckPage = new MultiPermissionsApp(SxcInstance, appId, Log);
-		            return permCheckPage.UserMay(GrantSets.WritePublished) 
+		            return permCheckPage.UserMayOnAll(GrantSets.WritePublished) 
                         ? resolved 
                         : hyperlink;
 		        }

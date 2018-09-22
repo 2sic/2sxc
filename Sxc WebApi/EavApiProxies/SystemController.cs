@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             //var permCheck = new AppAndPermissions(sxcInstance, appId, log);
 	        //if (permCheck.Permissions == null)
 	        //    permCheck.GetTypePermissionChecker(null);
-	        var includeNonPublic = permCheck.UserMay(GrantSets.WritePublished);
+	        var includeNonPublic = permCheck.UserMayOnAll(GrantSets.WritePublished);
 
 	        return Eav.WebApi.SystemController.GetFeatures(appId)
 	            .Where(f => includeNonPublic || f.Public == true);
