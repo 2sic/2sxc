@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Internal
                     var mds = DataSource.GetMetaDataSource(zoneId, p.Key);
                     var appMetaData = mds
                         .GetMetadata(SystemRuntime.MetadataType(Eav.Constants.AppAssignmentName), p.Key,
-                            AppConstants.AttributeSetStaticNameApps)
+                            AppConstants.TypeAppConfig)
                         .FirstOrDefault();
                     var folder = appMetaData?.GetBestValue("Folder").ToString();
                     if (!String.IsNullOrEmpty(folder) && folder.ToLower() == nameLower)
