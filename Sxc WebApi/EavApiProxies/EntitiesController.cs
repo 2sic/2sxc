@@ -35,8 +35,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
             var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentType, Log);
-            if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.ReadSomething, out var exp))
-                throw exp;
+            if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
+                throw exception;
             // 2018-09-15 old code, should have checked the same stuff mostly...
             //new AppPermissionBeforeUsing(SxcInstance, Log)
             //    .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
@@ -50,17 +50,19 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             var wrapLog = Log.Call("GetManyForEditing", $"get many a#{appId}, items⋮{items.Count}");
 
+            // before we start, we have to convert the indexes into something more useful, because
+            // otherwise in content-list scenaries we don't have the type
+            var appForSecurityChecks = App.LightWithoutData(new DnnTenant(PortalSettings), appId, Log);
+            items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, appForSecurityChecks);
+
             // to do full security check, we'll have to see what content-type is requested
             var permCheck = new MultiPermissionsTypes(SxcInstance, appId, items, Log);
-            if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.WriteSomething, out var exp))
+
+            if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
             // 2018-09-15 old code, should have checked the same stuff mostly...
             //if (!permCheck.Ensure(GrantSets.WriteSomething, /*items,*/ out var exp))
             //    throw exp;
-
-            //permCheck.InitializeData();
-
-            items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);
 
             var list = new EntityApi(appId, Log).GetEntitiesForEditing(appId, items);
 
@@ -125,8 +127,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
 	        var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentType, Log);
-	        if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.ReadSomething, out var exp))
-	            throw exp;
+	        if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
+	            throw exception;
 	        // 2018-09-15 old code, should have checked the same stuff mostly...
 	        //new AppPermissionBeforeUsing(SxcInstance, Log)
          //       .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
@@ -140,8 +142,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
             var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentType, Log);
-            if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.DeleteSomething, out var exp))
-                throw exp;
+            if (!permCheck.EnsureAll(GrantSets.DeleteSomething, out var exception))
+                throw exception;
             // 2018-09-15 old code, should have checked the same stuff mostly...
             //new AppPermissionBeforeUsing(SxcInstance, Log)
             //    .ConfirmPermissionsOrThrow(contentType, appId, GrantSets.DeleteSomething);
@@ -154,8 +156,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
             var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentType, Log);
-            if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.DeleteSomething, out var exp))
-                throw exp;
+            if (!permCheck.EnsureAll(GrantSets.DeleteSomething, out var exception))
+                throw exception;
             // 2018-09-15 old code, should have checked the same stuff mostly...
             //new AppPermissionBeforeUsing(SxcInstance, Log)
             //    .ConfirmPermissionsOrThrow(contentType, appId, GrantSets.DeleteSomething);

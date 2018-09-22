@@ -7,25 +7,19 @@ using ToSic.SexyContent.WebApi.Errors;
 
 namespace ToSic.SexyContent.WebApi.Permissions
 {
-    internal class PermissionCheckWithEnsure: HasLog, IPermissionCheck
+    internal static class PermissionCheckWithEnsure 
     {
-        internal IPermissionCheck Original;
-
-        public PermissionCheckWithEnsure(IPermissionCheck original, Log parentLog):base("", parentLog)
+        /// <summary>
+        /// Run a permission check and return error if it failed
+        /// </summary>
+        /// <param name="permCheck"></param>
+        /// <param name="grants"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public static bool Ensure(this IPermissionCheck permCheck, List<Grants> grants, out HttpResponseException exception)
         {
-            Original = original;
-        }
-
-        public bool HasPermissions => Original.HasPermissions;
-
-        public bool UserMay(List<Grants> grants) => Original.UserMay(grants);
-
-        public ConditionType GrantedBecause => Original.GrantedBecause;
-
-        public bool Ensure(List<Grants> grants, out HttpResponseException exception)
-        {
-            var wrapLog = Log.Call("Ensure", () => $"[{string.Join(",", grants)}]", () => "or throw");
-            var ok = Original.UserMay(grants);
+            var wrapLog = permCheck.Log.Call("Ensure", () => $"[{string.Join(",", grants)}]", () => "or throw");
+            var ok = permCheck.UserMay(grants);
             exception = ok ? null : Http.PermissionDenied("required permissions for this request are not given");
             wrapLog(ok ? "ok" : "permissions not ok");
             return ok;

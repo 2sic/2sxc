@@ -11,6 +11,7 @@ using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -24,20 +25,17 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public AllInOne Load([FromBody] List<ItemIdentifier> items, int appId)
         {
             // Security check
-            Log.Add($"load many a#{appId}, items⋮{items.Count}");
+            var wraplog = Log.Call("Load", $"load many a#{appId}, items⋮{items.Count}");
 
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
-            var permCheck = new MultiPermissionsApp(SxcInstance, appId, Log);
-            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
-                throw exp;
-            //permCheck.InitializeData();
+            var appForSecurityChecks = App.LightWithoutData(new DnnTenant(PortalSettings), appId, Log);
+            items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, appForSecurityChecks);
 
             // now look up the types, and repeat security check with type-names
-            items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);
-            permCheck = new MultiPermissionsTypes(SxcInstance, appId, items, Log);
-            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out exp))
-                throw exp;
+            var permCheck = new MultiPermissionsTypes(SxcInstance, appId, items, Log);
+            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exception))
+                throw exception;
 
             // load items - similar
             var result = new AllInOne();
@@ -62,9 +60,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             result.InputTypes = GetNecessaryInputTypes(types, typeRead);
 
             // also deliver features
-            result.Features = SystemController.FeatureListWithPermissionCheck(appId, permCheck);
+            result.Features = SystemController.FeatureListWithPermissionCheck(appId, permCheck).ToList();
 
             // done - return
+            wraplog($"ready, sending items:{result.Items.Count}, " +
+                    $"types:{result.ContentTypes.Count}, " +
+                    $"inputs:{result.InputTypes.Count}, " +
+                    $"feats:{result.Features.Count()}");
             return result;
         }
 

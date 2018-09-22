@@ -3,7 +3,6 @@ using System.Web.Http;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.WebApi.Errors;
 
 namespace ToSic.SexyContent.WebApi.Permissions
 {
@@ -49,44 +48,23 @@ namespace ToSic.SexyContent.WebApi.Permissions
         {
             Log.Call("Ensure");
             foreach (var set in PermissionCheckers)
-                if (!Ensure(grants, set, out preparedException))
+                if (!set.Value.Ensure(grants, out preparedException))
                     return false;
 
             preparedException = null;
             return true;
         }
 
-        /// <summary>
-        /// Run a single permission check
-        /// </summary>
-        /// <param name="grants"></param>
-        /// <param name="set"></param>
-        /// <param name="preparedException"></param>
-        /// <returns></returns>
-        protected bool Ensure(List<Grants> grants, KeyValuePair<string, IPermissionCheck> set, out HttpResponseException preparedException)
-        {
-            var wrapLog = Log.Call("Ensure", () => $"[{string.Join(",", grants)}], {set.Key}", () => "or throw");
-
-            if (!set.Value.UserMay(grants))
-            {
-                Log.Add("permissions not ok");
-                preparedException = Http.PermissionDenied("required permissions for this type are not given");
-                return false;
-            }
-            wrapLog("ok");
-            preparedException = null;
-            return true;
-        }
-
-        public bool SameAppOrIsSuperUserAndEnsure(List<Grants> grants, out HttpResponseException preparedException)
-        {
-            if (!ZoneAsInContextOrSuperUser(out preparedException))
-                return false;
-            if (!EnsureAll(grants, out preparedException))
-                return false;
-            preparedException = null;
-            return true;
-        }
+        //2018-09-22 2dm removed again, as all internal checks actually already do this
+        //public bool SameAppOrIsSuperUserAndEnsure(List<Grants> grants, out HttpResponseException preparedException)
+        //{
+        //    if (!ZoneAsInContextOrSuperUser(out preparedException))
+        //        return false;
+        //    if (!EnsureAll(grants, out preparedException))
+        //        return false;
+        //    preparedException = null;
+        //    return true;
+        //}
 
 
 

@@ -7,7 +7,6 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Interfaces;
@@ -35,7 +34,7 @@ namespace ToSic.SexyContent.WebApi
 	    protected override void Initialize(HttpControllerContext controllerContext)
 	    {
 	        base.Initialize(controllerContext); // very important!!!
-	        Log.Rename("2sApCo");
+	        Log.Rename("Api.ApCont");
 	    }
 
 
@@ -47,20 +46,16 @@ namespace ToSic.SexyContent.WebApi
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null, string cultureCode = null)
         {
-            Log.Add($"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
+            Log.Call("GetEntities", $"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
 
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
 
-            // 2018-09-19 2dm testing
-            var appMan = new AppRuntime(appIdentity, Log);
-            var appPerms = appMan.Metadata.Get(Eav.Constants.MetadataForApp, Eav.Constants.PermissionTypeName);
-
-            throw new Exception("2dm working on this - trying to get permission check to work without initializing app!");
-
+            // verify that read-access to these content-types is permitted
             var permCheck = new MultiPermissionsTypes(SxcInstance, appIdentity.AppId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exp))
                 throw exp;
+
             //2018-09-15 2dm replaced
             //var context = GetContext(SxcInstance, Log);
             //PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null);
@@ -103,8 +98,8 @@ namespace ToSic.SexyContent.WebApi
 
             var itm = getOne(appIdentity.AppId);
             var permCheck = new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log);
-            if (!permCheck.SameAppOrIsSuperUserAndEnsure(GrantSets.ReadSomething, out var exp))
-                throw exp;
+            if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
+                throw exception;
             //2018-09-15 2dm moved/disabled
             //var context = GetContext(SxcInstance, Log);
             //PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null, itm);
@@ -231,8 +226,8 @@ namespace ToSic.SexyContent.WebApi
 
             var itm = new EntityApi(appIdentity.AppId, Log).GetOrThrow(contentType, id);
             var permCheck = new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log);
-            if (!permCheck.SameAppOrIsSuperUserAndEnsure(Grants.Delete.AsSet(), out var exp))
-                throw exp;
+            if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var exception))
+                throw exception;
             //2018-09-15 2dm moved/disabled
             //var context = GetContext(SxcInstance, Log);
             //PerformSecurityCheck(appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
@@ -252,8 +247,8 @@ namespace ToSic.SexyContent.WebApi
 	        var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
 	        var permCheck = new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log);
-	        if (!permCheck.SameAppOrIsSuperUserAndEnsure(Grants.Delete.AsSet(), out var exp))
-	            throw exp;
+	        if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var exception))
+	            throw exception;
 	        //2018-09-15 2dm moved/disabled
             //var context = GetContext(SxcInstance, Log);
             //PerformSecurityCheck(appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);

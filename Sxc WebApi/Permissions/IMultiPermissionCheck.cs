@@ -10,6 +10,6 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
         bool EnsureAll(List<Grants> grants, out HttpResponseException preparedException);
 
-        bool SameAppOrIsSuperUserAndEnsure(List<Grants> grants, out HttpResponseException preparedException);
+        //bool SameAppOrIsSuperUserAndEnsure(List<Grants> grants, out HttpResponseException preparedException);
     }
 }

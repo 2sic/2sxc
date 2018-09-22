@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
         public bool DraftShouldBranch = false;
 
-        public IEnumerable<Feature> Features;
+        public List<Feature> Features;
     }
 
 }
