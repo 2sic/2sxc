@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.ImportExport
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, Log parentLog)
         {
             var tenant = new DnnTenant(PortalSettings.Current);
-            var app = new App(tenant, zoneId, appId);
+            var app = App.LightWithoutData(tenant, zoneId, appId, parentLog: Log);
             AdamAppContext = new AdamAppContext(tenant, app, null, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 

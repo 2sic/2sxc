@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.WebApi.SaveHelpers
@@ -34,10 +35,13 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             IEnumerable<IGrouping<string, BundleWithHeader<T>>> groupItems)
         {
             var myLog = new Log("2Ap.GrpPrc", Log, "start");
-            var app = new App(new DnnTenant(PortalSettings.Current), appId);
-            var userMayEdit = SxcInstance.UserMayEdit;
+            // 2018-09-22 new
+            var app = new App(new DnnTenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
+                ConfigurationProvider.Build(SxcInstance, true), false, Log);
 
-            app.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(SxcInstance.EnvInstance.Id), SxcInstance.Data.ConfigurationProvider);
+            // 2018-09-22 old
+            //var userMayEdit = SxcInstance.UserMayEdit;
+            //app.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(SxcInstance.EnvInstance.Id), SxcInstance.Data.ConfigurationProvider);
 
             foreach (var entitySets in groupItems)
             {

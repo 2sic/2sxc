@@ -13,6 +13,7 @@ using ToSic.Eav.Data.Query;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
+using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
@@ -189,11 +190,16 @@ namespace ToSic.SexyContent.WebApi
             var userName = new DnnUser().IdentityToken;
 
             // try to create
-            var currentApp = new App(new DnnTenant(PortalSettings), appIdentity.AppId);
             var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
-            currentApp.InitData(false, 
-                publish.IsEnabled(ActiveModule.ModuleID), 
-                SxcInstance.Data.ConfigurationProvider);
+            // 2018-09-22 new
+            // todo: something looks wrong here, I think create/update would fail if it doesn't have a moduleid
+            var currentApp = new App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId, 
+                ConfigurationProvider.Build(false, publish.IsEnabled(ActiveModule.ModuleID),
+                    SxcInstance.Data.ConfigurationProvider), true, Log);
+            // 2018-09-22 old
+            //currentApp.InitData(false, 
+            //    publish.IsEnabled(ActiveModule.ModuleID), 
+            //    SxcInstance.Data.ConfigurationProvider);
             if (id == null)
             {
                 currentApp.Data.Create(contentType, cleanedNewItem, userName);

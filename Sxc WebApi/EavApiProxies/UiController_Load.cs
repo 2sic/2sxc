@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var permCheck = new MultiPermissionsApp(SxcInstance, appId, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
-            permCheck.InitializeData();
+            //permCheck.InitializeData();
 
             // now look up the types, and repeat security check with type-names
             items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);

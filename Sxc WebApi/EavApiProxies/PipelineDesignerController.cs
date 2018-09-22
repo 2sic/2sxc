@@ -74,7 +74,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		{
             Log.Add($"delete pipe:{id} on app:{appId}");
 			// Stop if a Template uses this Pipeline
-            var app = new App(new DnnTenant(PortalSettings.Current), appId);
+            var app = App.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
 			var templatesUsingPipeline = app.TemplateManager.GetAllTemplates().Where(t => t.Query != null && t.Query.EntityId == id).Select(t => t.TemplateId).ToArray();
 			if (templatesUsingPipeline.Any())
 				throw new Exception(

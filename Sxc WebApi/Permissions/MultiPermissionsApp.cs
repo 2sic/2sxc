@@ -6,6 +6,7 @@ using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
+using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Errors;
 using Factory = ToSic.Eav.Factory;
@@ -36,7 +37,9 @@ namespace ToSic.SexyContent.WebApi.Permissions
             var tenant = new DnnTenant(PortalSettings.Current);
             var environment = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
             var contextZoneId = environment.ZoneMapper.GetZoneId(tenant.Id);
-            App = new App(tenant, zoneId, appId, false, Log);
+            App = new App(tenant, zoneId, appId, 
+                ConfigurationProvider.Build(sxcInstance, true),
+                false, Log);
             SamePortal = contextZoneId == zoneId;
             PortalForSecurityCheck = SamePortal ? PortalSettings.Current : null;
             wrapLog($"ready for z/a:{zoneId}/{appId} t/z:{tenant.Id}/{contextZoneId} same:{SamePortal}");

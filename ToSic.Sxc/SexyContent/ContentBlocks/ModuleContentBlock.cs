@@ -75,7 +75,7 @@ namespace ToSic.SexyContent.ContentBlocks
                 //    Configuration);
 
                 // 2018-09-22 new with auto-init-data
-                App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(SxcInstance), true, Log);
+                App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(SxcInstance, false), true, Log);
 
                 ContentGroup = App.ContentGroupManager.GetInstanceContentGroup(instanceInfo.Id, instanceInfo.PageId);
 

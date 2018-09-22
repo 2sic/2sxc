@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.ContentBlocks;
+using ToSic.SexyContent.DataSources;
 using IApp = ToSic.SexyContent.Interfaces.IApp;
 
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -50,20 +51,27 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public static IApp App(int appId, PortalSettings ownerPortalSettings, bool versioningEnabled = false, bool showDrafts = false)
         {
-            var appStuff = new App(new DnnTenant(ownerPortalSettings), appId);
-            return ExtendAppWithDefaultProvider(versioningEnabled, showDrafts, appStuff);
+            // 2018-09-22 new
+            var appStuff = new App(new DnnTenant(ownerPortalSettings), Eav.Apps.App.AutoLookupZone, appId, 
+                ConfigurationProvider.Build(showDrafts, versioningEnabled, new ValueCollectionProvider()), true, null);
+            return appStuff;
+            //return ExtendAppWithDefaultProvider(versioningEnabled, showDrafts, appStuff);
         }
 
         public static IApp App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool versioningEnabled = false, bool showDrafts = false)
         {
-            var appStuff = new App(new DnnTenant(ownerPortalSettings), zoneId, appId);
-            return ExtendAppWithDefaultProvider(versioningEnabled, showDrafts, appStuff);
-        }
-        private static IApp ExtendAppWithDefaultProvider(bool versioningEnabled, bool showDrafts, App appStuff)
-        {
-            var provider = new ValueCollectionProvider(); // use blank provider for now
-            appStuff.InitData(showDrafts, versioningEnabled, provider);
+            var appStuff = new App(new DnnTenant(ownerPortalSettings), zoneId, appId,
+                ConfigurationProvider.Build(showDrafts, versioningEnabled, new ValueCollectionProvider()), true, null);
             return appStuff;
+            //return ExtendAppWithDefaultProvider(versioningEnabled, showDrafts, appStuff);
         }
+
+        // 2018-09-22 old
+        //private static IApp ExtendAppWithDefaultProvider(bool versioningEnabled, bool showDrafts, App appStuff)
+        //{
+        //    var provider = new ValueCollectionProvider(); // use blank provider for now
+        //    appStuff.InitData(showDrafts, versioningEnabled, provider);
+        //    return appStuff;
+        //}
     }
 }

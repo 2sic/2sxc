@@ -89,7 +89,7 @@ namespace ToSic.SexyContent.WebApi
 
         private string GetPath(int zoneId, int appId)
         {
-            var app = new App(new DnnTenant(PortalSettings), zoneId, appId);
+            var app = SexyContent.App.LightWithoutData(new DnnTenant(PortalSettings), zoneId, appId, parentLog: Log);
             return app.Path;
         }
 

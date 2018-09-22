@@ -14,18 +14,46 @@ namespace ToSic.SexyContent.DataSources
     public class ConfigurationProvider
     {
         /// <summary>
-        /// Generate a delegate which will be used to build the configuration
+        /// This is the key in the dictionary of providers, which contains the special one
+        /// meant to transport sxc-instance info to other sources needing it
         /// </summary>
-        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(SxcInstance sxcInstance)
-        {
-            var envInstanceId = sxcInstance.EnvInstance.Id;
-            IAppDataConfiguration BuildConfig(Eav.Apps.App appToUse)
-                => new AppDataConfiguration(sxcInstance.UserMayEdit,
-                    sxcInstance.Environment.PagePublishing.IsEnabled(envInstanceId),
-                    GetConfigProviderForModule(envInstanceId, appToUse as App, sxcInstance));
+        public const string SxcInstanceKey = "SxcInstance";
 
-            return BuildConfig;
+        /// <summary>
+        /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
+        /// </summary>
+        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(SxcInstance sxcInstance, bool useExistingConfig)
+        {
+            return appToUse =>
+            {
+                // the module id
+                var envInstanceId = sxcInstance.EnvInstance.Id;
+
+                // check if we'll use the config already on the sxc-instance, or generate a new one
+                var config = useExistingConfig
+                    ? sxcInstance.Data.ConfigurationProvider
+                    : GetConfigProviderForModule(envInstanceId, appToUse as App, sxcInstance);
+
+                // return results
+                return new AppDataConfiguration(sxcInstance.UserMayEdit,
+                    sxcInstance.Environment.PagePublishing.IsEnabled(envInstanceId), config);
+            };
         }
+
+        /// <summary>
+        /// Generate a delegate which will be used to build the configuration based existing stuff
+        /// </summary>
+        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(bool userMayEdit, bool publishEnabled, IValueCollectionProvider config) 
+            => appToUse => new AppDataConfiguration(userMayEdit, publishEnabled, config);
+
+        /// <summary>
+        /// Generate a delegate which will be used to build a basic configuration with very little context
+        /// </summary>
+        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(bool userMayEdit, bool publishEnabled)
+            => appToUse => new AppDataConfiguration(userMayEdit, publishEnabled,
+                GetConfigProviderForModule(0, appToUse as App, null));
+
+
 
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
@@ -68,9 +96,9 @@ namespace ToSic.SexyContent.DataSources
             }
 
             // provide the current SxcInstance to the children where necessary
-            if (!provider.Sources.ContainsKey("SxcInstance"))
+            if (!provider.Sources.ContainsKey(SxcInstanceKey))
             {
-                var sxci = new SxcInstanceValueProvider("SxcInstance", null, sxc);
+                var sxci = new SxcInstanceValueProvider(SxcInstanceKey, null, sxc);
                 provider.Sources.Add(sxci.Name, sxci);
             }
             return provider;

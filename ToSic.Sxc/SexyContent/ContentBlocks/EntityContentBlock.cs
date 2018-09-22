@@ -94,7 +94,7 @@ namespace ToSic.SexyContent.ContentBlocks
             //App.InitData(userMayEdit, publishingEnabled, Configuration);
 
             // 2018-09-22 new
-            App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(SxcInstance), true, Log);
+            App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(SxcInstance, true), true, Log);
 
             ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 

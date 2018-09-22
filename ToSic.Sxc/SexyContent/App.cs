@@ -65,16 +65,26 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        public App(ITenant tenant, int appId, Log parentLog = null) 
-            : base(tenant, AutoLookup, appId, true, null, parentLog) { }
+        /// <summary>
+        /// Special constructor to clarify it's a reduced app without data
+        /// Background: data operations need to know more like showDraft etc.
+        /// which often isn't needed for simpler operations
+        /// </summary>
+        public static App LightWithoutData(ITenant tenant, int appId, Log parentLog)
+            => new App(tenant, AutoLookupZone, appId, null, true, parentLog);
 
-        public App(ITenant tenant, int zoneId, int appId, bool allowSideEffects = true, Log parentLog = null)
-            : base(tenant, zoneId, appId, allowSideEffects, null, parentLog) { }
-        
+        public static App LightWithoutData(ITenant tenant, int zoneId, int appId, Log parentLog)
+            => new App(tenant, zoneId, appId, null, true, parentLog);
+
+        public static App LightWithoutData(ITenant tenant, int zoneId, int appId, bool allowSideEffects, Log parentLog)
+            => new App(tenant, zoneId, appId, null, allowSideEffects, parentLog);
+
         /// <summary>
         /// New constructor which auto-configures the app-data
         /// </summary>
-        public App(ITenant tenant, int zoneId, int appId, 
+        public App(ITenant tenant, 
+            int zoneId, 
+            int appId, 
             Func<Eav.Apps.App, IAppDataConfiguration> buildConfig, 
             bool allowSideEffects, 
             Log parentLog = null)

@@ -58,7 +58,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             //if (!permCheck.Ensure(GrantSets.WriteSomething, /*items,*/ out var exp))
             //    throw exp;
 
-            permCheck.InitializeData();
+            //permCheck.InitializeData();
 
             items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, permCheck.App);
 
@@ -190,7 +190,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    private static void ResolveItemIdOfGroup(int appId, ItemIdentifier item)
 	    {
             if (item.Group == null) return;
-	        var app = new App(new DnnTenant(PortalSettings.Current), appId);
+	        var app = App.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, null);
 	        var contentGroup = app.ContentGroupManager.GetContentGroup(item.Group.Guid);
 	        var part = contentGroup[item.Group.Part];
 	        item.EntityId = part[item.Group.Index].EntityId;
