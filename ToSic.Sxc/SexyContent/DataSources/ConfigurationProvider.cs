@@ -1,7 +1,10 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Web;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Engines.TokenEngine;
 using ToSic.SexyContent.Interfaces;
@@ -10,12 +13,24 @@ namespace ToSic.SexyContent.DataSources
 {
     public class ConfigurationProvider
     {
+        /// <summary>
+        /// Generate a delegate which will be used to build the configuration
+        /// </summary>
+        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(SxcInstance sxcInstance)
+        {
+            var envInstanceId = sxcInstance.EnvInstance.Id;
+            IAppDataConfiguration BuildConfig(Eav.Apps.App appToUse)
+                => new AppDataConfiguration(sxcInstance.UserMayEdit,
+                    sxcInstance.Environment.PagePublishing.IsEnabled(envInstanceId),
+                    GetConfigProviderForModule(envInstanceId, appToUse as App, sxcInstance));
+
+            return BuildConfig;
+        }
+
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
         internal static ValueCollectionProvider GetConfigProviderForModule(int moduleId, App app, SxcInstance sxc)
         {
-            //var portalSettings = PortalSettings.Current;
-
             var provider = new ValueCollectionProvider();
 
             // only add these in running inside an http-context. Otherwise leave them away!
@@ -24,35 +39,23 @@ namespace ToSic.SexyContent.DataSources
                 var request = HttpContext.Current.Request;
 
                 // new
-                NameValueCollection paramList = new NameValueCollection();
+                var paramList = new NameValueCollection();
                 if(sxc?.Parameters != null)
                     foreach (var pair in sxc.Parameters)
                         paramList.Add(pair.Key, pair.Value);
                 else
                     paramList = request.QueryString;
                 provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", paramList));
+
                 // old
                 provider.Sources.Add("server", new FilteredNameValueCollectionPropertyAccess("server", request.ServerVariables));
                 provider.Sources.Add("form", new FilteredNameValueCollectionPropertyAccess("form", request.Form));
             }
 
-            // Add the standard DNN property sources if PortalSettings object is available (new 2018-03-05)
+            // Add the standard DNN property sources if PortalSettings object is available (changed 2018-03-05)
             var envProvs = Factory.Resolve<IEnvironmentValueProviders>().GetProviders(moduleId).Sources;
             foreach (var prov in envProvs)
                 provider.Sources.Add(prov.Key, prov.Value);
-
-            // 2018-03-05 before
-            //// Add the standard DNN property sources if PortalSettings object is available
-            //if (portalSettings != null)
-            //{
-            //    var dnnUsr = portalSettings.UserInfo;
-            //    var dnnCult = Thread.CurrentThread.CurrentCulture;
-            //    var dnn = new TokenReplaceDnn(moduleId, portalSettings, dnnUsr);
-            //    var stdSources = dnn.PropertySources;
-            //    foreach (var propertyAccess in stdSources)
-            //        provider.Sources.Add(propertyAccess.Key,
-            //            new ValueProviderWrapperForPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
-            //}
 
             provider.Sources.Add("app", new AppPropertyAccess("app", app));
 

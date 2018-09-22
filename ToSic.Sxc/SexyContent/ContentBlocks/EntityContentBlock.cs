@@ -1,11 +1,8 @@
 ﻿using System;
-using ToSic.Eav;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
-using ToSic.SexyContent.Internal;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.SexyContent.ContentBlocks
@@ -22,7 +19,7 @@ namespace ToSic.SexyContent.ContentBlocks
         public override bool ParentIsEntity => false;
 
         public override ViewDataSource Data => _dataSource 
-            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, Configuration, Log));
+            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, App?.ConfigurationProvider /*Configuration*/, Log));
 
         #region ContentBlock Definition Entity
 
@@ -82,15 +79,22 @@ namespace ToSic.SexyContent.ContentBlocks
 
             if (AppId == 0) return;
 
-            // try to load the app - if possible
-            App = new App(Tenant, ZoneId, AppId);
+            // 2018-09-22 new
+            SxcInstance = new SxcInstance(this, Parent.SxcInstance.EnvInstance, Parent.SxcInstance.Parameters, Log);
 
-            Configuration = ConfigurationProvider.GetConfigProviderForModule(ParentId, App, SxcInstance);
+            // 2018-09-22 old
+            // try to load the app - if possible
+            //App = new App(Tenant, ZoneId, AppId);
+
+            //Configuration = ConfigurationProvider.GetConfigProviderForModule(ParentId, App, SxcInstance);
 
             // maybe ensure that App.Data is ready
-            var userMayEdit = SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
+            //var userMayEdit = SxcInstance.UserMayEdit;
+            //var publishingEnabled = SxcInstance.Environment.PagePublishing.IsEnabled(Parent.SxcInstance.EnvInstance.Id);
+            //App.InitData(userMayEdit, publishingEnabled, Configuration);
 
-            App.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(Parent.SxcInstance.EnvInstance.Id), Configuration);
+            // 2018-09-22 new
+            App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(SxcInstance), true, Log);
 
             ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 
@@ -107,12 +111,11 @@ namespace ToSic.SexyContent.ContentBlocks
         }
 
 
-        public override SxcInstance SxcInstance
-            => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, 
-                Parent.SxcInstance.EnvInstance, 
-                Parent.SxcInstance.Parameters, 
-                //Parent.SxcInstance.Environment.Permissions, 
-                Log));
+        //public override SxcInstance SxcInstance
+        //    => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, 
+        //        Parent.SxcInstance.EnvInstance, 
+        //        Parent.SxcInstance.Parameters, 
+        //        Log));
 
 
         public override bool IsContentApp => _appName == Eav.Constants.DefaultAppName;

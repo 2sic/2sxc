@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Web;
 using ToSic.Eav.AppEngine;
 using ToSic.Eav.Apps.Interfaces;
@@ -65,11 +66,19 @@ namespace ToSic.SexyContent
         #endregion
 
         public App(ITenant tenant, int appId, Log parentLog = null) 
-            : base(tenant, AutoLookup, appId, true, parentLog) { }
+            : base(tenant, AutoLookup, appId, true, null, parentLog) { }
 
         public App(ITenant tenant, int zoneId, int appId, bool allowSideEffects = true, Log parentLog = null)
-            : base(tenant, zoneId, appId, allowSideEffects, parentLog) { }
+            : base(tenant, zoneId, appId, allowSideEffects, null, parentLog) { }
         
+        /// <summary>
+        /// New constructor which auto-configures the app-data
+        /// </summary>
+        public App(ITenant tenant, int zoneId, int appId, 
+            Func<Eav.Apps.App, IAppDataConfiguration> buildConfig, 
+            bool allowSideEffects, 
+            Log parentLog = null)
+            : base(tenant, zoneId, appId, allowSideEffects, buildConfig, parentLog) { }
 
         #region Paths
         public string Path => VirtualPathUtility.ToAbsolute(GetRootPath());

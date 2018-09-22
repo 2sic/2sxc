@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.DataSources
 
         public DataPublishing Publish = new DataPublishing();
 
-        internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, ValueCollectionProvider configurationProvider, Log parentLog, int instanceId = 0)
+        internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, IValueCollectionProvider configurationProvider, Log parentLog, int instanceId = 0)
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
             var showDrafts = sxc.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(sxc.InstanceInfo);
