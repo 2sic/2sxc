@@ -41,7 +41,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             validator.PrepareForEntityChecks(appRead);
 
             // permission checks
-            var permCheck = new SaveHelpers.Security(SxcInstance, Log).DoSaveSecurityCheck(appId, package.Items);
+            var permCheck = new SaveHelpers.Security(SxcInstance, Log).DoPreSaveSecurityCheck(appId, package.Items);
 
             var items = package.Items.Select(i =>
             {

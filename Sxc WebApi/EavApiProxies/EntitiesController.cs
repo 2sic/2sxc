@@ -58,8 +58,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // to do full security check, we'll have to see what content-type is requested
             var permCheck = new MultiPermissionsTypes(SxcInstance, appId, items, Log);
 
-            if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
-                throw exp;
+            if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var exception))
+                throw exception;
             // 2018-09-15 old code, should have checked the same stuff mostly...
             //if (!permCheck.Ensure(GrantSets.WriteSomething, /*items,*/ out var exp))
             //    throw exp;
@@ -75,6 +75,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                     : null
             }).ToList();
 
+            // 2018-09-26 2dm
+            // if we're giving items which already exist, then we must verify that edit/read is allowed.
+            // todo: also share this code bit with the UiController
+            if (list.Any(set => set.Entity != null))
+                if (!permCheck.EnsureAll(GrantSets.ReadSomething, out exception))
+                    throw exception;
+
             wrapLog($"will return items⋮{list.Count}");
             return listAsEwH;
         }
@@ -87,7 +94,20 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             // log and do security check
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
-            var permCheck = new SaveHelpers.Security(SxcInstance, Log).DoSaveSecurityCheck(appId, items);
+
+            var permCheck = new SaveHelpers.Security(SxcInstance, Log).DoPreSaveSecurityCheck(appId, items);
+
+            #region check if it's an update, and do more security checks then
+            // todo: also share this code bit with the UiController
+            var appRead = new AppRuntime(appId, Log);
+            var foundItems = items.Where(i => i.EntityId != 0 && i.EntityGuid != Guid.Empty)
+                .Select(i => i.EntityGuid != Guid.Empty
+                    ? appRead.Entities.Get(i.EntityGuid) // prefer guid access if available
+                    : appRead.Entities.Get(i.EntityId)  // otherwise id
+                );
+            if (foundItems.Any(i => i != null) && !permCheck.EnsureAll(GrantSets.UpdateSomething, out var exception))
+                throw exception;
+            #endregion
 
             return new SaveHelpers.DnnPublishing(SxcInstance, Log)
                 .SaveWithinDnnPagePublishing(appId, items, partOfPage,
@@ -102,7 +122,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             bool partOfPage,
             bool forceDraft)
 	    {
-	        Log.Add($"SaveAndProcessGroups(..., appId:{appId}, items:{items?.Count}), partOfPage:{partOfPage}");
+	        Log.Add($"SaveAndProcessGroups(..., appId:{appId}, items:{items?.Count}), partOfPage:{partOfPage}, forceDraft:{forceDraft}");
 
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
@@ -175,7 +195,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		[HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public ContentTypeInfo GetContentType(string contentType, int appId) 
-            => new Eav.WebApi.ContentTypeController().GetSingle(appId, contentType, null);
+            => new Eav.WebApi.ContentTypeController().GetSingle(appId, contentType);
 
 	    #endregion
 

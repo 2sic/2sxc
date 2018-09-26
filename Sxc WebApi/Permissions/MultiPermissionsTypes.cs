@@ -55,7 +55,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         /// <returns></returns>
         protected IPermissionCheck BuildTypePermissionChecker(string typeName)
         {
-            Log.Call("BuildTypePermissionChecker", $"{typeName}");
+            Log.Add($"BuildTypePermissionChecker({typeName})");
             // now do relevant security checks
             return BuildPermissionChecker(AppRuntime.ContentTypes.Get(typeName));
         }

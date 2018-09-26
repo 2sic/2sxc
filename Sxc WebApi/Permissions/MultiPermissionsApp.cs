@@ -72,7 +72,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         /// <returns></returns>
         protected IPermissionCheck BuildPermissionChecker(IContentType type = null, IEntity item = null)
         {
-            Log.Call("BuildPermissionChecker");
+            Log.Add("BuildPermissionChecker(...)");
 
             // user has edit permissions on this app, and it's the same app as the user is coming from
             return new DnnPermissionCheck(Log,

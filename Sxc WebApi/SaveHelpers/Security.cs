@@ -12,13 +12,17 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
         public Security(SxcInstance sxcInstance, Log parentLog) : base(sxcInstance, parentLog, "Api.SavSec") { }
 
 
-        public IMultiPermissionCheck DoSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)
+        public IMultiPermissionCheck DoPreSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)
         {
             var permCheck = new MultiPermissionsTypes(SxcInstance, appId, items.Select(i => i.Header).ToList(), Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething,  out var exp))
                 throw exp;
             if (!permCheck.UserCanWriteAndPublicFormsEnabled(out exp))
                 throw exp;
+
+            // 2018-09-26 2dm
+            // add test to verify that saving existing items is allowed
+
             Log.Add("passed security checks");
             return permCheck;
 
