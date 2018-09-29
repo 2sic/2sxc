@@ -2,12 +2,13 @@
 using System.Web.Http;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
     [SupportedModules("2sxc,2sxc-app")]
-    public class EntityPickerController : SxcApiControllerBase
+    public class EntityPickerController : SxcApiControllerBase, IEntityPickerController
     {
         [HttpGet]
         [HttpPost]

@@ -4,17 +4,18 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
-    /// <inheritdoc />
+    /// <inheritdoc cref="ISystemController" />
     /// <summary>
     /// Web API Controller Which Delivers System Information
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
     [AllowAnonymous]
-    public class SystemController : SxcApiControllerBase
+    public class SystemController : SxcApiControllerBase, ISystemController
     {
 
         [HttpGet]
@@ -31,8 +32,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	        //    permCheck.GetTypePermissionChecker(null);
 	        var includeNonPublic = permCheck.UserMayOnAll(GrantSets.WritePublished);
 
-	        return Eav.WebApi.SystemController.GetFeatures(appId)
-	            .Where(f => includeNonPublic || f.Public == true);
+	        return Eav.Configuration.Features.Ui
+                .Where(f => includeNonPublic || f.Public == true);
 	    }
 	}
 }

@@ -105,6 +105,7 @@
     <Compile Include="EavApiProxies\ValidatorBase.cs" />
     <Compile Include="EavApiProxies\SaveDataValidator.cs" />
     <Compile Include="AutoDetectContext\AppFinder.cs" />
+    <Compile Include="IImportExportController.cs" />
     <Compile Include="Permissions\IMultiPermissionCheck.cs" />
     <Compile Include="Permissions\MultiPermissionsBase.cs" />
     <Compile Include="Permissions\MultiPermissionsApp.cs" />
@@ -155,7 +156,6 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="ImportExportController.cs" />
     <Compile Include="ImportExport\HttpResponseMessageHelper.cs" />
-    <Compile Include="ImportExport\ImportResult.cs" />
     <Compile Include="ImportExport\SxcAppWrapper.cs" />
     <Compile Include="InstallerController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

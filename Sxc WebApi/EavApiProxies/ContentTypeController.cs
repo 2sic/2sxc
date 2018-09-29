@@ -6,6 +6,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -14,8 +15,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     /// Web API Controller for Content-Type structures, fields etc.
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
-    public class ContentTypeController : SxcApiControllerBase
-	{
+    public class ContentTypeController : SxcApiControllerBase, IContentTypeController
+    {
         private Eav.WebApi.ContentTypeController _eavCtc;
 
 	    protected override void Initialize(HttpControllerContext controllerContext)

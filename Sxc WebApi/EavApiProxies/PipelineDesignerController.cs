@@ -8,6 +8,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Dnn;
 
@@ -19,8 +20,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	[SupportedModules("2sxc,2sxc-app")]
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [SxcWebApiExceptionHandling]
-	public class PipelineDesignerController : DnnApiControllerWithFixes
-	{
+	public class PipelineDesignerController : DnnApiControllerWithFixes, IPipelineDesignerController
+    {
 		private Eav.WebApi.QueryController _eavCont;
 
 	    protected override void Initialize(HttpControllerContext controllerContext)

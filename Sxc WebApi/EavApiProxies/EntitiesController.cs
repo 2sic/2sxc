@@ -10,6 +10,7 @@ using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Permissions;
 using Guid = System.Guid;
@@ -21,7 +22,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	/// Proxy Class to the EAV EntitiesController (Web API Controller)
 	/// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
-	public class EntitiesController : SxcApiControllerBase
+	public class EntitiesController : SxcApiControllerBase, IEntitiesController
 	{
 	    protected override void Initialize(HttpControllerContext controllerContext)
 	    {
@@ -29,7 +30,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             Log.Rename("Api.2sEntC");
         }
 
-        [HttpGet]
+	    /// <inheritdoc />
+	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
@@ -43,7 +45,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         }
 
 
-        [HttpPost]
+	    /// <inheritdoc />
+	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public dynamic GetManyForEditing([FromBody] List<ItemIdentifier> items, int appId)
         {
@@ -86,7 +89,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         }
 
 
-
+	    /// <inheritdoc />
 	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<BundleWithHeader<EntityWithLanguages>> items, [FromUri] bool partOfPage = false)
