@@ -15,7 +15,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
         #region Content-Type Get, Delete, Save
         [HttpGet]
-        public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, string keyType, string key, string contentType, int? appId = null) 
+        public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, string keyType, string key, string contentType, int/*?*/ appId /*= null*/) 
             => new Eav.WebApi.MetadataController(Log).GetAssignedEntities(assignmentObjectTypeId, keyType, key, contentType, appId);
 
 	    #endregion

@@ -127,7 +127,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
 	        var eavEntitiesController = new Eav.WebApi.EntitiesController(Log);
-	        ((Serializer)eavEntitiesController.Serializer).Sxc = SxcInstance;
+            // 2018-09-29 2dm disabled access to shared serializer, as I don't think we're actually serializing anything with it
+	        //((Serializer)eavEntitiesController.Serializer).Sxc = SxcInstance;
 	        return eavEntitiesController.SaveMany(appId, items, partOfPage, forceDraft);
 	    }
 

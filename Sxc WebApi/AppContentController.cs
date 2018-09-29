@@ -103,7 +103,7 @@ namespace ToSic.SexyContent.WebApi
             //2018-09-15 2dm moved/disabled
             //var context = GetContext(SxcInstance, Log);
             //PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null, itm);
-            return InitEavAndSerializer(appIdentity.AppId).Serializer.Prepare(itm);
+            return InitEavAndSerializer(appIdentity.AppId).Prepare(itm);
         }
 
         #endregion
@@ -203,7 +203,7 @@ namespace ToSic.SexyContent.WebApi
             }
 
             currentApp.Data.Update(id.Value, cleanedNewItem, userName);
-            return InitEavAndSerializer(appIdentity.AppId).Serializer.Prepare(currentApp.Data.List.One(id.Value));
+            return InitEavAndSerializer(appIdentity.AppId).Prepare(currentApp.Data.List.One(id.Value));
         }
 
         #endregion
@@ -258,34 +258,34 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
-        #region GetAssigned - unclear if in use!
-        /// <summary>
-        /// Get Entities with specified AssignmentObjectTypeId and Key
-        /// todo: unclear if this is in use anywhere? 
-        /// </summary>
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-		public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, [FromUri] string appPath = null)
-        {
-            Log.Add($"get assigned for assigmentType#{assignmentObjectTypeId}, guid:{keyGuid}, type:{contentType}, path:{appPath}");
-	        return new MetadataController().GetAssignedEntities(assignmentObjectTypeId, "guid", keyGuid.ToString(), contentType);
-		}
+        #region GetAssigned 2018-09-29 2dm removed, I believe it's not in use anywhere
+  //      /// <summary>
+  //      /// Get Entities with specified AssignmentObjectTypeId and Key
+  //      /// todo: unclear if this is in use anywhere? 
+  //      /// </summary>
+  //      [HttpGet]
+  //      [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+		//public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, [FromUri] string appPath = null)
+  //      {
+  //          Log.Add($"get assigned for assigmentType#{assignmentObjectTypeId}, guid:{keyGuid}, type:{contentType}, path:{appPath}");
+	 //       return new MetadataController().GetAssignedEntities(assignmentObjectTypeId, "guid", keyGuid.ToString(), contentType);
+		//}
         #endregion
 
 
         #region helpers / initializers to prep the EAV and Serializer
 
         // 2018-04-18 2dm disabled init-serializer, don't think it's actually ever used!
-        private EntitiesController InitEavAndSerializer(int appId)
+        private Eav.Serializers.Serializer InitEavAndSerializer(int appId)
         {
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-            var entitiesController = new EntitiesController(appId);
-
+            //var entitiesController = new EntitiesController(Log);
+            var ser = Eav3WebApiBase.GetSerializerWithGuidEnabled();
             // only do this if we have a real context - otherwise don't do this
             //if (!appId.HasValue)
-                ((Serializer)entitiesController.Serializer).Sxc = SxcInstance;
-            return entitiesController;
+                ((Serializer)ser).Sxc = SxcInstance;
+            return ser;
         }
         #endregion
 
