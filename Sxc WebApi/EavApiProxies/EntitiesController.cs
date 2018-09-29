@@ -52,7 +52,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // before we start, we have to convert the indexes into something more useful, because
             // otherwise in content-list scenaries we don't have the type
-            var appForSecurityChecks = App.LightWithoutData(new DnnTenant(PortalSettings), appId, Log);
+            var appForSecurityChecks = App.LightWithoutData(new DnnTenant(PortalSettings), SystemRuntime.ZoneIdOfApp(appId), appId, Log);
             items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, appForSecurityChecks);
 
             // to do full security check, we'll have to see what content-type is requested

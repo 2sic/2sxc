@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         protected readonly bool SamePortal;
 
         public MultiPermissionsApp(SxcInstance sxcInstance, int appId, Log parentLog) :
-            this(sxcInstance, SystemManager.ZoneIdOfApp(appId), appId, parentLog) { }
+            this(sxcInstance, SystemRuntime.ZoneIdOfApp(appId), appId, parentLog) { }
 
         protected MultiPermissionsApp(SxcInstance sxcInstance, int zoneId, int appId, Log parentLog) 
             : base("Api.Perms", parentLog)
