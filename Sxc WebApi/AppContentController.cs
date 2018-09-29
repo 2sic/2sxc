@@ -12,6 +12,7 @@ using ToSic.Eav.Data.Query;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Helpers;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -281,10 +282,8 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             //var entitiesController = new EntitiesController(Log);
-            var ser = Eav3WebApiBase.GetSerializerWithGuidEnabled();
-            // only do this if we have a real context - otherwise don't do this
-            //if (!appId.HasValue)
-                ((Serializer)ser).Sxc = SxcInstance;
+            var ser = Eav.WebApi.Helpers.Serializers.GetSerializerWithGuidEnabled();
+            ((Serializer)ser).Sxc = SxcInstance;
             return ser;
         }
         #endregion
