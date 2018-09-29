@@ -12,7 +12,6 @@ using ToSic.Eav.Data.Query;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.Helpers;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -259,20 +258,6 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
-        #region GetAssigned 2018-09-29 2dm removed, I believe it's not in use anywhere
-  //      /// <summary>
-  //      /// Get Entities with specified AssignmentObjectTypeId and Key
-  //      /// todo: unclear if this is in use anywhere? 
-  //      /// </summary>
-  //      [HttpGet]
-  //      [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-		//public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, [FromUri] string appPath = null)
-  //      {
-  //          Log.Add($"get assigned for assigmentType#{assignmentObjectTypeId}, guid:{keyGuid}, type:{contentType}, path:{appPath}");
-	 //       return new MetadataController().GetAssignedEntities(assignmentObjectTypeId, "guid", keyGuid.ToString(), contentType);
-		//}
-        #endregion
-
 
         #region helpers / initializers to prep the EAV and Serializer
 
@@ -281,7 +266,6 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-            //var entitiesController = new EntitiesController(Log);
             var ser = Eav.WebApi.Helpers.Serializers.GetSerializerWithGuidEnabled();
             ((Serializer)ser).Sxc = SxcInstance;
             return ser;
