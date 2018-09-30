@@ -105,7 +105,6 @@
     <Compile Include="EavApiProxies\ValidatorBase.cs" />
     <Compile Include="EavApiProxies\SaveDataValidator.cs" />
     <Compile Include="AutoDetectContext\AppFinder.cs" />
-    <Compile Include="IImportExportController.cs" />
     <Compile Include="Permissions\IMultiPermissionCheck.cs" />
     <Compile Include="Permissions\MultiPermissionsBase.cs" />
     <Compile Include="Permissions\MultiPermissionsApp.cs" />
