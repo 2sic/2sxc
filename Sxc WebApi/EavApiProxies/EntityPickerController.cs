@@ -17,7 +17,9 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public IEnumerable<dynamic> GetAvailableEntities([FromUri]int appId, [FromBody] string[] items, [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
         {
             // do security check
-            var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentTypeName, Log);
+            var permCheck = string.IsNullOrEmpty(contentTypeName) 
+                ? new MultiPermissionsApp(SxcInstance, appId, Log)
+                : new MultiPermissionsTypes(SxcInstance, appId, contentTypeName, Log);
             if(!permCheck.EnsureAll(GrantSets.ReadSomething, out var exp))
                 throw exp;
 
