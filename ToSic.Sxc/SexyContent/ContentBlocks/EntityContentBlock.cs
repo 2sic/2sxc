@@ -77,10 +77,10 @@ namespace ToSic.SexyContent.ContentBlocks
                 return;
             }
 
-            if (AppId == 0) return;
-
-            // 2018-09-22 new
+            // 2018-09-22 new, must come before the AppId == 0 check
             SxcInstance = new SxcInstance(this, Parent.SxcInstance.EnvInstance, Parent.SxcInstance.Parameters, Log);
+
+            if (AppId == 0) return;
 
             // 2018-09-22 old
             // try to load the app - if possible
