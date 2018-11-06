@@ -81,6 +81,17 @@ namespace ToSic.Sxc.Adam.WebApi
 
         #region adam-file manager
 
+        // test method to provide a public API for accessing adam items easily
+        [HttpGet]
+        public IEnumerable<AdamItem> ItemsWithAppIdFromContext(string contentType, Guid guid, string field,
+            string subfolder = "")
+        {
+            // if app-path specified, use that app, otherwise use from context
+            var appId = SxcInstance.AppId;
+            if(appId == null) throw new Exception("Can't detect app-id, module-context missing in http request");
+            return Items(appId.Value, contentType, guid, field, subfolder);
+        }
+
         [HttpGet]
         public IEnumerable<AdamItem> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
