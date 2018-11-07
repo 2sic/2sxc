@@ -2137,11 +2137,15 @@ angular.module("sxcFieldTemplates")
             paste_remove_styles: true,
 
             paste_postprocess: function (plugin, args) {
-                var anchors = args.node.getElementsByTagName('a');
-                for (var i = 0; i < anchors.length; i++) {
-                    if (anchors[i].element.hasAttribute('target') === false) {
-                        anchors[i].setAttribute('target', '_blank');
+                try {
+                    var anchors = args.node.getElementsByTagName('a');
+                    for (var i = 0; i < anchors.length; i++) {
+                        if (anchors[i].hasAttribute('target') === false) {
+                            anchors[i].setAttribute('target', '_blank');
+                        }
                     }
+                } catch (e) {
+                    console.error('error in paste postprocess - will only log but not throw', e);
                 }
             }
         };

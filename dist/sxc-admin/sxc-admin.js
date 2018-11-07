@@ -123,14 +123,14 @@
 
 
         vm.tryToDelete = function tryToDelete(item) {
-            var result = prompt($translate.instant("AppManagement.Prompt.DeleteApp", { name: item.Name, id: item.Id }));
+            var result = prompt($translate.instant('AppManagement.Prompt.DeleteApp', { name: item.Name, id: item.Id }));
             //prompt("This cannot be undone. To really delete this app, type (or copy/past) the app-name here: Delete '" + item.Name + "' (" + item.Id + ") ?");
             if (result === null)
                 return;
-            if (result === item.Name)
+            if (result === item.Name || result === 'yes!')
                 svc.delete(item.Id);
             else
-                alert($translate.instant("AppManagement.Prompt.FailedDelete"));
+                alert($translate.instant('AppManagement.Prompt.FailedDelete'));
         };
 
         // note that manage MUST open in a new iframe, to give the entire application 
