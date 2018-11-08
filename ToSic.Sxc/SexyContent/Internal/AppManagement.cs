@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.Internal
         public static List<App> GetApps(int zoneId, bool includeDefaultApp, ITenant tenant, Log parentLog)
         {
             var appIds = new ZoneRuntime(zoneId, parentLog).Apps;
-            var builtApps = appIds.Select(eavApp => new App(tenant, zoneId, eavApp.Key));
+            var builtApps = appIds.Select(eavApp => App.LightWithoutData(tenant, zoneId, eavApp.Key, parentLog: parentLog));
 
             if (!includeDefaultApp)
                 builtApps = builtApps.Where(a => a.Name != Eav.Constants.ContentAppName);
@@ -28,17 +28,17 @@ namespace ToSic.SexyContent.Internal
             return builtApps.OrderBy(a => a.Name).ToList();
         }
 
-        internal static void RemoveAppInTenantAndEav(IEnvironment env, int zoneId, int appId, ITenant tenant, int userId, Log parentLog)
+        internal static void RemoveAppInTenantAndEav(IZoneMapper zoneMapper, int zoneId, int appId, ITenant tenant, int userId, Log parentLog)
         {
             // check portal assignment and that it's not the default app
-            if (zoneId != env.ZoneMapper.GetZoneId(tenant.Id))
+            if (zoneId != zoneMapper.GetZoneId(tenant.Id))
                 throw new Exception("This app does not belong to portal " + tenant.Id);
 
             if (appId == new ZoneRuntime(zoneId, parentLog).DefaultAppId)
                 throw new Exception("The default app of a zone cannot be removed.");
 
             // Delete folder in dnn
-            var sexyApp = new App(tenant, zoneId, appId);
+            var sexyApp = App.LightWithoutData(tenant, zoneId, appId, null);
             if (!IsNullOrEmpty(sexyApp.Folder) && Directory.Exists(sexyApp.PhysicalPath))
                 Directory.Delete(sexyApp.PhysicalPath, true);
 

@@ -6,6 +6,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -14,8 +15,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     /// Web API Controller for Content-Type structures, fields etc.
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
-    public class ContentTypeController : SxcApiControllerBase
-	{
+    public class ContentTypeController : SxcApiControllerBase, IContentTypeController
+    {
         private Eav.WebApi.ContentTypeController _eavCtc;
 
 	    protected override void Initialize(HttpControllerContext controllerContext)
@@ -40,11 +41,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
 	    {
-	        var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-            if(!permCheck.Ensure(GrantSets.WriteSomething, contentTypeStaticName, out var exp))
+	        var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentTypeStaticName, Log);
+            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
-            if(!permCheck.UserUnrestrictedAndFeatureEnabled(out exp))
+            if(!permCheck.UserCanWriteAndPublicFormsEnabled(out exp))
                 throw exp;
 
             // if we got this far, permissions are ok
@@ -80,10 +81,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName)
         {
             Log.Add($"get fields for a:{appId} type:{staticName}");
-	        var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-            if (!permCheck.Ensure(GrantSets.WriteSomething, staticName, out var exp))
+	        var permCheck = new MultiPermissionsTypes(SxcInstance, appId, staticName, Log);
+            if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
-            if(!permCheck.UserUnrestrictedAndFeatureEnabled(out exp))
+            if(!permCheck.UserCanWriteAndPublicFormsEnabled(out exp))
                 throw exp;
 
             return _eavCtc.GetFields(appId, staticName);

@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.WebApi.ImportExport
 
         public SxcAppWrapper(int zoneId, int appId)
         {
-            App = new App(new DnnTenant(PortalSettings.Current), zoneId, appId, false);
+            App = App.LightWithoutData(new DnnTenant(PortalSettings.Current), zoneId, appId, false, null);
         }
 
 

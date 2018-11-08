@@ -30,9 +30,9 @@ namespace ToSic.Sxc.WebApi.System
             {
                 Log.Add("getting content-type stats");
                 var entities = type == "all"
-                    ? appRead.Entities.All
+                    ? appRead.Entities.All.ToList()
                     : appRead.Entities.Get(type).ToList();
-                msg += p($"entities: {entities.Count()}\n");
+                msg += p($"entities: {entities.Count}\n");
                 msg += "<table id='table'><thead>" 
                     + tr(new[] { "#", "Id", "Guid", "Title", "Type", "Modified", "Owner", "Version", "Metadata", "Permissions" }, true)
                     + "</thead>"

@@ -3,6 +3,7 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Eav.WebApi.PublicApi;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -11,8 +12,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class ContentImportController : SxcApiControllerBase
-	{
+    public class ContentImportController : SxcApiControllerBase, IContentImportController
+    {
 	    protected override void Initialize(HttpControllerContext controllerContext)
 	    {
 	        base.Initialize(controllerContext);

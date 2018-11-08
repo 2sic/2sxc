@@ -2,6 +2,7 @@
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using ToSic.Eav.ImportExport.Options;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -19,8 +20,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     /// </remarks>
     [AllowAnonymous]
     [SxcWebApiExceptionHandling]
-    public class ContentExportController : DnnApiControllerWithFixes 
-	{
+    public class ContentExportController : DnnApiControllerWithFixes, IContentExportController
+    {
 	    protected override void Initialize(HttpControllerContext controllerContext)
 	    {
 	        base.Initialize(controllerContext); // very important!!!

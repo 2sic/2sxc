@@ -91,7 +91,8 @@ namespace ToSic.SexyContent.ContentBlocks
                         Name = a.Name,
                         AppId = a.AppId,
                         SupportsAjaxReload = a.Configuration.SupportsAjaxReload ?? false,
-                        Thumbnail = a.Thumbnail
+                        Thumbnail = a.Thumbnail,
+                        Version = a.Configuration.Version ?? ""
                     });
         }
 

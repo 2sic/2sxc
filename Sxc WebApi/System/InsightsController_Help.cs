@@ -9,6 +9,7 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string Help()
         {
+            var logWrap = Log.Call("Help");
             ThrowIfNotSuperuser();
 
             const string typeattribs = "typeattributes?appid=&type=";
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.WebApi.System
             const string globTypes = "globaltypes";
             const string globTypesLog = "globaltypeslog";
             const string logs = "logs";
-            return h1("2sxc Insights - Commands")
+            var result = h1("2sxc Insights - Commands")
                    + p(
                        "In most cases you'll just browse the cache and use the links from there. "
                        + "The other links are listed here so you know what they would be, "
@@ -55,6 +56,8 @@ namespace ToSic.Sxc.WebApi.System
                    + li("look at entity permissions using entity-id:" + a(entityPerms, entityPerms))
                    + "<ol>"
                 ;
+            logWrap("ok");
+            return result;
         }
         
     }

@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
         public override ViewDataSource Data => _dataSource 
-            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, Configuration, Log, InstanceInfo.Id));
+            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, App?.ConfigurationProvider /* Configuration*/, Log, InstanceInfo.Id));
 
         private readonly IEnumerable<KeyValuePair<string, string>> _urlParams;
 
@@ -57,18 +57,25 @@ namespace ToSic.SexyContent.ContentBlocks
                 return;
             }
 
+            // 2018-09-22 new with auto-init-data
+            SxcInstance = new SxcInstance(this, InstanceInfo, _urlParams, Log);
+
             if (AppId != 0)
             {
                 Log.Add("real app, will load data");
+                // 2018-09-22 old
                 // try to load the app - if possible
-                App = new App(Tenant, ZoneId, AppId, parentLog: Log);
+                //App = new App(Tenant, ZoneId, AppId, parentLog: Log);
 
-                Configuration = ConfigurationProvider.GetConfigProviderForModule(InstanceInfo.Id, App, SxcInstance);
+                //Configuration = ConfigurationProvider.GetConfigProviderForModule(InstanceInfo.Id, App, SxcInstance);
 
-                // maybe ensure that App.Data is ready
-                var userMayEdit = SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance.InstanceInfo);
-                App.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(InstanceInfo.Id), 
-                    Configuration);
+                //// maybe ensure that App.Data is ready
+                //var userMayEdit = SxcInstance.UserMayEdit;
+                //App.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(InstanceInfo.Id), 
+                //    Configuration);
+
+                // 2018-09-22 new with auto-init-data
+                App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(SxcInstance, false), true, Log);
 
                 ContentGroup = App.ContentGroupManager.GetInstanceContentGroup(instanceInfo.Id, instanceInfo.PageId);
 
@@ -84,8 +91,8 @@ namespace ToSic.SexyContent.ContentBlocks
         }
 
 
-        public override SxcInstance SxcInstance
-            => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, InstanceInfo, _urlParams, parentLog: Log));
+        //public override SxcInstance SxcInstance
+        //    => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, InstanceInfo, _urlParams, Log));
 
         public override bool IsContentApp => InstanceInfo.IsPrimary;
 

@@ -1,0 +1,99 @@
+.field-string-wysiwyg-mce-box {
+    position: relative;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(170,178,189);
+    border-radius: 4px;
+    padding: 8px;
+    padding-left: 0;
+    font-size: larger;
+    overflow: auto;
+}
+
+/* note: most of this definition should be the same as the definition of the standard input box */
+div.wrap-float-label .field-string-wysiwyg-mce-box {
+    border: none;
+    border-radius: 0;
+    -moz-box-shadow: inset 0 -10px 10px -10px #888;
+    -webkit-box-shadow: inset 0 -10px 10px -10px #888;
+    box-shadow: inset 0 -10px 10px -10px #888;
+    margin-top: 12px;
+}
+
+div.wrap-float-label .field-string-wysiwyg-mce-box.mce-edit-focus {
+    padding-left: 8px;
+}
+
+.mce-tinymce.mce-container.mce-tinymce-inline {
+    background-color: #0087F4;
+}
+.mce-tinymce.mce-container.mce-toolbar {
+    background-color: #0087F4;
+}
+.mce-container, .mce-panel, .mce-btn {
+    color: white!important;
+    background-color: #0087F4!important;
+}
+
+.mce-menubar .mce-menubtn button span, .mce-ico { color: white!important;}
+.mce-container, .mce-container *, .mce-widget, .mce-widget *, .mce-reset { color: white !important;}
+
+.mce-textbox {color:#333!important}
+
+.mce-btn:hover, .mce-btn:focus { border-color:whitesmoke!important}
+.mce-splitbtn .mce-open.mce-active {
+    /*background-color: whitesmoke !important;*/
+    opacity: 0.5;
+}
+.mce-menu-item .mce-caret {
+    border-left-color: whitesmoke !important;
+}
+
+.mce-caret { border-top-color: whitesmoke!important}
+
+.mce-tab {
+    background-color: #329ff6!important;
+}
+
+.mce-tab.mce-active {
+    background-color: #0087f4!important;
+}
+
+.mce-i-apple:before {
+    position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+    content:"\f179"
+}
+
+
+/* content block placeholders */
+/* added in 08.04.06 - purpose still secret :)*/
+hr[sxc] {
+    background-color: #B0DCFF; /* temporary color */
+    height: 75px;
+}
+
+hr[sxc]::after {
+    color: white;
+    content: "App / Content";
+    position: absolute;
+    text-align: center;
+    font-size: 25px;
+    display: inline-block;
+    width: 100%;
+    margin-top: 17px;
+}
+
+/*
+.feature-contentblocks .mce-btn-addcontentblock.mce-btn {
+    display: inline-block;
+}*/

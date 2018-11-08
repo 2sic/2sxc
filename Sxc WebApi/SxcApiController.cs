@@ -14,6 +14,7 @@ using Factory = ToSic.Eav.Factory;
 using ToSic.Sxc.Adam.WebApi;
 using System.IO;
 using ToSic.Eav.Configuration;
+using ToSic.SexyContent.WebApi.AutoDetectContext;
 using File = ToSic.Sxc.Adam.File;
 
 namespace ToSic.SexyContent.WebApi
@@ -60,8 +61,8 @@ namespace ToSic.SexyContent.WebApi
                 if (SxcInstance != null)
                     return _app = DnnAppAndDataHelpers.App;
 
-                var routeAppPath = Request.GetRouteData().Values["apppath"]?.ToString();
-                var appId = GetCurrentAppIdFromPath(routeAppPath).AppId;
+                var routeAppPath = Route.AppPathOrNull(Request.GetRouteData()) ;// Request.GetRouteData().Values["apppath"]?.ToString();
+                var appId = AppFinder.GetCurrentAppIdFromPath(routeAppPath).AppId;
                 // Look up if page publishing is enabled - if module context is not availabe, always false
                 var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);

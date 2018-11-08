@@ -1738,19 +1738,20 @@ angular.module('PipelineDesigner')
                     var testParams, testMid;
                     var warnings = vm.warnings = [];
                     try { // catch various not-initialized errors
-                        testParams = pipelineData.Pipeline.TestParameters;
-                        var matches = regex.exec(testParams);
-                        if (!matches || matches.length === 0)
-                            warnings.push(
-                                'Your test values has no moduleid specified. You probably want to check your test-parameters.');
-                        testMid = matches[1];
-                        var urlMid = getUrlParamMustRefactor('mid');
-                        if (testMid !== urlMid)
-                            warnings.push('Your test moduleid (' +
-                                testMid +
-                                ') is different from the current moduleid (' +
-                                urlMid +
-                                '). You probably want to check your test-values.');
+                      testParams = pipelineData.Pipeline.TestParameters;
+                      var matches = regex.exec(testParams);
+                      // 2018-09-30 disabled, as now the system will actually provide a module-id
+                      //if (!matches || matches.length === 0)
+                      //    warnings.push(
+                      //        'Your test values has no moduleid specified. You probably want to check your test-parameters.');
+                      testMid = matches[1];
+                      var urlMid = getUrlParamMustRefactor('mid');
+                      if (testMid !== urlMid)
+                          warnings.push('Your test moduleid (' +
+                              testMid +
+                              ') is different from the current moduleid (' +
+                              urlMid +
+                              '). Note that 2sxc 9.33 automatically provide the moduleid - so you usually do not need to set it any more.');
                     } catch (ex) { }
                 }
 

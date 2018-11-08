@@ -55,7 +55,7 @@ namespace ToSic.SexyContent.DataSources
                 if(!HasSxcContext)
                     throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
-                var sxciProvider = ConfigurationProvider.Sources["SxcInstance"];
+                var sxciProvider = ConfigurationProvider.Sources[DataSources.ConfigurationProvider.SxcInstanceKey];
                 _sxcContext = (sxciProvider as SxcInstanceValueProvider)?
                               .SxcInstance 
                               ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
@@ -64,7 +64,7 @@ namespace ToSic.SexyContent.DataSources
             }
         }
 
-        internal bool HasSxcContext => ConfigurationProvider.Sources.ContainsKey("SxcInstance");
+        internal bool HasSxcContext => ConfigurationProvider.Sources.ContainsKey(DataSources.ConfigurationProvider.SxcInstanceKey);
 
 		private ContentGroup _contentGroup;
 		private ContentGroup ContentGroup

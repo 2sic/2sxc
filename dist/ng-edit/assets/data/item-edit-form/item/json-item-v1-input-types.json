@@ -1,0 +1,59 @@
+{
+    "_": {
+        "V": 1
+    },
+    "Entity": {
+        "Id": 1963,
+        "Version": 6,
+        "Guid": "d328545b-4887-4c25-8ba9-190b81b4768f",
+        "Type": {
+            "Name": "TestInputTypes",
+            "Id": "bcb3c5d5-a9e9-495b-924f-c004d7d19ebc"
+        },
+        "Attributes": {
+            "String": {
+                "DropDownGroup1": {
+                    "*": "1"
+                },
+                "StringGroup1": {
+                    "*": "Ante test"
+                },
+                "StringGroup2": {
+                    "*": "ante test2"
+                },
+                "StringUrlPathGroup2": {
+                    "*": "sada-asd-ad-a-dfsd-s-s-dsdf4rgf-fdg"
+                }
+            },
+            "Entity": {
+                "EntityDefault": {
+                    "*": [
+                        "d86677cb-b5cf-40a3-92e4-71c6822adbc6"
+                    ]
+                }
+            },
+            "Number": {
+                "NumberDefault": {
+                    "*": 5.0
+                }
+            },
+            "DateTime": {
+                "DateTime": {
+                    "*": "2018-02-14T20:14:00Z"
+                },
+                "DateTimeWithTime": {
+                    "*": "2018-02-07T02:03:00Z"
+                }
+            },
+            "Boolean": {
+                "BooleanDefault": {
+                    "*": true
+                },
+                "BooleanGroup1": {
+                    "*": false
+                }
+            }
+        },
+        "Owner": "dnn:userid=1"
+    }
+}

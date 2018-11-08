@@ -1,0 +1,231 @@
+{
+    "Id": "d5e82a1f-8abb-4e6b-88ff-4a5f302cc2ae",
+    "Name": "News",
+    "Scope": "2SexyContent",
+    "Description": "News",
+    "Attributes": [
+        {
+            "Name": "Title",
+            "Type": "String",
+            "IsTitle": true,
+            "Metadata": [
+                {
+                    "Id": 1793,
+                    "Version": 1,
+                    "Guid": "0bc0e78b-2bd6-4b06-bfc4-623fe60a831c",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "Name": {
+                                "*": "Title"
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Date",
+            "Type": "DateTime",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1794,
+                    "Version": 1,
+                    "Guid": "d4912a6a-e908-4075-b700-c43f285f378a",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "Name": {
+                                "*": "Date"
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Intro",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1795,
+                    "Version": 1,
+                    "Guid": "d290b7f5-0bd8-4093-af8b-3bc00484040d",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "Name": {
+                                "*": "Intro"
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1796,
+                    "Version": 1,
+                    "Guid": "d77e3f6f-92e4-4443-9754-05835ad1cdc3",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DropdownValues": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "default"
+                            },
+                            "ValidationAutomatic": {
+                                "*": ""
+                            },
+                            "ValidationRegEx": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Number": {
+                            "RowCount": {
+                                "*": 3.0
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Body",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1797,
+                    "Version": 1,
+                    "Guid": "b6f338c2-da3e-447a-ac2a-b7d481f27d13",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "Name": {
+                                "*": "Body"
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1798,
+                    "Version": 1,
+                    "Guid": "090db8ff-ef2f-4e5a-9292-b8fb0bcd5fe3",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DropdownValues": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "wysiwyg"
+                            },
+                            "ValidationAutomatic": {
+                                "*": ""
+                            },
+                            "ValidationRegEx": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Number": {
+                            "RowCount": {
+                                "*": 1.0
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Image",
+            "Type": "Hyperlink",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1799,
+                    "Version": 1,
+                    "Guid": "4e0fd2b1-69e0-48ab-99c5-6754c3a4b644",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "Name": {
+                                "*": "Image"
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1800,
+                    "Version": 1,
+                    "Guid": "bb4fe976-3f26-4b52-ad0e-40ef4f8e357a",
+                    "Type": {
+                        "Name": "@Hyperlink",
+                        "Id": "@Hyperlink"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultDialog": {
+                                "*": "ImageManager"
+                            },
+                            "FileFilter": {
+                                "*": ""
+                            },
+                            "Paths": {
+                                "*": "News"
+                            }
+                        },
+                        "Boolean": {
+                            "ShowFileManager": {
+                                "*": false
+                            },
+                            "ShowImageManager": {
+                                "*": true
+                            },
+                            "ShowPagePicker": {
+                                "*": false
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        }
+    ],
+    "Metadata": []
+}

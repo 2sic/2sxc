@@ -57,8 +57,8 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
-            var permCheck = new AppAndPermissions(SxcInstance, App.AppId, Log);
-            if(!permCheck.Ensure(GrantSets.WriteSomething, null, out var exp))
+            var permCheck = new MultiPermissionsApp(SxcInstance, App.AppId, Log);
+            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
             return ContentGroupReferenceManager.SaveTemplateId(templateId, forceCreateContentGroup);
@@ -229,8 +229,8 @@ namespace ToSic.SexyContent.WebApi.View
         public bool Publish(string part, int sortOrder)
         {
             Log.Add($"try to publish #{sortOrder} on '{part}'");
-            if (!new AppAndPermissions(SxcInstance, App.AppId, Log)
-                .Ensure(GrantSets.WritePublished, null, out var exp))
+            if (!new MultiPermissionsApp(SxcInstance, App.AppId, Log)
+                .EnsureAll(GrantSets.WritePublished, out var exp))
                 throw exp;
             return ContentGroupReferenceManager.Publish(part, sortOrder);
         }
@@ -240,9 +240,8 @@ namespace ToSic.SexyContent.WebApi.View
         public bool Publish(int id)
         {
             Log.Add($"try to publish id #{id}");
-            if (!
-                new AppAndPermissions(SxcInstance, App.AppId, Log).Ensure(GrantSets.WritePublished, null,
-                    out var exp))
+            if (!new MultiPermissionsApp(SxcInstance, App.AppId, Log)
+                .EnsureAll(GrantSets.WritePublished, out var exp))
                 throw exp;
             new AppManager(App.ZoneId, App.AppId).Entities.Publish(id);
             return true;

@@ -1,0 +1,133 @@
+{
+    "_": {
+        "V": 1
+    },
+    "ContentType": {
+        "Id": "75ecf500-7e45-4998-b683-60f01ac49f3b",
+        "Name": "Books",
+        "Scope": "2SexyContent",
+        "Description": "",
+        "Attributes": [
+            {
+                "Name": "Name",
+                "Type": "String",
+                "IsTitle": true,
+                "Metadata": [
+                    {
+                        "Id": 1988,
+                        "Version": 1,
+                        "Guid": "a8fffe8a-ca5c-47b9-8871-b24a72a91dd0",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "InputType": {
+                                    "*": "string-default"
+                                },
+                                "Name": {
+                                    "*": "Name"
+                                }
+                            },
+                            "Boolean": {
+                                "VisibleInEditUI": {
+                                    "*": true
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    }
+                ]
+            },
+            {
+                "Name": "Author",
+                "Type": "Entity",
+                "IsTitle": false,
+                "Metadata": [
+                    {
+                        "Id": 1989,
+                        "Version": 4,
+                        "Guid": "c9a8a5fb-05a0-4b2f-bd9e-ad31ea01c1e2",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "CustomJavaScript": {
+                                    "*": ""
+                                },
+                                "DefaultValue": {
+                                    "*": ""
+                                },
+                                "InputType": {
+                                    "*": "entity-default"
+                                },
+                                "Name": {
+                                    "*": "Author"
+                                },
+                                "Notes": {
+                                    "*": ""
+                                },
+                                "ValidationRegExJavaScript": {
+                                    "*": ""
+                                }
+                            },
+                            "Boolean": {
+                                "Disabled": {
+                                    "*": false
+                                },
+                                "Required": {
+                                    "*": false
+                                },
+                                "VisibleInEditUI": {
+                                    "*": true
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1991,
+                        "Version": 3,
+                        "Guid": "4558bf46-4904-467a-9de7-b23ba49dda5a",
+                        "Type": {
+                            "Name": "@Entity",
+                            "Id": "@Entity"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "EntityType": {
+                                    "*": "Authors"
+                                }
+                            },
+                            "Boolean": {
+                                "AllowMultiValue": {
+                                    "*": false
+                                },
+                                "EnableAddExisting": {
+                                    "*": true
+                                },
+                                "EnableCreate": {
+                                    "*": true
+                                },
+                                "EnableDelete": {
+                                    "*": true
+                                },
+                                "EnableEdit": {
+                                    "*": true
+                                },
+                                "EnableRemove": {
+                                    "*": true
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    }
+                ]
+            }
+        ],
+        "Metadata": []
+    }
+}

@@ -14,7 +14,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
-using ToSic.SexyContent.WebApi.Dnn;
+using ToSic.SexyContent.WebApi.Permissions;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi
@@ -25,7 +25,7 @@ namespace ToSic.SexyContent.WebApi
 	[SupportedModules("2sxc,2sxc-app")]
     [SxcWebApiExceptionHandling]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class SystemController : DnnApiControllerWithFixes
+    public class SystemController : SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -89,7 +89,7 @@ namespace ToSic.SexyContent.WebApi
 
         private string GetPath(int zoneId, int appId)
         {
-            var app = new App(new DnnTenant(PortalSettings), zoneId, appId);
+            var app = SexyContent.App.LightWithoutData(new DnnTenant(PortalSettings), zoneId, appId, parentLog: Log);
             return app.Path;
         }
 
@@ -97,7 +97,7 @@ namespace ToSic.SexyContent.WebApi
         public void DeleteApp(int zoneId, int appId)
         {
             var userId = PortalSettings.Current.UserId;
-            AppManagement.RemoveAppInTenantAndEav(Env, zoneId, appId, new DnnTenant(PortalSettings), userId, Log);
+            AppManagement.RemoveAppInTenantAndEav(Env.ZoneMapper, zoneId, appId, new DnnTenant(PortalSettings), userId, Log);
         }
 
         [HttpPost]
@@ -110,19 +110,28 @@ namespace ToSic.SexyContent.WebApi
 
         #region Dialog Helpers
         /// <summary>
-        /// This seems to be the subsystem which delivers the getting-started app-iframe with instructions etc.
+        /// This is the subsystem which delivers the getting-started app-iframe with instructions etc.
         /// </summary>
         /// <param name="appId"></param>
         /// <returns></returns>
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            App app = null;
-            try
-            {
-                app = new App(new DnnTenant(PortalSettings.Current), appId);
-            }
-            catch (KeyNotFoundException) {}
+            var appAndPerms = new MultiPermissionsApp(SxcInstance, appId, Log);
+            if (!appAndPerms.ZoneAsInContextOrSuperUser(out var exp))
+                throw exp;
+
+            //var appIdentity = new AppPermissionBeforeUsing(SxcInstance, Log)
+            //    .GetAppIdentityOrThrowIfNotAllowed(appId);
+
+            var app = appAndPerms.App;
+
+            //App app = null;
+            //try
+            //{
+            //    app = new App(new DnnTenant(PortalSettings.Current), appIdentity.ZoneId, appIdentity.AppId, false, Log);
+            //}
+            //catch (KeyNotFoundException) {}
 
             return new
             {
@@ -133,6 +142,7 @@ namespace ToSic.SexyContent.WebApi
             };
         }
 
+        #region Features
         [HttpGet]
         public IEnumerable<Feature> Features(bool reload = false)
         {
@@ -180,11 +190,17 @@ namespace ToSic.SexyContent.WebApi
             return true;
         }
 
+        #endregion
 
-        // build a getting-started url which is used to correctly show the user infos like
-        // warnings related to his dnn or 2sxc version
-        // infos based on his languages
-        // redirects based on the app he's looking at, etc.
+
+        /// <summary>
+        /// build a getting-started url which is used to correctly show the user infos like
+        /// warnings related to his dnn or 2sxc version
+        /// infos based on his languages
+        /// redirects based on the app he's looking at, etc.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
         private string IntroductionToAppUrl(App app)
         {
             var dnn = PortalSettings.Current;
@@ -201,17 +217,14 @@ namespace ToSic.SexyContent.WebApi
                         + "&ZoneID=" + app.ZoneId
                         + "&DefaultLanguage=" + dnn.DefaultLanguage
                         + "&CurrentLanguage=" + dnn.CultureCode;
+            
             // Add AppStaticName and Version
             if (mod.DesktopModule.ModuleName != "2sxc")
             {
-                //var app = sxc.App;// SexyContent.GetApp(sexy, appId.Value, Sexy.OwnerPS);
-
                 gsUrl += "&AppGuid=" + app.AppGuid;
                 if (app.Configuration != null)
-                {
-                    gsUrl += "&AppVersion=" + app.Configuration.Version;
-                    gsUrl += "&AppOriginalId=" + app.Configuration.OriginalId;
-                }
+                    gsUrl += "&AppVersion=" + app.Configuration.Version
+                             + "&AppOriginalId=" + app.Configuration.OriginalId;
             }
 
             var hostSettings = HostController.Instance.GetSettingsDictionary();
@@ -221,7 +234,7 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
-        #region advanced logging
+        #region Enable extended logging
 
         [HttpGet]
         public string ExtendedLogging(int duration = 1)

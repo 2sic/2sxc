@@ -61,7 +61,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         public ITenant Tenant { get; protected set; }
 
-        public ValueCollectionProvider Configuration { get; protected set; }
+        //public ValueCollectionProvider Configuration { get; protected set; }
 
         // ReSharper disable once InconsistentNaming
         protected ViewDataSource _dataSource;
@@ -71,11 +71,12 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
         // ReSharper disable once InconsistentNaming
-        protected SxcInstance _sxcInstance;
+        //protected SxcInstance _sxcInstance;
 
-        public virtual SxcInstance SxcInstance => null;
+        public SxcInstance SxcInstance { get; protected set; }
 
         public virtual bool IsContentApp => false;
+
 
     }
 }

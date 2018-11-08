@@ -15,36 +15,30 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Dnn = new DnnHelper(instance);
             Link = new DnnLinkHelper(Dnn);
 
-            //if (sxcInstance == null)
-            //    return;
-
-            // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
-            // But in search mode, it shouldn't show drafts, so this is ok.
-            // Note that app could be null, if a user is in admin-ui of a module which hasn't actually be configured yet
-            InitAppDataFromContext(App, PortalSettings.Current, sxcInstance);
-            //App?.InitData(PortalSettings.Current != null && sxcInstance.UserMayEdit, 
-            //    PortalSettings.Current != null && sxcInstance.Environment.PagePublishing.IsEnabled(instance.Id), 
-            //    Data.ConfigurationProvider);
+            // 2018-09-22 #1624 old
+            //// If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
+            //// But in search mode, it shouldn't show drafts, so this is ok.
+            //// Note that app could be null, if a user is in admin-ui of a module which hasn't actually be configured yet
+            //InitAppDataFromContext(App, PortalSettings.Current, sxcInstance);
         }
 
-        // todo: maybe move to somewhere more appropriate, just not sure where
-        public static void InitAppDataFromContext(App app, PortalSettings portalSettings, SxcInstance sxcInstance)
-        {
-            // check if we have known context, otherwise ignore
-            if (sxcInstance == null)
-                return;
+        // 2018-09-22 #1624 old
+        //// todo: maybe move to somewhere more appropriate, just not sure where
+        //private static void InitAppDataFromContext(App app, PortalSettings portalSettings, SxcInstance sxcInstance)
+        //{
+        //    // check if we have known context, otherwise ignore
+        //    if (sxcInstance == null)
+        //        return;
 
-            app?.InitData(portalSettings != null && sxcInstance.UserMayEdit,
-                portalSettings != null && sxcInstance.Environment.PagePublishing.IsEnabled(sxcInstance.EnvInstance.Id),
-                sxcInstance.Data.ConfigurationProvider);
-        }
+        //    app?.InitData(portalSettings != null && sxcInstance.UserMayEdit,
+        //        portalSettings != null && sxcInstance.Environment.PagePublishing.IsEnabled(sxcInstance.EnvInstance.Id),
+        //        sxcInstance.Data.ConfigurationProvider);
+        //}
 
 
         /// <summary>
         /// Dnn context with module, page, portal etc.
         /// </summary>
         public DnnHelper Dnn { get; }
-
-
     }
 }

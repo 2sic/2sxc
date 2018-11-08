@@ -1,0 +1,32 @@
+{
+    "_": {
+        "V": 1
+    },
+    "Entity": {
+        "Id": 1997,
+        "Version": 3,
+        "Guid": "9a145645-cf38-48eb-b51d-33c2d48e48fd",
+        "Type": {
+            "Name": "Authors",
+            "Id": "15459c8b-7754-41e4-88fb-9745ebe863e6"
+        },
+        "Attributes": {
+            "String": {
+                "First Name": {
+                    "*": "Adam"
+                },
+                "Last Name": {
+                    "*": "Freeman"
+                }
+            },
+            "Entity": {
+                "Books": {
+                    "*": [
+                        "382299db-fdaf-4a5f-9169-4217784520a1"
+                    ]
+                }
+            }
+        },
+        "Owner": "dnn:userid=1"
+    }
+}

@@ -58,7 +58,7 @@ namespace ToSic.SexyContent.WebApi.Adam
 
         [AssertionMethod]
         internal static bool ThrowIfUserMayNotWriteEverywhere(bool usePortalRoot,
-            PermissionCheckBase permCheck)
+            IPermissionCheck permCheck)
         {
             var everywhereOk = permCheck.UserMay(GrantSets.WritePublished);
             if (usePortalRoot && !everywhereOk)

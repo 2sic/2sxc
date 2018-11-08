@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.DataSources
 
         public DataPublishing Publish = new DataPublishing();
 
-        internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, ValueCollectionProvider configurationProvider, Log parentLog, int instanceId = 0)
+        internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, IValueCollectionProvider configurationProvider, Log parentLog, int instanceId = 0)
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
             var showDrafts = sxc.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(sxc.InstanceInfo);
@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.DataSources
                 log.Add($"override template, & pipe#{overrideTemplate.Query?.EntityId}");
                 // Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
                 if (overrideTemplate.Query != null)
-                    new QueryFactory(parentLog).GetDataSource(sxc.AppId ?? -999, overrideTemplate.Query,
+                    new QueryFactory(parentLog).GetAsDataSource(sxc.AppId ?? -999, overrideTemplate.Query,
                         configurationProvider, viewDataSource, showDrafts: showDrafts);
 
             }

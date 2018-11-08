@@ -14,7 +14,8 @@ namespace ToSic.SexyContent.WebApi
     public static class Helpers
     {
         /// <summary>
-        /// Workaround for deserializing KeyValuePair - it requires lowercase properties (case sensitive), which seems to be a bug in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
+        /// Workaround for deserializing KeyValuePair - it requires lowercase properties (case sensitive), 
+        /// which seems to be a issue in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
         /// </summary>
         public class UpperCaseStringKeyValuePair
         {

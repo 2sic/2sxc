@@ -4,31 +4,36 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.WebApi.Permissions;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
+    /// <inheritdoc cref="ISystemController" />
     /// <summary>
-    /// Web API Controller for the Pipeline Designer UI
+    /// Web API Controller Which Delivers System Information
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
     [AllowAnonymous]
-    public class SystemController : SxcApiControllerBase
-	{
+    public class SystemController : SxcApiControllerBase, ISystemController
+    {
 
-	    [HttpGet]
-	    public IEnumerable<Feature> Features(int appId)
+        [HttpGet]
+        public IEnumerable<Feature> Features(int appId)
+            => FeatureListWithPermissionCheck(appId,
+                new MultiPermissionsApp(SxcInstance, appId, Log));
+
+	    internal static IEnumerable<Feature> FeatureListWithPermissionCheck(int appId, MultiPermissionsApp permCheck)
 	    {
             // if the user has full edit permissions, he may also get the unpublic features
             // otherwise just the public Ui features
-	        var permCheck = new AppAndPermissions(SxcInstance, appId, Log);
-	        permCheck.BuildPermissionChecker(null);
-	        var includeNonPublic = permCheck.Permissions.UserMay(GrantSets.WritePublished);
+            //var permCheck = new AppAndPermissions(sxcInstance, appId, log);
+	        //if (permCheck.Permissions == null)
+	        //    permCheck.GetTypePermissionChecker(null);
+	        var includeNonPublic = permCheck.UserMayOnAll(GrantSets.WritePublished);
 
-	        return new Eav.WebApi.SystemController()
-                .Features(appId)
+	        return Eav.Configuration.Features.Ui
                 .Where(f => includeNonPublic || f.Public == true);
 	    }
-        
-    }
+	}
 }

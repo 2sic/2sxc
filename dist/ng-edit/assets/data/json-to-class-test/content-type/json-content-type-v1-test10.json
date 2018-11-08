@@ -1,0 +1,459 @@
+{
+    "Id": "6f3d1eed-994e-4c93-82f0-011a4ca08f53",
+    "Name": "Album",
+    "Scope": "2SexyContent",
+    "Description": "Album",
+    "Attributes": [
+        {
+            "Name": "Title",
+            "Type": "String",
+            "IsTitle": true,
+            "Metadata": [
+                {
+                    "Id": 1887,
+                    "Version": 1,
+                    "Guid": "6f2e8f49-1bca-4d30-b613-1668cdb12c5a",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-default"
+                            },
+                            "Name": {
+                                "*": "Title"
+                            },
+                            "Notes": {
+                                "*": "<p>Enter a title for this album.</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": true
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1888,
+                    "Version": 1,
+                    "Guid": "90d75047-db8d-4d07-b365-7c7487745c72",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1889,
+                    "Version": 1,
+                    "Guid": "1216d726-598a-4fa6-a5a5-1fadc52a09fe",
+                    "Type": {
+                        "Name": "@string-default",
+                        "Id": "@string-default"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Path",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1890,
+                    "Version": 1,
+                    "Guid": "f6f0656f-c8e7-4785-9a32-3f7c6d78b399",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-url-path"
+                            },
+                            "Name": {
+                                "*": "Album Link ID"
+                            },
+                            "Notes": {
+                                "*": "<p>URL-Path for this album - needed for album direct links</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": true
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1891,
+                    "Version": 1,
+                    "Guid": "d7f51d8f-6eac-4937-9d12-f38b67c3d5a5",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1892,
+                    "Version": 1,
+                    "Guid": "cacc47e7-8468-4490-9d1a-cb6f5b675888",
+                    "Type": {
+                        "Name": "@string-url-path",
+                        "Id": "@string-url-path"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "AutoGenerateMask": {
+                                "*": "[Title]"
+                            }
+                        },
+                        "Boolean": {
+                            "AllowSlashes": {
+                                "*": false
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Introduction",
+            "Type": "String",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1893,
+                    "Version": 1,
+                    "Guid": "22eff08a-29cf-421d-be35-f01e0b204ce3",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "string-wysiwyg"
+                            },
+                            "Name": {
+                                "*": "Introduction"
+                            },
+                            "Notes": {
+                                "*": ""
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1894,
+                    "Version": 1,
+                    "Guid": "6dae2bc3-9f32-4572-b7d4-8e1858c23440",
+                    "Type": {
+                        "Name": "@String",
+                        "Id": "@String"
+                    },
+                    "Attributes": {},
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "Images",
+            "Type": "Hyperlink",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1895,
+                    "Version": 1,
+                    "Guid": "ca12d915-fe66-4fa7-a91a-b43d59a862d0",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "CustomJavaScript": {
+                                "*": ""
+                            },
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "hyperlink-library"
+                            },
+                            "Name": {
+                                "*": "Images"
+                            },
+                            "Notes": {
+                                "*": "<p>This is where all the images are added. Just drag them in - then add descriptions by clicking on the tag-icon inside the image.</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1896,
+                    "Version": 1,
+                    "Guid": "9d558707-5a7f-43de-957c-5fe6a20932b7",
+                    "Type": {
+                        "Name": "@Hyperlink",
+                        "Id": "@Hyperlink"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "Buttons": {
+                                "*": "adam,more"
+                            },
+                            "DefaultDialog": {
+                                "*": ""
+                            },
+                            "FileFilter": {
+                                "*": "*.jpg,*.png,*.gif"
+                            },
+                            "Paths": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "ShowAdam": {
+                                "*": true
+                            },
+                            "ShowFileManager": {
+                                "*": false
+                            },
+                            "ShowImageManager": {
+                                "*": false
+                            },
+                            "ShowPagePicker": {
+                                "*": false
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1897,
+                    "Version": 1,
+                    "Guid": "b56cf8a8-0f60-4e2f-9b4c-4ca662961506",
+                    "Type": {
+                        "Name": "@hyperlink-library",
+                        "Id": "@hyperlink-library"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "MetadataContentTypes": {
+                                "*": "ImageMetadata"
+                            }
+                        },
+                        "Number": {
+                            "FolderDepth": {
+                                "*": 0.0
+                            }
+                        },
+                        "Boolean": {
+                            "AllowAssetsInRoot": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        },
+        {
+            "Name": "AlbumThumbnail",
+            "Type": "Hyperlink",
+            "IsTitle": false,
+            "Metadata": [
+                {
+                    "Id": 1898,
+                    "Version": 1,
+                    "Guid": "1c359809-7609-4058-ab8f-7c713738a2be",
+                    "Type": {
+                        "Name": "@All",
+                        "Id": "@All"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "DefaultValue": {
+                                "*": ""
+                            },
+                            "InputType": {
+                                "*": "hyperlink-default"
+                            },
+                            "Name": {
+                                "*": "Album Thumbnail"
+                            },
+                            "Notes": {
+                                "*": "<p>The thumbnail shown&nbsp;in an albums overview. Not visible if you only show a single album.&nbsp;</p>"
+                            },
+                            "ValidationRegExJavaScript": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "Disabled": {
+                                "*": false
+                            },
+                            "Required": {
+                                "*": false
+                            },
+                            "VisibleInEditUI": {
+                                "*": true
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                },
+                {
+                    "Id": 1899,
+                    "Version": 1,
+                    "Guid": "08c178c6-31ae-44bb-935c-33614fd072c9",
+                    "Type": {
+                        "Name": "@Hyperlink",
+                        "Id": "@Hyperlink"
+                    },
+                    "Attributes": {
+                        "String": {
+                            "Buttons": {
+                                "*": "adam,more"
+                            },
+                            "DefaultDialog": {
+                                "*": ""
+                            },
+                            "FileFilter": {
+                                "*": ""
+                            },
+                            "Paths": {
+                                "*": ""
+                            }
+                        },
+                        "Boolean": {
+                            "ShowAdam": {
+                                "*": true
+                            },
+                            "ShowFileManager": {
+                                "*": false
+                            },
+                            "ShowImageManager": {
+                                "*": false
+                            },
+                            "ShowPagePicker": {
+                                "*": false
+                            }
+                        }
+                    },
+                    "Owner": "dnn:userid=1"
+                }
+            ]
+        }
+    ],
+    "Metadata": [
+        {
+            "Id": 1934,
+            "Version": 1,
+            "Guid": "9011e2dd-60c3-49a2-b12d-6c0671ae9175",
+            "Type": {
+                "Name": "ContentType",
+                "Id": "ContentType"
+            },
+            "Attributes": {
+                "String": {
+                    "Description": {
+                        "*": "Album with many Images"
+                    },
+                    "EditInstructions": {
+                        "*": ""
+                    },
+                    "Label": {
+                        "*": "Album"
+                    },
+                    "Notes": {
+                        "*": ""
+                    }
+                },
+                "Hyperlink": {
+                    "Icon": {
+                        "*": ""
+                    },
+                    "Link": {
+                        "*": ""
+                    }
+                }
+            },
+            "Owner": "dnn:userid=1",
+            "For": {
+                "Target": "ContentType",
+                "String": "6f3d1eed-994e-4c93-82f0-011a4ca08f53"
+            }
+        }
+    ]
+}

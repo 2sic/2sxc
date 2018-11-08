@@ -12,6 +12,8 @@ using System.Xml.Linq;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.WebApi.ImportExport;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.WebApi.Dnn;
@@ -19,7 +21,7 @@ using ToSic.SexyContent.WebApi.ImportExport;
 
 namespace ToSic.SexyContent.WebApi
 {
-    public class ImportExportController : DnnApiControllerWithFixes
+    public class ImportExportController : DnnApiControllerWithFixes, IImportExportController
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {

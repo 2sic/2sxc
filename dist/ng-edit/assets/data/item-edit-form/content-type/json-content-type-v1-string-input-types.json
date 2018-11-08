@@ -1,0 +1,433 @@
+{
+    "_": {
+        "V": 1
+    },
+    "ContentType": {
+        "Id": "e1ae1bcc-1adb-4b7f-bc58-9136de033dd5",
+        "Name": "TestStringInputType",
+        "Scope": "2SexyContent",
+        "Description": "TestDiscription",
+        "Attributes": [
+            {
+                "Name": "StringDefault",
+                "Type": "String",
+                "IsTitle": true,
+                "Metadata": [
+                    {
+                        "Id": 1943,
+                        "Version": 2,
+                        "Guid": "d86677cb-b5cf-40a3-92e4-71c6822adbc6",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "CustomJavaScript": {
+                                    "*": ""
+                                },
+                                "DefaultValue": {
+                                    "*": ""
+                                },
+                                "InputType": {
+                                    "*": "string-default"
+                                },
+                                "Name": {
+                                    "*": "StringDefault"
+                                },
+                                "Notes": {
+                                    "*": ""
+                                },
+                                "ValidationRegExJavaScript": {
+                                    "*": ""
+                                }
+                            },
+                            "Boolean": {
+                                "Disabled": {
+                                    "*": false
+                                },
+                                "Required": {
+                                    "*": true
+                                },
+                                "VisibleInEditUI": {
+                                    "*": true
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1952,
+                        "Version": 1,
+                        "Guid": "62596222-d625-463e-99a6-60442e395437",
+                        "Type": {
+                            "Name": "@String",
+                            "Id": "@String"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "DropdownValues": {
+                                    "*": ""
+                                },
+                                "InputType": {
+                                    "*": ""
+                                },
+                                "ValidationAutomatic": {
+                                    "*": ""
+                                },
+                                "ValidationRegEx": {
+                                    "*": ""
+                                },
+                                "ValidationRegExJavaScript": {
+                                    "*": ""
+                                }
+                            },
+                            "Number": {
+                                "RowCount": {
+                                    "*": 1.0
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1953,
+                        "Version": 1,
+                        "Guid": "11aec3cd-cdb9-4c77-8ec2-04cd9ab8c39a",
+                        "Type": {
+                            "Name": "@string-default",
+                            "Id": "@string-default"
+                        },
+                        "Attributes": {
+                            "Number": {
+                                "RowCount": {
+                                    "*": 3.0
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    }
+                ]
+            },
+            {
+                "Name": "StringURLPath",
+                "Type": "String",
+                "IsTitle": false,
+                "Metadata": [
+                    {
+                        "Id": 1944,
+                        "Version": 2,
+                        "Guid": "4edb0b2c-7acc-4fdc-aee0-2ab8bea3b64f",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "CustomJavaScript": {
+                                    "*": ""
+                                },
+                                "DefaultValue": {
+                                    "*": ""
+                                },
+                                "InputType": {
+                                    "*": "string-url-path"
+                                },
+                                "Name": {
+                                    "*": "StringURLPath"
+                                },
+                                "Notes": {
+                                    "*": ""
+                                },
+                                "ValidationRegExJavaScript": {
+                                    "*": ""
+                                }
+                            },
+                            "Boolean": {
+                                "Disabled": {
+                                    "*": false
+                                },
+                                "Required": {
+                                    "*": false
+                                },
+                                "VisibleInEditUI": {
+                                    "*": true
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1955,
+                        "Version": 1,
+                        "Guid": "887f2c5a-a8d6-410d-b202-13032cd737ec",
+                        "Type": {
+                            "Name": "@String",
+                            "Id": "@String"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "DropdownValues": {
+                                    "*": ""
+                                },
+                                "InputType": {
+                                    "*": ""
+                                },
+                                "ValidationAutomatic": {
+                                    "*": ""
+                                },
+                                "ValidationRegEx": {
+                                    "*": ""
+                                },
+                                "ValidationRegExJavaScript": {
+                                    "*": ""
+                                }
+                            },
+                            "Number": {
+                                "RowCount": {
+                                    "*": 1.0
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1956,
+                        "Version": 1,
+                        "Guid": "67e3f4d6-0343-4a44-a11f-a4855ffe5de8",
+                        "Type": {
+                            "Name": "@string-url-path",
+                            "Id": "@string-url-path"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "AutoGenerateMask": {
+                                    "*": "[Title]"
+                                }
+                            },
+                            "Boolean": {
+                                "AllowSlashes": {
+                                    "*": true
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    }
+                ]
+            },
+            {
+                "Name": "StringDropDown",
+                "Type": "String",
+                "IsTitle": false,
+                "Metadata": [
+                    {
+                        "Id": 1945,
+                        "Version": 2,
+                        "Guid": "966f5ed6-c46c-4794-9de9-ed4ff2352db8",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "CustomJavaScript": {
+                                    "*": ""
+                                },
+                                "DefaultValue": {
+                                    "*": ""
+                                },
+                                "InputType": {
+                                    "*": "string-dropdown"
+                                },
+                                "Name": {
+                                    "*": "StringDropDown"
+                                },
+                                "Notes": {
+                                    "*": ""
+                                },
+                                "ValidationRegExJavaScript": {
+                                    "*": ""
+                                }
+                            },
+                            "Boolean": {
+                                "Disabled": {
+                                    "*": false
+                                },
+                                "Required": {
+                                    "*": false
+                                },
+                                "VisibleInEditUI": {
+                                    "*": true
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1948,
+                        "Version": 1,
+                        "Guid": "d9804779-bbb4-4412-84f8-5cac515c871f",
+                        "Type": {
+                            "Name": "@String",
+                            "Id": "@String"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "DropdownValues": {
+                                    "*": ""
+                                },
+                                "InputType": {
+                                    "*": ""
+                                },
+                                "ValidationAutomatic": {
+                                    "*": ""
+                                },
+                                "ValidationRegEx": {
+                                    "*": ""
+                                },
+                                "ValidationRegExJavaScript": {
+                                    "*": ""
+                                }
+                            },
+                            "Number": {
+                                "RowCount": {
+                                    "*": 1.0
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1949,
+                        "Version": 1,
+                        "Guid": "d52c7126-cc43-43d5-9d5c-aebb4f2bffe5",
+                        "Type": {
+                            "Name": "@string-dropdown",
+                            "Id": "@string-dropdown"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "DropdownValues": {
+                                    "*": "First\nSecond\nThird"
+                                }
+                            },
+                            "Boolean": {
+                                "EnableTextEntry": {
+                                    "*": true
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "Name": "StringFontIconPicker",
+                "Type": "String",
+                "IsTitle": false,
+                "Metadata": [
+                    {
+                        "Id": 1946,
+                        "Version": 3,
+                        "Guid": "2eca971a-9260-46de-a676-485dc0a6e45e",
+                        "Type": {
+                            "Name": "@All",
+                            "Id": "@All"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "CustomJavaScript": {
+                                    "*": ""
+                                },
+                                "DefaultValue": {
+                                    "*": ""
+                                },
+                                "InputType": {
+                                    "*": "string-font-icon-picker"
+                                },
+                                "Name": {
+                                    "*": "StringFontIconPicker"
+                                },
+                                "Notes": {
+                                    "*": ""
+                                },
+                                "ValidationRegExJavaScript": {
+                                    "*": ""
+                                }
+                            },
+                            "Boolean": {
+                                "Disabled": {
+                                    "*": false
+                                },
+                                "Required": {
+                                    "*": false
+                                },
+                                "VisibleInEditUI": {
+                                    "*": true
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1950,
+                        "Version": 2,
+                        "Guid": "db251e77-9bb3-4918-96c8-ae883664b69e",
+                        "Type": {
+                            "Name": "@String",
+                            "Id": "@String"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "DropdownValues": {
+                                    "*": ""
+                                },
+                                "InputType": {
+                                    "*": ""
+                                },
+                                "ValidationAutomatic": {
+                                    "*": ""
+                                },
+                                "ValidationRegEx": {
+                                    "*": ""
+                                },
+                                "ValidationRegExJavaScript": {
+                                    "*": ""
+                                }
+                            },
+                            "Number": {
+                                "RowCount": {
+                                    "*": 1.0
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    },
+                    {
+                        "Id": 1951,
+                        "Version": 2,
+                        "Guid": "816aad8e-7c30-4ddd-a337-553be02155bf",
+                        "Type": {
+                            "Name": "@string-font-icon-picker",
+                            "Id": "@string-font-icon-picker"
+                        },
+                        "Attributes": {
+                            "String": {
+                                "CssPrefix": {
+                                    "*": ".glyphicon-"
+                                },
+                                "Files": {
+                                    "*": "[App:Path]/dist/custom-icons.css"
+                                },
+                                "PreviewCss": {
+                                    "*": "glyphicon"
+                                }
+                            }
+                        },
+                        "Owner": "dnn:userid=1"
+                    }
+                ]
+            }
+        ],
+        "Metadata": []
+    }
+}
