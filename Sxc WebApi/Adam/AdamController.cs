@@ -97,6 +97,7 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             Log.Add($"adam items a:{appId}, i:{guid}, field:{field}, subfold:{subfolder}, useRoot:{usePortalRoot}");
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
+            Log.Add("starting permissions checks");
             if (state.UserIsRestricted && !state.FieldPermissionOk(GrantSets.ReadSomething))
             {
                 Log.Add("user is restricted, and doesn't have permissions on field - return null");
@@ -109,6 +110,8 @@ namespace ToSic.Sxc.Adam.WebApi
                 Log.Add("user is restricted and item is already published");
                 return null;
             }
+
+            Log.Add("first permission checks passed");
 
             var folderManager = FolderManager.Instance;
 
