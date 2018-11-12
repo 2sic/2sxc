@@ -113,6 +113,7 @@
     <Compile Include="Permissions\PermissionCheckWithEnsure.cs" />
     <Compile Include="Permissions\PublicFormsPermissions.cs" />
     <Compile Include="Permissions\ReuseApp.cs" />
+    <Compile Include="RouteParts.cs" />
     <Compile Include="SaveHelpers\ContentGroupList.cs" />
     <Compile Include="SaveHelpers\DnnPublishing.cs" />
     <Compile Include="SaveHelpers\SaveHelperBase.cs" />

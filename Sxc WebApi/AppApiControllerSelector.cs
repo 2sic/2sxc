@@ -7,7 +7,6 @@ using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using ToSic.SexyContent.Internal;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -37,7 +36,20 @@ namespace ToSic.SexyContent.WebApi
         private static readonly string[] AllowedRoutes = {"desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/"}; // old routes, dnn 7/8 & dnn 9 
 
 
-        private static readonly string[] RegExRoutes = { @"desktopmodules\/2sxc\/api\/app\/[^/]+\/api", @"api\/2sxc\/app\/[^/]+\/api" }; // todo!!!
+        // before 2sxc 9.34 
+        // private static readonly string[] RegExRoutes = { @"desktopmodules\/2sxc\/api\/app\/[^/]+\/api", @"api\/2sxc\/app\/[^/]+\/api" };
+        // new in 2sxc 9.34 #1651 - added "([^/]+\/)?" to allow an optional edition parameter
+        private static readonly string[] RegExRoutes =
+        {
+            @"desktopmodules\/2sxc\/api\/app\/[^/]+\/([^/]+\/)?api",
+            @"api\/2sxc\/app\/[^/]+\/([^/]+\/)?api"
+        };
+
+        /// <summary>
+        /// Verify if this request is one which should be handled by this system
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>true if we want to handle it</returns>
         private bool HandleRequestWithThisController(HttpRequestMessage request)
         {
             var routeData = request.GetRouteData();
@@ -57,20 +69,27 @@ namespace ToSic.SexyContent.WebApi
                 return PreviousSelector.SelectController(request);
 
             var routeData = request.GetRouteData();
-            var controllerTypeName = routeData.Values["controller"] + "Controller";
+            var controllerTypeName = routeData.Values[RouteParts.ControllerKey] + "Controller";
             // Handle the app-api queries
             try
             {
-                var appFolder = Route.AppPathOrNull(routeData); //routeData.Values["apppath"]?.ToString();
+                var appFolder = Route.AppPathOrNull(routeData);
 
                 if(appFolder == null)
                 {
-                    var sexy = Helpers.GetSxcOfApiRequest(request, false);
+                    var sexy = Helpers.GetSxcOfApiRequest(request);
                     appFolder = sexy.App.Folder;
                 }
 
+                // new for 2sxc 9.34 #1651
+                var edition = "";
+                if (routeData.Values.ContainsKey(RouteParts.EditionKey))
+                    edition = routeData.Values[RouteParts.EditionKey].ToString();
+                if (!string.IsNullOrEmpty(edition))
+                    edition += "/";
+
                 var controllerPath = Path.Combine(DnnMapAppToInstance.AppBasePath(), appFolder,
-                    "api/" + controllerTypeName + ".cs");
+                    edition + "api/" + controllerTypeName + ".cs");
 
                 if (File.Exists(HostingEnvironment.MapPath(controllerPath)))
                 {
