@@ -41,9 +41,12 @@ namespace ToSic.SexyContent.WebApi.Adam
         {
             Field = field;
             Guid = guid;
-            if(!EnsureAll(GrantSets.WriteSomething, out var exp))
-                throw exp;
-            UserIsRestricted = !SecurityChecks.ThrowIfUserMayNotWriteEverywhere(usePortalRoot, PermissionCheckers.First().Value);
+            // 2018-11-12 2dm disabled this as it's always checked by the code using the secure state
+            //if(!EnsureAll(GrantSets.WriteSomething, out var exp))
+            //    throw exp;
+            UserIsRestricted = !PermissionCheckers.First().Value.UserMay(GrantSets.WritePublished);
+
+            SecurityChecks.ThrowIfAccessingRootButNotAllowed(usePortalRoot, UserIsRestricted);// PermissionCheckers.First().Value);
 
             if (UserIsRestricted && !Feats.Enabled(FeaturesForRestrictedUsers))
                 throw Http.PermissionDenied(
@@ -54,7 +57,7 @@ namespace ToSic.SexyContent.WebApi.Adam
             if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(field)) return;
 
             Attribute = Definition(appId, contentType, field);
-            if(!FileTypeIsOkForThisField(out exp))
+            if(!FileTypeIsOkForThisField(out var exp))
                 throw exp;
         }
 
@@ -137,7 +140,7 @@ namespace ToSic.SexyContent.WebApi.Adam
             return fieldPermissions.UserMay(requiredGrant);
         }
 
-        public bool UserMayWriteToFolder(string path, out HttpResponseException preparedException)
+        public bool SuperUserOrAccessingItemFolder(string path, out HttpResponseException preparedException)
         {
             preparedException = null;
             return !UserIsRestricted || SecurityChecks.DestinationIsInItem(Guid, Field, path, out preparedException);

@@ -4,7 +4,6 @@ using System.Web.Http;
 using DotNetNuke.Entities.Host;
 using JetBrains.Annotations;
 using ToSic.Eav.Identity;
-using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.WebApi.Errors;
 
 namespace ToSic.SexyContent.WebApi.Adam
@@ -57,13 +56,13 @@ namespace ToSic.SexyContent.WebApi.Adam
         }
 
         [AssertionMethod]
-        internal static bool ThrowIfUserMayNotWriteEverywhere(bool usePortalRoot,
-            IPermissionCheck permCheck)
+        internal static void ThrowIfAccessingRootButNotAllowed(bool usePortalRoot, bool userIsRestricted)
+            //IPermissionCheck permCheck)
         {
-            var everywhereOk = permCheck.UserMay(GrantSets.WritePublished);
-            if (usePortalRoot && !everywhereOk)
+            //var everywhereOk = permCheck.UserMay(GrantSets.WritePublished);
+            if (usePortalRoot && userIsRestricted)// !everywhereOk)
                 throw Http.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
-            return everywhereOk;
+            //return everywhereOk;
         }
 
 
