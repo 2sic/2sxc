@@ -107,7 +107,7 @@ namespace ToSic.Sxc.Adam.WebApi
             // check that if the user should only see drafts, he doesn't see items of published data
             if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var _))
             {
-                Log.Add("user is restricted and item is already published");
+                Log.Add("user is restricted (no read-published rights) and item is published - return null");
                 return null;
             }
 
@@ -125,7 +125,7 @@ namespace ToSic.Sxc.Adam.WebApi
             // ensure that it's super user, or the folder is really part of this item
             if (!state.SuperUserOrAccessingItemFolder(currentDnn.PhysicalPath, out var exp))
             {
-                Log.Add("user is not super-user and folder doesn't seem to be an ADAM folder of this item");
+                Log.Add("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
                 throw exp;
             }
 
