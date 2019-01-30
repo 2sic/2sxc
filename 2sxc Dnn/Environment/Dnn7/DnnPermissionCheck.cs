@@ -110,7 +110,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             var wrapLog = Log.Call("CurrentZoneMatchesTenantZone");
             // but is the current portal also the one we're asking about?
-            var env = Eav.Factory.Resolve<IEnvironment>();
+            var env = Eav.Factory.Resolve<IAppEnvironment>();
             if (Portal == null) return false; // this is the case when running out-of http-context
             if (AppIdentity == null) return true; // this is the case when an app hasn't been selected yet, so it's an empty module, must be on current portal
             var pZone = env.ZoneMapper.GetZoneId(Portal.PortalId);

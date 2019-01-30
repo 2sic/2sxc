@@ -12,7 +12,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
     [WebApiLogDetails]
     public class DnnApiControllerWithFixes: DnnApiController, IHasLog
     {
-        protected IEnvironment Env;
+        protected IAppEnvironment Env;
 
 	    public DnnApiControllerWithFixes() 
 	    {

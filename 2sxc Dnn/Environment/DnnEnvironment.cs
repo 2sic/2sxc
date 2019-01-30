@@ -1,5 +1,5 @@
 ﻿using System.Web.Hosting;
-using ToSic.Eav;
+using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
@@ -8,10 +8,8 @@ using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.Environment
 {
-    public class DnnEnvironment: HasLog, IEnvironment
+    public class DnnEnvironment: HasLog, IAppEnvironment
     {
-        //public IPermissions Permissions { get; set; }
-
         public IZoneMapper ZoneMapper { get;  } = new ZoneMapper();
 
         public IUser User { get; } = new DnnUser();
@@ -19,12 +17,14 @@ namespace ToSic.SexyContent.Environment
         public IPagePublishing PagePublishing {get ; }
 
 
-        public string MapPath(string virtualPath) => HostingEnvironment.MapPath(virtualPath);
+        public string MapAppPath(string virtualPath) => HostingEnvironment.MapPath(virtualPath);
 
 
         public  DnnEnvironment() : base("DNN.Enviro") { }
 
         public DnnEnvironment(Log parentLog = null) : base("DNN.Enviro", parentLog) 
             => PagePublishing =  Eav.Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
+
+        public string DefaultLanguage => PortalSettings.Current.DefaultLanguage;
     }
 }
