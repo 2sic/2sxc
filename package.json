@@ -1,6 +1,6 @@
 {
   "name": "2sic-2sxc",
-  "version": "09.34.00",
+  "version": "09.35.00",
   "description": "Create awesome, responsive content for DNN",
   "main": "index.js",
   "scripts": {

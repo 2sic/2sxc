@@ -79,8 +79,8 @@ namespace ToSic.SexyContent.WebApi
             mapRouteManager.MapHttpRoute("2sxc", "app-api-public", appPath + RouteParts.PathApiContAct, stdNsApps); // new public v08.10+
 
             // New for 2sxc 9.34 #1651 Open-Heart-Surgery
-            mapRouteManager.MapHttpRoute("2sxc", "app-api-edition-auto", appAutoEdition + RouteParts.PathApiContAct, stdNsApps);  // new, v09.34
-            mapRouteManager.MapHttpRoute("2sxc", "app-api-edition-public", appPathWithEdition + RouteParts.PathApiContAct, stdNsApps); // new public v09.34
+            mapRouteManager.MapHttpRoute("2sxc", "app-api-edition-auto", appAutoEdition + RouteParts.PathApiContAct, stdNsApps);  // new, v09. 34
+            mapRouteManager.MapHttpRoute("2sxc", "app-api-edition-public", appPathWithEdition + RouteParts.PathApiContAct, stdNsApps); // new public v09. 34
 
 
             // App-Query routes - to access designed queries
