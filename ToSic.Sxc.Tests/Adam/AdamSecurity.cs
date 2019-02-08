@@ -9,6 +9,8 @@ namespace ToSic.Sxc.Tests.Adam
         private readonly string[] _badFiles =
         {
             "hello.exe",
+            "unhappy.exe ",
+            "unhappy 2. exe",
             "bad.cshtml",
             "_notgood.cshtml",
             "trying to be smart.jpg.js"
@@ -17,9 +19,10 @@ namespace ToSic.Sxc.Tests.Adam
         private readonly string[] _goodFiles =
         {
             "hello.doc",
-            "bad.jpg",
-            "_notgood.png",
-            "this is a dot. and we love it.txt"
+            "good.jpg",
+            "_notbad.png",
+            "this is a dot. and we love it.txt",
+            "list of flowers.csv"
         };
 
         [TestMethod]
@@ -39,7 +42,7 @@ namespace ToSic.Sxc.Tests.Adam
             var exts = _goodFiles.Select(System.IO.Path.GetExtension).ToList();
 
             exts.ForEach(e =>
-                Assert.IsFalse(Sxc.Adam.Security.BadExtensions.IsMatch(e), $"expected {e} to be marked as bad")
+                Assert.IsFalse(Sxc.Adam.Security.BadExtensions.IsMatch(e), $"expected {e} to be marked as good")
             );
         }
 
