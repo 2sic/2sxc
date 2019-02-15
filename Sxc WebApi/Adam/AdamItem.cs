@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Adam.WebApi
 {
     public class AdamItem
     {
-        public bool IsFolder;
+        public bool IsFolder, AllowEdit;
         public int Id, ParentId, Size, MetadataId;
         public string Path, Name, Type;
         public DateTime Created, Modified;
@@ -22,6 +22,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Type = "unknown"; // will be set from the outside
             Created = original.CreatedOnDate;
             Modified = original.LastModifiedOnDate;
+            AllowEdit = true; // todo: STV
         }
 
         public AdamItem(IFolderInfo original)
@@ -35,6 +36,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Type = "folder";
             Created = original.CreatedOnDate;
             Modified = original.LastModifiedOnDate;
+            AllowEdit = true; // todo: STV
         }
     }
 }
