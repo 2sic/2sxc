@@ -65,6 +65,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IImportExportEnvironment, ImportExportEnvironment>();
 
                 sc.AddTransient<IRuntime, Runtime>();
+                sc.AddTransient<IAppEnvironment, DnnEnvironment>();
                 sc.AddTransient<IEnvironment, DnnEnvironment>();
 
                 sc.AddTransient<IClientDependencyManager, ClientDependencyManager>();

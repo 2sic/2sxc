@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public IPagePublishing PagePublisher(Log parentLog) => new PagePublishing(parentLog);
 
-        public IEnvironment Environment(Log parentLog) => new DnnEnvironment(parentLog);
+        public ToSic.Eav.Apps.Interfaces.IAppEnvironment Environment(Log parentLog) => new DnnEnvironment(parentLog);
 
 
 

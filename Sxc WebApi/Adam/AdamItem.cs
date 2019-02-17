@@ -1,16 +1,15 @@
-﻿using DotNetNuke.Services.FileSystem;
-
-// todo: try to sync the js-code to use same properties as the IFileInfo, so we don't need to map to this temporary form
+﻿using System;
+using DotNetNuke.Services.FileSystem;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Adam.WebApi
 {
     public class AdamItem
-
     {
-        public bool IsFolder;
+        public bool IsFolder, AllowEdit;
         public int Id, ParentId, Size, MetadataId;
         public string Path, Name, Type;
+        public DateTime Created, Modified;
 
         public AdamItem(IFileInfo original)
         {
@@ -21,7 +20,9 @@ namespace ToSic.Sxc.Adam.WebApi
             Name = original.FileName;
             Size = original.Size;
             Type = "unknown"; // will be set from the outside
-
+            Created = original.CreatedOnDate;
+            Modified = original.LastModifiedOnDate;
+            AllowEdit = true; // todo: STV
         }
 
         public AdamItem(IFolderInfo original)
@@ -33,8 +34,9 @@ namespace ToSic.Sxc.Adam.WebApi
             Name = original.DisplayName;
             Size = 0;
             Type = "folder";
+            Created = original.CreatedOnDate;
+            Modified = original.LastModifiedOnDate;
+            AllowEdit = true; // todo: STV
         }
-
-
     }
 }

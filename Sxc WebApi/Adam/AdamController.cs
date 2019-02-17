@@ -84,12 +84,12 @@ namespace ToSic.Sxc.Adam.WebApi
         // test method to provide a public API for accessing adam items easily
         [HttpGet]
         public IEnumerable<AdamItem> ItemsWithAppIdFromContext(string contenttype, Guid guid, string field,
-            string subfolder = "")
+            string folder = "")
         {
             // if app-path specified, use that app, otherwise use from context
             var appId = SxcInstance.AppId;
             if(appId == null) throw new Exception("Can't detect app-id, module-context missing in http request");
-            return Items(appId.Value, contenttype, guid, field, subfolder);
+            return Items(appId.Value, contenttype, guid, field, folder);
         }
 
         [HttpGet]
@@ -97,6 +97,7 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             Log.Add($"adam items a:{appId}, i:{guid}, field:{field}, subfold:{subfolder}, useRoot:{usePortalRoot}");
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
+            Log.Add("starting permissions checks");
             if (state.UserIsRestricted && !state.FieldPermissionOk(GrantSets.ReadSomething))
             {
                 Log.Add("user is restricted, and doesn't have permissions on field - return null");
@@ -105,7 +106,12 @@ namespace ToSic.Sxc.Adam.WebApi
 
             // check that if the user should only see drafts, he doesn't see items of published data
             if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var _))
+            {
+                Log.Add("user is restricted (no read-published rights) and item is published - return null");
                 return null;
+            }
+
+            Log.Add("first permission checks passed");
 
             var folderManager = FolderManager.Instance;
 
@@ -116,8 +122,12 @@ namespace ToSic.Sxc.Adam.WebApi
             var currentAdam = state.ContainerContext.Folder(subfolder, false);
             var currentDnn = folderManager.GetFolder(currentAdam.Id);
 
-            if(!state.UserMayWriteToFolder(currentDnn.PhysicalPath, out var exp))
+            // ensure that it's super user, or the folder is really part of this item
+            if (!state.SuperUserOrAccessingItemFolder(currentDnn.PhysicalPath, out var exp))
+            {
+                Log.Add("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
                 throw exp;
+            }
 
             var subfolders = folderManager.GetFolders(currentDnn);
             var files = folderManager.GetFiles(currentDnn);
@@ -185,7 +195,7 @@ namespace ToSic.Sxc.Adam.WebApi
                 var folderManager = FolderManager.Instance;
                 var fld = folderManager.GetFolder(id);
 
-                if(!state.UserMayWriteToFolder(fld.PhysicalPath, out exp))
+                if(!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
                     throw exp;
 
                 if (fld.ParentID != current.Id)
@@ -197,7 +207,7 @@ namespace ToSic.Sxc.Adam.WebApi
                 var fileManager = FileManager.Instance;
                 var file = fileManager.GetFile(id);
 
-                if(!state.UserMayWriteToFolder(file.PhysicalPath, out exp))
+                if(!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
                     throw exp;
 
                 if (file.FolderId != current.Id)
@@ -229,7 +239,7 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 var folderManager = FolderManager.Instance;
                 var fld = folderManager.GetFolder(id);
-                if(!state.UserMayWriteToFolder(fld.PhysicalPath, out exp))
+                if(!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
                     throw exp;
 
                 if (fld.ParentID != current.Id)
@@ -240,7 +250,7 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 var fileManager = FileManager.Instance;
                 var file = fileManager.GetFile(id);
-                if(!state.UserMayWriteToFolder(file.PhysicalPath, out exp))
+                if(!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
                     throw exp;
 
                 if (file.FolderId != current.Id)

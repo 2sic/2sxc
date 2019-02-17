@@ -41,7 +41,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Environment - should be the place to refactor everything into, which is the host around 2sxc
         /// </summary>
-        public IEnvironment Environment { get; }
+        public IAppEnvironment Environment { get; }
 
         public IEnvironmentFactory EnvFac { get; }
 

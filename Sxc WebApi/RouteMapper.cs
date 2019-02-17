@@ -52,8 +52,11 @@ namespace ToSic.SexyContent.WebApi
 
             #region new API routes after 08.10
 
-            var appAuto = "app/auto/";
-            var appPath = "app/{apppath}/";
+            const string appAuto = "app/auto/";
+            const string appPath = "app/{apppath}/";
+            const string appAutoEdition = appAuto + RouteParts.EditionToken + "/";
+            const string appPathWithEdition = appPath + RouteParts.EditionToken + "/";
+
             // ADAM routes
             mapRouteManager.MapHttpRoute("2sxc", "adam-auto", appAuto + "content/{contenttype}/{guid}/{field}", new { controller = "Adam" }, stdNsAdam);
             mapRouteManager.MapHttpRoute("2sxc", "adam2-auto", appAuto + "content/{contenttype}/{guid}/{field}/{action}", new { controller = "Adam" }, stdNsAdam);
@@ -72,8 +75,13 @@ namespace ToSic.SexyContent.WebApi
             mapRouteManager.MapHttpRoute("2sxc", "app-content-new-guid-named", appPath + "content/{contenttype}/{guid}", new { controller = "AppContent" }, stdNsWebApi);
 
             // App-API routes - for the custom code API calls of an app
-            mapRouteManager.MapHttpRoute("2sxc", "app-api-auto", appAuto + "api/{controller}/{action}", stdNsApps);  // new, v08.10+
-            mapRouteManager.MapHttpRoute("2sxc", "app-api-public", appPath + "api/{controller}/{action}", stdNsApps); // new public v08.10+
+            mapRouteManager.MapHttpRoute("2sxc", "app-api-auto", appAuto + RouteParts.PathApiContAct, stdNsApps);  // new, v08.10+
+            mapRouteManager.MapHttpRoute("2sxc", "app-api-public", appPath + RouteParts.PathApiContAct, stdNsApps); // new public v08.10+
+
+            // New for 2sxc 9.34 #1651 Open-Heart-Surgery
+            mapRouteManager.MapHttpRoute("2sxc", "app-api-edition-auto", appAutoEdition + RouteParts.PathApiContAct, stdNsApps);  // new, v09. 34
+            mapRouteManager.MapHttpRoute("2sxc", "app-api-edition-public", appPathWithEdition + RouteParts.PathApiContAct, stdNsApps); // new public v09. 34
+
 
             // App-Query routes - to access designed queries
             // new routes, v08.10+

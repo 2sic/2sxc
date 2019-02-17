@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Adam.WebApi
             
             // start with a security check - so we only upload into valid adam if that's the scenario
             var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
-            if(!state.UserMayWriteToFolder(dnnFolder.PhysicalPath, out exp))
+            if(!state.SuperUserOrAccessingItemFolder(dnnFolder.PhysicalPath, out exp))
                 throw exp;
 
             #region check content-type extensions...

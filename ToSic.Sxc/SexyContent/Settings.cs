@@ -32,12 +32,6 @@ namespace ToSic.SexyContent
         public const string WebConfigFileName = "web.config";
         public const string SexyContentGroupName = "2sxc designers";
         public const string AttributeSetScope = "2SexyContent";
-        //public static readonly string AttributeSetScopeApps = "2SexyContent-App";
-        //public static readonly string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
-
-        //public static readonly string AttributeSetStaticNameApps = "2SexyContent-App";
-        //public static readonly string AttributeSetStaticNameAppResources = "App-Resources";
-        //public static readonly string AttributeSetStaticNameAppSettings = "App-Settings";
 
         internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
 
@@ -55,15 +49,15 @@ namespace ToSic.SexyContent
         public class Installation
         {
             internal const string LogDirectory = "~/DesktopModules/ToSIC_SexyContent/Upgrade/Log/";
-            // todo: Maybe this list can somehow be extracted from the module manifest or placed there...
 
+            // todo: Maybe this list can somehow be extracted from the module manifest or placed there...
             internal static readonly string[] UpgradeVersionList =
             {
                 // new installer of 2sxc 9.20 doesn't upgrade versions before 8.12, so removed all those versions
                 "08.11.00", "08.12.00", "09.00.00", "09.00.01", "09.00.02", "09.01.00", /* note 09.01.01 was never released */ "09.01.02", "09.01.03", "09.02.00", "09.03.00", "09.03.01", "09.03.02", "09.03.03", "09.04.00", "09.04.01", "09.04.02", "09.04.03", "09.05.00", "09.05.01", "09.05.02",
                 "09.06.00", "09.06.01", "09.07.00", "09.08.00", "09.09.00", "09.10.00", "09.11.00", "09.11.01", "09.12.00", "09.13.00",
                 "09.14.00", /* LTS */
-                "09.20.00", "09.21.00", "09.22.00", "09.23.00", "09.30.00", "09.31.00","09.32.00", "09.33.00"
+                "09.20.00", "09.21.00", "09.22.00", "09.23.00", "09.30.00", "09.31.00","09.32.00", "09.33.00", "09.35.00"
             };
 
             // this is the last version which must run server-side change-code

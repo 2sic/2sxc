@@ -73,7 +73,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
 		        // file-check, more abilities to allow
 		        // this will already do a ensure-or-throw inside it if outside of adam
 		        var adamCheck = new AdamSecureState(SxcInstance, appId, contentType, field, guid, isOutsideOfAdam, Log);
-		        if (!adamCheck.UserMayWriteToFolder(resolved, out var exp))
+		        if (!adamCheck.SuperUserOrAccessingItemFolder(resolved, out var exp))
 		            throw exp;
                 if(!adamCheck.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))
                     throw exp;

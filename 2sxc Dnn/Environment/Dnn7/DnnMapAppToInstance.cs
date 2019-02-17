@@ -50,7 +50,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
         
-        public void SetAppIdForInstance(IInstanceInfo instance, IEnvironment env, int? appId, Log parentLog)
+        public void SetAppIdForInstance(IInstanceInfo instance, IAppEnvironment env, int? appId, Log parentLog)
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template

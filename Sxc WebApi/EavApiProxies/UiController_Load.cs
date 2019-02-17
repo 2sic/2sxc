@@ -66,7 +66,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             wraplog($"ready, sending items:{result.Items.Count}, " +
                     $"types:{result.ContentTypes.Count}, " +
                     $"inputs:{result.InputTypes.Count}, " +
-                    $"feats:{result.Features.Count()}");
+                    $"feats:{result.Features.Count}");
             return result;
         }
 

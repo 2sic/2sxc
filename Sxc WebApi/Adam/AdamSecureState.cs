@@ -41,10 +41,16 @@ namespace ToSic.SexyContent.WebApi.Adam
         {
             Field = field;
             Guid = guid;
-            if(!EnsureAll(GrantSets.WriteSomething, out var exp))
-                throw exp;
-            UserIsRestricted = !SecurityChecks.ThrowIfUserMayNotWriteEverywhere(usePortalRoot, PermissionCheckers.First().Value);
+            // 2018-11-12 2dm disabled this as it's always checked by the code using the secure state
+            //if(!EnsureAll(GrantSets.WriteSomething, out var exp))
+            //    throw exp;
+            UserIsRestricted = !PermissionCheckers.First().Value.UserMay(GrantSets.WritePublished);
 
+            Log.Add($"AdamSecureState - field:{field}, guid:{guid}, restricted:{UserIsRestricted}");
+
+            SecurityChecks.ThrowIfAccessingRootButNotAllowed(usePortalRoot, UserIsRestricted);// PermissionCheckers.First().Value);
+
+            Log.Add("check if feature enabled");
             if (UserIsRestricted && !Feats.Enabled(FeaturesForRestrictedUsers))
                 throw Http.PermissionDenied(
                     $"low-permission users may not access this - {Feats.MsgMissingSome(FeaturesForRestrictedUsers)}");
@@ -54,12 +60,13 @@ namespace ToSic.SexyContent.WebApi.Adam
             if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(field)) return;
 
             Attribute = Definition(appId, contentType, field);
-            if(!FileTypeIsOkForThisField(out exp))
+            if(!FileTypeIsOkForThisField(out var exp))
                 throw exp;
         }
 
         private void PrepCore(App app, Guid entityGuid, string fieldName, bool usePortalRoot)
         {
+            Log.Add("PrepCore(...)");
             var dnn = new DnnHelper(SxcInstance?.EnvInstance);
             var tenant = new DnnTenant(dnn.Portal);
             AdamAppContext = new AdamAppContext(tenant, app, SxcInstance, Log);
@@ -96,18 +103,25 @@ namespace ToSic.SexyContent.WebApi.Adam
 
         public bool FileTypeIsOkForThisField(out HttpResponseException preparedException)
         {
+            var wrap = Log.Call("FileTypeIsOkForThisField");
             var fieldDef = Attribute;
-
+            bool result;
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
             if (fieldDef == null || !(fieldDef.Type != Eav.Constants.DataTypeHyperlink ||
                                       fieldDef.Type != Eav.Constants.DataTypeString))
             {
+                Log.Add($"field type:{fieldDef?.Type} - does not allow upload");
                 preparedException = Http.BadRequest("Requested field '" + Field + "' type doesn't allow upload");
-                return false;
+                result = false;
             }
-            Log.Add($"field type:{fieldDef.Type}");
-            preparedException = null;
-            return true;
+            else
+            {
+                Log.Add($"field type:{fieldDef.Type}");
+                preparedException = null;
+                result = true;
+            }
+            wrap(result.ToString());
+            return result;
         }
 
         public bool UserIsPermittedOnField(List<Grants> requiredPermissions, out HttpResponseException preparedException)
@@ -137,7 +151,7 @@ namespace ToSic.SexyContent.WebApi.Adam
             return fieldPermissions.UserMay(requiredGrant);
         }
 
-        public bool UserMayWriteToFolder(string path, out HttpResponseException preparedException)
+        public bool SuperUserOrAccessingItemFolder(string path, out HttpResponseException preparedException)
         {
             preparedException = null;
             return !UserIsRestricted || SecurityChecks.DestinationIsInItem(Guid, Field, path, out preparedException);
