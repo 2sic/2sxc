@@ -160,6 +160,7 @@
     <Content Include=".data-custom\readme.md" />
     <None Include=".databeta\readme.md" />
     <Content Include=".gitignore" />
+    <Content Include="razorblade\bin\Connect.Razor.dll" />
     <Content Include="ClientScripts\ModuleEditor.js" />
     <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.dll" />
     <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.pdb" />
@@ -185,6 +186,8 @@
     <Content Include="koi\bin\Connect.Koi.dll" />
     <Content Include="koi\License.txt" />
     <Content Include="koi\ReleaseNotes.txt" />
+    <Content Include="razorblade\License.txt" />
+    <Content Include="razorblade\ReleaseNotes.txt" />
     <Content Include="README.md" />
     <Content Include="package.json" />
     <Content Include="packages.config" />
@@ -199,6 +202,7 @@
     <Content Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
     <Content Include="SexyContent\readme.md" />
     <Content Include="Upgrade\readme.md" />
+    <Content Include="razorblade\Resources.zip" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\View.ascx.resx" />
