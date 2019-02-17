@@ -185,14 +185,14 @@
     <Copy SourceFiles="@(KoiDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 
     <!-- include razorblade module -->
-    <!--<ItemGroup>
+    <ItemGroup>
       <RazorBladeFiles Include="$(MSBuildProjectDirectory)/razorblade/*.*" Exclude="**\*.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(RazorBladeFiles)" DestinationFolder="$(TempPackageFolder)\razorblade\%(RecursiveDir)" />
     <ItemGroup>
       <RazorBladeDllFiles Include="$(MSBuildProjectDirectory)/razorblade/bin/*.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(RazorBladeDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />-->
+    <Copy SourceFiles="@(RazorBladeDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 
 
     <!-- create the INSTALL RESOURCES.ZIP file -->
