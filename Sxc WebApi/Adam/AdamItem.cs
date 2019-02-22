@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 
 // ReSharper disable once CheckNamespace
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Type = "unknown"; // will be set from the outside
             Created = original.CreatedOnDate;
             Modified = original.LastModifiedOnDate;
-            AllowEdit = true; // todo: STV
+            AllowEdit = CanEditFile(original); // todo: STV
         }
 
         public AdamItem(IFolderInfo original)
@@ -36,7 +37,20 @@ namespace ToSic.Sxc.Adam.WebApi
             Type = "folder";
             Created = original.CreatedOnDate;
             Modified = original.LastModifiedOnDate;
-            AllowEdit = true; // todo: STV
+            AllowEdit = CanEditFolder(original); // todo: STV
+        }
+
+        private bool CanEditFile(IFileInfo file)
+        {
+            if (file == null) return false;
+            var folder = (FolderInfo)FolderManager.Instance.GetFolder(file.FolderId);
+            return CanEditFolder(folder);
+        }
+
+        private bool CanEditFolder(IFolderInfo folder)
+        {
+            if (folder == null) return false;
+            return FolderPermissionController.CanAddFolder(folder as FolderInfo);
         }
     }
 }
