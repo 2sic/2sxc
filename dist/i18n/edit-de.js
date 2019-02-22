@@ -28,7 +28,8 @@
 		"InnerControlMustOverride": "Inner control must override this function.",
 		"UnsavedChanges": "Du hast nicht gespeicherte Änderungen.",
 		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for",
-		"AdamUploadError": "Der Upload der Datei ist fehlgeschlagen. Möglicherweise ist die Datei zu gross."
+		"AdamUploadError": "Der Upload der Datei ist fehlgeschlagen. Möglicherweise ist die Datei zu gross.",
+		"NoAllowEdit": "Upload und Änderungen sind hier nicht möglich - du hast keine Bearbeitungsrechte."
 	},
 	"General": {},
 	"EditEntity": {

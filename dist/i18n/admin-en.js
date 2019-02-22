@@ -47,7 +47,7 @@
 			"YesNo": {
 				"true": "yes",
 				"false": "no",
-				"undefinde": "?"
+				"undefined": "?"
 			}
 		}
 	},

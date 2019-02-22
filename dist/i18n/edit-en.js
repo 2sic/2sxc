@@ -34,7 +34,8 @@
 		"InnerControlMustOverride": "Inner control must override this function.",
 		"UnsavedChanges": "You have unsaved changes.",
 		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for",
-		"AdamUploadError": "The upload failed. The most likely cause is that the file you were trying to upload is bigger than the maximum upload size."
+		"AdamUploadError": "The upload failed. The most likely cause is that the file you were trying to upload is bigger than the maximum upload size.",
+		"NoAllowEdit": "Upload and changes not possible - you don't have edit permissions."
 	},
 	"General": {},
 	"EditEntity": {
