@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
-using ToSic.SexyContent.EAVExtensions;
+using ToSic.SexyContent;
 using ToSic.SexyContent.Interfaces;
 
-namespace ToSic.SexyContent.Edit.Toolbar
+namespace ToSic.Sxc.Edit.Toolbar
 {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal class ItemToolbarAction

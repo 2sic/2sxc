@@ -6,9 +6,7 @@ using ToSic.Eav.WebApi.PublicApi;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
-    /// <summary>
-    /// Web API Controller for the Pipeline Designer UI
-    /// </summary>
+    /// <inheritdoc cref="IMetadataController" />
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class MetadataController : SxcApiControllerBase, IMetadataController

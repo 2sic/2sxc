@@ -5,7 +5,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent;
-using ToSic.SexyContent.Edit.Toolbar;
+using ToSic.Sxc.Edit.Toolbar;
 using Feats = ToSic.Eav.Configuration.Features;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
@@ -42,6 +42,24 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
             return new HtmlString(itmToolbar.Toolbar);
         }
+
+        public HtmlString ToolbarAttribute(DynamicEntity target = null,
+            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
+            string actions = null,
+            string contentType = null,
+            object prefill = null,
+            object toolbar = null,
+            object settings = null)
+        {
+            Log.Add("ctx toolbar - enabled:{Enabled}");
+            if (!Enabled) return null;
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar", $"{nameof(actions)},{nameof(contentType)},{nameof(prefill)},{nameof(toolbar)},{nameof(settings)}");
+
+            var itmToolbar = new ItemToolbar(target, actions, contentType, prefill, toolbar, settings);
+
+            return Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute);
+        }
+
 
         #endregion Toolbar
 

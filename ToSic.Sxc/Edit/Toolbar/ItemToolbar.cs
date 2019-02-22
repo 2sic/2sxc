@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using ToSic.SexyContent;
 
-namespace ToSic.SexyContent.Edit.Toolbar
+namespace ToSic.Sxc.Edit.Toolbar
 {
     internal class ItemToolbar
     {
@@ -43,7 +44,7 @@ namespace ToSic.SexyContent.Edit.Toolbar
         }
 
         private string ToolbarJson  =>  JsonConvert.SerializeObject(_fullConfig ??
-            ((_actions.Count == 1) ? _actions.First() : (object)_actions));
+            (_actions.Count == 1 ? _actions.First() : (object)_actions));
 
         private string SettingsJson => JsonConvert.SerializeObject(_fullSettings);
 
@@ -53,5 +54,7 @@ namespace ToSic.SexyContent.Edit.Toolbar
         [JsonIgnore]
         public string Toolbar => string.Format(ToolbarTemplate, ToolbarJson, SettingsJson);
 
+        [JsonIgnore]
+        public string ToolbarAttribute => "{\"toolbar\":" + ToolbarJson + ",\"settings\":"+ SettingsJson + "}"; 
     }
 }

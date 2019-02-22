@@ -12,8 +12,8 @@
 
 
 /****** the in-page toolbar and positioning / visibility thereof */
-.sc-element { position:relative; }
-.sc-element .sc-menu.sc-tb-hover-right { position:absolute; left: auto; right: 5px;top: 5px; }
+/*.sc-element { position:relative; }*/
+/*.sc-element .sc-menu.sc-tb-hover-right { position:absolute; left: auto; right: 5px;top: 5px; }*/
 .sc-element .sc-menu.sc-tb-hover-left { position:absolute; left: 5px;right: auto;top: 5px; }
 .sc-element .sc-menu.sc-tb-hover-center { position:absolute;margin-left: 0;margin-right: 0; top: 5px; display: inline-block }
 .sc-element .sc-menu.sc-tb-hover-none { position:static; right:auto;top: auto; }
