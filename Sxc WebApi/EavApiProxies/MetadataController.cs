@@ -12,12 +12,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     public class MetadataController : SxcApiControllerBase, IMetadataController
     {
 
-        #region Content-Type Get, Delete, Save
-        [HttpGet]
-        public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, string keyType, string key, string contentType, int appId) 
-            => new Eav.WebApi.MetadataController(Log).GetAssignedEntities(assignmentObjectTypeId, keyType, key, contentType, appId);
+        //[HttpGet]
+        //public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, string keyType, string key, string contentType, int appId) 
+        //    => new Eav.WebApi.MetadataController(Log).Get(appId, assignmentObjectTypeId, keyType, key, contentType);
 
-	    #endregion
+        [HttpGet]
+        public IEnumerable<Dictionary<string, object>> Get(int appId, int targetType, string keyType, string key, string contentType)
+            => new Eav.WebApi.MetadataController(Log).Get(appId, targetType, keyType, key, contentType);
 
 
     }
