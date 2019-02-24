@@ -2,6 +2,7 @@
 using System.Web;
 using Newtonsoft.Json;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent;
@@ -26,39 +27,47 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         #region Toolbar
 
-        public HtmlString Toolbar(DynamicEntity target = null,
+        public HtmlString Toolbar(object target = null, 
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
-            string actions = null,
+            string actions = null, 
             string contentType = null, 
-            object prefill = null,
-            object toolbar = null,
-            object settings = null)
-        {
-            Log.Add("ctx toolbar - enabled:{Enabled}");
-            if (!Enabled) return null;
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar", $"{nameof(actions)},{nameof(contentType)},{nameof(prefill)},{nameof(toolbar)},{nameof(settings)}");
+            object prefill = null, 
+            object toolbar = null, 
+            object settings = null) 
+            => ToolbarInternal(false, target, dontRelyOnParameterOrder, actions, contentType, prefill, toolbar,
+            settings);
 
-            var itmToolbar = new ItemToolbar(target, actions, contentType, prefill, toolbar, settings);
-
-            return new HtmlString(itmToolbar.Toolbar);
-        }
-
-        public HtmlString ToolbarAttribute(DynamicEntity target = null,
+        public HtmlString ToolbarAttribute(object target = null,
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             string actions = null,
             string contentType = null,
             object prefill = null,
             object toolbar = null,
-            object settings = null)
+            object settings = null) 
+            => ToolbarInternal(true, target, dontRelyOnParameterOrder, actions, contentType, prefill, toolbar,
+            settings);
+
+        private HtmlString ToolbarInternal(bool inline, object target,
+            string dontRelyOnParameterOrder,
+            string actions,
+            string contentType,
+            object prefill,
+            object toolbar,
+            object settings)
         {
-            Log.Add("ctx toolbar - enabled:{Enabled}");
+            Log.Add($"context toolbar - enabled:{Enabled}; inline{inline}");
             if (!Enabled) return null;
             Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar", $"{nameof(actions)},{nameof(contentType)},{nameof(prefill)},{nameof(toolbar)},{nameof(settings)}");
 
-            var itmToolbar = new ItemToolbar(target, actions, contentType, prefill, toolbar, settings);
+            // ensure that internally we always process it as an entity
+            var eTarget = target as IEntity ?? (target as DynamicEntity)?.Entity;
+            if (target != null && eTarget == null)
+                Log.Warn("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
+            var itmToolbar = new ItemToolbar(eTarget, actions, contentType, prefill, toolbar, settings);
 
-            return Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute);
+            return inline ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute) : new HtmlString(itmToolbar.Toolbar);
         }
+
 
 
         #endregion Toolbar

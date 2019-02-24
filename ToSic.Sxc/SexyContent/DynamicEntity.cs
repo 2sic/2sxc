@@ -28,7 +28,7 @@ namespace ToSic.SexyContent
                 if (!userMayEdit)
                     return new HtmlString("");
 
-                var toolbar = new ItemToolbar(this).Toolbar;
+                var toolbar = new ItemToolbar(Entity).Toolbar;
                 return new HtmlString(toolbar);
             }
         }

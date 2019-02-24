@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using ToSic.SexyContent;
+using ToSic.Eav.Interfaces;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         private readonly object _fullConfig;
         private readonly object _fullSettings;
 
-        public ItemToolbar(DynamicEntity dynamicEntity, string actions = null, string newType = null, object prefill = null, object toolbar = null, object settings = null)
+        public ItemToolbar(IEntity dynamicEntity, string actions = null, string newType = null, object prefill = null, object toolbar = null, object settings = null)
         {
             _fullSettings = settings;
 
