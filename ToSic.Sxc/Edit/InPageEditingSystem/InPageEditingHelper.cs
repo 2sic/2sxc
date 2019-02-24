@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             => ToolbarInternal(false, target, dontRelyOnParameterOrder, actions, contentType, prefill, toolbar,
             settings);
 
-        public HtmlString ToolbarAttribute(object target = null,
+        public HtmlString TagToolbar(object target = null,
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             string actions = null,
             string contentType = null,

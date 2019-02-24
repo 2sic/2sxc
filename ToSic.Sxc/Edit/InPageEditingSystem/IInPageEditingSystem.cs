@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Web;
-using ToSic.Eav.Interfaces;
 using ToSic.SexyContent;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
@@ -42,7 +41,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         /// <param name="toolbar">complex manual toolbar configuration if needed - providing this will cause actions to be ignored</param>
         /// <param name="settings">toolbar settings controlling hover etc.</param>
         /// <returns>If the user is an editor, it returns the attribute containing all the toolbar configuration</returns>
-        HtmlString ToolbarAttribute(object target = null,
+        HtmlString TagToolbar(object target = null,
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             string actions = null,
             string contentType = null,

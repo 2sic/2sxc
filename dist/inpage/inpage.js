@@ -796,22 +796,12 @@ var log_1 = __webpack_require__(7);
 var Constants = __webpack_require__(34);
 // quick debug - set to false if not needed for production
 var dbg = false;
-// generate an empty / fallback toolbar tag
-function generateFallbackToolbar() {
-    var settingsString = JSON.stringify(toolbar_settings_1.settingsForEmptyToolbar);
-    return $("<ul class='sc-menu' toolbar='' settings='" + settingsString + "'/>");
-}
-exports.generateFallbackToolbar = generateFallbackToolbar;
-// find current toolbars inside this wrapper-tag
-function getToolbarTags(parentTag) {
-    var allInner = $(".sc-menu[toolbar],.sc-menu[data-toolbar],[" + Constants.toolbar.attr.full + "]", parentTag);
-    // return only those, which don't belong to a sub-item
-    var onlyDirectDescendents = allInner.filter(function (i, e) { return $(e).closest(Constants.cb.selectors.ofName)[0] === parentTag[0]; });
-    if (dbg)
-        console.log('found toolbars for parent', parentTag, onlyDirectDescendents);
-    return onlyDirectDescendents;
-}
-// create a process-toolbar command to generate toolbars inside a tag
+/**
+ * create a process - toolbar command to generate toolbars inside a tag
+ * @param parentLog
+ * @param parentTag
+ * @param optionalId
+ */
 function buildToolbars(parentLog, parentTag, optionalId) {
     var log = new log_1.Log('Tlb.BldAll', parentLog);
     parentTag = $(parentTag || '.DnnModule-' + optionalId);
@@ -821,57 +811,82 @@ function buildToolbars(parentLog, parentTag, optionalId) {
     var toolbars = getToolbarTags(parentTag);
     // no toolbars found, must help a bit because otherwise editing is hard
     if (toolbars.length === 0)
-        toolbars = addFallbackAndGetThatToolbar(parentTag);
+        toolbars = addFallbackToolbar(parentTag);
     for (var i = 0; i < toolbars.length; i++) {
         var tag = $(toolbars[i]);
-        var toolbarData = void 0;
-        var toolbarSettings = void 0;
-        var at = sxc_controller_in_page_1.$2sxcInPage.c.attr;
-        try {
-            var newConfigFormat = tryGetAttrText(toolbars[i], Constants.toolbar.attr.full);
-            if (newConfigFormat) {
-                var fullConfig = JSON.parse(newConfigFormat);
-                toolbarData = fullConfig.toolbar;
-                toolbarSettings = fullConfig.settings;
+        var config = loadConfigFromAttributes(toolbars[i]);
+        if (config != null) // is null if load failed
+            try {
+                convertConfigToToolbarTags(tag, config, log);
             }
-            else {
-                var data = getTextContent(toolbars[i], at.toolbar, at.toolbarData);
-                toolbarData = JSON.parse(data);
-                var settings = getTextContent(toolbars[i], at.settings, at.settingsData);
-                toolbarSettings = JSON.parse(settings);
+            catch (err2) {
+                // catch any errors, as this is very common - make sure the others are still rendered
+                console.error('error creating toolbar - will skip this one', err2);
             }
-        }
-        catch (err) {
-            console.error('error in settings JSON - probably invalid - make sure you also quote your properties like "name": ...', 
-            // ReSharper disable once UsageOfPossiblyUnassignedValue
-            toolbarData, err);
-            return;
-        }
-        try {
-            var cnt = context_1.context(tag);
-            cnt.toolbar = toolbar_expand_config_1.expandToolbarConfig(cnt, toolbarData, toolbarSettings, log);
-            var toolbar = render_toolbar_1.renderToolbar(cnt);
-            if (tag.attr(Constants.toolbar.attr.full)) {
-                // new case, where the full toolbar is included in one setting
-                tag.prepend(toolbar);
-                ensureToolbarHoverClass(tag);
-            }
-            else {
-                // default case, tag is the old <ul> tag
-                // todo: find the sc-element parent before replacing
-                var scElementParent = tag.closest(Constants.toolbar.selectors.ofOldHover);
-                tag.replaceWith(toolbar);
-                if (scElementParent.length > 0)
-                    ensureToolbarHoverClass(scElementParent);
-            }
-        }
-        catch (err2) {
-            // note: errors happen a lot on custom toolbars, make sure the others are still rendered
-            console.error('error creating toolbar - will skip this one', err2);
-        }
     }
 }
 exports.buildToolbars = buildToolbars;
+//////////////////////////////// Private Functions ////////////////////////////////////
+/**
+ * Load the toolbar configuration from the sxc-toolbar attribute OR the old schema
+ * @param tag
+ * @return a configuration object or null in case of an error
+ */
+function loadConfigFromAttributes(tag) {
+    try {
+        var newConfigFormat = tryGetAttrText(tag, Constants.toolbar.attr.full);
+        if (newConfigFormat) {
+            return JSON.parse(newConfigFormat);
+        }
+        else {
+            var at = sxc_controller_in_page_1.$2sxcInPage.c.attr;
+            var data = getFirstAttribute(tag, at.toolbar, at.toolbarData);
+            var settings = getFirstAttribute(tag, at.settings, at.settingsData);
+            return {
+                toolbar: JSON.parse(data),
+                settings: JSON.parse(settings)
+            };
+        }
+    }
+    catch (err) {
+        console.error('error in settings JSON - probably invalid - make sure you also quote your properties like "name": ...', tag, err);
+        return null;
+    }
+}
+/**
+ * Take a configuration and convert into a toolbar-menu; also attach the hover-attribute
+ * @param tag
+ * @param config
+ * @param log
+ */
+function convertConfigToToolbarTags(tag, config, log) {
+    var cnt = context_1.context(tag);
+    cnt.toolbar = toolbar_expand_config_1.expandToolbarConfig(cnt, config.toolbar, config.settings, log);
+    var toolbar = render_toolbar_1.renderToolbar(cnt);
+    if (tag.attr(Constants.toolbar.attr.full)) {
+        // new case, where the full toolbar is included in one setting
+        tag.prepend(toolbar);
+        ensureToolbarHoverClass(tag);
+    }
+    else {
+        // default case, tag is the old <ul> tag, so find the sc-element parent before replacing
+        var scElementParent = tag.closest(Constants.toolbar.selectors.ofOldHover);
+        tag.replaceWith(toolbar);
+        if (scElementParent.length > 0)
+            ensureToolbarHoverClass(scElementParent);
+    }
+}
+/** find current toolbars inside this wrapper-tag */
+function getToolbarTags(parentTag) {
+    var allInner = $(".sc-menu[toolbar],.sc-menu[data-toolbar],[" + Constants.toolbar.attr.full + "]", parentTag);
+    // return only those, which don't belong to a sub-item
+    var onlyDirectDescendents = allInner
+        .filter(function (i, e) { return $(e).closest(Constants.cb.selectors.ofName)[0] === parentTag[0]; });
+    if (dbg)
+        console.log('found toolbars for parent', parentTag, onlyDirectDescendents);
+    return onlyDirectDescendents;
+}
+/** add hover-attribute to tag */
 function ensureToolbarHoverClass(jtag) {
     if (jtag.length <= 0)
         return; // skip in case nothing was given
@@ -879,40 +894,30 @@ function ensureToolbarHoverClass(jtag) {
     if (!tag.hasAttribute(Constants.toolbar.attr.hover))
         tag.setAttribute(Constants.toolbar.attr.hover, '');
 }
-// 2019-02-18 2dm extracted function for better readibilyt, not tested yet
-function addFallbackAndGetThatToolbar(parentTag) {
+/** Create a default/fallback toolbar and return it */
+function addFallbackToolbar(parentTag) {
     if (dbg)
         console.log("didn't find toolbar, so will auto-create", parentTag);
     var outsideCb = !parentTag.hasClass(Constants.cb.classes.name);
     var contentTag = outsideCb ? parentTag.find('div' + Constants.cb.selectors.ofName) : parentTag;
-    // todo: modify to use the new 2sxc 9.40 syntax, drop the sc-element
-    contentTag.addClass(Constants.toolbar.classes.oldHover);
     // auto toolbar
-    var cnt = context_1.context(contentTag);
-    if (cnt.ui.autoToolbar !== false)
-        contentTag.prepend(generateFallbackToolbar());
-    return getToolbarTags(parentTag);
+    var ctx = context_1.context(contentTag);
+    if (ctx.ui.autoToolbar !== false)
+        contentTag.attr(Constants.toolbar.attr.full, JSON.stringify(toolbar_settings_1.emptyToolbar));
+    return parentTag;
 }
-function getTextContent(toolbar, name1, name2) {
-    // 2019-02-18 2dm shortened, not tested yet
+/** Find the text of one or more attributes in fallback order, till we found one */
+function getFirstAttribute(toolbar, name1, name2) {
     return tryGetAttrText(toolbar, name1) || tryGetAttrText(toolbar, name2) || '{}';
-    //const item1 = toolbar.attributes.getNamedItem(name1);
-    //const item2 = toolbar.attributes.getNamedItem(name2);
-    //if (item1 && item1.textContent) {
-    //  return item1.textContent;
-    //} else if (item2 && item2.textContent) {
-    //  return item2.textContent;
-    //};
-    //return '{}';
 }
-// 2019-02-18 2dm shortened, not tested yet
+/** Get text-content of an attribute (or return null) */
 function tryGetAttrText(tag, name) {
     var item1 = tag.attributes.getNamedItem(name);
     return item1 && item1.textContent;
 }
 function disable(tag) {
-    tag = $(tag);
-    tag.attr(Constants.toolbar.attr.disable, true);
+    var jtag = $(tag);
+    jtag.attr(Constants.toolbar.attr.disable, 'true');
 }
 exports.disable = disable;
 function isDisabled(sxc) {
@@ -1700,9 +1705,15 @@ function clear() {
 exports.clear = clear;
 function createSpecs(type, list, index) {
     var listItems = list.find(selectors_instance_1.selectors[type].selector);
-    if (index >= listItems.length)
-        index = listItems.length - 1; // sometimes the index is 1 larger than the length, then select last
-    var currentItem = listItems[index];
+    var currentItem;
+    if (index >= listItems.length) {
+        // when paste module below the last module in pane
+        // index is 1 larger than the length, then select last
+        currentItem = listItems[listItems.length - 1];
+    }
+    else {
+        currentItem = listItems[index];
+    }
     var editContext = JSON.parse(list.attr(selectors_instance_1.selectors.cb.context) || null) || { parent: 'dnn', field: list.id };
     return {
         parent: editContext.parent,
@@ -2134,6 +2145,10 @@ exports.settingsForEmptyToolbar = new ToolbarSettings({
     hover: 'left',
     show: 'hover',
 });
+exports.emptyToolbar = {
+    toolbar: '',
+    settings: exports.settingsForEmptyToolbar,
+};
 
 
 /***/ }),
@@ -2883,7 +2898,7 @@ function moveMod(modId, pane, order) {
         TabId: tabId,
         ModuleId: modId,
         Pane: pane,
-        ModuleOrder: (2 * order + 4),
+        ModuleOrder: (2 * order + 0),
     };
     sendDnnAjax(modId, 'ModuleService/MoveModule', {
         type: 'POST',
@@ -4944,11 +4959,9 @@ var ToolbarManager = /** @class */ (function (_super) {
     return ToolbarManager;
 }(has_log_1.HasLog));
 exports.ToolbarManager = ToolbarManager;
-// 2019-02-18 2dm moved to constants
-//export const disableToolbarAttribute = 'data-disable-toolbar';
 //2dm 2018-03-22 this seems to be unused
 var sharedTbm = new ToolbarManager(null);
-exports._toolbarManager = sharedTbm; // new ToolbarManager();
+exports._toolbarManager = sharedTbm;
 
 
 /***/ }),
@@ -9052,7 +9065,7 @@ exports.ItemRender = ItemRender;
 Object.defineProperty(exports, "__esModule", { value: true });
 var sxc_controller_in_page_1 = __webpack_require__(3);
 // prevent propagation of the click (if menu was clicked)
-$(sxc_controller_in_page_1.$2sxcInPage.c.sel.scMenu /*".sc-menu"*/).click(function (e) { return e.stopPropagation(); });
+$(sxc_controller_in_page_1.$2sxcInPage.c.sel.scMenu).click(function (e) { return e.stopPropagation(); });
 
 
 /***/ }),

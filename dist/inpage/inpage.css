@@ -12,19 +12,35 @@
 
 
 /****** the in-page toolbar and positioning / visibility thereof */
-/*.sc-element { position:relative; }*/
-/*.sc-element .sc-menu.sc-tb-hover-right { position:absolute; left: auto; right: 5px;top: 5px; }*/
+/*.sc-element { position:relative; }
+.sc-element .sc-menu.sc-tb-hover-right { position:absolute; left: auto; right: 5px;top: 5px; }
 .sc-element .sc-menu.sc-tb-hover-left { position:absolute; left: 5px;right: auto;top: 5px; }
 .sc-element .sc-menu.sc-tb-hover-center { position:absolute;margin-left: 0;margin-right: 0; top: 5px; display: inline-block }
-.sc-element .sc-menu.sc-tb-hover-none { position:static; right:auto;top: auto; }
+.sc-element .sc-menu.sc-tb-hover-none { position:static; right:auto;top: auto; }*/
 
-
-.sc-element .sc-menu.sc-tb-show-always, 
-    .sc-element:hover .sc-menu.sc-tb-show-always  { display: initial; }
+/*.sc-element .sc-menu.sc-tb-show-always, 
+.sc-element:hover .sc-menu.sc-tb-show-always  { display: initial; }
 .sc-element .sc-menu.sc-tb-show-hover { opacity: 0; }
 body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 .sc-element:hover .sc-menu.sc-tb-show-hover { display: block; opacity: 1; }
-.sc-element:hover .sc-element:not(:hover) .sc-menu.sc-tb-show-hover { opacity: 0; }   /* prevent hover of a parent, when the item itself is not hovered */
+.sc-element:hover .sc-element:not(:hover) .sc-menu.sc-tb-show-hover { opacity: 0; }*/   /* prevent hover of a parent, when the item itself is not hovered */
+
+/* todo: discuss w/2rm, maybe there's a better way without changing the positioning of the main element... */
+/* ReSharper disable Html.AttributeNotResolved */
+*[sxc-toolbar-hover] { position: relative; }
+[sxc-toolbar-hover] .sc-menu.sc-tb-hover-right { position:absolute; left: auto; right: 5px;top: 5px; }
+[sxc-toolbar-hover] .sc-menu.sc-tb-hover-left { position:absolute; left: 5px;right: auto;top: 5px; }
+[sxc-toolbar-hover] .sc-menu.sc-tb-hover-center { position:absolute;margin-left: 0;margin-right: 0; top: 5px; display: inline-block }
+[sxc-toolbar-hover] .sc-menu.sc-tb-hover-none { position:static; right:auto;top: auto; }
+
+
+[sxc-toolbar-hover] .sc-menu.sc-tb-show-always, 
+    [sxc-toolbar-hover]:hover .sc-menu.sc-tb-show-always  { display: initial; }
+[sxc-toolbar-hover] .sc-menu.sc-tb-show-hover { opacity: 0; }
+body.sc-tb-show-all [sxc-toolbar-hover] .sc-menu { display: initial !important; }
+[sxc-toolbar-hover]:hover .sc-menu.sc-tb-show-hover { display: block; opacity: 1; }
+[sxc-toolbar-hover]:hover [sxc-toolbar-hover]:not(:hover) .sc-menu.sc-tb-show-hover { opacity: 0; }   /* prevent hover of a parent, when the item itself is not hovered */
+/* ReSharper restore Html.AttributeNotResolved */
 
 .sc-menu { list-style-type:none; margin:0; padding:0;display: inline;z-index: 1499; }
 .sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
@@ -41,16 +57,16 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 /* this one is for buttons which can be disabled, like publish */
 .sc-menu li a.disabled i {opacity: 0.4}
 
-  .sc-menu a div {
-  width: 28px !important;
+.sc-menu a div {
+    width: 28px !important;
   height: 28px !important;
   line-height: 28px !important;
   background-color:  #0088f4;
   border-style: solid;
   box-sizing: content-box;
-  border-radius: 20px; /*3px;*/
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
+  border-radius: 20px;
   color: #fff;
   text-align: center;
   font-size: 15px;
@@ -110,15 +126,12 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 
 .group-1 i.btn-mode:before, .group-5 i.btn-mode:before { 
     transform: rotate(45deg);
-    -ms-transform: rotate(45deg); /* IE 9 */
 }
 .group-2 i.btn-mode:before, .group-6 i.btn-mode:before { 
     transform: rotate(90deg);
-    -ms-transform: rotate(90deg); /* IE 9 */
 }
 .group-3 i.btn-mode:before, .group-7 i.btn-mode:before { 
     transform: rotate(135deg);
-    -ms-transform: rotate(135deg); /* IE 9 */
 }
 
 
@@ -158,28 +171,25 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
   width: 1em;
   margin-right: .3em;
   text-align: center;
-  /* opacity: .8; */
  
   /* For safety - reset parent styles, that can break glyph codes*/
   font-variant: normal;
   text-transform: none;
  
   /* fix buttons height, for twitter bootstrap */
-     line-height: 28px; /*1em;*/
+     line-height: 28px; 
  
   /* Animation center compensation - margins should be symmetric */
   /* remove if not needed */
   margin-left: .2em;
  
   /* you can be more comfortable with increased icons size */
-     font-size: 125%; /*130%;*/ 
+     font-size: 125%;  
  
   /* Font smoothing. That was taken from TWBS */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
  
-  /* Uncomment for 3D effect */
-  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 .inpage-frame-wrapper .inpage-frame {
     width: 100%;
