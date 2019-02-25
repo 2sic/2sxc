@@ -629,6 +629,7 @@
                       <plugins>
                         <add name="DiskCache" />
                       </plugins>
+                      <pipeline defaultCommands="autorotate.default=true" />
                     </resizer>
                   </node>
 
