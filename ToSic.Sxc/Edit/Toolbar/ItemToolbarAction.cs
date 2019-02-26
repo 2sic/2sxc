@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
-using ToSic.SexyContent.EAVExtensions;
+using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.Interfaces;
 
-namespace ToSic.SexyContent.Edit.Toolbar
+namespace ToSic.Sxc.Edit.Toolbar
 {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal class ItemToolbarAction
@@ -26,16 +26,15 @@ namespace ToSic.SexyContent.Edit.Toolbar
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public object prefill { get; set; }
 
-        public ItemToolbarAction(DynamicEntity dynamicEntity = null)
+        public ItemToolbarAction(IEntity dynEntityOrEntity = null) 
         {
             // a null value/missing is also valid, when all you want is a new/add toolbar
-            if (dynamicEntity == null)
+            if (dynEntityOrEntity == null)
                 return;
 
-            var Entity = dynamicEntity.Entity;
+            var Entity = dynEntityOrEntity;
             isPublished = Entity.IsPublished;
-            var editingData = Entity as IHasEditingData;
-            if (editingData != null)
+            if (Entity is IHasEditingData editingData)
             {
                 sortOrder = editingData.SortOrder;
                 useModuleList = true;

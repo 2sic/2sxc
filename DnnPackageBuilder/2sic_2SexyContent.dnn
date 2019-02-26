@@ -706,7 +706,7 @@
     <!-- Keep the 4th version number part as it is needed to prevent "repair install" message that DNN
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
-    <package name="Connect.Razor" type="Library" version="01.00.00.01">
+    <package name="Connect.Razor" type="Library" version="01.01.00.01">
       <friendlyName>DnnConnect Razor Blade</friendlyName>
       <description>Razor Blade</description>
       <iconFile>icon.png</iconFile>
@@ -736,6 +736,10 @@
           <assemblies>
             <assembly>
               <name>Connect.Razor.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Connect.Razor.Dnn.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>

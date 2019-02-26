@@ -5,8 +5,8 @@ using System.Web;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.SexyContent.EAVExtensions;
-using ToSic.SexyContent.Edit.Toolbar;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.SexyContent
 {
@@ -28,7 +28,7 @@ namespace ToSic.SexyContent
                 if (!userMayEdit)
                     return new HtmlString("");
 
-                var toolbar = new ItemToolbar(this).Toolbar;
+                var toolbar = new ItemToolbar(Entity).Toolbar;
                 return new HtmlString(toolbar);
             }
         }
