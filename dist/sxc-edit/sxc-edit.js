@@ -1037,6 +1037,9 @@ angular.module('Adam')
   .factory('sanitizeSvc', function () {
 
     removeFromStart = function (sanitized, charToRemove) {
+      // check for undefined 
+      if (!sanitized) return sanitized;
+
       while (sanitized.substring(0, 1) === charToRemove) {
         sanitized = sanitized.substring(1);
       }
@@ -1044,6 +1047,8 @@ angular.module('Adam')
     };
 
     removeFromEnd = function (sanitized, charToRemove) {
+      // check for undefined 
+      if (!sanitized) return sanitized;
       while (sanitized.substring(sanitized.length - 1, sanitized.length) === charToRemove) {
         sanitized = sanitized.substring(0, sanitized.length - 1);
       }
@@ -1051,6 +1056,9 @@ angular.module('Adam')
     };
 
     cleanBadPath = function (sanitized) {
+      // check for undefined 
+      if (!sanitized) return sanitized;
+
       var goodChar = "_";
       var illegalRe = /[\?<>\\:\*\|":]/g;
       var controlRe = /[\x00-\x1f\x80-\x9f]/g;
@@ -1069,6 +1077,9 @@ angular.module('Adam')
 
     // sanitize path
     svc.sanitizePath = function (sanitized) {
+      // check for undefined 
+      if (!sanitized) return sanitized;
+
       // remove slashes form start of path
       sanitized = removeFromStart(sanitized, '\/');
 
@@ -1089,6 +1100,9 @@ angular.module('Adam')
 
     // sanitize file or folder name
     svc.sanitizeName = function (sanitized) {
+      // check for undefined 
+      if (!sanitized) return sanitized;
+      
       // in addition to all path validation rules
       // slashes are not valid in file or folder name
       var replacement = "_";
