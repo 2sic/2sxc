@@ -548,7 +548,6 @@ angular.module('Adam')
           'addedfile': function (file) {
             if(svc.getAllowEdit() === false) {
               this.removeFile(file);
-              // toastr.error('permission denied', 'can\'t paste image'); // todo i18n
             } else {
               $timeout(function () {
                 // anything you want can go here and will safely be run on the next digest.
@@ -679,7 +678,10 @@ angular.module('Adam')
          * @param {any} dropzone
          */
         function pasteImageInDropzone(ev, data, dropzone) {
-          if(svc.getAllowEdit() === false) return;
+          if(svc.getAllowEdit() === false) {
+            toastr.error($translate.instant('Errors.NoAllowEdit')); // todo i18n
+            return;
+          }
 
           if (ev.detail && !data) {
             data = ev.detail;
