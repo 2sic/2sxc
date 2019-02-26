@@ -177,7 +177,14 @@ namespace ToSic.Sxc.Adam.WebApi
             state.ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            state.ContainerContext.Folder(subfolder, false);
+            var folder = state.ContainerContext.Folder(subfolder, false);
+
+            // start with a security check...
+            var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
+
+            // validate that dnn user have write permissions for folder
+            if (!SecurityChecks.CanEdit(dnnFolder))
+                throw Http.PermissionDenied("can't create new folder - permission denied");
 
             // now access the subfolder, creating it if missing (which is what we want
             state.ContainerContext.Folder(subfolder + "/" + newFolder, true);
@@ -206,6 +213,10 @@ namespace ToSic.Sxc.Adam.WebApi
                 var folderManager = FolderManager.Instance;
                 var fld = folderManager.GetFolder(id);
 
+                // validate that dnn user have write permissions for folder
+                if (!SecurityChecks.CanEdit(fld))
+                    throw Http.PermissionDenied("can't delete folder - permission denied");
+
                 if (!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
                     throw exp;
 
@@ -217,6 +228,10 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 var fileManager = FileManager.Instance;
                 var file = fileManager.GetFile(id);
+
+                // validate that dnn user have write permissions for folder where is file
+                if (!SecurityChecks.CanEdit(file))
+                    throw Http.PermissionDenied("can't delete file - permission denied");
 
                 if (!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
                     throw exp;
@@ -250,6 +265,11 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 var folderManager = FolderManager.Instance;
                 var fld = folderManager.GetFolder(id);
+
+                // validate that dnn user have write permissions for folder
+                if (!SecurityChecks.CanEdit(fld))
+                    throw Http.PermissionDenied("can't rename folder - permission denied");
+
                 if (!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
                     throw exp;
 
@@ -261,6 +281,11 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 var fileManager = FileManager.Instance;
                 var file = fileManager.GetFile(id);
+
+                // validate that dnn user have write permissions for folder where is file
+                if (!SecurityChecks.CanEdit(file))
+                    throw Http.PermissionDenied("can't rename file - permission denied");
+
                 if (!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
                     throw exp;
 

@@ -1672,9 +1672,15 @@ function clear() {
 exports.clear = clear;
 function createSpecs(type, list, index) {
     var listItems = list.find(selectors_instance_1.selectors[type].selector);
-    if (index >= listItems.length)
-        index = listItems.length - 1; // sometimes the index is 1 larger than the length, then select last
-    var currentItem = listItems[index];
+    var currentItem;
+    if (index >= listItems.length) {
+        // when paste module below the last module in pane
+        // index is 1 larger than the length, then select last
+        currentItem = listItems[listItems.length - 1];
+    }
+    else {
+        currentItem = listItems[index];
+    }
     var editContext = JSON.parse(list.attr(selectors_instance_1.selectors.cb.context) || null) || { parent: 'dnn', field: list.id };
     return {
         parent: editContext.parent,
@@ -2877,7 +2883,7 @@ function moveMod(modId, pane, order) {
         TabId: tabId,
         ModuleId: modId,
         Pane: pane,
-        ModuleOrder: (2 * order + 4),
+        ModuleOrder: (2 * order + 0),
     };
     sendDnnAjax(modId, 'ModuleService/MoveModule', {
         type: 'POST',

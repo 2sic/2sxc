@@ -25,370 +25,414 @@
 // note: don't prefix angular with window - something fails in production build if you do that
 // ReSharper disable PossiblyUnassignedProperty
 angular.module('Adam')
-    /*@ngInject*/
-    .factory('adamSvc', ["$http", "eavConfig", "sxc", "svcCreator", "appRoot", "appId", function ($http, eavConfig, sxc, svcCreator, appRoot, appId) {
+  /*@ngInject*/
+  .factory('adamSvc', ["$http", "eavConfig", "sxc", "svcCreator", "appRoot", "appId", "sanitizeSvc", "$filter", function ($http, eavConfig, sxc, svcCreator, appRoot, appId, sanitizeSvc, $filter) {
 
-        // Construct a service for this specific appId
-        return function createSvc(contentType, entityGuid, field, subfolder, serviceConfig) {
-            var svc = {
-                url: sxc.resolveServiceUrl('app-content/' + contentType + '/' + entityGuid + '/' + field),
-                subfolder: subfolder,
-                folders: [],
-                adamRoot: appRoot.substr(0, appRoot.indexOf('2sxc'))
-            };
+    // Construct a service for this specific appId
+    return function createSvc(contentType, entityGuid, field, subfolder, serviceConfig) {
 
-            // get the correct url for uploading as it is needed by external services (dropzone)
-            svc.uploadUrl = function(targetSubfolder) {
-                var url = (targetSubfolder === '')
-                    ? svc.url
-                    : svc.url + '?subfolder=' + targetSubfolder;
-                url += (url.indexOf('?') === -1 ? '?' : '&')
-                    + 'usePortalRoot=' + serviceConfig.usePortalRoot
-                    + '&appId=' + appId;
-                return url;
-            };
+      subfolder = sanitizeSvc.sanitizePath(subfolder);
 
-            // extend a json-response with a path (based on the adam-root) to also have a fullPath
-          svc.addFullPath = function(value, key) {
-            // 2dm 2018-03-29 special fix - sometimes the path already has the full path, sometimes not
-            // it should actually be resolved properly, but because I don't have time
-            // ATM (data comes from different web-services, which are also used in other places
-            // I'll just check if it's already in there
-            value.fullPath = value.Path;
+      allowEdit = false;
 
-            if(value.Path && value.Path.toLowerCase().indexOf(svc.adamRoot.toLowerCase()) === -1)
-              value.fullPath = svc.adamRoot + value.Path;
-          };
+      var svc = {
+        url: sxc.resolveServiceUrl('app-content/' + contentType + '/' + entityGuid + '/' + field),
+        subfolder: subfolder,
+        folders: [],
+        adamRoot: appRoot.substr(0, appRoot.indexOf('2sxc')),
 
-            svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get(svc.url + '/items',
-                        {
-                            params: {
-                                subfolder: svc.subfolder,
-                                usePortalRoot: serviceConfig.usePortalRoot,
-                                appId: appId
-                            }
-                        })
-                    .then(function(result) {
-                        angular.forEach(result.data, svc.addFullPath);
-                        return result;
-                    });
-            }));
+      };
 
-            // create folder
-            svc.addFolder = function (newfolder) {
-                return $http.post(svc.url + '/folder',
-                        {},
-                        {
-                            params: {
-                                subfolder: svc.subfolder,
-                                newFolder: newfolder,
-                                usePortalRoot: serviceConfig.usePortalRoot,
-                                appId: appId
-                            }
-                        })
-                    .then(svc.liveListReload);
-            };
+      checkAllowEdit = function (items) {
+        var currentFolder = $filter('filter')(items, { Name: '.' }, true)[0];
+        if (currentFolder) {
+          allowEdit = currentFolder.AllowEdit;
+          // return currentFolder.AllowEdit;
+        }
+        else {
+          // currentFolder missing
+          allowEdit = false;
+          // return false;
+        }
+      };
 
-            svc.goIntoFolder = function(childFolder) {
-                svc.folders.push(childFolder);
-                var pathParts = childFolder.Path.split('/');
-                var subPath = '';
-                for (var c = 0; c < svc.folders.length; c++)
-                    subPath = pathParts[pathParts.length - c - 2] + '/' + subPath;
+      svc.getAllowEdit = function() {
+        // return true;
+        return allowEdit;
+      };
 
-                subPath = subPath.replace('//', '/');
-                if (subPath[subPath.length - 1] === '/')
-                    subPath = subPath.substr(0, subPath.length - 1);
+      // get the correct url for uploading as it is needed by external services (dropzone)
+      svc.uploadUrl = function (targetSubfolder) {
+        targetSubfolder = sanitizeSvc.sanitizePath(targetSubfolder);
+        var url = (targetSubfolder === '')
+          ? svc.url
+          : svc.url + '?subfolder=' + targetSubfolder;
+        url += (url.indexOf('?') === -1 ? '?' : '&')
+          + 'usePortalRoot=' + serviceConfig.usePortalRoot
+          + '&appId=' + appId;
+        return url;
+      };
 
-                childFolder.Subfolder = subPath;
+      // extend a json-response with a path (based on the adam-root) to also have a fullPath
+      svc.addFullPath = function (value, key) {
+        // 2dm 2018-03-29 special fix - sometimes the path already has the full path, sometimes not
+        // it should actually be resolved properly, but because I don't have time
+        // ATM (data comes from different web-services, which are also used in other places
+        // I'll just check if it's already in there
+        value.fullPath = value.Path;
 
-                // now assemble the correct subfolder based on the folders-array
-                svc.subfolder = subPath;
-                svc.liveListReload();
-                return subPath;
-            };
+        if (value.Path && value.Path.toLowerCase().indexOf(svc.adamRoot.toLowerCase()) === -1)
+          value.fullPath = svc.adamRoot + value.Path;
+      };
 
-            svc.goUp = function() {
-                if (svc.folders.length > 0)
-                    svc.folders.pop();
-                if (svc.folders.length > 0) {
-                    svc.subfolder = svc.folders[svc.folders.length - 1].Subfolder;
-                } else {
-                    svc.subfolder = '';
-                }
-                svc.liveListReload();
-                return svc.subfolder;
-            };
+      svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
+        return $http.get(svc.url + '/items',
+          {
+            params: {
+              subfolder: svc.subfolder,
+              usePortalRoot: serviceConfig.usePortalRoot,
+              appId: appId
+            }
+          })
+          .then(function (result) {
+            angular.forEach(result.data, svc.addFullPath);
+            checkAllowEdit(result.data);
+            return result;
+          });
+      }));
 
-            // delete, then reload
-            // IF verb DELETE fails, so I'm using get for now
-            svc.delete = function (item) {
-                return $http.get(svc.url + '/delete',
-                        {
-                            params: {
-                                subfolder: svc.subfolder,
-                                isFolder: item.IsFolder,
-                                id: item.Id,
-                                usePortalRoot: serviceConfig.usePortalRoot,
-                                appId: appId
-                            }
-                        })
-                    .then(svc.liveListReload);
-            };
+      // create folder
+      svc.addFolder = function (newfolder) {
+        return $http.post(svc.url + '/folder',
+          {},
+          {
+            params: {
+              subfolder: svc.subfolder,
+              newFolder: sanitizeSvc.sanitizeName(newfolder),
+              usePortalRoot: serviceConfig.usePortalRoot,
+              appId: appId
+            }
+          })
+          .then(svc.liveListReload);
+      };
 
-            // rename, then reload
-            svc.rename = function (item, newName) {
-                return $http.get(svc.url + '/rename',
-                        {
-                            params: {
-                                subfolder: svc.subfolder,
-                                isFolder: item.IsFolder,
-                                id: item.Id,
-                                usePortalRoot: serviceConfig.usePortalRoot,
-                                newName: newName,
-                                appId: appId
-                            }
-                        })
-                    .then(svc.liveListReload);
-            };
-            
-            svc.reload = svc.liveListReload;
+      svc.goIntoFolder = function (childFolder) {
+        svc.folders.push(childFolder);
+        var pathParts = childFolder.Path.split('/');
+        var subPath = '';
+        for (var c = 0; c < svc.folders.length; c++)
+          subPath = pathParts[pathParts.length - c - 2] + '/' + subPath;
 
-            return svc;
-        };
-    }]);
+        subPath = subPath.replace('//', '/');
+        if (subPath[subPath.length - 1] === '/')
+          subPath = subPath.substr(0, subPath.length - 1);
+
+        // add configured Paths
+        subPath = (!!subfolder) ? subfolder + '/' + subPath : subPath;
+
+        childFolder.Subfolder = subPath;
+
+        // now assemble the correct subfolder based on the folders-array
+        svc.subfolder = subPath;
+        svc.liveListReload();
+        return subPath;
+      };
+
+      svc.goUp = function () {
+        if (svc.folders.length > 0)
+          svc.folders.pop();
+        if (svc.folders.length > 0) {
+          svc.subfolder = svc.folders[svc.folders.length - 1].Subfolder;
+        } else {
+          svc.subfolder = subfolder || '';
+        }
+        svc.liveListReload();
+        return svc.subfolder;
+      };
+
+      // delete, then reload
+      // IF verb DELETE fails, so I'm using get for now
+      svc.delete = function (item) {
+        return $http.get(svc.url + '/delete',
+          {
+            params: {
+              subfolder: svc.subfolder,
+              isFolder: item.IsFolder,
+              id: item.Id,
+              usePortalRoot: serviceConfig.usePortalRoot,
+              appId: appId
+            }
+          })
+          .then(svc.liveListReload);
+      };
+
+      // rename, then reload
+      svc.rename = function (item, newName) {
+        return $http.get(svc.url + '/rename',
+          {
+            params: {
+              subfolder: svc.subfolder,
+              isFolder: item.IsFolder,
+              id: item.Id,
+              usePortalRoot: serviceConfig.usePortalRoot,
+              newName: sanitizeSvc.sanitizeName(newName),
+              appId: appId
+            }
+          })
+          .then(svc.liveListReload);
+      };
+
+      svc.reload = svc.liveListReload;
+
+      return svc;
+    };
+  }]);
 // ReSharper restore PossiblyUnassignedProperty
 
 (function () {
-    /* jshint laxbreak:true */
-    "use strict";
+  /* jshint laxbreak:true */
+  "use strict";
 
-    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType", "featuresSvc"];
-    var app = angular.module("Adam"); 
+  BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType", "featuresSvc", "toastr"];
+  var app = angular.module("Adam");
 
-    // The controller for the main form directive
-    app.controller("BrowserController", BrowserController);
-    
-    /*@ngInject*/
-    function BrowserController($scope, adamSvc, debugState, eavConfig, eavAdminDialogs, appRoot, fileType, featuresSvc) {
-        var vm = this;
-        vm.debug = debugState;
+  // The controller for the main form directive
+  app.controller("BrowserController", BrowserController);
 
-        vm.clipboardPasteImageFunctionalityDisabled = true;
+  /*@ngInject*/
+  function BrowserController($scope, adamSvc, debugState, eavConfig, eavAdminDialogs, appRoot, fileType, featuresSvc, toastr) {
+    var vm = this;
+    vm.debug = debugState;
 
-        var initConfig = function initConfig() {
-            vm.contentTypeName = $scope.contentTypeName;
-            vm.entityGuid = $scope.entityGuid;
-            vm.fieldName = $scope.fieldName;
-            vm.subFolder = $scope.subFolder || "";
-            vm.showImagesOnly = $scope.showImagesOnly = $scope.showImagesOnly || false;
+    vm.clipboardPasteImageFunctionalityDisabled = true;
 
-            vm.folderDepth = (typeof $scope.folderDepth !== 'undefined' && $scope.folderDepth !== null)
-                ? $scope.folderDepth
-                : 2;
-            vm.showFolders = !!vm.folderDepth;
-            vm.allowAssetsInRoot = $scope.allowAssetsInRoot || true;    // if true, the initial folder can have files, otherwise only subfolders
-            vm.metadataContentTypes = $scope.metadataContentTypes || "";
+    var initConfig = function initConfig() {
+      vm.contentTypeName = $scope.contentTypeName;
+      vm.entityGuid = $scope.entityGuid;
+      vm.fieldName = $scope.fieldName;
+      vm.subFolder = $scope.subFolder || "";
+      vm.showImagesOnly = $scope.showImagesOnly = $scope.showImagesOnly || false;
 
-            // add clipboard paste image feature if enabled
-            featuresSvc.enabled('f6b8d6da-4744-453b-9543-0de499aa2352').then(
-                function (enabled) {
-                    if (enabled) {
-                        vm.clipboardPasteImageFunctionalityDisabled = (enabled === false);
-                    }
-                });
+      vm.folderDepth = (typeof $scope.folderDepth !== 'undefined' && $scope.folderDepth !== null)
+        ? $scope.folderDepth
+        : 2;
+      vm.showFolders = !!vm.folderDepth;
+      vm.allowAssetsInRoot = $scope.allowAssetsInRoot || true;    // if true, the initial folder can have files, otherwise only subfolders
+      vm.metadataContentTypes = $scope.metadataContentTypes || "";
+
+      // add clipboard paste image feature if enabled
+      featuresSvc.enabled('f6b8d6da-4744-453b-9543-0de499aa2352').then(
+        function (enabled) {
+          if (enabled) {
+            vm.clipboardPasteImageFunctionalityDisabled = false;
+          }
+        });
+    };
+
+    initConfig();
+
+    vm.show = false;
+    vm.appRoot = appRoot;
+    vm.adamModeConfig = $scope.adamModeConfig;
+
+    vm.disabled = $scope.ngDisabled;
+    vm.enableSelect = ($scope.enableSelect === false) ? false : true; // must do it like this, $scope.enableSelect || true will not work
+
+    vm.activate = function () {
+      if ($scope.autoLoad)
+        vm.toggle();
+      if ($scope.registerSelf)
+        $scope.registerSelf(vm);
+    };
+
+    // load svc...
+    vm.svc = adamSvc(vm.contentTypeName, vm.entityGuid, vm.fieldName, vm.subFolder, $scope.adamModeConfig);
+
+    vm.allowEdit = function() { 
+      return vm.svc.getAllowEdit();
+    };
+
+    // refresh - also used by callback after an upload completed
+    vm.refresh = vm.svc.liveListReload;
+
+    vm.get = function () {
+      vm.items = vm.svc.liveList();
+      vm.folders = vm.svc.folders;
+      vm.svc.liveListReload();
+    };
+
+    vm.toggle = function toggle(newConfig) {
+      // Reload configuration
+      initConfig();
+      var configChanged = false;
+      if (newConfig) {
+        // Detect changes in config, allows correct toggle behaviour
+        if (JSON.stringify(newConfig) !== vm.oldConfig)
+          configChanged = true;
+        vm.oldConfig = JSON.stringify(newConfig);
+
+        vm.showImagesOnly = newConfig.showImagesOnly;
+        $scope.adamModeConfig.usePortalRoot = !!(newConfig.usePortalRoot);
+      }
+
+      vm.show = configChanged || !vm.show;
+
+      if (!vm.show)
+        $scope.adamModeConfig.usePortalRoot = false;
+
+      // Override configuration in portal mode
+      if ($scope.adamModeConfig.usePortalRoot) {
+        vm.showFolders = true;
+        vm.folderDepth = 99;
+      }
+
+      if (vm.show)
+        vm.get();
+    };
+
+    vm.openUpload = function () {
+      vm.dropzone.openUpload();
+    };
+
+    vm.select = function (fileItem) {
+      if (vm.disabled || !vm.enableSelect)
+        return;
+      $scope.updateCallback(fileItem);
+    };
+
+    vm.addFolder = function () {
+      if (vm.disabled)
+        return;
+      var folderName = window.prompt("Please enter a folder name"); // todo i18n
+      if (folderName)
+        vm.svc.addFolder(folderName)
+          .then(vm.refresh)
+          .catch(function(error) {
+            console.error(error);
+            toastr.error('permission denied', 'can\'t create new folder'); // todo i18n
+          });
+    };
+
+    vm.del = function del(item) {
+      if (vm.disabled)
+        return;
+      var ok = window.confirm("Are you sure you want to delete this item?"); // todo i18n
+      if (ok)
+        vm.svc.delete(item)
+        .catch(function(error) {
+          console.error(error);
+          toastr.error('permission denied', 'can\'t delete'); // todo i18n
+        });
+    };
+
+    vm.rename = function rename(item) {
+      var newName = window.prompt('Rename the file / folder to: ', item.Name);
+      if (newName)
+        vm.svc.rename(item, newName)
+        .catch(function(error) {
+          console.error(error);
+          toastr.error('permission denied', 'can\'t rename'); // todo i18n
+        });
+    };
+
+    //#region Folder Navigation
+    vm.goIntoFolder = function (folder) {
+      var subFolder = vm.svc.goIntoFolder(folder);
+      vm.subFolder = subFolder;
+    };
+
+    vm.goUp = function () {
+      vm.subFolder = vm.svc.goUp();
+    };
+
+    vm.currentFolderDepth = function () {
+      return vm.svc.folders.length;
+    };
+
+    vm.allowCreateFolder = function () {
+      return (vm.allowEdit()) && (vm.svc.folders.length < vm.folderDepth);
+    };
+    //#endregion
+
+    //#region Metadata
+    vm.editMetadata = function (item) {
+      var items = [
+        vm._itemDefinition(item, vm.getMetadataType(item))
+      ];
+
+      eavAdminDialogs.openEditItems(items, vm.refresh);
+    };
+
+    vm.getMetadataType = function (item) {
+      var found;
+
+      // check if it's a folder and if this has a special registration
+      if (item.Type === "folder") {
+        found = vm.metadataContentTypes.match(/^(folder)(:)([^\n]*)/im);
+        if (found)
+          return found[3];
+        else
+          return null;
+      }
+
+      // check if the extension has a special registration
+      // -- not implemented yet
+
+      // check if the type "image" or "document" has a special registration
+      // -- not implemneted yet
+
+
+      // nothing found so far, go for the default with nothing as the prefix 
+      found = vm.metadataContentTypes.match(/^([^:\n]*)(\n|$)/im);
+      if (found)
+        return found[1];
+
+      // this is if we don't find anything
+      return null;
+    };
+
+    // todo: move to service, shouldn't be part of the application
+    vm._itemDefinition = function (item, metadataType) {
+      var title = "EditFormTitle.Metadata"; // todo: i18n
+      return item.MetadataId !== 0
+        ? { EntityId: item.MetadataId, Title: title } // if defined, return the entity-number to edit
+        : {
+          ContentTypeName: metadataType, // otherwise the content type for new-assegnment
+          Metadata: {
+            Key: (item.Type === "folder" ? "folder" : "file") + ":" + item.Id,
+            KeyType: "string",
+            TargetType: eavConfig.metadataOfCmsObject
+          },
+          Title: title,
+          Prefill: { EntityTitle: item.Name } // possibly prefill the entity title 
         };
 
-        initConfig();
-        
-        vm.show = false;
-        vm.appRoot = appRoot;        
-        vm.adamModeConfig = $scope.adamModeConfig;
+    };
 
-        vm.disabled = $scope.ngDisabled;
-        vm.enableSelect = ($scope.enableSelect === false) ? false : true; // must do it like this, $scope.enableSelect || true will not work
+    //#endregion
 
-        vm.activate = function () {
-            if($scope.autoLoad)
-                vm.toggle();
-            if ($scope.registerSelf)
-                $scope.registerSelf(vm);
-        };
+    //#region icons
+    vm.icon = function (item) {
+      return fileType.getIconClass(item.Name);
+    };
+    //#endregion
 
-        // load svc...
-        vm.svc = adamSvc(vm.contentTypeName, vm.entityGuid, vm.fieldName, vm.subFolder, $scope.adamModeConfig);
-
-        // refresh - also used by callback after an upload completed
-        vm.refresh = vm.svc.liveListReload;
-
-        vm.get = function () {
-            vm.items = vm.svc.liveList();
-            vm.folders = vm.svc.folders;
-            vm.svc.liveListReload();
-        };
-
-        vm.toggle = function toggle(newConfig) {
-            // Reload configuration
-            initConfig();
-            var configChanged = false;
-            if (newConfig) {
-                // Detect changes in config, allows correct toggle behaviour
-                if (JSON.stringify(newConfig) !== vm.oldConfig)
-                    configChanged = true;
-                vm.oldConfig = JSON.stringify(newConfig);
-
-                vm.showImagesOnly = newConfig.showImagesOnly;
-                $scope.adamModeConfig.usePortalRoot = !!(newConfig.usePortalRoot);
-            }
-
-            vm.show = configChanged || !vm.show;
-            
-            if (!vm.show)
-                $scope.adamModeConfig.usePortalRoot = false;
-
-            // Override configuration in portal mode
-            if ($scope.adamModeConfig.usePortalRoot) {
-                vm.showFolders = true;
-                vm.folderDepth = 99;
-            }
-
-            if (vm.show)
-                vm.get();
-        };
-
-        vm.openUpload = function () {
-            vm.dropzone.openUpload();
-        };
-
-        vm.select = function (fileItem) {
-            if (vm.disabled || !vm.enableSelect)
-                return;
-            $scope.updateCallback(fileItem);
-        };
-
-        vm.addFolder = function () {
-            if (vm.disabled)
-                return;
-            var folderName = window.prompt("Please enter a folder name"); // todo i18n
-            if (folderName)
-                vm.svc.addFolder(folderName)
-                    .then(vm.refresh);
-        };
-
-        vm.del = function del(item) {
-            if (vm.disabled)
-                return;
-            var ok = window.confirm("Are you sure you want to delete this item?"); // todo i18n
-            if (ok)
-                vm.svc.delete(item);
-        };
-
-        vm.rename = function rename(item) {
-            var newName = window.prompt('Rename the file / folder to: ', item.Name);
-            if (newName)
-                vm.svc.rename(item, newName);
-        };
-
-        //#region Folder Navigation
-        vm.goIntoFolder = function (folder) {
-            var subFolder = vm.svc.goIntoFolder(folder);
-            vm.subFolder = subFolder;
-        };
-
-        vm.goUp = function () {
-            vm.subFolder = vm.svc.goUp();
-        };
-
-        vm.currentFolderDepth = function() {
-            return vm.svc.folders.length;
-        };
-
-        vm.allowCreateFolder = function() {
-            return vm.svc.folders.length < vm.folderDepth;
-        };
-        //#endregion
-
-        //#region Metadata
-        vm.editMetadata = function(item) {
-            var items = [
-                vm._itemDefinition(item, vm.getMetadataType(item))
-            ];
-
-            eavAdminDialogs.openEditItems(items, vm.refresh);
-        };
-
-        vm.getMetadataType = function(item) {
-            var found;
-
-            // check if it's a folder and if this has a special registration
-            if (item.Type === "folder") {
-                found = vm.metadataContentTypes.match(/^(folder)(:)([^\n]*)/im);
-                if (found)
-                    return found[3];
-                else 
-                    return null;
-            }
-
-            // check if the extension has a special registration
-            // -- not implemented yet
-
-            // check if the type "image" or "document" has a special registration
-            // -- not implemneted yet
-
-
-            // nothing found so far, go for the default with nothing as the prefix 
-            found = vm.metadataContentTypes.match(/^([^:\n]*)(\n|$)/im);
-            if (found)
-                return found[1];
-
-            // this is if we don't find anything
-            return null;
-        };
-
-        // todo: move to service, shouldn't be part of the application
-        vm._itemDefinition = function (item, metadataType) {
-            var title = "EditFormTitle.Metadata"; // todo: i18n
-            return item.MetadataId !== 0
-                ? { EntityId: item.MetadataId, Title: title } // if defined, return the entity-number to edit
-                : {
-                    ContentTypeName: metadataType, // otherwise the content type for new-assegnment
-                    Metadata: {
-                        Key: (item.Type === "folder" ? "folder" : "file") + ":" + item.Id,
-                        KeyType: "string",
-                        TargetType: eavConfig.metadataOfCmsObject
-                    },
-                    Title: title,
-                    Prefill: { EntityTitle: item.Name } // possibly prefill the entity title 
-                };
-
-        };
-
-        //#endregion
-
-        //#region icons
-        vm.icon = function (item) {
-            return fileType.getIconClass(item.Name);
-        };
-        //#endregion
-
-        vm.allowedFileTypes = [];
-        if ($scope.fileFilter) {
-            vm.allowedFileTypes = $scope.fileFilter.split(',').map(function (i) {
-                return i.replace('*', '').trim();
-            });
-        }
-
-        vm.fileEndingFilter = function (item) {
-            if (vm.allowedFileTypes.length === 0)
-                return true;
-            var extension = item.Name.match(/(?:\.([^.]+))?$/)[0];
-            return vm.allowedFileTypes.indexOf(extension) != -1;
-        };
-
-        vm.activate();
-
+    vm.allowedFileTypes = [];
+    if ($scope.fileFilter) {
+      vm.allowedFileTypes = $scope.fileFilter.split(',').map(function (i) {
+        return i.replace('*', '').trim();
+      });
     }
+
+    vm.fileEndingFilter = function (item) {
+      if (vm.allowedFileTypes.length === 0)
+        return true;
+      var extension = item.Name.match(/(?:\.([^.]+))?$/)[0];
+      return vm.allowedFileTypes.indexOf(extension) != -1;
+    };
+
+    vm.activate();
+  }
 
 })();
 
@@ -457,230 +501,237 @@ angular.module('Adam')
 })();
 /* js/fileAppDirectives */
 (function () {
-    angular.module('Adam')
-        /*@ngInject*/
-        .directive('dropzone', ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", "featuresSvc", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate, featuresSvc) {
+  angular.module('Adam')
+    /*@ngInject*/
+    .directive('dropzone', ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", "featuresSvc", "toastr", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate, featuresSvc, toastr) {
 
-            return {
-                restrict: 'C',
-                link: postLink,
+      return {
+        restrict: 'C',
+        link: postLink,
 
-                // This controller is needed, because it needs an API which can talk to other directives
-                controller: controller
-            };
-
-
-            // this is the method called after linking the directive, which initializes Dropzone
-            function postLink(scope, element, attrs, controller) {
-                var header = scope.$parent.to.header;
-                var field = scope.$parent.options.key;
-                var entityGuid = header.Guid;
-                var svc = adamSvc(header.ContentTypeName, entityGuid, field, '', scope.$parent.vm.adamModeConfig);
-                var url = svc.url;
-
-                var config = {
-                    url: url,
-                    urlRoot: url,
-                    maxFilesize: 10000, // 10'000 MB = 10 GB, note that it will also be stopped on the server if it's larger than the really allowed sized
-                    paramName: 'uploadfile',
-                    maxThumbnailFilesize: 10,
-
-                    headers: {
-                        "ModuleId": AppInstanceId,
-                        "TabId": tabId,
-                        "ContentBlockId": ContentBlockId
-                    },
-
-                    dictDefaultMessage: '',
-                    addRemoveLinks: false,
-                    previewsContainer: '.field-' + field.toLowerCase() + ' .dropzone-previews',
-                    // we need a clickable, because otherwise the entire area is clickable. so i'm just making the preview clickable, as it's not important
-                    clickable: '.field-' + field.toLowerCase() + ' .invisible-clickable' // " .dropzone-adam"
-                };
+        // This controller is needed, because it needs an API which can talk to other directives
+        controller: controller
+      };
 
 
-                var eventHandlers = {
-                    'addedfile': function (file) {
-                        $timeout(function () {
-                            // anything you want can go here and will safely be run on the next digest.
-                            scope.$apply(function () { // this must run in a timeout
-                                scope.uploading = true;
-                            });
-                        });
-                    },
+      // this is the method called after linking the directive, which initializes Dropzone
+      function postLink(scope, element, attrs, controller) {
+        var header = scope.$parent.to.header;
+        var field = scope.$parent.options.key;
+        var entityGuid = header.Guid;
+        var paths = scope.$parent.to.settings.merged.Paths;
+        var svc = adamSvc(header.ContentTypeName, entityGuid, field, paths, scope.$parent.vm.adamModeConfig);
+        var url = svc.url;
 
-                    'drop': function (event) {
-                        // console.log('stv: drop', event);
-                    },
+        var config = {
+          url: url,
+          urlRoot: url,
+          maxFilesize: 10000, // 10'000 MB = 10 GB, note that it will also be stopped on the server if it's larger than the really allowed sized
+          paramName: 'uploadfile',
+          maxThumbnailFilesize: 10,
 
-                    "processing": function (file) {
-                        this.options.url = svc.uploadUrl(controller.adam.subFolder);
-                    },
+          headers: {
+            "ModuleId": AppInstanceId,
+            "TabId": tabId,
+            "ContentBlockId": ContentBlockId
+          },
 
-                    'success': function (file, response) {
-                        if (response.Success) {
-                            svc.addFullPath(response); // calculate additional infos
-                            scope.$parent.afterUpload(response);
-                        } else {
-                            alert('Upload failed because: ' + response.Error);
-                        }
-                    },
-                    'error': function (file, error, xhr) {
-                        alert($translate.instant('Errors.AdamUploadError'));
-                    },
-
-                    "queuecomplete": function (file) {
-                        if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                            scope.uploading = false;
-                            controller.adam.refresh();
-                        }
-                    }
-                };
-
-                // delay building the dropszone till the DOM is ready
-                $timeout(function () {
-                    var dropzone = new Dropzone(element[0], config);
-
-                    angular.forEach(eventHandlers, function (handler, event) {
-                        dropzone.on(event, handler);
-                    });
-
-                    scope.processDropzone = function () { dropzone.processQueue(); };
-                    scope.resetDropzone = function () { dropzone.removeAllFiles(); };
-                    controller.openUpload = function () { dropzone.hiddenFileInput.click(); };
-                    controller.processFile = function (file) { dropzone.processFile(file); }; // needed for clipboard paste
-
-                    clipboardPasteImageFeature(element[0], dropzone); // add clipboard paste image feature if enabled
-
-                }, 0);
+          dictDefaultMessage: '',
+          addRemoveLinks: false,
+          previewsContainer: '.field-' + field.toLowerCase() + ' .dropzone-previews',
+          // we need a clickable, because otherwise the entire area is clickable. so i'm just making the preview clickable, as it's not important
+          clickable: '.field-' + field.toLowerCase() + ' .invisible-clickable' // " .dropzone-adam"
+        };
 
 
-                /**
-                 * add clipboard paste image feature if enabled
-                 * @param {any} element
-                 * @param {any} dropzone
-                 */
-                function clipboardPasteImageFeature(element, dropzone) {
-                    featuresSvc.enabled('f6b8d6da-4744-453b-9543-0de499aa2352').then(
-                        function(enabled) {
-                            if (enabled) {
-                                clipboardPasteImageFunctionalityEnable(element, dropzone);
-                            }
-                        });
-                }
-
-
-                /**
-                 * attach paste functionality to UI elements in dropzone
-                 * @param {any} element
-                 * @param {any} dropzone
-                 */
-                function clipboardPasteImageFunctionalityEnable(element, dropzone) {
-
-                    var pasteInstance;
-
-                    // 1. pastableContenteditable - for tinymce
-                    pasteInstance = element.querySelector('div > div[contenteditable]');
-                    if (pasteInstance) {
-                        pasteInstance.pastableContenteditable();
-                        pasteInstance.addEventListener('handleImage', function (ev, data) {
-                            pasteImageInDropzone(ev, data, dropzone);
-                        });
-                        return;
-                    }
-
-                    // 2. pastableTextarea - for adam input
-                    pasteInstance = element.querySelector('div > div.after-preview > div > input');
-                    if (pasteInstance) {
-                        pasteInstance.pastableTextarea();
-                        pasteInstance.addEventListener('handleImage', function (ev, data) {
-                            pasteImageInDropzone(ev, data, dropzone);
-                        });
-
-                        // pastableNonInputable
-                        pasteInstance = element; // whole dropzone
-                        pasteInstance.pastableNonInputable();
-                        pasteInstance.addEventListener('handleImage', function (ev, data) {
-                            pasteImageInDropzone(ev, data, dropzone);
-                        });
-
-                        return;
-                    }
-
-                    // 3. pastableTextarea - for adam library
-                    pasteInstance = element.querySelector('div.paste-image');
-                    if (pasteInstance) {
-                        // pastableNonInputable
-                        pasteInstance = element; // whole dropzone
-                        pasteInstance.pastableNonInputable();
-                        pasteInstance.addEventListener('handleImage', function (ev, data) {
-                            pasteImageInDropzone(ev, data, dropzone);
-                        });
-
-                        return;
-                    }
-                }
-
-
-                /**
-                 * handle clipboard image after paste and prompt for new image filename
-                 * @param {any} ev event
-                 * @param {any} data clipboard image data
-                 * @param {any} dropzone
-                 */
-                function pasteImageInDropzone(ev, data, dropzone) {
-
-                    if (ev.detail && !data) {
-                        data = ev.detail;
-                    }
-
-                    // todo: convert png to jpg to reduce file size
-                    var filename = ev.imageFileName ? ev.imageFileName : ev.detail.imageFileName;
-                    var img = getFile(data, filename);
-                    dropzone.processFile(img);
-                    //ev.stopImmediatePropagation();
-                    //ev.preventDefault();
-                }
-
-                /**
-                 * creates new file with custom fileName
-                 * @param {File} file
-                 * @param {string} fileName
-                 */
-                function getFile(data, fileName) {
-                    var newFile = data.file; // for fallback
-
-                    try {
-                        if (document.documentMode || /Edge/.test(navigator.userAgent) || /MSIE/.test(navigator.userAgent) || /rv:11/.test(navigator.userAgent)) {
-                            // fix this for Edge and IE
-                            newFile = new Blob([data.file], { type: data.file.type });
-                            newFile.lastModifiedDate = data.file.lastModifiedDate;
-                            newFile.name = fileName;
-                        } else {
-                            // File.name is readonly so we do this
-                            var formData = new FormData();
-                            formData.append('file', data.file, fileName);
-                            newFile = formData.get('file');
-                        }
-                    } catch (e) {
-                        console.log('paste image error', e);
-                    }
-                    return newFile;
-                }
+        var eventHandlers = {
+          'addedfile': function (file) {
+            if(svc.getAllowEdit() === false) {
+              this.removeFile(file);
+              // toastr.error('permission denied', 'can\'t paste image'); // todo i18n
+            } else {
+              $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                scope.$apply(function () { // this must run in a timeout
+                  scope.uploading = true;
+                });
+              });
             }
+          },
 
-            /*@ngInject*/
-            function controller() {
-                var vm = this;
-                vm.adam = {
-                    show: false,
-                    subFolder: '',
-                    refresh: function () { }
-                };
+          'drop': function (event) {
+            // console.log('stv: drop', event);
+          },
 
+          "processing": function (file) {
+            this.options.url = svc.uploadUrl(controller.adam.subFolder);
+          },
+
+          'success': function (file, response) {
+            if (response.Success) {
+              svc.addFullPath(response); // calculate additional infos
+              scope.$parent.afterUpload(response);
+            } else {
+              alert('Upload failed because: ' + response.Error);
             }
+          },
+          'error': function (file, error, xhr) {
+            alert($translate.instant('Errors.AdamUploadError'));
+          },
 
-        }]);
+          "queuecomplete": function (file) {
+            if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+              scope.uploading = false;
+              controller.adam.refresh();
+            }
+          }
+        };
+
+        // delay building the dropszone till the DOM is ready
+        $timeout(function () {
+          var dropzone = new Dropzone(element[0], config);
+
+          angular.forEach(eventHandlers, function (handler, event) {
+            dropzone.on(event, handler);
+          });
+
+          scope.processDropzone = function () { dropzone.processQueue(); };
+          scope.resetDropzone = function () { dropzone.removeAllFiles(); };
+          controller.openUpload = function () { dropzone.hiddenFileInput.click(); };
+          controller.processFile = function (file) { dropzone.processFile(file); }; // needed for clipboard paste
+
+          clipboardPasteImageFeature(element[0], dropzone); // add clipboard paste image feature if enabled
+
+        }, 0);
+
+
+        /**
+         * add clipboard paste image feature if enabled
+         * @param {any} element
+         * @param {any} dropzone
+         */
+        function clipboardPasteImageFeature(element, dropzone) {
+          featuresSvc.enabled('f6b8d6da-4744-453b-9543-0de499aa2352').then(
+            function (enabled) {
+              if (enabled) {
+                clipboardPasteImageFunctionalityEnable(element, dropzone);
+              }
+            });
+        }
+
+
+        /**
+         * attach paste functionality to UI elements in dropzone
+         * @param {any} element
+         * @param {any} dropzone
+         */
+        function clipboardPasteImageFunctionalityEnable(element, dropzone) {
+
+          var pasteInstance;
+
+          // 1. pastableContenteditable - for tinymce
+          pasteInstance = element.querySelector('div > div[contenteditable]');
+          if (pasteInstance) {
+            pasteInstance.pastableContenteditable();
+            pasteInstance.addEventListener('handleImage', function (ev, data) {
+              pasteImageInDropzone(ev, data, dropzone);
+            });
+            return;
+          }
+
+          // 2. pastableTextarea - for adam input
+          pasteInstance = element.querySelector('div > div.after-preview > div > input');
+          if (pasteInstance) {
+            pasteInstance.pastableTextarea();
+            pasteInstance.addEventListener('handleImage', function (ev, data) {
+              pasteImageInDropzone(ev, data, dropzone);
+            });
+
+            // pastableNonInputable
+            pasteInstance = element; // whole dropzone
+            pasteInstance.pastableNonInputable();
+            pasteInstance.addEventListener('handleImage', function (ev, data) {
+              pasteImageInDropzone(ev, data, dropzone);
+            });
+
+            return;
+          }
+
+          // 3. pastableTextarea - for adam library
+          pasteInstance = element.querySelector('div.paste-image');
+          if (pasteInstance) {
+            // pastableNonInputable
+            pasteInstance = element; // whole dropzone
+            pasteInstance.pastableNonInputable();
+            pasteInstance.addEventListener('handleImage', function (ev, data) {
+              pasteImageInDropzone(ev, data, dropzone);
+            });
+
+            return;
+          }
+        }
+
+
+        /**
+         * handle clipboard image after paste and prompt for new image filename
+         * @param {any} ev event
+         * @param {any} data clipboard image data
+         * @param {any} dropzone
+         */
+        function pasteImageInDropzone(ev, data, dropzone) {
+          if(svc.getAllowEdit() === false) return;
+
+          if (ev.detail && !data) {
+            data = ev.detail;
+          }
+
+          // todo: convert png to jpg to reduce file size
+          var filename = ev.imageFileName ? ev.imageFileName : ev.detail.imageFileName;
+          var img = getFile(data, filename);
+          dropzone.processFile(img);
+          //ev.stopImmediatePropagation();
+          //ev.preventDefault();
+        }
+
+        /**
+         * creates new file with custom fileName
+         * @param {File} file
+         * @param {string} fileName
+         */
+        function getFile(data, fileName) {
+          var newFile = data.file; // for fallback
+
+          try {
+            if (document.documentMode || /Edge/.test(navigator.userAgent) || /MSIE/.test(navigator.userAgent) || /rv:11/.test(navigator.userAgent)) {
+              // fix this for Edge and IE
+              newFile = new Blob([data.file], { type: data.file.type });
+              newFile.lastModifiedDate = data.file.lastModifiedDate;
+              newFile.name = fileName;
+            } else {
+              // File.name is readonly so we do this
+              var formData = new FormData();
+              formData.append('file', data.file, fileName);
+              newFile = formData.get('file');
+            }
+          } catch (e) {
+            console.log('paste image error', e);
+          }
+          return newFile;
+        }
+      }
+
+      /*@ngInject*/
+      function controller() {
+        var vm = this;
+        vm.adam = {
+          show: false,
+          subFolder: '',
+          refresh: function () { }
+        };
+
+      }
+
+    }]);
 
 
 })();
@@ -981,6 +1032,73 @@ implementation is based on https://github.com/layerssss/paste.js
 
 }).call(this);
 
+// This is the service which sanitize path, file or folder name
+angular.module('Adam')
+  .factory('sanitizeSvc', function () {
+
+    removeFromStart = function (sanitized, charToRemove) {
+      while (sanitized.substring(0, 1) === charToRemove) {
+        sanitized = sanitized.substring(1);
+      }
+      return sanitized;
+    };
+
+    removeFromEnd = function (sanitized, charToRemove) {
+      while (sanitized.substring(sanitized.length - 1, sanitized.length) === charToRemove) {
+        sanitized = sanitized.substring(0, sanitized.length - 1);
+      }
+      return sanitized;
+    };
+
+    cleanBadPath = function (sanitized) {
+      var goodChar = "_";
+      var illegalRe = /[\?<>\\:\*\|":]/g;
+      var controlRe = /[\x00-\x1f\x80-\x9f]/g;
+      var reservedRe = /^\.+$/;
+      var windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
+      var windowsTrailingRe = /[\. ]+$/;
+      return sanitized
+        .replace(illegalRe, goodChar)
+        .replace(controlRe, goodChar)
+        .replace(reservedRe, goodChar)
+        .replace(windowsReservedRe, goodChar)
+        .replace(windowsTrailingRe, goodChar);
+    };
+
+    var svc = {};
+
+    // sanitize path
+    svc.sanitizePath = function (sanitized) {
+      // remove slashes form start of path
+      sanitized = removeFromStart(sanitized, '\/');
+
+      // remove slashed form end of path
+      sanitized = removeFromEnd(sanitized, '\/');
+
+      // remove backslashes form start of path
+      sanitized = removeFromStart(sanitized, '\\');
+
+      // remove backslashes form end of path
+      sanitized = removeFromEnd(sanitized, '\\');
+
+      // replace bad
+      sanitized = cleanBadPath(sanitized);
+
+      return sanitized;
+    };
+
+    // sanitize file or folder name
+    svc.sanitizeName = function (sanitized) {
+      // in addition to all path validation rules
+      // slashes are not valid in file or folder name
+      var replacement = "_";
+      var illegalRe = /\//g;
+      return svc.sanitizePath(sanitized)
+        .replace(illegalRe, replacement);
+    };
+
+    return svc;
+  });
 
 (function () {
 	"use strict";
@@ -2511,10 +2629,10 @@ angular.module("sxcFieldTemplates")
         return svc;
     }]);
 angular.module("SxcEditTemplates", []).run(["$templateCache", function($templateCache) {$templateCache.put("adam/adam-hint.html","<div class=\"small pull-right\">\r\n    <span style=\"opacity: 0.5\">drop files here -</span>\r\n    <a href=\"http://2sxc.org/help?tag=adam\" target=\"_blank\" uib-tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\">\r\n        <i class=\"eav-icon-apple\"></i>\r\n        Adam\r\n    </a>\r\n    <span style=\"opacity: 0.5\"> is sponsored with\r\n    <i class=\"eav-icon-heart\"></i> by\r\n    <a tabindex=\"-1\" href=\"http://2sic.com/\" target=\"_blank\">\r\n        2sic.com\r\n    </a>\r\n    </span>\r\n</div>\r\n");
-$templateCache.put("adam/browser.html","<div ng-if=\"vm.show\" ng-class=\"\'adam-scope-\' + (vm.adamModeConfig.usePortalRoot ? \'site\' : field)\">\r\n    <!-- info for dropping stuff here -->\r\n    <div class=\"dz-preview dropzone-adam\" ng-disabled=\"vm.disabled\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.AdamUploadLabel\' | translate }}\" ng-click=\"vm.openUpload()\">\r\n        <div class=\"dz-image adam-browse-background-icon adam-browse-background\" xstyle=\"background-color: whitesmoke\">\r\n            <i class=\"eav-icon-up-circled2\"></i>\r\n            <div class=\"adam-short-label\">upload to<i ng-class=\"vm.adamModeConfig.usePortalRoot ? \'eav-icon-globe\' : \'eav-icon-apple\'\" style=\"font-size: larger\"></i></div>\r\n        </div>\r\n    </div>\r\n\r\n    <!-- info for paste image from clipboard here -->\r\n    <div class=\"dz-preview dropzone-adam paste-image\" ng-disabled=\"vm.clipboardPasteImageFunctionalityDisabled\" uib-tooltip=\"click here and press [Ctrl]+[V] to paste image from clipboard\">\r\n        <div class=\"dz-image adam-browse-background-icon adam-browse-background\" xstyle=\"background-color: whitesmoke\">\r\n            <i class=\"eav-icon-file-image\"></i>\r\n            <div class=\"adam-short-label\">paste image</div>\r\n        </div>\r\n    </div>\r\n\r\n    <!-- add folder - not always shown -->\r\n    <div ng-show=\"vm.allowCreateFolder() || vm.debug.on\" class=\"dz-preview\" ng-disabled=\"vm.disabled\" ng-click=\"vm.addFolder()\">\r\n        <div class=\"dz-image adam-browse-background-icon adam-browse-background\">\r\n            <div class=\"\">\r\n                <i class=\"eav-icon-folder-empty\"></i>\r\n                <div class=\"adam-short-label\">new folder</div>\r\n            </div>\r\n        </div>\r\n        <div class=\"adam-background adam-browse-background-icon\">\r\n            <i class=\"eav-icon-plus\" style=\"font-size: 2em; top: 13px; position: relative;\"></i>\r\n        </div>\r\n        <div class=\"dz-details\" style=\"opacity: 1\">\r\n\r\n        </div>\r\n    </div>\r\n\r\n    <!-- browse up a folder - not always shown -->\r\n    <div ng-show=\"vm.showFolders || vm.debug.on\" class=\"dz-preview\" ng-disabled=\"vm.disabled\" ng-if=\"vm.folders.length > 0\" ng-click=\"vm.goUp()\">\r\n        <div class=\"dz-image  adam-browse-background-icon adam-browse-background\">\r\n            <i class=\"eav-icon-folder-empty\"></i>\r\n            <div class=\"adam-short-label\">up</div>\r\n        </div>\r\n        <div class=\"adam-background adam-browse-background-icon\">\r\n            <i class=\"eav-icon-level-up\" style=\"font-size: 2em; top: 13px; position: relative;\"></i>\r\n        </div>\r\n    </div>\r\n\r\n    <!-- folder list - not always shown -->\r\n    <div ng-show=\"vm.showFolders || vm.debug.on\" class=\"dz-preview\" ng-repeat=\"item in vm.items | filter: { IsFolder: true } | filter: { Name: \'!2sxc\' } | filter: { Name: \'!adam\' } | orderBy:\'Name\'\"\r\n         ng-click=\"vm.goIntoFolder(item)\">\r\n        <div class=\"dz-image adam-blur adam-browse-background-icon adam-browse-background\">\r\n            <i class=\"eav-icon-folder-empty\"></i>\r\n            <div class=\"short-label\">{{ item.Name }}</div>\r\n        </div>\r\n\r\n        <div class=\"dz-details file-type-{{item.Type}}\">\r\n            <span ng-click=\"vm.del(item)\" stop-event=\"click\" class=\"adam-delete-button\"><i class=\"eav-icon-cancel\"></i></span>\r\n            <span ng-click=\"vm.rename(item)\" stop-event=\"click\" class=\"adam-rename-button\"><i class=\"eav-icon-pencil\"></i></span>\r\n            <div class=\"adam-full-name-area\">\r\n                <div class=\"adam-full-name\">{{ item.Name }}</div>\r\n            </div>\r\n        </div>\r\n\r\n        <span class=\"adam-tag\" ng-class=\"{\'metadata-exists\': item.MetadataId > 0}\"\r\n              ng-click=\"vm.editMetadata(item)\"\r\n              ng-if=\"vm.getMetadataType(item)\"\r\n              stop-event=\"click\"\r\n              uib-tooltip=\"{{vm.getMetadataType(item)}}:{{item.MetadataId}}\">\r\n            <i class=\"eav-icon-tag\" style=\"font-size: larger\"></i>\r\n        </span>\r\n    </div>\r\n\r\n\r\n    <!-- files -->\r\n    <div class=\"dz-preview\" ng-class=\"{ \'dz-success\': value.Value.toLowerCase() == \'file:\' + item.Id }\" ng-repeat=\"item in (vm.items | filter: vm.fileEndingFilter | filter: { IsFolder: false }) | filter: (vm.showImagesOnly ? {Type: \'image\'} : {})  | orderBy:\'Name\'\" ng-click=\"vm.select(item)\" ng-disabled=\"vm.disabled || !vm.enableSelect\">\r\n        <div ng-if=\"item.Type !== \'image\'\" class=\"dz-image adam-blur  adam-browse-background-icon adam-browse-background\">\r\n            <i ng-class=\"vm.icon(item)\"></i>\r\n            <div class=\"adam-short-label\">{{ item.Name }}</div>\r\n        </div>\r\n        <div ng-if=\"item.Type === \'image\'\" class=\"dz-image\">\r\n            <img data-dz-thumbnail=\"\" alt=\"{{ item.Id + \':\' + item.Name\r\n}}\" ng-src=\"{{ item.fullPath + \'?w=120&h=120&mode=crop\' }}\">\r\n        </div>\r\n\r\n\r\n\r\n        <div class=\"dz-details file-type-{{item.Type}}\">\r\n            <span ng-click=\"vm.del(item)\" stop-event=\"click\" class=\"adam-delete-button\"><i class=\"eav-icon-cancel\"></i></span>\r\n            <span ng-click=\"vm.rename(item)\" stop-event=\"click\" class=\"adam-rename-button\"><i class=\"eav-icon-pencil\"></i></span>\r\n            <div class=\"adam-full-name-area\">\r\n                <div class=\"adam-full-name\">{{ item.Name }}</div>\r\n            </div>\r\n            <div class=\"dz-filename adam-short-label\">\r\n                <span>#{{ item.Id }} - {{ (item.Size / 1024).toFixed(0) }} kb</span>\r\n            </div>\r\n            <a class=\"adam-link-button\" target=\"_blank\" ng-href=\"{{ item.fullPath }}\">\r\n                <i class=\"eav-icon-link-ext\" style=\"font-size: larger\"></i>\r\n            </a>\r\n        </div>\r\n\r\n        <span class=\"adam-tag\" ng-class=\"{\'metadata-exists\': item.MetadataId > 0}\"\r\n              ng-click=\"vm.editMetadata(item)\"\r\n              ng-if=\"vm.getMetadataType(item)\"\r\n              stop-event=\"click\"\r\n              uib-tooltip=\"{{vm.getMetadataType(item)}}:{{item.MetadataId}}\">\r\n            <i class=\"eav-icon-tag\" style=\"font-size: larger\"></i>\r\n        </span>\r\n\r\n\r\n        <div class=\"dz-success-mark\">\r\n            <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\r\n                <title>Check</title>\r\n                <defs></defs>\r\n                <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\r\n                    <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\" sketch:type=\"MSShapeGroup\"></path>\r\n                </g>\r\n            </svg>\r\n        </div>\r\n    </div>\r\n\r\n</div>");
+$templateCache.put("adam/browser.html","<div ng-if=\"vm.show\" ng-class=\"\'adam-scope-\' + (vm.adamModeConfig.usePortalRoot ? \'site\' : field)\">\r\n    <!-- info for dropping stuff here -->\r\n    <div ng-show=\"vm.allowEdit()\" class=\"dz-preview dropzone-adam\" ng-disabled=\"vm.disabled\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.AdamUploadLabel\' | translate }}\" ng-click=\"vm.openUpload()\">\r\n        <div class=\"dz-image adam-browse-background-icon adam-browse-background\" xstyle=\"background-color: whitesmoke\">\r\n            <i class=\"eav-icon-up-circled2\"></i>\r\n            <div class=\"adam-short-label\">upload to<i ng-class=\"vm.adamModeConfig.usePortalRoot ? \'eav-icon-globe\' : \'eav-icon-apple\'\" style=\"font-size: larger\"></i></div>\r\n        </div>\r\n    </div>\r\n\r\n    <!-- info for paste image from clipboard here -->\r\n    <div ng-show=\"!vm.clipboardPasteImageFunctionalityDisabled && vm.allowEdit()\" class=\"dz-preview dropzone-adam paste-image\" ng-disabled=\"vm.clipboardPasteImageFunctionalityDisabled\" uib-tooltip=\"click here and press [Ctrl]+[V] to paste image from clipboard\">\r\n        <div class=\"dz-image adam-browse-background-icon adam-browse-background\" xstyle=\"background-color: whitesmoke\">\r\n            <i class=\"eav-icon-file-image\"></i>\r\n            <div class=\"adam-short-label\">paste image</div>\r\n        </div>\r\n    </div>\r\n\r\n    <!-- add folder - not always shown -->\r\n    <div ng-show=\"vm.allowCreateFolder() || vm.debug.on\" class=\"dz-preview\" ng-disabled=\"vm.disabled\" ng-click=\"vm.addFolder()\">\r\n        <div class=\"dz-image adam-browse-background-icon adam-browse-background\">\r\n            <div class=\"\">\r\n                <i class=\"eav-icon-folder-empty\"></i>\r\n                <div class=\"adam-short-label\">new folder</div>\r\n            </div>\r\n        </div>\r\n        <div class=\"adam-background adam-browse-background-icon\">\r\n            <i class=\"eav-icon-plus\" style=\"font-size: 2em; top: 13px; position: relative;\"></i>\r\n        </div>\r\n        <div class=\"dz-details\" style=\"opacity: 1\">\r\n\r\n        </div>\r\n    </div>\r\n\r\n    <!-- browse up a folder - not always shown -->\r\n    <div ng-show=\"vm.showFolders || vm.debug.on\" class=\"dz-preview\" ng-disabled=\"vm.disabled\" ng-if=\"vm.folders.length > 0\" ng-click=\"vm.goUp()\">\r\n        <div class=\"dz-image  adam-browse-background-icon adam-browse-background\">\r\n            <i class=\"eav-icon-folder-empty\"></i>\r\n            <div class=\"adam-short-label\">up</div>\r\n        </div>\r\n        <div class=\"adam-background adam-browse-background-icon\">\r\n            <i class=\"eav-icon-level-up\" style=\"font-size: 2em; top: 13px; position: relative;\"></i>\r\n        </div>\r\n    </div>\r\n\r\n    <!-- folder list - not always shown -->\r\n    <div ng-show=\"vm.showFolders || vm.debug.on\" class=\"dz-preview\"\r\n         ng-repeat=\"item in vm.items | filter: { IsFolder: true } | filter: { Name: \'!.\' } | filter: { Name: \'!2sxc\' } | filter: { Name: \'!adam\' } | orderBy:\'Name\'\"\r\n         ng-click=\"vm.goIntoFolder(item)\">\r\n        <div class=\"dz-image adam-blur adam-browse-background-icon adam-browse-background\">\r\n            <i class=\"eav-icon-folder-empty\"></i>\r\n            <div class=\"short-label\">{{ item.Name }}</div>\r\n        </div>\r\n\r\n        <div class=\"dz-details file-type-{{item.Type}}\">\r\n            <span ng-show=\"vm.allowEdit()\" ng-click=\"vm.del(item)\" stop-event=\"click\" class=\"adam-delete-button\"><i class=\"eav-icon-cancel\"></i></span>\r\n            <span ng-show=\"vm.allowEdit()\" ng-click=\"vm.rename(item)\" stop-event=\"click\" class=\"adam-rename-button\"><i class=\"eav-icon-pencil\"></i></span>\r\n            <div class=\"adam-full-name-area\">\r\n                <div class=\"adam-full-name\">{{ item.Name }}</div>\r\n            </div>\r\n        </div>\r\n\r\n        <span class=\"adam-tag\" ng-class=\"{\'metadata-exists\': item.MetadataId > 0}\"\r\n              ng-click=\"vm.editMetadata(item)\"\r\n              ng-if=\"vm.getMetadataType(item)\"\r\n              stop-event=\"click\"\r\n              uib-tooltip=\"{{vm.getMetadataType(item)}}:{{item.MetadataId}}\">\r\n            <i class=\"eav-icon-tag\" style=\"font-size: larger\"></i>\r\n        </span>\r\n    </div>\r\n\r\n\r\n    <!-- files -->\r\n    <div class=\"dz-preview\" ng-class=\"{ \'dz-success\': value.Value.toLowerCase() == \'file:\' + item.Id }\"\r\n        ng-repeat=\"item in (vm.items | filter: vm.fileEndingFilter | filter: { IsFolder: false }) | filter: (vm.showImagesOnly ? {Type: \'image\'} : {})  | orderBy:\'Name\'\"\r\n        ng-click=\"vm.select(item)\"\r\n        ng-disabled=\"vm.disabled || !vm.enableSelect\">\r\n        <div ng-if=\"item.Type !== \'image\'\" class=\"dz-image adam-blur  adam-browse-background-icon adam-browse-background\">\r\n            <i ng-class=\"vm.icon(item)\"></i>\r\n            <div class=\"adam-short-label\">{{ item.Name }}</div>\r\n        </div>\r\n        <div ng-if=\"item.Type === \'image\'\" class=\"dz-image\">\r\n            <img data-dz-thumbnail=\"\" alt=\"{{ item.Id + \':\' + item.Name\r\n}}\" ng-src=\"{{ item.fullPath + \'?w=120&h=120&mode=crop\' }}\">\r\n        </div>\r\n\r\n\r\n\r\n        <div class=\"dz-details file-type-{{item.Type}}\">\r\n            <span ng-show=\"vm.allowEdit()\" ng-click=\"vm.del(item)\" stop-event=\"click\" class=\"adam-delete-button\"><i class=\"eav-icon-cancel\"></i></span>\r\n            <span ng-show=\"vm.allowEdit()\" ng-click=\"vm.rename(item)\" stop-event=\"click\" class=\"adam-rename-button\"><i class=\"eav-icon-pencil\"></i></span>\r\n            <div class=\"adam-full-name-area\">\r\n                <div class=\"adam-full-name\">{{ item.Name }}</div>\r\n            </div>\r\n            <div class=\"dz-filename adam-short-label\">\r\n                <span>#{{ item.Id }} - {{ (item.Size / 1024).toFixed(0) }} kb</span>\r\n            </div>\r\n            <a class=\"adam-link-button\" target=\"_blank\" ng-href=\"{{ item.fullPath }}\">\r\n                <i class=\"eav-icon-link-ext\" style=\"font-size: larger\"></i>\r\n            </a>\r\n        </div>\r\n\r\n        <span class=\"adam-tag\" ng-class=\"{\'metadata-exists\': item.MetadataId > 0}\"\r\n              ng-click=\"vm.editMetadata(item)\"\r\n              ng-if=\"vm.getMetadataType(item)\"\r\n              stop-event=\"click\"\r\n              uib-tooltip=\"{{vm.getMetadataType(item)}}:{{item.MetadataId}}\">\r\n            <i class=\"eav-icon-tag\" style=\"font-size: larger\"></i>\r\n        </span>\r\n\r\n\r\n        <div class=\"dz-success-mark\">\r\n            <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\r\n                <title>Check</title>\r\n                <defs></defs>\r\n                <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\r\n                    <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\" sketch:type=\"MSShapeGroup\"></path>\r\n                </g>\r\n            </svg>\r\n        </div>\r\n    </div>\r\n\r\n</div>");
 $templateCache.put("adam/dropzone-upload-preview.html","<div ng-show=\"uploading\">\r\n    <div class=\"dropzone-previews\">\r\n    </div>\r\n    <span class=\"invisible-clickable\" data-note=\"just a fake, invisible area for dropzone\"></span>\r\n</div>");
 $templateCache.put("fields/dnn-bridge/hyperlink-default-pagepicker.html","<div>\r\n	<div class=\"modal-header\">\r\n		<h3 class=\"modal-title\" translate=\"Edit.Fields.Hyperlink.PagePicker.Title\"></h3>\r\n	</div>\r\n	<div class=\"modal-body\" style=\"height:370px; width:600px\">\r\n		<iframe style=\"width:100%; height: 350px; border: 0;\" web-forms-bridge=\"bridge\" bridge-type=\"pagepicker\" bridge-sync-height=\"false\"></iframe>\r\n	</div>\r\n	<div class=\"modal-footer\"></div>\r\n</div>");
-$templateCache.put("fields/hyperlink/hyperlink-default.html","<div class=\"dropzone\">\r\n    <div class=\"clearfix\">\r\n        <div ng-if=\"value.Value && vm.isImage()\"\r\n             class=\"thumbnail-before-input\"\r\n             ng-style=\"{ \'background-image\': \'url(\' + vm.thumbnailUrl(1, true) + \')\' }\"\r\n             ng-mouseover=\"vm.showPreview = true\"\r\n             ng-mouseleave=\"vm.showPreview = false\">\r\n        </div>\r\n\r\n        <div ng-if=\"value.Value && !vm.isImage()\"\r\n           class=\"thumbnail-before-input icon-before-input\">\r\n            <a href=\"{{vm.testLink}}\"\r\n               target=\"_blank\" tabindex=\"-1\"\r\n               tooltip-html=\"{{vm.tooltipUrl(vm.testLink)}}\"\r\n               tooltip-placement=\"right\"\r\n               ng-class=\"vm.icon()\">\r\n            </a>            \r\n        </div>\r\n        <div ng-if=\"!value.Value\"\r\n             class=\"thumbnail-before-input empty-placeholder\">\r\n        </div>\r\n        <div class=\"after-preview\">\r\n            <div class=\"input-group\" uib-dropdown>\r\n                <input type=\"text\" class=\"form-control input-lg\" ng-model=\"value.Value\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.Tooltip1\' | translate }}\r\n{{\'Edit.Fields.Hyperlink.Default.Tooltip2\' | translate }}\r\nADAM - sponsored with ♥ by 2sic.com\">\r\n                <span class=\"input-group-btn\" style=\"vertical-align: top;\">\r\n                    <div style=\"width: 6px;\"></div>\r\n                    <button ng-if=\"to.settings[\'merged\'].Buttons.indexOf(\'adam\') > -1\" type=\"button\" class=\"btn btn-default icon-field-button\" ng-disabled=\"to.disabled\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.AdamUploadLabel\' | translate }}\" ng-click=\"vm.toggleAdam()\">\r\n                        <i class=\"eav-icon-apple\"></i>\r\n                    </button>\r\n                    <button ng-if=\"to.settings[\'merged\'].Buttons.indexOf(\'page\') > -1\" type=\"button\" class=\"btn btn-default icon-field-button\" ng-disabled=\"to.disabled\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.PageLabel\' | translate }}\" ng-click=\"vm.openPageDialog()\">\r\n                        <i class=\"eav-icon-sitemap\"></i>\r\n                    </button>\r\n                    <button ng-if=\"to.settings[\'merged\'].Buttons.indexOf(\'more\') > -1\" tabindex=\"-1\" type=\"button\" class=\"btn btn-default uib-dropdown-toggle icon-field-button\" uib-dropdown-toggle ng-disabled=\"to.disabled\">\r\n                        <i class=\"eav-icon-options\"></i>\r\n                    </button>\r\n                </span>\r\n                <ul class=\"dropdown-menu pull-right\" uib-dropdown-menu role=\"menu\">\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowAdam\"><a class=\"dropzone-adam\" ng-click=\"vm.toggleAdam(false)\" href=\"javascript:void(0);\"><i class=\"eav-icon-apple\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuAdam\"></span></a></li>\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowPagePicker\"><a ng-click=\"vm.openPageDialog()\" href=\"javascript:void(0)\"><i class=\"eav-icon-sitemap\" xicon=\"home\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuPage\"></span></a></li>\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowImageManager\"><a ng-click=\"vm.toggleAdam(true, true)\" href=\"javascript:void(0)\"><i class=\"eav-icon-file-image\" xicon=\"picture\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuImage\"></span></a></li>\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowFileManager\"><a ng-click=\"vm.toggleAdam(true, false)\" href=\"javascript:void(0)\"><i class=\"eav-icon-file\" xicon=\"file\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuDocs\"></span></a></li>\r\n                </ul>\r\n            </div>\r\n            <div ng-if=\"vm.showPreview\" style=\"position: relative\">\r\n                <div style=\"position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0;\">\r\n                    <img ng-src=\"{{vm.thumbnailUrl(2)}}\" />\r\n                </div>\r\n            </div>\r\n\r\n            <adam-hint class=\"field-hints\"></adam-hint>\r\n            <div ng-if=\"value.Value\" class=\"field-hints\">\r\n                <a href=\"{{vm.testLink}}\" target=\"_blank\" tabindex=\"-1\" tooltip-html=\"{{vm.tooltipUrl(vm.testLink)}}\">\r\n                    <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span>\r\n                </a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div>\r\n        <!-- The ADAM file browser, requires the uploader wrapped around it -->\r\n        <adam-browser content-type-name=\"to.header.ContentTypeName\"\r\n                      entity-guid=\"to.header.Guid\"\r\n                      field-name=\"options.key\"\r\n                      auto-load=\"false\"\r\n                      folder-depth=\"0\"\r\n                      sub-folder=\"\"\r\n                      update-callback=\"vm.setValue\"\r\n                      register-self=\"vm.registerAdam\"\r\n                      adam-mode-config=\"vm.adamModeConfig\"\r\n                      ng-disabled=\"to.disabled\"\r\n                      file-filter=\"to.settings[\'merged\'].FileFilter\"></adam-browser>\r\n\r\n        <!-- the preview of the uploader -->\r\n        <dropzone-upload-preview></dropzone-upload-preview>\r\n\r\n    </div>\r\n</div>");
+$templateCache.put("fields/hyperlink/hyperlink-default.html","<div class=\"dropzone\">\r\n    <div class=\"clearfix\">\r\n        <div ng-if=\"value.Value && vm.isImage()\"\r\n             class=\"thumbnail-before-input\"\r\n             ng-style=\"{ \'background-image\': \'url(\' + vm.thumbnailUrl(1, true) + \')\' }\"\r\n             ng-mouseover=\"vm.showPreview = true\"\r\n             ng-mouseleave=\"vm.showPreview = false\">\r\n        </div>\r\n\r\n        <div ng-if=\"value.Value && !vm.isImage()\"\r\n           class=\"thumbnail-before-input icon-before-input\">\r\n            <a href=\"{{vm.testLink}}\"\r\n               target=\"_blank\" tabindex=\"-1\"\r\n               tooltip-html=\"{{vm.tooltipUrl(vm.testLink)}}\"\r\n               tooltip-placement=\"right\"\r\n               ng-class=\"vm.icon()\">\r\n            </a>            \r\n        </div>\r\n        <div ng-if=\"!value.Value\"\r\n             class=\"thumbnail-before-input empty-placeholder\">\r\n        </div>\r\n        <div class=\"after-preview\">\r\n            <div class=\"input-group\" uib-dropdown>\r\n                <input type=\"text\" class=\"form-control input-lg\" ng-model=\"value.Value\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.Tooltip1\' | translate }}\r\n{{\'Edit.Fields.Hyperlink.Default.Tooltip2\' | translate }}\r\nADAM - sponsored with ♥ by 2sic.com\">\r\n                <span class=\"input-group-btn\" style=\"vertical-align: top;\">\r\n                    <div style=\"width: 6px;\"></div>\r\n                    <button ng-if=\"to.settings[\'merged\'].Buttons.indexOf(\'adam\') > -1\" type=\"button\" class=\"btn btn-default icon-field-button\" ng-disabled=\"to.disabled\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.AdamUploadLabel\' | translate }}\" ng-click=\"vm.toggleAdam()\">\r\n                        <i class=\"eav-icon-apple\"></i>\r\n                    </button>\r\n                    <button ng-if=\"to.settings[\'merged\'].Buttons.indexOf(\'page\') > -1\" type=\"button\" class=\"btn btn-default icon-field-button\" ng-disabled=\"to.disabled\" uib-tooltip=\"{{\'Edit.Fields.Hyperlink.Default.PageLabel\' | translate }}\" ng-click=\"vm.openPageDialog()\">\r\n                        <i class=\"eav-icon-sitemap\"></i>\r\n                    </button>\r\n                    <button ng-if=\"to.settings[\'merged\'].Buttons.indexOf(\'more\') > -1\" tabindex=\"-1\" type=\"button\" class=\"btn btn-default uib-dropdown-toggle icon-field-button\" uib-dropdown-toggle ng-disabled=\"to.disabled\">\r\n                        <i class=\"eav-icon-options\"></i>\r\n                    </button>\r\n                </span>\r\n                <ul class=\"dropdown-menu pull-right\" uib-dropdown-menu role=\"menu\">\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowAdam\"><a class=\"dropzone-adam\" ng-click=\"vm.toggleAdam(false)\" href=\"javascript:void(0);\"><i class=\"eav-icon-apple\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuAdam\"></span></a></li>\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowPagePicker\"><a ng-click=\"vm.openPageDialog()\" href=\"javascript:void(0)\"><i class=\"eav-icon-sitemap\" xicon=\"home\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuPage\"></span></a></li>\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowImageManager\"><a ng-click=\"vm.toggleAdam(true, true)\" href=\"javascript:void(0)\"><i class=\"eav-icon-file-image\" xicon=\"picture\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuImage\"></span></a></li>\r\n                    <li role=\"menuitem\" ng-if=\"to.settings[\'merged\'].ShowFileManager\"><a ng-click=\"vm.toggleAdam(true, false)\" href=\"javascript:void(0)\"><i class=\"eav-icon-file\" xicon=\"file\"></i> <span translate=\"Edit.Fields.Hyperlink.Default.MenuDocs\"></span></a></li>\r\n                </ul>\r\n            </div>\r\n            <div ng-if=\"vm.showPreview\" style=\"position: relative\">\r\n                <div style=\"position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0;\">\r\n                    <img ng-src=\"{{vm.thumbnailUrl(2)}}\" />\r\n                </div>\r\n            </div>\r\n\r\n            <adam-hint class=\"field-hints\"></adam-hint>\r\n            <div ng-if=\"value.Value\" class=\"field-hints\">\r\n                <a href=\"{{vm.testLink}}\" target=\"_blank\" tabindex=\"-1\" tooltip-html=\"{{vm.tooltipUrl(vm.testLink)}}\">\r\n                    <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span>\r\n                </a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div>\r\n        <!-- The ADAM file browser, requires the uploader wrapped around it -->\r\n        <adam-browser content-type-name=\"to.header.ContentTypeName\"\r\n                      entity-guid=\"to.header.Guid\"\r\n                      field-name=\"options.key\"\r\n                      auto-load=\"false\"\r\n                      folder-depth=\"0\"\r\n                      sub-folder=\"to.settings[\'merged\'].Paths\"\r\n                      update-callback=\"vm.setValue\"\r\n                      register-self=\"vm.registerAdam\"\r\n                      adam-mode-config=\"vm.adamModeConfig\"\r\n                      ng-disabled=\"to.disabled\"\r\n                      file-filter=\"to.settings[\'merged\'].FileFilter\"></adam-browser>\r\n\r\n        <!-- the preview of the uploader -->\r\n        <dropzone-upload-preview></dropzone-upload-preview>\r\n\r\n    </div>\r\n</div>");
 $templateCache.put("fields/hyperlink/hyperlink-library.html","<div>\r\n    <div class=\"dropzone\">\r\n        <!-- The ADAM file browser, requires the uploader wrapped around it -->\r\n        <adam-browser\r\n            content-type-name=\"to.header.ContentTypeName\"\r\n            entity-guid=\"to.header.Guid\"\r\n            field-name=\"options.key\"\r\n            auto-load=\"true\"\r\n            sub-folder=\"\"\r\n            folder-depth=\"to.settings.merged.FolderDepth\"\r\n            metadata-content-types=\"to.settings.merged.MetadataContentTypes\"\r\n            allow-assets-in-root=\"to.settings.merged.allowAssetsInRoot\"\r\n            enable-select=\"false\"\r\n            update-callback=\"vm.setValue\"\r\n            register-self=\"vm.registerAdam\"\r\n            adam-mode-config=\"vm.adamModeConfig\">\r\n        </adam-browser>\r\n\r\n\r\n        <!-- the preview of the uploader -->\r\n        <dropzone-upload-preview></dropzone-upload-preview>\r\n\r\n    </div>\r\n</div>");
 $templateCache.put("fields/string/string-font-icon-picker.html","<div>\r\n    <div uib-dropdown uib-keyboard-nav auto-close=\"outsideClick\" is-open=\"vm.selectorIsOpen\">\r\n        <div class=\"thumbnail-before-input icon-preview\">\r\n            <button type=\"button\" class=\"\" uib-tooltip=\"{{value.Value}}\" uib-dropdown-toggle>\r\n                <i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=\"value.Value\"></i>\r\n                <span ng-show=\"!value.Value\">&nbsp;&nbsp;</span>\r\n            </button>\r\n        </div>\r\n        <div class=\"input-group\" uib-dropdown-toggle>\r\n            <input type=\"text\" class=\"form-control input-lg\" ng-model=\"value.Value\" ng-disabled=\"false\" >\r\n        </div>\r\n        <!-- the search ui -->\r\n        <ul class=\"dropdown-menu icons-menu-columns\" role=\"menu\" uib-dropdown-menu>\r\n            <li class=\"input-group\">\r\n                <span class=\"input-group-addon btn-default btn\" ng-click=\"vm.selectorIsOpen = false; value.Value = \'\'\">\r\n                    <i class=\"eav-icon-cancel\"></i>\r\n                </span>\r\n                <input type=\"search\" ng-model=\"vm.iconFilter\" class=\"form-control input-lg\" placeholder=\"search...\" />\r\n            </li>\r\n\r\n            <li ng-repeat=\"icn in vm.icons\" role=\"menuitem\"\r\n                ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\">\r\n                <a ng-click=\"vm.setIcon(icn.class)\" xng-click=\"value.Value = icn.class; vm.selectorIsOpen = false;\">\r\n                    <i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span uib-tooltip=\"{{icn.class}}\">...{{icn.class.substring(vm.prefix.length-1,25)}}</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div ng-if=\"vm.debug.on\">Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Selected is \"{{value.Value}}\" and files are: {{vm.files}}</div>\r\n</div> ");
 $templateCache.put("fields/string/string-template-picker.html","<div>\r\n    <div class=\"input-group\">\r\n\r\n        <select class=\"form-control input-material material\"\r\n                ng-model=\"value.Value\"\r\n                ng-disabled=\"!readyToUse()\">\r\n            <option value=\"\">(no file selected)</option>\r\n            <option ng-repeat=\"item in templates | isValidFile:file.ext\"\r\n                    ng-selected=\"{{item == value.Value}}\"\r\n                    value=\"{{item}}\">\r\n                {{item}}\r\n            </option>\r\n        </select>\r\n        <span class=\"input-group-btn\" style=\"vertical-align: top;\">\r\n            <button class=\"btn btn-default icon-field-button\" type=\"button\" ng-click=\"add()\" ng-disabled=\"!readyToUse()\">\r\n                <span class=\"eav-icon-plus\"></span>\r\n            </button>\r\n        </span>\r\n    </div>\r\n</div>");

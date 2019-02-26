@@ -47,9 +47,15 @@ namespace ToSic.Sxc.Adam.WebApi
             if (!string.IsNullOrEmpty(subFolder))
                 folder = state.ContainerContext.Folder(subFolder, false);
             
-            // start with a security check - so we only upload into valid adam if that's the scenario
+            // start with a security check...
             var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
-            if(!state.SuperUserOrAccessingItemFolder(dnnFolder.PhysicalPath, out exp))
+
+            // validate that dnn user have write permissions for folder
+            if (!SecurityChecks.CanEdit(dnnFolder))
+                throw Http.PermissionDenied("can't upload - permission denied");
+
+            // we only upload into valid adam if that's the scenario
+            if (!state.SuperUserOrAccessingItemFolder(dnnFolder.PhysicalPath, out exp))
                 throw exp;
 
             #region check content-type extensions...
