@@ -174,10 +174,11 @@ namespace ToSic.Sxc.Adam.WebApi
             }
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            state.ContainerContext.Folder();
+            var folder = state.ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var folder = state.ContainerContext.Folder(subfolder, false);
+            if (!string.IsNullOrEmpty(subfolder))
+                folder = state.ContainerContext.Folder(subfolder, false);
 
             // start with a security check...
             var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
@@ -186,8 +187,10 @@ namespace ToSic.Sxc.Adam.WebApi
             if (!SecurityChecks.CanEdit(dnnFolder))
                 throw Http.PermissionDenied("can't create new folder - permission denied");
 
+            var newFolderPath = string.IsNullOrEmpty(subfolder) ? newFolder : Path.Combine(subfolder, newFolder).Replace("\\", "/"); 
+
             // now access the subfolder, creating it if missing (which is what we want
-            state.ContainerContext.Folder(subfolder + "/" + newFolder, true);
+            state.ContainerContext.Folder(newFolderPath, true);
 
             return Items(appId, contentType, guid, field, subfolder, usePortalRoot);
         }
