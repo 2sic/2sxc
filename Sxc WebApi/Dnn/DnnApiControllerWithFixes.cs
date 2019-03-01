@@ -5,11 +5,12 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.WebApi.Helpers;
 using ToSic.SexyContent.Environment;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
-    [WebApiLogDetails]
+    [WebApiLogDetails, JsonResponse]
     public class DnnApiControllerWithFixes: DnnApiController, IHasLog
     {
         protected IAppEnvironment Env;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -46,7 +47,7 @@ namespace ToSic.SexyContent.WebApi
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null, string cultureCode = null)
         {
-            Log.Call("GetEntities", $"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
+            var wraplog = Log.Call("GetEntities", $"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
 
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
@@ -59,7 +60,9 @@ namespace ToSic.SexyContent.WebApi
             //2018-09-15 2dm replaced
             //var context = GetContext(SxcInstance, Log);
             //PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null);
-            return new EntityApi(appIdentity.AppId, Log).GetEntities(contentType, cultureCode);
+            var result = new EntityApi(appIdentity.AppId, Log).GetEntities(contentType, cultureCode);
+            wraplog("found: " + result?.Count());
+            return result;
         }
 
         #endregion
