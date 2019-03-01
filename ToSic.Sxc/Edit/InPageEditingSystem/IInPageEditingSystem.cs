@@ -82,8 +82,8 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             bool? autoToolbar = null,
             bool? styles = null);
 
-        HtmlString Attribute(string name, string value);
+        HtmlString EditorAttribute(string name, string value);
 
-        HtmlString Attribute(string name, object value);
+        HtmlString EditorAttribute(string name, object value);
     }
 }
