@@ -18,6 +18,7 @@ using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.DataSources.Caches;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7.Search
 {
     internal class SearchController: HasLog
@@ -34,6 +35,9 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             var dnnModule = (instance as EnvironmentInstance<ModuleInfo>)?.Original;
             // always log with method, to ensure errors are cought
             Log.Add($"start search for mod#{dnnModule?.ModuleID}");
+
+            History.Add("dnn-search", Log);
+
             if (dnnModule == null) return searchDocuments;
 
             var isContentModule = dnnModule.DesktopModule.ModuleName == "2sxc";
@@ -41,16 +45,9 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             // New Context because PortalSettings.Current is null
             var zoneId = new DnnEnvironment(Log).ZoneMapper.GetZoneId(dnnModule.OwnerPortalID);
 
-            int? appId = null;
-
-            if (!isContentModule)
-            {
-	            appId = new DnnMapAppToInstance(Log).GetAppIdFromInstance(instance, zoneId);
-            }
-            else
-            {
-                appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
-            }
+            var appId = !isContentModule
+                ? new DnnMapAppToInstance(Log).GetAppIdFromInstance(instance, zoneId)
+                : new ZoneRuntime(zoneId, Log).DefaultAppId;
 
             if (!appId.HasValue)
                 return searchDocuments;
