@@ -123,7 +123,7 @@
 		},
 		"Prompt": {
 			"NewApp": "Enter App Name (will also be used for folder)",
-			"DeleteApp": "This cannot be undone. To really delete this app, type (or copy/paste) the app-name here: sure you want to delete '{{name}}' ({{id}}) ?",
+			"DeleteApp": "This cannot be undone. To really delete this app, type 'yes!' or type/paste the app-name here: sure you want to delete '{{name}}' ({{id}}) ?",
 			"FailedDelete": "input did not match - will not delete"
 		},
 		"Tab": {

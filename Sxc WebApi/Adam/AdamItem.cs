@@ -1,5 +1,7 @@
 ﻿using System;
+using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
+using ToSic.SexyContent.WebApi.Adam;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Adam.WebApi
@@ -22,7 +24,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Type = "unknown"; // will be set from the outside
             Created = original.CreatedOnDate;
             Modified = original.LastModifiedOnDate;
-            AllowEdit = true; // todo: STV
+            AllowEdit = SecurityChecks.CanEdit(original);
         }
 
         public AdamItem(IFolderInfo original)
@@ -36,7 +38,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Type = "folder";
             Created = original.CreatedOnDate;
             Modified = original.LastModifiedOnDate;
-            AllowEdit = true; // todo: STV
+            AllowEdit = SecurityChecks.CanEdit(original);
         }
     }
 }

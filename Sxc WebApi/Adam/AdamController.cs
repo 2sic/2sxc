@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Adam.WebApi
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
-   public class AdamController: SxcApiControllerBase
+    public class AdamController : SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
         [HttpPost]
         [HttpPut]
-        public UploadResult Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) 
+        public UploadResult Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false)
             => UploadOne(appId, contentType, guid, field, subFolder, usePortalRoot);
 
         private UploadResult UploadOne(int appId, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot)
@@ -88,7 +88,7 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             // if app-path specified, use that app, otherwise use from context
             var appId = SxcInstance.AppId;
-            if(appId == null) throw new Exception("Can't detect app-id, module-context missing in http request");
+            if (appId == null) throw new Exception("Can't detect app-id, module-context missing in http request");
             return Items(appId.Value, contenttype, guid, field, folder);
         }
 
@@ -132,12 +132,24 @@ namespace ToSic.Sxc.Adam.WebApi
             var subfolders = folderManager.GetFolders(currentDnn);
             var files = folderManager.GetFiles(currentDnn);
 
+            var all = new List<AdamItem>();
+
+            // currentFolder is needed to get allowEdit for Adam root folder
+            var currentFolder = new AdamItem(currentDnn)
+            {
+                Name = ".",
+                MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, currentDnn.FolderID, true)
+            };
+            all.Insert(0, currentFolder);
+
             var adamFolders = subfolders.Where(s => s.FolderID != currentDnn.FolderID)
                 .Select(f => new AdamItem(f)
                 {
                     MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.FolderID, true)
                 })
                 .ToList();
+            all.AddRange(adamFolders);
+
             var adamFiles = files
                 .Select(f => new AdamItem(f)
                 {
@@ -145,8 +157,7 @@ namespace ToSic.Sxc.Adam.WebApi
                     Type = Classification.TypeName(f.Extension)
                 })
                 .ToList();
-
-            var all = adamFolders.Concat(adamFiles).ToList();
+            all.AddRange(adamFiles);
 
             Log.Add($"items complete - will return fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{all.Count}");
             return all;
@@ -163,13 +174,23 @@ namespace ToSic.Sxc.Adam.WebApi
             }
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            state.ContainerContext.Folder();
+            var folder = state.ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            state.ContainerContext.Folder(subfolder, false);
+            if (!string.IsNullOrEmpty(subfolder))
+                folder = state.ContainerContext.Folder(subfolder, false);
+
+            // start with a security check...
+            var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
+
+            // validate that dnn user have write permissions for folder
+            if (!SecurityChecks.CanEdit(dnnFolder))
+                throw Http.PermissionDenied("can't create new folder - permission denied");
+
+            var newFolderPath = string.IsNullOrEmpty(subfolder) ? newFolder : Path.Combine(subfolder, newFolder).Replace("\\", "/"); 
 
             // now access the subfolder, creating it if missing (which is what we want
-            state.ContainerContext.Folder(subfolder + "/" + newFolder, true);
+            state.ContainerContext.Folder(newFolderPath, true);
 
             return Items(appId, contentType, guid, field, subfolder, usePortalRoot);
         }
@@ -179,7 +200,7 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             Log.Add($"delete from a:{appId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
-            if(!state.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
+            if (!state.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
                 throw exp;
 
             // check that if the user should only see drafts, he doesn't see items of published data
@@ -188,14 +209,18 @@ namespace ToSic.Sxc.Adam.WebApi
 
             // try to see if we can get into the subfolder - will throw error if missing
             var current = state.ContainerContext.Folder(subfolder, false);
-            
+
 
             if (isFolder)
             {
                 var folderManager = FolderManager.Instance;
                 var fld = folderManager.GetFolder(id);
 
-                if(!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
+                // validate that dnn user have write permissions for folder
+                if (!SecurityChecks.CanEdit(fld))
+                    throw Http.PermissionDenied("can't delete folder - permission denied");
+
+                if (!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
                     throw exp;
 
                 if (fld.ParentID != current.Id)
@@ -207,7 +232,11 @@ namespace ToSic.Sxc.Adam.WebApi
                 var fileManager = FileManager.Instance;
                 var file = fileManager.GetFile(id);
 
-                if(!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
+                // validate that dnn user have write permissions for folder where is file
+                if (!SecurityChecks.CanEdit(file))
+                    throw Http.PermissionDenied("can't delete file - permission denied");
+
+                if (!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
                     throw exp;
 
                 if (file.FolderId != current.Id)
@@ -225,7 +254,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Log.Add($"rename a:{appId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
 
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
-            if(!state.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
+            if (!state.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
             // check that if the user should only see drafts, he doesn't see items of published data
@@ -239,7 +268,12 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 var folderManager = FolderManager.Instance;
                 var fld = folderManager.GetFolder(id);
-                if(!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
+
+                // validate that dnn user have write permissions for folder
+                if (!SecurityChecks.CanEdit(fld))
+                    throw Http.PermissionDenied("can't rename folder - permission denied");
+
+                if (!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
                     throw exp;
 
                 if (fld.ParentID != current.Id)
@@ -250,7 +284,12 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 var fileManager = FileManager.Instance;
                 var file = fileManager.GetFile(id);
-                if(!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
+
+                // validate that dnn user have write permissions for folder where is file
+                if (!SecurityChecks.CanEdit(file))
+                    throw Http.PermissionDenied("can't rename file - permission denied");
+
+                if (!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
                     throw exp;
 
                 if (file.FolderId != current.Id)

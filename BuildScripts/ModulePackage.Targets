@@ -26,6 +26,7 @@
     <ItemGroup>
       <DefaultExclude Include="**\bin\**" />
       <DefaultExclude Include="**\koi\**" />
+      <DefaultExclude Include="**\razorblade\**" />
       <DefaultExclude Include="**\*.user" />
       <DefaultExclude Include="**\*.suo" />
       <DefaultExclude Include="**\*.zip" />
@@ -182,6 +183,17 @@
       <KoiDllFiles Include="$(MSBuildProjectDirectory)/koi/bin/*.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(KoiDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
+
+    <!-- include razorblade module -->
+    <ItemGroup>
+      <RazorBladeFiles Include="$(MSBuildProjectDirectory)/razorblade/*.*" Exclude="**\*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(RazorBladeFiles)" DestinationFolder="$(TempPackageFolder)\razorblade\%(RecursiveDir)" />
+    <ItemGroup>
+      <RazorBladeDllFiles Include="$(MSBuildProjectDirectory)/razorblade/bin/*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(RazorBladeDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
+
 
     <!-- create the INSTALL RESOURCES.ZIP file -->
     <Copy SourceFiles="@(InstallInclude)" DestinationFolder="$(TempPackageResourcesFolder)\%(RecursiveDir)" />

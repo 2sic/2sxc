@@ -16,6 +16,7 @@ build/
 [Bb]in/
 # include bin files from koi
 !koi/bin/
+!razorblade/bin/
 [Oo]bj/
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets

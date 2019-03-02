@@ -143,7 +143,7 @@
 		},
 		"Prompt": {
 			"NewApp": "Gib ein App Name ein (wird auch für den App-Ordner verwendet)",
-			"DeleteApp": "Kann nicht rückgängig gemacht werden. Wenn die App wirklich gelöscht werden soll, tippe den App Namen in das Feld (oder per Copy-and-Paste). Soll die App '{{name}}' (ID: {{id}}) wirklich gelöscht werden?",
+			"DeleteApp": "Dies kann nicht rückgängig gemacht werden. Um zu bestätigen, schreibe 'yes!' oder den App Namen. Soll die App '{{name}}' (ID: {{id}}) wirklich gelöscht werden?",
 			"FailedDelete": "Die Eingabe stimmt nicht überein – App wird nicht gelöscht."
 		}
 	},

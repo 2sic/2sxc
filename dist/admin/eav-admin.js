@@ -2454,7 +2454,7 @@ angular.module("EavServices", [
 ]);
 
 angular.module('EavServices')
-    .factory('contentItemsSvc', ["$http", "entitiesSvc", "metadataSvc", "svcCreator", function ($http, entitiesSvc, metadataSvc, svcCreator) {
+    .factory('contentItemsSvc', ["$http", "entitiesSvc", "svcCreator", function ($http, entitiesSvc, /*metadataSvc,*/ svcCreator) {
         return function(appId, contentType) {
             var svc = {
                 contentType: contentType,
@@ -3303,28 +3303,28 @@ angular.module('EavServices')
       var svc = {};
 
       // Find all items assigned to a GUID
-      svc.getMetadata = function getMetadata(typeId, keyGuid, contentTypeName) {
-        console.log('using deprecated getMetadata - try to migrate code to get2');
-        return $http.get('eav/metadata/getassignedentities',
+      //svc.getMetadataOld = function getMetadata(typeId, keyGuid, contentTypeName) {
+      //  console.log('using deprecated getMetadata - try to migrate code to get2');
+      //  return $http.get('eav/metadata/get',
+      //    {
+      //      params: {
+      //        appId: appId,
+      //        targetType: typeId,
+      //        keyType: 'guid',
+      //        key: keyGuid,
+      //        contentType: contentTypeName
+      //      }
+      //    });
+      //};
+
+
+      svc.getMetadata = function(typeId, keyType, key, contentTypeName) {
+        return $http.get('eav/metadata/get',
           {
             params: {
               appId: appId,
-              assignmentObjectTypeId: typeId,
-              keyType: 'guid',
-              key: keyGuid,
-              contentType: contentTypeName
-            }
-          });
-      };
-
-
-      svc.getMetadata2 = function(typeId, keyType, key, contentTypeName) {
-        return $http.get('eav/metadata/getassignedentities',
-          {
-            params: {
-              appId: appId,
-              assignmentObjectTypeId: typeId,
-              keyType: keyType, //"guid",
+              targetType: typeId,
+              keyType: keyType,
               key: key,
               contentType: contentTypeName
             }
@@ -3335,7 +3335,7 @@ angular.module('EavServices')
 
 angular.module('EavServices')
   .factory('permissionsSvc',
-    ["$http", "eavConfig", "entitiesSvc", "metadataSvc", "svcCreator", "contentTypeSvc", function($http, eavConfig, entitiesSvc, metadataSvc, svcCreator, contentTypeSvc) {
+    ["entitiesSvc", "metadataSvc", "svcCreator", "contentTypeSvc", function(/*$http, eavConfig,*/ entitiesSvc, metadataSvc, svcCreator, contentTypeSvc) {
 
       // Construct a service for this specific targetGuid
       return function createSvc(appId, targetType, keyType, targetId) {
@@ -3351,7 +3351,7 @@ angular.module('EavServices')
 
         svc = angular.extend(svc,
           svcCreator.implementLiveList(function getAll() {
-            return metadataSvc.getMetadata2(svc.targetType, svc.keyType, svc.key, svc.ctName)
+            return metadataSvc.getMetadata(svc.targetType, svc.keyType, svc.key, svc.ctName)
               .then(svc.updateLiveAll);
           }));
 
@@ -3511,7 +3511,7 @@ angular.module("EavServices")
                 var keyGuid = dataSource.EntityGuid;
 
                 // Query for existing Entity
-                metadataSvc.getMetadata(assignmentObjectTypeId, keyGuid, contentTypeName).then(function (result) { 
+                metadataSvc.getMetadata(assignmentObjectTypeId, 'guid', keyGuid, contentTypeName).then(function (result) { 
                     var success = result.data;
                     if (success.length) // Edit existing Entity
                         eavAdminDialogs.openItemEditWithEntityId(success[0].Id);

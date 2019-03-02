@@ -2,6 +2,8 @@
 using System.IO;
 using System.Web.Http;
 using DotNetNuke.Entities.Host;
+using DotNetNuke.Security.Permissions;
+using DotNetNuke.Services.FileSystem;
 using JetBrains.Annotations;
 using ToSic.Eav.Identity;
 using ToSic.SexyContent.WebApi.Errors;
@@ -65,7 +67,18 @@ namespace ToSic.SexyContent.WebApi.Adam
             //return everywhereOk;
         }
 
+        internal static bool CanEdit(IFileInfo file)
+        {
+            if (file == null) return false;
+            var folder = (FolderInfo)FolderManager.Instance.GetFolder(file.FolderId);
+            return CanEdit(folder);
+        }
 
+        internal static bool CanEdit(IFolderInfo folder)
+        {
+            if (folder == null) return false;
+            return FolderPermissionController.CanAddFolder(folder as FolderInfo);
+        }
 
     }
 }
