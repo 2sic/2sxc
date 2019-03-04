@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Adam
                 if (autoCreate)
                     Add(pathToCheck);
                 else
-                    throw new Exception("subfolder " + pathToCheck + " not found");
+                    throw new Exception("subfolder " + pathToCheck + "not found");
             }
 
             var fldr = Folder(path);

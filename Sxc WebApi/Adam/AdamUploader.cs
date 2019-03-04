@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
             var folder = state.ContainerContext.Folder();
 
-            if (usePortalRoot && !string.IsNullOrEmpty(subFolder))
+            if (!string.IsNullOrEmpty(subFolder))
                 folder = state.ContainerContext.Folder(subFolder, false);
             
             // start with a security check...
