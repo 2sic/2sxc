@@ -810,8 +810,11 @@ function buildToolbars(parentLog, parentTag, optionalId) {
         return;
     var toolbars = getToolbarTags(parentTag);
     // no toolbars found, must help a bit because otherwise editing is hard
-    if (toolbars.length === 0)
+    if (toolbars.length === 0) {
         toolbars = addFallbackToolbar(parentTag);
+        if (toolbars == null)
+            return;
+    }
     for (var i = 0; i < toolbars.length; i++) {
         var tag = $(toolbars[i]);
         var config = loadConfigFromAttributes(toolbars[i]);
@@ -899,12 +902,13 @@ function addFallbackToolbar(parentTag) {
     if (dbg)
         console.log("didn't find toolbar, so will auto-create", parentTag);
     var outsideCb = !parentTag.hasClass(Constants.cb.classes.name);
-    var contentTag = outsideCb ? parentTag.find('div' + Constants.cb.selectors.ofName) : parentTag;
+    var contentTag = outsideCb ? parentTag.find("div" + Constants.cb.selectors.ofName) : parentTag;
     // auto toolbar
     var ctx = context_1.context(contentTag);
-    if (ctx.ui.autoToolbar !== false)
-        contentTag.attr(Constants.toolbar.attr.full, JSON.stringify(toolbar_settings_1.emptyToolbar));
-    return parentTag;
+    if (ctx.ui.autoToolbar === false)
+        return null;
+    contentTag.attr(Constants.toolbar.attr.full, JSON.stringify(toolbar_settings_1.emptyToolbar));
+    return contentTag;
 }
 /** Find the text of one or more attributes in fallback order, till we found one */
 function getFirstAttribute(toolbar, name1, name2) {

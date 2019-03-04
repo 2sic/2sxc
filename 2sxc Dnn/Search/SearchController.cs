@@ -16,7 +16,9 @@ using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Search;
+using ToSic.Eav.DataSources.Caches;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7.Search
 {
     internal class SearchController: HasLog
@@ -33,6 +35,9 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             var dnnModule = (instance as EnvironmentInstance<ModuleInfo>)?.Original;
             // always log with method, to ensure errors are cought
             Log.Add($"start search for mod#{dnnModule?.ModuleID}");
+
+            History.Add("dnn-search", Log);
+
             if (dnnModule == null) return searchDocuments;
 
             var isContentModule = dnnModule.DesktopModule.ModuleName == "2sxc";
@@ -40,17 +45,24 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             // New Context because PortalSettings.Current is null
             var zoneId = new DnnEnvironment(Log).ZoneMapper.GetZoneId(dnnModule.OwnerPortalID);
 
-            int? appId;// = new ZoneRuntime(zoneId, Log).DefaultAppId;
+            var appId = !isContentModule
+                ? new DnnMapAppToInstance(Log).GetAppIdFromInstance(instance, zoneId)
+                : new ZoneRuntime(zoneId, Log).DefaultAppId;
 
-            if (!isContentModule)
-            {
-	            appId = new DnnMapAppToInstance(Log).GetAppIdFromInstance(instance, zoneId);
-				if (!appId.HasValue)
-		            return searchDocuments;
-            }
+            if (!appId.HasValue)
+                return searchDocuments;
+
+            // As PortalSettings.Current is null, instanciate with modules' portal id
+            var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
+
+            // Ensure cache builds up with correct primary language
+            var cache = Eav.Factory.Resolve<ICache>();
+            ((BaseCache)cache).ZoneId = zoneId;
+            ((BaseCache)cache).AppId = appId.Value;
+            cache.PreLoadCache(portalSettings.DefaultLanguage.ToLower());
 
             // must find tenant through module, as the PortalSettings.Current is null in search mode
-            var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
+            var tenant = new DnnTenant(portalSettings);
             var mcb = new ModuleContentBlock(instance, Log, tenant);
             var sexy = mcb.SxcInstance;
 

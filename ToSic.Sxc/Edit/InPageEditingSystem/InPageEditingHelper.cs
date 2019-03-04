@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
                 Log.Warn("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
             var itmToolbar = new ItemToolbar(eTarget, actions, contentType, prefill, toolbar, settings);
 
-            return inline ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute) : new HtmlString(itmToolbar.Toolbar);
+            return inline ? EditorAttribute("sxc-toolbar", itmToolbar.ToolbarAttribute) : new HtmlString(itmToolbar.Toolbar);
         }
 
 
@@ -137,14 +137,14 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         /// Generate an HTML attribute 
         /// - but only if in edit mode
         /// </summary>
-        public HtmlString Attribute(string name, string value)
+        public HtmlString EditorAttribute(string name, string value)
             => !Enabled ? null : SexyContent.Html.Build.Attribute(name, value);
 
         /// <summary>
         /// Generate an HTML attribute by converting the value to JSON 
         /// - but only in edit mode
         /// </summary>
-        public HtmlString Attribute(string name, object value)
+        public HtmlString EditorAttribute(string name, object value)
             => !Enabled ? null : SexyContent.Html.Build.Attribute(name, JsonConvert.SerializeObject(value));
 
         #endregion Attribute Helper
