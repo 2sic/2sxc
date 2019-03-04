@@ -116,10 +116,12 @@ namespace ToSic.Sxc.Adam.WebApi
             var folderManager = FolderManager.Instance;
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            state.ContainerContext.Folder();
+            var currentAdam = state.ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var currentAdam = state.ContainerContext.Folder(subfolder, false);
+            if (usePortalRoot && !string.IsNullOrEmpty(subfolder))
+                currentAdam = state.ContainerContext.Folder(subfolder, false);
+
             var currentDnn = folderManager.GetFolder(currentAdam.Id);
 
             // ensure that it's super user, or the folder is really part of this item
@@ -177,7 +179,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var folder = state.ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            if (!string.IsNullOrEmpty(subfolder))
+            if (usePortalRoot && !string.IsNullOrEmpty(subfolder))
                 folder = state.ContainerContext.Folder(subfolder, false);
 
             // start with a security check...
@@ -207,9 +209,11 @@ namespace ToSic.Sxc.Adam.WebApi
             if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
                 throw permissionException;
 
-            // try to see if we can get into the subfolder - will throw error if missing
-            var current = state.ContainerContext.Folder(subfolder, false);
+            var current = state.ContainerContext.Folder();
 
+            // try to see if we can get into the subfolder - will throw error if missing
+            if (usePortalRoot && !string.IsNullOrEmpty(subfolder))
+                current = state.ContainerContext.Folder(subfolder, false);
 
             if (isFolder)
             {
@@ -261,8 +265,11 @@ namespace ToSic.Sxc.Adam.WebApi
             if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
                 throw permissionException;
 
+            var current = state.ContainerContext.Folder();
+
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = state.ContainerContext.Folder(subfolder, false);
+            if (usePortalRoot && !string.IsNullOrEmpty(subfolder))
+                current = state.ContainerContext.Folder(subfolder, false);
 
             if (isFolder)
             {
