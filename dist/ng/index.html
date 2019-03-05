@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+<head>
+  <script>
+    var
+      path = window.location.pathname,
+      isDevMode = window.location.hostname === 'localhost',
+      apiUrl;
+      
+    document.write('<base href="' + path + '">');
+
+    var
+      jsVersionCacheId = window.location.search,
+      devPath = 'http://2sxc.dev/desktopmodules/tosic_sexycontent/dist/a4/';
+    document.write('<script src="' + (isDevMode ? devPath : '') + '../../js/2sxc.api.js' + jsVersionCacheId + '"></scr' + 'ipt>');
+    // must now close the script tag, so that the added tag is parsed before all other code
+  </script>
+  <script>
+    apiUrl = $2sxc.urlParams.require("portalroot") + "desktopmodules/2sxc/api/";
+    createFakeSf(apiUrl);
+
+    // Create a fake DNN Service-Framework, required by $2sxc to work properly
+    function createFakeSf(apiUrl) {
+      if ($2sxc.urlParams.require("mid") === "") alert("ModuleId (mid) missing - cannot continue"); if (window.$ === undefined) window.$ = {};
+      window.$.ServicesFramework = function (id) {
+        return {
+          name: "This is a fake DNN ServicesFramework", description:
+          "It enables stuff requiring (but not really needing) the sf to work", getTabId: function () {
+            return $2sxc.urlParams.require("tid");
+          }, getAntiForgeryValue: function () {
+            return "abcdefgihjklmnop";
+          }, getServiceRoot: function () {
+            return apiUrl;
+          }
+        }
+      };
+    };
+  </script>
+  <meta charset="utf-8">
+  <title>Quick Dialog - DEV mode!</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+  <app-root></app-root>
+<script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="styles.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body>
+
+</html>
