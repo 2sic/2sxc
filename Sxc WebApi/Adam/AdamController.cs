@@ -135,7 +135,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var all = new List<AdamItem>();
 
             // currentFolder is needed to get allowEdit for Adam root folder
-            var currentFolder = new AdamItem(currentDnn)
+            var currentFolder = new AdamItem(currentDnn, usePortalRoot, state)
             {
                 Name = ".",
                 MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, currentDnn.FolderID, true)
@@ -143,7 +143,7 @@ namespace ToSic.Sxc.Adam.WebApi
             all.Insert(0, currentFolder);
 
             var adamFolders = subfolders.Where(s => s.FolderID != currentDnn.FolderID)
-                .Select(f => new AdamItem(f)
+                .Select(f => new AdamItem(f, usePortalRoot, state)
                 {
                     MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.FolderID, true)
                 })
@@ -151,7 +151,7 @@ namespace ToSic.Sxc.Adam.WebApi
             all.AddRange(adamFolders);
 
             var adamFiles = files
-                .Select(f => new AdamItem(f)
+                .Select(f => new AdamItem(f, usePortalRoot, state)
                 {
                     MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.FileId, false),
                     Type = Classification.TypeName(f.Extension)
@@ -183,8 +183,8 @@ namespace ToSic.Sxc.Adam.WebApi
             // start with a security check...
             var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
 
-            // validate that dnn user have write permissions for folder
-            if (!SecurityChecks.CanEdit(dnnFolder))
+            // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
+            if (usePortalRoot && !SecurityChecks.CanEdit(dnnFolder))
                 throw Http.PermissionDenied("can't create new folder - permission denied");
 
             var newFolderPath = string.IsNullOrEmpty(subfolder) ? newFolder : Path.Combine(subfolder, newFolder).Replace("\\", "/"); 
@@ -216,8 +216,8 @@ namespace ToSic.Sxc.Adam.WebApi
                 var folderManager = FolderManager.Instance;
                 var fld = folderManager.GetFolder(id);
 
-                // validate that dnn user have write permissions for folder
-                if (!SecurityChecks.CanEdit(fld))
+                // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
+                if (usePortalRoot && !SecurityChecks.CanEdit(fld))
                     throw Http.PermissionDenied("can't delete folder - permission denied");
 
                 if (!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
@@ -232,8 +232,8 @@ namespace ToSic.Sxc.Adam.WebApi
                 var fileManager = FileManager.Instance;
                 var file = fileManager.GetFile(id);
 
-                // validate that dnn user have write permissions for folder where is file
-                if (!SecurityChecks.CanEdit(file))
+                // validate that dnn user have write permissions for folder where is file in case dnn file system is used (usePortalRoot)
+                if (usePortalRoot && !SecurityChecks.CanEdit(file))
                     throw Http.PermissionDenied("can't delete file - permission denied");
 
                 if (!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
@@ -269,8 +269,8 @@ namespace ToSic.Sxc.Adam.WebApi
                 var folderManager = FolderManager.Instance;
                 var fld = folderManager.GetFolder(id);
 
-                // validate that dnn user have write permissions for folder
-                if (!SecurityChecks.CanEdit(fld))
+                // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
+                if (usePortalRoot && !SecurityChecks.CanEdit(fld))
                     throw Http.PermissionDenied("can't rename folder - permission denied");
 
                 if (!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
@@ -285,8 +285,8 @@ namespace ToSic.Sxc.Adam.WebApi
                 var fileManager = FileManager.Instance;
                 var file = fileManager.GetFile(id);
 
-                // validate that dnn user have write permissions for folder where is file
-                if (!SecurityChecks.CanEdit(file))
+                // validate that dnn user have write permissions for folder where is file in case dnn file system is used (usePortalRoot)
+                if (usePortalRoot && !SecurityChecks.CanEdit(file))
                     throw Http.PermissionDenied("can't rename file - permission denied");
 
                 if (!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))

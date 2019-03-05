@@ -1,6 +1,7 @@
 ﻿using System;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
+using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.WebApi.Adam;
 
 // ReSharper disable once CheckNamespace
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Adam.WebApi
         public string Path, Name, Type;
         public DateTime Created, Modified;
 
-        public AdamItem(IFileInfo original)
+        internal AdamItem(IFileInfo original, bool usePortalRoot, AdamSecureState state)
         {
             IsFolder = false;
             Id = original.FileId;
@@ -24,10 +25,10 @@ namespace ToSic.Sxc.Adam.WebApi
             Type = "unknown"; // will be set from the outside
             Created = original.CreatedOnDate;
             Modified = original.LastModifiedOnDate;
-            AllowEdit = SecurityChecks.CanEdit(original);
+            AllowEdit = usePortalRoot ? SecurityChecks.CanEdit(original) : (!state.UserIsRestricted || state.FieldPermissionOk(GrantSets.WriteSomething));
         }
 
-        public AdamItem(IFolderInfo original)
+        internal AdamItem(IFolderInfo original, bool usePortalRoot, AdamSecureState state)
         {
             IsFolder = true;
             Id = original.FolderID;
@@ -38,7 +39,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Type = "folder";
             Created = original.CreatedOnDate;
             Modified = original.LastModifiedOnDate;
-            AllowEdit = SecurityChecks.CanEdit(original);
+            AllowEdit = usePortalRoot ? SecurityChecks.CanEdit(original) : (!state.UserIsRestricted || state.FieldPermissionOk(GrantSets.WriteSomething));
         }
     }
 }
