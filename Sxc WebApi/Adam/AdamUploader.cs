@@ -50,8 +50,8 @@ namespace ToSic.Sxc.Adam.WebApi
             // start with a security check...
             var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
 
-            // validate that dnn user have write permissions for folder
-            if (!SecurityChecks.CanEdit(dnnFolder))
+            // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
+            if (usePortalRoot && !SecurityChecks.CanEdit(dnnFolder))
                 throw Http.PermissionDenied("can't upload - permission denied");
 
             // we only upload into valid adam if that's the scenario
