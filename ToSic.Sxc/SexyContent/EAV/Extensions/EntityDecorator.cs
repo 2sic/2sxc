@@ -57,6 +57,12 @@ namespace ToSic.SexyContent.EAVExtensions
         public T GetBestValue<T>(string attributeName, string[] languages, bool resolveHyperlinks = false) 
             => _baseEntity.GetBestValue<T>(attributeName, languages, resolveHyperlinks);
 
+        public object PrimaryValue(string attributeName, bool resolveHyperlinks = false) 
+            => _baseEntity.PrimaryValue(attributeName, resolveHyperlinks);
+
+        public T PrimaryValue<T>(string attributeName, bool resolveHyperlinks = false) 
+            => _baseEntity.PrimaryValue<T>(attributeName, resolveHyperlinks);
+
         public TVal GetBestValue<TVal>(string name, bool resolveHyperlinks = false)
             => _baseEntity.GetBestValue<TVal>(name, resolveHyperlinks);
 
