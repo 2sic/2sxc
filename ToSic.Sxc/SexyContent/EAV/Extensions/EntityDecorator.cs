@@ -53,6 +53,10 @@ namespace ToSic.SexyContent.EAVExtensions
 
         public object GetBestValue(string attributeName, string[] languages, bool resolveHyperlinks = false)
             => _baseEntity.GetBestValue(attributeName, languages, resolveHyperlinks);
+
+        public T GetBestValue<T>(string attributeName, string[] languages, bool resolveHyperlinks = false) 
+            => _baseEntity.GetBestValue<T>(attributeName, languages, resolveHyperlinks);
+
         public TVal GetBestValue<TVal>(string name, bool resolveHyperlinks = false)
             => _baseEntity.GetBestValue<TVal>(name, resolveHyperlinks);
 
@@ -72,9 +76,18 @@ namespace ToSic.SexyContent.EAVExtensions
 
         #endregion
 
-        #region breaking changes
+        #region breaking changes in EAV 4.5
 
         public object Value => _baseEntity.Value;
+        #endregion
+
+
+
+
+        #region experimental support for LINQ enhancements
+        public List<IEntity> Children(string field = null, string type = null) => _baseEntity.Children(field, type);
+
+        public List<IEntity> Parents(string type = null, string field = null) => _baseEntity.Parents(type, field);
 
         #endregion
     }
