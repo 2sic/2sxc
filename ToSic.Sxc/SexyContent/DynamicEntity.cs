@@ -4,21 +4,23 @@ using System.Linq;
 using System.Web;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Edit.Toolbar;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
 {
-    public class DynamicEntity : DynamicObject, IDynamicEntity
+    public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<DynamicEntity>
     {
+        [Obsolete("This has been obsolete since ca. 2sxc 4. Will be removed in 2sxc 10")]
         public ContentConfiguration Configuration = new ContentConfiguration();
         public Eav.Interfaces.IEntity Entity { get; set; }
         public HtmlString Toolbar {
             get
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
-                // 2018-02-03 2dm: disabled the PortalSettings criteria to decouple from DNN, may have side effects
                 if (SxcInstance == null)
                     return new HtmlString("");
 
@@ -102,6 +104,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Configuration class for this expando
         /// </summary>
+        [Obsolete("This has been obsolete since ca. 2sxc 4. Will be removed in 2sxc 10")]
         public class ContentConfiguration
         {
             public string ErrorKeyMissing {
@@ -121,5 +124,27 @@ namespace ToSic.SexyContent
         public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, SxcInstance);
 
         public IHtmlString Render() => ContentBlocks.Render.One(this);
+
+
+        #region Experimenting with comparison operations
+
+        public static bool operator ==(DynamicEntity d1, DynamicEntity d2) => IsEqual(d1, d2);
+        public static bool operator !=(DynamicEntity d1, DynamicEntity d2) => !IsEqual(d1, d2);
+
+        private static bool IsEqual(DynamicEntity d1, DynamicEntity d2) => d1.Entity == d2.Entity;
+
+        public override bool Equals(object obj)
+        {
+            if (obj is DynamicEntity deobj)
+                return Entity == deobj.Entity;
+            if (obj is IEntity entobj)
+                return Entity == entobj;
+
+            return false;
+        }
+
+        public bool Equals(DynamicEntity dynObj) => Entity == dynObj.Entity;
+
+        #endregion
     }
 }
