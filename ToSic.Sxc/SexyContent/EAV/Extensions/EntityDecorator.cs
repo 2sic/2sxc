@@ -82,11 +82,6 @@ namespace ToSic.SexyContent.EAVExtensions
 
         #endregion
 
-        #region breaking changes in EAV 4.5
-
-        public object Value => _baseEntity.Value;
-        #endregion
-
 
 
 
@@ -94,6 +89,9 @@ namespace ToSic.SexyContent.EAVExtensions
         public List<IEntity> Children(string field = null, string type = null) => _baseEntity.Children(field, type);
 
         public List<IEntity> Parents(string type = null, string field = null) => _baseEntity.Parents(type, field);
+        public object Value(string field, bool resolve = true) => _baseEntity.Value(field, resolve);
+
+        public T Value<T>(string field, bool resolve = true) => _baseEntity.Value<T>(field, resolve);
 
         #endregion
     }
