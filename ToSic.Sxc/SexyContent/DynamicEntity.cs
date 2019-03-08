@@ -133,13 +133,32 @@ namespace ToSic.SexyContent
 
         #region Changing comparison operation to internally compare the entities, not this wrapper
 
-        public static bool operator ==(DynamicEntity d1, DynamicEntity d2) => IsEqual(d1, d2);
-        public static bool operator !=(DynamicEntity d1, DynamicEntity d2) => !IsEqual(d1, d2);
+        public static bool operator ==(DynamicEntity d1, DynamicEntity d2) => OverrideIsEqual(d1, d2);
+        public static bool operator !=(DynamicEntity d1, DynamicEntity d2) => !OverrideIsEqual(d1, d2);
 
-        private static bool IsEqual(DynamicEntity d1, DynamicEntity d2) => d1.Entity == d2.Entity;
+        /// <summary>
+        /// Check if they are equal, based on the underlying entity. 
+        /// </summary>
+        /// <param name="d1"></param>
+        /// <param name="d2"></param>
+        /// <remarks>
+        /// It's important to do null-checks first, because if anything in here is null, it will otherwise throw an error. 
+        /// But we can't use != null, because that would call the != operator and be recursive.
+        /// </remarks>
+        /// <returns></returns>
+        private static bool OverrideIsEqual(DynamicEntity d1, DynamicEntity d2)
+        {
+            // check most basic case - they are really the same object or both null
+            if (ReferenceEquals(d1, d2))
+                return true;
+
+            return d1?.Entity == d2?.Entity;
+        }
 
         public override bool Equals(object obj)
         {
+            if (ReferenceEquals(this, obj))
+                return true;
             if (obj is DynamicEntity deobj)
                 return Entity == deobj.Entity;
             if (obj is IEntity entobj)
