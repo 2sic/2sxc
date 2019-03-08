@@ -5,7 +5,7 @@ using DotNetNuke.Web.Api;
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
     [SupportedModules("2sxc,2sxc-app")]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)] // while in dev-mode, only for super-users
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] // while in dev-mode, only for super-users
     public partial class UiController : SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Interfaces;
@@ -11,8 +9,6 @@ using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
-    [SupportedModules("2sxc,2sxc-app")]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)] // while in dev-mode, only for super-users
     public partial class UiController
     {
         // todo: replace object with Dictionary<Guid, int> when ready
