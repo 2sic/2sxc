@@ -20,9 +20,14 @@
 				"Title": "General placeholders",
 				"Help": "various common placeholders",
 				"Toolbar.Key": "Toolbar",
-				"Toolbar.Help": "Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will automatically float",
 				"ToolbarFloat.Key": "Toolbar floating",
-				"ToolbarFloat.Help": "toolbar together with the <div> tag in which it floats"
+				"ToolbarFloat.Help": "toolbar together with the <div> tag in which it floats",
+				"Toolbar.Title": "Hover Toolbars (recommended)",
+				"Toolbar.Help": "Hover toolbars let the editor experience the page as it will be.",
+				"Toolbar.Attrib.Title": "Hover Toolbar Attribute Examples (put inside an html-tag)",
+				"Toolbar.Attrib.Help": "These are examples to help you bild cool toolbars. They are always used inside a tag as an attribute - like &lt;div&gt; @Edit.TagToolbar(...)&gt;/div&lt;",
+				"Toolbar.Inline.Title": "Inline Toolbars (not recommended)",
+				"Toolbar.Inline.Help": "Inline toolbars are not recommended, because they change the look of the output for the editor. But sometimes you just need them."
 			},
 			"Fields.Title": "Fields",
 			"Fields.Help": "fields of the content item as configured in the content-type",
