@@ -172,6 +172,12 @@
 			"If.Title": "If Statements",
 			"Include.Title": "Include CSS Files"
 		},
+		"Linq": {
+			"Title": "LINQ - Querying Lists of Data",
+			"Using.Title": "Using statements for LINQ",
+			"SimpleQueries.Title": "Simple Queries",
+			"Relationships.Title": "Relationship Queries"
+		},
 		"Html": {
 			"Title": "Html snippets",
 			"Resources.Title": "Resources like javascripts and css",
