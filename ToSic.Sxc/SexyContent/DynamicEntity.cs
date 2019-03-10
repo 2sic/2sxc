@@ -1,24 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Web;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Edit.Toolbar;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
 {
-    public class DynamicEntity : DynamicObject, IDynamicEntity
+    public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<DynamicEntity>
     {
-        public ContentConfiguration Configuration = new ContentConfiguration();
-        public Eav.Interfaces.IEntity Entity { get; set; }
+
+        public IEntity Entity { get; }
         public HtmlString Toolbar {
             get
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
-                // 2018-02-03 2dm: disabled the PortalSettings criteria to decouple from DNN, may have side effects
                 if (SxcInstance == null)
                     return new HtmlString("");
 
@@ -38,7 +40,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
-        public DynamicEntity(Eav.Interfaces.IEntity entityModel, string[] dimensions, SxcInstance sexy)
+        public DynamicEntity(IEntity entityModel, string[] dimensions, SxcInstance sexy)
         {
             Entity = entityModel;
             _dimensions = dimensions;
@@ -99,9 +101,14 @@ namespace ToSic.SexyContent
                    ? new DynamicEntity(((EntityInContentGroup) Entity).Presentation, _dimensions, SxcInstance)
                    : null);
 
+        #region obsolete stuff - to remove in 2sxc 10
+        [Obsolete("This has been obsolete since ca. 2sxc 4. Will be removed in 2sxc 10")]
+        public ContentConfiguration Configuration = new ContentConfiguration();
+
         /// <summary>
         /// Configuration class for this expando
         /// </summary>
+        [Obsolete("This has been obsolete since ca. 2sxc 4. Will be removed in 2sxc 10")]
         public class ContentConfiguration
         {
             public string ErrorKeyMissing {
@@ -109,6 +116,7 @@ namespace ToSic.SexyContent
                 set => throw new Exception("Obsolete: Do not use ErrorKeyMissing anymore. Check if the value is null instead.");
             }
         }
+        #endregion
 
         public int EntityId => Entity.EntityId;
 
@@ -121,5 +129,58 @@ namespace ToSic.SexyContent
         public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, SxcInstance);
 
         public IHtmlString Render() => ContentBlocks.Render.One(this);
+
+
+        #region Changing comparison operation to internally compare the entities, not this wrapper
+
+        public static bool operator ==(DynamicEntity d1, DynamicEntity d2) => OverrideIsEqual(d1, d2);
+        public static bool operator !=(DynamicEntity d1, DynamicEntity d2) => !OverrideIsEqual(d1, d2);
+
+        /// <summary>
+        /// Check if they are equal, based on the underlying entity. 
+        /// </summary>
+        /// <param name="d1"></param>
+        /// <param name="d2"></param>
+        /// <remarks>
+        /// It's important to do null-checks first, because if anything in here is null, it will otherwise throw an error. 
+        /// But we can't use != null, because that would call the != operator and be recursive.
+        /// </remarks>
+        /// <returns></returns>
+        private static bool OverrideIsEqual(DynamicEntity d1, DynamicEntity d2)
+        {
+            // check most basic case - they are really the same object or both null
+            if (ReferenceEquals(d1, d2))
+                return true;
+
+            return d1?.Entity == d2?.Entity;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj is DynamicEntity deobj)
+                return Entity == deobj.Entity;
+            if (obj is IEntity entobj)
+                return Entity == entobj;
+
+            return false;
+        }
+
+        /// <summary>
+        /// This is used by various equality comparison. 
+        /// Since we define two DynamicEntities to be equal when they host the same entity, this uses the Entity.HashCode
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode() => Entity != null ? Entity.GetHashCode() : 0;
+
+        public bool Equals(DynamicEntity dynObj) => Entity == dynObj?.Entity;
+
+        #endregion
+
+        public List<DynamicEntity> Parents(string type = null, string field = null)
+            => Entity.Parents(type, field)
+                .Select(e => new DynamicEntity(e, _dimensions, SxcInstance))
+                .ToList();
     }
 }
