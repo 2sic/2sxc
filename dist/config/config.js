@@ -14,11 +14,10 @@
         }
     };
 
-    if (/* window.jQuery !== undefined && */ runningInDnn) { // in dnn-page there is a jquery, which also allows us to find attributes
+    if (runningInDnn) { // in dnn-page there is a jquery, which also allows us to find attributes
         // in jQuery-Mode I have to wait till the document is ready
         $(function () {
             var moduleElement = $(document);
-            // var manageInfo = $.parseJSON($(moduleElement.find(".Mod2sxcC, .Mod2sxcappC")[0]).attr("data-2sxc")).manage;
             var manageInfo = $.parseJSON($(moduleElement.find("div[data-2sxc]")[0]).attr("data-2sxc")).manage;
             var lng = window.$eavUIConfig.languages;
             lng.i18nRoot = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/i18n/";
@@ -90,7 +89,8 @@ if (window.angular) // needed because the file is also included in older non-ang
                             { From: "unsaved3", Out: "Default", To: "Out", In: "Default" }
                         ]
                     },
-                    testParameters: "[Module:ModuleID]=" + AppInstanceId
+                    // 2019-03-12 2dm disabled as not needed any more, and could cause trouble - see https://github.com/2sic/2sxc/issues/1710
+                    // testParameters: "[Module:ModuleID]=" + AppInstanceId
                 },
                 metadataOfAttribute: 2,
                 metadataOfApp: 3,
@@ -110,7 +110,6 @@ if (window.angular) // needed because the file is also included in older non-ang
                 formly: {
                     inputTypeReplacementMap: {
                         "string-wysiwyg": "string-wysiwyg-tinymce"
-                        //"string-wysiwyg": "string-wysiwyg-dnn"
                     },
                     // used to inject additional / change config if necessary
                     inputTypeReconfig: function (field) {
