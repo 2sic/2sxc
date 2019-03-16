@@ -62,9 +62,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var exception))
                 throw exception;
-            // 2018-09-15 old code, should have checked the same stuff mostly...
-            //if (!permCheck.Ensure(GrantSets.WriteSomething, /*items,*/ out var exp))
-            //    throw exp;
 
             var list = new EntityApi(appId, Log).GetEntitiesForEditing(appId, items);
 
