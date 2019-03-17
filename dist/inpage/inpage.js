@@ -868,7 +868,8 @@ function convertConfigToToolbarTags(tag, config, log) {
     cnt.toolbar = toolbar_expand_config_1.expandToolbarConfig(cnt, config.toolbar, config.settings, log);
     if (tag.attr(Constants.toolbar.attr.full)) {
         // new case, where the full toolbar is included in one setting
-        tag_toolbar_1.AppendTagToolbar(tag, cnt);
+        // ReSharper disable once WrongExpressionStatement
+        new tag_toolbar_1.TagToolbar(tag, cnt);
         ensureToolbarHoverClass(tag);
     }
     else {
@@ -2250,33 +2251,6 @@ exports.cb = {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var render_toolbar_1 = __webpack_require__(13);
-var tagToolbarPadding = 4, tagToolbarPaddingRight = 0, toolbarHeight = 20;
-var tagToolbarAttr = 'data-tagtoolbar';
-var tagToolbarForAttr = 'data-tagtoolbar-for';
-/**
- * Returns the body offset if positioning is relative or absolute
- */
-function getBodyOffset() {
-    var body = $('body');
-    var bodyPos = body.css('position');
-    if (bodyPos === 'relative' || bodyPos === 'absolute') {
-        return {
-            top: body.offset().top,
-            left: body.offset().left
-        };
-    }
-    return {
-        top: 0,
-        left: 0
-    };
-}
-/**
- * Number generator used for TagToolbars
- */
-var _lastMenuId = 0;
-function getMenuNumber() {
-    return _lastMenuId++;
-}
 /**
  * Remove orphan tag-toolbars from DOM
  */
@@ -2290,17 +2264,47 @@ function CleanupTagToolbars() {
     });
 }
 exports.CleanupTagToolbars = CleanupTagToolbars;
+var tagToolbarPadding = 4, tagToolbarPaddingRight = 0, toolbarHeight = 20;
+var tagToolbarAttr = 'data-tagtoolbar';
+var tagToolbarForAttr = 'data-tagtoolbar-for';
+/**
+ * Returns the body offset if positioning is relative or absolute
+ */
+function getBodyOffset() {
+    var body = $('body');
+    var bodyPos = body.css('position');
+    if (bodyPos === 'relative' || bodyPos === 'absolute') {
+        var offset = body.offset();
+        return {
+            top: offset.top,
+            left: offset.left
+        };
+    }
+    return {
+        top: 0,
+        left: 0
+    };
+}
+/**
+ * Number generator used for TagToolbars
+ */
+var lastMenuId = 0;
+function getMenuNumber() {
+    return lastMenuId++;
+}
+/** The current mouseposition, always updated when the mouse changes */
 var mousePosition = {
     x: 0,
     y: 0
 };
+/**
+ * Keep the mouse-position update for future use
+ */
 $(window).on('mousemove', function (e) {
     mousePosition.x = e.clientX;
     mousePosition.y = e.clientY;
 });
 var TagToolbar = /** @class */ (function () {
-    //tag: JQuery<HTMLElement>;
-    //cnt: ContextOfButton;
     function TagToolbar(tag, cnt) {
         var _this = this;
         this.tag = tag;
@@ -2355,7 +2359,6 @@ var TagToolbar = /** @class */ (function () {
             padding: tagToolbarPadding
         };
         // If we scrolled down, the toolbar might not be visible - calculate offset
-        console.log(this);
         position.tagScrollOffset = Math.min(position.viewportOffset - position.bodyOffset.top, 0);
         // Update top coordinates
         if (position.tagScrollOffset === 0)
@@ -2368,7 +2371,6 @@ var TagToolbar = /** @class */ (function () {
             position.right = position.win.width - position.tagOffset.left - position.tagWidth + tagToolbarPaddingRight - position.bodyOffset.left;
         else
             position.left = position.tagOffset.left + tagToolbarPadding + position.bodyOffset.left;
-        //console.log('positions', position);
         var cssPos = {
             top: position.top,
             left: position.left,
@@ -2377,24 +2379,21 @@ var TagToolbar = /** @class */ (function () {
         this.toolbarElement.css(cssPos);
     };
     TagToolbar.prototype.hideToolbar = function () {
-        var _this = this;
-        $(window).off('scroll', function () { return _this.updatePosition(); }); // important: use the () => syntax!
+        $(window).off('scroll', this.updatePosition);
         this.toolbarElement.css({ display: 'none' });
     };
     TagToolbar.prototype.showToolbar = function () {
-        var _this = this;
         if (this.toolbarElement.is(':visible'))
             return;
         this.toolbarElement.css({ display: 'block' });
-        $(window).on('scroll', function () { return _this.updatePosition(); }); // important: use the () => syntax!
+        // Attach the event, but use a $.proxy to ensure that the "this" context remains
+        // see also https://stackoverflow.com/questions/14990057/typescript-event-binding-and-unbinding
+        $(window).on('scroll', $.proxy(this.updatePosition, this));
         this.updatePosition();
     };
     return TagToolbar;
 }());
-function AppendTagToolbar(tag, cnt) {
-    new TagToolbar(tag, cnt);
-}
-exports.AppendTagToolbar = AppendTagToolbar;
+exports.TagToolbar = TagToolbar;
 
 
 /***/ }),
