@@ -38,10 +38,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var entityApi = new EntityApi(appId, Log);
             var typeRead = entityApi.AppManager.Read.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(appId, items);
+            var jsonSerializer = new JsonSerializer();
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
-                Entity = JsonSerializer.ToJson(e.Entity ?? ConstructEmptyEntity(appId, e.Header, typeRead))
+                Entity = jsonSerializer.ToJson(e.Entity ?? ConstructEmptyEntity(appId, e.Header, typeRead))
             }).ToList();
 
             // set published if some data already exists
