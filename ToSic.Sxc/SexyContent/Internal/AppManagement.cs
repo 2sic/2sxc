@@ -37,12 +37,19 @@ namespace ToSic.SexyContent.Internal
             if (appId == new ZoneRuntime(zoneId, parentLog).DefaultAppId)
                 throw new Exception("The default app of a zone cannot be removed.");
 
-            // Delete folder in dnn
+            // Prepare to Delete folder in dnn - this must be done, before deleting the app in the DB
             var sexyApp = App.LightWithoutData(tenant, zoneId, appId, null);
-            if (!IsNullOrEmpty(sexyApp.Folder) && Directory.Exists(sexyApp.PhysicalPath))
-                Directory.Delete(sexyApp.PhysicalPath, true);
+            var folder = sexyApp.Folder;
+            var physPath = sexyApp.PhysicalPath;
 
+            // now remove from DB. This sometimes fails, so we do this before trying to clean the files
+            // as the db part should be in a transaction, and if it fails, everything should stay as is
             new ZoneManager(zoneId, parentLog).DeleteApp(appId);
+
+            // now really delete the files - if the DB didn't end up throwing an error
+            if (!IsNullOrEmpty(folder) && Directory.Exists(physPath))
+                Directory.Delete(physPath, true);
+
         }
 
     }
