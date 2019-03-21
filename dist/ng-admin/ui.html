@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Content Editing UI</title>
+    <meta charset="utf-8" />
+    <base href="./ui.html">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script>
+        var jsVersionCacheId = window.location.search;    // use this to prevent
+        document.write('<script src="../../js/2sxc.api.min.js' + jsVersionCacheId + '"></scr' + 'ipt>');
+    </script>
+    <!-- first load the main 2sxc because it contains some url-param methods -->
+    <script>
+        // the version to append to each asset, to ensure reload after an upgrade
+        var sxcVersionParam = "sxcver=" + $2sxc.urlParams.require("sxcver");
+
+        // this creates an object on $.ServicesFramework
+        // it looks like the DNN object and is necessary so that scripts relying on it will work
+        // it basically fakes it, but contains the correct infos like getTabId etc. without needing the full DNN
+        //
+        // important!!!
+        // the ng-admin looks for i and p, not for mid/tid
+        function createFakeSf(apiUrl) {
+            if ($2sxc.urlParams.require("i") === "")
+                alert("ModuleId (mid) missing - cannot continue");
+            if (window.$ === undefined) window.$ = {};
+            window.$.ServicesFramework = function (id) {
+                return {
+                    name: "This is a fake DNN ServicesFramework",
+                    description: "It enables stuff requiring (but not really needing) the sf to work",
+                    getTabId: function () { return $2sxc.urlParams.require("p"); },
+                    getAntiForgeryValue: function () { return "abcdefgihjklmnop"; },
+                    getServiceRoot: function () { return apiUrl; }
+                }
+            }
+        }
+
+        // add a script right then and there to the document
+        function addScript(src) {
+            var async = src.async || false;
+            src = typeof src === "string" ? src : src.url;
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = toMinOrNotToMin(src);
+            document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
+        }
+
+        function toMinOrNotToMin(url) {
+            return $2sxc.parts.getUrl(url, (url.indexOf("lib") > -1)); // never unmin the lib-stuff, as it doesn't have the unminified included
+        }
+    </script>
+
+    <script>
+        // this must come close to the end, after a closed script which might load jQuery
+        var apiUrl = $2sxc.urlParams.require("rtt") 
+            + "desktopmodules/2sxc/api/";
+        createFakeSf(apiUrl);
+    </script>
+
+    <script>
+        var scripts = [
+            'runtime.js',            // default set needed for all UIs like angular, animate, translate
+            'es2015-polyfills.js',    // 2sxc stuff like bootloader, configuration
+            'polyfills.js',
+            'styles.js',            // Main parts like eav-admin, sxc-admin and eav-edit
+            'vendor.js',
+            'main.js'
+        ];
+    </script>
+
+</head>
+
+<body style="background-color:transparent">
+    <app-root></app-root>
+    <script>
+        for (var s = 0; s < scripts.length; s++)
+            addScript(scripts[s]);
+    </script>
+</body>
+
+</html>

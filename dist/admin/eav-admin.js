@@ -1088,7 +1088,7 @@ if (!String.prototype.endsWith) {
 
     //#region new Angular-UIs, especially REST infos
     vm.openRest = function(item) {
-      eavNgDialogs.open('/rest/content-type/' + item.Id + '/' + item.Name + '/' + item.StaticName, vm.refresh,
+      eavNgDialogs.open('/rest/content-type/' + item.Name  /* + '/' + item.StaticName */, vm.refresh,
         function () { console.log('was closed! came back'); });
     };
 
