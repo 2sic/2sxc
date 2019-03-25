@@ -10,13 +10,23 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <script>
-        var jsVersionCacheId = window.location.search;    // use this to prevent
+        var jsVersionCacheId = window.location.search;    // use this to ensure it's loaded once for every version
         document.write('<script src="../../js/2sxc.api.min.js' + jsVersionCacheId + '"></scr' + 'ipt>');
     </script>
     <!-- first load the main 2sxc because it contains some url-param methods -->
     <script>
+        /**
+         * first check in local storage if we have this parameter
+         * as it will often disappear from the url when navigating
+         * if not found, use from url
+         * the $2sxc.urlParams.require will throw an error, if not found
+         */
+        function reqParam(paramName) {
+            return localStorage.getItem(paramName) || $2sxc.urlParams.require(paramName);
+        }
+
         // the version to append to each asset, to ensure reload after an upgrade
-        var sxcVersionParam = "sxcver=" + $2sxc.urlParams.require("sxcver");
+        var sxcVersionParam = "sxcver=" + reqParam("sxcver");
 
         // this creates an object on $.ServicesFramework
         // it looks like the DNN object and is necessary so that scripts relying on it will work
@@ -25,14 +35,21 @@
         // important!!!
         // the ng-admin looks for i and p, not for mid/tid
         function createFakeSf(apiUrl) {
-            if ($2sxc.urlParams.require("i") === "")
-                alert("ModuleId (mid) missing - cannot continue");
+            if (reqParam("i") === "")
+                alert("ModuleId (i = mid) missing - cannot continue");
+            var pageId = reqParam("p");
+            if(pageId === '')
+                alert("PageId (p = tid) missing, cannot continue")
+
+            // create a fake jQuery object, as it shouldn't exist, but is where the ServicesFramework is attached
             if (window.$ === undefined) window.$ = {};
+            
+            // create a fake ServicesFramework, which $2sxc will pick up
             window.$.ServicesFramework = function (id) {
                 return {
                     name: "This is a fake DNN ServicesFramework",
                     description: "It enables stuff requiring (but not really needing) the sf to work",
-                    getTabId: function () { return $2sxc.urlParams.require("p"); },
+                    getTabId: function () { return pageId; },
                     getAntiForgeryValue: function () { return "abcdefgihjklmnop"; },
                     getServiceRoot: function () { return apiUrl; }
                 }
@@ -56,8 +73,7 @@
 
     <script>
         // this must come close to the end, after a closed script which might load jQuery
-        var apiUrl = $2sxc.urlParams.require("rtt") 
-            + "desktopmodules/2sxc/api/";
+        var apiUrl = reqParam("rtt") + "desktopmodules/2sxc/api/";
         createFakeSf(apiUrl);
     </script>
 
