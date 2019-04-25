@@ -22,6 +22,7 @@ namespace ToSic.SexyContent.WebApi.Adam
     {
         public string Field;
         public bool UserIsRestricted;
+        public bool UserMayAdminSiteFiles;
         public Guid Guid;
         internal ContainerBase ContainerContext;
         internal AdamAppContext AdamAppContext;
@@ -37,18 +38,28 @@ namespace ToSic.SexyContent.WebApi.Adam
         /// Initializes the object and performs all the initial security checks
         /// </summary>
         public AdamSecureState(SxcInstance sxcInstance, int appId, string contentType, string field, Guid guid, bool usePortalRoot, Log log)
-            : base(sxcInstance, appId, contentType, log)
+            : base(sxcInstance, appId, usePortalRoot ? new string[]{} : new []{contentType}, log)
         {
-            Field = field;
-            Guid = guid;
-            // 2018-11-12 2dm disabled this as it's always checked by the code using the secure state
-            //if(!EnsureAll(GrantSets.WriteSomething, out var exp))
-            //    throw exp;
-            UserIsRestricted = !PermissionCheckers.First().Value.UserMay(GrantSets.WritePublished);
+            // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
+            if (!usePortalRoot)
+            {
+                Field = field;
+                Guid = guid;
+            }
 
-            Log.Add($"AdamSecureState - field:{field}, guid:{guid}, restricted:{UserIsRestricted}");
+            var firstChecker = PermissionCheckers.First().Value;
+            var userMayAdminSomeFiles = firstChecker.UserMay(GrantSets.WritePublished);
+            UserMayAdminSiteFiles = firstChecker.GrantedBecause == ConditionType.EnvironmentGlobal ||
+                                   firstChecker.GrantedBecause == ConditionType.EnvironmentInstance;
 
-            SecurityChecks.ThrowIfAccessingRootButNotAllowed(usePortalRoot, UserIsRestricted);// PermissionCheckers.First().Value);
+            UserIsRestricted = !(usePortalRoot
+                ? UserMayAdminSiteFiles
+                : userMayAdminSomeFiles);
+
+
+            Log.Add($"AdamSecureState - field:{field}, guid:{guid}, adminSome:{userMayAdminSomeFiles}, restricted:{UserIsRestricted}");
+
+            SecurityChecks.ThrowIfAccessingRootButNotAllowed(usePortalRoot, UserIsRestricted);
 
             Log.Add("check if feature enabled");
             if (UserIsRestricted && !Feats.Enabled(FeaturesForRestrictedUsers))
@@ -221,5 +232,10 @@ namespace ToSic.SexyContent.WebApi.Adam
 
             return false;
         }
+
+        protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks() 
+            => ContentTypes.Any() 
+                ? InitPermissionChecksForType(ContentTypes) 
+                : InitPermissionChecksForApp();
     }
 }

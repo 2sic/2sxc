@@ -59,12 +59,9 @@ namespace ToSic.SexyContent.WebApi.Adam
 
         [AssertionMethod]
         internal static void ThrowIfAccessingRootButNotAllowed(bool usePortalRoot, bool userIsRestricted)
-            //IPermissionCheck permCheck)
         {
-            //var everywhereOk = permCheck.UserMay(GrantSets.WritePublished);
-            if (usePortalRoot && userIsRestricted)// !everywhereOk)
+            if (usePortalRoot && userIsRestricted)
                 throw Http.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
-            //return everywhereOk;
         }
 
         internal static bool CanEdit(IFileInfo file)

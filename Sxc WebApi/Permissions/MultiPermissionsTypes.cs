@@ -13,25 +13,22 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
         public MultiPermissionsTypes(SxcInstance sxcInstance, int appId, string contentType, Log parentLog) 
             : this(sxcInstance, appId, new []{contentType}, parentLog)
-        {
-        }
+        { }
 
         public MultiPermissionsTypes(SxcInstance sxcInstance, int appId, IEnumerable<string> contentTypes, Log parentLog) 
-            : base(sxcInstance, appId, parentLog)
-        {
-            ContentTypes = contentTypes;
-        }
+            : base(sxcInstance, appId, parentLog) 
+            => ContentTypes = contentTypes;
 
         public MultiPermissionsTypes(SxcInstance sxcInstance, int appId, List<ItemIdentifier> items, Log parentLog) 
-            : base(sxcInstance, appId, parentLog)
-        {
-            ContentTypes = ExtractTypeNamesFromItems(items);
-        }
+            : base(sxcInstance, appId, parentLog) 
+            => ContentTypes = ExtractTypeNamesFromItems(items);
 
 
         protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks()
-            => ContentTypes.Distinct().ToDictionary(t => t, BuildTypePermissionChecker);
+            => InitPermissionChecksForType(ContentTypes);
 
+        protected Dictionary<string, IPermissionCheck> InitPermissionChecksForType(IEnumerable<string> contentTypes)
+            => contentTypes.Distinct().ToDictionary(t => t, BuildTypePermissionChecker);
 
         private IEnumerable<string> ExtractTypeNamesFromItems(IEnumerable<ItemIdentifier> items)
         {
