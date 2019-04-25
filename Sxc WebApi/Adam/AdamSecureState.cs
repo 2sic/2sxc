@@ -38,7 +38,7 @@ namespace ToSic.SexyContent.WebApi.Adam
         /// Initializes the object and performs all the initial security checks
         /// </summary>
         public AdamSecureState(SxcInstance sxcInstance, int appId, string contentType, string field, Guid guid, bool usePortalRoot, Log log)
-            : base(sxcInstance, appId, usePortalRoot ? new string[]{} : new []{contentType}, log)
+            : base(sxcInstance, appId, contentType, log)
         {
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
             if (!usePortalRoot)
@@ -114,15 +114,15 @@ namespace ToSic.SexyContent.WebApi.Adam
 
         public bool FileTypeIsOkForThisField(out HttpResponseException preparedException)
         {
-            var wrap = Log.Call("FileTypeIsOkForThisField");
+            var wrapLog = Log.Call<bool>("FileTypeIsOkForThisField");
             var fieldDef = Attribute;
             bool result;
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
             if (fieldDef == null || !(fieldDef.Type != Eav.Constants.DataTypeHyperlink ||
                                       fieldDef.Type != Eav.Constants.DataTypeString))
             {
-                Log.Add($"field type:{fieldDef?.Type} - does not allow upload");
                 preparedException = Http.BadRequest("Requested field '" + Field + "' type doesn't allow upload");
+                Log.Add($"field type:{fieldDef?.Type} - does not allow upload");
                 result = false;
             }
             else
@@ -131,8 +131,7 @@ namespace ToSic.SexyContent.WebApi.Adam
                 preparedException = null;
                 result = true;
             }
-            wrap(result.ToString());
-            return result;
+            return wrapLog(result.ToString(), result);
         }
 
         public bool UserIsPermittedOnField(List<Grants> requiredPermissions, out HttpResponseException preparedException)
@@ -187,6 +186,7 @@ namespace ToSic.SexyContent.WebApi.Adam
 
         internal bool CustomFileFilterOk(string additionalFilter, string fileName)
         {
+            var wrapLog = Log.Call<bool>("CustomFileFilterOk");
             var extension = Path.GetExtension(fileName)?.TrimStart('.') ?? "";
             var hasNonAzChars = new Regex("[^a-z]", RegexOptions.IgnoreCase);
 
@@ -199,29 +199,22 @@ namespace ToSic.SexyContent.WebApi.Adam
                 // just a-z characters
                 if (!hasNonAzChars.IsMatch(f))
                     if (extension == f)
-                    {
-                        Log.Add($"filter {f} matched filename {fileName}");
-                        return true;
-                    }
-                    else continue;
+                        return wrapLog($"filter {f} matched filename {fileName}", true);
+                    else
+                        continue;
 
                 // could be regex or simple *.ext
                 if (f.StartsWith("*."))
                     if (string.Equals(extension, f.Substring(2), StringComparison.OrdinalIgnoreCase))
-                    {
-                        Log.Add($"filter {f} matched filename {fileName}");
-                        return true;
-                    }
-                    else continue;
+                        return wrapLog($"filter {f} matched filename {fileName}", true);
+                    else
+                        continue;
 
                 // it's a regex
                 try
                 {
                     if (new Regex(f, RegexOptions.IgnoreCase).IsMatch(fileName))
-                    {
-                        Log.Add($"filter {f} matched filename {fileName}");
-                        return true;
-                    }
+                        return wrapLog($"filter {f} matched filename {fileName}", true);
                 }
                 catch
                 {
@@ -233,9 +226,9 @@ namespace ToSic.SexyContent.WebApi.Adam
             return false;
         }
 
-        protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks() 
-            => ContentTypes.Any() 
-                ? InitPermissionChecksForType(ContentTypes) 
-                : InitPermissionChecksForApp();
+        //protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks() 
+        //    => ContentTypes.Any() 
+        //        ? InitPermissionChecksForType(ContentTypes) 
+        //        : InitPermissionChecksForApp();
     }
 }
