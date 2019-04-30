@@ -5376,6 +5376,7 @@ $(document).ready(function () {
  * @param isFirstRun should be true only on the very initial call
  */
 function initAllInstances(isFirstRun) {
+    window_in_page_1.windowInPage.$2sxc.stats.watchDomChanges++;
     $('div[data-edit-context]').each(function () { initInstance(this, isFirstRun); });
     if (isFirstRun)
         tryShowTemplatePicker();
