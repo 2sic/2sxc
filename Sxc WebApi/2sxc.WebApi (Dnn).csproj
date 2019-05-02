@@ -100,6 +100,9 @@
     <Compile Include="Adam\UploadResult.cs" />
     <Compile Include="AppContentEntityBuilder.cs" />
     <Compile Include="AutoDetectContext\Route.cs" />
+    <Compile Include="Cors\CorsLocalDevelopmentHandler.cs" />
+    <Compile Include="Cors\HttpRequestHeadersExtensions.cs" />
+    <Compile Include="Cors\HttpResponseHeadersExtensions.cs" />
     <Compile Include="EavApiProxies\UiController_Save.cs" />
     <Compile Include="EavApiProxies\UiController_Load.cs" />
     <Compile Include="EavApiProxies\ValidatorBase.cs" />
