@@ -11,8 +11,7 @@ namespace ToSic.SexyContent.WebApi.Cors
     class CorsLocalDevelopmentHandler : DelegatingHandler
     {
         private readonly Regex considerLocal = new Regex("^https?://(local(host)?|.*.dnndev.me)(:[0-9]+)?$", RegexOptions.IgnoreCase);
-        private readonly string allowedMethods = "*";
-        private readonly string allowedHeaders = "*";
+        private readonly string allowedMethods = "GET, POST, PUT, PATCH, DELETE";
 
         //private static bool webApiAllowLocalEnabled;
 
@@ -38,7 +37,7 @@ namespace ToSic.SexyContent.WebApi.Cors
                     && considerLocal.Match(origin).Success)
                 {
                     var preflightResponse = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
-                    AppendCorsHeaders(preflightResponse.Headers, origin);
+                    AppendCorsHeaders(preflightResponse.Headers, origin, request.Headers.AccessControlRequestHeaders());
                     return preflightResponse;
                 }
             }
@@ -59,7 +58,7 @@ namespace ToSic.SexyContent.WebApi.Cors
                             && origin != null
                             && considerLocal.Match(origin).Success)
                         {
-                            AppendCorsHeaders(task.Result.Headers, origin);
+                            AppendCorsHeaders(task.Result.Headers, origin, request.Headers.AccessControlRequestHeaders());
                         }
                     }
                     catch (Exception) { } // fail silently on errors
@@ -68,7 +67,7 @@ namespace ToSic.SexyContent.WebApi.Cors
                 }, cancellationToken);
         }
 
-        private void AppendCorsHeaders(HttpResponseHeaders headerCollection, string origin)
+        private void AppendCorsHeaders(HttpResponseHeaders headerCollection, string origin, string allowedHeaders)
         {
             headerCollection.Set("Access-Control-Allow-Origin", origin);
             headerCollection.Set("Access-Control-Allow-Methods", allowedMethods);
