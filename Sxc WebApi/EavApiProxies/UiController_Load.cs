@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // load content-types
             var types = UsedTypes(list, typeRead);
-            result.ContentTypes = types.Select(JsonSerializer.ToJson).ToList();
+            result.ContentTypes = types.Select(ct => JsonSerializer.ToJson(ct, true)).ToList();
 
             // load input-field configurations
             result.InputTypes = GetNecessaryInputTypes(types, typeRead);
