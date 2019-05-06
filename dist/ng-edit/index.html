@@ -7,6 +7,14 @@
   <base href=".\">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script>
+    var jsVersionCacheId = window.location.search;    // use this to prevent
+    document.write('<script src="../../js/2sxc.api.min.js' + jsVersionCacheId + '"></scr' + 'ipt>');
+  </script>
+
+  <script src='assets/script/dropzone-dragging-helper.js'></script>
+
   <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 
@@ -20,11 +28,26 @@
   <!-- <script src='assets/script/tinymce/js/tinymce/tinymce.min.js'></script> -->
   <!-- <script src='https://cloud.tinymce.com/stable/tinymce.min.js'></script> -->
 
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i" rel="stylesheet" />
+  <!--fontawesome  -->
+  <link rel="stylesheet" href="assets/style/font-awesome/css/solid.min.css" />
+  <link rel="stylesheet" href="assets/style/font-awesome/css/fontawesome.min.css" />
+  <script src="assets/auto-generated/elements/scripts-bundle.js"></script>
+  <script>
+    ng.core.enableProdMode();
+  </script>
+  <!-- <script src="assets/elements/field-string-wysiwyg.js"></script> -->
+<link rel="stylesheet" href="styles.css"></head>
 
-</head>
-
-<body>
+<body id="eav-app">
+  <script>
+    // Fix for IE11 - document.activeElement is not set in iframe
+    const isIE = navigator.userAgent.includes("MSIE") || navigator.userAgent.includes("Trident") || !!document.documentMode;
+    if (isIE) {
+      document.getElementById('eav-app').focus();
+    }
+  </script>
   <app-root></app-root>
-<script type="text/javascript" src="runtime.js"></script><script type="text/javascript" src="polyfills.js"></script><script type="text/javascript" src="styles.js"></script><script type="text/javascript" src="vendor.js"></script><script type="text/javascript" src="main.js"></script></body>
+<script type="text/javascript" src="runtime.js"></script><script type="text/javascript" src="polyfills.js"></script><script type="text/javascript" src="scripts.js"></script><script type="text/javascript" src="main.js"></script></body>
 
 </html>

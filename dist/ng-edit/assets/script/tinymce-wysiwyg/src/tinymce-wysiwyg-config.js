@@ -43,6 +43,7 @@ export default class tinymceWysiwygConfig {
     };
 
     buildModes(settings) {
+        console.log('settings.enableContentBlocks:', settings.enableContentBlocks);
         // the WYSIWYG-modes we offer, standard with simple toolbar and advanced with much more
         return {
             standard: {
@@ -75,7 +76,7 @@ export default class tinymceWysiwygConfig {
         var svc = this.svc();
         return {
             baseURL: svc.cdnRoot,
-            inline: true, // use the div, not an iframe
+            // inline: true, // use the div, not an iframe
             automatic_uploads: false, // we're using our own upload mechanism
             modes: modes, // for later switch to another mode
             menubar: modes.standard.menubar, // basic menu (none)
@@ -84,7 +85,7 @@ export default class tinymceWysiwygConfig {
             contextmenu: modes.standard.contextmenu, //"link image | charmap hr adamimage",
             autosave_ask_before_unload: false,
             paste_as_text: true,
-            extended_valid_elements: this.svc.validateAlso,
+            extended_valid_elements: svc.validateAlso,
             //'@[class]' // allow classes on all elements, 
             //+ ',i' // allow i elements (allows icon-font tags like <i class="fa fa-...">)
             //+ ",hr[sxc|guid]", // experimental: allow inline content-blocks
@@ -99,11 +100,12 @@ export default class tinymceWysiwygConfig {
             // General looks
             skin: "lightgray",
             theme: "modern",
-            // statusbar: true,    // doesn't work in inline :(
+            statusbar: false,    // doesn't work in inline :(
 
             language: svc.defaultLanguage,
 
-            debounce: false // DONT slow-down model updates - otherwise we sometimes miss the last changes
+            debounce: false, // DONT slow-down model updates - otherwise we sometimes miss the last changes
+            // link_context_toolbar: true,
 
             //paste_preprocess: function (plugin, args) {
             //    console.log(args.content);
@@ -116,5 +118,37 @@ export default class tinymceWysiwygConfig {
             //}
         };
     };
+
+    setLanguageOptions(currentLang, options) {
+        // check if it's an additionally translated language and load the translations
+        var lang2 = currentLang.substr(0, 2); //  /* "de" */ 
+        if (this.svc().languages.indexOf(lang2) >= 0) {
+            options = Object.assign(options, {
+                language: lang2,
+                language_url: "/DesktopModules/ToSIC_SexyContent/dist/i18n/lib/tinymce/" + lang2 + ".js"
+            });
+        }
+        return options;
+    }
+
+    addTranslations(language, translateService) {
+        var primaryLan = this.svc().defaultLanguage;
+        var keys = [], mceTranslations = {}, prefix = "Extension.TinyMce", prefixDot = "Extension.TinyMce."//  pLen = prefix.length;
+
+        // find all relevant keys by querying the primary language
+        // var all = translateService.getTranslationTable(primaryLan);
+        var all = translateService.translations[primaryLan];
+        // ReSharper disable once MissingHasOwnPropertyInForeach
+        for (var key in all)
+            if (key.indexOf(prefix) === 0)
+                keys.push(key);
+
+        var translations = translateService.instant(keys);
+
+        for (var k = 0; k < keys.length; k++)
+            mceTranslations[keys[k].replace(prefixDot, '')] = translations[keys[k]];
+
+        tinymce.addI18n(language, translations[keys[0]]);
+    }
 }
 // })();
