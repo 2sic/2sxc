@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public ReplaceSet Replace(Guid guid, string part, int index)
+        public /*ReplaceSet*/ dynamic Replace(Guid guid, string part, int index)
         {
             Log.Add($"replace target:{guid}, part:{part}, index:{index}");
             part = part.ToLower();
@@ -64,10 +64,11 @@ namespace ToSic.SexyContent.WebApi
 
             var selectedId = set.Count == 0 ? null : set[index]?.EntityId;
 
-            return new ReplaceSet
+            return new /*ReplaceSet*/
             {
                 SelectedId = selectedId,
-                Items = results
+                Items = results,
+                ContentTypeName = ct.StaticName
             };
         }
 
@@ -154,11 +155,12 @@ namespace ToSic.SexyContent.WebApi
 
 
         #region helper classes for data transport / json interface
-        public class ReplaceSet
-        {
-            public int? SelectedId { get; set; }
-            public Dictionary<int, string> Items { get; set; }
-        }
+        //public class ReplaceSet
+        //{
+        //    public int? SelectedId { get; set; }
+        //    public Dictionary<int, string> Items { get; set; }
+        //    public string TypeName;
+        //}
 
         public class SortedEntityItem
         {
