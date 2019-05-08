@@ -13,18 +13,13 @@ namespace ToSic.SexyContent.WebApi.Cors
         private readonly Regex considerLocal = new Regex("^https?://(local(host)?|.*.dnndev.me)(:[0-9]+)?$", RegexOptions.IgnoreCase);
         private readonly string allowedMethods = "GET, POST, PUT, PATCH, DELETE";
 
-        //private static bool webApiAllowLocalEnabled;
-
         public CorsLocalDevelopmentHandler()
         {
-            // Features seem not to be initialized at the time this is called
-            // value is always false
-            // webApiAllowLocalEnabled = Features.Enabled(FeatureIds.WebApiOptionsAllowLocal);
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            try
+            try // Wrap everything in a try/catch block to prevent errors
             {
                 var webApiAllowLocalEnabled = Features.Enabled(FeatureIds.WebApiOptionsAllowLocal);
                 var origin = request.Headers.Origin();
