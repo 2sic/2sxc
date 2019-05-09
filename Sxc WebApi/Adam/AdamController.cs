@@ -95,31 +95,28 @@ namespace ToSic.Sxc.Adam.WebApi
         [HttpGet]
         public IEnumerable<AdamItem> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
-            Log.Add($"adam items a:{appId}, i:{guid}, field:{field}, subfold:{subfolder}, useRoot:{usePortalRoot}");
+            var wrapLog = Log.Call<IEnumerable<AdamItem>>("Items",
+                $"adam items a:{appId}, i:{guid}, field:{field}, subfold:{subfolder}, useRoot:{usePortalRoot}");
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
+
+
             Log.Add("starting permissions checks");
             if (state.UserIsRestricted && !state.FieldPermissionOk(GrantSets.ReadSomething))
-            {
-                Log.Add("user is restricted, and doesn't have permissions on field - return null");
-                return null;
-            }
+                return wrapLog("user is restricted, and doesn't have permissions on field - return null", null);
 
             // check that if the user should only see drafts, he doesn't see items of published data
             if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var _))
-            {
-                Log.Add("user is restricted (no read-published rights) and item is published - return null");
-                return null;
-            }
+                return wrapLog("user is restricted (no read-published rights) and item is published - return null", null);
 
             Log.Add("first permission checks passed");
 
-            var folderManager = FolderManager.Instance;
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
             state.ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
             var currentAdam = state.ContainerContext.Folder(subfolder, false);
+            var folderManager = FolderManager.Instance;
             var currentDnn = folderManager.GetFolder(currentAdam.Id);
 
             // ensure that it's super user, or the folder is really part of this item

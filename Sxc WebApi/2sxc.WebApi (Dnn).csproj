@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2F0610DE-2518-4FC8-823E-7228DD17C04F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ToSic.SexyContent.WebApi</RootNamespace>
+    <AssemblyName>ToSic.SexyContent.WebApi</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'efc and WebApi|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\efc and WebApi\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'debug eav only|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\debug eav only\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dbg Testing|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Dbg Testing\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotNetNuke">
+      <HintPath>..\..\..\bin\DotNetNuke.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetNuke.Web">
+      <HintPath>..\..\..\bin\DotNetNuke.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\eav-server\packages\JetBrains.Annotations.10.2.1\lib\net\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\eav-server\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\eav-server\packages\System.Collections.Immutable.1.3.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Adam\AdamSecureState.cs" />
+    <Compile Include="Adam\AdamItem.cs" />
+    <Compile Include="Adam\AdamUploader.cs" />
+    <Compile Include="Adam\SecurityChecks.cs" />
+    <Compile Include="Adam\UploadResult.cs" />
+    <Compile Include="AppContentEntityBuilder.cs" />
+    <Compile Include="AutoDetectContext\Route.cs" />
+    <Compile Include="Cors\CorsLocalDevelopmentHandler.cs" />
+    <Compile Include="Cors\HttpRequestHeadersExtensions.cs" />
+    <Compile Include="Cors\HttpResponseHeadersExtensions.cs" />
+    <Compile Include="EavApiProxies\UiController_Save.cs" />
+    <Compile Include="EavApiProxies\UiController_Load.cs" />
+    <Compile Include="EavApiProxies\ValidatorBase.cs" />
+    <Compile Include="EavApiProxies\SaveDataValidator.cs" />
+    <Compile Include="AutoDetectContext\AppFinder.cs" />
+    <Compile Include="Permissions\IMultiPermissionCheck.cs" />
+    <Compile Include="Permissions\MultiPermissionsBase.cs" />
+    <Compile Include="Permissions\MultiPermissionsApp.cs" />
+    <Compile Include="Permissions\MultiPermissionsTypes.cs" />
+    <Compile Include="Permissions\MultiPermissionsItems.cs" />
+    <Compile Include="Permissions\PermissionCheckWithEnsure.cs" />
+    <Compile Include="Permissions\PublicFormsPermissions.cs" />
+    <Compile Include="Permissions\ReuseApp.cs" />
+    <Compile Include="RouteParts.cs" />
+    <Compile Include="SaveHelpers\ContentGroupList.cs" />
+    <Compile Include="SaveHelpers\DnnPublishing.cs" />
+    <Compile Include="SaveHelpers\SaveHelperBase.cs" />
+    <Compile Include="SaveHelpers\Security.cs" />
+    <Compile Include="System\InsightsController_IsAlive.cs" />
+    <Compile Include="System\InsightsController_App.cs" />
+    <Compile Include="System\InsightsController_Help.cs" />
+    <Compile Include="System\InsightsController_Entities.cs" />
+    <Compile Include="System\InsightsController_Log.cs" />
+    <Compile Include="System\InsightsController_Metadata.cs" />
+    <Compile Include="System\InsightsController_Attributes.cs" />
+    <Compile Include="System\InsightsController_ParamChecks.cs" />
+    <Compile Include="System\InsightsController_Types.cs" />
+    <Compile Include="System\InsightsController_AppActions.cs" />
+    <Compile Include="System\InsightsController_Html.cs" />
+    <Compile Include="EavApiProxies\SystemController.cs" />
+    <Compile Include="EavApiProxies\AllInOne.cs" />
+    <Compile Include="EavApiProxies\UiController.cs" />
+    <Compile Include="Errors\Http.cs" />
+    <Compile Include="FeaturesManagementUtils.cs" />
+    <Compile Include="System\InsightsController.cs" />
+    <Compile Include="SxcApiControllerBase.cs" />
+    <Compile Include="WebApiLogDetails.cs" />
+    <Compile Include="Adam\AdamController.cs" />
+    <Compile Include="AppApiControllerSelector.cs" />
+    <Compile Include="AppAssetsController.cs" />
+    <Compile Include="AppContentController.cs" />
+    <Compile Include="AppQueryController.cs" />
+    <Compile Include="ContentGroupController.cs" />
+    <Compile Include="Dnn\DnnApiControllerWithFixes.cs" />
+    <Compile Include="Dnn\HyperlinkController.cs" />
+    <Compile Include="Dnn\ModuleController.cs" />
+    <Compile Include="EavApiProxies\ContentExportController.cs" />
+    <Compile Include="EavApiProxies\ContentImportController.cs" />
+    <Compile Include="EavApiProxies\ContentTypeController.cs" />
+    <Compile Include="EavApiProxies\EntitiesController.cs" />
+    <Compile Include="EavApiProxies\EntityPickerController.cs" />
+    <Compile Include="EavApiProxies\MetadataController.cs" />
+    <Compile Include="EavApiProxies\PipelineDesignerController.cs" />
+    <Compile Include="Helpers.cs" />
+    <Compile Include="ImportExportController.cs" />
+    <Compile Include="ImportExport\HttpResponseMessageHelper.cs" />
+    <Compile Include="ImportExport\SxcAppWrapper.cs" />
+    <Compile Include="InstallerController.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouteMapper.cs" />
+    <Compile Include="SxcApiController.cs" />
+    <Compile Include="SxcWebApiExceptionHandling.cs" />
+    <Compile Include="SystemController.cs" />
+    <Compile Include="TemplateController.cs" />
+    <Compile Include="ToRefactorDeliverCBDataLight\GetContentBlockDataLight.cs" />
+    <Compile Include="View\ModuleController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">
+      <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
+      <Name>ToSic.Eav.Apps</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
+      <Project>{82f94588-269b-4cdd-98d1-d5cb14c39090}</Project>
+      <Name>ToSic.Eav.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj">
+      <Project>{daae8e21-ca5f-400b-9f5a-5e4e1196b21b}</Project>
+      <Name>ToSic.Eav.DataSources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj">
+      <Project>{5a75cd35-99f4-4cf0-944a-dc0f5d68b430}</Project>
+      <Name>ToSic.Eav.ImportExport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.Tokens\ToSic.Eav.TokenEngine.csproj">
+      <Project>{2a81f269-8cca-4afd-a85f-82b1c2343965}</Project>
+      <Name>ToSic.Eav.TokenEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj">
+      <Project>{f93f5fb1-95a6-4c4b-bdcf-b001e82f766f}</Project>
+      <Name>ToSic.Eav.WebApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\2sxc Dnn\2sxc Dnn.csproj">
+      <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
+      <Name>2sxc Dnn</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToSic.Sxc\2sxc core %28ToSic.Sxc%29.csproj">
+      <Project>{66318f76-3d43-406c-8de6-94b46c22f776}</Project>
+      <Name>2sxc core %28ToSic.Sxc%29</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

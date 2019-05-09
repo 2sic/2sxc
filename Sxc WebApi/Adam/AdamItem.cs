@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Type = "unknown"; // will be set from the outside
             Created = original.CreatedOnDate;
             Modified = original.LastModifiedOnDate;
-            AllowEdit = usePortalRoot ? SecurityChecks.CanEdit(original) : (!state.UserIsRestricted || state.FieldPermissionOk(GrantSets.WriteSomething));
+            AllowEdit = usePortalRoot ? SecurityChecks.CanEdit(original) : !state.UserIsRestricted || state.FieldPermissionOk(GrantSets.WriteSomething);
         }
 
         internal AdamItem(IFolderInfo original, bool usePortalRoot, AdamSecureState state)
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Type = "folder";
             Created = original.CreatedOnDate;
             Modified = original.LastModifiedOnDate;
-            AllowEdit = usePortalRoot ? SecurityChecks.CanEdit(original) : (!state.UserIsRestricted || state.FieldPermissionOk(GrantSets.WriteSomething));
+            AllowEdit = usePortalRoot ? SecurityChecks.CanEdit(original) : !state.UserIsRestricted || state.FieldPermissionOk(GrantSets.WriteSomething);
         }
     }
 }

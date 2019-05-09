@@ -46,12 +46,15 @@ namespace ToSic.SexyContent.WebApi.Permissions
         }
 
         protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks()
+            => InitPermissionChecksForApp();
+
+        protected Dictionary<string, IPermissionCheck> InitPermissionChecksForApp()
             => new Dictionary<string, IPermissionCheck>
             {
                 {"App", BuildPermissionChecker()}
             };
 
-        public override bool ZoneAsInContextOrSuperUser(out HttpResponseException exp)
+        public sealed override bool ZoneIsOfCurrentContextOrUserIsSuper(out HttpResponseException exp)
         {
             var wrapLog = Log.Call("ZoneChangedAndNotSuperUser()");
             var zoneSameOrSuperUser = SamePortal || PortalSettings.Current.UserInfo.IsSuperUser;
@@ -64,6 +67,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         }
 
 
+
         /// <summary>
         /// Creates a permission checker for an app
         /// Optionally you can provide a type-name, which will be 
@@ -72,7 +76,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
         /// <returns></returns>
         protected IPermissionCheck BuildPermissionChecker(IContentType type = null, IEntity item = null)
         {
-            Log.Add("BuildPermissionChecker(...)");
+            Log.Add($"BuildPermissionChecker(type:{type?.Name}, item:{item?.EntityId})");
 
             // user has edit permissions on this app, and it's the same app as the user is coming from
             return new DnnPermissionCheck(Log,

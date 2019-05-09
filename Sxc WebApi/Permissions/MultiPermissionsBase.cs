@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
         protected abstract Dictionary<string, IPermissionCheck> InitializePermissionChecks();
 
-        public abstract bool ZoneAsInContextOrSuperUser(out HttpResponseException exp);
+        public abstract bool ZoneIsOfCurrentContextOrUserIsSuper(out HttpResponseException exp);
 
         #endregion
 
@@ -46,19 +46,23 @@ namespace ToSic.SexyContent.WebApi.Permissions
         /// <returns>True if all pass, false if any one fails</returns>
         public bool EnsureAll(List<Grants> grants, out HttpResponseException preparedException)
         {
-            Log.Call("Ensure");
+            var wrap = Log.Call("EnsureAll");
             foreach (var set in PermissionCheckers)
                 if (!set.Value.Ensure(grants, out preparedException))
+                {
+                    wrap(false.ToString());
                     return false;
+                }
 
             preparedException = null;
+            wrap(true.ToString());
             return true;
         }
 
         //2018-09-22 2dm removed again, as all internal checks actually already do this
         //public bool SameAppOrIsSuperUserAndEnsure(List<Grants> grants, out HttpResponseException preparedException)
         //{
-        //    if (!ZoneAsInContextOrSuperUser(out preparedException))
+        //    if (!ZoneIsOfCurrentContextOrUserIsSuper(out preparedException))
         //        return false;
         //    if (!EnsureAll(grants, out preparedException))
         //        return false;

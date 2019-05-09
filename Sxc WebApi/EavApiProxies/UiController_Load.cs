@@ -38,10 +38,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var entityApi = new EntityApi(appId, Log);
             var typeRead = entityApi.AppManager.Read.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(appId, items);
+            var jsonSerializer = new JsonSerializer();
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
-                Entity = JsonSerializer.ToJson(e.Entity ?? ConstructEmptyEntity(appId, e.Header, typeRead))
+                Entity = jsonSerializer.ToJson(e.Entity ?? ConstructEmptyEntity(appId, e.Header, typeRead))
             }).ToList();
 
             // set published if some data already exists
@@ -50,7 +51,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // load content-types
             var types = UsedTypes(list, typeRead);
-            result.ContentTypes = types.Select(JsonSerializer.ToJson).ToList();
+            result.ContentTypes = types.Select(ct => JsonSerializer.ToJson(ct, true)).ToList();
 
             // load input-field configurations
             result.InputTypes = GetNecessaryInputTypes(types, typeRead);
