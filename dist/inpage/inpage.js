@@ -2803,7 +2803,7 @@ var DialogPaths;
 (function (DialogPaths) {
     DialogPaths["ng1"] = "dist/dnn/ui.html";
     DialogPaths["quickDialog"] = "dist/ng/ui.html";
-    DialogPaths["ng5"] = "dist/ng-edit/index.html";
+    DialogPaths["ng5"] = "dist/ng-edit/ui.html";
 })(DialogPaths = exports.DialogPaths || (exports.DialogPaths = {}));
 
 
