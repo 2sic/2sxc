@@ -48,9 +48,6 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         private string SettingsJson => JsonConvert.SerializeObject(_fullSettings);
 
-        //[JsonIgnore]
-        //public string ToolbarTemplate = "<ul class=\"sc-menu\" {0}></ul>";
-
         [JsonIgnore]
         public string Toolbar =>
             $"<ul class=\"sc-menu\" {SexyContent.Html.Build.Attribute("toolbar", ToolbarJson)} {SexyContent.Html.Build.Attribute("settings", SettingsJson)}></ul>";

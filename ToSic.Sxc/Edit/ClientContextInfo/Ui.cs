@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
         {
             AutoToolbar = autoToolbar;
 
-            Form = Features.Enabled(FeatureIds.Angular5Ui) ? "ng5" : null;
+            Form = Features.Enabled(FeatureIds.PreferOldFormsToNewAngularUi) ? null : "ng8";
         }
     }
 }

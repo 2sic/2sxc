@@ -375,7 +375,7 @@ function createContextFromEditContext(editContext) {
     if (editContext.Ui) {
         contextOfButton.ui.autoToolbar = editContext.Ui.AutoToolbar; // toolbar auto-show
         if (editContext.Ui.Form)
-            contextOfButton.ui.form = editContext.Ui.Form; // decide which dialog opens, eg ng5
+            contextOfButton.ui.form = editContext.Ui.Form; // decide which dialog opens, eg ng8
     }
     // *** ContextOfContentBlock ***
     // information related to the current contentBlock
@@ -2803,7 +2803,7 @@ var DialogPaths;
 (function (DialogPaths) {
     DialogPaths["ng1"] = "dist/dnn/ui.html";
     DialogPaths["quickDialog"] = "dist/ng/ui.html";
-    DialogPaths["ng5"] = "dist/ng-edit/ui.html";
+    DialogPaths["ng8"] = "dist/ng-edit/ui.html";
 })(DialogPaths = exports.DialogPaths || (exports.DialogPaths = {}));
 
 
@@ -4329,7 +4329,7 @@ var command_1 = __webpack_require__(84);
 function commandCreate(context) {
     var ngDialogUrl = context.instance.sxcRootUrl +
         'desktopmodules/tosic_sexycontent/' +
-        ((context.ui.form === 'ng5' && context.button.dialog(context) === 'edit') ? DialogPaths_1.DialogPaths.ng5 : DialogPaths_1.DialogPaths.ng1) +
+        ((context.ui.form === 'ng8' && context.button.dialog(context) === 'edit') ? DialogPaths_1.DialogPaths.ng8 : DialogPaths_1.DialogPaths.ng1) +
         '?sxcver=' + context.instance.sxcVersion;
     var isDebug = window_in_page_1.windowInPage.$2sxc.urlParams.get('debug') ? '&debug=true' : '';
     var cmd = new command_1.Command(context, ngDialogUrl, isDebug);
@@ -4725,7 +4725,7 @@ var DialogPaths_1 = __webpack_require__(40);
 function rewriteUrl(url) {
     // change default url-schema from the primary angular-app to the quick-dialog
     url = url.replace(DialogPaths_1.DialogPaths.ng1, DialogPaths_1.DialogPaths.quickDialog)
-        .replace(DialogPaths_1.DialogPaths.ng5, DialogPaths_1.DialogPaths.quickDialog);
+        .replace(DialogPaths_1.DialogPaths.ng8, DialogPaths_1.DialogPaths.quickDialog);
     url = changePathToDevIfNecessary(url);
     return url;
 }
