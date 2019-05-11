@@ -4344,6 +4344,14 @@ exports.commandCreate = commandCreate;
 
 "use strict";
 
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var ng_dialog_params_1 = __webpack_require__(85);
 var _2sxc_translate_1 = __webpack_require__(9);
@@ -4361,43 +4369,30 @@ var Command = /** @class */ (function () {
         };
         this.addSimpleItem = function () {
             var item = {};
-            var ct = _this.context.button.action.params.contentType || _this.context.button.action.params.attributeSetName; // two ways to name the content-type-name this, v 7.2+ and older
-            if (_this.context.button.action.params.entityId) {
-                item.EntityId = _this.context.button.action.params.entityId;
-            }
-            if (ct) {
+            var params = _this.context.button.action.params;
+            var ct = params.contentType || params.attributeSetName; // two ways to name the content-type-name this, v 7.2+ and older
+            if (params.entityId)
+                item.EntityId = params.entityId;
+            if (ct)
                 item.ContentTypeName = ct;
-            }
             // only add if there was stuff to add
             if (item.EntityId || item.ContentTypeName) {
-                _this.items.push(item);
+                console.warn('used the simple item header - test if dialog still works!');
+                // this.items.push(item);
+                _this.items.push(__assign({}, item, { Title: _2sxc_translate_1.translate(_this.findTranslationKey(_this.findPartName(true))) }));
             }
-        };
-        // this adds an item of the content-group, based on the group GUID and the sequence number
-        this.addContentGroupItem = function (guid, index, part, isAdd, isEntity, cbid, sectionLanguageKey) {
-            _this.items.push({
-                Group: {
-                    Guid: guid,
-                    Index: index,
-                    Part: part,
-                    Add: isAdd,
-                },
-                Title: _2sxc_translate_1.translate(sectionLanguageKey),
-            });
         };
         // this will tell the command to edit a item from the sorted list in the group, optionally together with the presentation item
         this.addContentGroupItemSetsToEditList = function (withPresentation) {
             var isContentAndNotHeader = (_this.context.button.action.params.sortOrder !== -1);
             var index = isContentAndNotHeader ? _this.context.button.action.params.sortOrder : 0;
-            var prefix = isContentAndNotHeader ? '' : 'List';
-            var cTerm = prefix + 'Content';
-            var pTerm = prefix + 'Presentation';
+            var cTerm = _this.findPartName(true);
+            var pTerm = _this.findPartName(false);
             var isAdd = _this.context.button.action.name === 'new';
             var groupId = _this.context.contentBlock.contentGroupId;
-            _this.addContentGroupItem(groupId, index, cTerm.toLowerCase(), isAdd, _this.context.contentBlock.isEntity, _this.context.contentBlock.id, "EditFormTitle." + cTerm);
-            if (withPresentation) {
-                _this.addContentGroupItem(groupId, index, pTerm.toLowerCase(), isAdd, _this.context.contentBlock.isEntity, _this.context.contentBlock.id, "EditFormTitle." + pTerm);
-            }
+            _this.addContentGroupItem(groupId, index, cTerm, isAdd);
+            if (withPresentation)
+                _this.addContentGroupItem(groupId, index, pTerm, isAdd);
         };
         // build the link, combining specific params with global ones and put all in the url
         this.generateLink = function (context) {
@@ -4439,6 +4434,27 @@ var Command = /** @class */ (function () {
             dialog: dialog || context.button.action.name,
         }, params);
     }
+    // this adds an item of the content-group, based on the group GUID and the sequence number
+    Command.prototype.addContentGroupItem = function (guid, index, part, isAdd) {
+        this.items.push({
+            Group: {
+                Guid: guid,
+                Index: index,
+                Part: part.toLocaleLowerCase(),
+                Add: isAdd,
+            },
+            Title: _2sxc_translate_1.translate(this.findTranslationKey(part)),
+        });
+    };
+    /** find the part name for both the API to give the right item (when using groups) and for i18n */
+    Command.prototype.findPartName = function (content) {
+        var isContentAndNotHeader = (this.context.button.action.params.sortOrder !== -1);
+        return (isContentAndNotHeader ? '' : 'List') + (content ? 'Content' : 'Presentation');
+    };
+    /** find the correct i18n key for this part */
+    Command.prototype.findTranslationKey = function (partName) {
+        return "EditFormTitle." + partName;
+    };
     return Command;
 }());
 exports.Command = Command;
@@ -8831,9 +8847,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 /***/ }),
 /* 160 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-// ReSharper restore InconsistentNaming
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 
 
 /***/ }),
