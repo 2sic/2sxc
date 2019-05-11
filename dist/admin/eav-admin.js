@@ -3121,37 +3121,38 @@ angular.module("eavNgSvcs", ["ng"])
 
 ;
 
-// metadata
-// retrieves metadata for an entity or an attribute
-
-angular.module('EavServices')
-  // Management actions which are rather advanced metadata kind of actions
-  .factory('featuresSvc',
-  ["$http", "appId", "$q", function ($http, appId, $q) {
+angular
+  .module("EavServices")
+  // features Services
+  // checks if a feature is enabled
+  .factory("featuresSvc", ["$http", "appId", "$q", function($http, appId, $q) {
     var svc = {
-      list: []
+      list: [],
+      ids: {
+        pasteImage: "f6b8d6da-4744-453b-9543-0de499aa2352",
+        pasteWysiwyg: "1b13e0e6-a346-4454-a1e6-2fb18c047d20"
+      }
     };
 
-      svc.getFeatures = function() {
-        return $http.get('eav/system/features',
-          {
-            params: {
-              appId: appId
-            }
-          });
-      };
+    svc.getFeatures = function() {
+      return $http.get("eav/system/features", {
+        params: {
+          appId: appId
+        }
+      });
+    };
 
     svc.promise = svc.getFeatures();
     svc.promise.then(function(data) {
       svc.list = data.data;
     });
 
-    svc.enabledNow = function(guid) {
-      for (var i = 0; i < svc.list.length; i++)
-        if (svc.list[i].id === guid)
-          return svc.list[i].enabled;
-      return false;
-    };
+    // 2019-05-11 2dm believe this is not used
+    // svc.enabledNow = function(guid) {
+    //   for (var i = 0; i < svc.list.length; i++)
+    //     if (svc.list[i].id === guid) return svc.list[i].enabled;
+    //   return false;
+    // };
 
     svc.enabled = function(guid) {
       return $q(function(resolve) {
@@ -3160,10 +3161,10 @@ angular.module('EavServices')
         });
       });
     };
-      
 
-      return svc;
-    }]);
+    return svc;
+  }]);
+
 
 /* File Type Services
  * Helps check if something is an image (then the UI usually wants a thumbnail)
