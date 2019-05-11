@@ -429,31 +429,6 @@ if (!String.prototype.endsWith) {
         }
     }
 }());
-(function () { 
-
-    EditContentItemController.$inject = ["mode", "entityId", "contentType", "eavAdminDialogs", "$uibModalInstance"];
-    angular.module("ContentEditApp", [
-        "EavServices",
-        "EavAdminUi"
-    ])
-        .controller("EditContentItem", EditContentItemController)
-        ;
-
-    function EditContentItemController(mode, entityId, contentType, eavAdminDialogs, $uibModalInstance) { //}, contentTypeId, eavAdminDialogs) {
-        var vm = this;
-        vm.mode = mode;
-        vm.entityId = entityId;
-        vm.contentType = contentType;
-        vm.TestMessage = "Test message the controller is binding correctly...";
-
-        vm.history = function history() {
-            return eavAdminDialogs.openItemHistory(vm.entityId);
-        };
-
-        vm.close = function () { $uibModalInstance.dismiss("cancel"); };
-    }
-
-} ());
 (function () {
 	'use strict';
 
@@ -1443,55 +1418,131 @@ angular.module('EavDirectives')
 //
 // The goal is to one day move all dialogs into that system
 // but until that is done, we'll have a hybrid situation
-(function () {
+(function() {
+  var shortMap = [
+    ['z', 'zoneId'],
+    ['a', 'appId'],
+    ['p', 'tid'],
+    ['c', 'cbid'],
+    ['d', 'debug'],
+    ['i', 'mid'],
+    ['lc', 'langs'],
+    ['lp', 'langpri'],
+    ['pop', 'partOfPage'],
+    ['rtt', 'portalroot'],
+    ['rtw', 'websiteroot']
+  ];
 
-  angular.module('Migration')
-    .factory('eavNgDialogs', ["zoneId", "appId", "debugState", "enableAppFeatures", "getUrlParamMustRefactor", function (
+  function lengthenParams(url) {
+    for (var i = 0; i < shortMap.length; i++) {
+      url = url.replace('&' + shortMap[i][0] + '=', '&' + shortMap[i][1] + '=');
+    }
+    return url;
+  }
+
+  angular
+    .module('Migration')
+    .factory('eavNgDialogs', ["zoneId", "appId", "debugState", "enableAppFeatures", "getUrlParamMustRefactor", "$window", function(
       zoneId,
       appId,
       debugState,
       enableAppFeatures,
-      getUrlParamMustRefactor
+      getUrlParamMustRefactor,
+      $window
     ) {
-
       var svc = {};
 
       svc.ngRoot = '../ng-admin/ui.html';
+      svc.ngEditRoot = '../ng-edit/ui.html';
 
-      svc.assembleInitValues = function () {
-        var url = getUrlParamMustRefactor;
-        return '?z=' + zoneId
-          + '&a=' + appId
-          //+ '&t=0'
-          + '&p=' + url('tid')
-          + '&c=' + url('cbid')
-          + '&d=' + debugState.on
-          + '&i=' + url('mid')
-          + '&lc=' + url('langs')
-          + '&lui=' + url('langs')
-          + '&lp=' + url('langpri')
-          + '&fa=' + enableAppFeatures
-          + '&fd=' + url('user%5BcanDesign%5D')
-          + '&fc=' + url('user%5BcanDevelop%5D')
-          + '&fs=' + 'false'
-          + '&pop=' + url('partOfPage')
-          + '&rtt=' + url('portalroot')
-          + '&rta=' + url('approot')
-          + '&rtw=' + url('websiteroot')
-          + '&systype=' + 'dnn'
-          + '&sxcver=' + url('sxcver')
-          //+ '&sysver=' 
-          ;
+      svc.openEdit = function(params, callback) {
+        var path =
+          svc.ngEditRoot +
+          svc.paramsToBreakCache() +
+          '#' +
+          svc.assembleInitValues(false) +
+          '&' +
+          params;
+
+        if (window.event && window.event.shiftKey) {
+          if (callback) callback();
+          return $window.open(path);
+        } else {
+          return window.$2sxc.totalPopup.open(path, callback);
+        }
       };
 
-      svc.open = function (route, callback) {
-        var path = svc.ngRoot + '#' + route + svc.assembleInitValues();
+      svc.openAdmin = function(route, callback) {
+        var path =
+          svc.ngRoot +
+          svc.paramsToBreakCache() +
+          '#' +
+          route +
+          svc.assembleInitValues();
         return window.$2sxc.totalPopup.open(path, callback);
+      };
+
+      svc.paramsToBreakCache = function() {
+        return '?sxcver=' + getUrlParamMustRefactor('sxcver');
+      };
+
+      svc.assembleInitValues = function(short) {
+        short = short || false;
+        var url = getUrlParamMustRefactor;
+        var result =
+          '&z=' +
+          zoneId +
+          '&a=' +
+          appId +
+          //+ '&t=0'
+          '&p=' +
+          url('tid') +
+          '&c=' +
+          url('cbid') +
+          '&d=' +
+          debugState.on +
+          '&i=' +
+          url('mid') +
+          '&lc=' +
+          url('langs') +
+          '&lp=' +
+          url('langpri') +
+          '&fs=' +
+          'false' +
+          '&pop=' +
+          url('partOfPage') +
+          '&rtt=' +
+          url('portalroot') +
+          '&rta=' +
+          url('approot') +
+          '&rtw=' +
+          url('websiteroot') +
+          '&systype=' +
+          'dnn' +
+          '&sxcver=' +
+          url('sxcver');
+
+        console.log('result before adding', result);
+        var addon = short
+          ? '&fa=' +
+            enableAppFeatures +
+            '&lui=' +
+            url('langs') +
+            '&fd=' +
+            url('user%5BcanDesign%5D') +
+            '&fc=' +
+            url('user%5BcanDevelop%5D')
+          : '&user=' + url('user');
+        result = result + addon;
+
+        if (!short) result = lengthenParams(result);
+        return result;
       };
 
       return svc;
     }]);
-}());
+})();
+
 (function() {
 
   permissionListController.$inject = ["permissionsSvc", "eavAdminDialogs", "eavConfig", "appId", "targetKey", "targetType", "keyType", "$uibModalInstance"];
@@ -2874,21 +2925,21 @@ angular.module("EavServices")
 
     });
 
-/*  this file contains a service to handle 
+/*  this file contains a service to handle
  * How it works
  * This service tries to open a modal dialog if it can, otherwise a new window returning a promise to allow
- * ...refresh when the window close. 
- * 
+ * ...refresh when the window close.
+ *
  * In most cases there is a nice command to open something, like openItemEditWithEntityId(id, callback)
  * ...and there is also a more advanced version where you could specify more closely what you wanted
  * ...usually ending with an X, so like openItemEditWithEntityIdX(resolve, callbacks)
- * 
+ *
  * the simple callback is 1 function (usually to refresh the main list), the complex callbacks have the following structure
  * 1. .success (optional)
- * 2. .error (optional) 
+ * 2. .error (optional)
  * 3. .notify (optional)
- * 4. .close (optional) --> this one is attached to all events if no primary handler is defined 
- * 
+ * 4. .close (optional) --> this one is attached to all events if no primary handler is defined
+ *
  * How to use
  * 1. you must already include all js files in your main app - so the controllers you'll need must be preloaded
  * 2. Your main app must also declare the other apps as dependencies, so angular.module('yourname', ['dialog 1', 'diolag 2'])
@@ -2901,209 +2952,338 @@ angular.module("EavServices")
 // 1. Import / Export
 // 2. Pipeline Designer
 
-angular.module('EavAdminUi', ['ng',
-    'ui.bootstrap',         // for the $uibModal etc.
+angular
+  .module('EavAdminUi', [
+    'ng',
+    'ui.bootstrap', // for the $uibModal etc.
     'EavServices',
-    'eavTemplates',         // Provides all cached templates
-    'PermissionsApp',       // Permissions dialogs to manage permissions
-    'ContentItemsAppAgnostic', 
-    'PipelineManagement',   // Manage pipelines
+    'eavTemplates', // Provides all cached templates
+    'PermissionsApp', // Permissions dialogs to manage permissions
+    'ContentItemsAppAgnostic',
+    'PipelineManagement', // Manage pipelines
     'ContentImportApp',
     'ContentExportApp',
-    'HistoryApp',            // the item-history app
+    'HistoryApp' // the item-history app
 
     // big todo: currently removed dependency to eavEditentity (much faster) but it actually does...
     // ...need it to initialize this class, so ATM this only works in a system where the other dependency
-    // is defined. very not clean :( 
+    // is defined. very not clean :(
     // but much faster for now
     // the correct clean up would be to create an edit-dialogs class or something (todo)
     // "eavEditEntity"			// the edit-app
-])
-    .factory('eavAdminDialogs', ["$uibModal", "eavConfig", "$window", "entitiesSvc", "contentTypeSvc", "appId", function ($uibModal, eavConfig, $window,
-        // these are needed just for simple access to some dialogs
-        entitiesSvc,    // warning: this only works ATM when called in 2sxc, because it needs the eavEditEntity dependency
-        contentTypeSvc,
-        appId) {
-        /*jshint laxbreak:true */
+  ])
+  .factory('eavAdminDialogs', ["$uibModal", "$window", "entitiesSvc", "contentTypeSvc", "appId", "featuresSvc", "eavNgDialogs", function(
+    $uibModal,
+    // eavConfig,
+    $window,
+    // these are needed just for simple access to some dialogs
+    entitiesSvc, // warning: this only works ATM when called in 2sxc, because it needs the eavEditEntity dependency
+    contentTypeSvc,
+    appId,
+    featuresSvc,
+    eavNgDialogs
+  ) {
+    /*jshint laxbreak:true */
 
-        var svc = {};
+    var svc = {};
 
-        //#region List of Content Items dialogs
-        svc.openContentItems = function oci(appId, staticName, itemId, closeCallback) {
-            var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, contentTypeId: itemId });
-            return svc.OpenModal('content-items/content-items-agnostic.html', 'ContentItemsList as vm', 'fullscreen', resolve, closeCallback);
-        };
-        //#endregion
+    //#region List of Content Items dialogs
+    svc.openContentItems = function oci(
+      appId,
+      staticName,
+      itemId,
+      closeCallback
+    ) {
+      var resolve = svc.CreateResolve({
+        appId: appId,
+        contentType: staticName,
+        contentTypeId: itemId
+      });
+      return svc.OpenModal(
+        'content-items/content-items-agnostic.html',
+        'ContentItemsList as vm',
+        'fullscreen',
+        resolve,
+        closeCallback
+      );
+    };
+    //#endregion
 
-        //#region content import export
-        svc.openContentImport = function ocimp(appId, staticName, closeCallback) {
-            var resolve = svc.CreateResolve({ appId: appId, contentType: staticName });
-            return svc.OpenModal('content-import-export/content-import.html', 'ContentImport as vm', 'lg', resolve, closeCallback);
-        };
+    //#region content import export
+    svc.openContentImport = function ocimp(appId, staticName, closeCallback) {
+      var resolve = svc.CreateResolve({
+        appId: appId,
+        contentType: staticName
+      });
+      return svc.OpenModal(
+        'content-import-export/content-import.html',
+        'ContentImport as vm',
+        'lg',
+        resolve,
+        closeCallback
+      );
+    };
 
-        svc.openContentExport = function ocexp(appId, staticName, closeCallback, optionalIds) {
-            var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, itemIds: optionalIds });
-            return svc.OpenModal('content-import-export/content-export.html', 'ContentExport as vm', 'lg', resolve, closeCallback);
-        };
+    svc.openContentExport = function ocexp(
+      appId,
+      staticName,
+      closeCallback,
+      optionalIds
+    ) {
+      var resolve = svc.CreateResolve({
+        appId: appId,
+        contentType: staticName,
+        itemIds: optionalIds
+      });
+      return svc.OpenModal(
+        'content-import-export/content-export.html',
+        'ContentExport as vm',
+        'lg',
+        resolve,
+        closeCallback
+      );
+    };
 
-        //#endregion
+    //#endregion
 
-        //#region ContentType dialogs
-        svc.openContentTypeEdit = function octe(item, closeCallback) {
-            var resolve = svc.CreateResolve({ item: item });
-            return svc.OpenModal('content-types/content-types-edit.html', 'Edit as vm', '', resolve, closeCallback);
-        };
+    //#region ContentType dialogs
+    svc.openContentTypeEdit = function octe(item, closeCallback) {
+      var resolve = svc.CreateResolve({ item: item });
+      return svc.OpenModal(
+        'content-types/content-types-edit.html',
+        'Edit as vm',
+        '',
+        resolve,
+        closeCallback
+      );
+    };
 
-        svc.openContentTypeFields = function octf(item, closeCallback) {
-            var resolve = svc.CreateResolve({ contentType: item });
-            return svc.OpenModal('content-types/content-types-fields.html', 'FieldList as vm', 'xlg', resolve, closeCallback);
-        };
+    svc.openContentTypeFields = function octf(item, closeCallback) {
+      var resolve = svc.CreateResolve({ contentType: item });
+      return svc.OpenModal(
+        'content-types/content-types-fields.html',
+        'FieldList as vm',
+        'xlg',
+        resolve,
+        closeCallback
+      );
+    };
 
-        // this one assumes we have a content-item, but must first retrieve content-type-infos
-        svc.openContentTypeFieldsOfItems = function octf(item, closeCallback) {
-            return entitiesSvc.getManyForEditing(appId, item)
-                .then(function (result) {
-                    var ctName = result.data[0].Header.ContentTypeName;
-                    var svcForThis = contentTypeSvc(appId); // note: won't specify scope to fallback
-                    return svcForThis.getDetails(ctName)
-                        .then(function (result2) {
-                            return svc.openContentTypeFields(result2.data, closeCallback);
-                        });
-                });
-        };
+    // this one assumes we have a content-item, but must first retrieve content-type-infos
+    svc.openContentTypeFieldsOfItems = function octf(item, closeCallback) {
+      return entitiesSvc.getManyForEditing(appId, item).then(function(result) {
+        var ctName = result.data[0].Header.ContentTypeName;
+        var svcForThis = contentTypeSvc(appId); // note: won't specify scope to fallback
+        return svcForThis.getDetails(ctName).then(function(result2) {
+          return svc.openContentTypeFields(result2.data, closeCallback);
+        });
+      });
+    };
 
-        //#endregion
-        //#region Item - new, edit
-        svc.openItemNew = function oin(contentTypeName, closeCallback) {
-            return svc.openEditItems([{ ContentTypeName: contentTypeName }], closeCallback, { partOfPage: false });
-        };
+    //#endregion
 
-        svc.openItemEditWithEntityId = function oie(entityId, closeCallback) {
-            return svc.openEditItems([{ EntityId: entityId }], closeCallback, { partOfPage: false });
-        };
+    //#region Item - new, edit - WIP for Angular 8
+    svc.openItemNew = function oin(contentTypeName, closeCallback) {
+      return svc.openEditItems(
+        [{ ContentTypeName: contentTypeName }],
+        closeCallback,
+        { partOfPage: false }
+      );
+    };
 
-        svc.openEditItems = function oel(items, closeCallback, moreResolves) {
-            var merged = angular.extend({ items: items }, moreResolves || {});
-            merged.partOfPage = Boolean(merged.partOfPage);
-            merged.publishing = merged.publishing || null;
-            console.log('openEditItems: partOfPage: ' + merged.partOfPage, ' publishing: ' + merged.publishing);
-            var resolve = svc.CreateResolve(merged);
-            return svc.OpenModal('form/main-form.html', 'EditEntityWrapperCtrl as vm', 'ent-edit', resolve, closeCallback);
-        };
+    svc.openItemEditWithEntityId = function oie(entityId, closeCallback) {
+      return svc.openEditItems([{ EntityId: entityId }], closeCallback, {
+        partOfPage: false
+      });
+    };
 
-        svc.openItemHistory = function ioh(entityId, closeCallback) {
-            return svc.OpenModal('content-items/history.html', 'History as vm', 'lg',
-                svc.CreateResolve({ entityId: entityId }),
-                closeCallback);
-        };
-        //#endregion
+    // here's where we need to work to get Angular 8 integrated
+    svc.openEditItems = function oel(items, closeCallback, moreResolves) {
+      var useOld = featuresSvc.enabledNow(featuresSvc.id.useOldEditUi);
+      if (window.event && window.event.altKey) useOld = !useOld;
+      var method = useOld ? openEditItemsNg1 : openEditItemsNew;
+      return method(items, closeCallback, moreResolves);
+    };
 
-      //#region Permissions Dialog
-      function openPermissions(params, closeCallback) {
-        return svc.OpenModal('permissions/permissions.html',
-          'PermissionList as vm',
-          'xlg',
-          svc.CreateResolve(params),
-          closeCallback);
-      }
+    /** method to open the old dialog */
+    function openEditItemsNg1(items, closeCallback, moreResolves) {
+      var merged = angular.extend({ items: items }, moreResolves || {});
+      merged.partOfPage = Boolean(merged.partOfPage);
+      merged.publishing = merged.publishing || null;
+      console.log(
+        'openEditItems: partOfPage: ' + merged.partOfPage,
+        ' publishing: ' + merged.publishing
+      );
+      var resolve = svc.CreateResolve(merged);
+      return svc.OpenModal(
+        'form/main-form.html',
+        'EditEntityWrapperCtrl as vm',
+        'ent-edit',
+        resolve,
+        closeCallback
+      );
+    }
 
-      svc.openPermissionsForGuid = function opfg(appId, targetKey, closeCallback) {
-        return openPermissions({ appId: appId, targetKey: targetKey, targetType: 4, keyType: 'guid' }, closeCallback);
+    function openEditItemsNew(items, closeCallback, moreResolves) {
+      var itemsStr = encodeURIComponent(JSON.stringify(items));
+      console.log('items', items, itemsStr);
+      return eavNgDialogs.openEdit('items=' + itemsStr, closeCallback);
+    }
+
+    // 2019-05-11 2dm disabled, don't think it's in use
+    // svc.openItemHistory = function ioh(entityId, closeCallback) {
+    //   return svc.OpenModal(
+    //     "content-items/history.html",
+    //     "History as vm",
+    //     "lg",
+    //     svc.CreateResolve({ entityId: entityId }),
+    //     closeCallback
+    //   );
+    // };
+    //#endregion
+
+    //#region Permissions Dialog
+    function openPermissions(params, closeCallback) {
+      return svc.OpenModal(
+        'permissions/permissions.html',
+        'PermissionList as vm',
+        'xlg',
+        svc.CreateResolve(params),
+        closeCallback
+      );
+    }
+
+    svc.openPermissionsForGuid = function opfg(
+      appId,
+      targetKey,
+      closeCallback
+    ) {
+      return openPermissions(
+        { appId: appId, targetKey: targetKey, targetType: 4, keyType: 'guid' },
+        closeCallback
+      );
+    };
+
+    svc.openPermissions = function opfg(
+      appId,
+      targetType,
+      keyType,
+      targetKey,
+      closeCallback
+    ) {
+      return openPermissions(
+        {
+          appId: appId,
+          targetKey: targetKey,
+          targetType: targetType,
+          keyType: keyType
+        },
+        closeCallback
+      );
+    };
+    //#endregion
+
+    //#region Pipeline Designer
+    svc.editPipeline = function ep(appId, pipelineId, closeCallback) {
+      var url = svc.derivedUrl({
+        dialog: 'pipeline-designer',
+        pipelineId: pipelineId
+      });
+      $window.open(url);
+      return;
+    };
+    //#endregion
+
+    //#region GenerateUrlBasedOnCurrent
+    svc.derivedUrl = function derivedUrl(varsToReplace) {
+      var url = window.location.href;
+      for (var prop in varsToReplace)
+        if (varsToReplace.hasOwnProperty(prop))
+          url = svc.replaceOrAddOneParam(url, prop, varsToReplace[prop]);
+
+      return url;
+    };
+
+    svc.replaceOrAddOneParam = function replaceOneParam(
+      original,
+      param,
+      value
+    ) {
+      var rule = new RegExp('(' + param + '=).*?(&)', 'i');
+      var newText = rule.test(original)
+        ? original.replace(rule, '$1' + value + '$2')
+        : original + '&' + param + '=' + value;
+      return newText;
+    };
+    //#endregion
+
+    //#region Internal helpers
+    svc._attachCallbacks = function attachCallbacks(promise, callbacks) {
+      if (typeof callbacks === 'undefined') return null;
+      if (typeof callbacks === 'function')
+        // if it's only one callback, use it for all close-cases
+        callbacks = { close: callbacks };
+      return promise.result.then(
+        callbacks.success || callbacks.close,
+        callbacks.error || callbacks.close,
+        callbacks.notify || callbacks.close
+      );
+    };
+
+    // Will open a modal window. Has various specials, like
+    // 1. If the templateUrl begins with "~/" - this will be re-mapped to the ng-app root. Only use this for not-inline stuff
+    // 2. The controller can be written as "something as vm" and this will be split and configured corectly
+    svc.openModalComponent = function(componentName, size, values, callbacks) {
+      var modalInstance = $uibModal.open({
+        component: componentName,
+        resolve: svc.CreateResolve(values),
+        size: size
+      });
+      return svc._attachCallbacks(modalInstance, callbacks);
+    };
+
+    svc.OpenModal = function openModal(
+      templateUrl,
+      controller,
+      size,
+      resolveValues,
+      callbacks
+    ) {
+      var foundAs = controller.indexOf(' as ');
+      var contAs = foundAs > 0 ? controller.substring(foundAs + 4) : null;
+
+      if (foundAs > 0) controller = controller.substring(0, foundAs);
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: templateUrl,
+        controller: controller,
+        controllerAs: contAs,
+        size: size,
+        resolve: resolveValues
+      });
+
+      return svc._attachCallbacks(modalInstance, callbacks);
+    };
+
+    /// This will create a resolve-object containing return function()... for each property in the array
+    svc.CreateResolve = function createResolve() {
+      var fns = {},
+        list = arguments[0];
+      for (var prop in list)
+        if (list.hasOwnProperty(prop))
+          fns[prop] = svc._create1Resolve(list[prop]);
+      return fns;
+    };
+
+    svc._create1Resolve = function(value) {
+      return function() {
+        return value;
       };
+    };
+    //#endregion
+    return svc;
+  }]);
 
-      svc.openPermissions = function opfg(appId, targetType, keyType, targetKey, closeCallback) {
-        return openPermissions({ appId: appId, targetKey: targetKey, targetType: targetType, keyType: keyType },
-          closeCallback);
-      };
-      //#endregion
-
-      //#region Pipeline Designer
-      svc.editPipeline = function ep(appId, pipelineId, closeCallback) {
-          var url = svc.derivedUrl({
-              dialog: 'pipeline-designer',
-              pipelineId: pipelineId
-          });
-          $window.open(url);
-          return;
-      };
-      //#endregion
-
-        //#region GenerateUrlBasedOnCurrent
-        svc.derivedUrl = function derivedUrl(varsToReplace) {
-            var url = window.location.href;
-            for (var prop in varsToReplace)
-                if (varsToReplace.hasOwnProperty(prop))
-                    url = svc.replaceOrAddOneParam(url, prop, varsToReplace[prop]);
-
-            return url;
-        };
-
-        svc.replaceOrAddOneParam = function replaceOneParam(original, param, value) {
-            var rule = new RegExp('(' + param + '=).*?(&)', 'i');
-            var newText = rule.test(original)
-                ? original.replace(rule, '$1' + value + '$2')
-                : original + '&' + param + '=' + value;
-            return newText;
-        };
-        //#endregion
-
-        //#region Internal helpers
-        svc._attachCallbacks = function attachCallbacks(promise, callbacks) {
-            if (typeof (callbacks) === 'undefined')
-                return null;
-            if (typeof (callbacks) === 'function') // if it's only one callback, use it for all close-cases
-                callbacks = { close: callbacks };
-            return promise.result.then(callbacks.success || callbacks.close, callbacks.error || callbacks.close, callbacks.notify || callbacks.close);
-        };
-
-        // Will open a modal window. Has various specials, like
-        // 1. If the templateUrl begins with "~/" - this will be re-mapped to the ng-app root. Only use this for not-inline stuff
-        // 2. The controller can be written as "something as vm" and this will be split and configured corectly
-        svc.openModalComponent = function (componentName, size, values, callbacks) {
-            var modalInstance = $uibModal.open({
-                component: componentName,
-                resolve: svc.CreateResolve(values),
-                size: size,
-            });
-            return svc._attachCallbacks(modalInstance, callbacks);
-        };
-
-        svc.OpenModal = function openModal(templateUrl, controller, size, resolveValues, callbacks) {
-            var foundAs = controller.indexOf(' as ');
-            var contAs = foundAs > 0 ?
-                controller.substring(foundAs + 4)
-                : null;
-
-            if (foundAs > 0) controller = controller.substring(0, foundAs);
-            var modalInstance = $uibModal.open({
-                animation: true,
-                templateUrl: templateUrl,
-                controller: controller,
-                controllerAs: contAs,
-                size: size,
-                resolve: resolveValues
-            });
-
-            return svc._attachCallbacks(modalInstance, callbacks);
-        };
-
-        /// This will create a resolve-object containing return function()... for each property in the array
-        svc.CreateResolve = function createResolve() {
-            var fns = {}, list = arguments[0];
-            for (var prop in list)
-                if (list.hasOwnProperty(prop))
-                    fns[prop] = svc._create1Resolve(list[prop]);
-            return fns;
-        };
-
-        svc._create1Resolve = function (value) {
-            return function () { return value; };
-        };
-        //#endregion
-        return svc;
-    }])
-
-    ;
 /*  this file contains various eav-angular services
  *  1. the basic configuration enforcing html5 mode
  */
@@ -3128,9 +3308,10 @@ angular
   .factory("featuresSvc", ["$http", "appId", "$q", function($http, appId, $q) {
     var svc = {
       list: [],
-      ids: {
+      id: {
         pasteImage: "f6b8d6da-4744-453b-9543-0de499aa2352",
-        pasteWysiwyg: "1b13e0e6-a346-4454-a1e6-2fb18c047d20"
+        pasteWysiwyg: "1b13e0e6-a346-4454-a1e6-2fb18c047d20",
+        useOldEditUi: "51da2093-f75a-4750-aea2-b45562fc4d51"
       }
     };
 
@@ -3147,12 +3328,11 @@ angular
       svc.list = data.data;
     });
 
-    // 2019-05-11 2dm believe this is not used
-    // svc.enabledNow = function(guid) {
-    //   for (var i = 0; i < svc.list.length; i++)
-    //     if (svc.list[i].id === guid) return svc.list[i].enabled;
-    //   return false;
-    // };
+    svc.enabledNow = function(guid) {
+      for (var i = 0; i < svc.list.length; i++)
+        if (svc.list[i].id === guid) return svc.list[i].enabled;
+      return false;
+    };
 
     svc.enabled = function(guid) {
       return $q(function(resolve) {
@@ -3290,78 +3470,81 @@ angular.module("EavServices")
 //
 // As of now, it only supplies
 // * appId
-(function () {
-    angular.module("InitParametersFromUrl", [])
-        //#region properties
-        .factory("appId", function () {
-            return getParameterByName("appId");
-        })
-        .factory("zoneId", function () {
-            return getParameterByName("zoneId");
-        })
-        .factory("entityId", function () {
-            return getParameterByName("entityid");
-        })
-        .factory("contentTypeName", function () {
-            return getParameterByName("contenttypename");
-        })
+(function() {
+  angular
+    .module('InitParametersFromUrl', [])
+    //#region properties
+    .factory('appId', function() {
+      return getParameterByName('appId');
+    })
+    .factory('zoneId', function() {
+      return getParameterByName('zoneId');
+    })
+    .factory('entityId', function() {
+      return getParameterByName('entityid');
+    })
+    .factory('contentTypeName', function() {
+      return getParameterByName('contenttypename');
+    })
 
-        .factory("pipelineId", function () {
-            return getParameterByName("pipelineId");
-        })
-        .factory("dialog", function () {
-            return getParameterByName("dialog");
-        })
-        //#endregion
-        //#region helpers / dummy objects
-        // This is a dummy object, because it's needed for dialogs
-        .factory("$uibModalInstance", function () {
-            return null;
-        })
-
-        // helper, currently only used by pipeline designer, to get url parameter
-        // will provide a get-url-param command
-        .factory("getUrlParamMustRefactor", function() {
-                return getParameterByName;
-        })
-
-        .factory('enableAppFeatures', function () {
-          return getParameterByName('fa') === "true"; // convert to boolean
-        })
+    .factory('pipelineId', function() {
+      return getParameterByName('pipelineId');
+    })
+    .factory('dialog', function() {
+      return getParameterByName('dialog');
+    })
     //#endregion
-    ;
+    //#region helpers / dummy objects
+    // This is a dummy object, because it's needed for dialogs
+    .factory('$uibModalInstance', function() {
+      return null;
+    })
 
-    function getParameterByName(name) {
-        if (window.$2sxc)
-            return window.$2sxc.urlParams.get(name);
-        return getParameterByNameDuplicate(name);
+    // helper, currently only used by pipeline designer, to get url parameter
+    // will provide a get-url-param command
+    .factory('getUrlParamMustRefactor', function() {
+      return getParameterByName;
+    })
+
+    .factory('enableAppFeatures', function() {
+      return getParameterByName('fa') === 'true'; // convert to boolean
+    });
+  //#endregion
+
+  function getParameterByName(name) {
+    if (window.$2sxc) return window.$2sxc.urlParams.get(name);
+    return getParameterByNameDuplicate(name);
+  }
+
+  // this is a duplicate fn of the 2sxc-version, should only be used if 2sxc doesn't exist
+  function getParameterByNameDuplicate(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var searchRx = new RegExp('[\\?&]' + name + '=([^&#]*)', 'i');
+    var results = searchRx.exec(location.search);
+
+    if (results === null) {
+      var hashRx = new RegExp('[#&]' + name + '=([^&#]*)', 'i');
+      results = hashRx.exec(location.hash);
     }
 
-    // this is a duplicate fn of the 2sxc-version, should only be used if 2sxc doesn't exist
-    function getParameterByNameDuplicate(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var searchRx = new RegExp("[\\?&]" + name + "=([^&#]*)", "i");
-        var results = searchRx.exec(location.search);
+    // if nothing found, try normal URL because DNN places parameters in /key/value notation
+    if (results === null) {
+      // Otherwise try parts of the URL
+      var matches = window.location.pathname.match(
+        new RegExp('/' + name + '/([^/]+)', 'i')
+      );
 
-        if (results === null) {
-            var hashRx = new RegExp("[#&]" + name + "=([^&#]*)", "i");
-            results = hashRx.exec(location.hash);
-        }
+      // Check if we found anything, if we do find it, we must reverse the results so we get the "last" one in case there are multiple hits
+      if (matches !== null && matches.length > 1)
+        results = matches.reverse()[0];
+    } else results = results[1];
 
-        // if nothing found, try normal URL because DNN places parameters in /key/value notation
-        if (results === null) {
-            // Otherwise try parts of the URL
-            var matches = window.location.pathname.match(new RegExp("/" + name + "/([^/]+)", "i"));
+    return results === null
+      ? ''
+      : decodeURIComponent(results.replace(/\+/g, ' '));
+  }
+})();
 
-            // Check if we found anything, if we do find it, we must reverse the results so we get the "last" one in case there are multiple hits
-            if (matches !== null && matches.length > 1)
-                results = matches.reverse()[0];
-        } else
-            results = results[1];
-
-        return results === null ? "" : decodeURIComponent(results.replace(/\+/g, " "));
-    }
-}());
 /*
  * Cleans up all kinds of texts containing non-latin characters like umlauts or romanian characters etc.
  * 
@@ -3788,7 +3971,6 @@ angular.module("EavServices")
 ;
 angular.module("eavTemplates", []).run(["$templateCache", function($templateCache) {$templateCache.put("content-import-export/content-export.html","<div ng-click=\"vm.debug.autoEnableAsNeeded($event)\">\r\n\r\n    <div class=\"modal-header\">\r\n        <button class=\"btn btn-default btn-square btn-subtle pull-right\" type=\"button\" icon=\"remove\" ng-click=\"vm.close()\"></button>\r\n        <h3 class=\"modal-title\" translate=\"Content.Export.Title\">cc</h3>\r\n    </div>\r\n\r\n    <div class=\"modal-body\">\r\n        <div translate=\"Content.Export.Help\"></div>\r\n        <formly-form form=\"vm.form\" model=\"vm.formValues\" fields=\"vm.formFields\">\r\n        </formly-form>\r\n    </div>\r\n\r\n    <div class=\"modal-footer\">\r\n        <button type=\"button\" class=\"btn btn-primary pull-left\"\r\n                ng-click=\"vm.exportContent()\"\r\n                translate=\"Content.Export.Commands.Export\"></button>\r\n\r\n        <button type=\"button\" class=\"btn btn-default pull-left\" ng-click=\"vm.exportJson()\"\r\n                not-yet-translate=\"Content.Export.Commands.ExportTypeAsJson\"\r\n                ng-disabled=\"vm.IsExporting\"\r\n                ng-show=\"vm.debug.on\">\r\n            Export Type Definition as Json (for developers)\r\n        </button>\r\n    </div>\r\n    \r\n    <show-debug-availability class=\"pull-right\"></show-debug-availability>\r\n</div>");
 $templateCache.put("content-import-export/content-import.html","<div ng-click=\"vm.debug.autoEnableAsNeeded($event)\">\r\n    <!-- HEADER -->\r\n    <div class=\"modal-header\">\r\n        <button class=\"btn btn-default btn-square btn-subtle pull-right\" type=\"button\" icon=\"remove\" ng-click=\"vm.close()\"></button>\r\n        <h3 class=\"modal-title\"><span  translate=\"Content.Import.Title\"></span> <span ng-show=\"vm.viewStateSelected > 0\" translate=\"Content.Import.TitleSteps\" translate-values=\"{step: vm.viewStateSelected}\"></span></h3>\r\n    </div>\r\n    <!-- END HEADER -->\r\n\r\n    <div ng-switch=\"vm.viewStateSelected\">\r\n\r\n        <!-- FORM -->\r\n        <div ng-switch-when=\"1\">\r\n            <div class=\"modal-body\">\r\n                <div translate=\"Content.Import.Help\"></div>\r\n                <formly-form form=\"vm.form\" model=\"vm.formValues\" fields=\"vm.formFields\"></formly-form>\r\n                <div class=\"text-warning\" translate=\"Content.Import.Messages.BackupContentBefore\"></div>\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn btn-primary pull-left\" ng-click=\"vm.evaluateContent()\" ng-disabled=\"!vm.formValues.File || !vm.formValues.File.filename\" translate=\"Content.Import.Commands.Preview\"></button>\r\n            </div>\r\n        </div>\r\n        <!-- END FORM -->\r\n\r\n\r\n        <!-- WAITING -->\r\n        <div ng-switch-when=\"0\">\r\n            <div class=\"modal-body\"> {{\'Content.Import.Messages.WaitingForResponse\' | translate}}\r\n            </div>\r\n        </div>\r\n        <!-- END WAITING -->\r\n\r\n\r\n        <!-- EVALUATION RESULT -->\r\n        <div ng-switch-when=\"2\">\r\n            <div class=\"modal-body\">\r\n                <!-- DETAILS / STATISTICS -->\r\n                <div ng-if=\"vm.evaluationResult.Succeeded\">\r\n                    <h4 translate=\"Content.Import.Evaluation.Detail.Title\" translate-values=\"{filename: vm.formValues.File.filename}\"></h4>\r\n                    <h5 translate=\"Content.Import.Evaluation.Detail.File.Title\"></h5>\r\n                    <ul>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.File.ElementCount\" translate-values=\"{count: vm.evaluationResult.Detail.DocumentElementsCount}\"></li>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.File.LanguageCount\" translate-values=\"{count: vm.evaluationResult.Detail.LanguagesInDocumentCount}\"></li>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.File.Attributes\" translate-values=\"{count: vm.evaluationResult.Detail.AttributeNamesInDocument.length, attributes: vm.evaluationResult.Detail.AttributeNamesInDocument.join(\', \')}\"></li>\r\n                    </ul>\r\n                    <h5 translate=\"Content.Import.Evaluation.Detail.Entities.Title\"></h5>\r\n                    <ul>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.Entities.Create\" translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesCreated}\"></li>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.Entities.Update\" translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesUpdated}\"></li>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.Entities.Delete\" translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesDeleted}\"></li>\r\n                        <li translate=\"Content.Import.Evaluation.Detail.Entities.AttributesIgnored\" translate-values=\"{count: vm.evaluationResult.Detail.AttributeNamesNotImported.length, attributes: vm.evaluationResult.Detail.AttributeNamesNotImported.join(\', \')}\"></li>\r\n                    </ul>\r\n                    <div class=\"text-warning\" translate=\"Content.Import.Messages.ImportCanTakeSomeTime\"></div>\r\n                </div>\r\n                <!-- END DETAILS / STATISTICS -->\r\n                <!-- ERRORS -->\r\n                <div ng-if=\"!vm.evaluationResult.Succeeded\">\r\n                    <h4 translate=\"Content.Import.Evaluation.Error.Title\" translate-values=\"{filename: vm.formValues.File.filename}\"></h4>\r\n                    <ul>\r\n                        <li ng-repeat=\"error in vm.evaluationResult.Detail\">\r\n                            <div><span translate=\"Content.Import.Evaluation.Error.Codes.{{error.ErrorCode}}\"></span></div>\r\n                            <div ng-if=\"error.ErrorDetail\"><i translate=\"Content.Import.Evaluation.Error.Detail\" translate-values=\"{detail: error.ErrorDetail}\"></i>\r\n                            </div>\r\n                            <div ng-if=\"error.LineNumber\"><i translate=Content.Import.Evaluation.Error.LineNumber\" translate-values=\"{number: error.LineNumber}\"></i>\r\n                            </div>\r\n                            <div ng-if=\"error.LineDetail\"><i translate=\"Content.Import.Evaluation.Error.LineDetail\" translate-values=\"{detail: error.LineDetail}\"></i>\r\n                            </div>\r\n                        </li>\r\n                    </ul>\r\n                </div>\r\n                <!-- END ERRORS -->\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn pull-left\" ng-click=\"vm.back()\" icon=\"arrow-left\"></button>\r\n                <button type=\"button\" class=\"btn btn-default pull-left\" ng-click=\"vm.importContent()\" translate=\"Content.Import.Commands.Import\" ng-disabled=\"!vm.evaluationResult.Succeeded\"></button>\r\n            </div>\r\n        </div>\r\n        <!-- END EVALUATION RESULT -->\r\n\r\n\r\n        <!-- IMPORT RESULT -->\r\n        <div ng-switch-when=\"3\">\r\n            <div class=\"modal-body\">\r\n                <span ng-show=\"vm.importResult.Succeeded\" translate=\"Content.Import.Messages.ImportSucceeded\"></span>\r\n                <span ng-hide=\"vm.importResult.Succeeded\" translate=\"Content.Import.Messages.ImportFailed\"></span>\r\n            </div>\r\n        </div>\r\n        <!-- END IMPORT RESULT -->\r\n\r\n        <div ng-if=\"vm.debug.on\">\r\n            <h3>Debug infos</h3>\r\n            <pre>{{vm.formValues | json}}</pre>\r\n        </div>\r\n    </div>\r\n</div>");
-$templateCache.put("content-items/content-edit.html","<div class=\"modal-header\">\r\n    <button type=\"button\" class=\"btn btn-default btn-subtle\" ng-click=\"vm.history()\">\r\n        <span class=\"glyphicon glyphicon-time\"> history / todo </span>\r\n    </button>\r\n    <h3 class=\"modal-title\">Edit / New Content</h3>\r\n</div>\r\n\r\n<div class=\"modal-body\">\r\n    this is where the edit appears. Would edit entity {{vm.entityId}} or add a {{vm.contentType}} - depending on the mode: {{vm.mode}}\r\n    <h3>Use cases</h3>\r\n    <ol>\r\n        <li>Edit an existing entity with ID</li>\r\n        <li>Create a new entity of a certaint content-type, just save and done (like from a \"new\" button without content-group)</li>\r\n        <li>Create a new entity of a certain type and assign it to a metadata thing (guid, int, string)</li>\r\n\r\n        <li>Create a new entity and put it into a content-group at the right place</li>\r\n        <li>Edit content-group: item + presentation </li>\r\n        <li>Edit multiple IDs/or new/mix: Edit multiple items with IDs</li>\r\n    </ol>\r\n\r\n    init of 1 edit\r\n    - entity-id in storage\r\n    - new-type + optional: assignment-id + assignment-type\r\n\r\n    - array of the above\r\n    --- [{id 17}, {type: \"person\"}, {type: person, asstype: 4, target: 0205}]\r\n\r\n    - content-group\r\n</div>\r\n");
 $templateCache.put("content-items/content-items-agnostic.html","<div ng-click=\"vm.debug.autoEnableAsNeeded($event)\" class=\"content-items-agnostic\">\r\n    <div class=\"modal-header\">\r\n        <button class=\"btn btn-default btn-square btn-subtle pull-right\" type=\"button\" ng-click=\"vm.close()\"><i icon=\"remove\"></i></button>\r\n        <h3 class=\"modal-title\" translate=\"Content.Manage.Title\"></h3>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <button type=\"button\" class=\"btn btn-primary btn-square\" ng-click=\"vm.add()\"><i icon=\"plus\"></i></button>\r\n        <button type=\"button\"\r\n                class=\"btn btn-default btn-square\"\r\n                uib-tooltip=\"{{ \'ContentTypes.Buttons.Export\' | translate }}\"\r\n                ng-click=\"vm.openExport()\">\r\n            <i icon=\"export\"></i>\r\n        </button>\r\n        <button icon=\"import\" type=\"button\" class=\"btn btn-default btn-square\" ng-click=\"vm.importItem.show = !vm.importItem.show\"></button>\r\n        <button ng-if=\"vm.debug.on\" type=\"button\" class=\"btn btn-warning btn-square\" ng-click=\"vm.addMetadata()\"><i class=\"eav-icon-tag\"></i></button>\r\n	    <button ng-if=\"vm.debug.on\" type=\"button\" class=\"btn btn-warning btn-square\" ng-click=\"vm.refresh()\"><i icon=\"repeat\"></i></button>\r\n        <button ng-if=\"vm.debug.on\" type=\"button\" class=\"btn btn-warning btn-square\" ng-click=\"vm.debugFilter()\"><i icon=\"filter\"></i></button>\r\n        \r\n        <div ng-if=\"vm.importItem.show\">\r\n            <h3>Quick-Import a single JSON Item</h3>\r\n            <div ng-switch=\"vm.importItem.viewState\">\r\n                <div ng-switch-when=\"1\">\r\n\r\n                    <formly-form form=\"vm.importItem.form\"\r\n                                 model=\"vm.importItem.formValues\"\r\n                                 fields=\"vm.importItem.formFields\">\r\n                    </formly-form>\r\n                    <div>\r\n                        <button type=\"button\" class=\"btn btn-primary pull-left\"\r\n                                ng-click=\"vm.importItem.save()\"\r\n                                ng-disabled=\"!vm.importItem.formValues.File || !vm.importItem.formValues.File.filename\"\r\n                                translate=\"Content.Import.Commands.Import\">\r\n                        </button>\r\n                    </div>\r\n                </div>\r\n                <div ng-switch-when=\"2\">\r\n                    Saving...\r\n                </div>\r\n                <div ng-switch-when=\"3\">\r\n                    <i class=\"eav-icon-ok\"></i> \r\n                    Import completed! \r\n                    <span ng-click=\"vm.importItem.reset()\"><i class=\"eav-icon-cancel\"></i></span>\r\n                </div>\r\n            </div>\r\n            <br />\r\n            <br/>\r\n        </div>\r\n\r\n\r\n        <div ag-grid=\"vm.gridOptions\" class=\"ag-grid-wrapper\"></div>\r\n	    \r\n        <show-debug-availability class=\"pull-right\" ></show-debug-availability>\r\n    </div>\r\n</div>");
 $templateCache.put("content-items/history-details.html","<div>\r\n    <div class=\"modal-header\">\r\n        <button class=\"btn btn-default btn-subtle btn-square pull-right\" type=\"button\" ng-click=\"vm.close()\">\r\n            <span class=\"glyphicon glyphicon-remove\"></span>\r\n        </button>\r\n        <h3 class=\"modal-title\">History Details {{vm.ChangeId}} of {{vm.entityId}}</h3>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <h1>todo</h1>\r\n        <table class=\"table table-striped table-hover\">\r\n            <thead>\r\n            <tr>\r\n                <th>Field</th>\r\n                <th>Language</th>\r\n                <th>Value</th>\r\n                <th>SharedWith</th>\r\n            </tr>\r\n            </thead>\r\n            <tbody>\r\n            <tr ng-repeat=\"item in vm.items | orderBy:SysCreatedDate:reverse\">\r\n                <td>{{item.Field}}</td>\r\n                <td>{{item.Language}}</td>\r\n                <td>{{item.Value}}</td>\r\n                <td>{{item.SharedWith}}</td>\r\n\r\n            </tr>\r\n            <tr ng-if=\"!vm.items.length\">\r\n                <td colspan=\"100\">No History</td>\r\n            </tr>\r\n            </tbody>\r\n        </table>\r\n\r\n        <button class=\"btn btn-primary pull-right\" type=\"button\" ng-click=\"vm.restore()\">\r\n            <span class=\"glyphicon glyphicon-ok\">todo restore</span>\r\n        </button>    </div>\r\n\r\n</div>");
 $templateCache.put("content-items/history.html","<div>\r\n    <div class=\"modal-header\">\r\n        <button class=\"btn btn-default btn-square btn-subtle pull-right\" type=\"button\" ng-click=\"vm.close()\">\r\n            <span class=\"glyphicon glyphicon-remove\"></span>\r\n        </button>\r\n        <h3 class=\"modal-title\">{{ \"Content.History.Title\" | translate:\'{ id:vm.entityId }\' }}History of {{vm.entityId}}</h3>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n\r\n        <table class=\"table table-striped table-hover\">\r\n            <thead>\r\n            <tr>\r\n                <th translate=\"Content.History.Table.Id\"></th>\r\n                <th translate=\"Content.History.Table.When\"></th>\r\n                <th translate=\"Content.History.Table.User\"></th>\r\n                <th translate=\"Content.History.Table.Action\"></th>\r\n            </tr>\r\n            </thead>\r\n            <tbody>\r\n            <tr ng-repeat=\"item in vm.items | orderBy:SysCreatedDate:reverse\">\r\n                <td><span uib-tooltip=\"ChangeId: {{item.ChangeId}}\">{{item.VirtualVersion}}</span></td>\r\n                <td>{{item.SysCreatedDate.replace(\"T\", \" \")}}</td>\r\n                <td>{{item.User}}</td>\r\n                <td>\r\n                    <button type=\"button\" class=\"btn btn-xs\" ng-click=\"vm.details(item)\">\r\n                        <span class=\"glyphicon glyphicon-search\"></span>\r\n                    </button>\r\n                </td>\r\n            </tr>\r\n                <tr ng-if=\"!vm.items.length\">\r\n                    <td colspan=\"100\" translate=\"General.Messages.NothingFound\"></td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n\r\n</div>");

@@ -308,104 +308,104 @@ function getContextInstance(sxc, htmlElement) {
 exports.getContextInstance = getContextInstance;
 /**
  * create part of context object (it is not cached)
- * @param editContext
+ * @param editCtx
  */
-function createContextFromEditContext(editContext) {
-    var contextOfButton = new context_of_button_1.ContextOfButton();
+function createContextFromEditContext(editCtx) {
+    var btnCtx = new context_of_button_1.ContextOfButton();
     // *** ContextOf ***
     // this will be everything about the current system, like system / api -paths etc.
-    contextOfButton.system = new system_context_1.SystemContext();
-    if (editContext.error) {
-        contextOfButton.system.error = editContext.error.type;
+    btnCtx.system = new system_context_1.SystemContext();
+    if (editCtx.error) {
+        btnCtx.system.error = editCtx.error.type;
     }
     // empty
     // this will be something about the current tenant(the dnn portal)
-    contextOfButton.tenant = new tenant_context_1.TenantContext();
-    if (editContext.Environment) {
-        contextOfButton.tenant.id = editContext.Environment.WebsiteId; // InstanceConfig.portalId
-        contextOfButton.tenant.url = editContext.Environment.WebsiteUrl; // NgDialogParams.portalroot
+    btnCtx.tenant = new tenant_context_1.TenantContext();
+    if (editCtx.Environment) {
+        btnCtx.tenant.id = editCtx.Environment.WebsiteId; // InstanceConfig.portalId
+        btnCtx.tenant.url = editCtx.Environment.WebsiteUrl; // NgDialogParams.portalroot
     }
     // things about the user
-    contextOfButton.user = new user_context_1.UserContext();
-    if (editContext.User) {
-        contextOfButton.user.canDesign = editContext.User.CanDesign;
-        contextOfButton.user.canDevelop = editContext.User.CanDevelop;
+    btnCtx.user = new user_context_1.UserContext();
+    if (editCtx.User) {
+        btnCtx.user.canDesign = editCtx.User.CanDesign;
+        btnCtx.user.canDevelop = editCtx.User.CanDevelop;
     }
     // *** ContextOfPage ***
     // this will be information related to the current page
-    contextOfButton.page = new page_context_1.PageContext();
-    if (editContext.Environment) {
-        contextOfButton.page.id = editContext.Environment.PageId; // InstanceConfig.tabId, NgDialogParams.tid
-        contextOfButton.page.url = editContext.Environment.PageUrl;
+    btnCtx.page = new page_context_1.PageContext();
+    if (editCtx.Environment) {
+        btnCtx.page.id = editCtx.Environment.PageId; // InstanceConfig.tabId, NgDialogParams.tid
+        btnCtx.page.url = editCtx.Environment.PageUrl;
     }
     // *** ContextOfInstance ***
     // information related to the current DNN module, incl.instanceId, etc.
-    contextOfButton.instance = new instance_context_1.InstanceContext();
-    if (editContext.Environment) {
-        contextOfButton.instance.id = editContext.Environment.InstanceId; // InstanceConfig.moduleId, NgDialogParams.mid
-        contextOfButton.instance.isEditable = editContext.Environment.IsEditable;
+    btnCtx.instance = new instance_context_1.InstanceContext();
+    if (editCtx.Environment) {
+        btnCtx.instance.id = editCtx.Environment.InstanceId; // InstanceConfig.moduleId, NgDialogParams.mid
+        btnCtx.instance.isEditable = editCtx.Environment.IsEditable;
         // sxc
-        contextOfButton.instance.sxcVersion = editContext.Environment.SxcVersion;
-        contextOfButton.instance.parameters = editContext.Environment.parameters;
-        contextOfButton.instance.sxcRootUrl = editContext.Environment.SxcRootUrl; // NgDialogParams.websiteroot
+        btnCtx.instance.sxcVersion = editCtx.Environment.SxcVersion;
+        btnCtx.instance.parameters = editCtx.Environment.parameters;
+        btnCtx.instance.sxcRootUrl = editCtx.Environment.SxcRootUrl; // NgDialogParams.websiteroot
     }
-    if (editContext.ContentBlock) {
-        contextOfButton.instance.allowPublish = editContext.ContentBlock.VersioningRequirements === sxc_controller_in_page_1.$2sxcInPage.c.publishAllowed; // NgDialogParams.publishing
+    if (editCtx.ContentBlock) {
+        btnCtx.instance.allowPublish = editCtx.ContentBlock.VersioningRequirements === sxc_controller_in_page_1.$2sxcInPage.c.publishAllowed; // NgDialogParams.publishing
     }
     // this will be about the current app, settings of the app, app - paths, etc.
-    contextOfButton.app = new app_context_1.AppContext();
-    if (editContext.ContentGroup) {
-        contextOfButton.app.id = editContext.ContentGroup.AppId; // or NgDialogParams.appId
-        contextOfButton.app.isContent = editContext.ContentGroup.IsContent;
-        contextOfButton.app.resourcesId = editContext.ContentGroup.AppResourcesId;
-        contextOfButton.app.settingsId = editContext.ContentGroup.AppSettingsId;
-        contextOfButton.app.appPath = editContext.ContentGroup.AppUrl; // InstanceConfig.appPath, NgDialogParams.approot, this is the only value which doesn't have a slash by default. note that the app-root doesn't exist when opening "manage-app"
-        contextOfButton.app.hasContent = editContext.ContentGroup.HasContent;
-        contextOfButton.app.supportsAjax = editContext.ContentGroup.SupportsAjax;
-        contextOfButton.app.zoneId = editContext.ContentGroup.ZoneId; // or NgDialogParams.zoneId
+    btnCtx.app = new app_context_1.AppContext();
+    if (editCtx.ContentGroup) {
+        btnCtx.app.id = editCtx.ContentGroup.AppId; // or NgDialogParams.appId
+        btnCtx.app.isContent = editCtx.ContentGroup.IsContent;
+        btnCtx.app.resourcesId = editCtx.ContentGroup.AppResourcesId;
+        btnCtx.app.settingsId = editCtx.ContentGroup.AppSettingsId;
+        btnCtx.app.appPath = editCtx.ContentGroup.AppUrl; // InstanceConfig.appPath, NgDialogParams.approot, this is the only value which doesn't have a slash by default. note that the app-root doesn't exist when opening "manage-app"
+        btnCtx.app.hasContent = editCtx.ContentGroup.HasContent;
+        btnCtx.app.supportsAjax = editCtx.ContentGroup.SupportsAjax;
+        btnCtx.app.zoneId = editCtx.ContentGroup.ZoneId; // or NgDialogParams.zoneId
     }
-    if (editContext.Language) {
+    if (editCtx.Language) {
         // languages
-        contextOfButton.app.currentLanguage = editContext.Language.Current; // NgDialogParams.lang
-        contextOfButton.app.primaryLanguage = editContext.Language.Primary; // NgDialogParams.langpri
-        contextOfButton.app.allLanguages = editContext.Language.All; // or NgDialogParams.langs
+        btnCtx.app.currentLanguage = editCtx.Language.Current; // NgDialogParams.lang
+        btnCtx.app.primaryLanguage = editCtx.Language.Primary; // NgDialogParams.langpri
+        btnCtx.app.allLanguages = editCtx.Language.All; // or NgDialogParams.langs
     }
     // ensure that the UI will load the correct assets to enable editing
-    contextOfButton.ui = new ui_context_1.UiContext();
-    if (editContext.Ui) {
-        contextOfButton.ui.autoToolbar = editContext.Ui.AutoToolbar; // toolbar auto-show
-        if (editContext.Ui.Form)
-            contextOfButton.ui.form = editContext.Ui.Form; // decide which dialog opens, eg ng8
+    btnCtx.ui = new ui_context_1.UiContext();
+    if (editCtx.Ui) {
+        btnCtx.ui.autoToolbar = editCtx.Ui.AutoToolbar; // toolbar auto-show
+        if (editCtx.Ui.Form)
+            btnCtx.ui.form = editCtx.Ui.Form; // decide which dialog opens, eg ng8
     }
     // *** ContextOfContentBlock ***
     // information related to the current contentBlock
-    contextOfButton.contentBlock = new content_block_context_1.ContentBlockContext();
-    if (editContext.ContentBlock) {
-        contextOfButton.contentBlock.id = editContext.ContentBlock.Id; // or sxc.cbid or InstanceConfig.cbid
-        contextOfButton.contentBlock.isEntity = editContext.ContentBlock.IsEntity; // ex: InstanceConfig.cbIsEntity
-        contextOfButton.contentBlock.showTemplatePicker = editContext.ContentBlock.ShowTemplatePicker;
-        contextOfButton.contentBlock.versioningRequirements = editContext.ContentBlock.VersioningRequirements;
-        contextOfButton.contentBlock.parentFieldName = editContext.ContentBlock.ParentFieldName;
-        contextOfButton.contentBlock.parentFieldSortOrder = editContext.ContentBlock.ParentFieldSortOrder;
-        contextOfButton.contentBlock.partOfPage = editContext.ContentBlock.PartOfPage; // NgDialogParams.partOfPage
+    btnCtx.contentBlock = new content_block_context_1.ContentBlockContext();
+    if (editCtx.ContentBlock) {
+        btnCtx.contentBlock.id = editCtx.ContentBlock.Id; // or sxc.cbid or InstanceConfig.cbid
+        btnCtx.contentBlock.isEntity = editCtx.ContentBlock.IsEntity; // ex: InstanceConfig.cbIsEntity
+        btnCtx.contentBlock.showTemplatePicker = editCtx.ContentBlock.ShowTemplatePicker;
+        btnCtx.contentBlock.versioningRequirements = editCtx.ContentBlock.VersioningRequirements;
+        btnCtx.contentBlock.parentFieldName = editCtx.ContentBlock.ParentFieldName;
+        btnCtx.contentBlock.parentFieldSortOrder = editCtx.ContentBlock.ParentFieldSortOrder;
+        btnCtx.contentBlock.partOfPage = editCtx.ContentBlock.PartOfPage; // NgDialogParams.partOfPage
     }
-    if (editContext.ContentGroup) {
-        contextOfButton.contentBlock.isCreated = editContext.ContentGroup.IsCreated;
-        contextOfButton.contentBlock.isList = editContext.ContentGroup.IsList; // ex: InstanceConfig.isList
-        contextOfButton.contentBlock.queryId = editContext.ContentGroup.QueryId;
-        contextOfButton.contentBlock.templateId = editContext.ContentGroup.TemplateId;
-        contextOfButton.contentBlock.contentTypeId = editContext.ContentGroup.ContentTypeName;
-        contextOfButton.contentBlock.contentGroupId = editContext.ContentGroup.Guid; // ex: InstanceConfig.contentGroupId
+    if (editCtx.ContentGroup) {
+        btnCtx.contentBlock.isCreated = editCtx.ContentGroup.IsCreated;
+        btnCtx.contentBlock.isList = editCtx.ContentGroup.IsList; // ex: InstanceConfig.isList
+        btnCtx.contentBlock.queryId = editCtx.ContentGroup.QueryId;
+        btnCtx.contentBlock.templateId = editCtx.ContentGroup.TemplateId;
+        btnCtx.contentBlock.contentTypeId = editCtx.ContentGroup.ContentTypeName;
+        btnCtx.contentBlock.contentGroupId = editCtx.ContentGroup.Guid; // ex: InstanceConfig.contentGroupId
     }
     // *** ContextOfItem ***
     // information about the current item
-    contextOfButton.item = new item_context_1.ItemContext();
+    btnCtx.item = new item_context_1.ItemContext();
     // empty
     // *** ContextOfToolbar ***
     // fill externally
     // *** ContextOfButton ***
     // fill externally
-    return contextOfButton;
+    return btnCtx;
 }
 exports.createContextFromEditContext = createContextFromEditContext;
 
@@ -1527,11 +1527,11 @@ exports.UserOfEditContext = UserOfEditContext;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var QuickEditState = __webpack_require__(41);
+var DebugConfig_1 = __webpack_require__(17);
 var Container = __webpack_require__(42);
 var ContainerSize = __webpack_require__(43);
+var QuickEditState = __webpack_require__(41);
 var UrlHandler = __webpack_require__(89);
-var DebugConfig_1 = __webpack_require__(17);
 var dbg = DebugConfig_1.DebugConfig.qDialog;
 var diagShowClass = 'dia-select';
 /** dialog manager - the currently active dialog object */
@@ -1549,14 +1549,13 @@ var QuickDialogManager = /** @class */ (function () {
     QuickDialogManager.prototype.isVisible = function () {
         return current != null;
     };
-    ;
     /**
      * toggle visibility
      * @param {boolean} [show] true/false optional
      */
     QuickDialogManager.prototype.setVisible = function (show) {
         var cont = Container.getOrCreate();
-        //if (show === undefined)
+        // if (show === undefined)
         //  show = !cont.hasClass(diagShowClass);
         // show/hide visually
         cont.toggleClass(diagShowClass, show);
@@ -1578,7 +1577,9 @@ var QuickDialogManager = /** @class */ (function () {
         // in case it's a toggle
         if (this.isVisible()) {
             // check if we're just toggling the current, or will show a new one afterwards
-            var currentPromise = dialogName && current && current.bridge.isConfiguredFor(context.sxc.cacheKey, dialogName)
+            var currentPromise = dialogName &&
+                current &&
+                current.bridge.isConfiguredFor(context.sxc.cacheKey, dialogName)
                 ? this.promise
                 : null;
             this.cancel(current.bridge);
@@ -1586,7 +1587,7 @@ var QuickDialogManager = /** @class */ (function () {
             if (currentPromise)
                 return currentPromise;
         }
-        var dialogUrl = UrlHandler.rewriteUrl(url);
+        var dialogUrl = UrlHandler.setUrlToQuickDialog(url);
         iFrame.bridge.setup(context.sxc, dialogName);
         iFrame.setAttribute('src', dialogUrl);
         // if the window had already been loaded, re-init
@@ -1605,7 +1606,9 @@ var QuickDialogManager = /** @class */ (function () {
         if (dbg.showHide)
             console.log("qDialog persistDia(..., " + state + ")");
         if (state) {
-            var cbId = iframe.bridge.getContext().contentBlock.id.toString();
+            var cbId = iframe.bridge
+                .getContext()
+                .contentBlock.id.toString();
             if (dbg.showHide)
                 console.log("contentBlockId: " + cbId + ")");
             return QuickEditState.cbId.set(cbId);
@@ -1615,7 +1618,7 @@ var QuickDialogManager = /** @class */ (function () {
     };
     QuickDialogManager.prototype.promiseRestart = function () {
         var _this = this;
-        this.promise = new Promise(function (resolve) { return _this.resolvePromise = resolve; });
+        this.promise = new Promise(function (resolve) { return (_this.resolvePromise = resolve); });
         return this.promise;
     };
     return QuickDialogManager;
@@ -1772,11 +1775,11 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(52);
-var has_log_1 = __webpack_require__(15);
-var log_1 = __webpack_require__(7);
 var context_1 = __webpack_require__(5);
 var context_of_instance_1 = __webpack_require__(26);
 var DebugConfig_1 = __webpack_require__(17);
+var has_log_1 = __webpack_require__(15);
+var log_1 = __webpack_require__(7);
 var logId = 'Cms.Api';
 var Cms = /** @class */ (function (_super) {
     __extends(Cms, _super);
@@ -1796,14 +1799,14 @@ var Cms = /** @class */ (function (_super) {
     Cms.prototype.resetLog = function () {
         this.log = new log_1.Log(logId, null, 'log was reset');
     };
-    ;
     Cms.prototype.run = function (context, nameOrSettings, eventOrSettings, event) {
         var _this = this;
-        var realContext = (context_of_instance_1.isContextOfInstance(context))
+        var realContext = context_of_instance_1.isContextOfInstance(context)
             ? context
             : context_1.context(context);
-        return this.do(function () { return new engine_1.Engine(_this.log)
-            .detectParamsAndRun(realContext, nameOrSettings, eventOrSettings, event); });
+        return this.do(function () {
+            return new engine_1.Engine(_this.log).detectParamsAndRun(realContext, nameOrSettings, eventOrSettings, event);
+        });
     };
     /**
      * reset/clear the log if alwaysResetLog is true
@@ -1811,9 +1814,7 @@ var Cms = /** @class */ (function (_super) {
     Cms.prototype.do = function (innerCall) {
         if (this.autoReset)
             this.resetLog();
-        //console.log('before');
         var result = innerCall();
-        //console.log('after');
         if (this.autoDump)
             console.log(this.log.dump());
         return result;
@@ -2745,8 +2746,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var render_1 = __webpack_require__(16);
 var sxc_controller_in_page_1 = __webpack_require__(3);
 var window_in_page_1 = __webpack_require__(1);
-var command_link_to_ng_dialog_1 = __webpack_require__(82);
 var quick_dialog_1 = __webpack_require__(23);
+var DialogPaths_1 = __webpack_require__(40);
+var command_link_to_ng_dialog_1 = __webpack_require__(82);
 /**
  * open a new dialog of the angular-ui
  * @param settings
@@ -2769,15 +2771,23 @@ function commandOpenNgDialog(context, event) {
         // check if inline window (quick-dialog)
         if (context.button.inlineWindow) {
             // test if it should be full screen (value or resolve-function)
-            if (typeof (context.button.fullScreen) === 'function')
+            if (typeof context.button.fullScreen === 'function')
                 fullScreen = context.button.fullScreen(context);
             var diagName = context.button.dialog(context).toString();
-            quick_dialog_1.quickDialog.showOrToggleFromToolbar(context, link, fullScreen, diagName)
-                .then(function (isChanged) { if (isChanged)
-                resolveAndReInit(); });
+            quick_dialog_1.quickDialog
+                .showOrToggleFromToolbar(context, link, fullScreen, diagName)
+                .then(function (isChanged) {
+                if (isChanged)
+                    resolveAndReInit();
+            });
             // else it's a normal pop-up dialog
         }
         else {
+            // check if alt-key pressed, to open the old/new dialog instead
+            if (origEvent && origEvent.altKey) {
+                var toOld = link.indexOf(DialogPaths_1.DialogPaths.ng8) > 0;
+                link = link.replace(toOld ? DialogPaths_1.DialogPaths.ng8 : DialogPaths_1.DialogPaths.ng1, toOld ? DialogPaths_1.DialogPaths.ng1 : DialogPaths_1.DialogPaths.ng8);
+            }
             // check if new-window
             if (context.button.newWindow || (origEvent && origEvent.shiftKey)) {
                 resolvePromise(context);
@@ -3302,12 +3312,12 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var templates_1 = __webpack_require__(18);
-var command_open_ng_dialog_1 = __webpack_require__(39);
-var commands_1 = __webpack_require__(10);
+var has_log_1 = __webpack_require__(15);
+var settings_adapter_1 = __webpack_require__(30);
 var button_action_1 = __webpack_require__(20);
 var button_config_1 = __webpack_require__(21);
-var settings_adapter_1 = __webpack_require__(30);
-var has_log_1 = __webpack_require__(15);
+var command_open_ng_dialog_1 = __webpack_require__(39);
+var commands_1 = __webpack_require__(10);
 var Engine = /** @class */ (function (_super) {
     __extends(Engine, _super);
     function Engine(parentLog) {
@@ -3316,9 +3326,12 @@ var Engine = /** @class */ (function (_super) {
     Engine.prototype.detectParamsAndRun = function (context, nameOrSettings, eventOrSettings, event) {
         this.log.add("detecting params and running - has " + arguments.length + " params");
         var settings;
-        var thirdParamIsEvent = (!event && eventOrSettings && typeof eventOrSettings.altKey !== 'undefined');
+        var thirdParamIsEvent = !event &&
+            eventOrSettings &&
+            typeof eventOrSettings.altKey !== 'undefined';
         this.log.add("might cycle parameters, in case not all were given. third is event=" + thirdParamIsEvent);
-        if (thirdParamIsEvent) { // no event param, but settings contains the event-object
+        if (thirdParamIsEvent) {
+            // no event param, but settings contains the event-object
             this.log.add('cycling parameters as event was missing & eventOrSettings seems to be an event; settings must be empty');
             event = eventOrSettings; // move it to the correct variable
             settings = this.nameOrSettingsAdapter(nameOrSettings);
@@ -3338,6 +3351,7 @@ var Engine = /** @class */ (function (_super) {
      * @param event
      */
     Engine.prototype.run = function (context, nameOrSettings, event) {
+        // | any is temporary, just to get it to work; should be improved to only give a promise
         var settings = this.nameOrSettingsAdapter(nameOrSettings);
         settings = this.expandSettingsWithDefaults(settings);
         var origEvent = event;
@@ -3349,27 +3363,28 @@ var Engine = /** @class */ (function (_super) {
         newButtonAction.commandDefinition = commands_1.Commands.getInstance().get(name);
         var newButtonConfig = new button_config_1.ButtonConfig(newButtonAction);
         newButtonConfig.name = name;
-        var button = context.button = Object.assign(newButtonConfig, newButtonAction.commandDefinition.buttonConfig, settings_adapter_1.settingsAdapter(settings)); // merge conf & settings, but settings has higher priority
+        var button = (context.button = Object.assign(newButtonConfig, newButtonAction.commandDefinition.buttonConfig, settings_adapter_1.settingsAdapter(settings))); // merge conf & settings, but settings has higher priority
         // todo: stv, fix this in case that is function
         if (!button.dialog) {
-            this.log.add("button.dialog method missing, must be old implementation which used the action-name - generating method");
-            button.dialog = function () { return name; };
+            this.log.add('button.dialog method missing, must be old implementation which used the action-name - generating method');
+            button.dialog = function () {
+                return name;
+            };
         }
         // todo: stv, fix this in case that is function
         if (!button.code) {
-            this.log.add("simple button without code - generating code to open standard dialog");
-            button.code = function (contextParam, event) {
-                return command_open_ng_dialog_1.commandOpenNgDialog(contextParam, event);
+            this.log.add('simple button without code - generating code to open standard dialog');
+            button.code = function (contextParam, evt) {
+                return command_open_ng_dialog_1.commandOpenNgDialog(contextParam, evt);
             };
         }
         if (button.uiActionOnly(context)) {
-            this.log.add("just a UI command, will not run pre-flight to ensure content-block - now running the code");
+            this.log.add('just a UI command, will not run pre-flight to ensure content-block - now running the code');
             return button.code(context, origEvent);
         }
         // if more than just a UI-action, then it needs to be sure the content-group is created first
-        this.log.add("command might change data, will wrap in pre-flight to ensure content-block");
-        return templates_1.prepareToAddContent(context, settings.useModuleList)
-            .then(function () {
+        this.log.add('command might change data, will wrap in pre-flight to ensure content-block');
+        return templates_1.prepareToAddContent(context, settings.useModuleList).then(function () {
             return context.button.code(context, origEvent);
         });
     };
@@ -4322,17 +4337,14 @@ var DialogPaths_1 = __webpack_require__(40);
 var command_1 = __webpack_require__(84);
 /**
  * assemble an object which will store the configuration and execute it
- * @param sxc
- * @param editContext
- * @param specialSettings
  */
 function commandCreate(context) {
     var ngDialogUrl = context.instance.sxcRootUrl +
         'desktopmodules/tosic_sexycontent/' +
         ((context.ui.form === 'ng8' && context.button.dialog(context) === 'edit') ? DialogPaths_1.DialogPaths.ng8 : DialogPaths_1.DialogPaths.ng1) +
         '?sxcver=' + context.instance.sxcVersion;
-    var isDebug = window_in_page_1.windowInPage.$2sxc.urlParams.get('debug') ? '&debug=true' : '';
-    var cmd = new command_1.Command(context, ngDialogUrl, isDebug);
+    var debugUrlParam = window_in_page_1.windowInPage.$2sxc.urlParams.get('debug') ? '&debug=true' : '';
+    var cmd = new command_1.Command(context, ngDialogUrl, debugUrlParam);
     return cmd;
 }
 exports.commandCreate = commandCreate;
@@ -4735,26 +4747,26 @@ var DialogPaths_1 = __webpack_require__(40);
 /**
  * rewrite the url to fit the quick-dialog situation
  * optionally with a live-compiled version from ng-serve
- * @param {string} url - original url pointing to the "wrong" dialog
- * @returns {string} new url
+ * @param {string} url - original url pointing to the default dialog
+ * @returns {string} new url pointing to quick dialog
  */
-function rewriteUrl(url) {
+function setUrlToQuickDialog(url) {
     // change default url-schema from the primary angular-app to the quick-dialog
     url = url.replace(DialogPaths_1.DialogPaths.ng1, DialogPaths_1.DialogPaths.quickDialog)
         .replace(DialogPaths_1.DialogPaths.ng8, DialogPaths_1.DialogPaths.quickDialog);
-    url = changePathToDevIfNecessary(url);
+    url = changePathToLocalhostForDev(url);
     return url;
 }
-exports.rewriteUrl = rewriteUrl;
+exports.setUrlToQuickDialog = setUrlToQuickDialog;
 /**
  * special debug-code when running on local ng-serve
  * this is only activated if the developer manually sets a value in the localStorage
  * @param url
  */
-function changePathToDevIfNecessary(url) {
+function changePathToLocalhostForDev(url) {
     try {
         var devMode = localStorage.getItem('devMode');
-        if (devMode && ~~devMode) {
+        if (devMode && !!devMode) {
             return url.replace('/desktopmodules/tosic_sexycontent/dist/ng/ui.html', 'http://localhost:4200');
         }
     }
