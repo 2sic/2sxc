@@ -2966,7 +2966,8 @@ angular
     'PipelineManagement', // Manage pipelines
     'ContentImportApp',
     'ContentExportApp',
-    'HistoryApp' // the item-history app
+    'HistoryApp', // the item-history app
+    'Migration'
 
     // big todo: currently removed dependency to eavEditentity (much faster) but it actually does...
     // ...need it to initialize this class, so ATM this only works in a system where the other dependency
