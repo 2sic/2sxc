@@ -18,6 +18,7 @@ namespace ToSic.SexyContent.WebApi
 	[SupportedModules("2sxc,2sxc-app")]
     [SxcWebApiExceptionHandling]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [ValidateAntiForgeryToken]
     public class AppAssetsController : SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)

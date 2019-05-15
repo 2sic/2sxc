@@ -3105,12 +3105,12 @@ angular
     svc.openEditItems = function oel(items, closeCallback, moreResolves) {
       var useOld = featuresSvc.enabledNow(featuresSvc.id.useOldEditUi);
       if (window.event && window.event.altKey) useOld = !useOld;
-      var method = useOld ? openEditItemsNg1 : openEditItemsNew;
+      var method = useOld ? svc.openEditItemsNg1 : svc.openEditItemsNew;
       return method(items, closeCallback, moreResolves);
     };
 
     /** method to open the old dialog */
-    function openEditItemsNg1(items, closeCallback, moreResolves) {
+    svc.openEditItemsNg1 = function(items, closeCallback, moreResolves) {
       var merged = angular.extend({ items: items }, moreResolves || {});
       merged.partOfPage = Boolean(merged.partOfPage);
       merged.publishing = merged.publishing || null;
@@ -3126,13 +3126,13 @@ angular
         resolve,
         closeCallback
       );
-    }
+    };
 
-    function openEditItemsNew(items, closeCallback, moreResolves) {
+    svc.openEditItemsNew = function(items, closeCallback, moreResolves) {
       var itemsStr = encodeURIComponent(JSON.stringify(items));
       console.log('items', items, itemsStr);
       return eavNgDialogs.openEdit('items=' + itemsStr, closeCallback);
-    }
+    };
 
     // 2019-05-11 2dm disabled, don't think it's in use
     // svc.openItemHistory = function ioh(entityId, closeCallback) {

@@ -25,6 +25,7 @@ namespace ToSic.Sxc.Adam.WebApi
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
+    [ValidateAntiForgeryToken]
     public class AdamController : SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)
@@ -61,7 +62,7 @@ namespace ToSic.Sxc.Adam.WebApi
                         Error = "",
                         Name = Path.GetFileName(file.FileName),
                         Id = file.FileId,
-                        Path = /*PortalSettings.HomeDirectory +*/ file.Url,//.RelativePath,
+                        Path = file.Url,
                         Type = Classification.TypeName(file.Extension)
                     };
                 }
