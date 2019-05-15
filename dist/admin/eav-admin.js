@@ -1426,6 +1426,7 @@ angular.module('EavDirectives')
     ['c', 'cbid'],
     ['d', 'debug'],
     ['i', 'mid'],
+    ['l', 'lang'],
     ['lc', 'langs'],
     ['lp', 'langpri'],
     ['pop', 'partOfPage'],
@@ -1503,6 +1504,8 @@ angular.module('EavDirectives')
           debugState.on +
           '&i=' +
           url('mid') +
+          '&l=' +
+          url('lang') +
           '&lc=' +
           url('langs') +
           '&lp=' +
