@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Content Editing UI (Angular)</title>
+    <meta charset="utf-8" />
+    <base href="./">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script>
+        var jsVersionCacheId = window.location.search;    // use this to ensure it's loaded once for every version
+        document.write('<script src="../../js/2sxc.api.min.js' + jsVersionCacheId + '"></scr' + 'ipt>');
+    </script>
+    <!-- first load the main 2sxc because it contains some url-param methods -->
+    <script>
+        /**
+         * first check in local storage if we have this parameter
+         * as it will often disappear from the url when navigating
+         * if not found, use from url
+         * the $2sxc.urlParams.require will throw an error, if not found
+         */
+        function reqParam(paramName) {
+            return $2sxc.urlParams.require(paramName);
+        }
+
+        // the version to append to each asset, to ensure reload after an upgrade
+        var sxcVersionParam = "sxcver=" + reqParam("sxcver");
+
+        // this creates an object on $.ServicesFramework
+        // it looks like the DNN object and is necessary so that scripts relying on it will work
+        // it basically fakes it, but contains the correct infos like getTabId etc. without needing the full DNN
+        //
+        // important!!!
+        // the ng-admin looks for i and p, not for mid/tid
+        function createFakeSf(apiUrl) {
+            if (reqParam("mid") === "")
+                alert("ModuleId (i = mid) missing - cannot continue");
+            var pageId = reqParam("tid");
+            if (pageId === '')
+                alert("PageId (p = tid) missing, cannot continue")
+
+            // create a fake jQuery object, as it shouldn't exist, but is where the ServicesFramework is attached
+            if (window.$ === undefined) window.$ = {};
+
+            // create a fake ServicesFramework, which $2sxc will pick up
+            window.$.ServicesFramework = function (id) {
+                return {
+                    name: "This is a fake DNN ServicesFramework",
+                    description: "It enables stuff requiring (but not really needing) the sf to work",
+                    getTabId: function () { return pageId; },
+                    getAntiForgeryValue: function () { return "abcdefgihjklmnop"; },
+                    getServiceRoot: function () { return apiUrl; }
+                }
+            }
+        }
+
+        // add a script right then and there to the document
+        function addScript(src) {
+            var async = src.async || false;
+            src = typeof src === "string" ? src : src.url;
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = src + "?" + sxcVersionParam;
+            document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
+        }
+
+        // add a style to the document header
+        function addStyle(src) {
+            var style = document.createElement("link");
+            style.setAttribute("rel", "stylesheet");
+            style.setAttribute("type", "text/css");
+            style.setAttribute("href", src + "?" + sxcVersionParam);
+            document.getElementsByTagName("head")[0].appendChild(style);
+        }
+
+    </script>
+
+    <script>
+        var apiUrl = reqParam("portalroot") + "desktopmodules/2sxc/api/";
+        createFakeSf(apiUrl);
+    </script>
+
+    <script>
+        var core = [
+            'core.js',
+        ];
+        var scripts = [
+            'runtime.js',            // default set needed for all UIs like angular, animate, translate
+            // 'es2015-polyfills.js',    // 2sxc stuff like bootloader, configuration
+            'polyfills.js',
+            'styles.js',            // Main parts like eav-admin, sxc-admin and eav-edit
+            'scripts.js',
+            'vendor.js',
+            'main.js'
+        ];
+        var styles = []
+    </script>
+
+</head>
+
+<body style="background-color:transparent">
+    <app-root></app-root>
+    <script>
+        for (var s = 0; s < core.length; s++)
+            addScript(core[s]);
+    </script>
+    <script>
+        ng.core.enableProdMode();
+    </script>
+    <script>
+        for (var s = 0; s < scripts.length; s++)
+            addScript(scripts[s]);
+        for (var s = 0; s < styles.length; s++)
+            addStyle(styles[s]);
+    </script>
+</body>
+
+</html>
