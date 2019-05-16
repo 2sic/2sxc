@@ -52,7 +52,7 @@
                     name: "This is a fake DNN ServicesFramework",
                     description: "It enables stuff requiring (but not really needing) the sf to work",
                     getTabId: function () { return pageId; },
-                    getAntiForgeryValue: function () { return "abcdefgihjklmnop"; },
+                    getAntiForgeryValue: function () { return reqParam("rvt"); },
                     getServiceRoot: function () { return apiUrl; }
                 }
             }
