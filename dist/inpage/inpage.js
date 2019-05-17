@@ -2860,6 +2860,8 @@ exports.getIFrame = getIFrame;
  */
 function buildContainerAndIFrame() {
     var container = $(containerTemplate);
+    if ($("#personaBar-iframe").length > 0)
+        container.addClass("persona-bar-visible");
     var newIFrame = document.createElement(iframeTag);
     var extendedIFrame = Iframebridge.build(newIFrame);
     container.find("." + iframeClass).append(extendedIFrame);
