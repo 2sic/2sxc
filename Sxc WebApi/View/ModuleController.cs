@@ -27,6 +27,7 @@ using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi.View
 {
+    [ValidateAntiForgeryToken]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ModuleController : SxcApiController
     {

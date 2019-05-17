@@ -8,6 +8,7 @@ using ToSic.SexyContent.WebApi.Permissions;
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
     [SupportedModules("2sxc,2sxc-app")]
+    [ValidateAntiForgeryToken]
     public class EntityPickerController : SxcApiControllerBase, IEntityPickerController
     {
         [HttpGet]

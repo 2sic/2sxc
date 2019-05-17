@@ -16,6 +16,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string Entities(int? appId = null, string type = null)
         {
+            ThrowIfNotSuperuser();
+
             if (UrlParamsIncomplete(appId, type, out var message))
                 return message;
 
@@ -69,6 +71,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string EntityMetadata(int? appId = null, int? entity = null)
         {
+            ThrowIfNotSuperuser();
+
             if (UrlParamsIncomplete(appId, entity, out var message))
                 return message;
 
@@ -85,6 +89,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string EntityPermissions(int? appId = null, int? entity = null)
         {
+            ThrowIfNotSuperuser();
+
             if (UrlParamsIncomplete(appId, entity, out var message))
                 return message;
 
@@ -101,6 +107,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string Entity(int? appId = null, string entity = null)
         {
+            ThrowIfNotSuperuser();
+
             if (UrlParamsIncomplete(appId, entity, out var message))
                 return message;
 

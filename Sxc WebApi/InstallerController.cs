@@ -15,6 +15,7 @@ namespace ToSic.SexyContent.WebApi
 {
     [SupportedModules("2sxc,2sxc-app")]
     [SxcWebApiExceptionHandling]
+    [ValidateAntiForgeryToken]
     public class InstallerController : DnnApiControllerWithFixes
     {
         protected override void Initialize(HttpControllerContext controllerContext)

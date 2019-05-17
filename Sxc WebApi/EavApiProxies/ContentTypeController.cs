@@ -15,6 +15,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     /// Web API Controller for Content-Type structures, fields etc.
     /// </summary>
     [SupportedModules("2sxc,2sxc-app")]
+    [ValidateAntiForgeryToken]
     public class ContentTypeController : SxcApiControllerBase, IContentTypeController
     {
         private Eav.WebApi.ContentTypeController _eavCtc;

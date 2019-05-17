@@ -116,6 +116,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string TypeMetadata(int? appId = null, string type = null)
         {
+            ThrowIfNotSuperuser();
+
             if (UrlParamsIncomplete(appId, type, out var message))
                 return message;
 
@@ -132,6 +134,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string TypePermissions(int? appId = null, string type = null)
         {
+            ThrowIfNotSuperuser();
+
             if (UrlParamsIncomplete(appId, type, out var message))
                 return message;
 

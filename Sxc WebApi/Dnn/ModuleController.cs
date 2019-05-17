@@ -8,6 +8,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
     // support all modules now... 
     [SupportedModules("2sxc,2sxc-app")]
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [ValidateAntiForgeryToken]
     public class ModuleController: DnnApiControllerWithFixes
     {
         protected override void Initialize(HttpControllerContext controllerContext)
