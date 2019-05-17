@@ -52,8 +52,8 @@
 			<DefaultExclude Include="_\**" />
 
       <!-- 2dm 2018-08-12 exclude ng-edit, as we only want a local copy while developing and not distribute it-->
-      <DefaultExclude Include="dist\ng-edit\**" />
-      <DefaultExclude Include="dist\i18n\ng-edit\**" />
+      <DefaultExclude Include="dist\ng-edit\**\*.map" />
+      <DefaultExclude Include="dist\i18n\ng-edit\**.map" />
     </ItemGroup>
 
     <ItemGroup>
