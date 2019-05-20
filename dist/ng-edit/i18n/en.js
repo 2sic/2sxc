@@ -12,7 +12,23 @@
 	"SaveMode": {
 		"show": "show",
 		"hide": "hide",
-		"branch": "draft"
+    "branch": "draft",
+    "Dialog": {
+      "Title": "Save Mode",
+      "Intro": "This determines how you will save. The default is show/publish.",
+      "Show": {
+        "Title": "Show / Publish Everything",
+        "Body": "Show item with changes to the public when saving."
+      },
+      "Hide": {
+        "Title": "Hide Everything",
+        "Body": "This item will be hidden, and only visible to content editors."
+      },
+      "Branch": {
+        "Title": "Draft / Hide Changes",
+        "Body": "Keep original published. Only editors can see changed data until published at a later time."
+      }
+    }
 	},
 	"Message": {
 		"Saving": "saving...",
@@ -32,7 +48,7 @@
 	"Errors": {
 		"UnclearError": "Something went wrong - maybe parts worked, maybe not. Sorry :(",
 		"InnerControlMustOverride": "Inner control must override this function.",
-		"UnsavedChanges": "You have unsaved changes.",
+		"UnsavedChanges": "You have unsaved changes. Are you sure you want to close this dialog?",
 		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for",
 		"AdamUploadError": "The upload failed. The most likely cause is that the file you were trying to upload is bigger than the maximum upload size."
 	},
@@ -96,7 +112,34 @@
 		"Copy": "copy from",
 		"Use": "use from",
 		"Share": "share from",
-		"AllFields": "all fields"
+    "AllFields": "all fields",
+    "Dialog": {
+      "Title": "Translate {{name}}",
+      "Intro": "You can do many things when translating, incl. linking languages together.",
+      "NoTranslate": {
+        "Title": "Don't Translate",
+        "Body": "Use value in primary language ({{primary}})"
+      },
+      "FromPrimary": {
+        "Title": "Translate from ({{primary}})",
+        "Body": "Translate and start with the value in the primary language"
+      },
+      "FromOther": {
+        "Title": "Translate from ...",
+        "Body": "Translate and start with the value from another language",
+        "Subtitle": "Language to translate from"
+      },
+      "LinkReadOnly": {
+        "Title": "Inherit to other languege (read-only)",
+        "Body": "Inherit value from another language but don't edit it.",
+        "Subtitle": "Language to inherit from"
+      },
+      "LinkShared": {
+        "Title": "Share with another language (read/write)",
+        "Body": "Link languages together so they use the same value, editable.",
+        "Subtitle": "Language to share with"
+      }
+    }
 	},
 	"LangWrapper": {
 		"CreateValueInDefFirst": "Please create the value for '{{fieldname}}' in the default language before translating it."
