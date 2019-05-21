@@ -12,6 +12,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string Attributes(int? appId = null, string type = null)
         {
+            ThrowIfNotSuperuser();
+
             if (UrlParamsIncomplete(appId, type, out var message))
                 return message;
 
@@ -60,6 +62,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string AttributeMetadata(int? appId = null, string type = null, string attribute = null)
         {
+            ThrowIfNotSuperuser();
+
             if (UrlParamsIncomplete(appId, type, attribute, out var message))
                 return message;
 

@@ -11,6 +11,7 @@ using ToSic.Eav.Apps.Environment;
 namespace ToSic.SexyContent.WebApi
 {
     [SupportedModules("2sxc,2sxc-app")]
+    [ValidateAntiForgeryToken]
     public class ContentGroupController : SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)

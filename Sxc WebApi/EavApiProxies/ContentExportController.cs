@@ -16,10 +16,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     /// - [SupportedModules("2sxc,2sxc-app")]
     /// - [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
     /// Instead, the method itself must do additional security checking.
-    /// Security checking is possible, becauset the cookie still contains user information
+    /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [AllowAnonymous]
     [SxcWebApiExceptionHandling]
+    // [ValidateAntiForgeryToken] as these pages are called directly (browser opens the url directly to download files), we
+    // can't globally use this attribute.
     public class ContentExportController : DnnApiControllerWithFixes, IContentExportController
     {
 	    protected override void Initialize(HttpControllerContext controllerContext)

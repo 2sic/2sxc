@@ -94,6 +94,13 @@ namespace ToSic.SexyContent
             return result;
         }
 
+        /// <summary>
+        /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public dynamic Get(string name) => GetEntityValue(name, out _);
+
         private DynamicEntity _presentation;
 
         private DynamicEntity Presentation

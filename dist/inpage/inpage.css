@@ -222,6 +222,10 @@ body.sc-tb-show-all [sxc-toolbar-hover] .sc-menu { display: initial !important; 
     z-index: 9999;
 }
 
+.inpage-frame-wrapper.persona-bar-visible {
+    padding-left:80px;
+}
+
 .DNNModuleContent .sc-uninitialized {
     cursor: pointer;
     width: 100%;

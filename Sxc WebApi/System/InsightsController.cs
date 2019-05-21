@@ -1,4 +1,6 @@
-﻿using System.Web.Http.Controllers;
+﻿using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
+using System.Web.Http.Controllers;
 using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.Dnn;
 

@@ -26,7 +26,7 @@
                     name: "This is a fake DNN ServicesFramework",
                     description: "It enables stuff requiring (but not really needing) the sf to work",
                     getTabId: function () { return $2sxc.urlParams.require("tid"); },
-                    getAntiForgeryValue: function () { return "abcdefgihjklmnop"; },
+                    getAntiForgeryValue: function () { return $2sxc.urlParams.require('rvt') /* "abcdefgihjklmnop" */; },
                     getServiceRoot: function () { return apiUrl; }
                 }
             }

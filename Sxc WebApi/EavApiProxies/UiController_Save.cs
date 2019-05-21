@@ -33,7 +33,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             var appMan = new AppManager(appId, Log);
             var appRead = appMan.Read;
-            var ser = new JsonSerializer(appRead.Package, Log);
+            var ser = new JsonSerializer(appRead.Package, Log)
+            {
+                // Since we're importing directly into this app, we would prefer local content-types
+                PreferLocalAppTypes = true
+            };
             validator.PrepareForEntityChecks(appRead);
 
             // permission checks

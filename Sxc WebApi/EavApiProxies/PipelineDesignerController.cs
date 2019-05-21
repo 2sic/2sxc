@@ -22,6 +22,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	[SupportedModules("2sxc,2sxc-app")]
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [SxcWebApiExceptionHandling]
+    [ValidateAntiForgeryToken]
 	public class PipelineDesignerController : DnnApiControllerWithFixes, IPipelineDesignerController
     {
 		private QueryController _eavCont;

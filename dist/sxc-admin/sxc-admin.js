@@ -280,7 +280,7 @@
 
         switch (initialDialog) {
             case "edit":
-                eavAdminDialogs.openEditItems(items, vm.close, {
+                eavAdminDialogs.openEditItemsNg1(items, vm.close, {
                     partOfPage: $2sxc.urlParams.get('partOfPage'),
                     publishing: $2sxc.urlParams.get('publishing')
                 });

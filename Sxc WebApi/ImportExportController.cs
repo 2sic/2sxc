@@ -21,6 +21,9 @@ using ToSic.SexyContent.WebApi.ImportExport;
 
 namespace ToSic.SexyContent.WebApi
 {
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
+    // we can't set this globally (only needed for imports)
     public class ImportExportController : DnnApiControllerWithFixes, IImportExportController
     {
         protected override void Initialize(HttpControllerContext controllerContext)
@@ -31,6 +34,7 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
         public dynamic GetAppInfo(int appId, int zoneId)
         {
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
@@ -57,6 +61,7 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
         public dynamic GetContentInfo(int appId, int zoneId, string scope)
         {
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{UserInfo.IsSuperUser}");
@@ -119,6 +124,7 @@ namespace ToSic.SexyContent.WebApi
         }
 
         [HttpGet]
+        [ValidateAntiForgeryToken]
         public bool ExportForVersionControl(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
             Log.Add($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
@@ -156,6 +162,7 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
         public ImportResult ImportApp()
         {
             Log.Add("import app start");
@@ -194,6 +201,7 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
         public ImportResult ImportContent()
         {
             Log.Add("import content start");
