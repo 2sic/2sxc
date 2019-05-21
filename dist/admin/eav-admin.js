@@ -2969,7 +2969,8 @@ angular
     'ContentImportApp',
     'ContentExportApp',
     'HistoryApp', // the item-history app
-    'Migration'
+    'Migration',
+    'InitParametersFromUrl'
 
     // big todo: currently removed dependency to eavEditentity (much faster) but it actually does...
     // ...need it to initialize this class, so ATM this only works in a system where the other dependency
@@ -2978,7 +2979,7 @@ angular
     // the correct clean up would be to create an edit-dialogs class or something (todo)
     // "eavEditEntity"			// the edit-app
   ])
-  .factory('eavAdminDialogs', ["$uibModal", "$window", "entitiesSvc", "contentTypeSvc", "appId", "featuresSvc", "eavNgDialogs", function(
+  .factory('eavAdminDialogs', ["$uibModal", "$window", "entitiesSvc", "contentTypeSvc", "appId", "featuresSvc", "eavNgDialogs", "sxcver", function(
     $uibModal,
     // eavConfig,
     $window,
@@ -2987,7 +2988,8 @@ angular
     contentTypeSvc,
     appId,
     featuresSvc,
-    eavNgDialogs
+    eavNgDialogs,
+    sxcver
   ) {
     /*jshint laxbreak:true */
 
@@ -3105,7 +3107,10 @@ angular
 
     // here's where we need to work to get Angular 8 integrated
     svc.openEditItems = function oel(items, closeCallback, moreResolves) {
-      var useOld = featuresSvc.enabledNow(featuresSvc.id.useOldEditUi);
+      var is10 = sxcver.startsWith('1');
+      var is9 = !is10;
+      console.log('is9', is9, sxcver);
+      var useOld = is9 || featuresSvc.enabledNow(featuresSvc.id.useOldEditUi);
       if (window.event && window.event.altKey) useOld = !useOld;
       var method = useOld ? svc.openEditItemsNg1 : svc.openEditItemsNew;
       return method(items, closeCallback, moreResolves);
@@ -3504,6 +3509,10 @@ angular.module("EavServices")
     // This is a dummy object, because it's needed for dialogs
     .factory('$uibModalInstance', function() {
       return null;
+    })
+
+    .factory('sxcver', function() {
+      return getParameterByName('sxcver');
     })
 
     // helper, currently only used by pipeline designer, to get url parameter
