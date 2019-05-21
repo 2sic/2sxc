@@ -13,6 +13,7 @@ using ToSic.SexyContent.WebApi.Permissions;
 namespace ToSic.SexyContent.WebApi.Dnn
 {
 	[SupportedModules("2sxc,2sxc-app")]
+    [ValidateAntiForgeryToken]
 	public class HyperlinkController : SxcApiControllerBase
 	{
 

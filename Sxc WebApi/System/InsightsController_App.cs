@@ -13,6 +13,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string LoadLog(int? appId = null)
         {
+            ThrowIfNotSuperuser();
+
             if (UrlParamsIncomplete(appId, out var message))
                 return message;
 
@@ -64,6 +66,8 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string Stats(int? appId = null)
         {
+            ThrowIfNotSuperuser();
+
             if (UrlParamsIncomplete(appId, out var message))
                 return message;
 

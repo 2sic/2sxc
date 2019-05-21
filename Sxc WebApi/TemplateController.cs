@@ -11,6 +11,7 @@ using ToSic.Eav.Interfaces;
 namespace ToSic.SexyContent.WebApi
 {
 	[SupportedModules("2sxc,2sxc-app")]
+    [ValidateAntiForgeryToken]
 	public class TemplateController : SxcApiControllerBase
 	{
 

@@ -22,6 +22,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	/// Proxy Class to the EAV EntitiesController (Web API Controller)
 	/// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
+    [ValidateAntiForgeryToken]
 	public class EntitiesController : SxcApiControllerBase, IEntitiesController
 	{
 	    protected override void Initialize(HttpControllerContext controllerContext)
@@ -53,7 +54,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var wrapLog = Log.Call("GetManyForEditing", $"get many a#{appId}, items⋮{items.Count}");
 
             // before we start, we have to convert the indexes into something more useful, because
-            // otherwise in content-list scenaries we don't have the type
+            // otherwise in content-list scenarios we don't have the type
             var appForSecurityChecks = App.LightWithoutData(new DnnTenant(PortalSettings), SystemRuntime.ZoneIdOfApp(appId), appId, Log);
             items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, appForSecurityChecks);
 
@@ -147,9 +148,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	        var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentType, Log);
 	        if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
 	            throw exception;
-	        // 2018-09-15 old code, should have checked the same stuff mostly...
-	        //new AppPermissionBeforeUsing(SxcInstance, Log)
-         //       .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
             return new EntityApi(appId, Log).GetEntitiesForAdmin(contentType);
 	    }
 
@@ -162,9 +160,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.DeleteSomething, out var exception))
                 throw exception;
-            // 2018-09-15 old code, should have checked the same stuff mostly...
-            //new AppPermissionBeforeUsing(SxcInstance, Log)
-            //    .ConfirmPermissionsOrThrow(contentType, appId, GrantSets.DeleteSomething);
             new EntityApi(appId, Log).Delete(contentType, id, force);
         }
 
@@ -176,9 +171,6 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.DeleteSomething, out var exception))
                 throw exception;
-            // 2018-09-15 old code, should have checked the same stuff mostly...
-            //new AppPermissionBeforeUsing(SxcInstance, Log)
-            //    .ConfirmPermissionsOrThrow(contentType, appId, GrantSets.DeleteSomething);
             new EntityApi(appId, Log).Delete(contentType, guid, force);
         }
 

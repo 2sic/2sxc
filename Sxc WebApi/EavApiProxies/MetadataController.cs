@@ -9,6 +9,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     /// <inheritdoc cref="IMetadataController" />
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [ValidateAntiForgeryToken]
     public class MetadataController : SxcApiControllerBase, IMetadataController
     {
 
