@@ -51,10 +51,10 @@
       <DefaultExclude Include=".vs\**" />
 			<DefaultExclude Include="_\**" />
 
-      <!-- 2dm 2018-08-12 exclude ng-edit, as we only want a local copy while developing and not distribute it-->
-      <DefaultExclude Include="dist\ng-edit\**" />
-      <!--<DefaultExclude Include="dist\ng-edit\**\*.map" />
-      -->
+      <!-- 2dm 2019-05-22 exclude source maps in ng-edit, as we'll publish them on sources.2sxc.org -->
+      <!--<DefaultExclude Include="dist\ng-edit\**" />-->
+      <DefaultExclude Include="dist\ng-edit\**\*.map" />
+      
     </ItemGroup>
 
     <ItemGroup>
