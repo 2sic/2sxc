@@ -127,7 +127,7 @@ var QuickE = /** @class */ (function () {
         this.main = $("<div class='sc-content-block-menu sc-content-block-quick-insert sc-i18n'></div>");
         this.template = "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[titleTemplate]QuickInsertMenu.AddBlockContent'>x</a><a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[titleTemplate]QuickInsertMenu.AddBlockApp'>x</a>" + btn('select', 'ok', 'Select', true) + btn('paste', 'paste', 'Paste', true, true);
         this.selected = $("<div class='sc-content-block-menu sc-content-block-selected-menu sc-i18n'></div>")
-            .append(btn('delete', 'trash-empty', 'Delete'), btn('sendToPane', 'export', 'Move', null, null, 'sc-cb-mod-only'), "<div id='paneList'></div>");
+            .append(btn('delete', 'trash-empty', 'Delete'), btn('sendToPane', 'move', 'Move', null, null, 'sc-cb-mod-only'), "<div id='paneList'></div>");
         // will be populated later in the module section
         this.contentBlocks = null;
         this.cachedPanes = null;
@@ -9319,4 +9319,4 @@ var item = /** @class */ (function () {
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=inpage.js.map
+//# sourceMappingURL=https://sources.2sxc.org/10.00.00/./inpage/inpage.js.map
