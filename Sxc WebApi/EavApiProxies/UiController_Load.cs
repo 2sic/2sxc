@@ -39,10 +39,24 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var typeRead = entityApi.AppManager.Read.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(appId, items);
             var jsonSerializer = new JsonSerializer();
-            result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
+            result.Items = list.Select(e =>
             {
-                Header = e.Header,
-                Entity = jsonSerializer.ToJson(e.Entity ?? ConstructEmptyEntity(appId, e.Header, typeRead))
+                // attach original metadata assignment when creating a new one
+                JsonEntity ent;
+                if (e.Entity != null)
+                    ent = jsonSerializer.ToJson(e.Entity);
+                else
+                {
+                    ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, e.Header, typeRead));
+                    if (ent.For == null && e.Header?.For != null)
+                        ent.For = e.Header.For;
+                }
+
+                return new BundleWithHeader<JsonEntity>
+                {
+                    Header = e.Header,
+                    Entity = ent
+                };
             }).ToList();
 
             // set published if some data already exists
