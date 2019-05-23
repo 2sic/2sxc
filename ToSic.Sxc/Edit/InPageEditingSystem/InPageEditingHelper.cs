@@ -156,12 +156,14 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         {
             Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Enable", $"{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
 
-            // check if feature enabled
-            var feats = new[] {FeatureIds.PublicForms};
-            if (!Feats.EnabledOrException(feats, "public forms not available", out var exp))
-                throw exp;
-            //if (!Feats.Enabled(feats))
-            //    throw new Exception($"public forms not available - {Feats.MsgMissingSome(feats)}");
+            // check if feature enabled - if more than the api is needed
+            // extend this list if new parameters are added
+            if (forms.HasValue || styles.HasValue || context.HasValue || autoToolbar.HasValue)
+            {
+                var feats = new[] {FeatureIds.PublicForms};
+                if (!Feats.EnabledOrException(feats, "public forms not available", out var exp))
+                    throw exp;
+            }
 
             // only update the values if true, otherwise leave untouched
             if (api.HasValue || forms.HasValue)
