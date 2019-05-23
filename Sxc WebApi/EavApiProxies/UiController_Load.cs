@@ -52,6 +52,9 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                         ent.For = e.Header.For;
                 }
 
+                // new UI doesn't use this any more, reset it
+                e.Header.Metadata = null;
+
                 return new BundleWithHeader<JsonEntity>
                 {
                     Header = e.Header,
