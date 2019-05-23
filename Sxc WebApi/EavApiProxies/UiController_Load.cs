@@ -48,8 +48,21 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                 else
                 {
                     ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, e.Header, typeRead));
-                    if (ent.For == null && e.Header?.For != null)
-                        ent.For = e.Header.For;
+                    if (ent.For == null)
+                    {
+                        if (e.Header?.For != null)
+                            ent.For = e.Header.For;
+                        else if (e.Header.Metadata != null)
+                        {
+                            var md = e.Header.Metadata;
+                            var newFor = new JsonMetadataFor();
+                            newFor.Guid = md.KeyGuid;
+                            newFor.String = md.KeyString;
+                            newFor.Number = md.KeyNumber;
+                            newFor.Target = jsonSerializer.MetadataProvider.GetType(md.TargetType); // todo: resolve to text
+                            ent.For = newFor;
+                        }
+                    }
                 }
 
                 // new UI doesn't use this any more, reset it
