@@ -50,12 +50,13 @@
       <!-- 2dm 2019-05-22 exclude source maps in ng-edit, as we'll publish them on sources.2sxc.org -->
       <DefaultExclude Include="dist\inpage\**\*.map" />
       <DefaultExclude Include="dist\ng-edit\**\*.map" />
-      
+      <DefaultExclude Include="dist\ng\**\*.map" />
     </ItemGroup>
 
     <ItemGroup>
       <ExternalSourceMaps Include="dist\*ng-edit\**\*.map" />
       <ExternalSourceMaps Include="dist\*inpage\**\*.map" />
+      <ExternalSourceMaps Include="dist\*ng\**\*.map" />
     </ItemGroup>
 
     <ItemGroup>
