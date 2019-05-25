@@ -42,7 +42,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
-                Entity = jsonSerializer.ToJson(e.Entity ?? ConstructEmptyEntity(appId, e.Header, typeRead))
+                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, typeRead)
             }).ToList();
 
             // set published if some data already exists
@@ -65,6 +65,56 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                     $"inputs:{result.InputTypes.Count}, " +
                     $"feats:{result.Features.Count}");
             return result;
+        }
+
+        /// <summary>
+        /// Get Serialized entity or create a new one, and assign metadata
+        /// based on the header (if none already existed)
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="bundle"></param>
+        /// <param name="jsonSerializer"></param>
+        /// <param name="typeRead"></param>
+        /// <returns></returns>
+        private static JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleIEntity bundle, JsonSerializer jsonSerializer,
+            ContentTypeRuntime typeRead)
+        {
+            // attach original metadata assignment when creating a new one
+            JsonEntity ent;
+            if (bundle.Entity != null)
+                ent = jsonSerializer.ToJson(bundle.Entity);
+            else
+            {
+                ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, bundle.Header, typeRead));
+
+                // only attach metadata, if no metadata already exists
+                if (ent.For == null)
+                {
+                    if (bundle.Header?.For != null)
+                        ent.For = bundle.Header.For;
+
+                    // if we have "old" Metadata headers, attach these
+                    else if (bundle.Header?.Metadata != null)
+                    {
+                        var md = bundle.Header.Metadata;
+                        ent.For = new JsonMetadataFor
+                        {
+                            Guid = md.KeyGuid,
+                            String = md.KeyString,
+                            Number = md.KeyNumber,
+                            Target = jsonSerializer.MetadataProvider.GetType(md.TargetType)
+                        };
+                    }
+                }
+            }
+
+            // new UI doesn't use this any more, reset it
+            if (bundle.Header != null)
+            {
+                bundle.Header.Metadata = null;
+                bundle.Header.For = null;
+            }
+            return ent;
         }
 
         private static List<IContentType> UsedTypes(List<BundleIEntity> list, ContentTypeRuntime typeRead)

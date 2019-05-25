@@ -5,11 +5,7 @@
 
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="MSBuild.Community.Tasks.Targets" />
-  <Target Name="PackageModule" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <!-- Move the node_modules folder outside the project folder - path length issue -->
-    <!--<Exec Command="mkdir ..\ToSIC_SexyContent-build-temp" />
-    <Exec Command="move node_modules ..\ToSIC_SexyContent-build-temp\node_modules" />-->
-    
+  <Target Name="PackageModule" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">   
     <XmlRead Prefix="n"
                     Namespace="http://schemas.microsoft.com/developer/msbuild/2003"
                     XPath="dotnetnuke/packages/package[1]/@version"
@@ -51,10 +47,16 @@
       <DefaultExclude Include=".vs\**" />
 			<DefaultExclude Include="_\**" />
 
-      <!-- 2dm 2018-08-12 exclude ng-edit, as we only want a local copy while developing and not distribute it-->
-      <DefaultExclude Include="dist\ng-edit\**" />
-      <!--<DefaultExclude Include="dist\ng-edit\**\*.map" />
-      -->
+      <!-- 2dm 2019-05-22 exclude source maps in ng-edit, as we'll publish them on sources.2sxc.org -->
+      <DefaultExclude Include="dist\inpage\**\*.map" />
+      <DefaultExclude Include="dist\ng-edit\**\*.map" />
+      <DefaultExclude Include="dist\ng\**\*.map" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ExternalSourceMaps Include="dist\*ng-edit\**\*.map" />
+      <ExternalSourceMaps Include="dist\*inpage\**\*.map" />
+      <ExternalSourceMaps Include="dist\*ng\**\*.map" />
     </ItemGroup>
 
     <ItemGroup>
@@ -218,10 +220,9 @@
     <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="ModulePackages/$(PackageName)_$(Version)_Install.$(Extension)" />
     <!-- Copy the Install package to the Packages folder -->
     <!--<Copy SourceFiles="$(TempPackageFolder)\$(PackageName)_$(Version)_Install.$(Extension)" DestinationFolder="ModulePackages/" />-->
-    
-    <!-- Move node_modules folder back -->
-    <!--<Exec Command="move ..\ToSIC_SexyContent-build-temp\node_modules node_modules" />
-    <Exec Command="rmdir ..\ToSIC_SexyContent-build-temp" />-->
+
+    <!-- 2dm Experiment - try to auto-deploy the externalized map files -->
+    <Copy SourceFiles="@(ExternalSourceMaps)" DestinationFolder="C:\Projects\2sxc-sources\$(Version)\%(RecursiveDir)" />
     
     <!-- Cleanup -->
     <RemoveDir Directories="$(TempPackageFolder)" />
@@ -229,4 +230,6 @@
     <RemoveDir Directories="$(TempPackagePdbFolder)" />
 
   </Target>
+
+
 </Project>

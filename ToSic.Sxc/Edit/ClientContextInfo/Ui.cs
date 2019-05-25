@@ -15,10 +15,10 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             AutoToolbar = autoToolbar;
 
             // for 2sxc 9
-            Form = null; // Features.Enabled(FeatureIds.PreferOldFormsToNewAngularUi) ? null : "ng8";
+            //Form = null; // Features.Enabled(FeatureIds.PreferOldFormsToNewAngularUi) ? null : "ng8";
 
             // for 2sxc 10
-            //Form = Features.Enabled(FeatureIds.PreferOldFormsToNewAngularUi) ? null : "ng8";
+            Form = Features.Enabled(FeatureIds.EditFormPreferAngularJs) ? null : "ng8";
         }
     }
 }
