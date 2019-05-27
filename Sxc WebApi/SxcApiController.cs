@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.WebApi
     /// safer because it can't accidentally mix the App with a different appId in the params
     /// </summary>
     [SxcWebApiExceptionHandling]
-    public abstract class SxcApiController : SxcApiControllerBase, IAppAndDataHelpers
+    public abstract class SxcApiController : SxcApiControllerBase, Sxc.Interfaces.IAppAndDataHelpers
     {
         #region constructor
 

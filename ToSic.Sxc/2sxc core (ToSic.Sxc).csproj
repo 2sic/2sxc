@@ -79,6 +79,8 @@
     <Compile Include="Adam\IFile.cs" />
     <Compile Include="Adam\Metadata.cs" />
     <Compile Include="Adam\Obsolete\AdamFile.cs" />
+    <Compile Include="Code\SharedWithContext.cs" />
+    <Compile Include="Compiler\CsCompiler.cs" />
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\ClientContextInfo\Ui.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="Html\Build.cs" />
     <Compile Include="Interfaces\IEnvironmentInfo.cs" />
     <Compile Include="Interfaces\IEnvironmentInstaller.cs" />
+    <Compile Include="Interfaces\IAppOutputGenerators.cs" />
     <Compile Include="Interfaces\IRenderingHelpers.cs" />
     <Compile Include="Interfaces\IClientDependencyManager.cs" />
     <Compile Include="Interfaces\IApp.cs" />
@@ -102,6 +105,8 @@
     <Compile Include="Interfaces\IContentBlock.cs" />
     <Compile Include="Interfaces\IDynamicEntity.cs" />
     <Compile Include="Interfaces\ILinkHelper.cs" />
+    <Compile Include="Interfaces\ISharedCodeBuilder.cs" />
+    <Compile Include="Interfaces\ISharedCodeForwarding.cs" />
     <Compile Include="Interfaces\IWebFactoryTemp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\ISearchInfo.cs" />
@@ -159,6 +164,7 @@
     <Compile Include="SexyContent\SxcInstance_Template.cs" />
     <Compile Include="SexyContent\SxcInstance_EditUi.cs" />
     <Compile Include="SexyContent\TemplateManager.cs" />
+    <Compile Include="Interfaces\IAppAndDataHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">

@@ -49,6 +49,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             if(list.Any())
                 result.IsPublished = list.First().Entity?.IsPublished ?? true; // Entity could be null (new), then true
 
+            // since we're retrieving data - make sure we're allowed to
+            // this is to ensure that if public forms only have create permissions, they can't access existing data
+            if (list.Any(set => set.Entity != null))
+                if (!permCheck.EnsureAll(GrantSets.ReadSomething, out exception))
+                    throw exception;
+
             // load content-types
             var types = UsedTypes(list, typeRead);
             result.ContentTypes = types.Select(ct => JsonSerializer.ToJson(ct, true)).ToList();

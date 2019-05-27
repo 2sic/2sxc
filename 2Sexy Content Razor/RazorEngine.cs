@@ -113,7 +113,9 @@ namespace ToSic.SexyContent.Engines
         private void InitHelpers(SexyContentWebPage webPage)
         {
             webPage.Html = new HtmlHelper();
-            webPage.Url = new UrlHelper(InstInfo);
+            // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
+            // reactivate if it turns out to be used, otherwise delete ca. EOY 2019
+            //webPage.Url = new UrlHelper(InstInfo);
             webPage.Sexy = Sexy;
             webPage.DnnAppAndDataHelpers = new DnnAppAndDataHelpers(Sexy);
 

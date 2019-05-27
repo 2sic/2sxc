@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return new ModuleContentBlock(moduleInfo, parentLog: null, tenant: tenant).SxcInstance;
         }
 
-        public static IAppAndDataHelpers CodingHelpers(ISxcInstance sxc) 
+        public static Sxc.Interfaces.IAppOutputGenerators CodingHelpers(ISxcInstance sxc) 
             => new DnnAppAndDataHelpers(sxc as SxcInstance);
 
         /// <summary>

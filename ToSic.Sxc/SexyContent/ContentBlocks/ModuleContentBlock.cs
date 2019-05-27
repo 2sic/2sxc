@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.DnnWebForms.Helpers;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
@@ -36,7 +37,7 @@ namespace ToSic.SexyContent.ContentBlocks
             ContentBlockId = ParentId;
 
             // url-params
-            _urlParams = overrideParams ?? DnnWebForms.Helpers.SystemWeb.GetUrlParams();
+            _urlParams = overrideParams ?? SystemWeb.GetUrlParams();
 
             // Ensure we know what portal the stuff is coming from
             // PortalSettings is null, when in search mode

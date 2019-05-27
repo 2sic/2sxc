@@ -14,7 +14,10 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Dnn.Interfaces;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Razor;
 using File = System.IO.File;
 
 namespace ToSic.SexyContent.Razor
@@ -23,26 +26,22 @@ namespace ToSic.SexyContent.Razor
     /// The core page type for delivering a 2sxc page
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
-    public abstract class SexyContentWebPage : WebPageBase, IAppAndDataHelpers
+    public abstract class SexyContentWebPage : WebPageBase, IAppOutputGenerators, ISharedCodeBuilder, IHasDnnContext
     {
         #region Helpers
 
         protected internal HtmlHelper Html { get; internal set; }
 
-        protected internal UrlHelper Url { get; internal set; }
+        // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
+        // reactivate if it turns out to be used, otherwise delete ca. EOY 2019
+        //protected internal UrlHelper Url { get; internal set; }
 
-        protected internal ILinkHelper Link => DnnAppAndDataHelpers.Link;
+        public ILinkHelper Link => DnnAppAndDataHelpers.Link;
 
         // <2sic>
         protected internal SxcInstance Sexy { get; set; }
         protected internal DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
         // </2sic>
-
-        /// <summary>
-        /// Helper commands to enable in-page editing functionality
-        /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
-        /// </summary>
-        public IInPageEditingSystem Edit => DnnAppAndDataHelpers.Edit;
 
 
         #endregion
@@ -60,7 +59,9 @@ namespace ToSic.SexyContent.Razor
             if (!(parentPage is SexyContentWebPage typedParent)) return;
 
             Html = typedParent.Html;
-            Url = typedParent.Url;
+            // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
+            // reactivate if it turns out to be used, otherwise delete ca. EOY 2019
+            //Url = typedParent.Url;
             Sexy = typedParent.Sexy;
             DnnAppAndDataHelpers = typedParent.DnnAppAndDataHelpers;
         }
@@ -69,6 +70,12 @@ namespace ToSic.SexyContent.Razor
 
 
         #region AppAndDataHelpers implementation
+
+        /// <summary>
+        /// Helper commands to enable in-page editing functionality
+        /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
+        /// </summary>
+        public IInPageEditingSystem Edit => DnnAppAndDataHelpers.Edit;
 
         public DnnHelper Dnn => DnnAppAndDataHelpers.Dnn;
 
@@ -82,15 +89,6 @@ namespace ToSic.SexyContent.Razor
         public ViewDataSource Data => DnnAppAndDataHelpers.Data;
 
         public RazorPermissions Permissions => new RazorPermissions(Sexy);
-
-        // temp - should be elsewhere, but quickly need it so Permissions-object still works after refactoring
-        public class RazorPermissions // : DnnPermissions
-        {
-            protected readonly SxcInstance SxcInstance;
-            public RazorPermissions(SxcInstance sxc) => SxcInstance = sxc;
-            public bool UserMayEditContent => SxcInstance.UserMayEdit;
-
-        }
 
         #region AsDynamic in many variations
         /// <inheritdoc />
@@ -162,12 +160,17 @@ namespace ToSic.SexyContent.Razor
         {
             var path = NormalizePath(relativePath);
 
-            if(!File.Exists(HostingEnvironment.MapPath(path)))
-                throw new FileNotFoundException("The shared file does not exist.", path);
+            VerifyFileExists(path);
 
             var webPage = (SexyContentWebPage)CreateInstanceFromVirtualPath(path);
             webPage.ConfigurePage(this);
             return webPage;
+        }
+
+        private static void VerifyFileExists(string path)
+        {
+            if (!File.Exists(HostingEnvironment.MapPath(path)))
+                throw new FileNotFoundException("The shared file does not exist.", path);
         }
 
 
@@ -207,6 +210,21 @@ namespace ToSic.SexyContent.Razor
 
         #endregion
 
+        #region Compile Helpers
+
+        public string SharedCodePath { get; set; }
+
+        public dynamic SharedCode(string path, 
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string name = null,
+            string relativePath = null,
+            bool throwOnError = true)
+        {
+            path = NormalizePath(path);
+            VerifyFileExists(path);
+            return DnnAppAndDataHelpers.SharedCode(path, dontRelyOnParameterOrder, name, SharedCodePath, throwOnError);
+        }
+        #endregion
     }
 
 

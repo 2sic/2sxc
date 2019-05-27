@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using ToSic.Eav;
@@ -13,11 +14,15 @@ using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Compiler;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Interfaces;
 
+// ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
 namespace ToSic.SexyContent
 {
-    public abstract class AppAndDataHelpersBase : HasLog, IAppAndDataHelpers
+    public abstract class AppAndDataHelpersBase : HasLog, IAppOutputGenerators
     {
         protected readonly SxcInstance SxcInstance;
 
@@ -304,7 +309,47 @@ namespace ToSic.SexyContent
         /// Helper commands to enable in-page editing functionality
         /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
         /// </summary>
-        public IInPageEditingSystem Edit { get; private set; }
+        public IInPageEditingSystem Edit { get; }
         #endregion
+
+        #region SharedCode Compiler
+        public dynamic SharedCode(string path,
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string name = null,
+            string relativePath = null,
+            bool throwOnError = true)
+        {
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SharedCode",
+                $"{nameof(name)},{nameof(throwOnError)}");
+
+            // todo: if path relative, merge with shared code path
+            if (!path.StartsWith("/"))
+            {
+                Log.Add($"Trying to resolve relative path: '{path}' using '{relativePath}'");
+                if (relativePath == null)
+                {
+                    Log.Add("Error: relative path is null");
+                    if(throwOnError) throw new Exception("Unexpected null value");
+                    return null;
+                }
+                path = Path.Combine(relativePath, path);
+                Log.Add($"found {path}");
+            }
+
+            var compiler = new CsCompiler(Log);
+            var instance = compiler.InstantiateClass(path, name, throwOnError);
+            if (instance is SharedWithContext isShared)
+                isShared.InitShared(this);
+
+            // in case it supports shared code again, give it the relative path
+            if (instance is ISharedCodeBuilder codeForwarding)
+                codeForwarding.SharedCodePath = Path.GetDirectoryName(path);
+
+            return instance;
+
+        }
+        #endregion
+
+        public string SharedCodePath { get; set; }
     }
 }

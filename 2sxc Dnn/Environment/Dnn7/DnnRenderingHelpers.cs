@@ -45,7 +45,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
         public string WrapInContext(string content,
-            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             int instanceId = 0, 
             int contentBlockId = 0, 
             bool editContext = false,
@@ -55,7 +55,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             bool autoToolbar = false,
             bool addLineBreaks = true)
         {
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(autoToolbar)},{nameof(addLineBreaks)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(autoToolbar)},{nameof(addLineBreaks)}");
 
             var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext, autoToolbar);
 
@@ -149,6 +149,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
         }
 
         public void LinkLog(Log parentLog) => Log.LinkTo(parentLog);
+
+
     }
 
 }
