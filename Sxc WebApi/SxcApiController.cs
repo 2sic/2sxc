@@ -16,7 +16,7 @@ using System.IO;
 using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
-using ToSic.Sxc.Compiler;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Interfaces;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using File = ToSic.Sxc.Adam.File;
@@ -43,7 +43,7 @@ namespace ToSic.SexyContent.WebApi
             controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); // must run after creating AppAndDataHelpers
 
             // Pick up the path given by the AppApiControllerSelector - for relative paths needed in the SharedCode section
-            if(controllerContext.Configuration.Properties.TryGetValue(CsCompiler.SharedCodeRootPathKeyInCache, out var value))
+            if(controllerContext.Configuration.Properties.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var value))
                 SharedCodeVirtualRoot = value as string;
         }
         #endregion
@@ -207,12 +207,12 @@ namespace ToSic.SexyContent.WebApi
 
         public string SharedCodeVirtualRoot { get; set; }
 
-        public dynamic SharedCode(string path, 
+        public dynamic SharedCode(string virtualPath, 
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null, 
             string relativePath = null, 
             bool throwOnError = true) =>
-            DnnAppAndDataHelpers.SharedCode(path, dontRelyOnParameterOrder, name,
+            DnnAppAndDataHelpers.SharedCode(virtualPath, dontRelyOnParameterOrder, name,
                 SharedCodeVirtualRoot, throwOnError);
     }
 }

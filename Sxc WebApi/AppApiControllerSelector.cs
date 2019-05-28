@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
-using ToSic.Sxc.Compiler;
+using ToSic.Sxc.Code;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -99,7 +99,7 @@ namespace ToSic.SexyContent.WebApi
                     var type = assembly.GetType(controllerTypeName, true, true);
 
                     // attach the folder it's running in as a property, in case the target needs this
-                    _config.Properties.TryAdd(CsCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+                    _config.Properties.TryAdd(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
 
                     return new HttpControllerDescriptor(_config, controllerTypeName, type);
                 }

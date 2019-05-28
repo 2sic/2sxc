@@ -60,12 +60,12 @@ namespace ToSic.Sxc.Code
         #region SharedCode - must also map previous path to use here
         public string SharedCodeVirtualRoot { get; set; }
 
-        public dynamic SharedCode(string path, 
+        public dynamic SharedCode(string virtualPath, 
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
             bool throwOnError = true) =>
-            Parent?.SharedCode(path, dontRelyOnParameterOrder, name, SharedCodeVirtualRoot, throwOnError);
+            Parent?.SharedCode(virtualPath, dontRelyOnParameterOrder, name, SharedCodeVirtualRoot, throwOnError);
 
         #endregion
     }

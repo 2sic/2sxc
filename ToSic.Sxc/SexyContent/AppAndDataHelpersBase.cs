@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using ToSic.Eav;
@@ -15,9 +14,7 @@ using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Compiler;
 using ToSic.Sxc.Edit.InPageEditingSystem;
-using ToSic.Sxc.Interfaces;
 
 // ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
 namespace ToSic.SexyContent
@@ -313,7 +310,7 @@ namespace ToSic.SexyContent
         #endregion
 
         #region SharedCode Compiler
-        public dynamic SharedCode(string path,
+        public dynamic SharedCode(string virtualPath,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
@@ -322,38 +319,18 @@ namespace ToSic.SexyContent
             Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SharedCode",
                 $"{nameof(name)},{nameof(throwOnError)}");
 
-            // todo: if path relative, merge with shared code path
-            path = path.Replace("\\", "/");
-            if (!path.StartsWith("/"))
-            {
-                Log.Add($"Trying to resolve relative path: '{path}' using '{relativePath}'");
-                if (relativePath == null)
-                {
-                    Log.Add("Error: relative path is null");
-                    if(throwOnError) throw new Exception("Unexpected null value");
-                    return null;
-                }
+            // Compile
+            var instance = new CodeCompiler(Log)
+                .InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
-                // if necessary, add trailing slash
-                if (!relativePath.EndsWith("/")) 
-                    relativePath += "/";
-
-                path = System.Web.VirtualPathUtility.Combine(relativePath, path);
-                Log.Add($"found {path}");
-            }
-
-            var compiler = new CsCompiler(Log);
-            var instance = compiler.InstantiateClass(path, name, throwOnError);
+            // if it supports all our known context properties, attach them
             if (instance is SharedWithContext isShared)
                 isShared.InitShared(this);
 
-            // in case it supports shared code again, give it the relative path
-            if (instance is ISharedCodeBuilder codeForwarding)
-                codeForwarding.SharedCodeVirtualRoot = Path.GetDirectoryName(path);
-
             return instance;
-
         }
+
+
         #endregion
 
         public string SharedCodeVirtualRoot { get; set; }

@@ -213,12 +213,12 @@ namespace ToSic.SexyContent.Razor
 
         public string SharedCodeVirtualRoot { get; set; }
 
-        public dynamic SharedCode(string path, 
+        public dynamic SharedCode(string virtualPath, 
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
             bool throwOnError = true) =>
-            DnnAppAndDataHelpers.SharedCode(NormalizePath(path), dontRelyOnParameterOrder, name, null, throwOnError);
+            DnnAppAndDataHelpers.SharedCode(NormalizePath(virtualPath), dontRelyOnParameterOrder, name, null, throwOnError);
 
         #endregion
     }
