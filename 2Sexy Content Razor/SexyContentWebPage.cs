@@ -16,7 +16,6 @@ using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Dnn.Interfaces;
 using ToSic.Sxc.Edit.InPageEditingSystem;
-using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Razor;
 using File = System.IO.File;
 
@@ -26,7 +25,7 @@ namespace ToSic.SexyContent.Razor
     /// The core page type for delivering a 2sxc page
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
-    public abstract class SexyContentWebPage : WebPageBase, IAppOutputGenerators, ISharedCodeBuilder, IHasDnnContext
+    public abstract class SexyContentWebPage : WebPageBase, Sxc.Interfaces.IAppAndDataHelpers, IHasDnnContext
     {
         #region Helpers
 

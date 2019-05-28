@@ -1,14 +1,10 @@
-﻿using System;
-using ToSic.Eav.Logging.Simple;
+﻿using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Razor.Helpers;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Compiler;
 using ToSic.Sxc.Dnn.Interfaces;
-using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class DnnAppAndDataHelpers : AppAndDataHelpersBase, ISharedCodeBuilder, IHasDnnContext
+    public class DnnAppAndDataHelpers : AppAndDataHelpersBase, IHasDnnContext
     {
         public DnnAppAndDataHelpers(SxcInstance sxcInstance) : this(sxcInstance, null) {}
 

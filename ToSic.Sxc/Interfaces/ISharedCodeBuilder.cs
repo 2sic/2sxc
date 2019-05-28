@@ -9,7 +9,7 @@
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
             string name = null,
             string relativePath = null,
-            bool throwOnError = false);
+            bool throwOnError = true);
 
     }
 }

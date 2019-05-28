@@ -17,12 +17,11 @@ using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Compiler;
 using ToSic.Sxc.Edit.InPageEditingSystem;
-using ToSic.Sxc.Interfaces;
 
 // ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
 namespace ToSic.SexyContent
 {
-    public abstract class AppAndDataHelpersBase : HasLog, IAppOutputGenerators
+    public abstract class AppAndDataHelpersBase : HasLog, ToSic.Sxc.Interfaces.IAppAndDataHelpers
     {
         protected readonly SxcInstance SxcInstance;
 
@@ -60,7 +59,7 @@ namespace ToSic.SexyContent
         public ILinkHelper Link { get; protected set; }
 
 
-        #region AsDynamic overrides
+        #region AsDynamic Implementations
         /// <inheritdoc />
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
@@ -210,7 +209,7 @@ namespace ToSic.SexyContent
         private dynamic _listContent;
 
         /// <remarks>
-        /// This must be lazyl-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
+        /// This must be lazy-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
         /// - this would break API even though the List etc. are never accessed
         /// </remarks>
         private void TryToBuildListContentObject()
@@ -235,7 +234,7 @@ namespace ToSic.SexyContent
         private List<Element> _list;
 
         /// <remarks>
-        /// This must be lazyl-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
+        /// This must be lazy-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
         /// - this would break API even though the List etc. are never accessed
         /// </remarks>
         private void TryToBuildContentAndList()
@@ -323,6 +322,7 @@ namespace ToSic.SexyContent
                 $"{nameof(name)},{nameof(throwOnError)}");
 
             // todo: if path relative, merge with shared code path
+            path = path.Replace("\\", "/");
             if (!path.StartsWith("/"))
             {
                 Log.Add($"Trying to resolve relative path: '{path}' using '{relativePath}'");
@@ -332,7 +332,8 @@ namespace ToSic.SexyContent
                     if(throwOnError) throw new Exception("Unexpected null value");
                     return null;
                 }
-                path = Path.Combine(relativePath, path);
+
+                path = System.Web.VirtualPathUtility.Combine(relativePath, path);
                 Log.Add($"found {path}");
             }
 
@@ -342,8 +343,8 @@ namespace ToSic.SexyContent
                 isShared.InitShared(this);
 
             // in case it supports shared code again, give it the relative path
-            if (instance is ISharedCodeBuilder codeForwarding)
-                codeForwarding.SharedCodePath = Path.GetDirectoryName(path);
+            if (instance is SharedCodeBase codeForwarding)
+                codeForwarding.SharedCodePath = Path.GetDirectoryName(path) + "/";
 
             return instance;
 

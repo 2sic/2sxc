@@ -7,21 +7,20 @@ using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Edit.InPageEditingSystem;
-using ToSic.Sxc.Interfaces;
 using App = ToSic.SexyContent.App;
 using Constants = ToSic.Eav.Constants;
 
 namespace ToSic.Sxc.Code
 {
-    public abstract class SharedWithContext : IAppOutputGenerators
+    public abstract class SharedWithContext : SharedCodeBase, Interfaces.IAppAndDataHelpers
     {
         public App App => Sxc?.SxcInstance?.App;
         public ViewDataSource Data => Sxc?.SxcInstance?.Data;
         public SxcHelper Sxc { get; private set; }
 
-        internal IAppOutputGenerators Parent;
+        internal Interfaces.IAppAndDataHelpers Parent;
 
-        internal virtual void InitShared(IAppOutputGenerators parent)
+        internal virtual void InitShared(Interfaces.IAppAndDataHelpers parent)
         {
             Parent = parent;
             Sxc = parent.Sxc;
@@ -69,7 +68,6 @@ namespace ToSic.Sxc.Code
         {
             return Parent?.SharedCode(path, dontRelyOnParameterOrder, name, SharedCodePath, throwOnError);
         }
-        public string SharedCodePath { get; set; }
 
         #endregion
     }

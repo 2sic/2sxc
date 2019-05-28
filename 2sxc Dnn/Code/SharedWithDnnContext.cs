@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Code
     {
         public DnnHelper Dnn { get; private set; }
 
-        internal override void InitShared(IAppOutputGenerators parent)
+        internal override void InitShared(IAppAndDataHelpers parent)
         {
             if (parent is IHasDnnContext withDnn) Dnn = withDnn.Dnn;
 

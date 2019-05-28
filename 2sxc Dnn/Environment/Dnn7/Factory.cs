@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return new ModuleContentBlock(moduleInfo, parentLog: null, tenant: tenant).SxcInstance;
         }
 
-        public static Sxc.Interfaces.IAppOutputGenerators CodingHelpers(ISxcInstance sxc) 
+        public static Sxc.Interfaces.IAppAndDataHelpers CodingHelpers(ISxcInstance sxc) 
             => new DnnAppAndDataHelpers(sxc as SxcInstance);
 
         /// <summary>
@@ -55,7 +55,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
             var appStuff = new App(new DnnTenant(ownerPortalSettings), Eav.Apps.App.AutoLookupZone, appId, 
                 ConfigurationProvider.Build(showDrafts, versioningEnabled, new ValueCollectionProvider()), true, null);
             return appStuff;
-            //return ExtendAppWithDefaultProvider(versioningEnabled, showDrafts, appStuff);
         }
 
         public static IApp App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool versioningEnabled = false, bool showDrafts = false)
@@ -63,15 +62,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             var appStuff = new App(new DnnTenant(ownerPortalSettings), zoneId, appId,
                 ConfigurationProvider.Build(showDrafts, versioningEnabled, new ValueCollectionProvider()), true, null);
             return appStuff;
-            //return ExtendAppWithDefaultProvider(versioningEnabled, showDrafts, appStuff);
         }
 
-        // 2018-09-22 old
-        //private static IApp ExtendAppWithDefaultProvider(bool versioningEnabled, bool showDrafts, App appStuff)
-        //{
-        //    var provider = new ValueCollectionProvider(); // use blank provider for now
-        //    appStuff.InitData(showDrafts, versioningEnabled, provider);
-        //    return appStuff;
-        //}
     }
 }

@@ -79,6 +79,7 @@
     <Compile Include="Adam\IFile.cs" />
     <Compile Include="Adam\Metadata.cs" />
     <Compile Include="Adam\Obsolete\AdamFile.cs" />
+    <Compile Include="Code\SharedCodeBase.cs" />
     <Compile Include="Code\SharedWithContext.cs" />
     <Compile Include="Compiler\CsCompiler.cs" />
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
