@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using System.Web;
 using System.Web.Compilation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -23,7 +22,7 @@ namespace ToSic.Sxc.Compiler
             if (string.IsNullOrWhiteSpace(virtualPath))
             {
                 wrapLog("no path given");
-                if (throwOnError) throw new Exception("no name provided");
+                if (throwOnError) throw new Exception("no path/name provided");
                 return null;
             }
 
@@ -33,19 +32,9 @@ namespace ToSic.Sxc.Compiler
                 Log.Add($"path contains ':': {virtualPath}");
                 wrapLog("failed");
                 throw new Exception("Tried to get .cs file to compile, but found a full path, which is not allowed.");
-                //var root = HttpContext.Current.Server.MapPath("~/");
-                //var rootOtherSlash = root.Replace("/", @"\");
-                //if (virtualPath.StartsWith(root, StringComparison.InvariantCultureIgnoreCase) ||
-                //    virtualPath.StartsWith(rootOtherSlash, StringComparison.InvariantCultureIgnoreCase))
-                //    virtualPath = virtualPath.Remove(0, root.Length - 1);
-                //else
-                //{
-                //    var msg = $"Path '{virtualPath}' contains ':' but not from application root '{root}', will cancel.";
-                //    Log.Add(msg);
-                //    wrapLog("failed");
-                //    throw new Exception(msg);
-                //}
             }
+
+            // if no name provided, use the name which is the same as the file name
             name = name ?? System.IO.Path.GetFileNameWithoutExtension(virtualPath);
 
             var assembly = BuildManager.GetCompiledAssembly(virtualPath);

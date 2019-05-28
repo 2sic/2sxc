@@ -13,7 +13,6 @@ using System.Text.RegularExpressions;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.Sxc.Compiler;
-using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -99,9 +98,9 @@ namespace ToSic.SexyContent.WebApi
                     var assembly = BuildManager.GetCompiledAssembly(controllerPath);
                     var type = assembly.GetType(controllerTypeName, true, true);
 
-                    // todo!!
-                    //if (type is ISharedCodeBuilder codeBuilder) codeBuilder.SharedCodePath = controllerFolder;
+                    // attach the folder it's running in as a property, in case the target needs this
                     _config.Properties.TryAdd(CsCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+
                     return new HttpControllerDescriptor(_config, controllerTypeName, type);
                 }
             }

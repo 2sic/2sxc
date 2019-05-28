@@ -2,7 +2,7 @@
 {
     public interface ISharedCodeBuilder
     {
-        string SharedCodePath { get; set; }
+        string SharedCodeVirtualRoot { get; set; }
 
 
         dynamic SharedCode(string path, 

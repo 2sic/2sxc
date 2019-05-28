@@ -17,6 +17,7 @@ using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Compiler;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Interfaces;
 
 // ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
 namespace ToSic.SexyContent
@@ -333,6 +334,10 @@ namespace ToSic.SexyContent
                     return null;
                 }
 
+                // if necessary, add trailing slash
+                if (!relativePath.EndsWith("/")) 
+                    relativePath += "/";
+
                 path = System.Web.VirtualPathUtility.Combine(relativePath, path);
                 Log.Add($"found {path}");
             }
@@ -343,14 +348,14 @@ namespace ToSic.SexyContent
                 isShared.InitShared(this);
 
             // in case it supports shared code again, give it the relative path
-            if (instance is SharedCodeBase codeForwarding)
-                codeForwarding.SharedCodePath = Path.GetDirectoryName(path) + "/";
+            if (instance is ISharedCodeBuilder codeForwarding)
+                codeForwarding.SharedCodeVirtualRoot = Path.GetDirectoryName(path);
 
             return instance;
 
         }
         #endregion
 
-        public string SharedCodePath { get; set; }
+        public string SharedCodeVirtualRoot { get; set; }
     }
 }

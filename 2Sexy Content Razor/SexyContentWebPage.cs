@@ -211,18 +211,15 @@ namespace ToSic.SexyContent.Razor
 
         #region Compile Helpers
 
-        public string SharedCodePath { get; set; }
+        public string SharedCodeVirtualRoot { get; set; }
 
         public dynamic SharedCode(string path, 
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
-            bool throwOnError = true)
-        {
-            path = NormalizePath(path);
-            VerifyFileExists(path);
-            return DnnAppAndDataHelpers.SharedCode(path, dontRelyOnParameterOrder, name, SharedCodePath, throwOnError);
-        }
+            bool throwOnError = true) =>
+            DnnAppAndDataHelpers.SharedCode(NormalizePath(path), dontRelyOnParameterOrder, name, null, throwOnError);
+
         #endregion
     }
 

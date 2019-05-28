@@ -12,7 +12,7 @@ using Constants = ToSic.Eav.Constants;
 
 namespace ToSic.Sxc.Code
 {
-    public abstract class SharedWithContext : SharedCodeBase, Interfaces.IAppAndDataHelpers
+    public abstract class SharedWithContext : Interfaces.IAppAndDataHelpers
     {
         public App App => Sxc?.SxcInstance?.App;
         public ViewDataSource Data => Sxc?.SxcInstance?.Data;
@@ -58,16 +58,14 @@ namespace ToSic.Sxc.Code
         public IInPageEditingSystem Edit => Parent?.Edit;
 
         #region SharedCode - must also map previous path to use here
-
+        public string SharedCodeVirtualRoot { get; set; }
 
         public dynamic SharedCode(string path, 
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
-            bool throwOnError = true)
-        {
-            return Parent?.SharedCode(path, dontRelyOnParameterOrder, name, SharedCodePath, throwOnError);
-        }
+            bool throwOnError = true) =>
+            Parent?.SharedCode(path, dontRelyOnParameterOrder, name, SharedCodeVirtualRoot, throwOnError);
 
         #endregion
     }
