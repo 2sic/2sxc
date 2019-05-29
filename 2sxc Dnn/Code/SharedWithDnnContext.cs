@@ -5,6 +5,7 @@ using ToSic.Sxc.Interfaces;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Code
 {
+    // ReSharper disable once UnusedMember.Global
     public abstract class SharedWithDnnContext: SharedWithContext, IHasDnnContext
     {
         public DnnHelper Dnn { get; private set; }

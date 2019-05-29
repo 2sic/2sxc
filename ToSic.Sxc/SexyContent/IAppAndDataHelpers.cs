@@ -12,12 +12,10 @@ namespace ToSic.SexyContent
     /// We'll probably keep it forever, but don't add any more features. Instead, put it on the new interface
     /// This will force developers to use the new interface without breaking compatibility
     /// </remarks>
-    [Obsolete("Avoid this - it's in a bad namespace. Use the ToSic.Sxc.Interfaces.IAppAndDataHelpers")]
+    [Obsolete("Avoid this - it's in an old namespace. Use the ToSic.Sxc.Interfaces.IAppAndDataHelpers")]
     public interface IAppAndDataHelpers
     {
-        [Obsolete("This is now obsolete, please use the app-property of the SxcInstance")]
         App App { get; }
-        [Obsolete("This is now obsolete, please use the data-property of the SxcInstance")]
         ViewDataSource Data { get; }
 
         SxcHelper Sxc { get; }
