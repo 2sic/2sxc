@@ -12,7 +12,7 @@ using Constants = ToSic.Eav.Constants;
 
 namespace ToSic.Sxc.Code
 {
-    public abstract class SharedWithContext : Interfaces.IAppAndDataHelpers
+    public abstract class WithContext : Interfaces.IAppAndDataHelpers
     {
         public App App => Parent?.App;
 

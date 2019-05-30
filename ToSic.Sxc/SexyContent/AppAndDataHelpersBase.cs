@@ -325,7 +325,7 @@ namespace ToSic.SexyContent
                 .InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them
-            if (instance is SharedWithContext isShared)
+            if (instance is WithContext isShared)
                 isShared.InitShared(this);
 
             return instance;
