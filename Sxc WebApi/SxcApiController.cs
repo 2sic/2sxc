@@ -216,13 +216,8 @@ namespace ToSic.SexyContent.WebApi
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null, 
             string relativePath = null, 
-            bool throwOnError = true)
-        {
-            // todo: ensure that App etc. are available, even if initialized in other ways
-
-            // Compile
-            return DnnAppAndDataHelpers.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
+            bool throwOnError = true) =>
+            DnnAppAndDataHelpers.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
                 SharedCodeVirtualRoot, throwOnError);
-        }
     }
 }

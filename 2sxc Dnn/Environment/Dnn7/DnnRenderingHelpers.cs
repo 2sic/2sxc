@@ -49,8 +49,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
             int instanceId = 0, 
             int contentBlockId = 0, 
             bool editContext = false,
-            //string moreAttribs = null, 
-            //string moreClasses = null,
             string tag = Constants.DefaultContextTag,
             bool autoToolbar = false,
             bool addLineBreaks = true)
