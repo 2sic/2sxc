@@ -19,7 +19,7 @@ using ToSic.Sxc.Edit.InPageEditingSystem;
 // ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
 namespace ToSic.SexyContent
 {
-    public abstract class AppAndDataHelpersBase : HasLog, ToSic.Sxc.Interfaces.IAppAndDataHelpers
+    public abstract class AppAndDataHelpersBase : HasLog, Sxc.Interfaces.IAppAndDataHelpers
     {
         protected readonly SxcInstance SxcInstance;
 
@@ -37,12 +37,13 @@ namespace ToSic.SexyContent
             Edit = new InPageEditingHelper(sxcInstance, Log);
         }
 
+        internal void LateAttachApp(App app) => App = app;
 
 
         /// <summary>
         /// The current app containing the data and read/write commands
         /// </summary>
-        public App App { get; }
+        public App App { get; private set; }
 
         /// <summary>
         /// The view data
@@ -310,13 +311,13 @@ namespace ToSic.SexyContent
         #endregion
 
         #region SharedCode Compiler
-        public dynamic SharedCode(string virtualPath,
+        public dynamic CreateInstance(string virtualPath,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SharedCode",
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "CreateInstance",
                 $"{nameof(name)},{nameof(throwOnError)}");
 
             // Compile

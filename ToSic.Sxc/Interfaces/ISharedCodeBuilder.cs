@@ -5,7 +5,7 @@
         string SharedCodeVirtualRoot { get; set; }
 
 
-        dynamic SharedCode(string virtualPath, 
+        dynamic CreateInstance(string virtualPath, 
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
             string name = null,
             string relativePath = null,

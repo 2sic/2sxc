@@ -40,7 +40,13 @@ namespace ToSic.SexyContent.WebApi
             base.Initialize(controllerContext);
             // Note that the SxcInstance is created by the BaseClass, if it's detectable. Otherwise it's null
             DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcInstance, SxcInstance?.Log ?? Log);
-            controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); // must run after creating AppAndDataHelpers
+
+            // In case SxcInstance was null, there is no instance, but we may still need the app
+            if (DnnAppAndDataHelpers.App == null)
+                TryToAttachAppFromUrlParams();
+
+            // must run this after creating AppAndDataHelpers
+            controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); 
 
             // Pick up the path given by the AppApiControllerSelector - for relative paths needed in the SharedCode section
             if(controllerContext.Configuration.Properties.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var value))
@@ -55,27 +61,26 @@ namespace ToSic.SexyContent.WebApi
         public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
 
         /// <inheritdoc />
-        public App App
+        public App App => DnnAppAndDataHelpers.App;
+
+        private void TryToAttachAppFromUrlParams()
         {
-            get
+            var wrapLog = Log.Call("TryToAttachAppFromUrlParams");
+            var found = false;
+            try
             {
-                // try already-retrieved
-                if (_app != null)
-                    return _app;
-
-                // try "normal" case with instance context
-                if (SxcInstance != null)
-                    return _app = DnnAppAndDataHelpers.App;
-
-                var routeAppPath = Route.AppPathOrNull(Request.GetRouteData()) ;
+                var routeAppPath = Route.AppPathOrNull(Request.GetRouteData());
                 var appId = AppFinder.GetCurrentAppIdFromPath(routeAppPath).AppId;
                 // Look up if page publishing is enabled - if module context is not available, always false
                 var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);
-                return _app = (App) Environment.Dnn7.Factory.App(appId, publishingEnabled);
-            }
+                var app = (App) Environment.Dnn7.Factory.App(appId, publishingEnabled);
+                DnnAppAndDataHelpers.LateAttachApp(app);
+                found = true;
+            } catch { /* ignore */ }
+
+            wrapLog(found.ToString());
         }
-        private App _app;
 
         /// <inheritdoc />
         public ViewDataSource Data => DnnAppAndDataHelpers.Data;
@@ -207,12 +212,17 @@ namespace ToSic.SexyContent.WebApi
 
         public string SharedCodeVirtualRoot { get; set; }
 
-        public dynamic SharedCode(string virtualPath, 
+        public dynamic CreateInstance(string virtualPath, 
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null, 
             string relativePath = null, 
-            bool throwOnError = true) =>
-            DnnAppAndDataHelpers.SharedCode(virtualPath, dontRelyOnParameterOrder, name,
+            bool throwOnError = true)
+        {
+            // todo: ensure that App etc. are available, even if initialized in other ways
+
+            // Compile
+            return DnnAppAndDataHelpers.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
                 SharedCodeVirtualRoot, throwOnError);
+        }
     }
 }

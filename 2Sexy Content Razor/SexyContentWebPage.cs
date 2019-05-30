@@ -14,6 +14,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Interfaces;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Razor;
@@ -92,14 +93,14 @@ namespace ToSic.SexyContent.Razor
         #region AsDynamic in many variations
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => DnnAppAndDataHelpers.AsDynamic(entity);
-        
-
-        /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) =>  DnnAppAndDataHelpers.AsDynamic(dynamicEntity);
 
 
         /// <inheritdoc />
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(dynamic dynamicEntity) => DnnAppAndDataHelpers.AsDynamic(dynamicEntity);
+
+
+        /// <inheritdoc />
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
 
 
         /// <inheritdoc />
@@ -116,10 +117,10 @@ namespace ToSic.SexyContent.Razor
         #endregion
 
         #region Data Source Stuff
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null) 
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
             => DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
 
-        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null) 
+        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
             => DnnAppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
 
         /// <inheritdoc />
@@ -129,8 +130,8 @@ namespace ToSic.SexyContent.Razor
         /// <typeparam name="T"></typeparam>
         /// <param name="inStream"></param>
         /// <returns></returns>
-		public T CreateSource<T>(IDataStream inStream) 
-            =>  DnnAppAndDataHelpers.CreateSource<T>(inStream);
+		public T CreateSource<T>(IDataStream inStream)
+            => DnnAppAndDataHelpers.CreateSource<T>(inStream);
 
         #endregion
 
@@ -150,17 +151,9 @@ namespace ToSic.SexyContent.Razor
         #endregion
 
 
-        /// <summary>
-        /// Creates instances of the shared pages with the given relative path
-        /// </summary>
-        /// <param name="relativePath"></param>
-        /// <returns></returns>
-        public dynamic CreateInstance(string relativePath)
+
+        private dynamic CreateInstanceCshtml(string path)
         {
-            var path = NormalizePath(relativePath);
-
-            VerifyFileExists(path);
-
             var webPage = (SexyContentWebPage)CreateInstanceFromVirtualPath(path);
             webPage.ConfigurePage(this);
             return webPage;
@@ -196,8 +189,8 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(DynamicEntity entity, string fieldName) =>  DnnAppAndDataHelpers.AsAdam(entity, fieldName);
-        
+        public FolderOfField AsAdam(DynamicEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+
 
         /// <summary>
         /// Provides an Adam instance for this item and field
@@ -205,7 +198,7 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(IEntity entity, string fieldName) =>  DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public FolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
         #endregion
 
@@ -213,12 +206,22 @@ namespace ToSic.SexyContent.Razor
 
         public string SharedCodeVirtualRoot { get; set; }
 
-        public dynamic SharedCode(string virtualPath, 
+        /// <summary>
+        /// Creates instances of the shared pages with the given relative path
+        /// </summary>
+        /// <returns></returns>
+        public dynamic CreateInstance(string virtualPath,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
-            bool throwOnError = true) =>
-            DnnAppAndDataHelpers.SharedCode(NormalizePath(virtualPath), dontRelyOnParameterOrder, name, null, throwOnError);
+            bool throwOnError = true)
+        {
+            var path = NormalizePath(virtualPath);
+            VerifyFileExists(path);
+            return path.EndsWith(CodeCompiler.CsFileExtension)
+                ? DnnAppAndDataHelpers.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
+                : CreateInstanceCshtml(path);
+        }
 
         #endregion
     }

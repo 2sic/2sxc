@@ -14,7 +14,12 @@ namespace ToSic.Sxc.Code
 {
     public abstract class SharedWithContext : Interfaces.IAppAndDataHelpers
     {
-        public App App => Sxc?.SxcInstance?.App;
+        public App App => Parent?.App;
+
+        /// <summary>
+        /// Note that data is only available if we have an instance, as it's the
+        /// instance data, not the app data
+        /// </summary>
         public ViewDataSource Data => Sxc?.SxcInstance?.Data;
         public SxcHelper Sxc { get; private set; }
 
@@ -60,12 +65,12 @@ namespace ToSic.Sxc.Code
         #region SharedCode - must also map previous path to use here
         public string SharedCodeVirtualRoot { get; set; }
 
-        public dynamic SharedCode(string virtualPath, 
+        public dynamic CreateInstance(string virtualPath, 
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
             bool throwOnError = true) =>
-            Parent?.SharedCode(virtualPath, dontRelyOnParameterOrder, name, SharedCodeVirtualRoot, throwOnError);
+            Parent?.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, SharedCodeVirtualRoot, throwOnError);
 
         #endregion
     }
