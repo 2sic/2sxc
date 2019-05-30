@@ -33,8 +33,9 @@ namespace ToSic.Sxc.Adam
         }
 
         public Eav.Apps.Assets.Folder Get(int tenantId, string path, AdamAppContext appContext) 
-            => DnnToAdam( appContext, _folderManager.GetFolder(tenantId, path));
+            => DnnToAdam( appContext, _folderManager.GetFolder(tenantId, ConvertRootPathToEmptyForDnn(path)));
 
+        private string ConvertRootPathToEmptyForDnn(string path) => (path == "/" || path == "\\") ? "" : path;
 
         public List<Folder> GetFolders(int folderId, AdamAppContext appContext) 
             => GetFolders(GetFolder(folderId), appContext);

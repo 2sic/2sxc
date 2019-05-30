@@ -97,7 +97,7 @@ namespace ToSic.Sxc.Adam.WebApi
         public IEnumerable<AdamItem> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
             var wrapLog = Log.Call<IEnumerable<AdamItem>>("Items",
-                $"adam items a:{appId}, i:{guid}, field:{field}, subfold:{subfolder}, useRoot:{usePortalRoot}");
+                $"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
             var state = new AdamSecureState(SxcInstance, appId, contentType, field, guid, usePortalRoot, Log);
 
 
