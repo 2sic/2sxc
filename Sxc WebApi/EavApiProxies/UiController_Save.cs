@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.WebApi.Formats;
@@ -45,9 +46,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             var items = package.Items.Select(i =>
             {
-                var ent = ser.Deserialize(i.Entity, false, false);
+                var ent = ser.Deserialize(i.Entity, false, false) as Entity;
                 if (!validator.EntityIsOk(package.Items.IndexOf(i) , ent, out exp))
                     throw exp;
+
+                ent.IsPublished = package.IsPublished;
+                ent.PlaceDraftInBranch = package.DraftShouldBranch;
 
                 return new BundleWithHeader<IEntity>
                 {
