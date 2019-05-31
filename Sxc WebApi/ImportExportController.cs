@@ -21,7 +21,8 @@ using ToSic.SexyContent.WebApi.ImportExport;
 
 namespace ToSic.SexyContent.WebApi
 {
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
+    // token, which fails in the cases where the url is called using get, which should result in a download
     // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
     // we can't set this globally (only needed for imports)
     public class ImportExportController : DnnApiControllerWithFixes, IImportExportController
