@@ -99,6 +99,7 @@
     <Compile Include="Helpers\HtmlHelper.cs" />
     <Compile Include="Helpers\UrlHelper.cs" />
     <Compile Include="RazorEngine.cs" />
+    <Compile Include="RazorPermissions.cs" />
     <Compile Include="SexyContentWebPage.cs" />
     <Compile Include="SexyContentWebPageOfT.cs" />
   </ItemGroup>

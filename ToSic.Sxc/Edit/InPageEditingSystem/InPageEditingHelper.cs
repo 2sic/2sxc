@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         #region Toolbar
 
         public HtmlString Toolbar(object target = null, 
-            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
             string actions = null, 
             string contentType = null, 
             object prefill = null, 
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             settings);
 
         public HtmlString TagToolbar(object target = null,
-            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string actions = null,
             string contentType = null,
             object prefill = null,
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         {
             Log.Add($"context toolbar - enabled:{Enabled}; inline{inline}");
             if (!Enabled) return null;
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar", $"{nameof(actions)},{nameof(contentType)},{nameof(prefill)},{nameof(toolbar)},{nameof(settings)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar", $"{nameof(actions)},{nameof(contentType)},{nameof(prefill)},{nameof(toolbar)},{nameof(settings)}");
 
             // ensure that internally we always process it as an entity
             var eTarget = target as IEntity ?? (target as DynamicEntity)?.Entity;
@@ -86,14 +86,14 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         /// <param name="newGuid">the guid of a new item - use null for auto-generate</param>
         /// <returns></returns>
         public HtmlString ContextAttributes(DynamicEntity target,
-            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
             string field = null,
             string contentType = null, 
             Guid? newGuid = null)
         {
             Log.Add("ctx attribs - enabled:{Enabled}");
             if (!Enabled) return null;
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
 
             if (field == null) throw new Exception("need parameter 'field'");
 
@@ -107,7 +107,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
 
         public HtmlString WrapInContext(object content,
-            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string tag = Constants.DefaultContextTag,
             bool full = false,
             bool? enableEdit = null,
@@ -115,7 +115,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             int contentBlockId = 0
         )
         {
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "WrapInContext", $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "WrapInContext", $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
             return new HtmlString(
                 SxcInstance.RenderingHelper.WrapInContext(content.ToString(),
@@ -152,9 +152,9 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         #region Scripts and CSS includes
 
 
-        public string Enable(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, bool? api = null, bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
+        public string Enable(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, bool? api = null, bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
         {
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Enable", $"{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Enable", $"{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
 
             // check if feature enabled - if more than the api is needed
             // extend this list if new parameters are added

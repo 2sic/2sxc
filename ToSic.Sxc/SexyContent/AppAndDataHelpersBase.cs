@@ -13,11 +13,13 @@ using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 
+// ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
 namespace ToSic.SexyContent
 {
-    public abstract class AppAndDataHelpersBase : HasLog, IAppAndDataHelpers
+    public abstract class AppAndDataHelpersBase : HasLog, Sxc.Interfaces.IAppAndDataHelpers
     {
         protected readonly SxcInstance SxcInstance;
 
@@ -35,12 +37,13 @@ namespace ToSic.SexyContent
             Edit = new InPageEditingHelper(sxcInstance, Log);
         }
 
+        internal void LateAttachApp(App app) => App = app;
 
 
         /// <summary>
         /// The current app containing the data and read/write commands
         /// </summary>
-        public App App { get; }
+        public App App { get; private set; }
 
         /// <summary>
         /// The view data
@@ -55,7 +58,7 @@ namespace ToSic.SexyContent
         public ILinkHelper Link { get; protected set; }
 
 
-        #region AsDynamic overrides
+        #region AsDynamic Implementations
         /// <inheritdoc />
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
@@ -205,7 +208,7 @@ namespace ToSic.SexyContent
         private dynamic _listContent;
 
         /// <remarks>
-        /// This must be lazyl-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
+        /// This must be lazy-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
         /// - this would break API even though the List etc. are never accessed
         /// </remarks>
         private void TryToBuildListContentObject()
@@ -230,7 +233,7 @@ namespace ToSic.SexyContent
         private List<Element> _list;
 
         /// <remarks>
-        /// This must be lazyl-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
+        /// This must be lazy-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
         /// - this would break API even though the List etc. are never accessed
         /// </remarks>
         private void TryToBuildContentAndList()
@@ -304,7 +307,33 @@ namespace ToSic.SexyContent
         /// Helper commands to enable in-page editing functionality
         /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
         /// </summary>
-        public IInPageEditingSystem Edit { get; private set; }
+        public IInPageEditingSystem Edit { get; }
         #endregion
+
+        #region SharedCode Compiler
+        public dynamic CreateInstance(string virtualPath,
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string name = null,
+            string relativePath = null,
+            bool throwOnError = true)
+        {
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "CreateInstance",
+                $"{nameof(name)},{nameof(throwOnError)}");
+
+            // Compile
+            var instance = new CodeCompiler(Log)
+                .InstantiateClass(virtualPath, name, relativePath, throwOnError);
+
+            // if it supports all our known context properties, attach them
+            if (instance is WithContext isShared)
+                isShared.InitShared(this);
+
+            return instance;
+        }
+
+
+        #endregion
+
+        public string SharedCodeVirtualRoot { get; set; }
     }
 }

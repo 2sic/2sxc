@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web;
 
-namespace ToSic.SexyContent.DnnWebForms.Helpers
+namespace ToSic.Sxc.DnnWebForms.Helpers
 {
     public static class SystemWeb
     {

@@ -14,7 +14,10 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.Interfaces;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Razor;
 using File = System.IO.File;
 
 namespace ToSic.SexyContent.Razor
@@ -23,26 +26,22 @@ namespace ToSic.SexyContent.Razor
     /// The core page type for delivering a 2sxc page
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
-    public abstract class SexyContentWebPage : WebPageBase, IAppAndDataHelpers
+    public abstract class SexyContentWebPage : WebPageBase, Sxc.Interfaces.IAppAndDataHelpers, IHasDnnContext
     {
         #region Helpers
 
         protected internal HtmlHelper Html { get; internal set; }
 
-        protected internal UrlHelper Url { get; internal set; }
+        // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
+        // reactivate if it turns out to be used, otherwise delete ca. EOY 2019
+        //protected internal UrlHelper Url { get; internal set; }
 
-        protected internal ILinkHelper Link => DnnAppAndDataHelpers.Link;
+        public ILinkHelper Link => DnnAppAndDataHelpers.Link;
 
         // <2sic>
         protected internal SxcInstance Sexy { get; set; }
         protected internal DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
         // </2sic>
-
-        /// <summary>
-        /// Helper commands to enable in-page editing functionality
-        /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
-        /// </summary>
-        public IInPageEditingSystem Edit => DnnAppAndDataHelpers.Edit;
 
 
         #endregion
@@ -60,7 +59,9 @@ namespace ToSic.SexyContent.Razor
             if (!(parentPage is SexyContentWebPage typedParent)) return;
 
             Html = typedParent.Html;
-            Url = typedParent.Url;
+            // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
+            // reactivate if it turns out to be used, otherwise delete ca. EOY 2019
+            //Url = typedParent.Url;
             Sexy = typedParent.Sexy;
             DnnAppAndDataHelpers = typedParent.DnnAppAndDataHelpers;
         }
@@ -69,6 +70,12 @@ namespace ToSic.SexyContent.Razor
 
 
         #region AppAndDataHelpers implementation
+
+        /// <summary>
+        /// Helper commands to enable in-page editing functionality
+        /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
+        /// </summary>
+        public IInPageEditingSystem Edit => DnnAppAndDataHelpers.Edit;
 
         public DnnHelper Dnn => DnnAppAndDataHelpers.Dnn;
 
@@ -83,26 +90,17 @@ namespace ToSic.SexyContent.Razor
 
         public RazorPermissions Permissions => new RazorPermissions(Sexy);
 
-        // temp - should be elsewhere, but quickly need it so Permissions-object still works after refactoring
-        public class RazorPermissions // : DnnPermissions
-        {
-            protected readonly SxcInstance SxcInstance;
-            public RazorPermissions(SxcInstance sxc) => SxcInstance = sxc;
-            public bool UserMayEditContent => SxcInstance.UserMayEdit;
-
-        }
-
         #region AsDynamic in many variations
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => DnnAppAndDataHelpers.AsDynamic(entity);
-        
-
-        /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) =>  DnnAppAndDataHelpers.AsDynamic(dynamicEntity);
 
 
         /// <inheritdoc />
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(dynamic dynamicEntity) => DnnAppAndDataHelpers.AsDynamic(dynamicEntity);
+
+
+        /// <inheritdoc />
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
 
 
         /// <inheritdoc />
@@ -119,10 +117,10 @@ namespace ToSic.SexyContent.Razor
         #endregion
 
         #region Data Source Stuff
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null) 
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
             => DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
 
-        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null) 
+        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
             => DnnAppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
 
         /// <inheritdoc />
@@ -132,8 +130,8 @@ namespace ToSic.SexyContent.Razor
         /// <typeparam name="T"></typeparam>
         /// <param name="inStream"></param>
         /// <returns></returns>
-		public T CreateSource<T>(IDataStream inStream) 
-            =>  DnnAppAndDataHelpers.CreateSource<T>(inStream);
+		public T CreateSource<T>(IDataStream inStream)
+            => DnnAppAndDataHelpers.CreateSource<T>(inStream);
 
         #endregion
 
@@ -153,21 +151,18 @@ namespace ToSic.SexyContent.Razor
         #endregion
 
 
-        /// <summary>
-        /// Creates instances of the shared pages with the given relative path
-        /// </summary>
-        /// <param name="relativePath"></param>
-        /// <returns></returns>
-        public dynamic CreateInstance(string relativePath)
+
+        private dynamic CreateInstanceCshtml(string path)
         {
-            var path = NormalizePath(relativePath);
-
-            if(!File.Exists(HostingEnvironment.MapPath(path)))
-                throw new FileNotFoundException("The shared file does not exist.", path);
-
             var webPage = (SexyContentWebPage)CreateInstanceFromVirtualPath(path);
             webPage.ConfigurePage(this);
             return webPage;
+        }
+
+        private static void VerifyFileExists(string path)
+        {
+            if (!File.Exists(HostingEnvironment.MapPath(path)))
+                throw new FileNotFoundException("The shared file does not exist.", path);
         }
 
 
@@ -194,8 +189,8 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(DynamicEntity entity, string fieldName) =>  DnnAppAndDataHelpers.AsAdam(entity, fieldName);
-        
+        public FolderOfField AsAdam(DynamicEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+
 
         /// <summary>
         /// Provides an Adam instance for this item and field
@@ -203,10 +198,32 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(IEntity entity, string fieldName) =>  DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public FolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
         #endregion
 
+        #region Compile Helpers
+
+        public string SharedCodeVirtualRoot { get; set; }
+
+        /// <summary>
+        /// Creates instances of the shared pages with the given relative path
+        /// </summary>
+        /// <returns></returns>
+        public dynamic CreateInstance(string virtualPath,
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string name = null,
+            string relativePath = null,
+            bool throwOnError = true)
+        {
+            var path = NormalizePath(virtualPath);
+            VerifyFileExists(path);
+            return path.EndsWith(CodeCompiler.CsFileExtension)
+                ? DnnAppAndDataHelpers.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
+                : CreateInstanceCshtml(path);
+        }
+
+        #endregion
     }
 
 

@@ -1,28 +1,93 @@
 {
-	"Button": {
-		"Save": "Speichern",
-		"Cancel": "Abbrechen",
-		"MoreOptions": "Mehr Optionen",
-		"SaveAndKeepOpen": "Speichern und fortsetzen"
-	},
-	"Status": {
-		"Published": "Veröffentlicht",
-		"Unpublished": "Nicht veröffentlicht / Entwurf"
-	},
-	"SaveMode": {
-		"show": "element anzeigen",
-		"hide": "element ausblenden",
-		"branch": "nur änderungen ausblenden"
+  "Form": {
+    "Buttons": {
+      "Save": "Speichern (CTRL + S)",
+      "Save.Tip": "speichern und schliessen - mit CTRL + S nur speichern",
+      "Exit.Tip": "verlassen - bei Änderungen wird zum Speichern aufgefordert",
+      "Return.Tip": "zurück zum vorherigen Dialog"
+    }
+  },
+
+  "SaveMode": {
+    "show": "anzeigen",
+    "show.Tip": "Änderungen sind öffentlich",
+    "hide": "verstecken",
+    "hide.Tip": "dieses Element ist nicht öffentlich",
+    "branch": "entwurf",
+    "branch.Tip": "nur Redakteure sehen Änderungen",
+    "Dialog": {
+      "Title": "Speichern",
+      "Intro": "Entscheide, wie du speichern möchtest. Standard ist anzeigen / veröffentlichen.",
+      "Show": {
+        "Title": "Alles anzeigen / veröffentlichen",
+        "Body": "Änderungen werden sofort öffentlich angezeigt (empfohlen)."
+      },
+      "Hide": {
+        "Title": "Alles verstecken",
+        "Body": "Das ganze element wird versteckt und ist nur sichtbar für Redakteure."
+      },
+      "Branch": {
+        "Title": "Entwurf, Änderungen verstecken",
+        "Body": "Nur Redakteure sehen Änderungen (bis es später veröffentlicht wird)."
+      }
+    }
 	},
 	"Message": {
-		"Saving": "Speichern...",
-		"Saved": "Gespeichert",
-		"ErrorWhileSaving": "Während dem Speichern ist ein Fehler aufgetreten.",
-		"WillPublish": "Wird veröffentlicht beim Speichern",
-		"WontPublish": "Wird nicht veröffentlicht beim Speichern",
-		"PleaseCreateDefLang": "Eintrag bitte zuerst in der Hauptsprache bearbeiten.",
-		"ExitOk": "Wirklich beenden?"
+		"Saved": "gespeichert"
+  },
+
+	"LangMenu": {
+		"UseDefault": "auto (Standardsprache)",
+		"In": "in {{languages}}",
+		"From": "von {{languages}}",
+    "Dialog": {
+      "Title": "{{name}} übersetzen",
+      "Intro": "Du kannst auf verschiedene Arten übersetzen, sogar Sprachen aneinander koppeln.",
+      "NoTranslate": {
+        "Title": "Nicht übersetzen",
+        "Body": "verwendet den Wert aus der Primärsprache {{primary}}"
+      },
+      "FromPrimary": {
+        "Title": "Übersetzen von: {{primary}}",
+        "Body": "beginne beim Übersetzen mit dem Wert in der Primärsprache"
+      },
+      "FromOther": {
+        "Title": "Übersetzen von: ...",
+        "Body": "beginne beim Übersetzen mit dem Wert in einer anderen Sprache",
+        "Subtitle": "Vorlagensprache"
+      },
+      "LinkReadOnly": {
+        "Title": "Von anderer Sprache erben (nur anzeigen)",
+        "Body": "nutzt den Wert einer anderen sprache, ist jedoch nicht bearbeitbar",
+        "Subtitle": "Sprache, von der geerbt wird"
+      },
+      "LinkShared": {
+        "Title": "Mit anderer Sprache verbinden (bearbeitbar)",
+        "Body": "verbindet Sprachen zusammen, damit sie den gleichen Wert verwenden",
+        "Subtitle": "Sprache, die verbunden wird"
+      },
+      "PickLanguageIntro": "Nur Sprachen mit bestehendem Inhalt können ausgewählt werden."
+    },
+
+
+    "//": "unsure if used, probably not",
+		"EditableIn": "editable in {{languages}}",
+		"AlsoUsedIn": ", also used in {{more}}",
+		"NotImplemented": "This action is not implemented yet.",
+		"CopyNotPossible": "Copy not possible: the field is disabled.",
+		"Unlink": "translate (unlink)",
+		"LinkDefault": "link to default",
+		"GoogleTranslate": "machine-translate (Google)",
+		"Copy": "copy from",
+		"Use": "use from",
+		"Share": "share from",
+    "AllFields": "all fields"
 	},
+
+
+  "//": "Everything below this hasn't been verified yet - much may be unused",
+
+
 	"Errors": {
 		"UnclearError": "Da lief was falsch - vielleicht funktioniert ein Teil, vielleicht auch nicht. Entschuldigung :(",
 		"InnerControlMustOverride": "Inner control must override this function.",
@@ -45,22 +110,6 @@
 			"Edit": "Dieses Element bearbeiten",
 			"Remove": "Aus Liste entfernen"
 		}
-	},
-	"LangMenu": {
-		"UseDefault": "auto (Standardsprache)",
-		"In": "in {{languages}}",
-		"From": "von {{languages}}",
-		"EditableIn": "Editierbar in {{languages}}",
-		"AlsoUsedIn": ", auch verwendet in {{more}}",
-		"NotImplemented": "Diese Aktion kann noch nicht verwendet werden.",
-		"CopyNotPossible": "Kopieren nicht möglich, das Feld ist gesperrt.",
-		"Unlink": "Übersetzen (abkoppeln)",
-		"LinkDefault": "Mit Standardsprache koppeln",
-		"GoogleTranslate": "Online Übersetzung (Google)",
-		"Copy": "Kopieren von",
-		"Use": "Verwenden von",
-		"Share": "Teilen mit",
-		"AllFields": "alle Felder"
 	},
 	"LangWrapper": {
 		"CreateValueInDefFirst": "Bitte das Feld '{{fieldname}}' zuerst in der Standardsprache befüllen vor dem Übersetzen."

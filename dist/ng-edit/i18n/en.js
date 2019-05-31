@@ -1,18 +1,19 @@
 {
-	"Button": {
-		"Save": "save",
-		"Cancel": "cancel",
-		"MoreOptions": "more options",
-		"SaveAndKeepOpen": "save but keep dialog open"
-	},
-	"Status": {
-		"Published": "published",
-		"Unpublished": "unpublished / draft"
-	},
+  "Form": {
+    "Buttons": {
+      "Save": "SAVE (CTRL + S)",
+      "Save.Tip": "click to save and close, use CTRL + S to save and keep open",
+      "Exit.Tip": "exit - if something changed, you will be asked to save",
+      "Return.Tip": "return to previous dialog"
+    }
+  },
 	"SaveMode": {
-		"show": "show",
-		"hide": "hide",
+    "show": "show",
+    "show.Tip": "changes are public",
+    "hide": "hide",
+    "hide.Tip": "this item is not publicly visible",
     "branch": "draft",
+    "branch.Tip": "changes are only visible to editors",
     "Dialog": {
       "Title": "Save Mode",
       "Intro": "This determines how you will save. The default is show/publish.",
@@ -26,25 +27,66 @@
       },
       "Branch": {
         "Title": "Draft / Hide Changes",
-        "Body": "Keep original published. Only editors can see changed data until published at a later time."
+        "Body": "Only editors can see changes (until published at a later time)."
       }
     }
 	},
 	"Message": {
-		"Saving": "saving...",
-		"Saved": "saved",
-		"ErrorWhileSaving": "There was an error while saving.",
-		"WillPublish": "will publish when saving",
-		"WontPublish": "will not publish when saving",
-		"PleaseCreateDefLang": "please edit this in the default language first.",
-		"ExitOk": "do you really want to exit?",
-		"Deleting": "deleting...",
-		"Ok": "ok",
-		"Error": "error",
-		"CantSaveProcessing": "can't save because something else is still being processed",
-		"CantSaveInvalid": "form not valid, can't save - errors on: <ul>{0}</ul>",
-		"FieldErrorList": "<li>{field} ({error})</li>"
+		"Saved": "saved"
+  },
+
+  "LangMenu": {
+		"UseDefault": "auto (default)",
+		"In": "in {{languages}}",
+    "From": "from {{languages}}",
+    "Dialog": {
+      "Title": "Translate {{name}}",
+      "Intro": "You can do many things when translating, incl. linking languages together.",
+      "NoTranslate": {
+        "Title": "Don't Translate",
+        "Body": "use value in primary language {{primary}}"
+      },
+      "FromPrimary": {
+        "Title": "Translate from: {{primary}}",
+        "Body": "begin translation with with the value in the primary language"
+      },
+      "FromOther": {
+        "Title": "Translate from: ...",
+        "Body": "begin translation with the value from another language",
+        "Subtitle": "Language to translate from"
+      },
+      "LinkReadOnly": {
+        "Title": "Inherit from other language (read-only)",
+        "Body": "inherit value from another language",
+        "Subtitle": "Language to inherit from"
+      },
+      "LinkShared": {
+        "Title": "Share with another language (read/write)",
+        "Body": "link languages together to use the same editable value",
+        "Subtitle": "Language to share with"
+      },
+      "PickLanguageIntro": "Only languages with content can be selected."
+    },
+
+
+    "//": "unsure if used, probably not",
+		"EditableIn": "editable in {{languages}}",
+		"AlsoUsedIn": ", also used in {{more}}",
+		"NotImplemented": "This action is not implemented yet.",
+		"CopyNotPossible": "Copy not possible: the field is disabled.",
+		"Unlink": "translate (unlink)",
+		"LinkDefault": "link to default",
+		"GoogleTranslate": "machine-translate (Google)",
+		"Copy": "copy from",
+		"Use": "use from",
+		"Share": "share from",
+    "AllFields": "all fields"
 	},
+
+
+
+  "//": "Everything below this hasn't been verified yet - much may be unused",
+
 	"Errors": {
 		"UnclearError": "Something went wrong - maybe parts worked, maybe not. Sorry :(",
 		"InnerControlMustOverride": "Inner control must override this function.",
@@ -98,49 +140,7 @@
 			"QueryStreamNotFound": "Error: The query did not return a stream named "
 		}
 	},
-	"LangMenu": {
-		"UseDefault": "auto (default)",
-		"In": "in {{languages}}",
-		"From": "from {{languages}}",
-		"EditableIn": "editable in {{languages}}",
-		"AlsoUsedIn": ", also used in {{more}}",
-		"NotImplemented": "This action is not implemented yet.",
-		"CopyNotPossible": "Copy not possible: the field is disabled.",
-		"Unlink": "translate (unlink)",
-		"LinkDefault": "link to default",
-		"GoogleTranslate": "machine-translate (Google)",
-		"Copy": "copy from",
-		"Use": "use from",
-		"Share": "share from",
-    "AllFields": "all fields",
-    "Dialog": {
-      "Title": "Translate {{name}}",
-      "Intro": "You can do many things when translating, incl. linking languages together.",
-      "NoTranslate": {
-        "Title": "Don't Translate",
-        "Body": "Use value in primary language ({{primary}})"
-      },
-      "FromPrimary": {
-        "Title": "Translate from ({{primary}})",
-        "Body": "Translate and start with the value in the primary language"
-      },
-      "FromOther": {
-        "Title": "Translate from ...",
-        "Body": "Translate and start with the value from another language",
-        "Subtitle": "Language to translate from"
-      },
-      "LinkReadOnly": {
-        "Title": "Inherit to other languege (read-only)",
-        "Body": "Inherit value from another language but don't edit it.",
-        "Subtitle": "Language to inherit from"
-      },
-      "LinkShared": {
-        "Title": "Share with another language (read/write)",
-        "Body": "Link languages together so they use the same value, editable.",
-        "Subtitle": "Language to share with"
-      }
-    }
-	},
+
 	"LangWrapper": {
 		"CreateValueInDefFirst": "Please create the value for '{{fieldname}}' in the default language before translating it."
 	},

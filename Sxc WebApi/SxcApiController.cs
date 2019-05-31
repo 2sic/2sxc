@@ -14,7 +14,11 @@ using Factory = ToSic.Eav.Factory;
 using ToSic.Sxc.Adam.WebApi;
 using System.IO;
 using ToSic.Eav.Configuration;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.Interfaces;
+using ToSic.Sxc.Edit.InPageEditingSystem;
 using File = ToSic.Sxc.Adam.File;
 
 namespace ToSic.SexyContent.WebApi
@@ -27,7 +31,7 @@ namespace ToSic.SexyContent.WebApi
     /// safer because it can't accidentally mix the App with a different appId in the params
     /// </summary>
     [SxcWebApiExceptionHandling]
-    public abstract class SxcApiController : SxcApiControllerBase, IAppAndDataHelpers
+    public abstract class SxcApiController : SxcApiControllerBase, Sxc.Interfaces.IAppAndDataHelpers, IHasDnnContext
     {
         #region constructor
 
@@ -36,45 +40,54 @@ namespace ToSic.SexyContent.WebApi
             base.Initialize(controllerContext);
             // Note that the SxcInstance is created by the BaseClass, if it's detectable. Otherwise it's null
             DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcInstance, SxcInstance?.Log ?? Log);
-            controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); // must run after creating AppAndDataHelpers
+
+            // In case SxcInstance was null, there is no instance, but we may still need the app
+            if (DnnAppAndDataHelpers.App == null)
+                TryToAttachAppFromUrlParams();
+
+            // must run this after creating AppAndDataHelpers
+            controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); 
+
+            // Pick up the path given by the AppApiControllerSelector - for relative paths needed in the SharedCode section
+            if(controllerContext.Configuration.Properties.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var value))
+                SharedCodeVirtualRoot = value as string;
         }
         #endregion
 
         private DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
-
-        #region AppAndDataHelpers implementation
 
         public DnnHelper Dnn => DnnAppAndDataHelpers.Dnn;
 
         public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
 
         /// <inheritdoc />
-        public App App
+        public App App => DnnAppAndDataHelpers.App;
+
+        private void TryToAttachAppFromUrlParams()
         {
-            get
+            var wrapLog = Log.Call("TryToAttachAppFromUrlParams");
+            var found = false;
+            try
             {
-                // try already-retrieved
-                if (_app != null)
-                    return _app;
-
-                // try "normal" case with instance context
-                if (SxcInstance != null)
-                    return _app = DnnAppAndDataHelpers.App;
-
-                var routeAppPath = Route.AppPathOrNull(Request.GetRouteData()) ;// Request.GetRouteData().Values["apppath"]?.ToString();
+                var routeAppPath = Route.AppPathOrNull(Request.GetRouteData());
                 var appId = AppFinder.GetCurrentAppIdFromPath(routeAppPath).AppId;
-                // Look up if page publishing is enabled - if module context is not availabe, always false
+                // Look up if page publishing is enabled - if module context is not available, always false
                 var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);
-                return _app = (App) Environment.Dnn7.Factory.App(appId, publishingEnabled);
-            }
+                var app = (App) Environment.Dnn7.Factory.App(appId, publishingEnabled);
+                DnnAppAndDataHelpers.LateAttachApp(app);
+                found = true;
+            } catch { /* ignore */ }
+
+            wrapLog(found.ToString());
         }
-        private App _app;
 
         /// <inheritdoc />
         public ViewDataSource Data => DnnAppAndDataHelpers.Data;
 
-	    /// <inheritdoc />
+
+        #region AsDynamic implementations
+        /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => DnnAppAndDataHelpers.AsDynamic(entity);
 
 
@@ -92,8 +105,10 @@ namespace ToSic.SexyContent.WebApi
 
         /// <inheritdoc />
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DnnAppAndDataHelpers.AsDynamic(entities);
+        #endregion
 
-	    public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
+        #region CreateSource implementations
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
 	        IValueCollectionProvider configurationProvider = null)
 	        => DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
 
@@ -103,6 +118,9 @@ namespace ToSic.SexyContent.WebApi
 	    /// <inheritdoc />
 	    public T CreateSource<T>(IDataStream inStream) => DnnAppAndDataHelpers.CreateSource<T>(inStream);
 
+        #endregion
+
+        #region Content, Presentation & List
         /// <summary>
         /// content item of the current view
         /// </summary>
@@ -151,6 +169,7 @@ namespace ToSic.SexyContent.WebApi
         /// <summary>
         /// Save a file from a stream (usually an upload from the browser) into an adam-field
         /// </summary>
+        /// <param name="dontRelyOnParameterOrder">ensure that all parameters use names, so the api can change in future</param>
         /// <param name="stream">the stream</param>
         /// <param name="fileName">file name to save to</param>
         /// <param name="contentType">content-type of the target item (important for security checks)</param>
@@ -158,7 +177,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="field"></param>
         /// <param name="subFolder"></param>
         /// <returns></returns>
-        public File SaveInAdam(string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
+        public File SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
             Stream stream = null, 
             string fileName = null, 
             string contentType = null, 
@@ -166,7 +185,7 @@ namespace ToSic.SexyContent.WebApi
             string field = null,
             string subFolder = "")
         {
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam", 
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam", 
                 $"{nameof(stream)},{nameof(fileName)},{nameof(contentType)},{nameof(guid)},{nameof(field)},{nameof(subFolder)} (optional)");
 
             if(stream == null || fileName == null || contentType == null || guid == null || field == null)
@@ -175,8 +194,6 @@ namespace ToSic.SexyContent.WebApi
             var feats = new[]{FeatureIds.UseAdamInWebApi, FeatureIds.PublicUpload};
             if (!Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
-            //if(!Features.Enabled(feats))
-            //    throw new Exception(Features.MsgMissingSome(feats));
 
             return new AdamUploader(SxcInstance, 
                 SxcInstance.AppId ?? throw new Exception("can't save in adam - full context not available"), 
@@ -186,9 +203,21 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
+        #region Link & Edit - added in 2sxc 10.01
+        public ILinkHelper Link => DnnAppAndDataHelpers?.Link;
+        public IInPageEditingSystem Edit => DnnAppAndDataHelpers?.Edit;
+
+        #endregion
 
 
+        public string SharedCodeVirtualRoot { get; set; }
 
-
+        public dynamic CreateInstance(string virtualPath, 
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string name = null, 
+            string relativePath = null, 
+            bool throwOnError = true) =>
+            DnnAppAndDataHelpers.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
+                SharedCodeVirtualRoot, throwOnError);
     }
 }

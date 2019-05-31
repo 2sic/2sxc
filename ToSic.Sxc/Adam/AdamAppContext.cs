@@ -83,9 +83,7 @@ namespace ToSic.Sxc.Adam
                     throw new Exception("subfolder " + pathToCheck + "not found");
             }
 
-            var fldr = Folder(path);
-
-            return fldr;
+            return Folder(path);
         }
 
 
@@ -95,13 +93,5 @@ namespace ToSic.Sxc.Adam
         #endregion
 
         public Export Export => new Export(this);
-
-
-        //public string UrlPath(AdamFile currentFile)
-        //    => Tenant.ContentPath + currentFile.Folder + currentFile.FileName;
-
-        //public string UrlPath(AdamFolder currentFolder)
-        //    => Tenant.ContentPath + currentFolder.FolderPath;
-
     }
 }

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
+using ToSic.Sxc.Code;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -88,13 +89,18 @@ namespace ToSic.SexyContent.WebApi
                 if (!string.IsNullOrEmpty(edition))
                     edition += "/";
 
-                var controllerPath = Path.Combine(DnnMapAppToInstance.AppBasePath(), appFolder,
-                    edition + "api/" + controllerTypeName + ".cs");
+                var controllerFolder = Path.Combine(DnnMapAppToInstance.AppBasePath(), appFolder,
+                    edition + "api/");
+                var controllerPath = Path.Combine(controllerFolder + controllerTypeName + ".cs");
 
                 if (File.Exists(HostingEnvironment.MapPath(controllerPath)))
                 {
                     var assembly = BuildManager.GetCompiledAssembly(controllerPath);
                     var type = assembly.GetType(controllerTypeName, true, true);
+
+                    // attach the folder it's running in as a property, in case the target needs this
+                    _config.Properties.TryAdd(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+
                     return new HttpControllerDescriptor(_config, controllerTypeName, type);
                 }
             }

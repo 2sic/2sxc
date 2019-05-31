@@ -7435,7 +7435,7 @@ var AppResources = /** @class */ (function (_super) {
     __extends(AppResources, _super);
     function AppResources() {
         var _this = _super.call(this) || this;
-        _this.makeDef('app-resources', 'AppResources', 'language', true, false, {
+        _this.makeDef('app-resources', 'AppResources', 'translate', true, false, {
             dialog: function (context) { return 'edit'; },
             disabled: function (context) {
                 return context.app.resourcesId === null;

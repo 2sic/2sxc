@@ -189,7 +189,6 @@
     <Content Include="razorblade\License.txt" />
     <Content Include="razorblade\ReleaseNotes.txt" />
     <Content Include="README.md" />
-    <Content Include="package.json" />
     <Content Include="packages.config" />
     <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
