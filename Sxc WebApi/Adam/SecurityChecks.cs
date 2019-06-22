@@ -5,7 +5,6 @@ using DotNetNuke.Entities.Host;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using JetBrains.Annotations;
-using ToSic.Eav.Identity;
 using ToSic.SexyContent.WebApi.Errors;
 
 namespace ToSic.SexyContent.WebApi.Adam
@@ -13,20 +12,13 @@ namespace ToSic.SexyContent.WebApi.Adam
     internal class SecurityChecks
     {
 
-
-
-
         internal static bool DestinationIsInItem(Guid guid, string field, string path, out HttpResponseException preparedException)
         {
-            var shortGuid = Mapper.GuidCompress(guid);
-            // will do check, case-sensitive because the compressed guid is case-sensitive
-            if (!path.Replace('\\', '/').Contains(shortGuid + "/" + field))
-            {
-                preparedException = Http.PermissionDenied("Can't access a resource which is not part of this item.");
-                return false;
-            }
-            preparedException = null;
-            return true;
+            var inAdam = Sxc.Adam.Security.PathIsInItemAdam(guid, field, path);
+            preparedException = inAdam
+                ? null
+                : Http.PermissionDenied("Can't access a resource which is not part of this item.");
+            return inAdam;
         }
 
 
@@ -71,11 +63,7 @@ namespace ToSic.SexyContent.WebApi.Adam
             return CanEdit(folder);
         }
 
-        internal static bool CanEdit(IFolderInfo folder)
-        {
-            if (folder == null) return false;
-            return FolderPermissionController.CanAddFolder(folder as FolderInfo);
-        }
-
+        internal static bool CanEdit(IFolderInfo folder) 
+            => folder != null && FolderPermissionController.CanAddFolder(folder as FolderInfo);
     }
 }

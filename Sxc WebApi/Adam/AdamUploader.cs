@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Adam.WebApi
             // Make sure the image does not exist yet, cycle through numbers (change file name)
             fileName = RenameFileToNotOverwriteExisting(fileName, dnnFolder);
 
-            // Everything is ok, add file
+            // Everything is ok, add file to DNN
             var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName),
                 stream);
 

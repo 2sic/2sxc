@@ -53,7 +53,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
 
 		        // look it up first, because we need to know if the result is in ADAM or not (different security scenario)
 		        var conv = new DnnValueConverter();
-		        var resolved = conv.Convert(ConversionScenario.GetFriendlyValue, "Hyperlink", hyperlink);
+                var resolved = conv.ToValue(guid, hyperlink);
 
 		        if (lookupPage)
 		        {
