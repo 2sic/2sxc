@@ -38,6 +38,7 @@
 
 	"LangMenu": {
 		"UseDefault": "auto (Standardsprache)",
+		"InAllLanguages": "in allen Sprachen",
 		"In": "in {{languages}}",
 		"From": "von {{languages}}",
     "Dialog": {
