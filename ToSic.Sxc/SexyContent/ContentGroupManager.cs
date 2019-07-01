@@ -20,7 +20,8 @@ namespace ToSic.SexyContent
         private readonly bool _showDrafts;
         private readonly bool _enableVersioning;
 
-        public ContentGroupManager(int zoneId, int appId, bool showDrafts, bool enableVersioning, Log parentLog): base("CG.Manage", parentLog)
+        public ContentGroupManager(int zoneId, int appId, bool showDrafts, bool enableVersioning, Log parentLog)
+            : base("CG.Manage", parentLog, "constructor", nameof(ContentGroupManager))
 		{
 			_zoneId = zoneId;
 			_appId = appId;
@@ -47,7 +48,10 @@ namespace ToSic.SexyContent
 		    var groupEntity = dataSource.List.One(contentGroupGuid);
 		    return groupEntity != null 
                 ? new ContentGroup(groupEntity, _zoneId, _appId, _showDrafts, _enableVersioning, Log) 
-                : new ContentGroup(Guid.Empty, _zoneId, _appId, _showDrafts, _enableVersioning, Log) {DataIsMissing = true};
+                : new ContentGroup(Guid.Empty, _zoneId, _appId, _showDrafts, _enableVersioning, Log)
+                {
+                    DataIsMissing = true
+                };
 		}
 
 	    /// <summary>

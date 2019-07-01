@@ -47,11 +47,26 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var items = package.Items.Select(i =>
             {
                 var ent = ser.Deserialize(i.Entity, false, false) as Entity;
-                if (!validator.EntityIsOk(package.Items.IndexOf(i) , ent, out exp))
+                
+                var index = package.Items.IndexOf(i); // index is helpful in case of errors
+                if (!validator.EntityIsOk(index, ent, out exp))
+                    throw exp;
+
+                if (!validator.IfUpdateValidateAndCorrectIds(index, ent, out exp))
                     throw exp;
 
                 ent.IsPublished = package.IsPublished;
                 ent.PlaceDraftInBranch = package.DraftShouldBranch;
+
+                // only do this if we're adding to a group
+                if (i.Header.Group != null)
+                {
+                    // the entityId is reset by the validator if it turns out to be an update
+                    if (ent.EntityId > 0 && i.Header.Group.Add)
+                        i.Header.Group.Add = false;
+
+                    i.Header.Group.ReallyAddBecauseAlreadyVerified = i.Header.Group.Add;
+                }
 
                 return new BundleWithHeader<IEntity>
                 {
