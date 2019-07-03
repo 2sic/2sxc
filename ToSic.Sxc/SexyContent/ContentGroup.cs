@@ -20,7 +20,8 @@ namespace ToSic.SexyContent
         private readonly bool _versioningEnabled;
         private readonly Guid? _previewTemplateId;
 
-        public ContentGroup(Eav.Interfaces.IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled, Log parentLog): base("CG.Group", parentLog)
+        public ContentGroup(Eav.Interfaces.IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled, Log parentLog)
+            : base("CG.Group", parentLog, "constructor from entity", nameof(ContentGroup))
         {
             _contentGroupEntity = contentGroupEntity ?? throw new Exception("ContentGroup entity is null. This usually happens when you are duplicating a site, and have not yet imported the other content/apps. If that is your issue, check 2sxc.org/help?tag=export-import");
             _zoneId = zoneId;
@@ -30,9 +31,10 @@ namespace ToSic.SexyContent
         }
 
         /// <summary>
-        /// Instanciate a "temporary" ContentGroup with the specified templateId and no Content items
+        /// Instantiate a "temporary" ContentGroup with the specified templateId and no Content items
         /// </summary>
-        public ContentGroup(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts, bool versioningEnabled, Log parentLog): base("CG.Group", parentLog)
+        public ContentGroup(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts, bool versioningEnabled, Log parentLog)
+            : base("CG.Group", parentLog, "constructor empty", nameof(ContentGroup))
         {
             _previewTemplateId = previewTemplateId;
             _zoneId = zoneId;
@@ -131,7 +133,7 @@ namespace ToSic.SexyContent
         {
             var somethingChanged = false;
             if (sortOrder == -1)
-                throw new Exception("Sortorder is never -1 any more; deprecated");
+                throw new Exception("Sort order is never -1 any more; deprecated");
 
             var listMain = ListWithNulls(type); // this[type].Select(p => p?.EntityId).ToList();
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.WebApi.Formats;
@@ -45,9 +46,27 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             var items = package.Items.Select(i =>
             {
-                var ent = ser.Deserialize(i.Entity, false, false);
-                if (!validator.EntityIsOk(package.Items.IndexOf(i) , ent, out exp))
+                var ent = ser.Deserialize(i.Entity, false, false) as Entity;
+                
+                var index = package.Items.IndexOf(i); // index is helpful in case of errors
+                if (!validator.EntityIsOk(index, ent, out exp))
                     throw exp;
+
+                if (!validator.IfUpdateValidateAndCorrectIds(index, ent, out exp))
+                    throw exp;
+
+                ent.IsPublished = package.IsPublished;
+                ent.PlaceDraftInBranch = package.DraftShouldBranch;
+
+                // only do this if we're adding to a group
+                if (i.Header.Group != null)
+                {
+                    // the entityId is reset by the validator if it turns out to be an update
+                    if (ent.EntityId > 0 && i.Header.Group.Add)
+                        i.Header.Group.Add = false;
+
+                    i.Header.Group.ReallyAddBecauseAlreadyVerified = i.Header.Group.Add;
+                }
 
                 return new BundleWithHeader<IEntity>
                 {

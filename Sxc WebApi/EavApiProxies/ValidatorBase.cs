@@ -9,7 +9,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     {
         public string Errors = string.Empty;
 
-        protected ValidatorBase(string logName, Log parentLog = null, string initialMessage = null) : base(logName, parentLog, initialMessage)
+        protected ValidatorBase(string logName, Log parentLog, string initialMessage, string className) 
+            : base(logName, parentLog, initialMessage, className)
         {
         }
 
@@ -19,11 +20,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         /// Determine if errors exist, and return that state
         /// </summary>
         /// <returns></returns>
-        protected bool BuildTrueIfOk(out HttpResponseException preparedException, string logMessage = null)
+        protected bool BuildExceptionIfHasIssues(out HttpResponseException preparedException, string logMessage = null)
         {
+            var wrapLog = Log.Call(nameof(BuildExceptionIfHasIssues));
             preparedException = HasErrors ? Http.BadRequest(Errors): null;
-            Log.Add(HasErrors ? "found errors: " + Errors : "no errors found");
-            if (logMessage != null) Log.Add(logMessage);
+            if (logMessage != null) Log.Add($"{nameof(logMessage)}:{logMessage}");
+            if (HasErrors) Log.Add($"Errors:{Errors}");
+            wrapLog(HasErrors ? "found errors" : "all ok");
             return !HasErrors;
         }
 
@@ -32,7 +35,10 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         /// Add an error message
         /// </summary>
         /// <param name="addition"></param>
-        protected void Add(string addition) => Errors += (Errors == string.Empty ? "" : "\n") + addition;
-
+        protected void Add(string addition)
+        {
+            Log.Add($"Add problem to list:{addition}");
+            Errors += (Errors == string.Empty ? "" : "\n") + addition;
+        }
     }
 }

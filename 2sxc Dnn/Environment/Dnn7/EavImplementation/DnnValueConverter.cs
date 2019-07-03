@@ -8,21 +8,18 @@ using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Implementations.ValueConverter;
 
 namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
 {
     public class DnnValueConverter : IEavValueConverter
     {
-        public string Convert(ConversionScenario scenario, string type, string originalValue/*, PortalSettings portalInfo*/)
-        {
-            if (type == Eav.Constants.DataTypeHyperlink)
-                return scenario == ConversionScenario.GetFriendlyValue
-                    ? TryToResolveDnnCodeToLink(originalValue)
-                    : TryToResolveOneLinkToInternalDnnCode(originalValue);
+        public string ToReference(string value) 
+            => TryToResolveOneLinkToInternalDnnCode(value);
 
-            return originalValue;
-        }
+        public string ToValue(Guid itemGuid, string reference) 
+            => TryToResolveDnnCodeToLink(itemGuid, reference);
 
         /// <summary>
         /// Will take a link like http:\\... to a file or page and try to return a DNN-style info like
@@ -30,7 +27,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
         /// </summary>
         /// <param name="potentialFilePath"></param>
         /// <returns></returns>
-        private string TryToResolveOneLinkToInternalDnnCode(string potentialFilePath)
+        private static string TryToResolveOneLinkToInternalDnnCode(string potentialFilePath)
         {
             // note: this can always use the current context, because this should happen
             // when saving etc. - which is always expected to happen in the owning portal
@@ -48,7 +45,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
                                        .FirstOrDefault(tab => tab.TabPath == potentialFilePath);
 
             if (tabInfo != null)
-                return "fage:" + tabInfo.TabID;
+                return "page:" + tabInfo.TabID;
 
             return potentialFilePath;
         }
@@ -57,64 +54,75 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
         /// Will take a link like "File:17" and convert to "Faq/screenshot1.jpg"
         /// It will always deliver a relative path to the portal root
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="itemGuid">the item we're in - important for the feature which checks if the file is in this items ADAM</param>
+        /// <param name="originalValue"></param>
         /// <returns></returns>
-        private string TryToResolveDnnCodeToLink(string value)
+        private string TryToResolveDnnCodeToLink(Guid itemGuid, string originalValue)
         {
             // new
-            var resultString = value;
+            var resultString = originalValue;
             var regularExpression = Regex.Match(resultString, @"^(?<type>(file|page)):(?<id>[0-9]+)(?<params>(\?|\#).*)?$", RegexOptions.IgnoreCase);
 
             if (!regularExpression.Success)
-                return value;
+                return originalValue;
 
             var linkType = regularExpression.Groups["type"].Value.ToLower();
             var linkId = int.Parse(regularExpression.Groups["id"].Value);
             var urlParams = regularExpression.Groups["params"].Value ?? "";
 
+            var isPageLookup = linkType == "page";
             try
             {
-                var result = linkType == "page"
-                    ? ResolvePageLink(linkId, value)
-                    : ResolveFileLink(linkId, value);
+                var result = (isPageLookup
+                                 ? ResolvePageLink(linkId)
+                                 : ResolveFileLink(linkId, itemGuid))
+                             ?? originalValue;
 
-                return result + ((result == value) ? "" : urlParams);
+                return result + (result == originalValue ? "" : urlParams);
             }
             catch (Exception e)
             {
-                var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + value + "\"", e);
+                var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + originalValue + "\"", e);
                 Exceptions.LogException(wrappedEx);
-                return value;
+                return originalValue;
             }
 
         }
 
-        private string ResolveFileLink(int linkId, string defaultValue)
+        private static string ResolveFileLink(int linkId, Guid itemGuid)
         {
             var fileInfo = FileManager.Instance.GetFile(linkId);
             if (fileInfo == null)
-                return defaultValue;
+                return null;
 
             #region special handling of issues in case something in the background is broken
             // there are cases where the PortalSettings will be null or something, and in these cases the serializer would break down
             // so this is to just ensure that if it can't be converted, it'll just fall back to default
             try
             {
-                return Path.Combine(new PortalSettings(fileInfo.PortalId)?.HomeDirectory ?? "", fileInfo?.RelativePath ?? "");
+                var result = Path.Combine(new PortalSettings(fileInfo.PortalId)?.HomeDirectory ?? "", fileInfo?.RelativePath ?? "");
+                
+                // optionally do extra security checks (new in 10.02)
+                if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
+
+                // check if it's in this item. We won't check the field, just the item, so the field is ""
+                return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", result) 
+                    ? null 
+                    : result;
             }
             catch
             {
-                return defaultValue;
+                return null;
             }
             #endregion
         }
 
-        private string ResolvePageLink(int id, string defaultValue)
+        private static string ResolvePageLink(int id)
         {
             var tabController = new TabController();
 
-            var tabInfo = tabController.GetTab(id, 0); // older, obselete API: tabController.GetTab(id);
-            if (tabInfo == null) return defaultValue;
+            var tabInfo = tabController.GetTab(id, 0);
+            if (tabInfo == null) return null;
 
             var portalSettings = PortalSettings.Current;
 
@@ -122,18 +130,20 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
             if (PortalSettings.Current != null && PortalSettings.Current.PortalId != tabInfo.PortalID)
                 portalSettings = new PortalSettings(tabInfo.PortalID);
 
-            if (portalSettings == null) return defaultValue;
+            if (portalSettings == null) return null;
 
-            if (tabInfo.CultureCode != "" && tabInfo.CultureCode != PortalSettings.Current.CultureCode)
+            if (tabInfo.CultureCode != "" && PortalSettings.Current != null && tabInfo.CultureCode != PortalSettings.Current.CultureCode)
             {
-                var cultureTabInfo = tabController.GetTabByCulture(tabInfo.TabID, tabInfo.PortalID, LocaleController.Instance.GetLocale(PortalSettings.Current.CultureCode));
+                var cultureTabInfo = tabController
+                    .GetTabByCulture(tabInfo.TabID, tabInfo.PortalID, 
+                        LocaleController.Instance.GetLocale(PortalSettings.Current.CultureCode));
 
                 if (cultureTabInfo != null)
                     tabInfo = cultureTabInfo;
             }
 
             // Exception in AdvancedURLProvider because ownerPortalSettings.PortalAlias is null
-            return Globals.NavigateURL(tabInfo.TabID, portalSettings, "", new string[] { });// + urlParams;
+            return Globals.NavigateURL(tabInfo.TabID, portalSettings, "", new string[] { });
         }
     }
 

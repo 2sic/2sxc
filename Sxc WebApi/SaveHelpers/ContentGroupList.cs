@@ -34,7 +34,8 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             Dictionary<Guid, int> postSaveIds,
             IEnumerable<IGrouping<string, BundleWithHeader<T>>> groupItems)
         {
-            var myLog = new Log("2Ap.GrpPrc", Log, "start");
+            var wrapLog = Log.Call(nameof(UpdateList), $"{appId}");
+            //var myLog = new Log("2Ap.GrpPrc", Log, "start");
             // 2018-09-22 new
             var app = new App(new DnnTenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
                 ConfigurationProvider.Build(SxcInstance, true), false, Log);
@@ -45,12 +46,12 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
 
             foreach (var entitySets in groupItems)
             {
-                myLog.Add("processing:" + entitySets.Key);
+                Log.Add("processing:" + entitySets.Key);
                 var contItem =
                     entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ContentLower) ??
                     entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ListContentLower);
                 if (contItem == null)
-                    throw new Exception("unexpected group-entity assigment, cannot figure it out");
+                    throw new Exception("unexpected group-entity assignment, cannot figure it out");
 
                 var presItem =
                     entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.PresentationLower) ??
@@ -79,9 +80,17 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
                     presentationId = presItem.Header.Group.SlotIsEmpty ? null : presentationId;
                     // use null if it shouldn't have one
                 }
+
                 // add or update slots
-                var reallyAddGroup = contItem.EntityId == 0; // only really add if it's really new
-                if (contItem.Header.Group.Add && reallyAddGroup) // this cannot be auto-detected, it must be specified
+                var itemIsReallyNew = contItem.EntityId == 0; // only really add if it's really new
+                var willAdd = contItem.Header.Group.Add && itemIsReallyNew;
+
+                // 2019-07-01 2dm needed to add this, because new-save already gives it an ID
+                if (contItem.Header.Group.ReallyAddBecauseAlreadyVerified != null)
+                    willAdd = contItem.Header.Group.ReallyAddBecauseAlreadyVerified.Value;
+
+                Log.Add($"will add: {willAdd}; add-pre-verified:{contItem.Header.Group.ReallyAddBecauseAlreadyVerified}; Group.Add:{contItem.Header.Group.Add}; {nameof(itemIsReallyNew)}:{itemIsReallyNew}; EntityId:{contItem.EntityId}");
+                if (willAdd) // this cannot be auto-detected, it must be specified
                     contentGroup.AddContentAndPresentationEntity(partName, index, postSaveId, presentationId);
                 else // if (part.Count <= index || part[index] == null)
                     contentGroup.UpdateEntityIfChanged(partName, index, postSaveId, true, presentationId);
@@ -89,6 +98,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
 
             // update-module-title
             SxcInstance.ContentBlock.Manager.UpdateTitle();
+            wrapLog("ok");
         }
 
         internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers, App app)

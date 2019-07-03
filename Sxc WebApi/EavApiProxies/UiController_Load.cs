@@ -47,7 +47,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // set published if some data already exists
             if(list.Any())
+            {
                 result.IsPublished = list.First().Entity?.IsPublished ?? true; // Entity could be null (new), then true
+                // only set draft-should-branch if this draft already has a published item
+                if (!result.IsPublished) result.DraftShouldBranch = list.First().Entity?.GetPublished() != null;
+            }
 
             // since we're retrieving data - make sure we're allowed to
             // this is to ensure that if public forms only have create permissions, they can't access existing data
