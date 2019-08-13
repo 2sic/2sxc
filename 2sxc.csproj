@@ -339,7 +339,7 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PostBuildEvent>
-xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I</PostBuildEvent>
+Echo xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <Extension>zip</Extension>
