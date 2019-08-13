@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("09.43.01.*")]
+[assembly: AssemblyVersion("09.43.02.*")]
 //[assembly: AssemblyFileVersion("8.2.*")]
 [assembly: InternalsVisibleTo("ToSic.SexyContent.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn")]
