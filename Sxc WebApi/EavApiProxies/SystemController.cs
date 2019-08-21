@@ -2,6 +2,9 @@
 using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
+using ToSic.Eav;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.PublicApi;
@@ -21,10 +24,22 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
         [HttpGet]
         public IEnumerable<Feature> Features(int appId)
-            => FeatureListWithPermissionCheck(appId,
-                new MultiPermissionsApp(SxcInstance, appId, Log));
+        {
+            // some dialogs don't have an app-id yet, because no app has been selected
+            // in this case, use the app-id of the content-app for feature-permission check
+            if (appId == 0)
+            {
+                var environment = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
+                var zoneId = environment.ZoneMapper.GetZoneId(PortalSettings.PortalId);
+                appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
+            }
 
-	    internal static IEnumerable<Feature> FeatureListWithPermissionCheck(int appId, MultiPermissionsApp permCheck)
+            return FeatureListWithPermissionCheck(appId,
+                new MultiPermissionsApp(SxcInstance, appId, Log));
+        }
+
+
+        internal static IEnumerable<Feature> FeatureListWithPermissionCheck(int appId, MultiPermissionsApp permCheck)
 	    {
             // if the user has full edit permissions, he may also get the unpublic features
             // otherwise just the public Ui features
