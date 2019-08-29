@@ -797,6 +797,7 @@ var Constants = __webpack_require__(35);
 var tag_toolbar_1 = __webpack_require__(36);
 // quick debug - set to false if not needed for production
 var dbg = false;
+var toolbarSelector = ".sc-menu[toolbar],.sc-menu[data-toolbar],[" + Constants.toolbar.attr.full + "]";
 /**
  * create a process - toolbar command to generate toolbars inside a tag
  * @param parentLog
@@ -816,21 +817,46 @@ function buildToolbars(parentLog, parentTag, optionalId) {
         if (toolbars == null)
             return;
     }
-    for (var i = 0; i < toolbars.length; i++) {
-        var tag = $(toolbars[i]);
-        var config = loadConfigFromAttributes(toolbars[i]);
-        if (config != null) // is null if load failed
-            try {
-                convertConfigToToolbarTags(tag, config, log);
-            }
-            catch (err2) {
-                // catch any errors, as this is very common - make sure the others are still rendered
-                console.error('error creating toolbar - will skip this one', err2);
-            }
-    }
+    toolbars.each(function (i, e) { return loadAndConvertTag(log, e); });
 }
 exports.buildToolbars = buildToolbars;
+/**
+ * Build toolbar, but allow any node as target
+ * Will automatically find a wrapping sc-edit-context and all containing toolbars
+ * ToDo: Some duplicate code with the above
+ * @param parentLog
+ * @param node
+ */
+function buildToolbarsFromAnyNode(parentLog, node) {
+    var log = new log_1.Log('Tlb.BldAny', parentLog);
+    var contextNode = $(node).closest(Constants.cb.selectors.ofName)[0];
+    // if we have no contextNode (a parent content block), we can
+    //assume the node is outside of a 2sxc module so not interesting
+    if (contextNode == null)
+        return;
+    if (node.is(toolbarSelector)) // toolbar itself has been added
+        loadAndConvertTag(log, node[0]);
+    var toolbars = $(toolbarSelector, node);
+    toolbars.each(function (i, e) { return loadAndConvertTag(log, e); });
+}
+exports.buildToolbarsFromAnyNode = buildToolbarsFromAnyNode;
 //////////////////////////////// Private Functions ////////////////////////////////////
+function loadAndConvertTag(log, node) {
+    var tag = $(node);
+    // Do not process tag if a toolbar has already been attached
+    if (tag.data("2sxc-tagtoolbar"))
+        return;
+    var config = loadConfigFromAttributes(node);
+    if (config != null) { // is null if load failed
+        try {
+            convertConfigToToolbarTags(tag, config, log);
+        }
+        catch (err2) {
+            // catch any errors, as this is very common - make sure the others are still rendered
+            console.error('error creating toolbar - will skip this one', err2);
+        }
+    }
+}
 /**
  * Load the toolbar configuration from the sxc-toolbar attribute OR the old schema
  * @param tag
@@ -869,7 +895,7 @@ function convertConfigToToolbarTags(tag, config, log) {
     if (tag.attr(Constants.toolbar.attr.full)) {
         // new case, where the full toolbar is included in one setting
         // ReSharper disable once WrongExpressionStatement
-        new tag_toolbar_1.TagToolbar(tag, cnt);
+        tag.data("2sxc-tagtoolbar", new tag_toolbar_1.TagToolbar(tag, cnt));
         ensureToolbarHoverClass(tag);
     }
     else {
@@ -883,7 +909,7 @@ function convertConfigToToolbarTags(tag, config, log) {
 }
 /** find current toolbars inside this wrapper-tag */
 function getToolbarTags(parentTag) {
-    var allInner = $(".sc-menu[toolbar],.sc-menu[data-toolbar],[" + Constants.toolbar.attr.full + "]", parentTag);
+    var allInner = $(toolbarSelector, parentTag);
     // return only those, which don't belong to a sub-item
     var onlyDirectDescendents = allInner
         .filter(function (i, e) { return $(e).closest(Constants.cb.selectors.ofName)[0] === parentTag[0]; });
@@ -2355,6 +2381,7 @@ var TagToolbar = /** @class */ (function () {
         $('body').append(this.toolbarElement);
         this.toolbarElement.attr(tagToolbarForAttr, toolbarId);
         this.tag.attr(tagToolbarAttr, toolbarId);
+        this.tag["2sxc-toolbar-dbg"] = this;
         this.toolbarElement.css({ display: 'none', position: 'absolute', transition: 'top 0.5s ease-out' });
         this.initialized = true;
     };
@@ -5408,7 +5435,6 @@ $(document).ready(function () {
  * @param isFirstRun should be true only on the very initial call
  */
 function initAllInstances(isFirstRun) {
-    window_in_page_1.windowInPage.$2sxc.stats.watchDomChanges++;
     $('div[data-edit-context]').each(function () { initInstance(this, isFirstRun); });
     if (isFirstRun)
         tryShowTemplatePicker();
@@ -5417,7 +5443,33 @@ function initAllInstances(isFirstRun) {
  * create an observer instance and start observing
  */
 function watchDomChanges() {
-    var observer = new MutationObserver(function () { return initAllInstances(false); });
+    var observer = new MutationObserver(function (m) {
+        // Watch how many changes were processed (statistics)
+        window_in_page_1.windowInPage.$2sxc.stats.watchDomChanges++;
+        // Create toolbars for added nodes
+        var log = new log_1.Log('Bts.Module');
+        var processed = 0;
+        m.forEach(function (v) {
+            Array.prototype.forEach.call(v.addedNodes, function (n) {
+                var node = $(n);
+                // Ignore added menu nodes as this may cause performance issues
+                if (node.is(".sc-menu"))
+                    return;
+                processed++;
+                // If the added node is a [data-edit-context], it is either a module or a content block which was replaced
+                // re-initialize the module
+                if (node.is("div[data-edit-context]"))
+                    initInstance(node, false);
+                // In all other cases, build the toolbars inside the added node
+                else
+                    build_toolbars_1.buildToolbarsFromAnyNode(log, node);
+            });
+        });
+        if (processed) {
+            // Clean up orphan tags if nodes have been added
+            tag_toolbar_1.CleanupTagToolbars();
+        }
+    });
     observer.observe(document.body, { attributes: false, childList: true, subtree: true });
 }
 /**
@@ -5471,9 +5523,6 @@ function initInstance(module, isFirstRun) {
     // check if we must show the glasses
     // this must always run because it can be added ajax-style
     var wasEmpty = showGlassesButtonIfUninitialized(sxc);
-    // Remove orphan tag-toolbars
-    if (!isFirstRun)
-        tag_toolbar_1.CleanupTagToolbars();
     if (isFirstRun || !wasEmpty) {
         // use a logger for each iteration
         var log = new log_1.Log('Bts.Module');
