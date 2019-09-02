@@ -11,6 +11,7 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Permissions;
+using ToSic.Sxc.Compatibility;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -61,10 +62,17 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // load content-types
             var types = UsedTypes(list, typeRead);
-            result.ContentTypes = types.Select(ct => JsonSerializer.ToJson(ct, true)).ToList();
+            result.ContentTypes = types
+                .Select(ct => JsonSerializer.ToJson(ct, true))
+                .ToList();
+
+            // Fix not-supported input-type names; map to correct name
+            result.ContentTypes
+                .ForEach(jt => jt.Attributes
+                    .ForEach(at => at.InputType = InputTypes.MapInputTypeV10(at.InputType)));
 
             // load input-field configurations
-            result.InputTypes = GetNecessaryInputTypes(types, typeRead);
+            result.InputTypes = GetNecessaryInputTypes(result.ContentTypes/*types*/, typeRead);
 
             // also deliver features
             result.Features = SystemController.FeatureListWithPermissionCheck(appId, permCheck).ToList();
@@ -134,11 +142,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                        ?? typeRead.Get(i.Header.ContentTypeName))
                 .ToList();
 
-        private static List<InputTypeInfo> GetNecessaryInputTypes(List<IContentType> types, ContentTypeRuntime typeRead)
+        private static List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> types, ContentTypeRuntime typeRead)
         {
             var fields = types
                 .SelectMany(t => t.Attributes)
-                .Select(a => a.InputTypeTempBetterForNewUi)
+                .Select(a => a.InputType)//.InputTypeTempBetterForNewUi)
                 .Distinct();
             return typeRead.GetInputTypes()
                 .Where(it => fields.Contains(it.Type))
