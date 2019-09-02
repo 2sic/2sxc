@@ -799,7 +799,7 @@ var tag_toolbar_1 = __webpack_require__(36);
 var dbg = false;
 var toolbarSelector = ".sc-menu[toolbar],.sc-menu[data-toolbar],[" + Constants.toolbar.attr.full + "]";
 /**
- * create a process - toolbar command to generate toolbars inside a tag
+ * Generate toolbars inside a MODULE tag (usually a div with class sc-edit-context)
  * @param parentLog
  * @param parentTag
  * @param optionalId
@@ -823,7 +823,6 @@ exports.buildToolbars = buildToolbars;
 /**
  * Build toolbar, but allow any node as target
  * Will automatically find a wrapping sc-edit-context and all containing toolbars
- * ToDo: Some duplicate code with the above
  * @param parentLog
  * @param node
  */
@@ -841,6 +840,12 @@ function buildToolbarsFromAnyNode(parentLog, node) {
 }
 exports.buildToolbarsFromAnyNode = buildToolbarsFromAnyNode;
 //////////////////////////////// Private Functions ////////////////////////////////////
+/**
+ * Setup a toolbar for a specific tag/node by loading its self-contained configuration
+ * and replacing / preparing the toolbar as needed.
+ * @param log
+ * @param node
+ */
 function loadAndConvertTag(log, node) {
     var tag = $(node);
     // Do not process tag if a toolbar has already been attached
@@ -2381,7 +2386,6 @@ var TagToolbar = /** @class */ (function () {
         $('body').append(this.toolbarElement);
         this.toolbarElement.attr(tagToolbarForAttr, toolbarId);
         this.tag.attr(tagToolbarAttr, toolbarId);
-        this.tag["2sxc-toolbar-dbg"] = this;
         this.toolbarElement.css({ display: 'none', position: 'absolute', transition: 'top 0.5s ease-out' });
         this.initialized = true;
     };
@@ -2398,7 +2402,7 @@ var TagToolbar = /** @class */ (function () {
             mousePos: mousePosition,
             win: {
                 scrollY: window.scrollY,
-                width: $('body').width()
+                width: $(window).width()
             },
             padding: tagToolbarPadding
         };
@@ -2409,6 +2413,7 @@ var TagToolbar = /** @class */ (function () {
             position.top = position.tagOffset.top + tagToolbarPadding - position.bodyOffset.top;
         else
             position.top = position.mousePos.y + position.win.scrollY - position.bodyOffset.top - toolbarHeight / 2;
+        console.log(position);
         // Update left / right coordinates
         // todo: try to change class to use attribute or something
         if (this.toolbarElement.hasClass('sc-tb-hover-right'))
@@ -5449,6 +5454,7 @@ function watchDomChanges() {
         // Create toolbars for added nodes
         var log = new log_1.Log('Bts.Module');
         var processed = 0;
+        // 2019-08-29 2rm added automatic initialization of toolbars (not only module nodes)
         m.forEach(function (v) {
             Array.prototype.forEach.call(v.addedNodes, function (n) {
                 var node = $(n);
