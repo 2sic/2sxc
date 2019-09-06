@@ -91,7 +91,7 @@
 	"Errors": {
 		"UnclearError": "Something went wrong - maybe parts worked, maybe not. Sorry :(",
 		"InnerControlMustOverride": "Inner control must override this function.",
-		"UnsavedChanges": "You have unsaved changes. Are you sure you want to close this dialog?",
+		"UnsavedChanges": "You have unsaved changes. To close this dialog, please decide what happens to the changes:",
 		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for",
 		"AdamUploadError": "The upload failed. The most likely cause is that the file you were trying to upload is bigger than the maximum upload size."
 	},
@@ -103,7 +103,7 @@
 			"Delete": "delete",
 			"Edit": "edit",
 			"ForceDelete": "force delete",
-			"NotSave": "not save",
+			"NotSave": "discard changes",
 			"Permissions": "permissions",
 			"Refresh": "refresh",
 			"Rename": "rename",
