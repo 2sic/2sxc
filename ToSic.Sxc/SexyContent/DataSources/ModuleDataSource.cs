@@ -124,9 +124,9 @@ namespace ToSic.SexyContent.DataSources
         private Template _template;
 		private Template Template => _template ?? (_template = OverrideTemplate ?? ContentGroup.Template);
 
-	    private IEnumerable<IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity, bool isListHeader)
+	    private IEnumerable<IEntity> GetStream(List<IEntity> contentList, IEntity contentDemoEntity, List<IEntity> presentationList, IEntity presentationDemoEntity, bool isListHeader)
 	    {
-	        Log.Add($"get stream content⋮{content.Count}, demo#{contentDemoEntity?.EntityId}, present⋮{presentation?.Count}, presDemo#{presentationDemoEntity?.EntityId}, header:{isListHeader}");
+	        Log.Add($"get stream content⋮{contentList.Count}, demo#{contentDemoEntity?.EntityId}, present⋮{presentationList?.Count}, presDemo#{presentationDemoEntity?.EntityId}, header:{isListHeader}");
             try
             {
                 var entitiesToDeliver = new List<IEntity>();
@@ -137,10 +137,11 @@ namespace ToSic.SexyContent.DataSources
                     return entitiesToDeliver;
                 }
 
-                var contentEntities = content.ToList(); // Create copy of list (not in cache) because it will get modified
+                // Create copy of list (not in cache) because it will get modified
+                var contentEntities = contentList.ToList(); 
 
-                // If no Content Elements exist and type is content (means, presentation is not null), add an empty entity (demo entry will be taken for this)
-                if (content.Count == 0 && presentation != null)
+                // If no Content Elements exist and type is content (means, presentationList is not null), add an empty entity (demo entry will be taken for this)
+                if (contentList.Count == 0 && presentationList != null)
                 {
                     Log.Add("empty list, will add a null-item");
                     contentEntities.Add(null);
@@ -171,16 +172,16 @@ namespace ToSic.SexyContent.DataSources
                         IEntity presentationEntity = null;
                         try
                         {
-                            if (presentation != null)
+                            if (presentationList != null)
                             {
-                                // Try to find presentation entity
+                                // Try to find presentationList entity
                                 var presentationEntityId =
-                                    presentation.Count - 1 >= i && presentation[i] != null &&
-                                    originals.Has(presentation[i].EntityId)
-                                        ? presentation[i].EntityId
+                                    presentationList.Count - 1 >= i && presentationList[i] != null &&
+                                    originals.Has(presentationList[i].EntityId)
+                                        ? presentationList[i].EntityId
                                         : new int?();
 
-                                // If there is no presentation entity, take default entity
+                                // If there is no presentationList entity, take default entity
                                 if (!presentationEntityId.HasValue)
                                     presentationEntityId =
                                         presentationDemoEntity != null &&
@@ -194,7 +195,7 @@ namespace ToSic.SexyContent.DataSources
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception("trouble adding presentation of " + entityId, ex);
+                            throw new Exception("trouble adding presentationList of " + entityId, ex);
                         }
 
                         try
