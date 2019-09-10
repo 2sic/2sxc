@@ -2413,7 +2413,6 @@ var TagToolbar = /** @class */ (function () {
             position.top = position.tagOffset.top + tagToolbarPadding - position.bodyOffset.top;
         else
             position.top = position.mousePos.y + position.win.scrollY - position.bodyOffset.top - toolbarHeight / 2;
-        console.log(position);
         // Update left / right coordinates
         // todo: try to change class to use attribute or something
         if (this.toolbarElement.hasClass('sc-tb-hover-right'))
@@ -5462,10 +5461,17 @@ function watchDomChanges() {
                 if (node.is(".sc-menu"))
                     return;
                 processed++;
+                console.log("Mutation Observer saw ", v.addedNodes);
                 // If the added node is a [data-edit-context], it is either a module or a content block which was replaced
                 // re-initialize the module
                 if (node.is("div[data-edit-context]"))
                     initInstance(node, false);
+                // If the added node contains [data-edit-context] nodes, it is likely the DNN module drag manager which added
+                // the node. To prevent multiple initialization while dragging modules, we additionally check for the
+                // .active-module class which seems to be applied while dragging the module.
+                else if (node.is(":not(.active-module)") && node.has("div[data-edit-context]")) {
+                    $('div[data-edit-context]', node).each(function () { initInstance(this, false); });
+                }
                 // In all other cases, build the toolbars inside the added node
                 else
                     build_toolbars_1.buildToolbarsFromAnyNode(log, node);
@@ -5516,6 +5522,8 @@ function tryShowTemplatePicker() {
     return true;
 }
 function initInstance(module, isFirstRun) {
+    console.log("initInstance called with ", module, isFirstRun);
+    console.log("Initialized instances are ", initializedInstances);
     // check if module is already in the list of initialized modules
     if (initializedInstances.find(function (m) { return m === module; }))
         return;
