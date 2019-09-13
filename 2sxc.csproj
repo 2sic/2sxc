@@ -186,6 +186,7 @@
     <Content Include="koi\bin\Connect.Koi.dll" />
     <Content Include="koi\License.txt" />
     <Content Include="koi\ReleaseNotes.txt" />
+    <Content Include="razorblade\bin\Connect.Razor.Dnn.dll" />
     <Content Include="razorblade\License.txt" />
     <Content Include="razorblade\ReleaseNotes.txt" />
     <Content Include="README.md" />
