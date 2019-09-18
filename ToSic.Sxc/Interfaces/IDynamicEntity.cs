@@ -17,6 +17,6 @@ namespace ToSic.SexyContent.Interfaces
 
         dynamic GetPublished();
 
-
+        bool IsDemoItem { get; }
     }
 }

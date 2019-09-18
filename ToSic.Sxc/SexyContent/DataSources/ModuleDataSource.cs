@@ -83,10 +83,8 @@ namespace ToSic.SexyContent.DataSources
                     Log.Add("need content-group, will construct as cannot use context");
                     if (!InstanceId.HasValue)
                         throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
-                    // 2018-03-05 2dm moved into the contentgroupmanager
-                    //var tabId = ModuleController.Instance.GetTabModulesByModule(InstanceId.Value)[0].TabID;
                     var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
-                    var userMayEdit = HasSxcContext && SxcInstance.UserMayEdit;// Factory.Resolve<IPermissions>().UserMayEditContent(SxcInstance?.InstanceInfo);
+                    var userMayEdit = HasSxcContext && SxcInstance.UserMayEdit;
 
                     var cgm = new ContentGroupManager(ZoneId, AppId,
                         HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value),
@@ -153,13 +151,20 @@ namespace ToSic.SexyContent.DataSources
                 {
                     for (; i < contentEntities.Count; i++)
                     {
+                        // new 2019-09-18 trying to mark demo-items for better detection in output #1792
+                        var usingDemoItem = false;
+
                         // get the entity, if null: try to substitute with the demo item
                         var contentEntity = contentEntities[i];
 
                         // check if it "exists" in the in-stream. if not, then it's probably unpublished
                         // so try revert back to the demo-item (assuming it exists...)
                         if (contentEntity == null || !originals.Has(contentEntity.EntityId))
+                        {
                             contentEntity = contentDemoEntity;
+                            // new 2019-09-18 trying to mark demo-items for better detection in output #1792
+                            usingDemoItem = true; 
+                        }
 
                         // now check again...
                         // ...we can't deliver entities that are not delivered by base (original stream), so continue
@@ -206,7 +211,9 @@ namespace ToSic.SexyContent.DataSources
                                 SortOrder = isListHeader ? -1 : i,
                                 ContentGroupItemModified = itm.Modified,
                                 Presentation = presentationEntity,
-                                GroupId = ContentGroup.ContentGroupGuid
+                                GroupId = ContentGroup.ContentGroupGuid,
+                                // new 2019-09-18 trying to mark demo-items for better detection in output #1792
+                                IsDemoItem = usingDemoItem
                             });
                         }
                         catch (Exception ex)
