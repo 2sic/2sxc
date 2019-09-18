@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json;
@@ -19,6 +21,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     {
 
         [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public AllInOne Load([FromBody] List<ItemIdentifier> items, int appId)
         {
             // Security check
@@ -56,6 +59,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // since we're retrieving data - make sure we're allowed to
             // this is to ensure that if public forms only have create permissions, they can't access existing data
+            // important, this code is shared/duplicated in the EntitiesController.GetManyForEditing
             if (list.Any(set => set.Entity != null))
                 if (!permCheck.EnsureAll(GrantSets.ReadSomething, out exception))
                     throw exception;
@@ -74,7 +78,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // load input-field configurations
             result.InputTypes = GetNecessaryInputTypes(result.ContentTypes/*types*/, typeRead);
 
-            // also deliver features
+            // also include UI features
             result.Features = SystemController.FeatureListWithPermissionCheck(appId, permCheck).ToList();
 
             // done - return

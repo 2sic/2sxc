@@ -77,7 +77,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // 2018-09-26 2dm
             // if we're giving items which already exist, then we must verify that edit/read is allowed.
-            // todo: also share this code bit with the UiController
+            // important, this code is shared/duplicated in the UiController.Load
             if (list.Any(set => set.Entity != null))
                 if (!permCheck.EnsureAll(GrantSets.ReadSomething, out exception))
                     throw exception;
@@ -95,11 +95,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // log and do security check
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
 
-            var permCheck = new SaveHelpers.Security(SxcInstance, Log).DoPreSaveSecurityCheck(appId, items);
-
-            #region check if it's an update, and do more security checks then
-            // todo: also share this code bit with the UiController
             var appRead = new AppRuntime(appId, Log);
+            #region check if it's an update, and do more security checks - shared with UiController.Save
+            // basic permission checks
+            var permCheck = new SaveHelpers.Security(SxcInstance, Log)
+                .DoPreSaveSecurityCheck(appId, items);
+
             var foundItems = items.Where(i => i.EntityId != 0 && i.EntityGuid != Guid.Empty)
                 .Select(i => i.EntityGuid != Guid.Empty
                     ? appRead.Entities.Get(i.EntityGuid) // prefer guid access if available
