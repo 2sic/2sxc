@@ -48,8 +48,7 @@ namespace ToSic.SexyContent.WebApi
             // must run this after creating AppAndDataHelpers
             controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); 
 
-            // Pick up the path given by the AppApiControllerSelector - for relative paths needed in the SharedCode section
-            if(controllerContext.Configuration.Properties.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var value))
+            if(controllerContext.Request.Properties.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var value))
                 SharedCodeVirtualRoot = value as string;
         }
         #endregion

@@ -93,13 +93,15 @@ namespace ToSic.SexyContent.WebApi
                     edition + "api/");
                 var controllerPath = Path.Combine(controllerFolder + controllerTypeName + ".cs");
 
+                // note: this may look like something you could optimize/cache the result, but that's a bad idea
+                // because when the file changes, the type-object will be different, so please don't optimize :)
                 if (File.Exists(HostingEnvironment.MapPath(controllerPath)))
                 {
                     var assembly = BuildManager.GetCompiledAssembly(controllerPath);
                     var type = assembly.GetType(controllerTypeName, true, true);
 
-                    // attach the folder it's running in as a property, in case the target needs this
-                    _config.Properties.TryAdd(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+                    // try to fix path resolution
+                    request.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
 
                     return new HttpControllerDescriptor(_config, controllerTypeName, type);
                 }
