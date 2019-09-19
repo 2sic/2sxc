@@ -100,7 +100,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             if (js)
             {
                 RegisterJs(page, ver, root + "js/2sxc.api" + ext);
-                RegisterJs(page, ver, root + "dist/inpage/inpage" + ext);
+                RegisterJs(page, ver, root + "dist/inpage/inpage.min.js");// + ext);
             }
         }
 
