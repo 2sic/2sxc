@@ -135,6 +135,13 @@ namespace ToSic.SexyContent
         
         public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, SxcInstance);
 
+        /// <summary>
+        /// Tell the system that it's a demo item, not one added by the user
+        /// 2019-09-18 trying to mark demo-items for better detection in output #1792
+        /// </summary>
+        /// <returns></returns>
+        public bool IsDemoItem => Entity is EntityInContentGroup entInCg && entInCg.IsDemoItem;
+
         public IHtmlString Render() => ContentBlocks.Render.One(this);
 
 

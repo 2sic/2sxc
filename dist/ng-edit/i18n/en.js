@@ -164,6 +164,7 @@
 		"Link.Anchor.Tooltip": "Anchor to link to using .../page#anchorname",
 		"SwitchMode.Pro": "Switch to advanced mode",
 		"SwitchMode.Standard": "Switch to standard mode",
+		"SwitchMode.Expand": "Fullscreen",
 		"H1": "H1",
 		"H2": "H2",
 		"H3": "H3",

@@ -65,6 +65,10 @@ namespace ToSic.Sxc.Adam
         public List<File> GetFiles(int folderId, AdamAppContext appContext)
         {
             var fldObj = _folderManager.GetFolder(folderId);
+            // sometimes the folder doesn't exist for whatever reason
+            if (fldObj == null) return  new List<File>();
+
+            // try to find the files
             var firstList = _folderManager.GetFiles(fldObj);
             var files = firstList?.Select(f => DnnToAdam(appContext, f)).ToList()
                      ?? new List<File>();

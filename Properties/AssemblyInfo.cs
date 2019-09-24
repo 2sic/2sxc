@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ToSic")]
 [assembly: AssemblyProduct("2SexyContent")]
-[assembly: AssemblyCopyright("© 2sic 2018")]
+[assembly: AssemblyCopyright("© 2sic 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: Guid("bd90b92e-79ec-4846-8998-b56277d5b2b4")]
 
@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("10.05.00.*")]
+[assembly: AssemblyVersion("10.06.00.*")]
 
 
 [assembly: InternalsVisibleTo("ToSic.SexyContent.WebApi")]

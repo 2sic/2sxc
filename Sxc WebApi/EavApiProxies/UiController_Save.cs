@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
     public partial class UiController
     {
-        // todo: replace object with Dictionary<Guid, int> when ready
         [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] AllInOne package, int appId, bool partOfPage)
         {
             Log.Add($"save started with a#{appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
@@ -41,8 +44,20 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             };
             validator.PrepareForEntityChecks(appRead);
 
-            // permission checks
-            var permCheck = new SaveHelpers.Security(SxcInstance, Log).DoPreSaveSecurityCheck(appId, package.Items);
+            #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
+            // basic permission checks
+            var permCheck = new SaveHelpers.Security(SxcInstance, Log)
+                .DoPreSaveSecurityCheck(appId, package.Items);
+
+            var foundItems = package.Items.Where(i => i.EntityId != 0 && i.EntityGuid != Guid.Empty)
+                .Select(i => i.EntityGuid != Guid.Empty
+                        ? appRead.Entities.Get(i.EntityGuid) // prefer guid access if available
+                        : appRead.Entities.Get(i.EntityId)  // otherwise id
+                );
+            if (foundItems.Any(i => i != null) && !permCheck.EnsureAll(GrantSets.UpdateSomething, out var exception))
+                throw exception;
+            #endregion
+
 
             var items = package.Items.Select(i =>
             {
