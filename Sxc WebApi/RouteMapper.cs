@@ -1,7 +1,6 @@
 ﻿using DotNetNuke.Web.Api;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using ToSic.SexyContent.WebApi.Cors;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -109,10 +108,7 @@ namespace ToSic.SexyContent.WebApi
             var config = GlobalConfiguration.Configuration;
             var previousSelector = config.Services.GetService(typeof(IHttpControllerSelector)) as IHttpControllerSelector;
             config.Services.Replace(typeof(IHttpControllerSelector), new AppApiControllerSelector(config) { PreviousSelector = previousSelector });
-
-            // Register local development handler
-            config.MessageHandlers.Add(new CorsLocalDevelopmentHandler());
-
+            
             // Also register Unity Dependency-Injection here, since this will certainly run once early during bootup
             // do this by accessing a setting, which registers everything
             Settings.EnsureSystemIsInitialized();
