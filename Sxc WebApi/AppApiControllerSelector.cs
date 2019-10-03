@@ -91,6 +91,9 @@ namespace ToSic.SexyContent.WebApi
 
                 var controllerFolder = Path.Combine(DnnMapAppToInstance.AppBasePath(), appFolder,
                     edition + "api/");
+                // testing 2dm 2019-10-01
+                controllerFolder = controllerFolder.Replace("\\", @"/");
+
                 var controllerPath = Path.Combine(controllerFolder + controllerTypeName + ".cs");
 
                 // note: this may look like something you could optimize/cache the result, but that's a bad idea
@@ -103,7 +106,8 @@ namespace ToSic.SexyContent.WebApi
                     // try to fix path resolution
                     request.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
 
-                    return new HttpControllerDescriptor(_config, controllerTypeName, type);
+                    var descriptor = new HttpControllerDescriptor(_config, /*controllerTypeName*/ type.Name, type);
+                    return descriptor;
                 }
             }
             catch (Exception e)

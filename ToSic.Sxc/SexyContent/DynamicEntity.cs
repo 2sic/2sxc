@@ -17,6 +17,9 @@ namespace ToSic.SexyContent
     {
 
         public IEntity Entity { get; }
+        /// <summary>
+        /// Deprecated - avoid using. Use Edit.Toolbar(object...) instead
+        /// </summary>
         public HtmlString Toolbar {
             get
             {
@@ -34,6 +37,7 @@ namespace ToSic.SexyContent
                 return new HtmlString(toolbar);
             }
         }
+
         private readonly string[] _dimensions;
         internal SxcInstance SxcInstance { get; }   // must be internal for further use cases
 
@@ -192,9 +196,10 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        public List<DynamicEntity> Parents(string type = null, string field = null)
+        public List<IDynamicEntity> Parents(string type = null, string field = null)
             => Entity.Parents(type, field)
                 .Select(e => new DynamicEntity(e, _dimensions, SxcInstance))
+                .Cast<IDynamicEntity>()
                 .ToList();
     }
 }
