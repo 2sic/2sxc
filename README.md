@@ -29,3 +29,6 @@ This is just one repo of 2sxc - the full software also has another ca. 5 for
 
 The full list with repo-links is maintained on the [2sxc github wiki setup-contribute](https://github.com/2sic/2sxc/wiki/contribute-setup) site. 
 
+# Release Information
+
+This is version 10.08.00
