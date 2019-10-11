@@ -6,6 +6,7 @@ using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using JetBrains.Annotations;
 using ToSic.SexyContent.WebApi.Errors;
+using ToSic.Eav.Security.Files;
 
 namespace ToSic.SexyContent.WebApi.Adam
 {
@@ -42,12 +43,8 @@ namespace ToSic.SexyContent.WebApi.Adam
 
 
         [AssertionMethod]
-        internal static bool IsKnownRiskyExtension(string fileName)
-        {
-            var extension = Path.GetExtension(fileName);
-            return !string.IsNullOrEmpty(extension)
-                   && Sxc.Adam.Security.BadExtensions.IsMatch(extension);
-        }
+        internal static bool IsKnownRiskyExtension(string fileName) 
+            => FileNames.IsKnownRiskyExtension(fileName);
 
         [AssertionMethod]
         internal static void ThrowIfAccessingRootButNotAllowed(bool usePortalRoot, bool userIsRestricted)

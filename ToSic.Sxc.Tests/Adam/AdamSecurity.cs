@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Eav.Security.Files;
 
 namespace ToSic.Sxc.Tests.Adam
 {
@@ -31,7 +32,7 @@ namespace ToSic.Sxc.Tests.Adam
             var exts = _badFiles.Select(System.IO.Path.GetExtension).ToList();
 
             exts.ForEach(e =>
-                Assert.IsTrue(Sxc.Adam.Security.BadExtensions.IsMatch(e), $"expected {e} to be marked as bad")
+                Assert.IsTrue( FileNames.IsKnownRiskyExtension(e), $"expected {e} to be marked as bad")
             );
         }
 
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Tests.Adam
             var exts = _goodFiles.Select(System.IO.Path.GetExtension).ToList();
 
             exts.ForEach(e =>
-                Assert.IsFalse(Sxc.Adam.Security.BadExtensions.IsMatch(e), $"expected {e} to be marked as good")
+                Assert.IsFalse(FileNames.IsKnownRiskyExtension(e), $"expected {e} to be marked as good")
             );
         }
 
