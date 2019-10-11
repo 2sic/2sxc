@@ -6,6 +6,10 @@ using System.Web.Http.Dispatcher;
 using DotNetNuke.Common;
 using Microsoft.Extensions.DependencyInjection;
 
+// This is a special workaround for DNN 9.4
+// Review the readme.md to understand how and why
+
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Dnn940
 {
     public class WebApiHttpControllerActivator : IHttpControllerActivator
@@ -17,7 +21,7 @@ namespace ToSic.Sxc.Dnn940
         {
             // first try to just get it from the DI - if it's there
             // note that the PreviousActivator doesn't exist
-            return PreviousActivator?.Create(request, controllerDescriptor, controllerType) ?? // (IHttpController)Globals.DependencyProvider.GetService(controllerType) ??
+            return PreviousActivator?.Create(request, controllerDescriptor, controllerType) ??
                    // If it's not found (null), then it's probably a dynamically compiled type from a .cs file or similar
                    // Such types are never registered in the DI catalog, as they may change on-the-fly.
                    // In this case we must use ActivatorUtilities, which will create the object and if it expects 
