@@ -226,7 +226,7 @@ namespace ToSic.SexyContent.WebApi
                     // Increase script timeout to prevent timeouts
                     HttpContext.Current.Server.ScriptTimeout = 300;
                     var temporaryDirectory = HttpContext.Current.Server.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory, Guid.NewGuid().ToString()));
-                    result.Succeeded = zipImport.ImportZip(file.InputStream, temporaryDirectory);// HttpContext.Current.Server); // , /*PortalSettings,*/ env.Messages);
+                    result.Succeeded = zipImport.ImportZip(file.InputStream, temporaryDirectory);
                     result.Messages = env.Messages;
                 }
                 catch (Exception ex)
@@ -238,7 +238,7 @@ namespace ToSic.SexyContent.WebApi
             {   // XML
                 using (var fileStreamReader = new StreamReader(file.InputStream))
                 {
-                    var xmlImport = new XmlImportWithFiles(Log, PortalSettings.DefaultLanguage, /*UserIdentity.CurrentUserIdentityToken,*/ allowSystemChanges);
+                    var xmlImport = new XmlImportWithFiles(Log, PortalSettings.DefaultLanguage, allowSystemChanges);
                     var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
                     result.Succeeded = xmlImport.ImportXml(zoneId, appId, xmlDocument);
                     result.Messages = xmlImport.Messages;
@@ -251,7 +251,7 @@ namespace ToSic.SexyContent.WebApi
         private void EnsureUserIsAdmin()
         {
             Log.Add("ensure user is admin");
-            if (!PortalSettings.UserInfo.Roles.Contains(PortalSettings.AdministratorRoleName) && !PortalSettings.UserInfo.IsSuperUser) // todo: add to 8.5
+            if (!PortalSettings.UserInfo.Roles.Contains(PortalSettings.AdministratorRoleName) && !PortalSettings.UserInfo.IsSuperUser)
                 throw new AuthenticationException("user doesn't seem to be admin or super-user");
         }
 

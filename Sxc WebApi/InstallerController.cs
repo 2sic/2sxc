@@ -42,8 +42,8 @@ namespace ToSic.SexyContent.WebApi
                 // Increase script timeout to prevent timeouts
                 HttpContext.Current.Server.ScriptTimeout = 300;
 
-                success = new ZipImport(helper, zoneId, appId, PortalSettings.UserInfo.IsSuperUser, Log)
-                    .ImportZipFromUrl(packageUrl, ActiveModule.DesktopModule.ModuleName == "2sxc-app");
+                success = new ZipFromUrlImport(helper, zoneId, appId, PortalSettings.UserInfo.IsSuperUser, Log)
+                    .ImportUrl(packageUrl, ActiveModule.DesktopModule.ModuleName == "2sxc-app");
             }
             catch (Exception ex)
             {
