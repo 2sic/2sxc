@@ -20,20 +20,28 @@ namespace ToSic.SexyContent
     public partial class View : PortalModuleBase, IActionable
     {
         private SxcInstance _sxci;
+        private bool _sxcInstanceLoaded;
 
-        protected SxcInstance SxcInstance => _sxci ?? (_sxci = new ModuleContentBlock(
-                                              new DnnInstanceInfo(ModuleConfiguration),
-                                              Log,
-                                              new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
-                                          .SxcInstance);
+        protected SxcInstance SxcInstance
+        {
+            get
+            {
+                if (_sxcInstanceLoaded) return _sxci;
+                _sxcInstanceLoaded = true;
+                _sxci = new ModuleContentBlock(
+                        new DnnInstanceInfo(ModuleConfiguration),
+                        Log,
+                        new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
+                    .SxcInstance;
+                return _sxci;
+            }
+        }
 
         private Log Log { get; } = new Log("Sxc.View");
 
         /// <summary>
-        /// Page Load event - preload template chooser if necessary
+        /// Page Load event
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             // always do this, part of the guarantee that everything will work
@@ -50,6 +58,12 @@ namespace ToSic.SexyContent
         {
             try
             {
+                // throw better error if SxcInstance isn't available
+                // not sure if this doesn't have side-effects...
+                if (SxcInstance == null)
+                    throw new Exception("Error - can't find 2sxc instance configuration. " +
+                                        "Probably trying to show an app or content that has been deleted.");
+
                 // check things if it's a module of this portal (ensure everything is ok, etc.)
                 var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
                 if (!isSharedModule && !SxcInstance.ContentBlock.ContentGroupExists && SxcInstance.App != null)
@@ -98,13 +112,8 @@ namespace ToSic.SexyContent
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
-        private string HtmlLog() => Log.Dump(" - ", "<!-- 2sxc extensive log for " + ModuleId + "\n", "-->");
-
-
-        #region Security Check
-
-        //protected bool UserMayEditThisModule => SxcInstance?.UserMayEdit ?? false;
-        #endregion
+        private string HtmlLog() 
+            => Log.Dump(" - ", "<!-- 2sxc extensive log for " + ModuleId + "\n", "-->");
 
 
         /// <summary>
