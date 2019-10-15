@@ -31,4 +31,4 @@ The full list with repo-links is maintained on the [2sxc github wiki setup-contr
 
 # Release Information
 
-This is version 10.08.00
+This is version 10.09.00
