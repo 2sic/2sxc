@@ -79,7 +79,10 @@ namespace ToSic.Sxc.Adam.WebApi
                 throw new Exception($"file too large - more than {MaxFileSizeKb}Kb");
 
             // remove forbidden / troubling file name characters
-            fileName = fileName.Replace("%", "per").Replace("#", "hash");
+            fileName = fileName
+                .Replace("+", "plus")
+                .Replace("%", "per")
+                .Replace("#", "hash");
 
             if (fileName != originalFileName)
                 Log.Add($"cleaned file name from'{originalFileName}' to '{fileName}'");
