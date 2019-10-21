@@ -1,11 +1,11 @@
-﻿<h3>Release Notes of Razor Blade</h3>
+﻿<h3>Release Notes of RazorBlade.net v3</h3>
 <p>
-	This is Connect - Razor Blade
+	This is ToSic - RazorBlade.net
 </p>
 <p class="Contributor">
-	By the <a href="https://www.dnn-connect.org/" target="_blank">DNN Connect Community</a> 
-	and <a href="https://www.2sic.com/" target="_blank">2sic</a>
+	By <a href="https://www.2sic.com/" target="_blank">2sic</a>
 	<br />
-	Visit <a href="https://github.com/DNN-Connect/razor-blade" target="_blank">Razor Blade on Github</a> to discover more, 
-	or try the <a href="https://github.com/DNN-Connect/razor-blade-tutorial-app" target="_blank">tutorial app from github</a>.
+	Read the <a href="https://razor-blade.net" target="_blank">API docs</a>
+	Visit <a href="https://github.com/2sic/razor-blade" target="_blank">RazorBlade.net on Github</a> to discover more, 
+	or try the <a href="https://2sxc.org/dnn-tutorials/" target="_blank">tutorials</a>.
 </p>

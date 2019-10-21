@@ -23,6 +23,7 @@
       <DefaultExclude Include="**\bin\**" />
       <DefaultExclude Include="**\koi\**" />
       <DefaultExclude Include="**\razorblade\**" />
+      <DefaultExclude Include="**\razorblade-old\**" />
       <DefaultExclude Include="**\*.user" />
       <DefaultExclude Include="**\*.suo" />
       <DefaultExclude Include="**\*.zip" />
@@ -188,13 +189,23 @@
     </ItemGroup>
     <Copy SourceFiles="@(KoiDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 
-    <!-- include razorblade module -->
+    <!-- include new razorblade 3 module -->
     <ItemGroup>
-      <RazorBladeFiles Include="$(MSBuildProjectDirectory)/razorblade/*.*" Exclude="**\*.dll" />
+      <RazorBlade3Files Include="$(MSBuildProjectDirectory)/razorblade/*.*" Exclude="**\*.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(RazorBladeFiles)" DestinationFolder="$(TempPackageFolder)\razorblade\%(RecursiveDir)" />
+    <Copy SourceFiles="@(RazorBlade3Files)" DestinationFolder="$(TempPackageFolder)\razorblade\%(RecursiveDir)" />
     <ItemGroup>
-      <RazorBladeDllFiles Include="$(MSBuildProjectDirectory)/razorblade/bin/*.dll" />
+      <RazorBlade3DllFiles Include="$(MSBuildProjectDirectory)/razorblade/bin/*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(RazorBlade3DllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
+
+    <!-- include razorblade old module -->
+    <ItemGroup>
+      <RazorBladeFiles Include="$(MSBuildProjectDirectory)/razorblade-old/*.*" Exclude="**\*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(RazorBladeFiles)" DestinationFolder="$(TempPackageFolder)\razorblade-old\%(RecursiveDir)" />
+    <ItemGroup>
+      <RazorBladeDllFiles Include="$(MSBuildProjectDirectory)/razorblade-old/bin/*.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(RazorBladeDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 

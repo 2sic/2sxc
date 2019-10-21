@@ -160,7 +160,7 @@
     <Content Include=".data-custom\readme.md" />
     <None Include=".databeta\readme.md" />
     <Content Include=".gitignore" />
-    <Content Include="razorblade\bin\Connect.Razor.dll" />
+    <Content Include="razorblade-old\bin\Connect.Razor.dll" />
     <Content Include="ClientScripts\ModuleEditor.js" />
     <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.dll" />
     <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.pdb" />
@@ -186,14 +186,18 @@
     <Content Include="koi\bin\Connect.Koi.dll" />
     <Content Include="koi\License.txt" />
     <Content Include="koi\ReleaseNotes.txt" />
-    <Content Include="razorblade\bin\Connect.Razor.Dnn.dll" />
-    <Content Include="razorblade\License.txt" />
-    <Content Include="razorblade\ReleaseNotes.txt" />
+    <Content Include="razorblade-old\bin\Connect.Razor.Dnn.dll" />
+    <Content Include="razorblade-old\License.txt" />
+    <Content Include="razorblade-old\ReleaseNotes.txt" />
     <Content Include="README.md" />
     <Content Include="packages.config" />
     <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
     <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
+    <Content Include="razorblade\bin\ToSic.Razor.dll" />
+    <Content Include="razorblade\bin\ToSic.Razor.Dnn.dll" />
+    <Content Include="razorblade\License.txt" />
+    <Content Include="razorblade\ReleaseNotes.txt" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <Content Include="web-Deploy.config" />
@@ -202,6 +206,7 @@
     <Content Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
     <Content Include="SexyContent\readme.md" />
     <Content Include="Upgrade\readme.md" />
+    <Content Include="razorblade-old\Resources.zip" />
     <Content Include="razorblade\Resources.zip" />
   </ItemGroup>
   <ItemGroup>
