@@ -2,12 +2,13 @@
   "Form": {
     "Buttons": {
       "Save": "SAVE (CTRL + S)",
-      "Save.Tip": "click to save and close, use CTRL + S to save and keep open",
+      "Save.Tip": "save and close (CTRL + S saves and doesn't close)",
       "Exit.Tip": "exit - if something changed, you will be asked to save",
       "Return.Tip": "return to previous dialog"
     }
   },
-	"SaveMode": {
+  "SaveMode": {
+    "Label": "Status:",
     "show": "show",
     "show.Tip": "changes are public",
     "hide": "hide",
@@ -19,30 +20,37 @@
       "Intro": "This determines how you will save. The default is show/publish.",
       "Show": {
         "Title": "Show / Publish Everything",
-        "Body": "Show item with changes to the public when saving."
+        "Body": "Show changes to the public after you save."
       },
       "Hide": {
         "Title": "Hide Everything",
-        "Body": "This item will be hidden, and only visible to content editors."
+        "Body": "This item will be hidden and only visible to content editors."
       },
       "Branch": {
         "Title": "Draft / Hide Changes",
-        "Body": "Only editors can see changes (until published at a later time)."
+        "Body": "Only editors can see changes until published at a later time."
       }
     }
-	},
-	"Message": {
-		"Saved": "saved"
   },
-
+  "Message": {
+    "Saved": "saved",
+    "Saving": "saving...",
+    "DebugEnabled": "debug mode enabled",
+    "DebugDisabled": "debug mode disabled"
+  },
   "LangMenu": {
-		"UseDefault": "auto (default)",
-		"InAllLanguages": "in all languages",
-		"In": "in {{languages}}",
+    "Translate": "Translate",
+    "TranslateAll": "Translate all",
+    "NoTranslate": "Don't translate",
+    "NoTranslateAll": "Don't translate any",
+    "Link": "Link to other language",
+    "UseDefault": "auto (default)",
+    "InAllLanguages": "in all languages",
+    "In": "in {{languages}}",
     "From": "from {{languages}}",
     "Dialog": {
       "Title": "Translate {{name}}",
-      "Intro": "You can do many things when translating, incl. linking languages together.",
+      "Intro": "You can do many things when translating, like linking languages together.",
       "NoTranslate": {
         "Title": "Don't Translate",
         "Body": "use value in primary language {{primary}}"
@@ -67,140 +75,114 @@
         "Subtitle": "Language to share with"
       },
       "PickLanguageIntro": "Only languages with content can be selected."
+    }
+  },
+  "Errors": {
+    "UnsavedChanges": "You have unsaved changes.",
+    "SaveErrors": "To save the form, please fix the following errors:"
+  },
+  "General": {
+    "Buttons": {
+      "NotSave": "discard changes",
+      "Save": "save",
+      "Debug": "debug"
+    }
+  },
+  "Data": {
+    "Delete.Question": "delete '{{title}}' ({{id}})?"
+  },
+  "ItemCard": {
+    "DefaultTitle": "Edit item",
+    "SlotUsedTrue": "this item is open for editing. Click here to lock / remove it and revert to default.",
+    "SlotUsedFalse": "this item is locked and will stay empty/default. The values are shown for your convenience. Click here to unlock if needed."
+  },
+  "ValidationMessage": {
+    "NotValid": "Not valid",
+    "Required": "This is required",
+    "RequiredShort": "required",
+    "Min": "This value should be more than {{param.Min}}",
+    "Max": "This value should be less or equal {{param.Max}}",
+    "Pattern": "Please match the requested format",
+    "Decimals": "This number can have up to {{param.Decimals}} decimal places"
+  },
+  "Fields": {
+    "Entity": {
+      "Choose": "add existing item",
+      "New": "create new",
+      "EntityNotFound": "(item not found)",
+      "DragMove": "drag to re-order the list",
+      "Edit": "edit this item",
+      "Remove": "remove from list",
+      "Delete": "delete"
     },
-
-
-    "//": "unsure if used, probably not",
-		"EditableIn": "editable in {{languages}}",
-		"AlsoUsedIn": ", also used in {{more}}",
-		"NotImplemented": "This action is not implemented yet.",
-		"CopyNotPossible": "Copy not possible: the field is disabled.",
-		"Unlink": "translate (unlink)",
-		"LinkDefault": "link to default",
-		"GoogleTranslate": "machine-translate (Google)",
-		"Copy": "copy from",
-		"Use": "use from",
-		"Share": "share from",
-    "AllFields": "all fields"
-	},
-
-
-
-  "//": "Everything below this hasn't been verified yet - much may be unused",
-
-	"Errors": {
-		"UnclearError": "Something went wrong - maybe parts worked, maybe not. Sorry :(",
-		"InnerControlMustOverride": "Inner control must override this function.",
-		"UnsavedChanges": "You have unsaved changes. To close this dialog, please decide what happens to the changes:",
-		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for",
-		"AdamUploadError": "The upload failed. The most likely cause is that the file you were trying to upload is bigger than the maximum upload size."
-	},
-	"General": {
-		"Buttons": {
-			"Add": "add",
-			"Cancel": "cancel",
-			"Copy": "copy",
-			"Delete": "delete",
-			"Edit": "edit",
-			"ForceDelete": "force delete",
-			"NotSave": "discard changes",
-			"Permissions": "permissions",
-			"Refresh": "refresh",
-			"Rename": "rename",
-			"Save": "save",
-			"System": "advanced system functions",
-			"Metadata": "metadata",
-			"Export": "export",
-			"Import": "import"
-		},
-		"Questions": {
-			"Delete": "are you sure you want to delete {{target}}?",
-			"DeleteEntity": "delete '{{title}}' ({{id}})?",
-			"Rename": "what new name would you like for {{target}}?",
-			"SystemInput": "This is for very advanced operations. Only use this if you know what you're doing. \n\n Enter admin commands:",
-			"ForceDelete": "do you want to force delete '{{title}}' ({{id}})?"
-		}
-	},
-	"EditEntity": {
-		"DefaultTitle": "Edit item",
-		"SlotUsedtrue": "this item is open for editing. Click here to lock / remove it and revert to default.",
-		"SlotUsedfalse": "this item is locked and will stay empty/default. The values are shown for your convenience. Click here to unlock if needed."
-	},
-	"FieldType": {
-		"Entity": {
-			"Choose": "add existing item",
-			"New": "create new",
-			"EntityNotFound": "(item not found)",
-			"DragMove": "drag to re-order the list",
-			"Edit": "edit this item",
-			"Remove": "remove from list"
-		},
-		"EntityQuery": {
-			"QueryNoItems": "No items found",
-			"QueryError": "Error: An error occurred while executing the query. See the console for more information.",
-			"QueryStreamNotFound": "Error: The query did not return a stream named "
-		}
-	},
-
-	"LangWrapper": {
-		"CreateValueInDefFirst": "Please create the value for '{{fieldname}}' in the default language before translating it."
-	},
-	"CalendarPopup": {
-		"ClearButton": "Clear",
-		"CloseButton": "Done",
-		"CurrentButton": "Today"
-	},
-	"Extension.TinyMce": {
-		"Link.AdamFile": "Link ADAM-file (recommended)",
-		"Link.AdamFile.Tooltip": "Link using ADAM - just drop files using the Automatic Digital Assets Manager",
-		"Image.AdamImage": "Insert ADAM image (recommended)",
-		"Image.AdamImage.Tooltip": "Image from ADAM- just drop files using the Automatic Digital Assets Manager",
-		"Link.DnnFile": "Link DNN-file",
-		"Link.DnnFile.Tooltip": "Link a DNN-file (all files, slow)",
-		"Image.DnnImage": "Insert DNN image",
-		"Image.DnnImage.Tooltip": "Image from DNN file storage (all files, slow)",
-		"Link.Page": "Link to another page",
-		"Link.Page.Tooltip": "Link a page from the current site",
-		"Link.Anchor.Tooltip": "Anchor to link to using .../page#anchorname",
-		"SwitchMode.Pro": "Switch to advanced mode",
-		"SwitchMode.Standard": "Switch to standard mode",
-		"SwitchMode.Expand": "Fullscreen",
-		"H1": "H1",
-		"H2": "H2",
-		"H3": "H3",
-		"Remove": "Remove",
-		"ContentBlock.Add": "add app or content-block"
-	},
-	"ValidationMessage": {
-		"RequiredShort": "required",
-		"NotValid": "not valid",
-		"Required": "This field is required",
-		"Min": "This value should be more than {{param.Min}}",
-		"Max": "This value should be less or equal {{param.Max}}",
-		"Pattern": "Please match the requested format",
-		"Decimals": "This number can have up to 2 {{param.Decimals}} decimal places"
-	},
-	"Edit": {
-		"Fields": {
-			"Hyperlink": {
-				"Default": {
-					"Tooltip1": "drop files here to auto-upload",
-					"Tooltip2": "for help see 2sxc.org/help?tag=adam",
-					"Tooltip3": "ADAM - sponsored with love by 2sic.com",
-					"AdamUploadLabel": "quick-upload using ADAM",
-					"AdamUploadPasteLabel": "click here and press [Ctrl]+[V] to paste image from clipboard",
-					"PageLabel": "pick a page",
-					"MenuAdam": "Upload file with Adam",
-					"MenuPage": "Page Picker",
-					"MenuImage": "Image Manager",
-					"MenuDocs": "Document Manager",
-					"SponsoredLine": "<a href='https://2sxc.org/help?tag=adam' target='_blank' tooltip='ADAM is the Automatic Digital Assets Manager - click to discover more'>Adam</a> is sponsored with ♥ by <a tabindex='-1' href='https://www.2sic.com' target='_blank'>2sic.com</a>"
-				},
-				"FileManager": {},
-				"PagePicker": {
-					"Title": "Select a web page"
-				}
-			}
-		}
-	}
+    "EntityQuery": {
+      "QueryNoItems": "No items found",
+      "QueryError": "Error: An error occurred while executing the query. See the console for more information.",
+      "QueryStreamNotFound": "Error: The query did not return a stream named "
+    },
+    "Hyperlink": {
+      "Default": {
+        "Tooltip": "Drop files here to auto-upload. For help see 2sxc.org/help?tag=adam. ADAM - sponsored with ♡ by 2sic.com",
+        "Sponsor": "ADAM - sponsored with ♡ by 2sic.com",
+        "Fullscreen": "open in fullscreen",
+        "AdamTip": "quick-upload using ADAM",
+        "PageTip": "pick a page",
+        "MoreOptions": "more...",
+        "MenuAdam": "Upload file with Adam",
+        "MenuPage": "Page Picker",
+        "MenuImage": "Image Manager",
+        "MenuDocs": "File Manager"
+      },
+      "AdamFileManager": {
+        "UploadLabel": "upload to",
+        "UploadTip": "quick-upload using ADAM",
+        "UploadPasteLabel": "paste image",
+        "UploadPasteTip": "click here and press [Ctrl]+[V] to paste image from clipboard",
+        "NewFolder": "New folder",
+        "NewFolderTip": "create a new folder",
+        "BackFolder": "Back",
+        "BackFolderTip": "return to previous folder",
+        "Show": "Open in new tab",
+        "Edit": "Rename",
+        "RenameQuestion": "Rename file / folder to:",
+        "Delete": "Delete",
+        "DeleteQuestion": "Are you sure you want to delete this file?",
+        "Hint": "drop files here",
+        "SponsorTooltip": "ADAM is the Automatic Digital Assets Manager - click to discover more",
+        "SponsorLine": "is sponsored with ♡ by"
+      },
+      "PagePicker": {
+        "Title": "Select a web page"
+      }
+    },
+    "DateTime": {
+      "Open": "open calendar",
+      "Cancel": "Cancel",
+      "Set": "Set"
+    },
+    "String": {
+      "Dropdown": "switch to dropdown",
+      "Freetext": "switch to enter text"
+    }
+  },
+  "Extension.TinyMce": {
+    "Link.AdamFile": "Link ADAM-file (recommended)",
+    "Link.AdamFile.Tooltip": "Link using ADAM - just drop files using the Automatic Digital Assets Manager",
+    "Image.AdamImage": "Insert ADAM image (recommended)",
+    "Image.AdamImage.Tooltip": "Image from ADAM - just drop files using the Automatic Digital Assets Manager",
+    "Link.DnnFile": "Link DNN-file",
+    "Link.DnnFile.Tooltip": "Link a DNN-file (all files, slow)",
+    "Image.DnnImage": "Insert DNN image",
+    "Image.DnnImage.Tooltip": "Image from DNN file storage (all files, slow)",
+    "Link.Page": "Link to another page",
+    "Link.Page.Tooltip": "Link a page from the current site",
+    "Link.Anchor.Tooltip": "Anchor to link to using .../page#anchorname",
+    "SwitchMode.Pro": "Switch to advanced mode",
+    "SwitchMode.Standard": "Switch to standard mode",
+    "SwitchMode.Expand": "Fullscreen",
+    "H1": "H1",
+    "H2": "H2",
+    "H3": "H3",
+    "ContentBlock.Add": "add app or content-block"
+  }
 }

@@ -8,15 +8,26 @@
   <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <script>
+    (function obsoleteBrowserCheck() {
+      var isIE = navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0 || !!document.documentMode;
+      var isEdge = navigator.userAgent.indexOf("Edge") >= 0;
+      if (isIE || isEdge) {
+        alert("Error: Old Browser Detected\n\nIt seems that you are using an old browser like Internet Explorer or Edge. Editing doesn't work with obsolete browsers, so please use a modern browser like Chrome instead.");
+        window.parent.$2sxc.totalPopup.close();
+      }
+    })();
+  </script>
+
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <!-- first load the main 2sxc because it contains some url-param methods -->
-  <script src="../../js/2sxc.api.min.js?sxcver=10.09.00.84767"></script>
+  <script src="../../js/2sxc.api.min.js?sxcver=10.09.00.28847"></script>
 
   <script>
     // the version to append to each asset, to ensure reload after an upgrade
-    var sxcVersion = "10.09.00.84767";
+    var sxcVersion = "10.09.00.28847";
 
     var apiUrl = reqParam("portalroot") + "desktopmodules/2sxc/api/";
     createFakeSf(apiUrl);
@@ -63,12 +74,12 @@
 
 <body style="background-color:transparent">
   <app-root></app-root>
-  <script type="text/javascript" src="runtime.js?sxcver=10.09.00.84767"></script>
-  <script type="text/javascript" src="polyfills.js?sxcver=10.09.00.84767"></script>
-  <script type="text/javascript" src="styles.js?sxcver=10.09.00.84767"></script>
-  <script type="text/javascript" src="scripts.js?sxcver=10.09.00.84767"></script>
-  <script type="text/javascript" src="vendor.js?sxcver=10.09.00.84767"></script>
-  <script type="text/javascript" src="main.js?sxcver=10.09.00.84767"></script>
+  <script type="text/javascript" src="runtime.js?sxcver=10.09.00.28847"></script>
+  <script type="text/javascript" src="polyfills.js?sxcver=10.09.00.28847"></script>
+  <script type="text/javascript" src="styles.js?sxcver=10.09.00.28847"></script>
+  <script type="text/javascript" src="scripts.js?sxcver=10.09.00.28847"></script>
+  <script type="text/javascript" src="vendor.js?sxcver=10.09.00.28847"></script>
+  <script type="text/javascript" src="main.js?sxcver=10.09.00.28847"></script>
 </body>
 
 </html>

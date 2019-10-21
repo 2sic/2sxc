@@ -1,99 +1,188 @@
 {
-	"Button": {
-		"Save": "enregistrer",
-		"Cancel": "annuler",
-		"MoreOptions": "plus d'options",
-		"SaveAndKeepOpen": "enregistrer et rester ici"
-	},
-	"Status": {
-		"Published": "publié",
-		"Unpublished": "en attente/brouillon"
-	},
-	"SaveMode": {
-		"show": "afficher cet élément",
-		"hide": "masquer cet élément",
-		"branch": "masquer les changements en tant que brouillon"
-	},
-	"Message": {
-		"Saving": "En cours d'enregistrement...",
-		"Saved": "Enregistré",
-		"ErrorWhileSaving": "Une erreur s'est produite lors de l'enregistrement.",
-		"WillPublish": "publié des l'enregistrement",
-		"WontPublish": "ne sera pas publié immédiatement",
-		"PleaseCreateDefLang": "Veuillez modifier ceci dans la langue par défaut d'abord.",
-		"ExitOk": "Voulez-vous vraiment quitter ?",
-		"Deleting": "suppression...",
-		"Error": "erreur",
-		"CantSaveProcessing": "Impossible de sauvegarder car quelque chose d'autre est en cours de traitement",
-		"CantSaveInvalid": "Formulaire invalide, ne peut pas etre enregistrer, erreur sur : <ul>{0}</ul>"
-	},
-	"Errors": {
-		"UnclearError": "Quelque chose s'est mal passé - tout ou en partie. Désolé :(",
-		"InnerControlMustOverride": "Un controle interne doit supplanter cette fontion.",
-		"UnsavedChanges": "Il y a des données non enregistrées.",
-		"DefLangNotFound": "Pas trouvé de langue par défaut, mais plusieurs - mise a jour impossible",
-		"AdamUploadError": "Le téléchargement a échoué. La cause la plus probable est que le fichier que vous essayez de télécharger est supérieur a la taille de téléchargement maximale."
-	},
-	"General": {},
-	"EditEntity": {
-		"DefaultTitle": "Mise a jour d'item",
-		"SlotUsedtrue": "Cet item est en mode modif. Click here to lock / remove it and revert to default.",
-		"SlotUsedfalse": "Cet item est verrouillé et restera vide ou par défault. Les valeurs sont montrées a titre indicatif. Cliquer ici pour déverrouiller si nécessaire."
-	},
-	"FieldType": {
-		"Entity": {
-			"Choose": "-- Choix de l'item a ajouter --",
-			"New": "-- Nouveau --",
-			"EntityNotFound": "(item non trouvé)",
-			"DragMove": "ré-ordonner la liste a la souris",
-			"Edit": "mettre a jour cet item",
-			"Remove": "supprimer de la liste"
-		}
-	},
-	"LangMenu": {
-		"UseDefault": "auto (par défaut)",
-		"In": "dans {{langues}}",
-		"From": "de {{languages}}",
-		"EditableIn": "editable dans {{langues}}",
-		"AlsoUsedIn": ", aussi utilisé dans {{more}}",
-		"NotImplemented": "Action par encore implémentée.",
-		"CopyNotPossible": "Copie impossible: la rubrique est désactivée.",
-		"Unlink": "traduire (délier)",
-		"LinkDefault": "liée par défaut",
-		"GoogleTranslate": "traduction automatique (Google)",
-		"Copy": "copier de",
-		"Use": "utiliser de",
-		"Share": "partager de",
-		"AllFields": "tous les champs"
-	},
-	"LangWrapper": {
-		"CreateValueInDefFirst": "Renseigner la rubrique '{{fieldname}}' dans la langue par défaut, avant de la traduire."
-	},
-	"CalendarPopup": {
-		"ClearButton": "Nettoyer",
-		"CloseButton": "Fait",
-		"CurrentButton": "Aujourd'hui"
-	},
-	"Dialog1": {},
-	"dialog2": {},
-	"Extension.TinyMce": {
-		"Link.AdamFile": "Lien via ADAM-fichier (recommandé)",
-		"Link.AdamFile.Tooltip": "Lien utilisant ADAM - déposez simplement les fichiers a l'aide du gestionnaire automatique des actifs numériques",
-		"Image.AdamImage": "Insérer l'image via ADAM (recommandé)",
-		"Image.AdamImage.Tooltip": "Image via ADAM : déposez simplement des fichiers a l'aide du gestionnaire automatique d'actifs numériques",
-		"Link.DnnFile": "Lien via DNN-fichiers",
-		"Link.DnnFile.Tooltip": "Lier un fichier via DNN (tous les fichiers, lent)",
-		"Image.DnnImage": "Insérer une image via DNN (lent)",
-		"Image.DnnImage.Tooltip": "Image via le gestionnaire de fichiers DNN (tous les fichiers, lent)",
-		"Link.Page": "Lien vers une autre page",
-		"Link.Page.Tooltip": "Lien vers une page du site actuel",
-		"Link.Anchor.Tooltip": "Ancre pour lier a l'utilisation .../page#nomdelancre",
-		"SwitchMode.Pro": "Passer en mode avancé",
-		"SwitchMode.Standard": "Passer en mode standard",
-		"H1": "H1",
-		"H2": "H2",
-		"H3": "H3",
-		"Remove": "Supprimer",
-		"ContentBlock.Add": "Ajouter une application ou un content-type"
-	}
+  "Form": {
+    "Buttons": {
+      "Save": "SAVE (CTRL + S)",
+      "Save.Tip": "save and close (CTRL + S saves and doesn't close)",
+      "Exit.Tip": "exit - if something changed, you will be asked to save",
+      "Return.Tip": "return to previous dialog"
+    }
+  },
+  "SaveMode": {
+    "Label": "Status:",
+    "show": "show",
+    "show.Tip": "changes are public",
+    "hide": "hide",
+    "hide.Tip": "this item is not publicly visible",
+    "branch": "draft",
+    "branch.Tip": "changes are only visible to editors",
+    "Dialog": {
+      "Title": "Save Mode",
+      "Intro": "This determines how you will save. The default is show/publish.",
+      "Show": {
+        "Title": "Show / Publish Everything",
+        "Body": "Show changes to the public after you save."
+      },
+      "Hide": {
+        "Title": "Hide Everything",
+        "Body": "This item will be hidden and only visible to content editors."
+      },
+      "Branch": {
+        "Title": "Draft / Hide Changes",
+        "Body": "Only editors can see changes until published at a later time."
+      }
+    }
+  },
+  "Message": {
+    "Saved": "EnregistrÃ©",
+    "Saving": "En cours d'enregistrement...",
+    "DebugEnabled": "debug mode enabled",
+    "DebugDisabled": "debug mode disabled"
+  },
+  "LangMenu": {
+    "Translate": "Translate",
+    "TranslateAll": "Translate all",
+    "NoTranslate": "Don't translate",
+    "NoTranslateAll": "Don't translate any",
+    "Link": "Link to other language",
+    "UseDefault": "auto (par dÃ©faut)",
+    "InAllLanguages": "in all languages",
+    "In": "dans {{languages}}",
+    "From": "de {{languages}}",
+    "Dialog": {
+      "Title": "Translate {{name}}",
+      "Intro": "You can do many things when translating, like linking languages together.",
+      "NoTranslate": {
+        "Title": "Don't Translate",
+        "Body": "use value in primary language {{primary}}"
+      },
+      "FromPrimary": {
+        "Title": "Translate from: {{primary}}",
+        "Body": "begin translation with with the value in the primary language"
+      },
+      "FromOther": {
+        "Title": "Translate from: ...",
+        "Body": "begin translation with the value from another language",
+        "Subtitle": "Language to translate from"
+      },
+      "LinkReadOnly": {
+        "Title": "Inherit from other language (read-only)",
+        "Body": "inherit value from another language",
+        "Subtitle": "Language to inherit from"
+      },
+      "LinkShared": {
+        "Title": "Share with another language (read/write)",
+        "Body": "link languages together to use the same editable value",
+        "Subtitle": "Language to share with"
+      },
+      "PickLanguageIntro": "Only languages with content can be selected."
+    }
+  },
+  "Errors": {
+    "UnsavedChanges": "Il y a des donnÃ©es non enregistrÃ©es.",
+    "SaveErrors": "To save the form, please fix the following errors:"
+  },
+  "General": {
+    "Buttons": {
+      "NotSave": "discard changes",
+      "Save": "save",
+      "Debug": "debug"
+    }
+  },
+  "Data": {
+    "Delete.Question": "delete '{{title}}' ({{id}})?"
+  },
+  "ItemCard": {
+    "DefaultTitle": "Mise a jour d'item",
+    "SlotUsedTrue": "Cet item est en mode modif. Click here to lock / remove it and revert to default.",
+    "SlotUsedFalse": "Cet item est verrouillÃ© et restera vide ou par dÃ©fault. Les valeurs sont montrÃ©es a titre indicatif. Cliquer ici pour dÃ©verrouiller si nÃ©cessaire."
+  },
+  "ValidationMessage": {
+    "NotValid": "Not valid",
+    "Required": "This is required",
+    "RequiredShort": "required",
+    "Min": "This value should be more than {{param.Min}}",
+    "Max": "This value should be less or equal {{param.Max}}",
+    "Pattern": "Please match the requested format",
+    "Decimals": "This number can have up to {{param.Decimals}} decimal places"
+  },
+  "Fields": {
+    "Entity": {
+      "Choose": "-- Choix de l'item a ajouter --",
+      "New": "-- Nouveau --",
+      "EntityNotFound": "(item non trouvÃ©)",
+      "DragMove": "rÃ©-ordonner la liste a la souris",
+      "Edit": "mettre a jour cet item",
+      "Remove": "supprimer de la liste",
+      "Delete": "delete"
+    },
+    "EntityQuery": {
+      "QueryNoItems": "No items found",
+      "QueryError": "Error: An error occurred while executing the query. See the console for more information.",
+      "QueryStreamNotFound": "Error: The query did not return a stream named "
+    },
+    "Hyperlink": {
+      "Default": {
+        "Tooltip": "Drop files here to auto-upload. For help see 2sxc.org/help?tag=adam. ADAM - sponsored with â™¥ by 2sic.com",
+        "Sponsor": "ADAM - sponsored with â™¡ by 2sic.com",
+        "Fullscreen": "open in fullscreen",
+        "AdamTip": "quick-upload using ADAM",
+        "PageTip": "pick a page",
+        "MoreOptions": "more...",
+        "MenuAdam": "Upload file with Adam",
+        "MenuPage": "Page Picker",
+        "MenuImage": "Image Manager",
+        "MenuDocs": "Document Manager"
+      },
+      "AdamFileManager": {
+        "UploadLabel": "upload to",
+        "UploadTip": "quick-upload using ADAM",
+        "UploadPasteLabel": "paste image",
+        "UploadPasteTip": "click here and press [Ctrl]+[V] to paste image from clipboard",
+        "NewFolder": "New folder",
+        "NewFolderTip": "create a new folder",
+        "BackFolder": "Back",
+        "BackFolderTip": "return to previous folder",
+        "Show": "Open in new tab",
+        "Edit": "Rename",
+        "RenameQuestion": "Rename file / folder to:",
+        "Delete": "Delete",
+        "DeleteQuestion": "Are you sure you want to delete this file?",
+        "Hint": "drop files here",
+        "SponsorTooltip": "ADAM is the Automatic Digital Assets Manager - click to discover more",
+        "SponsorLine": "is sponsored with â™¥ by"
+      },
+      "PagePicker": {
+        "Title": "Select a web page"
+      }
+    },
+    "DateTime": {
+      "Open": "open calendar",
+      "Cancel": "Cancel",
+      "Set": "Set"
+    },
+    "String": {
+      "Dropdown": "switch to dropdown select",
+      "Freetext": "switch to freetext"
+    }
+  },
+  "Extension.TinyMce": {
+    "Link.AdamFile": "Lien via ADAM-fichier (recommandÃ©)",
+    "Link.AdamFile.Tooltip": "Lien utilisant ADAM - dÃ©posez simplement les fichiers a l'aide du gestionnaire automatique des actifs numÃ©riques",
+    "Image.AdamImage": "InsÃ©rer l'image via ADAM (recommandÃ©)",
+    "Image.AdamImage.Tooltip": "Image via ADAM : dÃ©posez simplement des fichiers a l'aide du gestionnaire automatique d'actifs numÃ©riques",
+    "Link.DnnFile": "Lien via DNN-fichiers",
+    "Link.DnnFile.Tooltip": "Lier un fichier via DNN (tous les fichiers, lent)",
+    "Image.DnnImage": "InsÃ©rer une image via DNN (lent)",
+    "Image.DnnImage.Tooltip": "Image via le gestionnaire de fichiers DNN (tous les fichiers, lent)",
+    "Link.Page": "Lien vers une autre page",
+    "Link.Page.Tooltip": "Lien vers une page du site actuel",
+    "Link.Anchor.Tooltip": "Ancre pour lier a l'utilisation .../page#nomdelancre",
+    "SwitchMode.Pro": "Passer en mode avancÃ©",
+    "SwitchMode.Standard": "Passer en mode standard",
+    "SwitchMode.Expand": "Fullscreen",
+    "H1": "H1",
+    "H2": "H2",
+    "H3": "H3",
+    "ContentBlock.Add": "Ajouter une application ou un content-type"
+  }
 }
