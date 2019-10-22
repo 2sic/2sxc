@@ -7,8 +7,6 @@ _you can't use DNN without 2sxc 😉_
 This tool helps web designers and developers prepare great looking, animated and sexy content templates in DNN (DotNetNuke). 
 It's like mixing DNN with Umbraco and Drupal :).
 
-BTW: it used to be called 2SexyContent.
-
 Visit [2sxc.org](https://2sxc.org/) for more information.
 
 # Contents of this Repo
