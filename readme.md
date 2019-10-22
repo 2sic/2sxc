@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/wiki/2sic/2sxc/assets/logos/2sxc10/2sxcv10.png" width="200px" align="right">
 
-# 2sxc 10 - turn DNN into a CMS and App-Engine
+# 2sxc 10 - CMS & App-Engine for DNN
 
 _you can't use DNN without 2sxc 😉_
 
