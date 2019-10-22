@@ -16,7 +16,10 @@ build/
 [Bb]in/
 # include bin files from koi
 !koi/bin/
+!ToSIC_SexyContent/koi/bin/
 !razorblade/bin/
+!ToSIC_SexyContent/razorblade/bin/
+!ToSIC_SexyContent/razorblade-old/bin/
 [Oo]bj/
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
