@@ -1,0 +1,13 @@
+﻿-- This SQL file is used for the app-module package (in .dnn manifest file) which must not be installed or upgraded if the 2sxc module fails to install
+
+DECLARE @RequiredVersion int
+SET @RequiredVersion = 9
+
+DECLARE @RequiredVersionIsInstalled int
+SELECT @RequiredVersionIsInstalled = CASE WHEN EXISTS(SELECT * FROM {databaseOwner}[{objectQualifier}Packages] WHERE Name = N'2SexyContent' AND CONVERT(int, LEFT([Version], CHARINDEX('.', [Version])-1)) >= @RequiredVersion) THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+
+If @RequiredVersionIsInstalled = 0
+BEGIN
+	RAISERROR(N'2sxc 9 or newer must be installed for the app module to install. Probably something else went wrong while installing - see previous errors for more information. ****************************************************************************************************************************************************************************************************************************************************************************************************************************************************', 16, 1)
+	RETURN
+END

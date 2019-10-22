@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>EavItemDialogAngular</title>
+  <base href=".\">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script>
+    var jsVersionCacheId = window.location.search;    // use this to prevent
+    document.write('<script src="../../js/2sxc.api.min.js' + jsVersionCacheId + '"></scr' + 'ipt>');
+  </script>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i" rel="stylesheet" />
+
+  <!-- <link rel="stylesheet" href="assets/style/bootstrap-glyphicons.css"> -->
+
+  <!--fontawesome spm not used  -->
+  <!-- <link rel="stylesheet" href="assets/style/font-awesome/css/solid.min.css" />
+  <link rel="stylesheet" href="assets/style/font-awesome/css/fontawesome.min.css" /> -->
+  <!-- <script src="core.js"></script> -->
+  <script>
+    ng.core.enableProdMode();
+  </script>
+</head>
+
+<body id="eav-app">
+  <script>
+    // Fix for IE11 - document.activeElement is not set in iframe
+    const isIE = navigator.userAgent.includes("MSIE") || navigator.userAgent.includes("Trident") || !!document.documentMode;
+    if (isIE) {
+      document.getElementById('eav-app').focus();
+    }
+  </script>
+  <app-root></app-root>
+<script src="runtime.js" defer></script><script src="polyfills-es5.js" nomodule defer></script><script src="polyfills.js" defer></script><script src="styles.js" defer></script><script src="scripts.js" defer></script><script src="vendor.js" defer></script><script src="main.js" defer></script></body>
+
+</html>

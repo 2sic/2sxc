@@ -1,0 +1,6 @@
+﻿2sxc contains ImageResizer from http://imageresizing.net/ (see license.md for the license)
+
+- While installing 2sxc, it is registered in the web.config and a few dll files are created in the bin folder
+- 2sxc does not install any plugins that require a paid license of ImageResizer for production use
+- 2sxc includes the ImageResizer TinyCache plugin
+- Please use the official (paid) DiskCache for better performance. More information: http://imageresizing.net/licenses

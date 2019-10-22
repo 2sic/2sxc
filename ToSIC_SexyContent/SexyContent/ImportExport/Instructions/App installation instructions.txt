@@ -1,0 +1,5 @@
+This is a App for DNN and runs in 2sxc - an open source module which does everything for you. 
+
+To install this app, you must first install 2sxc, then upload this ZIP into 2sxc. 
+
+More: http://2sxc.org/en/help?tag=install-app

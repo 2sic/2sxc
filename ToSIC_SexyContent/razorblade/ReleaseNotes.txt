@@ -1,0 +1,11 @@
+﻿<h3>Release Notes of RazorBlade.net v3</h3>
+<p>
+	This is ToSic - RazorBlade.net
+</p>
+<p class="Contributor">
+	By <a href="https://www.2sic.com/" target="_blank">2sic</a>
+	<br />
+	Read the <a href="https://razor-blade.net" target="_blank">API docs</a>
+	Visit <a href="https://github.com/2sic/razor-blade" target="_blank">RazorBlade.net on Github</a> to discover more, 
+	or try the <a href="https://2sxc.org/dnn-tutorials/" target="_blank">tutorials</a>.
+</p>

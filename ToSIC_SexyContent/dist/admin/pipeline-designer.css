@@ -1,0 +1,221 @@
+.actions {
+	width: 215px;
+	position: fixed;
+	right: 0;
+}
+
+	.actions * {
+		margin: 4px 0 4px 0;
+	}
+
+	.actions .panel-heading {
+		height: 45px;
+		margin: 0;
+	}
+
+.dataSource {
+	height: 50px;
+	transition: box-shadow 0.15s ease-in 0s;
+	min-width: 250px;
+	border: 1px solid #346789;
+	box-shadow: 2px 2px 19px #aaa;
+	-o-box-shadow: 2px 2px 19px #aaa;
+	-webkit-box-shadow: 2px 2px 19px #aaa;
+	-moz-box-shadow: 2px 2px 19px #aaa;
+	-moz-border-radius: 0.5em;
+    border-top-left-radius: 0.8em;
+    border-bottom-right-radius: 0.8em;
+	filter: alpha(opacity=80);
+	text-align: center;
+	z-index: 20;
+	position: absolute;
+	background-color: #eeeeef;
+	color: black;
+	font-family: helvetica;
+	padding: 0.5em;
+	font-size: 0.9em;
+}
+
+	.dataSource:hover {
+		box-shadow: 2px 2px 19px #444;
+		-o-box-shadow: 2px 2px 19px #444;
+		-webkit-box-shadow: 2px 2px 19px #444;
+		-moz-box-shadow: 2px 2px 19px #444;
+		cursor: move;
+		filter: alpha(opacity=60);
+	}
+
+	.dataSource .name, .dataSource .description {
+	    cursor: text !important;
+		display: inline-block;
+		max-width: 215px;
+		max-height: 16px;
+		overflow: hidden;
+	}
+
+	.dataSource .name {
+		margin-top: 2px;
+		font-weight: bold;
+	}
+
+	.dataSource .description {
+		font-size: 0.8em;
+	}
+
+    .dataSource .description i, 
+    .dataSource .name i {
+        font-size: xx-small;
+    }
+
+	.dataSource .typename {
+		font-size: 1em;
+	    background: white;
+	    opacity: 0.8;
+	    z-index: 100;
+	    padding-top:25px;
+		display: none;
+	}
+
+	.dataSource .delete {
+		display: none;
+		position: absolute;
+	    color: #aaaaaa;
+	    right: 0;
+		top: 32px;
+	}
+
+    .dataSource .help {
+        display: none;
+        position: absolute;
+        color: #aaaaaa;
+        left: 0;
+        top: 32px;
+    }
+
+	.dataSource .configure {
+	    display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	.dataSource .type-info {
+		position: absolute;
+		top: 10px;
+		left: 0;
+		padding: 3px;
+		font-size: large;
+	}
+
+    .dataSource .show-hover-inline {
+        display: none;
+    }
+
+    .dataSource:hover .show-hover-inline {
+        display: inline-block;
+    }
+
+    /* show all hidden elements */
+    .dataSource:hover .configure,
+    .dataSource:hover .delete,
+    .dataSource:hover .help,
+    .dataSource:hover .typename,
+    .dataSource:hover .add-endpoint {
+        cursor: pointer !important;
+        display: block;
+    }
+
+
+.sourceEndpoint:after, .targetEndpoint:after {
+    font-family: 'app-icons';
+    content: "\e856";
+    margin-top: -10px;
+    color: #000;
+    font-size: 16px;
+    border-radius: 10px;
+    width: 20px;
+    display: inline-block;
+    text-align: center;
+}
+
+.jsplumb-endpoint, .endpointTargetLabel, .endpointSourceLabel {
+	z-index: 21;
+	cursor: pointer;
+}
+
+.sourceEndpoint.jsplumb-hover, .targetEndpoint.jsplumb-hover {
+    z-index: 101;
+}
+
+
+/* The endpoint needs a round radius, because otherwise the hover won't look good '*/
+.jsplumb-endpoint {
+    border-radius: 30px;
+}
+
+.jsplumb-endpoint.active, .dataSource.active {
+	border: 1px dotted green;
+}
+
+/* Hover effect when dragging an endpoint on a target or datasource */
+.jsplumb-endpoint.hover, .dataSource.active.hover {
+    box-shadow: 2px 2px 20px #f00;
+	-o-box-shadow: 2px 2px 20px #f00;
+	-webkit-box-shadow: 2px 2px 20px #f00;
+	-moz-box-shadow: 2px 2px 20px #f00;
+}
+
+.endpointTargetLabel, .endpointSourceLabel {
+    cursor: text !important;
+	background-color: white;
+	font: 12px sans-serif;
+	color: #444;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+	cursor: pointer;
+}
+
+.endpointSourceLabel.jsplumb-hover, .endpointTargetLabel.jsplumb-hover {
+	background-color: #5C96BC;
+    padding: 0.4em;
+	color: white;
+	border: 1px solid white;
+	z-index: 100;
+	opacity: 1;
+}
+
+.streamEntitiesCount {
+    background: #93ceff;
+    color: black;
+    padding: 2px;
+    border-radius: 25px;
+    opacity: 0.8;
+    min-width: 25px;
+    text-align: center;
+}
+
+.add-endpoint {
+    position: absolute;
+    top: -15px;
+    right: 5px;
+    width: 1em;
+    height: 1em;
+    cursor: pointer;
+    font-size: large;
+    color: orange;
+    display: none
+}
+
+.add-endpoint:hover {
+    color: #D98D00;
+}
+
+.noselect {
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

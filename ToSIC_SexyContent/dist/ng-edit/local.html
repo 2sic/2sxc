@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Content Editing UI (Angular)</title>
+  <meta charset="utf-8" />
+  <base href="./">
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- first load the main 2sxc because it contains some url-param methods -->
+  <script src="../../js/2sxc.api.min.js?sxcver=10.09.00.77325"></script>
+
+  <script>
+    // the version to append to each asset, to ensure reload after an upgrade
+    var sxcVersion = "10.09.00.77325";
+
+    var apiUrl = reqParam("portalroot") + "desktopmodules/2sxc/api/";
+    createFakeSf(apiUrl);
+
+    /**
+     * first check in local storage if we have this parameter
+     * as it will often disappear from the url when navigating
+     * if not found, use from url
+     * the $2sxc.urlParams.require will throw an error, if not found
+     */
+    function reqParam(paramName) {
+      return $2sxc.urlParams.require(paramName);
+    }
+
+    // this creates an object on $.ServicesFramework
+    // it looks like the DNN object and is necessary so that scripts relying on it will work
+    // it basically fakes it, but contains the correct infos like getTabId etc. without needing the full DNN
+    //
+    // important!!!
+    // the ng-admin looks for i and p, not for mid/tid
+    function createFakeSf(apiUrl) {
+      if (reqParam("mid") === "")
+        alert("ModuleId (i = mid) missing - cannot continue");
+      var pageId = reqParam("tid");
+      if (pageId === '')
+        alert("PageId (p = tid) missing, cannot continue")
+
+      // create a fake jQuery object, as it shouldn't exist, but is where the ServicesFramework is attached
+      if (window.$ === undefined) window.$ = {};
+
+      // create a fake ServicesFramework, which $2sxc will pick up
+      window.$.ServicesFramework = function (id) {
+        return {
+          name: "This is a fake DNN ServicesFramework",
+          description: "It enables stuff requiring (but not really needing) the sf to work",
+          getTabId: function () { return pageId; },
+          getAntiForgeryValue: function () { return reqParam("rvt"); },
+          getServiceRoot: function () { return apiUrl; }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body style="background-color:transparent">
+  <app-root></app-root>
+  <script type="text/javascript" src="//localhost:4200/runtime.js"></script>
+  <script type="text/javascript" src="//localhost:4200/polyfills.js"></script>
+  <script type="text/javascript" src="//localhost:4200/styles.js"></script>
+  <script type="text/javascript" src="//localhost:4200/scripts.js"></script>
+  <script type="text/javascript" src="//localhost:4200/vendor.js"></script>
+  <script type="text/javascript" src="//localhost:4200/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,539 @@
+
+/* #region ag-Grid (Content Items) */
+.content-items-agnostic {
+	height: 100%;
+}
+.ag-grid-wrapper {
+	height: 100%;
+}
+.ag-cell, .ag-header-cell {
+	padding: 8px
+}
+.ag-cell {
+	border-bottom: 1px solid #ddd;
+}
+.ag-header-cell {
+	text-align: left
+}
+.ag-header-cell-text {
+	font-weight: bold;
+}
+.ag-header-container {
+	border-bottom: 2px solid #DDD;
+}
+
+.ag-header-icon {
+	padding-right: 2px;
+}
+
+.ag-filter-checkbox {
+  position: relative;
+  top: 2px;
+  left: 2px;
+}
+.ag-filter-header-container {
+  border-bottom: 1px solid #d3d3d3;
+}
+.ag-filter-apply-panel {
+  border-top: 1px solid #d3d3d3;
+  padding: 2px;
+}
+.ag-filter {
+  border: 1px solid #000;
+  background-color: #f0f0f0;
+}
+.ag-filter label {
+	font-weight: normal;
+}
+.ag-filter-value {
+  margin-left: 4px;
+}
+
+.ag-header-cell-menu-button {
+  padding: 2px;
+  border: 1px solid transparent;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box; /* When using bootstrap, box-sizing was set to 'border-box' */
+}
+.ag-header-cell-menu-button:hover {
+  border: 1px solid #000;
+}
+
+
+.ag-row:hover {
+  background-color: #f5f5f5;
+}
+.ag-row:hover .clickable {
+	text-decoration: underline;
+}
+/* #endregion */
+/* load all glyphicons from CDN 
+
+    note that we'll remove these soon anyhow
+*/
+
+
+
+@font-face{font-family:'Glyphicons Halflings';
+           src:url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.eot);
+           src:url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.eot?#iefix) format('embedded-opentype'),
+               url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff2) format('woff2'),
+               url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff) format('woff'),
+               url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.ttf) format('truetype'),
+               url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format('svg')}
+/* These are helpers to create larger dialogs than available by default in boostrap*/
+.modal-xlg {
+     width: 95%;
+}
+.modal-max {
+     width: 100%;
+}
+.modal-fullscreen {
+	width: 95%;
+	height: calc(100% - 30px);
+	margin-bottom: auto;
+}
+
+	.modal-fullscreen .modal-content {
+		height: 100%;
+		padding-bottom: 0;
+		border-radius: 0;
+	}
+
+	.modal-fullscreen .modal-body {
+	height: calc(100% - 130px);
+}
+
+
+
+/* this helps that tooltips can wrap as we want them to */
+.tooltip-inner {
+    white-space: pre-wrap;
+}
+
+
+/* since we have many windows on other windows, I want to reduce opacity so it's more see-through */
+.modal-backdrop.in {
+    opacity: .1;
+}
+ 
+/* used for the custom file picker */
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.hide-overflow-text {
+    display: block;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-manage-eav {
+    table-layout: fixed;
+     width: 100%
+}
+
+.col-id {
+    width: 40px
+}
+.mini-btn-1 {
+    width: 40px
+}
+.mini-btn-2 {
+    width: 80px
+}
+.mini-btn-3 {
+    width: 120px
+}
+.mini-btn-4 {
+    width: 160px
+}
+.mini-btn-5 {
+    width: 160px
+}
+
+/* Global link styling */
+a { cursor: pointer; }
+
+.btn-square {
+    height: 34px;
+    width: 34px;
+    padding-left: 9px;
+}
+
+/* new class, will have to replace all uses of btn-square when icons are done */
+.btn-icon-square {
+    width: 36px;
+    height: 36px;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.btn-icon {
+    height: 34px;
+    width: 34px;
+    padding-left: 6px;
+}
+
+/* old glyphicon... */
+.btn-lg.btn-square {
+    height: 46px;
+    width: 46px;
+    padding-left: 13px;
+    padding-top: 11px;
+}
+
+/* new icon... */
+.btn-lg.btn-icon-square {
+    height: 46px;
+    width: 46px;
+    padding-left: 0;
+    padding-top: 0;
+    font-size: 28px;
+    vertical-align: bottom;
+}
+
+
+
+.btn-xs.btn-square {
+    height: 22px;
+    width: 22px;
+    text-align: center;
+    padding-left: 4px;
+}
+
+.btn-xs.btn-square i {
+    padding-top: 2px;
+}
+.btn.btn-default.btn-subtle {
+    border: none;
+}
+
+.clickable { cursor:pointer; }
+.clickable:hover { text-decoration: underline }
+.clickable-row:hover td.clickable { text-decoration: underline }
+
+/* old glyphicon */
+.low-priority .glyphicon, .low-priority.glyphicon,
+/* new icon set */
+i.low-priority {
+    color: lightgray;
+}
+
+h3:hover .low-priority.glyphicon, h4:hover .low-priority.glyphicon {
+    color: #3bafda;
+    text-decoration: none;
+}
+
+h3.clickable:hover, h4.clickable:hover {
+    color: #3bafda;
+    text-decoration: none;
+}
+
+
+/* Toastr Color Specs for 2sic colors */
+.toast {
+  background-color: #030303;
+}
+.toast-success {
+  background-color: #97d600;
+}
+.toast-error {
+  background-color: #E9573F;
+}
+.toast-info {
+  background-color: #0088f4;
+}
+.toast-warning {
+  background-color: #F6BB42;
+}
+
+
+/* corrections for the nav-tab (would be white/gray */
+.nav-tabs {
+    background-color: white;
+}
+
+.nav-tabs > li.active {
+    border-top-style: solid;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-top-color: #0088f4;
+}
+
+.nav-tabs > li {
+    border-left-style: none;
+}
+
+.nav-tabs > li > a:hover {
+    background-color: white;
+    border-top-color: #93CEFF;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-top-style: solid;
+}
+
+.modal-content {
+    padding-bottom: 10px;
+}
+
+
+/* hover buttons */
+.hover-pair .hover-default { display: block; }
+.hover-pair:hover .hover-default { display: none; }
+
+.hover-pair .hover-hover { display: none; }
+.hover-pair:hover .hover-hover { display: block; }
+
+/* special design for the content-fields table */
+.eav-admin-field-list .type-empty {
+    background: #eeeeee;
+}
+
+/* special debug stuff */
+.debug-indicator.debug-enabled {
+    color: red;
+}
+.actions {
+	width: 215px;
+	position: fixed;
+	right: 0;
+}
+
+	.actions * {
+		margin: 4px 0 4px 0;
+	}
+
+	.actions .panel-heading {
+		height: 45px;
+		margin: 0;
+	}
+
+.dataSource {
+	height: 50px;
+	transition: box-shadow 0.15s ease-in 0s;
+	min-width: 250px;
+	border: 1px solid #346789;
+	box-shadow: 2px 2px 19px #aaa;
+	-o-box-shadow: 2px 2px 19px #aaa;
+	-webkit-box-shadow: 2px 2px 19px #aaa;
+	-moz-box-shadow: 2px 2px 19px #aaa;
+	-moz-border-radius: 0.5em;
+    border-top-left-radius: 0.8em;
+    border-bottom-right-radius: 0.8em;
+	filter: alpha(opacity=80);
+	text-align: center;
+	z-index: 20;
+	position: absolute;
+	background-color: #eeeeef;
+	color: black;
+	font-family: helvetica;
+	padding: 0.5em;
+	font-size: 0.9em;
+}
+
+	.dataSource:hover {
+		box-shadow: 2px 2px 19px #444;
+		-o-box-shadow: 2px 2px 19px #444;
+		-webkit-box-shadow: 2px 2px 19px #444;
+		-moz-box-shadow: 2px 2px 19px #444;
+		cursor: move;
+		filter: alpha(opacity=60);
+	}
+
+	.dataSource .name, .dataSource .description {
+	    cursor: text !important;
+		display: inline-block;
+		max-width: 215px;
+		max-height: 16px;
+		overflow: hidden;
+	}
+
+	.dataSource .name {
+		margin-top: 2px;
+		font-weight: bold;
+	}
+
+	.dataSource .description {
+		font-size: 0.8em;
+	}
+
+    .dataSource .description i, 
+    .dataSource .name i {
+        font-size: xx-small;
+    }
+
+	.dataSource .typename {
+		font-size: 1em;
+	    background: white;
+	    opacity: 0.8;
+	    z-index: 100;
+	    padding-top:25px;
+		display: none;
+	}
+
+	.dataSource .delete {
+		display: none;
+		position: absolute;
+	    color: #aaaaaa;
+	    right: 0;
+		top: 32px;
+	}
+
+    .dataSource .help {
+        display: none;
+        position: absolute;
+        color: #aaaaaa;
+        left: 0;
+        top: 32px;
+    }
+
+	.dataSource .configure {
+	    display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	.dataSource .type-info {
+		position: absolute;
+		top: 10px;
+		left: 0;
+		padding: 3px;
+		font-size: large;
+	}
+
+    .dataSource .show-hover-inline {
+        display: none;
+    }
+
+    .dataSource:hover .show-hover-inline {
+        display: inline-block;
+    }
+
+    /* show all hidden elements */
+    .dataSource:hover .configure,
+    .dataSource:hover .delete,
+    .dataSource:hover .help,
+    .dataSource:hover .typename,
+    .dataSource:hover .add-endpoint {
+        cursor: pointer !important;
+        display: block;
+    }
+
+
+.sourceEndpoint:after, .targetEndpoint:after {
+    font-family: 'app-icons';
+    content: "\e856";
+    margin-top: -10px;
+    color: #000;
+    font-size: 16px;
+    border-radius: 10px;
+    width: 20px;
+    display: inline-block;
+    text-align: center;
+}
+
+.jsplumb-endpoint, .endpointTargetLabel, .endpointSourceLabel {
+	z-index: 21;
+	cursor: pointer;
+}
+
+.sourceEndpoint.jsplumb-hover, .targetEndpoint.jsplumb-hover {
+    z-index: 101;
+}
+
+
+/* The endpoint needs a round radius, because otherwise the hover won't look good '*/
+.jsplumb-endpoint {
+    border-radius: 30px;
+}
+
+.jsplumb-endpoint.active, .dataSource.active {
+	border: 1px dotted green;
+}
+
+/* Hover effect when dragging an endpoint on a target or datasource */
+.jsplumb-endpoint.hover, .dataSource.active.hover {
+    box-shadow: 2px 2px 20px #f00;
+	-o-box-shadow: 2px 2px 20px #f00;
+	-webkit-box-shadow: 2px 2px 20px #f00;
+	-moz-box-shadow: 2px 2px 20px #f00;
+}
+
+.endpointTargetLabel, .endpointSourceLabel {
+    cursor: text !important;
+	background-color: white;
+	font: 12px sans-serif;
+	color: #444;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+	cursor: pointer;
+}
+
+.endpointSourceLabel.jsplumb-hover, .endpointTargetLabel.jsplumb-hover {
+	background-color: #5C96BC;
+    padding: 0.4em;
+	color: white;
+	border: 1px solid white;
+	z-index: 100;
+	opacity: 1;
+}
+
+.streamEntitiesCount {
+    background: #93ceff;
+    color: black;
+    padding: 2px;
+    border-radius: 25px;
+    opacity: 0.8;
+    min-width: 25px;
+    text-align: center;
+}
+
+.add-endpoint {
+    position: absolute;
+    top: -15px;
+    right: 5px;
+    width: 1em;
+    height: 1em;
+    cursor: pointer;
+    font-size: large;
+    color: orange;
+    display: none
+}
+
+.add-endpoint:hover {
+    color: #D98D00;
+}
+
+.noselect {
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

@@ -1,0 +1,27 @@
+{
+	"_": {
+		"V": 1
+	},
+	"Entity": {
+		"Id": 48237,
+		"Version": 4,
+		"Guid": "0b5f33c3-b566-4c19-9492-2955462084c8",
+		"Type": {
+			"Name": "FeaturesConfiguration",
+			"Id": "094941f2-688e-4df1-89c9-51a51c8bbb2e"
+		},
+		"Attributes": {
+			"String": {
+				"Signature": {
+					"*": "testing"
+				}
+			},
+			"Custom": {
+				"Features": {
+					"*": "{\n\t\"features\": [{\n\t\t\"id\": \"f6b8d6da-4744-453b-9543-0de499aa2352\",\n\t\t\"enabled\": true,\n\t\t\"expires\": \"2025-04-14T00:00:00+02:00\"\n\t},{\n\t\t\"id\": \"6cac008e-0663-4cd8-92b2-1d3afbcefcd8\",\n\t\t\"enabled\": true,\n\t\t\"expires\": \"2025-04-14T00:00:00+02:00\"\n\t},{\n\t\t\"id\": \"d93baf71-74c6-4956-9fe0-8281acdfd14a\",\n\t\t\"enabled\": true,\n\t\t\"expires\": \"2025-04-14T00:00:00+02:00\"\n\t},{\n\t\t\"id\": \"79b9f5f8-d104-458b-8e8f-9f4a11c5935e\",\n\t\t\"enabled\": true,\n\t\t\"expires\": \"2025-04-14T00:00:00+02:00\"\n\t},\n\t{\n\t\t\"id\": \"4f3d0021-1c8b-4286-a33b-3210ed3b2d9a\",\n\t\t\"enabled\": true,\n\t\t\"expires\": \"2018-04-14T00:00:00+02:00\"\n\t},\n\t{\n\t\t\"id\": \"00000000-0000-0000-0000-000000000000\",\n\t\t\"enabled\": false,\n\t\t\"expires\": \"2018-04-13T00:00:00+02:00\"\n\t}]\n}"
+				}
+			}
+		},
+		"Owner": "dnn:userid=1"
+	}
+}

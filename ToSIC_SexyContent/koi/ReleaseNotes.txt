@@ -1,0 +1,8 @@
+﻿<h3>Release Notes of Connect.Koi</h3>
+<p>
+	This is Connect.Koi - there are no special release notes.
+</p>
+<p class="Contributor">
+	By DNN Connect and 2sic<br />
+	Visit <a href="https://connect-koi.net/" target="_blank">https://connect-koi.net/</a> to discover more.
+</p>

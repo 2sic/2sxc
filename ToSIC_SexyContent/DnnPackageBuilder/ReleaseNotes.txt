@@ -1,0 +1,2 @@
+<p>Read the <a href="https://github.com/2sic/2sxc/releases" target="_blank">release notes on Github</a><br/>
+</p>
