@@ -185,3 +185,22 @@ Temporary/
 _/
 .data-custom/configurations/features.json
 .data-custom/contenttypes 2/
+
+# other stuff in the DesktopModules Folder
+/2FlexCopyright/*
+/Admin/*
+/AuthenticationServices/*
+/DDRMenu/*
+/DNNCorp/*
+/DevicePreviewManagement/*
+/DigitalAssets/*
+/CoreMessaging/*
+/HTML/*
+/MemberDirectory/*
+/Journal/*
+/RazorModules/*
+/MobileManagement/*
+/SocialGroups/*
+/UserDefinedTable/*
+/Connect.Dnn.Koi/*
+/Connect.Razor/*
