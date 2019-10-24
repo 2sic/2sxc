@@ -137,6 +137,7 @@
         "UploadLabel": "upload nach",
         "UploadTip": "schnell-upload mit ADAM",
         "UploadPasteLabel": "Bild aus Zwischenablage",
+        "UploadPasteFocusedLabel": "Ctrl+V drücken",
         "UploadPasteTip": "Klick hier und drück [Ctrl]+[V] um aus der Zwischenablage einzufügen",
         "NewFolder": "Neuer Ordner",
         "NewFolderTip": "Neuen Ordner erstellen",

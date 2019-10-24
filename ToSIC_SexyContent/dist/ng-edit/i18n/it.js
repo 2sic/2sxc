@@ -137,6 +137,7 @@
         "UploadLabel": "upload to",
         "UploadTip": "quick-upload using ADAM",
         "UploadPasteLabel": "paste image",
+        "UploadPasteFocusedLabel": "press ctrl+v",
         "UploadPasteTip": "click here and press [Ctrl]+[V] to paste image from clipboard",
         "NewFolder": "New folder",
         "NewFolderTip": "create a new folder",
