@@ -1,0 +1,42 @@
+﻿apiRules:
+# Exclude System.Object to avoid having .Equals and stuff
+# in the documentation
+- exclude:
+    uidRegex: ^System\.Object
+
+# Exclude any tests
+- exclude:
+    uidRegex: ^Tests
+
+# Exclude the everything with the old 2SexyContent namespace
+# As this is old and must first be converted to Sxc. before releasing it for official use
+- exclude:
+    uidRegex: ^ToSic\.SexyContent.*
+
+# maybe do include first, before excludes?
+- include:
+    hasAttribute: 
+        uid: ToSic.Eav.PublicApi.PublicApi
+- exclude:
+    uidRegex: ^ToSic\.Sxc
+    type: Member
+    type: Namespace
+    type: Type
+- exclude:
+    hasAttribute: 
+        uid: ToSic.Eav.PublicApi.PrivateApi
+    type: Type
+    type: Member
+
+ # For now also exclude everything in the Sxc - just for safety, till we marked the public api
+#- exclude:
+#    uidRegex: ^ToSic\.Sxc
+    # type: Namespace
+#- include:
+#    hasAttribute: 
+#        uid: ToSic.Eav.PublicApi.PublicApi
+
+ # For now also exclude everything in the Sxc - just for safety, till we marked the public api
+#- exclude:
+#    uidRegex: ^ToSic\.Eav\.AppEngine
+    # type: Namespace

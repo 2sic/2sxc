@@ -5,12 +5,14 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.PublicApi;
 using ToSic.SexyContent;
 using ToSic.Sxc.Edit.Toolbar;
 using Feats = ToSic.Eav.Configuration.Features;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
+    [PublicApi]
     public class InPageEditingHelper : HasLog, IInPageEditingSystem
     {
         private readonly string _jsonTemplate =
@@ -22,11 +24,14 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             SxcInstance = sxcInstance;
         }
 
+        /// <inheritdoc />
         public bool Enabled { get; }
+        [PrivateApi]
         protected SxcInstance SxcInstance;
 
         #region Toolbar
 
+        /// <inheritdoc />
         public HtmlString Toolbar(object target = null, 
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
             string actions = null, 
@@ -37,6 +42,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             => ToolbarInternal(false, target, dontRelyOnParameterOrder, actions, contentType, prefill, toolbar,
             settings);
 
+        /// <inheritdoc/>
         public HtmlString TagToolbar(object target = null,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string actions = null,
@@ -74,17 +80,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         #region Context Attributes
 
-        /// <summary>
-        /// Get html-attributes to mark the current context
-        /// these will be added to a wrapper tag (usually a div)
-        /// so that in-page editing knows what the context is
-        /// </summary>
-        /// <param name="target">the object for is part of the context</param>
-        /// <param name="dontRelyOnParameterOrder">this is just to ensure you will use named params for any other param</param>
-        /// <param name="field">the field name - in case of list-contexts</param>
-        /// <param name="contentType">type name for new items - usually for inner-content and list-contexts</param>
-        /// <param name="newGuid">the guid of a new item - use null for auto-generate</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public HtmlString ContextAttributes(DynamicEntity target,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
             string field = null,
@@ -105,7 +101,8 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
                 newGuid));
         }
 
-
+        /// <inheritdoc/>
+        [PrivateApi]
         public HtmlString WrapInContext(object content,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string tag = Constants.DefaultContextTag,
@@ -133,17 +130,11 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         #region Attribute-helper
 
-        /// <summary>
-        /// Generate an HTML attribute 
-        /// - but only if in edit mode
-        /// </summary>
+        /// <inheritdoc/>
         public HtmlString Attribute(string name, string value)
             => !Enabled ? null : SexyContent.Html.Build.Attribute(name, value);
 
-        /// <summary>
-        /// Generate an HTML attribute by converting the value to JSON 
-        /// - but only in edit mode
-        /// </summary>
+        /// <inheritdoc/>
         public HtmlString Attribute(string name, object value)
             => !Enabled ? null : SexyContent.Html.Build.Attribute(name, JsonConvert.SerializeObject(value));
 
@@ -151,7 +142,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         #region Scripts and CSS includes
 
-
+        /// <inheritdoc/>
         public string Enable(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, bool? api = null, bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
         {
             Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Enable", $"{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");

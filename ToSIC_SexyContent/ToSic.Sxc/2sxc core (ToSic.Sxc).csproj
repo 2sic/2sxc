@@ -86,7 +86,6 @@
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\ClientContextInfo\Ui.cs" />
     <Compile Include="Edit\InPageEditingSystem\IInPageEditingSystem.cs" />
-    <Compile Include="Edit\InPageEditingSystem\InPageEditingHelperx.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
