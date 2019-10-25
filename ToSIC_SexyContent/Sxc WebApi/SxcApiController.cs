@@ -14,7 +14,7 @@ using Factory = ToSic.Eav.Factory;
 using ToSic.Sxc.Adam.WebApi;
 using System.IO;
 using ToSic.Eav.Configuration;
-using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Interfaces;

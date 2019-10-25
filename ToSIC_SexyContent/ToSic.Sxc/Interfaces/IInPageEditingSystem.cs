@@ -3,7 +3,7 @@ using System.Web;
 using ToSic.Eav.PublicApi;
 using ToSic.SexyContent;
 
-namespace ToSic.Sxc.Edit.InPageEditingSystem
+namespace ToSic.Sxc.Interfaces
 {
     [PublicApi]
     public interface IInPageEditingSystem

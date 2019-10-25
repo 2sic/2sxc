@@ -10,6 +10,7 @@ namespace ToSic.SexyContent.Interfaces
         /// <summary>
         /// Deprecated - avoid using. Use Edit.Toolbar(object...) instead
         /// </summary>
+        [Obsolete]
         HtmlString Toolbar { get; }
 
         int EntityId { get; }

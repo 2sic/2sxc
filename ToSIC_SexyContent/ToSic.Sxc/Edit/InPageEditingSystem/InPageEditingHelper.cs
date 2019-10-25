@@ -8,11 +8,11 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.PublicApi;
 using ToSic.SexyContent;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Interfaces;
 using Feats = ToSic.Eav.Configuration.Features;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
-    [PublicApi]
     public class InPageEditingHelper : HasLog, IInPageEditingSystem
     {
         private readonly string _jsonTemplate =

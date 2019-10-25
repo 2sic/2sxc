@@ -4,7 +4,7 @@ using ToSic.Eav.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using App = ToSic.SexyContent.App;

@@ -17,9 +17,8 @@ namespace ToSic.SexyContent
     {
 
         public IEntity Entity { get; }
-        /// <summary>
-        /// Deprecated - avoid using. Use Edit.Toolbar(object...) instead
-        /// </summary>
+        /// <inheritdoc />
+        [Obsolete]
         public HtmlString Toolbar {
             get
             {

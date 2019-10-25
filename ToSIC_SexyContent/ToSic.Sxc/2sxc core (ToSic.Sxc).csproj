@@ -85,7 +85,7 @@
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\ClientContextInfo\Ui.cs" />
-    <Compile Include="Edit\InPageEditingSystem\IInPageEditingSystem.cs" />
+    <Compile Include="Interfaces\IInPageEditingSystem.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
@@ -97,6 +97,7 @@
     <Compile Include="Html\Build.cs" />
     <Compile Include="Interfaces\IEnvironmentInfo.cs" />
     <Compile Include="Interfaces\IEnvironmentInstaller.cs" />
+    <Compile Include="Interfaces\Old_ILinkHelper.cs" />
     <Compile Include="Interfaces\IRenderingHelpers.cs" />
     <Compile Include="Interfaces\IClientDependencyManager.cs" />
     <Compile Include="Interfaces\IApp.cs" />

@@ -11,7 +11,7 @@ using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Code;

@@ -5,6 +5,7 @@ using System.Web;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.ContentBlocks.Renderers
 {
