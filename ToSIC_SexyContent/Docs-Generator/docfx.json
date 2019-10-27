@@ -4,10 +4,10 @@
       "src": [
         {
           "files": [
-            "**.csproj",
-            "/projects/eav-server/**.csproj"
+            "2sxc-dnn742/Website/DesktopModules/**.csproj",
+            "eav-server/**.csproj"
           ],
-          "cwd": "..",
+          "cwd": "c:/projects/",
           "exclude": [
             "**/obj/**",
             "**/bin/**",

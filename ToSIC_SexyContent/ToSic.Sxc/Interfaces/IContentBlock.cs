@@ -7,7 +7,7 @@ using App = ToSic.SexyContent.App;
 
 namespace ToSic.Sxc.Interfaces
 {
-    internal interface IContentBlock: IAppIdentity
+    internal interface IContentBlock: IZoneIdentity
     {
         bool ShowTemplateChooser { get; }
 
@@ -22,6 +22,7 @@ namespace ToSic.Sxc.Interfaces
         int ParentFieldSortOrder { get; }
 
         #region Values related to the current unit of content / the view
+        int AppId { get; }
 
         ITenant Tenant { get; }
 
