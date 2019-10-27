@@ -1,0 +1,392 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/Projects/2sxc-dnn742/Website/DesktopModules/ToSIC_SexyContent/Docs-Generator",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "/8/JzctaxYWhND8jIDI+dw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html",
+          "hash": "tJMaTPdJqBrCzjOciXLL9A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "t7iiFrmuYmrKWisdq+lN6Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "0MPYgMpevcVknRx7frFXhQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Apps.Interfaces.IApp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Apps.Interfaces.IApp.html",
+          "hash": "ywukRsLjDTg9XjlYsst0JQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Apps.Interfaces.IAppIdentity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Apps.Interfaces.IAppIdentity.html",
+          "hash": "mDMQQfJEfZ0NwmW0Au2qdA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Apps.Interfaces.ITenant.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Apps.Interfaces.ITenant.html",
+          "hash": "qIGR3XrxCRh+N+V+95xXsw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Apps.Interfaces.IZoneIdentity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Apps.Interfaces.IZoneIdentity.html",
+          "hash": "Sx3l31vLAoZLmLQIqRE/jQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Apps.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Apps.Interfaces.html",
+          "hash": "+dZ9xa4juDbEAF2qXGxF2A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Interfaces.IChildEntities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Interfaces.IChildEntities.html",
+          "hash": "VrizF4dxGHvR+Ye0GjE1LA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Interfaces.IEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Interfaces.IEntity.html",
+          "hash": "+sD/hOAgNQDIaaF+P5hWmQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Interfaces.IEntityLight.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Interfaces.IEntityLight.html",
+          "hash": "vGG4JFBmxw23ROLTBEdz0w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Interfaces.IMetadataFor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Interfaces.IMetadataFor.html",
+          "hash": "mZv773IgXcLU1REbBFwhiA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Interfaces.IMetadataOfItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Interfaces.IMetadataOfItem.html",
+          "hash": "+lDHkqgable/EhngKPg1XQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Interfaces.IRelationshipManager.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Interfaces.IRelationshipManager.html",
+          "hash": "OJ3Pmx44l+u6hjm2ndHXHw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Interfaces.html",
+          "hash": "Fs4zBaou6cRJVKAm52CD+g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Security.Permissions.IHasPermissions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Security.Permissions.IHasPermissions.html",
+          "hash": "Vj7EvwIwISke4mBDH5/N8Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Security.Permissions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Security.Permissions.html",
+          "hash": "8o/w2exfVmqYjUzFU+u03g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Sxc.Dnn.Interfaces.IDnnContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Sxc.Dnn.Interfaces.IDnnContext.html",
+          "hash": "R3Qg9K/mWjl3CbR5lCycGw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Sxc.Dnn.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Sxc.Dnn.Interfaces.html",
+          "hash": "q2Fkr1YdDOX8xXIV3SfQrg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Sxc.Interfaces.IApp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Sxc.Interfaces.IApp.html",
+          "hash": "fL4ew0f+NIBSgDrZnCj+NQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Sxc.Interfaces.IAppAndDataHelpers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Sxc.Interfaces.IAppAndDataHelpers.html",
+          "hash": "wa+prX5AlW++HSQnJqYZcw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Sxc.Interfaces.IDynamicEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Sxc.Interfaces.IDynamicEntity.html",
+          "hash": "DLOA8OeenOvqjdPZDb5zVg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Sxc.Interfaces.IInPageEditingSystem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Sxc.Interfaces.IInPageEditingSystem.html",
+          "hash": "I1x7m0v321WPztCeI0teHQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Sxc.Interfaces.ILinkHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Sxc.Interfaces.ILinkHelper.html",
+          "hash": "TMOGtM/zfjKo/2z7h2i4xw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Sxc.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Sxc.Interfaces.html",
+          "hash": "4My+MayNZ4owU/8NIBehww=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "obj/api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "CfAJcDIi8ILl5x1WRvnL6g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "Sg+nKmnHP++YKMT39ruhpw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Disable incremental build by force rebuild option.",
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0,
+        "full_build_reason_code": "ForceRebuild"
+      },
+      "processors": {
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 3,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 22,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: it's disabled.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
