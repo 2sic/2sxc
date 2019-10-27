@@ -5,6 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.SexyContent;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Adam
 {
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.Adam
         /// <param name="id">the id of the file/folder</param>
         /// <param name="isFolder">if it's a file or a folder</param>
         /// <returns></returns>
-        internal static Eav.Interfaces.IEntity GetFirstMetadata(/*App*/AppRuntime app, int id, bool isFolder)
+        internal static Eav.Interfaces.IEntity GetFirstMetadata(AppRuntime app, int id, bool isFolder)
             => app/*.Data*/.Metadata
                 .Get/*Metadata*/(Eav.Constants.MetadataForCmsObject,
                     (isFolder ? "folder:" : "file:") + id)
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Get the first metadata entity of an item - or return a fake one instead
         /// </summary>
-        internal static DynamicEntity GetFirstOrFake(AdamAppContext appContext, int id, bool isFolder)
+        internal static IDynamicEntity GetFirstOrFake(AdamAppContext appContext, int id, bool isFolder)
         {
             var meta = GetFirstMetadata(appContext.AppRuntime, id, isFolder) ?? CreateFakeMetadata();
             return new DynamicEntity(meta, new[] { Thread.CurrentThread.CurrentCulture.Name }, appContext.SxcInstance);

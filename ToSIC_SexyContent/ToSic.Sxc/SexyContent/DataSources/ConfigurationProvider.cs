@@ -7,7 +7,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Engines.TokenEngine;
-using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.DataSources
 {

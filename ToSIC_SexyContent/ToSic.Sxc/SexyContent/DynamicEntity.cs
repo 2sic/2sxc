@@ -6,20 +6,21 @@ using System.Web;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.PublicApi;
 using ToSic.SexyContent.EAVExtensions;
-using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
 {
-    public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<DynamicEntity>
+    [PrivateApi]
+    public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>
     {
 
         public IEntity Entity { get; }
-        /// <summary>
-        /// Deprecated - avoid using. Use Edit.Toolbar(object...) instead
-        /// </summary>
+        /// <inheritdoc />
+        [Obsolete]
         public HtmlString Toolbar {
             get
             {
@@ -105,9 +106,9 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public dynamic Get(string name) => GetEntityValue(name, out _);
 
-        private DynamicEntity _presentation;
+        private IDynamicEntity _presentation;
 
-        private DynamicEntity Presentation
+        private IDynamicEntity Presentation
             => _presentation ?? (_presentation = Entity is EntityInContentGroup
                    ? new DynamicEntity(((EntityInContentGroup) Entity).Presentation, _dimensions, SxcInstance)
                    : null);
@@ -151,8 +152,8 @@ namespace ToSic.SexyContent
 
         #region Changing comparison operation to internally compare the entities, not this wrapper
 
-        public static bool operator ==(DynamicEntity d1, DynamicEntity d2) => OverrideIsEqual(d1, d2);
-        public static bool operator !=(DynamicEntity d1, DynamicEntity d2) => !OverrideIsEqual(d1, d2);
+        public static bool operator ==(DynamicEntity d1, IDynamicEntity d2) => OverrideIsEqual(d1, d2);
+        public static bool operator !=(DynamicEntity d1, IDynamicEntity d2) => !OverrideIsEqual(d1, d2);
 
         /// <summary>
         /// Check if they are equal, based on the underlying entity. 
@@ -164,7 +165,7 @@ namespace ToSic.SexyContent
         /// But we can't use != null, because that would call the != operator and be recursive.
         /// </remarks>
         /// <returns></returns>
-        private static bool OverrideIsEqual(DynamicEntity d1, DynamicEntity d2)
+        private static bool OverrideIsEqual(DynamicEntity d1, IDynamicEntity d2)
         {
             // check most basic case - they are really the same object or both null
             if (ReferenceEquals(d1, d2))
@@ -177,7 +178,7 @@ namespace ToSic.SexyContent
         {
             if (ReferenceEquals(this, obj))
                 return true;
-            if (obj is DynamicEntity deobj)
+            if (obj is IDynamicEntity deobj)
                 return Entity == deobj.Entity;
             if (obj is IEntity entobj)
                 return Entity == entobj;
@@ -192,7 +193,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public override int GetHashCode() => Entity != null ? Entity.GetHashCode() : 0;
 
-        public bool Equals(DynamicEntity dynObj) => Entity == dynObj?.Entity;
+        public bool Equals(IDynamicEntity dynObj) => Entity == dynObj?.Entity;
 
         #endregion
 

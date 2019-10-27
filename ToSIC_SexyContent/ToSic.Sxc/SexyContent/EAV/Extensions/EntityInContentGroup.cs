@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.EAVExtensions
 {

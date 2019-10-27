@@ -10,6 +10,7 @@ using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 using Exception = System.Exception;
 
 namespace ToSic.SexyContent.Environment.Dnn7.Installation

@@ -5,6 +5,8 @@ using System.Web;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Interfaces;
+using IDynamicEntity = ToSic.Sxc.Interfaces.IDynamicEntity;
 
 namespace ToSic.SexyContent.ContentBlocks.Renderers
 {
@@ -34,7 +36,7 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
         private const string WrapperSingleItem = WrapperMultiItems + " show-placeholder single-item"; // enables a placeholder when empty, and limits one entry
 
 
-        internal static string RenderWithEditContext(DynamicEntity parent, DynamicEntity subItem, string cbFieldName,  Guid? newGuid = null, IInPageEditingSystem edit = null)
+        internal static string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid = null, IInPageEditingSystem edit = null)
         {
             if (edit == null)
                 edit = new InPageEditingHelper(parent.SxcInstance, parent.SxcInstance.Log);

@@ -101,5 +101,7 @@ Resources.zip.manifest
 !razorblade-old/bin/
 
 # Test data
-.data-custom/configurations/features.json
+\.data-custom/configurations/features.json
 .data-custom/contenttypes 2/
+\.data-custom/configurations/**
+.data-custom/configurations/**

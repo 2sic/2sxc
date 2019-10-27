@@ -1,12 +1,13 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
-using ToSic.Eav.ValueProvider;
+using ToSic.SexyContent;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
+using App = ToSic.SexyContent.App;
 
-namespace ToSic.SexyContent.Interfaces
+namespace ToSic.Sxc.Interfaces
 {
-    internal interface IContentBlock
+    internal interface IContentBlock: IZoneIdentity
     {
         bool ShowTemplateChooser { get; }
 
@@ -22,7 +23,6 @@ namespace ToSic.SexyContent.Interfaces
 
         #region Values related to the current unit of content / the view
         int AppId { get; }
-        int ZoneId { get; }
 
         ITenant Tenant { get; }
 
@@ -31,8 +31,6 @@ namespace ToSic.SexyContent.Interfaces
         ContentGroup ContentGroup { get; }
 
         App App { get; }
-
-        //ValueCollectionProvider Configuration { get; }
 
         ViewDataSource Data { get; }
 

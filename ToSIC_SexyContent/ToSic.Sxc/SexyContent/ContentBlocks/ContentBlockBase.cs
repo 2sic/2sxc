@@ -2,9 +2,8 @@
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
@@ -61,17 +60,12 @@ namespace ToSic.SexyContent.ContentBlocks
 
         public ITenant Tenant { get; protected set; }
 
-        //public ValueCollectionProvider Configuration { get; protected set; }
-
         // ReSharper disable once InconsistentNaming
         protected ViewDataSource _dataSource;
         public virtual ViewDataSource Data => null;
 
         public ContentGroup ContentGroup { get; protected set; }
 
-
-        // ReSharper disable once InconsistentNaming
-        //protected SxcInstance _sxcInstance;
 
         public SxcInstance SxcInstance { get; protected set; }
 

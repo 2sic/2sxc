@@ -17,6 +17,7 @@ using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Sxc.Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7.Search

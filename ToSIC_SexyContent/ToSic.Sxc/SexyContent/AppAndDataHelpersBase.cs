@@ -12,9 +12,9 @@ using ToSic.Eav.ValueProvider;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
-using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Interfaces;
 
 // ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
 namespace ToSic.SexyContent
@@ -98,7 +98,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
-        public Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity) => ((DynamicEntity) dynamicEntity).Entity;
+        public Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity) => ((IDynamicEntity) dynamicEntity).Entity;
 
         /// <inheritdoc />
         /// <summary>
@@ -279,7 +279,7 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(DynamicEntity entity, string fieldName)
+        public FolderOfField AsAdam(IDynamicEntity entity, string fieldName)
             => AsAdam(AsEntity(entity), fieldName);
 
 

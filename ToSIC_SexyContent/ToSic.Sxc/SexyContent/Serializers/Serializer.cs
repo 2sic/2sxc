@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.Serializers
 {
@@ -46,7 +45,7 @@ namespace ToSic.SexyContent.Serializers
 	    /// <summary>
 	    /// Return an object that represents an IDataStream, but is serializable
 	    /// </summary>
-	    public Dictionary<string, object> Prepare(DynamicEntity dynamicEntity)
+	    public Dictionary<string, object> Prepare(Sxc.Interfaces.IDynamicEntity dynamicEntity)
 	        => GetDictionaryFromEntity(dynamicEntity.Entity);
         
         #endregion

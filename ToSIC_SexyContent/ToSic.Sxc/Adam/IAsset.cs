@@ -1,7 +1,12 @@
-﻿using ToSic.SexyContent;
+﻿using ToSic.Eav.PublicApi;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Adam
 {
+    /// <summary>
+    /// Describes an ADAM asset.
+    /// </summary>
+    [PublicApi]
     internal interface IAsset
     {
         #region Metadata
@@ -15,7 +20,7 @@ namespace ToSic.Sxc.Adam
         /// will automatically contain a fake item, even if no metadata exits
         /// to help in razor template etc.
         /// </summary>
-        DynamicEntity Metadata { get; }
+        IDynamicEntity Metadata { get; }
         #endregion
 
 

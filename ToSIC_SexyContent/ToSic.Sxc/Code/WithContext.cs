@@ -4,9 +4,8 @@ using ToSic.Eav.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Edit.InPageEditingSystem;
 using App = ToSic.SexyContent.App;
 using Constants = ToSic.Eav.Constants;
 
@@ -53,7 +52,7 @@ namespace ToSic.Sxc.Code
         public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
             => Parent.CreateSource<T>(inSource, configurationProvider);
 
-        public FolderOfField AsAdam(DynamicEntity entity, string fieldName)
+        public FolderOfField AsAdam(IDynamicEntity entity, string fieldName)
             => Parent?.AsAdam(entity, fieldName);
 
         public FolderOfField AsAdam(IEntity entity, string fieldName)

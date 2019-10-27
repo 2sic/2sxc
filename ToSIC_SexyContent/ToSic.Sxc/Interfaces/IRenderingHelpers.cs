@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent;
+using Constants = ToSic.Eav.Constants;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Interfaces
@@ -14,8 +15,6 @@ namespace ToSic.Sxc.Interfaces
             int instanceId = 0, 
             int contentBlockId = 0, 
             bool editContext = false, 
-            //string moreClasses = null, 
-            //string moreAttribs = null,
             string tag = "div",
             bool autoToolbar = false,
             bool addLineBreaks = true);

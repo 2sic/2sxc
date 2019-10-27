@@ -6,18 +6,18 @@ using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.PublicApi;
 using ToSic.Eav.ValueProvider;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Interfaces;
-using ToSic.SexyContent.Razor.Helpers;
+using ToSic.Sxc.Interfaces;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Interfaces;
-using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Razor;
+using ToSic.Sxc.Razor.Interfaces;
 using File = System.IO.File;
 
 namespace ToSic.SexyContent.Razor
@@ -30,16 +30,14 @@ namespace ToSic.SexyContent.Razor
     {
         #region Helpers
 
-        protected internal HtmlHelper Html { get; internal set; }
-
-        // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
-        // reactivate if it turns out to be used, otherwise delete ca. EOY 2019
-        //protected internal UrlHelper Url { get; internal set; }
+        protected internal IHtmlHelper Html { get; internal set; }
 
         public ILinkHelper Link => DnnAppAndDataHelpers.Link;
 
         // <2sic>
+        [PrivateApi]
         protected internal SxcInstance Sexy { get; set; }
+        [PrivateApi]
         protected internal DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
         // </2sic>
 
@@ -77,7 +75,7 @@ namespace ToSic.SexyContent.Razor
         /// </summary>
         public IInPageEditingSystem Edit => DnnAppAndDataHelpers.Edit;
 
-        public DnnHelper Dnn => DnnAppAndDataHelpers.Dnn;
+        public IDnnContext Dnn => DnnAppAndDataHelpers.Dnn;
 
         /// <inheritdoc />
         public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
@@ -189,7 +187,7 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(DynamicEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public FolderOfField AsAdam(IDynamicEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
 
         /// <summary>

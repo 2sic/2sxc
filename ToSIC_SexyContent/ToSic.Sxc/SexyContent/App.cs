@@ -10,7 +10,7 @@ namespace ToSic.SexyContent
     /// <summary>
     /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
     /// </summary>
-    public class App : Eav.Apps.App, Interfaces.IApp
+    public class App : Eav.Apps.App, Sxc.Interfaces.IApp
     {
         #region Dynamic Properties: Configuration, Settings, Resources
         public dynamic Configuration

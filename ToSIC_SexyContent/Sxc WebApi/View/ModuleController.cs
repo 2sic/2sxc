@@ -21,8 +21,8 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.WebApi.Permissions;
+using ToSic.Sxc.Interfaces;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi.View

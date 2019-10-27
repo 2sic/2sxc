@@ -2,6 +2,7 @@
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7.ValueProviders
 {

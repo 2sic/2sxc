@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using ToSic.SexyContent.ContentBlocks.Renderers;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
@@ -18,12 +19,12 @@ namespace ToSic.SexyContent.ContentBlocks
         /// <param name="newGuid"></param>
         /// <returns></returns>
         public static IHtmlString One(DynamicEntity context,
-            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
-            DynamicEntity item = null, 
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            IDynamicEntity item = null, 
             string field = null,
             Guid? newGuid = null)
         {
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "One", $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "One", $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
             if (item == null)
                 item = context;
             
@@ -41,11 +42,11 @@ namespace ToSic.SexyContent.ContentBlocks
         /// <param name="merge">Optional: html-text containing special placeholders</param>
         /// <returns></returns>
         public static IHtmlString All(DynamicEntity context,
-            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string field = null, 
             string merge = null)
         {
-            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "All", $"{nameof(field)},{nameof(merge)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "All", $"{nameof(field)},{nameof(merge)}");
             if (field == null)
                 throw new ArgumentNullException(nameof(field));
 

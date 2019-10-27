@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Assets;
-using ToSic.SexyContent;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Adam
 {
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Adam
         }
 
         /// <inheritdoc />
-        public DynamicEntity Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true);
+        public IDynamicEntity Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true);
 
         /// <inheritdoc />
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;

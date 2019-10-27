@@ -6,6 +6,7 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.DnnWebForms.Helpers;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.ContentBlocks
 {

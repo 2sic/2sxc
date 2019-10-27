@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps.Assets;
-using ToSic.SexyContent;
 using ToSic.SexyContent.Adam;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Adam
 {
@@ -14,19 +14,19 @@ namespace ToSic.Sxc.Adam
             AppContext = appContext;
         }
 
-        /// <inheritdoc />
-        public DynamicEntity Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, false);
+        /// <inheritdoc cref="IDynamicEntity" />
+        public IDynamicEntity Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, false);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicEntity" />
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
 
-        /// <inheritdoc />
-        public  string Url => AppContext.Tenant.ContentPath + Folder + FullName;
+        /// <inheritdoc cref="IDynamicEntity" />
+        public string Url => AppContext.Tenant.ContentPath + Folder + FullName;
 
-         /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicEntity" />
        public string Type => Classification.TypeName(Extension);
 
-         /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicEntity" />
        public string Name { get; internal set; }
 
 
