@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Web;
+using ToSic.Sxc.Razor.Interfaces;
 
 namespace ToSic.SexyContent.Razor.Helpers
 {
     /// <summary>
     /// helper to quickly "raw" some html
     /// </summary>
-    public class HtmlHelper
+    public class HtmlHelper: IHtmlHelper
     {
-        /// <summary>
-        /// Returns a HtmlString which Razor will output as Raw Html.
-        /// </summary>
+        /// <inheritdoc/>
         public HtmlString Raw(object stringHtml)
         {
             if(stringHtml is string s)

@@ -1,7 +1,12 @@
-﻿using ToSic.Sxc.Interfaces;
+﻿using ToSic.Eav.PublicApi;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Adam
 {
+    /// <summary>
+    /// Describes an ADAM asset.
+    /// </summary>
+    [PublicApi]
     internal interface IAsset
     {
         #region Metadata

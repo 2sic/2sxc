@@ -6,7 +6,10 @@ namespace ToSic.Sxc.Interfaces
     /// Compiler helpers to ensure that razor views and WebApis can access other code files
     /// in folders nearby. 
     /// </summary>
-    [PublicApi]
+    /// <remarks>
+    /// Set as private API, because I don't think that others should work with this.
+    /// </remarks>
+    [PrivateApi]
     public interface ISharedCodeBuilder
     {
         /// <summary>
