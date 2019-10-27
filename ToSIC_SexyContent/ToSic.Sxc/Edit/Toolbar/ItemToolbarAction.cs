@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {

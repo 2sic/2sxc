@@ -4,6 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.Serializers
 {

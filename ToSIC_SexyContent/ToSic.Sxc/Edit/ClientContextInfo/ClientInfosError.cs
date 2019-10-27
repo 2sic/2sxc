@@ -1,8 +1,8 @@
-﻿using ToSic.SexyContent.Interfaces;
+﻿using ToSic.Sxc.Interfaces;
 
 // ReSharper disable InconsistentNaming
 
-namespace ToSic.SexyContent.Edit.ClientContextInfo
+namespace ToSic.Sxc.Edit.ClientContextInfo
 {
     public class ClientInfosError
     {

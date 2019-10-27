@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ToSic.SexyContent.Interfaces
+namespace ToSic.Sxc.Interfaces
 {
     /// <summary>
     /// Basic interface which tells the system that this item has editing-information attached

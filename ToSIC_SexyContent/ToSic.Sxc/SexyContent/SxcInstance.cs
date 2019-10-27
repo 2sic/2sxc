@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent

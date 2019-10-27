@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.ValueProvider;
 
-namespace ToSic.SexyContent.Interfaces
+namespace ToSic.Sxc.Interfaces
 {
     internal interface IEnvironmentValueProviders
     {

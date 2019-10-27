@@ -1,10 +1,11 @@
 ﻿using System;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging.Simple;
+using ToSic.SexyContent;
 
-namespace ToSic.SexyContent.Interfaces
+namespace ToSic.Sxc.Interfaces
 {
-    public interface IMapAppToInstance
+    internal interface IMapAppToInstance
     {
         int? GetAppIdFromInstance(IInstanceInfo instance, int zoneId);
         void SetAppIdForInstance(IInstanceInfo instance, IAppEnvironment env, int? appId, Log parentLog);

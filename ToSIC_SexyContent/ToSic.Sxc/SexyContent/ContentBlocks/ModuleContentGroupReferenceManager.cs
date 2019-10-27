@@ -1,6 +1,6 @@
 ﻿using System;
 using ToSic.Eav;
-using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
