@@ -8,7 +8,7 @@ using DotNetNuke.Web.Client.Providers;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class ClientDependencyManager: Base.ClientDepedencyManager
+    public class ClientDependencyManager: Base.ClientDependencyManager
     {
 
         public override string Process(string renderedTemplate)

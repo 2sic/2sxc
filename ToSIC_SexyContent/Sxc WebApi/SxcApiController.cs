@@ -18,7 +18,6 @@ using ToSic.Sxc.Interfaces;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Interfaces;
-using ToSic.Sxc.Edit.InPageEditingSystem;
 using File = ToSic.Sxc.Adam.File;
 
 namespace ToSic.SexyContent.WebApi
@@ -153,7 +152,7 @@ namespace ToSic.SexyContent.WebApi
 	    /// <param name="entity">The entity, often Content or similar</param>
 	    /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
 	    /// <returns>An Adam object for navigating the assets</returns>
-	    public FolderOfField AsAdam(DynamicEntity entity, string fieldName)
+	    public FolderOfField AsAdam(IDynamicEntity entity, string fieldName)
 	        => DnnAppAndDataHelpers.AsAdam(AsEntity(entity), fieldName);
 
         /// <summary>

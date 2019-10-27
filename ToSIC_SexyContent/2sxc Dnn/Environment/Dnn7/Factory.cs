@@ -5,7 +5,7 @@ using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
-using IApp = ToSic.SexyContent.Interfaces.IApp;
+using IApp = ToSic.Sxc.Interfaces.IApp;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {

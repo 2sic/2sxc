@@ -1,10 +1,13 @@
-﻿using ToSic.SexyContent;
-using ToSic.SexyContent.Interfaces;
+﻿using ToSic.Eav.PublicApi;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Edit.InPageEditingSystem;
 
 namespace ToSic.Sxc.Interfaces
 {
+    /// <summary>
+    /// This is for razor-templates and Sxc WebAPIs - so that they have a consistent
+    /// API like AsAdam(...) or Link, Edit etc. 
+    /// </summary>
+    [PublicApi]
 #pragma warning disable 618
     public interface IAppAndDataHelpers: SexyContent.IAppAndDataHelpers, ISharedCodeBuilder
 #pragma warning restore 618
@@ -18,7 +21,7 @@ namespace ToSic.Sxc.Interfaces
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        FolderOfField AsAdam(DynamicEntity entity, string fieldName);
+        FolderOfField AsAdam(IDynamicEntity entity, string fieldName);
 
         /// <summary>
         /// Provides an Adam instance for this item and field
@@ -35,6 +38,9 @@ namespace ToSic.Sxc.Interfaces
         /// <summary>
         /// Link helper object to create the correct links
         /// </summary>
+        /// <returns>
+        /// A LinkHelper object.
+        /// </returns>
         ILinkHelper Link { get; }
 
         #endregion
@@ -45,6 +51,9 @@ namespace ToSic.Sxc.Interfaces
         /// Helper commands to enable in-page editing functionality
         /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
         /// </summary>
+        /// <returns>
+        /// An InPageEditingSystem object.
+        /// </returns>
         IInPageEditingSystem Edit { get; }
         #endregion
     }

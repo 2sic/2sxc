@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar", $"{nameof(actions)},{nameof(contentType)},{nameof(prefill)},{nameof(toolbar)},{nameof(settings)}");
 
             // ensure that internally we always process it as an entity
-            var eTarget = target as IEntity ?? (target as DynamicEntity)?.Entity;
+            var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;
             if (target != null && eTarget == null)
                 Log.Warn("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
             var itmToolbar = new ItemToolbar(eTarget, actions, contentType, prefill, toolbar, settings);
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         #region Context Attributes
 
         /// <inheritdoc/>
-        public HtmlString ContextAttributes(DynamicEntity target,
+        public HtmlString ContextAttributes(IDynamicEntity target,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
             string field = null,
             string contentType = null, 

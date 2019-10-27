@@ -1,4 +1,4 @@
-﻿using ToSic.SexyContent;
+﻿using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Adam
 {
@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Adam
         /// will automatically contain a fake item, even if no metadata exits
         /// to help in razor template etc.
         /// </summary>
-        DynamicEntity Metadata { get; }
+        IDynamicEntity Metadata { get; }
         #endregion
 
 

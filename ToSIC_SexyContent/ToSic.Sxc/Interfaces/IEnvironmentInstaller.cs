@@ -1,6 +1,6 @@
-﻿namespace ToSic.SexyContent.Interfaces
+﻿namespace ToSic.Sxc.Interfaces
 {
-    public interface IEnvironmentInstaller
+    internal interface IEnvironmentInstaller
     {
         string UpgradeMessages();
 

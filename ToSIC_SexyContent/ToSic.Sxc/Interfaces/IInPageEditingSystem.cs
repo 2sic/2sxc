@@ -5,12 +5,16 @@ using ToSic.SexyContent;
 
 namespace ToSic.Sxc.Interfaces
 {
+    /// <summary>
+    /// Contains status and commands to configure the in-page editing system. 
+    /// </summary>
     [PublicApi]
     public interface IInPageEditingSystem
     {
         /// <summary>
         /// If editing is enabled or not
         /// </summary>
+        /// <returns>True if enabled, false if not.</returns>
         bool Enabled { get; }
 
         /// <summary>
@@ -63,7 +67,7 @@ namespace ToSic.Sxc.Interfaces
         /// <param name="newGuid">the guid of a new item - use null for auto-generate</param>
         /// <returns></returns>
 
-        HtmlString ContextAttributes(DynamicEntity target, 
+        HtmlString ContextAttributes(IDynamicEntity target, 
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
             string field = null, 
             string contentType = null,
@@ -112,12 +116,18 @@ namespace ToSic.Sxc.Interfaces
         /// Generate an HTML attribute by converting the value to JSON 
         /// - but only in edit mode
         /// </summary>
+        /// <param name="name">the attribute name, used for ...=</param>
+        /// <param name="value">the attribute value, used for ="..."</param>
+        /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
         HtmlString Attribute(string name, string value);
 
         /// <summary>
         /// Generate an HTML attribute by converting the value to JSON 
         /// - but only in edit mode
         /// </summary>
+        /// <param name="name">the attribute name, used for ...=</param>
+        /// <param name="value">the attribute value, used for ="..."</param>
+        /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
         HtmlString Attribute(string name, object value);
     }
 }

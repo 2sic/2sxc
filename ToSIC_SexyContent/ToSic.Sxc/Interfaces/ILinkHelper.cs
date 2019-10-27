@@ -2,6 +2,9 @@
 
 namespace ToSic.Sxc.Interfaces
 {
+    /// <summary>
+    /// Helpers to create links with parameters or base-tag links (important for SPAs)
+    /// </summary>
     [PublicApi]
     public interface ILinkHelper: SexyContent.Interfaces.ILinkHelper
     {

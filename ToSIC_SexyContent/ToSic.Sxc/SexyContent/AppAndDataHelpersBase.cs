@@ -98,7 +98,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
-        public Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity) => ((DynamicEntity) dynamicEntity).Entity;
+        public Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity) => ((IDynamicEntity) dynamicEntity).Entity;
 
         /// <inheritdoc />
         /// <summary>
@@ -279,7 +279,7 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(DynamicEntity entity, string fieldName)
+        public FolderOfField AsAdam(IDynamicEntity entity, string fieldName)
             => AsAdam(AsEntity(entity), fieldName);
 
 
