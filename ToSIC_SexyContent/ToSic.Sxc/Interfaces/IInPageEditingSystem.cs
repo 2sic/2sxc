@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Web;
-using ToSic.Eav.PublicApi;
+using ToSic.Eav.Documentation;
 using ToSic.SexyContent;
+// ReSharper disable UnusedMember.Global
 
 namespace ToSic.Sxc.Interfaces
 {

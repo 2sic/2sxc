@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.PublicApi;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Adam

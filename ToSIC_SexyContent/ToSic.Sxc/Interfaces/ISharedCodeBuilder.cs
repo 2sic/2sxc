@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.PublicApi;
+﻿using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Interfaces
 {

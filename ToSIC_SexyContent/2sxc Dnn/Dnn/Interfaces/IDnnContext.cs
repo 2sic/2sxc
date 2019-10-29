@@ -2,13 +2,14 @@
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
-using ToSic.Eav.PublicApi;
+using ToSic.Eav.Documentation;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Dnn.Interfaces
 {
     /// <summary>
     /// Provides information about the current context within DNN.
+    /// This only applies to 2sxc running inside DNN, not inside another platform. 
     /// </summary>
     [PublicApi]
     public interface IDnnContext

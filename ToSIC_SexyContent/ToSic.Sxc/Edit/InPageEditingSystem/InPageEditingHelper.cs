@@ -2,10 +2,10 @@
 using System.Web;
 using Newtonsoft.Json;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.PublicApi;
 using ToSic.SexyContent;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Interfaces;

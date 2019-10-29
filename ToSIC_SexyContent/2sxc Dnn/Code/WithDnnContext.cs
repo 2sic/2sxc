@@ -1,5 +1,4 @@
-﻿using ToSic.SexyContent.Razor.Helpers;
-using ToSic.Sxc.Dnn.Interfaces;
+﻿using ToSic.Sxc.Dnn.Interfaces;
 using ToSic.Sxc.Interfaces;
 
 // ReSharper disable once CheckNamespace

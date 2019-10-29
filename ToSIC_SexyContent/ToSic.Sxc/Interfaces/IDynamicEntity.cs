@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.PublicApi;
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Interfaces
