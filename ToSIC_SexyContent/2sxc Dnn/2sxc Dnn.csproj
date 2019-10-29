@@ -7,7 +7,7 @@
     <ProjectGuid>{A94DE6D7-D1E6-4BE2-B5B5-DC4A6A61CD80}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ToSic.SexyContent</RootNamespace>
+    <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc.Dnn</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -86,12 +86,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\WithDnnContext.cs" />
+    <Compile Include="Code\AppDataDnnHelpers.cs" />
     <Compile Include="Dnn920\SharpZipLibRedirect.cs" />
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
     <Compile Include="DnnHelper.cs" />
-    <Compile Include="Dnn\Interfaces\IHasDnnContext.cs" />
+    <Compile Include="Dnn\Interfaces\IDynamicCode.cs" />
     <Compile Include="Dnn\SecurityHelpers.cs" />
     <Compile Include="Environment\Dnn7\DnnAppAndDataHelpers.cs" />
     <Compile Include="Environment\Dnn7\ClientDependencyManager.cs" />

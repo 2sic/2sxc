@@ -80,9 +80,11 @@
       <h4><a class="xref" href="ToSic.Sxc.Interfaces.IApp.html">IApp</a></h4>
       <section><p>An app-object as is available in a razor template or WebApi</p>
 </section>
-      <h4><a class="xref" href="ToSic.Sxc.Interfaces.IAppAndDataHelpers.html">IAppAndDataHelpers</a></h4>
-      <section><p>This is for razor-templates and Sxc WebAPIs - so that they have a consistent
-API like AsAdam(...) or Link, Edit etc. </p>
+      <h4><a class="xref" href="ToSic.Sxc.Interfaces.IDynamicCode.html">IDynamicCode</a></h4>
+      <section><p>Dynamic code files like Razor or WebApis.
+Supports many properties like App, etc. to ensure that the dynamic code has everything you need. <br>
+Also provides many Conversions between <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> and <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a>.
+Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity &quot;just work&quot; even if you give them the original data. </p>
 </section>
       <h4><a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a></h4>
       <section><p>This is a wrapper for IEntity objects. It provides nicer access to underlying properties

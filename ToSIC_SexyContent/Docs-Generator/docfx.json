@@ -54,7 +54,8 @@
     "overwrite": [
       {
         "files": [
-          "apidoc/**.md"
+          "apidoc/**.md",
+          "namespaces/**.md"
         ],
         "exclude": [
           "obj/**",

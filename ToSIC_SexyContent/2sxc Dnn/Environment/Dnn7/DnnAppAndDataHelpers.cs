@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Razor.Helpers;
-using ToSic.Sxc.Dnn.Interfaces;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class DnnAppAndDataHelpers : AppAndDataHelpersBase, IHasDnnContext
+    public class DnnAppAndDataHelpers : AppAndDataHelpersBase, IDynamicCode
     {
         public DnnAppAndDataHelpers(SxcInstance sxcInstance, Log parentLog = null): base(sxcInstance, new DnnTenant(null), parentLog)
         {

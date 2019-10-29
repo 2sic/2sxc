@@ -1,6 +1,5 @@
 ﻿using System;
-using ToSic.SexyContent.Razor.Helpers;
-using ToSic.Sxc.Dnn.Interfaces;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7

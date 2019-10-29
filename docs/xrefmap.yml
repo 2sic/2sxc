@@ -651,82 +651,127 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Interfaces.IRelationshipManager.Children
   nameWithType: IRelationshipManager.Children
-- uid: ToSic.Eav.Security.Permissions
-  name: ToSic.Eav.Security.Permissions
-  href: api/ToSic.Eav.Security.Permissions.html
-  commentId: N:ToSic.Eav.Security.Permissions
-  fullName: ToSic.Eav.Security.Permissions
-  nameWithType: ToSic.Eav.Security.Permissions
-- uid: ToSic.Eav.Security.Permissions.IHasPermissions
-  name: IHasPermissions
-  href: api/ToSic.Eav.Security.Permissions.IHasPermissions.html
-  commentId: T:ToSic.Eav.Security.Permissions.IHasPermissions
-  fullName: ToSic.Eav.Security.Permissions.IHasPermissions
-  nameWithType: IHasPermissions
-- uid: ToSic.Sxc.Dnn.Interfaces
-  name: ToSic.Sxc.Dnn.Interfaces
-  href: api/ToSic.Sxc.Dnn.Interfaces.html
-  commentId: N:ToSic.Sxc.Dnn.Interfaces
-  fullName: ToSic.Sxc.Dnn.Interfaces
-  nameWithType: ToSic.Sxc.Dnn.Interfaces
-- uid: ToSic.Sxc.Dnn.Interfaces.IDnnContext
+- uid: ToSic.Sxc.Dnn
+  name: ToSic.Sxc.Dnn
+  href: api/ToSic.Sxc.Dnn.html
+  commentId: N:ToSic.Sxc.Dnn
+  fullName: ToSic.Sxc.Dnn
+  nameWithType: ToSic.Sxc.Dnn
+- uid: ToSic.Sxc.Dnn.IDnnContext
   name: IDnnContext
-  href: api/ToSic.Sxc.Dnn.Interfaces.IDnnContext.html
-  commentId: T:ToSic.Sxc.Dnn.Interfaces.IDnnContext
-  fullName: ToSic.Sxc.Dnn.Interfaces.IDnnContext
+  href: api/ToSic.Sxc.Dnn.IDnnContext.html
+  commentId: T:ToSic.Sxc.Dnn.IDnnContext
+  fullName: ToSic.Sxc.Dnn.IDnnContext
   nameWithType: IDnnContext
-- uid: ToSic.Sxc.Dnn.Interfaces.IDnnContext.Module
+- uid: ToSic.Sxc.Dnn.IDnnContext.Module
   name: Module
-  href: api/ToSic.Sxc.Dnn.Interfaces.IDnnContext.html#ToSic_Sxc_Dnn_Interfaces_IDnnContext_Module
-  commentId: P:ToSic.Sxc.Dnn.Interfaces.IDnnContext.Module
-  fullName: ToSic.Sxc.Dnn.Interfaces.IDnnContext.Module
+  href: api/ToSic.Sxc.Dnn.IDnnContext.html#ToSic_Sxc_Dnn_IDnnContext_Module
+  commentId: P:ToSic.Sxc.Dnn.IDnnContext.Module
+  fullName: ToSic.Sxc.Dnn.IDnnContext.Module
   nameWithType: IDnnContext.Module
-- uid: ToSic.Sxc.Dnn.Interfaces.IDnnContext.Module*
+- uid: ToSic.Sxc.Dnn.IDnnContext.Module*
   name: Module
-  href: api/ToSic.Sxc.Dnn.Interfaces.IDnnContext.html#ToSic_Sxc_Dnn_Interfaces_IDnnContext_Module_
-  commentId: Overload:ToSic.Sxc.Dnn.Interfaces.IDnnContext.Module
+  href: api/ToSic.Sxc.Dnn.IDnnContext.html#ToSic_Sxc_Dnn_IDnnContext_Module_
+  commentId: Overload:ToSic.Sxc.Dnn.IDnnContext.Module
   isSpec: "True"
-  fullName: ToSic.Sxc.Dnn.Interfaces.IDnnContext.Module
+  fullName: ToSic.Sxc.Dnn.IDnnContext.Module
   nameWithType: IDnnContext.Module
-- uid: ToSic.Sxc.Dnn.Interfaces.IDnnContext.Portal
+- uid: ToSic.Sxc.Dnn.IDnnContext.Portal
   name: Portal
-  href: api/ToSic.Sxc.Dnn.Interfaces.IDnnContext.html#ToSic_Sxc_Dnn_Interfaces_IDnnContext_Portal
-  commentId: P:ToSic.Sxc.Dnn.Interfaces.IDnnContext.Portal
-  fullName: ToSic.Sxc.Dnn.Interfaces.IDnnContext.Portal
+  href: api/ToSic.Sxc.Dnn.IDnnContext.html#ToSic_Sxc_Dnn_IDnnContext_Portal
+  commentId: P:ToSic.Sxc.Dnn.IDnnContext.Portal
+  fullName: ToSic.Sxc.Dnn.IDnnContext.Portal
   nameWithType: IDnnContext.Portal
-- uid: ToSic.Sxc.Dnn.Interfaces.IDnnContext.Portal*
+- uid: ToSic.Sxc.Dnn.IDnnContext.Portal*
   name: Portal
-  href: api/ToSic.Sxc.Dnn.Interfaces.IDnnContext.html#ToSic_Sxc_Dnn_Interfaces_IDnnContext_Portal_
-  commentId: Overload:ToSic.Sxc.Dnn.Interfaces.IDnnContext.Portal
+  href: api/ToSic.Sxc.Dnn.IDnnContext.html#ToSic_Sxc_Dnn_IDnnContext_Portal_
+  commentId: Overload:ToSic.Sxc.Dnn.IDnnContext.Portal
   isSpec: "True"
-  fullName: ToSic.Sxc.Dnn.Interfaces.IDnnContext.Portal
+  fullName: ToSic.Sxc.Dnn.IDnnContext.Portal
   nameWithType: IDnnContext.Portal
-- uid: ToSic.Sxc.Dnn.Interfaces.IDnnContext.Tab
+- uid: ToSic.Sxc.Dnn.IDnnContext.Tab
   name: Tab
-  href: api/ToSic.Sxc.Dnn.Interfaces.IDnnContext.html#ToSic_Sxc_Dnn_Interfaces_IDnnContext_Tab
-  commentId: P:ToSic.Sxc.Dnn.Interfaces.IDnnContext.Tab
-  fullName: ToSic.Sxc.Dnn.Interfaces.IDnnContext.Tab
+  href: api/ToSic.Sxc.Dnn.IDnnContext.html#ToSic_Sxc_Dnn_IDnnContext_Tab
+  commentId: P:ToSic.Sxc.Dnn.IDnnContext.Tab
+  fullName: ToSic.Sxc.Dnn.IDnnContext.Tab
   nameWithType: IDnnContext.Tab
-- uid: ToSic.Sxc.Dnn.Interfaces.IDnnContext.Tab*
+- uid: ToSic.Sxc.Dnn.IDnnContext.Tab*
   name: Tab
-  href: api/ToSic.Sxc.Dnn.Interfaces.IDnnContext.html#ToSic_Sxc_Dnn_Interfaces_IDnnContext_Tab_
-  commentId: Overload:ToSic.Sxc.Dnn.Interfaces.IDnnContext.Tab
+  href: api/ToSic.Sxc.Dnn.IDnnContext.html#ToSic_Sxc_Dnn_IDnnContext_Tab_
+  commentId: Overload:ToSic.Sxc.Dnn.IDnnContext.Tab
   isSpec: "True"
-  fullName: ToSic.Sxc.Dnn.Interfaces.IDnnContext.Tab
+  fullName: ToSic.Sxc.Dnn.IDnnContext.Tab
   nameWithType: IDnnContext.Tab
-- uid: ToSic.Sxc.Dnn.Interfaces.IDnnContext.User
+- uid: ToSic.Sxc.Dnn.IDnnContext.User
   name: User
-  href: api/ToSic.Sxc.Dnn.Interfaces.IDnnContext.html#ToSic_Sxc_Dnn_Interfaces_IDnnContext_User
-  commentId: P:ToSic.Sxc.Dnn.Interfaces.IDnnContext.User
-  fullName: ToSic.Sxc.Dnn.Interfaces.IDnnContext.User
+  href: api/ToSic.Sxc.Dnn.IDnnContext.html#ToSic_Sxc_Dnn_IDnnContext_User
+  commentId: P:ToSic.Sxc.Dnn.IDnnContext.User
+  fullName: ToSic.Sxc.Dnn.IDnnContext.User
   nameWithType: IDnnContext.User
-- uid: ToSic.Sxc.Dnn.Interfaces.IDnnContext.User*
+- uid: ToSic.Sxc.Dnn.IDnnContext.User*
   name: User
-  href: api/ToSic.Sxc.Dnn.Interfaces.IDnnContext.html#ToSic_Sxc_Dnn_Interfaces_IDnnContext_User_
-  commentId: Overload:ToSic.Sxc.Dnn.Interfaces.IDnnContext.User
+  href: api/ToSic.Sxc.Dnn.IDnnContext.html#ToSic_Sxc_Dnn_IDnnContext_User_
+  commentId: Overload:ToSic.Sxc.Dnn.IDnnContext.User
   isSpec: "True"
-  fullName: ToSic.Sxc.Dnn.Interfaces.IDnnContext.User
+  fullName: ToSic.Sxc.Dnn.IDnnContext.User
   nameWithType: IDnnContext.User
+- uid: ToSic.Sxc.Dnn.IDynamicCode
+  name: IDynamicCode
+  href: api/ToSic.Sxc.Dnn.IDynamicCode.html
+  commentId: T:ToSic.Sxc.Dnn.IDynamicCode
+  fullName: ToSic.Sxc.Dnn.IDynamicCode
+  nameWithType: IDynamicCode
+- uid: ToSic.Sxc.Dnn.IDynamicCode.Dnn
+  name: Dnn
+  href: api/ToSic.Sxc.Dnn.IDynamicCode.html#ToSic_Sxc_Dnn_IDynamicCode_Dnn
+  commentId: P:ToSic.Sxc.Dnn.IDynamicCode.Dnn
+  fullName: ToSic.Sxc.Dnn.IDynamicCode.Dnn
+  nameWithType: IDynamicCode.Dnn
+- uid: ToSic.Sxc.Dnn.IDynamicCode.Dnn*
+  name: Dnn
+  href: api/ToSic.Sxc.Dnn.IDynamicCode.html#ToSic_Sxc_Dnn_IDynamicCode_Dnn_
+  commentId: Overload:ToSic.Sxc.Dnn.IDynamicCode.Dnn
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.IDynamicCode.Dnn
+  nameWithType: IDynamicCode.Dnn
+- uid: ToSic.Sxc.Dnn.IHtmlHelper
+  name: IHtmlHelper
+  href: api/ToSic.Sxc.Dnn.IHtmlHelper.html
+  commentId: T:ToSic.Sxc.Dnn.IHtmlHelper
+  fullName: ToSic.Sxc.Dnn.IHtmlHelper
+  nameWithType: IHtmlHelper
+- uid: ToSic.Sxc.Dnn.IHtmlHelper.Raw(System.Object)
+  name: Raw(Object)
+  href: api/ToSic.Sxc.Dnn.IHtmlHelper.html#ToSic_Sxc_Dnn_IHtmlHelper_Raw_System_Object_
+  commentId: M:ToSic.Sxc.Dnn.IHtmlHelper.Raw(System.Object)
+  fullName: ToSic.Sxc.Dnn.IHtmlHelper.Raw(System.Object)
+  nameWithType: IHtmlHelper.Raw(Object)
+- uid: ToSic.Sxc.Dnn.IHtmlHelper.Raw*
+  name: Raw
+  href: api/ToSic.Sxc.Dnn.IHtmlHelper.html#ToSic_Sxc_Dnn_IHtmlHelper_Raw_
+  commentId: Overload:ToSic.Sxc.Dnn.IHtmlHelper.Raw
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.IHtmlHelper.Raw
+  nameWithType: IHtmlHelper.Raw
+- uid: ToSic.Sxc.Dnn.IRazor
+  name: IRazor
+  href: api/ToSic.Sxc.Dnn.IRazor.html
+  commentId: T:ToSic.Sxc.Dnn.IRazor
+  fullName: ToSic.Sxc.Dnn.IRazor
+  nameWithType: IRazor
+- uid: ToSic.Sxc.Dnn.IRazor.Html
+  name: Html
+  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_Html
+  commentId: P:ToSic.Sxc.Dnn.IRazor.Html
+  fullName: ToSic.Sxc.Dnn.IRazor.Html
+  nameWithType: IRazor.Html
+- uid: ToSic.Sxc.Dnn.IRazor.Html*
+  name: Html
+  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_Html_
+  commentId: Overload:ToSic.Sxc.Dnn.IRazor.Html
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.IRazor.Html
+  nameWithType: IRazor.Html
 - uid: ToSic.Sxc.Interfaces
   name: ToSic.Sxc.Interfaces
   href: api/ToSic.Sxc.Interfaces.html
@@ -817,57 +862,164 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Interfaces.IApp.Thumbnail
   nameWithType: IApp.Thumbnail
-- uid: ToSic.Sxc.Interfaces.IAppAndDataHelpers
-  name: IAppAndDataHelpers
-  href: api/ToSic.Sxc.Interfaces.IAppAndDataHelpers.html
-  commentId: T:ToSic.Sxc.Interfaces.IAppAndDataHelpers
-  fullName: ToSic.Sxc.Interfaces.IAppAndDataHelpers
-  nameWithType: IAppAndDataHelpers
-- uid: ToSic.Sxc.Interfaces.IAppAndDataHelpers.AsAdam(ToSic.Eav.Interfaces.IEntity,System.String)
+- uid: ToSic.Sxc.Interfaces.IDynamicCode
+  name: IDynamicCode
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html
+  commentId: T:ToSic.Sxc.Interfaces.IDynamicCode
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode
+  nameWithType: IDynamicCode
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.AsAdam(ToSic.Eav.Interfaces.IEntity,System.String)
   name: AsAdam(IEntity, String)
-  href: api/ToSic.Sxc.Interfaces.IAppAndDataHelpers.html#ToSic_Sxc_Interfaces_IAppAndDataHelpers_AsAdam_ToSic_Eav_Interfaces_IEntity_System_String_
-  commentId: M:ToSic.Sxc.Interfaces.IAppAndDataHelpers.AsAdam(ToSic.Eav.Interfaces.IEntity,System.String)
-  fullName: ToSic.Sxc.Interfaces.IAppAndDataHelpers.AsAdam(ToSic.Eav.Interfaces.IEntity, System.String)
-  nameWithType: IAppAndDataHelpers.AsAdam(IEntity, String)
-- uid: ToSic.Sxc.Interfaces.IAppAndDataHelpers.AsAdam(ToSic.Sxc.Interfaces.IDynamicEntity,System.String)
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_AsAdam_ToSic_Eav_Interfaces_IEntity_System_String_
+  commentId: M:ToSic.Sxc.Interfaces.IDynamicCode.AsAdam(ToSic.Eav.Interfaces.IEntity,System.String)
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.AsAdam(ToSic.Eav.Interfaces.IEntity, System.String)
+  nameWithType: IDynamicCode.AsAdam(IEntity, String)
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.AsAdam(ToSic.Sxc.Interfaces.IDynamicEntity,System.String)
   name: AsAdam(IDynamicEntity, String)
-  href: api/ToSic.Sxc.Interfaces.IAppAndDataHelpers.html#ToSic_Sxc_Interfaces_IAppAndDataHelpers_AsAdam_ToSic_Sxc_Interfaces_IDynamicEntity_System_String_
-  commentId: M:ToSic.Sxc.Interfaces.IAppAndDataHelpers.AsAdam(ToSic.Sxc.Interfaces.IDynamicEntity,System.String)
-  fullName: ToSic.Sxc.Interfaces.IAppAndDataHelpers.AsAdam(ToSic.Sxc.Interfaces.IDynamicEntity, System.String)
-  nameWithType: IAppAndDataHelpers.AsAdam(IDynamicEntity, String)
-- uid: ToSic.Sxc.Interfaces.IAppAndDataHelpers.AsAdam*
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_AsAdam_ToSic_Sxc_Interfaces_IDynamicEntity_System_String_
+  commentId: M:ToSic.Sxc.Interfaces.IDynamicCode.AsAdam(ToSic.Sxc.Interfaces.IDynamicEntity,System.String)
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.AsAdam(ToSic.Sxc.Interfaces.IDynamicEntity, System.String)
+  nameWithType: IDynamicCode.AsAdam(IDynamicEntity, String)
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.AsAdam*
   name: AsAdam
-  href: api/ToSic.Sxc.Interfaces.IAppAndDataHelpers.html#ToSic_Sxc_Interfaces_IAppAndDataHelpers_AsAdam_
-  commentId: Overload:ToSic.Sxc.Interfaces.IAppAndDataHelpers.AsAdam
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_AsAdam_
+  commentId: Overload:ToSic.Sxc.Interfaces.IDynamicCode.AsAdam
   isSpec: "True"
-  fullName: ToSic.Sxc.Interfaces.IAppAndDataHelpers.AsAdam
-  nameWithType: IAppAndDataHelpers.AsAdam
-- uid: ToSic.Sxc.Interfaces.IAppAndDataHelpers.Edit
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.AsAdam
+  nameWithType: IDynamicCode.AsAdam
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Interfaces.IEntity})
+  name: AsDynamic(IEnumerable<IEntity>)
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_System_Collections_Generic_IEnumerable_ToSic_Eav_Interfaces_IEntity__
+  commentId: M:ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Interfaces.IEntity})
+  name.vb: AsDynamic(IEnumerable(Of IEntity))
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable<ToSic.Eav.Interfaces.IEntity>)
+  fullName.vb: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable(Of ToSic.Eav.Interfaces.IEntity))
+  nameWithType: IDynamicCode.AsDynamic(IEnumerable<IEntity>)
+  nameWithType.vb: IDynamicCode.AsDynamic(IEnumerable(Of IEntity))
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair{System.Int32,ToSic.Eav.Interfaces.IEntity})
+  name: AsDynamic(KeyValuePair<Int32, IEntity>)
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_System_Collections_Generic_KeyValuePair_System_Int32_ToSic_Eav_Interfaces_IEntity__
+  commentId: M:ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair{System.Int32,ToSic.Eav.Interfaces.IEntity})
+  name.vb: AsDynamic(KeyValuePair(Of Int32, IEntity))
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair<System.Int32, ToSic.Eav.Interfaces.IEntity>)
+  fullName.vb: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair(Of System.Int32, ToSic.Eav.Interfaces.IEntity))
+  nameWithType: IDynamicCode.AsDynamic(KeyValuePair<Int32, IEntity>)
+  nameWithType.vb: IDynamicCode.AsDynamic(KeyValuePair(Of Int32, IEntity))
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Object)
+  name: AsDynamic(Object)
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_System_Object_
+  commentId: M:ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Object)
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Object)
+  nameWithType: IDynamicCode.AsDynamic(Object)
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  name: AsDynamic(IDataStream)
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_ToSic_Eav_DataSources_IDataStream_
+  commentId: M:ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  nameWithType: IDynamicCode.AsDynamic(IDataStream)
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(ToSic.Eav.Interfaces.IEntity)
+  name: AsDynamic(IEntity)
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_ToSic_Eav_Interfaces_IEntity_
+  commentId: M:ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(ToSic.Eav.Interfaces.IEntity)
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(ToSic.Eav.Interfaces.IEntity)
+  nameWithType: IDynamicCode.AsDynamic(IEntity)
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic*
+  name: AsDynamic
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_
+  commentId: Overload:ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic
+  isSpec: "True"
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic
+  nameWithType: IDynamicCode.AsDynamic
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.AsEntity(System.Object)
+  name: AsEntity(Object)
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_AsEntity_System_Object_
+  commentId: M:ToSic.Sxc.Interfaces.IDynamicCode.AsEntity(System.Object)
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.AsEntity(System.Object)
+  nameWithType: IDynamicCode.AsEntity(Object)
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.AsEntity*
+  name: AsEntity
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_AsEntity_
+  commentId: Overload:ToSic.Sxc.Interfaces.IDynamicCode.AsEntity
+  isSpec: "True"
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.AsEntity
+  nameWithType: IDynamicCode.AsEntity
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.Content
+  name: Content
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_Content
+  commentId: P:ToSic.Sxc.Interfaces.IDynamicCode.Content
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.Content
+  nameWithType: IDynamicCode.Content
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.Content*
+  name: Content
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_Content_
+  commentId: Overload:ToSic.Sxc.Interfaces.IDynamicCode.Content
+  isSpec: "True"
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.Content
+  nameWithType: IDynamicCode.Content
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource*
+  name: CreateSource
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_CreateSource_
+  commentId: Overload:ToSic.Sxc.Interfaces.IDynamicCode.CreateSource
+  isSpec: "True"
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource
+  nameWithType: IDynamicCode.CreateSource
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.ValueProvider.IValueCollectionProvider)
+  name: CreateSource<T>(IDataSource, IValueCollectionProvider)
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_ValueProvider_IValueCollectionProvider_
+  commentId: M:ToSic.Sxc.Interfaces.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.ValueProvider.IValueCollectionProvider)
+  name.vb: CreateSource(Of T)(IDataSource, IValueCollectionProvider)
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource<T>(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.ValueProvider.IValueCollectionProvider)
+  fullName.vb: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource(Of T)(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.ValueProvider.IValueCollectionProvider)
+  nameWithType: IDynamicCode.CreateSource<T>(IDataSource, IValueCollectionProvider)
+  nameWithType.vb: IDynamicCode.CreateSource(Of T)(IDataSource, IValueCollectionProvider)
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataStream)
+  name: CreateSource<T>(IDataStream)
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_CreateSource__1_ToSic_Eav_DataSources_IDataStream_
+  commentId: M:ToSic.Sxc.Interfaces.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataStream)
+  name.vb: CreateSource(Of T)(IDataStream)
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource<T>(ToSic.Eav.DataSources.IDataStream)
+  fullName.vb: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource(Of T)(ToSic.Eav.DataSources.IDataStream)
+  nameWithType: IDynamicCode.CreateSource<T>(IDataStream)
+  nameWithType.vb: IDynamicCode.CreateSource(Of T)(IDataStream)
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.Edit
   name: Edit
-  href: api/ToSic.Sxc.Interfaces.IAppAndDataHelpers.html#ToSic_Sxc_Interfaces_IAppAndDataHelpers_Edit
-  commentId: P:ToSic.Sxc.Interfaces.IAppAndDataHelpers.Edit
-  fullName: ToSic.Sxc.Interfaces.IAppAndDataHelpers.Edit
-  nameWithType: IAppAndDataHelpers.Edit
-- uid: ToSic.Sxc.Interfaces.IAppAndDataHelpers.Edit*
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_Edit
+  commentId: P:ToSic.Sxc.Interfaces.IDynamicCode.Edit
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.Edit
+  nameWithType: IDynamicCode.Edit
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.Edit*
   name: Edit
-  href: api/ToSic.Sxc.Interfaces.IAppAndDataHelpers.html#ToSic_Sxc_Interfaces_IAppAndDataHelpers_Edit_
-  commentId: Overload:ToSic.Sxc.Interfaces.IAppAndDataHelpers.Edit
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_Edit_
+  commentId: Overload:ToSic.Sxc.Interfaces.IDynamicCode.Edit
   isSpec: "True"
-  fullName: ToSic.Sxc.Interfaces.IAppAndDataHelpers.Edit
-  nameWithType: IAppAndDataHelpers.Edit
-- uid: ToSic.Sxc.Interfaces.IAppAndDataHelpers.Link
-  name: Link
-  href: api/ToSic.Sxc.Interfaces.IAppAndDataHelpers.html#ToSic_Sxc_Interfaces_IAppAndDataHelpers_Link
-  commentId: P:ToSic.Sxc.Interfaces.IAppAndDataHelpers.Link
-  fullName: ToSic.Sxc.Interfaces.IAppAndDataHelpers.Link
-  nameWithType: IAppAndDataHelpers.Link
-- uid: ToSic.Sxc.Interfaces.IAppAndDataHelpers.Link*
-  name: Link
-  href: api/ToSic.Sxc.Interfaces.IAppAndDataHelpers.html#ToSic_Sxc_Interfaces_IAppAndDataHelpers_Link_
-  commentId: Overload:ToSic.Sxc.Interfaces.IAppAndDataHelpers.Link
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.Edit
+  nameWithType: IDynamicCode.Edit
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.Header
+  name: Header
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_Header
+  commentId: P:ToSic.Sxc.Interfaces.IDynamicCode.Header
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.Header
+  nameWithType: IDynamicCode.Header
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.Header*
+  name: Header
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_Header_
+  commentId: Overload:ToSic.Sxc.Interfaces.IDynamicCode.Header
   isSpec: "True"
-  fullName: ToSic.Sxc.Interfaces.IAppAndDataHelpers.Link
-  nameWithType: IAppAndDataHelpers.Link
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.Header
+  nameWithType: IDynamicCode.Header
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.Link
+  name: Link
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_Link
+  commentId: P:ToSic.Sxc.Interfaces.IDynamicCode.Link
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.Link
+  nameWithType: IDynamicCode.Link
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.Link*
+  name: Link
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_Link_
+  commentId: Overload:ToSic.Sxc.Interfaces.IDynamicCode.Link
+  isSpec: "True"
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.Link
+  nameWithType: IDynamicCode.Link
 - uid: ToSic.Sxc.Interfaces.IDynamicEntity
   name: IDynamicEntity
   href: api/ToSic.Sxc.Interfaces.IDynamicEntity.html

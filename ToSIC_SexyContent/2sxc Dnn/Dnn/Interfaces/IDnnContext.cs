@@ -4,8 +4,7 @@ using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Documentation;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Dnn.Interfaces
+namespace ToSic.Sxc.Dnn
 {
     /// <summary>
     /// Provides information about the current context within DNN.

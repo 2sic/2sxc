@@ -9,7 +9,6 @@ using ToSic.Eav.ValueProvider;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Razor.Helpers;
 using Factory = ToSic.Eav.Factory;
 using ToSic.Sxc.Adam.WebApi;
 using System.IO;
@@ -17,8 +16,9 @@ using ToSic.Eav.Configuration;
 using ToSic.Sxc.Interfaces;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Dnn.Interfaces;
+using ToSic.Sxc.Dnn;
 using File = ToSic.Sxc.Adam.File;
+using IDynamicCode = ToSic.Sxc.Dnn.IDynamicCode;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -30,7 +30,7 @@ namespace ToSic.SexyContent.WebApi
     /// safer because it can't accidentally mix the App with a different appId in the params
     /// </summary>
     [SxcWebApiExceptionHandling]
-    public abstract class SxcApiController : SxcApiControllerBase, Sxc.Interfaces.IAppAndDataHelpers, IHasDnnContext
+    public abstract class SxcApiController : SxcApiControllerBase, IDynamicCode
     {
         #region constructor
 
@@ -85,23 +85,24 @@ namespace ToSic.SexyContent.WebApi
 
 
         #region AsDynamic implementations
-        /// <inheritdoc />
+
+        /// <inheritdoc cref="IDynamicCode" />
         public dynamic AsDynamic(IEntity entity) => DnnAppAndDataHelpers.AsDynamic(entity);
 
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode" />
         public dynamic AsDynamic(dynamic dynamicEntity) =>  DnnAppAndDataHelpers.AsDynamic(dynamicEntity);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode" />
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode" />
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  DnnAppAndDataHelpers.AsDynamic(stream.List);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode" />
         public IEntity AsEntity(dynamic dynamicEntity) =>  DnnAppAndDataHelpers.AsEntity(dynamicEntity);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode" />
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DnnAppAndDataHelpers.AsDynamic(entities);
         #endregion
 
@@ -111,10 +112,11 @@ namespace ToSic.SexyContent.WebApi
 	        => DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
 
         public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+            where T : IDataSource
             =>  DnnAppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
 
-	    /// <inheritdoc />
-	    public T CreateSource<T>(IDataStream inStream) => DnnAppAndDataHelpers.CreateSource<T>(inStream);
+	    public T CreateSource<T>(IDataStream inStream) where T : IDataSource 
+            => DnnAppAndDataHelpers.CreateSource<T>(inStream);
 
         #endregion
 
@@ -130,6 +132,9 @@ namespace ToSic.SexyContent.WebApi
         [Obsolete("please use Content.Presentation instead")]
         public dynamic Presentation => DnnAppAndDataHelpers.Content?.Presentation;
 
+        public dynamic Header => DnnAppAndDataHelpers.Header;
+
+        [Obsolete("use Header instead")]
 	    public dynamic ListContent => DnnAppAndDataHelpers.ListContent;
 
         /// <summary>

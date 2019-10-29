@@ -16,7 +16,7 @@
 # maybe do include first, before excludes?
 - include:
     hasAttribute: 
-        uid: ToSic.Eav.PublicApi.PublicApi
+        uid: ToSic.Eav.Documentation.PublicApi
 - exclude:
     uidRegex: ^ToSic
     type: Member
@@ -24,7 +24,7 @@
     type: Type
 - exclude:
     hasAttribute: 
-        uid: ToSic.Eav.PublicApi.PrivateApi
+        uid: ToSic.Eav.Documentation.PrivateApi
     type: Type
     type: Member
 

@@ -19,7 +19,7 @@ using ToSic.Sxc.Interfaces;
 // ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
 namespace ToSic.SexyContent
 {
-    public abstract class AppAndDataHelpersBase : HasLog, Sxc.Interfaces.IAppAndDataHelpers
+    public abstract class AppAndDataHelpersBase : HasLog, IDynamicCode
     {
         protected readonly SxcInstance SxcInstance;
 
@@ -146,7 +146,7 @@ namespace ToSic.SexyContent
         /// <param name="inSource"></param>
         /// <param name="configurationProvider"></param>
         /// <returns></returns>
-        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null) where T : IDataSource
         {
             if (configurationProvider == null)
                 configurationProvider = ConfigurationProvider;
@@ -168,7 +168,7 @@ namespace ToSic.SexyContent
         /// <typeparam name="T"></typeparam>
         /// <param name="inStream"></param>
         /// <returns></returns>
-        public T CreateSource<T>(IDataStream inStream)
+        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
         {
             // if it has a source, then use this, otherwise it's null and that works too. Reason: some sources like DataTable or SQL won't have an upstream source
             var src = CreateSource<T>(inStream.Source);
@@ -194,31 +194,34 @@ namespace ToSic.SexyContent
         }
         private dynamic _content;
 
+        
         /// <summary>
         /// List item of the current view
         /// </summary>
-		public dynamic ListContent {
+		public dynamic Header {
             get
             {
-                if(_listContent == null) TryToBuildListContentObject();
-                return _listContent;
+                if(_header == null) TryToBuildHeaderObject();
+                return _header;
             } 
         }
+        private dynamic _header;
 
-        private dynamic _listContent;
+        [Obsolete("use Header instead")]
+        public dynamic ListContent => Header;
 
         /// <remarks>
         /// This must be lazy-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
         /// - this would break API even though the List etc. are never accessed
         /// </remarks>
-        private void TryToBuildListContentObject()
+        private void TryToBuildHeaderObject()
         {
             Log.Add("try to build ListContent (header) object");
             if (Data == null || SxcInstance.Template == null) return;
             if (!Data.Out.ContainsKey(AppConstants.ListContent)) return;
 
             var listEntity = Data[AppConstants.ListContent].List.FirstOrDefault();
-            _listContent = listEntity == null ? null : AsDynamic(listEntity);
+            _header = listEntity == null ? null : AsDynamic(listEntity);
         }
 
 #pragma warning disable 618
