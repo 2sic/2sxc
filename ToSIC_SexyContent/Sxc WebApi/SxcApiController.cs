@@ -54,7 +54,7 @@ namespace ToSic.SexyContent.WebApi
 
         private DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
 
-        public DnnHelper Dnn => DnnAppAndDataHelpers.Dnn;
+        public IDnnContext Dnn => DnnAppAndDataHelpers.Dnn;
 
         public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
 

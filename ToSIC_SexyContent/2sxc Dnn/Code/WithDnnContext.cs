@@ -6,9 +6,9 @@ using ToSic.Sxc.Interfaces;
 namespace ToSic.Sxc.Code
 {
     // ReSharper disable once UnusedMember.Global
-    public abstract class WithDnnContext: WithContext, IHasDnnContext
+    public abstract class WithDnnContext : WithContext, IHasDnnContext
     {
-        public DnnHelper Dnn { get; private set; }
+        public IDnnContext Dnn { get; private set; }
 
         internal override void InitShared(IAppAndDataHelpers parent)
         {

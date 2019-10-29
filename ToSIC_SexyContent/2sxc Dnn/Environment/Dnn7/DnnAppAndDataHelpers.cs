@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// <summary>
         /// Dnn context with module, page, portal etc.
         /// </summary>
-        public DnnHelper Dnn { get; }
+        public IDnnContext Dnn { get; }
         #endregion
 
 
