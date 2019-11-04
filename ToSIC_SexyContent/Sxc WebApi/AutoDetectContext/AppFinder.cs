@@ -69,7 +69,7 @@ namespace ToSic.SexyContent.WebApi.AutoDetectContext
                     : GetCurrentAppIdFromPath(appPath);
             }
 
-            wrapLog(appId.LogState);
+            wrapLog(appId.LogState());
 
             return appId;
         }
