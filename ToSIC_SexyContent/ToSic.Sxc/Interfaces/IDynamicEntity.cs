@@ -90,5 +90,19 @@ namespace ToSic.Sxc.Interfaces
         /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
         /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
         new List<IDynamicEntity> Parents(string type = null, string field = null);
+
+        /// <summary>
+        /// Contains presentation settings for an item - if they exist.
+        /// This is a functionality of the CMS, where an instance of an item can be configured to show in a specific way.
+        /// Normally it's used when something like an address has various show-settings (like how the map should visualize this address).
+        /// The presentation-info is therefor not-null IF <br/>
+        /// - the content <em>belongs</em> to this module instance <br/>
+        /// - the view-configuration of this module is configured to have presentation items <br />
+        /// - there is either a default presentation configured in the view, or the user has manually edited the presentation settings
+        /// </summary>
+        /// <returns>
+        /// An <see cref="IDynamicEntity"/> with the presentation item (or the demo-presentation), otherwise null.
+        /// </returns>
+        dynamic Presentation { get; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Web;
-using ToSic.Sxc.Razor;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent.Razor.Helpers
 {
