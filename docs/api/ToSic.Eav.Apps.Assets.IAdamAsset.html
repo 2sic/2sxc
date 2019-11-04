@@ -73,7 +73,8 @@
   
   <h1 id="ToSic_Eav_Apps_Assets_IAdamAsset" data-uid="ToSic.Eav.Apps.Assets.IAdamAsset" class="text-break">Interface IAdamAsset
   </h1>
-  <div class="markdown level0 summary"><p>Describes an ADAM asset.</p>
+  <div class="markdown level0 summary"><p>Describes an ADAM (Automatic Digital Asset Management) asset. <br>
+This contains properties which both <a class="xref" href="ToSic.Eav.Apps.Assets.IAdamFolder.html">IAdamFolder</a> and <a class="xref" href="ToSic.Eav.Apps.Assets.IAdamFile.html">IAdamFile</a> have in common.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ToSic.Eav.Apps.Assets.html">ToSic.Eav.Apps.Assets</a></h6>
@@ -89,11 +90,11 @@
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Apps_Assets_IAdamAsset_HasMetadata.md&amp;value=---%0Auid%3A%20ToSic.Eav.Apps.Assets.IAdamAsset.HasMetadata%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.AppEngine/Assets/IAdamAsset.cs/#L15">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.AppEngine/Assets/IAdamAsset.cs/#L17">View Source</a>
   </span>
   <a id="ToSic_Eav_Apps_Assets_IAdamAsset_HasMetadata_" data-uid="ToSic.Eav.Apps.Assets.IAdamAsset.HasMetadata*"></a>
   <h4 id="ToSic_Eav_Apps_Assets_IAdamAsset_HasMetadata" data-uid="ToSic.Eav.Apps.Assets.IAdamAsset.HasMetadata">HasMetadata</h4>
-  <div class="markdown level1 summary"><p>True if this asset has metadata</p>
+  <div class="markdown level1 summary"><p>Informs the code if this asset has real metadata attached or not. </p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -111,7 +112,8 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>True if this asset has metadata, false if it doesn&apos;t (in which case the Metadata property still works, but won&apos;t deliver any real values)</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -120,7 +122,7 @@
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Apps_Assets_IAdamAsset_Metadata.md&amp;value=---%0Auid%3A%20ToSic.Eav.Apps.Assets.IAdamAsset.Metadata%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.AppEngine/Assets/IAdamAsset.cs/#L23">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.AppEngine/Assets/IAdamAsset.cs/#L25">View Source</a>
   </span>
   <a id="ToSic_Eav_Apps_Assets_IAdamAsset_Metadata_" data-uid="ToSic.Eav.Apps.Assets.IAdamAsset.Metadata*"></a>
   <h4 id="ToSic_Eav_Apps_Assets_IAdamAsset_Metadata" data-uid="ToSic.Eav.Apps.Assets.IAdamAsset.Metadata">Metadata</h4>
@@ -154,7 +156,7 @@ to help in razor template etc.</p>
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Apps_Assets_IAdamAsset_Type.md&amp;value=---%0Auid%3A%20ToSic.Eav.Apps.Assets.IAdamAsset.Type%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.AppEngine/Assets/IAdamAsset.cs/#L37">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.AppEngine/Assets/IAdamAsset.cs/#L39">View Source</a>
   </span>
   <a id="ToSic_Eav_Apps_Assets_IAdamAsset_Type_" data-uid="ToSic.Eav.Apps.Assets.IAdamAsset.Type*"></a>
   <h4 id="ToSic_Eav_Apps_Assets_IAdamAsset_Type" data-uid="ToSic.Eav.Apps.Assets.IAdamAsset.Type">Type</h4>
@@ -186,7 +188,7 @@ to help in razor template etc.</p>
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Apps_Assets_IAdamAsset_Url.md&amp;value=---%0Auid%3A%20ToSic.Eav.Apps.Assets.IAdamAsset.Url%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.AppEngine/Assets/IAdamAsset.cs/#L31">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.AppEngine/Assets/IAdamAsset.cs/#L33">View Source</a>
   </span>
   <a id="ToSic_Eav_Apps_Assets_IAdamAsset_Url_" data-uid="ToSic.Eav.Apps.Assets.IAdamAsset.Url*"></a>
   <h4 id="ToSic_Eav_Apps_Assets_IAdamAsset_Url" data-uid="ToSic.Eav.Apps.Assets.IAdamAsset.Url">Url</h4>
@@ -224,7 +226,7 @@ to help in razor template etc.</p>
                     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Apps_Assets_IAdamAsset.md&amp;value=---%0Auid%3A%20ToSic.Eav.Apps.Assets.IAdamAsset%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.AppEngine/Assets/IAdamAsset.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.AppEngine/Assets/IAdamAsset.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

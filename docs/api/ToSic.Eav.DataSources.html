@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Namespace ToSic.Eav.DataSources
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Namespace ToSic.Eav.DataSources
+   ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="ToSic.Eav.DataSources">
+  
+  <h1 id="ToSic_Eav_DataSources" data-uid="ToSic.Eav.DataSources" class="text-break">Namespace ToSic.Eav.DataSources
+  </h1>
+  <div class="markdown level0 summary"><p>This is all about DataSources which are chained together to prepare/process data for views, WebApi or anything else. </p>
+<p>In most cases there will be a VisualQuery which connects all the parts automatically, but when you want to work with them programatically, here you&#39;ll find the API. 
+Note that we&#39;ve hidden the constructors for all DataSource objects in these docs, because you should usually use the <code>CreateSource&lt;T&gt;(...)</code> command on the Razor template or WebApi, which will auto-configure things behind the scenes. </p>
+<p><em>Note: Most DataSources have an Attribute which adds more metadata - as of now, we couldn&#39;t figure out how to include it in the Docs-generator, so you can&#39;t see them. we&#39;re working on it.</em></p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+    <h3 id="classes">Classes
+  </h3>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.App.html">App</a></h4>
+      <section><p>Represents an App with all the data inside it.
+For example, it has a variable amount of Out-streams, one for each content-type in the app.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.AttributeFilter.html">AttributeFilter</a></h4>
+      <section><p>DataSource to only pass through configured AttributeNames - other attributes/properties are removed from the entities.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.BaseDataSource.html">BaseDataSource</a></h4>
+      <section><p>The base class, which should always be inherited. Already implements things like Get One / Get many, Caching and a lot more.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.CsvDataSource.html">CsvDataSource</a></h4>
+      <section><p>DataSource for importing/reading CSV files. </p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.DataTableDataSource.html">DataTableDataSource</a></h4>
+      <section><p>Provide Entities from a System.Data.DataTable. <br>
+This is not meant for VisualQuery, but for code which pre-processes data in a DataTable and then wants to provide it as entities. </p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.EntityIdFilter.html">EntityIdFilter</a></h4>
+      <section><p>A DataSource that filters Entities by Ids</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.EntityTypeFilter.html">EntityTypeFilter</a></h4>
+      <section><p>Return only entities of a specific content-type</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.ExternalDataDataSource.html">ExternalDataDataSource</a></h4>
+      <section><p>Base DataSource class for providing data from external systems</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.ItemFilterDuplicates.html">ItemFilterDuplicates</a></h4>
+      <section><p>A DataSource that merges two streams</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.OwnerFilter.html">OwnerFilter</a></h4>
+      <section><p>Filter entities to show Drafts or only Published Entities</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.Paging.html">Paging</a></h4>
+      <section><p>A DataSource that filters Entities by Ids</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.PassThrough.html">PassThrough</a></h4>
+      <section><p>A DataSource that passes through all In Connections. Can be used con consolidate/merge multiple Sources into one.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.PublishingFilter.html">PublishingFilter</a></h4>
+      <section><p>Filter entities to show Drafts or only Published Entities</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.RelationshipFilter.html">RelationshipFilter</a></h4>
+      <section><p>Filter Entities by Value in a Related Entity. For example:
+Find all Books (desired Entity), whose Authors (related Entity) have a Country (Attribute) with &apos;Switzerland&apos; (Value). </p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.Shuffle.html">Shuffle</a></h4>
+      <section><p>A DataSource that filters Entities by Ids</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.SqlDataSource.html">SqlDataSource</a></h4>
+      <section><p>Provide Entities from a SQL Server</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.StreamFallback.html">StreamFallback</a></h4>
+      <section><p>A DataSource that returns the first stream which has content</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.StreamMerge.html">StreamMerge</a></h4>
+      <section><p>A DataSource that merges two streams</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.ValueFilter.html">ValueFilter</a></h4>
+      <section><p>Return only Entities having a specific value in an Attribute</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.ValueSort.html">ValueSort</a></h4>
+      <section><p>Sort Entity by values in specified Attributes</p>
+</section>
+    <h3 id="interfaces">Interfaces
+  </h3>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a></h4>
+      <section><p>Public interface for an Eav DataSource. All DataSource objects are based on this. </p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a></h4>
+      <section><p>Represents a DataStream object. This is a stream of IEntity objects, which has a source and a name.
+A stream can be read from, and it can be attached to upstream data-sources for further processing.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.DataSources.IDataTarget.html">IDataTarget</a></h4>
+      <section><p>Represents a data source that can be the recipient of Data.
+This basically means it has an In <a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a></p>
+</section>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Eav.DataSources.md/#L2" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

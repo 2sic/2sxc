@@ -37,7 +37,9 @@ and drill down to the other APIs as needed.
 1. If you're working with `ADAM` Assets, like from the `AsAdam(...)` command on @ToSic.Sxc.Interfaces.IDynamicEntity objects,  
 	you'll want to read about @ToSic.Eav.Apps.Assets.IAdamFolder and @ToSic.Eav.Apps.Assets.IAdamFile
 
-### 
+### Programming with DataSources and VisualQuery
+
+All the DataSources are based on @ToSic.Eav.DataSources.IDataSource and most of them are also @ToSic.Eav.DataSources.IDataTarget . You can find most of them in @ToSic.Eav.DataSources . 
 
 ## todo
 datasources

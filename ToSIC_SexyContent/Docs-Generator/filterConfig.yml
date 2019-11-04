@@ -1,8 +1,22 @@
-﻿apiRules:
+﻿attributeRules:
+- include: 
+    uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute
+    type: Type
+    type: Class
+    type: Interface
+    type: Namespace
+    type: Member
+    type: Method
+    type: Property
+    
+apiRules:
 # Exclude System.Object to avoid having .Equals and stuff
 # in the documentation
 - exclude:
     uidRegex: ^System\.Object
+
+- exclude:
+    uidRegex: ^System\.Attribute
 
 # Exclude any tests
 - exclude:
@@ -28,15 +42,18 @@
     type: Type
     type: Member
 
- # For now also exclude everything in the Sxc - just for safety, till we marked the public api
-#- exclude:
-#    uidRegex: ^ToSic\.Sxc
-    # type: Namespace
-#- include:
-#    hasAttribute: 
-#        uid: ToSic.Eav.PublicApi.PublicApi
 
- # For now also exclude everything in the Sxc - just for safety, till we marked the public api
-#- exclude:
-#    uidRegex: ^ToSic\.Eav\.AppEngine
-    # type: Namespace
+
+
+attributeRules:
+- include: 
+    # uidRegex: '^ToSic\.Eav\..*$'
+    uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute
+    type: Type
+    type: Class
+    type: Interface
+    type: Namespace
+    type: Member
+    type: Method
+    type: Property
+    

@@ -79,8 +79,33 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="interfaces">Interfaces
   </h3>
+      <h4><a class="xref" href="ToSic.Eav.Interfaces.IAttributeBase.html">IAttributeBase</a></h4>
+      <section><p>Represents an Attribute. This is the base for both</p>
+<ul>
+<li>attribute definition (in the IContentType)</li>
+<li>attribute with values-list (in the IEntity)</li>
+</ul>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Interfaces.IAttributeDefinition.html">IAttributeDefinition</a></h4>
+      <section><p>Represents an Attribute. This is the base for both</p>
+<ul>
+<li>attribute definition (in the IContentType)</li>
+<li>attribute with values-list (in the IEntity)</li>
+</ul>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Interfaces.ICacheExpiring.html">ICacheExpiring</a></h4>
+      <section><p>Marks objects which are cache-based, and which may contain obsolete cached data.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Interfaces.ICacheKeyProvider.html">ICacheKeyProvider</a></h4>
+      <section><p>Marks objects which can identify what cache it&apos;s for. <br>
+For example, when parameters change what data is cached, then the cache-key can contain this parameter,
+so that a different cache is used based on changing parameters. </p>
+</section>
       <h4><a class="xref" href="ToSic.Eav.Interfaces.IChildEntities.html">IChildEntities</a></h4>
       <section><p>This manages child entities - so entities referenced in a field of an Entity</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Interfaces.IContentType.html">IContentType</a></h4>
+      <section><p>Represents a Content Type information (the schema) used for <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> objects.</p>
 </section>
       <h4><a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a></h4>
       <section><p>The primary data-item in the system, IEntity is a generic data-item for any kind of information.
@@ -98,6 +123,10 @@ For the more powerful Entity, use <a class="xref" href="ToSic.Eav.Interfaces.IEn
       <h4><a class="xref" href="ToSic.Eav.Interfaces.IMetadataOfItem.html">IMetadataOfItem</a></h4>
       <section><p>A provider for metadata for something.
 So if an <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> or an <see cref="!:ToSic.Eav.Apps.Interfaces.IApp"></see> has metadata, this will provide it. </p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Interfaces.IMetadataProvider.html">IMetadataProvider</a></h4>
+      <section><p>For querying metadata from the data source.
+Mainly used in the Store, Cache-Systems and Apps.</p>
 </section>
       <h4><a class="xref" href="ToSic.Eav.Interfaces.IRelationshipManager.html">IRelationshipManager</a></h4>
       <section><p>Manages relationships of an entity - to it&apos;s children and parents.</p>
