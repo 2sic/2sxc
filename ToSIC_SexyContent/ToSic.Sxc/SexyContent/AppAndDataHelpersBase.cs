@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.ValueProvider;
@@ -282,7 +284,7 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(IDynamicEntity entity, string fieldName)
+        public IAdamFolder AsAdam(IDynamicEntity entity, string fieldName)
             => AsAdam(AsEntity(entity), fieldName);
 
 
@@ -292,7 +294,7 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(Eav.Interfaces.IEntity entity, string fieldName)
+        public IAdamFolder AsAdam(IEntity entity, string fieldName)
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
             if (_adamAppContext == null)

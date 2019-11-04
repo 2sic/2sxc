@@ -1,11 +1,11 @@
 ﻿using System;
-using ToSic.Sxc.Adam;
+using ToSic.Eav.Apps.Assets;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Adam
 {
     // ReSharper disable once InconsistentNaming
-    public interface AdamFile: IFile
+    public interface AdamFile: IAdamFile
     {
         string FileName { get; }
 

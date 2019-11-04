@@ -70,13 +70,37 @@
 <h1 id="this-is-the-2sxc-api-documentation">This is the <strong>2sxc API Documentation</strong>.</h1>
 
 <p>It&#39;s completely work-in-progress (WIP) as of October / November 2019. Do not use this yet!</p>
-<h2 id="background-to-help-you-get-things-done">Background to Help You Get Things Done</h2>
-<h3 id="eav-vs-sxc-vs-dnn">EAV vs. Sxc vs. Dnn</h3>
+<h2 id="background-eav-vs-sxc-vs-dnn">Background: Eav vs. Sxc vs. Dnn</h2>
 <p>The data management system underneath everything is called the <strong>EAV</strong> - which stands for <strong>Entity</strong>, <strong>Attribute</strong>, <strong>Value</strong>. 
 Anything in that namespace is about internal data models, reading/saving data etc. 
 So anything inside the <a class="xref" href="ToSic.Eav.Interfaces.html">ToSic.Eav.Interfaces</a> is all about the internals, which you only need in special scenarios. 
+The same applies to <a class="xref" href="ToSic.Eav.Apps.Interfaces.html">ToSic.Eav.Apps.Interfaces</a> which is the sub-system responsible for combining data into virtual bundles called <strong>Apps</strong>.
 You can usually ignore this. </p>
-<p>On top </p>
+<p>On top of the <em>EAV</em> layer we have the <strong>Sxc</strong> layer. 
+It&#39;s responsible for <em>Content Management</em> on top of the <em>App</em> model provided by the <em>EAV</em>. 
+The <em>Sxc</em> layer provides things like <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> to let you code like <code>@Content.Title</code>. 
+This is usually more interesting for you, but still fairly generic, because 2sxc is also meant to work with other 
+platforms like NopCommerce, Orchard or Oqtane, but it hasn&#39;t been implemented yet.</p>
+<p>On top of the <em>Sxc</em> layer we have the <strong>Dnn</strong> layer. It connects 2sxc with Dnn. 
+Usually when you&#39;re writing code and want to know about the API, you&#39;ll typically start here, 
+and drill down to the other APIs as needed.</p>
+<h2 id="what-youre-probably-looking-for">What You&#39;re Probably Looking for</h2>
+<h3 id="apis-in-razor-templates-and-webapi">APIs in Razor Templates and WebApi</h3>
+<ol>
+<li><p>If you are creating a <strong>Razor</strong> template and want to know what APIs are available, start with <a class="xref" href="ToSic.Sxc.Dnn.IRazor.html">IRazor</a> which is mostly an <a class="xref" href="ToSic.Sxc.Dnn.IDynamicCode.html">IDynamicCode</a> with an <a class="xref" href="ToSic.Sxc.Dnn.IHtmlHelper.html">IHtmlHelper</a>. 
+ This is because a Razor Page inherits from that interface, so you&#39;ll see all the commannds you get there. </p>
+</li>
+<li><p>If you&#39;le creating a <strong>WebApi</strong> and need to know everything in it, you also want to check the <a class="xref" href="ToSic.Sxc.Dnn.IDynamicCode.html">IDynamicCode</a>, because all WebApi classes implement that interface. </p>
+</li>
+</ol>
+<h3 id="working-with-entities">Working with Entities</h3>
+<ol>
+<li>If you&#39;re working with <code>DynamicEntity</code> objects and want to know more about them, check out <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a>.<br> In very rare cases you also want to know more about the underlying <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a>.</li>
+<li>If you&#39;re working with <code>ADAM</code> Assets, like from the <code>AsAdam(...)</code> command on <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> objects,<br> you&#39;ll want to read about <a class="xref" href="ToSic.Eav.Apps.Assets.IAdamFolder.html">IAdamFolder</a> and <a class="xref" href="ToSic.Eav.Apps.Assets.IAdamFile.html">IAdamFile</a></li>
+</ol>
+<h3 id="-"></h3>
+<h2 id="todo">todo</h2>
+<p>datasources</p>
 </article>
           </div>
           

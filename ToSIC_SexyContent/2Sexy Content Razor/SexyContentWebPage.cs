@@ -4,6 +4,7 @@ using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
@@ -129,19 +130,19 @@ namespace ToSic.SexyContent.Razor
 
         #endregion
 
-        #region Content, Presentation, ListContent, ListPresentation and List
+        #region Content, Header, etc. and List
         public dynamic Content => DnnAppAndDataHelpers.Content;
 
         [Obsolete("use Content.Presentation instead")]
         public dynamic Presentation => DnnAppAndDataHelpers.Content?.Presentation;
 
-        public dynamic Header => DnnAppAndDataHelpers.ListContent;
+        public dynamic Header => DnnAppAndDataHelpers.Header;
 
         [Obsolete("Use Header instead")]
-        public dynamic ListContent => DnnAppAndDataHelpers.ListContent;
+        public dynamic ListContent => DnnAppAndDataHelpers.Header;
 
         [Obsolete("Use Header.Presentation instead")]
-        public dynamic ListPresentation => DnnAppAndDataHelpers.ListContent?.Presentation;
+        public dynamic ListPresentation => DnnAppAndDataHelpers.Header?.Presentation;
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
         public List<Element> List => DnnAppAndDataHelpers.List;
@@ -188,7 +189,7 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(IDynamicEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public IAdamFolder AsAdam(IDynamicEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
 
         /// <summary>
@@ -197,7 +198,7 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public IAdamFolder AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
         #endregion
 

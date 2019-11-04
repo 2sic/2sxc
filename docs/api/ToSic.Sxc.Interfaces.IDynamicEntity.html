@@ -249,6 +249,46 @@ Added in 2sxc 10.07.</p>
       </tr>
     </tbody>
   </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicEntity_Presentation.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicEntity.Presentation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicEntity.cs/#L106">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicEntity_Presentation_" data-uid="ToSic.Sxc.Interfaces.IDynamicEntity.Presentation*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicEntity_Presentation" data-uid="ToSic.Sxc.Interfaces.IDynamicEntity.Presentation">Presentation</h4>
+  <div class="markdown level1 summary"><p>Contains presentation settings for an item - if they exist.
+This is a functionality of the CMS, where an instance of an item can be configured to show in a specific way.
+Normally it&apos;s used when something like an address has various show-settings (like how the map should visualize this address).
+The presentation-info is therefor not-null IF <br></p>
+<ul>
+<li>the content <em>belongs</em> to this module instance <br></li>
+<li>the view-configuration of this module is configured to have presentation items <br></li>
+<li>there is either a default presentation configured in the view, or the user has manually edited the presentation settings</li>
+</ul>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">dynamic Presentation { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><p>An <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> with the presentation item (or the demo-presentation), otherwise null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">

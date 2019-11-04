@@ -12,6 +12,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using Factory = ToSic.Eav.Factory;
 using ToSic.Sxc.Adam.WebApi;
 using System.IO;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Configuration;
 using ToSic.Sxc.Interfaces;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
@@ -135,15 +136,15 @@ namespace ToSic.SexyContent.WebApi
         public dynamic Header => DnnAppAndDataHelpers.Header;
 
         [Obsolete("use Header instead")]
-	    public dynamic ListContent => DnnAppAndDataHelpers.ListContent;
+	    public dynamic ListContent => DnnAppAndDataHelpers.Header;
 
         /// <summary>
         /// presentation item of the content-item. 
         /// </summary>
-        [Obsolete("please use ListContent.Presentation instead")]
-	    public dynamic ListPresentation => DnnAppAndDataHelpers.ListContent?.Presentation;
+        [Obsolete("please use Header.Presentation instead")]
+	    public dynamic ListPresentation => DnnAppAndDataHelpers.Header?.Presentation;
 
-        [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
+        [Obsolete("This is an old way used to loop things. Use Data[\"Default\"] instead. Will be removed in 2sxc v10")]
         public List<Element> List => DnnAppAndDataHelpers.List;
 
 	    #endregion
@@ -151,13 +152,13 @@ namespace ToSic.SexyContent.WebApi
 
         #region Adam
 
-	    /// <summary>
-	    /// Provides an Adam instance for this item and field
-	    /// </summary>
-	    /// <param name="entity">The entity, often Content or similar</param>
-	    /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
-	    /// <returns>An Adam object for navigating the assets</returns>
-	    public FolderOfField AsAdam(IDynamicEntity entity, string fieldName)
+        /// <summary>
+        /// Provides an Adam instance for this item and field
+        /// </summary>
+        /// <param name="entity">The entity, often Content or similar</param>
+        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
+        /// <returns>An Adam object for navigating the assets</returns>
+        public IAdamFolder AsAdam(IDynamicEntity entity, string fieldName)
 	        => DnnAppAndDataHelpers.AsAdam(AsEntity(entity), fieldName);
 
         /// <summary>
@@ -166,7 +167,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public IAdamFolder AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
 
         /// <summary>

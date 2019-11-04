@@ -30,8 +30,6 @@ namespace ToSic.Sxc.Adam
             Name = f.Name;
         }
 
-        //public string Root => Container.Root;
-
         public bool Exists => AppContext.Exists(Container.Root);
 
     }

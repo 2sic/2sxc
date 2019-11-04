@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.ValueProvider;
@@ -71,10 +72,10 @@ namespace ToSic.Sxc.Code
         #endregion
 
         #region AsAdam
-        public FolderOfField AsAdam(IDynamicEntity entity, string fieldName)
+        public IAdamFolder AsAdam(IDynamicEntity entity, string fieldName)
             => Parent?.AsAdam(entity, fieldName);
 
-        public FolderOfField AsAdam(IEntity entity, string fieldName)
+        public IAdamFolder AsAdam(IEntity entity, string fieldName)
             => Parent?.AsAdam(entity, fieldName);
         #endregion
 

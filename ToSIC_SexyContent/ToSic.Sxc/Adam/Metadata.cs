@@ -35,8 +35,8 @@ namespace ToSic.Sxc.Adam
         /// <param name="isFolder">if it's a file or a folder</param>
         /// <returns></returns>
         internal static Eav.Interfaces.IEntity GetFirstMetadata(AppRuntime app, int id, bool isFolder)
-            => app/*.Data*/.Metadata
-                .Get/*Metadata*/(Eav.Constants.MetadataForCmsObject,
+            => app.Metadata
+                .Get(Eav.Constants.MetadataForCmsObject,
                     (isFolder ? "folder:" : "file:") + id)
                 .FirstOrDefault();
 

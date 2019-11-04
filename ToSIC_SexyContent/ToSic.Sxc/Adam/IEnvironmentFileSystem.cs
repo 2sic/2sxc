@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Apps.Assets;
 
 namespace ToSic.Sxc.Adam
 {

@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Assets;
-using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Adam
 {
 
-    public class Folder : Eav.Apps.Assets.Folder, IAsset
+    public class Folder : Eav.Apps.Assets.Folder, IAdamFolder
     {
         protected AdamAppContext AppContext { get; set; }
 
@@ -18,7 +17,7 @@ namespace ToSic.Sxc.Adam
         }
 
         /// <inheritdoc />
-        public IDynamicEntity Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true);
+        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true) as dynamic;
 
         /// <inheritdoc />
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         ///  Get all subfolders
         /// </summary>
-        public IEnumerable<Folder> Folders
+        public IEnumerable<IAdamFolder> Folders
         {
             get
             {
@@ -47,7 +46,7 @@ namespace ToSic.Sxc.Adam
                 return _folders;
             }
         }
-        private IEnumerable<Folder> _folders;
+        private IEnumerable<IAdamFolder> _folders;
 
 
 
@@ -55,8 +54,8 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Get all files in this folder
         /// </summary>
-        public IEnumerable<File> Files 
+        public IEnumerable<IAdamFile> Files 
             => _files ?? (_files = _fileSystem.GetFiles(Id, AppContext));
-        private IEnumerable<File> _files;
+        private IEnumerable<IAdamFile> _files;
     }
 }

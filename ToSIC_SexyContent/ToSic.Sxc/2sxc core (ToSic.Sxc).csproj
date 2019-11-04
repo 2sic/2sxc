@@ -74,9 +74,7 @@
     <Compile Include="Adam\ContainerOfField.cs" />
     <Compile Include="Adam\Configuration.cs" />
     <Compile Include="Adam\Export.cs" />
-    <Compile Include="Adam\IAsset.cs" />
     <Compile Include="Adam\IEnvironmentFileSystem.cs" />
-    <Compile Include="Adam\IFile.cs" />
     <Compile Include="Adam\Metadata.cs" />
     <Compile Include="Adam\Obsolete\AdamFile.cs" />
     <Compile Include="Code\WithContext.cs" />

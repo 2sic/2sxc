@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
@@ -50,7 +51,7 @@ namespace ToSic.Sxc.Interfaces
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        FolderOfField AsAdam(IDynamicEntity entity, string fieldName);
+        IAdamFolder AsAdam(IDynamicEntity entity, string fieldName);
 
         /// <summary>
         /// Provides an Adam instance for this item and field
@@ -58,7 +59,7 @@ namespace ToSic.Sxc.Interfaces
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        FolderOfField AsAdam(IEntity entity, string fieldName);
+        IAdamFolder AsAdam(IEntity entity, string fieldName);
 
         #endregion
 
