@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Interfaces;
 
@@ -9,7 +8,7 @@ namespace ToSic.SexyContent.ContentBlocks
 {
     internal abstract class ContentBlockBase : HasLog, IContentBlock
     {
-        protected ContentBlockBase(Log parentLog, string logName) : base(logName, parentLog) { }
+        protected ContentBlockBase(ILog parentLog, string logName) : base(logName, parentLog) { }
 
         public IContentBlock Parent;
 

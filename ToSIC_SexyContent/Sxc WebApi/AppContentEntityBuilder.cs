@@ -12,7 +12,7 @@ namespace ToSic.SexyContent.WebApi
 {
     internal class AppContentEntityBuilder: HasLog
     {
-        public AppContentEntityBuilder(Log parentLog) : base("Api.Bldr", parentLog)
+        public AppContentEntityBuilder(ILog parentLog) : base("Api.Bldr", parentLog)
         {
         }
 

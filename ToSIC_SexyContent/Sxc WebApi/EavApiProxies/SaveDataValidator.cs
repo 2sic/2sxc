@@ -5,6 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json.Format;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.WebApi.Formats;
 
@@ -15,7 +16,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public AllInOne Package;
         internal AppRuntime AppRead;
 
-        public SaveDataValidator(AllInOne package, Log parentLog) 
+        public SaveDataValidator(AllInOne package, ILog parentLog) 
             : base("Val.Save", parentLog, "start save validator", nameof(SaveDataValidator))
         {
             Package = package;

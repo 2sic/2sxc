@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -12,7 +12,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
 {
     internal class ContentGroupList: SaveHelperBase
     {
-        public ContentGroupList(SxcInstance sxcInstance, Log parentLog) : base(sxcInstance, parentLog, "Api.GrpPrc") {}
+        public ContentGroupList(SxcInstance sxcInstance, ILog parentLog) : base(sxcInstance, parentLog, "Api.GrpPrc") {}
 
         internal void IfInListUpdateList<T>(int appId, List<BundleWithHeader<T>> items, Dictionary<Guid, int> ids)
         {

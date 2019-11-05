@@ -5,7 +5,6 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Persistence;
 using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
@@ -20,7 +19,7 @@ namespace ToSic.SexyContent
         private readonly bool _versioningEnabled;
         private readonly Guid? _previewTemplateId;
 
-        public ContentGroup(Eav.Interfaces.IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled, Log parentLog)
+        public ContentGroup(Eav.Interfaces.IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled, ILog parentLog)
             : base("CG.Group", parentLog, "constructor from entity", nameof(ContentGroup))
         {
             _contentGroupEntity = contentGroupEntity ?? throw new Exception("ContentGroup entity is null. This usually happens when you are duplicating a site, and have not yet imported the other content/apps. If that is your issue, check 2sxc.org/help?tag=export-import");
@@ -33,7 +32,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Instantiate a "temporary" ContentGroup with the specified templateId and no Content items
         /// </summary>
-        public ContentGroup(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts, bool versioningEnabled, Log parentLog)
+        public ContentGroup(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts, bool versioningEnabled, ILog parentLog)
             : base("CG.Group", parentLog, "constructor empty", nameof(ContentGroup))
         {
             _previewTemplateId = previewTemplateId;

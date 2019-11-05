@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Adam.WebApi
         protected readonly SxcInstance SxcInstance;
         private readonly int _appId;
 
-        public AdamUploader(SxcInstance sxcInstance, int appId, Log parentLog) : base("Api.AdmUpl", parentLog)
+        public AdamUploader(SxcInstance sxcInstance, int appId, ILog parentLog) : base("Api.AdmUpl", parentLog)
         {
             SxcInstance = sxcInstance;
             _appId = appId;

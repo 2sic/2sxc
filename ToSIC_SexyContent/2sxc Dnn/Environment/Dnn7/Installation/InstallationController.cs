@@ -8,6 +8,7 @@ using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Interfaces;
@@ -21,7 +22,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Installation
 
         private readonly Logger _installLogger;
 
-        private Log Log = new Log("Ist.InstCo");
+        private ILog Log = new Log("Ist.InstCo");
 
         /// <summary>
         /// This static initializer will do a one-time check to see if everything is ready,

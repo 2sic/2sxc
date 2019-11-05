@@ -9,7 +9,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     {
         public string Errors = string.Empty;
 
-        protected ValidatorBase(string logName, Log parentLog, string initialMessage, string className) 
+        protected ValidatorBase(string logName, ILog parentLog, string initialMessage, string className) 
             : base(logName, parentLog, initialMessage, className)
         {
         }

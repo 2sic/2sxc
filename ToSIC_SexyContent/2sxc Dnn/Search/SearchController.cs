@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
 {
     internal class SearchController: HasLog
     {
-        public SearchController(Log parentLog = null) : base("DNN.Search", parentLog) { }
+        public SearchController(ILog parentLog = null) : base("DNN.Search", parentLog) { }
 
         /// <summary>
         /// Get search info for each dnn module containing 2sxc data

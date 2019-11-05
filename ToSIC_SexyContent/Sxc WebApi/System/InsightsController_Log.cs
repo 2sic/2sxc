@@ -158,7 +158,7 @@ namespace ToSic.Sxc.WebApi.System
             return msg;
         }
 
-        private static string FormatLog(string title, Log log)
+        private static string FormatLog(string title, ILog log)
         {
             var dump = log.Dump(" - ", "",
                 "end of log", "*resStart*", "*resEnd*");

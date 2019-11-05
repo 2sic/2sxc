@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.SexyContent.WebApi.Permissions
@@ -10,7 +10,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
     {
         protected List<IEntity> Items;
 
-        public MultiPermissionsItems(SxcInstance sxcInstance, int appId, IEntity item, Log parentLog) 
+        public MultiPermissionsItems(SxcInstance sxcInstance, int appId, IEntity item, ILog parentLog) 
             : base(sxcInstance, appId, parentLog)
         {
             Items = new List<IEntity> {item};

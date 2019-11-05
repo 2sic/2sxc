@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Web;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Interfaces;
 using IDynamicEntity = ToSic.Sxc.Interfaces.IDynamicEntity;
@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
     {
         private static string EmptyMessage = "<!-- auto-render of item {0} -->";
 
-        internal static IHtmlString Render(IContentBlock parentCb, Eav.Interfaces.IEntity entity, Log parentLog)
+        internal static IHtmlString Render(IContentBlock parentCb, Eav.Interfaces.IEntity entity, ILog parentLog)
         {
             var log = new Log("Htm.Render", parentLog, "simple");
 

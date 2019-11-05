@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
     public class ZoneMapper : HasLog, IZoneMapper
     {
         /// <inheritdoc />
-        public ZoneMapper(Log parentLog = null) : base("DNN.ZoneMp", parentLog)
+        public ZoneMapper(ILog parentLog = null) : base("DNN.ZoneMp", parentLog)
         {
         }
 

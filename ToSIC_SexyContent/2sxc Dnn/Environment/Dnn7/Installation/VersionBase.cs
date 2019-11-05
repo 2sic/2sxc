@@ -1,14 +1,15 @@
-﻿using ToSic.Eav.Logging.Simple;
+﻿using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Environment.Dnn7.Installation
 {
     public class VersionBase
     {
-        protected Log Log;
+        protected ILog Log;
 
         protected Logger logger;
         protected string _version;
-        internal VersionBase(string version, Logger sharedLogger, string logName, Log parentLog = null)
+        internal VersionBase(string version, Logger sharedLogger, string logName, ILog parentLog = null)
         {
             logger = sharedLogger;
             _version = version;

@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Web.Http;
 using DotNetNuke.Services.Log.EventLog;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Logging;
 using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -11,7 +11,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
     {
         public const int MaxDuration = 10;
 
-        public static void LogToDnn(string key, string message, Log log = null, DnnHelper dnnContext = null, bool force = false)
+        public static void LogToDnn(string key, string message, ILog log = null, DnnHelper dnnContext = null, bool force = false)
         {
             if(!force)
                 if (!EnableLogging(GlobalConfiguration.Configuration.Properties)) return;

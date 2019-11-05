@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Search;
@@ -28,9 +29,9 @@ namespace ToSic.SexyContent.Engines
 
         public RenderStatusType PreRenderStatus { get; internal set; }
 
-        protected Log Log { get; set; }
+        protected ILog Log { get; set; }
 
-        public void Init(Template template, App app, IInstanceInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, Log parentLog)
+        public void Init(Template template, App app, IInstanceInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, ILog parentLog)
         {
             var templatePath = VirtualPathUtility.Combine(Internal.TemplateHelpers.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
 

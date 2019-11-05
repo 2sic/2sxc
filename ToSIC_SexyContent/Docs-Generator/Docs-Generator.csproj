@@ -65,7 +65,14 @@
   <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="api\.gitignore" />
+    <Content Include="images\logos\2sxc-10-150.png" />
+    <Content Include="images\logos\2sxc-10-50.png" />
+    <Content Include="images\logos\2sxc-10-500.png" />
+    <Content Include="images\logos\2sxc-10.svg" />
+    <Content Include="images\logos\2sxcv-10-300.png" />
+    <Content Include="images\logos\favicon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\..\..\eav-server\packages\docfx.console.2.46.0\build\docfx.console.targets" Condition="Exists('..\..\..\..\..\eav-server\packages\docfx.console.2.46.0\build\docfx.console.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

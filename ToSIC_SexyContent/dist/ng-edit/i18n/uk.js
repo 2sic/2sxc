@@ -36,7 +36,8 @@
     "Saved": "збережено",
     "Saving": "зберігаємо...",
     "DebugEnabled": "debug mode enabled",
-    "DebugDisabled": "debug mode disabled"
+    "DebugDisabled": "debug mode disabled",
+    "SwitchedLanguageToDefault": "We have switched language to default {{language}} because it's missing some or all values"
   },
   "LangMenu": {
     "Translate": "Translate",
@@ -46,6 +47,7 @@
     "Link": "Link to other language",
     "UseDefault": "авто (по замовчуванню)",
     "InAllLanguages": "in all languages",
+    "MissingDefaultLangValue": "please create value in the default language {{languages}} before translating",
     "In": "у {{languages}}",
     "From": "від {{languages}}",
     "Dialog": {

@@ -5,7 +5,6 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Interfaces;
@@ -18,7 +17,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         private readonly string _jsonTemplate =
             "data-list-context='{{ `parent`: {0}, `field`: `{1}`, `type`: `{2}`, `guid`: `{3}`}}'".Replace("`", "\"");
 
-        internal InPageEditingHelper(SxcInstance sxcInstance, Log parentLog) : base("Edt", parentLog)
+        internal InPageEditingHelper(SxcInstance sxcInstance, ILog parentLog) : base("Edt", parentLog)
         {
             Enabled = sxcInstance.UserMayEdit;
             SxcInstance = sxcInstance;

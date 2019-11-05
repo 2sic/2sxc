@@ -1,5 +1,5 @@
 ﻿using System.Web.Http.Filters;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Logging;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Environment.Dnn7;
 
@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.WebApi
 
                 if (reqProps.ContainsKey(AlreadyLogged)) return;
 
-                var log = reqProps[Constants.EavLogKey] as Log;
+                var log = reqProps[Constants.EavLogKey] as ILog;
 
                 // check if we have additional context information (portal, module, etc.)
                 reqProps.TryGetValue(Constants.DnnContextKey, out var dnnContext);

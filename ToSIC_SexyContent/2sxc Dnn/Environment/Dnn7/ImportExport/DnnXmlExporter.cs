@@ -3,6 +3,7 @@ using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport.Environment;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -14,7 +15,7 @@ namespace ToSic.SexyContent.ImportExport
         private readonly IFileManager _dnnFiles = FileManager.Instance;
         internal AdamAppContext AdamAppContext;
 
-        public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, Log parentLog)
+        public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
             var tenant = new DnnTenant(PortalSettings.Current);
             var app = App.LightWithoutData(tenant, zoneId, appId, parentLog: Log);

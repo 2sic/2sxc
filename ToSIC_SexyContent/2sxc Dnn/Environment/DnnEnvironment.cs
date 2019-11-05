@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.Environment
 
         public  DnnEnvironment() : base("DNN.Enviro") { }
 
-        public DnnEnvironment(Log parentLog = null) : base("DNN.Enviro", parentLog) 
+        public DnnEnvironment(ILog parentLog = null) : base("DNN.Enviro", parentLog) 
             => PagePublishing =  Eav.Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
 
         public string DefaultLanguage => PortalSettings.Current.DefaultLanguage;

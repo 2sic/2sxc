@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Environment.Dnn7.Installation
@@ -51,7 +52,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Installation
         }
 
 
-        internal static void ImportXmlSchemaOfVersion(string version, bool leaveOriginalsUntouched, Log parentLog = null)
+        internal static void ImportXmlSchemaOfVersion(string version, bool leaveOriginalsUntouched, ILog parentLog = null)
         {
             //var userName = "System-ModuleUpgrade-" + version;
             var xmlToImport =

@@ -21,7 +21,7 @@ namespace ToSic.SexyContent
         private readonly bool _showDrafts;
         private readonly bool _enableVersioning;
 
-        public ContentGroupManager(int zoneId, int appId, bool showDrafts, bool enableVersioning, Log parentLog)
+        public ContentGroupManager(int zoneId, int appId, bool showDrafts, bool enableVersioning, ILog parentLog)
             : base("CG.Manage", parentLog, "constructor", nameof(ContentGroupManager))
 		{
 			_zoneId = zoneId;

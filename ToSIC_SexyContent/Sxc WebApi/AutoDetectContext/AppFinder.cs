@@ -6,7 +6,6 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.SexyContent.WebApi.AutoDetectContext
@@ -21,7 +20,7 @@ namespace ToSic.SexyContent.WebApi.AutoDetectContext
         private PortalSettings Portal { get; }
         private HttpControllerContext ControllerContext { get; }
 
-        public AppFinder(PortalSettings portal, IZoneMapper zoneMapper, HttpControllerContext controllerContext, Log parentLog) : base("Api.FindAp", parentLog, null, "AppForApiCall")
+        public AppFinder(PortalSettings portal, IZoneMapper zoneMapper, HttpControllerContext controllerContext, ILog parentLog) : base("Api.FindAp", parentLog, null, "AppForApiCall")
         {
             ZoneMapper = zoneMapper;
             Portal = portal;

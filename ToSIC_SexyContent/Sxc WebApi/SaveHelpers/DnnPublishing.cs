@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
@@ -12,7 +13,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
 {
     internal class DnnPublishing:SaveHelperBase
     {
-        public DnnPublishing(SxcInstance sxcInstance, Log parentLog) : base(sxcInstance, parentLog, "Api.DnnPub") { }
+        public DnnPublishing(SxcInstance sxcInstance, ILog parentLog) : base(sxcInstance, parentLog, "Api.DnnPub") { }
 
         internal Dictionary<Guid, int> SaveWithinDnnPagePublishing<T>(
             int appId,

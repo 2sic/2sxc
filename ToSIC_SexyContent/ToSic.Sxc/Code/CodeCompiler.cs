@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Code
 {
     internal class CodeCompiler: HasLog
     {
-        internal CodeCompiler(Log parentLog) : base("Sys.CsCmpl", parentLog)
+        internal CodeCompiler(ILog parentLog) : base("Sys.CsCmpl", parentLog)
         {
         }
 

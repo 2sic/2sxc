@@ -26,7 +26,7 @@ namespace ToSic.SexyContent
         protected readonly SxcInstance SxcInstance;
 
         private readonly ITenant _tenant;
-        protected AppAndDataHelpersBase(SxcInstance sxcInstance, ITenant tenant, Log parentLog): base("Sxc.AppHlp", parentLog ?? sxcInstance?.Log)
+        protected AppAndDataHelpersBase(SxcInstance sxcInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? sxcInstance?.Log)
         {
             if (sxcInstance == null)
                 return;

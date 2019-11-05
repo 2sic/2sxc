@@ -37,7 +37,7 @@ namespace ToSic.SexyContent
             }
         }
 
-        private Log Log { get; } = new Log("Sxc.View");
+        private ILog Log { get; } = new Log("Sxc.View");
 
         /// <summary>
         /// Page Load event

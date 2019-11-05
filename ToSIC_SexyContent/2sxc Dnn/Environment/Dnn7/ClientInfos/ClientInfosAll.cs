@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public Ui Ui;
 
-        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IInstanceInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated, bool autoToolbar, Log parentLog)
+        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IInstanceInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated, bool autoToolbar, ILog parentLog)
             : base("Sxc.CliInf", parentLog, "building entire client-context")
         {
             var versioning = sxc.Environment.PagePublishing;

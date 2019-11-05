@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 using Constants = ToSic.Eav.Constants;
 
@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Interfaces
 {
     public interface IRenderingHelpers
     {
-        IRenderingHelpers Init(SxcInstance sxc, Log parentLog);
+        IRenderingHelpers Init(SxcInstance sxc, ILog parentLog);
 
         string WrapInContext(string content,
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
