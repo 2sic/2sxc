@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Interfaces;
 
 // ReSharper disable once CheckNamespace
@@ -27,7 +27,7 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        public Log Log { get; }
+        public ILog Log { get; }
 
         /// <summary>
         /// The url-parameters (or alternative thereof) to use when picking views or anything
@@ -66,7 +66,7 @@ namespace ToSic.SexyContent
         internal SxcInstance(IContentBlock  cb, 
             IInstanceInfo envInstance, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
-            Log parentLog = null)
+            ILog parentLog = null)
         {
             Log = new Log("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
             EnvFac = Factory.Resolve<IEnvironmentFactory>();

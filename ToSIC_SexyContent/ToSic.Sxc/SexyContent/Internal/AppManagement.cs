@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using static System.String;
 
@@ -17,7 +18,7 @@ namespace ToSic.SexyContent.Internal
         /// Returns all Apps for the current zone
         /// </summary>
         /// <returns></returns>
-        public static List<App> GetApps(int zoneId, bool includeDefaultApp, ITenant tenant, Log parentLog)
+        public static List<App> GetApps(int zoneId, bool includeDefaultApp, ITenant tenant, ILog parentLog)
         {
             var appIds = new ZoneRuntime(zoneId, parentLog).Apps;
             var builtApps = appIds.Select(eavApp => App.LightWithoutData(tenant, zoneId, eavApp.Key, parentLog: parentLog));
@@ -28,7 +29,7 @@ namespace ToSic.SexyContent.Internal
             return builtApps.OrderBy(a => a.Name).ToList();
         }
 
-        internal static void RemoveAppInTenantAndEav(IZoneMapper zoneMapper, int zoneId, int appId, ITenant tenant, int userId, Log parentLog)
+        internal static void RemoveAppInTenantAndEav(IZoneMapper zoneMapper, int zoneId, int appId, ITenant tenant, int userId, ILog parentLog)
         {
             // check portal assignment and that it's not the default app
             if (zoneId != zoneMapper.GetZoneId(tenant.Id))

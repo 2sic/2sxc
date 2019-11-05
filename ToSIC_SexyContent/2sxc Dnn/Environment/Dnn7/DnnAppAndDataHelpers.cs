@@ -1,12 +1,13 @@
-﻿using ToSic.Eav.Logging.Simple;
+﻿using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Razor.Helpers;
-using ToSic.Sxc.Dnn.Interfaces;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class DnnAppAndDataHelpers : AppAndDataHelpersBase, IHasDnnContext
+    public class DnnAppAndDataHelpers : AppAndDataHelpersBase, IDynamicCode
     {
-        public DnnAppAndDataHelpers(SxcInstance sxcInstance, Log parentLog = null): base(sxcInstance, new DnnTenant(null), parentLog)
+        public DnnAppAndDataHelpers(SxcInstance sxcInstance, ILog parentLog = null): base(sxcInstance, new DnnTenant(null), parentLog)
         {
             // Init things than require module-info or similar, but not 2sxc
             var instance = sxcInstance?.EnvInstance;
@@ -18,7 +19,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// <summary>
         /// Dnn context with module, page, portal etc.
         /// </summary>
-        public DnnHelper Dnn { get; }
+        public IDnnContext Dnn { get; }
         #endregion
 
 

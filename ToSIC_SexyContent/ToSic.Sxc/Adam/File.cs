@@ -5,7 +5,7 @@ using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Adam
 {
-    public class File : Eav.Apps.Assets.File, IAsset, AdamFile, IFile
+    public class File : Eav.Apps.Assets.File, AdamFile, IAdamFile
     {
         private AdamAppContext AppContext { get; }
 
@@ -15,19 +15,14 @@ namespace ToSic.Sxc.Adam
         }
 
         /// <inheritdoc cref="IDynamicEntity" />
-        public IDynamicEntity Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, false);
+        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, false) as dynamic;
 
-        /// <inheritdoc cref="IDynamicEntity" />
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
 
-        /// <inheritdoc cref="IDynamicEntity" />
         public string Url => AppContext.Tenant.ContentPath + Folder + FullName;
 
-        /// <inheritdoc cref="IDynamicEntity" />
        public string Type => Classification.TypeName(Extension);
 
-        /// <inheritdoc cref="IDynamicEntity" />
-       public string Name { get; internal set; }
 
 
         #region Obsolete properties, included to ensure old stuff still works because of refactoring in 2sxc 9.20

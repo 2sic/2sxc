@@ -21,14 +21,14 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private string _applicationRoot;
         private IInstanceInfo _moduleInfo;
 
-        public Log Log { get; } = new Log("Dnn.Render");
+        public ILog Log { get; } = new Log("Dnn.Render");
 
         // Blank constructor for IoC
         public DnnRenderingHelpers() { }
 
-        public DnnRenderingHelpers(SxcInstance sxc, Log parentLog) => Init(sxc, parentLog);
+        public DnnRenderingHelpers(SxcInstance sxc, ILog parentLog) => Init(sxc, parentLog);
 
-        public IRenderingHelpers Init(SxcInstance sxc, Log parentLog)
+        public IRenderingHelpers Init(SxcInstance sxc, ILog parentLog)
         {
             LinkLog(parentLog);
             var appRoot = VirtualPathUtility.ToAbsolute("~/");
@@ -146,7 +146,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return msg;
         }
 
-        public void LinkLog(Log parentLog) => Log.LinkTo(parentLog);
+        public void LinkLog(ILog parentLog) => Log.LinkTo(parentLog);
 
 
     }

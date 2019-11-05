@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
@@ -9,7 +10,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
 {
     internal class Security:SaveHelperBase
     {
-        public Security(SxcInstance sxcInstance, Log parentLog) : base(sxcInstance, parentLog, "Api.SavSec") { }
+        public Security(SxcInstance sxcInstance, ILog parentLog) : base(sxcInstance, parentLog, "Api.SavSec") { }
 
 
         public IMultiPermissionCheck DoPreSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)

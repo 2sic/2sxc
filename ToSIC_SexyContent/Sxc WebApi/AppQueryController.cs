@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.DataSources;
@@ -55,7 +56,7 @@ namespace ToSic.SexyContent.WebApi
         }
 
 
-        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(App app, string name, string stream, bool includeGuid, ModuleInfo module, Log log, SxcInstance sxc)
+        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(App app, string name, string stream, bool includeGuid, ModuleInfo module, ILog log, SxcInstance sxc)
         {
             log.Add($"build and run query name:{name}, with module:{module?.ModuleID}");
             var query = app.GetQuery(name);

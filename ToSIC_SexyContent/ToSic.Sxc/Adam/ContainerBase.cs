@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Apps.Assets;
-
-namespace ToSic.Sxc.Adam
+﻿namespace ToSic.Sxc.Adam
 {
     public abstract class ContainerBase
     {

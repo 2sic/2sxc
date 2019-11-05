@@ -36,7 +36,8 @@
     "Saved": "Enregistré",
     "Saving": "En cours d'enregistrement...",
     "DebugEnabled": "debug mode enabled",
-    "DebugDisabled": "debug mode disabled"
+    "DebugDisabled": "debug mode disabled",
+    "SwitchedLanguageToDefault": "We have switched language to default {{language}} because it's missing some or all values"
   },
   "LangMenu": {
     "Translate": "Translate",
@@ -46,6 +47,7 @@
     "Link": "Link to other language",
     "UseDefault": "auto (par défaut)",
     "InAllLanguages": "in all languages",
+    "MissingDefaultLangValue": "please create value in the default language {{languages}} before translating",
     "In": "dans {{languages}}",
     "From": "de {{languages}}",
     "Dialog": {

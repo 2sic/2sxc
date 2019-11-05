@@ -5,7 +5,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Internal;
@@ -19,7 +18,7 @@ namespace ToSic.Eav.AppEngine
 		public readonly int ZoneId;
 		public readonly int AppId;
 
-		public TemplateManager(int zoneId, int appId, Log parentLog): base("App.TmplMg", parentLog)
+		public TemplateManager(int zoneId, int appId, ILog parentLog): base("App.TmplMg", parentLog)
 		{
 			ZoneId = zoneId;
 			AppId = appId;

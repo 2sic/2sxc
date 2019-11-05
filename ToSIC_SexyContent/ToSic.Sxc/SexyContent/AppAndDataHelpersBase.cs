@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.ValueProvider;
@@ -19,12 +21,12 @@ using ToSic.Sxc.Interfaces;
 // ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
 namespace ToSic.SexyContent
 {
-    public abstract class AppAndDataHelpersBase : HasLog, Sxc.Interfaces.IAppAndDataHelpers
+    public abstract class AppAndDataHelpersBase : HasLog, IDynamicCode
     {
         protected readonly SxcInstance SxcInstance;
 
         private readonly ITenant _tenant;
-        protected AppAndDataHelpersBase(SxcInstance sxcInstance, ITenant tenant, Log parentLog): base("Sxc.AppHlp", parentLog ?? sxcInstance?.Log)
+        protected AppAndDataHelpersBase(SxcInstance sxcInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? sxcInstance?.Log)
         {
             if (sxcInstance == null)
                 return;
@@ -146,7 +148,7 @@ namespace ToSic.SexyContent
         /// <param name="inSource"></param>
         /// <param name="configurationProvider"></param>
         /// <returns></returns>
-        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null) where T : IDataSource
         {
             if (configurationProvider == null)
                 configurationProvider = ConfigurationProvider;
@@ -168,7 +170,7 @@ namespace ToSic.SexyContent
         /// <typeparam name="T"></typeparam>
         /// <param name="inStream"></param>
         /// <returns></returns>
-        public T CreateSource<T>(IDataStream inStream)
+        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
         {
             // if it has a source, then use this, otherwise it's null and that works too. Reason: some sources like DataTable or SQL won't have an upstream source
             var src = CreateSource<T>(inStream.Source);
@@ -194,31 +196,34 @@ namespace ToSic.SexyContent
         }
         private dynamic _content;
 
+        
         /// <summary>
         /// List item of the current view
         /// </summary>
-		public dynamic ListContent {
+		public dynamic Header {
             get
             {
-                if(_listContent == null) TryToBuildListContentObject();
-                return _listContent;
+                if(_header == null) TryToBuildHeaderObject();
+                return _header;
             } 
         }
+        private dynamic _header;
 
-        private dynamic _listContent;
+        [Obsolete("use Header instead")]
+        public dynamic ListContent => Header;
 
         /// <remarks>
         /// This must be lazy-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
         /// - this would break API even though the List etc. are never accessed
         /// </remarks>
-        private void TryToBuildListContentObject()
+        private void TryToBuildHeaderObject()
         {
             Log.Add("try to build ListContent (header) object");
             if (Data == null || SxcInstance.Template == null) return;
             if (!Data.Out.ContainsKey(AppConstants.ListContent)) return;
 
             var listEntity = Data[AppConstants.ListContent].List.FirstOrDefault();
-            _listContent = listEntity == null ? null : AsDynamic(listEntity);
+            _header = listEntity == null ? null : AsDynamic(listEntity);
         }
 
 #pragma warning disable 618
@@ -279,7 +284,7 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(IDynamicEntity entity, string fieldName)
+        public IAdamFolder AsAdam(IDynamicEntity entity, string fieldName)
             => AsAdam(AsEntity(entity), fieldName);
 
 
@@ -289,7 +294,7 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(Eav.Interfaces.IEntity entity, string fieldName)
+        public IAdamFolder AsAdam(IEntity entity, string fieldName)
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
             if (_adamAppContext == null)

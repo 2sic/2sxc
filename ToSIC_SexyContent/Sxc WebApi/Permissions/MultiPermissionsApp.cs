@@ -4,6 +4,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.DataSources;
@@ -26,10 +27,10 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
         protected readonly bool SamePortal;
 
-        public MultiPermissionsApp(SxcInstance sxcInstance, int appId, Log parentLog) :
+        public MultiPermissionsApp(SxcInstance sxcInstance, int appId, ILog parentLog) :
             this(sxcInstance, SystemRuntime.ZoneIdOfApp(appId), appId, parentLog) { }
 
-        protected MultiPermissionsApp(SxcInstance sxcInstance, int zoneId, int appId, Log parentLog) 
+        protected MultiPermissionsApp(SxcInstance sxcInstance, int zoneId, int appId, ILog parentLog) 
             : base("Api.Perms", parentLog)
         {
             var wrapLog = Log.New("AppAndPermissions", $"..., appId: {appId}, ...");

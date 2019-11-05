@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Log = new Log("DNN.BusCon", null, "starting");
         }
 
-        private Log Log { get; }
+        private ILog Log { get; }
 
         #region DNN Interface Members - search, upgrade, versionable
 

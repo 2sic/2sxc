@@ -6,21 +6,21 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Namespace ToSic.Eav.Interfaces
-   </title>
+   | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace ToSic.Eav.Interfaces
-   ">
+   | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
-    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="shortcut icon" href="../images/logos/favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
     <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
     
-    
-    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -37,7 +37,7 @@
               </button>
               
               <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
+                <img id="logo" class="svg" src="../images/logos/2sxc-10-50.png" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -58,6 +58,16 @@
           </div>
         </div>
       </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
       <div role="main" class="container body-content hide-when-search">
         
         <div class="sidenav hide-when-search">
@@ -72,13 +82,40 @@
   
   <h1 id="ToSic_Eav_Interfaces" data-uid="ToSic.Eav.Interfaces" class="text-break">Namespace ToSic.Eav.Interfaces
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>The EAV system underlying 2sxc is the core data management system, in charge of Entities and such. For long term stability, we only use interfaces in the API. </p>
+<p>In most cases you only care about the <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> interface. </p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
     <h3 id="interfaces">Interfaces
   </h3>
+      <h4><a class="xref" href="ToSic.Eav.Interfaces.IAttributeBase.html">IAttributeBase</a></h4>
+      <section><p>Represents an Attribute. This is the base for both</p>
+<ul>
+<li>attribute definition (in the IContentType)</li>
+<li>attribute with values-list (in the IEntity)</li>
+</ul>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Interfaces.IAttributeDefinition.html">IAttributeDefinition</a></h4>
+      <section><p>Represents an Attribute. This is the base for both</p>
+<ul>
+<li>attribute definition (in the IContentType)</li>
+<li>attribute with values-list (in the IEntity)</li>
+</ul>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Interfaces.ICacheExpiring.html">ICacheExpiring</a></h4>
+      <section><p>Marks objects which are cache-based, and which may contain obsolete cached data.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Interfaces.ICacheKeyProvider.html">ICacheKeyProvider</a></h4>
+      <section><p>Marks objects which can identify what cache it&apos;s for. <br>
+For example, when parameters change what data is cached, then the cache-key can contain this parameter,
+so that a different cache is used based on changing parameters. </p>
+</section>
       <h4><a class="xref" href="ToSic.Eav.Interfaces.IChildEntities.html">IChildEntities</a></h4>
       <section><p>This manages child entities - so entities referenced in a field of an Entity</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Interfaces.IContentType.html">IContentType</a></h4>
+      <section><p>Represents a Content Type information (the schema) used for <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> objects.</p>
 </section>
       <h4><a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a></h4>
       <section><p>The primary data-item in the system, IEntity is a generic data-item for any kind of information.
@@ -95,7 +132,11 @@ For the more powerful Entity, use <a class="xref" href="ToSic.Eav.Interfaces.IEn
 </section>
       <h4><a class="xref" href="ToSic.Eav.Interfaces.IMetadataOfItem.html">IMetadataOfItem</a></h4>
       <section><p>A provider for metadata for something.
-So if an <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> or an <a class="xref" href="ToSic.Eav.Apps.Interfaces.IApp.html">IApp</a> has metadata, this will provide it. </p>
+So if an <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> or an <see cref="!:ToSic.Eav.Apps.Interfaces.IApp"></see> has metadata, this will provide it. </p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Interfaces.IMetadataProvider.html">IMetadataProvider</a></h4>
+      <section><p>For querying metadata from the data source.
+Mainly used in the Store, Cache-Systems and Apps.</p>
 </section>
       <h4><a class="xref" href="ToSic.Eav.Interfaces.IRelationshipManager.html">IRelationshipManager</a></h4>
       <section><p>Manages relationships of an entity - to it&apos;s children and parents.</p>
@@ -107,6 +148,9 @@ So if an <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> or
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Eav.Interfaces.md/#L2" class="contribution-link">Improve this Doc</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

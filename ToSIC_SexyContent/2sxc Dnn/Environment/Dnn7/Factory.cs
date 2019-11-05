@@ -7,6 +7,7 @@ using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
 using IApp = ToSic.Sxc.Interfaces.IApp;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     /// <summary>
@@ -32,7 +33,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return new ModuleContentBlock(moduleInfo, parentLog: null, tenant: tenant).SxcInstance;
         }
 
-        public static Sxc.Interfaces.IAppAndDataHelpers CodingHelpers(ISxcInstance sxc) 
+        public static Sxc.Interfaces.IDynamicCode CodingHelpers(ISxcInstance sxc) 
             => new DnnAppAndDataHelpers(sxc as SxcInstance);
 
         /// <summary>

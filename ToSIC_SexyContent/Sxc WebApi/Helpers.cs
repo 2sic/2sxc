@@ -4,6 +4,7 @@ using System.Net.Http;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Environment.Dnn7;
@@ -24,7 +25,7 @@ namespace ToSic.SexyContent.WebApi
             public string Value{ get; set; }
         }
 
-        internal static SxcInstance GetSxcOfApiRequest(HttpRequestMessage request, bool allowNoContextFound = false, Log log = null)
+        internal static SxcInstance GetSxcOfApiRequest(HttpRequestMessage request, bool allowNoContextFound = false, ILog log = null)
         {
             var cbidHeader = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();

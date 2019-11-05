@@ -5,8 +5,8 @@ using System.Linq;
 using System.Web;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.PublicApi;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Interfaces;
@@ -75,7 +75,7 @@ namespace ToSic.SexyContent
                 return Toolbar.ToString();
 
             if (attributeName == AppConstants.Presentation)
-                return Presentation;
+                return GetPresentation;
 
             #endregion
 
@@ -106,12 +106,14 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public dynamic Get(string name) => GetEntityValue(name, out _);
 
-        private IDynamicEntity _presentation;
+        /// <inheritdoc />
+        public dynamic Presentation => GetPresentation; 
 
-        private IDynamicEntity Presentation
+        private IDynamicEntity GetPresentation
             => _presentation ?? (_presentation = Entity is EntityInContentGroup
                    ? new DynamicEntity(((EntityInContentGroup) Entity).Presentation, _dimensions, SxcInstance)
                    : null);
+        private IDynamicEntity _presentation;
 
         #region obsolete stuff - to remove in 2sxc 10
         [Obsolete("This has been obsolete since ca. 2sxc 4. Will be removed in 2sxc 10")]

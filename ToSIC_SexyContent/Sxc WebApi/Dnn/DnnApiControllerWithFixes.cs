@@ -43,9 +43,9 @@ namespace ToSic.SexyContent.WebApi.Dnn
         }
 
 
-        public Log Log { get; }
+        public ILog Log { get; }
 
-        public void LinkLog(Log parentLog)
+        public void LinkLog(ILog parentLog)
         {
             throw new NotImplementedException();
         }

@@ -5,22 +5,22 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Namespace ToSic.Eav.Security.Permissions
-   </title>
+    <title>Namespace ToSic.Eav.Logging
+   | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Namespace ToSic.Eav.Security.Permissions
-   ">
+    <meta name="title" content="Namespace ToSic.Eav.Logging
+   | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
-    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="shortcut icon" href="../images/logos/favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
     <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
     
-    
-    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -37,7 +37,7 @@
               </button>
               
               <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
+                <img id="logo" class="svg" src="../images/logos/2sxc-10-50.png" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -58,6 +58,16 @@
           </div>
         </div>
       </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
       <div role="main" class="container body-content hide-when-search">
         
         <div class="sidenav hide-when-search">
@@ -68,18 +78,39 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ToSic.Eav.Security.Permissions">
+            <article class="content wrap" id="_content" data-uid="ToSic.Eav.Logging">
   
-  <h1 id="ToSic_Eav_Security_Permissions" data-uid="ToSic.Eav.Security.Permissions" class="text-break">Namespace ToSic.Eav.Security.Permissions
+  <h1 id="ToSic_Eav_Logging" data-uid="ToSic.Eav.Logging" class="text-break">Namespace ToSic.Eav.Logging
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>The EAV system has a powerful internal logging system. It&#39;s the backbone to Insights.</p>
+<p>This is where it resides - usually you don&#39;t want to know about it ;).</p>
+<p>If you do, here a short conceptual background:</p>
+<ul>
+<li><p>Any object can have a property - usually called <code>Log</code> which is an <a class="xref" href="ToSic.Eav.Logging.ILog.html">ILog</a> .<br>  Using this the object can call the <code>Log.Add(...)</code> to add messages. Many other commands help in various scenarios. </p>
+</li>
+<li><p>The real power comes from chaining these - because each logger can know what parent-logger it reports to.<br>  This allows us to reproduce the chain of events in the original code, because you can track where<br>  loggers were made, and how they relate. </p>
+</li>
+<li><p>Most objects which use the Log, implement the <a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a>, often by inheriting<br>  <a class="xref" href="ToSic.Eav.Logging.HasLog.html">HasLog</a> which automates things when initializing - like the chaining of the Loggers. </p>
+</li>
+</ul>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
+    <h3 id="classes">Classes
+  </h3>
+      <h4><a class="xref" href="ToSic.Eav.Logging.HasLog.html">HasLog</a></h4>
+      <section><p>Base class for most objects which simply want to implement log and log-chaining.</p>
+</section>
     <h3 id="interfaces">Interfaces
   </h3>
-      <h4><a class="xref" href="ToSic.Eav.Security.Permissions.IHasPermissions.html">IHasPermissions</a></h4>
-      <section><p>Anything that uses <a class="xref" href="ToSic.Eav.Security.Permissions.IHasPermissions.html">IHasPermissions</a> can have custom permissions.
-This interface provides access to the information stored in the custom permissions.</p>
+      <h4><a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a></h4>
+      <section><p>Objects which can log their activity, and share their log with other objects in the chain to produce extensive internal logging.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Logging.ILog.html">ILog</a></h4>
+      <section><p>A logger with special capabilities.
+It can take log messages, and chain itself to other loggers. <br>
+If chained, it can broadcast the messages to the other loggers from that time forward.
+Basically this is the backbone of Insights.</p>
 </section>
 </article>
           </div>
@@ -88,6 +119,9 @@ This interface provides access to the information stored in the custom permissio
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Eav.Logging.md/#L2" class="contribution-link">Improve this Doc</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

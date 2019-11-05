@@ -1,0 +1,949 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class BaseDataSource
+   | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class BaseDataSource
+   | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="ToSic.Eav.DataSources.BaseDataSource">
+  
+  
+  <h1 id="ToSic_Eav_DataSources_BaseDataSource" data-uid="ToSic.Eav.DataSources.BaseDataSource" class="text-break">Class BaseDataSource
+  </h1>
+  <div class="markdown level0 summary"><p>The base class, which should always be inherited. Already implements things like Get One / Get many, Caching and a lot more.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="ToSic.Eav.Logging.HasLog.html">HasLog</a></div>
+    <div class="level2"><span class="xref">BaseDataSource</span></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.App.html">App</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.AttributeFilter.html">AttributeFilter</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.EntityIdFilter.html">EntityIdFilter</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.EntityTypeFilter.html">EntityTypeFilter</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.ExternalDataDataSource.html">ExternalDataDataSource</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.ItemFilterDuplicates.html">ItemFilterDuplicates</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.OwnerFilter.html">OwnerFilter</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.Paging.html">Paging</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.PassThrough.html">PassThrough</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.PublishingFilter.html">PublishingFilter</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.RelationshipFilter.html">RelationshipFilter</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.Shuffle.html">Shuffle</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.StreamFallback.html">StreamFallback</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.StreamMerge.html">StreamMerge</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.ValueFilter.html">ValueFilter</a></div>
+      <div class="level3"><a class="xref" href="ToSic.Eav.DataSources.ValueSort.html">ValueSort</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a></div>
+    <div><a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a></div>
+    <div><a class="xref" href="ToSic.Eav.Apps.Interfaces.IAppIdentity.html">IAppIdentity</a></div>
+    <div><a class="xref" href="ToSic.Eav.Apps.Interfaces.IZoneIdentity.html">IZoneIdentity</a></div>
+    <div><a class="xref" href="ToSic.Eav.Interfaces.ICacheExpiring.html">ICacheExpiring</a></div>
+    <div><a class="xref" href="ToSic.Eav.Interfaces.ICacheKeyProvider.html">ICacheKeyProvider</a></div>
+    <div><a class="xref" href="ToSic.Eav.DataSources.Caches.ICanPurgeListCache.html">ICanPurgeListCache</a></div>
+    <div><a class="xref" href="ToSic.Eav.DataSources.IDataTarget.html">IDataTarget</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog_Log">HasLog.Log</a>
+    </div>
+    <div>
+      <a class="xref" href="ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog_InitLog_System_String_ToSic_Eav_Logging_ILog_System_String_">HasLog.InitLog(String, ILog, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog_LinkLog_ToSic_Eav_Logging_ILog_">HasLog.LinkLog(ILog)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="ToSic.Eav.DataSources.html">ToSic.Eav.DataSources</a></h6>
+  <h6><strong>Assembly</strong>: ToSic.Eav.DataSources.dll</h6>
+  <h5 id="ToSic_Eav_DataSources_BaseDataSource_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class BaseDataSource : HasLog, IHasLog, IDataSource, IAppIdentity, IZoneIdentity, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_AppId.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.AppId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L106">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_AppId_" data-uid="ToSic.Eav.DataSources.BaseDataSource.AppId*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_AppId" data-uid="ToSic.Eav.DataSources.BaseDataSource.AppId">AppId</h4>
+  <div class="markdown level1 summary"><p>The app id as used internally</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual int AppId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p>The App ID</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_Cache.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.Cache%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L72">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_Cache_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Cache*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_Cache" data-uid="ToSic.Eav.DataSources.BaseDataSource.Cache">Cache</h4>
+  <div class="markdown level1 summary"><p>Direct access to the root cache underlying all data provided by this data source. </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICache Cache { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">ToSic.Eav.DataSources.Caches.ICache</span></td>
+        <td><p>An <span class="xref">ToSic.Eav.DataSources.Caches.ICache</span> data source to the root cache.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_CacheFullKey.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.CacheFullKey%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L75">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_CacheFullKey_" data-uid="ToSic.Eav.DataSources.BaseDataSource.CacheFullKey*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_CacheFullKey" data-uid="ToSic.Eav.DataSources.BaseDataSource.CacheFullKey">CacheFullKey</h4>
+  <div class="markdown level1 summary"><p>Combination of the current key and all keys of upstream cached items, to create a long unique key for this context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual string CacheFullKey { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><p>Full key containing own partial key and upstream keys.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_CachePartialKey.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.CachePartialKey%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L51">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_CachePartialKey_" data-uid="ToSic.Eav.DataSources.BaseDataSource.CachePartialKey*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_CachePartialKey" data-uid="ToSic.Eav.DataSources.BaseDataSource.CachePartialKey">CachePartialKey</h4>
+  <div class="markdown level1 summary"><p>Unique key-id for this specific situation - could be the same for all instances, or could vary by some parameter.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual string CachePartialKey { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><p>A string which is specific to this cache-item.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_CacheRelevantConfigurations.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.CacheRelevantConfigurations%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L40">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_CacheRelevantConfigurations_" data-uid="ToSic.Eav.DataSources.BaseDataSource.CacheRelevantConfigurations*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_CacheRelevantConfigurations" data-uid="ToSic.Eav.DataSources.BaseDataSource.CacheRelevantConfigurations">CacheRelevantConfigurations</h4>
+  <div class="markdown level1 summary"><p>Some configuration of the data source is cache-relevant, others are not.
+This list contains the names of all configuration items which are cache relevant.
+It will be used when generating a unique ID for caching the data.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;string&gt; CacheRelevantConfigurations { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_CacheTimestamp.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.CacheTimestamp%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L93">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_CacheTimestamp_" data-uid="ToSic.Eav.DataSources.BaseDataSource.CacheTimestamp*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_CacheTimestamp" data-uid="ToSic.Eav.DataSources.BaseDataSource.CacheTimestamp">CacheTimestamp</h4>
+  <div class="markdown level1 summary"><p>System time-stamp of when the data in this cached thing was initialized. </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual long CacheTimestamp { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><p>A timestamp as a long number</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_Configuration.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.Configuration%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L135">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_Configuration_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Configuration*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_Configuration" data-uid="ToSic.Eav.DataSources.BaseDataSource.Configuration">Configuration</h4>
+  <div class="markdown level1 summary"><p>Gets a Dictionary of Configurations for this DataSource, e.g. Key: EntityId, Value: [QueryString:EntityId]</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDictionary&lt;string, string&gt; Configuration { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_ConfigurationProvider.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.ConfigurationProvider%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L132">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_ConfigurationProvider_" data-uid="ToSic.Eav.DataSources.BaseDataSource.ConfigurationProvider*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_ConfigurationProvider" data-uid="ToSic.Eav.DataSources.BaseDataSource.ConfigurationProvider">ConfigurationProvider</h4>
+  <div class="markdown level1 summary"><p>Gets the ConfigurationProvider for this DataSource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IValueCollectionProvider ConfigurationProvider { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.ValueProvider.IValueCollectionProvider.html">IValueCollectionProvider</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_DataSourceGuid.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.DataSourceGuid%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L112">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_DataSourceGuid_" data-uid="ToSic.Eav.DataSources.BaseDataSource.DataSourceGuid*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_DataSourceGuid" data-uid="ToSic.Eav.DataSources.BaseDataSource.DataSourceGuid">DataSourceGuid</h4>
+  <div class="markdown level1 summary"><p>Internal ID usually from persisted configurations IF the configuration was build from an pre-stored query.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Guid DataSourceGuid { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
+        <td><p>The guid of this data source which identifies the configuration <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> of the data source.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_In.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.In%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L115">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_In_" data-uid="ToSic.Eav.DataSources.BaseDataSource.In*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_In" data-uid="ToSic.Eav.DataSources.BaseDataSource.In">In</h4>
+  <div class="markdown level1 summary"><p>List of all In connections</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDictionary&lt;string, IDataStream&gt; In { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_Item_System_String_.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.Item(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L121">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_Item_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Item*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_Item_System_String_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Item(System.String)">Item[String]</h4>
+  <div class="markdown level1 summary"><p>Gets the Out-Stream with specified Name. </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDataStream this[string outName] { get; }</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">outName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a></td>
+        <td><p>an <a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a> of the desired name</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.NullReferenceException</span></td>
+        <td><p>if the stream does not exist</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_List.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.List%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L124">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_List_" data-uid="ToSic.Eav.DataSources.BaseDataSource.List*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_List" data-uid="ToSic.Eav.DataSources.BaseDataSource.List">List</h4>
+  <div class="markdown level1 summary"><p>The items in the data-source - to be exact, the ones in the Default stream.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;IEntity&gt; List { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a>&gt;</td>
+        <td><p>A list of <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> items in the Default stream.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_Name.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L35">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_Name_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Name*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_Name" data-uid="ToSic.Eav.DataSources.BaseDataSource.Name">Name</h4>
+  <div class="markdown level1 summary"><p>Name of this data source - mainly to aid debugging</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Name { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><p>Name of this source.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_Out.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.Out%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L118">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_Out_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Out*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_Out" data-uid="ToSic.Eav.DataSources.BaseDataSource.Out">Out</h4>
+  <div class="markdown level1 summary"><p>Gets the Dictionary of Out-Streams. This is the internal accessor, as usually you&apos;ll use this[&quot;name&quot;] instead. <br>
+In rare cases you need the Out, for example to list the stream names in the data source.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual IDictionary&lt;string, IDataStream&gt; Out { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a>&gt;</td>
+        <td><p>A dictionary of named <a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a> objects</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_Ready.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.Ready%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L203">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_Ready_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Ready*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_Ready" data-uid="ToSic.Eav.DataSources.BaseDataSource.Ready">Ready</h4>
+  <div class="markdown level1 summary"><p>Indicates whether the DataSource is ready for use (initialized/configured)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool Ready { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if ready, false if not. Rarely used.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_ZoneId.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.ZoneId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L109">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_ZoneId_" data-uid="ToSic.Eav.DataSources.BaseDataSource.ZoneId*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_ZoneId" data-uid="ToSic.Eav.DataSources.BaseDataSource.ZoneId">ZoneId</h4>
+  <div class="markdown level1 summary"><p>ID of the zone (EAV Tenant)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual int ZoneId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p>The zone ID</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_Attach_System_String_ToSic_Eav_DataSources_IDataSource_.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.Attach(System.String%2CToSic.Eav.DataSources.IDataSource)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L174">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_Attach_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Attach*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_Attach_System_String_ToSic_Eav_DataSources_IDataSource_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Attach(System.String,ToSic.Eav.DataSources.IDataSource)">Attach(String, IDataSource)</h4>
+  <div class="markdown level1 summary"><p>Add a single named stream to the In</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Attach(string streamName, IDataSource dataSource)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">streamName</span></td>
+        <td><p>In-name of the stream</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a></td>
+        <td><span class="parametername">dataSource</span></td>
+        <td><p>The data source - will use it&apos;s default out</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_Attach_System_String_ToSic_Eav_DataSources_IDataStream_.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.Attach(System.String%2CToSic.Eav.DataSources.IDataStream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L178">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_Attach_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Attach*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_Attach_System_String_ToSic_Eav_DataSources_IDataStream_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Attach(System.String,ToSic.Eav.DataSources.IDataStream)">Attach(String, IDataStream)</h4>
+  <div class="markdown level1 summary"><p>Add a single named stream to the In</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Attach(string streamName, IDataStream dataStream)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">streamName</span></td>
+        <td><p>In-name of the stream</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a></td>
+        <td><span class="parametername">dataStream</span></td>
+        <td><p>The data stream to attach</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_Attach_ToSic_Eav_DataSources_IDataSource_.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.Attach(ToSic.Eav.DataSources.IDataSource)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L163">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_Attach_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Attach*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_Attach_ToSic_Eav_DataSources_IDataSource_" data-uid="ToSic.Eav.DataSources.BaseDataSource.Attach(ToSic.Eav.DataSources.IDataSource)">Attach(IDataSource)</h4>
+  <div class="markdown level1 summary"><p>Attach a DataSource to In - replaces all existing in-streams.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Attach(IDataSource dataSource)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a></td>
+        <td><span class="parametername">dataSource</span></td>
+        <td><p>DataSource to attach</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_CacheChanged_System_Int64_.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.CacheChanged(System.Int64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L98">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_CacheChanged_" data-uid="ToSic.Eav.DataSources.BaseDataSource.CacheChanged*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_CacheChanged_System_Int64_" data-uid="ToSic.Eav.DataSources.BaseDataSource.CacheChanged(System.Int64)">CacheChanged(Int64)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool CacheChanged(long newCacheTimeStamp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">newCacheTimeStamp</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource_PurgeList_System_Boolean_.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource.PurgeList(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L259">View Source</a>
+  </span>
+  <a id="ToSic_Eav_DataSources_BaseDataSource_PurgeList_" data-uid="ToSic.Eav.DataSources.BaseDataSource.PurgeList*"></a>
+  <h4 id="ToSic_Eav_DataSources_BaseDataSource_PurgeList_System_Boolean_" data-uid="ToSic.Eav.DataSources.BaseDataSource.PurgeList(System.Boolean)">PurgeList(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Remove the current data from the cache, optionally also purge everything upstream</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void PurgeList(bool cascade = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">cascade</span></td>
+        <td><p>true to purge all sources as well, default is false</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.Apps.Interfaces.IAppIdentity.html">IAppIdentity</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.Apps.Interfaces.IZoneIdentity.html">IZoneIdentity</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.Interfaces.ICacheExpiring.html">ICacheExpiring</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.Interfaces.ICacheKeyProvider.html">ICacheKeyProvider</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.DataSources.Caches.ICanPurgeListCache.html">ICanPurgeListCache</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.DataSources.IDataTarget.html">IDataTarget</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_BaseDataSource.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.BaseDataSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/BaseDataSource.cs/#L16" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

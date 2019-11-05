@@ -2,9 +2,9 @@
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent;
 using App = ToSic.SexyContent.App;
 
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Adam
     /// The app-context of ADAM
     /// In charge of managing assets inside this app
     /// </summary>
-    public class AdamAppContext: HasLog
+    public class AdamAppContext: HasLog, IAdamContext
     {
         /// <summary>
         /// the app is only used to get folder / guid etc.
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Adam
         internal readonly IEnvironmentFileSystem EnvironmentFs;
 
 
-        public AdamAppContext(ITenant tenant, App app, SxcInstance sxcInstance, Log parentLog) : base("Adm.ApCntx", parentLog, "starting")
+        public AdamAppContext(ITenant tenant, App app, SxcInstance sxcInstance, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
         {
             Tenant = tenant;
             _app = app;

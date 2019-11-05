@@ -1,6 +1,5 @@
 ﻿using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -18,7 +17,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             public ModuleInfo ModuleInfo => _settingsHelper.ModuleInfo;
 
 
-            public ModuleVersions(int moduleId, Log parentLog): base("Dnn.ModVer", parentLog, "()")
+            public ModuleVersions(int moduleId, ILog parentLog): base("Dnn.ModVer", parentLog, "()")
             {
                 _settingsHelper = new ModuleSettingsHelper(moduleId);
             }

@@ -1,11 +1,12 @@
 ﻿using System.Web;
+using ToSic.Eav.Documentation;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Razor.Interfaces
+namespace ToSic.Sxc.Dnn
 {
     /// <summary>
     /// helper to quickly "raw" some html
     /// </summary>
+    [PublicApi]
     public interface IHtmlHelper
     {
         /// <summary>

@@ -1,0 +1,829 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface IDynamicCode
+   | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface IDynamicCode
+   | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="ToSic.Sxc.Interfaces.IDynamicCode">
+  
+  
+  <h1 id="ToSic_Sxc_Interfaces_IDynamicCode" data-uid="ToSic.Sxc.Interfaces.IDynamicCode" class="text-break">Interface IDynamicCode
+  </h1>
+  <div class="markdown level0 summary"><p>Dynamic code files like Razor or WebApis.
+Supports many properties like App, etc. to ensure that the dynamic code has everything you need. <br>
+Also provides many Conversions between <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> and <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a>.
+Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity &quot;just work&quot; even if you give them the original data. </p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="ToSic.Sxc.Interfaces.html">ToSic.Sxc.Interfaces</a></h6>
+  <h6><strong>Assembly</strong>: ToSic.Sxc.dll</h6>
+  <h5 id="ToSic_Sxc_Interfaces_IDynamicCode_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IDynamicCode : IAppAndDataHelpers, ISharedCodeBuilder</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_Content.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.Content%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L31">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_Content_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.Content*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_Content" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.Content">Content</h4>
+  <div class="markdown level1 summary"><p>The content object of the current razor view - IF the current view has content.
+If the view is a list, it will return the first item. 
+Will be null otherwise.
+To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html#ToSic_Sxc_Interfaces_IDynamicEntity_IsDemoItem">IsDemoItem</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">dynamic Content { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><p>A <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> object with the current content - or null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_Edit.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.Edit%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L87">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_Edit_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.Edit*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_Edit" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.Edit">Edit</h4>
+  <div class="markdown level1 summary"><p>Helper commands to enable in-page editing functionality
+Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IInPageEditingSystem Edit { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Sxc.Interfaces.IInPageEditingSystem.html">IInPageEditingSystem</a></td>
+        <td><p>An <a class="xref" href="ToSic.Sxc.Interfaces.IInPageEditingSystem.html">IInPageEditingSystem</a> object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_Header.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.Header%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L42">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_Header_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.Header*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_Header" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.Header">Header</h4>
+  <div class="markdown level1 summary"><p>The header object of the current razor view, if it&apos;s a list and has a header object.
+If it&apos;s a list and doesn&apos;t have a header (and no default), it will return null.
+To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html#ToSic_Sxc_Interfaces_IDynamicEntity_IsDemoItem">IsDemoItem</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">dynamic Header { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><p>A <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> object with the current content.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="ToSic_Sxc_Interfaces_IDynamicCode_Header_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Introduced in 2sxc 10.10 - previously it was called ListContent, now deprecated.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_Link.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.Link%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L74">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_Link_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.Link*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_Link" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.Link">Link</h4>
+  <div class="markdown level1 summary"><p>Link helper object to create the correct links</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ILinkHelper Link { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Sxc.Interfaces.ILinkHelper.html">ILinkHelper</a></td>
+        <td><p>A <a class="xref" href="ToSic.Sxc.Interfaces.ILinkHelper.html">ILinkHelper</a> object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_AsAdam_ToSic_Eav_Interfaces_IEntity_System_String_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.AsAdam(ToSic.Eav.Interfaces.IEntity%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L62">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_AsAdam_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsAdam*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_AsAdam_ToSic_Eav_Interfaces_IEntity_System_String_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsAdam(ToSic.Eav.Interfaces.IEntity,System.String)">AsAdam(IEntity, String)</h4>
+  <div class="markdown level1 summary"><p>Provides an Adam instance for this item and field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IAdamFolder AsAdam(IEntity entity, string fieldName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a></td>
+        <td><span class="parametername">entity</span></td>
+        <td><p>The entity, often Content or similar</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">fieldName</span></td>
+        <td><p>The field name, like &quot;Gallery&quot; or &quot;Pics&quot;</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.Apps.Assets.IAdamFolder.html">IAdamFolder</a></td>
+        <td><p>An Adam object for navigating the assets</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_AsAdam_ToSic_Sxc_Interfaces_IDynamicEntity_System_String_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.AsAdam(ToSic.Sxc.Interfaces.IDynamicEntity%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L54">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_AsAdam_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsAdam*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_AsAdam_ToSic_Sxc_Interfaces_IDynamicEntity_System_String_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsAdam(ToSic.Sxc.Interfaces.IDynamicEntity,System.String)">AsAdam(IDynamicEntity, String)</h4>
+  <div class="markdown level1 summary"><p>Provides an Adam instance for this item and field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IAdamFolder AsAdam(IDynamicEntity entity, string fieldName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a></td>
+        <td><span class="parametername">entity</span></td>
+        <td><p>The entity, often Content or similar</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">fieldName</span></td>
+        <td><p>The field name, like &quot;Gallery&quot; or &quot;Pics&quot;</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.Apps.Assets.IAdamFolder.html">IAdamFolder</a></td>
+        <td><p>An Adam object for navigating the assets</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_System_Collections_Generic_IEnumerable_ToSic_Eav_Interfaces_IEntity__.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable%7BToSic.Eav.Interfaces.IEntity%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L130">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_System_Collections_Generic_IEnumerable_ToSic_Eav_Interfaces_IEntity__" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Interfaces.IEntity})">AsDynamic(IEnumerable&lt;IEntity&gt;)</h4>
+  <div class="markdown level1 summary"><p>Converts a list of <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> objects into a list of <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> objects. </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;dynamic&gt; AsDynamic(IEnumerable&lt;IEntity&gt; entities)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a>&gt;</td>
+        <td><span class="parametername">entities</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><p>a list of <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> objects</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_System_Collections_Generic_KeyValuePair_System_Int32_ToSic_Eav_Interfaces_IEntity__.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair%7BSystem.Int32%2CToSic.Eav.Interfaces.IEntity%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L114">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_System_Collections_Generic_KeyValuePair_System_Int32_ToSic_Eav_Interfaces_IEntity__" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair{System.Int32,ToSic.Eav.Interfaces.IEntity})">AsDynamic(KeyValuePair&lt;Int32, IEntity&gt;)</h4>
+  <div class="markdown level1 summary"><p>Converts a dictionary-style list of many <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> objects into a key-value pair of <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> objects. </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">dynamic AsDynamic(KeyValuePair&lt;int, IEntity&gt; entityKeyValuePair)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.KeyValuePair</span>&lt;<span class="xref">System.Int32</span>, <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a>&gt;</td>
+        <td><span class="parametername">entityKeyValuePair</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_System_Object_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L106">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_System_Object_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(System.Object)">AsDynamic(Object)</h4>
+  <div class="markdown level1 summary"><p>Convert a dynamic entity and return itself again. This is so coders don&apos;t have to worry if the original object was an <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> or a <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> in the first place. </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">dynamic AsDynamic(dynamic dynamicEntity)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">dynamicEntity</span></td>
+        <td><p>the original object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><p>a dynamic object for easier coding</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_ToSic_Eav_DataSources_IDataStream_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(ToSic.Eav.DataSources.IDataStream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L122">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_ToSic_Eav_DataSources_IDataStream_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(ToSic.Eav.DataSources.IDataStream)">AsDynamic(IDataStream)</h4>
+  <div class="markdown level1 summary"><p>Converts a list of entities from a <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a> into a list of <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> objects. </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;dynamic&gt; AsDynamic(IDataStream stream)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a></td>
+        <td><span class="parametername">stream</span></td>
+        <td><p>the stream containing <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a> items</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><p>a list of <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> objects</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_ToSic_Eav_Interfaces_IEntity_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(ToSic.Eav.Interfaces.IEntity)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L98">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_AsDynamic_ToSic_Eav_Interfaces_IEntity_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsDynamic(ToSic.Eav.Interfaces.IEntity)">AsDynamic(IEntity)</h4>
+  <div class="markdown level1 summary"><p>Wraps an entity into a <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">dynamic AsDynamic(IEntity entity)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a></td>
+        <td><span class="parametername">entity</span></td>
+        <td><p>the original object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><p>a dynamic object for easier coding</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_AsEntity_System_Object_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.AsEntity(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L139">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_AsEntity_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsEntity*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_AsEntity_System_Object_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.AsEntity(System.Object)">AsEntity(Object)</h4>
+  <div class="markdown level1 summary"><p>Unwraps a dynamic entity back into the underlying <a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IEntity AsEntity(dynamic dynamicEntity)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">dynamicEntity</span></td>
+        <td><p>the wrapped IEntity</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.Interfaces.IEntity.html">IEntity</a></td>
+        <td><p>A normal IEntity</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_ValueProvider_IValueCollectionProvider_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.CreateSource%60%601(ToSic.Eav.DataSources.IDataSource%2CToSic.Eav.ValueProvider.IValueCollectionProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L168">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_CreateSource_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.CreateSource*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_ValueProvider_IValueCollectionProvider_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.ValueProvider.IValueCollectionProvider)">CreateSource&lt;T&gt;(IDataSource, IValueCollectionProvider)</h4>
+  <div class="markdown level1 summary"><p>Create a <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a> which will process data from the given stream.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">T CreateSource&lt;T&gt;(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+    where T : IDataSource</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a></td>
+        <td><span class="parametername">inSource</span></td>
+        <td><p>The data source which will be the default In of the new data-source.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.ValueProvider.IValueCollectionProvider.html">IValueCollectionProvider</a></td>
+        <td><span class="parametername">configurationProvider</span></td>
+        <td><p>An alternate configuration provider for the DataSource</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>A typed DataSource object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>A data-source type - must be inherited from IDataSource</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode_CreateSource__1_ToSic_Eav_DataSources_IDataStream_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode.CreateSource%60%601(ToSic.Eav.DataSources.IDataStream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L151">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Interfaces_IDynamicCode_CreateSource_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.CreateSource*"></a>
+  <h4 id="ToSic_Sxc_Interfaces_IDynamicCode_CreateSource__1_ToSic_Eav_DataSources_IDataStream_" data-uid="ToSic.Sxc.Interfaces.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataStream)">CreateSource&lt;T&gt;(IDataStream)</h4>
+  <div class="markdown level1 summary"><p>Create a <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a> which will process data from the given stream.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">T CreateSource&lt;T&gt;(IDataStream inStream)
+    where T : IDataSource</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a></td>
+        <td><span class="parametername">inStream</span></td>
+        <td><p>The stream which will be the default In of the new data-source.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>A typed DataSource object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>A data-source type - must be inherited from IDataSource</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/new/develop/apiSpec/new?filename=ToSic_Sxc_Interfaces_IDynamicCode.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Interfaces.IDynamicCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/ToSic.Sxc/Interfaces/IDynamicCode.cs/#L18" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

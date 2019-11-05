@@ -1,14 +1,14 @@
 ﻿using System;
-using ToSic.SexyContent.Razor.Helpers;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class DnnLinkHelper: ILinkHelper
     {
-        private readonly DnnHelper _dnn;
+        private readonly IDnnContext _dnn;
 
-        public DnnLinkHelper(DnnHelper dnn)
+        public DnnLinkHelper(IDnnContext dnn)
         {
             _dnn = dnn;
         }

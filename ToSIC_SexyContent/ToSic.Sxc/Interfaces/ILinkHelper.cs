@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.PublicApi;
+﻿using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Interfaces
 {
@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Interfaces
     /// Helpers to create links with parameters or base-tag links (important for SPAs)
     /// </summary>
     [PublicApi]
-    public interface ILinkHelper: SexyContent.Interfaces.ILinkHelper
+    public interface ILinkHelper: SexyContent.Interfaces.ILinkHelper    // inherits from old namespace for compatibility
     {
         /// <summary>
         /// returns a link to the current page with parameters resolved in a way that DNN wants it

@@ -66,9 +66,9 @@ namespace ToSic.SexyContent
         /// Create a source with initial stream to attach...
         /// </summary>
         /// <returns></returns>
-        T CreateSource<T>(IDataStream inStream);
+        T CreateSource<T>(IDataStream inStream) where T : IDataSource;
         IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null);
-        T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null);
+        T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null) where T : IDataSource;
         #endregion
 
     }

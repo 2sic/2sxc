@@ -39,7 +39,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
         /// <returns></returns>
 	    [HttpGet]
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-	    public string ResolveHyperlink(string hyperlink, int appId) 
+	    public string ResolveHyperlink(string hyperlink, int appId)
             => ResolveHyperlink(hyperlink, appId, null, default(Guid), null);
 
 	    [HttpGet]
@@ -60,8 +60,8 @@ namespace ToSic.SexyContent.WebApi.Dnn
                     // page link - only resolve if the user has edit-permissions
 		            // only people who have some full edit permissions may actually look up pages
 		            var permCheckPage = new MultiPermissionsApp(SxcInstance, appId, Log);
-		            return permCheckPage.UserMayOnAll(GrantSets.WritePublished) 
-                        ? resolved 
+		            return permCheckPage.UserMayOnAll(GrantSets.WritePublished)
+                        ? resolved
                         : hyperlink;
 		        }
 
@@ -79,7 +79,7 @@ namespace ToSic.SexyContent.WebApi.Dnn
                 if(!adamCheck.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))
                     throw exp;
 
-		        // if everythig worked till now, it's ok to return the result
+		        // if everything worked till now, it's ok to return the result
 		        return resolved;
 		    }
 		    catch

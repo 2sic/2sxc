@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Logging;
 using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Engines
@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.Engines
         /// <summary>
         /// Initialize the Engine (pass everything needed for Render to it)
         /// </summary>
-        void Init(Template template, App app, IInstanceInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, Log parentLog);
+        void Init(Template template, App app, IInstanceInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, ILog parentLog);
 
         /// <summary>
         /// Renders a template, returning a string with the rendered template.

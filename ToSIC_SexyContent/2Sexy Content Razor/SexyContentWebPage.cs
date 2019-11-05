@@ -4,9 +4,10 @@ using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.PublicApi;
 using ToSic.Eav.ValueProvider;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
@@ -15,9 +16,8 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Interfaces;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Dnn.Interfaces;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Razor;
-using ToSic.Sxc.Razor.Interfaces;
 using File = System.IO.File;
 
 namespace ToSic.SexyContent.Razor
@@ -26,11 +26,11 @@ namespace ToSic.SexyContent.Razor
     /// The core page type for delivering a 2sxc page
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
-    public abstract class SexyContentWebPage : WebPageBase, Sxc.Interfaces.IAppAndDataHelpers, IHasDnnContext
+    public abstract class SexyContentWebPage : WebPageBase, IRazor
     {
         #region Helpers
 
-        protected internal IHtmlHelper Html { get; internal set; }
+        public IHtmlHelper Html { get; internal set; }
 
         public ILinkHelper Link => DnnAppAndDataHelpers.Link;
 
@@ -115,32 +115,34 @@ namespace ToSic.SexyContent.Razor
         #endregion
 
         #region Data Source Stuff
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
+       public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
             => DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
 
+        /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
         public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+            where T : IDataSource
             => DnnAppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
 
-        /// <inheritdoc />
-        /// <summary>
-        /// Create a source with initial stream to attach...
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="inStream"></param>
-        /// <returns></returns>
-		public T CreateSource<T>(IDataStream inStream)
+        /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
+        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
             => DnnAppAndDataHelpers.CreateSource<T>(inStream);
 
         #endregion
 
-        #region Content, Presentation, ListContent, ListPresentation and List
+        #region Content, Header, etc. and List
         public dynamic Content => DnnAppAndDataHelpers.Content;
 
+        [Obsolete("use Content.Presentation instead")]
         public dynamic Presentation => DnnAppAndDataHelpers.Content?.Presentation;
 
-        public dynamic ListContent => DnnAppAndDataHelpers.ListContent;
+        public dynamic Header => DnnAppAndDataHelpers.Header;
 
-        public dynamic ListPresentation => DnnAppAndDataHelpers.ListContent?.Presentation;
+        [Obsolete("Use Header instead")]
+        public dynamic ListContent => DnnAppAndDataHelpers.Header;
+
+        [Obsolete("Use Header.Presentation instead")]
+        public dynamic ListPresentation => DnnAppAndDataHelpers.Header?.Presentation;
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
         public List<Element> List => DnnAppAndDataHelpers.List;
@@ -187,7 +189,7 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(IDynamicEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public IAdamFolder AsAdam(IDynamicEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
 
         /// <summary>
@@ -196,7 +198,7 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public FolderOfField AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public IAdamFolder AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
         #endregion
 

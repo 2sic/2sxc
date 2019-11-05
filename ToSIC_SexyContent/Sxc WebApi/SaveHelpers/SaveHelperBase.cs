@@ -10,7 +10,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
     {
         internal SxcInstance SxcInstance;
 
-        protected SaveHelperBase(SxcInstance sxcInstance, Log parentLog, string logName) : base(logName, parentLog)
+        protected SaveHelperBase(SxcInstance sxcInstance, ILog parentLog, string logName) : base(logName, parentLog)
         {
             SxcInstance = sxcInstance;
         }

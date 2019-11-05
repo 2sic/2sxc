@@ -4,7 +4,7 @@ using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
-using ToSic.Sxc.Dnn.Interfaces;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent.Razor.Helpers
 {

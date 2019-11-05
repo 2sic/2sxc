@@ -7,7 +7,7 @@ using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         protected IAppIdentity AppIdentity;
 
         public DnnPermissionCheck(
-            Log parentLog,
+            ILog parentLog,
             IContentType targetType = null,
             IEntity targetItem = null,
             IInstanceInfo instance = null,

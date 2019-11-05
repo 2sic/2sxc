@@ -1,4 +1,5 @@
 ﻿using System.Web.Http.Controllers;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
@@ -24,7 +25,7 @@ namespace ToSic.SexyContent.WebApi
         internal SxcInstance SxcInstance { get; private set; }
         
 
-        internal static DnnAppAndDataHelpers GetContext(SxcInstance sxcInstance, Log log) 
+        internal static DnnAppAndDataHelpers GetContext(SxcInstance sxcInstance, ILog log) 
             => new DnnAppAndDataHelpers(sxcInstance, sxcInstance?.Log ?? log);
 
 

@@ -36,7 +36,8 @@
     "Saved": "salvato",
     "Saving": "salvataggio...",
     "DebugEnabled": "debug mode enabled",
-    "DebugDisabled": "debug mode disabled"
+    "DebugDisabled": "debug mode disabled",
+    "SwitchedLanguageToDefault": "We have switched language to default {{language}} because it's missing some or all values"
   },
   "LangMenu": {
     "Translate": "Translate",
@@ -46,6 +47,7 @@
     "Link": "Link to other language",
     "UseDefault": "automatico (default)",
     "InAllLanguages": "in all languages",
+    "MissingDefaultLangValue": "please create value in the default language {{languages}} before translating",
     "In": "in {{languages}}",
     "From": "a partire dal {{languages}}",
     "Dialog": {

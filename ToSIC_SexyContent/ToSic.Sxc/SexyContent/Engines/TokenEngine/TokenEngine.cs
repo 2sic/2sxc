@@ -83,7 +83,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             _tokenReplace = new TokenReplaceEav(App, InstInfo.Id, /*PortalSettings.Current,*/ confProv);
             
             // Add the Content and ListContent property sources used always
-            _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new DynamicEntityPropertyAccess(SourcePropertyName.ListContent, _dataHelper.ListContent));
+            _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new DynamicEntityPropertyAccess(SourcePropertyName.ListContent, _dataHelper.Header));
             var contentProperty = _dataHelper.List.FirstOrDefault();
             if (contentProperty != null)
             {

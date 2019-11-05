@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
     {
         public DnnMapAppToInstance() : base("Dnn.MapA2I") { }
 
-        public DnnMapAppToInstance(Log parentLog) : base("Dnn.MapA2I", parentLog) { }
+        public DnnMapAppToInstance(ILog parentLog) : base("Dnn.MapA2I", parentLog) { }
 
         public int? GetAppIdFromInstance(IInstanceInfo instance, int zoneId)
         {
@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
         
-        public void SetAppIdForInstance(IInstanceInfo instance, IAppEnvironment env, int? appId, Log parentLog)
+        public void SetAppIdForInstance(IInstanceInfo instance, IAppEnvironment env, int? appId, ILog parentLog)
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
@@ -98,7 +98,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     guid.ToString(), Log);
         }
 
-        public ContentGroup GetInstanceContentGroup(ContentGroupManager cgm, Log log, int instanceId, int? pageId)
+        public ContentGroup GetInstanceContentGroup(ContentGroupManager cgm, ILog log, int instanceId, int? pageId)
         {
             var mci = ModuleController.Instance;
 

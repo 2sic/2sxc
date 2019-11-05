@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Interfaces;
 using IApp = ToSic.Eav.Apps.Interfaces.IApp;
@@ -10,18 +10,18 @@ namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class DnnEnvironmentFactory : IEnvironmentFactory, IWebFactoryTemp
     {
-        public PermissionCheckBase ItemPermissions(IAppIdentity appIdentity, IEntity targetItem, Log parentLog, IInstanceInfo module = null) 
+        public PermissionCheckBase ItemPermissions(IAppIdentity appIdentity, IEntity targetItem, ILog parentLog, IInstanceInfo module = null) 
             => new DnnPermissionCheck(parentLog, targetItem: targetItem, instance: module, portal: PortalSettings.Current, appIdentity: appIdentity);
 
-        public PermissionCheckBase TypePermissions(IAppIdentity appIdentity, IContentType targetType, IEntity targetItem, Log parentLog, IInstanceInfo module = null) 
+        public PermissionCheckBase TypePermissions(IAppIdentity appIdentity, IContentType targetType, IEntity targetItem, ILog parentLog, IInstanceInfo module = null) 
             => new DnnPermissionCheck(parentLog, targetType, targetItem, module, portal: PortalSettings.Current, appIdentity: appIdentity);
 
-        public PermissionCheckBase InstancePermissions(Log parentLog, IInstanceInfo module, IApp app)
+        public PermissionCheckBase InstancePermissions(ILog parentLog, IInstanceInfo module, IApp app)
             => new DnnPermissionCheck(parentLog, portal: PortalSettings.Current, instance: module, app: app);
 
-        public IPagePublishing PagePublisher(Log parentLog) => new PagePublishing(parentLog);
+        public IPagePublishing PagePublisher(ILog parentLog) => new PagePublishing(parentLog);
 
-        public ToSic.Eav.Apps.Interfaces.IAppEnvironment Environment(Log parentLog) => new DnnEnvironment(parentLog);
+        public ToSic.Eav.Apps.Interfaces.IAppEnvironment Environment(ILog parentLog) => new DnnEnvironment(parentLog);
 
 
 

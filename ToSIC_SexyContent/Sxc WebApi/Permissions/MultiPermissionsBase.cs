@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
             => _permissionCheckers ?? (_permissionCheckers = InitializePermissionChecks());
         private Dictionary<string, IPermissionCheck> _permissionCheckers;
 
-        protected MultiPermissionsBase(string logName, Log parentLog) : base(logName, parentLog)
+        protected MultiPermissionsBase(string logName, ILog parentLog) : base(logName, parentLog)
         {}
 
         #region abstract methods

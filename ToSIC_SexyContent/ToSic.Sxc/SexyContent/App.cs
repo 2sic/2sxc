@@ -3,7 +3,7 @@ using System.Threading;
 using System.Web;
 using ToSic.Eav.AppEngine;
 using ToSic.Eav.Apps.Interfaces;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Logging;
 
 namespace ToSic.SexyContent
 {
@@ -70,13 +70,13 @@ namespace ToSic.SexyContent
         /// Background: data operations need to know more like showDraft etc.
         /// which often isn't needed for simpler operations
         /// </summary>
-        public static App LightWithoutData(ITenant tenant, int appId, Log parentLog)
+        public static App LightWithoutData(ITenant tenant, int appId, ILog parentLog)
             => new App(tenant, AutoLookupZone, appId, null, true, parentLog);
 
-        public static App LightWithoutData(ITenant tenant, int zoneId, int appId, Log parentLog)
+        public static App LightWithoutData(ITenant tenant, int zoneId, int appId, ILog parentLog)
             => new App(tenant, zoneId, appId, null, true, parentLog);
 
-        public static App LightWithoutData(ITenant tenant, int zoneId, int appId, bool allowSideEffects, Log parentLog)
+        public static App LightWithoutData(ITenant tenant, int zoneId, int appId, bool allowSideEffects, ILog parentLog)
             => new App(tenant, zoneId, appId, null, allowSideEffects, parentLog);
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace ToSic.SexyContent
             int appId, 
             Func<Eav.Apps.App, IAppDataConfiguration> buildConfig, 
             bool allowSideEffects, 
-            Log parentLog = null)
+            ILog parentLog = null)
             : base(tenant, zoneId, appId, allowSideEffects, buildConfig, parentLog) { }
 
         #region Paths

@@ -74,9 +74,7 @@
     <Compile Include="Adam\ContainerOfField.cs" />
     <Compile Include="Adam\Configuration.cs" />
     <Compile Include="Adam\Export.cs" />
-    <Compile Include="Adam\IAsset.cs" />
     <Compile Include="Adam\IEnvironmentFileSystem.cs" />
-    <Compile Include="Adam\IFile.cs" />
     <Compile Include="Adam\Metadata.cs" />
     <Compile Include="Adam\Obsolete\AdamFile.cs" />
     <Compile Include="Code\WithContext.cs" />
@@ -85,6 +83,7 @@
     <Compile Include="Deprecated\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\ClientContextInfo\Ui.cs" />
+    <Compile Include="Interfaces\IDynamicCode.cs" />
     <Compile Include="Interfaces\IInPageEditingSystem.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />

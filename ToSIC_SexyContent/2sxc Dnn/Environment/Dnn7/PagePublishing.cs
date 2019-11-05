@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 {
     internal partial class PagePublishing : HasLog, IPagePublishing
     {
-        public PagePublishing(Log parentLog): base("Dnn.Publsh", parentLog, "()")
+        public PagePublishing(ILog parentLog): base("Dnn.Publsh", parentLog, "()")
         {
         }
 
