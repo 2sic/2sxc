@@ -2754,18 +2754,76 @@ references:
   commentId: N:ToSic.Eav.Logging
   fullName: ToSic.Eav.Logging
   nameWithType: ToSic.Eav.Logging
+- uid: ToSic.Eav.Logging.HasLog
+  name: HasLog
+  href: api/ToSic.Eav.Logging.HasLog.html
+  commentId: T:ToSic.Eav.Logging.HasLog
+  fullName: ToSic.Eav.Logging.HasLog
+  nameWithType: HasLog
+- uid: ToSic.Eav.Logging.HasLog.#ctor(System.String,ToSic.Eav.Logging.ILog,System.String,System.String)
+  name: HasLog(String, ILog, String, String)
+  href: api/ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog__ctor_System_String_ToSic_Eav_Logging_ILog_System_String_System_String_
+  commentId: M:ToSic.Eav.Logging.HasLog.#ctor(System.String,ToSic.Eav.Logging.ILog,System.String,System.String)
+  fullName: ToSic.Eav.Logging.HasLog.HasLog(System.String, ToSic.Eav.Logging.ILog, System.String, System.String)
+  nameWithType: HasLog.HasLog(String, ILog, String, String)
+- uid: ToSic.Eav.Logging.HasLog.#ctor*
+  name: HasLog
+  href: api/ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog__ctor_
+  commentId: Overload:ToSic.Eav.Logging.HasLog.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Logging.HasLog.HasLog
+  nameWithType: HasLog.HasLog
+- uid: ToSic.Eav.Logging.HasLog.InitLog(System.String,ToSic.Eav.Logging.ILog,System.String)
+  name: InitLog(String, ILog, String)
+  href: api/ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog_InitLog_System_String_ToSic_Eav_Logging_ILog_System_String_
+  commentId: M:ToSic.Eav.Logging.HasLog.InitLog(System.String,ToSic.Eav.Logging.ILog,System.String)
+  fullName: ToSic.Eav.Logging.HasLog.InitLog(System.String, ToSic.Eav.Logging.ILog, System.String)
+  nameWithType: HasLog.InitLog(String, ILog, String)
+- uid: ToSic.Eav.Logging.HasLog.InitLog*
+  name: InitLog
+  href: api/ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog_InitLog_
+  commentId: Overload:ToSic.Eav.Logging.HasLog.InitLog
+  isSpec: "True"
+  fullName: ToSic.Eav.Logging.HasLog.InitLog
+  nameWithType: HasLog.InitLog
+- uid: ToSic.Eav.Logging.HasLog.LinkLog(ToSic.Eav.Logging.ILog)
+  name: LinkLog(ILog)
+  href: api/ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog_LinkLog_ToSic_Eav_Logging_ILog_
+  commentId: M:ToSic.Eav.Logging.HasLog.LinkLog(ToSic.Eav.Logging.ILog)
+  fullName: ToSic.Eav.Logging.HasLog.LinkLog(ToSic.Eav.Logging.ILog)
+  nameWithType: HasLog.LinkLog(ILog)
+- uid: ToSic.Eav.Logging.HasLog.LinkLog*
+  name: LinkLog
+  href: api/ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog_LinkLog_
+  commentId: Overload:ToSic.Eav.Logging.HasLog.LinkLog
+  isSpec: "True"
+  fullName: ToSic.Eav.Logging.HasLog.LinkLog
+  nameWithType: HasLog.LinkLog
+- uid: ToSic.Eav.Logging.HasLog.Log
+  name: Log
+  href: api/ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog_Log
+  commentId: P:ToSic.Eav.Logging.HasLog.Log
+  fullName: ToSic.Eav.Logging.HasLog.Log
+  nameWithType: HasLog.Log
+- uid: ToSic.Eav.Logging.HasLog.Log*
+  name: Log
+  href: api/ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog_Log_
+  commentId: Overload:ToSic.Eav.Logging.HasLog.Log
+  isSpec: "True"
+  fullName: ToSic.Eav.Logging.HasLog.Log
+  nameWithType: HasLog.Log
 - uid: ToSic.Eav.Logging.IHasLog
   name: IHasLog
   href: api/ToSic.Eav.Logging.IHasLog.html
   commentId: T:ToSic.Eav.Logging.IHasLog
   fullName: ToSic.Eav.Logging.IHasLog
   nameWithType: IHasLog
-- uid: ToSic.Eav.Logging.IHasLog.LinkLog(ToSic.Eav.Logging.Simple.Log)
-  name: LinkLog(Log)
-  href: api/ToSic.Eav.Logging.IHasLog.html#ToSic_Eav_Logging_IHasLog_LinkLog_ToSic_Eav_Logging_Simple_Log_
-  commentId: M:ToSic.Eav.Logging.IHasLog.LinkLog(ToSic.Eav.Logging.Simple.Log)
-  fullName: ToSic.Eav.Logging.IHasLog.LinkLog(ToSic.Eav.Logging.Simple.Log)
-  nameWithType: IHasLog.LinkLog(Log)
+- uid: ToSic.Eav.Logging.IHasLog.LinkLog(ToSic.Eav.Logging.ILog)
+  name: LinkLog(ILog)
+  href: api/ToSic.Eav.Logging.IHasLog.html#ToSic_Eav_Logging_IHasLog_LinkLog_ToSic_Eav_Logging_ILog_
+  commentId: M:ToSic.Eav.Logging.IHasLog.LinkLog(ToSic.Eav.Logging.ILog)
+  fullName: ToSic.Eav.Logging.IHasLog.LinkLog(ToSic.Eav.Logging.ILog)
+  nameWithType: IHasLog.LinkLog(ILog)
 - uid: ToSic.Eav.Logging.IHasLog.LinkLog*
   name: LinkLog
   href: api/ToSic.Eav.Logging.IHasLog.html#ToSic_Eav_Logging_IHasLog_LinkLog_
@@ -2786,6 +2844,152 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Logging.IHasLog.Log
   nameWithType: IHasLog.Log
+- uid: ToSic.Eav.Logging.ILog
+  name: ILog
+  href: api/ToSic.Eav.Logging.ILog.html
+  commentId: T:ToSic.Eav.Logging.ILog
+  fullName: ToSic.Eav.Logging.ILog
+  nameWithType: ILog
+- uid: ToSic.Eav.Logging.ILog.Add(System.Func{System.String})
+  name: Add(Func<String>)
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Add_System_Func_System_String__
+  commentId: M:ToSic.Eav.Logging.ILog.Add(System.Func{System.String})
+  name.vb: Add(Func(Of String))
+  fullName: ToSic.Eav.Logging.ILog.Add(System.Func<System.String>)
+  fullName.vb: ToSic.Eav.Logging.ILog.Add(System.Func(Of System.String))
+  nameWithType: ILog.Add(Func<String>)
+  nameWithType.vb: ILog.Add(Func(Of String))
+- uid: ToSic.Eav.Logging.ILog.Add(System.String)
+  name: Add(String)
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Add_System_String_
+  commentId: M:ToSic.Eav.Logging.ILog.Add(System.String)
+  fullName: ToSic.Eav.Logging.ILog.Add(System.String)
+  nameWithType: ILog.Add(String)
+- uid: ToSic.Eav.Logging.ILog.Add*
+  name: Add
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Add_
+  commentId: Overload:ToSic.Eav.Logging.ILog.Add
+  isSpec: "True"
+  fullName: ToSic.Eav.Logging.ILog.Add
+  nameWithType: ILog.Add
+- uid: ToSic.Eav.Logging.ILog.Call(System.String,System.Func{System.String},System.Func{System.String})
+  name: Call(String, Func<String>, Func<String>)
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Call_System_String_System_Func_System_String__System_Func_System_String__
+  commentId: M:ToSic.Eav.Logging.ILog.Call(System.String,System.Func{System.String},System.Func{System.String})
+  name.vb: Call(String, Func(Of String), Func(Of String))
+  fullName: ToSic.Eav.Logging.ILog.Call(System.String, System.Func<System.String>, System.Func<System.String>)
+  fullName.vb: ToSic.Eav.Logging.ILog.Call(System.String, System.Func(Of System.String), System.Func(Of System.String))
+  nameWithType: ILog.Call(String, Func<String>, Func<String>)
+  nameWithType.vb: ILog.Call(String, Func(Of String), Func(Of String))
+- uid: ToSic.Eav.Logging.ILog.Call(System.String,System.String,System.String)
+  name: Call(String, String, String)
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Call_System_String_System_String_System_String_
+  commentId: M:ToSic.Eav.Logging.ILog.Call(System.String,System.String,System.String)
+  fullName: ToSic.Eav.Logging.ILog.Call(System.String, System.String, System.String)
+  nameWithType: ILog.Call(String, String, String)
+- uid: ToSic.Eav.Logging.ILog.Call*
+  name: Call
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Call_
+  commentId: Overload:ToSic.Eav.Logging.ILog.Call
+  isSpec: "True"
+  fullName: ToSic.Eav.Logging.ILog.Call
+  nameWithType: ILog.Call
+- uid: ToSic.Eav.Logging.ILog.Call``1(System.String,System.String,System.String)
+  name: Call<T>(String, String, String)
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Call__1_System_String_System_String_System_String_
+  commentId: M:ToSic.Eav.Logging.ILog.Call``1(System.String,System.String,System.String)
+  name.vb: Call(Of T)(String, String, String)
+  fullName: ToSic.Eav.Logging.ILog.Call<T>(System.String, System.String, System.String)
+  fullName.vb: ToSic.Eav.Logging.ILog.Call(Of T)(System.String, System.String, System.String)
+  nameWithType: ILog.Call<T>(String, String, String)
+  nameWithType.vb: ILog.Call(Of T)(String, String, String)
+- uid: ToSic.Eav.Logging.ILog.Get(System.String)
+  name: Get(String)
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Get_System_String_
+  commentId: M:ToSic.Eav.Logging.ILog.Get(System.String)
+  fullName: ToSic.Eav.Logging.ILog.Get(System.String)
+  nameWithType: ILog.Get(String)
+- uid: ToSic.Eav.Logging.ILog.Get*
+  name: Get
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Get_
+  commentId: Overload:ToSic.Eav.Logging.ILog.Get
+  isSpec: "True"
+  fullName: ToSic.Eav.Logging.ILog.Get
+  nameWithType: ILog.Get
+- uid: ToSic.Eav.Logging.ILog.LinkTo(ToSic.Eav.Logging.ILog,System.String)
+  name: LinkTo(ILog, String)
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_LinkTo_ToSic_Eav_Logging_ILog_System_String_
+  commentId: M:ToSic.Eav.Logging.ILog.LinkTo(ToSic.Eav.Logging.ILog,System.String)
+  fullName: ToSic.Eav.Logging.ILog.LinkTo(ToSic.Eav.Logging.ILog, System.String)
+  nameWithType: ILog.LinkTo(ILog, String)
+- uid: ToSic.Eav.Logging.ILog.LinkTo*
+  name: LinkTo
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_LinkTo_
+  commentId: Overload:ToSic.Eav.Logging.ILog.LinkTo
+  isSpec: "True"
+  fullName: ToSic.Eav.Logging.ILog.LinkTo
+  nameWithType: ILog.LinkTo
+- uid: ToSic.Eav.Logging.ILog.New(System.String,System.Func{System.String},System.Func{System.String})
+  name: New(String, Func<String>, Func<String>)
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_New_System_String_System_Func_System_String__System_Func_System_String__
+  commentId: M:ToSic.Eav.Logging.ILog.New(System.String,System.Func{System.String},System.Func{System.String})
+  name.vb: New(String, Func(Of String), Func(Of String))
+  fullName: ToSic.Eav.Logging.ILog.New(System.String, System.Func<System.String>, System.Func<System.String>)
+  fullName.vb: ToSic.Eav.Logging.ILog.New(System.String, System.Func(Of System.String), System.Func(Of System.String))
+  nameWithType: ILog.New(String, Func<String>, Func<String>)
+  nameWithType.vb: ILog.New(String, Func(Of String), Func(Of String))
+- uid: ToSic.Eav.Logging.ILog.New(System.String,System.String,System.String)
+  name: New(String, String, String)
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_New_System_String_System_String_System_String_
+  commentId: M:ToSic.Eav.Logging.ILog.New(System.String,System.String,System.String)
+  fullName: ToSic.Eav.Logging.ILog.New(System.String, System.String, System.String)
+  nameWithType: ILog.New(String, String, String)
+- uid: ToSic.Eav.Logging.ILog.New*
+  name: New
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_New_
+  commentId: Overload:ToSic.Eav.Logging.ILog.New
+  isSpec: "True"
+  fullName: ToSic.Eav.Logging.ILog.New
+  nameWithType: ILog.New
+- uid: ToSic.Eav.Logging.ILog.Rename(System.String)
+  name: Rename(String)
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Rename_System_String_
+  commentId: M:ToSic.Eav.Logging.ILog.Rename(System.String)
+  fullName: ToSic.Eav.Logging.ILog.Rename(System.String)
+  nameWithType: ILog.Rename(String)
+- uid: ToSic.Eav.Logging.ILog.Rename*
+  name: Rename
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Rename_
+  commentId: Overload:ToSic.Eav.Logging.ILog.Rename
+  isSpec: "True"
+  fullName: ToSic.Eav.Logging.ILog.Rename
+  nameWithType: ILog.Rename
+- uid: ToSic.Eav.Logging.ILog.Set(System.String)
+  name: Set(String)
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Set_System_String_
+  commentId: M:ToSic.Eav.Logging.ILog.Set(System.String)
+  fullName: ToSic.Eav.Logging.ILog.Set(System.String)
+  nameWithType: ILog.Set(String)
+- uid: ToSic.Eav.Logging.ILog.Set*
+  name: Set
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Set_
+  commentId: Overload:ToSic.Eav.Logging.ILog.Set
+  isSpec: "True"
+  fullName: ToSic.Eav.Logging.ILog.Set
+  nameWithType: ILog.Set
+- uid: ToSic.Eav.Logging.ILog.Warn(System.String)
+  name: Warn(String)
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Warn_System_String_
+  commentId: M:ToSic.Eav.Logging.ILog.Warn(System.String)
+  fullName: ToSic.Eav.Logging.ILog.Warn(System.String)
+  nameWithType: ILog.Warn(String)
+- uid: ToSic.Eav.Logging.ILog.Warn*
+  name: Warn
+  href: api/ToSic.Eav.Logging.ILog.html#ToSic_Eav_Logging_ILog_Warn_
+  commentId: Overload:ToSic.Eav.Logging.ILog.Warn
+  isSpec: "True"
+  fullName: ToSic.Eav.Logging.ILog.Warn
+  nameWithType: ILog.Warn
 - uid: ToSic.Eav.ValueProvider
   name: ToSic.Eav.ValueProvider
   href: api/ToSic.Eav.ValueProvider.html

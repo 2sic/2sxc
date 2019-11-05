@@ -57,6 +57,7 @@
     <None Include="namespaces\ToSic.Eav.DataSources.md" />
     <None Include="namespaces\ToSic.Eav.Apps.Assets.md" />
     <None Include="namespaces\ToSic.Eav.Apps.Interfaces.md" />
+    <None Include="namespaces\ToSic.Sxc.Interfaces.md" />
     <None Include="namespaces\ToSic.Sxc.Dnn.md" />
     <None Include="namespaces\ToSic.Eav.Interfaces.md" />
     <None Include="packages.config" />
