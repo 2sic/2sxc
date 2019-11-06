@@ -88,7 +88,7 @@
 <p>The data management system underneath everything is called the <strong>EAV</strong> - which stands for <strong>Entity</strong>, <strong>Attribute</strong>, <strong>Value</strong>. 
 Anything in that namespace is about internal data models, reading/saving data etc. 
 So anything inside the <a class="xref" href="../api/ToSic.Eav.Interfaces.html">ToSic.Eav.Interfaces</a> is all about the internals, which you only need in special scenarios. 
-The same applies to <a class="xref" href="../api/ToSic.Eav.Apps.Interfaces.html">ToSic.Eav.Apps.Interfaces</a> which is the sub-system responsible for combining data into virtual bundles called <strong>Apps</strong>.
+The same applies to @ToSic.Eav.Apps.Interfaces which is the sub-system responsible for combining data into virtual bundles called <strong>Apps</strong>.
 You can usually ignore this. </p>
 <h4 id="the-sxc-layer">The SXC Layer</h4>
 <p>On top of the <em>EAV</em> layer we have the <strong>Sxc</strong> layer. 
@@ -116,7 +116,7 @@ You&#39;ll find it in <a class="xref" href="../api/ToSic.Eav.Interfaces.html">To
 <h4 id="app-system-and-assets">App System and Assets</h4>
 <p>Another part that you may want to know more about. Here is where data is clustered together into virtual containers called <strong>Apps</strong>. 
 These contain all the content-types and items of an App. It also has view-definitions, Content-Blocks (the logical unit usually called a Module in DNN) and way more. 
-You&#39;ll find it in <a class="xref" href="../api/ToSic.Eav.Apps.Interfaces.html">ToSic.Eav.Apps.Interfaces</a>. </p>
+You&#39;ll find it in @ToSic.Eav.Apps.Interfaces. </p>
 <p>The assets - usually using ADAM - are found in <a class="xref" href="../api/ToSic.Eav.Apps.Assets.html">ToSic.Eav.Apps.Assets</a>.</p>
 <h4 id="web-api">Web API</h4>
 <p>This is ATM an internal section, mainly for connecting DNN WebAPIs to the EAV. Not documented as of now. </p>

@@ -8,7 +8,7 @@ using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.ValueProvider;
+
 using ToSic.Eav.ValueProviders;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;

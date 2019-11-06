@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.ValueProvider;
+
 using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;

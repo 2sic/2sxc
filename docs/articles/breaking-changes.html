@@ -81,15 +81,22 @@
 
 <p>We try to minimize breaking changes, and most breaking changes won&#39;t affect your work, because it&#39;s internal API. 
 We&#39;re documenting it here to ensure you know what happened, in case you still run into this.</p>
-<h2 id="1010">10.10</h2>
-<p>Version 10.10 has a lot of small breaking changes because we restructured the internal API so it&#39;s consistent when we publish it. 
+<h2 id="version-10">Version 10</h2>
+<p>Version 10 has a lot of small breaking changes because we restructured the internal API so it&#39;s consistent when we publish it. 
 All these things shouldn&#39;t affect you, because they were internal APIs, but in case it does - here&#39;s what we did.</p>
+<h4 id="version-1010">Version 10.10</h4>
 <ol>
-<li>the internal interface <code>IAppAndDataHelpers</code> was renamed to <code>IDynamicCode</code></li>
 <li>the internal interface <code>IInPageEditingHelpers</code> was moved from <code>ToSic.SexyContent.Interfaces</code> to the namespace <code>ToSic.Sxc.Interfaces</code></li>
 <li>the internal interface <code>IHtmlHelper</code> was moved to <code>ToSic.Sxc.Dnn</code></li>
-<li>the interface <code>ToSic.Sxc.Adam.IFile</code> was moved to <code>ToSic.Eav.Apps.Assets</code></li>
+<li>the interface <code>ToSic.Sxc.Adam.IFolder</code> was moved to <code>ToSic.Eav.Apps.Assets.IAdamFolder</code></li>
 <li>the internal namespace <code>ToSic.Eav.ValueProvider</code> was changed to <code>ToSic.Eav.ValueProviders</code> (added an &#39;s&#39; for consistency)</li>
+<li>the property <code>Configuration</code> on dynamic entities was deprecated in 2sxc 4 and removed in 2sxc 10 - we don&#39;t think it was ever used</li>
+<li>moved internal Metadata interfaces (ca. 5) into final namespace <a class="xref" href="../api/ToSic.Eav.Metadata.html">ToSic.Eav.Metadata</a></li>
+</ol>
+<h5 id="deprecated-but-not-broken">Deprecated, but not broken</h5>
+<ol>
+<li>the interface <code>ToSic.Sxc.Adam.IFile</code> was moved to <code>ToSic.Eav.Apps.Assets.IAdamFile</code> but the old interface still exists so it shouln&#39;t break<br> it was used by Mobius Forms</li>
+<li>the internal interface <code>ToSic.SexyContent.IAppAndDataHelpers</code> was renamed to <code>ToSic.Sxc.Interfaces.IDynamicCode</code> but the old interface still exists, so it shouldn&#39;t break<br> it was used by Mobius Forms</li>
 </ol>
 </article>
           </div>

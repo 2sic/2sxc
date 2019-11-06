@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;

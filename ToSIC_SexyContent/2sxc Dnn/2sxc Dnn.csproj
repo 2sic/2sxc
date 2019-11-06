@@ -91,6 +91,7 @@
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
     <Compile Include="DnnHelper.cs" />
+    <Compile Include="Dnn\Interfaces\IDynamicWebApi.cs" />
     <Compile Include="Dnn\Interfaces\IDynamicCode.cs" />
     <Compile Include="Dnn\SecurityHelpers.cs" />
     <Compile Include="Environment\Dnn7\DnnAppAndDataHelpers.cs" />

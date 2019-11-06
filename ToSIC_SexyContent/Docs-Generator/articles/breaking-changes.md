@@ -14,8 +14,16 @@ All these things shouldn't affect you, because they were internal APIs, but in c
 
 #### Version 10.10
 
-1. the internal interface `IAppAndDataHelpers` was renamed to `IDynamicCode`
 1. the internal interface `IInPageEditingHelpers` was moved from `ToSic.SexyContent.Interfaces` to the namespace `ToSic.Sxc.Interfaces`
 1. the internal interface `IHtmlHelper` was moved to `ToSic.Sxc.Dnn`
-1. the interface `ToSic.Sxc.Adam.IFile` was moved to `ToSic.Eav.Apps.Assets`
+1. the interface `ToSic.Sxc.Adam.IFolder` was moved to `ToSic.Eav.Apps.Assets.IAdamFolder`
 1. the internal namespace `ToSic.Eav.ValueProvider` was changed to `ToSic.Eav.ValueProviders` (added an 's' for consistency)
+1. the property `Configuration` on dynamic entities was deprecated in 2sxc 4 and removed in 2sxc 10 - we don't think it was ever used
+1. moved internal Metadata interfaces (ca. 5) into final namespace @ToSic.Eav.Metadata
+
+##### Deprecated, but not broken
+
+1. the interface `ToSic.Sxc.Adam.IFile` was moved to `ToSic.Eav.Apps.Assets.IAdamFile` but the old interface still exists so it shouln't break  
+	it was used by Mobius Forms
+1. the internal interface `ToSic.SexyContent.IAppAndDataHelpers` was renamed to `ToSic.Sxc.Interfaces.IDynamicCode` but the old interface still exists, so it shouldn't break  
+	it was used by Mobius Forms

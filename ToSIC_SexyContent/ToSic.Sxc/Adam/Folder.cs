@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Apps.Assets;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Adam
 {
@@ -16,22 +18,30 @@ namespace ToSic.Sxc.Adam
             _fileSystem = fileSystem;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IAdamAsset" />
         public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true) as dynamic;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IAdamAsset" />
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IAdamAsset" />
         public string Url => AppContext.Tenant.ContentPath + Path;
 
+        /// <inheritdoc cref="IAdamAsset" />
+        public string Type => Classification.Folder;
+
+        [PrivateApi]
+        [Obsolete]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public int FileId => throw new NotImplementedException();
+
+        [PrivateApi]
+        [Obsolete]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public string FileName => throw new NotImplementedException();
+
+
         /// <inheritdoc />
-       public string Type => Classification.Folder;
-
-
-        /// <summary>
-        ///  Get all subfolders
-        /// </summary>
         public IEnumerable<IAdamFolder> Folders
         {
             get
@@ -51,9 +61,7 @@ namespace ToSic.Sxc.Adam
 
 
 
-        /// <summary>
-        /// Get all files in this folder
-        /// </summary>
+        /// <inheritdoc/>
         public IEnumerable<IAdamFile> Files 
             => _files ?? (_files = _fileSystem.GetFiles(Id, AppContext));
         private IEnumerable<IAdamFile> _files;

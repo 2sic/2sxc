@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Interfaces
     /// An app-object as is available in a razor template or WebApi
     /// </summary>
     [PublicApi]
-    public interface IApp: Eav.Apps.Interfaces.IApp, SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
+    public interface IApp: Eav.Apps.IApp, SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
     {
         /// <summary>
         /// Configuration object as a DynamicEntity.

@@ -55,7 +55,8 @@
       {
         "files": [
           "apidoc/**.md",
-          "namespaces/**.md"
+          "namespaces/**.md",
+          "shared/**.md"
         ],
         "exclude": [
           "obj/**",

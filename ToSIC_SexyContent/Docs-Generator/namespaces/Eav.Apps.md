@@ -1,5 +1,5 @@
 ﻿---
-uid: ToSic.Eav.Apps.Interfaces
+uid: ToSic.Eav.Apps
 summary: *content
 ---
 

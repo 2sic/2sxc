@@ -91,8 +91,10 @@
 </ul>
 <p>Here&#39;s a code example in a C# Razor template:</p>
 <pre><code class="lang-html">&lt;!--
-  The default variable for the current item is Content, we&#39;ll just use another name for this sample
-  note that .Title is automatically provided, because the content-type has the property title. 
+  The default variable for the current item is Content, 
+  we&#39;ll just use another name for this sample
+  note that .Title is automatically provided, 
+  because the content-type has the property title. 
 --&gt;
 &lt;h1&gt;@Content.Title&lt;/h1&gt;
 &lt;div&gt;@Content.Description&lt;/div&gt;
@@ -109,7 +111,7 @@
 <li>Automatically do conversions, like convert related entities (like <code>.Children</code>) into dynamic objects to make your code more consistant  </li>
 </ol>
 <h2 id="properties-of-a-dynamic-entity">Properties of a Dynamic Entity</h2>
-<p>These are documented in the <a class="xref" href="../api/ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a>.</p>
+<p>Read the API docs in the <a class="xref" href="../api/ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a>.</p>
 <p>Additional properties that work (they are dynamic, so don&#39;t appear in the code)</p>
 <ol>
 <li><strong>EntityType</strong> <em>string</em> - the type name like <em>Person</em></li>

@@ -7,11 +7,11 @@ namespace ToSic.SexyContent.Adam
     // ReSharper disable once InconsistentNaming
     public interface AdamFile: IAdamFile
     {
-        string FileName { get; }
+        //string FileName { get; }
 
         DateTime CreatedOnDate { get; }
 
-        int FileId { get; }
+        //int FileId { get; }
 
 
     }

@@ -80,7 +80,7 @@
     <Compile Include="Code\WithContext.cs" />
     <Compile Include="Code\CodeCompiler.cs" />
     <Compile Include="Compatibility\InputTypes.cs" />
-    <Compile Include="Deprecated\RemoveInV10\Element.cs" />
+    <Compile Include="Compatibility\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\ClientContextInfo\Ui.cs" />
     <Compile Include="Interfaces\IDynamicCode.cs" />

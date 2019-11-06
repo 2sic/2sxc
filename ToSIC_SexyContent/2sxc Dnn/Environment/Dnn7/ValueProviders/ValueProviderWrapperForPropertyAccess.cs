@@ -2,7 +2,7 @@
 using System.Globalization;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
-using ToSic.Eav.ValueProvider;
+
 using ToSic.Eav.ValueProviders;
 
 namespace ToSic.SexyContent.Environment.Dnn7.ValueProviders

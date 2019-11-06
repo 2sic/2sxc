@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav.ValueProvider;
+
 using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Interfaces;

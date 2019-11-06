@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Metadata;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.EAVExtensions

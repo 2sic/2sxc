@@ -17,8 +17,10 @@ Here's a code example in a C# Razor template:
 
 ```html
 <!--
-  The default variable for the current item is Content, we'll just use another name for this sample
-  note that .Title is automatically provided, because the content-type has the property title. 
+  The default variable for the current item is Content, 
+  we'll just use another name for this sample
+  note that .Title is automatically provided, 
+  because the content-type has the property title. 
 -->
 <h1>@Content.Title</h1>
 <div>@Content.Description</div>
@@ -39,7 +41,7 @@ The main things that the _dynamic entity_ does for you, are
 
 ## Properties of a Dynamic Entity
 
-These are documented in the @ToSic.Sxc.Interfaces.IDynamicEntity.
+Read the API docs in the @ToSic.Sxc.Interfaces.IDynamicEntity.
 
 Additional properties that work (they are dynamic, so don't appear in the code)
 

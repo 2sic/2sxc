@@ -72,7 +72,9 @@ namespace ToSic.SexyContent
             #region check the two special cases Toolbar / Presentation which the EAV doesn't know
 
             if (attributeName == "Toolbar")
+#pragma warning disable 612
                 return Toolbar.ToString();
+#pragma warning restore 612
 
             if (attributeName == AppConstants.Presentation)
                 return GetPresentation;
@@ -115,22 +117,6 @@ namespace ToSic.SexyContent
                    : null);
         private IDynamicEntity _presentation;
 
-        #region obsolete stuff - to remove in 2sxc 10
-        [Obsolete("This has been obsolete since ca. 2sxc 4. Will be removed in 2sxc 10")]
-        public ContentConfiguration Configuration = new ContentConfiguration();
-
-        /// <summary>
-        /// Configuration class for this expando
-        /// </summary>
-        [Obsolete("This has been obsolete since ca. 2sxc 4. Will be removed in 2sxc 10")]
-        public class ContentConfiguration
-        {
-            public string ErrorKeyMissing {
-                get => null;
-                set => throw new Exception("Obsolete: Do not use ErrorKeyMissing anymore. Check if the value is null instead.");
-            }
-        }
-        #endregion
 
         public int EntityId => Entity.EntityId;
 

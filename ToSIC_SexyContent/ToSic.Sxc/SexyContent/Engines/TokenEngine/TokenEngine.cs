@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Web.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.ValueProvider;
+
 using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
@@ -75,7 +75,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 
         private void InitDataHelper()
         {
-            _dataHelper = Factory.Resolve<IWebFactoryTemp>().AppAndDataHelpers(Sexy) as AppAndDataHelpersBase ;// new AppAndDataHelpers(Sexy);
+            _dataHelper = Factory.Resolve<IWebFactoryTemp>().AppAndDataHelpers(Sexy) ;
         }
 
         private void InitTokenReplace()

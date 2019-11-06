@@ -55,16 +55,18 @@
     <None Include="docfx.json" />
     <None Include="filterConfig.yml" />
     <None Include="index.md" />
-    <None Include="namespaces\ToSic.Eav.ValueProviders.md" />
-    <None Include="namespaces\ToSic.Eav.Logging.md" />
-    <None Include="namespaces\ToSic.Eav.DataSources.md" />
-    <None Include="namespaces\ToSic.Eav.Apps.Assets.md" />
-    <None Include="namespaces\ToSic.Eav.Apps.Interfaces.md" />
-    <None Include="namespaces\ToSic.Sxc.Interfaces.md" />
-    <None Include="namespaces\ToSic.Sxc.Dnn.md" />
-    <None Include="namespaces\ToSic.Eav.Interfaces.md" />
+    <None Include="namespaces\Eav.Caching.md" />
+    <None Include="namespaces\Eav.Metadata.md" />
+    <None Include="namespaces\Eav.ValueProviders.md" />
+    <None Include="namespaces\Eav.Logging.md" />
+    <None Include="namespaces\Eav.DataSources.md" />
+    <None Include="namespaces\Eav.Apps.Assets.md" />
+    <None Include="namespaces\Eav.Apps.md" />
+    <None Include="namespaces\Sxc.Interfaces.md" />
+    <None Include="namespaces\Sxc.Dnn.md" />
+    <None Include="namespaces\Eav.Interfaces.md" />
     <None Include="packages.config" />
-    <None Include="xrefmap.yml" />
+    <None Include="shared\where-to-start.md" />
     <None Include="toc.yml" />
   </ItemGroup>
   <ItemGroup>

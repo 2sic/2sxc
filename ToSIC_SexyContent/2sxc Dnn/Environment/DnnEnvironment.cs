@@ -1,9 +1,9 @@
 ﻿using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.Environment

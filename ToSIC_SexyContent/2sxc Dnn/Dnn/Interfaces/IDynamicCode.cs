@@ -1,6 +1,4 @@
-﻿// ReSharper disable once CheckNamespace
-
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Dnn
 {
