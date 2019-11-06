@@ -92,12 +92,12 @@ All these things shouldn&#39;t affect you, because they were internal APIs, but 
 <li>the internal namespace <code>ToSic.Eav.ValueProvider</code> was changed to <code>ToSic.Eav.ValueProviders</code> (added an &#39;s&#39; for consistency)</li>
 <li>the property <code>Configuration</code> on dynamic entities was deprecated in 2sxc 4 and removed in 2sxc 10 - we don&#39;t think it was ever used</li>
 <li>moved internal Metadata interfaces (ca. 5) into final namespace <a class="xref" href="../api/ToSic.Eav.Metadata.html">ToSic.Eav.Metadata</a></li>
-<li>Moved a bunch of internal interfaces which we believe were never used externally<ol>
+<li>Moved a bunch of internal interfaces which we believe were never used externally from <code>ToSic.Eav.Interfaces</code> to <code>ToSic.Eav.Data</code><ol>
 <li><code>ToSic.Eav.Data.IAttribute</code></li>
 <li><code>ToSic.Eav.IAttribute&lt;T&gt;</code></li>
 <li><code>IAttributeBase</code></li>
 <li><code>IAttributeDefinition</code></li>
-<li><code>IChildEntities</code> (previous name different?)</li>
+<li><code>IChildEntities</code> </li>
 <li><code>IContentType</code></li>
 <li><code>IDimension</code></li>
 <li><code>IEntityLight</code></li>
@@ -109,7 +109,7 @@ All these things shouldn&#39;t affect you, because they were internal APIs, but 
 </ol>
 </li>
 </ol>
-<h5 id="deprecated-but-not-broken">Deprecated, but not broken</h5>
+<h5 id="deprecatedchanged-but-not-broken">Deprecated/Changed, but not broken</h5>
 <ol>
 <li>the interface <code>ToSic.Sxc.Adam.IFile</code> was moved to <code>ToSic.Eav.Apps.Assets.IAdamFile</code> but the old interface still exists so it shouln&#39;t break<br> <em>it was used by Mobius Forms</em></li>
 <li>the internal interface <code>ToSic.SexyContent.IAppAndDataHelpers</code> was renamed to <code>ToSic.Sxc.IDynamicCode</code> but the old interface still exists, so it shouldn&#39;t break<br> <em>it was used by Mobius Forms</em></li>
