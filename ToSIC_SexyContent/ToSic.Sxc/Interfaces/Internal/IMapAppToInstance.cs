@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;

@@ -55,6 +55,7 @@
     <None Include="docfx.json" />
     <None Include="filterConfig.yml" />
     <None Include="index.md" />
+    <None Include="namespaces\Eav.Apps.Adam.md" />
     <None Include="namespaces\Eav.Caching.md" />
     <None Include="namespaces\Eav.Metadata.md" />
     <None Include="namespaces\Eav.ValueProviders.md" />

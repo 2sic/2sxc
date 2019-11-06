@@ -34,6 +34,17 @@ All these things shouldn't affect you, because they were internal APIs, but in c
 	1. `IValue`
 	1. `IValue<T>`
 	1. `IValueOfDimension<T>`
+1. Moved a bunch of internal interfaces which we believe were never used externally from `ToSic.Eav.Apps.Interfaces` to `ToSic.Eav.Apps`
+	1. `IApp`
+	1. `IAppData`
+	1. `IAppDataConfiguration`
+	1. `IAppEnvironment`
+	1. `IEnvironmentFactory`
+	1. `IInstanceInfo`
+	1. `IItemListAction`
+	1. `IPagePublishing`
+	1. `ITenant`
+	1. `IZoneMapper`
 
 ##### Deprecated/Changed, but not broken
 

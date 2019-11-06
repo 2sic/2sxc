@@ -1,8 +1,7 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Apps.Interfaces;
-
 using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;

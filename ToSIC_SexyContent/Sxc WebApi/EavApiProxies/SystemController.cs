@@ -4,7 +4,6 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.PublicApi;

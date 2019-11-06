@@ -2,8 +2,8 @@
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent.Razor.Helpers
