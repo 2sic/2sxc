@@ -80,11 +80,11 @@
     <Compile Include="Code\WithContext.cs" />
     <Compile Include="Code\CodeCompiler.cs" />
     <Compile Include="Compatibility\InputTypes.cs" />
-    <Compile Include="Deprecated\RemoveInV10\Element.cs" />
+    <Compile Include="Compatibility\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\ClientContextInfo\Ui.cs" />
-    <Compile Include="Interfaces\IDynamicCode.cs" />
-    <Compile Include="Interfaces\IInPageEditingSystem.cs" />
+    <Compile Include="InterfacesCore\IDynamicCode.cs" />
+    <Compile Include="InterfacesCore\IInPageEditingSystem.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
@@ -100,11 +100,11 @@
     <Compile Include="Interfaces\Old-SexyContent-Namespace\ILinkHelper.cs" />
     <Compile Include="Interfaces\IRenderingHelpers.cs" />
     <Compile Include="Interfaces\Internal\IClientDependencyManager.cs" />
-    <Compile Include="Interfaces\IApp.cs" />
+    <Compile Include="InterfacesCore\IApp.cs" />
     <Compile Include="Interfaces\Old-SexyContent-Namespace\IAppData.cs" />
     <Compile Include="Interfaces\IContentBlock.cs" />
-    <Compile Include="Interfaces\IDynamicEntity.cs" />
-    <Compile Include="Interfaces\ILinkHelper.cs" />
+    <Compile Include="InterfacesCore\IDynamicEntity.cs" />
+    <Compile Include="InterfacesCore\ILinkHelper.cs" />
     <Compile Include="Interfaces\ISharedCodeBuilder.cs" />
     <Compile Include="Interfaces\IWebFactoryTemp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -163,7 +163,6 @@
     <Compile Include="SexyContent\SxcInstance_Template.cs" />
     <Compile Include="SexyContent\SxcInstance_EditUi.cs" />
     <Compile Include="SexyContent\TemplateManager.cs" />
-    <Compile Include="Interfaces\IAppAndDataHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">

@@ -1,13 +1,14 @@
 ﻿using ToSic.Eav.Documentation;
+
 // ReSharper disable UnusedMemberInSuper.Global
 
-namespace ToSic.Sxc.Interfaces
+namespace ToSic.Sxc
 {
     /// <summary>
     /// An app-object as is available in a razor template or WebApi
     /// </summary>
     [PublicApi]
-    public interface IApp: Eav.Apps.Interfaces.IApp, SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
+    public interface IApp: Eav.Apps.IApp, SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
     {
         /// <summary>
         /// Configuration object as a DynamicEntity.

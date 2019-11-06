@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.VisualQuery;
@@ -69,7 +70,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 			Configuration.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
 		}
 
-		private IEnumerable<ToSic.Eav.Interfaces.IEntity> GetList()
+		private IEnumerable<IEntity> GetList()
 		{
 			EnsureConfigurationIsLoaded();
 
@@ -90,7 +91,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 			}
 
 			// convert Profiles to Entities
-			var result = new List<ToSic.Eav.Interfaces.IEntity>();
+			var result = new List<IEntity>();
 			foreach (UserInfo user in users)
 			{
 				// add Profile-Properties

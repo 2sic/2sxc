@@ -10,6 +10,7 @@ using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {

@@ -1,6 +1,4 @@
-﻿// ReSharper disable once CheckNamespace
-
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -9,7 +7,7 @@ namespace ToSic.Sxc.Dnn
     /// It's important, because if 2sxc also runs on other CMS platforms, then the Dnn Context won't be available, so it's in a separate interface.
     /// </summary>
     [PublicApi]
-    public interface IDynamicCode : Interfaces.IDynamicCode
+    public interface IDynamicCode : Sxc.IDynamicCode
     {
         /// <summary>
         /// The DNN context.  

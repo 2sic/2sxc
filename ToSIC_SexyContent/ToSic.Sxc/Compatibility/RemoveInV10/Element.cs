@@ -3,7 +3,7 @@
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
 {
-    [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
+    [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v11 or v12")]
     public class Element
     {
         /// <summary>

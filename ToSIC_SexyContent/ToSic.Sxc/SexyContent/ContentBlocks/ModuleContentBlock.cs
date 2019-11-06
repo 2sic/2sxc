@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.DnnWebForms.Helpers;
 using ToSic.Sxc.Interfaces;
 

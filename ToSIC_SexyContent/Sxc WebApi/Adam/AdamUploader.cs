@@ -4,8 +4,8 @@ using System.Configuration;
 using System.IO;
 using System.Web.Configuration;
 using System.Web.Http;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent;
 using ToSic.SexyContent.WebApi.Adam;
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Adam.WebApi
             _appId = appId;
         }
 
-        public File UploadOne(Stream stream, string originalFileName, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot, bool skipFieldAndContentTypePermissionCheck)
+        public IAdamFile UploadOne(Stream stream, string originalFileName, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot, bool skipFieldAndContentTypePermissionCheck)
         {
             Log.Add($"upload one a:{_appId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
             
@@ -121,7 +121,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
 
 
-        public static string RenameFileToNotOverwriteExisting(string fileName, IFolderInfo dnnFolder)
+        internal static string RenameFileToNotOverwriteExisting(string fileName, IFolderInfo dnnFolder)
         {
             var numberedFile = fileName;
 

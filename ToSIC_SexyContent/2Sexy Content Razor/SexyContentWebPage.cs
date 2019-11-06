@@ -7,18 +7,17 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Interfaces;
-using ToSic.Eav.ValueProvider;
-using ToSic.Sxc.Adam;
+using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.Sxc.Interfaces;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Razor;
 using File = System.IO.File;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.Razor
 {
@@ -101,6 +100,7 @@ namespace ToSic.SexyContent.Razor
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
 
 
+
         /// <inheritdoc />
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DnnAppAndDataHelpers.AsDynamic(stream.List);
 
@@ -114,9 +114,25 @@ namespace ToSic.SexyContent.Razor
 
         #endregion
 
+        #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DnnAppAndDataHelpers.AsDynamic(entity);
+
+
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
+
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DnnAppAndDataHelpers.AsDynamic(entities);
+        #endregion
+
+
         #region Data Source Stuff
-         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
-       public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+        /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
             => DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
 
         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />

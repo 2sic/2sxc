@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Interfaces;
+using IDynamicEntity = ToSic.Sxc.IDynamicEntity;
 
 namespace ToSic.SexyContent.Serializers
 {
@@ -45,14 +47,14 @@ namespace ToSic.SexyContent.Serializers
 	    /// <summary>
 	    /// Return an object that represents an IDataStream, but is serializable
 	    /// </summary>
-	    public Dictionary<string, object> Prepare(Sxc.Interfaces.IDynamicEntity dynamicEntity)
+	    public Dictionary<string, object> Prepare(IDynamicEntity dynamicEntity)
 	        => GetDictionaryFromEntity(dynamicEntity.Entity);
         
         #endregion
 
 
 
-        public override Dictionary<string, object> GetDictionaryFromEntity(Eav.Interfaces.IEntity entity)
+        public override Dictionary<string, object> GetDictionaryFromEntity(IEntity entity)
 		{
             // Do groundwork
             var dictionary = base.GetDictionaryFromEntity(entity);
@@ -66,7 +68,7 @@ namespace ToSic.SexyContent.Serializers
         #region to enhance serializable IEntities with 2sxc specific infos
 
         #region special "old" serializer which provides data in the older format
-        internal Dictionary<string, object> PrepareOldFormat(Eav.Interfaces.IEntity entity)
+        internal Dictionary<string, object> PrepareOldFormat(IEntity entity)
         {
             // var ser = new Serializer(SxcInstance, _dimensions);
             var dicNew = GetDictionaryFromEntity(entity);
@@ -102,7 +104,7 @@ namespace ToSic.SexyContent.Serializers
 
         #endregion
 
-        internal void AddPresentation(Eav.Interfaces.IEntity entity, Dictionary<string, object> dictionary)
+        internal void AddPresentation(IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add full presentation object if it has one...because there we need more than just id/title
 	        if (entity is EntityInContentGroup && !dictionary.ContainsKey(AppConstants.Presentation))
@@ -113,7 +115,7 @@ namespace ToSic.SexyContent.Serializers
 	        }
 	    }
 
-	    internal void AddEditInfo(Eav.Interfaces.IEntity entity, Dictionary<string, object> dictionary)
+	    internal void AddEditInfo(IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add additional information in case we're in edit mode
 	        var userMayEdit = Sxc?.UserMayEdit ?? false;// Factory.Resolve<IPermissions>().UserMayEditContent(Sxc?.InstanceInfo);

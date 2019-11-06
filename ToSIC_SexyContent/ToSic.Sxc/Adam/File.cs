@@ -26,10 +26,13 @@ namespace ToSic.Sxc.Adam
 
 
         #region Obsolete properties, included to ensure old stuff still works because of refactoring in 2sxc 9.20
+        [Obsolete]
         public string FileName => FullName;
 
+        [Obsolete]
         public DateTime CreatedOnDate => Created;
 
+        [Obsolete]
         public int FileId => Id;
         #endregion
     }

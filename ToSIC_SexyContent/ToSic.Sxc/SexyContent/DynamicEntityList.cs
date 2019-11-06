@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Web;
-using ToSic.Eav.Interfaces;
-using ToSic.Sxc.Interfaces;
+using ToSic.Sxc;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent
 {

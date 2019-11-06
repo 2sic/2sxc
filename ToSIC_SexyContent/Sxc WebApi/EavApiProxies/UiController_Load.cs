@@ -4,6 +4,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.Format;
@@ -14,6 +15,7 @@ using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Compatibility;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {

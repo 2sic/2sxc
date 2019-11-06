@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Data;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.Metadata;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.EAVExtensions
@@ -94,5 +97,6 @@ namespace ToSic.SexyContent.EAVExtensions
         public T Value<T>(string field, bool resolve = true) => _baseEntity.Value<T>(field, resolve);
 
         #endregion
+
     }
 }

@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Assets;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
-using ToSic.Eav.ValueProvider;
+
+using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Adam;
 using App = ToSic.SexyContent.App;
 using Constants = ToSic.Eav.Constants;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Code
 {
@@ -43,16 +47,31 @@ namespace ToSic.Sxc.Code
         #region AsDynamic and AsEntity
         public dynamic AsDynamic(IEntity entity) => Parent?.AsDynamic(entity);
 
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => Parent?.AsDynamic(entity);
+
         public dynamic AsDynamic(dynamic dynamicEntity) => Parent?.AsDynamic(dynamicEntity);
 
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) 
             => Parent?.AsDynamic(entityKeyValuePair);
+
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) 
+            => Parent?.AsDynamic(entityKeyValuePair);
+
 
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => Parent?.AsDynamic(stream);
 
         public IEntity AsEntity(dynamic dynamicEntity) => Parent?.AsEntity(dynamicEntity);
 
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Parent?.AsDynamic(entities);
+
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => Parent?.AsDynamic(entities);
+
 
         #endregion
 

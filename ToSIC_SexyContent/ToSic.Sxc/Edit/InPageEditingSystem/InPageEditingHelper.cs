@@ -2,6 +2,7 @@
 using System.Web;
 using Newtonsoft.Json;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
@@ -9,6 +10,7 @@ using ToSic.SexyContent;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Interfaces;
 using Feats = ToSic.Eav.Configuration.Features;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {

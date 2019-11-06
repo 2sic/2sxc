@@ -2,15 +2,17 @@
 using System.Threading;
 using System.Web;
 using ToSic.Eav.AppEngine;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
+using IApp = ToSic.Sxc.IApp;
 
 namespace ToSic.SexyContent
 {
     /// <summary>
     /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
     /// </summary>
-    public class App : Eav.Apps.App, Sxc.Interfaces.IApp
+    public class App : Eav.Apps.App, IApp
     {
         #region Dynamic Properties: Configuration, Settings, Resources
         public dynamic Configuration

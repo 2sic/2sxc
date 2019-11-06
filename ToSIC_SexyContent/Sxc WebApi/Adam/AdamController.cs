@@ -60,8 +60,8 @@ namespace ToSic.Sxc.Adam.WebApi
                     {
                         Success = true,
                         Error = "",
-                        Name = Path.GetFileName(file.FileName),
-                        Id = file.FileId,
+                        Name = Path.GetFileName(file.FullName),
+                        Id = file.Id,
                         Path = file.Url,
                         Type = Classification.TypeName(file.Extension)
                     };

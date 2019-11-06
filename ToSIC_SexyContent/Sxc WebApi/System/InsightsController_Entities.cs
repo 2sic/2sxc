@@ -3,9 +3,11 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Http;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.WebApi.Errors;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System

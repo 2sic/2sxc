@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav;
+using ToSic.Eav.Data;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.ContentBlocks
@@ -22,7 +23,7 @@ namespace ToSic.SexyContent.ContentBlocks
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
             => Factory.Resolve<IMapAppToInstance>().SetContentGroup(ModuleId, true, cgGuid);
 
-        internal override void UpdateTitle(Eav.Interfaces.IEntity titleItem)
+        internal override void UpdateTitle(IEntity titleItem)
         {
             Log.Add("update title");
             Factory.Resolve<IMapAppToInstance>().UpdateTitle(SxcContext, titleItem);

@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.Sxc.Dnn;
 

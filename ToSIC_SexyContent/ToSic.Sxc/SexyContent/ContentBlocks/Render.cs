@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using ToSic.SexyContent.ContentBlocks.Renderers;
+using ToSic.Sxc;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.ContentBlocks

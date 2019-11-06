@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.DataSources;
@@ -23,12 +24,12 @@ namespace ToSic.SexyContent.ContentBlocks
 
         #region ContentBlock Definition Entity
 
-        internal Eav.Interfaces.IEntity ContentBlockEntity;
+        internal IEntity ContentBlockEntity;
         private string _appName;
         private Guid _contentGroupGuid;
         private Guid _previewTemplateGuid;
 
-        private void ParseContentBlockDefinition(Eav.Interfaces.IEntity cbDefinition)
+        private void ParseContentBlockDefinition(IEntity cbDefinition)
         {
             ContentBlockEntity = cbDefinition;
             _appName = ContentBlockEntity.GetBestValue(CbPropertyApp)?.ToString() ?? "";
@@ -47,7 +48,7 @@ namespace ToSic.SexyContent.ContentBlocks
         }
         #endregion
 
-        public EntityContentBlock(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition, ILog parentLog = null): base(parentLog, "CB.Ent") 
+        public EntityContentBlock(IContentBlock parent, IEntity cbDefinition, ILog parentLog = null): base(parentLog, "CB.Ent") 
             => _constructor(parent, cbDefinition);
 
         public EntityContentBlock(IContentBlock parent, int contentBlockId, ILog parentLog) : base(parentLog, "CB.Ent")
@@ -57,7 +58,7 @@ namespace ToSic.SexyContent.ContentBlocks
             _constructor(parent, cbDef);
         }
 
-        private void _constructor(IContentBlock parent, Eav.Interfaces.IEntity cbDefinition)
+        private void _constructor(IContentBlock parent, IEntity cbDefinition)
         {
             Parent = parent;
             ParseContentBlockDefinition(cbDefinition);

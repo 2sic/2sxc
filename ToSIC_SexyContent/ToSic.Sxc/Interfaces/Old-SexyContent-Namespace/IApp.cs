@@ -6,7 +6,7 @@
     /// But this interface shouldn't be enhanced or documented publicly
     /// </summary>
 
-    public interface IApp: Eav.Apps.Interfaces.IApp
+    public interface IApp: Eav.Apps.IApp
     {
          dynamic Configuration { get;  }
 

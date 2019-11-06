@@ -5,11 +5,13 @@ using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.VisualQuery;
 using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.EAVExtensions;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.DataSources
 {

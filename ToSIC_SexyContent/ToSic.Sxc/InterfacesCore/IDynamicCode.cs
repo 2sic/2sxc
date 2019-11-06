@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Interfaces;
-using ToSic.Eav.ValueProvider;
-using ToSic.Sxc.Adam;
+using ToSic.Eav.ValueProviders;
+using ToSic.Sxc.Interfaces;
+using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.Sxc.Interfaces
+namespace ToSic.Sxc
 {
     /// <summary>
     /// Dynamic code files like Razor or WebApis.

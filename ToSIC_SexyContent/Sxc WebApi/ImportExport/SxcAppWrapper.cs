@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.WebApi.ImportExport
@@ -24,7 +25,7 @@ namespace ToSic.SexyContent.WebApi.ImportExport
         }
 
 
-        public IEnumerable<Eav.Interfaces.IEntity> GetEntities() => DataSource.GetInitialDataSource(App.ZoneId, App.AppId).List;
+        public IEnumerable<IEntity> GetEntities() => DataSource.GetInitialDataSource(App.ZoneId, App.AppId).List;
 
         public IEnumerable<Template> GetTemplates() => App.TemplateManager.GetAllTemplates();
 
