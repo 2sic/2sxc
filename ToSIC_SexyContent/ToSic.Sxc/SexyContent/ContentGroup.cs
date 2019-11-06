@@ -12,14 +12,14 @@ namespace ToSic.SexyContent
 {
     public class ContentGroup: HasLog
     {
-        internal Eav.Interfaces.IEntity _contentGroupEntity;
+        internal IEntity _contentGroupEntity;
         private readonly int _zoneId;
         private readonly int _appId;
         private readonly bool _showDrafts;
         private readonly bool _versioningEnabled;
         private readonly Guid? _previewTemplateId;
 
-        public ContentGroup(Eav.Interfaces.IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled, ILog parentLog)
+        public ContentGroup(IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled, ILog parentLog)
             : base("CG.Group", parentLog, "constructor from entity", nameof(ContentGroup))
         {
             _contentGroupEntity = contentGroupEntity ?? throw new Exception("ContentGroup entity is null. This usually happens when you are duplicating a site, and have not yet imported the other content/apps. If that is your issue, check 2sxc.org/help?tag=export-import");
@@ -58,7 +58,7 @@ namespace ToSic.SexyContent
             {
                 if (_template != null) return _template;
 
-                Eav.Interfaces.IEntity templateEntity = null;
+                IEntity templateEntity = null;
 
                 if (_previewTemplateId.HasValue)
                 {
@@ -86,23 +86,23 @@ namespace ToSic.SexyContent
 
         #region Retrieve the lists - either as object or by the type-indexer
 
-        public List<Eav.Interfaces.IEntity> Content
+        public List<IEntity> Content
         {
             get
             {
-                if (_contentGroupEntity == null) return new List<Eav.Interfaces.IEntity> {null};
+                if (_contentGroupEntity == null) return new List<IEntity> {null};
                 var list = ((EntityRelationship) _contentGroupEntity.GetBestValue(AppConstants.Content)).ToList();
-                return list.Count > 0 ? list : new List<Eav.Interfaces.IEntity> {null};
+                return list.Count > 0 ? list : new List<IEntity> {null};
             }
         }
 
-        public List<Eav.Interfaces.IEntity> Presentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(AppConstants.Presentation))?.ToList() ?? new List<Eav.Interfaces.IEntity>();
+        public List<IEntity> Presentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(AppConstants.Presentation))?.ToList() ?? new List<IEntity>();
 
-        public List<Eav.Interfaces.IEntity> ListContent => ((EntityRelationship) _contentGroupEntity?.GetBestValue(AppConstants.ListContent/*cListC*/))?.ToList() ?? new List<Eav.Interfaces.IEntity>();
+        public List<IEntity> ListContent => ((EntityRelationship) _contentGroupEntity?.GetBestValue(AppConstants.ListContent/*cListC*/))?.ToList() ?? new List<IEntity>();
 
-        public List<Eav.Interfaces.IEntity> ListPresentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(AppConstants.ListPresentation/* cListP*/))?.ToList() ?? new List<Eav.Interfaces.IEntity>();
+        public List<IEntity> ListPresentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(AppConstants.ListPresentation/* cListP*/))?.ToList() ?? new List<IEntity>();
 
-        public List<Eav.Interfaces.IEntity> this[string type]
+        public List<IEntity> this[string type]
         {
             get
             {

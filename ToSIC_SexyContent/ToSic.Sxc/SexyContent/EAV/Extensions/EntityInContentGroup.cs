@@ -1,12 +1,12 @@
 ﻿using System;
-using ToSic.SexyContent.Interfaces;
+using ToSic.Eav.Data;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.EAVExtensions
 {
     public class EntityInContentGroup : EntityDecorator, IHasEditingData
     {
-        public EntityInContentGroup(Eav.Interfaces.IEntity baseEntity) : base(baseEntity)
+        public EntityInContentGroup(IEntity baseEntity) : base(baseEntity)
         {
         }
 
@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.EAVExtensions
         /// Presentation entity of this content-item.
         /// Important to keep content & presentation linked together
         /// </summary>
-		public Eav.Interfaces.IEntity Presentation { get; set; }
+		public IEntity Presentation { get; set; }
 
         /// <summary>
         /// ContentGroup ID, because as the group changes, we must be able to find it

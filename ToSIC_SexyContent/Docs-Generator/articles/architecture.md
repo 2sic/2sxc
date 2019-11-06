@@ -15,7 +15,7 @@ This is fairly straight forward - data can be stored in SQL (spread across table
 
 The data management system underneath everything is called the **EAV** - which stands for **Entity**, **Attribute**, **Value**. 
 Anything in that namespace is about internal data models, reading/saving data etc. 
-So anything inside the @ToSic.Eav.Interfaces is all about the internals, which you only need in special scenarios. 
+So anything inside the @ToSic.Eav.Data is all about the internals, which you only need in special scenarios. 
 The same applies to @ToSic.Eav.Apps.Interfaces which is the sub-system responsible for combining data into virtual bundles called **Apps**.
 You can usually ignore this. 
 
@@ -47,7 +47,7 @@ Areas of interest may be the @ToSic.Eav.Logging or @ToSic.Eav.ValueProviders.
 #### Core Data Models
 
 This is more interesting and relevant to you, when you want to dive deep into the data model. Again you should note that this is advanced stuff. 
-You'll find it in @ToSic.Eav.Interfaces - the most common bit you may care about is @ToSic.Eav.Interfaces.IEntity and @ToSic.Eav.Interfaces.IContentType.
+You'll find it in @ToSic.Eav.Data - the most common bit you may care about is @ToSic.Eav.Data.IEntity and @ToSic.Eav.Data.IContentType.
 
 #### Data Processing
 

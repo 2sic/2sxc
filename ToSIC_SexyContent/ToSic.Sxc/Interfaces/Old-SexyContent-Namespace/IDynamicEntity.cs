@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web;
+using ToSic.Eav.Data;
 using ToSic.Eav.Interfaces;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Interfaces
@@ -40,6 +42,6 @@ namespace ToSic.SexyContent.Interfaces
 
         bool IsDemoItem { get; }
 
-        List<Sxc.Interfaces.IDynamicEntity> Parents(string type = null, string field = null);
+        List<Sxc.IDynamicEntity> Parents(string type = null, string field = null);
     }
 }

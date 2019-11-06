@@ -64,7 +64,7 @@
     <None Include="namespaces\Eav.Apps.md" />
     <None Include="namespaces\Sxc.Interfaces.md" />
     <None Include="namespaces\Sxc.Dnn.md" />
-    <None Include="namespaces\Eav.Interfaces.md" />
+    <None Include="namespaces\Eav.Data.md" />
     <None Include="packages.config" />
     <None Include="shared\where-to-start.md" />
     <None Include="toc.yml" />

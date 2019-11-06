@@ -19,12 +19,12 @@ Once we're really sure that certain parts are very final, we'll publish the API 
 1. If you are creating a **Razor** template and want to know what APIs are available, start with @ToSic.Sxc.Dnn.IRazor which is mostly an @ToSic.Sxc.Dnn.IDynamicCode with an @ToSic.Sxc.Dnn.IHtmlHelper. 
 	This is because a Razor Page inherits from that interface, so you'll see all the commannds you get there. 
 
-1. If you'le creating a **WebApi** and need to know everything in it, you also want to check the @ToSic.Sxc.Dnn.IDynamicCode, because all WebApi classes implement that interface. 
+1. If you're creating a **WebApi** and need to know everything in it, you also want to check the @ToSic.Sxc.Dnn.IDynamicWebApi, because all WebApi classes implement that interface. 
 
 ### Working with Entities and ADAM Assets
 
 1. If you're working with `DynamicEntity` objects and want to know more about them, check out @ToSic.Sxc.Interfaces.IDynamicEntity.  
-	In very rare cases you also want to know more about the underlying @ToSic.Eav.Interfaces.IEntity.
+	In very rare cases you also want to know more about the underlying @ToSic.Eav.Data.IEntity.
 1. If you're working with `ADAM` Assets, like from the `AsAdam(...)` command on @ToSic.Sxc.Interfaces.IDynamicEntity objects,  
 	you'll want to read about @ToSic.Eav.Apps.Assets.IAdamFolder and @ToSic.Eav.Apps.Assets.IAdamFile
 

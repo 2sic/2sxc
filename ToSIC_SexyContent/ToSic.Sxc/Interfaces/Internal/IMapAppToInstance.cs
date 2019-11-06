@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 
@@ -19,6 +20,6 @@ namespace ToSic.Sxc.Interfaces
 
         ContentGroup GetInstanceContentGroup(ContentGroupManager cgm, ILog log, int instanceId, int? pageId);
 
-        void UpdateTitle(SxcInstance sxcInstance, Eav.Interfaces.IEntity titleItem);
+        void UpdateTitle(SxcInstance sxcInstance, IEntity titleItem);
     }
 }

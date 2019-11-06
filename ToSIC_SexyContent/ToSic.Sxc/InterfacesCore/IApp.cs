@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Documentation;
+
 // ReSharper disable UnusedMemberInSuper.Global
 
-namespace ToSic.Sxc.Interfaces
+namespace ToSic.Sxc
 {
     /// <summary>
     /// An app-object as is available in a razor template or WebApi

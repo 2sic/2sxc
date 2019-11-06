@@ -1,11 +1,13 @@
 ﻿using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Data;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Interfaces;
 using IApp = ToSic.Eav.Apps.IApp;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {

@@ -3,10 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.SexyContent.WebApi
 {

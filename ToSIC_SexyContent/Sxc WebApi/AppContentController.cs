@@ -9,6 +9,7 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
@@ -20,6 +21,7 @@ using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight;
 using Factory = ToSic.Eav.Factory;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.WebApi
 {

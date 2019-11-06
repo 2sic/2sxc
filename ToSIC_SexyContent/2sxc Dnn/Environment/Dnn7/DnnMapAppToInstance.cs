@@ -7,6 +7,7 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -136,7 +137,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString(), Log);
         }
 
-        public void UpdateTitle(SxcInstance sxcInstance, Eav.Interfaces.IEntity titleItem)
+        public void UpdateTitle(SxcInstance sxcInstance, IEntity titleItem)
         {
             Log.Add("update title");
 

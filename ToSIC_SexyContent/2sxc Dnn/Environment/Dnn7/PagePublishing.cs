@@ -9,12 +9,14 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Data;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {

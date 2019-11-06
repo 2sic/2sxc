@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.DataSources;
 
@@ -25,6 +27,14 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
+        dynamic AsDynamic(IEntity entity);
+
+
+        /// <summary>
+        /// this is for compatibility with old systems, to ensure that things cast to IEntity in a razor can still be cast back
+        /// </summary>
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
         dynamic AsDynamic(Eav.Interfaces.IEntity entity);
 
         /// <summary>
@@ -39,6 +49,13 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entityKeyValuePair"></param>
         /// <returns></returns>
+        dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair);
+
+        /// <summary>
+        /// this is for compatibility with old systems, to ensure that things cast to IEntity in a razor can still be cast back
+        /// </summary>
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
         dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair);
 
         /// <summary>
@@ -52,13 +69,20 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
-        Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity);
+        IEntity AsEntity(dynamic dynamicEntity);
 
         /// <summary>
         /// Returns a list of DynamicEntities
         /// </summary>
         /// <param name="entities">List of entities</param>
         /// <returns></returns>
+        IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities);
+
+        /// <summary>
+        /// this is for compatibility with old systems, to ensure that things cast to IEntity in a razor can still be cast back
+        /// </summary>
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
         IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities);
 
         #region Create Data Sources

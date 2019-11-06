@@ -6,10 +6,10 @@ using System.Web;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.EAVExtensions;
+using ToSic.Sxc;
 using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Interfaces;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent

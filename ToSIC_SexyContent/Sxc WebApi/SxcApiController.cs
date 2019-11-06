@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using Factory = ToSic.Eav.Factory;
@@ -12,12 +11,14 @@ using ToSic.Sxc.Adam.WebApi;
 using System.IO;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.ValueProviders;
-using ToSic.Sxc.Interfaces;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
+using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using IDynamicCode = ToSic.Sxc.Dnn.IDynamicCode;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -88,7 +89,6 @@ namespace ToSic.SexyContent.WebApi
         /// <inheritdoc cref="IDynamicCode" />
         public dynamic AsDynamic(IEntity entity) => DnnAppAndDataHelpers.AsDynamic(entity);
 
-
         /// <inheritdoc cref="IDynamicCode" />
         public dynamic AsDynamic(dynamic dynamicEntity) =>  DnnAppAndDataHelpers.AsDynamic(dynamicEntity);
 
@@ -104,6 +104,22 @@ namespace ToSic.SexyContent.WebApi
         /// <inheritdoc cref="IDynamicCode" />
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DnnAppAndDataHelpers.AsDynamic(entities);
         #endregion
+
+        #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DnnAppAndDataHelpers.AsDynamic(entity);
+
+
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
+
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DnnAppAndDataHelpers.AsDynamic(entities);
+        #endregion
+
 
         #region CreateSource implementations
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,

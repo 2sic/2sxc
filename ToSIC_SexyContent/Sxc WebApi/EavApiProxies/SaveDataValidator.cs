@@ -2,12 +2,14 @@
 using System.Linq;
 using System.Web.Http;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json.Format;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.WebApi.Formats;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {

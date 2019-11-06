@@ -2,9 +2,10 @@
 using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.SexyContent;
+
 // ReSharper disable UnusedMember.Global
 
-namespace ToSic.Sxc.Interfaces
+namespace ToSic.Sxc
 {
     /// <summary>
     /// Contains status and commands to configure the in-page editing system. 

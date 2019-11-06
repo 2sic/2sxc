@@ -10,6 +10,7 @@ using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
@@ -162,7 +163,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
         /// <param name="entity"></param>
         /// <param name="language"></param>
         /// <returns></returns>
-        private string GetJoinedAttributes(Eav.Interfaces.IEntity entity, string language)
+        private string GetJoinedAttributes(IEntity entity, string language)
         {
             return string.Join(", ",
                 entity.Attributes.Where(x => x.Value.Type == "String" || x.Value.Type == "Number").Select(x => x.Value[language])

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Internal;
@@ -33,7 +34,7 @@ namespace ToSic.SexyContent.ContentBlocks
         internal abstract void SetAppId(int? appId);
 
         internal abstract void EnsureLinkToContentGroup(Guid cgGuid);
-        internal abstract void UpdateTitle(Eav.Interfaces.IEntity titleItem);
+        internal abstract void UpdateTitle(IEntity titleItem);
         #endregion
 
         #region methods which are fairly stable / the same across content-block implementations

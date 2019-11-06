@@ -87,13 +87,13 @@
 <h4 id="the-eav-layer">The EAV Layer</h4>
 <p>The data management system underneath everything is called the <strong>EAV</strong> - which stands for <strong>Entity</strong>, <strong>Attribute</strong>, <strong>Value</strong>. 
 Anything in that namespace is about internal data models, reading/saving data etc. 
-So anything inside the <a class="xref" href="../api/ToSic.Eav.Interfaces.html">ToSic.Eav.Interfaces</a> is all about the internals, which you only need in special scenarios. 
+So anything inside the <a class="xref" href="../api/ToSic.Eav.Data.html">ToSic.Eav.Data</a> is all about the internals, which you only need in special scenarios. 
 The same applies to @ToSic.Eav.Apps.Interfaces which is the sub-system responsible for combining data into virtual bundles called <strong>Apps</strong>.
 You can usually ignore this. </p>
 <h4 id="the-sxc-layer">The SXC Layer</h4>
 <p>On top of the <em>EAV</em> layer we have the <strong>Sxc</strong> layer. 
 It&#39;s responsible for <em>Content Management</em> on top of the <em>App</em> model provided by the <em>EAV</em>. 
-The <em>Sxc</em> layer provides things like <a class="xref" href="../api/ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> to let you code like <code>@Content.Title</code>. 
+The <em>Sxc</em> layer provides things like @ToSic.Sxc.Interfaces.IDynamicEntity to let you code like <code>@Content.Title</code>. 
 This is usually more interesting for you, but still fairly generic, because 2sxc is also meant to work with other 
 platforms like NopCommerce, Orchard or Oqtane, but it hasn&#39;t been implemented yet.</p>
 <h4 id="the-dnn-layer">The DNN Layer</h4>
@@ -108,7 +108,7 @@ and drill down to the other APIs as needed.</p>
 Areas of interest may be the <a class="xref" href="../api/ToSic.Eav.Logging.html">ToSic.Eav.Logging</a> or <a class="xref" href="../api/ToSic.Eav.ValueProviders.html">ToSic.Eav.ValueProviders</a>.</p>
 <h4 id="core-data-models">Core Data Models</h4>
 <p>This is more interesting and relevant to you, when you want to dive deep into the data model. Again you should note that this is advanced stuff. 
-You&#39;ll find it in <a class="xref" href="../api/ToSic.Eav.Interfaces.html">ToSic.Eav.Interfaces</a> - the most common bit you may care about is <a class="xref" href="../api/ToSic.Eav.Interfaces.IEntity.html">IEntity</a> and <a class="xref" href="../api/ToSic.Eav.Interfaces.IContentType.html">IContentType</a>.</p>
+You&#39;ll find it in <a class="xref" href="../api/ToSic.Eav.Data.html">ToSic.Eav.Data</a> - the most common bit you may care about is <a class="xref" href="../api/ToSic.Eav.Data.IEntity.html">IEntity</a> and <a class="xref" href="../api/ToSic.Eav.Data.IContentType.html">IContentType</a>.</p>
 <h4 id="data-processing">Data Processing</h4>
 <p>This is where things get relevant for you. Check out the <a class="xref" href="../api/ToSic.Eav.DataSources.html">ToSic.Eav.DataSources</a> to find all the bits and pieces used to process, filter and cache data.</p>
 <h4 id="storage">Storage</h4>

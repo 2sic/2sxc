@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
+using IEntity = ToSic.Eav.Data.IEntity;
+
 // ReSharper disable UnusedMember.Global
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Interfaces
+namespace ToSic.Sxc
 {
     /// <summary>
     /// This is a wrapper for IEntity objects. It provides nicer access to underlying properties

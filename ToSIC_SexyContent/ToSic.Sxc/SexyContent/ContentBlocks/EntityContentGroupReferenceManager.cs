@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
 
 namespace ToSic.SexyContent.ContentBlocks
@@ -35,7 +36,7 @@ namespace ToSic.SexyContent.ContentBlocks
             => UpdateValue(EntityContentBlock.CbPropertyContentGroup, cgGuid.ToString()); // must pre-convert to string, as it's not a reference to an entity in the same app
 
 
-        internal override void UpdateTitle(Eav.Interfaces.IEntity titleItem)
+        internal override void UpdateTitle(IEntity titleItem)
         {
             if (titleItem?.GetBestTitle() == null) return;
             UpdateValue(EntityContentBlock.CbPropertyTitle, titleItem.GetBestTitle());

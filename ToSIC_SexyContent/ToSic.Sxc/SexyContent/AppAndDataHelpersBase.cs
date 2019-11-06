@@ -5,17 +5,17 @@ using System.Threading;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.Interfaces;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.ValueProviders;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
+using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Edit.InPageEditingSystem;
-using ToSic.Sxc.Interfaces;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 // ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
 namespace ToSic.SexyContent
@@ -66,8 +66,12 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, SxcInstance);
-        
+        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, SxcInstance);
+
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => AsDynamic(entity as IEntity);
+
 
         /// <inheritdoc />
         /// <summary>
@@ -83,7 +87,12 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entityKeyValuePair"></param>
         /// <returns></returns>
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
+
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
         public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
+
 
         /// <inheritdoc />
         /// <summary>
@@ -99,7 +108,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
-        public Eav.Interfaces.IEntity AsEntity(dynamic dynamicEntity) => ((IDynamicEntity) dynamicEntity).Entity;
+        public IEntity AsEntity(dynamic dynamicEntity) => ((IDynamicEntity) dynamicEntity).Entity;
 
         /// <inheritdoc />
         /// <summary>
@@ -107,7 +116,13 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entities">List of entities</param>
         /// <returns></returns>
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => entities.Select(e => AsDynamic(e));
+
+
+        [PrivateApi]
+        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
         public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => entities.Select(e => AsDynamic(e));
+
         #endregion
 
         #region DataSource and ConfigurationProvider (for DS) section
@@ -253,7 +268,7 @@ namespace ToSic.SexyContent
 
             _list = entities.Select(GetElementFromEntity).ToList();
 
-            Element GetElementFromEntity(Eav.Interfaces.IEntity e)
+            Element GetElementFromEntity(IEntity e)
             {
                 var el = new Element
                 {

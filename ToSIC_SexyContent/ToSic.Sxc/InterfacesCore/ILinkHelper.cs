@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Interfaces
+namespace ToSic.Sxc
 {
     /// <summary>
     /// Helpers to create links with parameters or base-tag links (important for SPAs)

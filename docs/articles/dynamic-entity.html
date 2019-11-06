@@ -101,7 +101,7 @@
 &lt;div&gt;Author: @Content.Author[0].FullName&lt;/div&gt;
 </code></pre><p>So basically all properties of this book can be shown using <code>[Object].[PropertyName]</code> - for example <code>Content.ReleaseDate</code>.</p>
 <h2 id="what-dynamic-entity-really-does---and-how">What Dynamic Entity really does - and how...</h2>
-<p>Technically the dynamic entity object is like a read-helper for the more complex <a class="xref" href="../api/ToSic.Eav.Interfaces.IEntity.html">IEntity</a>. So actually the <em>dynamic entity</em> object will keep a reference to the underlying read-only <code>IEntity</code> item on a property <code>Entity</code>, and whenever your code accesses a property, the dynamic entity will query it from the underlying <code>Entity</code>.</p>
+<p>Technically the dynamic entity object is like a read-helper for the more complex <a class="xref" href="../api/ToSic.Eav.Data.IEntity.html">IEntity</a>. So actually the <em>dynamic entity</em> object will keep a reference to the underlying read-only <code>IEntity</code> item on a property <code>Entity</code>, and whenever your code accesses a property, the dynamic entity will query it from the underlying <code>Entity</code>.</p>
 <p>The main things that the <em>dynamic entity</em> does for you, are</p>
 <ol>
 <li>Give you a nice, short syntax to access a property - so <code>Content.FirstName</code> instead of <code>Object.Attributes[&quot;FirstName&quot;][&quot;en&quot;]</code> which would be necessary using the more advanced <code>IEntity</code> object</li>
@@ -111,7 +111,7 @@
 <li>Automatically do conversions, like convert related entities (like <code>.Children</code>) into dynamic objects to make your code more consistant  </li>
 </ol>
 <h2 id="properties-of-a-dynamic-entity">Properties of a Dynamic Entity</h2>
-<p>Read the API docs in the <a class="xref" href="../api/ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a>.</p>
+<p>Read the API docs in the @ToSic.Sxc.Interfaces.IDynamicEntity.</p>
 <p>Additional properties that work (they are dynamic, so don&#39;t appear in the code)</p>
 <ol>
 <li><strong>EntityType</strong> <em>string</em> - the type name like <em>Person</em></li>

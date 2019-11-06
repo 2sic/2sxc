@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
+using ToSic.Eav.Data;
 using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Interfaces;
+using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
