@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.LookUp;
 using ToSic.Eav.ValueProviders;
 using ToSic.Sxc.Interfaces;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -158,7 +159,7 @@ namespace ToSic.Sxc
         /// <returns>A typed DataSource object</returns>
         [Obsolete("Please use the CreateSource<T> overload instead.")]
         [PrivateApi]
-        new IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null);
+        new IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ITokenListFiller configurationProvider = null);
 
         /// <summary>
         /// Create a <see cref="IDataSource"/> which will process data from the given stream.
@@ -167,7 +168,7 @@ namespace ToSic.Sxc
         /// <param name="configurationProvider">An alternate configuration provider for the DataSource</param>
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
-        new T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null) where T : IDataSource;
+        new T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null) where T : IDataSource;
         #endregion
 
 

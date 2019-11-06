@@ -9,6 +9,7 @@ using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.LookUp;
 using ToSic.Eav.ValueProviders;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
@@ -128,9 +129,9 @@ namespace ToSic.SexyContent
         #endregion
 
         #region DataSource and ConfigurationProvider (for DS) section
-        private IValueCollectionProvider _configurationProvider;
+        private ITokenListFiller _configurationProvider;
 
-        private IValueCollectionProvider ConfigurationProvider
+        private ITokenListFiller ConfigurationProvider
             => _configurationProvider ??
                (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.ConfigurationProvider);
 
@@ -142,7 +143,7 @@ namespace ToSic.SexyContent
         /// <param name="inSource"></param>
         /// <param name="configurationProvider"></param>
         /// <returns></returns>
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ITokenListFiller configurationProvider = null)
         {
             if (configurationProvider == null)
                 configurationProvider = ConfigurationProvider;
@@ -153,7 +154,7 @@ namespace ToSic.SexyContent
             var userMayEdit = SxcInstance.UserMayEdit;
 
             var initialSource = DataSource.GetInitialDataSource(SxcInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
-                userMayEdit, ConfigurationProvider as ValueCollectionProvider);
+                userMayEdit, ConfigurationProvider as TokenListFiller);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
@@ -164,7 +165,7 @@ namespace ToSic.SexyContent
         /// <param name="inSource"></param>
         /// <param name="configurationProvider"></param>
         /// <returns></returns>
-        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null) where T : IDataSource
+        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null) where T : IDataSource
         {
             if (configurationProvider == null)
                 configurationProvider = ConfigurationProvider;
@@ -175,7 +176,7 @@ namespace ToSic.SexyContent
             var userMayEdit = SxcInstance.UserMayEdit;
 
             var initialSource = DataSource.GetInitialDataSource(SxcInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
-                userMayEdit, ConfigurationProvider as ValueCollectionProvider);
+                userMayEdit, ConfigurationProvider as TokenListFiller);
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider, Log);
         }
 

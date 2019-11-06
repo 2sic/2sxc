@@ -132,7 +132,7 @@
     <Compile Include="Environment\Dnn7\DnnUser.cs" />
     <Compile Include="Environment\Dnn7\ValueProviders\DnnValueProviders.cs" />
     <Compile Include="Environment\Dnn7\ValueProviders\TokenReplaceDnn.cs" />
-    <Compile Include="Environment\Dnn7\ValueProviders\ValueProviderWrapperForPropertyAccess.cs" />
+    <Compile Include="Environment\Dnn7\ValueProviders\LookUpInDnnPropertyAccess.cs" />
     <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
     <Compile Include="Environment\DnnEnvironment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

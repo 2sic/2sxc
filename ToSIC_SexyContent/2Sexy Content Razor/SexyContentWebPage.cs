@@ -8,6 +8,7 @@ using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.LookUp;
 using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
@@ -134,11 +135,11 @@ namespace ToSic.SexyContent.Razor
 
         #region Data Source Stuff
         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ITokenListFiller configurationProvider = null)
             => DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
 
         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
-        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
             where T : IDataSource
             => DnnAppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
 

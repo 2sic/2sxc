@@ -2,6 +2,7 @@
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.LookUp;
 using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
@@ -55,14 +56,14 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             // 2018-09-22 new
             var appStuff = new App(new DnnTenant(ownerPortalSettings), Eav.Apps.App.AutoLookupZone, appId, 
-                ConfigurationProvider.Build(showDrafts, versioningEnabled, new ValueCollectionProvider()), true, null);
+                ConfigurationProvider.Build(showDrafts, versioningEnabled, new TokenListFiller()), true, null);
             return appStuff;
         }
 
         public static IApp App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool versioningEnabled = false, bool showDrafts = false)
         {
             var appStuff = new App(new DnnTenant(ownerPortalSettings), zoneId, appId,
-                ConfigurationProvider.Build(showDrafts, versioningEnabled, new ValueCollectionProvider()), true, null);
+                ConfigurationProvider.Build(showDrafts, versioningEnabled, new TokenListFiller()), true, null);
             return appStuff;
         }
 

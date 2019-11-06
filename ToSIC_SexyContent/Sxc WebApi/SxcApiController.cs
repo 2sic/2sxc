@@ -13,6 +13,7 @@ using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.LookUp;
 using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.Sxc;
@@ -126,10 +127,10 @@ namespace ToSic.SexyContent.WebApi
 
         #region CreateSource implementations
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-	        IValueCollectionProvider configurationProvider = null)
+	        ITokenListFiller configurationProvider = null)
 	        => DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
 
-        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
             where T : IDataSource
             =>  DnnAppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
 

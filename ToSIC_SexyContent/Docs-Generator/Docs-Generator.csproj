@@ -58,7 +58,7 @@
     <None Include="namespaces\Eav.Apps.Adam.md" />
     <None Include="namespaces\Eav.Caching.md" />
     <None Include="namespaces\Eav.Metadata.md" />
-    <None Include="namespaces\Eav.ValueProviders.md" />
+    <None Include="namespaces\Eav.LookUp.md" />
     <None Include="namespaces\Eav.Logging.md" />
     <None Include="namespaces\Eav.DataSources.md" />
     <None Include="namespaces\Eav.Apps.Assets.md" />

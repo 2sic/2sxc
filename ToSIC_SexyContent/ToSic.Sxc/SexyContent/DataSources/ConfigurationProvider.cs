@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.LookUp;
 using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.Engines.TokenEngine;
 using ToSic.Sxc.Interfaces;
@@ -42,7 +43,7 @@ namespace ToSic.SexyContent.DataSources
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based existing stuff
         /// </summary>
-        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(bool userMayEdit, bool publishEnabled, IValueCollectionProvider config) 
+        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(bool userMayEdit, bool publishEnabled, ITokenListFiller config) 
             => appToUse => new AppDataConfiguration(userMayEdit, publishEnabled, config);
 
         /// <summary>
@@ -56,9 +57,9 @@ namespace ToSic.SexyContent.DataSources
 
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal static ValueCollectionProvider GetConfigProviderForModule(int moduleId, App app, SxcInstance sxc)
+        internal static TokenListFiller GetConfigProviderForModule(int moduleId, App app, SxcInstance sxc)
         {
-            var provider = new ValueCollectionProvider();
+            var provider = new TokenListFiller();
 
             // only add these in running inside an http-context. Otherwise leave them away!
             if (HttpContext.Current != null)
@@ -72,11 +73,11 @@ namespace ToSic.SexyContent.DataSources
                         paramList.Add(pair.Key, pair.Value);
                 else
                     paramList = request.QueryString;
-                provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", paramList));
+                provider.Sources.Add("querystring", new LookUpInNameValueCollection("querystring", paramList));
 
                 // old
-                provider.Sources.Add("server", new FilteredNameValueCollectionPropertyAccess("server", request.ServerVariables));
-                provider.Sources.Add("form", new FilteredNameValueCollectionPropertyAccess("form", request.Form));
+                provider.Sources.Add("server", new LookUpInNameValueCollection("server", request.ServerVariables));
+                provider.Sources.Add("form", new LookUpInNameValueCollection("form", request.Form));
             }
 
             // Add the standard DNN property sources if PortalSettings object is available (changed 2018-03-05)
@@ -84,12 +85,12 @@ namespace ToSic.SexyContent.DataSources
             foreach (var prov in envProvs)
                 provider.Sources.Add(prov.Key, prov.Value);
 
-            provider.Sources.Add("app", new AppPropertyAccess("app", app));
+            provider.Sources.Add("app", new LookUpInAppProperty("app", app));
 
             // add module if it was not already added previously
             if (!provider.Sources.ContainsKey("module"))
             {
-                var modulePropertyAccess = new StaticValueProvider("module");
+                var modulePropertyAccess = new LookUpInDictionary("module");
                 modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
                 provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
             }
@@ -97,7 +98,7 @@ namespace ToSic.SexyContent.DataSources
             // provide the current SxcInstance to the children where necessary
             if (!provider.Sources.ContainsKey(SxcInstanceKey))
             {
-                var sxci = new SxcInstanceValueProvider(SxcInstanceKey, null, sxc);
+                var sxci = new SxcInstanceLookUp(SxcInstanceKey, null, sxc);
                 provider.Sources.Add(sxci.Name, sxci);
             }
             return provider;

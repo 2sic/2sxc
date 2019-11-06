@@ -6,7 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
-
+using ToSic.Eav.LookUp;
 using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
@@ -83,10 +83,10 @@ namespace ToSic.Sxc.Code
 
         [Obsolete("use CreateSource<T> instead")]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-            IValueCollectionProvider configurationProvider = null)
+            ITokenListFiller configurationProvider = null)
             => Parent?.CreateSource(typeName, inSource, configurationProvider);
 
-        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
             where T : IDataSource
             => Parent.CreateSource<T>(inSource, configurationProvider);
 

@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Web.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-
+using ToSic.Eav.LookUp;
 using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
@@ -84,11 +84,11 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             _tokenReplace = new TokenReplaceEav(App, InstInfo.Id, /*PortalSettings.Current,*/ confProv);
             
             // Add the Content and ListContent property sources used always
-            _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new DynamicEntityPropertyAccess(SourcePropertyName.ListContent, _dataHelper.Header));
+            _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new LookUpInDynamicEntity(SourcePropertyName.ListContent, _dataHelper.Header));
             var contentProperty = _dataHelper.List.FirstOrDefault();
             if (contentProperty != null)
             {
-                _tokenReplace.ValueSources.Add(SourcePropertyName.Content, new DynamicEntityPropertyAccess(SourcePropertyName.Content, contentProperty.Content));
+                _tokenReplace.ValueSources.Add(SourcePropertyName.Content, new LookUpInDynamicEntity(SourcePropertyName.Content, contentProperty.Content));
             }
         }
 
@@ -113,7 +113,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             // the tempates contained with placeholders, so the templates in the <reapeat>s 
             // are not rendered twice)
             var template = RepeatRegex.Replace(templateSource, RepeatPlaceholder);
-            var rendered = RenderSection(template, new Dictionary<string, IValueProvider>());
+            var rendered = RenderSection(template, new Dictionary<string, ILookUp>());
 
             // Insert <repeat>s rendered to the template target
             var repeatsIndexes = FindAllIndexesOfString(rendered, RepeatPlaceholder);
@@ -143,20 +143,20 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             for (var i = 0; i < itemsCount; i++)
             {
                 // Create property sources for the current data item (for the current data item and its list information)
-                var propertySources = new Dictionary<string, IValueProvider>();
-                propertySources.Add(sourceName, new DynamicEntityPropertyAccess(sourceName, _dataHelper.AsDynamic(dataItems.ElementAt(i)), i, itemsCount));
+                var propertySources = new Dictionary<string, ILookUp>();
+                propertySources.Add(sourceName, new LookUpInDynamicEntity(sourceName, _dataHelper.AsDynamic(dataItems.ElementAt(i)), i, itemsCount));
                 builder.Append(RenderSection(template, propertySources));
             }
 
             return builder.ToString();
         }
 
-        private string RenderSection(string template, IDictionary<string, IValueProvider> valuesForThisInstanceOnly)
+        private string RenderSection(string template, IDictionary<string, ILookUp> valuesForThisInstanceOnly)
         {
             if (string.IsNullOrEmpty(template))
                 return "";
 
-            var propertySourcesBackup = new Dictionary<string, IValueProvider>();
+            var propertySourcesBackup = new Dictionary<string, ILookUp>();
             
             // Replace old property sources with the new ones, and backup the old ones so that 
             // they can be restored after rendering the section

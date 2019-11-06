@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.DataSources
                     throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
                 var sxciProvider = ConfigurationProvider.Sources[DataSources.ConfigurationProvider.SxcInstanceKey];
-                _sxcContext = (sxciProvider as SxcInstanceValueProvider)?
+                _sxcContext = (sxciProvider as SxcInstanceLookUp)?
                               .SxcInstance 
                               ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
