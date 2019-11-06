@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
@@ -16,6 +17,7 @@ using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using IEntity = ToSic.Eav.Data.IEntity;
+using IFolder = ToSic.Eav.Apps.Adam.IFolder;
 
 // ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
 namespace ToSic.SexyContent
@@ -298,7 +300,7 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public IAdamFolder AsAdam(IDynamicEntity entity, string fieldName)
+        public IFolder AsAdam(IDynamicEntity entity, string fieldName)
             => AsAdam(AsEntity(entity), fieldName);
 
 
@@ -308,7 +310,7 @@ namespace ToSic.SexyContent
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public IAdamFolder AsAdam(IEntity entity, string fieldName)
+        public IFolder AsAdam(IEntity entity, string fieldName)
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
             if (_adamAppContext == null)

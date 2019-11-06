@@ -2,8 +2,7 @@
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Assets;
-using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 using App = ToSic.SexyContent.App;
@@ -14,7 +13,7 @@ namespace ToSic.Sxc.Adam
     /// The app-context of ADAM
     /// In charge of managing assets inside this app
     /// </summary>
-    public class AdamAppContext: HasLog, IAdamContext
+    public class AdamAppContext: HasLog, IContext
     {
         /// <summary>
         /// the app is only used to get folder / guid etc.

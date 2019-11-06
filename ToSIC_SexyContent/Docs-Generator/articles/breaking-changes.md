@@ -16,7 +16,7 @@ All these things shouldn't affect you, because they were internal APIs, but in c
 
 1. the internal interface `IInPageEditingHelpers` was moved from `ToSic.SexyContent.Interfaces` to the namespace `ToSic.Sxc`
 1. the internal interface `IHtmlHelper` and `ILinkHelper` was moved to `ToSic.Sxc.Dnn`
-1. the interface `ToSic.Sxc.Adam.IFolder` was moved to `ToSic.Eav.Apps.Assets.IAdamFolder`
+1. the interface `ToSic.Sxc.Adam.IFolder` was moved to `ToSic.Eav.Apps.Adam.IFolder`
 1. the internal namespace `ToSic.Eav.ValueProvider` was changed to `ToSic.Eav.ValueProviders` (added an 's' for consistency)
 1. the property `Configuration` on dynamic entities was deprecated in 2sxc 4 and removed in 2sxc 10 - we don't think it was ever used
 1. moved internal Metadata interfaces (ca. 5) into final namespace @ToSic.Eav.Metadata
@@ -37,7 +37,7 @@ All these things shouldn't affect you, because they were internal APIs, but in c
 
 ##### Deprecated/Changed, but not broken
 
-1. the interface `ToSic.Sxc.Adam.IFile` was moved to `ToSic.Eav.Apps.Assets.IAdamFile` but the old interface still exists so it shouln't break  
+1. the interface `ToSic.Sxc.Adam.IFile` was moved to `ToSic.Eav.Apps.Adam.IFile` but the old interface still exists so it shouln't break  
 	_it was used by Mobius Forms_
 1. the internal interface `ToSic.SexyContent.IAppAndDataHelpers` was renamed to `ToSic.Sxc.IDynamicCode` but the old interface still exists, so it shouldn't break  
 	_it was used by Mobius Forms_

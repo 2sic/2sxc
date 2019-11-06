@@ -9,6 +9,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using Factory = ToSic.Eav.Factory;
 using ToSic.Sxc.Adam.WebApi;
 using System.IO;
+using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
@@ -19,6 +20,8 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using IDynamicCode = ToSic.Sxc.Dnn.IDynamicCode;
 using IEntity = ToSic.Eav.Data.IEntity;
+using IFile = ToSic.Eav.Apps.Adam.IFile;
+using IFolder = ToSic.Eav.Apps.Adam.IFolder;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -172,7 +175,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public IAdamFolder AsAdam(IDynamicEntity entity, string fieldName)
+        public IFolder AsAdam(IDynamicEntity entity, string fieldName)
 	        => DnnAppAndDataHelpers.AsAdam(AsEntity(entity), fieldName);
 
         /// <summary>
@@ -181,7 +184,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public IAdamFolder AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public IFolder AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
 
         /// <summary>
@@ -195,7 +198,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="field"></param>
         /// <param name="subFolder"></param>
         /// <returns></returns>
-        public IAdamFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
+        public IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
             Stream stream = null, 
             string fileName = null, 
             string contentType = null, 
