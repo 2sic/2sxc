@@ -1,6 +1,12 @@
 ### YamlMime:XRefMap
 sorted: true
 references:
+- uid: Articles.ChangeLog.BreakingChanges
+  name: Breaking Changes in EAV and 2sxc
+  href: articles/breaking-changes.html
+- uid: Articles.DynamicEntity
+  name: How to Use a Dynamic Entity
+  href: articles/dynamic-entity.html
 - uid: ToSic.Eav.Apps.Assets
   name: ToSic.Eav.Apps.Assets
   href: api/ToSic.Eav.Apps.Assets.html
@@ -2990,135 +2996,135 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Logging.ILog.Warn
   nameWithType: ILog.Warn
-- uid: ToSic.Eav.ValueProvider
-  name: ToSic.Eav.ValueProvider
-  href: api/ToSic.Eav.ValueProvider.html
-  commentId: N:ToSic.Eav.ValueProvider
-  fullName: ToSic.Eav.ValueProvider
-  nameWithType: ToSic.Eav.ValueProvider
-- uid: ToSic.Eav.ValueProvider.IValueCollectionProvider
+- uid: ToSic.Eav.ValueProviders
+  name: ToSic.Eav.ValueProviders
+  href: api/ToSic.Eav.ValueProviders.html
+  commentId: N:ToSic.Eav.ValueProviders
+  fullName: ToSic.Eav.ValueProviders
+  nameWithType: ToSic.Eav.ValueProviders
+- uid: ToSic.Eav.ValueProviders.IValueCollectionProvider
   name: IValueCollectionProvider
-  href: api/ToSic.Eav.ValueProvider.IValueCollectionProvider.html
-  commentId: T:ToSic.Eav.ValueProvider.IValueCollectionProvider
-  fullName: ToSic.Eav.ValueProvider.IValueCollectionProvider
+  href: api/ToSic.Eav.ValueProviders.IValueCollectionProvider.html
+  commentId: T:ToSic.Eav.ValueProviders.IValueCollectionProvider
+  fullName: ToSic.Eav.ValueProviders.IValueCollectionProvider
   nameWithType: IValueCollectionProvider
-- uid: ToSic.Eav.ValueProvider.IValueCollectionProvider.Add(ToSic.Eav.ValueProvider.IValueProvider)
+- uid: ToSic.Eav.ValueProviders.IValueCollectionProvider.Add(ToSic.Eav.ValueProviders.IValueProvider)
   name: Add(IValueProvider)
-  href: api/ToSic.Eav.ValueProvider.IValueCollectionProvider.html#ToSic_Eav_ValueProvider_IValueCollectionProvider_Add_ToSic_Eav_ValueProvider_IValueProvider_
-  commentId: M:ToSic.Eav.ValueProvider.IValueCollectionProvider.Add(ToSic.Eav.ValueProvider.IValueProvider)
-  fullName: ToSic.Eav.ValueProvider.IValueCollectionProvider.Add(ToSic.Eav.ValueProvider.IValueProvider)
+  href: api/ToSic.Eav.ValueProviders.IValueCollectionProvider.html#ToSic_Eav_ValueProviders_IValueCollectionProvider_Add_ToSic_Eav_ValueProviders_IValueProvider_
+  commentId: M:ToSic.Eav.ValueProviders.IValueCollectionProvider.Add(ToSic.Eav.ValueProviders.IValueProvider)
+  fullName: ToSic.Eav.ValueProviders.IValueCollectionProvider.Add(ToSic.Eav.ValueProviders.IValueProvider)
   nameWithType: IValueCollectionProvider.Add(IValueProvider)
-- uid: ToSic.Eav.ValueProvider.IValueCollectionProvider.Add*
+- uid: ToSic.Eav.ValueProviders.IValueCollectionProvider.Add*
   name: Add
-  href: api/ToSic.Eav.ValueProvider.IValueCollectionProvider.html#ToSic_Eav_ValueProvider_IValueCollectionProvider_Add_
-  commentId: Overload:ToSic.Eav.ValueProvider.IValueCollectionProvider.Add
+  href: api/ToSic.Eav.ValueProviders.IValueCollectionProvider.html#ToSic_Eav_ValueProviders_IValueCollectionProvider_Add_
+  commentId: Overload:ToSic.Eav.ValueProviders.IValueCollectionProvider.Add
   isSpec: "True"
-  fullName: ToSic.Eav.ValueProvider.IValueCollectionProvider.Add
+  fullName: ToSic.Eav.ValueProviders.IValueCollectionProvider.Add
   nameWithType: IValueCollectionProvider.Add
-- uid: ToSic.Eav.ValueProvider.IValueCollectionProvider.AddOverride(System.Collections.Generic.IEnumerable{ToSic.Eav.ValueProvider.IValueProvider})
+- uid: ToSic.Eav.ValueProviders.IValueCollectionProvider.AddOverride(System.Collections.Generic.IEnumerable{ToSic.Eav.ValueProviders.IValueProvider})
   name: AddOverride(IEnumerable<IValueProvider>)
-  href: api/ToSic.Eav.ValueProvider.IValueCollectionProvider.html#ToSic_Eav_ValueProvider_IValueCollectionProvider_AddOverride_System_Collections_Generic_IEnumerable_ToSic_Eav_ValueProvider_IValueProvider__
-  commentId: M:ToSic.Eav.ValueProvider.IValueCollectionProvider.AddOverride(System.Collections.Generic.IEnumerable{ToSic.Eav.ValueProvider.IValueProvider})
+  href: api/ToSic.Eav.ValueProviders.IValueCollectionProvider.html#ToSic_Eav_ValueProviders_IValueCollectionProvider_AddOverride_System_Collections_Generic_IEnumerable_ToSic_Eav_ValueProviders_IValueProvider__
+  commentId: M:ToSic.Eav.ValueProviders.IValueCollectionProvider.AddOverride(System.Collections.Generic.IEnumerable{ToSic.Eav.ValueProviders.IValueProvider})
   name.vb: AddOverride(IEnumerable(Of IValueProvider))
-  fullName: ToSic.Eav.ValueProvider.IValueCollectionProvider.AddOverride(System.Collections.Generic.IEnumerable<ToSic.Eav.ValueProvider.IValueProvider>)
-  fullName.vb: ToSic.Eav.ValueProvider.IValueCollectionProvider.AddOverride(System.Collections.Generic.IEnumerable(Of ToSic.Eav.ValueProvider.IValueProvider))
+  fullName: ToSic.Eav.ValueProviders.IValueCollectionProvider.AddOverride(System.Collections.Generic.IEnumerable<ToSic.Eav.ValueProviders.IValueProvider>)
+  fullName.vb: ToSic.Eav.ValueProviders.IValueCollectionProvider.AddOverride(System.Collections.Generic.IEnumerable(Of ToSic.Eav.ValueProviders.IValueProvider))
   nameWithType: IValueCollectionProvider.AddOverride(IEnumerable<IValueProvider>)
   nameWithType.vb: IValueCollectionProvider.AddOverride(IEnumerable(Of IValueProvider))
-- uid: ToSic.Eav.ValueProvider.IValueCollectionProvider.AddOverride(ToSic.Eav.ValueProvider.IValueProvider)
+- uid: ToSic.Eav.ValueProviders.IValueCollectionProvider.AddOverride(ToSic.Eav.ValueProviders.IValueProvider)
   name: AddOverride(IValueProvider)
-  href: api/ToSic.Eav.ValueProvider.IValueCollectionProvider.html#ToSic_Eav_ValueProvider_IValueCollectionProvider_AddOverride_ToSic_Eav_ValueProvider_IValueProvider_
-  commentId: M:ToSic.Eav.ValueProvider.IValueCollectionProvider.AddOverride(ToSic.Eav.ValueProvider.IValueProvider)
-  fullName: ToSic.Eav.ValueProvider.IValueCollectionProvider.AddOverride(ToSic.Eav.ValueProvider.IValueProvider)
+  href: api/ToSic.Eav.ValueProviders.IValueCollectionProvider.html#ToSic_Eav_ValueProviders_IValueCollectionProvider_AddOverride_ToSic_Eav_ValueProviders_IValueProvider_
+  commentId: M:ToSic.Eav.ValueProviders.IValueCollectionProvider.AddOverride(ToSic.Eav.ValueProviders.IValueProvider)
+  fullName: ToSic.Eav.ValueProviders.IValueCollectionProvider.AddOverride(ToSic.Eav.ValueProviders.IValueProvider)
   nameWithType: IValueCollectionProvider.AddOverride(IValueProvider)
-- uid: ToSic.Eav.ValueProvider.IValueCollectionProvider.AddOverride*
+- uid: ToSic.Eav.ValueProviders.IValueCollectionProvider.AddOverride*
   name: AddOverride
-  href: api/ToSic.Eav.ValueProvider.IValueCollectionProvider.html#ToSic_Eav_ValueProvider_IValueCollectionProvider_AddOverride_
-  commentId: Overload:ToSic.Eav.ValueProvider.IValueCollectionProvider.AddOverride
+  href: api/ToSic.Eav.ValueProviders.IValueCollectionProvider.html#ToSic_Eav_ValueProviders_IValueCollectionProvider_AddOverride_
+  commentId: Overload:ToSic.Eav.ValueProviders.IValueCollectionProvider.AddOverride
   isSpec: "True"
-  fullName: ToSic.Eav.ValueProvider.IValueCollectionProvider.AddOverride
+  fullName: ToSic.Eav.ValueProviders.IValueCollectionProvider.AddOverride
   nameWithType: IValueCollectionProvider.AddOverride
-- uid: ToSic.Eav.ValueProvider.IValueCollectionProvider.LoadConfiguration(System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,ToSic.Eav.ValueProvider.IValueProvider},System.Int32)
+- uid: ToSic.Eav.ValueProviders.IValueCollectionProvider.LoadConfiguration(System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,ToSic.Eav.ValueProviders.IValueProvider},System.Int32)
   name: LoadConfiguration(IDictionary<String, String>, Dictionary<String, IValueProvider>, Int32)
-  href: api/ToSic.Eav.ValueProvider.IValueCollectionProvider.html#ToSic_Eav_ValueProvider_IValueCollectionProvider_LoadConfiguration_System_Collections_Generic_IDictionary_System_String_System_String__System_Collections_Generic_Dictionary_System_String_ToSic_Eav_ValueProvider_IValueProvider__System_Int32_
-  commentId: M:ToSic.Eav.ValueProvider.IValueCollectionProvider.LoadConfiguration(System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,ToSic.Eav.ValueProvider.IValueProvider},System.Int32)
+  href: api/ToSic.Eav.ValueProviders.IValueCollectionProvider.html#ToSic_Eav_ValueProviders_IValueCollectionProvider_LoadConfiguration_System_Collections_Generic_IDictionary_System_String_System_String__System_Collections_Generic_Dictionary_System_String_ToSic_Eav_ValueProviders_IValueProvider__System_Int32_
+  commentId: M:ToSic.Eav.ValueProviders.IValueCollectionProvider.LoadConfiguration(System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,ToSic.Eav.ValueProviders.IValueProvider},System.Int32)
   name.vb: LoadConfiguration(IDictionary(Of String, String), Dictionary(Of String, IValueProvider), Int32)
-  fullName: ToSic.Eav.ValueProvider.IValueCollectionProvider.LoadConfiguration(System.Collections.Generic.IDictionary<System.String, System.String>, System.Collections.Generic.Dictionary<System.String, ToSic.Eav.ValueProvider.IValueProvider>, System.Int32)
-  fullName.vb: ToSic.Eav.ValueProvider.IValueCollectionProvider.LoadConfiguration(System.Collections.Generic.IDictionary(Of System.String, System.String), System.Collections.Generic.Dictionary(Of System.String, ToSic.Eav.ValueProvider.IValueProvider), System.Int32)
+  fullName: ToSic.Eav.ValueProviders.IValueCollectionProvider.LoadConfiguration(System.Collections.Generic.IDictionary<System.String, System.String>, System.Collections.Generic.Dictionary<System.String, ToSic.Eav.ValueProviders.IValueProvider>, System.Int32)
+  fullName.vb: ToSic.Eav.ValueProviders.IValueCollectionProvider.LoadConfiguration(System.Collections.Generic.IDictionary(Of System.String, System.String), System.Collections.Generic.Dictionary(Of System.String, ToSic.Eav.ValueProviders.IValueProvider), System.Int32)
   nameWithType: IValueCollectionProvider.LoadConfiguration(IDictionary<String, String>, Dictionary<String, IValueProvider>, Int32)
   nameWithType.vb: IValueCollectionProvider.LoadConfiguration(IDictionary(Of String, String), Dictionary(Of String, IValueProvider), Int32)
-- uid: ToSic.Eav.ValueProvider.IValueCollectionProvider.LoadConfiguration*
+- uid: ToSic.Eav.ValueProviders.IValueCollectionProvider.LoadConfiguration*
   name: LoadConfiguration
-  href: api/ToSic.Eav.ValueProvider.IValueCollectionProvider.html#ToSic_Eav_ValueProvider_IValueCollectionProvider_LoadConfiguration_
-  commentId: Overload:ToSic.Eav.ValueProvider.IValueCollectionProvider.LoadConfiguration
+  href: api/ToSic.Eav.ValueProviders.IValueCollectionProvider.html#ToSic_Eav_ValueProviders_IValueCollectionProvider_LoadConfiguration_
+  commentId: Overload:ToSic.Eav.ValueProviders.IValueCollectionProvider.LoadConfiguration
   isSpec: "True"
-  fullName: ToSic.Eav.ValueProvider.IValueCollectionProvider.LoadConfiguration
+  fullName: ToSic.Eav.ValueProviders.IValueCollectionProvider.LoadConfiguration
   nameWithType: IValueCollectionProvider.LoadConfiguration
-- uid: ToSic.Eav.ValueProvider.IValueCollectionProvider.Sources
+- uid: ToSic.Eav.ValueProviders.IValueCollectionProvider.Sources
   name: Sources
-  href: api/ToSic.Eav.ValueProvider.IValueCollectionProvider.html#ToSic_Eav_ValueProvider_IValueCollectionProvider_Sources
-  commentId: P:ToSic.Eav.ValueProvider.IValueCollectionProvider.Sources
-  fullName: ToSic.Eav.ValueProvider.IValueCollectionProvider.Sources
+  href: api/ToSic.Eav.ValueProviders.IValueCollectionProvider.html#ToSic_Eav_ValueProviders_IValueCollectionProvider_Sources
+  commentId: P:ToSic.Eav.ValueProviders.IValueCollectionProvider.Sources
+  fullName: ToSic.Eav.ValueProviders.IValueCollectionProvider.Sources
   nameWithType: IValueCollectionProvider.Sources
-- uid: ToSic.Eav.ValueProvider.IValueCollectionProvider.Sources*
+- uid: ToSic.Eav.ValueProviders.IValueCollectionProvider.Sources*
   name: Sources
-  href: api/ToSic.Eav.ValueProvider.IValueCollectionProvider.html#ToSic_Eav_ValueProvider_IValueCollectionProvider_Sources_
-  commentId: Overload:ToSic.Eav.ValueProvider.IValueCollectionProvider.Sources
+  href: api/ToSic.Eav.ValueProviders.IValueCollectionProvider.html#ToSic_Eav_ValueProviders_IValueCollectionProvider_Sources_
+  commentId: Overload:ToSic.Eav.ValueProviders.IValueCollectionProvider.Sources
   isSpec: "True"
-  fullName: ToSic.Eav.ValueProvider.IValueCollectionProvider.Sources
+  fullName: ToSic.Eav.ValueProviders.IValueCollectionProvider.Sources
   nameWithType: IValueCollectionProvider.Sources
-- uid: ToSic.Eav.ValueProvider.IValueProvider
+- uid: ToSic.Eav.ValueProviders.IValueProvider
   name: IValueProvider
-  href: api/ToSic.Eav.ValueProvider.IValueProvider.html
-  commentId: T:ToSic.Eav.ValueProvider.IValueProvider
-  fullName: ToSic.Eav.ValueProvider.IValueProvider
+  href: api/ToSic.Eav.ValueProviders.IValueProvider.html
+  commentId: T:ToSic.Eav.ValueProviders.IValueProvider
+  fullName: ToSic.Eav.ValueProviders.IValueProvider
   nameWithType: IValueProvider
-- uid: ToSic.Eav.ValueProvider.IValueProvider.Get(System.String)
+- uid: ToSic.Eav.ValueProviders.IValueProvider.Get(System.String)
   name: Get(String)
-  href: api/ToSic.Eav.ValueProvider.IValueProvider.html#ToSic_Eav_ValueProvider_IValueProvider_Get_System_String_
-  commentId: M:ToSic.Eav.ValueProvider.IValueProvider.Get(System.String)
-  fullName: ToSic.Eav.ValueProvider.IValueProvider.Get(System.String)
+  href: api/ToSic.Eav.ValueProviders.IValueProvider.html#ToSic_Eav_ValueProviders_IValueProvider_Get_System_String_
+  commentId: M:ToSic.Eav.ValueProviders.IValueProvider.Get(System.String)
+  fullName: ToSic.Eav.ValueProviders.IValueProvider.Get(System.String)
   nameWithType: IValueProvider.Get(String)
-- uid: ToSic.Eav.ValueProvider.IValueProvider.Get(System.String,System.String,System.Boolean@)
+- uid: ToSic.Eav.ValueProviders.IValueProvider.Get(System.String,System.String,System.Boolean@)
   name: Get(String, String, ref Boolean)
-  href: api/ToSic.Eav.ValueProvider.IValueProvider.html#ToSic_Eav_ValueProvider_IValueProvider_Get_System_String_System_String_System_Boolean__
-  commentId: M:ToSic.Eav.ValueProvider.IValueProvider.Get(System.String,System.String,System.Boolean@)
+  href: api/ToSic.Eav.ValueProviders.IValueProvider.html#ToSic_Eav_ValueProviders_IValueProvider_Get_System_String_System_String_System_Boolean__
+  commentId: M:ToSic.Eav.ValueProviders.IValueProvider.Get(System.String,System.String,System.Boolean@)
   name.vb: Get(String, String, ByRef Boolean)
-  fullName: ToSic.Eav.ValueProvider.IValueProvider.Get(System.String, System.String, ref System.Boolean)
-  fullName.vb: ToSic.Eav.ValueProvider.IValueProvider.Get(System.String, System.String, ByRef System.Boolean)
+  fullName: ToSic.Eav.ValueProviders.IValueProvider.Get(System.String, System.String, ref System.Boolean)
+  fullName.vb: ToSic.Eav.ValueProviders.IValueProvider.Get(System.String, System.String, ByRef System.Boolean)
   nameWithType: IValueProvider.Get(String, String, ref Boolean)
   nameWithType.vb: IValueProvider.Get(String, String, ByRef Boolean)
-- uid: ToSic.Eav.ValueProvider.IValueProvider.Get*
+- uid: ToSic.Eav.ValueProviders.IValueProvider.Get*
   name: Get
-  href: api/ToSic.Eav.ValueProvider.IValueProvider.html#ToSic_Eav_ValueProvider_IValueProvider_Get_
-  commentId: Overload:ToSic.Eav.ValueProvider.IValueProvider.Get
+  href: api/ToSic.Eav.ValueProviders.IValueProvider.html#ToSic_Eav_ValueProviders_IValueProvider_Get_
+  commentId: Overload:ToSic.Eav.ValueProviders.IValueProvider.Get
   isSpec: "True"
-  fullName: ToSic.Eav.ValueProvider.IValueProvider.Get
+  fullName: ToSic.Eav.ValueProviders.IValueProvider.Get
   nameWithType: IValueProvider.Get
-- uid: ToSic.Eav.ValueProvider.IValueProvider.Has(System.String)
+- uid: ToSic.Eav.ValueProviders.IValueProvider.Has(System.String)
   name: Has(String)
-  href: api/ToSic.Eav.ValueProvider.IValueProvider.html#ToSic_Eav_ValueProvider_IValueProvider_Has_System_String_
-  commentId: M:ToSic.Eav.ValueProvider.IValueProvider.Has(System.String)
-  fullName: ToSic.Eav.ValueProvider.IValueProvider.Has(System.String)
+  href: api/ToSic.Eav.ValueProviders.IValueProvider.html#ToSic_Eav_ValueProviders_IValueProvider_Has_System_String_
+  commentId: M:ToSic.Eav.ValueProviders.IValueProvider.Has(System.String)
+  fullName: ToSic.Eav.ValueProviders.IValueProvider.Has(System.String)
   nameWithType: IValueProvider.Has(String)
-- uid: ToSic.Eav.ValueProvider.IValueProvider.Has*
+- uid: ToSic.Eav.ValueProviders.IValueProvider.Has*
   name: Has
-  href: api/ToSic.Eav.ValueProvider.IValueProvider.html#ToSic_Eav_ValueProvider_IValueProvider_Has_
-  commentId: Overload:ToSic.Eav.ValueProvider.IValueProvider.Has
+  href: api/ToSic.Eav.ValueProviders.IValueProvider.html#ToSic_Eav_ValueProviders_IValueProvider_Has_
+  commentId: Overload:ToSic.Eav.ValueProviders.IValueProvider.Has
   isSpec: "True"
-  fullName: ToSic.Eav.ValueProvider.IValueProvider.Has
+  fullName: ToSic.Eav.ValueProviders.IValueProvider.Has
   nameWithType: IValueProvider.Has
-- uid: ToSic.Eav.ValueProvider.IValueProvider.Name
+- uid: ToSic.Eav.ValueProviders.IValueProvider.Name
   name: Name
-  href: api/ToSic.Eav.ValueProvider.IValueProvider.html#ToSic_Eav_ValueProvider_IValueProvider_Name
-  commentId: P:ToSic.Eav.ValueProvider.IValueProvider.Name
-  fullName: ToSic.Eav.ValueProvider.IValueProvider.Name
+  href: api/ToSic.Eav.ValueProviders.IValueProvider.html#ToSic_Eav_ValueProviders_IValueProvider_Name
+  commentId: P:ToSic.Eav.ValueProviders.IValueProvider.Name
+  fullName: ToSic.Eav.ValueProviders.IValueProvider.Name
   nameWithType: IValueProvider.Name
-- uid: ToSic.Eav.ValueProvider.IValueProvider.Name*
+- uid: ToSic.Eav.ValueProviders.IValueProvider.Name*
   name: Name
-  href: api/ToSic.Eav.ValueProvider.IValueProvider.html#ToSic_Eav_ValueProvider_IValueProvider_Name_
-  commentId: Overload:ToSic.Eav.ValueProvider.IValueProvider.Name
+  href: api/ToSic.Eav.ValueProviders.IValueProvider.html#ToSic_Eav_ValueProviders_IValueProvider_Name_
+  commentId: Overload:ToSic.Eav.ValueProviders.IValueProvider.Name
   isSpec: "True"
-  fullName: ToSic.Eav.ValueProvider.IValueProvider.Name
+  fullName: ToSic.Eav.ValueProviders.IValueProvider.Name
   nameWithType: IValueProvider.Name
 - uid: ToSic.Sxc.Dnn
   name: ToSic.Sxc.Dnn
@@ -3432,13 +3438,13 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource
   nameWithType: IDynamicCode.CreateSource
-- uid: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.ValueProvider.IValueCollectionProvider)
+- uid: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.ValueProviders.IValueCollectionProvider)
   name: CreateSource<T>(IDataSource, IValueCollectionProvider)
-  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_ValueProvider_IValueCollectionProvider_
-  commentId: M:ToSic.Sxc.Interfaces.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.ValueProvider.IValueCollectionProvider)
+  href: api/ToSic.Sxc.Interfaces.IDynamicCode.html#ToSic_Sxc_Interfaces_IDynamicCode_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_ValueProviders_IValueCollectionProvider_
+  commentId: M:ToSic.Sxc.Interfaces.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.ValueProviders.IValueCollectionProvider)
   name.vb: CreateSource(Of T)(IDataSource, IValueCollectionProvider)
-  fullName: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource<T>(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.ValueProvider.IValueCollectionProvider)
-  fullName.vb: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource(Of T)(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.ValueProvider.IValueCollectionProvider)
+  fullName: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource<T>(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.ValueProviders.IValueCollectionProvider)
+  fullName.vb: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource(Of T)(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.ValueProviders.IValueCollectionProvider)
   nameWithType: IDynamicCode.CreateSource<T>(IDataSource, IValueCollectionProvider)
   nameWithType.vb: IDynamicCode.CreateSource(Of T)(IDataSource, IValueCollectionProvider)
 - uid: ToSic.Sxc.Interfaces.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataStream)

@@ -16,8 +16,12 @@ namespace ToSic.SexyContent.Interfaces
         /// <summary>
         /// Deprecated - avoid using. Use Edit.Toolbar(object...) instead
         /// </summary>
-        [Obsolete]
+        [Obsolete("Use Edit.Toolbar(...) instead")]
         HtmlString Toolbar { get; }
+
+
+        [Obsolete]
+        IHtmlString Render();
 
         IEntity Entity { get; }
 

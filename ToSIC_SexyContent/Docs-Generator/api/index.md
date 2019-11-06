@@ -3,23 +3,14 @@
 
 It's completely work-in-progress (WIP) as of October / November 2019. Do not use this yet!
 
-## Background: Eav vs. Sxc vs. Dnn
+## Background: Architecture of Eav, Sxc, Dnn
 
-The data management system underneath everything is called the **EAV** - which stands for **Entity**, **Attribute**, **Value**. 
-Anything in that namespace is about internal data models, reading/saving data etc. 
-So anything inside the @ToSic.Eav.Interfaces is all about the internals, which you only need in special scenarios. 
-The same applies to @ToSic.Eav.Apps.Interfaces which is the sub-system responsible for combining data into virtual bundles called **Apps**.
-You can usually ignore this. 
+> Before you start, please get familiar with the [architecture](../articles/architecture.md) - otherwise you probably won't understand what you see here.
 
-On top of the _EAV_ layer we have the **Sxc** layer. 
-It's responsible for _Content Management_ on top of the _App_ model provided by the _EAV_. 
-The _Sxc_ layer provides things like @ToSic.Sxc.Interfaces.IDynamicEntity to let you code like `@Content.Title`. 
-This is usually more interesting for you, but still fairly generic, because 2sxc is also meant to work with other 
-platforms like NopCommerce, Orchard or Oqtane, but it hasn't been implemented yet.
-
-On top of the _Sxc_ layer we have the **Dnn** layer. It connects 2sxc with Dnn. 
-Usually when you're writing code and want to know about the API, you'll typically start here, 
-and drill down to the other APIs as needed.
+Note also that the real code of EAV/2sxc/DNN has way more stuff, but that's inofficial. 
+Please don't use objects that are not documented here. 
+That allows us to improve the architecture without worrying about breaking your code. 
+Once we're really sure that certain parts are very final, we'll publish the API docs for those parts. 
 
 ## What You're Probably Looking for
 

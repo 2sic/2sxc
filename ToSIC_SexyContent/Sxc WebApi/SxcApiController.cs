@@ -14,6 +14,7 @@ using ToSic.Sxc.Adam.WebApi;
 using System.IO;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.ValueProviders;
 using ToSic.Sxc.Interfaces;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.Sxc.Code;

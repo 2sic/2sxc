@@ -10,7 +10,11 @@ namespace ToSic.Sxc.Interfaces
     /// <summary>
     /// This is a wrapper for IEntity objects. It provides nicer access to underlying properties
     /// and automatically handles things like multi-language etc.
-    /// The underlying IEntity <see cref="IEntity"/> is in the Entity property.
+    /// The underlying IEntity <see cref="IEntity"/> is in the Entity property. 
+    /// <blockquote>
+    /// Normally you will use it without caring about these internals. <br/>
+    /// Please check @Articles.DynamicEntity
+    /// </blockquote>
     /// </summary>
     [PublicApi]
     public interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity
@@ -44,7 +48,7 @@ namespace ToSic.Sxc.Interfaces
         /// The title of this item. This is always available no matter what the underlying field for the title is. 
         /// </summary>
         /// <returns>
-        /// The title of the underlying entity
+        /// The title of the underlying entity. In rare cases it can be null.
         /// </returns>
         new object EntityTitle { get; }
 
@@ -59,13 +63,13 @@ namespace ToSic.Sxc.Interfaces
         new dynamic Get(string name);
 
         /// <summary>
-        /// Get the draft item of this item.  
+        /// Get the draft item of this item if this is a content-item which is published, and has a draft.
         /// </summary>
         /// <returns>Returns a dynamic entity if there is a draft, or null if there is no draft.</returns>
         new dynamic GetDraft();
 
         /// <summary>
-        /// Get the published item of this item.  
+        /// Get the published item of this item if this is a content-item which is draft, and has a published.
         /// </summary>
         /// <returns>Returns a dynamic entity if there is a draft, or null if there is no draft.</returns>
         new dynamic GetPublished();
@@ -78,6 +82,7 @@ namespace ToSic.Sxc.Interfaces
         /// <returns>
         /// True if this is the item configured in the view-settings, false if not.
         /// </returns>
+        /// <remarks>New in 10.06</remarks>
         new bool IsDemoItem { get; }
 
         /// <summary>
@@ -89,6 +94,7 @@ namespace ToSic.Sxc.Interfaces
         /// <param name="type">Optional type filter - would only return items of this type. </param>
         /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
         /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
+        /// <remarks>New in 9.42</remarks>
         new List<IDynamicEntity> Parents(string type = null, string field = null);
 
         /// <summary>
@@ -104,5 +110,6 @@ namespace ToSic.Sxc.Interfaces
         /// An <see cref="IDynamicEntity"/> with the presentation item (or the demo-presentation), otherwise null.
         /// </returns>
         dynamic Presentation { get; }
+
     }
 }

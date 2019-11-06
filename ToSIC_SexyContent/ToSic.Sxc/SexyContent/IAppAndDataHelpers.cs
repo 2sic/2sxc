@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
+using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.DataSources;
 
 // ReSharper disable once CheckNamespace

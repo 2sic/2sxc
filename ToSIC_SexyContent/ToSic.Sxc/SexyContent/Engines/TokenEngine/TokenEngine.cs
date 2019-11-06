@@ -8,6 +8,7 @@ using System.Web.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.ValueProvider;
+using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 

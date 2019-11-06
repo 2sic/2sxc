@@ -80,20 +80,13 @@
 <h1 id="this-is-the-2sxc-api-documentation">This is the <strong>2sxc API Documentation</strong>.</h1>
 
 <p>It&#39;s completely work-in-progress (WIP) as of October / November 2019. Do not use this yet!</p>
-<h2 id="background-eav-vs-sxc-vs-dnn">Background: Eav vs. Sxc vs. Dnn</h2>
-<p>The data management system underneath everything is called the <strong>EAV</strong> - which stands for <strong>Entity</strong>, <strong>Attribute</strong>, <strong>Value</strong>. 
-Anything in that namespace is about internal data models, reading/saving data etc. 
-So anything inside the <a class="xref" href="ToSic.Eav.Interfaces.html">ToSic.Eav.Interfaces</a> is all about the internals, which you only need in special scenarios. 
-The same applies to <a class="xref" href="ToSic.Eav.Apps.Interfaces.html">ToSic.Eav.Apps.Interfaces</a> which is the sub-system responsible for combining data into virtual bundles called <strong>Apps</strong>.
-You can usually ignore this. </p>
-<p>On top of the <em>EAV</em> layer we have the <strong>Sxc</strong> layer. 
-It&#39;s responsible for <em>Content Management</em> on top of the <em>App</em> model provided by the <em>EAV</em>. 
-The <em>Sxc</em> layer provides things like <a class="xref" href="ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> to let you code like <code>@Content.Title</code>. 
-This is usually more interesting for you, but still fairly generic, because 2sxc is also meant to work with other 
-platforms like NopCommerce, Orchard or Oqtane, but it hasn&#39;t been implemented yet.</p>
-<p>On top of the <em>Sxc</em> layer we have the <strong>Dnn</strong> layer. It connects 2sxc with Dnn. 
-Usually when you&#39;re writing code and want to know about the API, you&#39;ll typically start here, 
-and drill down to the other APIs as needed.</p>
+<h2 id="background-architecture-of-eav-sxc-dnn">Background: Architecture of Eav, Sxc, Dnn</h2>
+<blockquote><p>Before you start, please get familiar with the <a href="../articles/architecture.html">architecture</a> - otherwise you probably won&#39;t understand what you see here.</p>
+</blockquote>
+<p>Note also that the real code of EAV/2sxc/DNN has way more stuff, but that&#39;s inofficial. 
+Please don&#39;t use objects that are not documented here. 
+That allows us to improve the architecture without worrying about breaking your code. 
+Once we&#39;re really sure that certain parts are very final, we&#39;ll publish the API docs for those parts. </p>
 <h2 id="what-youre-probably-looking-for">What You&#39;re Probably Looking for</h2>
 <h3 id="apis-in-razor-templates-and-webapi">APIs in Razor Templates and WebApi</h3>
 <ol>

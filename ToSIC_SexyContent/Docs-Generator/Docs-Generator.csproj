@@ -47,12 +47,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="api\index.md" />
+    <None Include="articles\breaking-changes.md" />
+    <None Include="articles\dynamic-entity.md" />
+    <None Include="articles\architecture.md" />
     <None Include="articles\intro.md" />
     <None Include="articles\toc.md" />
     <None Include="docfx.json" />
     <None Include="filterConfig.yml" />
     <None Include="index.md" />
-    <None Include="namespaces\ToSic.Eav.ValueProvider.md" />
+    <None Include="namespaces\ToSic.Eav.ValueProviders.md" />
     <None Include="namespaces\ToSic.Eav.Logging.md" />
     <None Include="namespaces\ToSic.Eav.DataSources.md" />
     <None Include="namespaces\ToSic.Eav.Apps.Assets.md" />
@@ -61,6 +64,7 @@
     <None Include="namespaces\ToSic.Sxc.Dnn.md" />
     <None Include="namespaces\ToSic.Eav.Interfaces.md" />
     <None Include="packages.config" />
+    <None Include="xrefmap.yml" />
     <None Include="toc.yml" />
   </ItemGroup>
   <ItemGroup>

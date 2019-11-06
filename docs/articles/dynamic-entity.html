@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>How to Use a Dynamic Entity | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="How to Use a Dynamic Entity | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Articles.DynamicEntity">
+<h1 id="how-to-use-a-dynamic-entity">How to Use a Dynamic Entity</h1>
+
+<p>Whenever you create a content-type - like <em>Person</em> - and want to work with the data in your C# Razor templates, you&#39;ll be working with a <em>Dynamic Entity</em>. The main code for this is the <a href="https://github.com/2sic/2sxc/blob/master/SexyContent/DynamicEntity.cs">DynamicEntity.cs</a> and also the <a href="https://github.com/2sic/eav-server/blob/master/ToSic.Eav.Core/Entity.cs">Entity.cs</a>.</p>
+<h2 id="code-example-using-a-dynamic-entity">Code example using a Dynamic Entity</h2>
+<p>We&#39;ll assume we have a <em>Content Type</em> called <em>Book</em> with the following properties:</p>
+<ul>
+<li>Title (text, 1-line)</li>
+<li>Teaser (text, multi-line)</li>
+<li>Description (text, html)</li>
+<li>ReleaseDate (date)</li>
+<li>Author (entity - another content item)</li>
+</ul>
+<p>Here&#39;s a code example in a C# Razor template:</p>
+<pre><code class="lang-html">&lt;!--
+  The default variable for the current item is Content, we&#39;ll just use another name for this sample
+  note that .Title is automatically provided, because the content-type has the property title. 
+--&gt;
+&lt;h1&gt;@Content.Title&lt;/h1&gt;
+&lt;div&gt;@Content.Description&lt;/div&gt;
+&lt;div&gt;Author: @Content.Author[0].FullName&lt;/div&gt;
+</code></pre><p>So basically all properties of this book can be shown using <code>[Object].[PropertyName]</code> - for example <code>Content.ReleaseDate</code>.</p>
+<h2 id="what-dynamic-entity-really-does---and-how">What Dynamic Entity really does - and how...</h2>
+<p>Technically the dynamic entity object is like a read-helper for the more complex <a class="xref" href="../api/ToSic.Eav.Interfaces.IEntity.html">IEntity</a>. So actually the <em>dynamic entity</em> object will keep a reference to the underlying read-only <code>IEntity</code> item on a property <code>Entity</code>, and whenever your code accesses a property, the dynamic entity will query it from the underlying <code>Entity</code>.</p>
+<p>The main things that the <em>dynamic entity</em> does for you, are</p>
+<ol>
+<li>Give you a nice, short syntax to access a property - so <code>Content.FirstName</code> instead of <code>Object.Attributes[&quot;FirstName&quot;][&quot;en&quot;]</code> which would be necessary using the more advanced <code>IEntity</code> object</li>
+<li>Ensure that the language used in retrieving a value is the current user language</li>
+<li>Give conveniant access to related information like the <code>Presentation</code> object</li>
+<li>Automatically handle some data-not-found errors</li>
+<li>Automatically do conversions, like convert related entities (like <code>.Children</code>) into dynamic objects to make your code more consistant  </li>
+</ol>
+<h2 id="properties-of-a-dynamic-entity">Properties of a Dynamic Entity</h2>
+<p>These are documented in the <a class="xref" href="../api/ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a>.</p>
+<p>Additional properties that work (they are dynamic, so don&#39;t appear in the code)</p>
+<ol>
+<li><strong>EntityType</strong> <em>string</em> - the type name like <em>Person</em></li>
+<li><strong>IsPublished</strong> <em>bool</em> - true/false if this item is currently published</li>
+<li><strong><em>AnyProperty</em></strong> <em>dynamic, but actually bool | string | decimal | datetime | List<dynamicentity></dynamicentity></em> any normal property of the content-item can be accessd directly. It&#39;s correctly .net typed (string, etc.)</li>
+</ol>
+<p>The following Methods exist on all dynamic entities</p>
+<ol>
+<li><strong>Render()</strong> - will render HTML for the current item, if there is a configuration for this. Almost always returns a simple HTML-comment, unless used as inner-content (added in 2sxc 8.3)</li>
+</ol>
+<h2 id="working-with-unpublisheddraft-items">Working with unpublished/draft items</h2>
+<p>TODO: write something about how-to-check if published/unpublished, navigating it, etc. - or link to such a page</p>
+<h2 id="appendix">Appendix</h2>
+<p>The following properties/methods exist, but shouldn&#39;t be used. They are documented here so that you know that they are not meant for public use:</p>
+<ol>
+<li>Created - the created date</li>
+<li>Author - the person who created this item</li>
+<li>Owner - the current owner of the item, usually the author</li>
+<li>Metadadata - currently use <code>AsEntity(theObject).Metadata</code></li>
+<li>Permissions - permissions of the current item (if any are defined)</li>
+</ol>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in 2sxc 01.00</li>
+<li>Changed to use interface IDynamicEntity in 6.x</li>
+<li>Draft/Published introduced in 2sxc 7.x</li>
+<li>Presentation introduced in 2sxc 7.x</li>
+<li>Modified introduced in 2sxc 8.x</li>
+<li>Implemented .net equality comparer in 2sxc 9.42</li>
+<li>Parents added in 2sxc 9.42</li>
+<li>Get added in 2sxc 9.42 and added to interface IDynamicEntity in 10.07</li>
+<li>Parents introduced in 2sxc 9.42, and added to interface IDynamicEntity in 10.07</li>
+<li>IsDemoItem property added in 2sxc 10.06</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/articles/dynamic-entity.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

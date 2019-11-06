@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>EAV / 2sxc / DNN Architecture | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="EAV / 2sxc / DNN Architecture | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="eav--2sxc--dnn-architecture">EAV / 2sxc / DNN Architecture</h1>
+
+<p>2sxc is simple to use, but to enable that, it&#39;s pretty sophisticated on the inside. We&#39;ll give you an overview here, so you can better understand what you are using. </p>
+<h2 id="overall-architecture">Overall Architecture</h2>
+<p><img src="/images/architecture/eav-2sxc-dnn.png" width="100%"></p>
+<h4 id="the-storage-systems">The Storage Systems</h4>
+<p>This is fairly straight forward - data can be stored in SQL (spread across tables or using JSON) and the File System (stored as JSON). Note that assets like images are not handled here, but in the EAV-Apps layer (see below).</p>
+<h4 id="the-eav-layer">The EAV Layer</h4>
+<p>The data management system underneath everything is called the <strong>EAV</strong> - which stands for <strong>Entity</strong>, <strong>Attribute</strong>, <strong>Value</strong>. 
+Anything in that namespace is about internal data models, reading/saving data etc. 
+So anything inside the <a class="xref" href="../api/ToSic.Eav.Interfaces.html">ToSic.Eav.Interfaces</a> is all about the internals, which you only need in special scenarios. 
+The same applies to <a class="xref" href="../api/ToSic.Eav.Apps.Interfaces.html">ToSic.Eav.Apps.Interfaces</a> which is the sub-system responsible for combining data into virtual bundles called <strong>Apps</strong>.
+You can usually ignore this. </p>
+<h4 id="the-sxc-layer">The SXC Layer</h4>
+<p>On top of the <em>EAV</em> layer we have the <strong>Sxc</strong> layer. 
+It&#39;s responsible for <em>Content Management</em> on top of the <em>App</em> model provided by the <em>EAV</em>. 
+The <em>Sxc</em> layer provides things like <a class="xref" href="../api/ToSic.Sxc.Interfaces.IDynamicEntity.html">IDynamicEntity</a> to let you code like <code>@Content.Title</code>. 
+This is usually more interesting for you, but still fairly generic, because 2sxc is also meant to work with other 
+platforms like NopCommerce, Orchard or Oqtane, but it hasn&#39;t been implemented yet.</p>
+<h4 id="the-dnn-layer">The DNN Layer</h4>
+<p>On top of the <em>Sxc</em> layer we have the <strong>Dnn</strong> layer. It connects 2sxc with Dnn. 
+Usually when you&#39;re writing code and want to know about the API, you&#39;ll typically start here, 
+and drill down to the other APIs as needed.</p>
+<h2 id="architecture-of-the-eav-layer">Architecture of the EAV Layer</h2>
+<p><img src="/images/architecture/eav-internals.png" width="100%"></p>
+<p>Inside the EAV you&#39;ll find a whole ecosystem of parts which make the magic happen. </p>
+<h4 id="infrastructure">Infrastructure</h4>
+<p>This is very internal stuff, to make sure everything happens. You will usually not go here. Most if it is also not public API. 
+Areas of interest may be the <a class="xref" href="../api/ToSic.Eav.Logging.html">ToSic.Eav.Logging</a> or <a class="xref" href="../api/ToSic.Eav.ValueProviders.html">ToSic.Eav.ValueProviders</a>.</p>
+<h4 id="core-data-models">Core Data Models</h4>
+<p>This is more interesting and relevant to you, when you want to dive deep into the data model. Again you should note that this is advanced stuff. 
+You&#39;ll find it in <a class="xref" href="../api/ToSic.Eav.Interfaces.html">ToSic.Eav.Interfaces</a> - the most common bit you may care about is <a class="xref" href="../api/ToSic.Eav.Interfaces.IEntity.html">IEntity</a> and <a class="xref" href="../api/ToSic.Eav.Interfaces.IContentType.html">IContentType</a>.</p>
+<h4 id="data-processing">Data Processing</h4>
+<p>This is where things get relevant for you. Check out the <a class="xref" href="../api/ToSic.Eav.DataSources.html">ToSic.Eav.DataSources</a> to find all the bits and pieces used to process, filter and cache data.</p>
+<h4 id="storage">Storage</h4>
+<p>This is still more an internal bit, and as of now you shouldn&#39;t use it. </p>
+<h4 id="app-system-and-assets">App System and Assets</h4>
+<p>Another part that you may want to know more about. Here is where data is clustered together into virtual containers called <strong>Apps</strong>. 
+These contain all the content-types and items of an App. It also has view-definitions, Content-Blocks (the logical unit usually called a Module in DNN) and way more. 
+You&#39;ll find it in <a class="xref" href="../api/ToSic.Eav.Apps.Interfaces.html">ToSic.Eav.Apps.Interfaces</a>. </p>
+<p>The assets - usually using ADAM - are found in <a class="xref" href="../api/ToSic.Eav.Apps.Assets.html">ToSic.Eav.Apps.Assets</a>.</p>
+<h4 id="web-api">Web API</h4>
+<p>This is ATM an internal section, mainly for connecting DNN WebAPIs to the EAV. Not documented as of now. </p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/articles/architecture.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
