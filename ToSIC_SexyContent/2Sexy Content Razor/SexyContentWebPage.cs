@@ -4,24 +4,23 @@ using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Apps.Adam;
-using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
-using ToSic.Sxc.Razor;
+using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Razor;
 using File = System.IO.File;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Eav.Apps.Adam.IFolder;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Razor
 {
     /// <summary>

@@ -1,4 +1,5 @@
-﻿namespace ToSic.SexyContent.Razor
+﻿// ReSharper disable once CheckNamespace
+namespace ToSic.SexyContent.Razor
 {
     /// <summary>
     /// this is just a generic variation of SexyContentWebPage

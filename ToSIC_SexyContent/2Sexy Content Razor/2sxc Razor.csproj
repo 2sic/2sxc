@@ -8,7 +8,7 @@
     <ProjectGuid>{78A558AF-F274-4E3C-95FE-8DE9226E0EBC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ToSic.SexyContent.Razor</RootNamespace>
+    <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.SexyContent.Razor</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -98,9 +98,9 @@
     <Compile Include="Dnn\IRazor.cs" />
     <Compile Include="Dnn\IHtmlHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Helpers\HtmlHelper.cs" />
-    <Compile Include="RazorEngine.cs" />
-    <Compile Include="RazorPermissions.cs" />
+    <Compile Include="Engines\Razor\HtmlHelper.cs" />
+    <Compile Include="Engines\Razor\RazorEngine.cs" />
+    <Compile Include="Engines\Razor\RazorPermissions.cs" />
     <Compile Include="SexyContentWebPage.cs" />
     <Compile Include="SexyContentWebPageOfT.cs" />
   </ItemGroup>
@@ -137,6 +137,7 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -8,6 +8,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Internal;
+using ToSic.Sxc.Engines;
 
 // mostly because of content-groups, cannot refactor out yet :(
 
@@ -37,7 +38,7 @@ namespace ToSic.Eav.AppEngine
 		}
 
 		public IEnumerable<Template> GetAllTemplates() 
-            => TemplateDataSource().List.Select(p => new Template(p, Log)).OrderBy(p => p.Name);
+            => TemplateDataSource().List.Select(p => new Template(p/*, Log*/)).OrderBy(p => p.Name);
 
 		public Template GetTemplate(int templateId)
 		{
@@ -49,7 +50,7 @@ namespace ToSic.Eav.AppEngine
 			if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");
 
-			return new Template(templateEntity, Log);
+			return new Template(templateEntity/*, Log*/);
 		}
 
         public bool DeleteTemplate(int templateId)
