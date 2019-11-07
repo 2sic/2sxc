@@ -31,6 +31,13 @@
       <DefaultExclude Include="Js\EditDataSource\**" />
       <DefaultExclude Include="Styles\EditDataSource\**" />
       <DefaultExclude Include="ModulePackages\**" />
+
+      <DefaultExclude Include="Docs-Generator\**" />
+      <DefaultExclude Include="ToSic.Sxc.Tests\**" />
+      <DefaultExclude Include="2sxc.WebApi.Tests\**" />
+      <DefaultExclude Include="ToSic.Sxc\**" />
+      <DefaultExclude Include="Sxc WebApi\**" />
+
       <DefaultExclude Include="DnnPackageBuilder\**" />
       <DefaultExclude Include="xSqlDataProvider\**" />
       <DefaultExclude Include=".databeta\**" />
