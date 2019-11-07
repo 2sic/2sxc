@@ -4,7 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.ValueProviders;
+
 using ToSic.SexyContent.DataSources;
 
 // ReSharper disable once CheckNamespace

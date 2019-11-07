@@ -5,7 +5,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 {
     internal class LookUpInAppProperty : LookUpBase
     {
-        private readonly App _app;
+        private readonly SexyContent.App _app;
 
         #region Internal stuff to be able to supply sub-properties
         private ILookUp _settings;

@@ -14,7 +14,7 @@ using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.ValueProviders;
+
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.Sxc;
 using ToSic.Sxc.Code;

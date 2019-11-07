@@ -75,7 +75,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IMapAppToInstance, DnnMapAppToInstance>();
                 sc.AddTransient<IEnvironmentInstaller, InstallationController>();
                 sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
-                sc.AddTransient<IEnvironmentValueProviders, DnnValueProviders>();
+                sc.AddTransient<IEnvironmentLookUps, DnnLookUps>();
                 sc.AddTransient<IFingerprintProvider, FingerprintProvider>();
 
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);

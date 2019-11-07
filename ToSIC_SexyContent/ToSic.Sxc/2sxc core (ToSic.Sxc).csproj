@@ -144,7 +144,7 @@
     <Compile Include="SexyContent\Engines\TokenEngine\LookUpInAppProperty.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\LookUpInDynamicEntity.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\LookUpInNameValueCollection.cs" />
-    <Compile Include="Interfaces\Internal\IEnvironmentValueProviders.cs" />
+    <Compile Include="Interfaces\Internal\IEnvironmentLookUps.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEAV.cs" />
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />

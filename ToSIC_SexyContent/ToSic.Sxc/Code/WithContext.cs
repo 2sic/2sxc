@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps.Adam;
-using ToSic.Eav.Apps.Assets;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
-using ToSic.Sxc.Interfaces;
-using ToSic.Sxc.Adam;
 using App = ToSic.SexyContent.App;
 using Constants = ToSic.Eav.Constants;
 using IEntity = ToSic.Eav.Data.IEntity;

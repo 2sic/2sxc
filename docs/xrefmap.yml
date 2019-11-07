@@ -3062,76 +3062,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.LookUp.ILookUp.Name
   nameWithType: ILookUp.Name
-- uid: ToSic.Eav.LookUp.ITokenListFiller
-  name: ITokenListFiller
-  href: api/ToSic.Eav.LookUp.ITokenListFiller.html
-  commentId: T:ToSic.Eav.LookUp.ITokenListFiller
-  fullName: ToSic.Eav.LookUp.ITokenListFiller
-  nameWithType: ITokenListFiller
-- uid: ToSic.Eav.LookUp.ITokenListFiller.Add(ToSic.Eav.LookUp.ILookUp)
-  name: Add(ILookUp)
-  href: api/ToSic.Eav.LookUp.ITokenListFiller.html#ToSic_Eav_LookUp_ITokenListFiller_Add_ToSic_Eav_LookUp_ILookUp_
-  commentId: M:ToSic.Eav.LookUp.ITokenListFiller.Add(ToSic.Eav.LookUp.ILookUp)
-  fullName: ToSic.Eav.LookUp.ITokenListFiller.Add(ToSic.Eav.LookUp.ILookUp)
-  nameWithType: ITokenListFiller.Add(ILookUp)
-- uid: ToSic.Eav.LookUp.ITokenListFiller.Add*
-  name: Add
-  href: api/ToSic.Eav.LookUp.ITokenListFiller.html#ToSic_Eav_LookUp_ITokenListFiller_Add_
-  commentId: Overload:ToSic.Eav.LookUp.ITokenListFiller.Add
-  isSpec: "True"
-  fullName: ToSic.Eav.LookUp.ITokenListFiller.Add
-  nameWithType: ITokenListFiller.Add
-- uid: ToSic.Eav.LookUp.ITokenListFiller.AddOverride(System.Collections.Generic.IEnumerable{ToSic.Eav.LookUp.ILookUp})
-  name: AddOverride(IEnumerable<ILookUp>)
-  href: api/ToSic.Eav.LookUp.ITokenListFiller.html#ToSic_Eav_LookUp_ITokenListFiller_AddOverride_System_Collections_Generic_IEnumerable_ToSic_Eav_LookUp_ILookUp__
-  commentId: M:ToSic.Eav.LookUp.ITokenListFiller.AddOverride(System.Collections.Generic.IEnumerable{ToSic.Eav.LookUp.ILookUp})
-  name.vb: AddOverride(IEnumerable(Of ILookUp))
-  fullName: ToSic.Eav.LookUp.ITokenListFiller.AddOverride(System.Collections.Generic.IEnumerable<ToSic.Eav.LookUp.ILookUp>)
-  fullName.vb: ToSic.Eav.LookUp.ITokenListFiller.AddOverride(System.Collections.Generic.IEnumerable(Of ToSic.Eav.LookUp.ILookUp))
-  nameWithType: ITokenListFiller.AddOverride(IEnumerable<ILookUp>)
-  nameWithType.vb: ITokenListFiller.AddOverride(IEnumerable(Of ILookUp))
-- uid: ToSic.Eav.LookUp.ITokenListFiller.AddOverride(ToSic.Eav.LookUp.ILookUp)
-  name: AddOverride(ILookUp)
-  href: api/ToSic.Eav.LookUp.ITokenListFiller.html#ToSic_Eav_LookUp_ITokenListFiller_AddOverride_ToSic_Eav_LookUp_ILookUp_
-  commentId: M:ToSic.Eav.LookUp.ITokenListFiller.AddOverride(ToSic.Eav.LookUp.ILookUp)
-  fullName: ToSic.Eav.LookUp.ITokenListFiller.AddOverride(ToSic.Eav.LookUp.ILookUp)
-  nameWithType: ITokenListFiller.AddOverride(ILookUp)
-- uid: ToSic.Eav.LookUp.ITokenListFiller.AddOverride*
-  name: AddOverride
-  href: api/ToSic.Eav.LookUp.ITokenListFiller.html#ToSic_Eav_LookUp_ITokenListFiller_AddOverride_
-  commentId: Overload:ToSic.Eav.LookUp.ITokenListFiller.AddOverride
-  isSpec: "True"
-  fullName: ToSic.Eav.LookUp.ITokenListFiller.AddOverride
-  nameWithType: ITokenListFiller.AddOverride
-- uid: ToSic.Eav.LookUp.ITokenListFiller.LoadConfiguration(System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,ToSic.Eav.LookUp.ILookUp},System.Int32)
-  name: LoadConfiguration(IDictionary<String, String>, Dictionary<String, ILookUp>, Int32)
-  href: api/ToSic.Eav.LookUp.ITokenListFiller.html#ToSic_Eav_LookUp_ITokenListFiller_LoadConfiguration_System_Collections_Generic_IDictionary_System_String_System_String__System_Collections_Generic_Dictionary_System_String_ToSic_Eav_LookUp_ILookUp__System_Int32_
-  commentId: M:ToSic.Eav.LookUp.ITokenListFiller.LoadConfiguration(System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,ToSic.Eav.LookUp.ILookUp},System.Int32)
-  name.vb: LoadConfiguration(IDictionary(Of String, String), Dictionary(Of String, ILookUp), Int32)
-  fullName: ToSic.Eav.LookUp.ITokenListFiller.LoadConfiguration(System.Collections.Generic.IDictionary<System.String, System.String>, System.Collections.Generic.Dictionary<System.String, ToSic.Eav.LookUp.ILookUp>, System.Int32)
-  fullName.vb: ToSic.Eav.LookUp.ITokenListFiller.LoadConfiguration(System.Collections.Generic.IDictionary(Of System.String, System.String), System.Collections.Generic.Dictionary(Of System.String, ToSic.Eav.LookUp.ILookUp), System.Int32)
-  nameWithType: ITokenListFiller.LoadConfiguration(IDictionary<String, String>, Dictionary<String, ILookUp>, Int32)
-  nameWithType.vb: ITokenListFiller.LoadConfiguration(IDictionary(Of String, String), Dictionary(Of String, ILookUp), Int32)
-- uid: ToSic.Eav.LookUp.ITokenListFiller.LoadConfiguration*
-  name: LoadConfiguration
-  href: api/ToSic.Eav.LookUp.ITokenListFiller.html#ToSic_Eav_LookUp_ITokenListFiller_LoadConfiguration_
-  commentId: Overload:ToSic.Eav.LookUp.ITokenListFiller.LoadConfiguration
-  isSpec: "True"
-  fullName: ToSic.Eav.LookUp.ITokenListFiller.LoadConfiguration
-  nameWithType: ITokenListFiller.LoadConfiguration
-- uid: ToSic.Eav.LookUp.ITokenListFiller.Sources
-  name: Sources
-  href: api/ToSic.Eav.LookUp.ITokenListFiller.html#ToSic_Eav_LookUp_ITokenListFiller_Sources
-  commentId: P:ToSic.Eav.LookUp.ITokenListFiller.Sources
-  fullName: ToSic.Eav.LookUp.ITokenListFiller.Sources
-  nameWithType: ITokenListFiller.Sources
-- uid: ToSic.Eav.LookUp.ITokenListFiller.Sources*
-  name: Sources
-  href: api/ToSic.Eav.LookUp.ITokenListFiller.html#ToSic_Eav_LookUp_ITokenListFiller_Sources_
-  commentId: Overload:ToSic.Eav.LookUp.ITokenListFiller.Sources
-  isSpec: "True"
-  fullName: ToSic.Eav.LookUp.ITokenListFiller.Sources
-  nameWithType: ITokenListFiller.Sources
 - uid: ToSic.Eav.LookUp.LookUpBase
   name: LookUpBase
   href: api/ToSic.Eav.LookUp.LookUpBase.html
@@ -3240,6 +3170,60 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.LookUp.LookUpInEntity.Has
   nameWithType: LookUpInEntity.Has
+- uid: ToSic.Eav.LookUp.LookUpInLookUps
+  name: LookUpInLookUps
+  href: api/ToSic.Eav.LookUp.LookUpInLookUps.html
+  commentId: T:ToSic.Eav.LookUp.LookUpInLookUps
+  fullName: ToSic.Eav.LookUp.LookUpInLookUps
+  nameWithType: LookUpInLookUps
+- uid: ToSic.Eav.LookUp.LookUpInLookUps.#ctor(System.String,ToSic.Eav.LookUp.ILookUp,ToSic.Eav.LookUp.ILookUp,ToSic.Eav.LookUp.ILookUp,ToSic.Eav.LookUp.ILookUp)
+  name: LookUpInLookUps(String, ILookUp, ILookUp, ILookUp, ILookUp)
+  href: api/ToSic.Eav.LookUp.LookUpInLookUps.html#ToSic_Eav_LookUp_LookUpInLookUps__ctor_System_String_ToSic_Eav_LookUp_ILookUp_ToSic_Eav_LookUp_ILookUp_ToSic_Eav_LookUp_ILookUp_ToSic_Eav_LookUp_ILookUp_
+  commentId: M:ToSic.Eav.LookUp.LookUpInLookUps.#ctor(System.String,ToSic.Eav.LookUp.ILookUp,ToSic.Eav.LookUp.ILookUp,ToSic.Eav.LookUp.ILookUp,ToSic.Eav.LookUp.ILookUp)
+  fullName: ToSic.Eav.LookUp.LookUpInLookUps.LookUpInLookUps(System.String, ToSic.Eav.LookUp.ILookUp, ToSic.Eav.LookUp.ILookUp, ToSic.Eav.LookUp.ILookUp, ToSic.Eav.LookUp.ILookUp)
+  nameWithType: LookUpInLookUps.LookUpInLookUps(String, ILookUp, ILookUp, ILookUp, ILookUp)
+- uid: ToSic.Eav.LookUp.LookUpInLookUps.#ctor*
+  name: LookUpInLookUps
+  href: api/ToSic.Eav.LookUp.LookUpInLookUps.html#ToSic_Eav_LookUp_LookUpInLookUps__ctor_
+  commentId: Overload:ToSic.Eav.LookUp.LookUpInLookUps.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.LookUp.LookUpInLookUps.LookUpInLookUps
+  nameWithType: LookUpInLookUps.LookUpInLookUps
+- uid: ToSic.Eav.LookUp.LookUpInLookUps.Get(System.String,System.String,System.Boolean@)
+  name: Get(String, String, ref Boolean)
+  href: api/ToSic.Eav.LookUp.LookUpInLookUps.html#ToSic_Eav_LookUp_LookUpInLookUps_Get_System_String_System_String_System_Boolean__
+  commentId: M:ToSic.Eav.LookUp.LookUpInLookUps.Get(System.String,System.String,System.Boolean@)
+  name.vb: Get(String, String, ByRef Boolean)
+  fullName: ToSic.Eav.LookUp.LookUpInLookUps.Get(System.String, System.String, ref System.Boolean)
+  fullName.vb: ToSic.Eav.LookUp.LookUpInLookUps.Get(System.String, System.String, ByRef System.Boolean)
+  nameWithType: LookUpInLookUps.Get(String, String, ref Boolean)
+  nameWithType.vb: LookUpInLookUps.Get(String, String, ByRef Boolean)
+- uid: ToSic.Eav.LookUp.LookUpInLookUps.Get*
+  name: Get
+  href: api/ToSic.Eav.LookUp.LookUpInLookUps.html#ToSic_Eav_LookUp_LookUpInLookUps_Get_
+  commentId: Overload:ToSic.Eav.LookUp.LookUpInLookUps.Get
+  isSpec: "True"
+  fullName: ToSic.Eav.LookUp.LookUpInLookUps.Get
+  nameWithType: LookUpInLookUps.Get
+- uid: ToSic.Eav.LookUp.LookUpInLookUps.Has(System.String)
+  name: Has(String)
+  href: api/ToSic.Eav.LookUp.LookUpInLookUps.html#ToSic_Eav_LookUp_LookUpInLookUps_Has_System_String_
+  commentId: M:ToSic.Eav.LookUp.LookUpInLookUps.Has(System.String)
+  fullName: ToSic.Eav.LookUp.LookUpInLookUps.Has(System.String)
+  nameWithType: LookUpInLookUps.Has(String)
+- uid: ToSic.Eav.LookUp.LookUpInLookUps.Has*
+  name: Has
+  href: api/ToSic.Eav.LookUp.LookUpInLookUps.html#ToSic_Eav_LookUp_LookUpInLookUps_Has_
+  commentId: Overload:ToSic.Eav.LookUp.LookUpInLookUps.Has
+  isSpec: "True"
+  fullName: ToSic.Eav.LookUp.LookUpInLookUps.Has
+  nameWithType: LookUpInLookUps.Has
+- uid: ToSic.Eav.LookUp.LookUpInLookUps.Providers
+  name: Providers
+  href: api/ToSic.Eav.LookUp.LookUpInLookUps.html#ToSic_Eav_LookUp_LookUpInLookUps_Providers
+  commentId: F:ToSic.Eav.LookUp.LookUpInLookUps.Providers
+  fullName: ToSic.Eav.LookUp.LookUpInLookUps.Providers
+  nameWithType: LookUpInLookUps.Providers
 - uid: ToSic.Eav.LookUp.LookUpInMetadata
   name: LookUpInMetadata
   href: api/ToSic.Eav.LookUp.LookUpInMetadata.html
@@ -3281,82 +3265,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.LookUp.LookUpInMetadata.Get
   nameWithType: LookUpInMetadata.Get
-- uid: ToSic.Eav.LookUp.TokenListFiller
-  name: TokenListFiller
-  href: api/ToSic.Eav.LookUp.TokenListFiller.html
-  commentId: T:ToSic.Eav.LookUp.TokenListFiller
-  fullName: ToSic.Eav.LookUp.TokenListFiller
-  nameWithType: TokenListFiller
-- uid: ToSic.Eav.LookUp.TokenListFiller.#ctor
-  name: TokenListFiller()
-  href: api/ToSic.Eav.LookUp.TokenListFiller.html#ToSic_Eav_LookUp_TokenListFiller__ctor
-  commentId: M:ToSic.Eav.LookUp.TokenListFiller.#ctor
-  fullName: ToSic.Eav.LookUp.TokenListFiller.TokenListFiller()
-  nameWithType: TokenListFiller.TokenListFiller()
-- uid: ToSic.Eav.LookUp.TokenListFiller.#ctor(ToSic.Eav.LookUp.ITokenListFiller)
-  name: TokenListFiller(ITokenListFiller)
-  href: api/ToSic.Eav.LookUp.TokenListFiller.html#ToSic_Eav_LookUp_TokenListFiller__ctor_ToSic_Eav_LookUp_ITokenListFiller_
-  commentId: M:ToSic.Eav.LookUp.TokenListFiller.#ctor(ToSic.Eav.LookUp.ITokenListFiller)
-  fullName: ToSic.Eav.LookUp.TokenListFiller.TokenListFiller(ToSic.Eav.LookUp.ITokenListFiller)
-  nameWithType: TokenListFiller.TokenListFiller(ITokenListFiller)
-- uid: ToSic.Eav.LookUp.TokenListFiller.#ctor*
-  name: TokenListFiller
-  href: api/ToSic.Eav.LookUp.TokenListFiller.html#ToSic_Eav_LookUp_TokenListFiller__ctor_
-  commentId: Overload:ToSic.Eav.LookUp.TokenListFiller.#ctor
-  isSpec: "True"
-  fullName: ToSic.Eav.LookUp.TokenListFiller.TokenListFiller
-  nameWithType: TokenListFiller.TokenListFiller
-- uid: ToSic.Eav.LookUp.TokenListFiller.Add(ToSic.Eav.LookUp.ILookUp)
-  name: Add(ILookUp)
-  href: api/ToSic.Eav.LookUp.TokenListFiller.html#ToSic_Eav_LookUp_TokenListFiller_Add_ToSic_Eav_LookUp_ILookUp_
-  commentId: M:ToSic.Eav.LookUp.TokenListFiller.Add(ToSic.Eav.LookUp.ILookUp)
-  fullName: ToSic.Eav.LookUp.TokenListFiller.Add(ToSic.Eav.LookUp.ILookUp)
-  nameWithType: TokenListFiller.Add(ILookUp)
-- uid: ToSic.Eav.LookUp.TokenListFiller.Add*
-  name: Add
-  href: api/ToSic.Eav.LookUp.TokenListFiller.html#ToSic_Eav_LookUp_TokenListFiller_Add_
-  commentId: Overload:ToSic.Eav.LookUp.TokenListFiller.Add
-  isSpec: "True"
-  fullName: ToSic.Eav.LookUp.TokenListFiller.Add
-  nameWithType: TokenListFiller.Add
-- uid: ToSic.Eav.LookUp.TokenListFiller.AddOverride(System.Collections.Generic.IEnumerable{ToSic.Eav.LookUp.ILookUp})
-  name: AddOverride(IEnumerable<ILookUp>)
-  href: api/ToSic.Eav.LookUp.TokenListFiller.html#ToSic_Eav_LookUp_TokenListFiller_AddOverride_System_Collections_Generic_IEnumerable_ToSic_Eav_LookUp_ILookUp__
-  commentId: M:ToSic.Eav.LookUp.TokenListFiller.AddOverride(System.Collections.Generic.IEnumerable{ToSic.Eav.LookUp.ILookUp})
-  name.vb: AddOverride(IEnumerable(Of ILookUp))
-  fullName: ToSic.Eav.LookUp.TokenListFiller.AddOverride(System.Collections.Generic.IEnumerable<ToSic.Eav.LookUp.ILookUp>)
-  fullName.vb: ToSic.Eav.LookUp.TokenListFiller.AddOverride(System.Collections.Generic.IEnumerable(Of ToSic.Eav.LookUp.ILookUp))
-  nameWithType: TokenListFiller.AddOverride(IEnumerable<ILookUp>)
-  nameWithType.vb: TokenListFiller.AddOverride(IEnumerable(Of ILookUp))
-- uid: ToSic.Eav.LookUp.TokenListFiller.AddOverride(ToSic.Eav.LookUp.ILookUp)
-  name: AddOverride(ILookUp)
-  href: api/ToSic.Eav.LookUp.TokenListFiller.html#ToSic_Eav_LookUp_TokenListFiller_AddOverride_ToSic_Eav_LookUp_ILookUp_
-  commentId: M:ToSic.Eav.LookUp.TokenListFiller.AddOverride(ToSic.Eav.LookUp.ILookUp)
-  fullName: ToSic.Eav.LookUp.TokenListFiller.AddOverride(ToSic.Eav.LookUp.ILookUp)
-  nameWithType: TokenListFiller.AddOverride(ILookUp)
-- uid: ToSic.Eav.LookUp.TokenListFiller.AddOverride*
-  name: AddOverride
-  href: api/ToSic.Eav.LookUp.TokenListFiller.html#ToSic_Eav_LookUp_TokenListFiller_AddOverride_
-  commentId: Overload:ToSic.Eav.LookUp.TokenListFiller.AddOverride
-  isSpec: "True"
-  fullName: ToSic.Eav.LookUp.TokenListFiller.AddOverride
-  nameWithType: TokenListFiller.AddOverride
-- uid: ToSic.Eav.LookUp.TokenListFiller.LoadConfiguration(System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,ToSic.Eav.LookUp.ILookUp},System.Int32)
-  name: LoadConfiguration(IDictionary<String, String>, Dictionary<String, ILookUp>, Int32)
-  href: api/ToSic.Eav.LookUp.TokenListFiller.html#ToSic_Eav_LookUp_TokenListFiller_LoadConfiguration_System_Collections_Generic_IDictionary_System_String_System_String__System_Collections_Generic_Dictionary_System_String_ToSic_Eav_LookUp_ILookUp__System_Int32_
-  commentId: M:ToSic.Eav.LookUp.TokenListFiller.LoadConfiguration(System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,ToSic.Eav.LookUp.ILookUp},System.Int32)
-  name.vb: LoadConfiguration(IDictionary(Of String, String), Dictionary(Of String, ILookUp), Int32)
-  fullName: ToSic.Eav.LookUp.TokenListFiller.LoadConfiguration(System.Collections.Generic.IDictionary<System.String, System.String>, System.Collections.Generic.Dictionary<System.String, ToSic.Eav.LookUp.ILookUp>, System.Int32)
-  fullName.vb: ToSic.Eav.LookUp.TokenListFiller.LoadConfiguration(System.Collections.Generic.IDictionary(Of System.String, System.String), System.Collections.Generic.Dictionary(Of System.String, ToSic.Eav.LookUp.ILookUp), System.Int32)
-  nameWithType: TokenListFiller.LoadConfiguration(IDictionary<String, String>, Dictionary<String, ILookUp>, Int32)
-  nameWithType.vb: TokenListFiller.LoadConfiguration(IDictionary(Of String, String), Dictionary(Of String, ILookUp), Int32)
-- uid: ToSic.Eav.LookUp.TokenListFiller.LoadConfiguration*
-  name: LoadConfiguration
-  href: api/ToSic.Eav.LookUp.TokenListFiller.html#ToSic_Eav_LookUp_TokenListFiller_LoadConfiguration_
-  commentId: Overload:ToSic.Eav.LookUp.TokenListFiller.LoadConfiguration
-  isSpec: "True"
-  fullName: ToSic.Eav.LookUp.TokenListFiller.LoadConfiguration
-  nameWithType: TokenListFiller.LoadConfiguration
 - uid: ToSic.Eav.Metadata
   name: ToSic.Eav.Metadata
   href: api/ToSic.Eav.Metadata.html

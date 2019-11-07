@@ -5,7 +5,6 @@ using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.ValueProviders;
 using ToSic.SexyContent.Engines.TokenEngine;
 using ToSic.Sxc.Interfaces;
 
@@ -81,7 +80,7 @@ namespace ToSic.SexyContent.DataSources
             }
 
             // Add the standard DNN property sources if PortalSettings object is available (changed 2018-03-05)
-            var envProvs = Factory.Resolve<IEnvironmentValueProviders>().GetProviders(moduleId).Sources;
+            var envProvs = Factory.Resolve<IEnvironmentLookUps>().GetLookUps(moduleId).Sources;
             foreach (var prov in envProvs)
                 provider.Sources.Add(prov.Key, prov.Value);
 

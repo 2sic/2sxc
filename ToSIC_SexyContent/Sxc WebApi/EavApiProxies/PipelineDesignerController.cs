@@ -65,7 +65,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    {
 	        var modId = ActiveModule?.ModuleID ?? 0;
 	        Log.Call("QueryPipeline", $"app:{appId}, id:{id}", $"mid:{modId}");
-	        var dnnConfigProvider = new DnnValueProviders().GetProviders(modId);
+	        var dnnConfigProvider = new DnnLookUps().GetLookUps(modId);
             return _eavCont.QueryPipeline(appId, id, dnnConfigProvider);
         }
 
