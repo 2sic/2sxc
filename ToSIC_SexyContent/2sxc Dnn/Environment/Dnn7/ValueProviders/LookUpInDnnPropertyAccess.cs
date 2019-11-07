@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.ValueProviders
             _loc = localization;
         }
 
-        public override string Get(string key, string format, ref bool propertyNotFound)
+        public override string Get(string key, string format, ref bool notFound)
         {
             bool blnNotFound = true;
             string result = _source.GetProperty(key, format, _loc, _user, Scope.DefaultSettings, ref blnNotFound);

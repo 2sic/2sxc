@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         }
         
 
-        public override string Get(string key, string format, ref bool propertyNotFound) 
+        public override string Get(string key, string format, ref bool notFound) 
             => _nameValueCollection == null 
             ? string.Empty 
             : FormatString(_nameValueCollection[key], format);

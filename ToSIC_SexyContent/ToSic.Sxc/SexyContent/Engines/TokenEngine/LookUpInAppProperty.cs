@@ -47,7 +47,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 			_app = app;
         }
 
-        public override string Get(string key, string strFormat, ref bool PropertyNotFound)
+        public override string Get(string key, string strFormat, ref bool notFound)
         {
             key = key.ToLower();
             if (key == "path")
@@ -64,13 +64,13 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                         ? Settings
                         : (subToken.Source == "resources") ? Resources : null;
                 if (subProvider != null)
-                    return subProvider.Get(subToken.Rest, strFormat, ref PropertyNotFound);
+                    return subProvider.Get(subToken.Rest, strFormat, ref notFound);
             }
 
             // Maybe someday: also retrieve metadata like Folder, Name, Version
-            // var found = base.Get(key, strFormat, ref PropertyNotFound);
+            // var found = base.Get(key, strFormat, ref notFound);
 
-            PropertyNotFound = true;
+            notFound = true;
             return string.Empty;
         }
 

@@ -3,7 +3,14 @@ uid: ToSic.Eav.LookUp
 summary: *content
 ---
 
-Sometimes objects need to get values from the context - like a URL Parameter, the current date/time etc. This is done through @ToSic.Eav.ValueProviders.IValueProvider objects. 
+Sometimes objects need to get values from the context - like...
 
-In many cases, we actually need an entire set of these, and go through them to find something. For this we have the @ToSic.Eav.ValueProviders.IValueCollectionProvider system. 
-It also supports a mechanism for re-using the ValueCollection but overriding some stuff for performance enhancemests. 
+* a URL Parameter
+* the current date/time 
+* an App Setting or Resource 
+
+etc. This is done through @ToSic.Eav.LookUp.ILookUp objects. 
+
+In many cases, we need to look up a few - like when we have a configuration made with _Tokens_. 
+These would look like `[App:Path]` or `[QueryString:Ui]`. 
+The tool which takes a list of these and looks all of them up is the @ToSic.Eav.LookUp.ITokenListFiller. 

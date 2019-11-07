@@ -110,8 +110,8 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 				var propertyMatch = Regex.Match(strPropertyName, "([a-z]+):([a-z]+)", RegexOptions.IgnoreCase);
 				if (propertyMatch.Success)
 				{
-					valueObject = _entity.Get(propertyMatch.Groups[1].Value/*, out propertyNotFound*/);
-					if (/*!propertyNotFound &&*/ valueObject != null)
+					valueObject = _entity.Get(propertyMatch.Groups[1].Value/*, out notFound*/);
+					if (/*!notFound &&*/ valueObject != null)
 					{
 						#region Handle Entity-Field (List of DynamicEntity)
 						var list = valueObject as List<IDynamicEntity>;
@@ -136,8 +136,8 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 			return string.Empty;
 		}
 
-		public string Get(string key, string strFormat, ref bool propertyNotFound) 
-            => GetProperty(key, strFormat, Thread.CurrentThread.CurrentCulture, ref propertyNotFound);
+		public string Get(string key, string strFormat, ref bool notFound) 
+            => GetProperty(key, strFormat, Thread.CurrentThread.CurrentCulture, ref notFound);
 
         /// <summary>
         /// Shorthand version, will return the string value or a null if not found. 

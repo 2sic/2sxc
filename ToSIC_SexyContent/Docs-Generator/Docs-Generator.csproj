@@ -63,7 +63,7 @@
     <None Include="namespaces\Eav.DataSources.md" />
     <None Include="namespaces\Eav.Apps.Assets.md" />
     <None Include="namespaces\Eav.Apps.md" />
-    <None Include="namespaces\Sxc.Interfaces.md" />
+    <None Include="namespaces\Sxc.md" />
     <None Include="namespaces\Sxc.Dnn.md" />
     <None Include="namespaces\Eav.Data.md" />
     <None Include="packages.config" />
