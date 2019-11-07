@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps.Adam;
-using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-
 using ToSic.Sxc.Interfaces;
 using IEntity = ToSic.Eav.Data.IEntity;
-using IFolder = ToSic.Eav.Apps.Adam.IFolder;
+using IFolder = ToSic.Sxc.Adam.IFolder;
 
 namespace ToSic.Sxc
 {

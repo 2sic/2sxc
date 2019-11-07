@@ -12,13 +12,13 @@ using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Engines.Razor;
 using File = System.IO.File;
 using IEntity = ToSic.Eav.Data.IEntity;
-using IFolder = ToSic.Eav.Apps.Adam.IFolder;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Razor

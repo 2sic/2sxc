@@ -1,12 +1,9 @@
 ﻿using System;
-using ToSic.Eav.Apps.Adam;
-using ToSic.Eav.Apps.Assets;
 using ToSic.SexyContent.Adam;
-using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Adam
 {
-    public class File : Eav.Apps.Assets.File, AdamFile, Eav.Apps.Adam.IFile
+    public class File : Eav.Apps.Assets.File, AdamFile, IFile
     {
         private AdamAppContext AppContext { get; }
 
@@ -27,13 +24,13 @@ namespace ToSic.Sxc.Adam
 
 
         #region Obsolete properties, included to ensure old stuff still works because of refactoring in 2sxc 9.20
-        [Obsolete]
+        [Obsolete("use FullName instead")]
         public string FileName => FullName;
 
-        [Obsolete]
+        [Obsolete("use Created instead")]
         public DateTime CreatedOnDate => Created;
 
-        [Obsolete]
+        [Obsolete("use Id instead")]
         public int FileId => Id;
         #endregion
     }

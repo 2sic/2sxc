@@ -64,6 +64,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adam\Classification.cs" />
+    <Compile Include="Adam\IAsset.cs" />
+    <Compile Include="Adam\IContext.cs" />
+    <Compile Include="Adam\IFile.cs" />
+    <Compile Include="Adam\IFolder.cs" />
     <Compile Include="Adam\Security.cs" />
     <Compile Include="Adam\File.cs" />
     <Compile Include="Adam\Folder.cs" />

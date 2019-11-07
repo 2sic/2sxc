@@ -1,20 +1,25 @@
 ﻿using System;
-using ToSic.Eav.Apps.Adam;
-using ToSic.Eav.Apps.Assets;
-using IFile = ToSic.Eav.Apps.Adam.IFile;
+using ToSic.Sxc.Adam;
+
+// Obsolete class / namespace
+// Used in some previous apps like BlueImp
+// Leave for compatibility
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Adam
 {
     // ReSharper disable once InconsistentNaming
+    [Obsolete("use ToSic.Sxc.Adam.IFile instead")]
     public interface AdamFile: IFile
     {
-        //string FileName { get; }
+        [Obsolete("use FullName instead")]
+        string FileName { get; }
 
+        [Obsolete("use Created instead")]
         DateTime CreatedOnDate { get; }
 
-        //int FileId { get; }
-
+        [Obsolete("use Id instead")]
+        int FileId { get; }
 
     }
 }

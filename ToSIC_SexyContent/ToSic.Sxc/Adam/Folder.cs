@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps.Adam;
-using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Documentation;
-using IFolder = ToSic.Eav.Apps.Adam.IFolder;
 
 namespace ToSic.Sxc.Adam
 {
@@ -20,16 +17,16 @@ namespace ToSic.Sxc.Adam
             _fileSystem = fileSystem;
         }
 
-        /// <inheritdoc cref="ICmsAsset" />
+        /// <inheritdoc cref="IAsset" />
         public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true) as dynamic;
 
-        /// <inheritdoc cref="ICmsAsset" />
+        /// <inheritdoc cref="IAsset" />
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
 
-        /// <inheritdoc cref="ICmsAsset" />
+        /// <inheritdoc cref="IAsset" />
         public string Url => AppContext.Tenant.ContentPath + Path;
 
-        /// <inheritdoc cref="ICmsAsset" />
+        /// <inheritdoc cref="IAsset" />
         public string Type => Classification.Folder;
 
         [PrivateApi]
@@ -64,8 +61,8 @@ namespace ToSic.Sxc.Adam
 
 
         /// <inheritdoc/>
-        public IEnumerable<Eav.Apps.Adam.IFile> Files 
+        public IEnumerable<Sxc.Adam.IFile> Files 
             => _files ?? (_files = _fileSystem.GetFiles(Id, AppContext));
-        private IEnumerable<Eav.Apps.Adam.IFile> _files;
+        private IEnumerable<Sxc.Adam.IFile> _files;
     }
 }

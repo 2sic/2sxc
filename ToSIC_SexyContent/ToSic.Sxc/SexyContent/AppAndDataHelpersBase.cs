@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
@@ -18,7 +17,7 @@ using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using IEntity = ToSic.Eav.Data.IEntity;
-using IFolder = ToSic.Eav.Apps.Adam.IFolder;
+using IFolder = ToSic.Sxc.Adam.IFolder;
 
 // ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
 namespace ToSic.SexyContent

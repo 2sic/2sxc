@@ -120,6 +120,19 @@ You&#39;ll find it in @ToSic.Eav.Apps.Interfaces. </p>
 <p>The assets - usually using ADAM - are found in <a class="xref" href="../api/ToSic.Eav.Apps.Assets.html">ToSic.Eav.Apps.Assets</a>.</p>
 <h4 id="web-api">Web API</h4>
 <p>This is ATM an internal section, mainly for connecting DNN WebAPIs to the EAV. Not documented as of now. </p>
+<h2 id="the-fine-line-between-eavapps-and-sxc">The Fine Line Between Eav.Apps and Sxc.*</h2>
+<p>To keep the architecture clean, it&#39;s important to draw a clear line between Apps and what Sxc does. Basically it&#39;s this: </p>
+<ul>
+<li>Eav.Apps are virtual containers bundling things together. This means content-types, data, queries, settings, etc.</li>
+<li>Sxc is all about (Web) Content Management. So anything related to views, templates, assets, content-blocks is in Sxc.</li>
+</ul>
+<p>Specifically, these things may not be in Apps, and must be in Sxc</p>
+<ol>
+<li>Templates</li>
+<li>Rendering Engines like Token/Razor</li>
+<li>Content-Blocks</li>
+<li>Custom WebApi (which is also kind of a dynamic rendering engine)</li>
+</ol>
 </article>
           </div>
           

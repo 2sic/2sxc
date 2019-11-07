@@ -4,7 +4,6 @@ using System.Configuration;
 using System.IO;
 using System.Web.Configuration;
 using System.Web.Http;
-using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
@@ -27,7 +26,7 @@ namespace ToSic.Sxc.Adam.WebApi
             _appId = appId;
         }
 
-        public Eav.Apps.Adam.IFile UploadOne(Stream stream, string originalFileName, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot, bool skipFieldAndContentTypePermissionCheck)
+        public IFile UploadOne(Stream stream, string originalFileName, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot, bool skipFieldAndContentTypePermissionCheck)
         {
             Log.Add($"upload one a:{_appId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
             

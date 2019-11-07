@@ -18,8 +18,8 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using IDynamicCode = ToSic.Sxc.Dnn.IDynamicCode;
 using IEntity = ToSic.Eav.Data.IEntity;
-using IFile = ToSic.Eav.Apps.Adam.IFile;
-using IFolder = ToSic.Eav.Apps.Adam.IFolder;
+using IFile = ToSic.Sxc.Adam.IFile;
+using IFolder = ToSic.Sxc.Adam.IFolder;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -196,7 +196,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="field"></param>
         /// <param name="subFolder"></param>
         /// <returns></returns>
-        public IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
+        public Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
             Stream stream = null, 
             string fileName = null, 
             string contentType = null, 
