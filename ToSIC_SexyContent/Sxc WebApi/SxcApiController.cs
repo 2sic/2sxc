@@ -9,12 +9,9 @@ using Factory = ToSic.Eav.Factory;
 using ToSic.Sxc.Adam.WebApi;
 using System.IO;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Adam;
-using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.Sxc;
 using ToSic.Sxc.Code;

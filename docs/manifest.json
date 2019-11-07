@@ -42,7 +42,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/breaking-changes.html",
-          "hash": "hAtNFfL61G+6Hh8oI8gIeQ=="
+          "hash": "36qRRUaFNNi0h7NYdb164g=="
         }
       },
       "is_incremental": false,
@@ -201,7 +201,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Apps.Adam.ICmsAsset.html",
-          "hash": "YuUBb6Paakt6e0O8V/EpmA=="
+          "hash": "68QHlIW1d6gg/EfvnpfJYA=="
         }
       },
       "is_incremental": false,
@@ -213,7 +213,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Apps.Adam.IFile.html",
-          "hash": "suKhHPsQLxrcL/tqO2mEMQ=="
+          "hash": "e27/jW+xhZxv2/IShBDg7Q=="
         }
       },
       "is_incremental": false,
@@ -225,7 +225,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Apps.Adam.IFolder.html",
-          "hash": "K17oEJKn3c63vJv7QcRPCw=="
+          "hash": "C7Di9s30/tLztA1X8L3PCw=="
         }
       },
       "is_incremental": false,
@@ -1234,10 +1234,11 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
-        "ManagedReferenceDocumentProcessor": {
+        "TocDocumentProcessor": {
           "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
-          "total_file_count": 95,
+          "total_file_count": 0,
           "skipped_file_count": 0
         },
         "ConceptualDocumentProcessor": {
@@ -1246,11 +1247,10 @@
           "total_file_count": 6,
           "skipped_file_count": 0
         },
-        "TocDocumentProcessor": {
+        "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
-          "total_file_count": 0,
+          "total_file_count": 95,
           "skipped_file_count": 0
         }
       }
