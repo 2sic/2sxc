@@ -1,6 +1,5 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.SexyContent.WebApi.Dnn;

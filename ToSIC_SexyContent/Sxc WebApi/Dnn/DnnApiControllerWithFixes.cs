@@ -28,8 +28,8 @@ namespace ToSic.SexyContent.WebApi.Dnn
             Log = new Log("DNN.WebApi", null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
 	        
             // ReSharper disable VirtualMemberCallInConstructor
-	        if (LogHistorySetName != null)
-	            History.Add(LogHistorySetName, Log);
+	        if (LogHistoryName != null)
+	            History.Add(LogHistoryName, Log);
             // ReSharper restore VirtualMemberCallInConstructor
 
             Env = new DnnEnvironment(Log);
@@ -50,6 +50,6 @@ namespace ToSic.SexyContent.WebApi.Dnn
             throw new NotImplementedException();
         }
 
-        protected virtual string LogHistorySetName { get; set; } = "web-api";
+        protected virtual string LogHistoryName { get; } = "web-api";
     }
 }

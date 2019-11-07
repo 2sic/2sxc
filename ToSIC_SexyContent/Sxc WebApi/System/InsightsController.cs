@@ -1,6 +1,4 @@
-﻿using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System.Web.Http.Controllers;
+﻿using System.Web.Http.Controllers;
 using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.Dnn;
 
@@ -21,7 +19,7 @@ namespace ToSic.Sxc.WebApi.System
         /// Make sure that these requests don't land in the normal api-log.
         /// Otherwise each log-access would re-number what item we're looking at
         /// </summary>
-        protected override string LogHistorySetName { get; set; } = "web-api.insights";
+        protected override string LogHistoryName { get; } = "web-api.insights";
 
 
     }

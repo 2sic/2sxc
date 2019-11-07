@@ -201,7 +201,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Apps.Adam.ICmsAsset.html",
-          "hash": "YuUBb6Paakt6e0O8V/EpmA=="
+          "hash": "68QHlIW1d6gg/EfvnpfJYA=="
         }
       },
       "is_incremental": false,
@@ -213,7 +213,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Apps.Adam.IFile.html",
-          "hash": "suKhHPsQLxrcL/tqO2mEMQ=="
+          "hash": "e27/jW+xhZxv2/IShBDg7Q=="
         }
       },
       "is_incremental": false,
@@ -225,7 +225,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Apps.Adam.IFolder.html",
-          "hash": "K17oEJKn3c63vJv7QcRPCw=="
+          "hash": "C7Di9s30/tLztA1X8L3PCw=="
         }
       },
       "is_incremental": false,
@@ -1219,10 +1219,12 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": true,
+        "can_incremental": false,
+        "details": "Disable incremental build by force rebuild option.",
         "incrementalPhase": "build",
         "total_file_count": 0,
-        "skipped_file_count": 0
+        "skipped_file_count": 0,
+        "full_build_reason_code": "ForceRebuild"
       },
       "processors": {
         "ResourceDocumentProcessor": {
@@ -1240,16 +1242,16 @@
           "skipped_file_count": 0
         },
         "ConceptualDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 6,
-          "skipped_file_count": 5
+          "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 95,
-          "skipped_file_count": 95
+          "skipped_file_count": 0
         }
       }
     },
