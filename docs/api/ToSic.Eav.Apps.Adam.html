@@ -5,9 +5,11 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Breaking Changes in EAV and 2sxc | 2sxc and EAV 10 </title>
+    <title>Namespace ToSic.Eav.Apps.Adam
+   | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Breaking Changes in EAV and 2sxc | 2sxc and EAV 10 ">
+    <meta name="title" content="Namespace ToSic.Eav.Apps.Adam
+   | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../images/logos/favicon.ico">
@@ -76,59 +78,26 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Articles.ChangeLog.BreakingChanges">
-<h1 id="breaking-changes-in-eav-and-2sxc">Breaking Changes in EAV and 2sxc</h1>
-
-<p>We try to minimize breaking changes, and most breaking changes won&#39;t affect your work, because it&#39;s internal API. 
-We&#39;re documenting it here to ensure you know what happened, in case you still run into this.</p>
-<h2 id="version-10">Version 10</h2>
-<p>Version 10 has a lot of small breaking changes because we restructured the internal API so it&#39;s consistent when we publish it. 
-All these things shouldn&#39;t affect you, because they were internal APIs, but in case it does - here&#39;s what we did.</p>
-<h4 id="version-1010">Version 10.10</h4>
-<ol>
-<li>the internal interface <code>IInPageEditingHelpers</code> was moved from <code>ToSic.SexyContent.Interfaces</code> to the namespace <code>ToSic.Sxc</code></li>
-<li>the internal interface <code>IHtmlHelper</code> and <code>ILinkHelper</code> was moved to <code>ToSic.Sxc.Dnn</code></li>
-<li>the interface <code>ToSic.Sxc.Adam.IFolder</code> was moved to <code>ToSic.Eav.Apps.Adam.IFolder</code></li>
-<li>the property <code>Configuration</code> on dynamic entities was deprecated in 2sxc 4 and removed in 2sxc 10 - we don&#39;t think it was ever used</li>
-<li>moved internal Metadata interfaces (ca. 5) into final namespace <a class="xref" href="../api/ToSic.Eav.Metadata.html">ToSic.Eav.Metadata</a></li>
-<li>Moved a bunch of internal interfaces which we believe were never used externally from <code>ToSic.Eav.Interfaces</code> to <code>ToSic.Eav.Data</code><ol>
-<li><code>ToSic.Eav.Data.IAttribute</code></li>
-<li><code>ToSic.Eav.IAttribute&lt;T&gt;</code></li>
-<li><code>IAttributeBase</code></li>
-<li><code>IAttributeDefinition</code></li>
-<li><code>IChildEntities</code> </li>
-<li><code>IContentType</code></li>
-<li><code>IDimension</code></li>
-<li><code>IEntityLight</code></li>
-<li><code>ILanguage</code></li>
-<li><code>IRelationshipManager</code></li>
-<li><code>IValue</code></li>
-<li><code>IValue&lt;T&gt;</code></li>
-<li><code>IValueOfDimension&lt;T&gt;</code></li>
-</ol>
-</li>
-<li>Moved a bunch of internal interfaces which we believe were never used externally from <code>ToSic.Eav.Apps.Interfaces</code> to <code>ToSic.Eav.Apps</code><ol>
-<li><code>IApp</code></li>
-<li><code>IAppData</code></li>
-<li><code>IAppDataConfiguration</code></li>
-<li><code>IAppEnvironment</code></li>
-<li><code>IEnvironmentFactory</code></li>
-<li><code>IInstanceInfo</code></li>
-<li><code>IItemListAction</code></li>
-<li><code>IPagePublishing</code></li>
-<li><code>ITenant</code></li>
-<li><code>IZoneMapper</code></li>
-</ol>
-</li>
-<li>the internal namespace <code>ToSic.Eav.ValueProvider</code> was changed to <code>ToSic.Eav.LookUp</code> (added an &#39;s&#39; for consistency) and inside it<br> we renamed a bunch of internal interfaces and objects which we believe were never used externally</li>
-</ol>
-<h5 id="deprecatedchanged-but-not-broken">Deprecated/Changed, but not broken</h5>
-<ol>
-<li>the interface <code>ToSic.Sxc.Adam.IFile</code> was moved to <code>ToSic.Eav.Apps.Adam.IFile</code> but the old interface still exists so it shouln&#39;t break<br> <em>it was used by Mobius Forms</em></li>
-<li>the internal interface <code>ToSic.SexyContent.IAppAndDataHelpers</code> was renamed to <code>ToSic.Sxc.IDynamicCode</code> but the old interface still exists, so it shouldn&#39;t break<br> <em>it was used by Mobius Forms</em></li>
-<li>moved <code>ToSic.Eav.Interfaces.IEntity</code> to <code>ToSic.Eav.Data.IEntity</code> - but preserved the old interface for compatibility
- <em>it was used everywhere</em></li>
-</ol>
+            <article class="content wrap" id="_content" data-uid="ToSic.Eav.Apps.Adam">
+  
+  <h1 id="ToSic_Eav_Apps_Adam" data-uid="ToSic.Eav.Apps.Adam" class="text-break">Namespace ToSic.Eav.Apps.Adam
+  </h1>
+  <div class="markdown level0 summary"><p>Everything related to ADAM - the automatic digital asset system in EAV/2sxc Apps. When you use <code>AsAdam</code> on any dynamic entity, you&#39;ll get <a class="xref" href="ToSic.Eav.Apps.Adam.IFolder.html">IFolder</a> objects which will also contain <a class="xref" href="ToSic.Eav.Apps.Adam.IFile.html">IFile</a> files.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+    <h3 id="interfaces">Interfaces
+  </h3>
+      <h4><a class="xref" href="ToSic.Eav.Apps.Adam.ICmsAsset.html">ICmsAsset</a></h4>
+      <section><p>Describes an ADAM (Automatic Digital Asset Management) asset. <br>
+This contains properties which both <a class="xref" href="ToSic.Eav.Apps.Adam.IFolder.html">IFolder</a> and <a class="xref" href="ToSic.Eav.Apps.Adam.IFile.html">IFile</a> have in common.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Apps.Adam.IFile.html">IFile</a></h4>
+      <section><p>An ADAM (Automatic Digital Asset Management) file</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Apps.Adam.IFolder.html">IFolder</a></h4>
+      <section><p>An ADAM (Automatic Digital Asset Management) folder</p>
+</section>
 </article>
           </div>
           
@@ -137,7 +106,7 @@ All these things shouldn&#39;t affect you, because they were internal APIs, but 
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/articles/breaking-changes.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/namespaces/Eav.Apps.Adam.md/#L2" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
