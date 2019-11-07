@@ -1,4 +1,4 @@
-﻿namespace ToSic.SexyContent.Engines
+﻿namespace ToSic.Sxc.Engines
 {
     public enum RenderStatusType
     {

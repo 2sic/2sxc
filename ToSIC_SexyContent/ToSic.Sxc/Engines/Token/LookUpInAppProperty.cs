@@ -1,7 +1,8 @@
 ﻿using System;
 using ToSic.Eav.LookUp;
+using ToSic.SexyContent;
 
-namespace ToSic.SexyContent.Engines.TokenEngine
+namespace ToSic.Sxc.Engines.Token
 {
     internal class LookUpInAppProperty : LookUpBase
     {

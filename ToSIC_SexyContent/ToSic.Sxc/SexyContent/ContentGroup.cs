@@ -6,6 +6,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence;
+using ToSic.Sxc.Engines;
 using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
@@ -71,7 +72,7 @@ namespace ToSic.SexyContent
                     templateEntity =
                         ((EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
 
-                _template = templateEntity == null ? null : new Template(templateEntity, Log);
+                _template = templateEntity == null ? null : new Template(templateEntity/*, Log*/);
 
                 return _template;
             }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
 using ToSic.Eav.LookUp;
 
-namespace ToSic.SexyContent.Engines.TokenEngine
+namespace ToSic.Sxc.Engines.Token
 {
     /// <inheritdoc />
     /// <summary>

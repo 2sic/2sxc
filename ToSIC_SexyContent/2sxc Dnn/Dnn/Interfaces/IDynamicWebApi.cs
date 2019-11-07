@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using ToSic.Eav.Apps.Adam;
-using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Documentation;
-using IFile = ToSic.Eav.Apps.Adam.IFile;
+using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Dnn
 {

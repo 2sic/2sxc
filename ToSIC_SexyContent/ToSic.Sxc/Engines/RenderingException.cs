@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ToSic.SexyContent.Engines
+namespace ToSic.Sxc.Engines
 {
     public class RenderingException: Exception
     {

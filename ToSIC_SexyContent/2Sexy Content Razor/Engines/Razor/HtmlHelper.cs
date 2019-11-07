@@ -2,7 +2,7 @@
 using System.Web;
 using ToSic.Sxc.Dnn;
 
-namespace ToSic.SexyContent.Razor.Helpers
+namespace ToSic.Sxc.Engines.Razor
 {
     /// <summary>
     /// helper to quickly "raw" some html

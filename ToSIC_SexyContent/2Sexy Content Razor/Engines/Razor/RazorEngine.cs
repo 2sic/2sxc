@@ -12,12 +12,11 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor;
-using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent.Engines
+namespace ToSic.Sxc.Engines.Razor
 {
+    [EngineDefinition(Name = "Razor")]
     public class RazorEngine : EngineBase
     {
 
@@ -66,8 +65,8 @@ namespace ToSic.SexyContent.Engines
             }
         }
 
-        private const string IentityErrDetection = "error CS0234: The type or namespace name 'IEntity' does not exist in the namespace 'ToSic.Eav'";
-        private const string IentityErrorMessage =
+        private const string IEntityErrDetection = "error CS0234: The type or namespace name 'IEntity' does not exist in the namespace 'ToSic.Eav'";
+        private const string IEntityErrorMessage =
             "Error in your razor template. " +
             "You are seeing this because 2sxc 9.3 has a breaking change on ToSic.Eav.IEntity. " +
             "It's easy to fix - please read " +
@@ -77,8 +76,8 @@ namespace ToSic.SexyContent.Engines
         private static void ProvideSpecialErrorOnIEntityIssues(Exception maybeIEntityCast)
         {
             if (maybeIEntityCast is HttpCompileException || maybeIEntityCast is InvalidCastException)
-                if (maybeIEntityCast.Message.IndexOf(IentityErrDetection, StringComparison.Ordinal) > 0)
-                    throw new Exception(IentityErrorMessage, maybeIEntityCast);
+                if (maybeIEntityCast.Message.IndexOf(IEntityErrDetection, StringComparison.Ordinal) > 0)
+                    throw new Exception(IEntityErrorMessage, maybeIEntityCast);
         }
 
         /// <summary>

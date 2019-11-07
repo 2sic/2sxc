@@ -1,7 +1,6 @@
 ﻿using ToSic.SexyContent;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Razor
+namespace ToSic.Sxc.Engines.Razor
 {
     // temp - should be elsewhere, but quickly need it so Permissions-object still works after refactoring
     public class RazorPermissions

@@ -5,19 +5,18 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc;
 
-namespace ToSic.SexyContent.Engines.TokenEngine
+namespace ToSic.Sxc.Engines.Token
 {
 	internal class LookUpInDynamicEntity : ILookUp
 	{
         public const string RepeaterSubToken = "Repeater";
 
 		private readonly IDynamicEntity _entity;
-		public string Name { get; private set; }
+		public string Name { get; }
 
-	    private readonly int _repeaterIndex = -1;
-	    private readonly int _repeaterTotal = -1;
+	    private readonly int _repeaterIndex;
+	    private readonly int _repeaterTotal;
         
 
 		public LookUpInDynamicEntity(string name, IDynamicEntity entity, int repeaterIndex = -1, int repeaterTotal = -1)
@@ -110,8 +109,8 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 				var propertyMatch = Regex.Match(strPropertyName, "([a-z]+):([a-z]+)", RegexOptions.IgnoreCase);
 				if (propertyMatch.Success)
 				{
-					valueObject = _entity.Get(propertyMatch.Groups[1].Value/*, out notFound*/);
-					if (/*!notFound &&*/ valueObject != null)
+					valueObject = _entity.Get(propertyMatch.Groups[1].Value);
+					if (valueObject != null)
 					{
 						#region Handle Entity-Field (List of DynamicEntity)
 						var list = valueObject as List<IDynamicEntity>;

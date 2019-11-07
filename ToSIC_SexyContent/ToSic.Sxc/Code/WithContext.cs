@@ -5,10 +5,10 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
+using ToSic.Sxc.Adam;
 using App = ToSic.SexyContent.App;
 using Constants = ToSic.Eav.Constants;
 using IEntity = ToSic.Eav.Data.IEntity;
-using IFolder = ToSic.Eav.Apps.Adam.IFolder;
 
 namespace ToSic.Sxc.Code
 {

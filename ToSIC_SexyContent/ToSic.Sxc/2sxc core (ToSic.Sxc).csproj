@@ -64,6 +64,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adam\Classification.cs" />
+    <Compile Include="Adam\IAsset.cs" />
+    <Compile Include="Adam\IContext.cs" />
+    <Compile Include="Adam\IFile.cs" />
+    <Compile Include="Adam\IFolder.cs" />
     <Compile Include="Adam\Security.cs" />
     <Compile Include="Adam\File.cs" />
     <Compile Include="Adam\Folder.cs" />
@@ -83,6 +88,9 @@
     <Compile Include="Compatibility\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\ClientContextInfo\Ui.cs" />
+    <Compile Include="Engines\Template_Constants.cs" />
+    <Compile Include="Engines\EngineDefinitionAttribute.cs" />
+    <Compile Include="Engines\Template.cs" />
     <Compile Include="InterfacesCore\IDynamicCode.cs" />
     <Compile Include="InterfacesCore\IInPageEditingSystem.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
@@ -135,18 +143,18 @@
     <Compile Include="SexyContent\EAV\Extensions\EntityDecorator.cs" />
     <Compile Include="SexyContent\EAV\Extensions\EntityInContentGroup.cs" />
     <Compile Include="Interfaces\Internal\IHasEditingData.cs" />
-    <Compile Include="SexyContent\Engines\EngineBase.cs" />
-    <Compile Include="SexyContent\Engines\EngineFactory.cs" />
-    <Compile Include="SexyContent\Engines\IEngine.cs" />
-    <Compile Include="SexyContent\Engines\InstancePurposes.cs" />
-    <Compile Include="SexyContent\Engines\RenderingException.cs" />
-    <Compile Include="SexyContent\Engines\RenderStatusType.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\LookUpInAppProperty.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\LookUpInDynamicEntity.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\LookUpInNameValueCollection.cs" />
+    <Compile Include="Engines\EngineBase.cs" />
+    <Compile Include="Engines\EngineFactory.cs" />
+    <Compile Include="Engines\IEngine.cs" />
+    <Compile Include="Engines\InstancePurposes.cs" />
+    <Compile Include="Engines\RenderingException.cs" />
+    <Compile Include="Engines\RenderStatusType.cs" />
+    <Compile Include="Engines\Token\LookUpInAppProperty.cs" />
+    <Compile Include="Engines\Token\LookUpInDynamicEntity.cs" />
+    <Compile Include="Engines\Token\LookUpInNameValueCollection.cs" />
     <Compile Include="Interfaces\Internal\IEnvironmentLookUps.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEAV.cs" />
+    <Compile Include="Engines\Token\TokenEngine.cs" />
+    <Compile Include="Engines\Token\TokenReplaceEAV.cs" />
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
     <Compile Include="SexyContent\Internal\AppHelpers.cs" />
@@ -200,6 +208,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="SexyContent\Engines\" />
     <Folder Include="Sxc\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

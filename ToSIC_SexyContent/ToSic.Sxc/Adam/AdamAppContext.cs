@@ -2,7 +2,6 @@
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 using App = ToSic.SexyContent.App;

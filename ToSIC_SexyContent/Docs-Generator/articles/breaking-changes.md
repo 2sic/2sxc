@@ -12,6 +12,13 @@ We're documenting it here to ensure you know what happened, in case you still ru
 Version 10 has a lot of small breaking changes because we restructured the internal API so it's consistent when we publish it. 
 All these things shouldn't affect you, because they were internal APIs, but in case it does - here's what we did.
 
+#### Version 10.20.01
+
+1. moved internal interfaces for engines (Razor/Token) to final namespaces `ToSic.Sxc.Engines`
+	1. `IEngine`
+	1. `EngineBase`
+	1. 
+
 #### Version 10.20
 
 1. the internal interface `IInPageEditingHelpers` was moved from `ToSic.SexyContent.Interfaces` to the namespace `ToSic.Sxc`
