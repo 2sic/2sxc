@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps.Assets;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Interfaces;
-
-using ToSic.Eav.ValueProviders;
+using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
-using ToSic.Sxc.Interfaces;
-using ToSic.Sxc.Adam;
 using App = ToSic.SexyContent.App;
 using Constants = ToSic.Eav.Constants;
 using IEntity = ToSic.Eav.Data.IEntity;
+using IFolder = ToSic.Eav.Apps.Adam.IFolder;
 
 namespace ToSic.Sxc.Code
 {
@@ -81,20 +76,20 @@ namespace ToSic.Sxc.Code
 
         [Obsolete("use CreateSource<T> instead")]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-            IValueCollectionProvider configurationProvider = null)
+            ITokenListFiller configurationProvider = null)
             => Parent?.CreateSource(typeName, inSource, configurationProvider);
 
-        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
             where T : IDataSource
             => Parent.CreateSource<T>(inSource, configurationProvider);
 
         #endregion
 
         #region AsAdam
-        public IAdamFolder AsAdam(IDynamicEntity entity, string fieldName)
+        public IFolder AsAdam(IDynamicEntity entity, string fieldName)
             => Parent?.AsAdam(entity, fieldName);
 
-        public IAdamFolder AsAdam(IEntity entity, string fieldName)
+        public IFolder AsAdam(IEntity entity, string fieldName)
             => Parent?.AsAdam(entity, fieldName);
         #endregion
 

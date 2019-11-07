@@ -18,7 +18,7 @@
       "output": {
         ".html": {
           "relative_path": "api/index.html",
-          "hash": "wGa+3a3N1w/AyNDSTk6GWw=="
+          "hash": "qv736b3Cpk/RTohj7J8H3g=="
         }
       },
       "is_incremental": false,
@@ -30,7 +30,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/architecture.html",
-          "hash": "KQtT9EL8lLVt0a2NyI2wJQ=="
+          "hash": "VAh0+g4aPBkSOpecGaQKvA=="
         }
       },
       "is_incremental": false,
@@ -42,7 +42,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/breaking-changes.html",
-          "hash": "MF+oIi8riqqhdLmuRabr2g=="
+          "hash": "hAtNFfL61G+6Hh8oI8gIeQ=="
         }
       },
       "is_incremental": false,
@@ -197,11 +197,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/api/ToSic.Eav.Apps.Assets.IAdamAsset.yml",
+      "source_relative_path": "obj/api/ToSic.Eav.Apps.Adam.ICmsAsset.yml",
       "output": {
         ".html": {
-          "relative_path": "api/ToSic.Eav.Apps.Assets.IAdamAsset.html",
-          "hash": "JHMWWltvpHhmJYsdnvkP1A=="
+          "relative_path": "api/ToSic.Eav.Apps.Adam.ICmsAsset.html",
+          "hash": "YuUBb6Paakt6e0O8V/EpmA=="
         }
       },
       "is_incremental": false,
@@ -209,11 +209,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/api/ToSic.Eav.Apps.Assets.IAdamFile.yml",
+      "source_relative_path": "obj/api/ToSic.Eav.Apps.Adam.IFile.yml",
       "output": {
         ".html": {
-          "relative_path": "api/ToSic.Eav.Apps.Assets.IAdamFile.html",
-          "hash": "RGOMORthJF7hO7DKNSkKUA=="
+          "relative_path": "api/ToSic.Eav.Apps.Adam.IFile.html",
+          "hash": "suKhHPsQLxrcL/tqO2mEMQ=="
         }
       },
       "is_incremental": false,
@@ -221,11 +221,23 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/api/ToSic.Eav.Apps.Assets.IAdamFolder.yml",
+      "source_relative_path": "obj/api/ToSic.Eav.Apps.Adam.IFolder.yml",
       "output": {
         ".html": {
-          "relative_path": "api/ToSic.Eav.Apps.Assets.IAdamFolder.html",
-          "hash": "spiDcYBweUcpLUglnhjBTg=="
+          "relative_path": "api/ToSic.Eav.Apps.Adam.IFolder.html",
+          "hash": "K17oEJKn3c63vJv7QcRPCw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Apps.Adam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Apps.Adam.html",
+          "hash": "RGvo0jFXG5NwEvqlOHtQ/w=="
         }
       },
       "is_incremental": false,
@@ -273,7 +285,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Apps.Assets.html",
-          "hash": "oys+vyqfBT0u4LLWlvFnnA=="
+          "hash": "iWCktoxGQcf2zdgokJ2UAg=="
         }
       },
       "is_incremental": false,
@@ -285,7 +297,31 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Apps.IApp.html",
-          "hash": "fNsm2GvWNP2vtFKq7Ddy8A=="
+          "hash": "PtANj7zbqgRkJHkwNOgvnw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Apps.IAppData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Apps.IAppData.html",
+          "hash": "ou0W/2ZJYA7GH3lFhp/ktQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Apps.IAppDataConfiguration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Apps.IAppDataConfiguration.html",
+          "hash": "t5BttGGRhrogZe6rkFlZZQ=="
         }
       },
       "is_incremental": false,
@@ -333,7 +369,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Apps.html",
-          "hash": "0NHm+gONWXWWotwgocmBFg=="
+          "hash": "XAMwg+ekRElCX+cZy7TWKg=="
         }
       },
       "is_incremental": false,
@@ -501,7 +537,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.DataSources.BaseDataSource.html",
-          "hash": "cR2amqvrt06PhyZMS2OTPw=="
+          "hash": "N+lRTzaRT0Dqx5jE/SKzDA=="
         }
       },
       "is_incremental": false,
@@ -597,7 +633,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.DataSources.IDataSource.html",
-          "hash": "scPoc/6sQy3tvSnO/HCWsQ=="
+          "hash": "uHlAklETk3e3d6XdhtIPVQ=="
         }
       },
       "is_incremental": false,
@@ -869,6 +905,78 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.LookUp.ILookUp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.LookUp.ILookUp.html",
+          "hash": "Q6X1dQREXPbipHHFN+8akA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.LookUp.LookUpBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.LookUp.LookUpBase.html",
+          "hash": "DNSQK8cmSD1Y5BG1Hej6Fw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.LookUp.LookUpInEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.LookUp.LookUpInEntity.html",
+          "hash": "feOemX57+Chxr+4StPmyiA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.LookUp.LookUpInLookUps.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.LookUp.LookUpInLookUps.html",
+          "hash": "2TVyPqhpn9nq40OKAai1Fw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.LookUp.LookUpInMetadata.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.LookUp.LookUpInMetadata.html",
+          "hash": "ANUz5rd2KC0hqcLFg7KTqw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.LookUp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.LookUp.html",
+          "hash": "zLUWujiomSyZwltAM79PZQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/ToSic.Eav.Metadata.IGlobalMetadataProvider.yml",
       "output": {
         ".html": {
@@ -941,42 +1049,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/api/ToSic.Eav.ValueProviders.IValueCollectionProvider.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/ToSic.Eav.ValueProviders.IValueCollectionProvider.html",
-          "hash": "uwqkcQcoTqJtXprrF0uJUA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "obj/api/ToSic.Eav.ValueProviders.IValueProvider.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/ToSic.Eav.ValueProviders.IValueProvider.html",
-          "hash": "qWPxQkDzbSyeGXz5ZxNJ+w=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "obj/api/ToSic.Eav.ValueProviders.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/ToSic.Eav.ValueProviders.html",
-          "hash": "EiYSZhtb9X77bUUvHSbkFA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "obj/api/ToSic.Sxc.Dnn.IDnnContext.yml",
       "output": {
         ".html": {
@@ -993,7 +1065,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Sxc.Dnn.IDynamicCode.html",
-          "hash": "R/wm0Z+R2j4arr/l03ZD1w=="
+          "hash": "W/ZXWIELxbHWTngHd3Lr4Q=="
         }
       },
       "is_incremental": false,
@@ -1005,7 +1077,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Sxc.Dnn.IDynamicWebApi.html",
-          "hash": "AUkF7B2EpU4kOJpZRoe3kQ=="
+          "hash": "bqGFT0rmJQ/JcxtDyB68Dg=="
         }
       },
       "is_incremental": false,
@@ -1029,7 +1101,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Sxc.Dnn.IRazor.html",
-          "hash": "g4YhJRUDV1lz1Wv1slgo9w=="
+          "hash": "K+ss7nPoo9XQTNNVhEmmrQ=="
         }
       },
       "is_incremental": false,
@@ -1065,7 +1137,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Sxc.IDynamicCode.html",
-          "hash": "QOMtIVmepIpbWywFLo6lpw=="
+          "hash": "9SOu7oXE//p/GylZYANBOw=="
         }
       },
       "is_incremental": false,
@@ -1125,7 +1197,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "i9uPXL/uOcVdKzjwGNt1mg=="
+          "hash": "go0f6VJWAHxx3OYtcNULiA=="
         }
       },
       "is_incremental": false,
@@ -1162,16 +1234,16 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 95,
+          "skipped_file_count": 0
+        },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 6,
-          "skipped_file_count": 0
-        },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 88,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

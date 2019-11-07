@@ -2,23 +2,27 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http.Controllers;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using Factory = ToSic.Eav.Factory;
 using ToSic.Sxc.Adam.WebApi;
 using System.IO;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.ValueProviders;
+using ToSic.Eav.LookUp;
+
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using IDynamicCode = ToSic.Sxc.Dnn.IDynamicCode;
 using IEntity = ToSic.Eav.Data.IEntity;
+using IFile = ToSic.Eav.Apps.Adam.IFile;
+using IFolder = ToSic.Eav.Apps.Adam.IFolder;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -123,10 +127,10 @@ namespace ToSic.SexyContent.WebApi
 
         #region CreateSource implementations
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-	        IValueCollectionProvider configurationProvider = null)
+	        ITokenListFiller configurationProvider = null)
 	        => DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
 
-        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
             where T : IDataSource
             =>  DnnAppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
 
@@ -172,7 +176,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public IAdamFolder AsAdam(IDynamicEntity entity, string fieldName)
+        public IFolder AsAdam(IDynamicEntity entity, string fieldName)
 	        => DnnAppAndDataHelpers.AsAdam(AsEntity(entity), fieldName);
 
         /// <summary>
@@ -181,7 +185,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public IAdamFolder AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public IFolder AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
 
         /// <summary>
@@ -195,7 +199,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="field"></param>
         /// <param name="subFolder"></param>
         /// <returns></returns>
-        public IAdamFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
+        public IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
             Stream stream = null, 
             string fileName = null, 
             string contentType = null, 

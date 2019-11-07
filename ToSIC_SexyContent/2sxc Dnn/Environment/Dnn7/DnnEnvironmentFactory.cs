@@ -1,6 +1,5 @@
 ﻿using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
@@ -24,7 +23,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public IPagePublishing PagePublisher(ILog parentLog) => new PagePublishing(parentLog);
 
-        public ToSic.Eav.Apps.Interfaces.IAppEnvironment Environment(ILog parentLog) => new DnnEnvironment(parentLog);
+        public IAppEnvironment Environment(ILog parentLog) => new DnnEnvironment(parentLog);
 
 
 

@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Adam.WebApi
             IsFolder = false;
             Id = original.FileId;
             ParentId = original.FolderId;
-            Path = original.RelativePath;
+            Path = (original.StorageLocation == 0) ? original.RelativePath : FileLinkClickController.Instance.GetFileLinkClick(original);
             Name = original.FileName;
             Size = original.Size;
             Type = "unknown"; // will be set from the outside

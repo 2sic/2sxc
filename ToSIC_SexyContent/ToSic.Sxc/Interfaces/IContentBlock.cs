@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.SexyContent;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;

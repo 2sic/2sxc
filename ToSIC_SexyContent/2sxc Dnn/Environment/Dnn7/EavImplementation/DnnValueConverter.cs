@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -15,10 +16,10 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
 {
     public class DnnValueConverter : IEavValueConverter
     {
-        public string ToReference(string value) 
+        public string ToReference(string value)
             => TryToResolveOneLinkToInternalDnnCode(value);
 
-        public string ToValue(Guid itemGuid, string reference) 
+        public string ToValue(Guid itemGuid, string reference)
             => TryToResolveDnnCodeToLink(itemGuid, reference);
 
         /// <summary>
@@ -100,14 +101,17 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
             // so this is to just ensure that if it can't be converted, it'll just fall back to default
             try
             {
-                var result = Path.Combine(new PortalSettings(fileInfo.PortalId)?.HomeDirectory ?? "", fileInfo?.RelativePath ?? "");
-                
+                var filePath = Path.Combine(new PortalSettings(fileInfo.PortalId)?.HomeDirectory ?? "", fileInfo?.RelativePath ?? "");
+
+                // return linkclick url for secure and other not standard folder locations
+                var result = (fileInfo.StorageLocation == 0) ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
+
                 // optionally do extra security checks (new in 10.02)
                 if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
-                return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", result) 
-                    ? null 
+                return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", filePath)
+                    ? null
                     : result;
             }
             catch
@@ -135,7 +139,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
             if (tabInfo.CultureCode != "" && PortalSettings.Current != null && tabInfo.CultureCode != PortalSettings.Current.CultureCode)
             {
                 var cultureTabInfo = tabController
-                    .GetTabByCulture(tabInfo.TabID, tabInfo.PortalID, 
+                    .GetTabByCulture(tabInfo.TabID, tabInfo.PortalID,
                         LocaleController.Instance.GetLocale(PortalSettings.Current.CultureCode));
 
                 if (cultureTabInfo != null)

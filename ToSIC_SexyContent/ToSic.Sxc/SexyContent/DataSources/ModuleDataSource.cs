@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources;
@@ -58,7 +57,7 @@ namespace ToSic.SexyContent.DataSources
                     throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
                 var sxciProvider = ConfigurationProvider.Sources[DataSources.ConfigurationProvider.SxcInstanceKey];
-                _sxcContext = (sxciProvider as SxcInstanceValueProvider)?
+                _sxcContext = (sxciProvider as SxcInstanceLookUp)?
                               .SxcInstance 
                               ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
 

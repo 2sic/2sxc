@@ -1,6 +1,6 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
-using ToSic.Eav.Apps.Interfaces;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Edit.ClientContextInfo;

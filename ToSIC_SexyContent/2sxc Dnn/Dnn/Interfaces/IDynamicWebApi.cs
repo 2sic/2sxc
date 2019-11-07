@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Documentation;
+using IFile = ToSic.Eav.Apps.Adam.IFile;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -23,7 +25,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="field"></param>
         /// <param name="subFolder"></param>
         /// <returns></returns>
-        IAdamFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+        IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             Stream stream = null,
             string fileName = null,
             string contentType = null,

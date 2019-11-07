@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Documentation;
+using IFolder = ToSic.Eav.Apps.Adam.IFolder;
 
 namespace ToSic.Sxc.Adam
 {
 
-    public class Folder : Eav.Apps.Assets.Folder, IAdamFolder
+    public class Folder : Eav.Apps.Assets.Folder, IFolder
     {
         protected AdamAppContext AppContext { get; set; }
 
@@ -18,16 +20,16 @@ namespace ToSic.Sxc.Adam
             _fileSystem = fileSystem;
         }
 
-        /// <inheritdoc cref="IAdamAsset" />
+        /// <inheritdoc cref="ICmsAsset" />
         public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true) as dynamic;
 
-        /// <inheritdoc cref="IAdamAsset" />
+        /// <inheritdoc cref="ICmsAsset" />
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
 
-        /// <inheritdoc cref="IAdamAsset" />
+        /// <inheritdoc cref="ICmsAsset" />
         public string Url => AppContext.Tenant.ContentPath + Path;
 
-        /// <inheritdoc cref="IAdamAsset" />
+        /// <inheritdoc cref="ICmsAsset" />
         public string Type => Classification.Folder;
 
         [PrivateApi]
@@ -42,7 +44,7 @@ namespace ToSic.Sxc.Adam
 
 
         /// <inheritdoc />
-        public IEnumerable<IAdamFolder> Folders
+        public IEnumerable<IFolder> Folders
         {
             get
             {
@@ -56,14 +58,14 @@ namespace ToSic.Sxc.Adam
                 return _folders;
             }
         }
-        private IEnumerable<IAdamFolder> _folders;
+        private IEnumerable<IFolder> _folders;
 
 
 
 
         /// <inheritdoc/>
-        public IEnumerable<IAdamFile> Files 
+        public IEnumerable<Eav.Apps.Adam.IFile> Files 
             => _files ?? (_files = _fileSystem.GetFiles(Id, AppContext));
-        private IEnumerable<IAdamFile> _files;
+        private IEnumerable<Eav.Apps.Adam.IFile> _files;
     }
 }

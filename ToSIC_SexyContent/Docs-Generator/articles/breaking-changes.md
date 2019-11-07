@@ -16,8 +16,7 @@ All these things shouldn't affect you, because they were internal APIs, but in c
 
 1. the internal interface `IInPageEditingHelpers` was moved from `ToSic.SexyContent.Interfaces` to the namespace `ToSic.Sxc`
 1. the internal interface `IHtmlHelper` and `ILinkHelper` was moved to `ToSic.Sxc.Dnn`
-1. the interface `ToSic.Sxc.Adam.IFolder` was moved to `ToSic.Eav.Apps.Assets.IAdamFolder`
-1. the internal namespace `ToSic.Eav.ValueProvider` was changed to `ToSic.Eav.ValueProviders` (added an 's' for consistency)
+1. the interface `ToSic.Sxc.Adam.IFolder` was moved to `ToSic.Eav.Apps.Adam.IFolder`
 1. the property `Configuration` on dynamic entities was deprecated in 2sxc 4 and removed in 2sxc 10 - we don't think it was ever used
 1. moved internal Metadata interfaces (ca. 5) into final namespace @ToSic.Eav.Metadata
 1. Moved a bunch of internal interfaces which we believe were never used externally from `ToSic.Eav.Interfaces` to `ToSic.Eav.Data`
@@ -34,10 +33,23 @@ All these things shouldn't affect you, because they were internal APIs, but in c
 	1. `IValue`
 	1. `IValue<T>`
 	1. `IValueOfDimension<T>`
+1. Moved a bunch of internal interfaces which we believe were never used externally from `ToSic.Eav.Apps.Interfaces` to `ToSic.Eav.Apps`
+	1. `IApp`
+	1. `IAppData`
+	1. `IAppDataConfiguration`
+	1. `IAppEnvironment`
+	1. `IEnvironmentFactory`
+	1. `IInstanceInfo`
+	1. `IItemListAction`
+	1. `IPagePublishing`
+	1. `ITenant`
+	1. `IZoneMapper`
+1. the internal namespace `ToSic.Eav.ValueProvider` was changed to `ToSic.Eav.LookUp` (added an 's' for consistency) and inside it  
+	we renamed a bunch of internal interfaces and objects which we believe were never used externally
 
 ##### Deprecated/Changed, but not broken
 
-1. the interface `ToSic.Sxc.Adam.IFile` was moved to `ToSic.Eav.Apps.Assets.IAdamFile` but the old interface still exists so it shouln't break  
+1. the interface `ToSic.Sxc.Adam.IFile` was moved to `ToSic.Eav.Apps.Adam.IFile` but the old interface still exists so it shouln't break  
 	_it was used by Mobius Forms_
 1. the internal interface `ToSic.SexyContent.IAppAndDataHelpers` was renamed to `ToSic.Sxc.IDynamicCode` but the old interface still exists, so it shouldn't break  
 	_it was used by Mobius Forms_

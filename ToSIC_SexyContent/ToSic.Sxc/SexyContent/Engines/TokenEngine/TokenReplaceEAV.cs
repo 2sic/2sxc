@@ -1,6 +1,7 @@
 ﻿// using DotNetNuke.Entities.Portals;
 
-using ToSic.Eav.ValueProviders;
+using ToSic.Eav.LookUp;
+
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
@@ -9,12 +10,12 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         public int ModuleId;
         //public PortalSettings PortalSettings;
 
-        public TokenReplaceEav(App app, int instanceId, /*PortalSettings portalSettings,*/ IValueCollectionProvider provider)
+        public TokenReplaceEav(App app, int instanceId, /*PortalSettings portalSettings,*/ ITokenListFiller provider)
         {
             InitAppAndPortalSettings(app, instanceId, /*portalSettings,*/ provider);
         }
 
-        public void InitAppAndPortalSettings(App app, int moduleId, /*PortalSettings portalSettings,*/ IValueCollectionProvider provider)
+        public void InitAppAndPortalSettings(App app, int moduleId, /*PortalSettings portalSettings,*/ ITokenListFiller provider)
         {
             foreach (var valueProvider in provider.Sources)
                 ValueSources.Add(valueProvider.Key, valueProvider.Value);

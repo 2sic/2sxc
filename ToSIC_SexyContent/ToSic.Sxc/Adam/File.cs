@@ -1,11 +1,12 @@
 ﻿using System;
+using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Apps.Assets;
 using ToSic.SexyContent.Adam;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Adam
 {
-    public class File : Eav.Apps.Assets.File, AdamFile, IAdamFile
+    public class File : Eav.Apps.Assets.File, AdamFile, Eav.Apps.Adam.IFile
     {
         private AdamAppContext AppContext { get; }
 

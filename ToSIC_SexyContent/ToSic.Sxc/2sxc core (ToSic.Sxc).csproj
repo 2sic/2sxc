@@ -128,7 +128,7 @@
     <Compile Include="SexyContent\DataPublishing.cs" />
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
-    <Compile Include="SexyContent\DataSources\SxcInstanceValueProvider.cs" />
+    <Compile Include="SexyContent\DataSources\SxcInstanceLookUp.cs" />
     <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
     <Compile Include="SexyContent\DynamicEntity.cs" />
     <Compile Include="SexyContent\DynamicEntityList.cs" />
@@ -141,10 +141,10 @@
     <Compile Include="SexyContent\Engines\InstancePurposes.cs" />
     <Compile Include="SexyContent\Engines\RenderingException.cs" />
     <Compile Include="SexyContent\Engines\RenderStatusType.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\AppPropertyAccess.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
-    <Compile Include="Interfaces\Internal\IEnvironmentValueProviders.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\LookUpInAppProperty.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\LookUpInDynamicEntity.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\LookUpInNameValueCollection.cs" />
+    <Compile Include="Interfaces\Internal\IEnvironmentLookUps.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEAV.cs" />
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />

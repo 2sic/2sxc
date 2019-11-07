@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Internal;
 
