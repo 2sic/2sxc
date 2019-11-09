@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Web;
-using ToSic.Eav.AppEngine;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Apps;
 using IApp = ToSic.Sxc.IApp;
 
 namespace ToSic.SexyContent
@@ -56,9 +56,9 @@ namespace ToSic.SexyContent
         #endregion
 
         #region App-Level TemplateManager, ContentGroupManager, EavContext --> must move to EAV some time
-        private TemplateManager _templateManager;
-        public TemplateManager TemplateManager => _templateManager 
-            ?? (_templateManager = new TemplateManager(ZoneId, AppId, Log));
+        private TemplatesRuntime _templateManager;
+        public TemplatesRuntime TemplateManager => _templateManager 
+            ?? (_templateManager = new TemplatesRuntime(ZoneId, AppId, Log));
 
         private ContentGroupManager _contentGroupManager;
         public ContentGroupManager ContentGroupManager => _contentGroupManager 

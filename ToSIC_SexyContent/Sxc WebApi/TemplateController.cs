@@ -4,10 +4,9 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.AppEngine;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Interfaces;
+using ToSic.Sxc.Apps;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.WebApi
@@ -51,10 +50,10 @@ namespace ToSic.SexyContent.WebApi
 	        return templates;
 	    }
 
-	    private TemplateManager TemplateManager(int appId)
+	    private TemplatesRuntime TemplateManager(int appId)
 	    {
 	        var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
-	        var tm = new TemplateManager(zoneId, appId, Log);
+	        var tm = new TemplatesRuntime(zoneId, appId, Log);
 	        return tm;
 	    }
 

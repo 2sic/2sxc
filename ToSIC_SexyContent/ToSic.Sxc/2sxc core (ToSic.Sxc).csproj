@@ -82,6 +82,10 @@
     <Compile Include="Adam\IEnvironmentFileSystem.cs" />
     <Compile Include="Adam\Metadata.cs" />
     <Compile Include="Adam\Obsolete\AdamFile.cs" />
+    <Compile Include="Apps\CmsManager.cs" />
+    <Compile Include="Apps\ImportExport\XmlImportFull.cs" />
+    <Compile Include="Apps\ImportExport\XmlImportFull_Templates.cs" />
+    <Compile Include="Apps\Parts\TemplatesManager.cs" />
     <Compile Include="Code\WithContext.cs" />
     <Compile Include="Code\CodeCompiler.cs" />
     <Compile Include="Compatibility\InputTypes.cs" />
@@ -170,7 +174,7 @@
     <Compile Include="SexyContent\SxcInstance_Render.cs" />
     <Compile Include="SexyContent\SxcInstance_Template.cs" />
     <Compile Include="SexyContent\SxcInstance_EditUi.cs" />
-    <Compile Include="SexyContent\TemplateManager.cs" />
+    <Compile Include="Apps\Parts\TemplatesRuntime.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">
@@ -205,11 +209,11 @@
   <ItemGroup>
     <None Include="Adam\Assets\Helper Excel to build list of all bad file extensions.xlsx" />
     <None Include="app.config" />
+    <None Include="Apps\Readme.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SexyContent\Engines\" />
-    <Folder Include="Sxc\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

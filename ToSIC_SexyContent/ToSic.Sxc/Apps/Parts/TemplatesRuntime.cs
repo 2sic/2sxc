@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.DataSources;
@@ -10,16 +11,15 @@ using ToSic.SexyContent;
 using ToSic.SexyContent.Internal;
 using ToSic.Sxc.Engines;
 
-// mostly because of content-groups, cannot refactor out yet :(
-
-namespace ToSic.Eav.AppEngine
+// note: not sure if the final namespace should be Sxc.Apps or Sxc.Templates
+namespace ToSic.Sxc.Apps
 {
-	public class TemplateManager: HasLog
+	public class TemplatesRuntime: HasLog
 	{
 		public readonly int ZoneId;
 		public readonly int AppId;
 
-		public TemplateManager(int zoneId, int appId, ILog parentLog): base("App.TmplMg", parentLog)
+		public TemplatesRuntime(int zoneId, int appId, ILog parentLog): base("App.TmplMg", parentLog)
 		{
 			ZoneId = zoneId;
 			AppId = appId;
@@ -32,7 +32,7 @@ namespace ToSic.Eav.AppEngine
 		    // ReSharper disable once RedundantArgumentDefaultValue
 			var dataSource = DataSource.GetInitialDataSource(ZoneId, AppId, false);
 			dataSource = DataSource.GetDataSource<EntityTypeFilter>(ZoneId, AppId, dataSource);
-		    ((EntityTypeFilter) dataSource).TypeName = Apps.Configuration.TemplateContentType;// TemplateTypeName;
+		    ((EntityTypeFilter) dataSource).TypeName = Configuration.TemplateContentType;
 		    _templateDs = dataSource;
 			return dataSource;
 		}
@@ -50,7 +50,7 @@ namespace ToSic.Eav.AppEngine
 			if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");
 
-			return new Template(templateEntity/*, Log*/);
+			return new Template(templateEntity);
 		}
 
         public bool DeleteTemplate(int templateId)
@@ -113,8 +113,6 @@ namespace ToSic.Eav.AppEngine
         {
             var templates = GetAllTemplates().ToList();
             var visible = templates.Where(t => !t.IsHidden).ToList();
-            //var mdCache = TemplateDataSource().Cache;
-            //var ctc = new ContentTypeController();
             var serializer = new Serializer();
 
             return new AppRuntime(ZoneId, AppId, Log).ContentTypes.FromScope(Settings.AttributeSetScope) 
@@ -122,7 +120,7 @@ namespace ToSic.Eav.AppEngine
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
                 {
-                    var metadata = ct.Metadata.Description;//.FirstOrDefault();
+                    var metadata = ct.Metadata.Description;
                     return new ContentTypeUiInfo {
                         StaticName = ct.StaticName,
                         Name = ct.Name,

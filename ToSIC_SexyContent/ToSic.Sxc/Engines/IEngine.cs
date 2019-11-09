@@ -20,7 +20,9 @@ namespace ToSic.Sxc.Engines
     public interface IEngine
     {
         /// <summary>
-        /// Initialize the Engine (pass everything needed for Render to it)
+        /// Initialize the Engine (pass everything needed for Render to it).<br/>
+        /// This is not in the constructor, because IEngines usually get constructed with DI,
+        /// so the constructor is off-limits. 
         /// </summary>
         [PrivateApi]
         void Init(Template template, App app, IInstanceInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, ILog parentLog);
@@ -28,8 +30,7 @@ namespace ToSic.Sxc.Engines
         /// <summary>
         /// Renders a template, returning a string with the rendered template.
         /// </summary>
-        /// <returns></returns>
-        [PrivateApi]
+        /// <returns>The string - usually HTML - which the engine created. </returns>
         string Render();
 
         /// <summary>

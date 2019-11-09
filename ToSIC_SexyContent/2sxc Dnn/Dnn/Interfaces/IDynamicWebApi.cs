@@ -2,6 +2,7 @@
 using System.IO;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Adam;
+// ReSharper disable UnusedMember.Global
 
 namespace ToSic.Sxc.Dnn
 {

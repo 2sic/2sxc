@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Search;
@@ -18,7 +17,7 @@ using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.Sxc.Engines
 {
-    public abstract class EngineBase : IEngine
+    public abstract class EngineBase : HasLog, IEngine
     {
         protected Template Template;
         protected string TemplatePath;
@@ -30,13 +29,17 @@ namespace ToSic.Sxc.Engines
 
         public RenderStatusType PreRenderStatus { get; internal set; }
 
-        protected ILog Log { get; set; }
+        //protected ILog Log { get; set; }
+
+        protected EngineBase() : base("Sxc.EngBas")
+        { }
 
         public void Init(Template template, App app, IInstanceInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, ILog parentLog)
         {
             var templatePath = VirtualPathUtility.Combine(SexyContent.Internal.TemplateHelpers.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
 
-            Log = new Log("Htm.RendEn", parentLog);
+            Log.LinkTo(parentLog);
+            //Log = new Log("Htm.RendEn", parentLog);
 
             // Throw Exception if Template does not exist
             if (!File.Exists(HostingEnvironment.MapPath(templatePath)))

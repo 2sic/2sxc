@@ -3,15 +3,13 @@ using System.Linq;
 using System.Threading;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Documentation;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Engines
 {
-    // todo: probably change to inherit from
-    // EntityBasedType
     public partial class Template: EntityBasedType
     {
-        //public readonly IEntity Entity;
 
         public Template(IEntity templateEntity) : base(templateEntity)
         {
@@ -47,7 +45,6 @@ namespace ToSic.Sxc.Engines
         public IEntity ListPresentationDemoEntity => GetBestRelationship(TemplateListPresentationDemo);
 
         public string Type => Entity.GetBestValue<string>(TemplateType);
-        //public Guid Guid => Entity.EntityGuid;
 
         public string GetTypeStaticName(string groupPart)
         {
@@ -74,12 +71,13 @@ namespace ToSic.Sxc.Engines
         public string StreamsToPublish => Entity.GetBestValue<string>(TemplatePublishStreams);
 
 
-        public IEntity Query => ((Eav.Data.EntityRelationship)Entity.Attributes["Pipeline"][0]).FirstOrDefault();
+        public IEntity Query => ((EntityRelationship)Entity.Attributes["Pipeline"][0]).FirstOrDefault();
         public string ViewNameInUrl => Entity.GetBestValue<string>(TemplateViewName);
 
         /// <summary>
         /// Returns true if the current template uses Razor
         /// </summary>
+        [PrivateApi]
         public bool IsRazor => Type == TemplateTypeRazor;
     }
 }

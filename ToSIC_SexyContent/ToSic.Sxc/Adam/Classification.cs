@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Adam
 {
-    public class Classification
+    internal class Classification
     {
         public const string Folder = "folder";
         public const string File = "file";

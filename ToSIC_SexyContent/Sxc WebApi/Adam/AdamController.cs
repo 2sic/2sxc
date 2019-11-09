@@ -9,7 +9,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
 using System.Web.Http.Controllers;
-using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.Adam;
