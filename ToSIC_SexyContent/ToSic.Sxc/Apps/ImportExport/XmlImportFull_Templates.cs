@@ -139,7 +139,7 @@ namespace ToSic.Sxc.Apps.ImportExport
                     var presentationTypeStaticName = "";
                     var presentationDemoEntityId = new int?();
                     //if list templateDefaults would have null objects, we would have an exception
-                    var presentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == AppConstants.Presentation);
+                    var presentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == Parts.Presentation);
                     if (presentationDefault != null)
                     {
                         presentationTypeStaticName = presentationDefault.ContentTypeStaticName;
@@ -148,7 +148,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
                     var listContentTypeStaticName = "";
                     var listContentDemoEntityId = new int?();
-                    var listContentDefault = templateDefaults.FirstOrDefault(t => t.ItemType == AppConstants.ListContent);
+                    var listContentDefault = templateDefaults.FirstOrDefault(t => t.ItemType == Parts.ListContent);
                     if (listContentDefault != null)
                     {
                         listContentTypeStaticName = listContentDefault.ContentTypeStaticName;
@@ -157,7 +157,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
                     var listPresentationTypeStaticName = "";
                     var listPresentationDemoEntityId = new int?();
-                    var listPresentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == AppConstants.ListPresentation);
+                    var listPresentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == Parts.ListPresentation);
                     if (listPresentationDefault != null)
                     {
                         listPresentationTypeStaticName = listPresentationDefault.ContentTypeStaticName;

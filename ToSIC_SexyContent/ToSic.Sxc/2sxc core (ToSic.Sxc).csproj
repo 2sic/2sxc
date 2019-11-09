@@ -89,10 +89,12 @@
     <Compile Include="Code\WithContext.cs" />
     <Compile Include="Code\CodeCompiler.cs" />
     <Compile Include="Compatibility\InputTypes.cs" />
+    <Compile Include="Compatibility\InstancePurposes.cs" />
     <Compile Include="Compatibility\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\ClientContextInfo\Ui.cs" />
     <Compile Include="Views\IView.cs" />
+    <Compile Include="Views\Parts.cs" />
     <Compile Include="Views\View_Constants.cs" />
     <Compile Include="Engines\EngineDefinitionAttribute.cs" />
     <Compile Include="Views\View.cs" />

@@ -9,6 +9,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Views;
 
 namespace ToSic.SexyContent
 {
@@ -75,10 +76,10 @@ namespace ToSic.SexyContent
 		        return appMan.Entities.Create(ContentGroupTypeName, new Dictionary<string, object>
 		        {
 		            {"Template", new List<int> {templateId}},
-		            {AppConstants.Content, new List<int>()},
-		            {AppConstants.Presentation, new List<int>()},
-		            {AppConstants.ListContent, new List<int>()},
-		            {AppConstants.ListPresentation, new List<int>()}
+		            {Parts.Content, new List<int>()},
+		            {Parts.Presentation, new List<int>()},
+		            {Parts.ListContent, new List<int>()},
+		            {Parts.ListPresentation, new List<int>()}
 		        }).Item2; // new guid
 		    }
 		    else

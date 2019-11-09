@@ -7,6 +7,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.Sxc.Views;
 
 namespace ToSic.SexyContent.WebApi.SaveHelpers
 {
@@ -48,14 +49,14 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             {
                 Log.Add("processing:" + entitySets.Key);
                 var contItem =
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ContentLower) ??
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ListContentLower);
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == Parts.ContentLower) ??
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == Parts.ListContentLower);
                 if (contItem == null)
                     throw new Exception("unexpected group-entity assignment, cannot figure it out");
 
                 var presItem =
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.PresentationLower) ??
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ListPresentationLower);
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == Parts.PresentationLower) ??
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == Parts.ListPresentationLower);
 
                 // Get group to assign to and parameters
                 var contentGroup = app.ContentGroupManager.GetContentGroup(contItem.Header.Group.Guid);
@@ -140,7 +141,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
                 identifier.EntityId = part[identifier.Group.Index].EntityId;
 
             // tell the UI that it should not actually use this data yet, keep it locked
-            if (!identifier.Group.Part.ToLower().Contains(AppConstants.PresentationLower))
+            if (!identifier.Group.Part.ToLower().Contains(Parts.PresentationLower))
                 return;
 
             // the following steps are only for presentation items
@@ -152,7 +153,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             identifier.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
 
             identifier.DuplicateEntity =
-                identifier.Group.Part.ToLower() == AppConstants.PresentationLower
+                identifier.Group.Part.ToLower() == Parts.PresentationLower
                     ? contentGroup.View.PresentationItem?.EntityId
                     : contentGroup.View.HeaderPresentationItem?.EntityId;
         }

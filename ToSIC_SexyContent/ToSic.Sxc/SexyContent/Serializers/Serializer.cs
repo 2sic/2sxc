@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent.EAVExtensions;
-using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Views;
 using IDynamicEntity = ToSic.Sxc.IDynamicEntity;
 
 namespace ToSic.SexyContent.Serializers
@@ -107,11 +106,11 @@ namespace ToSic.SexyContent.Serializers
         internal void AddPresentation(IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add full presentation object if it has one...because there we need more than just id/title
-	        if (entity is EntityInContentGroup && !dictionary.ContainsKey(AppConstants.Presentation))
+	        if (entity is EntityInContentGroup && !dictionary.ContainsKey(Parts.Presentation))
 	        {
 	            var entityInGroup = (EntityInContentGroup) entity;
 	            if (entityInGroup.Presentation != null)
-	                dictionary.Add(AppConstants.Presentation, GetDictionaryFromEntity(entityInGroup.Presentation));//, language));
+	                dictionary.Add(Parts.Presentation, GetDictionaryFromEntity(entityInGroup.Presentation));//, language));
 	        }
 	    }
 

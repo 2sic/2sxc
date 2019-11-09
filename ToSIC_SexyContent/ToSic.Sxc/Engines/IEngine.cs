@@ -39,7 +39,6 @@ namespace ToSic.Sxc.Engines
         /// This helps to ensure that other parts like JSON-Streams or Search have the same information
         /// as the view itself. 
         /// </summary>
-        [PrivateApi]
         void CustomizeData();
 
         /// <summary>

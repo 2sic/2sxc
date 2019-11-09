@@ -14,6 +14,7 @@ using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Views;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
@@ -234,9 +235,9 @@ namespace ToSic.SexyContent
         {
             Log.Add("try to build ListContent (header) object");
             if (Data == null || SxcInstance.View == null) return;
-            if (!Data.Out.ContainsKey(AppConstants.ListContent)) return;
+            if (!Data.Out.ContainsKey(Parts.ListContent)) return;
 
-            var listEntity = Data[AppConstants.ListContent].List.FirstOrDefault();
+            var listEntity = Data[Parts.ListContent].List.FirstOrDefault();
             _header = listEntity == null ? null : AsDynamic(listEntity);
         }
 

@@ -92,16 +92,16 @@ namespace ToSic.SexyContent
             get
             {
                 if (_contentGroupEntity == null) return new List<IEntity> {null};
-                var list = ((EntityRelationship) _contentGroupEntity.GetBestValue(AppConstants.Content)).ToList();
+                var list = ((EntityRelationship) _contentGroupEntity.GetBestValue(Parts.Content)).ToList();
                 return list.Count > 0 ? list : new List<IEntity> {null};
             }
         }
 
-        public List<IEntity> Presentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(AppConstants.Presentation))?.ToList() ?? new List<IEntity>();
+        public List<IEntity> Presentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(Parts.Presentation))?.ToList() ?? new List<IEntity>();
 
-        public List<IEntity> ListContent => ((EntityRelationship) _contentGroupEntity?.GetBestValue(AppConstants.ListContent/*cListC*/))?.ToList() ?? new List<IEntity>();
+        public List<IEntity> ListContent => ((EntityRelationship) _contentGroupEntity?.GetBestValue(Parts.ListContent/*cListC*/))?.ToList() ?? new List<IEntity>();
 
-        public List<IEntity> ListPresentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(AppConstants.ListPresentation/* cListP*/))?.ToList() ?? new List<IEntity>();
+        public List<IEntity> ListPresentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(Parts.ListPresentation/* cListP*/))?.ToList() ?? new List<IEntity>();
 
         public List<IEntity> this[string type]
         {
@@ -109,13 +109,13 @@ namespace ToSic.SexyContent
             {
                 switch (type.ToLower())
                 {
-                    case AppConstants.ContentLower:
+                    case Parts.ContentLower:
                         return Content;
-                    case AppConstants.PresentationLower: 
+                    case Parts.PresentationLower: 
                         return Presentation;
-                    case AppConstants.ListContentLower:
+                    case Parts.ListContentLower:
                         return ListContent;
-                    case AppConstants.ListPresentationLower:
+                    case Parts.ListPresentationLower:
                         return ListPresentation;
                     default:
                         throw new Exception("Type " + type + " not allowed");
@@ -151,7 +151,7 @@ namespace ToSic.SexyContent
 
             if (updatePresentation)
             {
-                var type2 = ReCapitalizePartName(type).Replace(AppConstants.Content, AppConstants.Presentation);
+                var type2 = ReCapitalizePartName(type).Replace(Parts.Content, Parts.Presentation);
                 var listPres = ListWithNulls(type2);
                 if (listPres.Count < sortOrder + 1)
                     listPres.AddRange(Enumerable.Repeat(new int?(), (sortOrder + 1) - listPres.Count));
@@ -170,12 +170,12 @@ namespace ToSic.SexyContent
         private void SaveChangedLists(Dictionary<string, List<int?>> values)
         {
             // ensure that there are never more presentations than values
-            if (values.ContainsKey(AppConstants.Presentation))
+            if (values.ContainsKey(Parts.Presentation))
             {
                 var contentCount = Content.Count;
-                if (values.ContainsKey(AppConstants.Content))
-                    contentCount = values[AppConstants.Content].Count;
-                if (values[AppConstants.Presentation].Count > contentCount)
+                if (values.ContainsKey(Parts.Content))
+                    contentCount = values[Parts.Content].Count;
+                if (values[Parts.Presentation].Count > contentCount)
                     throw new Exception("Presentation may not contain more items than Content.");
             }
 
@@ -213,10 +213,10 @@ namespace ToSic.SexyContent
         private string ReCapitalizePartName(string partName)
         {
             partName = partName.ToLower();
-            if (partName == AppConstants.ContentLower) partName = AppConstants.Content;
-            else if (partName == AppConstants.PresentationLower) partName = AppConstants.Presentation;
-            else if (partName == AppConstants.ListContentLower) partName = AppConstants.ListContent;
-            else if (partName == AppConstants.ListPresentationLower) partName = AppConstants.ListPresentation;
+            if (partName == Parts.ContentLower) partName = Parts.Content;
+            else if (partName == Parts.PresentationLower) partName = Parts.Presentation;
+            else if (partName == Parts.ListContentLower) partName = Parts.ListContent;
+            else if (partName == Parts.ListPresentationLower) partName = Parts.ListPresentation;
             else throw new Exception("Wanted to capitalize part name - but part name unknown: " + partName);
             return partName;
         }
@@ -231,7 +231,7 @@ namespace ToSic.SexyContent
             Log.Add($"remove content and pres items type:{type}, order:{sortOrder}");
             var list1 = ListWithNulls(type);
             list1.RemoveAt(sortOrder);
-            var type2 = ReCapitalizePartName(type).Replace(AppConstants.Content, AppConstants.Presentation);
+            var type2 = ReCapitalizePartName(type).Replace(Parts.Content, Parts.Presentation);
             var list2 = ListWithNulls(type2);
             if (list2.Count > sortOrder)    // in many cases the presentation-list is empty, then there is nothing to remove
                 list2.RemoveAt(sortOrder);
@@ -249,7 +249,7 @@ namespace ToSic.SexyContent
         public void AddContentAndPresentationEntity(string type, int? sortOrder, int? contentId, int? presentationId)
         {
             Log.Add($"add content/pres for type:{type}, order:{sortOrder}, content#{contentId}, pres#{presentationId}");
-            if (type.ToLower() != AppConstants.ContentLower)
+            if (type.ToLower() != Parts.ContentLower)
                 throw new Exception("This is only meant to work for content, not for list-content");
 
             if (!sortOrder.HasValue)
@@ -261,7 +261,7 @@ namespace ToSic.SexyContent
             var list2 = GetPresentationIdWithSameLengthAsContent();
             list2.Insert(sortOrder.Value, presentationId);
 
-            SaveChangedLists(PrepareSavePackage(AppConstants.Content, list1, PrepareSavePackage(AppConstants.Presentation, list2)));
+            SaveChangedLists(PrepareSavePackage(Parts.Content, list1, PrepareSavePackage(Parts.Presentation, list2)));
 
         }
 
@@ -275,7 +275,7 @@ namespace ToSic.SexyContent
             if (difference < 0)
                 Presentation.RemoveRange(Content.Count, difference);
 
-            var entityIds = ListWithNulls(AppConstants.Presentation);
+            var entityIds = ListWithNulls(Parts.Presentation);
 
             // extend as necessary
             if (difference != 0)
@@ -287,7 +287,7 @@ namespace ToSic.SexyContent
         public void ReorderEntities(int sortOrder, int destinationSortOrder)
         {
             Log.Add($"reorder entities before:{sortOrder} to after:{destinationSortOrder}");
-            var contentIds = ListWithNulls(AppConstants.Content); 
+            var contentIds = ListWithNulls(Parts.Content); 
             var presentationIds = GetPresentationIdWithSameLengthAsContent();
             var contentId = contentIds[sortOrder];
             var presentationId = presentationIds[sortOrder];
@@ -303,15 +303,15 @@ namespace ToSic.SexyContent
             contentIds.Insert(destinationSortOrder, contentId);
             presentationIds.Insert(destinationSortOrder, presentationId);
 
-            var list = PrepareSavePackage(AppConstants.Content, contentIds);
-            list = PrepareSavePackage(AppConstants.Presentation, presentationIds, list);
+            var list = PrepareSavePackage(Parts.Content, contentIds);
+            list = PrepareSavePackage(Parts.Presentation, presentationIds, list);
             SaveChangedLists(list);
         }
 
         public bool ReorderAll(int[] newSequence)
         {
             Log.Add(() => $"reorder all to:[{string.Join(",", newSequence)}]");
-            var oldCIds = ListWithNulls(AppConstants.Content);
+            var oldCIds = ListWithNulls(Parts.Content);
             var oldPIds = GetPresentationIdWithSameLengthAsContent();
 
             // some error checks
@@ -330,8 +330,8 @@ namespace ToSic.SexyContent
                 newPresIds.Add(pId);
             }
 
-            var list = PrepareSavePackage(AppConstants.Content, newContentIds);
-            list = PrepareSavePackage(AppConstants.Presentation, newPresIds, list);
+            var list = PrepareSavePackage(Parts.Content, newContentIds);
+            list = PrepareSavePackage(Parts.Presentation, newPresIds, list);
             SaveChangedLists(list);
 
             return true;

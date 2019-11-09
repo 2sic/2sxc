@@ -16,6 +16,7 @@ using ToSic.SexyContent.Search;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Views;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7.Search
@@ -94,7 +95,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             var searchInfoDictionary = new Dictionary<string, List<ISearchInfo>>();
 
             // Get DNN SearchDocuments from 2Sexy SearchInfos
-            foreach (var stream in dataSource.Out.Where(p => p.Key != AppConstants.Presentation && p.Key != AppConstants.ListPresentation))
+            foreach (var stream in dataSource.Out.Where(p => p.Key != Parts.Presentation && p.Key != Parts.ListPresentation))
             {
                 
                 var entities = stream.Value.List;

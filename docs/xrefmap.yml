@@ -554,6 +554,77 @@ references:
   commentId: N:ToSic.Eav.Data
   fullName: ToSic.Eav.Data
   nameWithType: ToSic.Eav.Data
+- uid: ToSic.Eav.Data.EntityBasedType
+  name: EntityBasedType
+  href: api/ToSic.Eav.Data.EntityBasedType.html
+  commentId: T:ToSic.Eav.Data.EntityBasedType
+  fullName: ToSic.Eav.Data.EntityBasedType
+  nameWithType: EntityBasedType
+- uid: ToSic.Eav.Data.EntityBasedType.#ctor(ToSic.Eav.Data.IEntity)
+  name: EntityBasedType(IEntity)
+  href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType__ctor_ToSic_Eav_Data_IEntity_
+  commentId: M:ToSic.Eav.Data.EntityBasedType.#ctor(ToSic.Eav.Data.IEntity)
+  fullName: ToSic.Eav.Data.EntityBasedType.EntityBasedType(ToSic.Eav.Data.IEntity)
+  nameWithType: EntityBasedType.EntityBasedType(IEntity)
+- uid: ToSic.Eav.Data.EntityBasedType.#ctor*
+  name: EntityBasedType
+  href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType__ctor_
+  commentId: Overload:ToSic.Eav.Data.EntityBasedType.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.EntityBasedType.EntityBasedType
+  nameWithType: EntityBasedType.EntityBasedType
+- uid: ToSic.Eav.Data.EntityBasedType.Entity
+  name: Entity
+  href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Entity
+  commentId: P:ToSic.Eav.Data.EntityBasedType.Entity
+  fullName: ToSic.Eav.Data.EntityBasedType.Entity
+  nameWithType: EntityBasedType.Entity
+- uid: ToSic.Eav.Data.EntityBasedType.Entity*
+  name: Entity
+  href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Entity_
+  commentId: Overload:ToSic.Eav.Data.EntityBasedType.Entity
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.EntityBasedType.Entity
+  nameWithType: EntityBasedType.Entity
+- uid: ToSic.Eav.Data.EntityBasedType.Guid
+  name: Guid
+  href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Guid
+  commentId: P:ToSic.Eav.Data.EntityBasedType.Guid
+  fullName: ToSic.Eav.Data.EntityBasedType.Guid
+  nameWithType: EntityBasedType.Guid
+- uid: ToSic.Eav.Data.EntityBasedType.Guid*
+  name: Guid
+  href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Guid_
+  commentId: Overload:ToSic.Eav.Data.EntityBasedType.Guid
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.EntityBasedType.Guid
+  nameWithType: EntityBasedType.Guid
+- uid: ToSic.Eav.Data.EntityBasedType.Id
+  name: Id
+  href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Id
+  commentId: P:ToSic.Eav.Data.EntityBasedType.Id
+  fullName: ToSic.Eav.Data.EntityBasedType.Id
+  nameWithType: EntityBasedType.Id
+- uid: ToSic.Eav.Data.EntityBasedType.Id*
+  name: Id
+  href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Id_
+  commentId: Overload:ToSic.Eav.Data.EntityBasedType.Id
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.EntityBasedType.Id
+  nameWithType: EntityBasedType.Id
+- uid: ToSic.Eav.Data.EntityBasedType.Title
+  name: Title
+  href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Title
+  commentId: P:ToSic.Eav.Data.EntityBasedType.Title
+  fullName: ToSic.Eav.Data.EntityBasedType.Title
+  nameWithType: EntityBasedType.Title
+- uid: ToSic.Eav.Data.EntityBasedType.Title*
+  name: Title
+  href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Title_
+  commentId: Overload:ToSic.Eav.Data.EntityBasedType.Title
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.EntityBasedType.Title
+  nameWithType: EntityBasedType.Title
 - uid: ToSic.Eav.Data.IAttributeBase
   name: IAttributeBase
   href: api/ToSic.Eav.Data.IAttributeBase.html
@@ -985,6 +1056,64 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.IEntity.Version
   nameWithType: IEntity.Version
+- uid: ToSic.Eav.Data.IEntityBasedType
+  name: IEntityBasedType
+  href: api/ToSic.Eav.Data.IEntityBasedType.html
+  commentId: T:ToSic.Eav.Data.IEntityBasedType
+  fullName: ToSic.Eav.Data.IEntityBasedType
+  nameWithType: IEntityBasedType
+- uid: ToSic.Eav.Data.IEntityBasedType.Entity
+  name: Entity
+  href: api/ToSic.Eav.Data.IEntityBasedType.html#ToSic_Eav_Data_IEntityBasedType_Entity
+  commentId: P:ToSic.Eav.Data.IEntityBasedType.Entity
+  fullName: ToSic.Eav.Data.IEntityBasedType.Entity
+  nameWithType: IEntityBasedType.Entity
+- uid: ToSic.Eav.Data.IEntityBasedType.Entity*
+  name: Entity
+  href: api/ToSic.Eav.Data.IEntityBasedType.html#ToSic_Eav_Data_IEntityBasedType_Entity_
+  commentId: Overload:ToSic.Eav.Data.IEntityBasedType.Entity
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.IEntityBasedType.Entity
+  nameWithType: IEntityBasedType.Entity
+- uid: ToSic.Eav.Data.IEntityBasedType.Guid
+  name: Guid
+  href: api/ToSic.Eav.Data.IEntityBasedType.html#ToSic_Eav_Data_IEntityBasedType_Guid
+  commentId: P:ToSic.Eav.Data.IEntityBasedType.Guid
+  fullName: ToSic.Eav.Data.IEntityBasedType.Guid
+  nameWithType: IEntityBasedType.Guid
+- uid: ToSic.Eav.Data.IEntityBasedType.Guid*
+  name: Guid
+  href: api/ToSic.Eav.Data.IEntityBasedType.html#ToSic_Eav_Data_IEntityBasedType_Guid_
+  commentId: Overload:ToSic.Eav.Data.IEntityBasedType.Guid
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.IEntityBasedType.Guid
+  nameWithType: IEntityBasedType.Guid
+- uid: ToSic.Eav.Data.IEntityBasedType.Id
+  name: Id
+  href: api/ToSic.Eav.Data.IEntityBasedType.html#ToSic_Eav_Data_IEntityBasedType_Id
+  commentId: P:ToSic.Eav.Data.IEntityBasedType.Id
+  fullName: ToSic.Eav.Data.IEntityBasedType.Id
+  nameWithType: IEntityBasedType.Id
+- uid: ToSic.Eav.Data.IEntityBasedType.Id*
+  name: Id
+  href: api/ToSic.Eav.Data.IEntityBasedType.html#ToSic_Eav_Data_IEntityBasedType_Id_
+  commentId: Overload:ToSic.Eav.Data.IEntityBasedType.Id
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.IEntityBasedType.Id
+  nameWithType: IEntityBasedType.Id
+- uid: ToSic.Eav.Data.IEntityBasedType.Title
+  name: Title
+  href: api/ToSic.Eav.Data.IEntityBasedType.html#ToSic_Eav_Data_IEntityBasedType_Title
+  commentId: P:ToSic.Eav.Data.IEntityBasedType.Title
+  fullName: ToSic.Eav.Data.IEntityBasedType.Title
+  nameWithType: IEntityBasedType.Title
+- uid: ToSic.Eav.Data.IEntityBasedType.Title*
+  name: Title
+  href: api/ToSic.Eav.Data.IEntityBasedType.html#ToSic_Eav_Data_IEntityBasedType_Title_
+  commentId: Overload:ToSic.Eav.Data.IEntityBasedType.Title
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.IEntityBasedType.Title
+  nameWithType: IEntityBasedType.Title
 - uid: ToSic.Eav.Data.IEntityLight
   name: IEntityLight
   href: api/ToSic.Eav.Data.IEntityLight.html
@@ -3588,6 +3717,35 @@ references:
   commentId: T:ToSic.Sxc.Dnn.IRazor
   fullName: ToSic.Sxc.Dnn.IRazor
   nameWithType: IRazor
+- uid: ToSic.Sxc.Dnn.IRazor.CustomizeData
+  name: CustomizeData()
+  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeData
+  commentId: M:ToSic.Sxc.Dnn.IRazor.CustomizeData
+  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeData()
+  nameWithType: IRazor.CustomizeData()
+- uid: ToSic.Sxc.Dnn.IRazor.CustomizeData*
+  name: CustomizeData
+  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeData_
+  commentId: Overload:ToSic.Sxc.Dnn.IRazor.CustomizeData
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeData
+  nameWithType: IRazor.CustomizeData
+- uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.SexyContent.Search.ISearchInfo}},DotNetNuke.Entities.Modules.ModuleInfo,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchInfo>>, ModuleInfo, DateTime)
+  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_SexyContent_Search_ISearchInfo___DotNetNuke_Entities_Modules_ModuleInfo_System_DateTime_
+  commentId: M:ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.SexyContent.Search.ISearchInfo}},DotNetNuke.Entities.Modules.ModuleInfo,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchInfo)), ModuleInfo, DateTime)
+  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.SexyContent.Search.ISearchInfo>>, DotNetNuke.Entities.Modules.ModuleInfo, System.DateTime)
+  fullName.vb: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.SexyContent.Search.ISearchInfo)), DotNetNuke.Entities.Modules.ModuleInfo, System.DateTime)
+  nameWithType: IRazor.CustomizeSearch(Dictionary<String, List<ISearchInfo>>, ModuleInfo, DateTime)
+  nameWithType.vb: IRazor.CustomizeSearch(Dictionary(Of String, List(Of ISearchInfo)), ModuleInfo, DateTime)
+- uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch*
+  name: CustomizeSearch
+  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_
+  commentId: Overload:ToSic.Sxc.Dnn.IRazor.CustomizeSearch
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeSearch
+  nameWithType: IRazor.CustomizeSearch
 - uid: ToSic.Sxc.Dnn.IRazor.Html
   name: Html
   href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_Html
@@ -3601,6 +3759,19 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Dnn.IRazor.Html
   nameWithType: IRazor.Html
+- uid: ToSic.Sxc.Dnn.IRazor.InstancePurpose
+  name: InstancePurpose
+  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_InstancePurpose
+  commentId: P:ToSic.Sxc.Dnn.IRazor.InstancePurpose
+  fullName: ToSic.Sxc.Dnn.IRazor.InstancePurpose
+  nameWithType: IRazor.InstancePurpose
+- uid: ToSic.Sxc.Dnn.IRazor.InstancePurpose*
+  name: InstancePurpose
+  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_InstancePurpose_
+  commentId: Overload:ToSic.Sxc.Dnn.IRazor.InstancePurpose
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.IRazor.InstancePurpose
+  nameWithType: IRazor.InstancePurpose
 - uid: ToSic.Sxc.Engines
   name: ToSic.Sxc.Engines
   href: api/ToSic.Sxc.Engines.html
@@ -3613,6 +3784,32 @@ references:
   commentId: T:ToSic.Sxc.Engines.IEngine
   fullName: ToSic.Sxc.Engines.IEngine
   nameWithType: IEngine
+- uid: ToSic.Sxc.Engines.IEngine.CustomizeData
+  name: CustomizeData()
+  href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_CustomizeData
+  commentId: M:ToSic.Sxc.Engines.IEngine.CustomizeData
+  fullName: ToSic.Sxc.Engines.IEngine.CustomizeData()
+  nameWithType: IEngine.CustomizeData()
+- uid: ToSic.Sxc.Engines.IEngine.CustomizeData*
+  name: CustomizeData
+  href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_CustomizeData_
+  commentId: Overload:ToSic.Sxc.Engines.IEngine.CustomizeData
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.IEngine.CustomizeData
+  nameWithType: IEngine.CustomizeData
+- uid: ToSic.Sxc.Engines.IEngine.Render
+  name: Render()
+  href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Render
+  commentId: M:ToSic.Sxc.Engines.IEngine.Render
+  fullName: ToSic.Sxc.Engines.IEngine.Render()
+  nameWithType: IEngine.Render()
+- uid: ToSic.Sxc.Engines.IEngine.Render*
+  name: Render
+  href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Render_
+  commentId: Overload:ToSic.Sxc.Engines.IEngine.Render
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.IEngine.Render
+  nameWithType: IEngine.Render
 - uid: ToSic.Sxc.IApp
   name: IApp
   href: api/ToSic.Sxc.IApp.html
@@ -4122,3 +4319,119 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.ILinkHelper.To
   nameWithType: ILinkHelper.To
+- uid: ToSic.Sxc.Views
+  name: ToSic.Sxc.Views
+  href: api/ToSic.Sxc.Views.html
+  commentId: N:ToSic.Sxc.Views
+  fullName: ToSic.Sxc.Views
+  nameWithType: ToSic.Sxc.Views
+- uid: ToSic.Sxc.Views.IView
+  name: IView
+  href: api/ToSic.Sxc.Views.IView.html
+  commentId: T:ToSic.Sxc.Views.IView
+  fullName: ToSic.Sxc.Views.IView
+  nameWithType: IView
+- uid: ToSic.Sxc.Views.IView.IsHidden
+  name: IsHidden
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_IsHidden
+  commentId: P:ToSic.Sxc.Views.IView.IsHidden
+  fullName: ToSic.Sxc.Views.IView.IsHidden
+  nameWithType: IView.IsHidden
+- uid: ToSic.Sxc.Views.IView.IsHidden*
+  name: IsHidden
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_IsHidden_
+  commentId: Overload:ToSic.Sxc.Views.IView.IsHidden
+  isSpec: "True"
+  fullName: ToSic.Sxc.Views.IView.IsHidden
+  nameWithType: IView.IsHidden
+- uid: ToSic.Sxc.Views.IView.Location
+  name: Location
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_Location
+  commentId: P:ToSic.Sxc.Views.IView.Location
+  fullName: ToSic.Sxc.Views.IView.Location
+  nameWithType: IView.Location
+- uid: ToSic.Sxc.Views.IView.Location*
+  name: Location
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_Location_
+  commentId: Overload:ToSic.Sxc.Views.IView.Location
+  isSpec: "True"
+  fullName: ToSic.Sxc.Views.IView.Location
+  nameWithType: IView.Location
+- uid: ToSic.Sxc.Views.IView.Name
+  name: Name
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_Name
+  commentId: P:ToSic.Sxc.Views.IView.Name
+  fullName: ToSic.Sxc.Views.IView.Name
+  nameWithType: IView.Name
+- uid: ToSic.Sxc.Views.IView.Name*
+  name: Name
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_Name_
+  commentId: Overload:ToSic.Sxc.Views.IView.Name
+  isSpec: "True"
+  fullName: ToSic.Sxc.Views.IView.Name
+  nameWithType: IView.Name
+- uid: ToSic.Sxc.Views.IView.Path
+  name: Path
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_Path
+  commentId: P:ToSic.Sxc.Views.IView.Path
+  fullName: ToSic.Sxc.Views.IView.Path
+  nameWithType: IView.Path
+- uid: ToSic.Sxc.Views.IView.Path*
+  name: Path
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_Path_
+  commentId: Overload:ToSic.Sxc.Views.IView.Path
+  isSpec: "True"
+  fullName: ToSic.Sxc.Views.IView.Path
+  nameWithType: IView.Path
+- uid: ToSic.Sxc.Views.IView.Query
+  name: Query
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_Query
+  commentId: P:ToSic.Sxc.Views.IView.Query
+  fullName: ToSic.Sxc.Views.IView.Query
+  nameWithType: IView.Query
+- uid: ToSic.Sxc.Views.IView.Query*
+  name: Query
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_Query_
+  commentId: Overload:ToSic.Sxc.Views.IView.Query
+  isSpec: "True"
+  fullName: ToSic.Sxc.Views.IView.Query
+  nameWithType: IView.Query
+- uid: ToSic.Sxc.Views.IView.Type
+  name: Type
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_Type
+  commentId: P:ToSic.Sxc.Views.IView.Type
+  fullName: ToSic.Sxc.Views.IView.Type
+  nameWithType: IView.Type
+- uid: ToSic.Sxc.Views.IView.Type*
+  name: Type
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_Type_
+  commentId: Overload:ToSic.Sxc.Views.IView.Type
+  isSpec: "True"
+  fullName: ToSic.Sxc.Views.IView.Type
+  nameWithType: IView.Type
+- uid: ToSic.Sxc.Views.IView.UrlIdentifier
+  name: UrlIdentifier
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_UrlIdentifier
+  commentId: P:ToSic.Sxc.Views.IView.UrlIdentifier
+  fullName: ToSic.Sxc.Views.IView.UrlIdentifier
+  nameWithType: IView.UrlIdentifier
+- uid: ToSic.Sxc.Views.IView.UrlIdentifier*
+  name: UrlIdentifier
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_UrlIdentifier_
+  commentId: Overload:ToSic.Sxc.Views.IView.UrlIdentifier
+  isSpec: "True"
+  fullName: ToSic.Sxc.Views.IView.UrlIdentifier
+  nameWithType: IView.UrlIdentifier
+- uid: ToSic.Sxc.Views.IView.UseForList
+  name: UseForList
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_UseForList
+  commentId: P:ToSic.Sxc.Views.IView.UseForList
+  fullName: ToSic.Sxc.Views.IView.UseForList
+  nameWithType: IView.UseForList
+- uid: ToSic.Sxc.Views.IView.UseForList*
+  name: UseForList
+  href: api/ToSic.Sxc.Views.IView.html#ToSic_Sxc_Views_IView_UseForList_
+  commentId: Overload:ToSic.Sxc.Views.IView.UseForList
+  isSpec: "True"
+  fullName: ToSic.Sxc.Views.IView.UseForList
+  nameWithType: IView.UseForList

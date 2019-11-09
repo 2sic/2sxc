@@ -184,14 +184,12 @@ namespace ToSic.SexyContent.Razor
         }
 
 
-        /// <summary>
-        /// Override this to have your code change the (already initialized) Data object. 
-        /// If you don't override this, nothing will be changed/customized. 
-        /// </summary>
+        /// <inheritdoc />
         public virtual void CustomizeData()
         {
         }
 
+        /// <inheritdoc />
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
         {
         }

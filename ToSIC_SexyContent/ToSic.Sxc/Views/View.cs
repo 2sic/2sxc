@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -49,13 +48,13 @@ namespace ToSic.Sxc.Views
         {
             switch (groupPart.ToLower())
             {
-                case AppConstants.ContentLower:
+                case Parts.ContentLower:
                     return ContentType;
-                case AppConstants.PresentationLower:
+                case Parts.PresentationLower:
                     return PresentationType;
-                case "listcontent":
+                case Parts.ListContentLower:
                     return HeaderType;
-                case "listpresentation":
+                case Parts.ListPresentationLower:
                     return HeaderPresentationType;
                 default:
                     throw new NotSupportedException("Unknown group part: " + groupPart);

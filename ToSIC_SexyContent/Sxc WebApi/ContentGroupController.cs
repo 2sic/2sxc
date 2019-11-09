@@ -7,6 +7,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Sxc.Views;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -39,14 +40,14 @@ namespace ToSic.SexyContent.WebApi
             var contentGroup = GetContentGroup(guid);
 
             // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
-            var set = part == AppConstants.ContentLower ? contentGroup.Content : contentGroup.ListContent;
+            var set = part == Parts.ContentLower ? contentGroup.Content : contentGroup.ListContent;
 
             // not sure what this check is for, just leaving it in for now (2015-09-19 2dm)
             if (set == null || contentGroup.View == null)
                 throw new Exception("Cannot find content group");
 
 
-            var attributeSetName = part == AppConstants.ContentLower
+            var attributeSetName = part == Parts.ContentLower
                 ? contentGroup.View.ContentType
                 : contentGroup.View.HeaderType;
 
