@@ -12,6 +12,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Views;
 using App = ToSic.SexyContent.App;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Engines
 {
     public abstract class EngineBase : HasLog, IEngine
     {
-        protected Template Template;
+        protected IView Template;
         protected string TemplatePath;
         protected App App;
         protected IInstanceInfo InstInfo;
@@ -34,7 +35,7 @@ namespace ToSic.Sxc.Engines
         protected EngineBase() : base("Sxc.EngBas")
         { }
 
-        public void Init(Template template, App app, IInstanceInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, ILog parentLog)
+        public void Init(IView template, App app, IInstanceInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, ILog parentLog)
         {
             var templatePath = VirtualPathUtility.Combine(SexyContent.Internal.TemplateHelpers.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
 
@@ -105,8 +106,8 @@ namespace ToSic.Sxc.Engines
             if (Template == null)
                 throw new RenderingException("Template Configuration Missing");
 
-            if (Template.ContentTypeStaticName != "" &&
-                Eav.DataSource.GetCache(App.ZoneId, App.AppId).GetContentType(Template.ContentTypeStaticName) == null)
+            if (Template.ContentType != "" &&
+                Eav.DataSource.GetCache(App.ZoneId, App.AppId).GetContentType(Template.ContentType) == null)
                 throw new RenderingException("The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
 
         }
@@ -115,7 +116,7 @@ namespace ToSic.Sxc.Engines
 
         private void CheckExpectedNoRenderConditions()
         {
-            if (Template.ContentTypeStaticName != "" && Template.ContentDemoEntity == null &&
+            if (Template.ContentType != "" && Template.ContentItem == null &&
                 Sexy.ContentGroup.Content.All(e => e == null))
             {
                 PreRenderStatus = RenderStatusType.MissingData;

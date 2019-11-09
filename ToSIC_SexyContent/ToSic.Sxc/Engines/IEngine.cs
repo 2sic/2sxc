@@ -6,6 +6,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Views;
 using App = ToSic.SexyContent.App;
 
 namespace ToSic.Sxc.Engines
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.Engines
         /// so the constructor is off-limits. 
         /// </summary>
         [PrivateApi]
-        void Init(Template template, App app, IInstanceInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, ILog parentLog);
+        void Init(IView template, App app, IInstanceInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, ILog parentLog);
 
         /// <summary>
         /// Renders a template, returning a string with the rendered template.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using ToSic.Sxc.Engines.Token;
+using ToSic.Sxc.Views;
 
 namespace ToSic.Sxc.Engines
 {
@@ -13,11 +14,11 @@ namespace ToSic.Sxc.Engines
             Razor = 1
         }
 
-        public static IEngine CreateEngine(Template template)
+        public static IEngine CreateEngine(IView view)
         {
             Type engineType = null;
 
-            switch (template.IsRazor)
+            switch (view.IsRazor)
             {
                 case true:
                     // TODO

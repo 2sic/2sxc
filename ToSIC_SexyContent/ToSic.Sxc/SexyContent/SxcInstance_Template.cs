@@ -1,31 +1,30 @@
 ﻿using System.Linq;
-using ToSic.Eav.Apps;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Views;
 
 namespace ToSic.SexyContent
 {
     public partial class SxcInstance
     {
 
-        public Template Template
+        public IView View
         {
-            get => ContentBlock.Template;
-            set => ContentBlock.Template = value;
+            get => ContentBlock.View;
+            set => ContentBlock.View = value;
         }
 
-        internal void SetTemplateOrOverrideFromUrl(Template defaultTemplate)
+        internal void SetTemplateOrOverrideFromUrl(IView defaultView)
         {
-            Template = defaultTemplate;
+            View = defaultView;
             // skif if not relevant or not yet initialized
             if (IsContentApp || App == null) return;
 
             // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
             var templateFromUrl = TryToGetTemplateBasedOnUrlParams();
             if (templateFromUrl != null)
-                Template = templateFromUrl;
+                View = templateFromUrl;
         }
 
-        private Template TryToGetTemplateBasedOnUrlParams()
+        private IView TryToGetTemplateBasedOnUrlParams()
         {
             Log.Add("template override - check");
             if (Parameters == null) return null;
@@ -35,9 +34,9 @@ namespace ToSic.SexyContent
                 $"{pair.Key}/{pair.Value}".ToLower());
 
 
-            foreach (var template in App.TemplateManager.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
+            foreach (var template in App.ViewManager.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.UrlIdentifier)))
             {
-                var desiredFullViewName = template.ViewNameInUrl.ToLower();
+                var desiredFullViewName = template.UrlIdentifier.ToLower();
                 if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12
                 {
                     var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);

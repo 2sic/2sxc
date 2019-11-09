@@ -3,6 +3,7 @@ using ToSic.Eav.Logging;
 using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Views;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
@@ -33,7 +34,7 @@ namespace ToSic.SexyContent.ContentBlocks
         public int ParentFieldSortOrder => 0;
 
         #region Template and extensive template-choice initialization
-        private Template _template;
+        private IView _view;
 
         // ensure the data is also set correctly...
         // Sequence of determining template
@@ -42,15 +43,15 @@ namespace ToSic.SexyContent.ContentBlocks
         // 5. If nothing exists, ensure system knows nothing applied 
         // #. possible override: If specifically defined in some object calls (like web-api), use that (set when opening this object?)
         // #. possible override in url - and allowed by permissions (admin/host), use that
-        public Template Template
+        public IView View
         {
             get 
             {
-                return _template; 
+                return _view; 
             }
             set
             {
-                _template = value;
+                _view = value;
                 _dataSource = null; // reset this
             }
         }

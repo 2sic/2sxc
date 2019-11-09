@@ -11,9 +11,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
-using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Sxc.Engines;
@@ -71,7 +69,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
 
             var contentGroup = sexy.App.ContentGroupManager.GetInstanceContentGroup(dnnModule.ModuleID, dnnModule.TabID);
 
-            var template = contentGroup.Template;
+            var template = contentGroup.View;
 
             // This list will hold all EAV entities to be indexed
             var dataSource = sexy.Data;

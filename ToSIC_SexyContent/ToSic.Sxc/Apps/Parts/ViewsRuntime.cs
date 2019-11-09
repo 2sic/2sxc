@@ -9,17 +9,17 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Internal;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Views;
 
-// note: not sure if the final namespace should be Sxc.Apps or Sxc.Templates
+// note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
 namespace ToSic.Sxc.Apps
 {
-	public class TemplatesRuntime: HasLog
+	public class ViewsRuntime: HasLog
 	{
 		public readonly int ZoneId;
 		public readonly int AppId;
 
-		public TemplatesRuntime(int zoneId, int appId, ILog parentLog): base("App.TmplMg", parentLog)
+		public ViewsRuntime(int zoneId, int appId, ILog parentLog): base("App.TmplMg", parentLog)
 		{
 			ZoneId = zoneId;
 			AppId = appId;
@@ -37,10 +37,10 @@ namespace ToSic.Sxc.Apps
 			return dataSource;
 		}
 
-		public IEnumerable<Template> GetAllTemplates() 
-            => TemplateDataSource().List.Select(p => new Template(p/*, Log*/)).OrderBy(p => p.Name);
+		public IEnumerable<IView> GetAllTemplates() 
+            => TemplateDataSource().List.Select(p => new View(p)).OrderBy(p => p.Name);
 
-		public Template GetTemplate(int templateId)
+		public IView GetTemplate(int templateId)
 		{
 			var dataSource = TemplateDataSource();
 			dataSource = DataSource.GetDataSource<EntityIdFilter>(ZoneId, AppId, dataSource);
@@ -50,20 +50,20 @@ namespace ToSic.Sxc.Apps
 			if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");
 
-			return new Template(templateEntity);
+			return new View(templateEntity);
 		}
 
         public bool DeleteTemplate(int templateId)
 		{
             // really get template first, to be sure it is a template
 			var template = GetTemplate(templateId);
-            return new AppManager(ZoneId, AppId).Entities.Delete(template.TemplateId);
+            return new AppManager(ZoneId, AppId).Entities.Delete(template.Id);
 		}
         
 
         internal IEnumerable<TemplateUiInfo> GetCompatibleTemplates(SexyContent.App app, ContentGroup contentGroup)
 	    {
-	        IEnumerable<Template> availableTemplates;
+	        IEnumerable<IView> availableTemplates;
 	        var items = contentGroup.Content;
 
             // if any items were already initialized...
@@ -80,9 +80,9 @@ namespace ToSic.Sxc.Apps
 
 	        return availableTemplates.Select(t => new TemplateUiInfo
 	        {
-	            TemplateId = t.TemplateId,
+	            TemplateId = t.Id,
 	            Name = t.Name,
-	            ContentTypeStaticName = t.ContentTypeStaticName,
+	            ContentTypeStaticName = t.ContentType,
 	            IsHidden = t.IsHidden,
 	            Thumbnail = TemplateHelpers.GetTemplateThumbnail(app, t.Location, t.Path)
 	        });
@@ -94,16 +94,16 @@ namespace ToSic.Sxc.Apps
         /// </summary>
         /// <param name="contentGroup"></param>
         /// <returns></returns>
-	    private IEnumerable<Template> GetFullyCompatibleTemplates(ContentGroup contentGroup)
+	    private IEnumerable<IView> GetFullyCompatibleTemplates(ContentGroup contentGroup)
         {
             var isList = contentGroup.Content.Count > 1;
 
             var compatibleTemplates = GetAllTemplates().Where(t => t.UseForList || !isList);
             compatibleTemplates = compatibleTemplates
-                .Where(t => contentGroup.Content.All(c => c == null) || contentGroup.Content.First(e => e != null).Type.StaticName == t.ContentTypeStaticName)
-                .Where(t => contentGroup.Presentation.All(c => c == null) || contentGroup.Presentation.First(e => e != null).Type.StaticName == t.PresentationTypeStaticName)
-                .Where(t => contentGroup.ListContent.All(c => c == null) || contentGroup.ListContent.First(e => e != null).Type.StaticName == t.ListContentTypeStaticName)
-                .Where(t => contentGroup.ListPresentation.All(c => c == null) || contentGroup.ListPresentation.First(e => e != null).Type.StaticName == t.ListPresentationTypeStaticName);
+                .Where(t => contentGroup.Content.All(c => c == null) || contentGroup.Content.First(e => e != null).Type.StaticName == t.ContentType)
+                .Where(t => contentGroup.Presentation.All(c => c == null) || contentGroup.Presentation.First(e => e != null).Type.StaticName == t.PresentationType)
+                .Where(t => contentGroup.ListContent.All(c => c == null) || contentGroup.ListContent.First(e => e != null).Type.StaticName == t.HeaderType)
+                .Where(t => contentGroup.ListPresentation.All(c => c == null) || contentGroup.ListPresentation.First(e => e != null).Type.StaticName == t.HeaderPresentationType);
 
             return compatibleTemplates;
         }
@@ -116,7 +116,7 @@ namespace ToSic.Sxc.Apps
             var serializer = new Serializer();
 
             return new AppRuntime(ZoneId, AppId, Log).ContentTypes.FromScope(Settings.AttributeSetScope) 
-                .Where(ct => templates.Any(t => t.ContentTypeStaticName == ct.StaticName)) // must exist in at least 1 template
+                .Where(ct => templates.Any(t => t.ContentType == ct.StaticName)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
                 {
@@ -124,8 +124,8 @@ namespace ToSic.Sxc.Apps
                     return new ContentTypeUiInfo {
                         StaticName = ct.StaticName,
                         Name = ct.Name,
-                        IsHidden = visible.All(t => t.ContentTypeStaticName != ct.StaticName),   // must check if *any* template is visible, otherise tell the UI that it's hidden
-                        Thumbnail = metadata?.GetBestValue(AppConstants.TemplateIcon, true)?.ToString(),
+                        IsHidden = visible.All(t => t.ContentType != ct.StaticName),   // must check if *any* template is visible, otherise tell the UI that it's hidden
+                        Thumbnail = metadata?.GetBestValue(View.TemplateIcon, true)?.ToString(),
                         Metadata = serializer.Prepare(metadata)
                     };
                 });

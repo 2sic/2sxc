@@ -20,8 +20,8 @@ namespace ToSic.Sxc.Apps
         /// The template management subsystem
         /// </summary>
         [PrivateApi("in our official Architecture there should be no templates at the Eav.Apps level.")]
-        public TemplatesManager Templates => _templates ?? (_templates = new TemplatesManager(this, Log));
-        private TemplatesManager _templates;
+        public ViewsManager Views => _templates ?? (_templates = new ViewsManager(this, Log));
+        private ViewsManager _templates;
 
 
     }

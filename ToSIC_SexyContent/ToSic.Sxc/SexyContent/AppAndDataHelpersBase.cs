@@ -4,12 +4,10 @@ using System.Linq;
 using System.Threading;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
-
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
@@ -235,7 +233,7 @@ namespace ToSic.SexyContent
         private void TryToBuildHeaderObject()
         {
             Log.Add("try to build ListContent (header) object");
-            if (Data == null || SxcInstance.Template == null) return;
+            if (Data == null || SxcInstance.View == null) return;
             if (!Data.Out.ContainsKey(AppConstants.ListContent)) return;
 
             var listEntity = Data[AppConstants.ListContent].List.FirstOrDefault();
@@ -262,7 +260,7 @@ namespace ToSic.SexyContent
             Log.Add("try to build List and Content objects");
             _list = new List<Element>();
 
-            if (Data == null || SxcInstance.Template == null) return;
+            if (Data == null || SxcInstance.View == null) return;
             if (!Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
             var entities = Data.List.ToList();

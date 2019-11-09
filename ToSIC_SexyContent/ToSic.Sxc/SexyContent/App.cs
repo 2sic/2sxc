@@ -55,10 +55,10 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        #region App-Level TemplateManager, ContentGroupManager, EavContext --> must move to EAV some time
-        private TemplatesRuntime _templateManager;
-        public TemplatesRuntime TemplateManager => _templateManager 
-            ?? (_templateManager = new TemplatesRuntime(ZoneId, AppId, Log));
+        #region App-Level ViewManager, ContentGroupManager, EavContext --> must move to EAV some time
+        private ViewsRuntime _viewManager;
+        public ViewsRuntime ViewManager => _viewManager 
+            ?? (_viewManager = new ViewsRuntime(ZoneId, AppId, Log));
 
         private ContentGroupManager _contentGroupManager;
         public ContentGroupManager ContentGroupManager => _contentGroupManager 

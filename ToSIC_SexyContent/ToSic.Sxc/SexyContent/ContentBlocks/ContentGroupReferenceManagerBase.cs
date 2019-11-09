@@ -78,7 +78,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
         public IEnumerable<TemplateUiInfo> GetSelectableTemplates() 
-            => SxcContext.App?.TemplateManager.GetCompatibleTemplates(SxcContext.App, ContentGroup);        
+            => SxcContext.App?.ViewManager.GetCompatibleTemplates(SxcContext.App, ContentGroup);        
 
 
         public IEnumerable<AppUiInfo> GetSelectableApps()
@@ -98,7 +98,7 @@ namespace ToSic.SexyContent.ContentBlocks
         }
 
         public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes()
-            => SxcContext.App?.TemplateManager.GetContentTypesWithStatus();
+            => SxcContext.App?.ViewManager.GetContentTypesWithStatus();
         
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {

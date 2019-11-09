@@ -42,13 +42,13 @@ namespace ToSic.SexyContent.WebApi
             var set = part == AppConstants.ContentLower ? contentGroup.Content : contentGroup.ListContent;
 
             // not sure what this check is for, just leaving it in for now (2015-09-19 2dm)
-            if (set == null || contentGroup.Template == null)
+            if (set == null || contentGroup.View == null)
                 throw new Exception("Cannot find content group");
 
 
             var attributeSetName = part == AppConstants.ContentLower
-                ? contentGroup.Template.ContentTypeStaticName
-                : contentGroup.Template.ListContentTypeStaticName;
+                ? contentGroup.View.ContentType
+                : contentGroup.View.HeaderType;
 
             // if no type was defined in this set, then return an empty list as there is nothing to choose from
             if (string.IsNullOrEmpty(attributeSetName))
@@ -104,7 +104,7 @@ namespace ToSic.SexyContent.WebApi
                 Id = c?.EntityId ?? 0,
                 Guid = c?.EntityGuid ?? Guid.Empty,
                 Title = c?.GetBestTitle() ?? "",
-                Type = c?.Type.StaticName ?? cg.Template.ContentTypeStaticName
+                Type = c?.Type.StaticName ?? cg.View.ContentType
             }).ToList();
 
             return list;
@@ -150,7 +150,7 @@ namespace ToSic.SexyContent.WebApi
                 Id = header?.EntityId ?? 0,
                 Guid = header?.EntityGuid ?? Guid.Empty,
                 Title = header?.GetBestTitle() ?? "",
-                Type = header?.Type.StaticName?? cg.Template.ListContentTypeStaticName
+                Type = header?.Type.StaticName?? cg.View.HeaderType
             };
         }
 

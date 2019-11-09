@@ -85,16 +85,17 @@
     <Compile Include="Apps\CmsManager.cs" />
     <Compile Include="Apps\ImportExport\XmlImportFull.cs" />
     <Compile Include="Apps\ImportExport\XmlImportFull_Templates.cs" />
-    <Compile Include="Apps\Parts\TemplatesManager.cs" />
+    <Compile Include="Apps\Parts\ViewsManager.cs" />
     <Compile Include="Code\WithContext.cs" />
     <Compile Include="Code\CodeCompiler.cs" />
     <Compile Include="Compatibility\InputTypes.cs" />
     <Compile Include="Compatibility\RemoveInV10\Element.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\ClientContextInfo\Ui.cs" />
-    <Compile Include="Engines\Template_Constants.cs" />
+    <Compile Include="Views\IView.cs" />
+    <Compile Include="Views\View_Constants.cs" />
     <Compile Include="Engines\EngineDefinitionAttribute.cs" />
-    <Compile Include="Engines\Template.cs" />
+    <Compile Include="Views\View.cs" />
     <Compile Include="InterfacesCore\IDynamicCode.cs" />
     <Compile Include="InterfacesCore\IInPageEditingSystem.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
@@ -174,7 +175,7 @@
     <Compile Include="SexyContent\SxcInstance_Render.cs" />
     <Compile Include="SexyContent\SxcInstance_Template.cs" />
     <Compile Include="SexyContent\SxcInstance_EditUi.cs" />
-    <Compile Include="Apps\Parts\TemplatesRuntime.cs" />
+    <Compile Include="Apps\Parts\ViewsRuntime.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">

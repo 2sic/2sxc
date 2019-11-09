@@ -70,7 +70,7 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void SetAppId(int? appId) => ContentGroupReferenceManager.SetAppId(appId);
 
-        #region Get Apps, ContentTypes and Templates for UI
+        #region Get Apps, ContentTypes and Views for UI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -194,8 +194,8 @@ namespace ToSic.SexyContent.WebApi.View
                 // if a real templateid was specified, swap to that
                 if (templateId > 0)
                 {
-                    var template = cbToRender.App.TemplateManager.GetTemplate(templateId);
-                    cbToRender.SxcInstance.Template = template;
+                    var template = cbToRender.App.ViewManager.GetTemplate(templateId);
+                    cbToRender.SxcInstance.View = template;
                 }
 
                 var rendered = cbToRender.SxcInstance.Render().ToString();
@@ -285,7 +285,7 @@ namespace ToSic.SexyContent.WebApi.View
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 try
                 {
-                    var all = SxcInstance.App.TemplateManager.GetAllTemplates();
+                    var all = SxcInstance.App.ViewManager.GetAllTemplates();
                     if (all.Any())
                         return null;
                 }

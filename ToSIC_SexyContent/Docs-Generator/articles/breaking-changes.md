@@ -9,17 +9,25 @@ We're documenting it here to ensure you know what happened, in case you still ru
 
 ## Version 10
 
-Version 10 has a lot of small breaking changes because we restructured the internal API so it's consistent when we publish it. 
-All these things shouldn't affect you, because they were internal APIs, but in case it does - here's what we did.
+> Version 10 has a lot of small breaking changes because 
+> we restructured the internal API so it's consistent when we publish it. 
+> All these things shouldn't affect you, because they were internal APIs, 
+> but in case it does - here's what we did.
 
-#### Version 10.20.01
+#### Version 10.20.01 (2019-11-09)
 
+1. Internal code now uses the term `Header` instead of `ListContent`
 1. moved internal interfaces for engines (Razor/Token) to final namespaces `ToSic.Sxc.Engines`
 	1. `IEngine`
 	1. `EngineBase`
-	1. 
+	1. `ITokenEngine`
+	1. `IRazorEngine`
+1. corrected architecture - some template-management code had slipped into `Eav.Apps`, was moved back to `Sxc.Apps`
+1. The `Template` object was moved from `Eav.Apps` to `Sxc.Views` and we added an interface `IView`. 
+	We also renamed the internal properti `ViewNameInUrl` to `UrlIdentifier`. 
+1. To correct the API a CmsManager was created extending the AppManager, which is in charge of Views
 
-#### Version 10.20
+#### Version 10.20.00 (2019-11-05)
 
 1. the internal interface `IInPageEditingHelpers` was moved from `ToSic.SexyContent.Interfaces` to the namespace `ToSic.Sxc`
 1. the internal interface `IHtmlHelper` and `ILinkHelper` was moved to `ToSic.Sxc.Dnn`
@@ -62,3 +70,26 @@ All these things shouldn't affect you, because they were internal APIs, but in c
 	_it was used by Mobius Forms_
 1. moved `ToSic.Eav.Interfaces.IEntity` to `ToSic.Eav.Data.IEntity` - but preserved the old interface for compatibility
 	_it was used everywhere_
+
+##### Clean-Up, but not broken
+
+1. We're transitioning to the term `Header` instead of `ListContent` in templates.  
+	The Razor pages and WebApi have this starting now, while old terms still work. 
+	Note that we're _not_ creating a `HeaderPresentation`, because you should use `Header.Presentation`
+
+## Version 9
+
+#### Version 9.20.00 (2018-03-04)
+
+1. Minor breaking change in ADAM properties, like `Id` instead of `FolderID` which was a leftover of DNN naming.  
+	see full [blog post](https://2sxc.org/en/blog/post/working-with-the-breaking-change-adam-objects-2sxc-9-20)
+
+#### Version 09.08.00 (2017-11-28)
+
+1. Minor breaking change `List<IEntity>` instead of `Dictionary<int, IEntity>` on the `IDataSource`  
+	see full [blog post](https://2sxc.org/en/blog/post/fixing-the-breaking-change-in-2sxc-9-8-list-instead-of-dictionary)
+
+#### Version 09.03.00 (2017-10-08)
+
+1. Breaking change on inconsistent naming `ToSic.Eav.IEntity` instead of `ToSic.Eav.Interfaces.IEntity`.  
+	see full [blog post](https://2sxc.org/en/blog/post/fixing-the-breaking-change-on-tosic-eav-ientity-in-2sxc-9-3)

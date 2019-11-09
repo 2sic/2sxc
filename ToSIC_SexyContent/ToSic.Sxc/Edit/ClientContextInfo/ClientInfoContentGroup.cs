@@ -31,13 +31,13 @@ namespace ToSic.SexyContent.Edit.ClientContextInfo
             AppResourcesId = (sxc.App?.Resources?.Entity?.Attributes?.Count > 0)
                 ? sxc.App?.Resources?.EntityId : null;  // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
 
-            HasContent = sxc.Template != null && (sxc.ContentGroup?.Exists ?? false);
+            HasContent = sxc.View != null && (sxc.ContentGroup?.Exists ?? false);
 
             ZoneId = sxc.ZoneId ?? 0;
-            TemplateId = sxc.Template?.TemplateId ?? 0;
-            QueryId = sxc.Template?.Query?.EntityId; // will be null if not defined
-            ContentTypeName = sxc.Template?.ContentTypeStaticName ?? "";
-            IsList = sxc.ContentGroup?.Template?.UseForList ?? false;//  isCreated && ((sxc.ContentGroup?.Content?.Count ?? 0) > 1);
+            TemplateId = sxc.View?.Id ?? 0;
+            QueryId = sxc.View?.Query?.EntityId; // will be null if not defined
+            ContentTypeName = sxc.View?.ContentType ?? "";
+            IsList = sxc.ContentGroup?.View?.UseForList ?? false;//  isCreated && ((sxc.ContentGroup?.Content?.Count ?? 0) > 1);
             SupportsAjax = sxc.IsContentApp || sxc.App?.Configuration?.SupportsAjaxReload ?? false;
         }
     }

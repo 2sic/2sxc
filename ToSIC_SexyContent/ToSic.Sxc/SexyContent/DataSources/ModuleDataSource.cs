@@ -4,13 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.VisualQuery;
-using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.EAVExtensions;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Views;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.DataSources
@@ -110,19 +108,19 @@ namespace ToSic.SexyContent.DataSources
         private IEnumerable<IEntity> _content;
 
         private IEnumerable<IEntity> GetContent()
-            => _content ?? (_content = GetStream(ContentGroup.Content, Template.ContentDemoEntity,
-                   ContentGroup.Presentation, Template.PresentationDemoEntity, false));
+            => _content ?? (_content = GetStream(ContentGroup.Content, View.ContentItem,
+                   ContentGroup.Presentation, View.PresentationItem, false));
 
         private IEnumerable<IEntity> _listContent;
 
         private IEnumerable<IEntity> GetListContent()
-            => _listContent ?? (_listContent = GetStream(ContentGroup.ListContent, Template.ListContentDemoEntity,
-                   ContentGroup.ListPresentation, Template.ListPresentationDemoEntity, true));
+            => _listContent ?? (_listContent = GetStream(ContentGroup.ListContent, View.HeaderItem,
+                   ContentGroup.ListPresentation, View.HeaderPresentationItem, true));
 
         #endregion
 
-        private Template _template;
-		private Template Template => _template ?? (_template = OverrideTemplate ?? ContentGroup.Template);
+        private IView _view;
+		private IView View => _view ?? (_view = OverrideView ?? ContentGroup.View);
 
 	    private IEnumerable<IEntity> GetStream(List<IEntity> contentList, IEntity contentDemoEntity, List<IEntity> presentationList, IEntity presentationDemoEntity, bool isListHeader)
 	    {
@@ -131,7 +129,7 @@ namespace ToSic.SexyContent.DataSources
             {
                 var entitiesToDeliver = new List<IEntity>();
                 // if no template is defined, return empty list
-                if (ContentGroup.Template == null && OverrideTemplate == null)
+                if (ContentGroup.View == null && OverrideView == null)
                 {
                     Log.Add("no template definition - will return empty list");
                     return entitiesToDeliver;
@@ -244,7 +242,7 @@ namespace ToSic.SexyContent.DataSources
 
         public bool UseSxcInstanceContentGroup = false;
 
-        public Template OverrideTemplate { get; set; }
+        public IView OverrideView { get; set; }
 
 
         #region obsolete stuff

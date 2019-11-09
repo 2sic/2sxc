@@ -183,13 +183,13 @@ namespace ToSic.SexyContent
             if (appIsKnown)
             {
                 // Edit item
-                if (!SxcInstance.Template?.UseForList ?? false)
+                if (!SxcInstance.View?.UseForList ?? false)
                     actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif",
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").edit();", "test", true,
                         SecurityAccessLevel.Edit, true, false);
 
                 // Add Item
-                if (SxcInstance.Template?.UseForList ?? false)
+                if (SxcInstance.View?.UseForList ?? false)
                     actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif",
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").addItem();", true, SecurityAccessLevel.Edit, true,
                         false);
@@ -204,7 +204,7 @@ namespace ToSic.SexyContent
                 SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo))
             {
                 // Edit Template Button
-                if (appIsKnown && SxcInstance.Template != null)
+                if (appIsKnown && SxcInstance.View != null)
                     actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
                         "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").develop();", "test",
                         true,

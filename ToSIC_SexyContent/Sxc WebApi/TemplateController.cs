@@ -36,24 +36,24 @@ namespace ToSic.SexyContent.WebApi
             var templates = from c in templateList
                             select new
                             {
-                                Id = c.TemplateId,
+                                Id = c.Id,
                                 c.Name,
-                                ContentType = MiniCTSpecs(attributeSetList, c.ContentTypeStaticName, c.ContentDemoEntity),
-                                PresentationType = MiniCTSpecs(attributeSetList, c.PresentationTypeStaticName, c.PresentationDemoEntity),
-                                ListContentType = MiniCTSpecs(attributeSetList, c.ListContentTypeStaticName, c.ListContentDemoEntity),
-                                ListPresentationType = MiniCTSpecs(attributeSetList, c.ListPresentationTypeStaticName, c.ListPresentationDemoEntity),
+                                ContentType = MiniCTSpecs(attributeSetList, c.ContentType, c.ContentItem),
+                                PresentationType = MiniCTSpecs(attributeSetList, c.PresentationType, c.PresentationItem),
+                                ListContentType = MiniCTSpecs(attributeSetList, c.HeaderType, c.HeaderItem),
+                                ListPresentationType = MiniCTSpecs(attributeSetList, c.HeaderPresentationType, c.HeaderPresentationItem),
                                 TemplatePath = c.Path,
                                 c.IsHidden,
-                                c.ViewNameInUrl,
+                                ViewNameInUrl = c.UrlIdentifier,
                                 c.Guid
                             };
 	        return templates;
 	    }
 
-	    private TemplatesRuntime TemplateManager(int appId)
+	    private ViewsRuntime TemplateManager(int appId)
 	    {
 	        var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
-	        var tm = new TemplatesRuntime(zoneId, appId, Log);
+	        var tm = new ViewsRuntime(zoneId, appId, Log);
 	        return tm;
 	    }
 

@@ -115,7 +115,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
                 }
 
                 var contentGroup = app.ContentGroupManager.GetContentGroup(identifier.Group.Guid);
-                var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(identifier.Group.Part);
+                var contentTypeStaticName = (contentGroup.View as Sxc.Views.View)?.GetTypeStaticName(identifier.Group.Part) ?? "";
 
                 // if there is no content-type for this, then skip it (don't deliver anything)
                 if (contentTypeStaticName == "")
@@ -153,8 +153,8 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
 
             identifier.DuplicateEntity =
                 identifier.Group.Part.ToLower() == AppConstants.PresentationLower
-                    ? contentGroup.Template.PresentationDemoEntity?.EntityId
-                    : contentGroup.Template.ListPresentationDemoEntity?.EntityId;
+                    ? contentGroup.View.PresentationItem?.EntityId
+                    : contentGroup.View.HeaderPresentationItem?.EntityId;
         }
 
     }

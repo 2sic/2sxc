@@ -58,7 +58,7 @@ namespace ToSic.SexyContent
                 if (body == null)
                     try
                     {
-                        if (Template != null) // when a content block is still new, there is no definition yet
+                        if (View != null) // when a content block is still new, there is no definition yet
                         {
                             Log.Add("standard case, found template, will render");
                             var engine = GetRenderingEngine(InstancePurposes.WebView);
@@ -116,8 +116,8 @@ namespace ToSic.SexyContent
 
         public IEngine GetRenderingEngine(InstancePurposes renderingPurpose)
         {
-            var engine = EngineFactory.CreateEngine(Template);
-            engine.Init(Template, App, EnvInstance, Data, renderingPurpose, this, Log);
+            var engine = EngineFactory.CreateEngine(View);
+            engine.Init(View, App, EnvInstance, Data, renderingPurpose, this, Log);
             return engine;
         }
 

@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
         public override ViewDataSource Data => _dataSource 
-            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, App?.ConfigurationProvider /* Configuration*/, Log, InstanceInfo.Id));
+            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, View, App?.ConfigurationProvider, Log, InstanceInfo.Id));
 
         private readonly IEnumerable<KeyValuePair<string, string>> _urlParams;
 
@@ -64,16 +64,6 @@ namespace ToSic.SexyContent.ContentBlocks
             if (AppId != 0)
             {
                 Log.Add("real app, will load data");
-                // 2018-09-22 old
-                // try to load the app - if possible
-                //App = new App(Tenant, ZoneId, AppId, parentLog: Log);
-
-                //Configuration = ConfigurationProvider.GetConfigProviderForModule(InstanceInfo.Id, App, SxcInstance);
-
-                //// maybe ensure that App.Data is ready
-                //var userMayEdit = SxcInstance.UserMayEdit;
-                //App.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(InstanceInfo.Id), 
-                //    Configuration);
 
                 // 2018-09-22 new with auto-init-data
                 App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(SxcInstance, false), true, Log);
@@ -87,7 +77,7 @@ namespace ToSic.SexyContent.ContentBlocks
                     return;
                 }
 
-                SxcInstance.SetTemplateOrOverrideFromUrl(ContentGroup.Template);                
+                SxcInstance.SetTemplateOrOverrideFromUrl(ContentGroup.View);                
             }
         }
 

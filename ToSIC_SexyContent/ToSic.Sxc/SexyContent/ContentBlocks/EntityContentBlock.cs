@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.ContentBlocks
         public override bool ParentIsEntity => false;
 
         public override ViewDataSource Data => _dataSource 
-            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, App?.ConfigurationProvider /*Configuration*/, Log));
+            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, View, App?.ConfigurationProvider, Log));
 
         #region ContentBlock Definition Entity
 
@@ -99,7 +99,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
             ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 
-            // handle cases where the content group is missing - usually because of uncomplete import
+            // handle cases where the content group is missing - usually because of incomplete import
             if (ContentGroup.DataIsMissing)
             {
                 _dataIsMissing = true;
@@ -108,7 +108,7 @@ namespace ToSic.SexyContent.ContentBlocks
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
-            SxcInstance.SetTemplateOrOverrideFromUrl(ContentGroup.Template);
+            SxcInstance.SetTemplateOrOverrideFromUrl(ContentGroup.View);
         }
 
 

@@ -1,7 +1,6 @@
 ﻿using System.Web;
-using ToSic.Eav.Apps;
 using ToSic.SexyContent.DataSources;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Views;
 
 namespace ToSic.SexyContent
 {
@@ -19,7 +18,7 @@ namespace ToSic.SexyContent
         /// </summary>
          ViewDataSource Data { get; }
 
-        Template Template { get; }
+        IView View { get; }
 
 
         HtmlString Render();

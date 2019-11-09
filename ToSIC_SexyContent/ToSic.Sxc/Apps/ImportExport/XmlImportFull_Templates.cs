@@ -5,6 +5,8 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Persistence.Logging;
+using ToSic.Sxc.Engines;
+using ToSic.Sxc.Views;
 
 // 2dm: must disable NullRef warnings, because there a lot of warnings when processing XML, 
 // ...and these are real errors which should blow
@@ -29,7 +31,7 @@ namespace ToSic.Sxc.Apps.ImportExport
                 try
                 {
                     name = template.Attribute(XmlConstants.Name).Value;
-                    var path = template.Attribute(AppConstants.TemplatePath).Value;
+                    var path = template.Attribute(View.FieldPath).Value;
 
                     var contentTypeStaticName = template.Attribute(XmlConstants.AttSetStatic).Value;
 
@@ -56,18 +58,18 @@ namespace ToSic.Sxc.Apps.ImportExport
                     }
 
                     var type = template.Attribute(XmlConstants.EntityTypeAttribute).Value;
-                    var isHidden = Boolean.Parse(template.Attribute(AppConstants.TemplateIsHidden).Value);
-                    var location = template.Attribute(AppConstants.TemplateLocation).Value;
+                    var isHidden = Boolean.Parse(template.Attribute(View.FieldIsHidden).Value);
+                    var location = template.Attribute(View.FieldLocation).Value;
                     var publishData =
-                        Boolean.Parse(template.Attribute(AppConstants.TemplatePublishEnable) == null
+                        Boolean.Parse(template.Attribute(View.FieldPublishEnable) == null
                             ? "False"
-                            : template.Attribute(AppConstants.TemplatePublishEnable).Value);
-                    var streamsToPublish = template.Attribute(AppConstants.TemplatePublishStreams) == null
+                            : template.Attribute(View.FieldPublishEnable).Value);
+                    var streamsToPublish = template.Attribute(View.FieldPublishStreams) == null
                         ? ""
-                        : template.Attribute(AppConstants.TemplatePublishStreams).Value;
-                    var viewNameInUrl = template.Attribute(AppConstants.TemplateViewName) == null
+                        : template.Attribute(View.FieldPublishStreams).Value;
+                    var viewNameInUrl = template.Attribute(View.FieldNameInUrl) == null
                         ? null
-                        : template.Attribute(AppConstants.TemplateViewName).Value;
+                        : template.Attribute(View.FieldNameInUrl).Value;
 
                     var queryEntityGuid = template.Attribute(XmlConstants.TemplateQueryGuidField);
                     var queryEntityId = new int?();
@@ -82,8 +84,8 @@ namespace ToSic.Sxc.Apps.ImportExport
                     }
 
                     var useForList = false;
-                    if (template.Attribute(AppConstants.TemplateUseList) != null)
-                        useForList = Boolean.Parse(template.Attribute(AppConstants.TemplateUseList).Value);
+                    if (template.Attribute(View.FieldUseList) != null)
+                        useForList = Boolean.Parse(template.Attribute(View.FieldUseList).Value);
 
                     var lstTemplateDefaults = template.Elements(XmlConstants.Entity).Select(e =>
                     {
@@ -162,8 +164,7 @@ namespace ToSic.Sxc.Apps.ImportExport
                         listPresentationDemoEntityId = listPresentationDefault.DemoEntityId;
                     }
 
-                    new CmsManager(GetCurrentAppManager(), Log).Templates
-                    // GetCurrentAppManager().Templates
+                    new CmsManager(GetCurrentAppManager(), Log).Views
                         .CreateOrUpdate(
                         null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName,
                         presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId,

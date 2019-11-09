@@ -2,8 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
-using ToSic.Eav.Apps;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Views;
 
 namespace ToSic.SexyContent.AppAssets
 {
@@ -23,7 +22,7 @@ namespace ToSic.SexyContent.AppAssets
             _userIsSuperUser = isSuperUser;
             _userIsAdmin = isAdmin;
 
-            var template = _app.TemplateManager.GetTemplate(templateId);
+            var template = _app.ViewManager.GetTemplate(templateId);
             EditInfo = TemplateAssetsInfo(template);
         }
 
@@ -67,7 +66,7 @@ namespace ToSic.SexyContent.AppAssets
             if(EditInfo.LocationScope != Settings.TemplateLocations.PortalFileSystem)
                 throw new AccessViolationException("current user may not edit templates in central storage - requires super user");
 
-            // optionally check if the file is really in the poprtal
+            // optionally check if the file is really in the portal
             if (fullPath == null) return;
 
             var path = new FileInfo(fullPath);
@@ -78,20 +77,20 @@ namespace ToSic.SexyContent.AppAssets
                 throw new AccessViolationException("current user may not edit files outside of the app-scope");
         }
 
-        private AssetEditInfo TemplateAssetsInfo(Template templ)
+        private AssetEditInfo TemplateAssetsInfo(IView view)
         {
-            var t = new AssetEditInfo(_app.AppId, _app.Name, templ.Path,
-                templ.Location == Settings.TemplateLocations.HostFileSystem)
+            var t = new AssetEditInfo(_app.AppId, _app.Name, view.Path,
+                view.Location == Settings.TemplateLocations.HostFileSystem)
             {
                 // Template specific properties, not really available in other files
-                LocationScope = templ.Location,
-                Type = templ.Type,
-                Name = templ.Name,
-                HasList = templ.UseForList,
-                TypeContent = templ.ContentTypeStaticName,
-                TypeContentPresentation = templ.PresentationTypeStaticName,
-                TypeList = templ.ListContentTypeStaticName,
-                TypeListPresentation = templ.ListPresentationTypeStaticName
+                LocationScope = view.Location,
+                Type = view.Type,
+                Name = view.Name,
+                HasList = view.UseForList,
+                TypeContent = view.ContentType,
+                TypeContentPresentation = view.PresentationType,
+                TypeList = view.HeaderType,
+                TypeListPresentation = view.HeaderPresentationType
             };
             return t;
         }

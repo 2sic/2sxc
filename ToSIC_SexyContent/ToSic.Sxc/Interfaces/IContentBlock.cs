@@ -3,6 +3,7 @@ using ToSic.SexyContent;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Views;
 using App = ToSic.SexyContent.App;
 
 namespace ToSic.Sxc.Interfaces
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Interfaces
 
         ITenant Tenant { get; }
 
-        Template Template { get; set; }
+        IView View { get; set; }
 
         ContentGroup ContentGroup { get; }
 

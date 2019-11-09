@@ -6,7 +6,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Views;
 using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
@@ -51,13 +51,13 @@ namespace ToSic.SexyContent
         internal bool DataIsMissing = false;
         #region Template stuff
 
-        private Template _template;
+        private IView _view;
 
-        public Template Template
+        public IView View
         {
             get
             {
-                if (_template != null) return _template;
+                if (_view != null) return _view;
 
                 IEntity templateEntity = null;
 
@@ -66,15 +66,15 @@ namespace ToSic.SexyContent
                     var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId);
                     // ToDo: Should use an indexed Guid filter
                     templateEntity =
-                        Eav.Data.Query.Entity.One(dataSource.List, _previewTemplateId.Value);//  .FirstOrDefault(e => e.Value.EntityGuid == _previewTemplateId).Value;
+                        Eav.Data.Query.Entity.One(dataSource.List, _previewTemplateId.Value);
                 }
                 else if (_contentGroupEntity != null)
                     templateEntity =
                         ((EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
 
-                _template = templateEntity == null ? null : new Template(templateEntity/*, Log*/);
+                _view = templateEntity == null ? null : new View(templateEntity/*, Log*/);
 
-                return _template;
+                return _view;
             }
         }
 
