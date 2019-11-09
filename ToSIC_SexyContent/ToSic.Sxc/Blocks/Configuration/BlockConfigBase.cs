@@ -7,7 +7,6 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent;
 using ToSic.SexyContent.Internal;
 using ToSic.Sxc.Apps.Blocks;
 
@@ -153,7 +152,7 @@ namespace ToSic.Sxc.Blocks
 
             // re-load the content-group so we have the new title
             var app = CmsContext.App;
-            var contentGroup = app.BlocksManager.GetContentGroup(BlockConfiguration.ContentGroupGuid);
+            var contentGroup = app.BlocksManager.GetBlockConfig(BlockConfiguration.ContentGroupGuid);
 
             var titleItem = contentGroup.ListContent.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
 

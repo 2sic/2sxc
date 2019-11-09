@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Apps
     /// </summary>
     public class ViewsManager: ManagerBase
     {
-        public ViewsManager(AppManager app, ILog parentLog) : base(app, parentLog, "App.TplMng") {}
+        public ViewsManager(CmsManager app, ILog parentLog) : base(app, parentLog, "App.TplMng") {}
 
         #region Template
 

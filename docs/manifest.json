@@ -42,7 +42,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/breaking-changes.html",
-          "hash": "fycJHkSV4zPPBJNX7QzZDA=="
+          "hash": "prp0H5R+WFmJS2GYo3Mueg=="
         }
       },
       "is_incremental": false,
@@ -1077,7 +1077,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Sxc.Apps.IApp.html",
-          "hash": "fqgJSIDjt5MlIbUQoFQEjg=="
+          "hash": "ee4TGP5WfLWDbZJV+bzDMg=="
         }
       },
       "is_incremental": false,
@@ -1330,13 +1330,6 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build",
-          "total_file_count": 0,
-          "skipped_file_count": 0
-        },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
@@ -1347,6 +1340,13 @@
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 105,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
           "skipped_file_count": 0
         }
       }

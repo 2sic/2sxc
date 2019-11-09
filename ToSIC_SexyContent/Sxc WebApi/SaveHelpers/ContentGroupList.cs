@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.DataSources;
@@ -61,7 +60,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
                     entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ListPresentationLower);
 
                 // Get group to assign to and parameters
-                var contentGroup = app.BlocksManager.GetContentGroup(contItem.Header.Group.Guid);
+                var contentGroup = app.BlocksManager.GetBlockConfig(contItem.Header.Group.Guid);
                 var partName = contItem.Header.Group.Part;
 
                 // var part = blockConfiguration[partName];
@@ -117,7 +116,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
                     continue;
                 }
 
-                var contentGroup = app.BlocksManager.GetContentGroup(identifier.Group.Guid);
+                var contentGroup = app.BlocksManager.GetBlockConfig(identifier.Group.Guid);
                 var contentTypeStaticName = (contentGroup.View as Sxc.Blocks.View)?.GetTypeStaticName(identifier.Group.Part) ?? "";
 
                 // if there is no content-type for this, then skip it (don't deliver anything)

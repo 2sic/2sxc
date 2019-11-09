@@ -25,7 +25,7 @@ namespace ToSic.SexyContent.WebApi
         private BlockConfiguration GetContentGroup(Guid contentGroupGuid)
         {
             Log.Add($"get group:{contentGroupGuid}");
-            var contentGroup = CmsBlock.App.BlocksManager.GetContentGroup(contentGroupGuid);
+            var contentGroup = CmsBlock.App.BlocksManager.GetBlockConfig(contentGroupGuid);
 
             if (contentGroup == null)
                 throw new Exception("BlockConfiguration with Guid " + contentGroupGuid + " does not exist.");
@@ -84,7 +84,7 @@ namespace ToSic.SexyContent.WebApi
             var versioning = CmsBlock.Environment.PagePublishing;// new PagePublishing(Log);
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
-                var contentGroup = CmsBlock.App.BlocksManager.GetContentGroup(guid);
+                var contentGroup = CmsBlock.App.BlocksManager.GetBlockConfig(guid);
                 contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
             };
 

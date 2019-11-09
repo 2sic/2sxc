@@ -197,7 +197,7 @@ namespace ToSic.Sxc.Apps.Blocks
             new AppManager(_zoneId, _appId).Entities.Save(saveEnt, saveOpts);
 
             // Refresh content group entity (ensures contentgroup is up to date)
-            _contentGroupEntity = new BlocksManager(_zoneId, _appId, _showDrafts, _versioningEnabled, Log).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
+            _contentGroupEntity = new BlocksManager(_zoneId, _appId, _showDrafts, _versioningEnabled, Log).GetBlockConfig(_contentGroupEntity.EntityGuid)._contentGroupEntity;
         }
 
         private Dictionary<string, List<int?>> PrepareSavePackage(string type, List<int?> entityIds,

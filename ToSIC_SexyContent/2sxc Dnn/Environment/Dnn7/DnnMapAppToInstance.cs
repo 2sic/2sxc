@@ -75,8 +75,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // Change to 1. available template if app has been set
             if (appId.HasValue)
             {
-                var app = GetApp.LightWithoutData(new DnnTenant(null), zoneId, appId.Value, parentLog: Log);
-                var templateGuid = app.ViewManager.GetAllTemplates().FirstOrDefault(t => !t.IsHidden)?.Guid;
+                //var app = GetApp.LightWithoutData(new DnnTenant(null), zoneId, appId.Value, parentLog: Log);
+                var cms = new CmsManager(zoneId, appId.Value, Log);
+                var templateGuid = cms.ViewReadTemp.GetAllTemplates().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue)
                     BlocksManager.SetPreviewTemplate(instance.Id, templateGuid.Value);
             }

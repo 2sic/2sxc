@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Apps
 		public IEnumerable<BlockConfiguration> GetContentGroups() 
             => ContentGroupSource().List.Select(p => new BlockConfiguration(p, _zoneId, _appId, _showDrafts, _enableVersioning, Log));
 
-	    public BlockConfiguration GetContentGroup(Guid contentGroupGuid)
+	    public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
 		{
 		    Log.Add($"get CG#{contentGroupGuid}");
 			var dataSource = ContentGroupSource();
@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Apps
 	        // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
 	        return groupGuid == Guid.Empty 
                 ? new BlockConfiguration(previewTemplateGuid, _zoneId, _appId, _showDrafts, _enableVersioning, Log)
-                : GetContentGroup(groupGuid);
+                : GetBlockConfig(groupGuid);
 	    }
 
 	}

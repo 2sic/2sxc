@@ -3599,19 +3599,6 @@ references:
   commentId: T:ToSic.Sxc.Apps.IApp
   fullName: ToSic.Sxc.Apps.IApp
   nameWithType: IApp
-- uid: ToSic.Sxc.Apps.IApp.BlocksManager
-  name: BlocksManager
-  href: api/ToSic.Sxc.Apps.IApp.html#ToSic_Sxc_Apps_IApp_BlocksManager
-  commentId: P:ToSic.Sxc.Apps.IApp.BlocksManager
-  fullName: ToSic.Sxc.Apps.IApp.BlocksManager
-  nameWithType: IApp.BlocksManager
-- uid: ToSic.Sxc.Apps.IApp.BlocksManager*
-  name: BlocksManager
-  href: api/ToSic.Sxc.Apps.IApp.html#ToSic_Sxc_Apps_IApp_BlocksManager_
-  commentId: Overload:ToSic.Sxc.Apps.IApp.BlocksManager
-  isSpec: "True"
-  fullName: ToSic.Sxc.Apps.IApp.BlocksManager
-  nameWithType: IApp.BlocksManager
 - uid: ToSic.Sxc.Apps.IApp.Configuration
   name: Configuration
   href: api/ToSic.Sxc.Apps.IApp.html#ToSic_Sxc_Apps_IApp_Configuration
@@ -3690,19 +3677,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Apps.IApp.Thumbnail
   nameWithType: IApp.Thumbnail
-- uid: ToSic.Sxc.Apps.IApp.ViewManager
-  name: ViewManager
-  href: api/ToSic.Sxc.Apps.IApp.html#ToSic_Sxc_Apps_IApp_ViewManager
-  commentId: P:ToSic.Sxc.Apps.IApp.ViewManager
-  fullName: ToSic.Sxc.Apps.IApp.ViewManager
-  nameWithType: IApp.ViewManager
-- uid: ToSic.Sxc.Apps.IApp.ViewManager*
-  name: ViewManager
-  href: api/ToSic.Sxc.Apps.IApp.html#ToSic_Sxc_Apps_IApp_ViewManager_
-  commentId: Overload:ToSic.Sxc.Apps.IApp.ViewManager
-  isSpec: "True"
-  fullName: ToSic.Sxc.Apps.IApp.ViewManager
-  nameWithType: IApp.ViewManager
 - uid: ToSic.Sxc.Blocks
   name: ToSic.Sxc.Blocks
   href: api/ToSic.Sxc.Blocks.html

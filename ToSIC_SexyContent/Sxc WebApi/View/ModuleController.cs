@@ -20,6 +20,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.WebApi.Permissions;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using Assembly = System.Reflection.Assembly;
@@ -284,7 +285,8 @@ namespace ToSic.SexyContent.WebApi.View
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 try
                 {
-                    var all = CmsBlock.App.ViewManager.GetAllTemplates();
+                    var all = new CmsManager(CmsBlock.App, Log).ViewReadTemp.GetAllTemplates();
+                        //CmsBlock.App.ViewManager.GetAllTemplates();
                     if (all.Any())
                         return null;
                 }

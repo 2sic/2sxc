@@ -205,7 +205,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    {
             if (item.Group == null) return;
 	        var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, null);
-	        var contentGroup = app.BlocksManager.GetContentGroup(item.Group.Guid);
+	        var contentGroup = app.BlocksManager.GetBlockConfig(item.Group.Guid);
 	        var part = contentGroup[item.Group.Part];
 	        item.EntityId = part[item.Group.Index].EntityId;
 	    }
