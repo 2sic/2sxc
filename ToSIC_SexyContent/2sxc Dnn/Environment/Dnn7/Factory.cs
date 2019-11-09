@@ -7,7 +7,8 @@ using ToSic.Eav.LookUp;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
 using ToSic.Sxc;
-using IApp = ToSic.Sxc.IApp;
+using ToSic.Sxc.Blocks;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -18,25 +19,25 @@ namespace ToSic.SexyContent.Environment.Dnn7
     /// </summary>
     public static class Factory
     {
-        public static ISxcInstance SxcInstanceForModule(int modId, int tabId)
+        public static ICmsBlock SxcInstanceForModule(int modId, int tabId)
         {
             var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
             var instance = new DnnInstanceInfo(moduleInfo);
             return SxcInstanceForModule(instance);
         }
 
-        public static ISxcInstance SxcInstanceForModule(ModuleInfo moduleInfo)
+        public static ICmsBlock SxcInstanceForModule(ModuleInfo moduleInfo)
             => SxcInstanceForModule(new DnnInstanceInfo(moduleInfo));
 
-        public static ISxcInstance SxcInstanceForModule(IInstanceInfo moduleInfo)
+        public static ICmsBlock SxcInstanceForModule(IInstanceInfo moduleInfo)
         {
             var dnnModule = ((EnvironmentInstance<ModuleInfo>) moduleInfo).Original;
             var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
-            return new ModuleContentBlock(moduleInfo, parentLog: null, tenant: tenant).SxcInstance;
+            return new BlockFromModule(moduleInfo, parentLog: null, tenant: tenant).CmsInstance;
         }
 
-        public static IDynamicCode CodingHelpers(ISxcInstance sxc) 
-            => new DnnAppAndDataHelpers(sxc as SxcInstance);
+        public static IDynamicCode CodingHelpers(ICmsBlock cms) 
+            => new DnnAppAndDataHelpers(cms as CmsInstance);
 
         /// <summary>
         /// get a full app-object for accessing data of the app from outside

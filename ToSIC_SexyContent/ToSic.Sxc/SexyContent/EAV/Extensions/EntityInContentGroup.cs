@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.EAVExtensions
 		public IEntity Presentation { get; set; }
 
         /// <summary>
-        /// ContentGroup ID, because as the group changes, we must be able to find it
+        /// BlockConfiguration ID, because as the group changes, we must be able to find it
         /// </summary>
 		public Guid GroupId { get; set; }
 

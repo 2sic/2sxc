@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             }
 
             return FeatureListWithPermissionCheck(appId,
-                new MultiPermissionsApp(SxcInstance, appId, Log));
+                new MultiPermissionsApp(CmsBlock, appId, Log));
         }
 
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using ToSic.Eav.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines.Token;
 
 namespace ToSic.Sxc.Engines
@@ -14,14 +14,14 @@ namespace ToSic.Sxc.Engines
             Razor = 1
         }
 
-        public static IEngine CreateEngine(Template template)
+        public static IEngine CreateEngine(IView view)
         {
             Type engineType = null;
 
-            switch (template.IsRazor)
+            switch (view.IsRazor)
             {
                 case true:
-                    // HUGE TODO
+                    // TODO
                     // This isn't done well, a setup like the DataSources which are loaded from DLL and
                     // instantiated would be the more correct (and probably faster) way to do this
                     var engineAssembly = Assembly.Load("ToSic.SexyContent.Razor");

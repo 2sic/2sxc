@@ -9,11 +9,13 @@ using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.SxcTemp;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -55,9 +57,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
-            ContentGroupManager.ClearPreviewTemplate(instance.Id);
+            BlocksManager.ClearPreviewTemplate(instance.Id);
 
-            // ToDo: Should throw exception if a real ContentGroup exists
+            // ToDo: Should throw exception if a real BlockConfiguration exists
 
             var module = (instance as EnvironmentInstance<ModuleInfo>).Original;
             var zoneId = env.ZoneMapper.GetZoneId(module.OwnerPortalID);
@@ -73,10 +75,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // Change to 1. available template if app has been set
             if (appId.HasValue)
             {
-                var app = App.LightWithoutData(new DnnTenant(null), zoneId, appId.Value, parentLog: Log);
-                var templateGuid = app.TemplateManager.GetAllTemplates().FirstOrDefault(t => !t.IsHidden)?.Guid;
+                //var app = GetApp.LightWithoutData(new DnnTenant(null), zoneId, appId.Value, parentLog: Log);
+                var cms = new CmsManager(zoneId, appId.Value, Log);
+                var templateGuid = cms.ViewReadTemp.GetAllTemplates().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue)
-                    ContentGroupManager.SetPreviewTemplate(instance.Id, templateGuid.Value);
+                    BlocksManager.SetPreviewTemplate(instance.Id, templateGuid.Value);
             }
         }
 
@@ -92,13 +95,13 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Log.Add($"SetContentGroup(iid: {instanceId}, wasCreated: {wasCreated}, guid: {guid})");
             // Remove the previewTemplateId (because it's not needed as soon Content is inserted)
             ClearPreviewTemplate(instanceId);
-            // Update contentGroup Guid for this module
+            // Update blockConfiguration Guid for this module
             if (wasCreated)
                 DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instanceId, Settings.ContentGroupGuidString,
                     guid.ToString(), Log);
         }
 
-        public ContentGroup GetInstanceContentGroup(ContentGroupManager cgm, ILog log, int instanceId, int? pageId)
+        public BlockConfiguration GetInstanceContentGroup(BlocksManager cgm, ILog log, int instanceId, int? pageId)
         {
             var mci = ModuleController.Instance;
 
@@ -136,16 +139,16 @@ namespace ToSic.SexyContent.Environment.Dnn7
             DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString(), Log);
         }
 
-        public void UpdateTitle(SxcInstance sxcInstance, IEntity titleItem)
+        public void UpdateTitle(ICmsBlock cmsInstance, IEntity titleItem)
         {
             Log.Add("update title");
 
-            var languages = sxcInstance.Environment.ZoneMapper.CulturesWithState(sxcInstance.EnvInstance.TenantId,
-                sxcInstance.ZoneId.Value);
+            var languages = cmsInstance.Environment.ZoneMapper.CulturesWithState(cmsInstance.EnvInstance.TenantId,
+                cmsInstance.ZoneId); // not nullable any more 2019-11-09 // .Value);
 
             // Find Module for default language
             var moduleController = new ModuleController();
-            var originalModule = moduleController.GetModule(sxcInstance.EnvInstance.Id);
+            var originalModule = moduleController.GetModule(cmsInstance.EnvInstance.Id);
 
             foreach (var dimension in languages)
             {
@@ -163,7 +166,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
                     // Find module for given Culture
                     var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
-                        originalModule.TabID, sxcInstance.EnvInstance.TenantId,
+                        originalModule.TabID, cmsInstance.EnvInstance.TenantId,
                         DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
 
                     // Break if no title module found

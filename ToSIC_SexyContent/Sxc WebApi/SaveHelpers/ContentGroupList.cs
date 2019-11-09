@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.SexyContent.WebApi.SaveHelpers
 {
     internal class ContentGroupList: SaveHelperBase
     {
-        public ContentGroupList(SxcInstance sxcInstance, ILog parentLog) : base(sxcInstance, parentLog, "Api.GrpPrc") {}
+        public ContentGroupList(ICmsBlock cmsInstance, ILog parentLog) : base(cmsInstance, parentLog, "Api.GrpPrc") {}
 
         internal void IfInListUpdateList<T>(int appId, List<BundleWithHeader<T>> items, Dictionary<Guid, int> ids)
         {
@@ -38,35 +40,35 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             //var myLog = new Log("2Ap.GrpPrc", Log, "start");
             // 2018-09-22 new
             var app = new App(new DnnTenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
-                ConfigurationProvider.Build(SxcInstance, true), false, Log);
+                ConfigurationProvider.Build(CmsInstance, true), false, Log);
 
             // 2018-09-22 old
-            //var userMayEdit = SxcInstance.UserMayEdit;
-            //app.InitData(userMayEdit, SxcInstance.Environment.PagePublishing.IsEnabled(SxcInstance.EnvInstance.Id), SxcInstance.Data.ConfigurationProvider);
+            //var userMayEdit = SxcBlock.UserMayEdit;
+            //app.InitData(userMayEdit, SxcBlock.Environment.PagePublishing.IsEnabled(SxcBlock.EnvInstance.Id), SxcBlock.Data.ConfigurationProvider);
 
             foreach (var entitySets in groupItems)
             {
                 Log.Add("processing:" + entitySets.Key);
                 var contItem =
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ContentLower) ??
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ListContentLower);
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ContentLower) ??
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ListContentLower);
                 if (contItem == null)
                     throw new Exception("unexpected group-entity assignment, cannot figure it out");
 
                 var presItem =
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.PresentationLower) ??
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == AppConstants.ListPresentationLower);
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.PresentationLower) ??
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ListPresentationLower);
 
                 // Get group to assign to and parameters
-                var contentGroup = app.ContentGroupManager.GetContentGroup(contItem.Header.Group.Guid);
+                var contentGroup = app.BlocksManager.GetBlockConfig(contItem.Header.Group.Guid);
                 var partName = contItem.Header.Group.Part;
 
-                // var part = contentGroup[partName];
+                // var part = blockConfiguration[partName];
                 var index = contItem.Header.Group.Index;
 
                 // Get saved entity (to get its ID)
                 if (!postSaveIds.ContainsKey(contItem.EntityGuid))
-                    throw new Exception("Saved entity not found - not able to update ContentGroup");
+                    throw new Exception("Saved entity not found - not able to update BlockConfiguration");
 
                 var postSaveId = postSaveIds[contItem.EntityGuid];
 
@@ -97,11 +99,11 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             }
 
             // update-module-title
-            SxcInstance.ContentBlock.Manager.UpdateTitle();
+            CmsInstance.Block.Manager.UpdateTitle();
             wrapLog("ok");
         }
 
-        internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers, App app)
+        internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers, IApp app)
         {
             Log.Add("ConvertListIndexToId()");
             var newItems = new List<ItemIdentifier>();
@@ -114,8 +116,8 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
                     continue;
                 }
 
-                var contentGroup = app.ContentGroupManager.GetContentGroup(identifier.Group.Guid);
-                var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(identifier.Group.Part);
+                var contentGroup = app.BlocksManager.GetBlockConfig(identifier.Group.Guid);
+                var contentTypeStaticName = (contentGroup.View as Sxc.Blocks.View)?.GetTypeStaticName(identifier.Group.Part) ?? "";
 
                 // if there is no content-type for this, then skip it (don't deliver anything)
                 if (contentTypeStaticName == "")
@@ -131,16 +133,16 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
         }
 
 
-        private static void ConvertListIndexToEntityIds(ItemIdentifier identifier, ContentGroup contentGroup)
+        private static void ConvertListIndexToEntityIds(ItemIdentifier identifier, BlockConfiguration blockConfiguration)
         {
-            var part = contentGroup[identifier.Group.Part];
+            var part = blockConfiguration[identifier.Group.Part];
             if (!identifier.Group.Add && // not in add-mode
                 part.Count > identifier.Group.Index && // has as many items as desired
                 part[identifier.Group.Index] != null) // and the slot has something
                 identifier.EntityId = part[identifier.Group.Index].EntityId;
 
             // tell the UI that it should not actually use this data yet, keep it locked
-            if (!identifier.Group.Part.ToLower().Contains(AppConstants.PresentationLower))
+            if (!identifier.Group.Part.ToLower().Contains(ViewParts.PresentationLower))
                 return;
 
             // the following steps are only for presentation items
@@ -152,9 +154,9 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             identifier.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
 
             identifier.DuplicateEntity =
-                identifier.Group.Part.ToLower() == AppConstants.PresentationLower
-                    ? contentGroup.Template.PresentationDemoEntity?.EntityId
-                    : contentGroup.Template.ListPresentationDemoEntity?.EntityId;
+                identifier.Group.Part.ToLower() == ViewParts.PresentationLower
+                    ? blockConfiguration.View.PresentationItem?.EntityId
+                    : blockConfiguration.View.HeaderPresentationItem?.EntityId;
         }
 
     }

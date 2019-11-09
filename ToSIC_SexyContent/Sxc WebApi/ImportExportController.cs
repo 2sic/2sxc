@@ -79,9 +79,9 @@ namespace ToSic.SexyContent.WebApi
                     Id = c.ContentTypeId,
                     c.Name,
                     c.StaticName,
-                    Templates = templates.Where(t => t.ContentTypeStaticName == c.StaticName).Select(t => new
+                    Templates = templates.Where(t => t.ContentType == c.StaticName).Select(t => new
                     {
-                        Id = t.TemplateId,
+                        Id = t.Id,
                         t.Name
                     }),
                     Entities = entities
@@ -92,9 +92,9 @@ namespace ToSic.SexyContent.WebApi
                             Id = e.EntityId
                         })
                 }),
-                TemplatesWithoutContentTypes = templates.Where(t => !string.IsNullOrEmpty(t.ContentTypeStaticName)).Select(t => new
+                TemplatesWithoutContentTypes = templates.Where(t => !string.IsNullOrEmpty(t.ContentType)).Select(t => new
                 {
-                    Id = t.TemplateId,
+                    Id = t.Id,
                     t.Name
                 })
             };

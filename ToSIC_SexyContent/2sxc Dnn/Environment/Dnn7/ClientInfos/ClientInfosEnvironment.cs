@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
+using ToSic.Sxc.Blocks;
 
 // ReSharper disable InconsistentNaming
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -21,7 +22,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public bool IsEditable;
 
-        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, IInstanceInfo mic, SxcInstance sxcInstance)
+        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, IInstanceInfo mic, ICmsBlock cmsInstance)
         {
             WebsiteId = ps.PortalId;
 
@@ -36,10 +37,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             SxcRootUrl = systemRootUrl;
 
-            var userMayEdit = sxcInstance?.UserMayEdit ?? false;
+            var userMayEdit = cmsInstance?.UserMayEdit ?? false;
 
             IsEditable = userMayEdit;
-            parameters = sxcInstance?.Parameters;
+            parameters = cmsInstance?.Parameters;
         }
     }
 

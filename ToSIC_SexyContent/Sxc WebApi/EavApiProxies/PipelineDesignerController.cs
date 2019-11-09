@@ -13,6 +13,8 @@ using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Dnn7.ValueProviders;
 using ToSic.SexyContent.WebApi.Dnn;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.SxcTemp;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -84,11 +86,12 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		{
             Log.Add($"delete pipe:{id} on app:{appId}");
 			// Stop if a Template uses this Pipeline
-            var app = App.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
-			var templatesUsingPipeline = app.TemplateManager.GetAllTemplates().Where(t => t.Query != null && t.Query.EntityId == id).Select(t => t.TemplateId).ToArray();
+            //var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
+            var cms = new CmsManager(appId, Log);
+			var templatesUsingPipeline = cms.ViewReadTemp.GetAllTemplates().Where(t => t.Query != null && t.Query.EntityId == id).Select(t => t.Id).ToArray();
 			if (templatesUsingPipeline.Any())
 				throw new Exception(
-				        $"Pipeline is used by Templates and cant be deleted. Pipeline EntityId: {id}. TemplateIds: {string.Join(", ", templatesUsingPipeline)}");
+				        $"Pipeline is used by Views and cant be deleted. Pipeline EntityId: {id}. TemplateIds: {string.Join(", ", templatesUsingPipeline)}");
 
 			return _eavCont.DeletePipeline(appId, id);
 		}

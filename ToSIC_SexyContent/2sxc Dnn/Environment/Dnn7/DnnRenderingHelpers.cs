@@ -9,13 +9,14 @@ using Newtonsoft.Json;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class DnnRenderingHelpers : IHasLog, IRenderingHelpers
     {
-        private SxcInstance _sxcInstance;
+        private ICmsBlock _cmsInstance;
         private PortalSettings _portalSettings;
         private UserInfo _userInfo;
         private string _applicationRoot;
@@ -26,14 +27,14 @@ namespace ToSic.SexyContent.Environment.Dnn7
         // Blank constructor for IoC
         public DnnRenderingHelpers() { }
 
-        public DnnRenderingHelpers(SxcInstance sxc, ILog parentLog) => Init(sxc, parentLog);
+        public DnnRenderingHelpers(ICmsBlock cms, ILog parentLog) => Init(cms, parentLog);
 
-        public IRenderingHelpers Init(SxcInstance sxc, ILog parentLog)
+        public IRenderingHelpers Init(ICmsBlock cms, ILog parentLog)
         {
             LinkLog(parentLog);
             var appRoot = VirtualPathUtility.ToAbsolute("~/");
-            _moduleInfo = sxc?.EnvInstance;
-            _sxcInstance = sxc;
+            _moduleInfo = cms?.EnvInstance;
+            _cmsInstance = cms;
             _portalSettings = PortalSettings.Current;
 
             _userInfo = PortalSettings.Current.UserInfo;
@@ -118,8 +119,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         // new
         public string UiContextInfos(bool autoToolbars)
-            => JsonConvert.SerializeObject(new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, _sxcInstance, _userInfo,
-                _sxcInstance.ZoneId ?? 0, _sxcInstance.ContentBlock.ContentGroupExists, autoToolbars, Log));
+            => JsonConvert.SerializeObject(new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, _cmsInstance, _userInfo,
+                _cmsInstance.ZoneId // 2019-11-09, Id not nullable any more // ?? 0
+                , _cmsInstance.Block.ContentGroupExists, autoToolbars, Log));
 
 
 

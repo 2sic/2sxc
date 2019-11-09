@@ -4,12 +4,12 @@ using System.Configuration;
 using System.IO;
 using System.Web.Configuration;
 using System.Web.Http;
-using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent;
 using ToSic.SexyContent.WebApi.Adam;
 using ToSic.SexyContent.WebApi.Errors;
+using ToSic.Sxc.Blocks;
 
 
 // ReSharper disable once CheckNamespace
@@ -17,12 +17,12 @@ namespace ToSic.Sxc.Adam.WebApi
 {
     internal class AdamUploader: HasLog
     {
-        protected readonly SxcInstance SxcInstance;
+        protected readonly ICmsBlock CmsInstance;
         private readonly int _appId;
 
-        public AdamUploader(SxcInstance sxcInstance, int appId, ILog parentLog) : base("Api.AdmUpl", parentLog)
+        public AdamUploader(ICmsBlock cmsInstance, int appId, ILog parentLog) : base("Api.AdmUpl", parentLog)
         {
-            SxcInstance = sxcInstance;
+            CmsInstance = cmsInstance;
             _appId = appId;
         }
 
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             Log.Add($"upload one a:{_appId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
             
-            var state = new AdamSecureState(SxcInstance, _appId, contentType, field, guid, usePortalRoot, Log);
+            var state = new AdamSecureState(CmsInstance, _appId, contentType, field, guid, usePortalRoot, Log);
             HttpResponseException exp;
             if (!skipFieldAndContentTypePermissionCheck)
             {
@@ -94,7 +94,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName),
                 stream);
 
-            var adamcontext = new AdamAppContext(SxcInstance.Tenant, state.App, SxcInstance, Log);
+            var adamcontext = new AdamAppContext(CmsInstance.Block.Tenant, state.App, CmsInstance, Log);
             var eavFile = new File(adamcontext)
             {
                 Created = dnnFile.CreatedOnDate,

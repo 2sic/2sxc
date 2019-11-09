@@ -6,7 +6,9 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Blocks;
 using App = ToSic.SexyContent.App;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Engines
 {
@@ -20,16 +22,17 @@ namespace ToSic.Sxc.Engines
     public interface IEngine
     {
         /// <summary>
-        /// Initialize the Engine (pass everything needed for Render to it)
+        /// Initialize the Engine (pass everything needed for Render to it).<br/>
+        /// This is not in the constructor, because IEngines usually get constructed with DI,
+        /// so the constructor is off-limits. 
         /// </summary>
         [PrivateApi]
-        void Init(Template template, App app, IInstanceInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, ILog parentLog);
+        void Init(IView template, IApp app, IInstanceInfo hostingModule, IDataSource dataSource, Purpose purpose, /*SxcInstance*/ICmsBlock cmsInstance, ILog parentLog);
 
         /// <summary>
         /// Renders a template, returning a string with the rendered template.
         /// </summary>
-        /// <returns></returns>
-        [PrivateApi]
+        /// <returns>The string - usually HTML - which the engine created. </returns>
         string Render();
 
         /// <summary>
@@ -37,7 +40,6 @@ namespace ToSic.Sxc.Engines
         /// This helps to ensure that other parts like JSON-Streams or Search have the same information
         /// as the view itself. 
         /// </summary>
-        [PrivateApi]
         void CustomizeData();
 
         /// <summary>

@@ -3,14 +3,14 @@ using System.Web.Http;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Errors;
+using ToSic.Sxc.Blocks;
 using Factory = ToSic.Eav.Factory;
+using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.WebApi.Permissions
@@ -20,27 +20,27 @@ namespace ToSic.SexyContent.WebApi.Permissions
         /// <summary>
         /// The current app which will be used and can be re-used externally
         /// </summary>
-        public App App { get; }
+        public IApp App { get; }
 
-        internal readonly SxcInstance SxcInstance;
+        internal readonly ICmsBlock CmsInstance;
 
         protected readonly PortalSettings PortalForSecurityCheck;
 
         protected readonly bool SamePortal;
 
-        public MultiPermissionsApp(SxcInstance sxcInstance, int appId, ILog parentLog) :
-            this(sxcInstance, SystemRuntime.ZoneIdOfApp(appId), appId, parentLog) { }
+        public MultiPermissionsApp(ICmsBlock cmsInstance, int appId, ILog parentLog) :
+            this(cmsInstance, SystemRuntime.ZoneIdOfApp(appId), appId, parentLog) { }
 
-        protected MultiPermissionsApp(SxcInstance sxcInstance, int zoneId, int appId, ILog parentLog) 
+        protected MultiPermissionsApp(ICmsBlock cmsInstance, int zoneId, int appId, ILog parentLog) 
             : base("Api.Perms", parentLog)
         {
             var wrapLog = Log.New("AppAndPermissions", $"..., appId: {appId}, ...");
-            SxcInstance = sxcInstance;
+            CmsInstance = cmsInstance;
             var tenant = new DnnTenant(PortalSettings.Current);
             var environment = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
             var contextZoneId = environment.ZoneMapper.GetZoneId(tenant.Id);
             App = new App(tenant, zoneId, appId, 
-                ConfigurationProvider.Build(sxcInstance, true),
+                ConfigurationProvider.Build(cmsInstance, true),
                 false, Log);
             SamePortal = contextZoneId == zoneId;
             PortalForSecurityCheck = SamePortal ? PortalSettings.Current : null;
@@ -82,7 +82,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
             // user has edit permissions on this app, and it's the same app as the user is coming from
             return new DnnPermissionCheck(Log,
-                instance: SxcInstance?.EnvInstance,
+                instance: CmsInstance?.EnvInstance,
                 app: App,
                 portal: PortalForSecurityCheck,
                 targetType: type,

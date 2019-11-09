@@ -2,8 +2,8 @@
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Edit.ClientContextInfo;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.ClientContextInfo;
 
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -21,20 +21,20 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public Ui Ui;
 
-        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IInstanceInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated, bool autoToolbar, ILog parentLog)
+        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IInstanceInfo mic, ICmsBlock cms, UserInfo uinfo, int zoneId, bool isCreated, bool autoToolbar, ILog parentLog)
             : base("Sxc.CliInf", parentLog, "building entire client-context")
         {
-            var versioning = sxc.Environment.PagePublishing;
+            var versioning = cms.Environment.PagePublishing;
 
-            Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic, sxc);
+            Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic, cms);
             Language = new ClientInfosLanguages(ps, zoneId);
             User = new ClientInfosUser(uinfo);
 
-            ContentBlock = new ClientInfoContentBlock(sxc.ContentBlock, null, 0, versioning.Requirements(mic.Id));
-            ContentGroup = new ClientInfoContentGroup(sxc, isCreated);
-            Ui = new Ui(sxc.UiAutoToolbar);
+            ContentBlock = new ClientInfoContentBlock(cms.Block, null, 0, versioning.Requirements(mic.Id));
+            ContentGroup = new ClientInfoContentGroup(cms, isCreated);
+            Ui = new Ui(((CmsInstance)cms).UiAutoToolbar);
 
-            error = new ClientInfosError(sxc.ContentBlock);
+            error = new ClientInfosError(cms.Block);
         }
     }
 }

@@ -7,6 +7,8 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -20,13 +22,13 @@ namespace ToSic.SexyContent.WebApi
             Log.Rename("2sCoGr");
         }
 
-        private ContentGroup GetContentGroup(Guid contentGroupGuid)
+        private BlockConfiguration GetContentGroup(Guid contentGroupGuid)
         {
             Log.Add($"get group:{contentGroupGuid}");
-            var contentGroup = SxcInstance.App.ContentGroupManager.GetContentGroup(contentGroupGuid);
+            var contentGroup = CmsBlock.App.BlocksManager.GetBlockConfig(contentGroupGuid);
 
             if (contentGroup == null)
-                throw new Exception("ContentGroup with Guid " + contentGroupGuid + " does not exist.");
+                throw new Exception("BlockConfiguration with Guid " + contentGroupGuid + " does not exist.");
             return contentGroup;
         }
 
@@ -39,22 +41,22 @@ namespace ToSic.SexyContent.WebApi
             var contentGroup = GetContentGroup(guid);
 
             // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
-            var set = part == AppConstants.ContentLower ? contentGroup.Content : contentGroup.ListContent;
+            var set = part == ViewParts.ContentLower ? contentGroup.Content : contentGroup.ListContent;
 
             // not sure what this check is for, just leaving it in for now (2015-09-19 2dm)
-            if (set == null || contentGroup.Template == null)
+            if (set == null || contentGroup.View == null)
                 throw new Exception("Cannot find content group");
 
 
-            var attributeSetName = part == AppConstants.ContentLower
-                ? contentGroup.Template.ContentTypeStaticName
-                : contentGroup.Template.ListContentTypeStaticName;
+            var attributeSetName = part == ViewParts.ContentLower
+                ? contentGroup.View.ContentType
+                : contentGroup.View.HeaderType;
 
             // if no type was defined in this set, then return an empty list as there is nothing to choose from
             if (string.IsNullOrEmpty(attributeSetName))
                 return null;
 
-            var context = GetContext(SxcInstance, Log);
+            var context = GetContext(CmsBlock, Log);
 
             var cache = context.App.Data.Cache; 
             var ct = cache.GetContentType(attributeSetName);
@@ -79,15 +81,15 @@ namespace ToSic.SexyContent.WebApi
         public void Replace(Guid guid, string part, int index, int entityId)
         {
             Log.Add($"replace target:{guid}, part:{part}, index:{index}, id:{entityId}");
-            var versioning = SxcInstance.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = CmsBlock.Environment.PagePublishing;// new PagePublishing(Log);
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
-                var contentGroup = SxcInstance.App.ContentGroupManager.GetContentGroup(guid);
+                var contentGroup = CmsBlock.App.BlocksManager.GetBlockConfig(guid);
                 contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
             };
 
             // use dnn versioning - this is always part of page
-            var context = GetContext(SxcInstance, Log);
+            var context = GetContext(CmsBlock, Log);
             versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, internalSave);
         }
 
@@ -104,7 +106,7 @@ namespace ToSic.SexyContent.WebApi
                 Id = c?.EntityId ?? 0,
                 Guid = c?.EntityGuid ?? Guid.Empty,
                 Title = c?.GetBestTitle() ?? "",
-                Type = c?.Type.StaticName ?? cg.Template.ContentTypeStaticName
+                Type = c?.Type.StaticName ?? cg.View.ContentType
             }).ToList();
 
             return list;
@@ -116,7 +118,7 @@ namespace ToSic.SexyContent.WebApi
         public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> list)
         {
             Log.Add($"list for:{guid}, items:{list?.Count}");
-            var versioning = SxcInstance.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = CmsBlock.Environment.PagePublishing;// new PagePublishing(Log);
 
             void InternalSave(VersioningActionInfo args)
             {
@@ -128,7 +130,7 @@ namespace ToSic.SexyContent.WebApi
             }
 
             // use dnn versioning - items here are always part of list
-            var context = GetContext(SxcInstance, Log);
+            var context = GetContext(CmsBlock, Log);
             versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
 
             return true;
@@ -150,7 +152,7 @@ namespace ToSic.SexyContent.WebApi
                 Id = header?.EntityId ?? 0,
                 Guid = header?.EntityGuid ?? Guid.Empty,
                 Title = header?.GetBestTitle() ?? "",
-                Type = header?.Type.StaticName?? cg.Template.ListContentTypeStaticName
+                Type = header?.Type.StaticName?? cg.View.HeaderType
             };
         }
 

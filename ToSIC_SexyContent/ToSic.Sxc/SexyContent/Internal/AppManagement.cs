@@ -5,7 +5,9 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Sxc.SxcTemp;
 using static System.String;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 
 // todo: move to eav
@@ -17,10 +19,10 @@ namespace ToSic.SexyContent.Internal
         /// Returns all Apps for the current zone
         /// </summary>
         /// <returns></returns>
-        public static List<App> GetApps(int zoneId, bool includeDefaultApp, ITenant tenant, ILog parentLog)
+        public static List<IApp> GetApps(int zoneId, bool includeDefaultApp, ITenant tenant, ILog parentLog)
         {
             var appIds = new ZoneRuntime(zoneId, parentLog).Apps;
-            var builtApps = appIds.Select(eavApp => App.LightWithoutData(tenant, zoneId, eavApp.Key, parentLog: parentLog));
+            var builtApps = appIds.Select(eavApp => GetApp.LightWithoutData(tenant, zoneId, eavApp.Key, parentLog: parentLog));
 
             if (!includeDefaultApp)
                 builtApps = builtApps.Where(a => a.Name != Eav.Constants.ContentAppName);
@@ -38,7 +40,7 @@ namespace ToSic.SexyContent.Internal
                 throw new Exception("The default app of a zone cannot be removed.");
 
             // Prepare to Delete folder in dnn - this must be done, before deleting the app in the DB
-            var sexyApp = App.LightWithoutData(tenant, zoneId, appId, null);
+            var sexyApp = GetApp.LightWithoutData(tenant, zoneId, appId, null);
             var folder = sexyApp.Folder;
             var physPath = sexyApp.PhysicalPath;
 

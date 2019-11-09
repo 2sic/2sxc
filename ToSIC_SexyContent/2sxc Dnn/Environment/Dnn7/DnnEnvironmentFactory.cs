@@ -1,10 +1,10 @@
 ﻿using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Blocks;
 using IApp = ToSic.Eav.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -28,6 +28,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
 
-        public AppAndDataHelpersBase AppAndDataHelpers(SxcInstance sxc) => new DnnAppAndDataHelpers(sxc);
+        public AppAndDataHelpersBase AppAndDataHelpers(/*SxcInstance*/ICmsBlock cms) => new DnnAppAndDataHelpers(cms);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Blocks;
 
 
 namespace ToSic.SexyContent.DataSources
@@ -14,12 +15,12 @@ namespace ToSic.SexyContent.DataSources
         /// <summary>
         /// The class constructor, can optionally take a dictionary to reference with, otherwise creates a new one
         /// </summary>
-        public SxcInstanceLookUp(string name, Dictionary<string, string> valueList, SxcInstance sxc): base(name, valueList)
+        public SxcInstanceLookUp(string name, Dictionary<string, string> valueList, /*SxcInstance*/ICmsBlock cms): base(name, valueList)
         {
-            SxcInstance = sxc;
+            CmsInstance = cms;
         }
 
-        public SxcInstance SxcInstance;
+        public /*SxcInstance*/ICmsBlock CmsInstance;
 
 
     }

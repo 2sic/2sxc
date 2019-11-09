@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Threading;
 using System.Web;
-using ToSic.Eav.AppEngine;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using IApp = ToSic.Sxc.IApp;
+using ToSic.Sxc.Apps;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.SexyContent
 {
     /// <summary>
     /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
     /// </summary>
-    public class App : Eav.Apps.App, IApp
+    public class App : Eav.Apps.App, Sxc.Apps.IApp
     {
         #region Dynamic Properties: Configuration, Settings, Resources
         public dynamic Configuration
@@ -55,30 +55,17 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        #region App-Level TemplateManager, ContentGroupManager, EavContext --> must move to EAV some time
-        private TemplateManager _templateManager;
-        public TemplateManager TemplateManager => _templateManager 
-            ?? (_templateManager = new TemplateManager(ZoneId, AppId, Log));
+        #region App-Level ViewManager, BlocksManager, EavContext --> must move to EAV some time
+        private ViewsRuntime _viewManager;
+        public ViewsRuntime ViewManager => _viewManager 
+            ?? (_viewManager = new ViewsRuntime(ZoneId, AppId, Log));
 
-        private ContentGroupManager _contentGroupManager;
-        public ContentGroupManager ContentGroupManager => _contentGroupManager 
-            ?? (_contentGroupManager = new ContentGroupManager(ZoneId, AppId, ShowDraftsInData, VersioningEnabled, Log));
+        private BlocksManager _blocksManager;
+        public BlocksManager BlocksManager => _blocksManager 
+            ?? (_blocksManager = new BlocksManager(ZoneId, AppId, ShowDraftsInData, VersioningEnabled, Log));
 
         #endregion
 
-        /// <summary>
-        /// Special constructor to clarify it's a reduced app without data
-        /// Background: data operations need to know more like showDraft etc.
-        /// which often isn't needed for simpler operations
-        /// </summary>
-        public static App LightWithoutData(ITenant tenant, int appId, ILog parentLog)
-            => new App(tenant, AutoLookupZone, appId, null, true, parentLog);
-
-        public static App LightWithoutData(ITenant tenant, int zoneId, int appId, ILog parentLog)
-            => new App(tenant, zoneId, appId, null, true, parentLog);
-
-        public static App LightWithoutData(ITenant tenant, int zoneId, int appId, bool allowSideEffects, ILog parentLog)
-            => new App(tenant, zoneId, appId, null, allowSideEffects, parentLog);
 
         /// <summary>
         /// New constructor which auto-configures the app-data

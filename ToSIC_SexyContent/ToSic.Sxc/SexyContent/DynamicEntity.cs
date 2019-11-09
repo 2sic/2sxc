@@ -8,6 +8,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -25,11 +26,11 @@ namespace ToSic.SexyContent
             get
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
-                if (SxcInstance == null)
+                if (CmsInstance == null)
                     return new HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = SxcInstance?.UserMayEdit ?? false;
+                var userMayEdit = CmsInstance?.UserMayEdit ?? false;
 
                 if (!userMayEdit)
                     return new HtmlString("");
@@ -40,16 +41,16 @@ namespace ToSic.SexyContent
         }
 
         private readonly string[] _dimensions;
-        internal SxcInstance SxcInstance { get; }   // must be internal for further use cases
+        internal /*SxcInstance*/ ICmsBlock CmsInstance { get; }   // must be internal for further use cases
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
-        public DynamicEntity(IEntity entityModel, string[] dimensions, SxcInstance sexy)
+        public DynamicEntity(IEntity entityModel, string[] dimensions, /*SxcInstance*/ ICmsBlock sexy)
         {
             Entity = entityModel;
             _dimensions = dimensions;
-            SxcInstance = sexy;
+            CmsInstance = sexy;
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -76,7 +77,7 @@ namespace ToSic.SexyContent
                 return Toolbar.ToString();
 #pragma warning restore 612
 
-            if (attributeName == AppConstants.Presentation)
+            if (attributeName == ViewParts.Presentation)
                 return GetPresentation;
 
             #endregion
@@ -90,7 +91,7 @@ namespace ToSic.SexyContent
                 if (result is EntityRelationship rel)
                 {
                     var relList = rel.Select(
-                        p => new DynamicEntity(p, _dimensions, SxcInstance)
+                        p => new DynamicEntity(p, _dimensions, CmsInstance)
                     ).ToList();
                     result = relList;
                 }
@@ -113,7 +114,7 @@ namespace ToSic.SexyContent
 
         private IDynamicEntity GetPresentation
             => _presentation ?? (_presentation = Entity is EntityInContentGroup
-                   ? new DynamicEntity(((EntityInContentGroup) Entity).Presentation, _dimensions, SxcInstance)
+                   ? new DynamicEntity(((EntityInContentGroup) Entity).Presentation, _dimensions, CmsInstance)
                    : null);
         private IDynamicEntity _presentation;
 
@@ -124,9 +125,9 @@ namespace ToSic.SexyContent
 
         public object EntityTitle => Entity.Title[_dimensions];
 
-        public dynamic GetDraft() => new DynamicEntity(Entity.GetDraft(), _dimensions, SxcInstance);
+        public dynamic GetDraft() => new DynamicEntity(Entity.GetDraft(), _dimensions, CmsInstance);
         
-        public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, SxcInstance);
+        public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, CmsInstance);
 
         /// <summary>
         /// Tell the system that it's a demo item, not one added by the user
@@ -187,7 +188,7 @@ namespace ToSic.SexyContent
 
         public List<IDynamicEntity> Parents(string type = null, string field = null)
             => Entity.Parents(type, field)
-                .Select(e => new DynamicEntity(e, _dimensions, SxcInstance))
+                .Select(e => new DynamicEntity(e, _dimensions, CmsInstance))
                 .Cast<IDynamicEntity>()
                 .ToList();
     }

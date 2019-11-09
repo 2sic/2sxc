@@ -82,18 +82,37 @@
 <p>We try to minimize breaking changes, and most breaking changes won&#39;t affect your work, because it&#39;s internal API. 
 We&#39;re documenting it here to ensure you know what happened, in case you still run into this.</p>
 <h2 id="version-10">Version 10</h2>
-<p>Version 10 has a lot of small breaking changes because we restructured the internal API so it&#39;s consistent when we publish it. 
-All these things shouldn&#39;t affect you, because they were internal APIs, but in case it does - here&#39;s what we did.</p>
-<h4 id="version-102001">Version 10.20.01</h4>
+<blockquote><p>Version 10 has a lot of small breaking changes because 
+we restructured the internal API so it&#39;s consistent when we publish it. 
+All these things shouldn&#39;t affect you, because they were internal APIs, 
+but in case it does - here&#39;s what we did.</p>
+</blockquote>
+<h4 id="version-102001-2019-11-09">Version 10.20.01 (2019-11-09)</h4>
 <ol>
+<li>Internal code now uses the term <code>Header</code> instead of <code>ListContent</code>. External code provides both for backward-compatibility</li>
 <li>moved internal interfaces for engines (Razor/Token) to final namespaces <code>ToSic.Sxc.Engines</code><ol>
 <li><code>IEngine</code></li>
 <li><code>EngineBase</code></li>
-<li></li>
+<li><code>ITokenEngine</code></li>
+<li><code>IRazorEngine</code></li>
+</ol>
+</li>
+<li>corrected architecture - some template-management code had slipped into <code>Eav.Apps</code>, was moved back to <code>Sxc.Apps</code></li>
+<li>The <code>Template</code> object was moved from <code>Eav.Apps</code> to <code>Sxc.Views</code> and we added an interface <code>IView</code>. 
+ We also renamed the internal properti <code>ViewNameInUrl</code> to <code>UrlIdentifier</code>. </li>
+<li>To correct the API a CmsManager was created extending the AppManager, which is in charge of Views</li>
+<li>Moving internal stuff related to content blocks<ol>
+<li><code>IContentBlock</code> from <code>SexyContent.Interfaces</code> to <code>Sxc.Blocks</code></li>
+<li>from <code>ToSic.SexyContent.ISxcInstance</code> to <code>ToSic.Sxc.Blocks.IBlockContext</code></li>
+<li>actually moved a lot of things there incl. <code>ContentBlock</code> now <code>BlockConfiguration</code> and more - all internal stuff</li>
 </ol>
 </li>
 </ol>
-<h4 id="version-1020">Version 10.20</h4>
+<h4 id="changed-but-completely-internal">Changed, but completely internal</h4>
+<ol>
+<li>Some namespaces on <code>SexyContent.ContentBlocks</code> were moved to <code>Sxc.Blocks</code></li>
+</ol>
+<h4 id="version-102000-2019-11-05">Version 10.20.00 (2019-11-05)</h4>
 <ol>
 <li>the internal interface <code>IInPageEditingHelpers</code> was moved from <code>ToSic.SexyContent.Interfaces</code> to the namespace <code>ToSic.Sxc</code></li>
 <li>the internal interface <code>IHtmlHelper</code> and <code>ILinkHelper</code> was moved to <code>ToSic.Sxc.Dnn</code></li>
@@ -137,6 +156,24 @@ All these things shouldn&#39;t affect you, because they were internal APIs, but 
 <li>the internal interface <code>ToSic.SexyContent.IAppAndDataHelpers</code> was renamed to <code>ToSic.Sxc.IDynamicCode</code> but the old interface still exists, so it shouldn&#39;t break<br> <em>it was used by Mobius Forms</em></li>
 <li>moved <code>ToSic.Eav.Interfaces.IEntity</code> to <code>ToSic.Eav.Data.IEntity</code> - but preserved the old interface for compatibility
  <em>it was used everywhere</em></li>
+</ol>
+<h5 id="clean-up-but-not-broken">Clean-Up, but not broken</h5>
+<ol>
+<li>We&#39;re transitioning to the term <code>Header</code> instead of <code>ListContent</code> in templates.<br> The Razor pages and WebApi have this starting now, while old terms still work. 
+ Note that we&#39;re <em>not</em> creating a <code>HeaderPresentation</code>, because you should use <code>Header.Presentation</code></li>
+</ol>
+<h2 id="version-9">Version 9</h2>
+<h4 id="version-92000-2018-03-04">Version 9.20.00 (2018-03-04)</h4>
+<ol>
+<li>Minor breaking change in ADAM properties, like <code>Id</code> instead of <code>FolderID</code> which was a leftover of DNN naming.<br> see full <a href="https://2sxc.org/en/blog/post/working-with-the-breaking-change-adam-objects-2sxc-9-20">blog post</a></li>
+</ol>
+<h4 id="version-090800-2017-11-28">Version 09.08.00 (2017-11-28)</h4>
+<ol>
+<li>Minor breaking change <code>List&lt;IEntity&gt;</code> instead of <code>Dictionary&lt;int, IEntity&gt;</code> on the <code>IDataSource</code><br> see full <a href="https://2sxc.org/en/blog/post/fixing-the-breaking-change-in-2sxc-9-8-list-instead-of-dictionary">blog post</a></li>
+</ol>
+<h4 id="version-090300-2017-10-08">Version 09.03.00 (2017-10-08)</h4>
+<ol>
+<li>Breaking change on inconsistent naming <code>ToSic.Eav.IEntity</code> instead of <code>ToSic.Eav.Interfaces.IEntity</code>.<br> see full <a href="https://2sxc.org/en/blog/post/fixing-the-breaking-change-on-tosic-eav-ientity-in-2sxc-9-3">blog post</a></li>
 </ol>
 </article>
           </div>

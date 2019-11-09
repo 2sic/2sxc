@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Web;
-using ToSic.SexyContent.ContentBlocks.Renderers;
 using ToSic.Sxc;
-using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Blocks.Renderers;
 
 namespace ToSic.SexyContent.ContentBlocks
 {
@@ -30,7 +29,7 @@ namespace ToSic.SexyContent.ContentBlocks
                 item = context;
             
             return field == null
-                ? Simple.Render(context.SxcInstance.ContentBlock, item.Entity, context.SxcInstance.Log) // with edit-context
+                ? Simple.Render(context.CmsInstance.Block, item.Entity, context.CmsInstance.Log) // with edit-context
                 : new HtmlString(Simple.RenderWithEditContext(context, item, field, newGuid) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
         }
 

@@ -19,8 +19,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         {
             // do security check
             var permCheck = string.IsNullOrEmpty(contentTypeName) 
-                ? new MultiPermissionsApp(SxcInstance, appId, Log)
-                : new MultiPermissionsTypes(SxcInstance, appId, contentTypeName, Log);
+                ? new MultiPermissionsApp(CmsBlock, appId, Log)
+                : new MultiPermissionsTypes(CmsBlock, appId, contentTypeName, Log);
             if(!permCheck.EnsureAll(GrantSets.ReadSomething, out var exp))
                 throw exp;
 

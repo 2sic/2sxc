@@ -4,9 +4,9 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
-using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Adam;
-using App = ToSic.SexyContent.App;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using Constants = ToSic.Eav.Constants;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -14,13 +14,13 @@ namespace ToSic.Sxc.Code
 {
     public abstract class WithContext : IDynamicCode
     {
-        public App App => Parent?.App;
+        public IApp App => Parent?.App;
 
         /// <summary>
         /// Note that data is only available if we have an instance, as it's the
         /// instance data, not the app data
         /// </summary>
-        public ViewDataSource Data => Sxc?.SxcInstance?.Data;
+        public IBlockDataSource Data => Sxc?.Cms?.Block.Data;
         public SxcHelper Sxc { get; private set; }
 
         internal IDynamicCode Parent;

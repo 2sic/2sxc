@@ -6,14 +6,19 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Hosting;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Engines.Token
 {
+    /// <summary>
+    /// Rendering Engine for Token based templates (html using [Content:Title] kind of placeholders. 
+    /// </summary>
+    [PublicApi]
     [EngineDefinition(Name = "Token")]
     internal class TokenEngine : EngineBase
     {
@@ -31,9 +36,10 @@ namespace ToSic.Sxc.Engines.Token
 
         #region Regular Expressions / String Constants
 
-        private static readonly dynamic SourcePropertyName =  new {
-            Content     = AppConstants.ContentLower,
-            ListContent = "listcontent"
+        private static readonly dynamic SourcePropertyName = new
+        {
+            Content = ViewParts.ContentLower,
+            ListContent = ViewParts.ListContentLower
         };
 
         private static readonly dynamic RegexToken = new {
@@ -82,11 +88,13 @@ namespace ToSic.Sxc.Engines.Token
         private void InitTokenReplace()
         {
             var confProv = ConfigurationProvider.GetConfigProviderForModule(InstInfo.Id, Sexy.App, Sexy);
-            _tokenReplace = new TokenReplaceEav(App, InstInfo.Id, /*PortalSettings.Current,*/ confProv);
+            _tokenReplace = new TokenReplaceEav(InstInfo.Id, confProv);
             
             // Add the Content and ListContent property sources used always
             _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new LookUpInDynamicEntity(SourcePropertyName.ListContent, _dataHelper.Header));
+#pragma warning disable 618
             var contentProperty = _dataHelper.List.FirstOrDefault();
+#pragma warning restore 618
             if (contentProperty != null)
             {
                 _tokenReplace.ValueSources.Add(SourcePropertyName.Content, new LookUpInDynamicEntity(SourcePropertyName.Content, contentProperty.Content));
@@ -111,7 +119,7 @@ namespace ToSic.Sxc.Engines.Token
             }
 
             // Render sections between the <repeat>s (but before replace the <repeat>s and 
-            // the tempates contained with placeholders, so the templates in the <reapeat>s 
+            // the templates contained with placeholders, so the templates in the <reapeat>s 
             // are not rendered twice)
             var template = RepeatRegex.Replace(templateSource, RepeatPlaceholder);
             var rendered = RenderSection(template, new Dictionary<string, ILookUp>());
@@ -166,7 +174,7 @@ namespace ToSic.Sxc.Engines.Token
                 if (_tokenReplace.ValueSources.ContainsKey(src.Key))
                 {
                     var oldSource = _tokenReplace.ValueSources[src.Key];
-                    propertySourcesBackup.Add(src.Key, oldSource); // tokenReplace.RemovePropertySource(src.Key));
+                    propertySourcesBackup.Add(src.Key, oldSource);
                     if (oldSource != null)
                         _tokenReplace.ValueSources.Remove(src.Key);
                 }

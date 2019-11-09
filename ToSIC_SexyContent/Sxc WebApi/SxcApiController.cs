@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using ToSic.Eav.DataSources;
-using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using Factory = ToSic.Eav.Factory;
 using ToSic.Sxc.Adam.WebApi;
@@ -14,11 +13,12 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.Sxc;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
+using IApp = ToSic.Sxc.Apps.IApp;
 using IDynamicCode = ToSic.Sxc.Dnn.IDynamicCode;
 using IEntity = ToSic.Eav.Data.IEntity;
-using IFile = ToSic.Sxc.Adam.IFile;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
 namespace ToSic.SexyContent.WebApi
@@ -38,10 +38,10 @@ namespace ToSic.SexyContent.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            // Note that the SxcInstance is created by the BaseClass, if it's detectable. Otherwise it's null
-            DnnAppAndDataHelpers = new DnnAppAndDataHelpers(SxcInstance, SxcInstance?.Log ?? Log);
+            // Note that the SxcBlock is created by the BaseClass, if it's detectable. Otherwise it's null
+            DnnAppAndDataHelpers = new DnnAppAndDataHelpers(CmsBlock, CmsBlock?.Log ?? Log);
 
-            // In case SxcInstance was null, there is no instance, but we may still need the app
+            // In case SxcBlock was null, there is no instance, but we may still need the app
             if (DnnAppAndDataHelpers.App == null)
                 TryToAttachAppFromUrlParams();
 
@@ -60,7 +60,7 @@ namespace ToSic.SexyContent.WebApi
         public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
 
         /// <inheritdoc />
-        public App App => DnnAppAndDataHelpers.App;
+        public IApp App => DnnAppAndDataHelpers.App;
 
         private void TryToAttachAppFromUrlParams()
         {
@@ -73,7 +73,7 @@ namespace ToSic.SexyContent.WebApi
                 // Look up if page publishing is enabled - if module context is not available, always false
                 var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);
-                var app = (App) Environment.Dnn7.Factory.App(appId, publishingEnabled);
+                var app = Environment.Dnn7.Factory.App(appId, publishingEnabled) as IApp;
                 DnnAppAndDataHelpers.LateAttachApp(app);
                 found = true;
             } catch { /* ignore */ }
@@ -82,7 +82,7 @@ namespace ToSic.SexyContent.WebApi
         }
 
         /// <inheritdoc />
-        public ViewDataSource Data => DnnAppAndDataHelpers.Data;
+        public IBlockDataSource Data => DnnAppAndDataHelpers.Data;
 
 
         #region AsDynamic implementations
@@ -214,8 +214,8 @@ namespace ToSic.SexyContent.WebApi
             if (!Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
-            return new AdamUploader(SxcInstance, 
-                SxcInstance.AppId ?? throw new Exception("can't save in adam - full context not available"), 
+            return new AdamUploader(CmsBlock, 
+                CmsBlock.AppId, // 2019-11-09 not nullable any more ?? throw new Exception("can't save in adam - full context not available"), 
                 Log)
                 .UploadOne(stream, fileName, contentType, guid.Value, field, subFolder, false, true);
         }

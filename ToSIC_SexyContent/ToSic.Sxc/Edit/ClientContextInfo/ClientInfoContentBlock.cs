@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps.Enums;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.Edit.ClientContextInfo
@@ -14,7 +15,7 @@ namespace ToSic.SexyContent.Edit.ClientContextInfo
         public int ParentFieldSortOrder;
         public bool PartOfPage;
 
-        internal ClientInfoContentBlock(IContentBlock contentBlock, string parentFieldName, int indexInField, PublishingMode versioningRequirements)
+        internal ClientInfoContentBlock(IBlock contentBlock, string parentFieldName, int indexInField, PublishingMode versioningRequirements)
         {
             ShowTemplatePicker = contentBlock.ShowTemplateChooser;
             IsEntity = contentBlock.ParentIsEntity;

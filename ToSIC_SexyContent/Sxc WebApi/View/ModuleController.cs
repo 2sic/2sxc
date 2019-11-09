@@ -14,14 +14,14 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
-using ToSic.SexyContent.ContentBlocks;
 using ToSic.Eav.Apps.ItemListActions;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.WebApi.Permissions;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using Assembly = System.Reflection.Assembly;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -36,19 +36,19 @@ namespace ToSic.SexyContent.WebApi.View
         {
             base.Initialize(controllerContext); // very important!!!
             Log.Rename("2sModC");
-            ContentGroupReferenceManager = SxcInstance.ContentBlock.Manager;
+            BlockConfig = CmsBlock.Block.Manager;
         }
 
-        private ContentGroupReferenceManagerBase ContentGroupReferenceManager { get; set;  }
+        private BlockConfigBase BlockConfig { get; set;  }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void AddItem([FromUri] int? sortOrder = null)
         {
             Log.Add($"add order:{sortOrder}");
-            var versioning = SxcInstance.Environment.PagePublishing;
+            var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.AddItem(sortOrder);
+            void InternalSave(VersioningActionInfo args) => BlockConfig.AddItem(sortOrder);
 
             // use dnn versioning - this is always part of page
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
@@ -59,31 +59,31 @@ namespace ToSic.SexyContent.WebApi.View
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
-            var permCheck = new MultiPermissionsApp(SxcInstance, App.AppId, Log);
+            var permCheck = new MultiPermissionsApp(CmsBlock, App.AppId, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
-            return ContentGroupReferenceManager.SaveTemplateId(templateId, forceCreateContentGroup);
+            return BlockConfig.SaveTemplateId(templateId, forceCreateContentGroup);
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void SetAppId(int? appId) => ContentGroupReferenceManager.SetAppId(appId);
+        public void SetAppId(int? appId) => BlockConfig.SetAppId(appId);
 
-        #region Get Apps, ContentTypes and Templates for UI
-
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<AppUiInfo> GetSelectableApps() => ContentGroupReferenceManager.GetSelectableApps();
+        #region Get Apps, ContentTypes and Views for UI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes() => ContentGroupReferenceManager.GetSelectableContentTypes();
+        public IEnumerable<AppUiInfo> GetSelectableApps() => BlockConfig.GetSelectableApps();
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes() => BlockConfig.GetSelectableContentTypes();
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => ContentGroupReferenceManager.GetSelectableTemplates();
+        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => BlockConfig.GetSelectableTemplates();
 
         #endregion
 
@@ -95,30 +95,30 @@ namespace ToSic.SexyContent.WebApi.View
             var contentTypeName = Settings.AttributeSetStaticNameContentBlockTypeName;
             var values = new Dictionary<string, object>
             {
-                {EntityContentBlock.CbPropertyTitle, ""},
-                {EntityContentBlock.CbPropertyApp, app},
-                {EntityContentBlock.CbPropertyShowChooser, true},
+                {BlockFromEntity.CbPropertyTitle, ""},
+                {BlockFromEntity.CbPropertyApp, app},
+                {BlockFromEntity.CbPropertyShowChooser, true},
             };
             var newGuid = guid ?? Guid.NewGuid();
             var entityId = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, newGuid);
 
             // now return a rendered instance
-            var newContentBlock = new EntityContentBlock(SxcInstance.ContentBlock, entityId, Log);
-            return newContentBlock.SxcInstance.Render().ToString();
+            var newContentBlock = new BlockFromEntity(CmsBlock.Block, entityId, Log);
+            return newContentBlock.CmsInstance.Render().ToString();
 
         }
 
         private int CreateItemAndAddToList(int parentId, string field, int sortOrder, string contentTypeName,
             Dictionary<string, object> values, Guid newGuid)
         {
-            var cgApp = SxcInstance.App;
+            var cgApp = CmsBlock.App;
 
             // create the new entity 
             var entityId = new AppManager(cgApp, Log).Entities.GetOrCreate(newGuid, contentTypeName, values);
 
             #region attach to the current list of items
 
-            var cbEnt = SxcInstance.App.Data.List.One(parentId);
+            var cbEnt = CmsBlock.App.Data.List.One(parentId);
             var blockList = ((EntityRelationship) cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
@@ -140,9 +140,9 @@ namespace ToSic.SexyContent.WebApi.View
         public void MoveItemInList(int parentId, string field, int indexFrom, int indexTo, [FromUri] bool partOfPage = false)
         {
             Log.Add($"move item in list parent:{parentId}, field:{field}, from:{indexFrom}, to:{indexTo}, partOfpage:{partOfPage}");
-            var versioning = SxcInstance.Environment.PagePublishing;
+            var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => new AppManager(SxcInstance.App, Log)
+            void InternalSave(VersioningActionInfo args) => new AppManager(CmsBlock.App, Log)
                 .Entities.ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
 
             // use dnn versioning if partOfPage
@@ -162,9 +162,9 @@ namespace ToSic.SexyContent.WebApi.View
         public void RemoveItemInList(int parentId, string field, int index, [FromUri] bool partOfPage = false)
         {
             Log.Add($"remove item: parent{parentId}, field:{field}, index:{index}, partOfPage{partOfPage}");
-            var versioning = SxcInstance.Environment.PagePublishing;
+            var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => new AppManager(SxcInstance.App, Log)
+            void InternalSave(VersioningActionInfo args) => new AppManager(CmsBlock.App, Log)
                 .Entities.ModifyItemList(parentId, field, new Remove(index));
 
             // use dnn versioning if partOfPage
@@ -189,16 +189,16 @@ namespace ToSic.SexyContent.WebApi.View
                     // Fallback / ignore if the language specified has not been found
                     catch (System.Globalization.CultureNotFoundException) { }
 
-                var cbToRender = SxcInstance.ContentBlock;
+                var cbToRender = CmsBlock.Block;
 
                 // if a real templateid was specified, swap to that
                 if (templateId > 0)
                 {
-                    var template = cbToRender.App.TemplateManager.GetTemplate(templateId);
-                    cbToRender.SxcInstance.Template = template;
+                    var template = cbToRender.App.ViewManager.GetTemplate(templateId);
+                    ((CmsInstance)cbToRender.CmsInstance).View = template;
                 }
 
-                var rendered = cbToRender.SxcInstance.Render().ToString();
+                var rendered = cbToRender.CmsInstance.Render().ToString();
 
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -218,9 +218,9 @@ namespace ToSic.SexyContent.WebApi.View
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
             Log.Add($"change order sort:{sortOrder}, dest:{destinationSortOrder}");
-            var versioning = SxcInstance.Environment.PagePublishing;
+            var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
+            void InternalSave(VersioningActionInfo args) => BlockConfig.ChangeOrder(sortOrder, destinationSortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
@@ -231,10 +231,10 @@ namespace ToSic.SexyContent.WebApi.View
         public bool Publish(string part, int sortOrder)
         {
             Log.Add($"try to publish #{sortOrder} on '{part}'");
-            if (!new MultiPermissionsApp(SxcInstance, App.AppId, Log)
+            if (!new MultiPermissionsApp(CmsBlock, App.AppId, Log)
                 .EnsureAll(GrantSets.WritePublished, out var exp))
                 throw exp;
-            return ContentGroupReferenceManager.Publish(part, sortOrder);
+            return BlockConfig.Publish(part, sortOrder);
         }
 
         [HttpGet]
@@ -242,7 +242,7 @@ namespace ToSic.SexyContent.WebApi.View
         public bool Publish(int id)
         {
             Log.Add($"try to publish id #{id}");
-            if (!new MultiPermissionsApp(SxcInstance, App.AppId, Log)
+            if (!new MultiPermissionsApp(CmsBlock, App.AppId, Log)
                 .EnsureAll(GrantSets.WritePublished, out var exp))
                 throw exp;
             new AppManager(App.ZoneId, App.AppId).Entities.Publish(id);
@@ -254,9 +254,9 @@ namespace ToSic.SexyContent.WebApi.View
         public void RemoveFromList([FromUri] int sortOrder)
         {
             Log.Add($"remove from index:{sortOrder}");
-            var versioning = SxcInstance.Environment.PagePublishing;
+            var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => ContentGroupReferenceManager.RemoveFromList(sortOrder);
+            void InternalSave(VersioningActionInfo args) => BlockConfig.RemoveFromList(sortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
@@ -285,7 +285,8 @@ namespace ToSic.SexyContent.WebApi.View
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 try
                 {
-                    var all = SxcInstance.App.TemplateManager.GetAllTemplates();
+                    var all = new CmsManager(CmsBlock.App, Log).ViewReadTemp.GetAllTemplates();
+                        //CmsBlock.App.ViewManager.GetAllTemplates();
                     if (all.Any())
                         return null;
                 }

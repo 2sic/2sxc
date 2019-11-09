@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent.EAVExtensions;
-using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using IDynamicEntity = ToSic.Sxc.IDynamicEntity;
 
@@ -12,7 +11,7 @@ namespace ToSic.SexyContent.Serializers
 {
 	public class Serializer: Eav.Serializers.Serializer
 	{
-		public SxcInstance Sxc { get; set; }
+		public /*SxcInstance*/ICmsBlock Cms { get; internal set; }
 
         /// <summary>
         /// Standard constructor, important for Unity when opening this class in dependency-injection mode
@@ -25,11 +24,11 @@ namespace ToSic.SexyContent.Serializers
 	    /// <summary>
 	    /// Common constructor, directly preparing it with 2sxc
 	    /// </summary>
-	    /// <param name="sxcInstance"></param>
+	    /// <param name="cmsInstance"></param>
 	    /// <param name="languages"></param>
-	    public Serializer(SxcInstance sxcInstance, string[] languages = null)
+	    public Serializer(/*SxcInstance*/ICmsBlock cmsInstance, string[] languages = null)
         {
-            Sxc = sxcInstance;
+            Cms = cmsInstance;
             Languages = languages;
         }
 
@@ -107,18 +106,18 @@ namespace ToSic.SexyContent.Serializers
         internal void AddPresentation(IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add full presentation object if it has one...because there we need more than just id/title
-	        if (entity is EntityInContentGroup && !dictionary.ContainsKey(AppConstants.Presentation))
+	        if (entity is EntityInContentGroup && !dictionary.ContainsKey(ViewParts.Presentation))
 	        {
 	            var entityInGroup = (EntityInContentGroup) entity;
 	            if (entityInGroup.Presentation != null)
-	                dictionary.Add(AppConstants.Presentation, GetDictionaryFromEntity(entityInGroup.Presentation));//, language));
+	                dictionary.Add(ViewParts.Presentation, GetDictionaryFromEntity(entityInGroup.Presentation));//, language));
 	        }
 	    }
 
 	    internal void AddEditInfo(IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add additional information in case we're in edit mode
-	        var userMayEdit = Sxc?.UserMayEdit ?? false;// Factory.Resolve<IPermissions>().UserMayEditContent(Sxc?.InstanceInfo);
+	        var userMayEdit = Cms?.UserMayEdit ?? false;// Factory.Resolve<IPermissions>().UserMayEditContent(Sxc?.InstanceInfo);
 
 	        if (!userMayEdit) return;
 

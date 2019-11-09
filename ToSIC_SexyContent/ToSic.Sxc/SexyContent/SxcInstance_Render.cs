@@ -2,14 +2,14 @@
 using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
 {
-    public partial class SxcInstance
+    public partial class CmsInstance
     {
 
 
@@ -37,7 +37,7 @@ namespace ToSic.SexyContent
                 if (body == null)
                 {
                     Log.Add("pre-init innerContent content is empty so no errors, will build");
-                    if (ContentBlock.DataIsMissing)
+                    if (Block.DataIsMissing)
                     {
                         Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
                         if (UserMayEdit)
@@ -58,10 +58,10 @@ namespace ToSic.SexyContent
                 if (body == null)
                     try
                     {
-                        if (Template != null) // when a content block is still new, there is no definition yet
+                        if (View != null) // when a content block is still new, there is no definition yet
                         {
                             Log.Add("standard case, found template, will render");
-                            var engine = GetRenderingEngine(InstancePurposes.WebView);
+                            var engine = GetRenderingEngine(Purpose.WebView);
                             body = engine.Render();
                         }
                         else body = "";
@@ -75,8 +75,8 @@ namespace ToSic.SexyContent
                 #region Wrap it all up into a nice wrapper tag
                 var result = RenderWithDiv
                     ? RenderingHelper.WrapInContext(body,
-                        instanceId: ContentBlock.ParentId,
-                        contentBlockId: ContentBlock.ContentBlockId,
+                        instanceId: Block.ParentId,
+                        contentBlockId: Block.ContentBlockId,
                         editContext: UiAddEditContext,
                         autoToolbar: UiAutoToolbar)
                     : body;
@@ -114,10 +114,10 @@ namespace ToSic.SexyContent
             return null;
         }
 
-        public IEngine GetRenderingEngine(InstancePurposes renderingPurpose)
+        public IEngine GetRenderingEngine(Purpose renderingPurpose)
         {
-            var engine = EngineFactory.CreateEngine(Template);
-            engine.Init(Template, App, EnvInstance, Data, renderingPurpose, this, Log);
+            var engine = EngineFactory.CreateEngine(View);
+            engine.Init(View, App, EnvInstance, Block.Data, renderingPurpose, this, Log);
             return engine;
         }
 

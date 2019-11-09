@@ -15,7 +15,9 @@ using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Permissions;
+using ToSic.Sxc.SxcTemp;
 using Assembly = System.Reflection.Assembly;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -90,7 +92,7 @@ namespace ToSic.SexyContent.WebApi
 
         private string GetPath(int zoneId, int appId)
         {
-            var app = SexyContent.App.LightWithoutData(new DnnTenant(PortalSettings), zoneId, appId, parentLog: Log);
+            var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings), zoneId, appId, parentLog: Log);
             return app.Path;
         }
 
@@ -118,11 +120,11 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            var appAndPerms = new MultiPermissionsApp(SxcInstance, appId, Log);
+            var appAndPerms = new MultiPermissionsApp(CmsBlock, appId, Log);
             if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var exp))
                 throw exp;
 
-            //var appIdentity = new AppPermissionBeforeUsing(SxcInstance, Log)
+            //var appIdentity = new AppPermissionBeforeUsing(SxcBlock, Log)
             //    .GetAppIdentityOrThrowIfNotAllowed(appId);
 
             var app = appAndPerms.App;
@@ -202,7 +204,7 @@ namespace ToSic.SexyContent.WebApi
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
-        private string IntroductionToAppUrl(App app)
+        private string IntroductionToAppUrl(IApp app)
         {
             var dnn = PortalSettings.Current;
             var mod = Request.FindModuleInfo();

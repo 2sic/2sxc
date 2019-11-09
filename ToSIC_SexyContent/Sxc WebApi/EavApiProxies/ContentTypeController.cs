@@ -42,7 +42,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
 	    {
-	        var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentTypeStaticName, Log);
+	        var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentTypeStaticName, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
@@ -82,7 +82,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName)
         {
             Log.Add($"get fields for a:{appId} type:{staticName}");
-	        var permCheck = new MultiPermissionsTypes(SxcInstance, appId, staticName, Log);
+	        var permCheck = new MultiPermissionsTypes(CmsBlock, appId, staticName, Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
             if(!permCheck.UserCanWriteAndPublicFormsEnabled(out exp))

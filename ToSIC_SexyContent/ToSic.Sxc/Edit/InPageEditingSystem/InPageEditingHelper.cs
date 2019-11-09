@@ -2,13 +2,11 @@
 using System.Web;
 using Newtonsoft.Json;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Interfaces;
 using Feats = ToSic.Eav.Configuration.Features;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -19,16 +17,16 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         private readonly string _jsonTemplate =
             "data-list-context='{{ `parent`: {0}, `field`: `{1}`, `type`: `{2}`, `guid`: `{3}`}}'".Replace("`", "\"");
 
-        internal InPageEditingHelper(SxcInstance sxcInstance, ILog parentLog) : base("Edt", parentLog)
+        internal InPageEditingHelper(/*SxcInstance*/ICmsBlock cmsInstance, ILog parentLog) : base("Edt", parentLog)
         {
-            Enabled = sxcInstance.UserMayEdit;
-            SxcInstance = sxcInstance;
+            Enabled = cmsInstance.UserMayEdit;
+            CmsInstance = cmsInstance;
         }
 
         /// <inheritdoc />
         public bool Enabled { get; }
         [PrivateApi]
-        protected SxcInstance SxcInstance;
+        protected /*SxcInstance*/ ICmsBlock CmsInstance;
 
         #region Toolbar
 
@@ -116,13 +114,13 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "WrapInContext", $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
             return new HtmlString(
-                SxcInstance.RenderingHelper.WrapInContext(content.ToString(),
+                ((CmsInstance)CmsInstance).RenderingHelper.WrapInContext(content.ToString(),
                     instanceId: instanceId > 0
                         ? instanceId
-                        : SxcInstance?.ContentBlock?.ParentId ?? 0,
+                        : CmsInstance?.Block?.ParentId ?? 0,
                     contentBlockId: contentBlockId > 0
                         ? contentBlockId
-                        : SxcInstance?.ContentBlock?.ContentBlockId ?? 0,
+                        : CmsInstance?.Block?.ContentBlockId ?? 0,
                     editContext: enableEdit ?? Enabled)
             );
         }
@@ -157,18 +155,20 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
                     throw exp;
             }
 
+            var hostWithInternals = (CmsInstance) CmsInstance;
+
             // only update the values if true, otherwise leave untouched
             if (api.HasValue || forms.HasValue)
-                SxcInstance.UiAddEditApi = api ?? forms.Value;
+                hostWithInternals.UiAddEditApi = api ?? forms.Value;
 
             if (styles.HasValue)
-                SxcInstance.UiAddEditUi = styles.Value;
+                hostWithInternals.UiAddEditUi = styles.Value;
 
             if (context.HasValue)
-                SxcInstance.UiAddEditContext = context.Value;
+                hostWithInternals.UiAddEditContext = context.Value;
 
             if (autoToolbar.HasValue)
-                SxcInstance.UiAutoToolbar = autoToolbar.Value;
+                hostWithInternals.UiAutoToolbar = autoToolbar.Value;
 
             return null;
         }

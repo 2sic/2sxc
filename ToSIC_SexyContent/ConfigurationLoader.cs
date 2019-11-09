@@ -16,6 +16,7 @@ using ToSic.SexyContent.Environment.Dnn7.Installation;
 using ToSic.SexyContent.Environment.Dnn7.ValueProviders;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Apps.ImportExport;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent
@@ -67,6 +68,9 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IRuntime, Runtime>();
                 sc.AddTransient<IAppEnvironment, DnnEnvironment>();
                 sc.AddTransient<IEnvironment, DnnEnvironment>();
+
+                // The file-importer - temporarily itself
+                sc.AddTransient<XmlImportWithFiles, XmlImportFull>();
 
                 sc.AddTransient<IClientDependencyManager, ClientDependencyManager>();
                 sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();

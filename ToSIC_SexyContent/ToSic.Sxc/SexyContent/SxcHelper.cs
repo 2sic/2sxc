@@ -1,16 +1,17 @@
 ﻿using ToSic.SexyContent.Serializers;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.SexyContent
 {
 	public class SxcHelper
 	{
-		public readonly SxcInstance SxcInstance;
-		public SxcHelper(SxcInstance sxcInstance)
+		public readonly ICmsBlock Cms;
+		public SxcHelper(ICmsBlock cms)
 		{
-			SxcInstance = sxcInstance;
+			Cms = cms;
 		}
 
 		private Serializer _serializer;
-		public Serializer Serializer => _serializer ?? (_serializer = new Serializer(SxcInstance));
+		public Serializer Serializer => _serializer ?? (_serializer = new Serializer(Cms));
 	}
 }

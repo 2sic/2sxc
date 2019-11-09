@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.SexyContent.Edit.ClientContextInfo
 {
@@ -17,28 +18,28 @@ namespace ToSic.SexyContent.Edit.ClientContextInfo
         public bool HasContent;
         public bool SupportsAjax;
 
-        public ClientInfoContentGroup(SxcInstance sxc, bool isCreated)
+        public ClientInfoContentGroup(ICmsBlock cms, bool isCreated)
         {
             IsCreated = isCreated;
-            IsContent = sxc.IsContentApp;
+            IsContent = cms.Block.IsContentApp;
 
-            Id = sxc.ContentGroup?.ContentGroupId ?? 0;
-            Guid = sxc.ContentGroup?.ContentGroupGuid ?? Guid.Empty;
-            AppId = sxc.AppId ?? 0;
-            AppUrl = sxc.App?.Path ?? "" + "/";
-            AppSettingsId = (sxc.App?.Settings?.Entity?.Attributes?.Count > 0)
-                ? sxc.App?.Settings?.EntityId : null;    // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
-            AppResourcesId = (sxc.App?.Resources?.Entity?.Attributes?.Count > 0)
-                ? sxc.App?.Resources?.EntityId : null;  // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
+            Id = cms.Block.Configuration?.ContentGroupId ?? 0;
+            Guid = cms.Block.Configuration?.ContentGroupGuid ?? Guid.Empty;
+            AppId = cms.AppId;// 2019-11-09, Id not nullable any more // ?? 0;
+            AppUrl = cms.App?.Path ?? "" + "/";
+            AppSettingsId = (cms.App?.Settings?.Entity?.Attributes?.Count > 0)
+                ? cms.App?.Settings?.EntityId : null;    // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
+            AppResourcesId = (cms.App?.Resources?.Entity?.Attributes?.Count > 0)
+                ? cms.App?.Resources?.EntityId : null;  // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
 
-            HasContent = sxc.Template != null && (sxc.ContentGroup?.Exists ?? false);
+            HasContent = cms.View != null && (cms.Block.Configuration?.Exists ?? false);
 
-            ZoneId = sxc.ZoneId ?? 0;
-            TemplateId = sxc.Template?.TemplateId ?? 0;
-            QueryId = sxc.Template?.Query?.EntityId; // will be null if not defined
-            ContentTypeName = sxc.Template?.ContentTypeStaticName ?? "";
-            IsList = sxc.ContentGroup?.Template?.UseForList ?? false;//  isCreated && ((sxc.ContentGroup?.Content?.Count ?? 0) > 1);
-            SupportsAjax = sxc.IsContentApp || sxc.App?.Configuration?.SupportsAjaxReload ?? false;
+            ZoneId = cms.ZoneId; // 2019-11-09, Id not nullable any more // ?? 0;
+            TemplateId = cms.View?.Id ?? 0;
+            QueryId = cms.View?.Query?.EntityId; // will be null if not defined
+            ContentTypeName = cms.View?.ContentType ?? "";
+            IsList = cms.Block.Configuration?.View?.UseForList ?? false;//  isCreated && ((sxc.BlockConfiguration?.Content?.Count ?? 0) > 1);
+            SupportsAjax = cms.Block.IsContentApp || cms.App?.Configuration?.SupportsAjaxReload ?? false;
         }
     }
 }

@@ -8,35 +8,40 @@ using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
-using App = ToSic.SexyContent.App;
+using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.Sxc.Engines
 {
-    public abstract class EngineBase : IEngine
+    public abstract class EngineBase : HasLog, IEngine
     {
-        protected Template Template;
+        protected IView Template;
         protected string TemplatePath;
-        protected App App;
+        protected IApp App;
         protected IInstanceInfo InstInfo;
         protected IDataSource DataSource;
-        protected InstancePurposes InstancePurposes;
-        protected SxcInstance Sexy;
+        protected Purpose Purpose;
+        protected /*SxcInstance*/ICmsBlock Sexy;
 
         public RenderStatusType PreRenderStatus { get; internal set; }
 
-        protected ILog Log { get; set; }
+        //protected ILog Log { get; set; }
 
-        public void Init(Template template, App app, IInstanceInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sxcInstance, ILog parentLog)
+        protected EngineBase() : base("Sxc.EngBas")
+        { }
+
+        public void Init(IView template, IApp app, IInstanceInfo hostingModule, IDataSource dataSource, Purpose purpose,
+            /*SxcInstance*/ICmsBlock cmsInstance, ILog parentLog)
         {
             var templatePath = VirtualPathUtility.Combine(SexyContent.Internal.TemplateHelpers.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
 
-            Log = new Log("Htm.RendEn", parentLog);
+            Log.LinkTo(parentLog);
+            //Log = new Log("Htm.RendEn", parentLog);
 
             // Throw Exception if Template does not exist
             if (!File.Exists(HostingEnvironment.MapPath(templatePath)))
@@ -48,14 +53,14 @@ namespace ToSic.Sxc.Engines
             App = app;
             InstInfo = hostingModule;
             DataSource = dataSource;
-            InstancePurposes = instancePurposes;
-            Sexy = sxcInstance;
+            Purpose = purpose;
+            Sexy = cmsInstance;
 
             // check common errors
             CheckExpectedTemplateErrors();
 
             // check access permissions - before initializing or running data-code in the template
-            CheckTemplatePermissions(sxcInstance.Tenant);
+            CheckTemplatePermissions(cmsInstance.Block.Tenant);
 
             // Run engine-internal init stuff
             Init();
@@ -102,8 +107,8 @@ namespace ToSic.Sxc.Engines
             if (Template == null)
                 throw new RenderingException("Template Configuration Missing");
 
-            if (Template.ContentTypeStaticName != "" &&
-                Eav.DataSource.GetCache(App.ZoneId, App.AppId).GetContentType(Template.ContentTypeStaticName) == null)
+            if (Template.ContentType != "" &&
+                Eav.DataSource.GetCache(App.ZoneId, App.AppId).GetContentType(Template.ContentType) == null)
                 throw new RenderingException("The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
 
         }
@@ -112,8 +117,8 @@ namespace ToSic.Sxc.Engines
 
         private void CheckExpectedNoRenderConditions()
         {
-            if (Template.ContentTypeStaticName != "" && Template.ContentDemoEntity == null &&
-                Sexy.ContentGroup.Content.All(e => e == null))
+            if (Template.ContentType != "" && Template.ContentItem == null &&
+                Sexy.Block.Configuration.Content.All(e => e == null))
             {
                 PreRenderStatus = RenderStatusType.MissingData;
 

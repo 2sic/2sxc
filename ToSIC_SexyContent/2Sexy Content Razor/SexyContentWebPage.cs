@@ -13,6 +13,8 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Engines;
@@ -37,7 +39,7 @@ namespace ToSic.SexyContent.Razor
 
         // <2sic>
         [PrivateApi]
-        protected internal SxcInstance Sexy { get; set; }
+        protected internal /*SxcInstance*/ICmsBlock Sexy { get; set; }
         [PrivateApi]
         protected internal DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
         // </2sic>
@@ -82,10 +84,10 @@ namespace ToSic.SexyContent.Razor
         public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
 
         /// <inheritdoc />
-        public new App App => DnnAppAndDataHelpers.App;
+        public new IApp App => DnnAppAndDataHelpers.App;
 
         /// <inheritdoc />
-        public ViewDataSource Data => DnnAppAndDataHelpers.Data;
+        public IBlockDataSource Data => DnnAppAndDataHelpers.Data;
 
         public RazorPermissions Permissions => new RazorPermissions(Sexy);
 
@@ -184,19 +186,17 @@ namespace ToSic.SexyContent.Razor
         }
 
 
-        /// <summary>
-        /// Override this to have your code change the (already initialized) Data object. 
-        /// If you don't override this, nothing will be changed/customized. 
-        /// </summary>
+        /// <inheritdoc />
         public virtual void CustomizeData()
         {
         }
 
+        /// <inheritdoc />
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
         {
         }
 
-        public InstancePurposes InstancePurpose { get; set; }
+        public Purpose Purpose { get; set; }
 
 
         #region Adam 

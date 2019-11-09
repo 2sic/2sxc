@@ -1,12 +1,12 @@
 ﻿using System;
 using ToSic.Eav.LookUp;
-using ToSic.SexyContent;
+using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Engines.Token
 {
     internal class LookUpInAppProperty : LookUpBase
     {
-        private readonly SexyContent.App _app;
+        private readonly IApp _app;
 
         #region Internal stuff to be able to supply sub-properties
         private ILookUp _settings;
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Engines.Token
         /// <summary>
 		/// Constructor
 		/// </summary>
-        public LookUpInAppProperty(string name, App app)
+        public LookUpInAppProperty(string name, IApp app)
         {
             Name = name; 
 			_app = app;

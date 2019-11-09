@@ -8,15 +8,12 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Data;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.ContentBlocks;
-using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
+using ToSic.Sxc.Blocks;
 using IEntity = ToSic.Eav.Data.IEntity;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     internal partial class PagePublishing : HasLog, IPagePublishing
@@ -112,7 +109,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 var instanceInfo = new DnnInstanceInfo(dnnModule);
                 // must find tenant through module, as the PortalSettings.Current is null in search mode
                 var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
-                var cb = new ModuleContentBlock(instanceInfo, Log, tenant);
+                var cb = new BlockFromModule(instanceInfo, Log, tenant);
 
                 Log.Add($"found dnn mod {instanceInfo.Id}, tenant {tenant.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
@@ -137,11 +134,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
                     var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
 
-                    // publish ContentGroup as well - if there already is one
-                    if (cb.ContentGroup != null)
+                    // publish BlockConfiguration as well - if there already is one
+                    if (cb.Configuration != null)
                     {
-                        Log.Add($"add group id:{cb.ContentGroup.ContentGroupId}");
-                        ids.Add(cb.ContentGroup.ContentGroupId);
+                        Log.Add($"add group id:{cb.Configuration.ContentGroupId}");
+                        ids.Add(cb.Configuration.ContentGroupId);
                     }
 
                     Log.Add(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]");
@@ -165,7 +162,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         }
 
-        private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, ViewDataSource data, string key)
+        private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockDataSource data, string key)
         {
             var cont = data.Out.ContainsKey(key) ? data[key]?.List?.ToList() : null;
             Log.Add($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );

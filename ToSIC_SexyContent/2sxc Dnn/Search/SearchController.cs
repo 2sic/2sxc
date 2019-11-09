@@ -11,11 +11,10 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
-using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
 
@@ -64,23 +63,23 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
 
             // must find tenant through module, as the PortalSettings.Current is null in search mode
             var tenant = new DnnTenant(portalSettings);
-            var mcb = new ModuleContentBlock(instance, Log, tenant);
-            var sexy = mcb.SxcInstance;
+            var mcb = new BlockFromModule(instance, Log, tenant);
+            var sexy = mcb.CmsInstance;
 
             var language = dnnModule.CultureCode;
 
-            var contentGroup = sexy.App.ContentGroupManager.GetInstanceContentGroup(dnnModule.ModuleID, dnnModule.TabID);
+            var contentGroup = sexy.App.BlocksManager.GetInstanceContentGroup(dnnModule.ModuleID, dnnModule.TabID);
 
-            var template = contentGroup.Template;
+            var template = contentGroup.View;
 
             // This list will hold all EAV entities to be indexed
-            var dataSource = sexy.Data;
+            var dataSource = sexy.Block.Data;
 			
             if (template == null)
                 return searchDocuments;
 
             var engine = EngineFactory.CreateEngine(template);
-            engine.Init(template, sexy.App, new DnnInstanceInfo(dnnModule), dataSource, InstancePurposes.IndexingForSearch, sexy, Log);
+            engine.Init(template, sexy.App, new DnnInstanceInfo(dnnModule), dataSource, Purpose.IndexingForSearch, sexy, Log);
 
             // see if data customization inside the cshtml works
             try
@@ -96,7 +95,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             var searchInfoDictionary = new Dictionary<string, List<ISearchInfo>>();
 
             // Get DNN SearchDocuments from 2Sexy SearchInfos
-            foreach (var stream in dataSource.Out.Where(p => p.Key != AppConstants.Presentation && p.Key != AppConstants.ListPresentation))
+            foreach (var stream in dataSource.Out.Where(p => p.Key != ViewParts.Presentation && p.Key != ViewParts.ListPresentation))
             {
                 
                 var entities = stream.Value.List;
