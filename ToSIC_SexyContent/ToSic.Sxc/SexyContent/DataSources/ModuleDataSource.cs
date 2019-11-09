@@ -99,7 +99,7 @@ namespace ToSic.SexyContent.DataSources
         public ModuleDataSource()
         {
             Out.Add(Eav.Constants.DefaultStreamName, new DataStream(this, Eav.Constants.DefaultStreamName, GetContent));
-            Out.Add(Parts.ListContent, new DataStream(this, Eav.Constants.DefaultStreamName, GetListContent));
+            Out.Add(ViewParts.ListContent, new DataStream(this, Eav.Constants.DefaultStreamName, GetListContent));
 
 			Configuration.Add("ModuleId", $"[Settings:{Settings.InstanceId}||[Module:ModuleId]]");
         }

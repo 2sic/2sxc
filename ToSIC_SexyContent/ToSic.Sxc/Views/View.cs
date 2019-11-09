@@ -48,13 +48,13 @@ namespace ToSic.Sxc.Views
         {
             switch (groupPart.ToLower())
             {
-                case Parts.ContentLower:
+                case ViewParts.ContentLower:
                     return ContentType;
-                case Parts.PresentationLower:
+                case ViewParts.PresentationLower:
                     return PresentationType;
-                case Parts.ListContentLower:
+                case ViewParts.ListContentLower:
                     return HeaderType;
-                case Parts.ListPresentationLower:
+                case ViewParts.ListPresentationLower:
                     return HeaderPresentationType;
                 default:
                     throw new NotSupportedException("Unknown group part: " + groupPart);

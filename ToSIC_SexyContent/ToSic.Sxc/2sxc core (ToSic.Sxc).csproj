@@ -94,7 +94,7 @@
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\ClientContextInfo\Ui.cs" />
     <Compile Include="Views\IView.cs" />
-    <Compile Include="Views\Parts.cs" />
+    <Compile Include="Views\ViewParts.cs" />
     <Compile Include="Views\View_Constants.cs" />
     <Compile Include="Engines\EngineDefinitionAttribute.cs" />
     <Compile Include="Views\View.cs" />
@@ -216,6 +216,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Blocks\" />
     <Folder Include="SexyContent\Engines\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

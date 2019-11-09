@@ -38,8 +38,8 @@ namespace ToSic.Sxc.Engines.Token
 
         private static readonly dynamic SourcePropertyName = new
         {
-            Content = Parts.ContentLower,
-            ListContent = Parts.ListContentLower
+            Content = ViewParts.ContentLower,
+            ListContent = ViewParts.ListContentLower
         };
 
         private static readonly dynamic RegexToken = new {

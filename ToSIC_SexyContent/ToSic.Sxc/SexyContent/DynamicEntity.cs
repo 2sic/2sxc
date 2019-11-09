@@ -76,7 +76,7 @@ namespace ToSic.SexyContent
                 return Toolbar.ToString();
 #pragma warning restore 612
 
-            if (attributeName == Sxc.Views.Parts.Presentation)
+            if (attributeName == Sxc.Views.ViewParts.Presentation)
                 return GetPresentation;
 
             #endregion

@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.ContentBlocks
             => _cGroup ?? (_cGroup = SxcContext.ContentGroup);
 
         public void AddItem(int? sortOrder = null)
-            => ContentGroup.AddContentAndPresentationEntity(Parts.ContentLower, sortOrder, null, null);
+            => ContentGroup.AddContentAndPresentationEntity(ViewParts.ContentLower, sortOrder, null, null);
         
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
@@ -112,7 +112,7 @@ namespace ToSic.SexyContent.ContentBlocks
             Log.Add($"publish part{part}, order:{sortOrder}");
             var contentGroup = ContentGroup;
             var contEntity = contentGroup[part][sortOrder];
-            var presKey = part.ToLower() == Parts.ContentLower ? Parts.PresentationLower : "listpresentation";
+            var presKey = part.ToLower() == ViewParts.ContentLower ? ViewParts.PresentationLower : "listpresentation";
             var presEntity = contentGroup[presKey][sortOrder];
 
             var hasPresentation = presEntity != null;
@@ -136,7 +136,7 @@ namespace ToSic.SexyContent.ContentBlocks
         {
             Log.Add($"remove from list order:{sortOrder}");
             var contentGroup = ContentGroup;
-            contentGroup.RemoveContentAndPresentationEntities(Parts.ContentLower, sortOrder);
+            contentGroup.RemoveContentAndPresentationEntities(ViewParts.ContentLower, sortOrder);
         }
 
         #endregion

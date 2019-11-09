@@ -76,10 +76,10 @@ namespace ToSic.SexyContent
 		        return appMan.Entities.Create(ContentGroupTypeName, new Dictionary<string, object>
 		        {
 		            {"Template", new List<int> {templateId}},
-		            {Parts.Content, new List<int>()},
-		            {Parts.Presentation, new List<int>()},
-		            {Parts.ListContent, new List<int>()},
-		            {Parts.ListPresentation, new List<int>()}
+		            {ViewParts.Content, new List<int>()},
+		            {ViewParts.Presentation, new List<int>()},
+		            {ViewParts.ListContent, new List<int>()},
+		            {ViewParts.ListPresentation, new List<int>()}
 		        }).Item2; // new guid
 		    }
 		    else

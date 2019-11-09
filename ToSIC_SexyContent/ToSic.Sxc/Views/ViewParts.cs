@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Views
 {
-    internal class Parts
+    internal class ViewParts
     {
         public const string Content = "Content";
         public const string ContentLower = "content";
