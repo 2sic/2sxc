@@ -2,7 +2,7 @@
 
 // ReSharper disable UnusedMemberInSuper.Global
 
-namespace ToSic.Sxc
+namespace ToSic.Sxc.Apps
 {
     /// <summary>
     /// An app-object as is available in a razor template or WebApi
@@ -47,5 +47,16 @@ namespace ToSic.Sxc
         /// </summary>
         /// <returns>path + app-icon.png if there is an icon there. </returns>
         new string Thumbnail { get; }
+
+
+
+        #region experimental
+
+        ViewsRuntime ViewManager { get; }
+
+        BlocksManager BlocksManager { get; }
+
+        //ITokenListFiller ConfigurationProvider { get; }
+        #endregion
     }
 }

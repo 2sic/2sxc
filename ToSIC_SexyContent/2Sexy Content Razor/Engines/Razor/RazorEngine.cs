@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Engines.Razor
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
-            Webpage.InstancePurpose = InstancePurposes;
+            Webpage.Purpose = Purpose;
             InitHelpers(Webpage);
         }
 

@@ -13,6 +13,7 @@ using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Permissions;
+using ToSic.Sxc.SxcTemp;
 using Guid = System.Guid;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -36,11 +37,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
-            var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentType, Log);
+            var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
                 throw exception;
             // 2018-09-15 old code, should have checked the same stuff mostly...
-            //new AppPermissionBeforeUsing(SxcInstance, Log)
+            //new AppPermissionBeforeUsing(SxcBlock, Log)
             //    .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
             return new EntityApi(appId, Log).GetOne(contentType, id, cultureCode);  // note that the culture-code isn't actually used...
         }
@@ -55,11 +56,11 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             // before we start, we have to convert the indexes into something more useful, because
             // otherwise in content-list scenarios we don't have the type
-            var appForSecurityChecks = App.LightWithoutData(new DnnTenant(PortalSettings), SystemRuntime.ZoneIdOfApp(appId), appId, Log);
-            items = new SaveHelpers.ContentGroupList(SxcInstance, Log).ConvertListIndexToId(items, appForSecurityChecks);
+            var appForSecurityChecks = GetApp.LightWithoutData(new DnnTenant(PortalSettings), SystemRuntime.ZoneIdOfApp(appId), appId, Log);
+            items = new SaveHelpers.ContentGroupList(CmsBlock, Log).ConvertListIndexToId(items, appForSecurityChecks);
 
             // to do full security check, we'll have to see what content-type is requested
-            var permCheck = new MultiPermissionsTypes(SxcInstance, appId, items, Log);
+            var permCheck = new MultiPermissionsTypes(CmsBlock, appId, items, Log);
 
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var exception))
                 throw exception;
@@ -98,7 +99,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var appRead = new AppRuntime(appId, Log);
             #region check if it's an update, and do more security checks - shared with UiController.Save
             // basic permission checks
-            var permCheck = new SaveHelpers.Security(SxcInstance, Log)
+            var permCheck = new SaveHelpers.Security(CmsBlock, Log)
                 .DoPreSaveSecurityCheck(appId, items);
 
             var foundItems = items.Where(i => i.EntityId != 0 && i.EntityGuid != Guid.Empty)
@@ -110,7 +111,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                 throw exception;
             #endregion
 
-            return new SaveHelpers.DnnPublishing(SxcInstance, Log)
+            return new SaveHelpers.DnnPublishing(CmsBlock, Log)
                 .SaveWithinDnnPagePublishing(appId, items, partOfPage,
                     forceSaveAsDraft => SaveOldFormatKeepTillReplaced(appId, items, partOfPage, forceSaveAsDraft),
                     permCheck);
@@ -146,7 +147,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
-	        var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentType, Log);
+	        var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentType, Log);
 	        if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
 	            throw exception;
             return new EntityApi(appId, Log).GetEntitiesForAdmin(contentType);
@@ -158,7 +159,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
-            var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentType, Log);
+            var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.DeleteSomething, out var exception))
                 throw exception;
             new EntityApi(appId, Log).Delete(contentType, id, force);
@@ -169,7 +170,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
-            var permCheck = new MultiPermissionsTypes(SxcInstance, appId, contentType, Log);
+            var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.DeleteSomething, out var exception))
                 throw exception;
             new EntityApi(appId, Log).Delete(contentType, guid, force);
@@ -203,8 +204,8 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    private static void ResolveItemIdOfGroup(int appId, ItemIdentifier item)
 	    {
             if (item.Group == null) return;
-	        var app = App.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, null);
-	        var contentGroup = app.ContentGroupManager.GetContentGroup(item.Group.Guid);
+	        var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, null);
+	        var contentGroup = app.BlocksManager.GetContentGroup(item.Group.Guid);
 	        var part = contentGroup[item.Group.Part];
 	        item.EntityId = part[item.Group.Index].EntityId;
 	    }

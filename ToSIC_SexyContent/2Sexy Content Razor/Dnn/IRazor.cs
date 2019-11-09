@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Documentation;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 
 // ReSharper disable UnusedMemberInSuper.Global
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.Dnn
         void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo,
             DateTime beginDate);
 
-        InstancePurposes InstancePurpose { get; }
+        Purpose Purpose { get; }
 
     }
 }

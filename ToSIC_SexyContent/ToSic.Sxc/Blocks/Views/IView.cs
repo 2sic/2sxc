@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Views
+namespace ToSic.Sxc.Blocks
 {
     /// <summary>
     /// Defines a template object which is loaded from an <see cref="EntityBasedType"/> configuration.

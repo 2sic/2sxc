@@ -5,8 +5,10 @@ using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines.Token;
 using ToSic.Sxc.Interfaces;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.SexyContent.DataSources
 {
@@ -21,21 +23,21 @@ namespace ToSic.SexyContent.DataSources
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
         /// </summary>
-        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(SxcInstance sxcInstance, bool useExistingConfig)
+        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(/*SxcInstance*/ ICmsBlock cmsInstance, bool useExistingConfig)
         {
             return appToUse =>
             {
                 // the module id
-                var envInstanceId = sxcInstance.EnvInstance.Id;
+                var envInstanceId = cmsInstance.EnvInstance.Id;
 
                 // check if we'll use the config already on the sxc-instance, or generate a new one
                 var config = useExistingConfig
-                    ? sxcInstance.Data.ConfigurationProvider
-                    : GetConfigProviderForModule(envInstanceId, appToUse as App, sxcInstance);
+                    ? cmsInstance.Block.Data.ConfigurationProvider
+                    : GetConfigProviderForModule(envInstanceId, appToUse as IApp, cmsInstance);
 
                 // return results
-                return new AppDataConfiguration(sxcInstance.UserMayEdit,
-                    sxcInstance.Environment.PagePublishing.IsEnabled(envInstanceId), config);
+                return new AppDataConfiguration(cmsInstance.UserMayEdit,
+                    cmsInstance.Environment.PagePublishing.IsEnabled(envInstanceId), config);
             };
         }
 
@@ -50,13 +52,13 @@ namespace ToSic.SexyContent.DataSources
         /// </summary>
         internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(bool userMayEdit, bool publishEnabled)
             => appToUse => new AppDataConfiguration(userMayEdit, publishEnabled,
-                GetConfigProviderForModule(0, appToUse as App, null));
+                GetConfigProviderForModule(0, appToUse as IApp, null));
 
 
 
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal static TokenListFiller GetConfigProviderForModule(int moduleId, App app, SxcInstance sxc)
+        internal static TokenListFiller GetConfigProviderForModule(int moduleId, IApp app, /*SxcInstance*/ICmsBlock cms)
         {
             var provider = new TokenListFiller();
 
@@ -67,8 +69,8 @@ namespace ToSic.SexyContent.DataSources
 
                 // new
                 var paramList = new NameValueCollection();
-                if(sxc?.Parameters != null)
-                    foreach (var pair in sxc.Parameters)
+                if(cms?.Parameters != null)
+                    foreach (var pair in cms.Parameters)
                         paramList.Add(pair.Key, pair.Value);
                 else
                     paramList = request.QueryString;
@@ -97,7 +99,7 @@ namespace ToSic.SexyContent.DataSources
             // provide the current SxcInstance to the children where necessary
             if (!provider.Sources.ContainsKey(SxcInstanceKey))
             {
-                var sxci = new SxcInstanceLookUp(SxcInstanceKey, null, sxc);
+                var sxci = new SxcInstanceLookUp(SxcInstanceKey, null, cms);
                 provider.Sources.Add(sxci.Name, sxci);
             }
             return provider;

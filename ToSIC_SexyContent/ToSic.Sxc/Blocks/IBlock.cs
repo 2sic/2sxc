@@ -1,14 +1,11 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.SexyContent;
-using ToSic.SexyContent.ContentBlocks;
-using ToSic.SexyContent.DataSources;
-using ToSic.Sxc.Engines;
-using ToSic.Sxc.Views;
-using App = ToSic.SexyContent.App;
+using ToSic.Eav.Documentation;
+using ToSic.Sxc.Apps.Blocks;
+using IApp = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.Sxc.Interfaces
+namespace ToSic.Sxc.Blocks
 {
-    internal interface IContentBlock: IZoneIdentity
+    public interface IBlock: IZoneIdentity
     {
         bool ShowTemplateChooser { get; }
 
@@ -29,18 +26,19 @@ namespace ToSic.Sxc.Interfaces
 
         IView View { get; set; }
 
-        ContentGroup ContentGroup { get; }
+        BlockConfiguration Configuration { get; }
 
-        App App { get; }
+        IApp App { get; }
 
-        ViewDataSource Data { get; }
+        IBlockDataSource Data { get; }
 
         bool IsContentApp { get; }
         #endregion
-        SxcInstance SxcInstance { get; }
+        ICmsBlock CmsInstance { get; }
 
         bool ContentGroupExists { get; }
 
-        ContentGroupReferenceManagerBase Manager { get; }
+        [PrivateApi]
+        BlockConfigBase Manager { get; }
     }
 }

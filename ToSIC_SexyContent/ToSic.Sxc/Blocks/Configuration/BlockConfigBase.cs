@@ -7,23 +7,25 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging;
+using ToSic.SexyContent;
 using ToSic.SexyContent.Internal;
-using ToSic.Sxc.Views;
+using ToSic.Sxc.Apps.Blocks;
 
-namespace ToSic.SexyContent.ContentBlocks
+namespace ToSic.Sxc.Blocks
 {
 
-    internal abstract class ContentGroupReferenceManagerBase : HasLog
+    // todo: create interface
+    public abstract class BlockConfigBase : HasLog
     {
-        protected SxcInstance SxcContext;
+        protected /*SxcInstance*/ ICmsBlock CmsContext;
         protected int ModuleId;
 
-        private ContentGroup _cGroup;
+        private BlockConfiguration _cGroup;
 
-        internal ContentGroupReferenceManagerBase(SxcInstance sxc): base("CG.RefMan", sxc.Log)
+        internal BlockConfigBase(ICmsBlock cms): base("CG.RefMan", cms.Log)
         {
-            SxcContext = sxc;
-            ModuleId = SxcContext.EnvInstance.Id;
+            CmsContext = cms;
+            ModuleId = CmsContext.EnvInstance.Id;
         }
 
 
@@ -40,25 +42,25 @@ namespace ToSic.SexyContent.ContentBlocks
 
         #region methods which are fairly stable / the same across content-block implementations
 
-        protected ContentGroup ContentGroup
-            => _cGroup ?? (_cGroup = SxcContext.ContentGroup);
+        protected BlockConfiguration BlockConfiguration
+            => _cGroup ?? (_cGroup = CmsContext.Block.Configuration);
 
         public void AddItem(int? sortOrder = null)
-            => ContentGroup.AddContentAndPresentationEntity(ViewParts.ContentLower, sortOrder, null, null);
+            => BlockConfiguration.AddContentAndPresentationEntity(ViewParts.ContentLower, sortOrder, null, null);
         
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
             Guid? result;
-            Log.Add($"save template#{templateId}, CG-exists:{ContentGroup.Exists} forceCreateCG:{forceCreateContentGroup}");
+            Log.Add($"save template#{templateId}, CG-exists:{BlockConfiguration.Exists} forceCreateCG:{forceCreateContentGroup}");
 
             // if it exists or has a force-create, then write to the Content-Group, otherwise it's just a preview
-            if (ContentGroup.Exists || forceCreateContentGroup)
+            if (BlockConfiguration.Exists || forceCreateContentGroup)
             {
-                var existedBeforeSettingTemplate = ContentGroup.Exists;
+                var existedBeforeSettingTemplate = BlockConfiguration.Exists;
 
-                var contentGroupGuid = SxcContext.ContentBlock.App.ContentGroupManager
-                    .UpdateOrCreateContentGroup(ContentGroup, templateId);
+                var contentGroupGuid = CmsContext.Block.App.BlocksManager
+                    .UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
                 if (!existedBeforeSettingTemplate)
                     EnsureLinkToContentGroup(contentGroupGuid);
@@ -68,7 +70,7 @@ namespace ToSic.SexyContent.ContentBlocks
             else
             {
                 // only set preview / content-group-reference - but must use the guid
-                var dataSource = SxcContext.App.Data;
+                var dataSource = CmsContext.App.Data;
                 var templateGuid = dataSource.List.One(templateId).EntityGuid;
                 SavePreviewTemplateId(templateGuid);
                 result = null; // send null back
@@ -79,15 +81,15 @@ namespace ToSic.SexyContent.ContentBlocks
 
 
         public IEnumerable<TemplateUiInfo> GetSelectableTemplates() 
-            => SxcContext.App?.ViewManager.GetCompatibleTemplates(SxcContext.App, ContentGroup);        
+            => CmsContext.App?.ViewManager.GetCompatibleTemplates(CmsContext.App, BlockConfiguration);        
 
 
         public IEnumerable<AppUiInfo> GetSelectableApps()
         {
             Log.Add("get selectable apps");
-            var zoneId = SxcContext.Environment.ZoneMapper.GetZoneId(SxcContext.ContentBlock.Tenant.Id);
+            var zoneId = CmsContext.Environment.ZoneMapper.GetZoneId(CmsContext.Block.Tenant.Id);
             return
-                AppManagement.GetApps(zoneId, false, SxcContext.ContentBlock.Tenant, Log)
+                AppManagement.GetApps(zoneId, false, CmsContext.Block.Tenant, Log)
                     .Where(a => !a.Hidden)
                     .Select(a => new AppUiInfo {
                         Name = a.Name,
@@ -99,25 +101,25 @@ namespace ToSic.SexyContent.ContentBlocks
         }
 
         public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes()
-            => SxcContext.App?.ViewManager.GetContentTypesWithStatus();
+            => CmsContext.App?.ViewManager.GetContentTypesWithStatus();
         
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
             Log.Add($"change order orig:{sortOrder}, dest:{destinationSortOrder}");
-            ContentGroup.ReorderEntities(sortOrder, destinationSortOrder);
+            BlockConfiguration.ReorderEntities(sortOrder, destinationSortOrder);
         }
 
         public bool Publish(string part, int sortOrder)
         {
             Log.Add($"publish part{part}, order:{sortOrder}");
-            var contentGroup = ContentGroup;
+            var contentGroup = BlockConfiguration;
             var contEntity = contentGroup[part][sortOrder];
             var presKey = part.ToLower() == ViewParts.ContentLower ? ViewParts.PresentationLower : "listpresentation";
             var presEntity = contentGroup[presKey][sortOrder];
 
             var hasPresentation = presEntity != null;
 
-            var appMan = new AppManager(SxcContext.App.ZoneId, SxcContext.App.AppId);
+            var appMan = new AppManager(CmsContext.App.ZoneId, CmsContext.App.AppId);
 
             // make sure we really have the draft item an not the live one
             var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
@@ -135,7 +137,7 @@ namespace ToSic.SexyContent.ContentBlocks
         public void RemoveFromList([FromUri] int sortOrder)
         {
             Log.Add($"remove from list order:{sortOrder}");
-            var contentGroup = ContentGroup;
+            var contentGroup = BlockConfiguration;
             contentGroup.RemoveContentAndPresentationEntities(ViewParts.ContentLower, sortOrder);
         }
 
@@ -144,14 +146,14 @@ namespace ToSic.SexyContent.ContentBlocks
         internal void UpdateTitle()
         {
             Log.Add("update title");
-            // check the contentGroup as to what should be the module title, then try to set it
+            // check the blockConfiguration as to what should be the module title, then try to set it
             // technically it could have multiple different groups to save in, 
             // ...but for now we'll just update the current modules title
             // note: it also correctly handles published/unpublished, but I'm not sure why :)
 
             // re-load the content-group so we have the new title
-            var app = SxcContext.App;
-            var contentGroup = app.ContentGroupManager.GetContentGroup(ContentGroup.ContentGroupGuid);
+            var app = CmsContext.App;
+            var contentGroup = app.BlocksManager.GetContentGroup(BlockConfiguration.ContentGroupGuid);
 
             var titleItem = contentGroup.ListContent.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
 

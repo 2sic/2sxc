@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Web.Hosting;
+using ToSic.Sxc;
+using ToSic.Sxc.Apps;
 
 namespace ToSic.SexyContent.Internal
 {
@@ -9,8 +11,8 @@ namespace ToSic.SexyContent.Internal
         public const string RazorC = "C# Razor";
         public const string TokenReplace = "Token";
 
-        public App App;
-        public TemplateHelpers(App app)
+        public IApp App;
+        public TemplateHelpers(IApp app)
         {
             App = app;
         }
@@ -47,7 +49,7 @@ namespace ToSic.SexyContent.Internal
         /// <summary>
         /// Returns the location where Templates are stored for the current app
         /// </summary>
-        public static string GetTemplatePathRoot(string locationId, App app)
+        public static string GetTemplatePathRoot(string locationId, IApp app)
         {
             var rootFolder = locationId == Settings.TemplateLocations.HostFileSystem
                 ? Settings.PortalHostDirectory + Settings.AppsRootFolder
@@ -56,7 +58,7 @@ namespace ToSic.SexyContent.Internal
             return rootFolder;
         }
 
-        public static string GetTemplateThumbnail(App app, string locationId, string templatePath)
+        public static string GetTemplateThumbnail(IApp app, string locationId, string templatePath)
         {
             var iconFile = GetTemplatePathRoot(locationId, app) + "/" + templatePath;
             iconFile = iconFile.Substring(0, iconFile.LastIndexOf(".")) + ".png";

@@ -9,6 +9,7 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.WebApi
@@ -25,7 +26,7 @@ namespace ToSic.SexyContent.WebApi
             public string Value{ get; set; }
         }
 
-        internal static SxcInstance GetSxcOfApiRequest(HttpRequestMessage request, bool allowNoContextFound = false, ILog log = null)
+        internal static /*SxcBlock*/ ICmsBlock GetSxcOfApiRequest(HttpRequestMessage request, bool allowNoContextFound = false, ILog log = null)
         {
             var cbidHeader = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();
@@ -51,17 +52,17 @@ namespace ToSic.SexyContent.WebApi
             var tenant = moduleInfo == null
                 ? new DnnTenant(null)
                 : new DnnTenant(new PortalSettings(moduleInfo.OwnerPortalID));
-            IContentBlock contentBlock = new ModuleContentBlock(new DnnInstanceInfo(moduleInfo), log, tenant, urlParams);
+            IBlock contentBlock = new BlockFromModule(new DnnInstanceInfo(moduleInfo), log, tenant, urlParams);
 
             // check if we need an inner block
             if (request.Headers.Contains(cbidHeader)) { 
                 var cbidh = request.Headers.GetValues(cbidHeader).FirstOrDefault();
                 int.TryParse(cbidh, out var cbid);
                 if (cbid < 0)   // negative id, so it's an inner block
-                    contentBlock = new EntityContentBlock(contentBlock, cbid, log);
+                    contentBlock = new BlockFromEntity(contentBlock, cbid, log);
             }
 
-            return contentBlock.SxcInstance;
+            return contentBlock.CmsInstance;
         }
 
 

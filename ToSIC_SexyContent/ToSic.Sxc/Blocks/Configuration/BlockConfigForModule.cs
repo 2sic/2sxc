@@ -1,23 +1,25 @@
 ﻿using System;
 using ToSic.Eav;
 using ToSic.Eav.Data;
+using ToSic.SexyContent;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Interfaces;
 
-namespace ToSic.SexyContent.ContentBlocks
+namespace ToSic.Sxc.Blocks
 {
-    internal class ModuleContentGroupReferenceManager: ContentGroupReferenceManagerBase
+    internal class BlockConfigForModule: BlockConfigBase
     {
-        public ModuleContentGroupReferenceManager(SxcInstance sxc) : base(sxc)
+        public BlockConfigForModule(ICmsBlock cms) : base(cms)
         {
         }
 
         #region methods which the entity-implementation must customize - so it's virtual
 
         protected override void SavePreviewTemplateId(Guid templateGuid) 
-            => ContentGroupManager.SetPreviewTemplate(ModuleId, templateGuid);
+            => BlocksManager.SetPreviewTemplate(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
-            => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(SxcContext.EnvInstance, SxcContext.Environment, appId, Log);
+            => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(CmsContext.EnvInstance, CmsContext.Environment, appId, Log);
         
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
@@ -26,7 +28,7 @@ namespace ToSic.SexyContent.ContentBlocks
         internal override void UpdateTitle(IEntity titleItem)
         {
             Log.Add("update title");
-            Factory.Resolve<IMapAppToInstance>().UpdateTitle(SxcContext, titleItem);
+            Factory.Resolve<IMapAppToInstance>().UpdateTitle(CmsContext, titleItem);
         }
 
         

@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Views
+﻿namespace ToSic.Sxc.Blocks
 {
 
     public partial class View 

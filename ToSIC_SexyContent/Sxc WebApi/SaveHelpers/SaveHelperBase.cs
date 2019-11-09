@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.SexyContent.WebApi.SaveHelpers
 {
@@ -8,11 +8,11 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
     /// </summary>
     internal abstract class SaveHelperBase: HasLog
     {
-        internal SxcInstance SxcInstance;
+        internal ICmsBlock CmsInstance;
 
-        protected SaveHelperBase(SxcInstance sxcInstance, ILog parentLog, string logName) : base(logName, parentLog)
+        protected SaveHelperBase(ICmsBlock cmsInstance, ILog parentLog, string logName) : base(logName, parentLog)
         {
-            SxcInstance = sxcInstance;
+            CmsInstance = cmsInstance;
         }
 
     }

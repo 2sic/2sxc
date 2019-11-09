@@ -1,7 +1,6 @@
 ﻿// using DotNetNuke.Entities.Portals;
 
 using ToSic.Eav.LookUp;
-using ToSic.SexyContent;
 
 namespace ToSic.Sxc.Engines.Token
 {
@@ -9,12 +8,12 @@ namespace ToSic.Sxc.Engines.Token
     {
         public int ModuleId;
 
-        public TokenReplaceEav(App app, int instanceId, ITokenListFiller provider)
+        public TokenReplaceEav(int instanceId, ITokenListFiller provider)
         {
-            InitAppAndPortalSettings(app, instanceId, provider);
+            InitAppAndPortalSettings(instanceId, provider);
         }
 
-        public void InitAppAndPortalSettings(App app, int moduleId, ITokenListFiller provider)
+        public void InitAppAndPortalSettings(int moduleId, ITokenListFiller provider)
         {
             foreach (var valueProvider in provider.Sources)
                 ValueSources.Add(valueProvider.Key, valueProvider.Value);

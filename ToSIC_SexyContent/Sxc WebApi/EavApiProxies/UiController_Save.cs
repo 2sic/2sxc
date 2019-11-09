@@ -47,7 +47,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
             // basic permission checks
-            var permCheck = new SaveHelpers.Security(SxcInstance, Log)
+            var permCheck = new SaveHelpers.Security(CmsBlock, Log)
                 .DoPreSaveSecurityCheck(appId, package.Items);
 
             var foundItems = package.Items.Where(i => i.EntityId != 0 && i.EntityGuid != Guid.Empty)
@@ -94,7 +94,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             Log.Add("items to save generated, all data tests passed");
 
-            return new SaveHelpers.DnnPublishing(SxcInstance, Log)
+            return new SaveHelpers.DnnPublishing(CmsBlock, Log)
                 .SaveWithinDnnPagePublishing(appId, items, partOfPage,
                     forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);

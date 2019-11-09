@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Views;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps
 {

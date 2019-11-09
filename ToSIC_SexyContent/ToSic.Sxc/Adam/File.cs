@@ -3,7 +3,11 @@ using ToSic.SexyContent.Adam;
 
 namespace ToSic.Sxc.Adam
 {
-    public class File : Eav.Apps.Assets.File, AdamFile, IFile
+    public class File : Eav.Apps.Assets.File, 
+#pragma warning disable 618
+        AdamFile, 
+#pragma warning restore 618
+        IFile
     {
         private AdamAppContext AppContext { get; }
 

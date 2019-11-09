@@ -5,18 +5,16 @@ using System.Web;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Sxc;
+using ToSic.SexyContent;
 using ToSic.Sxc.Edit.InPageEditingSystem;
-using ToSic.Sxc.Interfaces;
-using IDynamicEntity = ToSic.Sxc.IDynamicEntity;
 
-namespace ToSic.SexyContent.ContentBlocks.Renderers
+namespace ToSic.Sxc.Blocks.Renderers
 {
     internal class Simple
     {
         private static string EmptyMessage = "<!-- auto-render of item {0} -->";
 
-        internal static IHtmlString Render(IContentBlock parentCb, IEntity entity, ILog parentLog)
+        internal static IHtmlString Render(IBlock parentCb, IEntity entity, ILog parentLog)
         {
             var log = new Log("Htm.Render", parentLog, "simple");
 
@@ -29,8 +27,8 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
 
             // render it
             log.Add("found, will render");
-            var cb = new EntityContentBlock(parentCb, entity, log);
-            return cb.SxcInstance.Render();
+            var cb = new BlockFromEntity(parentCb, entity, log);
+            return cb.CmsInstance.Render();
         }
 
         private const string WrapperTemplate = "<div class='{0}' {1}>{2}</div>";
@@ -41,10 +39,10 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
         internal static string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid = null, IInPageEditingSystem edit = null)
         {
             if (edit == null)
-                edit = new InPageEditingHelper(parent.SxcInstance, parent.SxcInstance.Log);
+                edit = new InPageEditingHelper(parent.CmsInstance, parent.CmsInstance.Log);
 
             var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(parent.SxcInstance.ContentBlock, subItem.Entity, parent.SxcInstance.Log).ToString();
+            var inner = subItem == null ? "": Render(parent.CmsInstance.Block, subItem.Entity, parent.CmsInstance.Log).ToString();
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
@@ -57,12 +55,12 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
             {
                 if (objFound is IList<DynamicEntity> itms)
                     foreach (var cb in itms)
-                        innerBuilder.Append(Render(cb.SxcInstance.ContentBlock, cb.Entity, parent.SxcInstance.Log));
+                        innerBuilder.Append(Render(cb.CmsInstance.Block, cb.Entity, parent.CmsInstance.Log));
             }
 
             // create edit object if missing...to re-use in the wh
             if (edit == null)
-                edit = new InPageEditingHelper(parent.SxcInstance, parent.SxcInstance.Log);
+                edit = new InPageEditingHelper(parent.CmsInstance, parent.CmsInstance.Log);
 
             return string.Format(WrapperTemplate, new object[]
             {

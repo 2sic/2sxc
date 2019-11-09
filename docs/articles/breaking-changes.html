@@ -89,7 +89,7 @@ but in case it does - here&#39;s what we did.</p>
 </blockquote>
 <h4 id="version-102001-2019-11-09">Version 10.20.01 (2019-11-09)</h4>
 <ol>
-<li>Internal code now uses the term <code>Header</code> instead of <code>ListContent</code></li>
+<li>Internal code now uses the term <code>Header</code> instead of <code>ListContent</code>. External code provides both for backward-compatibility</li>
 <li>moved internal interfaces for engines (Razor/Token) to final namespaces <code>ToSic.Sxc.Engines</code><ol>
 <li><code>IEngine</code></li>
 <li><code>EngineBase</code></li>
@@ -101,6 +101,15 @@ but in case it does - here&#39;s what we did.</p>
 <li>The <code>Template</code> object was moved from <code>Eav.Apps</code> to <code>Sxc.Views</code> and we added an interface <code>IView</code>. 
  We also renamed the internal properti <code>ViewNameInUrl</code> to <code>UrlIdentifier</code>. </li>
 <li>To correct the API a CmsManager was created extending the AppManager, which is in charge of Views</li>
+<li>Moving internal stuff related to content blocks<ol>
+<li><code>IContentBlock</code> from <code>SexyContent.Interfaces</code> to <code>Sxc.Blocks</code></li>
+<li>from <code>ToSic.SexyContent.ISxcInstance</code> to <code>ToSic.Sxc.Blocks.IBlockContext</code></li>
+</ol>
+</li>
+</ol>
+<h4 id="changed-but-completely-internal">Changed, but completely internal</h4>
+<ol>
+<li>Some namespaces on <code>SexyContent.ContentBlocks</code> were moved to <code>Sxc.Blocks</code></li>
 </ol>
 <h4 id="version-102000-2019-11-05">Version 10.20.00 (2019-11-05)</h4>
 <ol>

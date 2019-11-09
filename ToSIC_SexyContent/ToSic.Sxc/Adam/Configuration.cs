@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Configuration;
-using ToSic.SexyContent;
+using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Adam
 {
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Adam
 
         private static string _adamAppRootFolder;
 
-        internal static Dictionary<string, string> AppReplacementMap(App app) => new Dictionary<string, string>
+        internal static Dictionary<string, string> AppReplacementMap(IApp app) => new Dictionary<string, string>
         {
             {"[AppFolder]", app.Folder},
             {"[ZoneId]", app.ZoneId.ToString()},

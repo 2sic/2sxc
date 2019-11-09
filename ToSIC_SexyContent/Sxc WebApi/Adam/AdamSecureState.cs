@@ -13,8 +13,10 @@ using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.WebApi.Errors;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Blocks;
 using SysConf = ToSic.Eav.Configuration;
 using Feats = ToSic.Eav.Configuration.Features;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.SexyContent.WebApi.Adam
 {
@@ -37,8 +39,8 @@ namespace ToSic.SexyContent.WebApi.Adam
         /// <summary>
         /// Initializes the object and performs all the initial security checks
         /// </summary>
-        public AdamSecureState(SxcInstance sxcInstance, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
-            : base(sxcInstance, appId, contentType, log)
+        public AdamSecureState(ICmsBlock cmsInstance, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
+            : base(cmsInstance, appId, contentType, log)
         {
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
             if (!usePortalRoot)
@@ -75,12 +77,12 @@ namespace ToSic.SexyContent.WebApi.Adam
                 throw exp;
         }
 
-        private void PrepCore(App app, Guid entityGuid, string fieldName, bool usePortalRoot)
+        private void PrepCore(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot)
         {
             Log.Add("PrepCore(...)");
-            var dnn = new DnnHelper(SxcInstance?.EnvInstance);
+            var dnn = new DnnHelper(CmsInstance?.EnvInstance);
             var tenant = new DnnTenant(dnn.Portal);
-            AdamAppContext = new AdamAppContext(tenant, app, SxcInstance, Log);
+            AdamAppContext = new AdamAppContext(tenant, app, CmsInstance, Log);
             ContainerContext = usePortalRoot
                 ? new ContainerOfTenant(AdamAppContext) as ContainerBase
                 : new ContainerOfField(AdamAppContext, entityGuid, fieldName);
@@ -154,9 +156,9 @@ namespace ToSic.SexyContent.WebApi.Adam
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
             var fieldPermissions = new DnnPermissionCheck(Log,
-                instance: SxcInstance.EnvInstance,
+                instance: CmsInstance.EnvInstance,
                 permissions1: Attribute.Permissions,
-                appIdentity: SxcInstance.App);
+                appIdentity: CmsInstance.App);
 
             return fieldPermissions.UserMay(requiredGrant);
         }

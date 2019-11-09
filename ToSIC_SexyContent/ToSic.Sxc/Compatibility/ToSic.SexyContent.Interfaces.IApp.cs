@@ -1,4 +1,5 @@
-﻿namespace ToSic.SexyContent.Interfaces
+﻿// ReSharper disable once CheckNamespace
+namespace ToSic.SexyContent.Interfaces
 {
     /// <summary>
     /// This is the old interface with the "wrong" namespace

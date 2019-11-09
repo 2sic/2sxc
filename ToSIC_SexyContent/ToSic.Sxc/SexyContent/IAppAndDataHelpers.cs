@@ -6,6 +6,9 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 
 using ToSic.SexyContent.DataSources;
+using ToSic.Sxc;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
@@ -18,8 +21,8 @@ namespace ToSic.SexyContent
     [Obsolete("Avoid this - it's in an old namespace. Use the ToSic.Sxc.Interfaces.IAppAndDataHelpers")]
     public interface IAppAndDataHelpers
     {
-        App App { get; }
-        ViewDataSource Data { get; }
+        IApp App { get; }
+        IBlockDataSource Data { get; }
 
         SxcHelper Sxc { get; }
 

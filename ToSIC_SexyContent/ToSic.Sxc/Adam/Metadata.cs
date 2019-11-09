@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Adam
         internal static IDynamicEntity GetFirstOrFake(AdamAppContext appContext, int id, bool isFolder)
         {
             var meta = GetFirstMetadata(appContext.AppRuntime, id, isFolder) ?? CreateFakeMetadata();
-            return new DynamicEntity(meta, new[] { Thread.CurrentThread.CurrentCulture.Name }, appContext.SxcInstance);
+            return new DynamicEntity(meta, new[] { Thread.CurrentThread.CurrentCulture.Name }, appContext.CmsInstance);
         }
 
         public static int GetMetadataId(AppRuntime appRuntime, int id, bool isFolder)

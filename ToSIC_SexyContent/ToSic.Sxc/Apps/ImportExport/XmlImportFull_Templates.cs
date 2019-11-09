@@ -5,8 +5,8 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Persistence.Logging;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Views;
 
 // 2dm: must disable NullRef warnings, because there a lot of warnings when processing XML, 
 // ...and these are real errors which should blow

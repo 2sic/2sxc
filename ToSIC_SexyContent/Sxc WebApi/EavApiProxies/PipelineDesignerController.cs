@@ -13,6 +13,7 @@ using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Dnn7.ValueProviders;
 using ToSic.SexyContent.WebApi.Dnn;
+using ToSic.Sxc.SxcTemp;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
@@ -84,7 +85,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 		{
             Log.Add($"delete pipe:{id} on app:{appId}");
 			// Stop if a Template uses this Pipeline
-            var app = App.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
+            var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
 			var templatesUsingPipeline = app.ViewManager.GetAllTemplates().Where(t => t.Query != null && t.Query.EntityId == id).Select(t => t.Id).ToArray();
 			if (templatesUsingPipeline.Any())
 				throw new Exception(

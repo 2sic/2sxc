@@ -9,9 +9,7 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.DataSources;
@@ -19,7 +17,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Blocks;
 using Factory = ToSic.Eav.Factory;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -52,15 +50,15 @@ namespace ToSic.SexyContent.WebApi
             var wraplog = Log.Call("GetEntities", $"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
 
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
 
             // verify that read-access to these content-types is permitted
-            var permCheck = new MultiPermissionsTypes(SxcInstance, appIdentity.AppId, contentType, Log);
+            var permCheck = new MultiPermissionsTypes(CmsBlock, appIdentity.AppId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exp))
                 throw exp;
 
             //2018-09-15 2dm replaced
-            //var context = GetContext(SxcInstance, Log);
+            //var context = GetContext(SxcBlock, Log);
             //PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null);
             var result = new EntityApi(appIdentity.AppId, Log).GetEntities(contentType, cultureCode);
             wraplog("found: " + result?.Count());
@@ -99,14 +97,14 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"get and serialie after security check type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
 
             var itm = getOne(appIdentity.AppId);
-            var permCheck = new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log);
+            var permCheck = new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
                 throw exception;
             //2018-09-15 2dm moved/disabled
-            //var context = GetContext(SxcInstance, Log);
+            //var context = GetContext(SxcBlock, Log);
             //PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null, itm);
             return InitEavAndSerializer(appIdentity.AppId).Prepare(itm);
         }
@@ -126,13 +124,13 @@ namespace ToSic.SexyContent.WebApi
             // - note that it's really not needed, as you can always use a query or something similar instead
             // - not also that if ever you do support view switching, you will need to ensure security checks
 
-            var dataHandler = new GetContentBlockDataLight(SxcInstance);
+            var dataHandler = new GetContentBlockDataLight(CmsBlock);
 
             // must access engine to ensure pre-processing of data has happened, 
             // especially if the cshtml contains a override void CustomizeData()
-            SxcInstance.GetRenderingEngine(InstancePurposes.PublishData);  
+            ((CmsInstance)CmsBlock).GetRenderingEngine(Purpose.PublishData);  
 
-            var dataSource = SxcInstance.Data;
+            var dataSource = CmsBlock.Block.Data;
             string json;
             if (dataSource.Publish.Enabled)
             {
@@ -143,7 +141,7 @@ namespace ToSic.SexyContent.WebApi
             else
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
-                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(SxcInstance.EnvInstance.Id)});
+                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(CmsBlock.EnvInstance.Id)});
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -160,7 +158,7 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
 
             // Check that this ID is actually of this content-type,
             // this throws an error if it's not the correct type
@@ -169,15 +167,15 @@ namespace ToSic.SexyContent.WebApi
                 : new EntityApi(appIdentity.AppId, Log).GetOrThrow(contentType, id.Value);
 
             var ok = itm == null
-                ? new MultiPermissionsTypes(SxcInstance, appIdentity.AppId, contentType, Log)
+                ? new MultiPermissionsTypes(CmsBlock, appIdentity.AppId, contentType, Log)
                     .EnsureAll(Grants.Create.AsSet(), out var exp)
-                : new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log)
+                : new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log)
                     .EnsureAll(Grants.Update.AsSet(), out exp);
             if (!ok)
                 throw exp;
 
             //2018-09-15 2dm moved/disabled
-            //var context = GetContext(SxcInstance, Log);
+            //var context = GetContext(SxcBlock, Log);
             //PerformSecurityCheck(appIdentity, contentType, perm, appPath == null ? context.Dnn.Module : null, itm);
 
             // Convert to case-insensitive dictionary just to be safe!
@@ -195,11 +193,11 @@ namespace ToSic.SexyContent.WebApi
             // todo: something looks wrong here, I think create/update would fail if it doesn't have a moduleid
             var currentApp = new App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId, 
                 ConfigurationProvider.Build(false, publish.IsEnabled(ActiveModule.ModuleID),
-                    SxcInstance.Data.ConfigurationProvider), true, Log);
+                    CmsBlock.Block.Data.ConfigurationProvider), true, Log);
             // 2018-09-22 old
             //currentApp.InitData(false, 
             //    publish.IsEnabled(ActiveModule.ModuleID), 
-            //    SxcInstance.Data.ConfigurationProvider);
+            //    SxcBlock.Data.ConfigurationProvider);
             if (id == null)
             {
                 currentApp.Data.Create(contentType, cleanedNewItem, userName);
@@ -223,18 +221,18 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"delete id:{id}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
 
             // don't allow type "any" on this
             if (contentType == "any")
                 throw new Exception("type any not allowed with id-only, requires guid");
 
             var itm = new EntityApi(appIdentity.AppId, Log).GetOrThrow(contentType, id);
-            var permCheck = new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log);
+            var permCheck = new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log);
             if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var exception))
                 throw exception;
             //2018-09-15 2dm moved/disabled
-            //var context = GetContext(SxcInstance, Log);
+            //var context = GetContext(SxcBlock, Log);
             //PerformSecurityCheck(appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
             new EntityApi(appIdentity.AppId, Log).Delete(itm.Type.Name, id);
         }
@@ -246,17 +244,14 @@ namespace ToSic.SexyContent.WebApi
 	    {
             Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, SxcInstance);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
 
             var entityApi = new EntityApi(appIdentity.AppId, Log);
 	        var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
-	        var permCheck = new MultiPermissionsItems(SxcInstance, appIdentity.AppId, itm, Log);
+	        var permCheck = new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log);
 	        if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var exception))
 	            throw exception;
-	        //2018-09-15 2dm moved/disabled
-            //var context = GetContext(SxcInstance, Log);
-            //PerformSecurityCheck(appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
 
             entityApi.Delete(itm.Type.Name, guid);
         }
@@ -272,7 +267,7 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             var ser = Eav.WebApi.Helpers.Serializers.GetSerializerWithGuidEnabled();
-            ((Serializer)ser).Sxc = SxcInstance;
+            ((Serializer)ser).Cms = CmsBlock;
             return ser;
         }
         #endregion

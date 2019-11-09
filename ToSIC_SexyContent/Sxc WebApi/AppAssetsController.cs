@@ -9,6 +9,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.AppAssets;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.Sxc.SxcTemp;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -126,7 +127,7 @@ namespace ToSic.SexyContent.WebApi
 
         private string ResolveAppPath(int appId, bool global,  bool allowFullAccess)
         {
-            var thisApp = App.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
+            var thisApp = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
 
             if (global && !allowFullAccess)
                 throw new NotSupportedException("only host user may access global files");
@@ -155,7 +156,7 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"create a#{appId}, path:{path}, global:{global}, cont-length:{content.Content?.Length}");
             path = path.Replace("/", "\\");
 
-            var thisApp = App.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
+            var thisApp = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
 
             if (content.Content == null)
                 content.Content = "";
@@ -192,8 +193,8 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"asset templ:{templateId}, path:{path}, global:{global}");
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(SxcInstance.App, templateId, UserInfo.IsSuperUser, isAdmin)
-                : new AssetEditor(SxcInstance.App, path, UserInfo.IsSuperUser, isAdmin, global);
+                ? new AssetEditor(CmsBlock.App, templateId, UserInfo.IsSuperUser, isAdmin)
+                : new AssetEditor(CmsBlock.App, path, UserInfo.IsSuperUser, isAdmin, global);
             assetEditor.EnsureUserMayEditAsset();
             return assetEditor.EditInfoWithSource;
         }
@@ -213,8 +214,8 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"asset templ:{templateId}, global:{global}, path:{path}");
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(SxcInstance.App, templateId, UserInfo.IsSuperUser, isAdmin)
-                : new AssetEditor(SxcInstance.App, path, UserInfo.IsSuperUser, isAdmin, global);
+                ? new AssetEditor(CmsBlock.App, templateId, UserInfo.IsSuperUser, isAdmin)
+                : new AssetEditor(CmsBlock.App, path, UserInfo.IsSuperUser, isAdmin, global);
             assetEditor.EnsureUserMayEditAsset();
             assetEditor.Source = template.Code;
             return true;

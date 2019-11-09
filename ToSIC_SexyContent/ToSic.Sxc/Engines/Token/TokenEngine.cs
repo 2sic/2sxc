@@ -11,7 +11,7 @@ using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
-using ToSic.Sxc.Views;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Engines.Token
 {
@@ -88,11 +88,13 @@ namespace ToSic.Sxc.Engines.Token
         private void InitTokenReplace()
         {
             var confProv = ConfigurationProvider.GetConfigProviderForModule(InstInfo.Id, Sexy.App, Sexy);
-            _tokenReplace = new TokenReplaceEav(App, InstInfo.Id, confProv);
+            _tokenReplace = new TokenReplaceEav(InstInfo.Id, confProv);
             
             // Add the Content and ListContent property sources used always
             _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new LookUpInDynamicEntity(SourcePropertyName.ListContent, _dataHelper.Header));
+#pragma warning disable 618
             var contentProperty = _dataHelper.List.FirstOrDefault();
+#pragma warning restore 618
             if (contentProperty != null)
             {
                 _tokenReplace.ValueSources.Add(SourcePropertyName.Content, new LookUpInDynamicEntity(SourcePropertyName.Content, contentProperty.Content));

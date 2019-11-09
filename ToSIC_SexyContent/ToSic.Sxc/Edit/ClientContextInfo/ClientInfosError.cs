@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Interfaces;
+﻿using ToSic.Sxc.Blocks;
 
 // ReSharper disable InconsistentNaming
 
@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
     {
         public string type;
 
-        internal ClientInfosError(IContentBlock cb)
+        internal ClientInfosError(IBlock cb)
         {
             if (cb.DataIsMissing)
                 type = "DataIsMissing";

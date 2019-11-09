@@ -8,7 +8,9 @@ using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.VisualQuery;
 using ToSic.SexyContent.EAVExtensions;
-using ToSic.Sxc.Views;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.DataSources
@@ -23,7 +25,7 @@ namespace ToSic.SexyContent.DataSources
     {
         public override string LogId => "DS.Module";
 
-        private SxcInstance _sxcContext;
+        private /*SxcInstance*/ICmsBlock _cmsContext;
 
         public enum Settings
         {
@@ -46,53 +48,53 @@ namespace ToSic.SexyContent.DataSources
         }
 
 
-        internal SxcInstance SxcInstance
+        internal /*SxcInstance*/ICmsBlock CmsInstance
         {
             get
             {
-                if (_sxcContext != null) return _sxcContext;
+                if (_cmsContext != null) return _cmsContext;
 
                 if(!HasSxcContext)
                     throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
                 var sxciProvider = ConfigurationProvider.Sources[DataSources.ConfigurationProvider.SxcInstanceKey];
-                _sxcContext = (sxciProvider as SxcInstanceLookUp)?
-                              .SxcInstance 
+                _cmsContext = (sxciProvider as SxcInstanceLookUp)?
+                              .CmsInstance 
                               ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
-                return _sxcContext;
+                return _cmsContext;
             }
         }
 
         internal bool HasSxcContext => ConfigurationProvider.Sources.ContainsKey(DataSources.ConfigurationProvider.SxcInstanceKey);
 
-		private ContentGroup _contentGroup;
-		private ContentGroup ContentGroup
+		private BlockConfiguration _blockConfiguration;
+		private BlockConfiguration BlockConfiguration
 		{
             get
             {
-                if (_contentGroup != null) return _contentGroup;
+                if (_blockConfiguration != null) return _blockConfiguration;
 
                 if (UseSxcInstanceContentGroup)
                 {
                     Log.Add("need content-group, will use from sxc-context");
-                    _contentGroup = SxcInstance.ContentGroup;
+                    _blockConfiguration = CmsInstance.Block.Configuration;
                 }
                 else
                 {
                     Log.Add("need content-group, will construct as cannot use context");
                     if (!InstanceId.HasValue)
-                        throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
+                        throw new Exception("Looking up BlockConfiguration failed because ModuleId is null.");
                     var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
-                    var userMayEdit = HasSxcContext && SxcInstance.UserMayEdit;
+                    var userMayEdit = HasSxcContext && CmsInstance.UserMayEdit;
 
-                    var cgm = new ContentGroupManager(ZoneId, AppId,
+                    var cgm = new BlocksManager(ZoneId, AppId,
                         HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value),
                         Log);
 
-                    _contentGroup = cgm.GetInstanceContentGroup(InstanceId.Value, null);
+                    _blockConfiguration = cgm.GetInstanceContentGroup(InstanceId.Value, null);
                 }
-                return _contentGroup;
+                return _blockConfiguration;
             }
         }
 
@@ -108,19 +110,19 @@ namespace ToSic.SexyContent.DataSources
         private IEnumerable<IEntity> _content;
 
         private IEnumerable<IEntity> GetContent()
-            => _content ?? (_content = GetStream(ContentGroup.Content, View.ContentItem,
-                   ContentGroup.Presentation, View.PresentationItem, false));
+            => _content ?? (_content = GetStream(BlockConfiguration.Content, View.ContentItem,
+                   BlockConfiguration.Presentation, View.PresentationItem, false));
 
         private IEnumerable<IEntity> _listContent;
 
         private IEnumerable<IEntity> GetListContent()
-            => _listContent ?? (_listContent = GetStream(ContentGroup.ListContent, View.HeaderItem,
-                   ContentGroup.ListPresentation, View.HeaderPresentationItem, true));
+            => _listContent ?? (_listContent = GetStream(BlockConfiguration.ListContent, View.HeaderItem,
+                   BlockConfiguration.ListPresentation, View.HeaderPresentationItem, true));
 
         #endregion
 
         private IView _view;
-		private IView View => _view ?? (_view = OverrideView ?? ContentGroup.View);
+		private IView View => _view ?? (_view = OverrideView ?? BlockConfiguration.View);
 
 	    private IEnumerable<IEntity> GetStream(List<IEntity> contentList, IEntity contentDemoEntity, List<IEntity> presentationList, IEntity presentationDemoEntity, bool isListHeader)
 	    {
@@ -129,7 +131,7 @@ namespace ToSic.SexyContent.DataSources
             {
                 var entitiesToDeliver = new List<IEntity>();
                 // if no template is defined, return empty list
-                if (ContentGroup.View == null && OverrideView == null)
+                if (BlockConfiguration.View == null && OverrideView == null)
                 {
                     Log.Add("no template definition - will return empty list");
                     return entitiesToDeliver;
@@ -211,7 +213,7 @@ namespace ToSic.SexyContent.DataSources
                                 SortOrder = isListHeader ? -1 : i,
                                 ContentGroupItemModified = itm.Modified,
                                 Presentation = presentationEntity,
-                                GroupId = ContentGroup.ContentGroupGuid,
+                                GroupId = BlockConfiguration.ContentGroupGuid,
                                 // new 2019-09-18 trying to mark demo-items for better detection in output #1792
                                 IsDemoItem = usingDemoItem
                             });

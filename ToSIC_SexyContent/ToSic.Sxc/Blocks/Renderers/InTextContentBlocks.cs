@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using ToSic.SexyContent;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 
-namespace ToSic.SexyContent.ContentBlocks.Renderers
+namespace ToSic.Sxc.Blocks.Renderers
 {
     internal class InTextContentBlocks
     {
@@ -27,7 +28,7 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
                 return textTemplate;
 
             // create edit-object which is necessary for context attributes
-            var edit = new InPageEditingHelper(parent.SxcInstance, parent.SxcInstance.Log);
+            var edit = new InPageEditingHelper(parent.CmsInstance, parent.CmsInstance.Log);
 
             foreach (Match curMatch in matches)
             {

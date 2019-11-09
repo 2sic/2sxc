@@ -3,23 +3,25 @@ using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
+using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.DnnWebForms.Helpers;
 using ToSic.Sxc.Interfaces;
+using App = ToSic.SexyContent.App;
 
-namespace ToSic.SexyContent.ContentBlocks
+namespace ToSic.Sxc.Blocks
 {
-    internal sealed class ModuleContentBlock: ContentBlockBase
+    internal sealed class BlockFromModule: BlockBase
     {
         public IInstanceInfo InstanceInfo;
 
-        public override ContentGroupReferenceManagerBase Manager => new ModuleContentGroupReferenceManager(SxcInstance);
+        public override BlockConfigBase Manager => new BlockConfigForModule(CmsInstance);
 
         public override bool ParentIsEntity => false;
 
 
-        public override ViewDataSource Data => _dataSource 
-            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, View, App?.ConfigurationProvider, Log, InstanceInfo.Id));
+        public override IBlockDataSource Data => _dataSource 
+            ?? (_dataSource = BlockDataSource.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log, InstanceInfo.Id));
 
         private readonly IEnumerable<KeyValuePair<string, string>> _urlParams;
 
@@ -30,7 +32,7 @@ namespace ToSic.SexyContent.ContentBlocks
         /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
         /// <param name="tenant"></param>
         /// <param name="overrideParams">optional override parameters</param>
-        public ModuleContentBlock(IInstanceInfo instanceInfo, ILog parentLog, ITenant tenant, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
+        public BlockFromModule(IInstanceInfo instanceInfo, ILog parentLog, ITenant tenant, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
         {
             InstanceInfo = instanceInfo ?? throw new Exception("Need valid Instance/ModuleInfo / ModuleConfiguration of runtime");
             ParentId = instanceInfo.Id;
@@ -59,25 +61,25 @@ namespace ToSic.SexyContent.ContentBlocks
             }
 
             // 2018-09-22 new with auto-init-data
-            SxcInstance = new SxcInstance(this, InstanceInfo, _urlParams, Log);
+            CmsInstance = new CmsInstance(this, InstanceInfo, _urlParams, Log);
 
             if (AppId != 0)
             {
                 Log.Add("real app, will load data");
 
                 // 2018-09-22 new with auto-init-data
-                App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(SxcInstance, false), true, Log);
+                App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(CmsInstance, false), true, Log);
 
-                ContentGroup = App.ContentGroupManager.GetInstanceContentGroup(instanceInfo.Id, instanceInfo.PageId);
+                Configuration = App.BlocksManager.GetInstanceContentGroup(instanceInfo.Id, instanceInfo.PageId);
 
-                if (ContentGroup.DataIsMissing)
+                if (Configuration.DataIsMissing)
                 {
                     _dataIsMissing = true;
                     App = null;
                     return;
                 }
 
-                SxcInstance.SetTemplateOrOverrideFromUrl(ContentGroup.View);                
+                ((CmsInstance)CmsInstance).SetTemplateOrOverrideFromUrl(Configuration.View);                
             }
         }
 

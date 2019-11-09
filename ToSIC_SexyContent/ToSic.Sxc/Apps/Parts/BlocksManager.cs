@@ -6,14 +6,13 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
-using ToSic.Sxc.Views;
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Apps
 {
-	public class ContentGroupManager: HasLog
+	public class BlocksManager: HasLog
 	{
 		private const string ContentGroupTypeName = "2SexyContent-ContentGroup";
 
@@ -22,8 +21,8 @@ namespace ToSic.SexyContent
         private readonly bool _showDrafts;
         private readonly bool _enableVersioning;
 
-        public ContentGroupManager(int zoneId, int appId, bool showDrafts, bool enableVersioning, ILog parentLog)
-            : base("CG.Manage", parentLog, "constructor", nameof(ContentGroupManager))
+        public BlocksManager(int zoneId, int appId, bool showDrafts, bool enableVersioning, ILog parentLog)
+            : base("CG.Manage", parentLog, "constructor", nameof(BlocksManager))
 		{
 			_zoneId = zoneId;
 			_appId = appId;
@@ -39,18 +38,18 @@ namespace ToSic.SexyContent
 			return dataSource;
 		}
 
-		public IEnumerable<ContentGroup> GetContentGroups() 
-            => ContentGroupSource().List.Select(p => new ContentGroup(p, _zoneId, _appId, _showDrafts, _enableVersioning, Log));
+		public IEnumerable<BlockConfiguration> GetContentGroups() 
+            => ContentGroupSource().List.Select(p => new BlockConfiguration(p, _zoneId, _appId, _showDrafts, _enableVersioning, Log));
 
-	    public ContentGroup GetContentGroup(Guid contentGroupGuid)
+	    public BlockConfiguration GetContentGroup(Guid contentGroupGuid)
 		{
 		    Log.Add($"get CG#{contentGroupGuid}");
 			var dataSource = ContentGroupSource();
 			// ToDo: Should use an indexed guid source
 		    var groupEntity = dataSource.List.One(contentGroupGuid);
 		    return groupEntity != null 
-                ? new ContentGroup(groupEntity, _zoneId, _appId, _showDrafts, _enableVersioning, Log) 
-                : new ContentGroup(Guid.Empty, _zoneId, _appId, _showDrafts, _enableVersioning, Log)
+                ? new BlockConfiguration(groupEntity, _zoneId, _appId, _showDrafts, _enableVersioning, Log) 
+                : new BlockConfiguration(Guid.Empty, _zoneId, _appId, _showDrafts, _enableVersioning, Log)
                 {
                     DataIsMissing = true
                 };
@@ -66,11 +65,11 @@ namespace ToSic.SexyContent
 	    public static void ClearPreviewTemplate(int instanceId) 
             => Factory.Resolve<IMapAppToInstance>().ClearPreviewTemplate(instanceId);
 
-	    public Guid UpdateOrCreateContentGroup(ContentGroup contentGroup, int templateId)
+	    public Guid UpdateOrCreateContentGroup(BlockConfiguration blockConfiguration, int templateId)
 		{
 		    var appMan = new AppManager(_zoneId, _appId, Log);
 
-		    if (!contentGroup.Exists)
+		    if (!blockConfiguration.Exists)
 		    {
 		        Log.Add($"doesn't exist, will creat new CG with template#{templateId}");
 		        return appMan.Entities.Create(ContentGroupTypeName, new Dictionary<string, object>
@@ -84,23 +83,23 @@ namespace ToSic.SexyContent
 		    }
 		    else
 		    {
-		        Log.Add($"exists, create for group#{contentGroup.ContentGroupGuid} with template#{templateId}");
-		        appMan.Entities.UpdateParts(contentGroup._contentGroupEntity.EntityId,
+		        Log.Add($"exists, create for group#{blockConfiguration.ContentGroupGuid} with template#{templateId}");
+		        appMan.Entities.UpdateParts(blockConfiguration._contentGroupEntity.EntityId,
 		            new Dictionary<string, object> {{"Template", new List<int?> {templateId}}});
 
-		        return contentGroup.ContentGroupGuid; // guid didn't change
+		        return blockConfiguration.ContentGroupGuid; // guid didn't change
 		    }
 		}
 
-	    public ContentGroup GetInstanceContentGroup(int instanceId, int? pageId)
+	    public BlockConfiguration GetInstanceContentGroup(int instanceId, int? pageId)
 	        => Factory.Resolve<IMapAppToInstance>().GetInstanceContentGroup(this, Log, instanceId, pageId);
 
-        internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)
+        internal BlockConfiguration GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)
 	    {
 	        Log.Add($"get CG or gen preview for grp#{groupGuid}, preview#{previewTemplateGuid}");
 	        // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
 	        return groupGuid == Guid.Empty 
-                ? new ContentGroup(previewTemplateGuid, _zoneId, _appId, _showDrafts, _enableVersioning, Log)
+                ? new BlockConfiguration(previewTemplateGuid, _zoneId, _appId, _showDrafts, _enableVersioning, Log)
                 : GetContentGroup(groupGuid);
 	    }
 

@@ -12,9 +12,10 @@ using ToSic.Sxc.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Edit.InPageEditingSystem;
-using ToSic.Sxc.Views;
+using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
@@ -23,34 +24,34 @@ namespace ToSic.SexyContent
 {
     public abstract class AppAndDataHelpersBase : HasLog, IDynamicCode
     {
-        protected readonly SxcInstance SxcInstance;
+        protected readonly /*SxcInstance*/ICmsBlock CmsInstance;
 
         private readonly ITenant _tenant;
-        protected AppAndDataHelpersBase(SxcInstance sxcInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? sxcInstance?.Log)
+        protected AppAndDataHelpersBase(/*SxcInstance*/ICmsBlock cmsInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsInstance?.Log)
         {
-            if (sxcInstance == null)
+            if (cmsInstance == null)
                 return;
 
-            SxcInstance = sxcInstance;
+            CmsInstance = cmsInstance;
             _tenant = tenant;
-            App = sxcInstance.App;
-            Data = sxcInstance.Data;
-			Sxc = new SxcHelper(sxcInstance);
-            Edit = new InPageEditingHelper(sxcInstance, Log);
+            App = cmsInstance.App;
+            Data = cmsInstance.Block.Data;
+			Sxc = new SxcHelper(cmsInstance);
+            Edit = new InPageEditingHelper(cmsInstance, Log);
         }
 
-        internal void LateAttachApp(App app) => App = app;
+        internal void LateAttachApp(IApp app) => App = app;
 
 
         /// <summary>
         /// The current app containing the data and read/write commands
         /// </summary>
-        public App App { get; private set; }
+        public IApp App { get; private set; }
 
         /// <summary>
         /// The view data
         /// </summary>
-        public ViewDataSource Data { get; }
+        public IBlockDataSource Data { get; }
 
 		public SxcHelper Sxc { get; }
 
@@ -67,7 +68,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, SxcInstance);
+        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, CmsInstance);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
@@ -149,9 +150,9 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var userMayEdit = SxcInstance.UserMayEdit;
+            var userMayEdit = CmsInstance.UserMayEdit;
 
-            var initialSource = DataSource.GetInitialDataSource(SxcInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
+            var initialSource = DataSource.GetInitialDataSource(CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as TokenListFiller);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
@@ -171,9 +172,9 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider, Log);
 
-            var userMayEdit = SxcInstance.UserMayEdit;
+            var userMayEdit = CmsInstance.UserMayEdit;
 
-            var initialSource = DataSource.GetInitialDataSource(SxcInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
+            var initialSource = DataSource.GetInitialDataSource(CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as TokenListFiller);
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider, Log);
         }
@@ -234,7 +235,7 @@ namespace ToSic.SexyContent
         private void TryToBuildHeaderObject()
         {
             Log.Add("try to build ListContent (header) object");
-            if (Data == null || SxcInstance.View == null) return;
+            if (Data == null || CmsInstance.View == null) return;
             if (!Data.Out.ContainsKey(ViewParts.ListContent)) return;
 
             var listEntity = Data[ViewParts.ListContent].List.FirstOrDefault();
@@ -261,7 +262,7 @@ namespace ToSic.SexyContent
             Log.Add("try to build List and Content objects");
             _list = new List<Element>();
 
-            if (Data == null || SxcInstance.View == null) return;
+            if (Data == null || CmsInstance.View == null) return;
             if (!Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
             var entities = Data.List.ToList();
@@ -313,7 +314,7 @@ namespace ToSic.SexyContent
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
             if (_adamAppContext == null)
-                _adamAppContext = new AdamAppContext(_tenant, App, SxcInstance, Log);
+                _adamAppContext = new AdamAppContext(_tenant, App, CmsInstance, Log);
             return new FolderOfField(envFs, _adamAppContext, entity.EntityGuid, fieldName);
         }
         private AdamAppContext _adamAppContext;

@@ -6,12 +6,12 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence;
-using ToSic.Sxc.Views;
+using ToSic.Sxc.Blocks;
 using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Apps.Blocks
 {
-    public class ContentGroup: HasLog
+    public class BlockConfiguration: HasLog
     {
         internal IEntity _contentGroupEntity;
         private readonly int _zoneId;
@@ -20,10 +20,10 @@ namespace ToSic.SexyContent
         private readonly bool _versioningEnabled;
         private readonly Guid? _previewTemplateId;
 
-        public ContentGroup(IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled, ILog parentLog)
-            : base("CG.Group", parentLog, "constructor from entity", nameof(ContentGroup))
+        public BlockConfiguration(IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled, ILog parentLog)
+            : base("CG.Group", parentLog, "constructor from entity", nameof(BlockConfiguration))
         {
-            _contentGroupEntity = contentGroupEntity ?? throw new Exception("ContentGroup entity is null. This usually happens when you are duplicating a site, and have not yet imported the other content/apps. If that is your issue, check 2sxc.org/help?tag=export-import");
+            _contentGroupEntity = contentGroupEntity ?? throw new Exception("BlockConfiguration entity is null. This usually happens when you are duplicating a site, and have not yet imported the other content/apps. If that is your issue, check 2sxc.org/help?tag=export-import");
             _zoneId = zoneId;
             _appId = appId;
             _showDrafts = showDrafts;
@@ -31,10 +31,10 @@ namespace ToSic.SexyContent
         }
 
         /// <summary>
-        /// Instantiate a "temporary" ContentGroup with the specified templateId and no Content items
+        /// Instantiate a "temporary" BlockConfiguration with the specified templateId and no Content items
         /// </summary>
-        public ContentGroup(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts, bool versioningEnabled, ILog parentLog)
-            : base("CG.Group", parentLog, "constructor empty", nameof(ContentGroup))
+        public BlockConfiguration(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts, bool versioningEnabled, ILog parentLog)
+            : base("CG.Group", parentLog, "constructor empty", nameof(BlockConfiguration))
         {
             _previewTemplateId = previewTemplateId;
             _zoneId = zoneId;
@@ -92,16 +92,16 @@ namespace ToSic.SexyContent
             get
             {
                 if (_contentGroupEntity == null) return new List<IEntity> {null};
-                var list = ((EntityRelationship) _contentGroupEntity.GetBestValue(ViewParts.Content)).ToList();
+                var list = _contentGroupEntity.Children(ViewParts.Content);
                 return list.Count > 0 ? list : new List<IEntity> {null};
             }
         }
 
-        public List<IEntity> Presentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(ViewParts.Presentation))?.ToList() ?? new List<IEntity>();
+        public List<IEntity> Presentation => _contentGroupEntity?.Children(ViewParts.Presentation) ?? new List<IEntity>();
 
-        public List<IEntity> ListContent => ((EntityRelationship) _contentGroupEntity?.GetBestValue(ViewParts.ListContent/*cListC*/))?.ToList() ?? new List<IEntity>();
+        public List<IEntity> ListContent => _contentGroupEntity?.Children(ViewParts.ListContent) ?? new List<IEntity>();
 
-        public List<IEntity> ListPresentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(ViewParts.ListPresentation/* cListP*/))?.ToList() ?? new List<IEntity>();
+        public List<IEntity> ListPresentation => _contentGroupEntity?.Children(ViewParts.ListPresentation) ?? new List<IEntity>();
 
         public List<IEntity> this[string type]
         {
@@ -135,7 +135,7 @@ namespace ToSic.SexyContent
             if (sortOrder == -1)
                 throw new Exception("Sort order is never -1 any more; deprecated");
 
-            var listMain = ListWithNulls(type); // this[type].Select(p => p?.EntityId).ToList();
+            var listMain = ListWithNulls(type);
 
             // if necessary, add to end
             if (listMain.Count < sortOrder + 1)
@@ -197,7 +197,7 @@ namespace ToSic.SexyContent
             new AppManager(_zoneId, _appId).Entities.Save(saveEnt, saveOpts);
 
             // Refresh content group entity (ensures contentgroup is up to date)
-            _contentGroupEntity = new ContentGroupManager(_zoneId, _appId, _showDrafts, _versioningEnabled, Log).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
+            _contentGroupEntity = new BlocksManager(_zoneId, _appId, _showDrafts, _versioningEnabled, Log).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
         }
 
         private Dictionary<string, List<int?>> PrepareSavePackage(string type, List<int?> entityIds,
@@ -294,7 +294,7 @@ namespace ToSic.SexyContent
 
             /*
              * ToDo 2017-08-28:
-             * Create a DRAFT copy of the ContentGroup if versioning is enabled.
+             * Create a DRAFT copy of the BlockConfiguration if versioning is enabled.
              */
             
             contentIds.RemoveAt(sortOrder);

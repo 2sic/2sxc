@@ -2,9 +2,8 @@
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.DataSources;
-using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Blocks;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
@@ -16,27 +15,25 @@ namespace ToSic.SexyContent
     /// it would be hard to get anything done .
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
-    public partial class SxcInstance :ISxcInstance
+    public partial class CmsInstance : HasLog, ICmsBlock
     {
         #region App-level information
 
-        internal int? ZoneId => ContentBlock.ZoneId;
-        internal int? AppId => ContentBlock.AppId;
-        public App App => ContentBlock.App;
-        public bool IsContentApp => ContentBlock.IsContentApp;
+        public int/*?*/ ZoneId => Block.ZoneId;
+        public int/*?*/ AppId => Block.AppId;
+        public IApp App => Block.App;
+        //public bool IsContentApp => Block.IsContentApp;
 
         #endregion
-
-        public ILog Log { get; }
 
         /// <summary>
         /// The url-parameters (or alternative thereof) to use when picking views or anything
         /// Note that it's not the same type as the request.querystring to ease migration to future coding conventions
         /// </summary>
-        internal IEnumerable<KeyValuePair<string, string>> Parameters;
+        public IEnumerable<KeyValuePair<string, string>> Parameters { get; private set; }
 
         #region Info for current runtime instance
-        public ContentGroup ContentGroup => ContentBlock.ContentGroup;
+        //public BlockConfiguration BlockConfiguration => Block.BlockConfiguration;
 
 
         /// <summary>
@@ -48,30 +45,32 @@ namespace ToSic.SexyContent
 
         public IInstanceInfo EnvInstance { get; }
 
-        internal IContentBlock ContentBlock { get; }
+        public IBlock Block { get; }
 
 
-        /// <summary>
-        /// This returns the PS of the original module. When a module is mirrored across portals,
-        /// then this will be different from the PortalSettingsOfVisitedPage, otherwise they are the same
-        /// </summary>
-        internal ITenant Tenant => ContentBlock.Tenant;
+        // 2019-11-09 2dm shrinking api
+        ///// <summary>
+        ///// This returns the Tenant/Portal of the original module. When a module is mirrored across portals,
+        ///// then this will be different from the PortalSettingsOfVisitedPage, otherwise they are the same
+        ///// </summary>
+        //internal ITenant Tenant => Block.Tenant;
 
-        public ViewDataSource Data => ContentBlock.Data;
+        //public IBlockDataSource Data => Block.Data;
 
 
         #endregion
 
         #region Constructor
-        internal SxcInstance(IContentBlock  cb, 
+        internal CmsInstance(IBlock  cb, 
             IInstanceInfo envInstance, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
             ILog parentLog = null)
+            : base("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
         {
-            Log = new Log("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
+            // Log = new Log();
             EnvFac = Factory.Resolve<IEnvironmentFactory>();
             Environment = EnvFac.Environment(parentLog);
-            ContentBlock = cb;
+            Block = cb;
             EnvInstance = envInstance;
 
             // keep url parameters, because we may need them later for view-switching and more

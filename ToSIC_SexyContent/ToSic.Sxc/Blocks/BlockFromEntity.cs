@@ -2,13 +2,13 @@
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging;
+using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
-using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.SexyContent.ContentBlocks
+namespace ToSic.Sxc.Blocks
 {
-    internal sealed class EntityContentBlock: ContentBlockBase
+    internal sealed class BlockFromEntity: BlockBase
     {
         internal const string CbPropertyApp = "App";
         internal const string CbPropertyTitle = "Title";
@@ -16,11 +16,11 @@ namespace ToSic.SexyContent.ContentBlocks
         internal const string CbPropertyTemplate = "Template";
         internal const string CbPropertyShowChooser = "ShowTemplateChooser";
 
-        public override ContentGroupReferenceManagerBase Manager => new EntityContentGroupReferenceManager(SxcInstance);
+        public override BlockConfigBase Manager => new BlockConfigForEntity(CmsInstance);
         public override bool ParentIsEntity => false;
 
-        public override ViewDataSource Data => _dataSource 
-            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, View, App?.ConfigurationProvider, Log));
+        public override IBlockDataSource Data => _dataSource 
+            ?? (_dataSource = BlockDataSource.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log));
 
         #region ContentBlock Definition Entity
 
@@ -48,17 +48,17 @@ namespace ToSic.SexyContent.ContentBlocks
         }
         #endregion
 
-        public EntityContentBlock(IContentBlock parent, IEntity cbDefinition, ILog parentLog = null): base(parentLog, "CB.Ent") 
+        public BlockFromEntity(IBlock parent, IEntity cbDefinition, ILog parentLog = null): base(parentLog, "CB.Ent") 
             => _constructor(parent, cbDefinition);
 
-        public EntityContentBlock(IContentBlock parent, int contentBlockId, ILog parentLog) : base(parentLog, "CB.Ent")
+        public BlockFromEntity(IBlock parent, int contentBlockId, ILog parentLog) : base(parentLog, "CB.Ent")
         {
             contentBlockId = Math.Abs(contentBlockId); // for various reasons this can be introduced as a negative value, make sure we neutralize that
-            var cbDef = parent.SxcInstance.App.Data.List.One(contentBlockId);  // get the content-block definition
+            var cbDef = parent.CmsInstance.App.Data.List.One(contentBlockId);  // get the content-block definition
             _constructor(parent, cbDef);
         }
 
-        private void _constructor(IContentBlock parent, IEntity cbDefinition)
+        private void _constructor(IBlock parent, IEntity cbDefinition)
         {
             Parent = parent;
             ParseContentBlockDefinition(cbDefinition);
@@ -79,28 +79,16 @@ namespace ToSic.SexyContent.ContentBlocks
             }
 
             // 2018-09-22 new, must come before the AppId == 0 check
-            SxcInstance = new SxcInstance(this, Parent.SxcInstance.EnvInstance, Parent.SxcInstance.Parameters, Log);
+            CmsInstance = new CmsInstance(this, Parent.CmsInstance.EnvInstance, Parent.CmsInstance.Parameters, Log);
 
             if (AppId == 0) return;
 
-            // 2018-09-22 old
-            // try to load the app - if possible
-            //App = new App(Tenant, ZoneId, AppId);
+            App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(CmsInstance, false), true, Log);
 
-            //Configuration = ConfigurationProvider.GetConfigProviderForModule(ParentId, App, SxcInstance);
-
-            // maybe ensure that App.Data is ready
-            //var userMayEdit = SxcInstance.UserMayEdit;
-            //var publishingEnabled = SxcInstance.Environment.PagePublishing.IsEnabled(Parent.SxcInstance.EnvInstance.Id);
-            //App.InitData(userMayEdit, publishingEnabled, Configuration);
-
-            // 2018-09-22 new
-            App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(SxcInstance, false), true, Log);
-
-            ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
+            Configuration = App.BlocksManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 
             // handle cases where the content group is missing - usually because of incomplete import
-            if (ContentGroup.DataIsMissing)
+            if (Configuration.DataIsMissing)
             {
                 _dataIsMissing = true;
                 App = null;
@@ -108,15 +96,9 @@ namespace ToSic.SexyContent.ContentBlocks
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
-            SxcInstance.SetTemplateOrOverrideFromUrl(ContentGroup.View);
+            ((CmsInstance)CmsInstance).SetTemplateOrOverrideFromUrl(Configuration.View);
         }
 
-
-        //public override SxcInstance SxcInstance
-        //    => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, 
-        //        Parent.SxcInstance.EnvInstance, 
-        //        Parent.SxcInstance.Parameters, 
-        //        Log));
 
 
         public override bool IsContentApp => _appName == Eav.Constants.DefaultAppName;

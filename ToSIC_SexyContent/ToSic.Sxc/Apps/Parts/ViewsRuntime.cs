@@ -9,7 +9,8 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Internal;
-using ToSic.Sxc.Views;
+using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
 namespace ToSic.Sxc.Apps
@@ -61,14 +62,14 @@ namespace ToSic.Sxc.Apps
 		}
         
 
-        internal IEnumerable<TemplateUiInfo> GetCompatibleTemplates(SexyContent.App app, ContentGroup contentGroup)
+        internal IEnumerable<TemplateUiInfo> GetCompatibleTemplates(IApp app, BlockConfiguration blockConfiguration)
 	    {
 	        IEnumerable<IView> availableTemplates;
-	        var items = contentGroup.Content;
+	        var items = blockConfiguration.Content;
 
             // if any items were already initialized...
 	        if (items.Any(e => e != null))
-	            availableTemplates = GetFullyCompatibleTemplates(contentGroup);
+	            availableTemplates = GetFullyCompatibleTemplates(blockConfiguration);
 
             // if it's only nulls, and only one (no list yet)
 	        else if (items.Count <= 1)
@@ -92,18 +93,18 @@ namespace ToSic.Sxc.Apps
         /// <summary>
         /// Get templates which match the signature of possible content-items, presentation etc. of the current template
         /// </summary>
-        /// <param name="contentGroup"></param>
+        /// <param name="blockConfiguration"></param>
         /// <returns></returns>
-	    private IEnumerable<IView> GetFullyCompatibleTemplates(ContentGroup contentGroup)
+	    private IEnumerable<IView> GetFullyCompatibleTemplates(BlockConfiguration blockConfiguration)
         {
-            var isList = contentGroup.Content.Count > 1;
+            var isList = blockConfiguration.Content.Count > 1;
 
             var compatibleTemplates = GetAllTemplates().Where(t => t.UseForList || !isList);
             compatibleTemplates = compatibleTemplates
-                .Where(t => contentGroup.Content.All(c => c == null) || contentGroup.Content.First(e => e != null).Type.StaticName == t.ContentType)
-                .Where(t => contentGroup.Presentation.All(c => c == null) || contentGroup.Presentation.First(e => e != null).Type.StaticName == t.PresentationType)
-                .Where(t => contentGroup.ListContent.All(c => c == null) || contentGroup.ListContent.First(e => e != null).Type.StaticName == t.HeaderType)
-                .Where(t => contentGroup.ListPresentation.All(c => c == null) || contentGroup.ListPresentation.First(e => e != null).Type.StaticName == t.HeaderPresentationType);
+                .Where(t => blockConfiguration.Content.All(c => c == null) || blockConfiguration.Content.First(e => e != null).Type.StaticName == t.ContentType)
+                .Where(t => blockConfiguration.Presentation.All(c => c == null) || blockConfiguration.Presentation.First(e => e != null).Type.StaticName == t.PresentationType)
+                .Where(t => blockConfiguration.ListContent.All(c => c == null) || blockConfiguration.ListContent.First(e => e != null).Type.StaticName == t.HeaderType)
+                .Where(t => blockConfiguration.ListPresentation.All(c => c == null) || blockConfiguration.ListPresentation.First(e => e != null).Type.StaticName == t.HeaderPresentationType);
 
             return compatibleTemplates;
         }

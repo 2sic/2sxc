@@ -7,7 +7,8 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
-using ToSic.Sxc.Views;
+using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -21,13 +22,13 @@ namespace ToSic.SexyContent.WebApi
             Log.Rename("2sCoGr");
         }
 
-        private ContentGroup GetContentGroup(Guid contentGroupGuid)
+        private BlockConfiguration GetContentGroup(Guid contentGroupGuid)
         {
             Log.Add($"get group:{contentGroupGuid}");
-            var contentGroup = SxcInstance.App.ContentGroupManager.GetContentGroup(contentGroupGuid);
+            var contentGroup = CmsBlock.App.BlocksManager.GetContentGroup(contentGroupGuid);
 
             if (contentGroup == null)
-                throw new Exception("ContentGroup with Guid " + contentGroupGuid + " does not exist.");
+                throw new Exception("BlockConfiguration with Guid " + contentGroupGuid + " does not exist.");
             return contentGroup;
         }
 
@@ -55,7 +56,7 @@ namespace ToSic.SexyContent.WebApi
             if (string.IsNullOrEmpty(attributeSetName))
                 return null;
 
-            var context = GetContext(SxcInstance, Log);
+            var context = GetContext(CmsBlock, Log);
 
             var cache = context.App.Data.Cache; 
             var ct = cache.GetContentType(attributeSetName);
@@ -80,15 +81,15 @@ namespace ToSic.SexyContent.WebApi
         public void Replace(Guid guid, string part, int index, int entityId)
         {
             Log.Add($"replace target:{guid}, part:{part}, index:{index}, id:{entityId}");
-            var versioning = SxcInstance.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = CmsBlock.Environment.PagePublishing;// new PagePublishing(Log);
 
             Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
-                var contentGroup = SxcInstance.App.ContentGroupManager.GetContentGroup(guid);
+                var contentGroup = CmsBlock.App.BlocksManager.GetContentGroup(guid);
                 contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
             };
 
             // use dnn versioning - this is always part of page
-            var context = GetContext(SxcInstance, Log);
+            var context = GetContext(CmsBlock, Log);
             versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, internalSave);
         }
 
@@ -117,7 +118,7 @@ namespace ToSic.SexyContent.WebApi
         public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> list)
         {
             Log.Add($"list for:{guid}, items:{list?.Count}");
-            var versioning = SxcInstance.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = CmsBlock.Environment.PagePublishing;// new PagePublishing(Log);
 
             void InternalSave(VersioningActionInfo args)
             {
@@ -129,7 +130,7 @@ namespace ToSic.SexyContent.WebApi
             }
 
             // use dnn versioning - items here are always part of list
-            var context = GetContext(SxcInstance, Log);
+            var context = GetContext(CmsBlock, Log);
             versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
 
             return true;

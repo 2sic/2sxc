@@ -4,7 +4,8 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
-using App = ToSic.SexyContent.App;
+using ToSic.Sxc.Blocks;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Adam
 {
@@ -19,19 +20,19 @@ namespace ToSic.Sxc.Adam
         /// don't use it to access data! as the data should never have to be initialized for this to work
         /// always use the AppRuntime instead
         /// </summary>
-        private readonly App _app;
+        private readonly IApp _app;
         public readonly AppRuntime AppRuntime;
         public readonly ITenant Tenant;
-        public readonly SxcInstance SxcInstance;
+        public readonly ICmsBlock CmsInstance;
         internal readonly IEnvironmentFileSystem EnvironmentFs;
 
 
-        public AdamAppContext(ITenant tenant, App app, SxcInstance sxcInstance, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
+        public AdamAppContext(ITenant tenant, IApp app, /*SxcInstance*/ICmsBlock cmsInstance, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
         {
             Tenant = tenant;
             _app = app;
             AppRuntime = new AppRuntime(app, null);
-            SxcInstance = sxcInstance;
+            CmsInstance = cmsInstance;
             EnvironmentFs = Factory.Resolve<IEnvironmentFileSystem>();
         }
 

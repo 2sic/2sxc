@@ -3,6 +3,9 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Interfaces
 {
@@ -18,8 +21,8 @@ namespace ToSic.Sxc.Interfaces
 
         void SetContentGroup(int instanceId, bool wasCreated, Guid guid);
 
-        ContentGroup GetInstanceContentGroup(ContentGroupManager cgm, ILog log, int instanceId, int? pageId);
+        BlockConfiguration GetInstanceContentGroup(BlocksManager cgm, ILog log, int instanceId, int? pageId);
 
-        void UpdateTitle(SxcInstance sxcInstance, IEntity titleItem);
+        void UpdateTitle(ICmsBlock cmsInstance, IEntity titleItem);
     }
 }

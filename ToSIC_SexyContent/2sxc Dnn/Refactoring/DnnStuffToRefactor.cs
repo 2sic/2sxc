@@ -3,7 +3,7 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.SexyContent.Internal
 {
@@ -15,15 +15,15 @@ namespace ToSic.SexyContent.Internal
         /// <summary>
         /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
         /// </summary>
-        public void EnsureTenantIsConfigured(SxcInstance sxc, HttpServerUtility server, string controlPath)
+        public void EnsureTenantIsConfigured(ICmsBlock cms, HttpServerUtility server, string controlPath)
         {
-            var sexyFolder = new DirectoryInfo(server.MapPath(sxc.Tenant.SxcPath));
+            var sexyFolder = new DirectoryInfo(server.MapPath(cms.Block.Tenant.SxcPath));
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Constants.ContentAppName));
             var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
-                var tm = new TemplateHelpers(sxc.App);
+                var tm = new TemplateHelpers(cms.App);
                 tm.EnsureTemplateFolderExists(Settings.TemplateLocations.PortalFileSystem);
             };
         }

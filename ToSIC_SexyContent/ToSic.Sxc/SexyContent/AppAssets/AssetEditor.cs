@@ -2,7 +2,9 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
-using ToSic.Sxc.Views;
+using ToSic.Sxc;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.SexyContent.AppAssets
 {
@@ -14,9 +16,9 @@ namespace ToSic.SexyContent.AppAssets
         private readonly bool _userIsAdmin;
 
 
-        private readonly App _app;
+        private readonly IApp _app;
 
-        public AssetEditor(App app, int templateId, bool isSuperUser, bool isAdmin)
+        public AssetEditor(IApp app, int templateId, bool isSuperUser, bool isAdmin)
         {
             _app = app;
             _userIsSuperUser = isSuperUser;
@@ -26,7 +28,7 @@ namespace ToSic.SexyContent.AppAssets
             EditInfo = TemplateAssetsInfo(template);
         }
 
-        public AssetEditor(App app, string path, bool isSuperUser, bool isAdmin, bool global = false)
+        public AssetEditor(IApp app, string path, bool isSuperUser, bool isAdmin, bool global = false)
         {
             _app = app;
             _userIsSuperUser = isSuperUser;

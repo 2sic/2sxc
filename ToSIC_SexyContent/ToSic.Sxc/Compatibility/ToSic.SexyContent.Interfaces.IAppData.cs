@@ -1,5 +1,6 @@
 ﻿using System;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Interfaces
 {
     [Obsolete("please use the Eav.Apps.Interfaces.IAppData instead")]

@@ -1,22 +1,22 @@
 ﻿using System.Linq;
-using ToSic.Sxc.Views;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.SexyContent
 {
-    public partial class SxcInstance
+    public partial class CmsInstance
     {
 
         public IView View
         {
-            get => ContentBlock.View;
-            set => ContentBlock.View = value;
+            get => Block.View;
+            set => Block.View = value;
         }
 
         internal void SetTemplateOrOverrideFromUrl(IView defaultView)
         {
             View = defaultView;
             // skif if not relevant or not yet initialized
-            if (IsContentApp || App == null) return;
+            if (Block.IsContentApp || App == null) return;
 
             // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
             var templateFromUrl = TryToGetTemplateBasedOnUrlParams();

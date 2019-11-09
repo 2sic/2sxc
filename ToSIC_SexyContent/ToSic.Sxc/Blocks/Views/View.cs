@@ -5,7 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.Sxc.Views
+namespace ToSic.Sxc.Blocks
 {
     public partial class View: EntityBasedType, IView
     {

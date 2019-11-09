@@ -5,23 +5,26 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.Sxc.Views;
+using ToSic.Sxc;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
+using ToSic.Sxc.SxcTemp;
 
 namespace ToSic.SexyContent.WebApi.ImportExport
 {
     public class SxcAppWrapper
     {
-        public App App { get; }
+        public IApp App { get; }
 
 
         public SxcAppWrapper(int appId, bool versioningEnabled)
         {
-            App = Environment.Dnn7.Factory.App(appId, versioningEnabled) as App;
+            App = Environment.Dnn7.Factory.App(appId, versioningEnabled);
         }
 
         public SxcAppWrapper(int zoneId, int appId)
         {
-            App = App.LightWithoutData(new DnnTenant(PortalSettings.Current), zoneId, appId, false, null);
+            App = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), zoneId, appId, false, null);
         }
 
 

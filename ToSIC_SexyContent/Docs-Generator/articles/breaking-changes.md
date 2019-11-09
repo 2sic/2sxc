@@ -16,7 +16,7 @@ We're documenting it here to ensure you know what happened, in case you still ru
 
 #### Version 10.20.01 (2019-11-09)
 
-1. Internal code now uses the term `Header` instead of `ListContent`
+1. Internal code now uses the term `Header` instead of `ListContent`. External code provides both for backward-compatibility
 1. moved internal interfaces for engines (Razor/Token) to final namespaces `ToSic.Sxc.Engines`
 	1. `IEngine`
 	1. `EngineBase`
@@ -26,6 +26,14 @@ We're documenting it here to ensure you know what happened, in case you still ru
 1. The `Template` object was moved from `Eav.Apps` to `Sxc.Views` and we added an interface `IView`. 
 	We also renamed the internal properti `ViewNameInUrl` to `UrlIdentifier`. 
 1. To correct the API a CmsManager was created extending the AppManager, which is in charge of Views
+1. Moving internal stuff related to content blocks
+	1. `IContentBlock` from `SexyContent.Interfaces` to `Sxc.Blocks`
+	1. from `ToSic.SexyContent.ISxcInstance` to `ToSic.Sxc.Blocks.IBlockContext`
+
+#### Changed, but completely internal
+
+1. Some namespaces on `SexyContent.ContentBlocks` were moved to `Sxc.Blocks`
+
 
 #### Version 10.20.00 (2019-11-05)
 

@@ -10,6 +10,9 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
+using ToSic.Sxc;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -31,8 +34,8 @@ namespace ToSic.SexyContent.WebApi
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null)
         {
-            var context = GetContext(SxcInstance, Log);
-            return BuildQueryAndRun(SxcInstance.App, name, stream, includeGuid, context.Dnn.Module, Log, SxcInstance);
+            var context = GetContext(CmsBlock, Log);
+            return BuildQueryAndRun(CmsBlock.App, name, stream, includeGuid, context.Dnn.Module, Log, CmsBlock);
         }
 
 
@@ -47,16 +50,16 @@ namespace ToSic.SexyContent.WebApi
                 ConfigurationProvider.Build(false, false), false, Log);
 
             // 2018-09-22 old
-            // ensure the queries can be executed (needs configuration provider, usually given in SxcInstance, but we don't hav that here)
+            // ensure the queries can be executed (needs configuration provider, usually given in SxcBlock, but we don't hav that here)
             //var config = DataSources.ConfigurationProvider.GetConfigProviderForModule(0, queryApp, null);
             //queryApp.InitData(false, false, config);
 
             // now just run the default query check and serializer
-            return BuildQueryAndRun(queryApp, name, stream, false, null, Log, SxcInstance);
+            return BuildQueryAndRun(queryApp, name, stream, false, null, Log, CmsBlock);
         }
 
 
-        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(App app, string name, string stream, bool includeGuid, ModuleInfo module, ILog log, SxcInstance sxc)
+        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, ModuleInfo module, ILog log, /*SxcBlock*/ICmsBlock cms)
         {
             log.Add($"build and run query name:{name}, with module:{module?.ModuleID}");
             var query = app.GetQuery(name);
@@ -75,7 +78,7 @@ namespace ToSic.SexyContent.WebApi
             if (!(readExplicitlyAllowed || isAdmin))
                 throw HttpErr(HttpStatusCode.Unauthorized, "Request not allowed", $"Request not allowed. User does not have read permissions for query '{name}'");
             
-            var serializer = new Serializer(sxc) { IncludeGuid = includeGuid };
+            var serializer = new Serializer(cms) { IncludeGuid = includeGuid };
             return serializer.Prepare(query, stream?.Split(','));
         }
 

@@ -1,25 +1,24 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent.DataSources;
-using ToSic.Sxc.Engines;
-using ToSic.Sxc.Interfaces;
-using ToSic.Sxc.Views;
+using ToSic.SexyContent;
+using ToSic.Sxc.Apps.Blocks;
+using IApp = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.SexyContent.ContentBlocks
+namespace ToSic.Sxc.Blocks
 {
-    internal abstract class ContentBlockBase : HasLog, IContentBlock
+    internal abstract class BlockBase : HasLog, IBlock
     {
-        protected ContentBlockBase(ILog parentLog, string logName) : base(logName, parentLog) { }
+        protected BlockBase(ILog parentLog, string logName) : base(logName, parentLog) { }
 
-        public IContentBlock Parent;
+        public IBlock Parent;
 
         public int ZoneId { get; protected set; }
         public int AppId { get; protected set; }
 
-        public App App { get; protected set; }
+        public IApp App { get; protected set; }
 
-        public bool ContentGroupExists => ContentGroup?.Exists ?? false;
-        public virtual ContentGroupReferenceManagerBase Manager => null;
+        public bool ContentGroupExists => Configuration?.Exists ?? false;
+        public virtual BlockConfigBase Manager => null;
 
         public bool ShowTemplateChooser { get; protected set; } = true;
         public virtual bool ParentIsEntity => false;
@@ -61,13 +60,13 @@ namespace ToSic.SexyContent.ContentBlocks
         public ITenant Tenant { get; protected set; }
 
         // ReSharper disable once InconsistentNaming
-        protected ViewDataSource _dataSource;
-        public virtual ViewDataSource Data => null;
+        protected IBlockDataSource _dataSource;
+        public virtual IBlockDataSource Data => null;
 
-        public ContentGroup ContentGroup { get; protected set; }
+        public BlockConfiguration Configuration { get; protected set; }
 
 
-        public SxcInstance SxcInstance { get; protected set; }
+        public ICmsBlock CmsInstance { get; protected set; }
 
         public virtual bool IsContentApp => false;
 
