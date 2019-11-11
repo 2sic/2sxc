@@ -5,7 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.SexyContent;
-using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam
 {

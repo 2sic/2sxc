@@ -5,7 +5,7 @@ using ToSic.Eav.Serializers;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
-using IDynamicEntity = ToSic.Sxc.IDynamicEntity;
+using IDynamicEntity = ToSic.Sxc.Data.IDynamicEntity;
 
 namespace ToSic.SexyContent.Serializers
 {

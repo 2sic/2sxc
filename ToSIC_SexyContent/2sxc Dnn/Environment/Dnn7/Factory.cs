@@ -3,11 +3,9 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.LookUp;
-
-using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
-using ToSic.Sxc;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Web;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 

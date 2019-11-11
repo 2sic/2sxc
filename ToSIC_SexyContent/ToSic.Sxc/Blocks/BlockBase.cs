@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent;
 using ToSic.Sxc.Apps.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
 

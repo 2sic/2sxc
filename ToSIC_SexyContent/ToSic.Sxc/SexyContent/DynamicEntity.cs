@@ -9,6 +9,7 @@ using ToSic.Eav.Documentation;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
 

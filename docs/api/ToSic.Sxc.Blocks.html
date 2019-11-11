@@ -82,17 +82,32 @@
   
   <h1 id="ToSic_Sxc_Blocks" data-uid="ToSic.Sxc.Blocks" class="text-break">Namespace ToSic.Sxc.Blocks
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>A unit of output it 2sxc is called a <strong>Block</strong>. In DNN-Link, this can be like a <em>Module</em>, except that blocks can be inside other blocks. </p>
+<p>Looking at it from the Platform like DNN, the entry object is an ICmsBlock which contains context information (in DNNs case, ModuleId etc.). Inside it is an IBlock which can itself contain more IBlocks. </p>
+<p>Note that each <em>Block</em> itself has <em>Views</em> <a class="xref" href="ToSic.Sxc.Blocks.IView.html">IView</a> and data specific to that block. </p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
     <h3 id="interfaces">Interfaces
   </h3>
+      <h4><a class="xref" href="ToSic.Sxc.Blocks.IBlock.html">IBlock</a></h4>
+      <section><p>A unit / block of output in a CMS. </p>
+</section>
+      <h4><a class="xref" href="ToSic.Sxc.Blocks.IBlockDataSource.html">IBlockDataSource</a></h4>
+      <section><p>A special data-source for a block, which also knows about data-publishing (to ensure page-versioning if necessary). <br>
+It&apos;s not documented more, as we may still make changes to it.</p>
+</section>
       <h4><a class="xref" href="ToSic.Sxc.Blocks.ICmsBlock.html">ICmsBlock</a></h4>
       <section><p>This is kind of the master-container for a content-management block. It&apos;s the wrapper which is in the CMS (DNN), and the module will talk with this
 Sxc Block to get everything rendered. </p>
 </section>
       <h4><a class="xref" href="ToSic.Sxc.Blocks.IView.html">IView</a></h4>
-      <section><p>Defines a template object which is loaded from an <a class="xref" href="ToSic.Eav.Data.EntityBasedType.html">EntityBasedType</a> configuration.</p>
+      <section><p>Defines a view configuration which is loaded from an <a class="xref" href="ToSic.Eav.Data.EntityBasedType.html">EntityBasedType</a>.</p>
+</section>
+    <h3 id="enums">Enums
+  </h3>
+      <h4><a class="xref" href="ToSic.Sxc.Blocks.Purpose.html">Purpose</a></h4>
+      <section><p>These are the purposes of a block as it&apos;s being built. It can be built to generate a web-view, juts for indexing or possibly also for json publishing. </p>
 </section>
 </article>
           </div>
@@ -101,6 +116,9 @@ Sxc Block to get everything rendered. </p>
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/namespaces/Sxc.Blocks.md/#L2" class="contribution-link">Improve this Doc</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

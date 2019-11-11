@@ -42,7 +42,7 @@ namespace ToSic.SexyContent.WebApi
             var contentGroup = GetContentGroup(guid);
 
             // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
-            var set = part == ViewParts.ContentLower ? contentGroup.Content : contentGroup.ListContent;
+            var set = part == ViewParts.ContentLower ? contentGroup.Content : contentGroup.Header;
 
             // not sure what this check is for, just leaving it in for now (2015-09-19 2dm)
             if (set == null || contentGroup.View == null)
@@ -151,7 +151,7 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"header for:{guid}");
             var cg = GetContentGroup(guid);
 
-            var header = cg.ListContent.FirstOrDefault();
+            var header = cg.Header.FirstOrDefault();
 
             return new SortedEntityItem
             {

@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Engines
         protected IInstanceInfo InstInfo;
         protected IDataSource DataSource;
         protected Purpose Purpose;
-        protected /*SxcInstance*/ICmsBlock Sexy;
+        protected ICmsBlock Sexy;
 
         public RenderStatusType PreRenderStatus { get; internal set; }
 

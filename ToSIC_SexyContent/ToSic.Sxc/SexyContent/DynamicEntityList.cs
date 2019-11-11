@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web;
 using ToSic.Sxc;
+using ToSic.Sxc.Data;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent

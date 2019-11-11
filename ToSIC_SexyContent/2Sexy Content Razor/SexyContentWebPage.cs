@@ -9,6 +9,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc;
@@ -16,9 +17,11 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Engines.Razor;
+using ToSic.Sxc.Web;
 using File = System.IO.File;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -196,7 +199,10 @@ namespace ToSic.SexyContent.Razor
         {
         }
 
-        public Purpose Purpose { get; set; }
+        public Purpose Purpose { get; internal set; }
+
+        [Obsolete("left for compatibility, use Purpose instead")]
+        public InstancePurposes InstancePurpose { get; internal set; }
 
 
         #region Adam 

@@ -6,7 +6,9 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks.Renderers
 {

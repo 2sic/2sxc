@@ -55,6 +55,7 @@
     <None Include="docfx.json" />
     <None Include="filterConfig.yml" />
     <None Include="index.md" />
+    <None Include="namespaces\Sxc.Data.md" />
     <None Include="namespaces\Sxc.Adam.md" />
     <None Include="namespaces\Eav.Caching.md" />
     <None Include="namespaces\Eav.Metadata.md" />
@@ -65,7 +66,8 @@
     <None Include="namespaces\Eav.Apps.md" />
     <None Include="namespaces\Sxc.Views.md" />
     <None Include="namespaces\Sxc.Engines.md" />
-    <None Include="namespaces\Sxc.md" />
+    <None Include="namespaces\Sxc.Blocks.md" />
+    <None Include="namespaces\Sxc.Web.md" />
     <None Include="namespaces\Sxc.Dnn.md" />
     <None Include="namespaces\Eav.Data.md" />
     <None Include="packages.config" />

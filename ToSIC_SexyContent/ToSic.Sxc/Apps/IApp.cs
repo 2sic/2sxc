@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Data;
 
 // ReSharper disable UnusedMemberInSuper.Global
 

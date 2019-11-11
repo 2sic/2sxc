@@ -5,23 +5,36 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
-    public interface IBlock: IZoneIdentity
+    /// <summary>
+    /// A unit / block of output in a CMS. 
+    /// </summary>
+    [PublicApi]
+    public interface IBlock: IAppIdentity
     {
+        [PrivateApi]
         bool ShowTemplateChooser { get; }
 
-
+        [PrivateApi]
         bool ParentIsEntity { get; }   // alternative is module
+        
+        [PrivateApi]
         int ParentId { get; }
 
+        [PrivateApi]
         bool DataIsMissing { get; }
 
+        [PrivateApi]
         int ContentBlockId { get; }
+
+        [PrivateApi]
         string ParentFieldName { get; }
+        [PrivateApi]
         int ParentFieldSortOrder { get; }
 
         #region Values related to the current unit of content / the view
-        int AppId { get; }
+        //int AppId { get; }
 
+        
         ITenant Tenant { get; }
 
         IView View { get; set; }
@@ -34,11 +47,15 @@ namespace ToSic.Sxc.Blocks
 
         bool IsContentApp { get; }
         #endregion
+
+        [PrivateApi]
         ICmsBlock CmsInstance { get; }
 
+        [PrivateApi]
         bool ContentGroupExists { get; }
 
         [PrivateApi]
+        // todo: should get rid of this asap.
         BlockEditorBase Editor { get; }
     }
 }

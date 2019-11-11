@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Dnn;
+using IDynamicCode = ToSic.Sxc.Web.IDynamicCode;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Code
