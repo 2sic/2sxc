@@ -18,11 +18,10 @@ namespace ToSic.Sxc.Apps
         {
             get
             {
-                if (!_configLoaded && AppConfiguration != null)
-                {
-                    //_config = new DynamicEntity(AppConfiguration, new[] {Thread.CurrentThread.CurrentCulture.Name}, null);
-                    _appConfig = new AppConfiguration(AppConfiguration, Log);
-                }
+                _appConfig = !_configLoaded && AppConfiguration != null
+                    ? new AppConfiguration(AppConfiguration, Log)
+                    : new AppConfiguration(null, Log);
+
                 _configLoaded = true;
                 return _appConfig;
             }
@@ -38,7 +37,7 @@ namespace ToSic.Sxc.Apps
             get
             {
                 var c = Configuration;
-                if (c != null) return new DynamicEntity(c.Entity, new[] {Thread.CurrentThread.CurrentCulture.Name}, null);
+                if (c?.Entity != null) return new DynamicEntity(c.Entity, new[] {Thread.CurrentThread.CurrentCulture.Name}, null);
                 return null;
             }
         }
