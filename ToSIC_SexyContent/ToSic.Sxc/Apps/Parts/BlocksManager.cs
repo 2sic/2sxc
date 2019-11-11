@@ -7,7 +7,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps
 {
-	public class BlocksManager: CmsManagerBase
+	public partial class BlocksManager: CmsManagerBase
 	{
         public BlocksManager(CmsManager cms, ILog parentLog)
             : base(cms, parentLog, "CG.Manage")

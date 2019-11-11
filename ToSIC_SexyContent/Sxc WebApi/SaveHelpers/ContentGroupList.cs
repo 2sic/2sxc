@@ -91,10 +91,13 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
                     willAdd = contItem.Header.Group.ReallyAddBecauseAlreadyVerified.Value;
 
                 Log.Add($"will add: {willAdd}; add-pre-verified:{contItem.Header.Group.ReallyAddBecauseAlreadyVerified}; Group.Add:{contItem.Header.Group.Add}; {nameof(itemIsReallyNew)}:{itemIsReallyNew}; EntityId:{contItem.EntityId}");
+
+                var cms = new CmsManager(app, Log);
+
                 if (willAdd) // this cannot be auto-detected, it must be specified
-                    contentGroup.AddContentAndPresentationEntity(partName, index, postSaveId, presentationId);
+                    /*contentGroup*/cms.Blocks .AddContentAndPresentationEntity(contentGroup, partName, index, postSaveId, presentationId);
                 else
-                    contentGroup.UpdateEntityIfChanged(partName, index, postSaveId, true, presentationId);
+                    /*contentGroup*/cms.Blocks.UpdateEntityIfChanged(contentGroup, partName, index, postSaveId, true, presentationId);
             }
 
             // update-module-title

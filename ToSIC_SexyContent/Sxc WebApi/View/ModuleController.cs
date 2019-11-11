@@ -37,6 +37,9 @@ namespace ToSic.SexyContent.WebApi.View
         protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = GetCmsRuntime());
         private CmsRuntime _cmsRuntime;
 
+        protected CmsManager CmsManager => _cmsManager ?? (_cmsManager = new CmsManager(App, Log));
+        private CmsManager _cmsManager;
+
         private CmsRuntime GetCmsRuntime()
             // todo: this must be changed, set showDrafts to true for now, as it's probably only used in the view-picker, but it shoudln't just be here
             => App == null ? null : new CmsRuntime(App, Log, true, false);
@@ -58,7 +61,9 @@ namespace ToSic.SexyContent.WebApi.View
             Log.Add($"add order:{sortOrder}");
             var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => BlockEditor.AddItem(sortOrder);
+            void InternalSave(VersioningActionInfo args) =>
+                CmsManager.Blocks.AddItem(CmsBlock.Block.Configuration, sortOrder);
+                //BlockEditor.AddItem(sortOrder);
 
             // use dnn versioning - this is always part of page
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
@@ -232,14 +237,15 @@ namespace ToSic.SexyContent.WebApi.View
             Log.Add($"change order sort:{sortOrder}, dest:{destinationSortOrder}");
             var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => BlockEditor.ChangeOrder(sortOrder, destinationSortOrder);
+            void InternalSave(VersioningActionInfo args) =>
+                CmsManager.Blocks.ChangeOrder(CmsBlock.Block.Configuration, sortOrder, destinationSortOrder);// BlockEditor.ChangeOrder(sortOrder, destinationSortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
         }
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Publish(string part, int sortOrder)
         {
             Log.Add($"try to publish #{sortOrder} on '{part}'");
@@ -268,7 +274,9 @@ namespace ToSic.SexyContent.WebApi.View
             Log.Add($"remove from index:{sortOrder}");
             var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => BlockEditor.RemoveFromList(sortOrder);
+            void InternalSave(VersioningActionInfo args) =>
+                CmsManager.Blocks.RemoveFromList(CmsBlock.Block.Configuration, sortOrder);
+                //BlockEditor.RemoveFromList(sortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);

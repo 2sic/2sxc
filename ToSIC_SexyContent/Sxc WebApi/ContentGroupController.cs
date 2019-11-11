@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"get group:{contentGroupGuid}");
             var cms = new CmsRuntime(CmsBlock.App, Log, true, false);
-            var contentGroup = /*CmsBlock.App.BlocksManager*/cms.Blocks.GetBlockConfig(contentGroupGuid);
+            var contentGroup = cms.Blocks.GetBlockConfig(contentGroupGuid);
 
             if (contentGroup == null)
                 throw new Exception("BlockConfiguration with Guid " + contentGroupGuid + " does not exist.");
@@ -87,9 +87,9 @@ namespace ToSic.SexyContent.WebApi
             void InternalSave(VersioningActionInfo args)
             {
                 var cms = new CmsManager(CmsBlock.App, Log);
-                var contentGroup = /*CmsBlock.App.BlocksManager*/cms.Read.Blocks.GetBlockConfig(guid);
-                // todo: must move to CmsManager
-                contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
+                var contentGroup = cms.Read.Blocks.GetBlockConfig(guid);
+                cms.Blocks.UpdateEntityIfChanged(contentGroup, part, index, entityId, false, null);
+                //contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
             }
 
             // use dnn versioning - this is always part of page
@@ -122,6 +122,9 @@ namespace ToSic.SexyContent.WebApi
         public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> list)
         {
             Log.Add($"list for:{guid}, items:{list?.Count}");
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
             var versioning = CmsBlock.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args)
@@ -129,8 +132,8 @@ namespace ToSic.SexyContent.WebApi
                 var cg = GetContentGroup(guid);
 
                 var sequence = list.Select(i => i.Index).ToArray();
-
-                cg.ReorderAll(sequence);
+                new CmsManager(CmsBlock.App, Log).Blocks.ReorderAll(cg, sequence);
+                //cg.ReorderAll(sequence);
             }
 
             // use dnn versioning - items here are always part of list
