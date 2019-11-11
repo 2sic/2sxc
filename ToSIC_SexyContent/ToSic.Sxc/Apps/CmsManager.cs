@@ -5,27 +5,27 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsManager: AppManager, IAppIdentityWithPublishingState
     {
-        public bool ShowDraftsInData { get; }
+        public bool ShowDrafts { get; }
 
-        public bool VersioningEnabled { get; }
+        public bool EnablePublishing { get; }
 
         public CmsManager(IAppIdentityWithPublishingState app, ILog parentLog) : base(app, parentLog)
         {
-            ShowDraftsInData = app.ShowDraftsInData;
-            VersioningEnabled = app.VersioningEnabled;
+            ShowDrafts = app.ShowDrafts;
+            EnablePublishing = app.EnablePublishing;
         }
 
         // todo: drop this interface asap.
         public CmsManager(IAppIdentity app, bool showDrafts, bool enablePublishing, ILog parentLog) : base(app, parentLog)
         {
-            ShowDraftsInData = showDrafts;
-            VersioningEnabled = enablePublishing;
+            ShowDrafts = showDrafts;
+            EnablePublishing = enablePublishing;
         }
 
         public CmsManager(int zoneId, int appId, bool showDrafts, bool enablePublishing, ILog parentLog) : base(zoneId, appId, parentLog)
         {
-            ShowDraftsInData = showDrafts;
-            VersioningEnabled = enablePublishing;
+            ShowDrafts = showDrafts;
+            EnablePublishing = enablePublishing;
         }
 
         // todo: th
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Apps
 
         }
 
-        public new CmsRuntime Read => _runtime ?? (_runtime = new CmsRuntime(Data, Log, ShowDraftsInData, VersioningEnabled));
+        public new CmsRuntime Read => _runtime ?? (_runtime = new CmsRuntime(Data, Log, ShowDrafts, EnablePublishing));
         private CmsRuntime _runtime;
 
 

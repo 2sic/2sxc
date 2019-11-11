@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Apps
 
 		public IEnumerable<BlockConfiguration> GetContentGroups() 
             => CmsManager.Read.Blocks.ContentGroupSource().List
-                .Select(p => new BlockConfiguration(p, CmsManager.ZoneId, CmsManager.AppId, CmsManager.ShowDraftsInData, CmsManager.VersioningEnabled, Log));
+                .Select(p => new BlockConfiguration(p, CmsManager.ZoneId, CmsManager.AppId, CmsManager.ShowDrafts, CmsManager.EnablePublishing, Log));
 
 
 	    public Guid UpdateOrCreateContentGroup(BlockConfiguration blockConfiguration, int templateId)

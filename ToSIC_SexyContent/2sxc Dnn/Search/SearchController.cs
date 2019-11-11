@@ -11,7 +11,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Sxc.Apps;
