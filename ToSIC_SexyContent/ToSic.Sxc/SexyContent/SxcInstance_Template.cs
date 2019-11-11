@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.SexyContent
@@ -33,8 +34,10 @@ namespace ToSic.SexyContent
             var urlParameterDict = Parameters.ToDictionary(pair => pair.Key?.ToLower() ?? "", pair =>
                 $"{pair.Key}/{pair.Value}".ToLower());
 
+            var allTemplates = new CmsRuntime(App, Log).Views.GetAll();
 
-            foreach (var template in App.ViewManager.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.UrlIdentifier)))
+
+            foreach (var template in /*App.ViewManager.GetAllTemplates()*/allTemplates.Where(t => !string.IsNullOrEmpty(t.UrlIdentifier)))
             {
                 var desiredFullViewName = template.UrlIdentifier.ToLower();
                 if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12

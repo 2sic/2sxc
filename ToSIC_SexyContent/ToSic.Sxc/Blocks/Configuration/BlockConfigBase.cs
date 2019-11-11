@@ -8,6 +8,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Internal;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 
 namespace ToSic.Sxc.Blocks
@@ -79,8 +80,11 @@ namespace ToSic.Sxc.Blocks
         }
 
 
+        private CmsRuntime GetCmsRuntime()
+            => CmsContext.App == null ? null : new CmsRuntime(CmsContext.App, Log);
+
         public IEnumerable<TemplateUiInfo> GetSelectableTemplates() 
-            => CmsContext.App?.ViewManager.GetCompatibleTemplates(CmsContext.App, BlockConfiguration);        
+            => GetCmsRuntime()?.Views.GetCompatibleViews(CmsContext.App, BlockConfiguration);
 
 
         public IEnumerable<AppUiInfo> GetSelectableApps()
@@ -100,8 +104,8 @@ namespace ToSic.Sxc.Blocks
         }
 
         public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes()
-            => CmsContext.App?.ViewManager.GetContentTypesWithStatus();
-        
+            => GetCmsRuntime()?.Views.GetContentTypesWithStatus();
+
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
             Log.Add($"change order orig:{sortOrder}, dest:{destinationSortOrder}");

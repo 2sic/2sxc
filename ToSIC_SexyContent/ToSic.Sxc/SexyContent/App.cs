@@ -56,9 +56,7 @@ namespace ToSic.SexyContent
         #endregion
 
         #region App-Level ViewManager, BlocksManager, EavContext --> must move to EAV some time
-        private ViewsRuntime _viewManager;
-        public ViewsRuntime ViewManager => _viewManager 
-            ?? (_viewManager = new ViewsRuntime(ZoneId, AppId, Log));
+
 
         private BlocksManager _blocksManager;
         public BlocksManager BlocksManager => _blocksManager 

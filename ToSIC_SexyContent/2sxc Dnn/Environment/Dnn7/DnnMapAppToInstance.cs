@@ -76,8 +76,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
             if (appId.HasValue)
             {
                 //var app = GetApp.LightWithoutData(new DnnTenant(null), zoneId, appId.Value, parentLog: Log);
-                var cms = new CmsManager(zoneId, appId.Value, Log);
-                var templateGuid = cms.ViewReadTemp.GetAllTemplates().FirstOrDefault(t => !t.IsHidden)?.Guid;
+                var cms = new CmsRuntime(zoneId, appId.Value, Log);
+                var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue)
                     BlocksManager.SetPreviewTemplate(instance.Id, templateGuid.Value);
             }

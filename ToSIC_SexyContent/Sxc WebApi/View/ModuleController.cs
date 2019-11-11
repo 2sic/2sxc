@@ -194,7 +194,7 @@ namespace ToSic.SexyContent.WebApi.View
                 // if a real templateid was specified, swap to that
                 if (templateId > 0)
                 {
-                    var template = cbToRender.App.ViewManager.GetTemplate(templateId);
+                    var template = /*cbToRender.App.ViewManager*/new CmsRuntime(cbToRender.App, Log).Views.Get(templateId);
                     ((CmsInstance)cbToRender.CmsInstance).View = template;
                 }
 
@@ -285,7 +285,7 @@ namespace ToSic.SexyContent.WebApi.View
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 try
                 {
-                    var all = new CmsManager(CmsBlock.App, Log).ViewReadTemp.GetAllTemplates();
+                    var all = new CmsRuntime(CmsBlock.App, Log).Views.GetAll();
                         //CmsBlock.App.ViewManager.GetAllTemplates();
                     if (all.Any())
                         return null;

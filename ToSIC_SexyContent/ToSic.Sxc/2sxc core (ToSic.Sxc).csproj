@@ -83,9 +83,12 @@
     <Compile Include="Adam\Metadata.cs" />
     <Compile Include="Adam\Obsolete\AdamFile.cs" />
     <Compile Include="Apps\CmsManager.cs" />
+    <Compile Include="Apps\CmsRuntime.cs" />
     <Compile Include="Apps\ImportExport\XmlImportFull.cs" />
     <Compile Include="Apps\ImportExport\XmlImportFull_Templates.cs" />
+    <Compile Include="Apps\Parts\CmsManagerBase.cs" />
     <Compile Include="Apps\Parts\ViewsManager.cs" />
+    <Compile Include="Apps\Parts\CmsRuntimeBase.cs" />
     <Compile Include="Code\WithContext.cs" />
     <Compile Include="Code\CodeCompiler.cs" />
     <Compile Include="Compatibility\InputTypes.cs" />

@@ -10,9 +10,11 @@ namespace ToSic.Sxc.Apps
     /// <summary>
     /// Views manager for the app engine - in charge of importing / modifying templates at app-level
     /// </summary>
-    public class ViewsManager: ManagerBase
+    public class ViewsManager: CmsManagerBase
     {
-        public ViewsManager(CmsManager app, ILog parentLog) : base(app, parentLog, "App.TplMng") {}
+        public ViewsManager(CmsManager cmsManager, ILog parentLog) : base(cmsManager, parentLog, "Cms.ViewMn")
+        {
+        }
 
         #region Template
 
@@ -56,6 +58,14 @@ namespace ToSic.Sxc.Apps
 
 
         #endregion
+
+        public bool DeleteTemplate(int templateId)
+        {
+            // really get template first, to be sure it is a template
+            var template = CmsManager.Read.Views.Get(templateId);
+            return AppManager .Entities.Delete(template.Id);
+        }
+
 
     }
 }

@@ -52,13 +52,10 @@ namespace ToSic.Sxc.Apps
 
         #region experimental
 
-        [PrivateApi("must probably also be split (not sure yet) and moved away from the App")]
-        ViewsRuntime ViewManager { get; }
 
         [PrivateApi("must be split (read/write) and moved away from the IApp")]
         BlocksManager BlocksManager { get; }
 
-        //ITokenListFiller ConfigurationProvider { get; }
         #endregion
     }
 }

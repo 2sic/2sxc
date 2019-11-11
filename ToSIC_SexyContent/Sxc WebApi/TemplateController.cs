@@ -4,7 +4,6 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -28,10 +27,11 @@ namespace ToSic.SexyContent.WebApi
 	    public IEnumerable<object> GetAll(int appId)
         {
             Log.Add($"get all a#{appId}");
-            var tm = TemplateManager(appId);
+            var cms = new CmsRuntime(appId, Log);
+            //var tm = TemplateManager(appId);
 
-	        var attributeSetList = new AppRuntime(tm.ZoneId, tm.AppId, Log).ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
-            var templateList = tm.GetAllTemplates().ToList();
+	        var attributeSetList = cms /*new AppRuntime(tm.ZoneId, tm.AppId, Log)*/.ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
+            var templateList = /*tm*/cms.Views.GetAll().ToList();
             Log.Add($"attrib list count:{attributeSetList.Count}, template count:{templateList.Count}");
             var templates = from c in templateList
                             select new
@@ -50,10 +50,10 @@ namespace ToSic.SexyContent.WebApi
 	        return templates;
 	    }
 
-	    private ViewsRuntime TemplateManager(int appId)
+	    private CmsRuntime TemplateManager(int appId)
 	    {
 	        var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
-	        var tm = new ViewsRuntime(zoneId, appId, Log);
+	        var tm = new CmsRuntime(zoneId, appId, Log);
 	        return tm;
 	    }
 
@@ -83,8 +83,9 @@ namespace ToSic.SexyContent.WebApi
 	    public bool Delete(int appId, int id)
 	    {
 	        Log.Add($"delete a{appId}, t:{id}");
-            var tm = TemplateManager(appId);
-            tm.DeleteTemplate(id);
+            var cms = new CmsManager(appId, Log);
+            //var tm = TemplateManager(appId);
+            /*tm*/cms.Views.DeleteTemplate(id);
 	        return true;
 	    }
         

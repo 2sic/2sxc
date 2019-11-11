@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
-using ToSic.Sxc;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 
@@ -24,7 +23,8 @@ namespace ToSic.SexyContent.AppAssets
             _userIsSuperUser = isSuperUser;
             _userIsAdmin = isAdmin;
 
-            var template = _app.ViewManager.GetTemplate(templateId);
+            // todo: 2dm Views - see if we can get logger to flow
+            var template = new CmsRuntime(app, null).Views/*; _app.ViewManager*/.Get(templateId);
             EditInfo = TemplateAssetsInfo(template);
         }
 

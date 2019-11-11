@@ -15,36 +15,29 @@ using ToSic.Sxc.Blocks;
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
 namespace ToSic.Sxc.Apps
 {
-	public class ViewsRuntime: HasLog
-	{
-		public readonly int ZoneId;
-		public readonly int AppId;
+	public class ViewsRuntime: CmsRuntimeBase
+    {
+        internal ViewsRuntime(CmsRuntime cmsRuntime, ILog parentLog) : base(cmsRuntime, parentLog) { }
 
-		public ViewsRuntime(int zoneId, int appId, ILog parentLog): base("App.TmplMg", parentLog)
+        private IDataSource _viewDs;
+		private IDataSource ViewsDataSource()
 		{
-			ZoneId = zoneId;
-			AppId = appId;
-		}
-
-	    private IDataSource _templateDs;
-		private IDataSource TemplateDataSource()
-		{
-            if(_templateDs!= null)return _templateDs;
+            if(_viewDs!= null)return _viewDs;
 		    // ReSharper disable once RedundantArgumentDefaultValue
-			var dataSource = DataSource.GetInitialDataSource(ZoneId, AppId, false);
-			dataSource = DataSource.GetDataSource<EntityTypeFilter>(ZoneId, AppId, dataSource);
+            var dataSource = App.Data;
+			dataSource = DataSource.GetDataSource<EntityTypeFilter>(upstream: dataSource);
 		    ((EntityTypeFilter) dataSource).TypeName = Configuration.TemplateContentType;
-		    _templateDs = dataSource;
+		    _viewDs = dataSource;
 			return dataSource;
 		}
 
-		public IEnumerable<IView> GetAllTemplates() 
-            => TemplateDataSource().List.Select(p => new View(p)).OrderBy(p => p.Name);
+		public IEnumerable<IView> GetAll() 
+            => ViewsDataSource().List.Select(p => new View(p)).OrderBy(p => p.Name);
 
-		public IView GetTemplate(int templateId)
+		public IView Get(int templateId)
 		{
-			var dataSource = TemplateDataSource();
-			dataSource = DataSource.GetDataSource<EntityIdFilter>(ZoneId, AppId, dataSource);
+			var dataSource = ViewsDataSource();
+			dataSource = DataSource.GetDataSource<EntityIdFilter>(upstream: dataSource);
 			((EntityIdFilter)dataSource).EntityIds = templateId.ToString();
 			var templateEntity = dataSource.List.FirstOrDefault();
 
@@ -54,30 +47,23 @@ namespace ToSic.Sxc.Apps
 			return new View(templateEntity);
 		}
 
-        public bool DeleteTemplate(int templateId)
-		{
-            // really get template first, to be sure it is a template
-			var template = GetTemplate(templateId);
-            return new AppManager(ZoneId, AppId).Entities.Delete(template.Id);
-		}
-        
 
-        internal IEnumerable<TemplateUiInfo> GetCompatibleTemplates(IApp app, BlockConfiguration blockConfiguration)
+        internal IEnumerable<TemplateUiInfo> GetCompatibleViews(IApp app, BlockConfiguration blockConfiguration)
 	    {
 	        IEnumerable<IView> availableTemplates;
 	        var items = blockConfiguration.Content;
 
             // if any items were already initialized...
 	        if (items.Any(e => e != null))
-	            availableTemplates = GetFullyCompatibleTemplates(blockConfiguration);
+	            availableTemplates = GetFullyCompatibleViews(blockConfiguration);
 
             // if it's only nulls, and only one (no list yet)
 	        else if (items.Count <= 1)
-	            availableTemplates = GetAllTemplates(); 
+	            availableTemplates = GetAll(); 
 
             // if it's a list of nulls, only allow lists
 	        else
-	            availableTemplates = GetAllTemplates().Where(p => p.UseForList);
+	            availableTemplates = GetAll().Where(p => p.UseForList);
 
 	        return availableTemplates.Select(t => new TemplateUiInfo
 	        {
@@ -95,11 +81,11 @@ namespace ToSic.Sxc.Apps
         /// </summary>
         /// <param name="blockConfiguration"></param>
         /// <returns></returns>
-	    private IEnumerable<IView> GetFullyCompatibleTemplates(BlockConfiguration blockConfiguration)
+	    private IEnumerable<IView> GetFullyCompatibleViews(BlockConfiguration blockConfiguration)
         {
             var isList = blockConfiguration.Content.Count > 1;
 
-            var compatibleTemplates = GetAllTemplates().Where(t => t.UseForList || !isList);
+            var compatibleTemplates = GetAll().Where(t => t.UseForList || !isList);
             compatibleTemplates = compatibleTemplates
                 .Where(t => blockConfiguration.Content.All(c => c == null) || blockConfiguration.Content.First(e => e != null).Type.StaticName == t.ContentType)
                 .Where(t => blockConfiguration.Presentation.All(c => c == null) || blockConfiguration.Presentation.First(e => e != null).Type.StaticName == t.PresentationType)
@@ -109,14 +95,15 @@ namespace ToSic.Sxc.Apps
             return compatibleTemplates;
         }
 
+
         // todo: check if this call could be replaced with the normal ContentTypeController.Get to prevent redundant code
         public IEnumerable<ContentTypeUiInfo> GetContentTypesWithStatus()
         {
-            var templates = GetAllTemplates().ToList();
+            var templates = GetAll().ToList();
             var visible = templates.Where(t => !t.IsHidden).ToList();
             var serializer = new Serializer();
 
-            return new AppRuntime(ZoneId, AppId, Log).ContentTypes.FromScope(Settings.AttributeSetScope) 
+            return App.ContentTypes.FromScope(Settings.AttributeSetScope) 
                 .Where(ct => templates.Any(t => t.ContentType == ct.StaticName)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
@@ -135,4 +122,5 @@ namespace ToSic.Sxc.Apps
 
 
     }
+
 }

@@ -30,7 +30,8 @@ namespace ToSic.SexyContent.WebApi.ImportExport
 
         public IEnumerable<IEntity> GetEntities() => DataSource.GetInitialDataSource(App.ZoneId, App.AppId).List;
 
-        public IEnumerable<IView> GetTemplates() => App.ViewManager.GetAllTemplates();
+        // todo: 2dm Views - probably remove this call, as it should go directly through CmsManager
+        public IEnumerable<IView> GetTemplates() => /*App.ViewManager*/new CmsRuntime(App, null).Views.GetAll();
 
         public IEnumerable<IView> GetRazorTemplates() => GetTemplates().Where(t => t.IsRazor);
 

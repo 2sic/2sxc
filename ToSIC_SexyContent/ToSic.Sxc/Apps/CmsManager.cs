@@ -19,12 +19,12 @@ namespace ToSic.Sxc.Apps
 
         }
 
+        public new CmsRuntime Read => _runtime ?? (_runtime = new CmsRuntime(Data, Log));
+        private CmsRuntime _runtime;
+
 
         public ViewsManager Views => _views ?? (_views = new ViewsManager(this, Log));
         private ViewsManager _views;
-
-        public ViewsRuntime ViewReadTemp => _viewReadTemp ?? (_viewReadTemp = new ViewsRuntime(ZoneId, AppId, Log));
-        private ViewsRuntime _viewReadTemp;
 
 
     }
