@@ -7,9 +7,9 @@ using ToSic.Eav.DataSources.Caches;
 
 namespace ToSic.Sxc.Blocks
 {
-    internal class BlockConfigForEntity : BlockConfigBase
+    internal class BlockEditorForEntity : BlockEditorBase
     {
-        internal BlockConfigForEntity(ICmsBlock cms): base(cms) { }
+        internal BlockEditorForEntity(ICmsBlock cms): base(cms) { }
 
         #region methods which the entity-implementation must customize 
 

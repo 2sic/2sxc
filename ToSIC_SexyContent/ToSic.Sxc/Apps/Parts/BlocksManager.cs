@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Apps
 		    else
 		    {
 		        Log.Add($"exists, create for group#{blockConfiguration.ContentGroupGuid} with template#{templateId}");
-		        appMan.Entities.UpdateParts(blockConfiguration._contentGroupEntity.EntityId,
+		        appMan.Entities.UpdateParts(blockConfiguration.Entity.EntityId,
 		            new Dictionary<string, object> {{"Template", new List<int?> {templateId}}});
 
 		        return blockConfiguration.ContentGroupGuid; // guid didn't change

@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Blocks
         public IApp App { get; protected set; }
 
         public bool ContentGroupExists => Configuration?.Exists ?? false;
-        public virtual BlockConfigBase Manager => null;
+        public virtual BlockEditorBase Editor => null;
 
         public bool ShowTemplateChooser { get; protected set; } = true;
         public virtual bool ParentIsEntity => false;

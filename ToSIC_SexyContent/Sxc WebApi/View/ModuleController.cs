@@ -44,10 +44,10 @@ namespace ToSic.SexyContent.WebApi.View
         {
             base.Initialize(controllerContext); // very important!!!
             Log.Rename("2sModC");
-            BlockConfig = CmsBlock.Block.Manager;
+            BlockEditor = CmsBlock.Block.Editor;
         }
 
-        private BlockConfigBase BlockConfig { get; set;  }
+        private BlockEditorBase BlockEditor { get; set;  }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -56,7 +56,7 @@ namespace ToSic.SexyContent.WebApi.View
             Log.Add($"add order:{sortOrder}");
             var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => BlockConfig.AddItem(sortOrder);
+            void InternalSave(VersioningActionInfo args) => BlockEditor.AddItem(sortOrder);
 
             // use dnn versioning - this is always part of page
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
@@ -71,18 +71,18 @@ namespace ToSic.SexyContent.WebApi.View
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
-            return BlockConfig.SaveTemplateId(templateId, forceCreateContentGroup);
+            return BlockEditor.SaveTemplateId(templateId, forceCreateContentGroup);
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void SetAppId(int? appId) => BlockConfig.SetAppId(appId);
+        public void SetAppId(int? appId) => BlockEditor.SetAppId(appId);
 
         #region Get Apps, ContentTypes and Views for UI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<AppUiInfo> GetSelectableApps() => /*CmsRuntime.Blocks.get*/ BlockConfig.GetSelectableApps();
+        public IEnumerable<AppUiInfo> GetSelectableApps() => /*CmsRuntime.Blocks.get*/ BlockEditor.GetSelectableApps();
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -229,7 +229,7 @@ namespace ToSic.SexyContent.WebApi.View
             Log.Add($"change order sort:{sortOrder}, dest:{destinationSortOrder}");
             var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => BlockConfig.ChangeOrder(sortOrder, destinationSortOrder);
+            void InternalSave(VersioningActionInfo args) => BlockEditor.ChangeOrder(sortOrder, destinationSortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
@@ -243,7 +243,7 @@ namespace ToSic.SexyContent.WebApi.View
             if (!new MultiPermissionsApp(CmsBlock, App.AppId, Log)
                 .EnsureAll(GrantSets.WritePublished, out var exp))
                 throw exp;
-            return BlockConfig.Publish(part, sortOrder);
+            return BlockEditor.Publish(part, sortOrder);
         }
 
         [HttpGet]
@@ -265,7 +265,7 @@ namespace ToSic.SexyContent.WebApi.View
             Log.Add($"remove from index:{sortOrder}");
             var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => BlockConfig.RemoveFromList(sortOrder);
+            void InternalSave(VersioningActionInfo args) => BlockEditor.RemoveFromList(sortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);

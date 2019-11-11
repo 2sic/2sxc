@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Blocks
     {
         public IInstanceInfo InstanceInfo;
 
-        public override BlockConfigBase Manager => new BlockConfigForModule(CmsInstance);
+        public override BlockEditorBase Editor => new BlockEditorForModule(CmsInstance);
 
         public override bool ParentIsEntity => false;
 

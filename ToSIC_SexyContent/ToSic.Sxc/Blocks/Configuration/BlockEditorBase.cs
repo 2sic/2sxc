@@ -16,14 +16,14 @@ namespace ToSic.Sxc.Blocks
 
     // todo: create interface
     // todo: move some parts out into a BlockManagement
-    public abstract class BlockConfigBase : HasLog
+    public abstract partial class BlockEditorBase : HasLog
     {
         protected ICmsBlock CmsContext;
         protected int ModuleId;
 
         private BlockConfiguration _cGroup;
 
-        internal BlockConfigBase(ICmsBlock cms): base("CG.RefMan", cms.Log)
+        internal BlockEditorBase(ICmsBlock cms): base("CG.RefMan", cms.Log)
         {
             CmsContext = cms;
             ModuleId = CmsContext.EnvInstance.Id;

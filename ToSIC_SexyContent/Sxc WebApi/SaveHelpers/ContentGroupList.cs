@@ -98,7 +98,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
             }
 
             // update-module-title
-            CmsInstance.Block.Manager.UpdateTitle();
+            CmsInstance.Block.Editor.UpdateTitle();
             wrapLog("ok");
         }
 

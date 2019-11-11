@@ -82,6 +82,7 @@
     <Compile Include="Adam\IEnvironmentFileSystem.cs" />
     <Compile Include="Adam\Metadata.cs" />
     <Compile Include="Adam\Obsolete\AdamFile.cs" />
+    <Compile Include="Apps\Blocks\BlockConfiguration_Extract.cs" />
     <Compile Include="Apps\CmsManager.cs" />
     <Compile Include="Apps\CmsRuntime.cs" />
     <Compile Include="Apps\ImportExport\XmlImportFull.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="Apps\Parts\CmsManagerBase.cs" />
     <Compile Include="Apps\Parts\ViewsManager.cs" />
     <Compile Include="Apps\Parts\CmsRuntimeBase.cs" />
+    <Compile Include="Blocks\Configuration\BlockEditorBase_More.cs" />
+    <Compile Include="Blocks\Configuration\BlockEditor_Title.cs" />
     <Compile Include="Code\WithContext.cs" />
     <Compile Include="Code\CodeCompiler.cs" />
     <Compile Include="Compatibility\InputTypes.cs" />
@@ -134,11 +137,11 @@
     <Compile Include="SexyContent\AppAssets\AssetEditor.cs" />
     <Compile Include="SexyContent\Constants.cs" />
     <Compile Include="Blocks\BlockBase.cs" />
-    <Compile Include="Blocks\Configuration\BlockConfigBase.cs" />
+    <Compile Include="Blocks\Configuration\BlockEditorBase.cs" />
     <Compile Include="Blocks\BlockFromEntity.cs" />
-    <Compile Include="Blocks\Configuration\BlockConfigForEntity.cs" />
+    <Compile Include="Blocks\Configuration\BlockEditorForEntity.cs" />
     <Compile Include="Blocks\BlockFromModule.cs" />
-    <Compile Include="Blocks\Configuration\BlockConfigForModule.cs" />
+    <Compile Include="Blocks\Configuration\BlockEditorForModule.cs" />
     <Compile Include="SexyContent\ContentBlocks\Render.cs" />
     <Compile Include="Blocks\Renderers\InTextContentBlocks.cs" />
     <Compile Include="Blocks\Renderers\Simple.cs" />

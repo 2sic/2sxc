@@ -5,9 +5,9 @@ using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Blocks
 {
-    internal class BlockConfigForModule: BlockConfigBase
+    internal class BlockEditorForModule: BlockEditorBase
     {
-        public BlockConfigForModule(ICmsBlock cms) : base(cms)
+        public BlockEditorForModule(ICmsBlock cms) : base(cms)
         {
         }
 

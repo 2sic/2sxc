@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Blocks
         internal const string CbPropertyTemplate = "Template";
         internal const string CbPropertyShowChooser = "ShowTemplateChooser";
 
-        public override BlockConfigBase Manager => new BlockConfigForEntity(CmsInstance);
+        public override BlockEditorBase Editor => new BlockEditorForEntity(CmsInstance);
         public override bool ParentIsEntity => false;
 
         public override IBlockDataSource Data => _dataSource 
