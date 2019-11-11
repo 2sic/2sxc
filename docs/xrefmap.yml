@@ -3501,12 +3501,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Metadata.IRemoteMetadataProvider.OfZoneAndApp
   nameWithType: IRemoteMetadataProvider.OfZoneAndApp
-- uid: ToSic.Sxc
-  name: ToSic.Sxc
-  href: api/ToSic.Sxc.html
-  commentId: N:ToSic.Sxc
-  fullName: ToSic.Sxc
-  nameWithType: ToSic.Sxc
 - uid: ToSic.Sxc.Adam
   name: ToSic.Sxc.Adam
   href: api/ToSic.Sxc.Adam.html
@@ -3854,6 +3848,96 @@ references:
   commentId: N:ToSic.Sxc.Blocks
   fullName: ToSic.Sxc.Blocks
   nameWithType: ToSic.Sxc.Blocks
+- uid: ToSic.Sxc.Blocks.IBlock
+  name: IBlock
+  href: api/ToSic.Sxc.Blocks.IBlock.html
+  commentId: T:ToSic.Sxc.Blocks.IBlock
+  fullName: ToSic.Sxc.Blocks.IBlock
+  nameWithType: IBlock
+- uid: ToSic.Sxc.Blocks.IBlock.App
+  name: App
+  href: api/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_App
+  commentId: P:ToSic.Sxc.Blocks.IBlock.App
+  fullName: ToSic.Sxc.Blocks.IBlock.App
+  nameWithType: IBlock.App
+- uid: ToSic.Sxc.Blocks.IBlock.App*
+  name: App
+  href: api/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_App_
+  commentId: Overload:ToSic.Sxc.Blocks.IBlock.App
+  isSpec: "True"
+  fullName: ToSic.Sxc.Blocks.IBlock.App
+  nameWithType: IBlock.App
+- uid: ToSic.Sxc.Blocks.IBlock.Configuration
+  name: Configuration
+  href: api/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_Configuration
+  commentId: P:ToSic.Sxc.Blocks.IBlock.Configuration
+  fullName: ToSic.Sxc.Blocks.IBlock.Configuration
+  nameWithType: IBlock.Configuration
+- uid: ToSic.Sxc.Blocks.IBlock.Configuration*
+  name: Configuration
+  href: api/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_Configuration_
+  commentId: Overload:ToSic.Sxc.Blocks.IBlock.Configuration
+  isSpec: "True"
+  fullName: ToSic.Sxc.Blocks.IBlock.Configuration
+  nameWithType: IBlock.Configuration
+- uid: ToSic.Sxc.Blocks.IBlock.Data
+  name: Data
+  href: api/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_Data
+  commentId: P:ToSic.Sxc.Blocks.IBlock.Data
+  fullName: ToSic.Sxc.Blocks.IBlock.Data
+  nameWithType: IBlock.Data
+- uid: ToSic.Sxc.Blocks.IBlock.Data*
+  name: Data
+  href: api/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_Data_
+  commentId: Overload:ToSic.Sxc.Blocks.IBlock.Data
+  isSpec: "True"
+  fullName: ToSic.Sxc.Blocks.IBlock.Data
+  nameWithType: IBlock.Data
+- uid: ToSic.Sxc.Blocks.IBlock.IsContentApp
+  name: IsContentApp
+  href: api/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_IsContentApp
+  commentId: P:ToSic.Sxc.Blocks.IBlock.IsContentApp
+  fullName: ToSic.Sxc.Blocks.IBlock.IsContentApp
+  nameWithType: IBlock.IsContentApp
+- uid: ToSic.Sxc.Blocks.IBlock.IsContentApp*
+  name: IsContentApp
+  href: api/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_IsContentApp_
+  commentId: Overload:ToSic.Sxc.Blocks.IBlock.IsContentApp
+  isSpec: "True"
+  fullName: ToSic.Sxc.Blocks.IBlock.IsContentApp
+  nameWithType: IBlock.IsContentApp
+- uid: ToSic.Sxc.Blocks.IBlock.Tenant
+  name: Tenant
+  href: api/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_Tenant
+  commentId: P:ToSic.Sxc.Blocks.IBlock.Tenant
+  fullName: ToSic.Sxc.Blocks.IBlock.Tenant
+  nameWithType: IBlock.Tenant
+- uid: ToSic.Sxc.Blocks.IBlock.Tenant*
+  name: Tenant
+  href: api/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_Tenant_
+  commentId: Overload:ToSic.Sxc.Blocks.IBlock.Tenant
+  isSpec: "True"
+  fullName: ToSic.Sxc.Blocks.IBlock.Tenant
+  nameWithType: IBlock.Tenant
+- uid: ToSic.Sxc.Blocks.IBlock.View
+  name: View
+  href: api/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_View
+  commentId: P:ToSic.Sxc.Blocks.IBlock.View
+  fullName: ToSic.Sxc.Blocks.IBlock.View
+  nameWithType: IBlock.View
+- uid: ToSic.Sxc.Blocks.IBlock.View*
+  name: View
+  href: api/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_View_
+  commentId: Overload:ToSic.Sxc.Blocks.IBlock.View
+  isSpec: "True"
+  fullName: ToSic.Sxc.Blocks.IBlock.View
+  nameWithType: IBlock.View
+- uid: ToSic.Sxc.Blocks.IBlockDataSource
+  name: IBlockDataSource
+  href: api/ToSic.Sxc.Blocks.IBlockDataSource.html
+  commentId: T:ToSic.Sxc.Blocks.IBlockDataSource
+  fullName: ToSic.Sxc.Blocks.IBlockDataSource
+  nameWithType: IBlockDataSource
 - uid: ToSic.Sxc.Blocks.ICmsBlock
   name: ICmsBlock
   href: api/ToSic.Sxc.Blocks.ICmsBlock.html
@@ -4059,6 +4143,148 @@ references:
   commentId: F:ToSic.Sxc.Blocks.Purpose.WebView
   fullName: ToSic.Sxc.Blocks.Purpose.WebView
   nameWithType: Purpose.WebView
+- uid: ToSic.Sxc.Data
+  name: ToSic.Sxc.Data
+  href: api/ToSic.Sxc.Data.html
+  commentId: N:ToSic.Sxc.Data
+  fullName: ToSic.Sxc.Data
+  nameWithType: ToSic.Sxc.Data
+- uid: ToSic.Sxc.Data.IDynamicEntity
+  name: IDynamicEntity
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html
+  commentId: T:ToSic.Sxc.Data.IDynamicEntity
+  fullName: ToSic.Sxc.Data.IDynamicEntity
+  nameWithType: IDynamicEntity
+- uid: ToSic.Sxc.Data.IDynamicEntity.Entity
+  name: Entity
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_Entity
+  commentId: P:ToSic.Sxc.Data.IDynamicEntity.Entity
+  fullName: ToSic.Sxc.Data.IDynamicEntity.Entity
+  nameWithType: IDynamicEntity.Entity
+- uid: ToSic.Sxc.Data.IDynamicEntity.Entity*
+  name: Entity
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_Entity_
+  commentId: Overload:ToSic.Sxc.Data.IDynamicEntity.Entity
+  isSpec: "True"
+  fullName: ToSic.Sxc.Data.IDynamicEntity.Entity
+  nameWithType: IDynamicEntity.Entity
+- uid: ToSic.Sxc.Data.IDynamicEntity.EntityGuid
+  name: EntityGuid
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_EntityGuid
+  commentId: P:ToSic.Sxc.Data.IDynamicEntity.EntityGuid
+  fullName: ToSic.Sxc.Data.IDynamicEntity.EntityGuid
+  nameWithType: IDynamicEntity.EntityGuid
+- uid: ToSic.Sxc.Data.IDynamicEntity.EntityGuid*
+  name: EntityGuid
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_EntityGuid_
+  commentId: Overload:ToSic.Sxc.Data.IDynamicEntity.EntityGuid
+  isSpec: "True"
+  fullName: ToSic.Sxc.Data.IDynamicEntity.EntityGuid
+  nameWithType: IDynamicEntity.EntityGuid
+- uid: ToSic.Sxc.Data.IDynamicEntity.EntityId
+  name: EntityId
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_EntityId
+  commentId: P:ToSic.Sxc.Data.IDynamicEntity.EntityId
+  fullName: ToSic.Sxc.Data.IDynamicEntity.EntityId
+  nameWithType: IDynamicEntity.EntityId
+- uid: ToSic.Sxc.Data.IDynamicEntity.EntityId*
+  name: EntityId
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_EntityId_
+  commentId: Overload:ToSic.Sxc.Data.IDynamicEntity.EntityId
+  isSpec: "True"
+  fullName: ToSic.Sxc.Data.IDynamicEntity.EntityId
+  nameWithType: IDynamicEntity.EntityId
+- uid: ToSic.Sxc.Data.IDynamicEntity.EntityTitle
+  name: EntityTitle
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_EntityTitle
+  commentId: P:ToSic.Sxc.Data.IDynamicEntity.EntityTitle
+  fullName: ToSic.Sxc.Data.IDynamicEntity.EntityTitle
+  nameWithType: IDynamicEntity.EntityTitle
+- uid: ToSic.Sxc.Data.IDynamicEntity.EntityTitle*
+  name: EntityTitle
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_EntityTitle_
+  commentId: Overload:ToSic.Sxc.Data.IDynamicEntity.EntityTitle
+  isSpec: "True"
+  fullName: ToSic.Sxc.Data.IDynamicEntity.EntityTitle
+  nameWithType: IDynamicEntity.EntityTitle
+- uid: ToSic.Sxc.Data.IDynamicEntity.Get(System.String)
+  name: Get(String)
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_Get_System_String_
+  commentId: M:ToSic.Sxc.Data.IDynamicEntity.Get(System.String)
+  fullName: ToSic.Sxc.Data.IDynamicEntity.Get(System.String)
+  nameWithType: IDynamicEntity.Get(String)
+- uid: ToSic.Sxc.Data.IDynamicEntity.Get*
+  name: Get
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_Get_
+  commentId: Overload:ToSic.Sxc.Data.IDynamicEntity.Get
+  isSpec: "True"
+  fullName: ToSic.Sxc.Data.IDynamicEntity.Get
+  nameWithType: IDynamicEntity.Get
+- uid: ToSic.Sxc.Data.IDynamicEntity.GetDraft
+  name: GetDraft()
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_GetDraft
+  commentId: M:ToSic.Sxc.Data.IDynamicEntity.GetDraft
+  fullName: ToSic.Sxc.Data.IDynamicEntity.GetDraft()
+  nameWithType: IDynamicEntity.GetDraft()
+- uid: ToSic.Sxc.Data.IDynamicEntity.GetDraft*
+  name: GetDraft
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_GetDraft_
+  commentId: Overload:ToSic.Sxc.Data.IDynamicEntity.GetDraft
+  isSpec: "True"
+  fullName: ToSic.Sxc.Data.IDynamicEntity.GetDraft
+  nameWithType: IDynamicEntity.GetDraft
+- uid: ToSic.Sxc.Data.IDynamicEntity.GetPublished
+  name: GetPublished()
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_GetPublished
+  commentId: M:ToSic.Sxc.Data.IDynamicEntity.GetPublished
+  fullName: ToSic.Sxc.Data.IDynamicEntity.GetPublished()
+  nameWithType: IDynamicEntity.GetPublished()
+- uid: ToSic.Sxc.Data.IDynamicEntity.GetPublished*
+  name: GetPublished
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_GetPublished_
+  commentId: Overload:ToSic.Sxc.Data.IDynamicEntity.GetPublished
+  isSpec: "True"
+  fullName: ToSic.Sxc.Data.IDynamicEntity.GetPublished
+  nameWithType: IDynamicEntity.GetPublished
+- uid: ToSic.Sxc.Data.IDynamicEntity.IsDemoItem
+  name: IsDemoItem
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_IsDemoItem
+  commentId: P:ToSic.Sxc.Data.IDynamicEntity.IsDemoItem
+  fullName: ToSic.Sxc.Data.IDynamicEntity.IsDemoItem
+  nameWithType: IDynamicEntity.IsDemoItem
+- uid: ToSic.Sxc.Data.IDynamicEntity.IsDemoItem*
+  name: IsDemoItem
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_IsDemoItem_
+  commentId: Overload:ToSic.Sxc.Data.IDynamicEntity.IsDemoItem
+  isSpec: "True"
+  fullName: ToSic.Sxc.Data.IDynamicEntity.IsDemoItem
+  nameWithType: IDynamicEntity.IsDemoItem
+- uid: ToSic.Sxc.Data.IDynamicEntity.Parents(System.String,System.String)
+  name: Parents(String, String)
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_Parents_System_String_System_String_
+  commentId: M:ToSic.Sxc.Data.IDynamicEntity.Parents(System.String,System.String)
+  fullName: ToSic.Sxc.Data.IDynamicEntity.Parents(System.String, System.String)
+  nameWithType: IDynamicEntity.Parents(String, String)
+- uid: ToSic.Sxc.Data.IDynamicEntity.Parents*
+  name: Parents
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_Parents_
+  commentId: Overload:ToSic.Sxc.Data.IDynamicEntity.Parents
+  isSpec: "True"
+  fullName: ToSic.Sxc.Data.IDynamicEntity.Parents
+  nameWithType: IDynamicEntity.Parents
+- uid: ToSic.Sxc.Data.IDynamicEntity.Presentation
+  name: Presentation
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_Presentation
+  commentId: P:ToSic.Sxc.Data.IDynamicEntity.Presentation
+  fullName: ToSic.Sxc.Data.IDynamicEntity.Presentation
+  nameWithType: IDynamicEntity.Presentation
+- uid: ToSic.Sxc.Data.IDynamicEntity.Presentation*
+  name: Presentation
+  href: api/ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_Presentation_
+  commentId: Overload:ToSic.Sxc.Data.IDynamicEntity.Presentation
+  isSpec: "True"
+  fullName: ToSic.Sxc.Data.IDynamicEntity.Presentation
+  nameWithType: IDynamicEntity.Presentation
 - uid: ToSic.Sxc.Dnn
   name: ToSic.Sxc.Dnn
   href: api/ToSic.Sxc.Dnn.html
@@ -4282,428 +4508,298 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.IEngine.Render
   nameWithType: IEngine.Render
-- uid: ToSic.Sxc.IDynamicCode
+- uid: ToSic.Sxc.Web
+  name: ToSic.Sxc.Web
+  href: api/ToSic.Sxc.Web.html
+  commentId: N:ToSic.Sxc.Web
+  fullName: ToSic.Sxc.Web
+  nameWithType: ToSic.Sxc.Web
+- uid: ToSic.Sxc.Web.IDynamicCode
   name: IDynamicCode
-  href: api/ToSic.Sxc.IDynamicCode.html
-  commentId: T:ToSic.Sxc.IDynamicCode
-  fullName: ToSic.Sxc.IDynamicCode
+  href: api/ToSic.Sxc.Web.IDynamicCode.html
+  commentId: T:ToSic.Sxc.Web.IDynamicCode
+  fullName: ToSic.Sxc.Web.IDynamicCode
   nameWithType: IDynamicCode
-- uid: ToSic.Sxc.IDynamicCode.AsAdam(ToSic.Eav.Data.IEntity,System.String)
+- uid: ToSic.Sxc.Web.IDynamicCode.AsAdam(ToSic.Eav.Data.IEntity,System.String)
   name: AsAdam(IEntity, String)
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_AsAdam_ToSic_Eav_Data_IEntity_System_String_
-  commentId: M:ToSic.Sxc.IDynamicCode.AsAdam(ToSic.Eav.Data.IEntity,System.String)
-  fullName: ToSic.Sxc.IDynamicCode.AsAdam(ToSic.Eav.Data.IEntity, System.String)
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsAdam_ToSic_Eav_Data_IEntity_System_String_
+  commentId: M:ToSic.Sxc.Web.IDynamicCode.AsAdam(ToSic.Eav.Data.IEntity,System.String)
+  fullName: ToSic.Sxc.Web.IDynamicCode.AsAdam(ToSic.Eav.Data.IEntity, System.String)
   nameWithType: IDynamicCode.AsAdam(IEntity, String)
-- uid: ToSic.Sxc.IDynamicCode.AsAdam(ToSic.Sxc.IDynamicEntity,System.String)
+- uid: ToSic.Sxc.Web.IDynamicCode.AsAdam(ToSic.Sxc.Data.IDynamicEntity,System.String)
   name: AsAdam(IDynamicEntity, String)
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_AsAdam_ToSic_Sxc_IDynamicEntity_System_String_
-  commentId: M:ToSic.Sxc.IDynamicCode.AsAdam(ToSic.Sxc.IDynamicEntity,System.String)
-  fullName: ToSic.Sxc.IDynamicCode.AsAdam(ToSic.Sxc.IDynamicEntity, System.String)
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsAdam_ToSic_Sxc_Data_IDynamicEntity_System_String_
+  commentId: M:ToSic.Sxc.Web.IDynamicCode.AsAdam(ToSic.Sxc.Data.IDynamicEntity,System.String)
+  fullName: ToSic.Sxc.Web.IDynamicCode.AsAdam(ToSic.Sxc.Data.IDynamicEntity, System.String)
   nameWithType: IDynamicCode.AsAdam(IDynamicEntity, String)
-- uid: ToSic.Sxc.IDynamicCode.AsAdam*
+- uid: ToSic.Sxc.Web.IDynamicCode.AsAdam*
   name: AsAdam
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_AsAdam_
-  commentId: Overload:ToSic.Sxc.IDynamicCode.AsAdam
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsAdam_
+  commentId: Overload:ToSic.Sxc.Web.IDynamicCode.AsAdam
   isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicCode.AsAdam
+  fullName: ToSic.Sxc.Web.IDynamicCode.AsAdam
   nameWithType: IDynamicCode.AsAdam
-- uid: ToSic.Sxc.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Data.IEntity})
+- uid: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Data.IEntity})
   name: AsDynamic(IEnumerable<IEntity>)
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_AsDynamic_System_Collections_Generic_IEnumerable_ToSic_Eav_Data_IEntity__
-  commentId: M:ToSic.Sxc.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Data.IEntity})
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsDynamic_System_Collections_Generic_IEnumerable_ToSic_Eav_Data_IEntity__
+  commentId: M:ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Data.IEntity})
   name.vb: AsDynamic(IEnumerable(Of IEntity))
-  fullName: ToSic.Sxc.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable<ToSic.Eav.Data.IEntity>)
-  fullName.vb: ToSic.Sxc.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable(Of ToSic.Eav.Data.IEntity))
+  fullName: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable<ToSic.Eav.Data.IEntity>)
+  fullName.vb: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable(Of ToSic.Eav.Data.IEntity))
   nameWithType: IDynamicCode.AsDynamic(IEnumerable<IEntity>)
   nameWithType.vb: IDynamicCode.AsDynamic(IEnumerable(Of IEntity))
-- uid: ToSic.Sxc.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair{System.Int32,ToSic.Eav.Data.IEntity})
+- uid: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair{System.Int32,ToSic.Eav.Data.IEntity})
   name: AsDynamic(KeyValuePair<Int32, IEntity>)
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_AsDynamic_System_Collections_Generic_KeyValuePair_System_Int32_ToSic_Eav_Data_IEntity__
-  commentId: M:ToSic.Sxc.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair{System.Int32,ToSic.Eav.Data.IEntity})
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsDynamic_System_Collections_Generic_KeyValuePair_System_Int32_ToSic_Eav_Data_IEntity__
+  commentId: M:ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair{System.Int32,ToSic.Eav.Data.IEntity})
   name.vb: AsDynamic(KeyValuePair(Of Int32, IEntity))
-  fullName: ToSic.Sxc.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair<System.Int32, ToSic.Eav.Data.IEntity>)
-  fullName.vb: ToSic.Sxc.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair(Of System.Int32, ToSic.Eav.Data.IEntity))
+  fullName: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair<System.Int32, ToSic.Eav.Data.IEntity>)
+  fullName.vb: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair(Of System.Int32, ToSic.Eav.Data.IEntity))
   nameWithType: IDynamicCode.AsDynamic(KeyValuePair<Int32, IEntity>)
   nameWithType.vb: IDynamicCode.AsDynamic(KeyValuePair(Of Int32, IEntity))
-- uid: ToSic.Sxc.IDynamicCode.AsDynamic(System.Object)
+- uid: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Object)
   name: AsDynamic(Object)
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_AsDynamic_System_Object_
-  commentId: M:ToSic.Sxc.IDynamicCode.AsDynamic(System.Object)
-  fullName: ToSic.Sxc.IDynamicCode.AsDynamic(System.Object)
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsDynamic_System_Object_
+  commentId: M:ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Object)
+  fullName: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Object)
   nameWithType: IDynamicCode.AsDynamic(Object)
-- uid: ToSic.Sxc.IDynamicCode.AsDynamic(ToSic.Eav.Data.IEntity)
+- uid: ToSic.Sxc.Web.IDynamicCode.AsDynamic(ToSic.Eav.Data.IEntity)
   name: AsDynamic(IEntity)
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_AsDynamic_ToSic_Eav_Data_IEntity_
-  commentId: M:ToSic.Sxc.IDynamicCode.AsDynamic(ToSic.Eav.Data.IEntity)
-  fullName: ToSic.Sxc.IDynamicCode.AsDynamic(ToSic.Eav.Data.IEntity)
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsDynamic_ToSic_Eav_Data_IEntity_
+  commentId: M:ToSic.Sxc.Web.IDynamicCode.AsDynamic(ToSic.Eav.Data.IEntity)
+  fullName: ToSic.Sxc.Web.IDynamicCode.AsDynamic(ToSic.Eav.Data.IEntity)
   nameWithType: IDynamicCode.AsDynamic(IEntity)
-- uid: ToSic.Sxc.IDynamicCode.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+- uid: ToSic.Sxc.Web.IDynamicCode.AsDynamic(ToSic.Eav.DataSources.IDataStream)
   name: AsDynamic(IDataStream)
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_AsDynamic_ToSic_Eav_DataSources_IDataStream_
-  commentId: M:ToSic.Sxc.IDynamicCode.AsDynamic(ToSic.Eav.DataSources.IDataStream)
-  fullName: ToSic.Sxc.IDynamicCode.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsDynamic_ToSic_Eav_DataSources_IDataStream_
+  commentId: M:ToSic.Sxc.Web.IDynamicCode.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  fullName: ToSic.Sxc.Web.IDynamicCode.AsDynamic(ToSic.Eav.DataSources.IDataStream)
   nameWithType: IDynamicCode.AsDynamic(IDataStream)
-- uid: ToSic.Sxc.IDynamicCode.AsDynamic*
+- uid: ToSic.Sxc.Web.IDynamicCode.AsDynamic*
   name: AsDynamic
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_AsDynamic_
-  commentId: Overload:ToSic.Sxc.IDynamicCode.AsDynamic
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsDynamic_
+  commentId: Overload:ToSic.Sxc.Web.IDynamicCode.AsDynamic
   isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicCode.AsDynamic
+  fullName: ToSic.Sxc.Web.IDynamicCode.AsDynamic
   nameWithType: IDynamicCode.AsDynamic
-- uid: ToSic.Sxc.IDynamicCode.AsEntity(System.Object)
+- uid: ToSic.Sxc.Web.IDynamicCode.AsEntity(System.Object)
   name: AsEntity(Object)
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_AsEntity_System_Object_
-  commentId: M:ToSic.Sxc.IDynamicCode.AsEntity(System.Object)
-  fullName: ToSic.Sxc.IDynamicCode.AsEntity(System.Object)
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsEntity_System_Object_
+  commentId: M:ToSic.Sxc.Web.IDynamicCode.AsEntity(System.Object)
+  fullName: ToSic.Sxc.Web.IDynamicCode.AsEntity(System.Object)
   nameWithType: IDynamicCode.AsEntity(Object)
-- uid: ToSic.Sxc.IDynamicCode.AsEntity*
+- uid: ToSic.Sxc.Web.IDynamicCode.AsEntity*
   name: AsEntity
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_AsEntity_
-  commentId: Overload:ToSic.Sxc.IDynamicCode.AsEntity
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsEntity_
+  commentId: Overload:ToSic.Sxc.Web.IDynamicCode.AsEntity
   isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicCode.AsEntity
+  fullName: ToSic.Sxc.Web.IDynamicCode.AsEntity
   nameWithType: IDynamicCode.AsEntity
-- uid: ToSic.Sxc.IDynamicCode.Content
+- uid: ToSic.Sxc.Web.IDynamicCode.Content
   name: Content
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_Content
-  commentId: P:ToSic.Sxc.IDynamicCode.Content
-  fullName: ToSic.Sxc.IDynamicCode.Content
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Content
+  commentId: P:ToSic.Sxc.Web.IDynamicCode.Content
+  fullName: ToSic.Sxc.Web.IDynamicCode.Content
   nameWithType: IDynamicCode.Content
-- uid: ToSic.Sxc.IDynamicCode.Content*
+- uid: ToSic.Sxc.Web.IDynamicCode.Content*
   name: Content
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_Content_
-  commentId: Overload:ToSic.Sxc.IDynamicCode.Content
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Content_
+  commentId: Overload:ToSic.Sxc.Web.IDynamicCode.Content
   isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicCode.Content
+  fullName: ToSic.Sxc.Web.IDynamicCode.Content
   nameWithType: IDynamicCode.Content
-- uid: ToSic.Sxc.IDynamicCode.CreateSource*
+- uid: ToSic.Sxc.Web.IDynamicCode.CreateSource*
   name: CreateSource
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_CreateSource_
-  commentId: Overload:ToSic.Sxc.IDynamicCode.CreateSource
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_CreateSource_
+  commentId: Overload:ToSic.Sxc.Web.IDynamicCode.CreateSource
   isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicCode.CreateSource
+  fullName: ToSic.Sxc.Web.IDynamicCode.CreateSource
   nameWithType: IDynamicCode.CreateSource
-- uid: ToSic.Sxc.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.LookUp.ITokenListFiller)
+- uid: ToSic.Sxc.Web.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.LookUp.ITokenListFiller)
   name: CreateSource<T>(IDataSource, ITokenListFiller)
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_LookUp_ITokenListFiller_
-  commentId: M:ToSic.Sxc.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.LookUp.ITokenListFiller)
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_LookUp_ITokenListFiller_
+  commentId: M:ToSic.Sxc.Web.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.LookUp.ITokenListFiller)
   name.vb: CreateSource(Of T)(IDataSource, ITokenListFiller)
-  fullName: ToSic.Sxc.IDynamicCode.CreateSource<T>(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.LookUp.ITokenListFiller)
-  fullName.vb: ToSic.Sxc.IDynamicCode.CreateSource(Of T)(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.LookUp.ITokenListFiller)
+  fullName: ToSic.Sxc.Web.IDynamicCode.CreateSource<T>(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.LookUp.ITokenListFiller)
+  fullName.vb: ToSic.Sxc.Web.IDynamicCode.CreateSource(Of T)(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.LookUp.ITokenListFiller)
   nameWithType: IDynamicCode.CreateSource<T>(IDataSource, ITokenListFiller)
   nameWithType.vb: IDynamicCode.CreateSource(Of T)(IDataSource, ITokenListFiller)
-- uid: ToSic.Sxc.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataStream)
+- uid: ToSic.Sxc.Web.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataStream)
   name: CreateSource<T>(IDataStream)
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_CreateSource__1_ToSic_Eav_DataSources_IDataStream_
-  commentId: M:ToSic.Sxc.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataStream)
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_CreateSource__1_ToSic_Eav_DataSources_IDataStream_
+  commentId: M:ToSic.Sxc.Web.IDynamicCode.CreateSource``1(ToSic.Eav.DataSources.IDataStream)
   name.vb: CreateSource(Of T)(IDataStream)
-  fullName: ToSic.Sxc.IDynamicCode.CreateSource<T>(ToSic.Eav.DataSources.IDataStream)
-  fullName.vb: ToSic.Sxc.IDynamicCode.CreateSource(Of T)(ToSic.Eav.DataSources.IDataStream)
+  fullName: ToSic.Sxc.Web.IDynamicCode.CreateSource<T>(ToSic.Eav.DataSources.IDataStream)
+  fullName.vb: ToSic.Sxc.Web.IDynamicCode.CreateSource(Of T)(ToSic.Eav.DataSources.IDataStream)
   nameWithType: IDynamicCode.CreateSource<T>(IDataStream)
   nameWithType.vb: IDynamicCode.CreateSource(Of T)(IDataStream)
-- uid: ToSic.Sxc.IDynamicCode.Edit
+- uid: ToSic.Sxc.Web.IDynamicCode.Edit
   name: Edit
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_Edit
-  commentId: P:ToSic.Sxc.IDynamicCode.Edit
-  fullName: ToSic.Sxc.IDynamicCode.Edit
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Edit
+  commentId: P:ToSic.Sxc.Web.IDynamicCode.Edit
+  fullName: ToSic.Sxc.Web.IDynamicCode.Edit
   nameWithType: IDynamicCode.Edit
-- uid: ToSic.Sxc.IDynamicCode.Edit*
+- uid: ToSic.Sxc.Web.IDynamicCode.Edit*
   name: Edit
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_Edit_
-  commentId: Overload:ToSic.Sxc.IDynamicCode.Edit
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Edit_
+  commentId: Overload:ToSic.Sxc.Web.IDynamicCode.Edit
   isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicCode.Edit
+  fullName: ToSic.Sxc.Web.IDynamicCode.Edit
   nameWithType: IDynamicCode.Edit
-- uid: ToSic.Sxc.IDynamicCode.Header
+- uid: ToSic.Sxc.Web.IDynamicCode.Header
   name: Header
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_Header
-  commentId: P:ToSic.Sxc.IDynamicCode.Header
-  fullName: ToSic.Sxc.IDynamicCode.Header
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Header
+  commentId: P:ToSic.Sxc.Web.IDynamicCode.Header
+  fullName: ToSic.Sxc.Web.IDynamicCode.Header
   nameWithType: IDynamicCode.Header
-- uid: ToSic.Sxc.IDynamicCode.Header*
+- uid: ToSic.Sxc.Web.IDynamicCode.Header*
   name: Header
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_Header_
-  commentId: Overload:ToSic.Sxc.IDynamicCode.Header
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Header_
+  commentId: Overload:ToSic.Sxc.Web.IDynamicCode.Header
   isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicCode.Header
+  fullName: ToSic.Sxc.Web.IDynamicCode.Header
   nameWithType: IDynamicCode.Header
-- uid: ToSic.Sxc.IDynamicCode.Link
+- uid: ToSic.Sxc.Web.IDynamicCode.Link
   name: Link
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_Link
-  commentId: P:ToSic.Sxc.IDynamicCode.Link
-  fullName: ToSic.Sxc.IDynamicCode.Link
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Link
+  commentId: P:ToSic.Sxc.Web.IDynamicCode.Link
+  fullName: ToSic.Sxc.Web.IDynamicCode.Link
   nameWithType: IDynamicCode.Link
-- uid: ToSic.Sxc.IDynamicCode.Link*
+- uid: ToSic.Sxc.Web.IDynamicCode.Link*
   name: Link
-  href: api/ToSic.Sxc.IDynamicCode.html#ToSic_Sxc_IDynamicCode_Link_
-  commentId: Overload:ToSic.Sxc.IDynamicCode.Link
+  href: api/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Link_
+  commentId: Overload:ToSic.Sxc.Web.IDynamicCode.Link
   isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicCode.Link
+  fullName: ToSic.Sxc.Web.IDynamicCode.Link
   nameWithType: IDynamicCode.Link
-- uid: ToSic.Sxc.IDynamicEntity
-  name: IDynamicEntity
-  href: api/ToSic.Sxc.IDynamicEntity.html
-  commentId: T:ToSic.Sxc.IDynamicEntity
-  fullName: ToSic.Sxc.IDynamicEntity
-  nameWithType: IDynamicEntity
-- uid: ToSic.Sxc.IDynamicEntity.Entity
-  name: Entity
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_Entity
-  commentId: P:ToSic.Sxc.IDynamicEntity.Entity
-  fullName: ToSic.Sxc.IDynamicEntity.Entity
-  nameWithType: IDynamicEntity.Entity
-- uid: ToSic.Sxc.IDynamicEntity.Entity*
-  name: Entity
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_Entity_
-  commentId: Overload:ToSic.Sxc.IDynamicEntity.Entity
-  isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicEntity.Entity
-  nameWithType: IDynamicEntity.Entity
-- uid: ToSic.Sxc.IDynamicEntity.EntityGuid
-  name: EntityGuid
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_EntityGuid
-  commentId: P:ToSic.Sxc.IDynamicEntity.EntityGuid
-  fullName: ToSic.Sxc.IDynamicEntity.EntityGuid
-  nameWithType: IDynamicEntity.EntityGuid
-- uid: ToSic.Sxc.IDynamicEntity.EntityGuid*
-  name: EntityGuid
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_EntityGuid_
-  commentId: Overload:ToSic.Sxc.IDynamicEntity.EntityGuid
-  isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicEntity.EntityGuid
-  nameWithType: IDynamicEntity.EntityGuid
-- uid: ToSic.Sxc.IDynamicEntity.EntityId
-  name: EntityId
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_EntityId
-  commentId: P:ToSic.Sxc.IDynamicEntity.EntityId
-  fullName: ToSic.Sxc.IDynamicEntity.EntityId
-  nameWithType: IDynamicEntity.EntityId
-- uid: ToSic.Sxc.IDynamicEntity.EntityId*
-  name: EntityId
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_EntityId_
-  commentId: Overload:ToSic.Sxc.IDynamicEntity.EntityId
-  isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicEntity.EntityId
-  nameWithType: IDynamicEntity.EntityId
-- uid: ToSic.Sxc.IDynamicEntity.EntityTitle
-  name: EntityTitle
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_EntityTitle
-  commentId: P:ToSic.Sxc.IDynamicEntity.EntityTitle
-  fullName: ToSic.Sxc.IDynamicEntity.EntityTitle
-  nameWithType: IDynamicEntity.EntityTitle
-- uid: ToSic.Sxc.IDynamicEntity.EntityTitle*
-  name: EntityTitle
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_EntityTitle_
-  commentId: Overload:ToSic.Sxc.IDynamicEntity.EntityTitle
-  isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicEntity.EntityTitle
-  nameWithType: IDynamicEntity.EntityTitle
-- uid: ToSic.Sxc.IDynamicEntity.Get(System.String)
-  name: Get(String)
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_Get_System_String_
-  commentId: M:ToSic.Sxc.IDynamicEntity.Get(System.String)
-  fullName: ToSic.Sxc.IDynamicEntity.Get(System.String)
-  nameWithType: IDynamicEntity.Get(String)
-- uid: ToSic.Sxc.IDynamicEntity.Get*
-  name: Get
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_Get_
-  commentId: Overload:ToSic.Sxc.IDynamicEntity.Get
-  isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicEntity.Get
-  nameWithType: IDynamicEntity.Get
-- uid: ToSic.Sxc.IDynamicEntity.GetDraft
-  name: GetDraft()
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_GetDraft
-  commentId: M:ToSic.Sxc.IDynamicEntity.GetDraft
-  fullName: ToSic.Sxc.IDynamicEntity.GetDraft()
-  nameWithType: IDynamicEntity.GetDraft()
-- uid: ToSic.Sxc.IDynamicEntity.GetDraft*
-  name: GetDraft
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_GetDraft_
-  commentId: Overload:ToSic.Sxc.IDynamicEntity.GetDraft
-  isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicEntity.GetDraft
-  nameWithType: IDynamicEntity.GetDraft
-- uid: ToSic.Sxc.IDynamicEntity.GetPublished
-  name: GetPublished()
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_GetPublished
-  commentId: M:ToSic.Sxc.IDynamicEntity.GetPublished
-  fullName: ToSic.Sxc.IDynamicEntity.GetPublished()
-  nameWithType: IDynamicEntity.GetPublished()
-- uid: ToSic.Sxc.IDynamicEntity.GetPublished*
-  name: GetPublished
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_GetPublished_
-  commentId: Overload:ToSic.Sxc.IDynamicEntity.GetPublished
-  isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicEntity.GetPublished
-  nameWithType: IDynamicEntity.GetPublished
-- uid: ToSic.Sxc.IDynamicEntity.IsDemoItem
-  name: IsDemoItem
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_IsDemoItem
-  commentId: P:ToSic.Sxc.IDynamicEntity.IsDemoItem
-  fullName: ToSic.Sxc.IDynamicEntity.IsDemoItem
-  nameWithType: IDynamicEntity.IsDemoItem
-- uid: ToSic.Sxc.IDynamicEntity.IsDemoItem*
-  name: IsDemoItem
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_IsDemoItem_
-  commentId: Overload:ToSic.Sxc.IDynamicEntity.IsDemoItem
-  isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicEntity.IsDemoItem
-  nameWithType: IDynamicEntity.IsDemoItem
-- uid: ToSic.Sxc.IDynamicEntity.Parents(System.String,System.String)
-  name: Parents(String, String)
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_Parents_System_String_System_String_
-  commentId: M:ToSic.Sxc.IDynamicEntity.Parents(System.String,System.String)
-  fullName: ToSic.Sxc.IDynamicEntity.Parents(System.String, System.String)
-  nameWithType: IDynamicEntity.Parents(String, String)
-- uid: ToSic.Sxc.IDynamicEntity.Parents*
-  name: Parents
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_Parents_
-  commentId: Overload:ToSic.Sxc.IDynamicEntity.Parents
-  isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicEntity.Parents
-  nameWithType: IDynamicEntity.Parents
-- uid: ToSic.Sxc.IDynamicEntity.Presentation
-  name: Presentation
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_Presentation
-  commentId: P:ToSic.Sxc.IDynamicEntity.Presentation
-  fullName: ToSic.Sxc.IDynamicEntity.Presentation
-  nameWithType: IDynamicEntity.Presentation
-- uid: ToSic.Sxc.IDynamicEntity.Presentation*
-  name: Presentation
-  href: api/ToSic.Sxc.IDynamicEntity.html#ToSic_Sxc_IDynamicEntity_Presentation_
-  commentId: Overload:ToSic.Sxc.IDynamicEntity.Presentation
-  isSpec: "True"
-  fullName: ToSic.Sxc.IDynamicEntity.Presentation
-  nameWithType: IDynamicEntity.Presentation
-- uid: ToSic.Sxc.IInPageEditingSystem
+- uid: ToSic.Sxc.Web.IInPageEditingSystem
   name: IInPageEditingSystem
-  href: api/ToSic.Sxc.IInPageEditingSystem.html
-  commentId: T:ToSic.Sxc.IInPageEditingSystem
-  fullName: ToSic.Sxc.IInPageEditingSystem
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html
+  commentId: T:ToSic.Sxc.Web.IInPageEditingSystem
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem
   nameWithType: IInPageEditingSystem
-- uid: ToSic.Sxc.IInPageEditingSystem.Attribute(System.String,System.Object)
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.Attribute(System.String,System.Object)
   name: Attribute(String, Object)
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_Attribute_System_String_System_Object_
-  commentId: M:ToSic.Sxc.IInPageEditingSystem.Attribute(System.String,System.Object)
-  fullName: ToSic.Sxc.IInPageEditingSystem.Attribute(System.String, System.Object)
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Attribute_System_String_System_Object_
+  commentId: M:ToSic.Sxc.Web.IInPageEditingSystem.Attribute(System.String,System.Object)
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Attribute(System.String, System.Object)
   nameWithType: IInPageEditingSystem.Attribute(String, Object)
-- uid: ToSic.Sxc.IInPageEditingSystem.Attribute(System.String,System.String)
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.Attribute(System.String,System.String)
   name: Attribute(String, String)
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_Attribute_System_String_System_String_
-  commentId: M:ToSic.Sxc.IInPageEditingSystem.Attribute(System.String,System.String)
-  fullName: ToSic.Sxc.IInPageEditingSystem.Attribute(System.String, System.String)
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Attribute_System_String_System_String_
+  commentId: M:ToSic.Sxc.Web.IInPageEditingSystem.Attribute(System.String,System.String)
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Attribute(System.String, System.String)
   nameWithType: IInPageEditingSystem.Attribute(String, String)
-- uid: ToSic.Sxc.IInPageEditingSystem.Attribute*
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.Attribute*
   name: Attribute
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_Attribute_
-  commentId: Overload:ToSic.Sxc.IInPageEditingSystem.Attribute
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Attribute_
+  commentId: Overload:ToSic.Sxc.Web.IInPageEditingSystem.Attribute
   isSpec: "True"
-  fullName: ToSic.Sxc.IInPageEditingSystem.Attribute
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Attribute
   nameWithType: IInPageEditingSystem.Attribute
-- uid: ToSic.Sxc.IInPageEditingSystem.ContextAttributes(ToSic.Sxc.IDynamicEntity,System.String,System.String,System.String,System.Nullable{System.Guid})
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes(ToSic.Sxc.Data.IDynamicEntity,System.String,System.String,System.String,System.Nullable{System.Guid})
   name: ContextAttributes(IDynamicEntity, String, String, String, Nullable<Guid>)
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_ContextAttributes_ToSic_Sxc_IDynamicEntity_System_String_System_String_System_String_System_Nullable_System_Guid__
-  commentId: M:ToSic.Sxc.IInPageEditingSystem.ContextAttributes(ToSic.Sxc.IDynamicEntity,System.String,System.String,System.String,System.Nullable{System.Guid})
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_ContextAttributes_ToSic_Sxc_Data_IDynamicEntity_System_String_System_String_System_String_System_Nullable_System_Guid__
+  commentId: M:ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes(ToSic.Sxc.Data.IDynamicEntity,System.String,System.String,System.String,System.Nullable{System.Guid})
   name.vb: ContextAttributes(IDynamicEntity, String, String, String, Nullable(Of Guid))
-  fullName: ToSic.Sxc.IInPageEditingSystem.ContextAttributes(ToSic.Sxc.IDynamicEntity, System.String, System.String, System.String, System.Nullable<System.Guid>)
-  fullName.vb: ToSic.Sxc.IInPageEditingSystem.ContextAttributes(ToSic.Sxc.IDynamicEntity, System.String, System.String, System.String, System.Nullable(Of System.Guid))
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes(ToSic.Sxc.Data.IDynamicEntity, System.String, System.String, System.String, System.Nullable<System.Guid>)
+  fullName.vb: ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes(ToSic.Sxc.Data.IDynamicEntity, System.String, System.String, System.String, System.Nullable(Of System.Guid))
   nameWithType: IInPageEditingSystem.ContextAttributes(IDynamicEntity, String, String, String, Nullable<Guid>)
   nameWithType.vb: IInPageEditingSystem.ContextAttributes(IDynamicEntity, String, String, String, Nullable(Of Guid))
-- uid: ToSic.Sxc.IInPageEditingSystem.ContextAttributes*
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes*
   name: ContextAttributes
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_ContextAttributes_
-  commentId: Overload:ToSic.Sxc.IInPageEditingSystem.ContextAttributes
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_ContextAttributes_
+  commentId: Overload:ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes
   isSpec: "True"
-  fullName: ToSic.Sxc.IInPageEditingSystem.ContextAttributes
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes
   nameWithType: IInPageEditingSystem.ContextAttributes
-- uid: ToSic.Sxc.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
   name: Enable(String, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_Enable_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
-  commentId: M:ToSic.Sxc.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
+  commentId: M:ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
   name.vb: Enable(String, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
-  fullName: ToSic.Sxc.IInPageEditingSystem.Enable(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>)
-  fullName.vb: ToSic.Sxc.IInPageEditingSystem.Enable(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean))
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>)
+  fullName.vb: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean))
   nameWithType: IInPageEditingSystem.Enable(String, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
   nameWithType.vb: IInPageEditingSystem.Enable(String, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
-- uid: ToSic.Sxc.IInPageEditingSystem.Enable*
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable*
   name: Enable
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_Enable_
-  commentId: Overload:ToSic.Sxc.IInPageEditingSystem.Enable
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_
+  commentId: Overload:ToSic.Sxc.Web.IInPageEditingSystem.Enable
   isSpec: "True"
-  fullName: ToSic.Sxc.IInPageEditingSystem.Enable
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Enable
   nameWithType: IInPageEditingSystem.Enable
-- uid: ToSic.Sxc.IInPageEditingSystem.Enabled
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.Enabled
   name: Enabled
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_Enabled
-  commentId: P:ToSic.Sxc.IInPageEditingSystem.Enabled
-  fullName: ToSic.Sxc.IInPageEditingSystem.Enabled
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enabled
+  commentId: P:ToSic.Sxc.Web.IInPageEditingSystem.Enabled
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Enabled
   nameWithType: IInPageEditingSystem.Enabled
-- uid: ToSic.Sxc.IInPageEditingSystem.Enabled*
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.Enabled*
   name: Enabled
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_Enabled_
-  commentId: Overload:ToSic.Sxc.IInPageEditingSystem.Enabled
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enabled_
+  commentId: Overload:ToSic.Sxc.Web.IInPageEditingSystem.Enabled
   isSpec: "True"
-  fullName: ToSic.Sxc.IInPageEditingSystem.Enabled
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Enabled
   nameWithType: IInPageEditingSystem.Enabled
-- uid: ToSic.Sxc.IInPageEditingSystem.TagToolbar(System.Object,System.String,System.String,System.String,System.Object,System.Object,System.Object)
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.TagToolbar(System.Object,System.String,System.String,System.String,System.Object,System.Object,System.Object)
   name: TagToolbar(Object, String, String, String, Object, Object, Object)
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_TagToolbar_System_Object_System_String_System_String_System_String_System_Object_System_Object_System_Object_
-  commentId: M:ToSic.Sxc.IInPageEditingSystem.TagToolbar(System.Object,System.String,System.String,System.String,System.Object,System.Object,System.Object)
-  fullName: ToSic.Sxc.IInPageEditingSystem.TagToolbar(System.Object, System.String, System.String, System.String, System.Object, System.Object, System.Object)
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_TagToolbar_System_Object_System_String_System_String_System_String_System_Object_System_Object_System_Object_
+  commentId: M:ToSic.Sxc.Web.IInPageEditingSystem.TagToolbar(System.Object,System.String,System.String,System.String,System.Object,System.Object,System.Object)
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.TagToolbar(System.Object, System.String, System.String, System.String, System.Object, System.Object, System.Object)
   nameWithType: IInPageEditingSystem.TagToolbar(Object, String, String, String, Object, Object, Object)
-- uid: ToSic.Sxc.IInPageEditingSystem.TagToolbar*
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.TagToolbar*
   name: TagToolbar
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_TagToolbar_
-  commentId: Overload:ToSic.Sxc.IInPageEditingSystem.TagToolbar
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_TagToolbar_
+  commentId: Overload:ToSic.Sxc.Web.IInPageEditingSystem.TagToolbar
   isSpec: "True"
-  fullName: ToSic.Sxc.IInPageEditingSystem.TagToolbar
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.TagToolbar
   nameWithType: IInPageEditingSystem.TagToolbar
-- uid: ToSic.Sxc.IInPageEditingSystem.Toolbar(System.Object,System.String,System.String,System.String,System.Object,System.Object,System.Object)
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.Toolbar(System.Object,System.String,System.String,System.String,System.Object,System.Object,System.Object)
   name: Toolbar(Object, String, String, String, Object, Object, Object)
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_Toolbar_System_Object_System_String_System_String_System_String_System_Object_System_Object_System_Object_
-  commentId: M:ToSic.Sxc.IInPageEditingSystem.Toolbar(System.Object,System.String,System.String,System.String,System.Object,System.Object,System.Object)
-  fullName: ToSic.Sxc.IInPageEditingSystem.Toolbar(System.Object, System.String, System.String, System.String, System.Object, System.Object, System.Object)
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Toolbar_System_Object_System_String_System_String_System_String_System_Object_System_Object_System_Object_
+  commentId: M:ToSic.Sxc.Web.IInPageEditingSystem.Toolbar(System.Object,System.String,System.String,System.String,System.Object,System.Object,System.Object)
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Toolbar(System.Object, System.String, System.String, System.String, System.Object, System.Object, System.Object)
   nameWithType: IInPageEditingSystem.Toolbar(Object, String, String, String, Object, Object, Object)
-- uid: ToSic.Sxc.IInPageEditingSystem.Toolbar*
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.Toolbar*
   name: Toolbar
-  href: api/ToSic.Sxc.IInPageEditingSystem.html#ToSic_Sxc_IInPageEditingSystem_Toolbar_
-  commentId: Overload:ToSic.Sxc.IInPageEditingSystem.Toolbar
+  href: api/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Toolbar_
+  commentId: Overload:ToSic.Sxc.Web.IInPageEditingSystem.Toolbar
   isSpec: "True"
-  fullName: ToSic.Sxc.IInPageEditingSystem.Toolbar
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Toolbar
   nameWithType: IInPageEditingSystem.Toolbar
-- uid: ToSic.Sxc.ILinkHelper
+- uid: ToSic.Sxc.Web.ILinkHelper
   name: ILinkHelper
-  href: api/ToSic.Sxc.ILinkHelper.html
-  commentId: T:ToSic.Sxc.ILinkHelper
-  fullName: ToSic.Sxc.ILinkHelper
+  href: api/ToSic.Sxc.Web.ILinkHelper.html
+  commentId: T:ToSic.Sxc.Web.ILinkHelper
+  fullName: ToSic.Sxc.Web.ILinkHelper
   nameWithType: ILinkHelper
-- uid: ToSic.Sxc.ILinkHelper.Base
+- uid: ToSic.Sxc.Web.ILinkHelper.Base
   name: Base()
-  href: api/ToSic.Sxc.ILinkHelper.html#ToSic_Sxc_ILinkHelper_Base
-  commentId: M:ToSic.Sxc.ILinkHelper.Base
-  fullName: ToSic.Sxc.ILinkHelper.Base()
+  href: api/ToSic.Sxc.Web.ILinkHelper.html#ToSic_Sxc_Web_ILinkHelper_Base
+  commentId: M:ToSic.Sxc.Web.ILinkHelper.Base
+  fullName: ToSic.Sxc.Web.ILinkHelper.Base()
   nameWithType: ILinkHelper.Base()
-- uid: ToSic.Sxc.ILinkHelper.Base*
+- uid: ToSic.Sxc.Web.ILinkHelper.Base*
   name: Base
-  href: api/ToSic.Sxc.ILinkHelper.html#ToSic_Sxc_ILinkHelper_Base_
-  commentId: Overload:ToSic.Sxc.ILinkHelper.Base
+  href: api/ToSic.Sxc.Web.ILinkHelper.html#ToSic_Sxc_Web_ILinkHelper_Base_
+  commentId: Overload:ToSic.Sxc.Web.ILinkHelper.Base
   isSpec: "True"
-  fullName: ToSic.Sxc.ILinkHelper.Base
+  fullName: ToSic.Sxc.Web.ILinkHelper.Base
   nameWithType: ILinkHelper.Base
-- uid: ToSic.Sxc.ILinkHelper.To(System.String,System.Nullable{System.Int32},System.String)
+- uid: ToSic.Sxc.Web.ILinkHelper.To(System.String,System.Nullable{System.Int32},System.String)
   name: To(String, Nullable<Int32>, String)
-  href: api/ToSic.Sxc.ILinkHelper.html#ToSic_Sxc_ILinkHelper_To_System_String_System_Nullable_System_Int32__System_String_
-  commentId: M:ToSic.Sxc.ILinkHelper.To(System.String,System.Nullable{System.Int32},System.String)
+  href: api/ToSic.Sxc.Web.ILinkHelper.html#ToSic_Sxc_Web_ILinkHelper_To_System_String_System_Nullable_System_Int32__System_String_
+  commentId: M:ToSic.Sxc.Web.ILinkHelper.To(System.String,System.Nullable{System.Int32},System.String)
   name.vb: To(String, Nullable(Of Int32), String)
-  fullName: ToSic.Sxc.ILinkHelper.To(System.String, System.Nullable<System.Int32>, System.String)
-  fullName.vb: ToSic.Sxc.ILinkHelper.To(System.String, System.Nullable(Of System.Int32), System.String)
+  fullName: ToSic.Sxc.Web.ILinkHelper.To(System.String, System.Nullable<System.Int32>, System.String)
+  fullName.vb: ToSic.Sxc.Web.ILinkHelper.To(System.String, System.Nullable(Of System.Int32), System.String)
   nameWithType: ILinkHelper.To(String, Nullable<Int32>, String)
   nameWithType.vb: ILinkHelper.To(String, Nullable(Of Int32), String)
-- uid: ToSic.Sxc.ILinkHelper.To*
+- uid: ToSic.Sxc.Web.ILinkHelper.To*
   name: To
-  href: api/ToSic.Sxc.ILinkHelper.html#ToSic_Sxc_ILinkHelper_To_
-  commentId: Overload:ToSic.Sxc.ILinkHelper.To
+  href: api/ToSic.Sxc.Web.ILinkHelper.html#ToSic_Sxc_Web_ILinkHelper_To_
+  commentId: Overload:ToSic.Sxc.Web.ILinkHelper.To
   isSpec: "True"
-  fullName: ToSic.Sxc.ILinkHelper.To
+  fullName: ToSic.Sxc.Web.ILinkHelper.To
   nameWithType: ILinkHelper.To

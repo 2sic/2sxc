@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.SexyContent.Adam;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam
 {

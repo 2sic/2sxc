@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Blocks
             var cms = GetCmsRuntime();// new CmsRuntime(app, Log, );
             var contentGroup = /*app.BlocksManager*/cms.Blocks.GetBlockConfig(BlockConfiguration.ContentGroupGuid);
 
-            var titleItem = contentGroup.ListContent.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
+            var titleItem = contentGroup.Header.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
 
             UpdateTitle(titleItem);
         }

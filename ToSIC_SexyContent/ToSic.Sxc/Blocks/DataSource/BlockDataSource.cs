@@ -6,6 +6,7 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Blocks
 {

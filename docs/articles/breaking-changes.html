@@ -109,6 +109,7 @@ but in case it does - here&#39;s what we did.</p>
 </li>
 <li>Moving the <code>ToSic.SexyContent.App</code> to <code>ToSic.Sxc.Apps.App</code></li>
 <li>In a razor page, we added the preferred <code>Purpose</code>. The old <code>InstancePurpose</code> will still work</li>
+<li>Placed some things we just moved in 10.20 to a final place - since it&#39;s a very recent change, we updated the docs in the 10.20.00 section</li>
 </ol>
 <h4 id="changed-but-completely-internal">Changed, but completely internal</h4>
 <ol>
@@ -116,9 +117,9 @@ but in case it does - here&#39;s what we did.</p>
 </ol>
 <h4 id="version-102000-2019-11-05">Version 10.20.00 (2019-11-05)</h4>
 <ol>
-<li>the internal interface <code>IInPageEditingHelpers</code> was moved from <code>ToSic.SexyContent.Interfaces</code> to the namespace <code>ToSic.Sxc</code></li>
-<li>the internal interface <code>IHtmlHelper</code> and <code>ILinkHelper</code> was moved to <code>ToSic.Sxc.Dnn</code></li>
-<li>the interface <code>ToSic.Sxc.Adam.IFolder</code> was moved to <code>ToSic.Eav.Apps.Adam.IFolder</code></li>
+<li>the internal interface <code>IInPageEditingHelpers</code> was moved from <code>ToSic.SexyContent.Interfaces</code> to the namespace <code>ToSic.Sxc.Web</code></li>
+<li>the internal interface <code>ILinkHelper</code> was moved to <code>ToSic.Sxc.Web</code></li>
+<li>the internal interface <code>IHtmlHelper</code> was moved to <code>ToSic.Sxc.Dnn</code></li>
 <li>the property <code>Configuration</code> on dynamic entities was deprecated in 2sxc 4 and removed in 2sxc 10 - we don&#39;t think it was ever used</li>
 <li>moved internal Metadata interfaces (ca. 5) into final namespace <a class="xref" href="../api/ToSic.Eav.Metadata.html">ToSic.Eav.Metadata</a></li>
 <li>Moved a bunch of internal interfaces which we believe were never used externally from <code>ToSic.Eav.Interfaces</code> to <code>ToSic.Eav.Data</code><ol>
@@ -150,11 +151,10 @@ but in case it does - here&#39;s what we did.</p>
 <li><code>IZoneMapper</code></li>
 </ol>
 </li>
-<li>the internal namespace <code>ToSic.Eav.ValueProvider</code> was changed to <code>ToSic.Eav.LookUp</code> (added an &#39;s&#39; for consistency) and inside it<br> we renamed a bunch of internal interfaces and objects which we believe were never used externally</li>
+<li>the internal namespace <code>ToSic.Eav.ValueProvider</code> was changed to <code>ToSic.Eav.LookUp</code> and inside it<br> we renamed a bunch of internal interfaces and objects which we believe were never used externally</li>
 </ol>
 <h5 id="deprecatedchanged-but-not-broken">Deprecated/Changed, but not broken</h5>
 <ol>
-<li>the interface <code>ToSic.Sxc.Adam.IFile</code> was moved to <code>ToSic.Eav.Apps.Adam.IFile</code> but the old interface still exists so it shouln&#39;t break<br> <em>it was used by Mobius Forms</em></li>
 <li>the internal interface <code>ToSic.SexyContent.IAppAndDataHelpers</code> was renamed to <code>ToSic.Sxc.IDynamicCode</code> but the old interface still exists, so it shouldn&#39;t break<br> <em>it was used by Mobius Forms</em></li>
 <li>moved <code>ToSic.Eav.Interfaces.IEntity</code> to <code>ToSic.Eav.Data.IEntity</code> - but preserved the old interface for compatibility
  <em>it was used everywhere</em></li>

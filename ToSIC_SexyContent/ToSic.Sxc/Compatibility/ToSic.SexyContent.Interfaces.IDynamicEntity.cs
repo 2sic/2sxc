@@ -42,6 +42,6 @@ namespace ToSic.SexyContent.Interfaces
 
         bool IsDemoItem { get; }
 
-        List<Sxc.IDynamicEntity> Parents(string type = null, string field = null);
+        List<Sxc.Data.IDynamicEntity> Parents(string type = null, string field = null);
     }
 }

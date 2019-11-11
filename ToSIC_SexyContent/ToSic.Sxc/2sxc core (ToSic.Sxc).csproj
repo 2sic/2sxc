@@ -110,8 +110,8 @@
     <Compile Include="Blocks\Views\View_Constants.cs" />
     <Compile Include="Engines\EngineDefinitionAttribute.cs" />
     <Compile Include="Blocks\Views\View.cs" />
-    <Compile Include="InterfacesCore\IDynamicCode.cs" />
-    <Compile Include="InterfacesCore\IInPageEditingSystem.cs" />
+    <Compile Include="Web\IDynamicCode.cs" />
+    <Compile Include="Web\IInPageEditingSystem.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
@@ -130,8 +130,8 @@
     <Compile Include="Apps\IApp.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.IAppData.cs" />
     <Compile Include="Blocks\IBlock.cs" />
-    <Compile Include="InterfacesCore\IDynamicEntity.cs" />
-    <Compile Include="InterfacesCore\ILinkHelper.cs" />
+    <Compile Include="Data\IDynamicEntity.cs" />
+    <Compile Include="Web\ILinkHelper.cs" />
     <Compile Include="Interfaces\ISharedCodeBuilder.cs" />
     <Compile Include="Interfaces\IWebFactoryTemp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -152,7 +152,7 @@
     <Compile Include="Blocks\Renderers\Simple.cs" />
     <Compile Include="Apps\Blocks\BlockConfiguration.cs" />
     <Compile Include="Apps\Parts\BlocksManager.cs" />
-    <Compile Include="SexyContent\DataPublishing.cs" />
+    <Compile Include="Data\DataPublishing.cs" />
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="Blocks\DataSource\IBlockDataSource.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
@@ -230,8 +230,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="InterfacesCore\" />
     <Folder Include="SexyContent\Engines\" />
-    <Folder Include="Web\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

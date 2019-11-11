@@ -118,8 +118,8 @@ namespace ToSic.SexyContent.DataSources
         private IEnumerable<IEntity> _listContent;
 
         private IEnumerable<IEntity> GetListContent()
-            => _listContent ?? (_listContent = GetStream(BlockConfiguration.ListContent, View.HeaderItem,
-                   BlockConfiguration.ListPresentation, View.HeaderPresentationItem, true));
+            => _listContent ?? (_listContent = GetStream(BlockConfiguration.Header, View.HeaderItem,
+                   BlockConfiguration.HeaderPresentation, View.HeaderPresentationItem, true));
 
         #endregion
 

@@ -93,8 +93,8 @@ namespace ToSic.Sxc.Apps
             compatibleTemplates = compatibleTemplates
                 .Where(t => blockConfiguration.Content.All(c => c == null) || blockConfiguration.Content.First(e => e != null).Type.StaticName == t.ContentType)
                 .Where(t => blockConfiguration.Presentation.All(c => c == null) || blockConfiguration.Presentation.First(e => e != null).Type.StaticName == t.PresentationType)
-                .Where(t => blockConfiguration.ListContent.All(c => c == null) || blockConfiguration.ListContent.First(e => e != null).Type.StaticName == t.HeaderType)
-                .Where(t => blockConfiguration.ListPresentation.All(c => c == null) || blockConfiguration.ListPresentation.First(e => e != null).Type.StaticName == t.HeaderPresentationType);
+                .Where(t => blockConfiguration.Header.All(c => c == null) || blockConfiguration.Header.First(e => e != null).Type.StaticName == t.HeaderType)
+                .Where(t => blockConfiguration.HeaderPresentation.All(c => c == null) || blockConfiguration.HeaderPresentation.First(e => e != null).Type.StaticName == t.HeaderPresentationType);
 
             return compatibleTemplates;
         }

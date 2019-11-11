@@ -2,6 +2,7 @@
 using ToSic.Sxc;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Web;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {

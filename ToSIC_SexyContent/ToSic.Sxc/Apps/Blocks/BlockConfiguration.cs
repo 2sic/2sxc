@@ -101,9 +101,9 @@ namespace ToSic.Sxc.Apps.Blocks
 
         public List<IEntity> Presentation => Entity?.Children(ViewParts.Presentation) ?? new List<IEntity>();
 
-        public List<IEntity> ListContent => Entity?.Children(ViewParts.ListContent) ?? new List<IEntity>();
+        public List<IEntity> Header => Entity?.Children(ViewParts.ListContent) ?? new List<IEntity>();
 
-        public List<IEntity> ListPresentation => Entity?.Children(ViewParts.ListPresentation) ?? new List<IEntity>();
+        public List<IEntity> HeaderPresentation => Entity?.Children(ViewParts.ListPresentation) ?? new List<IEntity>();
 
         public List<IEntity> this[string type]
         {
@@ -116,9 +116,9 @@ namespace ToSic.Sxc.Apps.Blocks
                     case ViewParts.PresentationLower: 
                         return Presentation;
                     case ViewParts.ListContentLower:
-                        return ListContent;
+                        return Header;
                     case ViewParts.ListPresentationLower:
-                        return ListPresentation;
+                        return HeaderPresentation;
                     default:
                         throw new Exception("Type " + type + " not allowed");
                 }
