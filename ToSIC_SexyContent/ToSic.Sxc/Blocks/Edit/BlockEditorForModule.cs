@@ -1,22 +1,21 @@
 ﻿using System;
 using ToSic.Eav;
 using ToSic.Eav.Data;
-using ToSic.SexyContent;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Blocks
 {
-    internal class BlockConfigForModule: BlockConfigBase
+    internal class BlockEditorForModule: BlockEditorBase
     {
-        public BlockConfigForModule(ICmsBlock cms) : base(cms)
+        public BlockEditorForModule(ICmsBlock cms) : base(cms)
         {
         }
 
         #region methods which the entity-implementation must customize - so it's virtual
 
-        protected override void SavePreviewTemplateId(Guid templateGuid) 
-            => BlocksManager.SetPreviewTemplate(ModuleId, templateGuid);
+        protected override void SavePreviewTemplateId(Guid templateGuid)
+            => Factory.Resolve<IMapAppToInstance>().SetPreviewTemplate(ModuleId, templateGuid);
+            //=> BlocksManager.SetPreviewTemplate(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
             => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(CmsContext.EnvInstance, CmsContext.Environment, appId, Log);

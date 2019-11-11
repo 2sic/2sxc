@@ -92,6 +92,7 @@ but when programming they should use typed objects to not accidentally access in
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">EntityBasedType</span></div>
+      <div class="level2"><a class="xref" href="ToSic.Eav.Data.EntityBasedWithLog.html">EntityBasedWithLog</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -166,7 +167,8 @@ but when programming they should use typed objects to not accidentally access in
     <tbody>
       <tr>
         <td><a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a></td>
-        <td></td>
+        <td><p>The entity, or null if not provided</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -197,7 +199,8 @@ but when programming they should use typed objects to not accidentally access in
     <tbody>
       <tr>
         <td><span class="xref">System.Guid</span></td>
-        <td></td>
+        <td><p>The guid, or an empty-guid of no entity available</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -228,7 +231,8 @@ but when programming they should use typed objects to not accidentally access in
     <tbody>
       <tr>
         <td><span class="xref">System.Int32</span></td>
-        <td></td>
+        <td><p>The id, or 0 if no entity available</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -259,13 +263,88 @@ but when programming they should use typed objects to not accidentally access in
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td></td>
+        <td><p>The title, or an empty string if not available or not string-able</p>
+</td>
       </tr>
     </tbody>
   </table>
   <h5 id="ToSic_Eav_Data_EntityBasedType_Title_remarks">Remarks</h5>
   <div class="markdown level1 remarks"><p>Can be overriden by other parts, if necessary.</p>
 </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_EntityBasedType_Get__1_System_String___0_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.EntityBasedType.Get%60%601(System.String%2C%60%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/EntityBasedType.cs/#L38">View Source</a>
+  </span>
+  <a id="ToSic_Eav_Data_EntityBasedType_Get_" data-uid="ToSic.Eav.Data.EntityBasedType.Get*"></a>
+  <h4 id="ToSic_Eav_Data_EntityBasedType_Get__1_System_String___0_" data-uid="ToSic.Eav.Data.EntityBasedType.Get``1(System.String,``0)">Get&lt;T&gt;(String, T)</h4>
+  <div class="markdown level1 summary"><p>Get a value from the underlying entity. </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected T Get&lt;T&gt;(string fieldName, T fallback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">fieldName</span></td>
+        <td><p>field name</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">fallback</span></td>
+        <td><p>fallback value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>The value. If the Entity is missing, will return the fallback result. </p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>type, should only be string, decimal, bool</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="ToSic.Eav.Data.IEntityBasedType.html">IEntityBasedType</a>

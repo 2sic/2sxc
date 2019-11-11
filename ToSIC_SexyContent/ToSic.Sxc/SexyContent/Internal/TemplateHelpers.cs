@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Web.Hosting;
-using ToSic.Sxc;
 using ToSic.Sxc.Apps;
 
 namespace ToSic.SexyContent.Internal
@@ -26,8 +25,8 @@ namespace ToSic.SexyContent.Internal
         {
             var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
                 ? Path.Combine(HostingEnvironment.MapPath(Settings.PortalHostDirectory), Settings.AppsRootFolder) 
-                : HostingEnvironment.MapPath(App.Tenant.SxcPath);//.Settings.HomeDirectoryMapPath;
-            var sexyFolderPath = portalPath;// Path.Combine(portalPath, Settings.TemplateFolder);
+                : HostingEnvironment.MapPath(App.Tenant.SxcPath);
+            var sexyFolderPath = portalPath;
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
 

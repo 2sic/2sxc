@@ -39,7 +39,7 @@ namespace ToSic.SexyContent.Edit.ClientContextInfo
             QueryId = cms.View?.Query?.EntityId; // will be null if not defined
             ContentTypeName = cms.View?.ContentType ?? "";
             IsList = cms.Block.Configuration?.View?.UseForList ?? false;//  isCreated && ((sxc.BlockConfiguration?.Content?.Count ?? 0) > 1);
-            SupportsAjax = cms.Block.IsContentApp || cms.App?.Configuration?.SupportsAjaxReload ?? false;
+            SupportsAjax = cms.Block.IsContentApp || (cms.App?.Configuration?.EnableAjax ?? false);
         }
     }
 }

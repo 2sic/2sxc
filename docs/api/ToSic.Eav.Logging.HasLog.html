@@ -100,7 +100,7 @@
   <h6><strong>Assembly</strong>: ToSic.Eav.Core.dll</h6>
   <h5 id="ToSic_Eav_Logging_HasLog_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class HasLog : IHasLog</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class HasLog : IHasLog</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -118,7 +118,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public HasLog(string logName, ILog parentLog = null, string initialMessage = null, string className = null)</code></pre>
+    <pre><code class="lang-csharp hljs">protected HasLog(string logName, ILog parentLog = null, string initialMessage = null, string className = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -239,40 +239,6 @@ long-living objects must actively prevent logs from being attached. </p>
   <h5 id="ToSic_Eav_Logging_HasLog_InitLog_System_String_ToSic_Eav_Logging_ILog_System_String__remarks">Remarks</h5>
   <div class="markdown level1 remarks"><p>this one can be overridden by outside sources, like the cache which should never allow attaching logs at runtime</p>
 </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Logging_HasLog_LinkLog_ToSic_Eav_Logging_ILog_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Logging.HasLog.LinkLog(ToSic.Eav.Logging.ILog)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Logging/HasLog.cs/#L67">View Source</a>
-  </span>
-  <a id="ToSic_Eav_Logging_HasLog_LinkLog_" data-uid="ToSic.Eav.Logging.HasLog.LinkLog*"></a>
-  <h4 id="ToSic_Eav_Logging_HasLog_LinkLog_ToSic_Eav_Logging_ILog_" data-uid="ToSic.Eav.Logging.HasLog.LinkLog(ToSic.Eav.Logging.ILog)">LinkLog(ILog)</h4>
-  <div class="markdown level1 summary"><p>Attach this log to another parent log, which should also know about events logged here.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void LinkLog(ILog parentLog)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ToSic.Eav.Logging.ILog.html">ILog</a></td>
-        <td><span class="parametername">parentLog</span></td>
-        <td><p>The parent log</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a>

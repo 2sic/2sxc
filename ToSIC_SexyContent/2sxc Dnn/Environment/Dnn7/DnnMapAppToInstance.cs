@@ -15,8 +15,8 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.SxcTemp;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7
 {
 
@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
-            BlocksManager.ClearPreviewTemplate(instance.Id);
+            /*BlocksManager.*/ClearPreviewTemplate(instance.Id);
 
             // ToDo: Should throw exception if a real BlockConfiguration exists
 
@@ -75,11 +75,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // Change to 1. available template if app has been set
             if (appId.HasValue)
             {
-                //var app = GetApp.LightWithoutData(new DnnTenant(null), zoneId, appId.Value, parentLog: Log);
-                var cms = new CmsManager(zoneId, appId.Value, Log);
-                var templateGuid = cms.ViewReadTemp.GetAllTemplates().FirstOrDefault(t => !t.IsHidden)?.Guid;
+                var cms = new CmsRuntime(zoneId, appId.Value, Log, true, env.PagePublishing.IsEnabled(instance.Id));
+                var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue)
-                    BlocksManager.SetPreviewTemplate(instance.Id, templateGuid.Value);
+                    /*BlocksManager.*/SetPreviewTemplate(instance.Id, templateGuid.Value);
             }
         }
 
@@ -101,7 +100,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     guid.ToString(), Log);
         }
 
-        public BlockConfiguration GetInstanceContentGroup(BlocksManager cgm, ILog log, int instanceId, int? pageId)
+        public BlockConfiguration GetInstanceContentGroup(BlocksRuntime cgm, ILog log, int instanceId, int? pageId)
         {
             var mci = ModuleController.Instance;
 

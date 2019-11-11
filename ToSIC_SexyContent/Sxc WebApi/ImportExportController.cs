@@ -18,6 +18,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.WebApi.Dnn;
 using ToSic.SexyContent.WebApi.ImportExport;
+using ToSic.Sxc.Apps;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -39,22 +40,25 @@ namespace ToSic.SexyContent.WebApi
         public dynamic GetAppInfo(int appId, int zoneId)
         {
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
-            var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo);// AppWithRestrictedZoneChange(appId, zoneId);
 
-            var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath, Log);
+            var zipExport = new ZipExport(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var cultCount = Env.ZoneMapper
-                .CulturesWithState(appWrapper.App.Tenant.Id, appWrapper.App.ZoneId)
+                .CulturesWithState(currentApp.Tenant.Id, currentApp.ZoneId)
                 .Count(c => c.Active);
+
+            var cms = new CmsRuntime(currentApp, Log, true, false);
+
             return new
             {
-                appWrapper.App.Name,
-                Guid = appWrapper.App.AppGuid,
-                Version = appWrapper.GetVersion(),
-                EntitiesCount = appWrapper.GetEntities().Count(),
+                currentApp.Name,
+                Guid = currentApp.AppGuid,
+                Version = currentApp.VersionSafe(),
+                EntitiesCount = cms.Entities.All.Count(),
                 LanguagesCount = cultCount,
-                TemplatesCount = appWrapper.GetTemplates().Count(),
-                HasRazorTemplates = appWrapper.GetRazorTemplates().Any(),
-                HasTokenTemplates = appWrapper.GetTokenTemplates().Any(),
+                TemplatesCount = cms.Views.GetAll().Count(),
+                HasRazorTemplates = cms.Views.GetRazor().Any(),
+                HasTokenTemplates = cms.Views.GetToken().Any(),
                 FilesCount = zipExport.FileManager.AllFiles.Count(),
                 TransferableFilesCount = zipExport.FileManager.AllTransferableFiles.Count()
             };
@@ -66,11 +70,12 @@ namespace ToSic.SexyContent.WebApi
         public dynamic GetContentInfo(int appId, int zoneId, string scope)
         {
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{UserInfo.IsSuperUser}");
-            var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId,appId, UserInfo);// AppWithRestrictedZoneChange(appId, zoneId);
 
-            var contentTypes = new AppRuntime(appWrapper.App, Log).ContentTypes.FromScope(scope);
-            var entities = appWrapper.GetEntities();
-            var templates = appWrapper.GetTemplates();
+            var cms = new CmsRuntime(currentApp, Log, true, false);
+            var contentTypes = cms.ContentTypes.FromScope(scope);
+            var entities = cms.Entities.All ;
+            var templates = cms.Views.GetAll();
 
             return new
             {
@@ -81,7 +86,7 @@ namespace ToSic.SexyContent.WebApi
                     c.StaticName,
                     Templates = templates.Where(t => t.ContentType == c.StaticName).Select(t => new
                     {
-                        Id = t.Id,
+                        t.Id,
                         t.Name
                     }),
                     Entities = entities
@@ -94,7 +99,7 @@ namespace ToSic.SexyContent.WebApi
                 }),
                 TemplatesWithoutContentTypes = templates.Where(t => !string.IsNullOrEmpty(t.ContentType)).Select(t => new
                 {
-                    Id = t.Id,
+                    t.Id,
                     t.Name
                 })
             };
@@ -108,13 +113,13 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
             EnsureUserIsAdmin(); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo);// AppWithRestrictedZoneChange(appId, zoneId);
 
-            var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath, Log);
+            var zipExport = new ZipExport(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
             var fileName =
-                $"2sxcApp_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}{addOnWhenContainingContent}.zip";
+                $"2sxcApp_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}{addOnWhenContainingContent}.zip";
             Log.Add($"file name:{fileName}");
             using (var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid))
             {
@@ -131,10 +136,9 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             EnsureUserIsAdmin();
 
-            // ReSharper disable once UnusedVariable
-            var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo);// AppWithRestrictedZoneChange(appId, zoneId);
 
-            var zipExport = new ZipExport(zoneId, appId, appWrapper.App.Folder, appWrapper.App.PhysicalPath, Log);
+            var zipExport = new ZipExport(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
 
             return true;
@@ -146,11 +150,10 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
             EnsureUserIsAdmin();
 
-            var appWrapper = AppBasedOnUserPermissions(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo);// AppWithRestrictedZoneChange(appId, zoneId);
+            var appRuntime = new AppRuntime(currentApp, Log);
 
-            var appRuntime = new AppRuntime(appId, Log);
-
-            var fileName = $"2sxcContentExport_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}.xml";
+            var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";
             var fileXml = new DnnXmlExporter().Init(zoneId, appId, appRuntime, false,
                 contentTypeIdsString?.Split(';') ?? new string[0],
                 entityIdsString?.Split(';') ?? new string[0],
@@ -255,22 +258,16 @@ namespace ToSic.SexyContent.WebApi
                 throw new AuthenticationException("user doesn't seem to be admin or super-user");
         }
 
-        /// <summary>
-        /// get the app, but only switch to another zone if the user is super-user
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="zoneId"></param>
-        /// <returns></returns>
-        /// <exception>
-        /// will throw exception if the app is in another zone, and the user is not a super-user
-        /// </exception>
-        private SxcAppWrapper AppBasedOnUserPermissions(int appId, int zoneId)
-        {
-            var appWrapper = UserInfo.IsSuperUser
-                ? new SxcAppWrapper(zoneId, appId) // only super-user may switch to another zone for export
-                : new SxcAppWrapper(appId, false);
-            return appWrapper;
-        }
-
+        ///// <summary>
+        ///// get the app, but only switch to another zone if the user is super-user
+        ///// </summary>
+        ///// <param name="appId"></param>
+        ///// <param name="zoneId"></param>
+        ///// <returns></returns>
+        ///// <exception>
+        ///// will throw exception if the app is in another zone, and the user is not a super-user
+        ///// </exception>
+        //private SxcAppWrapper AppWithRestrictedZoneChange(int appId, int zoneId) 
+        //    => SxcAppWrapper.GetBasedOnUserPermissions(zoneId, appId, UserInfo);
     }
 }

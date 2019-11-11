@@ -9,6 +9,7 @@ using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Errors;
 using ToSic.Sxc.Blocks;
+using App = ToSic.Sxc.Apps.App;
 using Factory = ToSic.Eav.Factory;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;

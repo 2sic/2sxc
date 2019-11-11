@@ -8,10 +8,10 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ItemListActions;
@@ -19,11 +19,13 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Security.Permissions;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using Assembly = System.Reflection.Assembly;
+using Factory = ToSic.Eav.Factory;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.WebApi.View
@@ -32,14 +34,25 @@ namespace ToSic.SexyContent.WebApi.View
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ModuleController : SxcApiController
     {
+        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = GetCmsRuntime());
+        private CmsRuntime _cmsRuntime;
+
+        protected CmsManager CmsManager => _cmsManager ?? (_cmsManager = new CmsManager(App, Log));
+        private CmsManager _cmsManager;
+
+        private CmsRuntime GetCmsRuntime()
+            // todo: this must be changed, set showDrafts to true for now, as it's probably only used in the view-picker, but it shoudln't just be here
+            => App == null ? null : new CmsRuntime(App, Log, true, false);
+
+
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext); // very important!!!
             Log.Rename("2sModC");
-            BlockConfig = CmsBlock.Block.Manager;
+            BlockEditor = CmsBlock.Block.Editor;
         }
 
-        private BlockConfigBase BlockConfig { get; set;  }
+        private BlockEditorBase BlockEditor { get; set;  }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -48,7 +61,9 @@ namespace ToSic.SexyContent.WebApi.View
             Log.Add($"add order:{sortOrder}");
             var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => BlockConfig.AddItem(sortOrder);
+            void InternalSave(VersioningActionInfo args) =>
+                CmsManager.Blocks.AddItem(CmsBlock.Block.Configuration, sortOrder);
+                //BlockEditor.AddItem(sortOrder);
 
             // use dnn versioning - this is always part of page
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
@@ -63,27 +78,29 @@ namespace ToSic.SexyContent.WebApi.View
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
-            return BlockConfig.SaveTemplateId(templateId, forceCreateContentGroup);
+            return BlockEditor.SaveTemplateId(templateId, forceCreateContentGroup);
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void SetAppId(int? appId) => BlockConfig.SetAppId(appId);
+        public void SetAppId(int? appId) => BlockEditor.SetAppId(appId);
 
         #region Get Apps, ContentTypes and Views for UI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<AppUiInfo> GetSelectableApps() => BlockConfig.GetSelectableApps();
+        public IEnumerable<AppUiInfo> GetSelectableApps() // => /*CmsRuntime.Blocks.get*/ BlockEditor.GetSelectableApps();
+         => new CmsZones(App.ZoneId, Env, Log).AppsRt.GetSelectableApps(new DnnTenant(PortalSettings.Current)); // BlockConfig.GetSelectableApps();
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes() => BlockConfig.GetSelectableContentTypes();
+        public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes() =>
+            CmsRuntime?.Views.GetContentTypesWithStatus();// BlockConfig.GetSelectableContentTypes();
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => BlockConfig.GetSelectableTemplates();
+        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => CmsRuntime?.Views.GetCompatibleViews(App, CmsBlock.Block.Configuration);// BlockConfig.GetSelectableTemplates();
 
         #endregion
 
@@ -194,7 +211,7 @@ namespace ToSic.SexyContent.WebApi.View
                 // if a real templateid was specified, swap to that
                 if (templateId > 0)
                 {
-                    var template = cbToRender.App.ViewManager.GetTemplate(templateId);
+                    var template = new CmsRuntime(cbToRender.App, Log, Edit.Enabled, false).Views.Get(templateId);
                     ((CmsInstance)cbToRender.CmsInstance).View = template;
                 }
 
@@ -220,21 +237,22 @@ namespace ToSic.SexyContent.WebApi.View
             Log.Add($"change order sort:{sortOrder}, dest:{destinationSortOrder}");
             var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => BlockConfig.ChangeOrder(sortOrder, destinationSortOrder);
+            void InternalSave(VersioningActionInfo args) =>
+                CmsManager.Blocks.ChangeOrder(CmsBlock.Block.Configuration, sortOrder, destinationSortOrder);// BlockEditor.ChangeOrder(sortOrder, destinationSortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
         }
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Publish(string part, int sortOrder)
         {
             Log.Add($"try to publish #{sortOrder} on '{part}'");
             if (!new MultiPermissionsApp(CmsBlock, App.AppId, Log)
                 .EnsureAll(GrantSets.WritePublished, out var exp))
                 throw exp;
-            return BlockConfig.Publish(part, sortOrder);
+            return BlockEditor.Publish(part, sortOrder);
         }
 
         [HttpGet]
@@ -256,11 +274,12 @@ namespace ToSic.SexyContent.WebApi.View
             Log.Add($"remove from index:{sortOrder}");
             var versioning = CmsBlock.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => BlockConfig.RemoveFromList(sortOrder);
+            void InternalSave(VersioningActionInfo args) =>
+                CmsManager.Blocks.RemoveFromList(CmsBlock.Block.Configuration, sortOrder);
+                //BlockEditor.RemoveFromList(sortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
-            //else internalSave(null);
         }
 
         [HttpGet]
@@ -268,6 +287,7 @@ namespace ToSic.SexyContent.WebApi.View
         public string RemoteInstallDialogUrl(string dialog, bool isContentApp)
         {
             // note / warning: some duplicate code with SystemController.cs
+            // ReSharper disable StringLiteralTypo
             
             if (dialog != "gettingstarted")
                 throw new Exception("unknown dialog name: " + dialog);
@@ -285,8 +305,7 @@ namespace ToSic.SexyContent.WebApi.View
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 try
                 {
-                    var all = new CmsManager(CmsBlock.App, Log).ViewReadTemp.GetAllTemplates();
-                        //CmsBlock.App.ViewManager.GetAllTemplates();
+                    var all = new CmsRuntime(CmsBlock.App, Log, Edit.Enabled, false).Views.GetAll();
                     if (all.Any())
                         return null;
                 }
@@ -299,7 +318,7 @@ namespace ToSic.SexyContent.WebApi.View
             // Add desired destination
             // Add DNN Version, 2SexyContent Version, module type, module id, Portal ID
             var gettingStartedSrc = "//gettingstarted.2sxc.org/router.aspx?"
-                + "destination=autoconfigure" + (isContentApp ? Eav.Constants.ContentAppName.ToLower() : "app")
+                                    + "destination=autoconfigure" + (isContentApp ? Eav.Constants.ContentAppName.ToLower() : "app")
                 + "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)
                 + "&2SexyContentVersion=" + Settings.ModuleVersion
                 + "&ModuleName=" + modName + "&ModuleId=" + moduleInfo.ModuleID
@@ -307,6 +326,7 @@ namespace ToSic.SexyContent.WebApi.View
             // Add VDB / Zone ID (if set)
             var zoneId = Env.ZoneMapper.GetZoneId(moduleInfo.PortalID);
             gettingStartedSrc +=  "&ZoneID=" + zoneId;
+                                    // ReSharper restore StringLiteralTypo
 
             // Add DNN Guid
             var hostSettings = HostController.Instance.GetSettingsDictionary();

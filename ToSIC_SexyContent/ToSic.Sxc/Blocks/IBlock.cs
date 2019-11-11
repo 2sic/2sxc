@@ -39,6 +39,6 @@ namespace ToSic.Sxc.Blocks
         bool ContentGroupExists { get; }
 
         [PrivateApi]
-        BlockConfigBase Manager { get; }
+        BlockEditorBase Editor { get; }
     }
 }

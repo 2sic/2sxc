@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public IRenderingHelpers Init(ICmsBlock cms, ILog parentLog)
         {
-            LinkLog(parentLog);
+            this.LinkLog(parentLog);
             var appRoot = VirtualPathUtility.ToAbsolute("~/");
             _moduleInfo = cms?.EnvInstance;
             _cmsInstance = cms;
@@ -147,9 +147,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             return msg;
         }
-
-        public void LinkLog(ILog parentLog) => Log.LinkTo(parentLog);
-
 
     }
 

@@ -45,11 +45,6 @@ namespace ToSic.SexyContent.WebApi.Dnn
 
         public ILog Log { get; }
 
-        public void LinkLog(ILog parentLog)
-        {
-            throw new NotImplementedException();
-        }
-
         protected virtual string LogHistoryName { get; } = "web-api";
     }
 }

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
@@ -13,12 +12,12 @@ using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Permissions;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.SxcTemp;
 using Guid = System.Guid;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
-	/// <inheritdoc />
 	/// <summary>
 	/// Proxy Class to the EAV EntitiesController (Web API Controller)
 	/// </summary>
@@ -201,11 +200,13 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	        return new AppManager(appId, Log).Entities.VersionHistory(item.EntityId);
         }
 
-	    private static void ResolveItemIdOfGroup(int appId, ItemIdentifier item)
+	    private void ResolveItemIdOfGroup(int appId, ItemIdentifier item)
 	    {
             if (item.Group == null) return;
-	        var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, null);
-	        var contentGroup = app.BlocksManager.GetBlockConfig(item.Group.Guid);
+	        //var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, null);
+            var cms = new CmsRuntime(appId, Log, true);
+
+            var contentGroup = /*app.BlocksManager*/cms.Blocks.GetBlockConfig(item.Group.Guid);
 	        var part = contentGroup[item.Group.Part];
 	        item.EntityId = part[item.Group.Index].EntityId;
 	    }

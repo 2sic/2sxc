@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.SexyContent
@@ -15,7 +16,7 @@ namespace ToSic.SexyContent
         internal void SetTemplateOrOverrideFromUrl(IView defaultView)
         {
             View = defaultView;
-            // skif if not relevant or not yet initialized
+            // skip if not relevant or not yet initialized
             if (Block.IsContentApp || App == null) return;
 
             // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
@@ -29,12 +30,13 @@ namespace ToSic.SexyContent
             Log.Add("template override - check");
             if (Parameters == null) return null;
 
-            // new 2016-05-01
             var urlParameterDict = Parameters.ToDictionary(pair => pair.Key?.ToLower() ?? "", pair =>
                 $"{pair.Key}/{pair.Value}".ToLower());
 
+            var allTemplates = new CmsRuntime(App, Log, UserMayEdit, false).Views.GetAll();
 
-            foreach (var template in App.ViewManager.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.UrlIdentifier)))
+
+            foreach (var template in allTemplates.Where(t => !string.IsNullOrEmpty(t.UrlIdentifier)))
             {
                 var desiredFullViewName = template.UrlIdentifier.ToLower();
                 if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12

@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.Interfaces
 
         void SetContentGroup(int instanceId, bool wasCreated, Guid guid);
 
-        BlockConfiguration GetInstanceContentGroup(BlocksManager cgm, ILog log, int instanceId, int? pageId);
+        BlockConfiguration GetInstanceContentGroup(BlocksRuntime cgm, ILog log, int instanceId, int? pageId);
 
         void UpdateTitle(ICmsBlock cmsInstance, IEntity titleItem);
     }

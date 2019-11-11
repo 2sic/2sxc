@@ -2,11 +2,9 @@
 using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Engines;
 
 // 2dm: must disable NullRef warnings, because there a lot of warnings when processing XML, 
 // ...and these are real errors which should blow
@@ -164,7 +162,7 @@ namespace ToSic.Sxc.Apps.ImportExport
                         listPresentationDemoEntityId = listPresentationDefault.DemoEntityId;
                     }
 
-                    new CmsManager(GetCurrentAppManager(), Log).Views
+                    new CmsManager(GetCurrentAppManager(), true, false, Log).Views
                         .CreateOrUpdate(
                         null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName,
                         presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId,

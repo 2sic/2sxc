@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using App = ToSic.SexyContent.App;
+using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.SxcTemp
 {
+    // todo: find out what these are for, I believe they should all in the end go to a CmsManager or something
     internal class GetApp
     {
         /// <summary>

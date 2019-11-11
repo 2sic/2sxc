@@ -1,0 +1,63 @@
+﻿using System;
+using ToSic.Eav.Data;
+using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
+
+namespace ToSic.Sxc.Apps
+{
+    /// <summary>
+    /// The configuration of the app, as you can set it in the app-package definition.
+    /// </summary>
+    [PublicApi]
+    public class AppConfiguration: EntityBasedWithLog
+    {
+        [PrivateApi]
+        public const string
+            FieldDescription = "Description",
+            FieldName = "DisplayName",
+            FieldFolder = "Folder",
+            FieldOriginalId = "OriginalId",
+            FieldVersion = "Version",
+            FieldAllowRazor = "AllowRazorTemplates",
+            FieldAllowToken = "AllowTokenTemplates",
+            FieldHidden = "Hidden",
+            FieldRequiredSxcVersion = "RequiredVersion",
+            FieldRequiredDnnVersion = "RequiredDnnVersion",
+            FieldSupportsAjax = "SupportsAjaxReload";
+
+        [PrivateApi]
+        public AppConfiguration(IEntity entity, ILog parentLog) : base(entity, parentLog, "Sxc.AppCnf")
+        {
+        }
+
+        public Version Version => Version.TryParse(Get(FieldVersion, ""), out var version)
+            ? version
+            : new Version();
+
+        public string Name => Get(FieldName, "unknown");
+
+        public string Description => Get(FieldDescription, "");
+
+        public string Folder => Get(FieldFolder, "");
+
+        public bool EnableRazor => Get(FieldAllowRazor, false);
+
+        public bool EnableToken => Get(FieldAllowToken, false);
+
+        public bool IsHidden => Get(FieldHidden, false);
+
+        public bool EnableAjax => Get(FieldSupportsAjax, false);
+
+        public Guid OriginalId => Guid.TryParse(Get(FieldOriginalId, ""), out var result) ? result : Guid.Empty;
+
+        public Version RequiredSxc =>
+            Version.TryParse(Get(FieldRequiredSxcVersion, ""), out var version)
+                ? version
+                : new Version();
+
+        public  Version RequiredDnn =>
+            Version.TryParse(Get(FieldRequiredDnnVersion, ""), out var version)
+                ? version
+                : new Version();
+    }
+}

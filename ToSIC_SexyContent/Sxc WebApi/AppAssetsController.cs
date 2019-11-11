@@ -162,7 +162,7 @@ namespace ToSic.SexyContent.WebApi
                 content.Content = "";
 
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
-            var assetEditor = new AssetEditor(thisApp, path, UserInfo.IsSuperUser, isAdmin, global);
+            var assetEditor = new AssetEditor(thisApp, path, UserInfo.IsSuperUser, isAdmin, global, Log);
             assetEditor.EnsureUserMayEditAsset(path);
             return assetEditor.Create(content.Content);
         }
@@ -193,8 +193,8 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"asset templ:{templateId}, path:{path}, global:{global}");
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(CmsBlock.App, templateId, UserInfo.IsSuperUser, isAdmin)
-                : new AssetEditor(CmsBlock.App, path, UserInfo.IsSuperUser, isAdmin, global);
+                ? new AssetEditor(CmsBlock.App, templateId, UserInfo.IsSuperUser, isAdmin, Log)
+                : new AssetEditor(CmsBlock.App, path, UserInfo.IsSuperUser, isAdmin, global, Log);
             assetEditor.EnsureUserMayEditAsset();
             return assetEditor.EditInfoWithSource;
         }
@@ -214,8 +214,8 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"asset templ:{templateId}, global:{global}, path:{path}");
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(CmsBlock.App, templateId, UserInfo.IsSuperUser, isAdmin)
-                : new AssetEditor(CmsBlock.App, path, UserInfo.IsSuperUser, isAdmin, global);
+                ? new AssetEditor(CmsBlock.App, templateId, UserInfo.IsSuperUser, isAdmin, Log)
+                : new AssetEditor(CmsBlock.App, path, UserInfo.IsSuperUser, isAdmin, global, Log);
             assetEditor.EnsureUserMayEditAsset();
             assetEditor.Source = template.Code;
             return true;

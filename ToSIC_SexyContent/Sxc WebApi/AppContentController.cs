@@ -18,6 +18,7 @@ using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight;
 using ToSic.Sxc.Blocks;
+using App = ToSic.Sxc.Apps.App;
 using Factory = ToSic.Eav.Factory;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -103,9 +104,6 @@ namespace ToSic.SexyContent.WebApi
             var permCheck = new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
                 throw exception;
-            //2018-09-15 2dm moved/disabled
-            //var context = GetContext(SxcBlock, Log);
-            //PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null, itm);
             return InitEavAndSerializer(appIdentity.AppId).Prepare(itm);
         }
 
