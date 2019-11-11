@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Http;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent.Internal;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 
@@ -84,33 +80,6 @@ namespace ToSic.Sxc.Blocks
         }
 
 
-        private CmsRuntime GetCmsRuntime()
-        // todo: this must be changed, set showDrafts to true for now, as it's probably only used in the view-picker, but it shoudln't just be here
-            => CmsContext.App == null ? null : new CmsRuntime(CmsContext.App, Log, true, false);
-
-        //public IEnumerable<TemplateUiInfo> GetSelectableTemplates() 
-        //    => GetCmsRuntime()?.Views.GetCompatibleViews(CmsContext.App, BlockConfiguration);
-
-
-        public IEnumerable<AppUiInfo> GetSelectableApps()
-        {
-            Log.Add("get selectable apps");
-            var zoneId = CmsContext.Environment.ZoneMapper.GetZoneId(CmsContext.Block.Tenant.Id);
-            return
-                AppManagement.GetApps(zoneId, false, CmsContext.Block.Tenant, Log)
-                    .Where(a => !a.Hidden)
-                    .Select(a => new AppUiInfo {
-                        Name = a.Name,
-                        AppId = a.AppId,
-                        SupportsAjaxReload = a.Configuration.SupportsAjaxReload ?? false,
-                        Thumbnail = a.Thumbnail,
-                        Version = a.Configuration.Version ?? ""
-                    });
-        }
-
-        //public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes()
-        //    => GetCmsRuntime()?.Views.GetContentTypesWithStatus();
-
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
             Log.Add($"change order orig:{sortOrder}, dest:{destinationSortOrder}");
@@ -151,23 +120,6 @@ namespace ToSic.Sxc.Blocks
 
         #endregion
 
-        internal void UpdateTitle()
-        {
-            Log.Add("update title");
-            // check the blockConfiguration as to what should be the module title, then try to set it
-            // technically it could have multiple different groups to save in, 
-            // ...but for now we'll just update the current modules title
-            // note: it also correctly handles published/unpublished, but I'm not sure why :)
-
-            // re-load the content-group so we have the new title
-            var app = CmsContext.App;
-            var cms = GetCmsRuntime();// new CmsRuntime(app, Log, );
-            var contentGroup = /*app.BlocksManager*/cms.Blocks.GetBlockConfig(BlockConfiguration.ContentGroupGuid);
-
-            var titleItem = contentGroup.ListContent.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
-
-            UpdateTitle(titleItem);
-        }
 
 
     }

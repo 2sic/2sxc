@@ -8,10 +8,10 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ItemListActions;
@@ -19,11 +19,13 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Query;
 using ToSic.Eav.Security.Permissions;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using Assembly = System.Reflection.Assembly;
+using Factory = ToSic.Eav.Factory;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.WebApi.View
@@ -82,7 +84,8 @@ namespace ToSic.SexyContent.WebApi.View
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<AppUiInfo> GetSelectableApps() => /*CmsRuntime.Blocks.get*/ BlockEditor.GetSelectableApps();
+        public IEnumerable<AppUiInfo> GetSelectableApps() // => /*CmsRuntime.Blocks.get*/ BlockEditor.GetSelectableApps();
+         => new CmsZones(App.ZoneId, Env, Log).AppsRt.GetSelectableApps(new DnnTenant(PortalSettings.Current)); // BlockConfig.GetSelectableApps();
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]

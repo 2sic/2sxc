@@ -15,6 +15,7 @@ using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Permissions;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.SxcTemp;
 using Assembly = System.Reflection.Assembly;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -76,7 +77,9 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic Apps(int zoneId)
         {
-            var list = AppManagement.GetApps(zoneId, true, new DnnTenant(new PortalSettings(ActiveModule.OwnerPortalID)), Log);
+            var cms = new CmsZones(zoneId, Env, Log);
+            var list = cms.AppsRt.GetApps(new DnnTenant(new PortalSettings(ActiveModule.OwnerPortalID)), true);
+            // AppManagement.GetApps(zoneId, true, new DnnTenant(new PortalSettings(ActiveModule.OwnerPortalID)), Log);
             return list.Select(a => new
             {
                 Id = a.AppId,
@@ -100,7 +103,8 @@ namespace ToSic.SexyContent.WebApi
         public void DeleteApp(int zoneId, int appId)
         {
             var userId = PortalSettings.Current.UserId;
-            AppManagement.RemoveAppInTenantAndEav(Env.ZoneMapper, zoneId, appId, new DnnTenant(PortalSettings), userId, Log);
+            new CmsZones(zoneId, Env, Log).AppsMan.RemoveAppInTenantAndEav(appId, new DnnTenant(PortalSettings));
+            //AppManagement.RemoveAppInTenantAndEav(Env.ZoneMapper, zoneId, appId, new DnnTenant(PortalSettings), userId, Log);
         }
 
         [HttpPost]

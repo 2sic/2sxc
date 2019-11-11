@@ -85,8 +85,11 @@
     <Compile Include="Apps\Blocks\BlockConfiguration_Extract.cs" />
     <Compile Include="Apps\CmsManager.cs" />
     <Compile Include="Apps\CmsRuntime.cs" />
+    <Compile Include="Apps\CmsZones.cs" />
     <Compile Include="Apps\ImportExport\XmlImportFull.cs" />
     <Compile Include="Apps\ImportExport\XmlImportFull_Templates.cs" />
+    <Compile Include="Apps\Parts\AppsManager.cs" />
+    <Compile Include="Apps\Parts\AppsRuntime.cs" />
     <Compile Include="Apps\Parts\BlocksRuntime.cs" />
     <Compile Include="Apps\Parts\CmsManagerBase.cs" />
     <Compile Include="Apps\Parts\ViewsManager.cs" />
