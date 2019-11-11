@@ -88,7 +88,7 @@ namespace ToSic.SexyContent.WebApi
                 a.Folder,
                 AppRoot = GetPath(zoneId, a.AppId),
                 IsHidden = a.Hidden,
-                ConfigurationId = a.Configuration?.EntityId
+                ConfigurationId = a.Configuration?.Id
             }).ToList();
         }
 

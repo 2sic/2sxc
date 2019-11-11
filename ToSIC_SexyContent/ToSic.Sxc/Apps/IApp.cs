@@ -17,7 +17,8 @@ namespace ToSic.Sxc.Apps
         /// This contains things like app version, path etc.
         /// </summary>
         /// <returns>An <see cref="IDynamicEntity"/> object</returns>
-        new dynamic Configuration { get;  }
+        //new dynamic Configuration { get;  }
+        new AppConfiguration Configuration { get; }
 
         /// <summary>
         /// All the app settings which are custom for each app. 
@@ -51,13 +52,5 @@ namespace ToSic.Sxc.Apps
         new string Thumbnail { get; }
 
 
-
-        #region experimental
-
-
-        //[PrivateApi("must be split (read/write) and moved away from the IApp")]
-        //BlocksManager BlocksManager { get; }
-
-        #endregion
     }
 }

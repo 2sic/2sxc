@@ -82,6 +82,7 @@
     <Compile Include="Adam\IEnvironmentFileSystem.cs" />
     <Compile Include="Adam\Metadata.cs" />
     <Compile Include="Adam\Obsolete\AdamFile.cs" />
+    <Compile Include="Apps\AppConfiguration.cs" />
     <Compile Include="Apps\Blocks\BlockConfiguration_Extract.cs" />
     <Compile Include="Apps\CmsManager.cs" />
     <Compile Include="Apps\CmsRuntime.cs" />

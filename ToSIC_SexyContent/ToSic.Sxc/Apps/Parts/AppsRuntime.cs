@@ -25,9 +25,9 @@ namespace ToSic.Sxc.Apps
                     {
                         Name = a.Name,
                         AppId = a.AppId,
-                        SupportsAjaxReload = a.Configuration.SupportsAjaxReload ?? false,
+                        SupportsAjaxReload = a.Configuration?.EnableAjax ?? false,
                         Thumbnail = a.Thumbnail,
-                        Version = a.Configuration.Version ?? ""
+                        Version = a.Configuration?.Version?.ToString() ?? ""
                     });
         }
 

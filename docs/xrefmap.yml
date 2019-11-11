@@ -283,15 +283,15 @@ references:
   commentId: T:ToSic.Eav.Apps.IAppData
   fullName: ToSic.Eav.Apps.IAppData
   nameWithType: IAppData
-- uid: ToSic.Eav.Apps.IAppData.Create(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},System.String,ToSic.Eav.Data.MetadataFor)
-  name: Create(String, Dictionary<String, Object>, String, MetadataFor)
-  href: api/ToSic.Eav.Apps.IAppData.html#ToSic_Eav_Apps_IAppData_Create_System_String_System_Collections_Generic_Dictionary_System_String_System_Object__System_String_ToSic_Eav_Data_MetadataFor_
-  commentId: M:ToSic.Eav.Apps.IAppData.Create(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},System.String,ToSic.Eav.Data.MetadataFor)
-  name.vb: Create(String, Dictionary(Of String, Object), String, MetadataFor)
-  fullName: ToSic.Eav.Apps.IAppData.Create(System.String, System.Collections.Generic.Dictionary<System.String, System.Object>, System.String, ToSic.Eav.Data.MetadataFor)
-  fullName.vb: ToSic.Eav.Apps.IAppData.Create(System.String, System.Collections.Generic.Dictionary(Of System.String, System.Object), System.String, ToSic.Eav.Data.MetadataFor)
-  nameWithType: IAppData.Create(String, Dictionary<String, Object>, String, MetadataFor)
-  nameWithType.vb: IAppData.Create(String, Dictionary(Of String, Object), String, MetadataFor)
+- uid: ToSic.Eav.Apps.IAppData.Create(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},System.String,ToSic.Eav.Metadata.IMetadataFor)
+  name: Create(String, Dictionary<String, Object>, String, IMetadataFor)
+  href: api/ToSic.Eav.Apps.IAppData.html#ToSic_Eav_Apps_IAppData_Create_System_String_System_Collections_Generic_Dictionary_System_String_System_Object__System_String_ToSic_Eav_Metadata_IMetadataFor_
+  commentId: M:ToSic.Eav.Apps.IAppData.Create(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},System.String,ToSic.Eav.Metadata.IMetadataFor)
+  name.vb: Create(String, Dictionary(Of String, Object), String, IMetadataFor)
+  fullName: ToSic.Eav.Apps.IAppData.Create(System.String, System.Collections.Generic.Dictionary<System.String, System.Object>, System.String, ToSic.Eav.Metadata.IMetadataFor)
+  fullName.vb: ToSic.Eav.Apps.IAppData.Create(System.String, System.Collections.Generic.Dictionary(Of System.String, System.Object), System.String, ToSic.Eav.Metadata.IMetadataFor)
+  nameWithType: IAppData.Create(String, Dictionary<String, Object>, String, IMetadataFor)
+  nameWithType.vb: IAppData.Create(String, Dictionary(Of String, Object), String, IMetadataFor)
 - uid: ToSic.Eav.Apps.IAppData.Create(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.Dictionary{System.String,System.Object}},System.String)
   name: Create(String, IEnumerable<Dictionary<String, Object>>, String)
   href: api/ToSic.Eav.Apps.IAppData.html#ToSic_Eav_Apps_IAppData_Create_System_String_System_Collections_Generic_IEnumerable_System_Collections_Generic_Dictionary_System_String_System_Object___System_String_
@@ -586,6 +586,22 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.EntityBasedType.Entity
   nameWithType: EntityBasedType.Entity
+- uid: ToSic.Eav.Data.EntityBasedType.Get*
+  name: Get
+  href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Get_
+  commentId: Overload:ToSic.Eav.Data.EntityBasedType.Get
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.EntityBasedType.Get
+  nameWithType: EntityBasedType.Get
+- uid: ToSic.Eav.Data.EntityBasedType.Get``1(System.String,``0)
+  name: Get<T>(String, T)
+  href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Get__1_System_String___0_
+  commentId: M:ToSic.Eav.Data.EntityBasedType.Get``1(System.String,``0)
+  name.vb: Get(Of T)(String, T)
+  fullName: ToSic.Eav.Data.EntityBasedType.Get<T>(System.String, T)
+  fullName.vb: ToSic.Eav.Data.EntityBasedType.Get(Of T)(System.String, T)
+  nameWithType: EntityBasedType.Get<T>(String, T)
+  nameWithType.vb: EntityBasedType.Get(Of T)(String, T)
 - uid: ToSic.Eav.Data.EntityBasedType.Guid
   name: Guid
   href: api/ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Guid
@@ -625,6 +641,38 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.EntityBasedType.Title
   nameWithType: EntityBasedType.Title
+- uid: ToSic.Eav.Data.EntityBasedWithLog
+  name: EntityBasedWithLog
+  href: api/ToSic.Eav.Data.EntityBasedWithLog.html
+  commentId: T:ToSic.Eav.Data.EntityBasedWithLog
+  fullName: ToSic.Eav.Data.EntityBasedWithLog
+  nameWithType: EntityBasedWithLog
+- uid: ToSic.Eav.Data.EntityBasedWithLog.#ctor(ToSic.Eav.Data.IEntity,ToSic.Eav.Logging.ILog,System.String)
+  name: EntityBasedWithLog(IEntity, ILog, String)
+  href: api/ToSic.Eav.Data.EntityBasedWithLog.html#ToSic_Eav_Data_EntityBasedWithLog__ctor_ToSic_Eav_Data_IEntity_ToSic_Eav_Logging_ILog_System_String_
+  commentId: M:ToSic.Eav.Data.EntityBasedWithLog.#ctor(ToSic.Eav.Data.IEntity,ToSic.Eav.Logging.ILog,System.String)
+  fullName: ToSic.Eav.Data.EntityBasedWithLog.EntityBasedWithLog(ToSic.Eav.Data.IEntity, ToSic.Eav.Logging.ILog, System.String)
+  nameWithType: EntityBasedWithLog.EntityBasedWithLog(IEntity, ILog, String)
+- uid: ToSic.Eav.Data.EntityBasedWithLog.#ctor*
+  name: EntityBasedWithLog
+  href: api/ToSic.Eav.Data.EntityBasedWithLog.html#ToSic_Eav_Data_EntityBasedWithLog__ctor_
+  commentId: Overload:ToSic.Eav.Data.EntityBasedWithLog.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.EntityBasedWithLog.EntityBasedWithLog
+  nameWithType: EntityBasedWithLog.EntityBasedWithLog
+- uid: ToSic.Eav.Data.EntityBasedWithLog.Log
+  name: Log
+  href: api/ToSic.Eav.Data.EntityBasedWithLog.html#ToSic_Eav_Data_EntityBasedWithLog_Log
+  commentId: P:ToSic.Eav.Data.EntityBasedWithLog.Log
+  fullName: ToSic.Eav.Data.EntityBasedWithLog.Log
+  nameWithType: EntityBasedWithLog.Log
+- uid: ToSic.Eav.Data.EntityBasedWithLog.Log*
+  name: Log
+  href: api/ToSic.Eav.Data.EntityBasedWithLog.html#ToSic_Eav_Data_EntityBasedWithLog_Log_
+  commentId: Overload:ToSic.Eav.Data.EntityBasedWithLog.Log
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.EntityBasedWithLog.Log
+  nameWithType: EntityBasedWithLog.Log
 - uid: ToSic.Eav.Data.IAttributeBase
   name: IAttributeBase
   href: api/ToSic.Eav.Data.IAttributeBase.html
@@ -2825,19 +2873,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Logging.HasLog.InitLog
   nameWithType: HasLog.InitLog
-- uid: ToSic.Eav.Logging.HasLog.LinkLog(ToSic.Eav.Logging.ILog)
-  name: LinkLog(ILog)
-  href: api/ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog_LinkLog_ToSic_Eav_Logging_ILog_
-  commentId: M:ToSic.Eav.Logging.HasLog.LinkLog(ToSic.Eav.Logging.ILog)
-  fullName: ToSic.Eav.Logging.HasLog.LinkLog(ToSic.Eav.Logging.ILog)
-  nameWithType: HasLog.LinkLog(ILog)
-- uid: ToSic.Eav.Logging.HasLog.LinkLog*
-  name: LinkLog
-  href: api/ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog_LinkLog_
-  commentId: Overload:ToSic.Eav.Logging.HasLog.LinkLog
-  isSpec: "True"
-  fullName: ToSic.Eav.Logging.HasLog.LinkLog
-  nameWithType: HasLog.LinkLog
 - uid: ToSic.Eav.Logging.HasLog.Log
   name: Log
   href: api/ToSic.Eav.Logging.HasLog.html#ToSic_Eav_Logging_HasLog_Log
@@ -2857,19 +2892,6 @@ references:
   commentId: T:ToSic.Eav.Logging.IHasLog
   fullName: ToSic.Eav.Logging.IHasLog
   nameWithType: IHasLog
-- uid: ToSic.Eav.Logging.IHasLog.LinkLog(ToSic.Eav.Logging.ILog)
-  name: LinkLog(ILog)
-  href: api/ToSic.Eav.Logging.IHasLog.html#ToSic_Eav_Logging_IHasLog_LinkLog_ToSic_Eav_Logging_ILog_
-  commentId: M:ToSic.Eav.Logging.IHasLog.LinkLog(ToSic.Eav.Logging.ILog)
-  fullName: ToSic.Eav.Logging.IHasLog.LinkLog(ToSic.Eav.Logging.ILog)
-  nameWithType: IHasLog.LinkLog(ILog)
-- uid: ToSic.Eav.Logging.IHasLog.LinkLog*
-  name: LinkLog
-  href: api/ToSic.Eav.Logging.IHasLog.html#ToSic_Eav_Logging_IHasLog_LinkLog_
-  commentId: Overload:ToSic.Eav.Logging.IHasLog.LinkLog
-  isSpec: "True"
-  fullName: ToSic.Eav.Logging.IHasLog.LinkLog
-  nameWithType: IHasLog.LinkLog
 - uid: ToSic.Eav.Logging.IHasLog.Log
   name: Log
   href: api/ToSic.Eav.Logging.IHasLog.html#ToSic_Eav_Logging_IHasLog_Log
@@ -3593,6 +3615,155 @@ references:
   commentId: N:ToSic.Sxc.Apps
   fullName: ToSic.Sxc.Apps
   nameWithType: ToSic.Sxc.Apps
+- uid: ToSic.Sxc.Apps.AppConfiguration
+  name: AppConfiguration
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html
+  commentId: T:ToSic.Sxc.Apps.AppConfiguration
+  fullName: ToSic.Sxc.Apps.AppConfiguration
+  nameWithType: AppConfiguration
+- uid: ToSic.Sxc.Apps.AppConfiguration.Description
+  name: Description
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_Description
+  commentId: P:ToSic.Sxc.Apps.AppConfiguration.Description
+  fullName: ToSic.Sxc.Apps.AppConfiguration.Description
+  nameWithType: AppConfiguration.Description
+- uid: ToSic.Sxc.Apps.AppConfiguration.Description*
+  name: Description
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_Description_
+  commentId: Overload:ToSic.Sxc.Apps.AppConfiguration.Description
+  isSpec: "True"
+  fullName: ToSic.Sxc.Apps.AppConfiguration.Description
+  nameWithType: AppConfiguration.Description
+- uid: ToSic.Sxc.Apps.AppConfiguration.EnableAjax
+  name: EnableAjax
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_EnableAjax
+  commentId: P:ToSic.Sxc.Apps.AppConfiguration.EnableAjax
+  fullName: ToSic.Sxc.Apps.AppConfiguration.EnableAjax
+  nameWithType: AppConfiguration.EnableAjax
+- uid: ToSic.Sxc.Apps.AppConfiguration.EnableAjax*
+  name: EnableAjax
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_EnableAjax_
+  commentId: Overload:ToSic.Sxc.Apps.AppConfiguration.EnableAjax
+  isSpec: "True"
+  fullName: ToSic.Sxc.Apps.AppConfiguration.EnableAjax
+  nameWithType: AppConfiguration.EnableAjax
+- uid: ToSic.Sxc.Apps.AppConfiguration.EnableRazor
+  name: EnableRazor
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_EnableRazor
+  commentId: P:ToSic.Sxc.Apps.AppConfiguration.EnableRazor
+  fullName: ToSic.Sxc.Apps.AppConfiguration.EnableRazor
+  nameWithType: AppConfiguration.EnableRazor
+- uid: ToSic.Sxc.Apps.AppConfiguration.EnableRazor*
+  name: EnableRazor
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_EnableRazor_
+  commentId: Overload:ToSic.Sxc.Apps.AppConfiguration.EnableRazor
+  isSpec: "True"
+  fullName: ToSic.Sxc.Apps.AppConfiguration.EnableRazor
+  nameWithType: AppConfiguration.EnableRazor
+- uid: ToSic.Sxc.Apps.AppConfiguration.EnableToken
+  name: EnableToken
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_EnableToken
+  commentId: P:ToSic.Sxc.Apps.AppConfiguration.EnableToken
+  fullName: ToSic.Sxc.Apps.AppConfiguration.EnableToken
+  nameWithType: AppConfiguration.EnableToken
+- uid: ToSic.Sxc.Apps.AppConfiguration.EnableToken*
+  name: EnableToken
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_EnableToken_
+  commentId: Overload:ToSic.Sxc.Apps.AppConfiguration.EnableToken
+  isSpec: "True"
+  fullName: ToSic.Sxc.Apps.AppConfiguration.EnableToken
+  nameWithType: AppConfiguration.EnableToken
+- uid: ToSic.Sxc.Apps.AppConfiguration.Folder
+  name: Folder
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_Folder
+  commentId: P:ToSic.Sxc.Apps.AppConfiguration.Folder
+  fullName: ToSic.Sxc.Apps.AppConfiguration.Folder
+  nameWithType: AppConfiguration.Folder
+- uid: ToSic.Sxc.Apps.AppConfiguration.Folder*
+  name: Folder
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_Folder_
+  commentId: Overload:ToSic.Sxc.Apps.AppConfiguration.Folder
+  isSpec: "True"
+  fullName: ToSic.Sxc.Apps.AppConfiguration.Folder
+  nameWithType: AppConfiguration.Folder
+- uid: ToSic.Sxc.Apps.AppConfiguration.IsHidden
+  name: IsHidden
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_IsHidden
+  commentId: P:ToSic.Sxc.Apps.AppConfiguration.IsHidden
+  fullName: ToSic.Sxc.Apps.AppConfiguration.IsHidden
+  nameWithType: AppConfiguration.IsHidden
+- uid: ToSic.Sxc.Apps.AppConfiguration.IsHidden*
+  name: IsHidden
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_IsHidden_
+  commentId: Overload:ToSic.Sxc.Apps.AppConfiguration.IsHidden
+  isSpec: "True"
+  fullName: ToSic.Sxc.Apps.AppConfiguration.IsHidden
+  nameWithType: AppConfiguration.IsHidden
+- uid: ToSic.Sxc.Apps.AppConfiguration.Name
+  name: Name
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_Name
+  commentId: P:ToSic.Sxc.Apps.AppConfiguration.Name
+  fullName: ToSic.Sxc.Apps.AppConfiguration.Name
+  nameWithType: AppConfiguration.Name
+- uid: ToSic.Sxc.Apps.AppConfiguration.Name*
+  name: Name
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_Name_
+  commentId: Overload:ToSic.Sxc.Apps.AppConfiguration.Name
+  isSpec: "True"
+  fullName: ToSic.Sxc.Apps.AppConfiguration.Name
+  nameWithType: AppConfiguration.Name
+- uid: ToSic.Sxc.Apps.AppConfiguration.OriginalId
+  name: OriginalId
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_OriginalId
+  commentId: P:ToSic.Sxc.Apps.AppConfiguration.OriginalId
+  fullName: ToSic.Sxc.Apps.AppConfiguration.OriginalId
+  nameWithType: AppConfiguration.OriginalId
+- uid: ToSic.Sxc.Apps.AppConfiguration.OriginalId*
+  name: OriginalId
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_OriginalId_
+  commentId: Overload:ToSic.Sxc.Apps.AppConfiguration.OriginalId
+  isSpec: "True"
+  fullName: ToSic.Sxc.Apps.AppConfiguration.OriginalId
+  nameWithType: AppConfiguration.OriginalId
+- uid: ToSic.Sxc.Apps.AppConfiguration.RequiredDnn
+  name: RequiredDnn
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_RequiredDnn
+  commentId: P:ToSic.Sxc.Apps.AppConfiguration.RequiredDnn
+  fullName: ToSic.Sxc.Apps.AppConfiguration.RequiredDnn
+  nameWithType: AppConfiguration.RequiredDnn
+- uid: ToSic.Sxc.Apps.AppConfiguration.RequiredDnn*
+  name: RequiredDnn
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_RequiredDnn_
+  commentId: Overload:ToSic.Sxc.Apps.AppConfiguration.RequiredDnn
+  isSpec: "True"
+  fullName: ToSic.Sxc.Apps.AppConfiguration.RequiredDnn
+  nameWithType: AppConfiguration.RequiredDnn
+- uid: ToSic.Sxc.Apps.AppConfiguration.RequiredSxc
+  name: RequiredSxc
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_RequiredSxc
+  commentId: P:ToSic.Sxc.Apps.AppConfiguration.RequiredSxc
+  fullName: ToSic.Sxc.Apps.AppConfiguration.RequiredSxc
+  nameWithType: AppConfiguration.RequiredSxc
+- uid: ToSic.Sxc.Apps.AppConfiguration.RequiredSxc*
+  name: RequiredSxc
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_RequiredSxc_
+  commentId: Overload:ToSic.Sxc.Apps.AppConfiguration.RequiredSxc
+  isSpec: "True"
+  fullName: ToSic.Sxc.Apps.AppConfiguration.RequiredSxc
+  nameWithType: AppConfiguration.RequiredSxc
+- uid: ToSic.Sxc.Apps.AppConfiguration.Version
+  name: Version
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_Version
+  commentId: P:ToSic.Sxc.Apps.AppConfiguration.Version
+  fullName: ToSic.Sxc.Apps.AppConfiguration.Version
+  nameWithType: AppConfiguration.Version
+- uid: ToSic.Sxc.Apps.AppConfiguration.Version*
+  name: Version
+  href: api/ToSic.Sxc.Apps.AppConfiguration.html#ToSic_Sxc_Apps_AppConfiguration_Version_
+  commentId: Overload:ToSic.Sxc.Apps.AppConfiguration.Version
+  isSpec: "True"
+  fullName: ToSic.Sxc.Apps.AppConfiguration.Version
+  nameWithType: AppConfiguration.Version
 - uid: ToSic.Sxc.Apps.IApp
   name: IApp
   href: api/ToSic.Sxc.Apps.IApp.html

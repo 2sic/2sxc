@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Web;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 
@@ -10,21 +11,37 @@ namespace ToSic.Sxc.Apps
     /// <summary>
     /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
     /// </summary>
-    public class App : Eav.Apps.App, Sxc.Apps.IApp
+    public class App : Eav.Apps.App, IApp
     {
         #region Dynamic Properties: Configuration, Settings, Resources
-        public dynamic Configuration
+        public AppConfiguration Configuration
         {
             get
             {
-                if(!_configLoaded && AppMetadata != null)
-                    _config = new DynamicEntity(AppMetadata, new[] {Thread.CurrentThread.CurrentCulture.Name}, null);
+                if (!_configLoaded && AppConfiguration != null)
+                {
+                    //_config = new DynamicEntity(AppConfiguration, new[] {Thread.CurrentThread.CurrentCulture.Name}, null);
+                    _appConfig = new AppConfiguration(AppConfiguration, Log);
+                }
                 _configLoaded = true;
-                return _config;
+                return _appConfig;
             }
         }
         private bool _configLoaded;
-        private dynamic _config;
+        //private dynamic _config;
+        private AppConfiguration _appConfig;
+
+        [PrivateApi("obsolete, use the typed accessor instead, only included for old-compatibility")]
+        [Obsolete("use the new, typed accessor instead")]
+        dynamic SexyContent.Interfaces.IApp.Configuration
+        {
+            get
+            {
+                var c = Configuration;
+                if (c != null) return new DynamicEntity(c.Entity, new[] {Thread.CurrentThread.CurrentCulture.Name}, null);
+                return null;
+            }
+        }
 
         public dynamic Settings
         {
