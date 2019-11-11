@@ -1,5 +1,11 @@
-﻿namespace ToSic.Sxc.Blocks
+﻿using ToSic.Eav.Documentation;
+
+namespace ToSic.Sxc.Blocks
 {
+    /// <summary>
+    /// These are the purposes of a block as it's being built. It can be built to generate a web-view, juts for indexing or possibly also for json publishing. 
+    /// </summary>
+    [PublicApi]
     public enum Purpose
     {
         /// <summary>
@@ -8,12 +14,12 @@
         WebView,
 
         /// <summary>
-        /// This means the instance was created for the search-indexer to build the index.
+        /// The purpose is for the search-indexer to build the index.
         /// </summary>
         IndexingForSearch,
 
         /// <summary>
-        /// This means the instance was only created to publish data as a JSON stream.
+        /// The purpose is to publish data as a JSON stream.
         /// This is a special use case and not documented well ATM.
         /// </summary>
         PublishData

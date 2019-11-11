@@ -9,6 +9,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc;
@@ -196,7 +197,10 @@ namespace ToSic.SexyContent.Razor
         {
         }
 
-        public Purpose Purpose { get; set; }
+        public Purpose Purpose { get; internal set; }
+
+        [Obsolete("left for compatibility, use Purpose instead")]
+        public InstancePurposes InstancePurpose { get; internal set; }
 
 
         #region Adam 

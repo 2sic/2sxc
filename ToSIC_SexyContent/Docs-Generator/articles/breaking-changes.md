@@ -31,6 +31,7 @@ We're documenting it here to ensure you know what happened, in case you still ru
 	1. from `ToSic.SexyContent.ISxcInstance` to `ToSic.Sxc.Blocks.IBlockContext`
 	1. actually moved a lot of things there incl. `ContentBlock` now `BlockConfiguration` and more - all internal stuff
 1. Moving the `ToSic.SexyContent.App` to `ToSic.Sxc.Apps.App`
+1. In a razor page, we added the preferred `Purpose`. The old `InstancePurpose` will still work
 
 #### Changed, but completely internal
 

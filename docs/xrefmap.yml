@@ -4035,6 +4035,30 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Blocks.IView.UseForList
   nameWithType: IView.UseForList
+- uid: ToSic.Sxc.Blocks.Purpose
+  name: Purpose
+  href: api/ToSic.Sxc.Blocks.Purpose.html
+  commentId: T:ToSic.Sxc.Blocks.Purpose
+  fullName: ToSic.Sxc.Blocks.Purpose
+  nameWithType: Purpose
+- uid: ToSic.Sxc.Blocks.Purpose.IndexingForSearch
+  name: IndexingForSearch
+  href: api/ToSic.Sxc.Blocks.Purpose.html#ToSic_Sxc_Blocks_Purpose_IndexingForSearch
+  commentId: F:ToSic.Sxc.Blocks.Purpose.IndexingForSearch
+  fullName: ToSic.Sxc.Blocks.Purpose.IndexingForSearch
+  nameWithType: Purpose.IndexingForSearch
+- uid: ToSic.Sxc.Blocks.Purpose.PublishData
+  name: PublishData
+  href: api/ToSic.Sxc.Blocks.Purpose.html#ToSic_Sxc_Blocks_Purpose_PublishData
+  commentId: F:ToSic.Sxc.Blocks.Purpose.PublishData
+  fullName: ToSic.Sxc.Blocks.Purpose.PublishData
+  nameWithType: Purpose.PublishData
+- uid: ToSic.Sxc.Blocks.Purpose.WebView
+  name: WebView
+  href: api/ToSic.Sxc.Blocks.Purpose.html#ToSic_Sxc_Blocks_Purpose_WebView
+  commentId: F:ToSic.Sxc.Blocks.Purpose.WebView
+  fullName: ToSic.Sxc.Blocks.Purpose.WebView
+  nameWithType: Purpose.WebView
 - uid: ToSic.Sxc.Dnn
   name: ToSic.Sxc.Dnn
   href: api/ToSic.Sxc.Dnn.html

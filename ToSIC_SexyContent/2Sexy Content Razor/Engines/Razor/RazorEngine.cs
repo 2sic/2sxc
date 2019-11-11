@@ -10,6 +10,7 @@ using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
+using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
@@ -137,6 +138,9 @@ namespace ToSic.Sxc.Engines.Razor
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
             Webpage.Purpose = Purpose;
+#pragma warning disable 618
+            Webpage.InstancePurpose = (InstancePurposes) Purpose;
+#pragma warning restore 618
             InitHelpers(Webpage);
         }
 
@@ -144,6 +148,6 @@ namespace ToSic.Sxc.Engines.Razor
             => Webpage?.CustomizeData();
 
         public override void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, IInstanceInfo moduleInfo, DateTime beginDate) 
-            => Webpage?.CustomizeSearch(searchInfos, ((EnvironmentInstance<ModuleInfo>)moduleInfo).Original /*moduleInfo*/, beginDate);
+            => Webpage?.CustomizeSearch(searchInfos, ((EnvironmentInstance<ModuleInfo>)moduleInfo).Original, beginDate);
     }
 }
