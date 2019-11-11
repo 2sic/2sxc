@@ -88,9 +88,11 @@ namespace ToSic.SexyContent.DataSources
                     var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                     var userMayEdit = HasSxcContext && CmsInstance.UserMayEdit;
 
-                    var cgm = new BlocksManager(ZoneId, AppId,
-                        HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value),
-                        Log);
+                    var cms = new CmsRuntime(ZoneId, AppId, Log, HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value));
+                    var cgm = cms.Blocks;
+                    //var cgm = new BlocksManager(ZoneId, AppId,
+                    //    HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value),
+                    //    Log);
 
                     _blockConfiguration = cgm.GetInstanceContentGroup(InstanceId.Value, null);
                 }

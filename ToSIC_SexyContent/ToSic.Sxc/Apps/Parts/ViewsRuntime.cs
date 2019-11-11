@@ -31,10 +31,14 @@ namespace ToSic.Sxc.Apps
 			return dataSource;
 		}
 
-		public IEnumerable<IView> GetAll() 
-            => ViewsDataSource().List.Select(p => new View(p)).OrderBy(p => p.Name);
+        public IEnumerable<IView> GetAll() => _all ?? (_all = ViewsDataSource().List.Select(p => new View(p)).OrderBy(p => p.Name));
+        private IEnumerable<IView> _all;
 
-		public IView Get(int templateId)
+        public IEnumerable<IView> GetRazor() => GetAll().Where(t => t.IsRazor);
+        public IEnumerable<IView> GetToken() => GetAll().Where(t => !t.IsRazor);
+
+
+        public IView Get(int templateId)
 		{
 			var dataSource = ViewsDataSource();
 			dataSource = DataSource.GetDataSource<EntityIdFilter>(upstream: dataSource);

@@ -6,6 +6,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -31,20 +32,18 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
                 Log.Add("no additional group processing necessary");
         }
 
+        private BlockConfiguration GetBlockConfig(IApp app, Guid blockGuid)
+            => new CmsRuntime(app, Log, CmsInstance.UserMayEdit,
+                CmsInstance.Environment.PagePublishing.IsEnabled(CmsInstance.EnvInstance.Id)).Blocks.GetBlockConfig(blockGuid);
+
         private void UpdateList<T>(
             int appId,
             Dictionary<Guid, int> postSaveIds,
             IEnumerable<IGrouping<string, BundleWithHeader<T>>> groupItems)
         {
             var wrapLog = Log.Call(nameof(UpdateList), $"{appId}");
-            //var myLog = new Log("2Ap.GrpPrc", Log, "start");
-            // 2018-09-22 new
             var app = new App(new DnnTenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
                 ConfigurationProvider.Build(CmsInstance, true), false, Log);
-
-            // 2018-09-22 old
-            //var userMayEdit = SxcBlock.UserMayEdit;
-            //app.InitData(userMayEdit, SxcBlock.Environment.PagePublishing.IsEnabled(SxcBlock.EnvInstance.Id), SxcBlock.Data.ConfigurationProvider);
 
             foreach (var entitySets in groupItems)
             {
@@ -60,7 +59,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
                     entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ListPresentationLower);
 
                 // Get group to assign to and parameters
-                var contentGroup = app.BlocksManager.GetBlockConfig(contItem.Header.Group.Guid);
+                var contentGroup = GetBlockConfig(app, contItem.Header.Group.Guid);// app.BlocksManager.GetBlockConfig(contItem.Header.Group.Guid);
                 var partName = contItem.Header.Group.Part;
 
                 // var part = blockConfiguration[partName];
@@ -94,7 +93,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
                 Log.Add($"will add: {willAdd}; add-pre-verified:{contItem.Header.Group.ReallyAddBecauseAlreadyVerified}; Group.Add:{contItem.Header.Group.Add}; {nameof(itemIsReallyNew)}:{itemIsReallyNew}; EntityId:{contItem.EntityId}");
                 if (willAdd) // this cannot be auto-detected, it must be specified
                     contentGroup.AddContentAndPresentationEntity(partName, index, postSaveId, presentationId);
-                else // if (part.Count <= index || part[index] == null)
+                else
                     contentGroup.UpdateEntityIfChanged(partName, index, postSaveId, true, presentationId);
             }
 
@@ -116,7 +115,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
                     continue;
                 }
 
-                var contentGroup = app.BlocksManager.GetBlockConfig(identifier.Group.Guid);
+                var contentGroup = GetBlockConfig(app, identifier.Group.Guid);//  app.BlocksManager.GetBlockConfig(identifier.Group.Guid);
                 var contentTypeStaticName = (contentGroup.View as Sxc.Blocks.View)?.GetTypeStaticName(identifier.Group.Part) ?? "";
 
                 // if there is no content-type for this, then skip it (don't deliver anything)

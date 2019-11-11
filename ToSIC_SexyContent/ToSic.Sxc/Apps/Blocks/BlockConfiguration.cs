@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence;
@@ -193,11 +192,15 @@ namespace ToSic.Sxc.Apps.Blocks
                 ((Entity)saveEnt).PlaceDraftInBranch = true;
                 ((Entity)saveEnt).IsPublished = false;
             }
-
-            new AppManager(_zoneId, _appId).Entities.Save(saveEnt, saveOpts);
+            
+            var cms = new CmsManager(_zoneId, _appId, _showDrafts, _versioningEnabled, Log);
+            cms.Entities.Save(saveEnt, saveOpts);
 
             // Refresh content group entity (ensures contentgroup is up to date)
-            _contentGroupEntity = new BlocksManager(_zoneId, _appId, _showDrafts, _versioningEnabled, Log).GetBlockConfig(_contentGroupEntity.EntityGuid)._contentGroupEntity;
+            // todo continue here!
+            
+            _contentGroupEntity = cms.Read.Blocks // new BlocksManager(_zoneId, _appId, _showDrafts, _versioningEnabled, Log)
+                .GetBlockConfig(_contentGroupEntity.EntityGuid)._contentGroupEntity;
         }
 
         private Dictionary<string, List<int?>> PrepareSavePackage(string type, List<int?> entityIds,

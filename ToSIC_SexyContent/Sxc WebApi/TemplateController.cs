@@ -5,6 +5,8 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Data;
+using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.SexyContent.WebApi.ImportExport;
 using ToSic.Sxc.Apps;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -27,7 +29,7 @@ namespace ToSic.SexyContent.WebApi
 	    public IEnumerable<object> GetAll(int appId)
         {
             Log.Add($"get all a#{appId}");
-            var cms = new CmsRuntime(appId, Log);
+            var cms = new CmsRuntime(appId, Log, true);
 
             var attributeSetList = cms.ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
             var templateList = cms.Views.GetAll().ToList();
@@ -74,8 +76,12 @@ namespace ToSic.SexyContent.WebApi
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public bool Delete(int appId, int id)
 	    {
+            // todo: must add extra security to only allow zone change if host user
 	        Log.Add($"delete a{appId}, t:{id}");
-            var cms = new CmsManager(appId, Log);
+            var app = Factory.App(appId, false);
+
+
+            var cms = new CmsManager(app, Log);
             cms.Views.DeleteTemplate(id);
 	        return true;
 	    }

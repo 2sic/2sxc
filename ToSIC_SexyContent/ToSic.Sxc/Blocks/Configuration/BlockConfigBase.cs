@@ -60,7 +60,10 @@ namespace ToSic.Sxc.Blocks
             {
                 var existedBeforeSettingTemplate = BlockConfiguration.Exists;
 
-                var contentGroupGuid = CmsContext.Block.App.BlocksManager
+                var app = CmsContext.Block.App;
+                var cms = new CmsManager(app, Log);
+
+                var contentGroupGuid = cms.Blocks // CmsContext.Block.App.BlocksManager
                     .UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
                 if (!existedBeforeSettingTemplate)
@@ -82,7 +85,8 @@ namespace ToSic.Sxc.Blocks
 
 
         private CmsRuntime GetCmsRuntime()
-            => CmsContext.App == null ? null : new CmsRuntime(CmsContext.App, Log);
+        // todo: this must be changed, set showDrafts to true for now, as it's probably only used in the view-picker, but it shoudln't just be here
+            => CmsContext.App == null ? null : new CmsRuntime(CmsContext.App, Log, true, false);
 
         public IEnumerable<TemplateUiInfo> GetSelectableTemplates() 
             => GetCmsRuntime()?.Views.GetCompatibleViews(CmsContext.App, BlockConfiguration);
@@ -157,7 +161,8 @@ namespace ToSic.Sxc.Blocks
 
             // re-load the content-group so we have the new title
             var app = CmsContext.App;
-            var contentGroup = app.BlocksManager.GetBlockConfig(BlockConfiguration.ContentGroupGuid);
+            var cms = GetCmsRuntime();// new CmsRuntime(app, Log, );
+            var contentGroup = /*app.BlocksManager*/cms.Blocks.GetBlockConfig(BlockConfiguration.ContentGroupGuid);
 
             var titleItem = contentGroup.ListContent.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
 

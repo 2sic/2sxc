@@ -6,6 +6,7 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 
@@ -24,7 +25,8 @@ namespace ToSic.SexyContent.WebApi
         private BlockConfiguration GetContentGroup(Guid contentGroupGuid)
         {
             Log.Add($"get group:{contentGroupGuid}");
-            var contentGroup = CmsBlock.App.BlocksManager.GetBlockConfig(contentGroupGuid);
+            var cms = new CmsRuntime(CmsBlock.App, Log, true, false);
+            var contentGroup = /*CmsBlock.App.BlocksManager*/cms.Blocks.GetBlockConfig(contentGroupGuid);
 
             if (contentGroup == null)
                 throw new Exception("BlockConfiguration with Guid " + contentGroupGuid + " does not exist.");
@@ -33,7 +35,7 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public /*ReplaceSet*/ dynamic Replace(Guid guid, string part, int index)
+        public dynamic Replace(Guid guid, string part, int index)
         {
             Log.Add($"replace target:{guid}, part:{part}, index:{index}");
             part = part.ToLower();
@@ -80,16 +82,19 @@ namespace ToSic.SexyContent.WebApi
         public void Replace(Guid guid, string part, int index, int entityId)
         {
             Log.Add($"replace target:{guid}, part:{part}, index:{index}, id:{entityId}");
-            var versioning = CmsBlock.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = CmsBlock.Environment.PagePublishing;
 
-            Action<Eav.Apps.Environment.VersioningActionInfo> internalSave = (args) => {
-                var contentGroup = CmsBlock.App.BlocksManager.GetBlockConfig(guid);
+            void InternalSave(VersioningActionInfo args)
+            {
+                var cms = new CmsManager(CmsBlock.App, Log);
+                var contentGroup = /*CmsBlock.App.BlocksManager*/cms.Read.Blocks.GetBlockConfig(guid);
+                // todo: must move to CmsManager
                 contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
-            };
+            }
 
             // use dnn versioning - this is always part of page
             var context = GetContext(CmsBlock, Log);
-            versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, internalSave);
+            versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
         }
 
         [HttpGet]
@@ -117,7 +122,7 @@ namespace ToSic.SexyContent.WebApi
         public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> list)
         {
             Log.Add($"list for:{guid}, items:{list?.Count}");
-            var versioning = CmsBlock.Environment.PagePublishing;// new PagePublishing(Log);
+            var versioning = CmsBlock.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args)
             {
@@ -157,12 +162,6 @@ namespace ToSic.SexyContent.WebApi
 
 
         #region helper classes for data transport / json interface
-        //public class ReplaceSet
-        //{
-        //    public int? SelectedId { get; set; }
-        //    public Dictionary<int, string> Items { get; set; }
-        //    public string TypeName;
-        //}
 
         public class SortedEntityItem
         {

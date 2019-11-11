@@ -14,8 +14,9 @@ namespace ToSic.Sxc.Blocks
 
         #region methods which the entity-implementation must customize - so it's virtual
 
-        protected override void SavePreviewTemplateId(Guid templateGuid) 
-            => BlocksManager.SetPreviewTemplate(ModuleId, templateGuid);
+        protected override void SavePreviewTemplateId(Guid templateGuid)
+            => Factory.Resolve<IMapAppToInstance>().SetPreviewTemplate(ModuleId, templateGuid);
+            //=> BlocksManager.SetPreviewTemplate(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
             => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(CmsContext.EnvInstance, CmsContext.Environment, appId, Log);

@@ -4,6 +4,7 @@ using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Blocks
@@ -84,8 +85,12 @@ namespace ToSic.Sxc.Blocks
             if (AppId == 0) return;
 
             App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(CmsInstance, false), true, Log);
+            
+            // 2019-11-11 2dm new, with CmsRuntime
+            var cms = new CmsRuntime(App, Log, parent.CmsInstance.UserMayEdit,
+                parent.CmsInstance.Environment.PagePublishing.IsEnabled(parent.CmsInstance.EnvInstance.Id));
 
-            Configuration = App.BlocksManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
+            Configuration = /*App.BlocksManager*/cms.Blocks.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 
             // handle cases where the content group is missing - usually because of incomplete import
             if (Configuration.DataIsMissing)

@@ -86,6 +86,7 @@
     <Compile Include="Apps\CmsRuntime.cs" />
     <Compile Include="Apps\ImportExport\XmlImportFull.cs" />
     <Compile Include="Apps\ImportExport\XmlImportFull_Templates.cs" />
+    <Compile Include="Apps\Parts\BlocksRuntime.cs" />
     <Compile Include="Apps\Parts\CmsManagerBase.cs" />
     <Compile Include="Apps\Parts\ViewsManager.cs" />
     <Compile Include="Apps\Parts\CmsRuntimeBase.cs" />

@@ -84,7 +84,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             Log.Add($"delete pipe:{id} on app:{appId}");
 			// Stop if a Template uses this Pipeline
             //var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
-            var cms = new CmsRuntime(appId, Log);
+            var cms = new CmsRuntime(appId, Log, true );
 			var templatesUsingPipeline = cms.Views.GetAll().Where(t => t.Query != null && t.Query.EntityId == id).Select(t => t.Id).ToArray();
 			if (templatesUsingPipeline.Any())
 				throw new Exception(

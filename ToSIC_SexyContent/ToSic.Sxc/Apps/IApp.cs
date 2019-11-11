@@ -8,7 +8,10 @@ namespace ToSic.Sxc.Apps
     /// An app-object as is available in a razor template or WebApi
     /// </summary>
     [PublicApi]
-    public interface IApp: Eav.Apps.IApp, SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
+    public interface IApp: 
+        Eav.Apps.IApp, 
+
+        SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
     {
         /// <summary>
         /// Configuration object as a DynamicEntity.
@@ -53,8 +56,8 @@ namespace ToSic.Sxc.Apps
         #region experimental
 
 
-        [PrivateApi("must be split (read/write) and moved away from the IApp")]
-        BlocksManager BlocksManager { get; }
+        //[PrivateApi("must be split (read/write) and moved away from the IApp")]
+        //BlocksManager BlocksManager { get; }
 
         #endregion
     }

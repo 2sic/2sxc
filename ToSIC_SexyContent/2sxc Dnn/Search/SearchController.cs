@@ -14,6 +14,7 @@ using ToSic.Eav.Logging;
 using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
@@ -68,7 +69,8 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
 
             var language = dnnModule.CultureCode;
 
-            var contentGroup = sexy.App.BlocksManager.GetInstanceContentGroup(dnnModule.ModuleID, dnnModule.TabID);
+            var cms = new CmsRuntime(sexy.App, Log, false, false);
+            var contentGroup = /*sexy.App.BlocksManager*/cms.Blocks.GetInstanceContentGroup(dnnModule.ModuleID, dnnModule.TabID);
 
             var template = contentGroup.View;
 

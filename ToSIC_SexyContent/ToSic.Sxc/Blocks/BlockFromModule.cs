@@ -5,6 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.DnnWebForms.Helpers;
 using ToSic.Sxc.Interfaces;
 using App = ToSic.SexyContent.App;
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Blocks
 
             // important: don't use the SxcInstance.Environment, as it would try to init the Sxc-object before the app is known, causing various side-effects
             var tempEnv = Factory.Resolve<IEnvironmentFactory>().Environment(parentLog);
-            ZoneId = tempEnv.ZoneMapper.GetZoneId(tenant.Id); // use tenant as reference, as it can be different from instance.TennantId
+            ZoneId = tempEnv.ZoneMapper.GetZoneId(tenant.Id); // use tenant as reference, as it can be different from instance.TenantId
             
             AppId = Factory.Resolve<IMapAppToInstance>().GetAppIdFromInstance(instanceInfo, ZoneId) ?? 0;// fallback/undefined YET
 
@@ -70,7 +71,11 @@ namespace ToSic.Sxc.Blocks
                 // 2018-09-22 new with auto-init-data
                 App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(CmsInstance, false), true, Log);
 
-                Configuration = App.BlocksManager.GetInstanceContentGroup(instanceInfo.Id, instanceInfo.PageId);
+                // 2019-11-11 2dm new, with CmsRuntime
+                var cms = new CmsRuntime(App, Log, CmsInstance.UserMayEdit,
+                    CmsInstance.Environment.PagePublishing.IsEnabled(CmsInstance.EnvInstance.Id));
+
+                Configuration = /*App.BlocksManager*/cms.Blocks.GetInstanceContentGroup(instanceInfo.Id, instanceInfo.PageId);
 
                 if (Configuration.DataIsMissing)
                 {

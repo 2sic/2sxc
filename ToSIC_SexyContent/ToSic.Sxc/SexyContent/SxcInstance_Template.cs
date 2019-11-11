@@ -33,7 +33,7 @@ namespace ToSic.SexyContent
             var urlParameterDict = Parameters.ToDictionary(pair => pair.Key?.ToLower() ?? "", pair =>
                 $"{pair.Key}/{pair.Value}".ToLower());
 
-            var allTemplates = new CmsRuntime(App, Log).Views.GetAll();
+            var allTemplates = new CmsRuntime(App, Log, UserMayEdit, false).Views.GetAll();
 
 
             foreach (var template in allTemplates.Where(t => !string.IsNullOrEmpty(t.UrlIdentifier)))

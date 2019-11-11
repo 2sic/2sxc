@@ -3,8 +3,6 @@ using System.Threading;
 using System.Web;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Apps;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.SexyContent
 {
@@ -52,15 +50,6 @@ namespace ToSic.SexyContent
         }
         private bool _resLoaded;
         private dynamic _res;
-
-        #endregion
-
-        #region App-Level ViewManager, BlocksManager, EavContext --> must move to EAV some time
-
-
-        private BlocksManager _blocksManager;
-        public BlocksManager BlocksManager => _blocksManager 
-            ?? (_blocksManager = new BlocksManager(ZoneId, AppId, ShowDraftsInData, VersioningEnabled, Log));
 
         #endregion
 
