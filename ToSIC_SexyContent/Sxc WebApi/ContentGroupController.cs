@@ -5,7 +5,6 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;

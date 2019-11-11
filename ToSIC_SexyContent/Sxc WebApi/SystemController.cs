@@ -124,17 +124,7 @@ namespace ToSic.SexyContent.WebApi
             if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var exp))
                 throw exp;
 
-            //var appIdentity = new AppPermissionBeforeUsing(SxcBlock, Log)
-            //    .GetAppIdentityOrThrowIfNotAllowed(appId);
-
             var app = appAndPerms.App;
-
-            //App app = null;
-            //try
-            //{
-            //    app = new App(new DnnTenant(PortalSettings.Current), appIdentity.ZoneId, appIdentity.AppId, false, Log);
-            //}
-            //catch (KeyNotFoundException) {}
 
             return new
             {

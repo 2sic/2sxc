@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Apps
     {
         protected readonly CmsRuntime CmsRuntime;
 
-        internal CmsRuntimeBase(CmsRuntime cmsRuntime, ILog parentLog) : base(cmsRuntime, parentLog)
+        internal CmsRuntimeBase(CmsRuntime cmsRuntime, ILog parentLog, string logName) : base(cmsRuntime, parentLog, logName)
         {
             CmsRuntime = cmsRuntime;
         }

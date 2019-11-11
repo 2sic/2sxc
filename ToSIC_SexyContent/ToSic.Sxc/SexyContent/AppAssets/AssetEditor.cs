@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.AppAssets
             _userIsAdmin = isAdmin;
 
             // todo: 2dm Views - see if we can get logger to flow
-            var template = new CmsRuntime(app, null).Views/*; _app.ViewManager*/.Get(templateId);
+            var template = new CmsRuntime(app, null).Views.Get(templateId);
             EditInfo = TemplateAssetsInfo(template);
         }
 

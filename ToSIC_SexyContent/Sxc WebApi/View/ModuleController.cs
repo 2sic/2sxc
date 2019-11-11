@@ -260,7 +260,6 @@ namespace ToSic.SexyContent.WebApi.View
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
-            //else internalSave(null);
         }
 
         [HttpGet]
@@ -268,6 +267,7 @@ namespace ToSic.SexyContent.WebApi.View
         public string RemoteInstallDialogUrl(string dialog, bool isContentApp)
         {
             // note / warning: some duplicate code with SystemController.cs
+            // ReSharper disable StringLiteralTypo
             
             if (dialog != "gettingstarted")
                 throw new Exception("unknown dialog name: " + dialog);
@@ -286,7 +286,6 @@ namespace ToSic.SexyContent.WebApi.View
                 try
                 {
                     var all = new CmsRuntime(CmsBlock.App, Log).Views.GetAll();
-                        //CmsBlock.App.ViewManager.GetAllTemplates();
                     if (all.Any())
                         return null;
                 }
@@ -299,7 +298,7 @@ namespace ToSic.SexyContent.WebApi.View
             // Add desired destination
             // Add DNN Version, 2SexyContent Version, module type, module id, Portal ID
             var gettingStartedSrc = "//gettingstarted.2sxc.org/router.aspx?"
-                + "destination=autoconfigure" + (isContentApp ? Eav.Constants.ContentAppName.ToLower() : "app")
+                                    + "destination=autoconfigure" + (isContentApp ? Eav.Constants.ContentAppName.ToLower() : "app")
                 + "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)
                 + "&2SexyContentVersion=" + Settings.ModuleVersion
                 + "&ModuleName=" + modName + "&ModuleId=" + moduleInfo.ModuleID
@@ -307,6 +306,7 @@ namespace ToSic.SexyContent.WebApi.View
             // Add VDB / Zone ID (if set)
             var zoneId = Env.ZoneMapper.GetZoneId(moduleInfo.PortalID);
             gettingStartedSrc +=  "&ZoneID=" + zoneId;
+                                    // ReSharper restore StringLiteralTypo
 
             // Add DNN Guid
             var hostSettings = HostController.Instance.GetSettingsDictionary();

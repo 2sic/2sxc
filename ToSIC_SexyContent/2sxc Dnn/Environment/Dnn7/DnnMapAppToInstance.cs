@@ -15,7 +15,6 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.SxcTemp;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {

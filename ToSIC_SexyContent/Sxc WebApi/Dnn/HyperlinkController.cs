@@ -4,7 +4,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
 using ToSic.SexyContent.WebApi.Adam;

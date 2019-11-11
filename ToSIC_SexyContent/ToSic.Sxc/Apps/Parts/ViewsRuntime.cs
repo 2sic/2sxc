@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Apps
 {
 	public class ViewsRuntime: CmsRuntimeBase
     {
-        internal ViewsRuntime(CmsRuntime cmsRuntime, ILog parentLog) : base(cmsRuntime, parentLog) { }
+        internal ViewsRuntime(CmsRuntime cmsRuntime, ILog parentLog) : base(cmsRuntime, parentLog, "Cms.ViewRd") { }
 
         private IDataSource _viewDs;
 		private IDataSource ViewsDataSource()

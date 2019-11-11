@@ -15,9 +15,10 @@ namespace ToSic.Sxc.Blocks
 {
 
     // todo: create interface
+    // todo: move some parts out into a BlockManagement
     public abstract class BlockConfigBase : HasLog
     {
-        protected /*SxcInstance*/ ICmsBlock CmsContext;
+        protected ICmsBlock CmsContext;
         protected int ModuleId;
 
         private BlockConfiguration _cGroup;

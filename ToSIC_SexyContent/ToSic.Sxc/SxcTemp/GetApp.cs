@@ -5,6 +5,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.SxcTemp
 {
+    // todo: find out what these are for, I believe they should all in the end go to a CmsManager or something
     internal class GetApp
     {
         /// <summary>

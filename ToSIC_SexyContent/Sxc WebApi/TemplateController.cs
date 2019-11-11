@@ -28,10 +28,9 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"get all a#{appId}");
             var cms = new CmsRuntime(appId, Log);
-            //var tm = TemplateManager(appId);
 
-	        var attributeSetList = cms /*new AppRuntime(tm.ZoneId, tm.AppId, Log)*/.ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
-            var templateList = /*tm*/cms.Views.GetAll().ToList();
+            var attributeSetList = cms.ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
+            var templateList = cms.Views.GetAll().ToList();
             Log.Add($"attrib list count:{attributeSetList.Count}, template count:{templateList.Count}");
             var templates = from c in templateList
                             select new
@@ -50,14 +49,7 @@ namespace ToSic.SexyContent.WebApi
 	        return templates;
 	    }
 
-	    private CmsRuntime TemplateManager(int appId)
-	    {
-	        var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
-	        var tm = new CmsRuntime(zoneId, appId, Log);
-	        return tm;
-	    }
-
-	    /// <summary>
+        /// <summary>
 	    /// Helper to prepare a quick-info about 1 content type
 	    /// </summary>
 	    /// <param name="allCTs"></param>
@@ -84,8 +76,7 @@ namespace ToSic.SexyContent.WebApi
 	    {
 	        Log.Add($"delete a{appId}, t:{id}");
             var cms = new CmsManager(appId, Log);
-            //var tm = TemplateManager(appId);
-            /*tm*/cms.Views.DeleteTemplate(id);
+            cms.Views.DeleteTemplate(id);
 	        return true;
 	    }
         

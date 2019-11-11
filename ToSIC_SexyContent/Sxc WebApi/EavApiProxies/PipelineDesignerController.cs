@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Dnn7.ValueProviders;
 using ToSic.SexyContent.WebApi.Dnn;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.SxcTemp;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {

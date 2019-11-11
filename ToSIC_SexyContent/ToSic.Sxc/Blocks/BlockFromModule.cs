@@ -83,10 +83,6 @@ namespace ToSic.Sxc.Blocks
             }
         }
 
-
-        //public override SxcInstance SxcInstance
-        //    => _sxcInstance ?? (_sxcInstance = new SxcInstance(this, InstanceInfo, _urlParams, Log));
-
         public override bool IsContentApp => InstanceInfo.IsPrimary;
 
     }
