@@ -13,7 +13,6 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.SxcTemp;

@@ -90,7 +90,7 @@
     <Compile Include="Apps\ImportExport\XmlImportFull_Templates.cs" />
     <Compile Include="Apps\Parts\AppsManager.cs" />
     <Compile Include="Apps\Parts\AppsRuntime.cs" />
-    <Compile Include="Apps\Parts\BlockManager_Lists.cs" />
+    <Compile Include="Apps\Parts\BlocksManager_Lists.cs" />
     <Compile Include="Apps\Parts\BlocksRuntime.cs" />
     <Compile Include="Apps\Parts\CmsManagerBase.cs" />
     <Compile Include="Apps\Parts\ViewsManager.cs" />
@@ -135,7 +135,7 @@
     <Compile Include="Interfaces\IWebFactoryTemp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\ISearchInfo.cs" />
-    <Compile Include="SexyContent\App.cs" />
+    <Compile Include="Apps\App.cs" />
     <Compile Include="SexyContent\AppAndDataHelpersBase.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditor.cs" />

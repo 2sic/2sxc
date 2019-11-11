@@ -94,10 +94,10 @@ namespace ToSic.Sxc.Apps
                 ((Entity)saveEnt).IsPublished = false;
             }
 
-            var cms = CmsManager;// new CmsManager(block.ZoneId, block.AppId, block.ShowDrafts, block.VersioningEnabled, Log);
-            cms.Entities.Save(saveEnt, saveOpts);
+            // var cms =  new CmsManager(block.ZoneId, block.AppId, block.ShowDrafts, block.VersioningEnabled, Log);
+            CmsManager.Entities.Save(saveEnt, saveOpts);
 
-            block.Entity = cms.Read.Blocks // new BlocksManager(_zoneId, _appId, _showDrafts, _versioningEnabled, Log)
+            block.Entity = CmsManager.Read.Blocks // new BlocksManager(_zoneId, _appId, _showDrafts, _versioningEnabled, Log)
                 .GetBlockConfig(block.Entity.EntityGuid).Entity;
         }
 

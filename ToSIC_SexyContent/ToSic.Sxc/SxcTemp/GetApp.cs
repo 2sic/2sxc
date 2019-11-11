@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using App = ToSic.SexyContent.App;
+using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.SxcTemp

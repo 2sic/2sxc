@@ -14,9 +14,10 @@ namespace ToSic.Sxc.Apps
         {
         }
 
-		public IEnumerable<BlockConfiguration> GetContentGroups() 
-            => CmsManager.Read.Blocks.ContentGroupSource().List
-                .Select(p => new BlockConfiguration(p, CmsManager.ZoneId, CmsManager.AppId, CmsManager.ShowDrafts, CmsManager.EnablePublishing, Log));
+        // 2019-11-11 2dm - this doesn't seem used anywhere
+		//public IEnumerable<BlockConfiguration> GetContentGroups() 
+  //          => CmsManager.Read.Blocks.ContentGroupSource().List
+  //              .Select(p => new BlockConfiguration(p, CmsManager.ZoneId, CmsManager.AppId, CmsManager.ShowDrafts, CmsManager.EnablePublishing, Log));
 
 
 	    public Guid UpdateOrCreateContentGroup(BlockConfiguration blockConfiguration, int templateId)

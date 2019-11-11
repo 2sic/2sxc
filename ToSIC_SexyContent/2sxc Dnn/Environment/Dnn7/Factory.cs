@@ -8,6 +8,7 @@ using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.DataSources;
 using ToSic.Sxc;
 using ToSic.Sxc.Blocks;
+using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace

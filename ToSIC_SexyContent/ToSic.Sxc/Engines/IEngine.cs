@@ -7,7 +7,7 @@ using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Blocks;
-using App = ToSic.SexyContent.App;
+using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Engines

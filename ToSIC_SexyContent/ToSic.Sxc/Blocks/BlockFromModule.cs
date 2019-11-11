@@ -8,7 +8,7 @@ using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.DnnWebForms.Helpers;
 using ToSic.Sxc.Interfaces;
-using App = ToSic.SexyContent.App;
+using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Blocks
 {

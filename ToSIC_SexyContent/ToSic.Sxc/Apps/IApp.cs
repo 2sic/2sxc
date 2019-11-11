@@ -9,8 +9,7 @@ namespace ToSic.Sxc.Apps
     /// </summary>
     [PublicApi]
     public interface IApp: 
-        Eav.Apps.IApp, 
-
+        Eav.Apps.IApp,
         SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
     {
         /// <summary>

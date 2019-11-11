@@ -42,9 +42,6 @@ namespace ToSic.Sxc.Blocks
         protected BlockConfiguration BlockConfiguration
             => _cGroup ?? (_cGroup = CmsContext.Block.Configuration);
 
-        //public void AddItem(int? sortOrder = null)
-        //    => BlockConfiguration.AddContentAndPresentationEntity(ViewParts.ContentLower, sortOrder, null, null);
-        
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
@@ -79,13 +76,6 @@ namespace ToSic.Sxc.Blocks
             return result;
         }
 
-
-        //public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
-        //{
-        //    Log.Add($"change order orig:{sortOrder}, dest:{destinationSortOrder}");
-        //    BlockConfiguration.ReorderEntities(sortOrder, destinationSortOrder);
-        //}
-
         public bool Publish(string part, int sortOrder)
         {
             Log.Add($"publish part{part}, order:{sortOrder}");
@@ -111,12 +101,6 @@ namespace ToSic.Sxc.Blocks
             return true;
         }
 
-        //public void RemoveFromList([FromUri] int sortOrder)
-        //{
-        //    Log.Add($"remove from list order:{sortOrder}");
-        //    var contentGroup = BlockConfiguration;
-        //    contentGroup.RemoveContentAndPresentationEntities(ViewParts.ContentLower, sortOrder);
-        //}
 
         #endregion
 
