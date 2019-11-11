@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Apps.Blocks
                     templateEntity =
                         ((EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
 
-                _view = templateEntity == null ? null : new View(templateEntity/*, Log*/);
+                _view = templateEntity == null ? null : new View(templateEntity);
 
                 return _view;
             }

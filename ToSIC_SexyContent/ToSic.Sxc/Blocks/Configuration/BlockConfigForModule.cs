@@ -1,7 +1,6 @@
 ﻿using System;
 using ToSic.Eav;
 using ToSic.Eav.Data;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Blocks

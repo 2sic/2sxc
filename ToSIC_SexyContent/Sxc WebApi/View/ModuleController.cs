@@ -32,6 +32,14 @@ namespace ToSic.SexyContent.WebApi.View
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ModuleController : SxcApiController
     {
+        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = GetCmsRuntime());
+        private CmsRuntime _cmsRuntime;
+
+        private CmsRuntime GetCmsRuntime()
+            // todo: this must be changed, set showDrafts to true for now, as it's probably only used in the view-picker, but it shoudln't just be here
+            => App == null ? null : new CmsRuntime(App, Log, true, false);
+
+
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext); // very important!!!
@@ -74,16 +82,17 @@ namespace ToSic.SexyContent.WebApi.View
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<AppUiInfo> GetSelectableApps() => BlockConfig.GetSelectableApps();
+        public IEnumerable<AppUiInfo> GetSelectableApps() => /*CmsRuntime.Blocks.get*/ BlockConfig.GetSelectableApps();
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes() => BlockConfig.GetSelectableContentTypes();
+        public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes() =>
+            CmsRuntime?.Views.GetContentTypesWithStatus();// BlockConfig.GetSelectableContentTypes();
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => BlockConfig.GetSelectableTemplates();
+        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => CmsRuntime?.Views.GetCompatibleViews(App, CmsBlock.Block.Configuration);// BlockConfig.GetSelectableTemplates();
 
         #endregion
 

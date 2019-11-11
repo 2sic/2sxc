@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
@@ -19,7 +18,6 @@ using Guid = System.Guid;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {
-	/// <inheritdoc />
 	/// <summary>
 	/// Proxy Class to the EAV EntitiesController (Web API Controller)
 	/// </summary>

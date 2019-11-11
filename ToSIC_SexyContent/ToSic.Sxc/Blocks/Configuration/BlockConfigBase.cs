@@ -88,8 +88,8 @@ namespace ToSic.Sxc.Blocks
         // todo: this must be changed, set showDrafts to true for now, as it's probably only used in the view-picker, but it shoudln't just be here
             => CmsContext.App == null ? null : new CmsRuntime(CmsContext.App, Log, true, false);
 
-        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() 
-            => GetCmsRuntime()?.Views.GetCompatibleViews(CmsContext.App, BlockConfiguration);
+        //public IEnumerable<TemplateUiInfo> GetSelectableTemplates() 
+        //    => GetCmsRuntime()?.Views.GetCompatibleViews(CmsContext.App, BlockConfiguration);
 
 
         public IEnumerable<AppUiInfo> GetSelectableApps()
@@ -108,8 +108,8 @@ namespace ToSic.Sxc.Blocks
                     });
         }
 
-        public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes()
-            => GetCmsRuntime()?.Views.GetContentTypesWithStatus();
+        //public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes()
+        //    => GetCmsRuntime()?.Views.GetContentTypesWithStatus();
 
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
