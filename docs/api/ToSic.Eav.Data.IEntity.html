@@ -318,6 +318,62 @@ If you need a string, use GetBestTitle() instead.</p>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_IEntity_Children_System_String_System_String_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.IEntity.Children(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Interfaces/IEntity.cs/#L101">View Source</a>
+  </span>
+  <a id="ToSic_Eav_Data_IEntity_Children_" data-uid="ToSic.Eav.Data.IEntity.Children*"></a>
+  <h4 id="ToSic_Eav_Data_IEntity_Children_System_String_System_String_" data-uid="ToSic.Eav.Data.IEntity.Children(System.String,System.String)">Children(String, String)</h4>
+  <div class="markdown level1 summary"><p>Get all the children <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> items - optionally only of a specific field and/or type</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">List&lt;IEntity&gt; Children(string field = null, string type = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td><p>Optional field name to access</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>Optional type to filter for</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a>&gt;</td>
+        <td><p>List of children, or empty list if not found</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_IEntity_GetBestTitle_System_String___.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.IEntity.GetBestTitle(System.String%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
@@ -507,6 +563,62 @@ the object is string, int or even a EntityRelationship</p>
       <tr>
         <td><span class="parametername">T</span></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_IEntity_Parents_System_String_System_String_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.IEntity.Parents(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Interfaces/IEntity.cs/#L109">View Source</a>
+  </span>
+  <a id="ToSic_Eav_Data_IEntity_Parents_" data-uid="ToSic.Eav.Data.IEntity.Parents*"></a>
+  <h4 id="ToSic_Eav_Data_IEntity_Parents_System_String_System_String_" data-uid="ToSic.Eav.Data.IEntity.Parents(System.String,System.String)">Parents(String, String)</h4>
+  <div class="markdown level1 summary"><p>Get all the parent <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> items - optionally only of a specific type and/or referenced in a specific field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">List&lt;IEntity&gt; Parents(string type = null, string field = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The type name to filter for</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td><p>The field name where a parent references this item</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a>&gt;</td>
+        <td><p>List of children, or empty list if not found</p>
+</td>
       </tr>
     </tbody>
   </table>

@@ -963,6 +963,19 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.IEntity.Attributes
   nameWithType: IEntity.Attributes
+- uid: ToSic.Eav.Data.IEntity.Children(System.String,System.String)
+  name: Children(String, String)
+  href: api/ToSic.Eav.Data.IEntity.html#ToSic_Eav_Data_IEntity_Children_System_String_System_String_
+  commentId: M:ToSic.Eav.Data.IEntity.Children(System.String,System.String)
+  fullName: ToSic.Eav.Data.IEntity.Children(System.String, System.String)
+  nameWithType: IEntity.Children(String, String)
+- uid: ToSic.Eav.Data.IEntity.Children*
+  name: Children
+  href: api/ToSic.Eav.Data.IEntity.html#ToSic_Eav_Data_IEntity_Children_
+  commentId: Overload:ToSic.Eav.Data.IEntity.Children
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.IEntity.Children
+  nameWithType: IEntity.Children
 - uid: ToSic.Eav.Data.IEntity.GetBestTitle(System.String[])
   name: GetBestTitle(String[])
   href: api/ToSic.Eav.Data.IEntity.html#ToSic_Eav_Data_IEntity_GetBestTitle_System_String___
@@ -1033,6 +1046,19 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.IEntity.Metadata
   nameWithType: IEntity.Metadata
+- uid: ToSic.Eav.Data.IEntity.Parents(System.String,System.String)
+  name: Parents(String, String)
+  href: api/ToSic.Eav.Data.IEntity.html#ToSic_Eav_Data_IEntity_Parents_System_String_System_String_
+  commentId: M:ToSic.Eav.Data.IEntity.Parents(System.String,System.String)
+  fullName: ToSic.Eav.Data.IEntity.Parents(System.String, System.String)
+  nameWithType: IEntity.Parents(String, String)
+- uid: ToSic.Eav.Data.IEntity.Parents*
+  name: Parents
+  href: api/ToSic.Eav.Data.IEntity.html#ToSic_Eav_Data_IEntity_Parents_
+  commentId: Overload:ToSic.Eav.Data.IEntity.Parents
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.IEntity.Parents
+  nameWithType: IEntity.Parents
 - uid: ToSic.Eav.Data.IEntity.Title
   name: Title
   href: api/ToSic.Eav.Data.IEntity.html#ToSic_Eav_Data_IEntity_Title
