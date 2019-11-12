@@ -12,22 +12,32 @@ namespace ToSic.Sxc.Engines.Token
 {
     /// <summary>
     /// LookUp for creating token based templates. In addition to retrieving values, it also resolves special tokens like
-    /// - index
-    /// - isfirst
+    /// - repeater:index
+    /// - repeater:isfirst
     /// - etc.
     /// </summary>
     [PublicApi]
-    internal class LookUpInDynamicEntity : ILookUp
+    public class LookUpInDynamicEntity : ILookUp
 	{
-        public const string RepeaterSubToken = "Repeater";
+        public const string TokenRepeater = "Repeater";
 
-		private readonly IDynamicEntity _entity;
+        public const string KeyIndex = "index";
+        public const string KeyIndex1 = "index1";
+        public const string KeyAlternator2 = "alternator2";
+        public const string KeyAlternator3 = "alternator3";
+        public const string KeyAlternator4 = "alternator4";
+        public const string KeyAlternator5 = "alternator5";
+        public const string KeyIsFirst = "isfirst";
+        public const string KeyIsLast = "islast";
+        public const string KeyCount = "count";
+
+        private readonly IDynamicEntity _entity;
 		public string Name { get; }
 
 	    private readonly int _repeaterIndex;
 	    private readonly int _repeaterTotal;
         
-
+        [PrivateApi]
 		public LookUpInDynamicEntity(string name, IDynamicEntity entity, int repeaterIndex = -1, int repeaterTotal = -1)
 		{
 			Name = name;
@@ -54,37 +64,36 @@ namespace ToSic.Sxc.Engines.Token
 
 			var propNotFound = false;
 
-            // 2015-05-04 2dm added functionality for repeater-infos
             string repeaterHelper = null;
-            if (_repeaterIndex > -1 && strPropertyName.StartsWith(RepeaterSubToken + ":", StringComparison.OrdinalIgnoreCase))
+            if (_repeaterIndex > -1 && strPropertyName.StartsWith(TokenRepeater + ":", StringComparison.OrdinalIgnoreCase))
             {
-                switch (strPropertyName.Substring(RepeaterSubToken.Length + 1).ToLower())
+                switch (strPropertyName.Substring(TokenRepeater.Length + 1).ToLower())
                 {
-                    case "index":
+                    case KeyIndex:
                         repeaterHelper = (_repeaterIndex).ToString();
                         break;
-                    case "index1":
+                    case KeyIndex1:
                         repeaterHelper = (_repeaterIndex + 1).ToString();
                         break;
-                    case "alternator2":
+                    case KeyAlternator2:
                         repeaterHelper = (_repeaterIndex%2).ToString();
                         break;
-                    case "alternator3":
+                    case KeyAlternator3:
                         repeaterHelper = (_repeaterIndex%3).ToString();
                         break;
-                    case "alternator4":
+                    case KeyAlternator4:
                         repeaterHelper = (_repeaterIndex%4).ToString();
                         break;
-                    case "alternator5":
+                    case KeyAlternator5:
                         repeaterHelper = (_repeaterIndex%5).ToString();
                         break;
-                    case "isfirst":
+                    case KeyIsFirst:
                         repeaterHelper = (_repeaterIndex == 0) ? "First" : "";
                         break;
-                    case "islast":
+                    case KeyIsLast:
                         repeaterHelper = (_repeaterIndex == _repeaterTotal - 1) ? "Last" : "";
                         break;
-                    case "count":
+                    case KeyCount:
                         repeaterHelper = _repeaterTotal.ToString();
                         break;
                 }
@@ -144,21 +153,19 @@ namespace ToSic.Sxc.Engines.Token
 			return string.Empty;
 		}
 
+        [PrivateApi]
 		public string Get(string key, string strFormat, ref bool notFound) 
             => GetProperty(key, strFormat, Thread.CurrentThread.CurrentCulture, ref notFound);
 
-        /// <summary>
-        /// Shorthand version, will return the string value or a null if not found. 
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public virtual string Get(string key)
         {
             var temp = false;
             return Get(key, "", ref temp);
         }
 
-
+        /// <inheritdoc />
+        [PrivateApi]
         public bool Has(string key)
         {
             throw new NotImplementedException();

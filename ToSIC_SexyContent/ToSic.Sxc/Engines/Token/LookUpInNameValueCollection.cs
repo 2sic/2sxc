@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Engines.Token
     /// Look-Up helper to get something from a standard .net NameValueCollection
     /// </summary>
     [PublicApi]
-    internal class LookUpInNameValueCollection : LookUpBase
+    public class LookUpInNameValueCollection : LookUpBase
     {
 	    readonly NameValueCollection _nameValueCollection;
         public LookUpInNameValueCollection(string name, NameValueCollection list)

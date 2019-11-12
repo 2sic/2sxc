@@ -4476,6 +4476,80 @@ references:
   commentId: N:ToSic.Sxc.Engines
   fullName: ToSic.Sxc.Engines
   nameWithType: ToSic.Sxc.Engines
+- uid: ToSic.Sxc.Engines.EngineBase
+  name: EngineBase
+  href: api/ToSic.Sxc.Engines.EngineBase.html
+  commentId: T:ToSic.Sxc.Engines.EngineBase
+  fullName: ToSic.Sxc.Engines.EngineBase
+  nameWithType: EngineBase
+- uid: ToSic.Sxc.Engines.EngineBase.#ctor
+  name: EngineBase()
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase__ctor
+  commentId: M:ToSic.Sxc.Engines.EngineBase.#ctor
+  fullName: ToSic.Sxc.Engines.EngineBase.EngineBase()
+  nameWithType: EngineBase.EngineBase()
+- uid: ToSic.Sxc.Engines.EngineBase.#ctor*
+  name: EngineBase
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase__ctor_
+  commentId: Overload:ToSic.Sxc.Engines.EngineBase.#ctor
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.EngineBase.EngineBase
+  nameWithType: EngineBase.EngineBase
+- uid: ToSic.Sxc.Engines.EngineBase.CustomizeData
+  name: CustomizeData()
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeData
+  commentId: M:ToSic.Sxc.Engines.EngineBase.CustomizeData
+  fullName: ToSic.Sxc.Engines.EngineBase.CustomizeData()
+  nameWithType: EngineBase.CustomizeData()
+- uid: ToSic.Sxc.Engines.EngineBase.CustomizeData*
+  name: CustomizeData
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeData_
+  commentId: Overload:ToSic.Sxc.Engines.EngineBase.CustomizeData
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.EngineBase.CustomizeData
+  nameWithType: EngineBase.CustomizeData
+- uid: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.SexyContent.Search.ISearchInfo}},ToSic.Eav.Apps.IInstanceInfo,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchInfo>>, IInstanceInfo, DateTime)
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_SexyContent_Search_ISearchInfo___ToSic_Eav_Apps_IInstanceInfo_System_DateTime_
+  commentId: M:ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.SexyContent.Search.ISearchInfo}},ToSic.Eav.Apps.IInstanceInfo,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchInfo)), IInstanceInfo, DateTime)
+  fullName: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.SexyContent.Search.ISearchInfo>>, ToSic.Eav.Apps.IInstanceInfo, System.DateTime)
+  fullName.vb: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.SexyContent.Search.ISearchInfo)), ToSic.Eav.Apps.IInstanceInfo, System.DateTime)
+  nameWithType: EngineBase.CustomizeSearch(Dictionary<String, List<ISearchInfo>>, IInstanceInfo, DateTime)
+  nameWithType.vb: EngineBase.CustomizeSearch(Dictionary(Of String, List(Of ISearchInfo)), IInstanceInfo, DateTime)
+- uid: ToSic.Sxc.Engines.EngineBase.CustomizeSearch*
+  name: CustomizeSearch
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeSearch_
+  commentId: Overload:ToSic.Sxc.Engines.EngineBase.CustomizeSearch
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.EngineBase.CustomizeSearch
+  nameWithType: EngineBase.CustomizeSearch
+- uid: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.IInstanceInfo,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
+  name: Init(IView, IApp, IInstanceInfo, IDataSource, Purpose, ICmsBlock, ILog)
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Init_ToSic_Sxc_Blocks_IView_ToSic_Sxc_Apps_IApp_ToSic_Eav_Apps_IInstanceInfo_ToSic_Eav_DataSources_IDataSource_ToSic_Sxc_Blocks_Purpose_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Eav_Logging_ILog_
+  commentId: M:ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.IInstanceInfo,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
+  fullName: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView, ToSic.Sxc.Apps.IApp, ToSic.Eav.Apps.IInstanceInfo, ToSic.Eav.DataSources.IDataSource, ToSic.Sxc.Blocks.Purpose, ToSic.Sxc.Blocks.ICmsBlock, ToSic.Eav.Logging.ILog)
+  nameWithType: EngineBase.Init(IView, IApp, IInstanceInfo, IDataSource, Purpose, ICmsBlock, ILog)
+- uid: ToSic.Sxc.Engines.EngineBase.Init*
+  name: Init
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Init_
+  commentId: Overload:ToSic.Sxc.Engines.EngineBase.Init
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.EngineBase.Init
+  nameWithType: EngineBase.Init
+- uid: ToSic.Sxc.Engines.EngineBase.Render
+  name: Render()
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Render
+  commentId: M:ToSic.Sxc.Engines.EngineBase.Render
+  fullName: ToSic.Sxc.Engines.EngineBase.Render()
+  nameWithType: EngineBase.Render()
+- uid: ToSic.Sxc.Engines.EngineBase.Render*
+  name: Render
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Render_
+  commentId: Overload:ToSic.Sxc.Engines.EngineBase.Render
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.EngineBase.Render
+  nameWithType: EngineBase.Render
 - uid: ToSic.Sxc.Engines.IEngine
   name: IEngine
   href: api/ToSic.Sxc.Engines.IEngine.html
@@ -4495,6 +4569,19 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.IEngine.CustomizeData
   nameWithType: IEngine.CustomizeData
+- uid: ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.IInstanceInfo,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
+  name: Init(IView, IApp, IInstanceInfo, IDataSource, Purpose, ICmsBlock, ILog)
+  href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Init_ToSic_Sxc_Blocks_IView_ToSic_Sxc_Apps_IApp_ToSic_Eav_Apps_IInstanceInfo_ToSic_Eav_DataSources_IDataSource_ToSic_Sxc_Blocks_Purpose_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Eav_Logging_ILog_
+  commentId: M:ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.IInstanceInfo,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
+  fullName: ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView, ToSic.Sxc.Apps.IApp, ToSic.Eav.Apps.IInstanceInfo, ToSic.Eav.DataSources.IDataSource, ToSic.Sxc.Blocks.Purpose, ToSic.Sxc.Blocks.ICmsBlock, ToSic.Eav.Logging.ILog)
+  nameWithType: IEngine.Init(IView, IApp, IInstanceInfo, IDataSource, Purpose, ICmsBlock, ILog)
+- uid: ToSic.Sxc.Engines.IEngine.Init*
+  name: Init
+  href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Init_
+  commentId: Overload:ToSic.Sxc.Engines.IEngine.Init
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.IEngine.Init
+  nameWithType: IEngine.Init
 - uid: ToSic.Sxc.Engines.IEngine.Render
   name: Render()
   href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Render
@@ -4508,6 +4595,187 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.IEngine.Render
   nameWithType: IEngine.Render
+- uid: ToSic.Sxc.Engines.Token
+  name: ToSic.Sxc.Engines.Token
+  href: api/ToSic.Sxc.Engines.Token.html
+  commentId: N:ToSic.Sxc.Engines.Token
+  fullName: ToSic.Sxc.Engines.Token
+  nameWithType: ToSic.Sxc.Engines.Token
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity
+  name: LookUpInDynamicEntity
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html
+  commentId: T:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity
+  nameWithType: LookUpInDynamicEntity
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.Get(System.String)
+  name: Get(String)
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_Get_System_String_
+  commentId: M:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.Get(System.String)
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.Get(System.String)
+  nameWithType: LookUpInDynamicEntity.Get(String)
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.Get*
+  name: Get
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_Get_
+  commentId: Overload:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.Get
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.Get
+  nameWithType: LookUpInDynamicEntity.Get
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.GetProperty(System.String,System.String,System.Globalization.CultureInfo,System.Boolean@)
+  name: GetProperty(String, String, CultureInfo, ref Boolean)
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_GetProperty_System_String_System_String_System_Globalization_CultureInfo_System_Boolean__
+  commentId: M:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.GetProperty(System.String,System.String,System.Globalization.CultureInfo,System.Boolean@)
+  name.vb: GetProperty(String, String, CultureInfo, ByRef Boolean)
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.GetProperty(System.String, System.String, System.Globalization.CultureInfo, ref System.Boolean)
+  fullName.vb: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.GetProperty(System.String, System.String, System.Globalization.CultureInfo, ByRef System.Boolean)
+  nameWithType: LookUpInDynamicEntity.GetProperty(String, String, CultureInfo, ref Boolean)
+  nameWithType.vb: LookUpInDynamicEntity.GetProperty(String, String, CultureInfo, ByRef Boolean)
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.GetProperty*
+  name: GetProperty
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_GetProperty_
+  commentId: Overload:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.GetProperty
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.GetProperty
+  nameWithType: LookUpInDynamicEntity.GetProperty
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyAlternator2
+  name: KeyAlternator2
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_KeyAlternator2
+  commentId: F:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyAlternator2
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyAlternator2
+  nameWithType: LookUpInDynamicEntity.KeyAlternator2
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyAlternator3
+  name: KeyAlternator3
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_KeyAlternator3
+  commentId: F:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyAlternator3
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyAlternator3
+  nameWithType: LookUpInDynamicEntity.KeyAlternator3
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyAlternator4
+  name: KeyAlternator4
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_KeyAlternator4
+  commentId: F:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyAlternator4
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyAlternator4
+  nameWithType: LookUpInDynamicEntity.KeyAlternator4
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyAlternator5
+  name: KeyAlternator5
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_KeyAlternator5
+  commentId: F:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyAlternator5
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyAlternator5
+  nameWithType: LookUpInDynamicEntity.KeyAlternator5
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyCount
+  name: KeyCount
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_KeyCount
+  commentId: F:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyCount
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyCount
+  nameWithType: LookUpInDynamicEntity.KeyCount
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyIndex
+  name: KeyIndex
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_KeyIndex
+  commentId: F:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyIndex
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyIndex
+  nameWithType: LookUpInDynamicEntity.KeyIndex
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyIndex1
+  name: KeyIndex1
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_KeyIndex1
+  commentId: F:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyIndex1
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyIndex1
+  nameWithType: LookUpInDynamicEntity.KeyIndex1
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyIsFirst
+  name: KeyIsFirst
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_KeyIsFirst
+  commentId: F:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyIsFirst
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyIsFirst
+  nameWithType: LookUpInDynamicEntity.KeyIsFirst
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyIsLast
+  name: KeyIsLast
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_KeyIsLast
+  commentId: F:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyIsLast
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.KeyIsLast
+  nameWithType: LookUpInDynamicEntity.KeyIsLast
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.Name
+  name: Name
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_Name
+  commentId: P:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.Name
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.Name
+  nameWithType: LookUpInDynamicEntity.Name
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.Name*
+  name: Name
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_Name_
+  commentId: Overload:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.Name
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.Name
+  nameWithType: LookUpInDynamicEntity.Name
+- uid: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.TokenRepeater
+  name: TokenRepeater
+  href: api/ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.html#ToSic_Sxc_Engines_Token_LookUpInDynamicEntity_TokenRepeater
+  commentId: F:ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.TokenRepeater
+  fullName: ToSic.Sxc.Engines.Token.LookUpInDynamicEntity.TokenRepeater
+  nameWithType: LookUpInDynamicEntity.TokenRepeater
+- uid: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection
+  name: LookUpInNameValueCollection
+  href: api/ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.html
+  commentId: T:ToSic.Sxc.Engines.Token.LookUpInNameValueCollection
+  fullName: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection
+  nameWithType: LookUpInNameValueCollection
+- uid: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.#ctor(System.String,System.Collections.Specialized.NameValueCollection)
+  name: LookUpInNameValueCollection(String, NameValueCollection)
+  href: api/ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.html#ToSic_Sxc_Engines_Token_LookUpInNameValueCollection__ctor_System_String_System_Collections_Specialized_NameValueCollection_
+  commentId: M:ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.#ctor(System.String,System.Collections.Specialized.NameValueCollection)
+  fullName: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.LookUpInNameValueCollection(System.String, System.Collections.Specialized.NameValueCollection)
+  nameWithType: LookUpInNameValueCollection.LookUpInNameValueCollection(String, NameValueCollection)
+- uid: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.#ctor*
+  name: LookUpInNameValueCollection
+  href: api/ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.html#ToSic_Sxc_Engines_Token_LookUpInNameValueCollection__ctor_
+  commentId: Overload:ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.#ctor
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.LookUpInNameValueCollection
+  nameWithType: LookUpInNameValueCollection.LookUpInNameValueCollection
+- uid: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Get(System.String,System.String,System.Boolean@)
+  name: Get(String, String, ref Boolean)
+  href: api/ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.html#ToSic_Sxc_Engines_Token_LookUpInNameValueCollection_Get_System_String_System_String_System_Boolean__
+  commentId: M:ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Get(System.String,System.String,System.Boolean@)
+  name.vb: Get(String, String, ByRef Boolean)
+  fullName: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Get(System.String, System.String, ref System.Boolean)
+  fullName.vb: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Get(System.String, System.String, ByRef System.Boolean)
+  nameWithType: LookUpInNameValueCollection.Get(String, String, ref Boolean)
+  nameWithType.vb: LookUpInNameValueCollection.Get(String, String, ByRef Boolean)
+- uid: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Get*
+  name: Get
+  href: api/ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.html#ToSic_Sxc_Engines_Token_LookUpInNameValueCollection_Get_
+  commentId: Overload:ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Get
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Get
+  nameWithType: LookUpInNameValueCollection.Get
+- uid: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Has(System.String)
+  name: Has(String)
+  href: api/ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.html#ToSic_Sxc_Engines_Token_LookUpInNameValueCollection_Has_System_String_
+  commentId: M:ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Has(System.String)
+  fullName: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Has(System.String)
+  nameWithType: LookUpInNameValueCollection.Has(String)
+- uid: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Has*
+  name: Has
+  href: api/ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.html#ToSic_Sxc_Engines_Token_LookUpInNameValueCollection_Has_
+  commentId: Overload:ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Has
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.Token.LookUpInNameValueCollection.Has
+  nameWithType: LookUpInNameValueCollection.Has
+- uid: ToSic.Sxc.Engines.Token.TokenEngine
+  name: TokenEngine
+  href: api/ToSic.Sxc.Engines.Token.TokenEngine.html
+  commentId: T:ToSic.Sxc.Engines.Token.TokenEngine
+  fullName: ToSic.Sxc.Engines.Token.TokenEngine
+  nameWithType: TokenEngine
+- uid: ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate
+  name: RenderTemplate()
+  href: api/ToSic.Sxc.Engines.Token.TokenEngine.html#ToSic_Sxc_Engines_Token_TokenEngine_RenderTemplate
+  commentId: M:ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate
+  fullName: ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate()
+  nameWithType: TokenEngine.RenderTemplate()
+- uid: ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate*
+  name: RenderTemplate
+  href: api/ToSic.Sxc.Engines.Token.TokenEngine.html#ToSic_Sxc_Engines_Token_TokenEngine_RenderTemplate_
+  commentId: Overload:ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate
+  nameWithType: TokenEngine.RenderTemplate
 - uid: ToSic.Sxc.Web
   name: ToSic.Sxc.Web
   href: api/ToSic.Sxc.Web.html

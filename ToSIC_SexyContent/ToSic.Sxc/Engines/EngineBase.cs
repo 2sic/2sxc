@@ -7,6 +7,7 @@ using System.Web.Hosting;
 using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent;
@@ -18,49 +19,54 @@ using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.Sxc.Engines
 {
+    /// <summary>
+    /// The foundation for engines - must be inherited by other engines
+    /// </summary>
+    [PublicApi]
     public abstract class EngineBase : HasLog, IEngine
     {
-        protected IView Template;
-        protected string TemplatePath;
-        protected IApp App;
-        protected IInstanceInfo InstInfo;
-        protected IDataSource DataSource;
-        protected Purpose Purpose;
-        protected ICmsBlock Sexy;
+        [PrivateApi] protected IView Template;
+        [PrivateApi] protected string TemplatePath;
+        [PrivateApi] protected IApp App;
+        [PrivateApi] protected IInstanceInfo InstInfo;
+        [PrivateApi] protected IDataSource DataSource;
+        [PrivateApi] protected Purpose Purpose;
+        [PrivateApi] protected ICmsBlock Sexy;
 
+        [PrivateApi]
         public RenderStatusType PreRenderStatus { get; internal set; }
 
-        //protected ILog Log { get; set; }
-
+        /// <summary>
+        /// Empty constructor, so it can be used in dependency injection
+        /// </summary>
         protected EngineBase() : base("Sxc.EngBas")
         { }
 
-        public void Init(IView template, IApp app, IInstanceInfo hostingModule, IDataSource dataSource, Purpose purpose,
-            /*SxcInstance*/ICmsBlock cmsInstance, ILog parentLog)
+        /// <inheritdoc />
+        public void Init(IView view, IApp app, IInstanceInfo envInstance, IDataSource dataSource, Purpose purpose, ICmsBlock cmsBlock, ILog parentLog)
         {
-            var templatePath = VirtualPathUtility.Combine(SexyContent.Internal.TemplateHelpers.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
+            var templatePath = VirtualPathUtility.Combine(SexyContent.Internal.TemplateHelpers.GetTemplatePathRoot(view.Location, app) + "/", view.Path);
 
             Log.LinkTo(parentLog);
-            //Log = new Log("Htm.RendEn", parentLog);
 
             // Throw Exception if Template does not exist
             if (!File.Exists(HostingEnvironment.MapPath(templatePath)))
                 // todo: change to some kind of "rendering exception"
                 throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
 
-            Template = template;
+            Template = view;
             TemplatePath = templatePath;
             App = app;
-            InstInfo = hostingModule;
+            InstInfo = envInstance;
             DataSource = dataSource;
             Purpose = purpose;
-            Sexy = cmsInstance;
+            Sexy = cmsBlock;
 
             // check common errors
             CheckExpectedTemplateErrors();
 
             // check access permissions - before initializing or running data-code in the template
-            CheckTemplatePermissions(cmsInstance.Block.Tenant);
+            CheckTemplatePermissions(cmsBlock.Block.Tenant);
 
             // Run engine-internal init stuff
             Init();
@@ -75,22 +81,22 @@ namespace ToSic.Sxc.Engines
                 PreRenderStatus = RenderStatusType.Ok;
         }
 
+        [PrivateApi]
         protected abstract string RenderTemplate();
 
+        [PrivateApi]
         protected virtual void Init() {}
 
+        /// <inheritdoc />
         public virtual void CustomizeData() {}
 
+        /// <inheritdoc />
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, IInstanceInfo moduleInfo,
             DateTime beginDate)
         {
         }
 
         /// <inheritdoc />
-        /// <summary>
-        /// Renders the given elements with Razor or TokenReplace and returns the string representation.
-        /// </summary>
-        /// <returns></returns>
         public string Render()
         {
             if (PreRenderStatus != RenderStatusType.Ok)
@@ -113,6 +119,7 @@ namespace ToSic.Sxc.Engines
 
         }
 
+        [PrivateApi]
         internal string AlternateRendering;
 
         private void CheckExpectedNoRenderConditions()
@@ -127,6 +134,7 @@ namespace ToSic.Sxc.Engines
         }
 
         // todo: refactor - this should go somewhere, I just don't know where :)
+        [PrivateApi]
         internal static string ToolbarForEmptyTemplate
         {
             get

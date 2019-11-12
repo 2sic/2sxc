@@ -83,7 +83,6 @@
     <Compile Include="Adam\Metadata.cs" />
     <Compile Include="Adam\Obsolete\AdamFile.cs" />
     <Compile Include="Apps\AppConfiguration.cs" />
-    <Compile Include="Apps\Blocks\BlockConfiguration_Extract.cs" />
     <Compile Include="Apps\CmsManager.cs" />
     <Compile Include="Apps\CmsRuntime.cs" />
     <Compile Include="Apps\CmsZones.cs" />
@@ -175,10 +174,9 @@
     <Compile Include="Interfaces\Internal\IEnvironmentLookUps.cs" />
     <Compile Include="Engines\Token\TokenEngine.cs" />
     <Compile Include="Engines\Token\TokenReplaceEAV.cs" />
-    <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.IAppAndDataHelpers.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
     <Compile Include="SexyContent\Internal\AppHelpers.cs" />
-    <Compile Include="SexyContent\Internal\AppManagement.cs" />
     <Compile Include="Interfaces\Internal\IMapAppToInstance.cs" />
     <Compile Include="SexyContent\Internal\TemplateHelpers.cs" />
     <Compile Include="Blocks\ICmsBlock.cs" />
@@ -231,7 +229,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="InterfacesCore\" />
-    <Folder Include="SexyContent\Engines\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

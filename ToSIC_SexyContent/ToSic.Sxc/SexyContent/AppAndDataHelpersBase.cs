@@ -24,10 +24,10 @@ namespace ToSic.SexyContent
 {
     public abstract class AppAndDataHelpersBase : HasLog, IDynamicCode
     {
-        protected readonly /*SxcInstance*/ICmsBlock CmsInstance;
+        protected readonly ICmsBlock CmsInstance;
 
         private readonly ITenant _tenant;
-        protected AppAndDataHelpersBase(/*SxcInstance*/ICmsBlock cmsInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsInstance?.Log)
+        protected AppAndDataHelpersBase(ICmsBlock cmsInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsInstance?.Log)
         {
             if (cmsInstance == null)
                 return;
