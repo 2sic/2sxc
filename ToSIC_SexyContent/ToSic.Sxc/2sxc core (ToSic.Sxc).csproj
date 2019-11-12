@@ -134,7 +134,7 @@
     <Compile Include="Interfaces\ISharedCodeBuilder.cs" />
     <Compile Include="Interfaces\IWebFactoryTemp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Search\ISearchInfo.cs" />
+    <Compile Include="Compatibility\ISearchInfo.cs" />
     <Compile Include="Apps\App.cs" />
     <Compile Include="SexyContent\AppAndDataHelpersBase.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
@@ -229,6 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="InterfacesCore\" />
+    <Folder Include="Search\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
