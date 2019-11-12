@@ -4,12 +4,20 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Engines.Token
 {
-	internal class LookUpInDynamicEntity : ILookUp
+    /// <summary>
+    /// LookUp for creating token based templates. In addition to retrieving values, it also resolves special tokens like
+    /// - index
+    /// - isfirst
+    /// - etc.
+    /// </summary>
+    [PublicApi]
+    internal class LookUpInDynamicEntity : ILookUp
 	{
         public const string RepeaterSubToken = "Repeater";
 
