@@ -15,12 +15,12 @@ namespace ToSic.SexyContent.DataSources
         /// <summary>
         /// The class constructor, can optionally take a dictionary to reference with, otherwise creates a new one
         /// </summary>
-        public SxcInstanceLookUp(string name, Dictionary<string, string> valueList, /*SxcInstance*/ICmsBlock cms): base(name, valueList)
+        public SxcInstanceLookUp(string name, Dictionary<string, string> valueList, ICmsBlock cms): base(name, valueList)
         {
             CmsInstance = cms;
         }
 
-        public /*SxcInstance*/ICmsBlock CmsInstance;
+        public ICmsBlock CmsInstance;
 
 
     }

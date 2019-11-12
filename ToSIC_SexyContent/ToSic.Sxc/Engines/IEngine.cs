@@ -4,10 +4,8 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Blocks;
-using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Engines
@@ -26,8 +24,14 @@ namespace ToSic.Sxc.Engines
         /// This is not in the constructor, because IEngines usually get constructed with DI,
         /// so the constructor is off-limits. 
         /// </summary>
-        [PrivateApi]
-        void Init(IView template, IApp app, IInstanceInfo hostingModule, IDataSource dataSource, Purpose purpose, /*SxcInstance*/ICmsBlock cmsInstance, ILog parentLog);
+        /// <param name="view">The view configuration</param>
+        /// <param name="app">App this engine will render</param>
+        /// <param name="envInstance">Information about the instance in the environment (DNN)</param>
+        /// <param name="dataSource">Data source to be used for this engine</param>
+        /// <param name="purpose">Purpose of the engine (show in web, search-index, etc.)</param>
+        /// <param name="cmsBlock">The block within the cms</param>
+        /// <param name="parentLog">Log to chain with</param>
+        void Init(IView view, IApp app, IInstanceInfo envInstance, IDataSource dataSource, Purpose purpose, ICmsBlock cmsBlock, ILog parentLog);
 
         /// <summary>
         /// Renders a template, returning a string with the rendered template.

@@ -20,10 +20,14 @@ namespace ToSic.Sxc.Engines.Token
     /// </summary>
     [PublicApi]
     [EngineDefinition(Name = "Token")]
-    internal class TokenEngine : EngineBase
+    public class TokenEngine : EngineBase
     {
         #region Replacement List to still support old Tokens
         // Version 6 to 7
+        /// <summary>
+        /// Token translation table - to auto-convert tokens as they were written
+        /// pre v7 to be treated as they should in the new convention
+        /// </summary>
         private readonly string[,] _upgrade6To7 = {
             {"[Presentation:", "[Content:Presentation:"},           // replaces all old direct references to presentation
             {"[ListPresentation:", "[ListContent:Presentation:"},   // Replaces all old references to ListPresentation
@@ -72,7 +76,7 @@ namespace ToSic.Sxc.Engines.Token
 
         private TokenReplaceEav _tokenReplace;
 
-
+        [PrivateApi]
         protected override void Init()
         {
             base.Init();
@@ -102,7 +106,7 @@ namespace ToSic.Sxc.Engines.Token
         }
 
 
-
+        /// <inheritdoc />
         protected override string RenderTemplate()
         {
             var templateSource = File.ReadAllText(HostingEnvironment.MapPath(TemplatePath));
@@ -196,7 +200,7 @@ namespace ToSic.Sxc.Engines.Token
         }
 
         // Find all indexes of a string in a source string
-        public static List<int> FindAllIndexesOfString(string source, string value)
+        private static List<int> FindAllIndexesOfString(string source, string value)
         {
             var indexes = new List<int>();
             for (var index = 0; ; index += value.Length)

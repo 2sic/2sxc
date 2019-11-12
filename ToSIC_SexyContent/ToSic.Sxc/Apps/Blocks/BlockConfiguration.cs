@@ -9,7 +9,7 @@ using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.Sxc.Apps.Blocks
 {
-    public partial class BlockConfiguration: HasLog
+    public class BlockConfiguration: HasLog
     {
         internal IEntity Entity;
         internal readonly int ZoneId;

@@ -1,9 +1,14 @@
 ﻿using System;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Engines.Token
 {
+    /// <summary>
+    /// Look up things in app-settings, app-resources etc.
+    /// </summary>
+    [PublicApi]
     internal class LookUpInAppProperty : LookUpBase
     {
         private readonly IApp _app;
@@ -15,9 +20,8 @@ namespace ToSic.Sxc.Engines.Token
         {
             get
             {
-                if(_settings == null)
-                    if (_app.Settings != null)
-                        _settings = new LookUpInDynamicEntity("appsettings", _app.Settings);
+                if(_settings == null && _app.Settings != null) 
+                    _settings = new LookUpInDynamicEntity("appsettings", _app.Settings);
                 return _settings;
 
             }
@@ -28,9 +32,8 @@ namespace ToSic.Sxc.Engines.Token
         {
             get
             {
-                if(_resources == null)
-                    if (_app.Resources != null)
-                        _resources = new LookUpInDynamicEntity("appresources", _app.Resources);
+                if(_resources == null && _app.Resources != null) 
+                    _resources = new LookUpInDynamicEntity("appresources", _app.Resources);
                 return _resources;
 
             }
@@ -48,6 +51,7 @@ namespace ToSic.Sxc.Engines.Token
 			_app = app;
         }
 
+        /// <inheritdoc/>
         public override string Get(string key, string strFormat, ref bool notFound)
         {
             key = key.ToLower();
@@ -75,18 +79,8 @@ namespace ToSic.Sxc.Engines.Token
             return string.Empty;
         }
 
-        ///// <summary>
-        ///// Shorthand version, will return the string value or a null if not found. 
-        ///// </summary>
-        ///// <param name="key"></param>
-        ///// <returns></returns>
-        //public virtual string Get(string key)
-        //{
-        //    var temp = false;
-        //    return Get(key, "", ref temp);
-        //}
 
-
+        [PrivateApi]
         public override bool Has(string key)
         {
             throw new NotImplementedException();
