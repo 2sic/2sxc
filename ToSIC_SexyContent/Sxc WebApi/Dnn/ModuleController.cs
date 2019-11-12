@@ -18,7 +18,6 @@ namespace ToSic.SexyContent.WebApi.Dnn
         }
 
         [HttpGet]
-        // 2016-12-09 testing - had to disable this because the additional security brock in dnn9
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 		public bool Delete(int tabId, int modId)
 		{

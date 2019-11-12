@@ -90,7 +90,13 @@ namespace ToSic.SexyContent.WebApi.View
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<AppUiInfo> GetSelectableApps() // => /*CmsRuntime.Blocks.get*/ BlockEditor.GetSelectableApps();
-         => new CmsZones(App.ZoneId, Env, Log).AppsRt.GetSelectableApps(new DnnTenant(PortalSettings.Current)); // BlockConfig.GetSelectableApps();
+        {
+            // we must get the zone-id from the environment,
+            // since the app may not yet exist when inserted the first time
+            var tenant = new DnnTenant(PortalSettings.Current);
+            var tenantZoneId = Env.ZoneMapper.GetZoneId(tenant);
+            return new CmsZones(tenantZoneId, Env, Log).AppsRt.GetSelectableApps(tenant);
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
