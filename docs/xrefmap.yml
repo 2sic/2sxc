@@ -4428,15 +4428,15 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Dnn.IRazor.CustomizeData
   nameWithType: IRazor.CustomizeData
-- uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.SexyContent.Search.ISearchInfo}},DotNetNuke.Entities.Modules.ModuleInfo,System.DateTime)
-  name: CustomizeSearch(Dictionary<String, List<ISearchInfo>>, ModuleInfo, DateTime)
-  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_SexyContent_Search_ISearchInfo___DotNetNuke_Entities_Modules_ModuleInfo_System_DateTime_
-  commentId: M:ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.SexyContent.Search.ISearchInfo}},DotNetNuke.Entities.Modules.ModuleInfo,System.DateTime)
-  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchInfo)), ModuleInfo, DateTime)
-  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.SexyContent.Search.ISearchInfo>>, DotNetNuke.Entities.Modules.ModuleInfo, System.DateTime)
-  fullName.vb: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.SexyContent.Search.ISearchInfo)), DotNetNuke.Entities.Modules.ModuleInfo, System.DateTime)
-  nameWithType: IRazor.CustomizeSearch(Dictionary<String, List<ISearchInfo>>, ModuleInfo, DateTime)
-  nameWithType.vb: IRazor.CustomizeSearch(Dictionary(Of String, List(Of ISearchInfo)), ModuleInfo, DateTime)
+- uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},DotNetNuke.Entities.Modules.ModuleInfo,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, ModuleInfo, DateTime)
+  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___DotNetNuke_Entities_Modules_ModuleInfo_System_DateTime_
+  commentId: M:ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},DotNetNuke.Entities.Modules.ModuleInfo,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ModuleInfo, DateTime)
+  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, DotNetNuke.Entities.Modules.ModuleInfo, System.DateTime)
+  fullName.vb: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), DotNetNuke.Entities.Modules.ModuleInfo, System.DateTime)
+  nameWithType: IRazor.CustomizeSearch(Dictionary<String, List<ISearchItem>>, ModuleInfo, DateTime)
+  nameWithType.vb: IRazor.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ModuleInfo, DateTime)
 - uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch*
   name: CustomizeSearch
   href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_
@@ -4508,15 +4508,15 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.EngineBase.CustomizeData
   nameWithType: EngineBase.CustomizeData
-- uid: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.SexyContent.Search.ISearchInfo}},ToSic.Eav.Apps.IInstanceInfo,System.DateTime)
-  name: CustomizeSearch(Dictionary<String, List<ISearchInfo>>, IInstanceInfo, DateTime)
-  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_SexyContent_Search_ISearchInfo___ToSic_Eav_Apps_IInstanceInfo_System_DateTime_
-  commentId: M:ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.SexyContent.Search.ISearchInfo}},ToSic.Eav.Apps.IInstanceInfo,System.DateTime)
-  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchInfo)), IInstanceInfo, DateTime)
-  fullName: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.SexyContent.Search.ISearchInfo>>, ToSic.Eav.Apps.IInstanceInfo, System.DateTime)
-  fullName.vb: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.SexyContent.Search.ISearchInfo)), ToSic.Eav.Apps.IInstanceInfo, System.DateTime)
-  nameWithType: EngineBase.CustomizeSearch(Dictionary<String, List<ISearchInfo>>, IInstanceInfo, DateTime)
-  nameWithType.vb: EngineBase.CustomizeSearch(Dictionary(Of String, List(Of ISearchInfo)), IInstanceInfo, DateTime)
+- uid: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.IInstanceInfo,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, IInstanceInfo, DateTime)
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Apps_IInstanceInfo_System_DateTime_
+  commentId: M:ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.IInstanceInfo,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IInstanceInfo, DateTime)
+  fullName: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Apps.IInstanceInfo, System.DateTime)
+  fullName.vb: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Apps.IInstanceInfo, System.DateTime)
+  nameWithType: EngineBase.CustomizeSearch(Dictionary<String, List<ISearchItem>>, IInstanceInfo, DateTime)
+  nameWithType.vb: EngineBase.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IInstanceInfo, DateTime)
 - uid: ToSic.Sxc.Engines.EngineBase.CustomizeSearch*
   name: CustomizeSearch
   href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeSearch_
@@ -4595,6 +4595,60 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.IEngine.Render
   nameWithType: IEngine.Render
+- uid: ToSic.Sxc.Engines.Razor
+  name: ToSic.Sxc.Engines.Razor
+  href: api/ToSic.Sxc.Engines.Razor.html
+  commentId: N:ToSic.Sxc.Engines.Razor
+  fullName: ToSic.Sxc.Engines.Razor
+  nameWithType: ToSic.Sxc.Engines.Razor
+- uid: ToSic.Sxc.Engines.Razor.RazorEngine
+  name: RazorEngine
+  href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html
+  commentId: T:ToSic.Sxc.Engines.Razor.RazorEngine
+  fullName: ToSic.Sxc.Engines.Razor.RazorEngine
+  nameWithType: RazorEngine
+- uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData
+  name: CustomizeData()
+  href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeData
+  commentId: M:ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData
+  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData()
+  nameWithType: RazorEngine.CustomizeData()
+- uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData*
+  name: CustomizeData
+  href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeData_
+  commentId: Overload:ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData
+  nameWithType: RazorEngine.CustomizeData
+- uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.IInstanceInfo,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, IInstanceInfo, DateTime)
+  href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Apps_IInstanceInfo_System_DateTime_
+  commentId: M:ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.IInstanceInfo,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IInstanceInfo, DateTime)
+  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Apps.IInstanceInfo, System.DateTime)
+  fullName.vb: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Apps.IInstanceInfo, System.DateTime)
+  nameWithType: RazorEngine.CustomizeSearch(Dictionary<String, List<ISearchItem>>, IInstanceInfo, DateTime)
+  nameWithType.vb: RazorEngine.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IInstanceInfo, DateTime)
+- uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch*
+  name: CustomizeSearch
+  href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeSearch_
+  commentId: Overload:ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch
+  nameWithType: RazorEngine.CustomizeSearch
+- uid: ToSic.Sxc.Engines.Razor.RazorEngine.RenderTemplate
+  name: RenderTemplate()
+  href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_RenderTemplate
+  commentId: M:ToSic.Sxc.Engines.Razor.RazorEngine.RenderTemplate
+  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.RenderTemplate()
+  nameWithType: RazorEngine.RenderTemplate()
+- uid: ToSic.Sxc.Engines.Razor.RazorEngine.RenderTemplate*
+  name: RenderTemplate
+  href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_RenderTemplate_
+  commentId: Overload:ToSic.Sxc.Engines.Razor.RazorEngine.RenderTemplate
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.RenderTemplate
+  nameWithType: RazorEngine.RenderTemplate
 - uid: ToSic.Sxc.Engines.Token
   name: ToSic.Sxc.Engines.Token
   href: api/ToSic.Sxc.Engines.Token.html
@@ -4776,6 +4830,167 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate
   nameWithType: TokenEngine.RenderTemplate
+- uid: ToSic.Sxc.Search
+  name: ToSic.Sxc.Search
+  href: api/ToSic.Sxc.Search.html
+  commentId: N:ToSic.Sxc.Search
+  fullName: ToSic.Sxc.Search
+  nameWithType: ToSic.Sxc.Search
+- uid: ToSic.Sxc.Search.ISearchItem
+  name: ISearchItem
+  href: api/ToSic.Sxc.Search.ISearchItem.html
+  commentId: T:ToSic.Sxc.Search.ISearchItem
+  fullName: ToSic.Sxc.Search.ISearchItem
+  nameWithType: ISearchItem
+- uid: ToSic.Sxc.Search.ISearchItem.Body
+  name: Body
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_Body
+  commentId: P:ToSic.Sxc.Search.ISearchItem.Body
+  fullName: ToSic.Sxc.Search.ISearchItem.Body
+  nameWithType: ISearchItem.Body
+- uid: ToSic.Sxc.Search.ISearchItem.Body*
+  name: Body
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_Body_
+  commentId: Overload:ToSic.Sxc.Search.ISearchItem.Body
+  isSpec: "True"
+  fullName: ToSic.Sxc.Search.ISearchItem.Body
+  nameWithType: ISearchItem.Body
+- uid: ToSic.Sxc.Search.ISearchItem.CultureCode
+  name: CultureCode
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_CultureCode
+  commentId: P:ToSic.Sxc.Search.ISearchItem.CultureCode
+  fullName: ToSic.Sxc.Search.ISearchItem.CultureCode
+  nameWithType: ISearchItem.CultureCode
+- uid: ToSic.Sxc.Search.ISearchItem.CultureCode*
+  name: CultureCode
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_CultureCode_
+  commentId: Overload:ToSic.Sxc.Search.ISearchItem.CultureCode
+  isSpec: "True"
+  fullName: ToSic.Sxc.Search.ISearchItem.CultureCode
+  nameWithType: ISearchItem.CultureCode
+- uid: ToSic.Sxc.Search.ISearchItem.Description
+  name: Description
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_Description
+  commentId: P:ToSic.Sxc.Search.ISearchItem.Description
+  fullName: ToSic.Sxc.Search.ISearchItem.Description
+  nameWithType: ISearchItem.Description
+- uid: ToSic.Sxc.Search.ISearchItem.Description*
+  name: Description
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_Description_
+  commentId: Overload:ToSic.Sxc.Search.ISearchItem.Description
+  isSpec: "True"
+  fullName: ToSic.Sxc.Search.ISearchItem.Description
+  nameWithType: ISearchItem.Description
+- uid: ToSic.Sxc.Search.ISearchItem.Entity
+  name: Entity
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_Entity
+  commentId: P:ToSic.Sxc.Search.ISearchItem.Entity
+  fullName: ToSic.Sxc.Search.ISearchItem.Entity
+  nameWithType: ISearchItem.Entity
+- uid: ToSic.Sxc.Search.ISearchItem.Entity*
+  name: Entity
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_Entity_
+  commentId: Overload:ToSic.Sxc.Search.ISearchItem.Entity
+  isSpec: "True"
+  fullName: ToSic.Sxc.Search.ISearchItem.Entity
+  nameWithType: ISearchItem.Entity
+- uid: ToSic.Sxc.Search.ISearchItem.IsActive
+  name: IsActive
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_IsActive
+  commentId: P:ToSic.Sxc.Search.ISearchItem.IsActive
+  fullName: ToSic.Sxc.Search.ISearchItem.IsActive
+  nameWithType: ISearchItem.IsActive
+- uid: ToSic.Sxc.Search.ISearchItem.IsActive*
+  name: IsActive
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_IsActive_
+  commentId: Overload:ToSic.Sxc.Search.ISearchItem.IsActive
+  isSpec: "True"
+  fullName: ToSic.Sxc.Search.ISearchItem.IsActive
+  nameWithType: ISearchItem.IsActive
+- uid: ToSic.Sxc.Search.ISearchItem.ModifiedTimeUtc
+  name: ModifiedTimeUtc
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_ModifiedTimeUtc
+  commentId: P:ToSic.Sxc.Search.ISearchItem.ModifiedTimeUtc
+  fullName: ToSic.Sxc.Search.ISearchItem.ModifiedTimeUtc
+  nameWithType: ISearchItem.ModifiedTimeUtc
+- uid: ToSic.Sxc.Search.ISearchItem.ModifiedTimeUtc*
+  name: ModifiedTimeUtc
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_ModifiedTimeUtc_
+  commentId: Overload:ToSic.Sxc.Search.ISearchItem.ModifiedTimeUtc
+  isSpec: "True"
+  fullName: ToSic.Sxc.Search.ISearchItem.ModifiedTimeUtc
+  nameWithType: ISearchItem.ModifiedTimeUtc
+- uid: ToSic.Sxc.Search.ISearchItem.QueryString
+  name: QueryString
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_QueryString
+  commentId: P:ToSic.Sxc.Search.ISearchItem.QueryString
+  fullName: ToSic.Sxc.Search.ISearchItem.QueryString
+  nameWithType: ISearchItem.QueryString
+- uid: ToSic.Sxc.Search.ISearchItem.QueryString*
+  name: QueryString
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_QueryString_
+  commentId: Overload:ToSic.Sxc.Search.ISearchItem.QueryString
+  isSpec: "True"
+  fullName: ToSic.Sxc.Search.ISearchItem.QueryString
+  nameWithType: ISearchItem.QueryString
+- uid: ToSic.Sxc.Search.ISearchItem.Title
+  name: Title
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_Title
+  commentId: P:ToSic.Sxc.Search.ISearchItem.Title
+  fullName: ToSic.Sxc.Search.ISearchItem.Title
+  nameWithType: ISearchItem.Title
+- uid: ToSic.Sxc.Search.ISearchItem.Title*
+  name: Title
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_Title_
+  commentId: Overload:ToSic.Sxc.Search.ISearchItem.Title
+  isSpec: "True"
+  fullName: ToSic.Sxc.Search.ISearchItem.Title
+  nameWithType: ISearchItem.Title
+- uid: ToSic.Sxc.Search.ISearchItem.UniqueKey
+  name: UniqueKey
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_UniqueKey
+  commentId: P:ToSic.Sxc.Search.ISearchItem.UniqueKey
+  fullName: ToSic.Sxc.Search.ISearchItem.UniqueKey
+  nameWithType: ISearchItem.UniqueKey
+- uid: ToSic.Sxc.Search.ISearchItem.UniqueKey*
+  name: UniqueKey
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_UniqueKey_
+  commentId: Overload:ToSic.Sxc.Search.ISearchItem.UniqueKey
+  isSpec: "True"
+  fullName: ToSic.Sxc.Search.ISearchItem.UniqueKey
+  nameWithType: ISearchItem.UniqueKey
+- uid: ToSic.Sxc.Search.ISearchItem.Url
+  name: Url
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_Url
+  commentId: P:ToSic.Sxc.Search.ISearchItem.Url
+  fullName: ToSic.Sxc.Search.ISearchItem.Url
+  nameWithType: ISearchItem.Url
+- uid: ToSic.Sxc.Search.ISearchItem.Url*
+  name: Url
+  href: api/ToSic.Sxc.Search.ISearchItem.html#ToSic_Sxc_Search_ISearchItem_Url_
+  commentId: Overload:ToSic.Sxc.Search.ISearchItem.Url
+  isSpec: "True"
+  fullName: ToSic.Sxc.Search.ISearchItem.Url
+  nameWithType: ISearchItem.Url
+- uid: ToSic.Sxc.Search.SearchItem
+  name: SearchItem
+  href: api/ToSic.Sxc.Search.SearchItem.html
+  commentId: T:ToSic.Sxc.Search.SearchItem
+  fullName: ToSic.Sxc.Search.SearchItem
+  nameWithType: SearchItem
+- uid: ToSic.Sxc.Search.SearchItem.Entity
+  name: Entity
+  href: api/ToSic.Sxc.Search.SearchItem.html#ToSic_Sxc_Search_SearchItem_Entity
+  commentId: P:ToSic.Sxc.Search.SearchItem.Entity
+  fullName: ToSic.Sxc.Search.SearchItem.Entity
+  nameWithType: SearchItem.Entity
+- uid: ToSic.Sxc.Search.SearchItem.Entity*
+  name: Entity
+  href: api/ToSic.Sxc.Search.SearchItem.html#ToSic_Sxc_Search_SearchItem_Entity_
+  commentId: Overload:ToSic.Sxc.Search.SearchItem.Entity
+  isSpec: "True"
+  fullName: ToSic.Sxc.Search.SearchItem.Entity
+  nameWithType: SearchItem.Entity
 - uid: ToSic.Sxc.Web
   name: ToSic.Sxc.Web
   href: api/ToSic.Sxc.Web.html

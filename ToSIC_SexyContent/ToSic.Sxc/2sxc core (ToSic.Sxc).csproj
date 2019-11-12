@@ -109,6 +109,7 @@
     <Compile Include="Blocks\Views\View_Constants.cs" />
     <Compile Include="Engines\EngineDefinitionAttribute.cs" />
     <Compile Include="Blocks\Views\View.cs" />
+    <Compile Include="Search\ISearchItem.cs" />
     <Compile Include="Web\IDynamicCode.cs" />
     <Compile Include="Web\IInPageEditingSystem.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
@@ -134,7 +135,7 @@
     <Compile Include="Interfaces\ISharedCodeBuilder.cs" />
     <Compile Include="Interfaces\IWebFactoryTemp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Search\ISearchInfo.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.Search.ISearchInfo.cs" />
     <Compile Include="Apps\App.cs" />
     <Compile Include="SexyContent\AppAndDataHelpersBase.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />

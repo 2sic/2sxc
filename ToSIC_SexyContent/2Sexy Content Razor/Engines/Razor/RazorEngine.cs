@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Compilation;
@@ -10,19 +11,27 @@ using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Documentation;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Engines.Razor
 {
+    /// <summary>
+    /// The razor engine, which compiles / runs engine templates
+    /// </summary>
+    [PublicApi]
     [EngineDefinition(Name = "Razor")]
     public class RazorEngine : EngineBase
     {
-
+        [PrivateApi]
         protected SexyContentWebPage Webpage { get; set; }
 
+        /// <inheritdoc />
+        [PrivateApi]
         protected override void Init()
         {
             try
@@ -37,9 +46,11 @@ namespace ToSic.Sxc.Engines.Razor
             }
         }
 
+        [PrivateApi]
         protected HttpContextBase HttpContext 
             => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
 
+        [PrivateApi("not sure if this is actually sued anywhere?")]
         public Type RequestedModelType()
         {
             if (Webpage != null)
@@ -51,7 +62,7 @@ namespace ToSic.Sxc.Engines.Razor
             return null;
         }
 
-
+        [PrivateApi]
         public void Render(TextWriter writer)
         {
             Log.Add("will render into textwriter");
@@ -81,10 +92,7 @@ namespace ToSic.Sxc.Engines.Razor
                     throw new Exception(IEntityErrorMessage, maybeIEntityCast);
         }
 
-        /// <summary>
-        /// Renders the template
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         protected override string RenderTemplate()
         {
             Log.Add("will render razor template");
@@ -144,10 +152,21 @@ namespace ToSic.Sxc.Engines.Razor
             InitHelpers(Webpage);
         }
 
+        /// <inheritdoc />
         public override void CustomizeData() 
             => Webpage?.CustomizeData();
 
-        public override void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, IInstanceInfo moduleInfo, DateTime beginDate) 
-            => Webpage?.CustomizeSearch(searchInfos, ((EnvironmentInstance<ModuleInfo>)moduleInfo).Original, beginDate);
+        /// <inheritdoc />
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IInstanceInfo moduleInfo, DateTime beginDate)
+        {
+            if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
+
+            // call new signature
+            Webpage.CustomizeSearch(searchInfos, moduleInfo, beginDate);
+
+            // also call old signature
+            var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());
+            Webpage.CustomizeSearch(oldSignature, ((EnvironmentInstance<ModuleInfo>) moduleInfo).Original, beginDate);
+        }
     }
 }
