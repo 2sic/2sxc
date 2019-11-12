@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -15,7 +16,7 @@ namespace ToSic.SexyContent
     /// it would be hard to get anything done .
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
-    public partial class CmsInstance : HasLog, ICmsBlock
+    public partial class CmsInstance : HasLog, Sxc.Blocks.ICmsBlock
     {
         #region App-level information
 
@@ -43,7 +44,7 @@ namespace ToSic.SexyContent
 
         public IEnvironmentFactory EnvFac { get; }
 
-        public IInstanceInfo EnvInstance { get; }
+        public IContainer EnvInstance { get; }
 
         public IBlock Block { get; }
 
@@ -62,7 +63,7 @@ namespace ToSic.SexyContent
 
         #region Constructor
         internal CmsInstance(IBlock  cb, 
-            IInstanceInfo envInstance, 
+            IContainer envInstance, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
             ILog parentLog = null)
             : base("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")

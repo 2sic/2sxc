@@ -13,6 +13,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.Environment;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
@@ -30,10 +31,10 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
         /// Get search info for each dnn module containing 2sxc data
         /// </summary>
         /// <returns></returns>
-        public IList<SearchDocument> GetModifiedSearchDocuments(IInstanceInfo instance, DateTime beginDate)
+        public IList<SearchDocument> GetModifiedSearchDocuments(IContainer instance, DateTime beginDate)
         {
             var searchDocuments = new List<SearchDocument>();
-            var dnnModule = (instance as EnvironmentInstance<ModuleInfo>)?.Original;
+            var dnnModule = (instance as Container<ModuleInfo>)?.Original;
             // always log with method, to ensure errors are cought
             Log.Add($"start search for mod#{dnnModule?.ModuleID}");
 

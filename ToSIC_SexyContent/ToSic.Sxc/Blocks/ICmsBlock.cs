@@ -2,6 +2,7 @@
 using System.Web;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -49,7 +50,7 @@ namespace ToSic.Sxc.Blocks
 
         // todo: better name, this is kind of the module we're in or something
         [PrivateApi]
-        IInstanceInfo EnvInstance { get; }
+        IContainer EnvInstance { get; }
 
         [PrivateApi]
         IEnumerable<KeyValuePair<string, string>> Parameters { get; }

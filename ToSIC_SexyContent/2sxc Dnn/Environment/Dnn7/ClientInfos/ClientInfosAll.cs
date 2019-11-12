@@ -1,9 +1,8 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
-using ToSic.Eav.Apps;
+using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Edit.ClientContextInfo;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.ClientContextInfo;
 
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -21,7 +20,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public Ui Ui;
 
-        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IInstanceInfo mic, ICmsBlock cms, UserInfo uinfo, int zoneId, bool isCreated, bool autoToolbar, ILog parentLog)
+        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IContainer mic, Sxc.Blocks.ICmsBlock cms, UserInfo uinfo, int zoneId, bool isCreated, bool autoToolbar, ILog parentLog)
             : base("Sxc.CliInf", parentLog, "building entire client-context")
         {
             var versioning = cms.Environment.PagePublishing;

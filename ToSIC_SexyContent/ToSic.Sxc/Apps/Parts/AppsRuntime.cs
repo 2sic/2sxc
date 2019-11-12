@@ -3,6 +3,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.SxcTemp;
 
@@ -17,9 +18,8 @@ namespace ToSic.Sxc.Apps
         public IEnumerable<AppUiInfo> GetSelectableApps(ITenant tenant)
         {
             Log.Add("get selectable apps");
-            // var zoneId = CmsContext.Environment.ZoneMapper.GetZoneId(CmsContext.Block.Tenant.Id);
             return
-                GetApps(tenant,false /*CmsContext.Block.Tenant, Log*/)
+                GetApps(tenant,false)
                     .Where(a => !a.Hidden)
                     .Select(a => new AppUiInfo
                     {
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Apps
         /// <returns></returns>
         public List<IApp> GetApps(ITenant tenant, bool includeDefaultApp)
         {
-            var appIds = new ZoneRuntime(ZoneRuntime.ZoneId, /*CmsRuntime.*/ Log).Apps;
+            var appIds = new ZoneRuntime(ZoneRuntime.ZoneId, Log).Apps;
             var builtApps = appIds.Select(eavApp => GetApp.LightWithoutData(tenant, ZoneRuntime.ZoneId, eavApp.Key, parentLog: Log));
 
             if (!includeDefaultApp)

@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
@@ -10,8 +11,8 @@ namespace ToSic.Sxc.Interfaces
 {
     internal interface IMapAppToInstance
     {
-        int? GetAppIdFromInstance(IInstanceInfo instance, int zoneId);
-        void SetAppIdForInstance(IInstanceInfo instance, IAppEnvironment env, int? appId, ILog parentLog);
+        int? GetAppIdFromInstance(IContainer instance, int zoneId);
+        void SetAppIdForInstance(IContainer instance, IAppEnvironment env, int? appId, ILog parentLog);
 
 
         void ClearPreviewTemplate(int instanceId);
@@ -22,6 +23,6 @@ namespace ToSic.Sxc.Interfaces
 
         BlockConfiguration GetInstanceContentGroup(BlocksRuntime cgm, ILog log, int instanceId, int? pageId);
 
-        void UpdateTitle(ICmsBlock cmsInstance, IEntity titleItem);
+        void UpdateTitle(Blocks.ICmsBlock cmsInstance, IEntity titleItem);
     }
 }

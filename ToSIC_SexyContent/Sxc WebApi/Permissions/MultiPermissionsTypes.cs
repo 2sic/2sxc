@@ -2,10 +2,9 @@
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.Sxc.Blocks;
+using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
 namespace ToSic.SexyContent.WebApi.Permissions
 {

@@ -9,9 +9,8 @@ using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Environment;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor;
@@ -124,8 +123,8 @@ namespace ToSic.Sxc.Engines.Razor
             // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
             // reactivate if it turns out to be used, otherwise delete ca. EOY 2019
             //webPage.Url = new UrlHelper(InstInfo);
-            webPage.Sexy = Sexy;
-            webPage.DnnAppAndDataHelpers = new DnnAppAndDataHelpers(Sexy);
+            webPage.Sexy = CmsBlock;
+            webPage.DnnAppAndDataHelpers = new DnnAppAndDataHelpers(CmsBlock);
 
         }
 
@@ -157,7 +156,7 @@ namespace ToSic.Sxc.Engines.Razor
             => Webpage?.CustomizeData();
 
         /// <inheritdoc />
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IInstanceInfo moduleInfo, DateTime beginDate)
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate)
         {
             if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
 
@@ -166,7 +165,7 @@ namespace ToSic.Sxc.Engines.Razor
 
             // also call old signature
             var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());
-            Webpage.CustomizeSearch(oldSignature, ((EnvironmentInstance<ModuleInfo>) moduleInfo).Original, beginDate);
+            Webpage.CustomizeSearch(oldSignature, ((Container<ModuleInfo>) moduleInfo).Original, beginDate);
         }
     }
 }

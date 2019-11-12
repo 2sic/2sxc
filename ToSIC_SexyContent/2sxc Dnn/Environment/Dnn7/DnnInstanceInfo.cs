@@ -1,9 +1,9 @@
 ﻿using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Environment;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    public class DnnInstanceInfo: EnvironmentInstance<ModuleInfo>
+    public class DnnInstanceInfo: Container<ModuleInfo>
     {
         public DnnInstanceInfo(ModuleInfo item) : base(item)
         {

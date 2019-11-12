@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Blocks;
@@ -32,7 +33,7 @@ namespace ToSic.Sxc.Engines
         /// <param name="purpose">Purpose of the engine (show in web, search-index, etc.)</param>
         /// <param name="cmsBlock">The block within the cms</param>
         /// <param name="parentLog">Log to chain with</param>
-        void Init(IView view, IApp app, IInstanceInfo envInstance, IDataSource dataSource, Purpose purpose, ICmsBlock cmsBlock, ILog parentLog);
+        void Init(IView view, IApp app, IContainer envInstance, IDataSource dataSource, Purpose purpose, Blocks.ICmsBlock cmsBlock, ILog parentLog);
 
         /// <summary>
         /// Renders a template, returning a string with the rendered template.
@@ -54,7 +55,7 @@ namespace ToSic.Sxc.Engines
         /// <param name="moduleInfo"></param>
         /// <param name="beginDate"></param>
         [PrivateApi]
-        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IInstanceInfo moduleInfo, DateTime beginDate);
+        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate);
 
         /// <summary>
         /// todo

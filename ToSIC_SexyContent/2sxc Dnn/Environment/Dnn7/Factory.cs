@@ -2,6 +2,7 @@
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Environment;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Blocks;
@@ -18,24 +19,24 @@ namespace ToSic.SexyContent.Environment.Dnn7
     /// </summary>
     public static class Factory
     {
-        public static ICmsBlock SxcInstanceForModule(int modId, int tabId)
+        public static Sxc.Blocks.ICmsBlock SxcInstanceForModule(int modId, int tabId)
         {
             var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
             var instance = new DnnInstanceInfo(moduleInfo);
             return SxcInstanceForModule(instance);
         }
 
-        public static ICmsBlock SxcInstanceForModule(ModuleInfo moduleInfo)
+        public static Sxc.Blocks.ICmsBlock SxcInstanceForModule(ModuleInfo moduleInfo)
             => SxcInstanceForModule(new DnnInstanceInfo(moduleInfo));
 
-        public static ICmsBlock SxcInstanceForModule(IInstanceInfo moduleInfo)
+        public static Sxc.Blocks.ICmsBlock SxcInstanceForModule(IContainer moduleInfo)
         {
-            var dnnModule = ((EnvironmentInstance<ModuleInfo>) moduleInfo).Original;
+            var dnnModule = ((Container<ModuleInfo>) moduleInfo).Original;
             var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
             return new BlockFromModule(moduleInfo, parentLog: null, tenant: tenant).CmsInstance;
         }
 
-        public static IDynamicCode CodingHelpers(ICmsBlock cms) 
+        public static IDynamicCode CodingHelpers(Sxc.Blocks.ICmsBlock cms) 
             => new DnnAppAndDataHelpers(cms as CmsInstance);
 
         /// <summary>

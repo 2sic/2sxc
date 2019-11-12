@@ -4,22 +4,18 @@ using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Environment;
 using ToSic.Eav.LookUp;
-
-using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Search;
-using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
-using ToSic.Sxc.Engines;
 using ToSic.Sxc.Engines.Razor;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
@@ -44,7 +40,7 @@ namespace ToSic.SexyContent.Razor
 
         // <2sic>
         [PrivateApi]
-        protected internal /*SxcInstance*/ICmsBlock Sexy { get; set; }
+        protected internal /*SxcInstance*/Sxc.Blocks.ICmsBlock Sexy { get; set; }
         [PrivateApi]
         protected internal DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
         // </2sic>
@@ -197,7 +193,7 @@ namespace ToSic.SexyContent.Razor
         }
 
         /// <inheritdoc />
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IInstanceInfo moduleInfo,
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
             DateTime beginDate)
         {
         }

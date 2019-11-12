@@ -40,12 +40,12 @@ namespace ToSic.SexyContent
         }
 
         private readonly string[] _dimensions;
-        internal /*SxcInstance*/ ICmsBlock CmsInstance { get; }   // must be internal for further use cases
+        internal ICmsBlock CmsInstance { get; }   // must be internal for further use cases
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
-        public DynamicEntity(IEntity entityModel, string[] dimensions, /*SxcInstance*/ ICmsBlock sexy)
+        public DynamicEntity(IEntity entityModel, string[] dimensions, ICmsBlock sexy)
         {
             Entity = entityModel;
             _dimensions = dimensions;

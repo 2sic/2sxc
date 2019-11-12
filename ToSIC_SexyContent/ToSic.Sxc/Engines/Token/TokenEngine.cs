@@ -86,12 +86,12 @@ namespace ToSic.Sxc.Engines.Token
 
         private void InitDataHelper()
         {
-            _dataHelper = Factory.Resolve<IWebFactoryTemp>().AppAndDataHelpers(Sexy) ;
+            _dataHelper = Factory.Resolve<IWebFactoryTemp>().AppAndDataHelpers(CmsBlock) ;
         }
 
         private void InitTokenReplace()
         {
-            var confProv = ConfigurationProvider.GetConfigProviderForModule(InstInfo.Id, Sexy.App, Sexy);
+            var confProv = ConfigurationProvider.GetConfigProviderForModule(InstInfo.Id, CmsBlock.App, CmsBlock);
             _tokenReplace = new TokenReplaceEav(InstInfo.Id, confProv);
             
             // Add the Content and ListContent property sources used always

@@ -4,6 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Serializers;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Interfaces;
 using IDynamicEntity = ToSic.Sxc.Data.IDynamicEntity;
 

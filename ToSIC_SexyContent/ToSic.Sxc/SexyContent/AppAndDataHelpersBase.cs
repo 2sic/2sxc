@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
@@ -16,6 +16,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
+using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 

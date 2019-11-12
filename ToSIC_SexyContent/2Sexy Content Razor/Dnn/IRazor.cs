@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
-using ToSic.SexyContent.Search;
+using ToSic.Eav.Environment;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Engines;
 using ToSic.Sxc.Search;
 
 // ReSharper disable UnusedMemberInSuper.Global
@@ -37,7 +35,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="searchInfos"></param>
         /// <param name="moduleInfo"></param>
         /// <param name="beginDate"></param>
-        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IInstanceInfo moduleInfo,
+        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
             DateTime beginDate);
 
         Purpose Purpose { get; }

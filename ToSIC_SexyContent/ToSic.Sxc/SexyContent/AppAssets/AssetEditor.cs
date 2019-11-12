@@ -7,7 +7,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 
 
-// todo: move to Sxc.Apps
+// todo: move to Sxc.Adam
 namespace ToSic.SexyContent.AppAssets
 {
     internal class AssetEditor: HasLog

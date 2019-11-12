@@ -4,6 +4,6 @@ namespace ToSic.SexyContent.Interfaces
 {
     public interface IWebFactoryTemp
     {
-        AppAndDataHelpersBase AppAndDataHelpers(/*SxcInstance*/ICmsBlock cms);
+        AppAndDataHelpersBase AppAndDataHelpers(ICmsBlock cms);
     }
 }

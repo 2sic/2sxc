@@ -11,6 +11,8 @@ using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Data;
+using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.DataSources
@@ -25,7 +27,7 @@ namespace ToSic.SexyContent.DataSources
     {
         public override string LogId => "DS.Module";
 
-        private /*SxcInstance*/ICmsBlock _cmsContext;
+        private ICmsBlock _cmsContext;
 
         public enum Settings
         {

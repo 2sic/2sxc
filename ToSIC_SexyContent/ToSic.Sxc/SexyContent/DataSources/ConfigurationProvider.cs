@@ -5,10 +5,10 @@ using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines.Token;
 using ToSic.Sxc.Interfaces;
 using IApp = ToSic.Sxc.Apps.IApp;
+using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
 namespace ToSic.SexyContent.DataSources
 {
@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.DataSources
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
         /// </summary>
-        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(/*SxcInstance*/ ICmsBlock cmsInstance, bool useExistingConfig)
+        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(ICmsBlock cmsInstance, bool useExistingConfig)
         {
             return appToUse =>
             {
