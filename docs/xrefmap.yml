@@ -180,207 +180,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Apps.Assets.IFolder.HasChildren
   nameWithType: IFolder.HasChildren
-- uid: ToSic.Eav.Apps.Blocks
-  name: ToSic.Eav.Apps.Blocks
-  href: api/ToSic.Eav.Apps.Blocks.html
-  commentId: N:ToSic.Eav.Apps.Blocks
-  fullName: ToSic.Eav.Apps.Blocks
-  nameWithType: ToSic.Eav.Apps.Blocks
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1
-  name: CmsBlock<T>
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html
-  commentId: T:ToSic.Eav.Apps.Blocks.CmsBlock`1
-  name.vb: CmsBlock(Of T)
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T)
-  nameWithType: CmsBlock<T>
-  nameWithType.vb: CmsBlock(Of T)
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.#ctor(`0)
-  name: CmsBlock(T)
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1__ctor__0_
-  commentId: M:ToSic.Eav.Apps.Blocks.CmsBlock`1.#ctor(`0)
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.CmsBlock(T)
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).CmsBlock(T)
-  nameWithType: CmsBlock<T>.CmsBlock(T)
-  nameWithType.vb: CmsBlock(Of T).CmsBlock(T)
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.#ctor*
-  name: CmsBlock
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1__ctor_
-  commentId: Overload:ToSic.Eav.Apps.Blocks.CmsBlock`1.#ctor
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.CmsBlock
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).CmsBlock
-  nameWithType: CmsBlock<T>.CmsBlock
-  nameWithType.vb: CmsBlock(Of T).CmsBlock
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.Id
-  name: Id
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_Id
-  commentId: P:ToSic.Eav.Apps.Blocks.CmsBlock`1.Id
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.Id
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).Id
-  nameWithType: CmsBlock<T>.Id
-  nameWithType.vb: CmsBlock(Of T).Id
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.Id*
-  name: Id
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_Id_
-  commentId: Overload:ToSic.Eav.Apps.Blocks.CmsBlock`1.Id
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.Id
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).Id
-  nameWithType: CmsBlock<T>.Id
-  nameWithType.vb: CmsBlock(Of T).Id
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.IsPrimary
-  name: IsPrimary
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_IsPrimary
-  commentId: P:ToSic.Eav.Apps.Blocks.CmsBlock`1.IsPrimary
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.IsPrimary
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).IsPrimary
-  nameWithType: CmsBlock<T>.IsPrimary
-  nameWithType.vb: CmsBlock(Of T).IsPrimary
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.IsPrimary*
-  name: IsPrimary
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_IsPrimary_
-  commentId: Overload:ToSic.Eav.Apps.Blocks.CmsBlock`1.IsPrimary
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.IsPrimary
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).IsPrimary
-  nameWithType: CmsBlock<T>.IsPrimary
-  nameWithType.vb: CmsBlock(Of T).IsPrimary
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.Original
-  name: Original
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_Original
-  commentId: P:ToSic.Eav.Apps.Blocks.CmsBlock`1.Original
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.Original
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).Original
-  nameWithType: CmsBlock<T>.Original
-  nameWithType.vb: CmsBlock(Of T).Original
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.Original*
-  name: Original
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_Original_
-  commentId: Overload:ToSic.Eav.Apps.Blocks.CmsBlock`1.Original
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.Original
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).Original
-  nameWithType: CmsBlock<T>.Original
-  nameWithType.vb: CmsBlock(Of T).Original
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.PageId
-  name: PageId
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_PageId
-  commentId: P:ToSic.Eav.Apps.Blocks.CmsBlock`1.PageId
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.PageId
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).PageId
-  nameWithType: CmsBlock<T>.PageId
-  nameWithType.vb: CmsBlock(Of T).PageId
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.PageId*
-  name: PageId
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_PageId_
-  commentId: Overload:ToSic.Eav.Apps.Blocks.CmsBlock`1.PageId
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.PageId
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).PageId
-  nameWithType: CmsBlock<T>.PageId
-  nameWithType.vb: CmsBlock(Of T).PageId
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.TenantId
-  name: TenantId
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_TenantId
-  commentId: P:ToSic.Eav.Apps.Blocks.CmsBlock`1.TenantId
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.TenantId
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).TenantId
-  nameWithType: CmsBlock<T>.TenantId
-  nameWithType.vb: CmsBlock(Of T).TenantId
-- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.TenantId*
-  name: TenantId
-  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_TenantId_
-  commentId: Overload:ToSic.Eav.Apps.Blocks.CmsBlock`1.TenantId
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.TenantId
-  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).TenantId
-  nameWithType: CmsBlock<T>.TenantId
-  nameWithType.vb: CmsBlock(Of T).TenantId
-- uid: ToSic.Eav.Apps.Blocks.ICmsBlock
-  name: ICmsBlock
-  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html
-  commentId: T:ToSic.Eav.Apps.Blocks.ICmsBlock
-  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock
-  nameWithType: ICmsBlock
-- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.Id
-  name: Id
-  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_Id
-  commentId: P:ToSic.Eav.Apps.Blocks.ICmsBlock.Id
-  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.Id
-  nameWithType: ICmsBlock.Id
-- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.Id*
-  name: Id
-  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_Id_
-  commentId: Overload:ToSic.Eav.Apps.Blocks.ICmsBlock.Id
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.Id
-  nameWithType: ICmsBlock.Id
-- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.IsPrimary
-  name: IsPrimary
-  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_IsPrimary
-  commentId: P:ToSic.Eav.Apps.Blocks.ICmsBlock.IsPrimary
-  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.IsPrimary
-  nameWithType: ICmsBlock.IsPrimary
-- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.IsPrimary*
-  name: IsPrimary
-  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_IsPrimary_
-  commentId: Overload:ToSic.Eav.Apps.Blocks.ICmsBlock.IsPrimary
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.IsPrimary
-  nameWithType: ICmsBlock.IsPrimary
-- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.PageId
-  name: PageId
-  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_PageId
-  commentId: P:ToSic.Eav.Apps.Blocks.ICmsBlock.PageId
-  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.PageId
-  nameWithType: ICmsBlock.PageId
-- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.PageId*
-  name: PageId
-  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_PageId_
-  commentId: Overload:ToSic.Eav.Apps.Blocks.ICmsBlock.PageId
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.PageId
-  nameWithType: ICmsBlock.PageId
-- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.TenantId
-  name: TenantId
-  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_TenantId
-  commentId: P:ToSic.Eav.Apps.Blocks.ICmsBlock.TenantId
-  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.TenantId
-  nameWithType: ICmsBlock.TenantId
-- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.TenantId*
-  name: TenantId
-  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_TenantId_
-  commentId: Overload:ToSic.Eav.Apps.Blocks.ICmsBlock.TenantId
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.TenantId
-  nameWithType: ICmsBlock.TenantId
-- uid: ToSic.Eav.Apps.Blocks.ICmsBlock`1
-  name: ICmsBlock<T>
-  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock-1.html
-  commentId: T:ToSic.Eav.Apps.Blocks.ICmsBlock`1
-  name.vb: ICmsBlock(Of T)
-  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock<T>
-  fullName.vb: ToSic.Eav.Apps.Blocks.ICmsBlock(Of T)
-  nameWithType: ICmsBlock<T>
-  nameWithType.vb: ICmsBlock(Of T)
-- uid: ToSic.Eav.Apps.Blocks.ICmsBlock`1.Original
-  name: Original
-  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock-1.html#ToSic_Eav_Apps_Blocks_ICmsBlock_1_Original
-  commentId: P:ToSic.Eav.Apps.Blocks.ICmsBlock`1.Original
-  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock<T>.Original
-  fullName.vb: ToSic.Eav.Apps.Blocks.ICmsBlock(Of T).Original
-  nameWithType: ICmsBlock<T>.Original
-  nameWithType.vb: ICmsBlock(Of T).Original
-- uid: ToSic.Eav.Apps.Blocks.ICmsBlock`1.Original*
-  name: Original
-  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock-1.html#ToSic_Eav_Apps_Blocks_ICmsBlock_1_Original_
-  commentId: Overload:ToSic.Eav.Apps.Blocks.ICmsBlock`1.Original
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock<T>.Original
-  fullName.vb: ToSic.Eav.Apps.Blocks.ICmsBlock(Of T).Original
-  nameWithType: ICmsBlock<T>.Original
-  nameWithType.vb: ICmsBlock(Of T).Original
 - uid: ToSic.Eav.Apps.IApp
   name: IApp
   href: api/ToSic.Eav.Apps.IApp.html
@@ -615,51 +414,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Apps.IAppIdentity.AppId
   nameWithType: IAppIdentity.AppId
-- uid: ToSic.Eav.Apps.ITenant
-  name: ITenant
-  href: api/ToSic.Eav.Apps.ITenant.html
-  commentId: T:ToSic.Eav.Apps.ITenant
-  fullName: ToSic.Eav.Apps.ITenant
-  nameWithType: ITenant
-- uid: ToSic.Eav.Apps.ITenant.DefaultLanguage
-  name: DefaultLanguage
-  href: api/ToSic.Eav.Apps.ITenant.html#ToSic_Eav_Apps_ITenant_DefaultLanguage
-  commentId: P:ToSic.Eav.Apps.ITenant.DefaultLanguage
-  fullName: ToSic.Eav.Apps.ITenant.DefaultLanguage
-  nameWithType: ITenant.DefaultLanguage
-- uid: ToSic.Eav.Apps.ITenant.DefaultLanguage*
-  name: DefaultLanguage
-  href: api/ToSic.Eav.Apps.ITenant.html#ToSic_Eav_Apps_ITenant_DefaultLanguage_
-  commentId: Overload:ToSic.Eav.Apps.ITenant.DefaultLanguage
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.ITenant.DefaultLanguage
-  nameWithType: ITenant.DefaultLanguage
-- uid: ToSic.Eav.Apps.ITenant.Id
-  name: Id
-  href: api/ToSic.Eav.Apps.ITenant.html#ToSic_Eav_Apps_ITenant_Id
-  commentId: P:ToSic.Eav.Apps.ITenant.Id
-  fullName: ToSic.Eav.Apps.ITenant.Id
-  nameWithType: ITenant.Id
-- uid: ToSic.Eav.Apps.ITenant.Id*
-  name: Id
-  href: api/ToSic.Eav.Apps.ITenant.html#ToSic_Eav_Apps_ITenant_Id_
-  commentId: Overload:ToSic.Eav.Apps.ITenant.Id
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.ITenant.Id
-  nameWithType: ITenant.Id
-- uid: ToSic.Eav.Apps.ITenant.Name
-  name: Name
-  href: api/ToSic.Eav.Apps.ITenant.html#ToSic_Eav_Apps_ITenant_Name
-  commentId: P:ToSic.Eav.Apps.ITenant.Name
-  fullName: ToSic.Eav.Apps.ITenant.Name
-  nameWithType: ITenant.Name
-- uid: ToSic.Eav.Apps.ITenant.Name*
-  name: Name
-  href: api/ToSic.Eav.Apps.ITenant.html#ToSic_Eav_Apps_ITenant_Name_
-  commentId: Overload:ToSic.Eav.Apps.ITenant.Name
-  isSpec: "True"
-  fullName: ToSic.Eav.Apps.ITenant.Name
-  nameWithType: ITenant.Name
 - uid: ToSic.Eav.Apps.IZoneIdentity
   name: IZoneIdentity
   href: api/ToSic.Eav.Apps.IZoneIdentity.html
@@ -3036,6 +2790,346 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type
   nameWithType: VisualQueryAttribute.Type
+- uid: ToSic.Eav.Environment
+  name: ToSic.Eav.Environment
+  href: api/ToSic.Eav.Environment.html
+  commentId: N:ToSic.Eav.Environment
+  fullName: ToSic.Eav.Environment
+  nameWithType: ToSic.Eav.Environment
+- uid: ToSic.Eav.Environment.Container`1
+  name: Container<T>
+  href: api/ToSic.Eav.Environment.Container-1.html
+  commentId: T:ToSic.Eav.Environment.Container`1
+  name.vb: Container(Of T)
+  fullName: ToSic.Eav.Environment.Container<T>
+  fullName.vb: ToSic.Eav.Environment.Container(Of T)
+  nameWithType: Container<T>
+  nameWithType.vb: Container(Of T)
+- uid: ToSic.Eav.Environment.Container`1.#ctor(`0)
+  name: Container(T)
+  href: api/ToSic.Eav.Environment.Container-1.html#ToSic_Eav_Environment_Container_1__ctor__0_
+  commentId: M:ToSic.Eav.Environment.Container`1.#ctor(`0)
+  fullName: ToSic.Eav.Environment.Container<T>.Container(T)
+  fullName.vb: ToSic.Eav.Environment.Container(Of T).Container(T)
+  nameWithType: Container<T>.Container(T)
+  nameWithType.vb: Container(Of T).Container(T)
+- uid: ToSic.Eav.Environment.Container`1.#ctor*
+  name: Container
+  href: api/ToSic.Eav.Environment.Container-1.html#ToSic_Eav_Environment_Container_1__ctor_
+  commentId: Overload:ToSic.Eav.Environment.Container`1.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.Container<T>.Container
+  fullName.vb: ToSic.Eav.Environment.Container(Of T).Container
+  nameWithType: Container<T>.Container
+  nameWithType.vb: Container(Of T).Container
+- uid: ToSic.Eav.Environment.Container`1.Id
+  name: Id
+  href: api/ToSic.Eav.Environment.Container-1.html#ToSic_Eav_Environment_Container_1_Id
+  commentId: P:ToSic.Eav.Environment.Container`1.Id
+  fullName: ToSic.Eav.Environment.Container<T>.Id
+  fullName.vb: ToSic.Eav.Environment.Container(Of T).Id
+  nameWithType: Container<T>.Id
+  nameWithType.vb: Container(Of T).Id
+- uid: ToSic.Eav.Environment.Container`1.Id*
+  name: Id
+  href: api/ToSic.Eav.Environment.Container-1.html#ToSic_Eav_Environment_Container_1_Id_
+  commentId: Overload:ToSic.Eav.Environment.Container`1.Id
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.Container<T>.Id
+  fullName.vb: ToSic.Eav.Environment.Container(Of T).Id
+  nameWithType: Container<T>.Id
+  nameWithType.vb: Container(Of T).Id
+- uid: ToSic.Eav.Environment.Container`1.IsPrimary
+  name: IsPrimary
+  href: api/ToSic.Eav.Environment.Container-1.html#ToSic_Eav_Environment_Container_1_IsPrimary
+  commentId: P:ToSic.Eav.Environment.Container`1.IsPrimary
+  fullName: ToSic.Eav.Environment.Container<T>.IsPrimary
+  fullName.vb: ToSic.Eav.Environment.Container(Of T).IsPrimary
+  nameWithType: Container<T>.IsPrimary
+  nameWithType.vb: Container(Of T).IsPrimary
+- uid: ToSic.Eav.Environment.Container`1.IsPrimary*
+  name: IsPrimary
+  href: api/ToSic.Eav.Environment.Container-1.html#ToSic_Eav_Environment_Container_1_IsPrimary_
+  commentId: Overload:ToSic.Eav.Environment.Container`1.IsPrimary
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.Container<T>.IsPrimary
+  fullName.vb: ToSic.Eav.Environment.Container(Of T).IsPrimary
+  nameWithType: Container<T>.IsPrimary
+  nameWithType.vb: Container(Of T).IsPrimary
+- uid: ToSic.Eav.Environment.Container`1.Original
+  name: Original
+  href: api/ToSic.Eav.Environment.Container-1.html#ToSic_Eav_Environment_Container_1_Original
+  commentId: P:ToSic.Eav.Environment.Container`1.Original
+  fullName: ToSic.Eav.Environment.Container<T>.Original
+  fullName.vb: ToSic.Eav.Environment.Container(Of T).Original
+  nameWithType: Container<T>.Original
+  nameWithType.vb: Container(Of T).Original
+- uid: ToSic.Eav.Environment.Container`1.Original*
+  name: Original
+  href: api/ToSic.Eav.Environment.Container-1.html#ToSic_Eav_Environment_Container_1_Original_
+  commentId: Overload:ToSic.Eav.Environment.Container`1.Original
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.Container<T>.Original
+  fullName.vb: ToSic.Eav.Environment.Container(Of T).Original
+  nameWithType: Container<T>.Original
+  nameWithType.vb: Container(Of T).Original
+- uid: ToSic.Eav.Environment.Container`1.PageId
+  name: PageId
+  href: api/ToSic.Eav.Environment.Container-1.html#ToSic_Eav_Environment_Container_1_PageId
+  commentId: P:ToSic.Eav.Environment.Container`1.PageId
+  fullName: ToSic.Eav.Environment.Container<T>.PageId
+  fullName.vb: ToSic.Eav.Environment.Container(Of T).PageId
+  nameWithType: Container<T>.PageId
+  nameWithType.vb: Container(Of T).PageId
+- uid: ToSic.Eav.Environment.Container`1.PageId*
+  name: PageId
+  href: api/ToSic.Eav.Environment.Container-1.html#ToSic_Eav_Environment_Container_1_PageId_
+  commentId: Overload:ToSic.Eav.Environment.Container`1.PageId
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.Container<T>.PageId
+  fullName.vb: ToSic.Eav.Environment.Container(Of T).PageId
+  nameWithType: Container<T>.PageId
+  nameWithType.vb: Container(Of T).PageId
+- uid: ToSic.Eav.Environment.Container`1.TenantId
+  name: TenantId
+  href: api/ToSic.Eav.Environment.Container-1.html#ToSic_Eav_Environment_Container_1_TenantId
+  commentId: P:ToSic.Eav.Environment.Container`1.TenantId
+  fullName: ToSic.Eav.Environment.Container<T>.TenantId
+  fullName.vb: ToSic.Eav.Environment.Container(Of T).TenantId
+  nameWithType: Container<T>.TenantId
+  nameWithType.vb: Container(Of T).TenantId
+- uid: ToSic.Eav.Environment.Container`1.TenantId*
+  name: TenantId
+  href: api/ToSic.Eav.Environment.Container-1.html#ToSic_Eav_Environment_Container_1_TenantId_
+  commentId: Overload:ToSic.Eav.Environment.Container`1.TenantId
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.Container<T>.TenantId
+  fullName.vb: ToSic.Eav.Environment.Container(Of T).TenantId
+  nameWithType: Container<T>.TenantId
+  nameWithType.vb: Container(Of T).TenantId
+- uid: ToSic.Eav.Environment.IContainer
+  name: IContainer
+  href: api/ToSic.Eav.Environment.IContainer.html
+  commentId: T:ToSic.Eav.Environment.IContainer
+  fullName: ToSic.Eav.Environment.IContainer
+  nameWithType: IContainer
+- uid: ToSic.Eav.Environment.IContainer.Id
+  name: Id
+  href: api/ToSic.Eav.Environment.IContainer.html#ToSic_Eav_Environment_IContainer_Id
+  commentId: P:ToSic.Eav.Environment.IContainer.Id
+  fullName: ToSic.Eav.Environment.IContainer.Id
+  nameWithType: IContainer.Id
+- uid: ToSic.Eav.Environment.IContainer.Id*
+  name: Id
+  href: api/ToSic.Eav.Environment.IContainer.html#ToSic_Eav_Environment_IContainer_Id_
+  commentId: Overload:ToSic.Eav.Environment.IContainer.Id
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.IContainer.Id
+  nameWithType: IContainer.Id
+- uid: ToSic.Eav.Environment.IContainer.IsPrimary
+  name: IsPrimary
+  href: api/ToSic.Eav.Environment.IContainer.html#ToSic_Eav_Environment_IContainer_IsPrimary
+  commentId: P:ToSic.Eav.Environment.IContainer.IsPrimary
+  fullName: ToSic.Eav.Environment.IContainer.IsPrimary
+  nameWithType: IContainer.IsPrimary
+- uid: ToSic.Eav.Environment.IContainer.IsPrimary*
+  name: IsPrimary
+  href: api/ToSic.Eav.Environment.IContainer.html#ToSic_Eav_Environment_IContainer_IsPrimary_
+  commentId: Overload:ToSic.Eav.Environment.IContainer.IsPrimary
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.IContainer.IsPrimary
+  nameWithType: IContainer.IsPrimary
+- uid: ToSic.Eav.Environment.IContainer.PageId
+  name: PageId
+  href: api/ToSic.Eav.Environment.IContainer.html#ToSic_Eav_Environment_IContainer_PageId
+  commentId: P:ToSic.Eav.Environment.IContainer.PageId
+  fullName: ToSic.Eav.Environment.IContainer.PageId
+  nameWithType: IContainer.PageId
+- uid: ToSic.Eav.Environment.IContainer.PageId*
+  name: PageId
+  href: api/ToSic.Eav.Environment.IContainer.html#ToSic_Eav_Environment_IContainer_PageId_
+  commentId: Overload:ToSic.Eav.Environment.IContainer.PageId
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.IContainer.PageId
+  nameWithType: IContainer.PageId
+- uid: ToSic.Eav.Environment.IContainer.TenantId
+  name: TenantId
+  href: api/ToSic.Eav.Environment.IContainer.html#ToSic_Eav_Environment_IContainer_TenantId
+  commentId: P:ToSic.Eav.Environment.IContainer.TenantId
+  fullName: ToSic.Eav.Environment.IContainer.TenantId
+  nameWithType: IContainer.TenantId
+- uid: ToSic.Eav.Environment.IContainer.TenantId*
+  name: TenantId
+  href: api/ToSic.Eav.Environment.IContainer.html#ToSic_Eav_Environment_IContainer_TenantId_
+  commentId: Overload:ToSic.Eav.Environment.IContainer.TenantId
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.IContainer.TenantId
+  nameWithType: IContainer.TenantId
+- uid: ToSic.Eav.Environment.IContainer`1
+  name: IContainer<T>
+  href: api/ToSic.Eav.Environment.IContainer-1.html
+  commentId: T:ToSic.Eav.Environment.IContainer`1
+  name.vb: IContainer(Of T)
+  fullName: ToSic.Eav.Environment.IContainer<T>
+  fullName.vb: ToSic.Eav.Environment.IContainer(Of T)
+  nameWithType: IContainer<T>
+  nameWithType.vb: IContainer(Of T)
+- uid: ToSic.Eav.Environment.IContainer`1.Original
+  name: Original
+  href: api/ToSic.Eav.Environment.IContainer-1.html#ToSic_Eav_Environment_IContainer_1_Original
+  commentId: P:ToSic.Eav.Environment.IContainer`1.Original
+  fullName: ToSic.Eav.Environment.IContainer<T>.Original
+  fullName.vb: ToSic.Eav.Environment.IContainer(Of T).Original
+  nameWithType: IContainer<T>.Original
+  nameWithType.vb: IContainer(Of T).Original
+- uid: ToSic.Eav.Environment.IContainer`1.Original*
+  name: Original
+  href: api/ToSic.Eav.Environment.IContainer-1.html#ToSic_Eav_Environment_IContainer_1_Original_
+  commentId: Overload:ToSic.Eav.Environment.IContainer`1.Original
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.IContainer<T>.Original
+  fullName.vb: ToSic.Eav.Environment.IContainer(Of T).Original
+  nameWithType: IContainer<T>.Original
+  nameWithType.vb: IContainer(Of T).Original
+- uid: ToSic.Eav.Environment.ITenant
+  name: ITenant
+  href: api/ToSic.Eav.Environment.ITenant.html
+  commentId: T:ToSic.Eav.Environment.ITenant
+  fullName: ToSic.Eav.Environment.ITenant
+  nameWithType: ITenant
+- uid: ToSic.Eav.Environment.ITenant.DefaultLanguage
+  name: DefaultLanguage
+  href: api/ToSic.Eav.Environment.ITenant.html#ToSic_Eav_Environment_ITenant_DefaultLanguage
+  commentId: P:ToSic.Eav.Environment.ITenant.DefaultLanguage
+  fullName: ToSic.Eav.Environment.ITenant.DefaultLanguage
+  nameWithType: ITenant.DefaultLanguage
+- uid: ToSic.Eav.Environment.ITenant.DefaultLanguage*
+  name: DefaultLanguage
+  href: api/ToSic.Eav.Environment.ITenant.html#ToSic_Eav_Environment_ITenant_DefaultLanguage_
+  commentId: Overload:ToSic.Eav.Environment.ITenant.DefaultLanguage
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.ITenant.DefaultLanguage
+  nameWithType: ITenant.DefaultLanguage
+- uid: ToSic.Eav.Environment.ITenant.Id
+  name: Id
+  href: api/ToSic.Eav.Environment.ITenant.html#ToSic_Eav_Environment_ITenant_Id
+  commentId: P:ToSic.Eav.Environment.ITenant.Id
+  fullName: ToSic.Eav.Environment.ITenant.Id
+  nameWithType: ITenant.Id
+- uid: ToSic.Eav.Environment.ITenant.Id*
+  name: Id
+  href: api/ToSic.Eav.Environment.ITenant.html#ToSic_Eav_Environment_ITenant_Id_
+  commentId: Overload:ToSic.Eav.Environment.ITenant.Id
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.ITenant.Id
+  nameWithType: ITenant.Id
+- uid: ToSic.Eav.Environment.ITenant.Name
+  name: Name
+  href: api/ToSic.Eav.Environment.ITenant.html#ToSic_Eav_Environment_ITenant_Name
+  commentId: P:ToSic.Eav.Environment.ITenant.Name
+  fullName: ToSic.Eav.Environment.ITenant.Name
+  nameWithType: ITenant.Name
+- uid: ToSic.Eav.Environment.ITenant.Name*
+  name: Name
+  href: api/ToSic.Eav.Environment.ITenant.html#ToSic_Eav_Environment_ITenant_Name_
+  commentId: Overload:ToSic.Eav.Environment.ITenant.Name
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.ITenant.Name
+  nameWithType: ITenant.Name
+- uid: ToSic.Eav.Environment.Tenant`1
+  name: Tenant<T>
+  href: api/ToSic.Eav.Environment.Tenant-1.html
+  commentId: T:ToSic.Eav.Environment.Tenant`1
+  name.vb: Tenant(Of T)
+  fullName: ToSic.Eav.Environment.Tenant<T>
+  fullName.vb: ToSic.Eav.Environment.Tenant(Of T)
+  nameWithType: Tenant<T>
+  nameWithType.vb: Tenant(Of T)
+- uid: ToSic.Eav.Environment.Tenant`1.#ctor(`0)
+  name: Tenant(T)
+  href: api/ToSic.Eav.Environment.Tenant-1.html#ToSic_Eav_Environment_Tenant_1__ctor__0_
+  commentId: M:ToSic.Eav.Environment.Tenant`1.#ctor(`0)
+  fullName: ToSic.Eav.Environment.Tenant<T>.Tenant(T)
+  fullName.vb: ToSic.Eav.Environment.Tenant(Of T).Tenant(T)
+  nameWithType: Tenant<T>.Tenant(T)
+  nameWithType.vb: Tenant(Of T).Tenant(T)
+- uid: ToSic.Eav.Environment.Tenant`1.#ctor*
+  name: Tenant
+  href: api/ToSic.Eav.Environment.Tenant-1.html#ToSic_Eav_Environment_Tenant_1__ctor_
+  commentId: Overload:ToSic.Eav.Environment.Tenant`1.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.Tenant<T>.Tenant
+  fullName.vb: ToSic.Eav.Environment.Tenant(Of T).Tenant
+  nameWithType: Tenant<T>.Tenant
+  nameWithType.vb: Tenant(Of T).Tenant
+- uid: ToSic.Eav.Environment.Tenant`1.DefaultLanguage
+  name: DefaultLanguage
+  href: api/ToSic.Eav.Environment.Tenant-1.html#ToSic_Eav_Environment_Tenant_1_DefaultLanguage
+  commentId: P:ToSic.Eav.Environment.Tenant`1.DefaultLanguage
+  fullName: ToSic.Eav.Environment.Tenant<T>.DefaultLanguage
+  fullName.vb: ToSic.Eav.Environment.Tenant(Of T).DefaultLanguage
+  nameWithType: Tenant<T>.DefaultLanguage
+  nameWithType.vb: Tenant(Of T).DefaultLanguage
+- uid: ToSic.Eav.Environment.Tenant`1.DefaultLanguage*
+  name: DefaultLanguage
+  href: api/ToSic.Eav.Environment.Tenant-1.html#ToSic_Eav_Environment_Tenant_1_DefaultLanguage_
+  commentId: Overload:ToSic.Eav.Environment.Tenant`1.DefaultLanguage
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.Tenant<T>.DefaultLanguage
+  fullName.vb: ToSic.Eav.Environment.Tenant(Of T).DefaultLanguage
+  nameWithType: Tenant<T>.DefaultLanguage
+  nameWithType.vb: Tenant(Of T).DefaultLanguage
+- uid: ToSic.Eav.Environment.Tenant`1.Id
+  name: Id
+  href: api/ToSic.Eav.Environment.Tenant-1.html#ToSic_Eav_Environment_Tenant_1_Id
+  commentId: P:ToSic.Eav.Environment.Tenant`1.Id
+  fullName: ToSic.Eav.Environment.Tenant<T>.Id
+  fullName.vb: ToSic.Eav.Environment.Tenant(Of T).Id
+  nameWithType: Tenant<T>.Id
+  nameWithType.vb: Tenant(Of T).Id
+- uid: ToSic.Eav.Environment.Tenant`1.Id*
+  name: Id
+  href: api/ToSic.Eav.Environment.Tenant-1.html#ToSic_Eav_Environment_Tenant_1_Id_
+  commentId: Overload:ToSic.Eav.Environment.Tenant`1.Id
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.Tenant<T>.Id
+  fullName.vb: ToSic.Eav.Environment.Tenant(Of T).Id
+  nameWithType: Tenant<T>.Id
+  nameWithType.vb: Tenant(Of T).Id
+- uid: ToSic.Eav.Environment.Tenant`1.Name
+  name: Name
+  href: api/ToSic.Eav.Environment.Tenant-1.html#ToSic_Eav_Environment_Tenant_1_Name
+  commentId: P:ToSic.Eav.Environment.Tenant`1.Name
+  fullName: ToSic.Eav.Environment.Tenant<T>.Name
+  fullName.vb: ToSic.Eav.Environment.Tenant(Of T).Name
+  nameWithType: Tenant<T>.Name
+  nameWithType.vb: Tenant(Of T).Name
+- uid: ToSic.Eav.Environment.Tenant`1.Name*
+  name: Name
+  href: api/ToSic.Eav.Environment.Tenant-1.html#ToSic_Eav_Environment_Tenant_1_Name_
+  commentId: Overload:ToSic.Eav.Environment.Tenant`1.Name
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.Tenant<T>.Name
+  fullName.vb: ToSic.Eav.Environment.Tenant(Of T).Name
+  nameWithType: Tenant<T>.Name
+  nameWithType.vb: Tenant(Of T).Name
+- uid: ToSic.Eav.Environment.Tenant`1.Original
+  name: Original
+  href: api/ToSic.Eav.Environment.Tenant-1.html#ToSic_Eav_Environment_Tenant_1_Original
+  commentId: P:ToSic.Eav.Environment.Tenant`1.Original
+  fullName: ToSic.Eav.Environment.Tenant<T>.Original
+  fullName.vb: ToSic.Eav.Environment.Tenant(Of T).Original
+  nameWithType: Tenant<T>.Original
+  nameWithType.vb: Tenant(Of T).Original
+- uid: ToSic.Eav.Environment.Tenant`1.Original*
+  name: Original
+  href: api/ToSic.Eav.Environment.Tenant-1.html#ToSic_Eav_Environment_Tenant_1_Original_
+  commentId: Overload:ToSic.Eav.Environment.Tenant`1.Original
+  isSpec: "True"
+  fullName: ToSic.Eav.Environment.Tenant<T>.Original
+  fullName.vb: ToSic.Eav.Environment.Tenant(Of T).Original
+  nameWithType: Tenant<T>.Original
+  nameWithType.vb: Tenant(Of T).Original
 - uid: ToSic.Eav.Logging
   name: ToSic.Eav.Logging
   href: api/ToSic.Eav.Logging.html
@@ -4629,15 +4723,15 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Dnn.IRazor.CustomizeData
   nameWithType: IRazor.CustomizeData
-- uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.Blocks.ICmsBlock,System.DateTime)
-  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, ICmsBlock, DateTime)
-  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Apps_Blocks_ICmsBlock_System_DateTime_
-  commentId: M:ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.Blocks.ICmsBlock,System.DateTime)
-  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ICmsBlock, DateTime)
-  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Apps.Blocks.ICmsBlock, System.DateTime)
-  fullName.vb: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Apps.Blocks.ICmsBlock, System.DateTime)
-  nameWithType: IRazor.CustomizeSearch(Dictionary<String, List<ISearchItem>>, ICmsBlock, DateTime)
-  nameWithType.vb: IRazor.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ICmsBlock, DateTime)
+- uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
+  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Environment_IContainer_System_DateTime_
+  commentId: M:ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
+  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Environment.IContainer, System.DateTime)
+  fullName.vb: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Environment.IContainer, System.DateTime)
+  nameWithType: IRazor.CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
+  nameWithType.vb: IRazor.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
 - uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch*
   name: CustomizeSearch
   href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_
@@ -4709,15 +4803,15 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.EngineBase.CustomizeData
   nameWithType: EngineBase.CustomizeData
-- uid: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.Blocks.ICmsBlock,System.DateTime)
-  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, ICmsBlock, DateTime)
-  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Apps_Blocks_ICmsBlock_System_DateTime_
-  commentId: M:ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.Blocks.ICmsBlock,System.DateTime)
-  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ICmsBlock, DateTime)
-  fullName: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Apps.Blocks.ICmsBlock, System.DateTime)
-  fullName.vb: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Apps.Blocks.ICmsBlock, System.DateTime)
-  nameWithType: EngineBase.CustomizeSearch(Dictionary<String, List<ISearchItem>>, ICmsBlock, DateTime)
-  nameWithType.vb: EngineBase.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ICmsBlock, DateTime)
+- uid: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Environment_IContainer_System_DateTime_
+  commentId: M:ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
+  fullName: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Environment.IContainer, System.DateTime)
+  fullName.vb: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Environment.IContainer, System.DateTime)
+  nameWithType: EngineBase.CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
+  nameWithType.vb: EngineBase.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
 - uid: ToSic.Sxc.Engines.EngineBase.CustomizeSearch*
   name: CustomizeSearch
   href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeSearch_
@@ -4725,12 +4819,12 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.EngineBase.CustomizeSearch
   nameWithType: EngineBase.CustomizeSearch
-- uid: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.Blocks.ICmsBlock,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
-  name: Init(IView, IApp, ICmsBlock, IDataSource, Purpose, ICmsBlock, ILog)
-  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Init_ToSic_Sxc_Blocks_IView_ToSic_Sxc_Apps_IApp_ToSic_Eav_Apps_Blocks_ICmsBlock_ToSic_Eav_DataSources_IDataSource_ToSic_Sxc_Blocks_Purpose_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Eav_Logging_ILog_
-  commentId: M:ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.Blocks.ICmsBlock,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
-  fullName: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView, ToSic.Sxc.Apps.IApp, ToSic.Eav.Apps.Blocks.ICmsBlock, ToSic.Eav.DataSources.IDataSource, ToSic.Sxc.Blocks.Purpose, ToSic.Sxc.Blocks.ICmsBlock, ToSic.Eav.Logging.ILog)
-  nameWithType: EngineBase.Init(IView, IApp, ICmsBlock, IDataSource, Purpose, ICmsBlock, ILog)
+- uid: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Environment.IContainer,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
+  name: Init(IView, IApp, IContainer, IDataSource, Purpose, ICmsBlock, ILog)
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Init_ToSic_Sxc_Blocks_IView_ToSic_Sxc_Apps_IApp_ToSic_Eav_Environment_IContainer_ToSic_Eav_DataSources_IDataSource_ToSic_Sxc_Blocks_Purpose_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Eav_Logging_ILog_
+  commentId: M:ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Environment.IContainer,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
+  fullName: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView, ToSic.Sxc.Apps.IApp, ToSic.Eav.Environment.IContainer, ToSic.Eav.DataSources.IDataSource, ToSic.Sxc.Blocks.Purpose, ToSic.Sxc.Blocks.ICmsBlock, ToSic.Eav.Logging.ILog)
+  nameWithType: EngineBase.Init(IView, IApp, IContainer, IDataSource, Purpose, ICmsBlock, ILog)
 - uid: ToSic.Sxc.Engines.EngineBase.Init*
   name: Init
   href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Init_
@@ -4770,12 +4864,12 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.IEngine.CustomizeData
   nameWithType: IEngine.CustomizeData
-- uid: ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.Blocks.ICmsBlock,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
-  name: Init(IView, IApp, ICmsBlock, IDataSource, Purpose, ICmsBlock, ILog)
-  href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Init_ToSic_Sxc_Blocks_IView_ToSic_Sxc_Apps_IApp_ToSic_Eav_Apps_Blocks_ICmsBlock_ToSic_Eav_DataSources_IDataSource_ToSic_Sxc_Blocks_Purpose_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Eav_Logging_ILog_
-  commentId: M:ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.Blocks.ICmsBlock,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
-  fullName: ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView, ToSic.Sxc.Apps.IApp, ToSic.Eav.Apps.Blocks.ICmsBlock, ToSic.Eav.DataSources.IDataSource, ToSic.Sxc.Blocks.Purpose, ToSic.Sxc.Blocks.ICmsBlock, ToSic.Eav.Logging.ILog)
-  nameWithType: IEngine.Init(IView, IApp, ICmsBlock, IDataSource, Purpose, ICmsBlock, ILog)
+- uid: ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Environment.IContainer,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
+  name: Init(IView, IApp, IContainer, IDataSource, Purpose, ICmsBlock, ILog)
+  href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Init_ToSic_Sxc_Blocks_IView_ToSic_Sxc_Apps_IApp_ToSic_Eav_Environment_IContainer_ToSic_Eav_DataSources_IDataSource_ToSic_Sxc_Blocks_Purpose_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Eav_Logging_ILog_
+  commentId: M:ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Environment.IContainer,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
+  fullName: ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView, ToSic.Sxc.Apps.IApp, ToSic.Eav.Environment.IContainer, ToSic.Eav.DataSources.IDataSource, ToSic.Sxc.Blocks.Purpose, ToSic.Sxc.Blocks.ICmsBlock, ToSic.Eav.Logging.ILog)
+  nameWithType: IEngine.Init(IView, IApp, IContainer, IDataSource, Purpose, ICmsBlock, ILog)
 - uid: ToSic.Sxc.Engines.IEngine.Init*
   name: Init
   href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Init_
@@ -4821,15 +4915,15 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData
   nameWithType: RazorEngine.CustomizeData
-- uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.Blocks.ICmsBlock,System.DateTime)
-  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, ICmsBlock, DateTime)
-  href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Apps_Blocks_ICmsBlock_System_DateTime_
-  commentId: M:ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.Blocks.ICmsBlock,System.DateTime)
-  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ICmsBlock, DateTime)
-  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Apps.Blocks.ICmsBlock, System.DateTime)
-  fullName.vb: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Apps.Blocks.ICmsBlock, System.DateTime)
-  nameWithType: RazorEngine.CustomizeSearch(Dictionary<String, List<ISearchItem>>, ICmsBlock, DateTime)
-  nameWithType.vb: RazorEngine.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ICmsBlock, DateTime)
+- uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
+  href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Environment_IContainer_System_DateTime_
+  commentId: M:ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
+  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Environment.IContainer, System.DateTime)
+  fullName.vb: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Environment.IContainer, System.DateTime)
+  nameWithType: RazorEngine.CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
+  nameWithType.vb: RazorEngine.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
 - uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch*
   name: CustomizeSearch
   href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeSearch_

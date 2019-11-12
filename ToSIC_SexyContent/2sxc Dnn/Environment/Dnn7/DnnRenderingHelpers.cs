@@ -7,11 +7,11 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using Newtonsoft.Json;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
-using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private PortalSettings _portalSettings;
         private UserInfo _userInfo;
         private string _applicationRoot;
-        private ICmsBlock _moduleInfo;
+        private IContainer _moduleInfo;
 
         public ILog Log { get; } = new Log("Dnn.Render");
 

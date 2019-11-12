@@ -10,9 +10,9 @@ using System.Web.Compilation;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Blocks;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Environment;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor;
@@ -158,7 +158,7 @@ namespace ToSic.Sxc.Engines.Razor
             => Webpage?.CustomizeData();
 
         /// <inheritdoc />
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, ICmsBlock moduleInfo, DateTime beginDate)
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate)
         {
             if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
 
@@ -167,7 +167,7 @@ namespace ToSic.Sxc.Engines.Razor
 
             // also call old signature
             var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());
-            Webpage.CustomizeSearch(oldSignature, ((CmsBlock<ModuleInfo>) moduleInfo).Original, beginDate);
+            Webpage.CustomizeSearch(oldSignature, ((Container<ModuleInfo>) moduleInfo).Original, beginDate);
         }
     }
 }

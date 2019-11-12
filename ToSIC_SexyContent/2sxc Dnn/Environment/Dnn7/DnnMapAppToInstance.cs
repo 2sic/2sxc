@@ -5,10 +5,10 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Blocks;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Internal;
 using ToSic.Sxc.Apps;
@@ -16,7 +16,6 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Internal;
-using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -28,9 +27,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public DnnMapAppToInstance(ILog parentLog) : base("Dnn.MapA2I", parentLog) { }
 
-        public int? GetAppIdFromInstance(ICmsBlock instance, int zoneId)
+        public int? GetAppIdFromInstance(IContainer instance, int zoneId)
         {
-            var module = (instance as CmsBlock<ModuleInfo>)?.Original
+            var module = (instance as Container<ModuleInfo>)?.Original
                 ?? throw new Exception("instance is not of type ModuleInfo");
 
             var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
@@ -55,7 +54,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
         
-        public void SetAppIdForInstance(ICmsBlock instance, IAppEnvironment env, int? appId, ILog parentLog)
+        public void SetAppIdForInstance(IContainer instance, IAppEnvironment env, int? appId, ILog parentLog)
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
@@ -63,7 +62,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             // ToDo: Should throw exception if a real BlockConfiguration exists
 
-            var module = (instance as CmsBlock<ModuleInfo>).Original;
+            var module = (instance as Container<ModuleInfo>).Original;
             var zoneId = env.ZoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == 0 || !appId.HasValue)

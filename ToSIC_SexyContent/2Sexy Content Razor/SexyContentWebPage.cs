@@ -7,6 +7,7 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Environment;
 using ToSic.Eav.LookUp;
 
 using ToSic.SexyContent.DataSources;
@@ -25,7 +26,6 @@ using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using File = System.IO.File;
 using IApp = ToSic.Sxc.Apps.IApp;
-using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 // ReSharper disable once CheckNamespace
@@ -198,7 +198,7 @@ namespace ToSic.SexyContent.Razor
         }
 
         /// <inheritdoc />
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, ICmsBlock moduleInfo,
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
             DateTime beginDate)
         {
         }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Environment;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Search;
-using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 
 // ReSharper disable UnusedMemberInSuper.Global
 
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="searchInfos"></param>
         /// <param name="moduleInfo"></param>
         /// <param name="beginDate"></param>
-        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, ICmsBlock moduleInfo,
+        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
             DateTime beginDate);
 
         Purpose Purpose { get; }

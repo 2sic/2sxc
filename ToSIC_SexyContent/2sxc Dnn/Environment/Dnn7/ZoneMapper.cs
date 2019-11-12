@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 

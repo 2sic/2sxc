@@ -1,18 +1,18 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 
 namespace ToSic.Sxc.Interfaces
 {
     internal interface IMapAppToInstance
     {
-        int? GetAppIdFromInstance(ICmsBlock instance, int zoneId);
-        void SetAppIdForInstance(ICmsBlock instance, IAppEnvironment env, int? appId, ILog parentLog);
+        int? GetAppIdFromInstance(IContainer instance, int zoneId);
+        void SetAppIdForInstance(IContainer instance, IAppEnvironment env, int? appId, ILog parentLog);
 
 
         void ClearPreviewTemplate(int instanceId);

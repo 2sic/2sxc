@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
-using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
@@ -44,7 +44,7 @@ namespace ToSic.SexyContent
 
         public IEnvironmentFactory EnvFac { get; }
 
-        public ICmsBlock EnvInstance { get; }
+        public IContainer EnvInstance { get; }
 
         public IBlock Block { get; }
 
@@ -63,7 +63,7 @@ namespace ToSic.SexyContent
 
         #region Constructor
         internal CmsInstance(IBlock  cb, 
-            ICmsBlock envInstance, 
+            IContainer envInstance, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
             ILog parentLog = null)
             : base("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")

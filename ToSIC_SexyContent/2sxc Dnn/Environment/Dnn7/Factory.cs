@@ -1,15 +1,14 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Blocks;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Environment;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
-using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -30,9 +29,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public static Sxc.Blocks.ICmsBlock SxcInstanceForModule(ModuleInfo moduleInfo)
             => SxcInstanceForModule(new DnnInstanceInfo(moduleInfo));
 
-        public static Sxc.Blocks.ICmsBlock SxcInstanceForModule(ICmsBlock moduleInfo)
+        public static Sxc.Blocks.ICmsBlock SxcInstanceForModule(IContainer moduleInfo)
         {
-            var dnnModule = ((CmsBlock<ModuleInfo>) moduleInfo).Original;
+            var dnnModule = ((Container<ModuleInfo>) moduleInfo).Original;
             var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
             return new BlockFromModule(moduleInfo, parentLog: null, tenant: tenant).CmsInstance;
         }
