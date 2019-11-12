@@ -377,11 +377,35 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Data.IAttribute-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Data.IAttribute-1.html",
+          "hash": "y/FS935uR0zkU6YqDfRLXw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Data.IAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Data.IAttribute.html",
+          "hash": "nA6q1dTXFW08IAMdlGhIFA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/ToSic.Eav.Data.IAttributeBase.yml",
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Data.IAttributeBase.html",
-          "hash": "3rC1u/70lhRWDh6Ml+Qfhw=="
+          "hash": "4kaegVew0xe3mOwuB+08Hw=="
         }
       },
       "is_incremental": false,
@@ -393,7 +417,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Data.IAttributeDefinition.html",
-          "hash": "ncuE5HJKhFfgluGLVQnKyw=="
+          "hash": "18Ycoy/EWfVK3VMurmuQ5g=="
         }
       },
       "is_incremental": false,
@@ -425,11 +449,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Data.IDimension.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Data.IDimension.html",
+          "hash": "w3uF3J8LIfN1tPB+Ps+p+Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/ToSic.Eav.Data.IEntity.yml",
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Data.IEntity.html",
-          "hash": "bH/9RFx2k75Wm+HSsnIzBw=="
+          "hash": "rCPVFFZ4nBxzOJyIrq9asg=="
         }
       },
       "is_incremental": false,
@@ -453,7 +489,19 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Data.IEntityLight.html",
-          "hash": "hR6rEwoSgVbFpB96hY4YHA=="
+          "hash": "lTXXCCBudukNr00EDr81ng=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Data.ILanguage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Data.ILanguage.html",
+          "hash": "YxG/MMBNS/lrRnHG01g+FQ=="
         }
       },
       "is_incremental": false,
@@ -473,11 +521,59 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Data.IValue-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Data.IValue-1.html",
+          "hash": "4O+3M8gj99bCdty250uziA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Data.IValue.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Data.IValue.html",
+          "hash": "D4Es4iof8hU59wLj+GfYsg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Data.Value-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Data.Value-1.html",
+          "hash": "8Umn1pYIxoMJnsMfnTJOOw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/ToSic.Eav.Data.ValueTypes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ToSic.Eav.Data.ValueTypes.html",
+          "hash": "pQr3uTOu4cBqKO4riNZufQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/ToSic.Eav.Data.yml",
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Data.html",
-          "hash": "El5bLpvvbYeYd7dt3eN8Tw=="
+          "hash": "UwOzOIhLbJ33NVpIqRNp6A=="
         }
       },
       "is_incremental": false,
@@ -1485,7 +1581,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Sxc.Web.IDynamicCode.html",
-          "hash": "+oGt8Filk8wgkIQe8t/gng=="
+          "hash": "wkQJL+DfO7MbTfiMljfE1w=="
         }
       },
       "is_incremental": false,
@@ -1533,7 +1629,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "4uTKi56E6jdlk3IhWRSIsg=="
+          "hash": "wt6/BfSSDO+tZZHjsh3djA=="
         }
       },
       "is_incremental": false,
@@ -1570,11 +1666,10 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
-        "TocDocumentProcessor": {
+        "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
-          "total_file_count": 0,
+          "total_file_count": 135,
           "skipped_file_count": 0
         },
         "ConceptualDocumentProcessor": {
@@ -1583,10 +1678,11 @@
           "total_file_count": 6,
           "skipped_file_count": 0
         },
-        "ManagedReferenceDocumentProcessor": {
+        "TocDocumentProcessor": {
           "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
-          "total_file_count": 127,
+          "total_file_count": 0,
           "skipped_file_count": 0
         }
       }
