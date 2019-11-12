@@ -4,6 +4,7 @@ using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -14,15 +15,16 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Engines.Razor;
+using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using File = System.IO.File;
+using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 // ReSharper disable once CheckNamespace
@@ -195,6 +197,12 @@ namespace ToSic.SexyContent.Razor
         }
 
         /// <inheritdoc />
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IInstanceInfo moduleInfo,
+            DateTime beginDate)
+        {
+        }
+
+        [PrivateApi("this is the old signature, should still be supported")]
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
         {
         }

@@ -14,6 +14,7 @@ using ToSic.SexyContent;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Search;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
@@ -91,7 +92,7 @@ namespace ToSic.Sxc.Engines
         public virtual void CustomizeData() {}
 
         /// <inheritdoc />
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, IInstanceInfo moduleInfo,
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IInstanceInfo moduleInfo,
             DateTime beginDate)
         {
         }

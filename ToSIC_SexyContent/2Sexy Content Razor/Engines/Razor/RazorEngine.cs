@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Compilation;
@@ -15,6 +16,7 @@ using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Engines.Razor
 {
@@ -155,7 +157,16 @@ namespace ToSic.Sxc.Engines.Razor
             => Webpage?.CustomizeData();
 
         /// <inheritdoc />
-        public override void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, IInstanceInfo moduleInfo, DateTime beginDate) 
-            => Webpage?.CustomizeSearch(searchInfos, ((EnvironmentInstance<ModuleInfo>)moduleInfo).Original, beginDate);
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IInstanceInfo moduleInfo, DateTime beginDate)
+        {
+            if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
+
+            // call new signature
+            Webpage.CustomizeSearch(searchInfos, moduleInfo, beginDate);
+
+            // also call old signature
+            var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());
+            Webpage.CustomizeSearch(oldSignature, ((EnvironmentInstance<ModuleInfo>) moduleInfo).Original, beginDate);
+        }
     }
 }

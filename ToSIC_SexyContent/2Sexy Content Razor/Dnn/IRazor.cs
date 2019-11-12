@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Search;
 
 // ReSharper disable UnusedMemberInSuper.Global
 
@@ -28,14 +30,14 @@ namespace ToSic.Sxc.Dnn
         /// If you don't override this, nothing will be changed/customized. 
         /// </summary>
         void CustomizeData();
-        
+
         /// <summary>
         /// Customize how the search will process data on this page. 
         /// </summary>
         /// <param name="searchInfos"></param>
         /// <param name="moduleInfo"></param>
         /// <param name="beginDate"></param>
-        void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo,
+        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IInstanceInfo moduleInfo,
             DateTime beginDate);
 
         Purpose Purpose { get; }

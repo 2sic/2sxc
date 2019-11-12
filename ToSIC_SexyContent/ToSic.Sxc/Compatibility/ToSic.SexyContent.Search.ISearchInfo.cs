@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Data;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Search
 {
     /// <remarks>
