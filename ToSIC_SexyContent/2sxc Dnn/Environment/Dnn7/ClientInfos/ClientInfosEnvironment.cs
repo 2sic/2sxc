@@ -2,6 +2,7 @@
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Sxc.Blocks;
+using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 
 // ReSharper disable InconsistentNaming
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -22,7 +23,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public bool IsEditable;
 
-        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, IInstanceInfo mic, ICmsBlock cmsInstance)
+        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, ICmsBlock mic, Sxc.Blocks.ICmsBlock cmsInstance)
         {
             WebsiteId = ps.PortalId;
 

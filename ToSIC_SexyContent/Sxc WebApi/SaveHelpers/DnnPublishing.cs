@@ -8,6 +8,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Blocks;
+using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
 namespace ToSic.SexyContent.WebApi.SaveHelpers
 {

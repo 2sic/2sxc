@@ -17,6 +17,7 @@ using ToSic.Sxc.Blocks;
 using SysConf = ToSic.Eav.Configuration;
 using Feats = ToSic.Eav.Configuration.Features;
 using IApp = ToSic.Sxc.Apps.IApp;
+using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
 namespace ToSic.SexyContent.WebApi.Adam
 {

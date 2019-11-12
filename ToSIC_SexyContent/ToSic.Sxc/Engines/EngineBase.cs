@@ -16,6 +16,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Search;
 using IApp = ToSic.Sxc.Apps.IApp;
+using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.Sxc.Engines
@@ -29,10 +30,10 @@ namespace ToSic.Sxc.Engines
         [PrivateApi] protected IView Template;
         [PrivateApi] protected string TemplatePath;
         [PrivateApi] protected IApp App;
-        [PrivateApi] protected IInstanceInfo InstInfo;
+        [PrivateApi] protected ICmsBlock InstInfo;
         [PrivateApi] protected IDataSource DataSource;
         [PrivateApi] protected Purpose Purpose;
-        [PrivateApi] protected ICmsBlock Sexy;
+        [PrivateApi] protected Blocks.ICmsBlock Sexy;
 
         [PrivateApi]
         public RenderStatusType PreRenderStatus { get; internal set; }
@@ -44,7 +45,7 @@ namespace ToSic.Sxc.Engines
         { }
 
         /// <inheritdoc />
-        public void Init(IView view, IApp app, IInstanceInfo envInstance, IDataSource dataSource, Purpose purpose, ICmsBlock cmsBlock, ILog parentLog)
+        public void Init(IView view, IApp app, ICmsBlock envInstance, IDataSource dataSource, Purpose purpose, Blocks.ICmsBlock cmsBlock, ILog parentLog)
         {
             var templatePath = VirtualPathUtility.Combine(SexyContent.Internal.TemplateHelpers.GetTemplatePathRoot(view.Location, app) + "/", view.Path);
 
@@ -92,7 +93,7 @@ namespace ToSic.Sxc.Engines
         public virtual void CustomizeData() {}
 
         /// <inheritdoc />
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IInstanceInfo moduleInfo,
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, ICmsBlock moduleInfo,
             DateTime beginDate)
         {
         }

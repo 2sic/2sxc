@@ -11,6 +11,7 @@ using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
+using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.DataSources

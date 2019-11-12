@@ -8,6 +8,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Blocks;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
@@ -18,6 +19,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Search;
+using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7.Search
@@ -30,10 +32,10 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
         /// Get search info for each dnn module containing 2sxc data
         /// </summary>
         /// <returns></returns>
-        public IList<SearchDocument> GetModifiedSearchDocuments(IInstanceInfo instance, DateTime beginDate)
+        public IList<SearchDocument> GetModifiedSearchDocuments(ICmsBlock instance, DateTime beginDate)
         {
             var searchDocuments = new List<SearchDocument>();
-            var dnnModule = (instance as EnvironmentInstance<ModuleInfo>)?.Original;
+            var dnnModule = (instance as CmsBlock<ModuleInfo>)?.Original;
             // always log with method, to ensure errors are cought
             Log.Add($"start search for mod#{dnnModule?.ModuleID}");
 

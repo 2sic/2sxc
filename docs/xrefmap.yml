@@ -180,6 +180,207 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Apps.Assets.IFolder.HasChildren
   nameWithType: IFolder.HasChildren
+- uid: ToSic.Eav.Apps.Blocks
+  name: ToSic.Eav.Apps.Blocks
+  href: api/ToSic.Eav.Apps.Blocks.html
+  commentId: N:ToSic.Eav.Apps.Blocks
+  fullName: ToSic.Eav.Apps.Blocks
+  nameWithType: ToSic.Eav.Apps.Blocks
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1
+  name: CmsBlock<T>
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html
+  commentId: T:ToSic.Eav.Apps.Blocks.CmsBlock`1
+  name.vb: CmsBlock(Of T)
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T)
+  nameWithType: CmsBlock<T>
+  nameWithType.vb: CmsBlock(Of T)
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.#ctor(`0)
+  name: CmsBlock(T)
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1__ctor__0_
+  commentId: M:ToSic.Eav.Apps.Blocks.CmsBlock`1.#ctor(`0)
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.CmsBlock(T)
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).CmsBlock(T)
+  nameWithType: CmsBlock<T>.CmsBlock(T)
+  nameWithType.vb: CmsBlock(Of T).CmsBlock(T)
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.#ctor*
+  name: CmsBlock
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1__ctor_
+  commentId: Overload:ToSic.Eav.Apps.Blocks.CmsBlock`1.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.CmsBlock
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).CmsBlock
+  nameWithType: CmsBlock<T>.CmsBlock
+  nameWithType.vb: CmsBlock(Of T).CmsBlock
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.Id
+  name: Id
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_Id
+  commentId: P:ToSic.Eav.Apps.Blocks.CmsBlock`1.Id
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.Id
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).Id
+  nameWithType: CmsBlock<T>.Id
+  nameWithType.vb: CmsBlock(Of T).Id
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.Id*
+  name: Id
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_Id_
+  commentId: Overload:ToSic.Eav.Apps.Blocks.CmsBlock`1.Id
+  isSpec: "True"
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.Id
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).Id
+  nameWithType: CmsBlock<T>.Id
+  nameWithType.vb: CmsBlock(Of T).Id
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.IsPrimary
+  name: IsPrimary
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_IsPrimary
+  commentId: P:ToSic.Eav.Apps.Blocks.CmsBlock`1.IsPrimary
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.IsPrimary
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).IsPrimary
+  nameWithType: CmsBlock<T>.IsPrimary
+  nameWithType.vb: CmsBlock(Of T).IsPrimary
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.IsPrimary*
+  name: IsPrimary
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_IsPrimary_
+  commentId: Overload:ToSic.Eav.Apps.Blocks.CmsBlock`1.IsPrimary
+  isSpec: "True"
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.IsPrimary
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).IsPrimary
+  nameWithType: CmsBlock<T>.IsPrimary
+  nameWithType.vb: CmsBlock(Of T).IsPrimary
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.Original
+  name: Original
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_Original
+  commentId: P:ToSic.Eav.Apps.Blocks.CmsBlock`1.Original
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.Original
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).Original
+  nameWithType: CmsBlock<T>.Original
+  nameWithType.vb: CmsBlock(Of T).Original
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.Original*
+  name: Original
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_Original_
+  commentId: Overload:ToSic.Eav.Apps.Blocks.CmsBlock`1.Original
+  isSpec: "True"
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.Original
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).Original
+  nameWithType: CmsBlock<T>.Original
+  nameWithType.vb: CmsBlock(Of T).Original
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.PageId
+  name: PageId
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_PageId
+  commentId: P:ToSic.Eav.Apps.Blocks.CmsBlock`1.PageId
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.PageId
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).PageId
+  nameWithType: CmsBlock<T>.PageId
+  nameWithType.vb: CmsBlock(Of T).PageId
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.PageId*
+  name: PageId
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_PageId_
+  commentId: Overload:ToSic.Eav.Apps.Blocks.CmsBlock`1.PageId
+  isSpec: "True"
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.PageId
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).PageId
+  nameWithType: CmsBlock<T>.PageId
+  nameWithType.vb: CmsBlock(Of T).PageId
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.TenantId
+  name: TenantId
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_TenantId
+  commentId: P:ToSic.Eav.Apps.Blocks.CmsBlock`1.TenantId
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.TenantId
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).TenantId
+  nameWithType: CmsBlock<T>.TenantId
+  nameWithType.vb: CmsBlock(Of T).TenantId
+- uid: ToSic.Eav.Apps.Blocks.CmsBlock`1.TenantId*
+  name: TenantId
+  href: api/ToSic.Eav.Apps.Blocks.CmsBlock-1.html#ToSic_Eav_Apps_Blocks_CmsBlock_1_TenantId_
+  commentId: Overload:ToSic.Eav.Apps.Blocks.CmsBlock`1.TenantId
+  isSpec: "True"
+  fullName: ToSic.Eav.Apps.Blocks.CmsBlock<T>.TenantId
+  fullName.vb: ToSic.Eav.Apps.Blocks.CmsBlock(Of T).TenantId
+  nameWithType: CmsBlock<T>.TenantId
+  nameWithType.vb: CmsBlock(Of T).TenantId
+- uid: ToSic.Eav.Apps.Blocks.ICmsBlock
+  name: ICmsBlock
+  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html
+  commentId: T:ToSic.Eav.Apps.Blocks.ICmsBlock
+  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock
+  nameWithType: ICmsBlock
+- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.Id
+  name: Id
+  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_Id
+  commentId: P:ToSic.Eav.Apps.Blocks.ICmsBlock.Id
+  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.Id
+  nameWithType: ICmsBlock.Id
+- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.Id*
+  name: Id
+  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_Id_
+  commentId: Overload:ToSic.Eav.Apps.Blocks.ICmsBlock.Id
+  isSpec: "True"
+  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.Id
+  nameWithType: ICmsBlock.Id
+- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.IsPrimary
+  name: IsPrimary
+  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_IsPrimary
+  commentId: P:ToSic.Eav.Apps.Blocks.ICmsBlock.IsPrimary
+  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.IsPrimary
+  nameWithType: ICmsBlock.IsPrimary
+- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.IsPrimary*
+  name: IsPrimary
+  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_IsPrimary_
+  commentId: Overload:ToSic.Eav.Apps.Blocks.ICmsBlock.IsPrimary
+  isSpec: "True"
+  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.IsPrimary
+  nameWithType: ICmsBlock.IsPrimary
+- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.PageId
+  name: PageId
+  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_PageId
+  commentId: P:ToSic.Eav.Apps.Blocks.ICmsBlock.PageId
+  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.PageId
+  nameWithType: ICmsBlock.PageId
+- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.PageId*
+  name: PageId
+  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_PageId_
+  commentId: Overload:ToSic.Eav.Apps.Blocks.ICmsBlock.PageId
+  isSpec: "True"
+  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.PageId
+  nameWithType: ICmsBlock.PageId
+- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.TenantId
+  name: TenantId
+  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_TenantId
+  commentId: P:ToSic.Eav.Apps.Blocks.ICmsBlock.TenantId
+  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.TenantId
+  nameWithType: ICmsBlock.TenantId
+- uid: ToSic.Eav.Apps.Blocks.ICmsBlock.TenantId*
+  name: TenantId
+  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock.html#ToSic_Eav_Apps_Blocks_ICmsBlock_TenantId_
+  commentId: Overload:ToSic.Eav.Apps.Blocks.ICmsBlock.TenantId
+  isSpec: "True"
+  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock.TenantId
+  nameWithType: ICmsBlock.TenantId
+- uid: ToSic.Eav.Apps.Blocks.ICmsBlock`1
+  name: ICmsBlock<T>
+  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock-1.html
+  commentId: T:ToSic.Eav.Apps.Blocks.ICmsBlock`1
+  name.vb: ICmsBlock(Of T)
+  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock<T>
+  fullName.vb: ToSic.Eav.Apps.Blocks.ICmsBlock(Of T)
+  nameWithType: ICmsBlock<T>
+  nameWithType.vb: ICmsBlock(Of T)
+- uid: ToSic.Eav.Apps.Blocks.ICmsBlock`1.Original
+  name: Original
+  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock-1.html#ToSic_Eav_Apps_Blocks_ICmsBlock_1_Original
+  commentId: P:ToSic.Eav.Apps.Blocks.ICmsBlock`1.Original
+  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock<T>.Original
+  fullName.vb: ToSic.Eav.Apps.Blocks.ICmsBlock(Of T).Original
+  nameWithType: ICmsBlock<T>.Original
+  nameWithType.vb: ICmsBlock(Of T).Original
+- uid: ToSic.Eav.Apps.Blocks.ICmsBlock`1.Original*
+  name: Original
+  href: api/ToSic.Eav.Apps.Blocks.ICmsBlock-1.html#ToSic_Eav_Apps_Blocks_ICmsBlock_1_Original_
+  commentId: Overload:ToSic.Eav.Apps.Blocks.ICmsBlock`1.Original
+  isSpec: "True"
+  fullName: ToSic.Eav.Apps.Blocks.ICmsBlock<T>.Original
+  fullName.vb: ToSic.Eav.Apps.Blocks.ICmsBlock(Of T).Original
+  nameWithType: ICmsBlock<T>.Original
+  nameWithType.vb: ICmsBlock(Of T).Original
 - uid: ToSic.Eav.Apps.IApp
   name: IApp
   href: api/ToSic.Eav.Apps.IApp.html
@@ -4428,15 +4629,15 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Dnn.IRazor.CustomizeData
   nameWithType: IRazor.CustomizeData
-- uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},DotNetNuke.Entities.Modules.ModuleInfo,System.DateTime)
-  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, ModuleInfo, DateTime)
-  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___DotNetNuke_Entities_Modules_ModuleInfo_System_DateTime_
-  commentId: M:ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},DotNetNuke.Entities.Modules.ModuleInfo,System.DateTime)
-  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ModuleInfo, DateTime)
-  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, DotNetNuke.Entities.Modules.ModuleInfo, System.DateTime)
-  fullName.vb: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), DotNetNuke.Entities.Modules.ModuleInfo, System.DateTime)
-  nameWithType: IRazor.CustomizeSearch(Dictionary<String, List<ISearchItem>>, ModuleInfo, DateTime)
-  nameWithType.vb: IRazor.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ModuleInfo, DateTime)
+- uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.Blocks.ICmsBlock,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, ICmsBlock, DateTime)
+  href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Apps_Blocks_ICmsBlock_System_DateTime_
+  commentId: M:ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.Blocks.ICmsBlock,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ICmsBlock, DateTime)
+  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Apps.Blocks.ICmsBlock, System.DateTime)
+  fullName.vb: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Apps.Blocks.ICmsBlock, System.DateTime)
+  nameWithType: IRazor.CustomizeSearch(Dictionary<String, List<ISearchItem>>, ICmsBlock, DateTime)
+  nameWithType.vb: IRazor.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ICmsBlock, DateTime)
 - uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch*
   name: CustomizeSearch
   href: api/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_
@@ -4508,15 +4709,15 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.EngineBase.CustomizeData
   nameWithType: EngineBase.CustomizeData
-- uid: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.IInstanceInfo,System.DateTime)
-  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, IInstanceInfo, DateTime)
-  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Apps_IInstanceInfo_System_DateTime_
-  commentId: M:ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.IInstanceInfo,System.DateTime)
-  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IInstanceInfo, DateTime)
-  fullName: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Apps.IInstanceInfo, System.DateTime)
-  fullName.vb: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Apps.IInstanceInfo, System.DateTime)
-  nameWithType: EngineBase.CustomizeSearch(Dictionary<String, List<ISearchItem>>, IInstanceInfo, DateTime)
-  nameWithType.vb: EngineBase.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IInstanceInfo, DateTime)
+- uid: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.Blocks.ICmsBlock,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, ICmsBlock, DateTime)
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Apps_Blocks_ICmsBlock_System_DateTime_
+  commentId: M:ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.Blocks.ICmsBlock,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ICmsBlock, DateTime)
+  fullName: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Apps.Blocks.ICmsBlock, System.DateTime)
+  fullName.vb: ToSic.Sxc.Engines.EngineBase.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Apps.Blocks.ICmsBlock, System.DateTime)
+  nameWithType: EngineBase.CustomizeSearch(Dictionary<String, List<ISearchItem>>, ICmsBlock, DateTime)
+  nameWithType.vb: EngineBase.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ICmsBlock, DateTime)
 - uid: ToSic.Sxc.Engines.EngineBase.CustomizeSearch*
   name: CustomizeSearch
   href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_CustomizeSearch_
@@ -4524,12 +4725,12 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.EngineBase.CustomizeSearch
   nameWithType: EngineBase.CustomizeSearch
-- uid: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.IInstanceInfo,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
-  name: Init(IView, IApp, IInstanceInfo, IDataSource, Purpose, ICmsBlock, ILog)
-  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Init_ToSic_Sxc_Blocks_IView_ToSic_Sxc_Apps_IApp_ToSic_Eav_Apps_IInstanceInfo_ToSic_Eav_DataSources_IDataSource_ToSic_Sxc_Blocks_Purpose_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Eav_Logging_ILog_
-  commentId: M:ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.IInstanceInfo,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
-  fullName: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView, ToSic.Sxc.Apps.IApp, ToSic.Eav.Apps.IInstanceInfo, ToSic.Eav.DataSources.IDataSource, ToSic.Sxc.Blocks.Purpose, ToSic.Sxc.Blocks.ICmsBlock, ToSic.Eav.Logging.ILog)
-  nameWithType: EngineBase.Init(IView, IApp, IInstanceInfo, IDataSource, Purpose, ICmsBlock, ILog)
+- uid: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.Blocks.ICmsBlock,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
+  name: Init(IView, IApp, ICmsBlock, IDataSource, Purpose, ICmsBlock, ILog)
+  href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Init_ToSic_Sxc_Blocks_IView_ToSic_Sxc_Apps_IApp_ToSic_Eav_Apps_Blocks_ICmsBlock_ToSic_Eav_DataSources_IDataSource_ToSic_Sxc_Blocks_Purpose_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Eav_Logging_ILog_
+  commentId: M:ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.Blocks.ICmsBlock,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
+  fullName: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView, ToSic.Sxc.Apps.IApp, ToSic.Eav.Apps.Blocks.ICmsBlock, ToSic.Eav.DataSources.IDataSource, ToSic.Sxc.Blocks.Purpose, ToSic.Sxc.Blocks.ICmsBlock, ToSic.Eav.Logging.ILog)
+  nameWithType: EngineBase.Init(IView, IApp, ICmsBlock, IDataSource, Purpose, ICmsBlock, ILog)
 - uid: ToSic.Sxc.Engines.EngineBase.Init*
   name: Init
   href: api/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Init_
@@ -4569,12 +4770,12 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.IEngine.CustomizeData
   nameWithType: IEngine.CustomizeData
-- uid: ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.IInstanceInfo,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
-  name: Init(IView, IApp, IInstanceInfo, IDataSource, Purpose, ICmsBlock, ILog)
-  href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Init_ToSic_Sxc_Blocks_IView_ToSic_Sxc_Apps_IApp_ToSic_Eav_Apps_IInstanceInfo_ToSic_Eav_DataSources_IDataSource_ToSic_Sxc_Blocks_Purpose_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Eav_Logging_ILog_
-  commentId: M:ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.IInstanceInfo,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
-  fullName: ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView, ToSic.Sxc.Apps.IApp, ToSic.Eav.Apps.IInstanceInfo, ToSic.Eav.DataSources.IDataSource, ToSic.Sxc.Blocks.Purpose, ToSic.Sxc.Blocks.ICmsBlock, ToSic.Eav.Logging.ILog)
-  nameWithType: IEngine.Init(IView, IApp, IInstanceInfo, IDataSource, Purpose, ICmsBlock, ILog)
+- uid: ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.Blocks.ICmsBlock,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
+  name: Init(IView, IApp, ICmsBlock, IDataSource, Purpose, ICmsBlock, ILog)
+  href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Init_ToSic_Sxc_Blocks_IView_ToSic_Sxc_Apps_IApp_ToSic_Eav_Apps_Blocks_ICmsBlock_ToSic_Eav_DataSources_IDataSource_ToSic_Sxc_Blocks_Purpose_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Eav_Logging_ILog_
+  commentId: M:ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Apps.Blocks.ICmsBlock,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
+  fullName: ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.IView, ToSic.Sxc.Apps.IApp, ToSic.Eav.Apps.Blocks.ICmsBlock, ToSic.Eav.DataSources.IDataSource, ToSic.Sxc.Blocks.Purpose, ToSic.Sxc.Blocks.ICmsBlock, ToSic.Eav.Logging.ILog)
+  nameWithType: IEngine.Init(IView, IApp, ICmsBlock, IDataSource, Purpose, ICmsBlock, ILog)
 - uid: ToSic.Sxc.Engines.IEngine.Init*
   name: Init
   href: api/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Init_
@@ -4620,15 +4821,15 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData
   nameWithType: RazorEngine.CustomizeData
-- uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.IInstanceInfo,System.DateTime)
-  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, IInstanceInfo, DateTime)
-  href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Apps_IInstanceInfo_System_DateTime_
-  commentId: M:ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.IInstanceInfo,System.DateTime)
-  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IInstanceInfo, DateTime)
-  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Apps.IInstanceInfo, System.DateTime)
-  fullName.vb: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Apps.IInstanceInfo, System.DateTime)
-  nameWithType: RazorEngine.CustomizeSearch(Dictionary<String, List<ISearchItem>>, IInstanceInfo, DateTime)
-  nameWithType.vb: RazorEngine.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IInstanceInfo, DateTime)
+- uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.Blocks.ICmsBlock,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, ICmsBlock, DateTime)
+  href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Apps_Blocks_ICmsBlock_System_DateTime_
+  commentId: M:ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Apps.Blocks.ICmsBlock,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ICmsBlock, DateTime)
+  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Apps.Blocks.ICmsBlock, System.DateTime)
+  fullName.vb: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Apps.Blocks.ICmsBlock, System.DateTime)
+  nameWithType: RazorEngine.CustomizeSearch(Dictionary<String, List<ISearchItem>>, ICmsBlock, DateTime)
+  nameWithType.vb: RazorEngine.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), ICmsBlock, DateTime)
 - uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch*
   name: CustomizeSearch
   href: api/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeSearch_

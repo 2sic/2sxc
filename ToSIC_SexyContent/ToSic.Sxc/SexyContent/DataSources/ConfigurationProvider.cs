@@ -9,6 +9,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines.Token;
 using ToSic.Sxc.Interfaces;
 using IApp = ToSic.Sxc.Apps.IApp;
+using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
 namespace ToSic.SexyContent.DataSources
 {

@@ -25,6 +25,7 @@ using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using File = System.IO.File;
 using IApp = ToSic.Sxc.Apps.IApp;
+using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 // ReSharper disable once CheckNamespace
@@ -44,7 +45,7 @@ namespace ToSic.SexyContent.Razor
 
         // <2sic>
         [PrivateApi]
-        protected internal /*SxcInstance*/ICmsBlock Sexy { get; set; }
+        protected internal /*SxcInstance*/Sxc.Blocks.ICmsBlock Sexy { get; set; }
         [PrivateApi]
         protected internal DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
         // </2sic>
@@ -197,7 +198,7 @@ namespace ToSic.SexyContent.Razor
         }
 
         /// <inheritdoc />
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IInstanceInfo moduleInfo,
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, ICmsBlock moduleInfo,
             DateTime beginDate)
         {
         }

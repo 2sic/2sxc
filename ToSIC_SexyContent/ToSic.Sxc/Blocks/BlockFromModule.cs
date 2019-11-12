@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Blocks
 {
     internal sealed class BlockFromModule: BlockBase
     {
-        public IInstanceInfo InstanceInfo;
+        public Eav.Apps.Blocks.ICmsBlock CmsBlock;
 
         public override BlockEditorBase Editor => new BlockEditorForModule(CmsInstance);
 
@@ -22,21 +22,21 @@ namespace ToSic.Sxc.Blocks
 
 
         public override IBlockDataSource Data => _dataSource 
-            ?? (_dataSource = BlockDataSource.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log, InstanceInfo.Id));
+            ?? (_dataSource = BlockDataSource.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log, CmsBlock.Id));
 
         private readonly IEnumerable<KeyValuePair<string, string>> _urlParams;
 
         /// <summary>
         /// Create a module-content block
         /// </summary>
-        /// <param name="instanceInfo">the dnn module-info</param>
+        /// <param name="cmsBlock">the dnn module-info</param>
         /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
         /// <param name="tenant"></param>
         /// <param name="overrideParams">optional override parameters</param>
-        public BlockFromModule(IInstanceInfo instanceInfo, ILog parentLog, ITenant tenant, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
+        public BlockFromModule(Eav.Apps.Blocks.ICmsBlock cmsBlock, ILog parentLog, ITenant tenant, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
         {
-            InstanceInfo = instanceInfo ?? throw new Exception("Need valid Instance/ModuleInfo / ModuleConfiguration of runtime");
-            ParentId = instanceInfo.Id;
+            CmsBlock = cmsBlock ?? throw new Exception("Need valid Instance/ModuleInfo / ModuleConfiguration of runtime");
+            ParentId = cmsBlock.Id;
             ContentBlockId = ParentId;
 
             // url-params
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Blocks
             var tempEnv = Factory.Resolve<IEnvironmentFactory>().Environment(parentLog);
             ZoneId = tempEnv.ZoneMapper.GetZoneId(tenant.Id); // use tenant as reference, as it can be different from instance.TenantId
             
-            AppId = Factory.Resolve<IMapAppToInstance>().GetAppIdFromInstance(instanceInfo, ZoneId) ?? 0;// fallback/undefined YET
+            AppId = Factory.Resolve<IMapAppToInstance>().GetAppIdFromInstance(cmsBlock, ZoneId) ?? 0;// fallback/undefined YET
 
             Log.Add($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
 
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Blocks
             }
 
             // 2018-09-22 new with auto-init-data
-            CmsInstance = new CmsInstance(this, InstanceInfo, _urlParams, Log);
+            CmsInstance = new CmsInstance(this, CmsBlock, _urlParams, Log);
 
             if (AppId != 0)
             {
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Blocks
                 var cms = new CmsRuntime(App, Log, CmsInstance.UserMayEdit,
                     CmsInstance.Environment.PagePublishing.IsEnabled(CmsInstance.EnvInstance.Id));
 
-                Configuration = /*App.BlocksManager*/cms.Blocks.GetInstanceContentGroup(instanceInfo.Id, instanceInfo.PageId);
+                Configuration = /*App.BlocksManager*/cms.Blocks.GetInstanceContentGroup(cmsBlock.Id, cmsBlock.PageId);
 
                 if (Configuration.DataIsMissing)
                 {
@@ -88,7 +88,7 @@ namespace ToSic.Sxc.Blocks
             }
         }
 
-        public override bool IsContentApp => InstanceInfo.IsPrimary;
+        public override bool IsContentApp => CmsBlock.IsPrimary;
 
     }
 }

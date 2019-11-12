@@ -4,6 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
+using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
@@ -15,7 +16,7 @@ namespace ToSic.SexyContent
     /// it would be hard to get anything done .
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
-    public partial class CmsInstance : HasLog, ICmsBlock
+    public partial class CmsInstance : HasLog, Sxc.Blocks.ICmsBlock
     {
         #region App-level information
 
@@ -43,7 +44,7 @@ namespace ToSic.SexyContent
 
         public IEnvironmentFactory EnvFac { get; }
 
-        public IInstanceInfo EnvInstance { get; }
+        public ICmsBlock EnvInstance { get; }
 
         public IBlock Block { get; }
 
@@ -62,7 +63,7 @@ namespace ToSic.SexyContent
 
         #region Constructor
         internal CmsInstance(IBlock  cb, 
-            IInstanceInfo envInstance, 
+            ICmsBlock envInstance, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
             ILog parentLog = null)
             : base("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")

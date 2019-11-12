@@ -11,25 +11,26 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
+using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class DnnRenderingHelpers : IHasLog, IRenderingHelpers
     {
-        private ICmsBlock _cmsInstance;
+        private Sxc.Blocks.ICmsBlock _cmsInstance;
         private PortalSettings _portalSettings;
         private UserInfo _userInfo;
         private string _applicationRoot;
-        private IInstanceInfo _moduleInfo;
+        private ICmsBlock _moduleInfo;
 
         public ILog Log { get; } = new Log("Dnn.Render");
 
         // Blank constructor for IoC
         public DnnRenderingHelpers() { }
 
-        public DnnRenderingHelpers(ICmsBlock cms, ILog parentLog) => Init(cms, parentLog);
+        public DnnRenderingHelpers(Sxc.Blocks.ICmsBlock cms, ILog parentLog) => Init(cms, parentLog);
 
-        public IRenderingHelpers Init(ICmsBlock cms, ILog parentLog)
+        public IRenderingHelpers Init(Sxc.Blocks.ICmsBlock cms, ILog parentLog)
         {
             this.LinkLog(parentLog);
             var appRoot = VirtualPathUtility.ToAbsolute("~/");

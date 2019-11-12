@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Blocks;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Eav.Interfaces;
@@ -25,8 +26,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
 
 
-        protected IInstanceInfo Instance { get; }
-        protected ModuleInfo Module => ((EnvironmentInstance<ModuleInfo>) Instance)?.Original;
+        protected ICmsBlock Instance { get; }
+        protected ModuleInfo Module => ((CmsBlock<ModuleInfo>) Instance)?.Original;
         protected PortalSettings Portal { get; }
 
         protected IApp App { get; }
@@ -37,7 +38,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             ILog parentLog,
             IContentType targetType = null,
             IEntity targetItem = null,
-            IInstanceInfo instance = null,
+            ICmsBlock instance = null,
             IApp app = null,
             IEnumerable<IEntity> permissions1 = null,
             PortalSettings portal = null,

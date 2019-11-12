@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Blocks
 
         // todo: better name, this is kind of the module we're in or something
         [PrivateApi]
-        IInstanceInfo EnvInstance { get; }
+        Eav.Apps.Blocks.ICmsBlock EnvInstance { get; }
 
         [PrivateApi]
         IEnumerable<KeyValuePair<string, string>> Parameters { get; }

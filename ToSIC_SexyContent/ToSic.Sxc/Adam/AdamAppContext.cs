@@ -6,6 +6,7 @@ using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
+using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
 namespace ToSic.Sxc.Adam
 {

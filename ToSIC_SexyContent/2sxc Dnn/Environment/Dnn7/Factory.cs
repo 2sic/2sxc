@@ -1,6 +1,7 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Blocks;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent.DataSources;
@@ -8,6 +9,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
+using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -18,24 +20,24 @@ namespace ToSic.SexyContent.Environment.Dnn7
     /// </summary>
     public static class Factory
     {
-        public static ICmsBlock SxcInstanceForModule(int modId, int tabId)
+        public static Sxc.Blocks.ICmsBlock SxcInstanceForModule(int modId, int tabId)
         {
             var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
             var instance = new DnnInstanceInfo(moduleInfo);
             return SxcInstanceForModule(instance);
         }
 
-        public static ICmsBlock SxcInstanceForModule(ModuleInfo moduleInfo)
+        public static Sxc.Blocks.ICmsBlock SxcInstanceForModule(ModuleInfo moduleInfo)
             => SxcInstanceForModule(new DnnInstanceInfo(moduleInfo));
 
-        public static ICmsBlock SxcInstanceForModule(IInstanceInfo moduleInfo)
+        public static Sxc.Blocks.ICmsBlock SxcInstanceForModule(ICmsBlock moduleInfo)
         {
-            var dnnModule = ((EnvironmentInstance<ModuleInfo>) moduleInfo).Original;
+            var dnnModule = ((CmsBlock<ModuleInfo>) moduleInfo).Original;
             var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
             return new BlockFromModule(moduleInfo, parentLog: null, tenant: tenant).CmsInstance;
         }
 
-        public static IDynamicCode CodingHelpers(ICmsBlock cms) 
+        public static IDynamicCode CodingHelpers(Sxc.Blocks.ICmsBlock cms) 
             => new DnnAppAndDataHelpers(cms as CmsInstance);
 
         /// <summary>

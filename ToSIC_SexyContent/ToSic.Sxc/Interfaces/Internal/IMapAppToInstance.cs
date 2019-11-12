@@ -5,13 +5,14 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
+using ICmsBlock = ToSic.Eav.Apps.Blocks.ICmsBlock;
 
 namespace ToSic.Sxc.Interfaces
 {
     internal interface IMapAppToInstance
     {
-        int? GetAppIdFromInstance(IInstanceInfo instance, int zoneId);
-        void SetAppIdForInstance(IInstanceInfo instance, IAppEnvironment env, int? appId, ILog parentLog);
+        int? GetAppIdFromInstance(ICmsBlock instance, int zoneId);
+        void SetAppIdForInstance(ICmsBlock instance, IAppEnvironment env, int? appId, ILog parentLog);
 
 
         void ClearPreviewTemplate(int instanceId);
@@ -22,6 +23,6 @@ namespace ToSic.Sxc.Interfaces
 
         BlockConfiguration GetInstanceContentGroup(BlocksRuntime cgm, ILog log, int instanceId, int? pageId);
 
-        void UpdateTitle(ICmsBlock cmsInstance, IEntity titleItem);
+        void UpdateTitle(Blocks.ICmsBlock cmsInstance, IEntity titleItem);
     }
 }
