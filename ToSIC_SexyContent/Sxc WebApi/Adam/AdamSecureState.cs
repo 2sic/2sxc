@@ -13,7 +13,6 @@ using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.WebApi.Errors;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Blocks;
 using SysConf = ToSic.Eav.Configuration;
 using Feats = ToSic.Eav.Configuration.Features;
 using IApp = ToSic.Sxc.Apps.IApp;

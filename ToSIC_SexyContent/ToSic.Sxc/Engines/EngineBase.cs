@@ -12,7 +12,6 @@ using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent;
-using ToSic.SexyContent.Search;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Search;
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.Engines
         [PrivateApi] protected IContainer InstInfo;
         [PrivateApi] protected IDataSource DataSource;
         [PrivateApi] protected Purpose Purpose;
-        [PrivateApi] protected Blocks.ICmsBlock Sexy;
+        [PrivateApi] protected ICmsBlock CmsBlock;
 
         [PrivateApi]
         public RenderStatusType PreRenderStatus { get; internal set; }
@@ -45,7 +44,7 @@ namespace ToSic.Sxc.Engines
         { }
 
         /// <inheritdoc />
-        public void Init(IView view, IApp app, IContainer envInstance, IDataSource dataSource, Purpose purpose, Blocks.ICmsBlock cmsBlock, ILog parentLog)
+        public void Init(IView view, IApp app, IContainer envInstance, IDataSource dataSource, Purpose purpose, ICmsBlock cmsBlock, ILog parentLog)
         {
             var templatePath = VirtualPathUtility.Combine(SexyContent.Internal.TemplateHelpers.GetTemplatePathRoot(view.Location, app) + "/", view.Path);
 
@@ -62,7 +61,7 @@ namespace ToSic.Sxc.Engines
             InstInfo = envInstance;
             DataSource = dataSource;
             Purpose = purpose;
-            Sexy = cmsBlock;
+            CmsBlock = cmsBlock;
 
             // check common errors
             CheckExpectedTemplateErrors();
@@ -127,7 +126,7 @@ namespace ToSic.Sxc.Engines
         private void CheckExpectedNoRenderConditions()
         {
             if (Template.ContentType != "" && Template.ContentItem == null &&
-                Sexy.Block.Configuration.Content.All(e => e == null))
+                CmsBlock.Block.Configuration.Content.All(e => e == null))
             {
                 PreRenderStatus = RenderStatusType.MissingData;
 

@@ -3,8 +3,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Web.Compilation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Code
 {

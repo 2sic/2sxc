@@ -5,7 +5,6 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Environment;
@@ -13,7 +12,6 @@ using ToSic.Eav.Logging;
 using ToSic.SexyContent.Internal;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Internal;
 

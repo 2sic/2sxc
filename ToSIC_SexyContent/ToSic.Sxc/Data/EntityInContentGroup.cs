@@ -1,9 +1,12 @@
 ﻿using System;
 using ToSic.Eav.Data;
+using ToSic.Eav.Documentation;
+using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc.Interfaces;
 
-namespace ToSic.SexyContent.EAVExtensions
+namespace ToSic.Sxc.Data
 {
+    [PrivateApi("final name not good yet, in future probably not called content-group")]
     public class EntityInContentGroup : EntityDecorator, IHasEditingData
     {
         public EntityInContentGroup(IEntity baseEntity) : base(baseEntity)
@@ -24,7 +27,7 @@ namespace ToSic.SexyContent.EAVExtensions
 		public IEntity Presentation { get; set; }
 
         /// <summary>
-        /// BlockConfiguration ID, because as the group changes, we must be able to find it
+        /// Block ID, because as the group changes, we must be able to find it
         /// </summary>
 		public Guid GroupId { get; set; }
 

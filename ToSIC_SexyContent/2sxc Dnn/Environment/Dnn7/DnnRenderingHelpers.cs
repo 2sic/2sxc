@@ -6,11 +6,9 @@ using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using Newtonsoft.Json;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7

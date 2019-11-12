@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Interfaces
+namespace ToSic.Sxc.Code
 {
     /// <summary>
     /// Compiler helpers to ensure that razor views and WebApis can access other code files

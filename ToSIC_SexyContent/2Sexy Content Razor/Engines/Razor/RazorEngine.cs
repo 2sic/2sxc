@@ -9,8 +9,6 @@ using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.SexyContent.Engines;
@@ -125,8 +123,8 @@ namespace ToSic.Sxc.Engines.Razor
             // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
             // reactivate if it turns out to be used, otherwise delete ca. EOY 2019
             //webPage.Url = new UrlHelper(InstInfo);
-            webPage.Sexy = Sexy;
-            webPage.DnnAppAndDataHelpers = new DnnAppAndDataHelpers(Sexy);
+            webPage.Sexy = CmsBlock;
+            webPage.DnnAppAndDataHelpers = new DnnAppAndDataHelpers(CmsBlock);
 
         }
 

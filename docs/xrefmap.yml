@@ -2965,32 +2965,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Environment.IContainer.TenantId
   nameWithType: IContainer.TenantId
-- uid: ToSic.Eav.Environment.IContainer`1
-  name: IContainer<T>
-  href: api/ToSic.Eav.Environment.IContainer-1.html
-  commentId: T:ToSic.Eav.Environment.IContainer`1
-  name.vb: IContainer(Of T)
-  fullName: ToSic.Eav.Environment.IContainer<T>
-  fullName.vb: ToSic.Eav.Environment.IContainer(Of T)
-  nameWithType: IContainer<T>
-  nameWithType.vb: IContainer(Of T)
-- uid: ToSic.Eav.Environment.IContainer`1.Original
-  name: Original
-  href: api/ToSic.Eav.Environment.IContainer-1.html#ToSic_Eav_Environment_IContainer_1_Original
-  commentId: P:ToSic.Eav.Environment.IContainer`1.Original
-  fullName: ToSic.Eav.Environment.IContainer<T>.Original
-  fullName.vb: ToSic.Eav.Environment.IContainer(Of T).Original
-  nameWithType: IContainer<T>.Original
-  nameWithType.vb: IContainer(Of T).Original
-- uid: ToSic.Eav.Environment.IContainer`1.Original*
-  name: Original
-  href: api/ToSic.Eav.Environment.IContainer-1.html#ToSic_Eav_Environment_IContainer_1_Original_
-  commentId: Overload:ToSic.Eav.Environment.IContainer`1.Original
-  isSpec: "True"
-  fullName: ToSic.Eav.Environment.IContainer<T>.Original
-  fullName.vb: ToSic.Eav.Environment.IContainer(Of T).Original
-  nameWithType: IContainer<T>.Original
-  nameWithType.vb: IContainer(Of T).Original
 - uid: ToSic.Eav.Environment.ITenant
   name: ITenant
   href: api/ToSic.Eav.Environment.ITenant.html

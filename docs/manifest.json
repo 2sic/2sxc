@@ -837,19 +837,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Environment.Container-1.html",
-          "hash": "p0urDQMhyOjcYUIK/el8FQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "obj/api/ToSic.Eav.Environment.IContainer-1.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/ToSic.Eav.Environment.IContainer-1.html",
-          "hash": "skkKsqowv5m/fl2i0Utwdw=="
+          "hash": "ElALrZf59WD6b8dySEm5MA=="
         }
       },
       "is_incremental": false,
@@ -885,7 +873,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Environment.Tenant-1.html",
-          "hash": "gf/PhkWDWp4VnuAMw88onQ=="
+          "hash": "jsvq87HmtyItUDhE48o5eA=="
         }
       },
       "is_incremental": false,
@@ -897,7 +885,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ToSic.Eav.Environment.html",
-          "hash": "J3mw5KLM5NpY67pA+gF7gg=="
+          "hash": "ChBJdINwrLgWpunXbjQEVg=="
         }
       },
       "is_incremental": false,
@@ -1545,7 +1533,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "Y4tYhoIAqEv574D1XgzS8w=="
+          "hash": "4uTKi56E6jdlk3IhWRSIsg=="
         }
       },
       "is_incremental": false,
@@ -1592,7 +1580,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 128,
+          "total_file_count": 127,
           "skipped_file_count": 0
         },
         "ConceptualDocumentProcessor": {

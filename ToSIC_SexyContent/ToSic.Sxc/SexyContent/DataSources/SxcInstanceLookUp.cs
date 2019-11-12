@@ -7,7 +7,7 @@ namespace ToSic.SexyContent.DataSources
 {
     /// <inheritdoc />
     /// <summary>
-    /// special "fake" value provider, which also transports the Sxc-depedency to underlying layers
+    /// special "fake" value provider, which also transports the Sxc-dependency to underlying layers
     /// </summary>
     public class SxcInstanceLookUp : LookUpInDictionary
     {
