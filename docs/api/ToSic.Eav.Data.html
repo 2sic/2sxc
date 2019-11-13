@@ -92,10 +92,6 @@
       <h4><a class="xref" href="ToSic.Eav.Data.Attribute-1.html">Attribute&lt;T&gt;</a></h4>
       <section><p>Represents an Attribute / Property of an Entity with Values of a Generic Type</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.Children.html">Children</a></h4>
-      <section><p>A dictionary-style children accessor containing all fields which have child-entities. <br>
-Used on the <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> Children property.</p>
-</section>
       <h4><a class="xref" href="ToSic.Eav.Data.ContentType.html">ContentType</a></h4>
       <section><p>Represents a ContentType</p>
 </section>
@@ -105,9 +101,6 @@ Used on the <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> Child
       <h4><a class="xref" href="ToSic.Eav.Data.ContentTypeMetadata.html">ContentTypeMetadata</a></h4>
       <section><p>Provides metadata for a content type. This can be very special, because ContentTypes can be shared (ghosts),
 in which case the metadata must be retrieved from another &quot;remote&quot; location (where the original is defined). </p>
-</section>
-      <h4><a class="xref" href="ToSic.Eav.Data.Dimension.html">Dimension</a></h4>
-      <section><p>Represents a Dimension / Language Assignment</p>
 </section>
       <h4><a class="xref" href="ToSic.Eav.Data.DimensionDefinition.html">DimensionDefinition</a></h4>
       <section><p>The definition of a dimension / language</p>
@@ -120,13 +113,21 @@ but when programming they should use typed objects to not accidentally access in
       <h4><a class="xref" href="ToSic.Eav.Data.EntityBasedWithLog.html">EntityBasedWithLog</a></h4>
       <section><p>A strongly typed object which gets its data from an entity, and also logs what it does.</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.EntityRelationshipItem.html">EntityRelationshipItem</a></h4>
+      <h4><a class="xref" href="ToSic.Eav.Data.EntityRelationship.html">EntityRelationship</a></h4>
       <section><p>Represents a Relation between two entities, connecting a parent to a child.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.Language.html">Language</a></h4>
+      <section><p>Represents a Dimension / Language Assignment</p>
 </section>
       <h4><a class="xref" href="ToSic.Eav.Data.LazyEntities.html">LazyEntities</a></h4>
       <section><p>Delivers entities which are needed. <br>
-It&apos;s lazy, because on initialization it only knows the Ids (int/guid) of the items to pick up, and only retrieves them when needed. <br>
-Once retrieved, it will cache the result, until the up-stream reports changes.</p>
+It&apos;s lazy, because on initialization it only knows the Ids (int/guid) of the items to pick up,
+and only retrieves them when needed. <br></p>
+<ul>
+<li>Once retrieved, it will cache the result, until the up-stream reports changes.</li>
+<li>An additional optimization: in special cases where we just need the IDs for saving,
+it won&apos;t actually query the cache if the IDs are already known.</li>
+</ul>
 </section>
       <h4><a class="xref" href="ToSic.Eav.Data.Value-1.html">Value&lt;T&gt;</a></h4>
       <section><p>Represents a typed Value object in the memory model</p>
@@ -149,9 +150,6 @@ Usually we&apos;ll extend this and use <a class="xref" href="ToSic.Eav.Data.IAtt
 <li><a class="xref" href="ToSic.Eav.Data.IContentTypeAttribute.html">IContentTypeAttribute</a> (in the IContentType)</li>
 <li>attribute with values-list (in the IEntity)</li>
 </ul>
-</section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IChildEntities.html">IChildEntities</a></h4>
-      <section><p>This manages child entities - so entities referenced in a field of an Entity</p>
 </section>
       <h4><a class="xref" href="ToSic.Eav.Data.IContentType.html">IContentType</a></h4>
       <section><p>Represents a Content Type information (the schema) used for <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> objects.</p>

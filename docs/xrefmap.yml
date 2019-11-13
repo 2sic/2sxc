@@ -756,28 +756,6 @@ references:
   fullName.vb: ToSic.Eav.Data.Attribute(Of T).Values
   nameWithType: Attribute<T>.Values
   nameWithType.vb: Attribute(Of T).Values
-- uid: ToSic.Eav.Data.Children
-  name: Children
-  href: api/ToSic.Eav.Data.Children.html
-  commentId: T:ToSic.Eav.Data.Children
-  fullName: ToSic.Eav.Data.Children
-  nameWithType: Children
-- uid: ToSic.Eav.Data.Children.Item(System.String)
-  name: Item[String]
-  href: api/ToSic.Eav.Data.Children.html#ToSic_Eav_Data_Children_Item_System_String_
-  commentId: P:ToSic.Eav.Data.Children.Item(System.String)
-  name.vb: Item(String)
-  fullName: ToSic.Eav.Data.Children.Item[System.String]
-  fullName.vb: ToSic.Eav.Data.Children.Item(System.String)
-  nameWithType: Children.Item[String]
-  nameWithType.vb: Children.Item(String)
-- uid: ToSic.Eav.Data.Children.Item*
-  name: Item
-  href: api/ToSic.Eav.Data.Children.html#ToSic_Eav_Data_Children_Item_
-  commentId: Overload:ToSic.Eav.Data.Children.Item
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.Children.Item
-  nameWithType: Children.Item
 - uid: ToSic.Eav.Data.ContentType
   name: ContentType
   href: api/ToSic.Eav.Data.ContentType.html
@@ -1174,51 +1152,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider
   nameWithType: ContentTypeMetadata.LoadFromProvider
-- uid: ToSic.Eav.Data.Dimension
-  name: Dimension
-  href: api/ToSic.Eav.Data.Dimension.html
-  commentId: T:ToSic.Eav.Data.Dimension
-  fullName: ToSic.Eav.Data.Dimension
-  nameWithType: Dimension
-- uid: ToSic.Eav.Data.Dimension.DimensionId
-  name: DimensionId
-  href: api/ToSic.Eav.Data.Dimension.html#ToSic_Eav_Data_Dimension_DimensionId
-  commentId: P:ToSic.Eav.Data.Dimension.DimensionId
-  fullName: ToSic.Eav.Data.Dimension.DimensionId
-  nameWithType: Dimension.DimensionId
-- uid: ToSic.Eav.Data.Dimension.DimensionId*
-  name: DimensionId
-  href: api/ToSic.Eav.Data.Dimension.html#ToSic_Eav_Data_Dimension_DimensionId_
-  commentId: Overload:ToSic.Eav.Data.Dimension.DimensionId
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.Dimension.DimensionId
-  nameWithType: Dimension.DimensionId
-- uid: ToSic.Eav.Data.Dimension.Key
-  name: Key
-  href: api/ToSic.Eav.Data.Dimension.html#ToSic_Eav_Data_Dimension_Key
-  commentId: P:ToSic.Eav.Data.Dimension.Key
-  fullName: ToSic.Eav.Data.Dimension.Key
-  nameWithType: Dimension.Key
-- uid: ToSic.Eav.Data.Dimension.Key*
-  name: Key
-  href: api/ToSic.Eav.Data.Dimension.html#ToSic_Eav_Data_Dimension_Key_
-  commentId: Overload:ToSic.Eav.Data.Dimension.Key
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.Dimension.Key
-  nameWithType: Dimension.Key
-- uid: ToSic.Eav.Data.Dimension.ReadOnly
-  name: ReadOnly
-  href: api/ToSic.Eav.Data.Dimension.html#ToSic_Eav_Data_Dimension_ReadOnly
-  commentId: P:ToSic.Eav.Data.Dimension.ReadOnly
-  fullName: ToSic.Eav.Data.Dimension.ReadOnly
-  nameWithType: Dimension.ReadOnly
-- uid: ToSic.Eav.Data.Dimension.ReadOnly*
-  name: ReadOnly
-  href: api/ToSic.Eav.Data.Dimension.html#ToSic_Eav_Data_Dimension_ReadOnly_
-  commentId: Overload:ToSic.Eav.Data.Dimension.ReadOnly
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.Dimension.ReadOnly
-  nameWithType: Dimension.ReadOnly
 - uid: ToSic.Eav.Data.DimensionDefinition
   name: DimensionDefinition
   href: api/ToSic.Eav.Data.DimensionDefinition.html
@@ -1396,51 +1329,51 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.EntityBasedWithLog.Log
   nameWithType: EntityBasedWithLog.Log
-- uid: ToSic.Eav.Data.EntityRelationshipItem
-  name: EntityRelationshipItem
-  href: api/ToSic.Eav.Data.EntityRelationshipItem.html
-  commentId: T:ToSic.Eav.Data.EntityRelationshipItem
-  fullName: ToSic.Eav.Data.EntityRelationshipItem
-  nameWithType: EntityRelationshipItem
-- uid: ToSic.Eav.Data.EntityRelationshipItem.#ctor(ToSic.Eav.Data.IEntity,ToSic.Eav.Data.IEntity)
-  name: EntityRelationshipItem(IEntity, IEntity)
-  href: api/ToSic.Eav.Data.EntityRelationshipItem.html#ToSic_Eav_Data_EntityRelationshipItem__ctor_ToSic_Eav_Data_IEntity_ToSic_Eav_Data_IEntity_
-  commentId: M:ToSic.Eav.Data.EntityRelationshipItem.#ctor(ToSic.Eav.Data.IEntity,ToSic.Eav.Data.IEntity)
-  fullName: ToSic.Eav.Data.EntityRelationshipItem.EntityRelationshipItem(ToSic.Eav.Data.IEntity, ToSic.Eav.Data.IEntity)
-  nameWithType: EntityRelationshipItem.EntityRelationshipItem(IEntity, IEntity)
-- uid: ToSic.Eav.Data.EntityRelationshipItem.#ctor*
-  name: EntityRelationshipItem
-  href: api/ToSic.Eav.Data.EntityRelationshipItem.html#ToSic_Eav_Data_EntityRelationshipItem__ctor_
-  commentId: Overload:ToSic.Eav.Data.EntityRelationshipItem.#ctor
+- uid: ToSic.Eav.Data.EntityRelationship
+  name: EntityRelationship
+  href: api/ToSic.Eav.Data.EntityRelationship.html
+  commentId: T:ToSic.Eav.Data.EntityRelationship
+  fullName: ToSic.Eav.Data.EntityRelationship
+  nameWithType: EntityRelationship
+- uid: ToSic.Eav.Data.EntityRelationship.#ctor(ToSic.Eav.Data.IEntity,ToSic.Eav.Data.IEntity)
+  name: EntityRelationship(IEntity, IEntity)
+  href: api/ToSic.Eav.Data.EntityRelationship.html#ToSic_Eav_Data_EntityRelationship__ctor_ToSic_Eav_Data_IEntity_ToSic_Eav_Data_IEntity_
+  commentId: M:ToSic.Eav.Data.EntityRelationship.#ctor(ToSic.Eav.Data.IEntity,ToSic.Eav.Data.IEntity)
+  fullName: ToSic.Eav.Data.EntityRelationship.EntityRelationship(ToSic.Eav.Data.IEntity, ToSic.Eav.Data.IEntity)
+  nameWithType: EntityRelationship.EntityRelationship(IEntity, IEntity)
+- uid: ToSic.Eav.Data.EntityRelationship.#ctor*
+  name: EntityRelationship
+  href: api/ToSic.Eav.Data.EntityRelationship.html#ToSic_Eav_Data_EntityRelationship__ctor_
+  commentId: Overload:ToSic.Eav.Data.EntityRelationship.#ctor
   isSpec: "True"
-  fullName: ToSic.Eav.Data.EntityRelationshipItem.EntityRelationshipItem
-  nameWithType: EntityRelationshipItem.EntityRelationshipItem
-- uid: ToSic.Eav.Data.EntityRelationshipItem.Child
+  fullName: ToSic.Eav.Data.EntityRelationship.EntityRelationship
+  nameWithType: EntityRelationship.EntityRelationship
+- uid: ToSic.Eav.Data.EntityRelationship.Child
   name: Child
-  href: api/ToSic.Eav.Data.EntityRelationshipItem.html#ToSic_Eav_Data_EntityRelationshipItem_Child
-  commentId: P:ToSic.Eav.Data.EntityRelationshipItem.Child
-  fullName: ToSic.Eav.Data.EntityRelationshipItem.Child
-  nameWithType: EntityRelationshipItem.Child
-- uid: ToSic.Eav.Data.EntityRelationshipItem.Child*
+  href: api/ToSic.Eav.Data.EntityRelationship.html#ToSic_Eav_Data_EntityRelationship_Child
+  commentId: P:ToSic.Eav.Data.EntityRelationship.Child
+  fullName: ToSic.Eav.Data.EntityRelationship.Child
+  nameWithType: EntityRelationship.Child
+- uid: ToSic.Eav.Data.EntityRelationship.Child*
   name: Child
-  href: api/ToSic.Eav.Data.EntityRelationshipItem.html#ToSic_Eav_Data_EntityRelationshipItem_Child_
-  commentId: Overload:ToSic.Eav.Data.EntityRelationshipItem.Child
+  href: api/ToSic.Eav.Data.EntityRelationship.html#ToSic_Eav_Data_EntityRelationship_Child_
+  commentId: Overload:ToSic.Eav.Data.EntityRelationship.Child
   isSpec: "True"
-  fullName: ToSic.Eav.Data.EntityRelationshipItem.Child
-  nameWithType: EntityRelationshipItem.Child
-- uid: ToSic.Eav.Data.EntityRelationshipItem.Parent
+  fullName: ToSic.Eav.Data.EntityRelationship.Child
+  nameWithType: EntityRelationship.Child
+- uid: ToSic.Eav.Data.EntityRelationship.Parent
   name: Parent
-  href: api/ToSic.Eav.Data.EntityRelationshipItem.html#ToSic_Eav_Data_EntityRelationshipItem_Parent
-  commentId: P:ToSic.Eav.Data.EntityRelationshipItem.Parent
-  fullName: ToSic.Eav.Data.EntityRelationshipItem.Parent
-  nameWithType: EntityRelationshipItem.Parent
-- uid: ToSic.Eav.Data.EntityRelationshipItem.Parent*
+  href: api/ToSic.Eav.Data.EntityRelationship.html#ToSic_Eav_Data_EntityRelationship_Parent
+  commentId: P:ToSic.Eav.Data.EntityRelationship.Parent
+  fullName: ToSic.Eav.Data.EntityRelationship.Parent
+  nameWithType: EntityRelationship.Parent
+- uid: ToSic.Eav.Data.EntityRelationship.Parent*
   name: Parent
-  href: api/ToSic.Eav.Data.EntityRelationshipItem.html#ToSic_Eav_Data_EntityRelationshipItem_Parent_
-  commentId: Overload:ToSic.Eav.Data.EntityRelationshipItem.Parent
+  href: api/ToSic.Eav.Data.EntityRelationship.html#ToSic_Eav_Data_EntityRelationship_Parent_
+  commentId: Overload:ToSic.Eav.Data.EntityRelationship.Parent
   isSpec: "True"
-  fullName: ToSic.Eav.Data.EntityRelationshipItem.Parent
-  nameWithType: EntityRelationshipItem.Parent
+  fullName: ToSic.Eav.Data.EntityRelationship.Parent
+  nameWithType: EntityRelationship.Parent
 - uid: ToSic.Eav.Data.IAttribute
   name: IAttribute
   href: api/ToSic.Eav.Data.IAttribute.html
@@ -1593,28 +1526,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.IAttributeBase.Type
   nameWithType: IAttributeBase.Type
-- uid: ToSic.Eav.Data.IChildEntities
-  name: IChildEntities
-  href: api/ToSic.Eav.Data.IChildEntities.html
-  commentId: T:ToSic.Eav.Data.IChildEntities
-  fullName: ToSic.Eav.Data.IChildEntities
-  nameWithType: IChildEntities
-- uid: ToSic.Eav.Data.IChildEntities.Item(System.String)
-  name: Item[String]
-  href: api/ToSic.Eav.Data.IChildEntities.html#ToSic_Eav_Data_IChildEntities_Item_System_String_
-  commentId: P:ToSic.Eav.Data.IChildEntities.Item(System.String)
-  name.vb: Item(String)
-  fullName: ToSic.Eav.Data.IChildEntities.Item[System.String]
-  fullName.vb: ToSic.Eav.Data.IChildEntities.Item(System.String)
-  nameWithType: IChildEntities.Item[String]
-  nameWithType.vb: IChildEntities.Item(String)
-- uid: ToSic.Eav.Data.IChildEntities.Item*
-  name: Item
-  href: api/ToSic.Eav.Data.IChildEntities.html#ToSic_Eav_Data_IChildEntities_Item_
-  commentId: Overload:ToSic.Eav.Data.IChildEntities.Item
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.IChildEntities.Item
-  nameWithType: IChildEntities.Item
 - uid: ToSic.Eav.Data.IContentType
   name: IContentType
   href: api/ToSic.Eav.Data.IContentType.html
@@ -2300,19 +2211,32 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.IRelationshipManager.AllParents
   nameWithType: IRelationshipManager.AllParents
-- uid: ToSic.Eav.Data.IRelationshipManager.Children
-  name: Children
-  href: api/ToSic.Eav.Data.IRelationshipManager.html#ToSic_Eav_Data_IRelationshipManager_Children
-  commentId: P:ToSic.Eav.Data.IRelationshipManager.Children
-  fullName: ToSic.Eav.Data.IRelationshipManager.Children
-  nameWithType: IRelationshipManager.Children
-- uid: ToSic.Eav.Data.IRelationshipManager.Children*
-  name: Children
-  href: api/ToSic.Eav.Data.IRelationshipManager.html#ToSic_Eav_Data_IRelationshipManager_Children_
-  commentId: Overload:ToSic.Eav.Data.IRelationshipManager.Children
+- uid: ToSic.Eav.Data.IRelationshipManager.FindChildren(System.String,System.String,ToSic.Eav.Logging.ILog)
+  name: FindChildren(String, String, ILog)
+  href: api/ToSic.Eav.Data.IRelationshipManager.html#ToSic_Eav_Data_IRelationshipManager_FindChildren_System_String_System_String_ToSic_Eav_Logging_ILog_
+  commentId: M:ToSic.Eav.Data.IRelationshipManager.FindChildren(System.String,System.String,ToSic.Eav.Logging.ILog)
+  fullName: ToSic.Eav.Data.IRelationshipManager.FindChildren(System.String, System.String, ToSic.Eav.Logging.ILog)
+  nameWithType: IRelationshipManager.FindChildren(String, String, ILog)
+- uid: ToSic.Eav.Data.IRelationshipManager.FindChildren*
+  name: FindChildren
+  href: api/ToSic.Eav.Data.IRelationshipManager.html#ToSic_Eav_Data_IRelationshipManager_FindChildren_
+  commentId: Overload:ToSic.Eav.Data.IRelationshipManager.FindChildren
   isSpec: "True"
-  fullName: ToSic.Eav.Data.IRelationshipManager.Children
-  nameWithType: IRelationshipManager.Children
+  fullName: ToSic.Eav.Data.IRelationshipManager.FindChildren
+  nameWithType: IRelationshipManager.FindChildren
+- uid: ToSic.Eav.Data.IRelationshipManager.FindParents(System.String,System.String,ToSic.Eav.Logging.ILog)
+  name: FindParents(String, String, ILog)
+  href: api/ToSic.Eav.Data.IRelationshipManager.html#ToSic_Eav_Data_IRelationshipManager_FindParents_System_String_System_String_ToSic_Eav_Logging_ILog_
+  commentId: M:ToSic.Eav.Data.IRelationshipManager.FindParents(System.String,System.String,ToSic.Eav.Logging.ILog)
+  fullName: ToSic.Eav.Data.IRelationshipManager.FindParents(System.String, System.String, ToSic.Eav.Logging.ILog)
+  nameWithType: IRelationshipManager.FindParents(String, String, ILog)
+- uid: ToSic.Eav.Data.IRelationshipManager.FindParents*
+  name: FindParents
+  href: api/ToSic.Eav.Data.IRelationshipManager.html#ToSic_Eav_Data_IRelationshipManager_FindParents_
+  commentId: Overload:ToSic.Eav.Data.IRelationshipManager.FindParents
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.IRelationshipManager.FindParents
+  nameWithType: IRelationshipManager.FindParents
 - uid: ToSic.Eav.Data.IValue
   name: IValue
   href: api/ToSic.Eav.Data.IValue.html
@@ -2371,6 +2295,51 @@ references:
   fullName.vb: ToSic.Eav.Data.IValue(Of T).TypedContents
   nameWithType: IValue<T>.TypedContents
   nameWithType.vb: IValue(Of T).TypedContents
+- uid: ToSic.Eav.Data.Language
+  name: Language
+  href: api/ToSic.Eav.Data.Language.html
+  commentId: T:ToSic.Eav.Data.Language
+  fullName: ToSic.Eav.Data.Language
+  nameWithType: Language
+- uid: ToSic.Eav.Data.Language.DimensionId
+  name: DimensionId
+  href: api/ToSic.Eav.Data.Language.html#ToSic_Eav_Data_Language_DimensionId
+  commentId: P:ToSic.Eav.Data.Language.DimensionId
+  fullName: ToSic.Eav.Data.Language.DimensionId
+  nameWithType: Language.DimensionId
+- uid: ToSic.Eav.Data.Language.DimensionId*
+  name: DimensionId
+  href: api/ToSic.Eav.Data.Language.html#ToSic_Eav_Data_Language_DimensionId_
+  commentId: Overload:ToSic.Eav.Data.Language.DimensionId
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.Language.DimensionId
+  nameWithType: Language.DimensionId
+- uid: ToSic.Eav.Data.Language.Key
+  name: Key
+  href: api/ToSic.Eav.Data.Language.html#ToSic_Eav_Data_Language_Key
+  commentId: P:ToSic.Eav.Data.Language.Key
+  fullName: ToSic.Eav.Data.Language.Key
+  nameWithType: Language.Key
+- uid: ToSic.Eav.Data.Language.Key*
+  name: Key
+  href: api/ToSic.Eav.Data.Language.html#ToSic_Eav_Data_Language_Key_
+  commentId: Overload:ToSic.Eav.Data.Language.Key
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.Language.Key
+  nameWithType: Language.Key
+- uid: ToSic.Eav.Data.Language.ReadOnly
+  name: ReadOnly
+  href: api/ToSic.Eav.Data.Language.html#ToSic_Eav_Data_Language_ReadOnly
+  commentId: P:ToSic.Eav.Data.Language.ReadOnly
+  fullName: ToSic.Eav.Data.Language.ReadOnly
+  nameWithType: Language.ReadOnly
+- uid: ToSic.Eav.Data.Language.ReadOnly*
+  name: ReadOnly
+  href: api/ToSic.Eav.Data.Language.html#ToSic_Eav_Data_Language_ReadOnly_
+  commentId: Overload:ToSic.Eav.Data.Language.ReadOnly
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.Language.ReadOnly
+  nameWithType: Language.ReadOnly
 - uid: ToSic.Eav.Data.LazyEntities
   name: LazyEntities
   href: api/ToSic.Eav.Data.LazyEntities.html
@@ -2403,19 +2372,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.LazyEntities.CacheTimestamp
   nameWithType: LazyEntities.CacheTimestamp
-- uid: ToSic.Eav.Data.LazyEntities.GetEnumerator
-  name: GetEnumerator()
-  href: api/ToSic.Eav.Data.LazyEntities.html#ToSic_Eav_Data_LazyEntities_GetEnumerator
-  commentId: M:ToSic.Eav.Data.LazyEntities.GetEnumerator
-  fullName: ToSic.Eav.Data.LazyEntities.GetEnumerator()
-  nameWithType: LazyEntities.GetEnumerator()
-- uid: ToSic.Eav.Data.LazyEntities.GetEnumerator*
-  name: GetEnumerator
-  href: api/ToSic.Eav.Data.LazyEntities.html#ToSic_Eav_Data_LazyEntities_GetEnumerator_
-  commentId: Overload:ToSic.Eav.Data.LazyEntities.GetEnumerator
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.LazyEntities.GetEnumerator
-  nameWithType: LazyEntities.GetEnumerator
 - uid: ToSic.Eav.Data.LazyEntities.Identifiers
   name: Identifiers
   href: api/ToSic.Eav.Data.LazyEntities.html#ToSic_Eav_Data_LazyEntities_Identifiers
@@ -2429,23 +2385,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.LazyEntities.Identifiers
   nameWithType: LazyEntities.Identifiers
-- uid: ToSic.Eav.Data.LazyEntities.System#Collections#IEnumerable#GetEnumerator
-  name: IEnumerable.GetEnumerator()
-  href: api/ToSic.Eav.Data.LazyEntities.html#ToSic_Eav_Data_LazyEntities_System_Collections_IEnumerable_GetEnumerator
-  commentId: M:ToSic.Eav.Data.LazyEntities.System#Collections#IEnumerable#GetEnumerator
-  name.vb: System.Collections.IEnumerable.GetEnumerator()
-  fullName: ToSic.Eav.Data.LazyEntities.System.Collections.IEnumerable.GetEnumerator()
-  nameWithType: LazyEntities.IEnumerable.GetEnumerator()
-  nameWithType.vb: LazyEntities.System.Collections.IEnumerable.GetEnumerator()
-- uid: ToSic.Eav.Data.LazyEntities.System#Collections#IEnumerable#GetEnumerator*
-  name: IEnumerable.GetEnumerator
-  href: api/ToSic.Eav.Data.LazyEntities.html#ToSic_Eav_Data_LazyEntities_System_Collections_IEnumerable_GetEnumerator_
-  commentId: Overload:ToSic.Eav.Data.LazyEntities.System#Collections#IEnumerable#GetEnumerator
-  isSpec: "True"
-  name.vb: System.Collections.IEnumerable.GetEnumerator
-  fullName: ToSic.Eav.Data.LazyEntities.System.Collections.IEnumerable.GetEnumerator
-  nameWithType: LazyEntities.IEnumerable.GetEnumerator
-  nameWithType.vb: LazyEntities.System.Collections.IEnumerable.GetEnumerator
 - uid: ToSic.Eav.Data.Value`1
   name: Value<T>
   href: api/ToSic.Eav.Data.Value-1.html

@@ -84,8 +84,13 @@
   <h1 id="ToSic_Eav_Data_LazyEntities" data-uid="ToSic.Eav.Data.LazyEntities" class="text-break">Class LazyEntities
   </h1>
   <div class="markdown level0 summary"><p>Delivers entities which are needed. <br>
-It&apos;s lazy, because on initialization it only knows the Ids (int/guid) of the items to pick up, and only retrieves them when needed. <br>
-Once retrieved, it will cache the result, until the up-stream reports changes.</p>
+It&apos;s lazy, because on initialization it only knows the Ids (int/guid) of the items to pick up,
+and only retrieves them when needed. <br></p>
+<ul>
+<li>Once retrieved, it will cache the result, until the up-stream reports changes.</li>
+<li>An additional optimization: in special cases where we just need the IDs for saving,
+it won&apos;t actually query the cache if the IDs are already known.</li>
+</ul>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -112,7 +117,7 @@ Once retrieved, it will cache the result, until the up-stream reports changes.</
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_LazyEntities_CacheTimestamp.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.LazyEntities.CacheTimestamp%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Relationships/LazyEntities.cs/#L153">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Entities/LazyEntities.cs/#L161">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_LazyEntities_CacheTimestamp_" data-uid="ToSic.Eav.Data.LazyEntities.CacheTimestamp*"></a>
   <h4 id="ToSic_Eav_Data_LazyEntities_CacheTimestamp" data-uid="ToSic.Eav.Data.LazyEntities.CacheTimestamp">CacheTimestamp</h4>
@@ -142,11 +147,12 @@ Once retrieved, it will cache the result, until the up-stream reports changes.</
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_LazyEntities_Identifiers.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.LazyEntities.Identifiers%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Relationships/LazyEntities.cs/#L38">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Entities/LazyEntities.cs/#L42">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_LazyEntities_Identifiers_" data-uid="ToSic.Eav.Data.LazyEntities.Identifiers*"></a>
   <h4 id="ToSic_Eav_Data_LazyEntities_Identifiers" data-uid="ToSic.Eav.Data.LazyEntities.Identifiers">Identifiers</h4>
-  <div class="markdown level1 summary"><p>Identifiers of the items in the list. Build with either the Guids or the Ids, depending on what was used. </p>
+  <div class="markdown level1 summary"><p>Identifiers of the items in the list. Build with either the Guids or the Ids, depending on what was used.
+Special mechanism to get identifiers to DB storage, without loading the entities themselves</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -175,7 +181,7 @@ Once retrieved, it will cache the result, until the up-stream reports changes.</
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_LazyEntities_CacheChanged.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.LazyEntities.CacheChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Relationships/LazyEntities.cs/#L156">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Entities/LazyEntities.cs/#L164">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_LazyEntities_CacheChanged_" data-uid="ToSic.Eav.Data.LazyEntities.CacheChanged*"></a>
   <h4 id="ToSic_Eav_Data_LazyEntities_CacheChanged" data-uid="ToSic.Eav.Data.LazyEntities.CacheChanged">CacheChanged()</h4>
@@ -202,68 +208,6 @@ Once retrieved, it will cache the result, until the up-stream reports changes.</
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_LazyEntities_GetEnumerator.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.LazyEntities.GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Relationships/LazyEntities.cs/#L124">View Source</a>
-  </span>
-  <a id="ToSic_Eav_Data_LazyEntities_GetEnumerator_" data-uid="ToSic.Eav.Data.LazyEntities.GetEnumerator*"></a>
-  <h4 id="ToSic_Eav_Data_LazyEntities_GetEnumerator" data-uid="ToSic.Eav.Data.LazyEntities.GetEnumerator">GetEnumerator()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IEnumerator&lt;IEntity&gt; GetEnumerator()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerator</span>&lt;<a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="eii">Explicit Interface Implementations
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_LazyEntities_System_Collections_IEnumerable_GetEnumerator.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.LazyEntities.System%23Collections%23IEnumerable%23GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Relationships/LazyEntities.cs/#L132">View Source</a>
-  </span>
-  <a id="ToSic_Eav_Data_LazyEntities_System_Collections_IEnumerable_GetEnumerator_" data-uid="ToSic.Eav.Data.LazyEntities.System#Collections#IEnumerable#GetEnumerator*"></a>
-  <h4 id="ToSic_Eav_Data_LazyEntities_System_Collections_IEnumerable_GetEnumerator" data-uid="ToSic.Eav.Data.LazyEntities.System#Collections#IEnumerable#GetEnumerator">IEnumerable.GetEnumerator()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IEnumerator IEnumerable.GetEnumerator()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.IEnumerator</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>
@@ -285,7 +229,7 @@ Once retrieved, it will cache the result, until the up-stream reports changes.</
                     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_LazyEntities.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.LazyEntities%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Relationships/LazyEntities.cs/#L16" class="contribution-link">View Source</a>
+                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Entities/LazyEntities.cs/#L19" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
