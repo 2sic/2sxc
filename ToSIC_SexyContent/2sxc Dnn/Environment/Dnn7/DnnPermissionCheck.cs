@@ -39,7 +39,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             IEntity targetItem = null,
             IContainer instance = null,
             IApp app = null,
-            IEnumerable<IEntity> permissions1 = null,
+            IEnumerable<Permission> permissions1 = null,
             PortalSettings portal = null,
             IInAppAndZone appIdentity = null
             )

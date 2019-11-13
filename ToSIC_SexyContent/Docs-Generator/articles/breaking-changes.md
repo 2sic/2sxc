@@ -29,7 +29,7 @@ More internal changes which shouldn't affect anybody, but make the API ready for
 1. Renamed `CacheChainedIEnumerable<T>` to `SynchronizedList<T>`
 1. Moved/Renamed `MetadataFor` to `Eav.Metadata.Target`. Left old name compatible.
 1. Moved some extension methods for IEntity from `ToSic.Eav.Data.Query` to `ToSic.Eav.Data`
-1. 
+1. Changed `Permissions` to be strongly typed EntityBased objects
 
 #### Version 10.20.01 (2019-11-12)
 

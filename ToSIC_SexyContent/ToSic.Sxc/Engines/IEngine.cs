@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent.Search;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Search;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -33,6 +31,7 @@ namespace ToSic.Sxc.Engines
         /// <param name="purpose">Purpose of the engine (show in web, search-index, etc.)</param>
         /// <param name="cmsBlock">The block within the cms</param>
         /// <param name="parentLog">Log to chain with</param>
+        [PrivateApi]
         void Init(IView view, IApp app, IContainer envInstance, IDataSource dataSource, Purpose purpose, Blocks.ICmsBlock cmsBlock, ILog parentLog);
 
         /// <summary>

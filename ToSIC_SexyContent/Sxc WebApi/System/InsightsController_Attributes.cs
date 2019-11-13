@@ -93,7 +93,7 @@ namespace ToSic.Sxc.WebApi.System
                       ?? throw Http.BadRequest($"can't find attribute {attribute}");
 
             var msg = h1($"Attribute Permissions for {typ.Name}.{attribute} in {appId}\n");
-            var metadata = att.Metadata.Permissions.ToList();
+            var metadata = att.Metadata.Permissions.Select(p => p.Entity).ToList();
 
             return MetadataTable(msg, metadata);
         }

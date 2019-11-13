@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Security.Permissions;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 // ReSharper disable once CheckNamespace
@@ -119,7 +120,7 @@ namespace ToSic.SexyContent.EAVExtensions
         public IMetadataOf Metadata => _baseEntity.Metadata;
 
         /// <inheritdoc />
-        public IEnumerable<IEntity> Permissions => _baseEntity.Permissions;
+        public IEnumerable<Permission> Permissions => _baseEntity.Permissions;
 
         #endregion
 

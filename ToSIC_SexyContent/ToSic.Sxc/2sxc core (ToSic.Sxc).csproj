@@ -169,9 +169,8 @@
     <Compile Include="Blocks\Purpose.cs" />
     <Compile Include="Engines\RenderingException.cs" />
     <Compile Include="Engines\RenderStatusType.cs" />
-    <Compile Include="Engines\Token\LookUpInAppProperty.cs" />
-    <Compile Include="Engines\Token\LookUpInDynamicEntity.cs" />
-    <Compile Include="Engines\Token\LookUpInNameValueCollection.cs" />
+    <Compile Include="LookUp\LookUpInAppProperty.cs" />
+    <Compile Include="LookUp\LookUpInDynamicEntity.cs" />
     <Compile Include="Interfaces\Internal\IEnvironmentLookUps.cs" />
     <Compile Include="Engines\Token\TokenEngine.cs" />
     <Compile Include="Engines\Token\TokenReplaceEAV.cs" />

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Web;
+using ToSic.Eav.Documentation;
 using ToSic.Sxc.Dnn;
 
 namespace ToSic.Sxc.Engines.Razor
 {
     /// <summary>
-    /// helper to quickly "raw" some html
+    /// helper to quickly "raw" some html.
     /// </summary>
+    [PrivateApi("basically shouldn't be used, because @: does the same thing")]
     public class HtmlHelper: IHtmlHelper
     {
         /// <inheritdoc/>

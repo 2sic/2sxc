@@ -55,6 +55,11 @@
     <None Include="docfx.json" />
     <None Include="filterConfig.yml" />
     <None Include="index.md" />
+    <None Include="namespaces\Sxc.Search.md" />
+    <None Include="namespaces\Sxc.LookUp.md" />
+    <None Include="namespaces\Eav.Security.md" />
+    <None Include="namespaces\Eav.Environment.md" />
+    <None Include="namespaces\Sxc.Apps.md" />
     <None Include="namespaces\Sxc.Data.md" />
     <None Include="namespaces\Sxc.Adam.md" />
     <None Include="namespaces\Eav.Caching.md" />
