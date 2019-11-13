@@ -515,6 +515,128 @@ references:
   commentId: N:ToSic.Eav.Data
   fullName: ToSic.Eav.Data
   nameWithType: ToSic.Eav.Data
+- uid: ToSic.Eav.Data.Attribute`1
+  name: Attribute<T>
+  href: api/ToSic.Eav.Data.Attribute-1.html
+  commentId: T:ToSic.Eav.Data.Attribute`1
+  name.vb: Attribute(Of T)
+  fullName: ToSic.Eav.Data.Attribute<T>
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T)
+  nameWithType: Attribute<T>
+  nameWithType.vb: Attribute(Of T)
+- uid: ToSic.Eav.Data.Attribute`1.#ctor(System.String,System.String)
+  name: Attribute(String, String)
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1__ctor_System_String_System_String_
+  commentId: M:ToSic.Eav.Data.Attribute`1.#ctor(System.String,System.String)
+  fullName: ToSic.Eav.Data.Attribute<T>.Attribute(System.String, System.String)
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).Attribute(System.String, System.String)
+  nameWithType: Attribute<T>.Attribute(String, String)
+  nameWithType.vb: Attribute(Of T).Attribute(String, String)
+- uid: ToSic.Eav.Data.Attribute`1.#ctor*
+  name: Attribute
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1__ctor_
+  commentId: Overload:ToSic.Eav.Data.Attribute`1.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.Attribute<T>.Attribute
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).Attribute
+  nameWithType: Attribute<T>.Attribute
+  nameWithType.vb: Attribute(Of T).Attribute
+- uid: ToSic.Eav.Data.Attribute`1.Item(System.Int32)
+  name: Item[Int32]
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1_Item_System_Int32_
+  commentId: P:ToSic.Eav.Data.Attribute`1.Item(System.Int32)
+  name.vb: Item(Int32)
+  fullName: ToSic.Eav.Data.Attribute<T>.Item[System.Int32]
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).Item(System.Int32)
+  nameWithType: Attribute<T>.Item[Int32]
+  nameWithType.vb: Attribute(Of T).Item(Int32)
+- uid: ToSic.Eav.Data.Attribute`1.Item(System.Int32[])
+  name: Item[Int32[]]
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1_Item_System_Int32___
+  commentId: P:ToSic.Eav.Data.Attribute`1.Item(System.Int32[])
+  name.vb: Item(Int32())
+  fullName: ToSic.Eav.Data.Attribute<T>.Item[System.Int32[]]
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).Item(System.Int32())
+  nameWithType: Attribute<T>.Item[Int32[]]
+  nameWithType.vb: Attribute(Of T).Item(Int32())
+- uid: ToSic.Eav.Data.Attribute`1.Item(System.String)
+  name: Item[String]
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1_Item_System_String_
+  commentId: P:ToSic.Eav.Data.Attribute`1.Item(System.String)
+  name.vb: Item(String)
+  fullName: ToSic.Eav.Data.Attribute<T>.Item[System.String]
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).Item(System.String)
+  nameWithType: Attribute<T>.Item[String]
+  nameWithType.vb: Attribute(Of T).Item(String)
+- uid: ToSic.Eav.Data.Attribute`1.Item(System.String[])
+  name: Item[String[]]
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1_Item_System_String___
+  commentId: P:ToSic.Eav.Data.Attribute`1.Item(System.String[])
+  name.vb: Item(String())
+  fullName: ToSic.Eav.Data.Attribute<T>.Item[System.String[]]
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).Item(System.String())
+  nameWithType: Attribute<T>.Item[String[]]
+  nameWithType.vb: Attribute(Of T).Item(String())
+- uid: ToSic.Eav.Data.Attribute`1.Item*
+  name: Item
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1_Item_
+  commentId: Overload:ToSic.Eav.Data.Attribute`1.Item
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.Attribute<T>.Item
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).Item
+  nameWithType: Attribute<T>.Item
+  nameWithType.vb: Attribute(Of T).Item
+- uid: ToSic.Eav.Data.Attribute`1.Typed
+  name: Typed
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1_Typed
+  commentId: P:ToSic.Eav.Data.Attribute`1.Typed
+  fullName: ToSic.Eav.Data.Attribute<T>.Typed
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).Typed
+  nameWithType: Attribute<T>.Typed
+  nameWithType.vb: Attribute(Of T).Typed
+- uid: ToSic.Eav.Data.Attribute`1.Typed*
+  name: Typed
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1_Typed_
+  commentId: Overload:ToSic.Eav.Data.Attribute`1.Typed
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.Attribute<T>.Typed
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).Typed
+  nameWithType: Attribute<T>.Typed
+  nameWithType.vb: Attribute(Of T).Typed
+- uid: ToSic.Eav.Data.Attribute`1.TypedContents
+  name: TypedContents
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1_TypedContents
+  commentId: P:ToSic.Eav.Data.Attribute`1.TypedContents
+  fullName: ToSic.Eav.Data.Attribute<T>.TypedContents
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).TypedContents
+  nameWithType: Attribute<T>.TypedContents
+  nameWithType.vb: Attribute(Of T).TypedContents
+- uid: ToSic.Eav.Data.Attribute`1.TypedContents*
+  name: TypedContents
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1_TypedContents_
+  commentId: Overload:ToSic.Eav.Data.Attribute`1.TypedContents
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.Attribute<T>.TypedContents
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).TypedContents
+  nameWithType: Attribute<T>.TypedContents
+  nameWithType.vb: Attribute(Of T).TypedContents
+- uid: ToSic.Eav.Data.Attribute`1.Values
+  name: Values
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1_Values
+  commentId: P:ToSic.Eav.Data.Attribute`1.Values
+  fullName: ToSic.Eav.Data.Attribute<T>.Values
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).Values
+  nameWithType: Attribute<T>.Values
+  nameWithType.vb: Attribute(Of T).Values
+- uid: ToSic.Eav.Data.Attribute`1.Values*
+  name: Values
+  href: api/ToSic.Eav.Data.Attribute-1.html#ToSic_Eav_Data_Attribute_1_Values_
+  commentId: Overload:ToSic.Eav.Data.Attribute`1.Values
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.Attribute<T>.Values
+  fullName.vb: ToSic.Eav.Data.Attribute(Of T).Values
+  nameWithType: Attribute<T>.Values
+  nameWithType.vb: Attribute(Of T).Values
 - uid: ToSic.Eav.Data.ContentType
   name: ContentType
   href: api/ToSic.Eav.Data.ContentType.html
@@ -767,6 +889,99 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.ContentType.StaticName
   nameWithType: ContentType.StaticName
+- uid: ToSic.Eav.Data.ContentTypeAttribute
+  name: ContentTypeAttribute
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html
+  commentId: T:ToSic.Eav.Data.ContentTypeAttribute
+  fullName: ToSic.Eav.Data.ContentTypeAttribute
+  nameWithType: ContentTypeAttribute
+- uid: ToSic.Eav.Data.ContentTypeAttribute.#ctor(System.Int32,System.String,System.String,System.Boolean,System.Int32,System.Int32,ToSic.Eav.Data.IDeferredEntitiesList,System.Int32)
+  name: ContentTypeAttribute(Int32, String, String, Boolean, Int32, Int32, IDeferredEntitiesList, Int32)
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute__ctor_System_Int32_System_String_System_String_System_Boolean_System_Int32_System_Int32_ToSic_Eav_Data_IDeferredEntitiesList_System_Int32_
+  commentId: M:ToSic.Eav.Data.ContentTypeAttribute.#ctor(System.Int32,System.String,System.String,System.Boolean,System.Int32,System.Int32,ToSic.Eav.Data.IDeferredEntitiesList,System.Int32)
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.ContentTypeAttribute(System.Int32, System.String, System.String, System.Boolean, System.Int32, System.Int32, ToSic.Eav.Data.IDeferredEntitiesList, System.Int32)
+  nameWithType: ContentTypeAttribute.ContentTypeAttribute(Int32, String, String, Boolean, Int32, Int32, IDeferredEntitiesList, Int32)
+- uid: ToSic.Eav.Data.ContentTypeAttribute.#ctor(System.Int32,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.Object)
+  name: ContentTypeAttribute(Int32, String, String, String, String, String, Nullable<Boolean>, Object)
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute__ctor_System_Int32_System_String_System_String_System_String_System_String_System_String_System_Nullable_System_Boolean__System_Object_
+  commentId: M:ToSic.Eav.Data.ContentTypeAttribute.#ctor(System.Int32,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.Object)
+  name.vb: ContentTypeAttribute(Int32, String, String, String, String, String, Nullable(Of Boolean), Object)
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.ContentTypeAttribute(System.Int32, System.String, System.String, System.String, System.String, System.String, System.Nullable<System.Boolean>, System.Object)
+  fullName.vb: ToSic.Eav.Data.ContentTypeAttribute.ContentTypeAttribute(System.Int32, System.String, System.String, System.String, System.String, System.String, System.Nullable(Of System.Boolean), System.Object)
+  nameWithType: ContentTypeAttribute.ContentTypeAttribute(Int32, String, String, String, String, String, Nullable<Boolean>, Object)
+  nameWithType.vb: ContentTypeAttribute.ContentTypeAttribute(Int32, String, String, String, String, String, Nullable(Of Boolean), Object)
+- uid: ToSic.Eav.Data.ContentTypeAttribute.#ctor*
+  name: ContentTypeAttribute
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute__ctor_
+  commentId: Overload:ToSic.Eav.Data.ContentTypeAttribute.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.ContentTypeAttribute
+  nameWithType: ContentTypeAttribute.ContentTypeAttribute
+- uid: ToSic.Eav.Data.ContentTypeAttribute.AppId
+  name: AppId
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute_AppId
+  commentId: P:ToSic.Eav.Data.ContentTypeAttribute.AppId
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.AppId
+  nameWithType: ContentTypeAttribute.AppId
+- uid: ToSic.Eav.Data.ContentTypeAttribute.AppId*
+  name: AppId
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute_AppId_
+  commentId: Overload:ToSic.Eav.Data.ContentTypeAttribute.AppId
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.AppId
+  nameWithType: ContentTypeAttribute.AppId
+- uid: ToSic.Eav.Data.ContentTypeAttribute.AttributeId
+  name: AttributeId
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute_AttributeId
+  commentId: P:ToSic.Eav.Data.ContentTypeAttribute.AttributeId
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.AttributeId
+  nameWithType: ContentTypeAttribute.AttributeId
+- uid: ToSic.Eav.Data.ContentTypeAttribute.AttributeId*
+  name: AttributeId
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute_AttributeId_
+  commentId: Overload:ToSic.Eav.Data.ContentTypeAttribute.AttributeId
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.AttributeId
+  nameWithType: ContentTypeAttribute.AttributeId
+- uid: ToSic.Eav.Data.ContentTypeAttribute.IsTitle
+  name: IsTitle
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute_IsTitle
+  commentId: P:ToSic.Eav.Data.ContentTypeAttribute.IsTitle
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.IsTitle
+  nameWithType: ContentTypeAttribute.IsTitle
+- uid: ToSic.Eav.Data.ContentTypeAttribute.IsTitle*
+  name: IsTitle
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute_IsTitle_
+  commentId: Overload:ToSic.Eav.Data.ContentTypeAttribute.IsTitle
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.IsTitle
+  nameWithType: ContentTypeAttribute.IsTitle
+- uid: ToSic.Eav.Data.ContentTypeAttribute.Metadata
+  name: Metadata
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute_Metadata
+  commentId: P:ToSic.Eav.Data.ContentTypeAttribute.Metadata
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.Metadata
+  nameWithType: ContentTypeAttribute.Metadata
+- uid: ToSic.Eav.Data.ContentTypeAttribute.Metadata*
+  name: Metadata
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute_Metadata_
+  commentId: Overload:ToSic.Eav.Data.ContentTypeAttribute.Metadata
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.Metadata
+  nameWithType: ContentTypeAttribute.Metadata
+- uid: ToSic.Eav.Data.ContentTypeAttribute.SortOrder
+  name: SortOrder
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute_SortOrder
+  commentId: P:ToSic.Eav.Data.ContentTypeAttribute.SortOrder
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.SortOrder
+  nameWithType: ContentTypeAttribute.SortOrder
+- uid: ToSic.Eav.Data.ContentTypeAttribute.SortOrder*
+  name: SortOrder
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute_SortOrder_
+  commentId: Overload:ToSic.Eav.Data.ContentTypeAttribute.SortOrder
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.SortOrder
+  nameWithType: ContentTypeAttribute.SortOrder
 - uid: ToSic.Eav.Data.ContentTypeMetadata
   name: ContentTypeMetadata
   href: api/ToSic.Eav.Data.ContentTypeMetadata.html
@@ -943,49 +1158,6 @@ references:
   commentId: T:ToSic.Eav.Data.IAttribute
   fullName: ToSic.Eav.Data.IAttribute
   nameWithType: IAttribute
-- uid: ToSic.Eav.Data.IAttribute.Item(System.Int32)
-  name: Item[Int32]
-  href: api/ToSic.Eav.Data.IAttribute.html#ToSic_Eav_Data_IAttribute_Item_System_Int32_
-  commentId: P:ToSic.Eav.Data.IAttribute.Item(System.Int32)
-  name.vb: Item(Int32)
-  fullName: ToSic.Eav.Data.IAttribute.Item[System.Int32]
-  fullName.vb: ToSic.Eav.Data.IAttribute.Item(System.Int32)
-  nameWithType: IAttribute.Item[Int32]
-  nameWithType.vb: IAttribute.Item(Int32)
-- uid: ToSic.Eav.Data.IAttribute.Item(System.Int32[])
-  name: Item[Int32[]]
-  href: api/ToSic.Eav.Data.IAttribute.html#ToSic_Eav_Data_IAttribute_Item_System_Int32___
-  commentId: P:ToSic.Eav.Data.IAttribute.Item(System.Int32[])
-  name.vb: Item(Int32())
-  fullName: ToSic.Eav.Data.IAttribute.Item[System.Int32[]]
-  fullName.vb: ToSic.Eav.Data.IAttribute.Item(System.Int32())
-  nameWithType: IAttribute.Item[Int32[]]
-  nameWithType.vb: IAttribute.Item(Int32())
-- uid: ToSic.Eav.Data.IAttribute.Item(System.String)
-  name: Item[String]
-  href: api/ToSic.Eav.Data.IAttribute.html#ToSic_Eav_Data_IAttribute_Item_System_String_
-  commentId: P:ToSic.Eav.Data.IAttribute.Item(System.String)
-  name.vb: Item(String)
-  fullName: ToSic.Eav.Data.IAttribute.Item[System.String]
-  fullName.vb: ToSic.Eav.Data.IAttribute.Item(System.String)
-  nameWithType: IAttribute.Item[String]
-  nameWithType.vb: IAttribute.Item(String)
-- uid: ToSic.Eav.Data.IAttribute.Item(System.String[])
-  name: Item[String[]]
-  href: api/ToSic.Eav.Data.IAttribute.html#ToSic_Eav_Data_IAttribute_Item_System_String___
-  commentId: P:ToSic.Eav.Data.IAttribute.Item(System.String[])
-  name.vb: Item(String())
-  fullName: ToSic.Eav.Data.IAttribute.Item[System.String[]]
-  fullName.vb: ToSic.Eav.Data.IAttribute.Item(System.String())
-  nameWithType: IAttribute.Item[String[]]
-  nameWithType.vb: IAttribute.Item(String())
-- uid: ToSic.Eav.Data.IAttribute.Item*
-  name: Item
-  href: api/ToSic.Eav.Data.IAttribute.html#ToSic_Eav_Data_IAttribute_Item_
-  commentId: Overload:ToSic.Eav.Data.IAttribute.Item
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.IAttribute.Item
-  nameWithType: IAttribute.Item
 - uid: ToSic.Eav.Data.IAttribute.Values
   name: Values
   href: api/ToSic.Eav.Data.IAttribute.html#ToSic_Eav_Data_IAttribute_Values
@@ -1132,77 +1304,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.IAttributeBase.Type
   nameWithType: IAttributeBase.Type
-- uid: ToSic.Eav.Data.IAttributeDefinition
-  name: IAttributeDefinition
-  href: api/ToSic.Eav.Data.IAttributeDefinition.html
-  commentId: T:ToSic.Eav.Data.IAttributeDefinition
-  fullName: ToSic.Eav.Data.IAttributeDefinition
-  nameWithType: IAttributeDefinition
-- uid: ToSic.Eav.Data.IAttributeDefinition.AppId
-  name: AppId
-  href: api/ToSic.Eav.Data.IAttributeDefinition.html#ToSic_Eav_Data_IAttributeDefinition_AppId
-  commentId: P:ToSic.Eav.Data.IAttributeDefinition.AppId
-  fullName: ToSic.Eav.Data.IAttributeDefinition.AppId
-  nameWithType: IAttributeDefinition.AppId
-- uid: ToSic.Eav.Data.IAttributeDefinition.AppId*
-  name: AppId
-  href: api/ToSic.Eav.Data.IAttributeDefinition.html#ToSic_Eav_Data_IAttributeDefinition_AppId_
-  commentId: Overload:ToSic.Eav.Data.IAttributeDefinition.AppId
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.IAttributeDefinition.AppId
-  nameWithType: IAttributeDefinition.AppId
-- uid: ToSic.Eav.Data.IAttributeDefinition.AttributeId
-  name: AttributeId
-  href: api/ToSic.Eav.Data.IAttributeDefinition.html#ToSic_Eav_Data_IAttributeDefinition_AttributeId
-  commentId: P:ToSic.Eav.Data.IAttributeDefinition.AttributeId
-  fullName: ToSic.Eav.Data.IAttributeDefinition.AttributeId
-  nameWithType: IAttributeDefinition.AttributeId
-- uid: ToSic.Eav.Data.IAttributeDefinition.AttributeId*
-  name: AttributeId
-  href: api/ToSic.Eav.Data.IAttributeDefinition.html#ToSic_Eav_Data_IAttributeDefinition_AttributeId_
-  commentId: Overload:ToSic.Eav.Data.IAttributeDefinition.AttributeId
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.IAttributeDefinition.AttributeId
-  nameWithType: IAttributeDefinition.AttributeId
-- uid: ToSic.Eav.Data.IAttributeDefinition.IsTitle
-  name: IsTitle
-  href: api/ToSic.Eav.Data.IAttributeDefinition.html#ToSic_Eav_Data_IAttributeDefinition_IsTitle
-  commentId: P:ToSic.Eav.Data.IAttributeDefinition.IsTitle
-  fullName: ToSic.Eav.Data.IAttributeDefinition.IsTitle
-  nameWithType: IAttributeDefinition.IsTitle
-- uid: ToSic.Eav.Data.IAttributeDefinition.IsTitle*
-  name: IsTitle
-  href: api/ToSic.Eav.Data.IAttributeDefinition.html#ToSic_Eav_Data_IAttributeDefinition_IsTitle_
-  commentId: Overload:ToSic.Eav.Data.IAttributeDefinition.IsTitle
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.IAttributeDefinition.IsTitle
-  nameWithType: IAttributeDefinition.IsTitle
-- uid: ToSic.Eav.Data.IAttributeDefinition.Metadata
-  name: Metadata
-  href: api/ToSic.Eav.Data.IAttributeDefinition.html#ToSic_Eav_Data_IAttributeDefinition_Metadata
-  commentId: P:ToSic.Eav.Data.IAttributeDefinition.Metadata
-  fullName: ToSic.Eav.Data.IAttributeDefinition.Metadata
-  nameWithType: IAttributeDefinition.Metadata
-- uid: ToSic.Eav.Data.IAttributeDefinition.Metadata*
-  name: Metadata
-  href: api/ToSic.Eav.Data.IAttributeDefinition.html#ToSic_Eav_Data_IAttributeDefinition_Metadata_
-  commentId: Overload:ToSic.Eav.Data.IAttributeDefinition.Metadata
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.IAttributeDefinition.Metadata
-  nameWithType: IAttributeDefinition.Metadata
-- uid: ToSic.Eav.Data.IAttributeDefinition.SortOrder
-  name: SortOrder
-  href: api/ToSic.Eav.Data.IAttributeDefinition.html#ToSic_Eav_Data_IAttributeDefinition_SortOrder
-  commentId: P:ToSic.Eav.Data.IAttributeDefinition.SortOrder
-  fullName: ToSic.Eav.Data.IAttributeDefinition.SortOrder
-  nameWithType: IAttributeDefinition.SortOrder
-- uid: ToSic.Eav.Data.IAttributeDefinition.SortOrder*
-  name: SortOrder
-  href: api/ToSic.Eav.Data.IAttributeDefinition.html#ToSic_Eav_Data_IAttributeDefinition_SortOrder_
-  commentId: Overload:ToSic.Eav.Data.IAttributeDefinition.SortOrder
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.IAttributeDefinition.SortOrder
-  nameWithType: IAttributeDefinition.SortOrder
 - uid: ToSic.Eav.Data.IChildEntities
   name: IChildEntities
   href: api/ToSic.Eav.Data.IChildEntities.html
@@ -1390,6 +1491,64 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Data.IContentType.StaticName
   nameWithType: IContentType.StaticName
+- uid: ToSic.Eav.Data.IContentTypeAttribute
+  name: IContentTypeAttribute
+  href: api/ToSic.Eav.Data.IContentTypeAttribute.html
+  commentId: T:ToSic.Eav.Data.IContentTypeAttribute
+  fullName: ToSic.Eav.Data.IContentTypeAttribute
+  nameWithType: IContentTypeAttribute
+- uid: ToSic.Eav.Data.IContentTypeAttribute.AttributeId
+  name: AttributeId
+  href: api/ToSic.Eav.Data.IContentTypeAttribute.html#ToSic_Eav_Data_IContentTypeAttribute_AttributeId
+  commentId: P:ToSic.Eav.Data.IContentTypeAttribute.AttributeId
+  fullName: ToSic.Eav.Data.IContentTypeAttribute.AttributeId
+  nameWithType: IContentTypeAttribute.AttributeId
+- uid: ToSic.Eav.Data.IContentTypeAttribute.AttributeId*
+  name: AttributeId
+  href: api/ToSic.Eav.Data.IContentTypeAttribute.html#ToSic_Eav_Data_IContentTypeAttribute_AttributeId_
+  commentId: Overload:ToSic.Eav.Data.IContentTypeAttribute.AttributeId
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.IContentTypeAttribute.AttributeId
+  nameWithType: IContentTypeAttribute.AttributeId
+- uid: ToSic.Eav.Data.IContentTypeAttribute.IsTitle
+  name: IsTitle
+  href: api/ToSic.Eav.Data.IContentTypeAttribute.html#ToSic_Eav_Data_IContentTypeAttribute_IsTitle
+  commentId: P:ToSic.Eav.Data.IContentTypeAttribute.IsTitle
+  fullName: ToSic.Eav.Data.IContentTypeAttribute.IsTitle
+  nameWithType: IContentTypeAttribute.IsTitle
+- uid: ToSic.Eav.Data.IContentTypeAttribute.IsTitle*
+  name: IsTitle
+  href: api/ToSic.Eav.Data.IContentTypeAttribute.html#ToSic_Eav_Data_IContentTypeAttribute_IsTitle_
+  commentId: Overload:ToSic.Eav.Data.IContentTypeAttribute.IsTitle
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.IContentTypeAttribute.IsTitle
+  nameWithType: IContentTypeAttribute.IsTitle
+- uid: ToSic.Eav.Data.IContentTypeAttribute.Metadata
+  name: Metadata
+  href: api/ToSic.Eav.Data.IContentTypeAttribute.html#ToSic_Eav_Data_IContentTypeAttribute_Metadata
+  commentId: P:ToSic.Eav.Data.IContentTypeAttribute.Metadata
+  fullName: ToSic.Eav.Data.IContentTypeAttribute.Metadata
+  nameWithType: IContentTypeAttribute.Metadata
+- uid: ToSic.Eav.Data.IContentTypeAttribute.Metadata*
+  name: Metadata
+  href: api/ToSic.Eav.Data.IContentTypeAttribute.html#ToSic_Eav_Data_IContentTypeAttribute_Metadata_
+  commentId: Overload:ToSic.Eav.Data.IContentTypeAttribute.Metadata
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.IContentTypeAttribute.Metadata
+  nameWithType: IContentTypeAttribute.Metadata
+- uid: ToSic.Eav.Data.IContentTypeAttribute.SortOrder
+  name: SortOrder
+  href: api/ToSic.Eav.Data.IContentTypeAttribute.html#ToSic_Eav_Data_IContentTypeAttribute_SortOrder
+  commentId: P:ToSic.Eav.Data.IContentTypeAttribute.SortOrder
+  fullName: ToSic.Eav.Data.IContentTypeAttribute.SortOrder
+  nameWithType: IContentTypeAttribute.SortOrder
+- uid: ToSic.Eav.Data.IContentTypeAttribute.SortOrder*
+  name: SortOrder
+  href: api/ToSic.Eav.Data.IContentTypeAttribute.html#ToSic_Eav_Data_IContentTypeAttribute_SortOrder_
+  commentId: Overload:ToSic.Eav.Data.IContentTypeAttribute.SortOrder
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.IContentTypeAttribute.SortOrder
+  nameWithType: IContentTypeAttribute.SortOrder
 - uid: ToSic.Eav.Data.IDimension
   name: IDimension
   href: api/ToSic.Eav.Data.IDimension.html

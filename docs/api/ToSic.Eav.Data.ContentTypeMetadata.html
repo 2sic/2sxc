@@ -112,15 +112,16 @@ in which case the metadata must be retrieved from another &quot;remote&quot; loc
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.ContentTypeMetadata.%23ctor(System.String%2CSystem.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L21">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L33">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_ContentTypeMetadata__ctor_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.#ctor*"></a>
   <h4 id="ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_System_Int32_System_Int32_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,System.Int32,System.Int32)">ContentTypeMetadata(String, Int32, Int32)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Used in cases where the metadata provider isn&apos;t known, but the IDs are known</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ContentTypeMetadata(string key, int remoteZoneId, int remoteAppId)</code></pre>
+    <pre><code class="lang-csharp hljs">public ContentTypeMetadata(string typeId, int sourceZoneId, int sourceAppId)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -134,18 +135,21 @@ in which case the metadata must be retrieved from another &quot;remote&quot; loc
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><span class="parametername">typeId</span></td>
+        <td><p>type id / static-name</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">remoteZoneId</span></td>
-        <td></td>
+        <td><span class="parametername">sourceZoneId</span></td>
+        <td><p>the zone which has the metadata</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">remoteAppId</span></td>
-        <td></td>
+        <td><span class="parametername">sourceAppId</span></td>
+        <td><p>the app which has the metadata</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -154,15 +158,16 @@ in which case the metadata must be retrieved from another &quot;remote&quot; loc
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_ToSic_Eav_Data_IDeferredEntitiesList_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.ContentTypeMetadata.%23ctor(System.String%2CToSic.Eav.Data.IDeferredEntitiesList)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L17">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L23">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_ContentTypeMetadata__ctor_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.#ctor*"></a>
   <h4 id="ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_ToSic_Eav_Data_IDeferredEntitiesList_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,ToSic.Eav.Data.IDeferredEntitiesList)">ContentTypeMetadata(String, IDeferredEntitiesList)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Used in cases where the metadata-provider is already known</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ContentTypeMetadata(string key, IDeferredEntitiesList metaProvider)</code></pre>
+    <pre><code class="lang-csharp hljs">public ContentTypeMetadata(string typeId, IDeferredEntitiesList metaProvider)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -176,13 +181,15 @@ in which case the metadata must be retrieved from another &quot;remote&quot; loc
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><span class="parametername">typeId</span></td>
+        <td><p>type id / static-name</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">ToSic.Eav.Data.IDeferredEntitiesList</span></td>
         <td><span class="parametername">metaProvider</span></td>
-        <td></td>
+        <td><p>remote / deferred metadata provider</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -193,11 +200,11 @@ in which case the metadata must be retrieved from another &quot;remote&quot; loc
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_ContentTypeMetadata_Description.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.ContentTypeMetadata.Description%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L30">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L42">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_ContentTypeMetadata_Description_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.Description*"></a>
   <h4 id="ToSic_Eav_Data_ContentTypeMetadata_Description" data-uid="ToSic.Eav.Data.ContentTypeMetadata.Description">Description</h4>
-  <div class="markdown level1 summary"><p>Description of this content-type</p>
+  <div class="markdown level1 summary"><p>Description <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> metadata of this content-type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -226,7 +233,7 @@ in which case the metadata must be retrieved from another &quot;remote&quot; loc
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_ContentTypeMetadata_LoadFromProvider.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L37">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L49">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_ContentTypeMetadata_LoadFromProvider_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider*"></a>
   <h4 id="ToSic_Eav_Data_ContentTypeMetadata_LoadFromProvider" data-uid="ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider">LoadFromProvider()</h4>

@@ -33,8 +33,6 @@ namespace ToSic.Sxc.Blocks
         int ParentFieldSortOrder { get; }
 
         #region Values related to the current unit of content / the view
-        //int AppId { get; }
-
         
         ITenant Tenant { get; }
 

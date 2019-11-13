@@ -5,7 +5,6 @@ using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Interfaces;
-using ToSic.Sxc.Blocks;
 using IApp = ToSic.Eav.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 

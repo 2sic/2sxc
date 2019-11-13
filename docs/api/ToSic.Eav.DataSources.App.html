@@ -182,6 +182,10 @@ For example, it has a variable amount of Out-streams, one for each content-type 
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.App, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Source, Icon = &quot;app&quot;, DynamicOut = true, ExpectsDataOfType = &quot;|Config ToSic.Eav.DataSources.App&quot;, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-App&quot;)]
 public class App : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
+  <h5 id="ToSic_Eav_DataSources_App_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.
+But this would be inefficient, so for optimization, many items identify themselves with both the app and zone Ids</p>
+</div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">

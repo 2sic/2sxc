@@ -68,8 +68,8 @@ namespace ToSic.Sxc.Apps.Blocks
                         Eav.Data.Query.Entity.One(dataSource.List, PreviewTemplateId.Value);
                 }
                 else if (Entity != null)
-                    templateEntity =
-                        ((EntityRelationship) Entity.Attributes["Template"][0]).FirstOrDefault();
+                    templateEntity = Entity.Children("Template").FirstOrDefault();
+                //((EntityRelationship) Entity.Attributes["Template"][0]).FirstOrDefault();
 
                 _view = templateEntity == null ? null : new View(templateEntity);
 
