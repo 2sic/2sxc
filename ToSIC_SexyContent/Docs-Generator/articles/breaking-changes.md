@@ -14,7 +14,24 @@ We're documenting it here to ensure you know what happened, in case you still ru
 > All these things shouldn't affect you, because they were internal APIs, 
 > but in case it does - here's what we did.
 
-#### Version 10.20.01 (2019-11-09)
+#### Version 10.20.0? (2019-11-?)
+
+More internal changes which shouldn't affect anybody, but make the API ready for public docs...
+
+1. Moved/renamed the internal `Eav.AppDataPackage` to `Eav.Apps.AppState`
+1. Moved/renamed some internal interfaces like `Entity...`
+1. Did a major change for how `Attribute<T>` for relationships work.  
+	Before they were `Attribute<EntityRelationship>` and now they are `Attribute<IEnumerable<IEntity>>`.  
+	This also affects `Value<EntityRelationship>` which is now `Value<IEnumerable<IEntity>>`
+1. Moved `Tenant<T>` and `Container<T>` including matching interfaces to `Eav.Environment`
+1. Renamed `IAppIdentity` to `IInAppAndZone` and `IZoneIdentity` to `IInZone`
+1. Renamed `ICacheKeyProvider` to `ICacheKey`
+1. Renamed `CacheChainedIEnumerable<T>` to `SynchronizedList<T>`
+1. Moved/Renamed `MetadataFor` to `Eav.Metadata.Target`. Left old name compatible.
+1. Moved some extension methods for IEntity from `ToSic.Eav.Data.Query` to `ToSic.Eav.Data`
+1. 
+
+#### Version 10.20.01 (2019-11-12)
 
 1. Internal code now uses the term `Header` instead of `ListContent`. External code provides both for backward-compatibility
 1. moved internal interfaces for engines (Razor/Token) to final namespaces `ToSic.Sxc.Engines`

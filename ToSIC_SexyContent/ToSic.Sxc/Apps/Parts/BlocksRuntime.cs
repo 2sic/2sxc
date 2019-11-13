@@ -1,6 +1,6 @@
 ﻿using System;
 using ToSic.Eav;
-using ToSic.Eav.Data.Query;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;

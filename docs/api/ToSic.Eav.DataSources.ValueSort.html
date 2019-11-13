@@ -101,7 +101,8 @@
     <div><a class="xref" href="ToSic.Eav.Apps.IInZone.html">IInZone</a></div>
     <div><a class="xref" href="ToSic.Eav.Apps.IInApp.html">IInApp</a></div>
     <div><a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a></div>
-    <div><a class="xref" href="ToSic.Eav.Caching.ICacheKeyProvider.html">ICacheKeyProvider</a></div>
+    <div><a class="xref" href="ToSic.Eav.Caching.ITimestamped.html">ITimestamped</a></div>
+    <div><a class="xref" href="ToSic.Eav.Caching.ICacheKey.html">ICacheKey</a></div>
     <div><a class="xref" href="ToSic.Eav.DataSources.Caches.ICanPurgeListCache.html">ICanPurgeListCache</a></div>
     <div><a class="xref" href="ToSic.Eav.DataSources.IDataTarget.html">IDataTarget</a></div>
   </div>
@@ -182,7 +183,7 @@
   <h5 id="ToSic_Eav_DataSources_ValueSort_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.ValueSort, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Sort, DynamicOut = false, ExpectsDataOfType = &quot;|Config ToSic.Eav.DataSources.ValueSort&quot;, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ValueSort&quot;)]
-public sealed class ValueSort : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+public sealed class ValueSort : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKey, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
   <h5 id="ToSic_Eav_DataSources_ValueSort_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.
@@ -303,7 +304,10 @@ But this would be inefficient, so for optimization, many items identify themselv
       <a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a>
   </div>
   <div>
-      <a class="xref" href="ToSic.Eav.Caching.ICacheKeyProvider.html">ICacheKeyProvider</a>
+      <a class="xref" href="ToSic.Eav.Caching.ITimestamped.html">ITimestamped</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.Caching.ICacheKey.html">ICacheKey</a>
   </div>
   <div>
       <a class="xref" href="ToSic.Eav.DataSources.Caches.ICanPurgeListCache.html">ICanPurgeListCache</a>

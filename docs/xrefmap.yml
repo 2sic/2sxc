@@ -445,119 +445,6 @@ references:
   commentId: N:ToSic.Eav.Caching
   fullName: ToSic.Eav.Caching
   nameWithType: ToSic.Eav.Caching
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1
-  name: CacheChainedIEnumerable<T>
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html
-  commentId: T:ToSic.Eav.Caching.CacheChainedIEnumerable`1
-  name.vb: CacheChainedIEnumerable(Of T)
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T)
-  nameWithType: CacheChainedIEnumerable<T>
-  nameWithType.vb: CacheChainedIEnumerable(Of T)
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1.#ctor(ToSic.Eav.Caching.ICacheExpiring,System.Func{System.Collections.Generic.List{`0}})
-  name: CacheChainedIEnumerable(ICacheExpiring, Func<List<T>>)
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html#ToSic_Eav_Caching_CacheChainedIEnumerable_1__ctor_ToSic_Eav_Caching_ICacheExpiring_System_Func_System_Collections_Generic_List__0___
-  commentId: M:ToSic.Eav.Caching.CacheChainedIEnumerable`1.#ctor(ToSic.Eav.Caching.ICacheExpiring,System.Func{System.Collections.Generic.List{`0}})
-  name.vb: CacheChainedIEnumerable(ICacheExpiring, Func(Of List(Of T)))
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>.CacheChainedIEnumerable(ToSic.Eav.Caching.ICacheExpiring, System.Func<System.Collections.Generic.List<T>>)
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T).CacheChainedIEnumerable(ToSic.Eav.Caching.ICacheExpiring, System.Func(Of System.Collections.Generic.List(Of T)))
-  nameWithType: CacheChainedIEnumerable<T>.CacheChainedIEnumerable(ICacheExpiring, Func<List<T>>)
-  nameWithType.vb: CacheChainedIEnumerable(Of T).CacheChainedIEnumerable(ICacheExpiring, Func(Of List(Of T)))
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1.#ctor*
-  name: CacheChainedIEnumerable
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html#ToSic_Eav_Caching_CacheChainedIEnumerable_1__ctor_
-  commentId: Overload:ToSic.Eav.Caching.CacheChainedIEnumerable`1.#ctor
-  isSpec: "True"
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>.CacheChainedIEnumerable
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T).CacheChainedIEnumerable
-  nameWithType: CacheChainedIEnumerable<T>.CacheChainedIEnumerable
-  nameWithType.vb: CacheChainedIEnumerable(Of T).CacheChainedIEnumerable
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1.CacheChanged
-  name: CacheChanged()
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html#ToSic_Eav_Caching_CacheChainedIEnumerable_1_CacheChanged
-  commentId: M:ToSic.Eav.Caching.CacheChainedIEnumerable`1.CacheChanged
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>.CacheChanged()
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T).CacheChanged()
-  nameWithType: CacheChainedIEnumerable<T>.CacheChanged()
-  nameWithType.vb: CacheChainedIEnumerable(Of T).CacheChanged()
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1.CacheChanged(System.Int64)
-  name: CacheChanged(Int64)
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html#ToSic_Eav_Caching_CacheChainedIEnumerable_1_CacheChanged_System_Int64_
-  commentId: M:ToSic.Eav.Caching.CacheChainedIEnumerable`1.CacheChanged(System.Int64)
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>.CacheChanged(System.Int64)
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T).CacheChanged(System.Int64)
-  nameWithType: CacheChainedIEnumerable<T>.CacheChanged(Int64)
-  nameWithType.vb: CacheChainedIEnumerable(Of T).CacheChanged(Int64)
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1.CacheChanged*
-  name: CacheChanged
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html#ToSic_Eav_Caching_CacheChainedIEnumerable_1_CacheChanged_
-  commentId: Overload:ToSic.Eav.Caching.CacheChainedIEnumerable`1.CacheChanged
-  isSpec: "True"
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>.CacheChanged
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T).CacheChanged
-  nameWithType: CacheChainedIEnumerable<T>.CacheChanged
-  nameWithType.vb: CacheChainedIEnumerable(Of T).CacheChanged
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1.CacheTimestamp
-  name: CacheTimestamp
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html#ToSic_Eav_Caching_CacheChainedIEnumerable_1_CacheTimestamp
-  commentId: P:ToSic.Eav.Caching.CacheChainedIEnumerable`1.CacheTimestamp
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>.CacheTimestamp
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T).CacheTimestamp
-  nameWithType: CacheChainedIEnumerable<T>.CacheTimestamp
-  nameWithType.vb: CacheChainedIEnumerable(Of T).CacheTimestamp
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1.CacheTimestamp*
-  name: CacheTimestamp
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html#ToSic_Eav_Caching_CacheChainedIEnumerable_1_CacheTimestamp_
-  commentId: Overload:ToSic.Eav.Caching.CacheChainedIEnumerable`1.CacheTimestamp
-  isSpec: "True"
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>.CacheTimestamp
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T).CacheTimestamp
-  nameWithType: CacheChainedIEnumerable<T>.CacheTimestamp
-  nameWithType.vb: CacheChainedIEnumerable(Of T).CacheTimestamp
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1.GetEnumerator
-  name: GetEnumerator()
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html#ToSic_Eav_Caching_CacheChainedIEnumerable_1_GetEnumerator
-  commentId: M:ToSic.Eav.Caching.CacheChainedIEnumerable`1.GetEnumerator
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>.GetEnumerator()
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T).GetEnumerator()
-  nameWithType: CacheChainedIEnumerable<T>.GetEnumerator()
-  nameWithType.vb: CacheChainedIEnumerable(Of T).GetEnumerator()
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1.GetEnumerator*
-  name: GetEnumerator
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html#ToSic_Eav_Caching_CacheChainedIEnumerable_1_GetEnumerator_
-  commentId: Overload:ToSic.Eav.Caching.CacheChainedIEnumerable`1.GetEnumerator
-  isSpec: "True"
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>.GetEnumerator
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T).GetEnumerator
-  nameWithType: CacheChainedIEnumerable<T>.GetEnumerator
-  nameWithType.vb: CacheChainedIEnumerable(Of T).GetEnumerator
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1.System#Collections#IEnumerable#GetEnumerator
-  name: IEnumerable.GetEnumerator()
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html#ToSic_Eav_Caching_CacheChainedIEnumerable_1_System_Collections_IEnumerable_GetEnumerator
-  commentId: M:ToSic.Eav.Caching.CacheChainedIEnumerable`1.System#Collections#IEnumerable#GetEnumerator
-  name.vb: System.Collections.IEnumerable.GetEnumerator()
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>.System.Collections.IEnumerable.GetEnumerator()
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T).System.Collections.IEnumerable.GetEnumerator()
-  nameWithType: CacheChainedIEnumerable<T>.IEnumerable.GetEnumerator()
-  nameWithType.vb: CacheChainedIEnumerable(Of T).System.Collections.IEnumerable.GetEnumerator()
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1.System#Collections#IEnumerable#GetEnumerator*
-  name: IEnumerable.GetEnumerator
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html#ToSic_Eav_Caching_CacheChainedIEnumerable_1_System_Collections_IEnumerable_GetEnumerator_
-  commentId: Overload:ToSic.Eav.Caching.CacheChainedIEnumerable`1.System#Collections#IEnumerable#GetEnumerator
-  isSpec: "True"
-  name.vb: System.Collections.IEnumerable.GetEnumerator
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>.System.Collections.IEnumerable.GetEnumerator
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T).System.Collections.IEnumerable.GetEnumerator
-  nameWithType: CacheChainedIEnumerable<T>.IEnumerable.GetEnumerator
-  nameWithType.vb: CacheChainedIEnumerable(Of T).System.Collections.IEnumerable.GetEnumerator
-- uid: ToSic.Eav.Caching.CacheChainedIEnumerable`1.Upstream
-  name: Upstream
-  href: api/ToSic.Eav.Caching.CacheChainedIEnumerable-1.html#ToSic_Eav_Caching_CacheChainedIEnumerable_1_Upstream
-  commentId: F:ToSic.Eav.Caching.CacheChainedIEnumerable`1.Upstream
-  fullName: ToSic.Eav.Caching.CacheChainedIEnumerable<T>.Upstream
-  fullName.vb: ToSic.Eav.Caching.CacheChainedIEnumerable(Of T).Upstream
-  nameWithType: CacheChainedIEnumerable<T>.Upstream
-  nameWithType.vb: CacheChainedIEnumerable(Of T).Upstream
 - uid: ToSic.Eav.Caching.ICacheDependent
   name: ICacheDependent
   href: api/ToSic.Eav.Caching.ICacheDependent.html
@@ -596,38 +483,170 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Caching.ICacheExpiring.CacheChanged
   nameWithType: ICacheExpiring.CacheChanged
-- uid: ToSic.Eav.Caching.ICacheKeyProvider
-  name: ICacheKeyProvider
-  href: api/ToSic.Eav.Caching.ICacheKeyProvider.html
-  commentId: T:ToSic.Eav.Caching.ICacheKeyProvider
-  fullName: ToSic.Eav.Caching.ICacheKeyProvider
-  nameWithType: ICacheKeyProvider
-- uid: ToSic.Eav.Caching.ICacheKeyProvider.CacheFullKey
+- uid: ToSic.Eav.Caching.ICacheKey
+  name: ICacheKey
+  href: api/ToSic.Eav.Caching.ICacheKey.html
+  commentId: T:ToSic.Eav.Caching.ICacheKey
+  fullName: ToSic.Eav.Caching.ICacheKey
+  nameWithType: ICacheKey
+- uid: ToSic.Eav.Caching.ICacheKey.CacheFullKey
   name: CacheFullKey
-  href: api/ToSic.Eav.Caching.ICacheKeyProvider.html#ToSic_Eav_Caching_ICacheKeyProvider_CacheFullKey
-  commentId: P:ToSic.Eav.Caching.ICacheKeyProvider.CacheFullKey
-  fullName: ToSic.Eav.Caching.ICacheKeyProvider.CacheFullKey
-  nameWithType: ICacheKeyProvider.CacheFullKey
-- uid: ToSic.Eav.Caching.ICacheKeyProvider.CacheFullKey*
+  href: api/ToSic.Eav.Caching.ICacheKey.html#ToSic_Eav_Caching_ICacheKey_CacheFullKey
+  commentId: P:ToSic.Eav.Caching.ICacheKey.CacheFullKey
+  fullName: ToSic.Eav.Caching.ICacheKey.CacheFullKey
+  nameWithType: ICacheKey.CacheFullKey
+- uid: ToSic.Eav.Caching.ICacheKey.CacheFullKey*
   name: CacheFullKey
-  href: api/ToSic.Eav.Caching.ICacheKeyProvider.html#ToSic_Eav_Caching_ICacheKeyProvider_CacheFullKey_
-  commentId: Overload:ToSic.Eav.Caching.ICacheKeyProvider.CacheFullKey
+  href: api/ToSic.Eav.Caching.ICacheKey.html#ToSic_Eav_Caching_ICacheKey_CacheFullKey_
+  commentId: Overload:ToSic.Eav.Caching.ICacheKey.CacheFullKey
   isSpec: "True"
-  fullName: ToSic.Eav.Caching.ICacheKeyProvider.CacheFullKey
-  nameWithType: ICacheKeyProvider.CacheFullKey
-- uid: ToSic.Eav.Caching.ICacheKeyProvider.CachePartialKey
+  fullName: ToSic.Eav.Caching.ICacheKey.CacheFullKey
+  nameWithType: ICacheKey.CacheFullKey
+- uid: ToSic.Eav.Caching.ICacheKey.CachePartialKey
   name: CachePartialKey
-  href: api/ToSic.Eav.Caching.ICacheKeyProvider.html#ToSic_Eav_Caching_ICacheKeyProvider_CachePartialKey
-  commentId: P:ToSic.Eav.Caching.ICacheKeyProvider.CachePartialKey
-  fullName: ToSic.Eav.Caching.ICacheKeyProvider.CachePartialKey
-  nameWithType: ICacheKeyProvider.CachePartialKey
-- uid: ToSic.Eav.Caching.ICacheKeyProvider.CachePartialKey*
+  href: api/ToSic.Eav.Caching.ICacheKey.html#ToSic_Eav_Caching_ICacheKey_CachePartialKey
+  commentId: P:ToSic.Eav.Caching.ICacheKey.CachePartialKey
+  fullName: ToSic.Eav.Caching.ICacheKey.CachePartialKey
+  nameWithType: ICacheKey.CachePartialKey
+- uid: ToSic.Eav.Caching.ICacheKey.CachePartialKey*
   name: CachePartialKey
-  href: api/ToSic.Eav.Caching.ICacheKeyProvider.html#ToSic_Eav_Caching_ICacheKeyProvider_CachePartialKey_
-  commentId: Overload:ToSic.Eav.Caching.ICacheKeyProvider.CachePartialKey
+  href: api/ToSic.Eav.Caching.ICacheKey.html#ToSic_Eav_Caching_ICacheKey_CachePartialKey_
+  commentId: Overload:ToSic.Eav.Caching.ICacheKey.CachePartialKey
   isSpec: "True"
-  fullName: ToSic.Eav.Caching.ICacheKeyProvider.CachePartialKey
-  nameWithType: ICacheKeyProvider.CachePartialKey
+  fullName: ToSic.Eav.Caching.ICacheKey.CachePartialKey
+  nameWithType: ICacheKey.CachePartialKey
+- uid: ToSic.Eav.Caching.ITimestamped
+  name: ITimestamped
+  href: api/ToSic.Eav.Caching.ITimestamped.html
+  commentId: T:ToSic.Eav.Caching.ITimestamped
+  fullName: ToSic.Eav.Caching.ITimestamped
+  nameWithType: ITimestamped
+- uid: ToSic.Eav.Caching.ITimestamped.CacheTimestamp
+  name: CacheTimestamp
+  href: api/ToSic.Eav.Caching.ITimestamped.html#ToSic_Eav_Caching_ITimestamped_CacheTimestamp
+  commentId: P:ToSic.Eav.Caching.ITimestamped.CacheTimestamp
+  fullName: ToSic.Eav.Caching.ITimestamped.CacheTimestamp
+  nameWithType: ITimestamped.CacheTimestamp
+- uid: ToSic.Eav.Caching.ITimestamped.CacheTimestamp*
+  name: CacheTimestamp
+  href: api/ToSic.Eav.Caching.ITimestamped.html#ToSic_Eav_Caching_ITimestamped_CacheTimestamp_
+  commentId: Overload:ToSic.Eav.Caching.ITimestamped.CacheTimestamp
+  isSpec: "True"
+  fullName: ToSic.Eav.Caching.ITimestamped.CacheTimestamp
+  nameWithType: ITimestamped.CacheTimestamp
+- uid: ToSic.Eav.Caching.SynchronizedList`1
+  name: SynchronizedList<T>
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html
+  commentId: T:ToSic.Eav.Caching.SynchronizedList`1
+  name.vb: SynchronizedList(Of T)
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T)
+  nameWithType: SynchronizedList<T>
+  nameWithType.vb: SynchronizedList(Of T)
+- uid: ToSic.Eav.Caching.SynchronizedList`1.#ctor(ToSic.Eav.Caching.ICacheExpiring,System.Func{System.Collections.Generic.List{`0}})
+  name: SynchronizedList(ICacheExpiring, Func<List<T>>)
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html#ToSic_Eav_Caching_SynchronizedList_1__ctor_ToSic_Eav_Caching_ICacheExpiring_System_Func_System_Collections_Generic_List__0___
+  commentId: M:ToSic.Eav.Caching.SynchronizedList`1.#ctor(ToSic.Eav.Caching.ICacheExpiring,System.Func{System.Collections.Generic.List{`0}})
+  name.vb: SynchronizedList(ICacheExpiring, Func(Of List(Of T)))
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>.SynchronizedList(ToSic.Eav.Caching.ICacheExpiring, System.Func<System.Collections.Generic.List<T>>)
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).SynchronizedList(ToSic.Eav.Caching.ICacheExpiring, System.Func(Of System.Collections.Generic.List(Of T)))
+  nameWithType: SynchronizedList<T>.SynchronizedList(ICacheExpiring, Func<List<T>>)
+  nameWithType.vb: SynchronizedList(Of T).SynchronizedList(ICacheExpiring, Func(Of List(Of T)))
+- uid: ToSic.Eav.Caching.SynchronizedList`1.#ctor*
+  name: SynchronizedList
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html#ToSic_Eav_Caching_SynchronizedList_1__ctor_
+  commentId: Overload:ToSic.Eav.Caching.SynchronizedList`1.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>.SynchronizedList
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).SynchronizedList
+  nameWithType: SynchronizedList<T>.SynchronizedList
+  nameWithType.vb: SynchronizedList(Of T).SynchronizedList
+- uid: ToSic.Eav.Caching.SynchronizedList`1.CacheChanged
+  name: CacheChanged()
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html#ToSic_Eav_Caching_SynchronizedList_1_CacheChanged
+  commentId: M:ToSic.Eav.Caching.SynchronizedList`1.CacheChanged
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>.CacheChanged()
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).CacheChanged()
+  nameWithType: SynchronizedList<T>.CacheChanged()
+  nameWithType.vb: SynchronizedList(Of T).CacheChanged()
+- uid: ToSic.Eav.Caching.SynchronizedList`1.CacheChanged(System.Int64)
+  name: CacheChanged(Int64)
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html#ToSic_Eav_Caching_SynchronizedList_1_CacheChanged_System_Int64_
+  commentId: M:ToSic.Eav.Caching.SynchronizedList`1.CacheChanged(System.Int64)
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>.CacheChanged(System.Int64)
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).CacheChanged(System.Int64)
+  nameWithType: SynchronizedList<T>.CacheChanged(Int64)
+  nameWithType.vb: SynchronizedList(Of T).CacheChanged(Int64)
+- uid: ToSic.Eav.Caching.SynchronizedList`1.CacheChanged*
+  name: CacheChanged
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html#ToSic_Eav_Caching_SynchronizedList_1_CacheChanged_
+  commentId: Overload:ToSic.Eav.Caching.SynchronizedList`1.CacheChanged
+  isSpec: "True"
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>.CacheChanged
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).CacheChanged
+  nameWithType: SynchronizedList<T>.CacheChanged
+  nameWithType.vb: SynchronizedList(Of T).CacheChanged
+- uid: ToSic.Eav.Caching.SynchronizedList`1.CacheTimestamp
+  name: CacheTimestamp
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html#ToSic_Eav_Caching_SynchronizedList_1_CacheTimestamp
+  commentId: P:ToSic.Eav.Caching.SynchronizedList`1.CacheTimestamp
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>.CacheTimestamp
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).CacheTimestamp
+  nameWithType: SynchronizedList<T>.CacheTimestamp
+  nameWithType.vb: SynchronizedList(Of T).CacheTimestamp
+- uid: ToSic.Eav.Caching.SynchronizedList`1.CacheTimestamp*
+  name: CacheTimestamp
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html#ToSic_Eav_Caching_SynchronizedList_1_CacheTimestamp_
+  commentId: Overload:ToSic.Eav.Caching.SynchronizedList`1.CacheTimestamp
+  isSpec: "True"
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>.CacheTimestamp
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).CacheTimestamp
+  nameWithType: SynchronizedList<T>.CacheTimestamp
+  nameWithType.vb: SynchronizedList(Of T).CacheTimestamp
+- uid: ToSic.Eav.Caching.SynchronizedList`1.GetEnumerator
+  name: GetEnumerator()
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html#ToSic_Eav_Caching_SynchronizedList_1_GetEnumerator
+  commentId: M:ToSic.Eav.Caching.SynchronizedList`1.GetEnumerator
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>.GetEnumerator()
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).GetEnumerator()
+  nameWithType: SynchronizedList<T>.GetEnumerator()
+  nameWithType.vb: SynchronizedList(Of T).GetEnumerator()
+- uid: ToSic.Eav.Caching.SynchronizedList`1.GetEnumerator*
+  name: GetEnumerator
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html#ToSic_Eav_Caching_SynchronizedList_1_GetEnumerator_
+  commentId: Overload:ToSic.Eav.Caching.SynchronizedList`1.GetEnumerator
+  isSpec: "True"
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>.GetEnumerator
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).GetEnumerator
+  nameWithType: SynchronizedList<T>.GetEnumerator
+  nameWithType.vb: SynchronizedList(Of T).GetEnumerator
+- uid: ToSic.Eav.Caching.SynchronizedList`1.System#Collections#IEnumerable#GetEnumerator
+  name: IEnumerable.GetEnumerator()
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html#ToSic_Eav_Caching_SynchronizedList_1_System_Collections_IEnumerable_GetEnumerator
+  commentId: M:ToSic.Eav.Caching.SynchronizedList`1.System#Collections#IEnumerable#GetEnumerator
+  name.vb: System.Collections.IEnumerable.GetEnumerator()
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>.System.Collections.IEnumerable.GetEnumerator()
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).System.Collections.IEnumerable.GetEnumerator()
+  nameWithType: SynchronizedList<T>.IEnumerable.GetEnumerator()
+  nameWithType.vb: SynchronizedList(Of T).System.Collections.IEnumerable.GetEnumerator()
+- uid: ToSic.Eav.Caching.SynchronizedList`1.System#Collections#IEnumerable#GetEnumerator*
+  name: IEnumerable.GetEnumerator
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html#ToSic_Eav_Caching_SynchronizedList_1_System_Collections_IEnumerable_GetEnumerator_
+  commentId: Overload:ToSic.Eav.Caching.SynchronizedList`1.System#Collections#IEnumerable#GetEnumerator
+  isSpec: "True"
+  name.vb: System.Collections.IEnumerable.GetEnumerator
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>.System.Collections.IEnumerable.GetEnumerator
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).System.Collections.IEnumerable.GetEnumerator
+  nameWithType: SynchronizedList<T>.IEnumerable.GetEnumerator
+  nameWithType.vb: SynchronizedList(Of T).System.Collections.IEnumerable.GetEnumerator
+- uid: ToSic.Eav.Caching.SynchronizedList`1.Upstream
+  name: Upstream
+  href: api/ToSic.Eav.Caching.SynchronizedList-1.html#ToSic_Eav_Caching_SynchronizedList_1_Upstream
+  commentId: F:ToSic.Eav.Caching.SynchronizedList`1.Upstream
+  fullName: ToSic.Eav.Caching.SynchronizedList<T>.Upstream
+  fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).Upstream
+  nameWithType: SynchronizedList<T>.Upstream
+  nameWithType.vb: SynchronizedList(Of T).Upstream
 - uid: ToSic.Eav.Data
   name: ToSic.Eav.Data
   href: api/ToSic.Eav.Data.html

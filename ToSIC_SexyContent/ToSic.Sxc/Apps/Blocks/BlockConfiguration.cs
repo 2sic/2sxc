@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Apps.Blocks
                     var dataSource = DataSource.GetInitialDataSource(ZoneId, AppId);
                     // ToDo: Should use an indexed Guid filter
                     templateEntity =
-                        Eav.Data.Query.IEntityExtensions.One(dataSource.List, PreviewTemplateId.Value);
+                        IEntityExtensions.One(dataSource.List, PreviewTemplateId.Value);
                 }
                 else if (Entity != null)
                     templateEntity = Entity.Children("Template").FirstOrDefault();

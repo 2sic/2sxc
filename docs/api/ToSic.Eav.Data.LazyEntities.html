@@ -103,6 +103,7 @@ it won&apos;t actually query the cache if the IDs are already known.</li>
     <div><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a>&gt;</div>
     <div><span class="xref">System.Collections.IEnumerable</span></div>
     <div><a class="xref" href="ToSic.Eav.Caching.ICacheDependent.html">ICacheDependent</a></div>
+    <div><a class="xref" href="ToSic.Eav.Caching.ITimestamped.html">ITimestamped</a></div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ToSic.Eav.Data.html">ToSic.Eav.Data</a></h6>
   <h6><strong>Assembly</strong>: ToSic.Eav.Core.dll</h6>
@@ -117,11 +118,13 @@ it won&apos;t actually query the cache if the IDs are already known.</li>
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_LazyEntities_CacheTimestamp.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.LazyEntities.CacheTimestamp%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Entities/LazyEntities.cs/#L161">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Entities/LazyEntities.cs/#L160">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_LazyEntities_CacheTimestamp_" data-uid="ToSic.Eav.Data.LazyEntities.CacheTimestamp*"></a>
   <h4 id="ToSic_Eav_Data_LazyEntities_CacheTimestamp" data-uid="ToSic.Eav.Data.LazyEntities.CacheTimestamp">CacheTimestamp</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>System time-stamp of when the data in this cached thing was initialized or updated.
+Depending on the implementation, this may go up-stream and return an up-stream value. </p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -138,7 +141,8 @@ it won&apos;t actually query the cache if the IDs are already known.</li>
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
+        <td><p>A timestamp as a long number</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -147,7 +151,7 @@ it won&apos;t actually query the cache if the IDs are already known.</li>
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_LazyEntities_Identifiers.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.LazyEntities.Identifiers%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Entities/LazyEntities.cs/#L42">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Entities/LazyEntities.cs/#L41">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_LazyEntities_Identifiers_" data-uid="ToSic.Eav.Data.LazyEntities.Identifiers*"></a>
   <h4 id="ToSic_Eav_Data_LazyEntities_Identifiers" data-uid="ToSic.Eav.Data.LazyEntities.Identifiers">Identifiers</h4>
@@ -181,7 +185,7 @@ Special mechanism to get identifiers to DB storage, without loading the entities
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_LazyEntities_CacheChanged.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.LazyEntities.CacheChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Entities/LazyEntities.cs/#L164">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Entities/LazyEntities.cs/#L163">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_LazyEntities_CacheChanged_" data-uid="ToSic.Eav.Data.LazyEntities.CacheChanged*"></a>
   <h4 id="ToSic_Eav_Data_LazyEntities_CacheChanged" data-uid="ToSic.Eav.Data.LazyEntities.CacheChanged">CacheChanged()</h4>
@@ -218,6 +222,9 @@ Special mechanism to get identifiers to DB storage, without loading the entities
   <div>
       <a class="xref" href="ToSic.Eav.Caching.ICacheDependent.html">ICacheDependent</a>
   </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.Caching.ITimestamped.html">ITimestamped</a>
+  </div>
 </article>
           </div>
           
@@ -229,7 +236,7 @@ Special mechanism to get identifiers to DB storage, without loading the entities
                     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_LazyEntities.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.LazyEntities%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Entities/LazyEntities.cs/#L19" class="contribution-link">View Source</a>
+                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/Entities/LazyEntities.cs/#L18" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
