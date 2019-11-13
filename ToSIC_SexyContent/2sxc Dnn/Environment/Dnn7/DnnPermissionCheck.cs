@@ -5,7 +5,6 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Interfaces;
@@ -32,7 +31,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         protected IApp App { get; }
 
-        protected IAppIdentity AppIdentity;
+        protected IInAppAndZone AppIdentity;
 
         public DnnPermissionCheck(
             ILog parentLog,
@@ -40,9 +39,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
             IEntity targetItem = null,
             IContainer instance = null,
             IApp app = null,
-            IEnumerable<IEntity> permissions1 = null,
+            IEnumerable<Permission> permissions1 = null,
             PortalSettings portal = null,
-            IAppIdentity appIdentity = null
+            IInAppAndZone appIdentity = null
             )
             : base(parentLog, targetType, targetItem, app?.Metadata.Permissions, permissions1)
         {

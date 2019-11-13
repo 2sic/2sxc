@@ -86,15 +86,26 @@
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
+    <h3 id="classes">Classes
+  </h3>
+      <h4><a class="xref" href="ToSic.Eav.Caching.SynchronizedList-1.html">SynchronizedList&lt;T&gt;</a></h4>
+      <section><p>This is an IEnumerable which relies on an up-stream cache, which may change. That would require this IEnumerable to update what it delivers.</p>
+</section>
     <h3 id="interfaces">Interfaces
   </h3>
+      <h4><a class="xref" href="ToSic.Eav.Caching.ICacheDependent.html">ICacheDependent</a></h4>
+      <section><p>Marks something that is cache-dependent. Used for things that are themselves cached, but rely on an upstream cache. </p>
+</section>
       <h4><a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a></h4>
       <section><p>Marks objects which are cache-based, and which may contain obsolete cached data.</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Caching.ICacheKeyProvider.html">ICacheKeyProvider</a></h4>
+      <h4><a class="xref" href="ToSic.Eav.Caching.ICacheKey.html">ICacheKey</a></h4>
       <section><p>Marks objects which can identify what cache it&apos;s for. <br>
 For example, when parameters change what data is cached, then the cache-key can contain this parameter,
 so that a different cache is used based on changing parameters. </p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Caching.ITimestamped.html">ITimestamped</a></h4>
+      <section><p>Provides a time stamp when something was created / updated for caching. </p>
 </section>
 </article>
           </div>

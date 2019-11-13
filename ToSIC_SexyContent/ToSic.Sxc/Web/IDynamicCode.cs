@@ -5,7 +5,6 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Interfaces;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 

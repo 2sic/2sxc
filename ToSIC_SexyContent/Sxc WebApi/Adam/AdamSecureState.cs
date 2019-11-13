@@ -28,7 +28,7 @@ namespace ToSic.SexyContent.WebApi.Adam
         public Guid Guid;
         internal ContainerBase ContainerContext;
         internal AdamAppContext AdamAppContext;
-        internal IAttributeDefinition Attribute;
+        internal IContentTypeAttribute Attribute;
 
         public readonly Guid[] FeaturesForRestrictedUsers =
             {
@@ -106,7 +106,7 @@ namespace ToSic.SexyContent.WebApi.Adam
             return false;
         }
 
-        private IAttributeDefinition Definition(int appId, string contentType, string fieldName)
+        private IContentTypeAttribute Definition(int appId, string contentType, string fieldName)
         {
             // try to find attribute definition - for later extra security checks
             var appRead = new AppRuntime(appId, Log);

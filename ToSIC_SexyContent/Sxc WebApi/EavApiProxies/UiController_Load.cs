@@ -126,7 +126,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                             Guid = md.KeyGuid,
                             String = md.KeyString,
                             Number = md.KeyNumber,
-                            Target = jsonSerializer.MetadataProvider.GetType(md.TargetType)
+                            Target = jsonSerializer.MetadataProvider.GetName(md.TargetType)
                         };
                     }
                 }

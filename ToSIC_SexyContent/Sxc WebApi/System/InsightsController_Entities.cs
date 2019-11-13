@@ -101,7 +101,7 @@ namespace ToSic.Sxc.WebApi.System
             var ent = appRead.Entities.Get(entity.Value);
 
             var msg = h1($"Entity Permissions for {entity} in {appId}\n");
-            var permissions = ent.Metadata.Permissions.ToList();
+            var permissions = ent.Metadata.Permissions.Select(p => p.Entity).ToList();
 
             return MetadataTable(msg, permissions);
         }

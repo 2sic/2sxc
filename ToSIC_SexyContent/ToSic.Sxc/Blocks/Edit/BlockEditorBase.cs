@@ -2,7 +2,6 @@
 using System.Web.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Query;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;

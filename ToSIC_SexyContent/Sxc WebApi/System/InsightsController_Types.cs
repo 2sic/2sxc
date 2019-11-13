@@ -146,7 +146,7 @@ namespace ToSic.Sxc.WebApi.System
             var typ = appRead.ContentTypes.Get(type);
 
             var msg = h1($"Permissions for {typ.Name} ({typ.StaticName}) in {appId}\n");
-            var metadata = typ.Metadata.Permissions.ToList();
+            var metadata = typ.Metadata.Permissions.Select(p => p.Entity).ToList();
 
             return MetadataTable(msg, metadata);
         }

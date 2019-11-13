@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Blocks
     /// A unit / block of output in a CMS. 
     /// </summary>
     [PublicApi]
-    public interface IBlock: IAppIdentity
+    public interface IBlock: IInAppAndZone
     {
         [PrivateApi]
         bool ShowTemplateChooser { get; }
@@ -33,8 +33,6 @@ namespace ToSic.Sxc.Blocks
         int ParentFieldSortOrder { get; }
 
         #region Values related to the current unit of content / the view
-        //int AppId { get; }
-
         
         ITenant Tenant { get; }
 

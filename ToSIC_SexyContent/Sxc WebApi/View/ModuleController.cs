@@ -17,7 +17,6 @@ using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ItemListActions;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Query;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Permissions;
@@ -142,7 +141,7 @@ namespace ToSic.SexyContent.WebApi.View
             #region attach to the current list of items
 
             var cbEnt = CmsBlock.App.Data.List.One(parentId);
-            var blockList = ((EntityRelationship) cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
+            var blockList = ((IEnumerable<IEntity>) cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
             // add only if it's not already in the list (could happen if http requests are run again)

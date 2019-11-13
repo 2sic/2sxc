@@ -89,17 +89,17 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="ToSic.Eav.Apps.IAppIdentity.html#ToSic_Eav_Apps_IAppIdentity_AppId">IAppIdentity.AppId</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInZone.html#ToSic_Eav_Apps_IInZone_ZoneId">IInZone.ZoneId</a>
     </div>
     <div>
-      <a class="xref" href="ToSic.Eav.Apps.IZoneIdentity.html#ToSic_Eav_Apps_IZoneIdentity_ZoneId">IZoneIdentity.ZoneId</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInApp.html#ToSic_Eav_Apps_IInApp_AppId">IInApp.AppId</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ToSic.Eav.Apps.html">ToSic.Eav.Apps</a></h6>
   <h6><strong>Assembly</strong>: ToSic.Eav.Apps.dll</h6>
   <h5 id="ToSic_Eav_Apps_IApp_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IApp : IAppIdentityWithPublishingState, IAppIdentity, IZoneIdentity</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IApp : IAppIdentityWithPublishingState, IInAppAndZone, IInZone, IInApp</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -245,7 +245,7 @@ Important to configure apps once and then hide from normal users. </p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IMetadataOfItem Metadata { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">IMetadataOf Metadata { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -257,7 +257,7 @@ Important to configure apps once and then hide from normal users. </p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="ToSic.Eav.Metadata.IMetadataOfItem.html">IMetadataOfItem</a></td>
+        <td><a class="xref" href="ToSic.Eav.Metadata.IMetadataOf.html">IMetadataOf</a></td>
         <td><p>A metadata provider for the app</p>
 </td>
       </tr>

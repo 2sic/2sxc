@@ -1,0 +1,437 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class SynchronizedList&lt;T&gt;
+   | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class SynchronizedList&lt;T&gt;
+   | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="ToSic.Eav.Caching.SynchronizedList`1">
+  
+  
+  <h1 id="ToSic_Eav_Caching_SynchronizedList_1" data-uid="ToSic.Eav.Caching.SynchronizedList`1" class="text-break">Class SynchronizedList&lt;T&gt;
+  </h1>
+  <div class="markdown level0 summary"><p>This is an IEnumerable which relies on an up-stream cache, which may change. That would require this IEnumerable to update what it delivers.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">SynchronizedList&lt;T&gt;</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</div>
+    <div><span class="xref">System.Collections.IEnumerable</span></div>
+    <div><a class="xref" href="ToSic.Eav.Caching.ICacheDependent.html">ICacheDependent</a></div>
+    <div><a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a></div>
+    <div><a class="xref" href="ToSic.Eav.Caching.ITimestamped.html">ITimestamped</a></div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="ToSic.Eav.Caching.html">ToSic.Eav.Caching</a></h6>
+  <h6><strong>Assembly</strong>: ToSic.Eav.Core.dll</h6>
+  <h5 id="ToSic_Eav_Caching_SynchronizedList_1_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class SynchronizedList&lt;T&gt; : IEnumerable&lt;T&gt;, IEnumerable, ICacheDependent, ICacheExpiring, ITimestamped</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>The type which is enumerated, usually an <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Caching_SynchronizedList_1__ctor_ToSic_Eav_Caching_ICacheExpiring_System_Func_System_Collections_Generic_List__0___.md&amp;value=---%0Auid%3A%20ToSic.Eav.Caching.SynchronizedList%601.%23ctor(ToSic.Eav.Caching.ICacheExpiring%2CSystem.Func%7BSystem.Collections.Generic.List%7B%600%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Caching/SynchronizedList.cs/#L30">View Source</a>
+  </span>
+  <a id="ToSic_Eav_Caching_SynchronizedList_1__ctor_" data-uid="ToSic.Eav.Caching.SynchronizedList`1.#ctor*"></a>
+  <h4 id="ToSic_Eav_Caching_SynchronizedList_1__ctor_ToSic_Eav_Caching_ICacheExpiring_System_Func_System_Collections_Generic_List__0___" data-uid="ToSic.Eav.Caching.SynchronizedList`1.#ctor(ToSic.Eav.Caching.ICacheExpiring,System.Func{System.Collections.Generic.List{`0}})">SynchronizedList(ICacheExpiring, Func&lt;List&lt;T&gt;&gt;)</h4>
+  <div class="markdown level1 summary"><p>Initialized a new list which depends on another source</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SynchronizedList(ICacheExpiring upstream, Func&lt;List&lt;T&gt;&gt; rebuild)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a></td>
+        <td><span class="parametername">upstream</span></td>
+        <td><p>the upstream cache which can tell us if a refresh is necessary</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;T&gt;&gt;</td>
+        <td><span class="parametername">rebuild</span></td>
+        <td><p>the method which rebuilds the list</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Caching_SynchronizedList_1_Upstream.md&amp;value=---%0Auid%3A%20ToSic.Eav.Caching.SynchronizedList%601.Upstream%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Caching/SynchronizedList.cs/#L19">View Source</a>
+  </span>
+  <h4 id="ToSic_Eav_Caching_SynchronizedList_1_Upstream" data-uid="ToSic.Eav.Caching.SynchronizedList`1.Upstream">Upstream</h4>
+  <div class="markdown level1 summary"><p>Upstream source which implements <a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a> to tell this object when the data must be refreshed</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected readonly ICacheExpiring Upstream</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Caching_SynchronizedList_1_CacheTimestamp.md&amp;value=---%0Auid%3A%20ToSic.Eav.Caching.SynchronizedList%601.CacheTimestamp%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Caching/SynchronizedList.cs/#L55">View Source</a>
+  </span>
+  <a id="ToSic_Eav_Caching_SynchronizedList_1_CacheTimestamp_" data-uid="ToSic.Eav.Caching.SynchronizedList`1.CacheTimestamp*"></a>
+  <h4 id="ToSic_Eav_Caching_SynchronizedList_1_CacheTimestamp" data-uid="ToSic.Eav.Caching.SynchronizedList`1.CacheTimestamp">CacheTimestamp</h4>
+  <div class="markdown level1 summary"><p>System time-stamp of when the data in this cached thing was initialized or updated.
+Depending on the implementation, this may go up-stream and return an up-stream value. </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public long CacheTimestamp { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><p>A timestamp as a long number</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Caching_SynchronizedList_1_CacheChanged.md&amp;value=---%0Auid%3A%20ToSic.Eav.Caching.SynchronizedList%601.CacheChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Caching/SynchronizedList.cs/#L61">View Source</a>
+  </span>
+  <a id="ToSic_Eav_Caching_SynchronizedList_1_CacheChanged_" data-uid="ToSic.Eav.Caching.SynchronizedList`1.CacheChanged*"></a>
+  <h4 id="ToSic_Eav_Caching_SynchronizedList_1_CacheChanged" data-uid="ToSic.Eav.Caching.SynchronizedList`1.CacheChanged">CacheChanged()</h4>
+  <div class="markdown level1 summary"><p>Find out if the source it depends on has changed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool CacheChanged()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the upstream cache returns a newer timestamp</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Caching_SynchronizedList_1_CacheChanged_System_Int64_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Caching.SynchronizedList%601.CacheChanged(System.Int64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Caching/SynchronizedList.cs/#L58">View Source</a>
+  </span>
+  <a id="ToSic_Eav_Caching_SynchronizedList_1_CacheChanged_" data-uid="ToSic.Eav.Caching.SynchronizedList`1.CacheChanged*"></a>
+  <h4 id="ToSic_Eav_Caching_SynchronizedList_1_CacheChanged_System_Int64_" data-uid="ToSic.Eav.Caching.SynchronizedList`1.CacheChanged(System.Int64)">CacheChanged(Int64)</h4>
+  <div class="markdown level1 summary"><p>Detect if the cache has old data, by comparing it to a timestamp which may be newer. <br>
+This is implemented in each object, because sometimes it compares its own timestamp, sometimes that of another underlying object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool CacheChanged(long newCacheTimeStamp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">newCacheTimeStamp</span></td>
+        <td><p>New time stamp to compare with</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the timestamps differ, false if it&apos;s the same</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Caching_SynchronizedList_1_GetEnumerator.md&amp;value=---%0Auid%3A%20ToSic.Eav.Caching.SynchronizedList%601.GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Caching/SynchronizedList.cs/#L48">View Source</a>
+  </span>
+  <a id="ToSic_Eav_Caching_SynchronizedList_1_GetEnumerator_" data-uid="ToSic.Eav.Caching.SynchronizedList`1.GetEnumerator*"></a>
+  <h4 id="ToSic_Eav_Caching_SynchronizedList_1_GetEnumerator" data-uid="ToSic.Eav.Caching.SynchronizedList`1.GetEnumerator">GetEnumerator()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerator&lt;T&gt; GetEnumerator()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerator</span>&lt;T&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Caching_SynchronizedList_1_System_Collections_IEnumerable_GetEnumerator.md&amp;value=---%0Auid%3A%20ToSic.Eav.Caching.SynchronizedList%601.System%23Collections%23IEnumerable%23GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Caching/SynchronizedList.cs/#L52">View Source</a>
+  </span>
+  <a id="ToSic_Eav_Caching_SynchronizedList_1_System_Collections_IEnumerable_GetEnumerator_" data-uid="ToSic.Eav.Caching.SynchronizedList`1.System#Collections#IEnumerable#GetEnumerator*"></a>
+  <h4 id="ToSic_Eav_Caching_SynchronizedList_1_System_Collections_IEnumerable_GetEnumerator" data-uid="ToSic.Eav.Caching.SynchronizedList`1.System#Collections#IEnumerable#GetEnumerator">IEnumerable.GetEnumerator()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IEnumerator IEnumerable.GetEnumerator()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.IEnumerator</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>
+  </div>
+  <div>
+      <span class="xref">System.Collections.IEnumerable</span>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.Caching.ICacheDependent.html">ICacheDependent</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.Caching.ITimestamped.html">ITimestamped</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Caching_SynchronizedList_1.md&amp;value=---%0Auid%3A%20ToSic.Eav.Caching.SynchronizedList%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Caching/SynchronizedList.cs/#L13" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

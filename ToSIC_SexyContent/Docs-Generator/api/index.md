@@ -1,7 +1,5 @@
 
-# This is the **2sxc API Documentation**.
-
-It's completely work-in-progress (WIP) as of October / November 2019. Do not use this yet!
+# This is the **2sxc API Documentation**
 
 ## Background: Architecture of Eav, Sxc, Dnn
 
@@ -23,14 +21,12 @@ Once we're really sure that certain parts are very final, we'll publish the API 
 
 ### Working with Entities and ADAM Assets
 
-1. If you're working with `DynamicEntity` objects and want to know more about them, check out @ToSic.Sxc.Interfaces.IDynamicEntity.  
+1. If you're working with `DynamicEntity` objects and want to know more about them, check out @ToSic.Sxc.Data.IDynamicEntity.  
 	In very rare cases you also want to know more about the underlying @ToSic.Eav.Data.IEntity.
-1. If you're working with `ADAM` Assets, like from the `AsAdam(...)` command on @ToSic.Sxc.Interfaces.IDynamicEntity objects,  
-	you'll want to read about @ToSic.Eav.Apps.Assets.IAdamFolder and @ToSic.Eav.Apps.Assets.IAdamFile
+1. If you're working with `ADAM` Assets, like from the `AsAdam(...)` command on @ToSic.Sxc.Data.IDynamicEntity objects,  
+	you'll want to read about @ToSic.Sxc.Adam.IAdamFolder and @ToSic.Sxc.Adam.IAdamFile
 
 ### Programming with DataSources and VisualQuery
 
 All the DataSources are based on @ToSic.Eav.DataSources.IDataSource and most of them are also @ToSic.Eav.DataSources.IDataTarget . You can find most of them in @ToSic.Eav.DataSources . 
 
-## todo
-datasources

@@ -119,25 +119,22 @@
       <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html#ToSic_Eav_DataSources_IDataSource_CacheRelevantConfigurations">IDataSource.CacheRelevantConfigurations</a>
     </div>
     <div>
-      <a class="xref" href="ToSic.Eav.Apps.IAppIdentity.html#ToSic_Eav_Apps_IAppIdentity_AppId">IAppIdentity.AppId</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInZone.html#ToSic_Eav_Apps_IInZone_ZoneId">IInZone.ZoneId</a>
     </div>
     <div>
-      <a class="xref" href="ToSic.Eav.Apps.IZoneIdentity.html#ToSic_Eav_Apps_IZoneIdentity_ZoneId">IZoneIdentity.ZoneId</a>
-    </div>
-    <div>
-      <a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html#ToSic_Eav_Caching_ICacheExpiring_CacheTimestamp">ICacheExpiring.CacheTimestamp</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInApp.html#ToSic_Eav_Apps_IInApp_AppId">IInApp.AppId</a>
     </div>
     <div>
       <a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html#ToSic_Eav_Caching_ICacheExpiring_CacheChanged_System_Int64_">ICacheExpiring.CacheChanged(Int64)</a>
     </div>
     <div>
-      <a class="xref" href="ToSic.Eav.Caching.ICacheKeyProvider.html#ToSic_Eav_Caching_ICacheKeyProvider_CachePartialKey">ICacheKeyProvider.CachePartialKey</a>
+      <a class="xref" href="ToSic.Eav.Caching.ITimestamped.html#ToSic_Eav_Caching_ITimestamped_CacheTimestamp">ITimestamped.CacheTimestamp</a>
     </div>
     <div>
-      <a class="xref" href="ToSic.Eav.Caching.ICacheKeyProvider.html#ToSic_Eav_Caching_ICacheKeyProvider_CacheFullKey">ICacheKeyProvider.CacheFullKey</a>
+      <a class="xref" href="ToSic.Eav.Caching.ICacheKey.html#ToSic_Eav_Caching_ICacheKey_CachePartialKey">ICacheKey.CachePartialKey</a>
     </div>
     <div>
-      <a class="xref" href="ToSic.Eav.DataSources.Caches.ICanPurgeListCache.html#ToSic_Eav_DataSources_Caches_ICanPurgeListCache_PurgeList_System_Boolean_">ICanPurgeListCache.PurgeList(Boolean)</a>
+      <a class="xref" href="ToSic.Eav.Caching.ICacheKey.html#ToSic_Eav_Caching_ICacheKey_CacheFullKey">ICacheKey.CacheFullKey</a>
     </div>
     <div>
       <a class="xref" href="ToSic.Eav.DataSources.IDataTarget.html#ToSic_Eav_DataSources_IDataTarget_In">IDataTarget.In</a>
@@ -156,7 +153,7 @@
   <h6><strong>Assembly</strong>: ToSic.Eav.Apps.dll</h6>
   <h5 id="ToSic_Eav_Apps_IAppData_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IAppData : IDataSource, IAppIdentity, IZoneIdentity, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IAppData : IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKey, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -176,7 +173,7 @@ This allows users of the App to query metadata directly through this object. </p
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IMetadataProvider Metadata { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">IMetadataSource Metadata { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -188,7 +185,7 @@ This allows users of the App to query metadata directly through this object. </p
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="ToSic.Eav.Metadata.IMetadataProvider.html">IMetadataProvider</a></td>
+        <td><a class="xref" href="ToSic.Eav.Metadata.IMetadataSource.html">IMetadataSource</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -197,19 +194,19 @@ This allows users of the App to query metadata directly through this object. </p
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Apps_IAppData_Create_System_String_System_Collections_Generic_Dictionary_System_String_System_Object__System_String_ToSic_Eav_Metadata_IMetadataFor_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Apps.IAppData.Create(System.String%2CSystem.Collections.Generic.Dictionary%7BSystem.String%2CSystem.Object%7D%2CSystem.String%2CToSic.Eav.Metadata.IMetadataFor)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Apps_IAppData_Create_System_String_System_Collections_Generic_Dictionary_System_String_System_Object__System_String_ToSic_Eav_Metadata_ITarget_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Apps.IAppData.Create(System.String%2CSystem.Collections.Generic.Dictionary%7BSystem.String%2CSystem.Object%7D%2CSystem.String%2CToSic.Eav.Metadata.ITarget)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.AppEngine/Interfaces/IAppData.cs/#L22">View Source</a>
   </span>
   <a id="ToSic_Eav_Apps_IAppData_Create_" data-uid="ToSic.Eav.Apps.IAppData.Create*"></a>
-  <h4 id="ToSic_Eav_Apps_IAppData_Create_System_String_System_Collections_Generic_Dictionary_System_String_System_Object__System_String_ToSic_Eav_Metadata_IMetadataFor_" data-uid="ToSic.Eav.Apps.IAppData.Create(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},System.String,ToSic.Eav.Metadata.IMetadataFor)">Create(String, Dictionary&lt;String, Object&gt;, String, IMetadataFor)</h4>
+  <h4 id="ToSic_Eav_Apps_IAppData_Create_System_String_System_Collections_Generic_Dictionary_System_String_System_Object__System_String_ToSic_Eav_Metadata_ITarget_" data-uid="ToSic.Eav.Apps.IAppData.Create(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},System.String,ToSic.Eav.Metadata.ITarget)">Create(String, Dictionary&lt;String, Object&gt;, String, ITarget)</h4>
   <div class="markdown level1 summary"><p>Create a new entity in the storage.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void Create(string contentTypeName, Dictionary&lt;string, object&gt; values, string userName = null, IMetadataFor target = null)</code></pre>
+    <pre><code class="lang-csharp hljs">void Create(string contentTypeName, Dictionary&lt;string, object&gt; values, string userName = null, ITarget target = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -240,7 +237,7 @@ This allows users of the App to query metadata directly through this object. </p
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="ToSic.Eav.Metadata.IMetadataFor.html">IMetadataFor</a></td>
+        <td><a class="xref" href="ToSic.Eav.Metadata.ITarget.html">ITarget</a></td>
         <td><span class="parametername">target</span></td>
         <td><p>information if this new item is to be metadata for something</p>
 </td>

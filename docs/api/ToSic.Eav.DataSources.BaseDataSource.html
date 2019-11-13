@@ -112,11 +112,12 @@
     <h5>Implements</h5>
     <div><a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a></div>
     <div><a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a></div>
-    <div><a class="xref" href="ToSic.Eav.Apps.IAppIdentity.html">IAppIdentity</a></div>
-    <div><a class="xref" href="ToSic.Eav.Apps.IZoneIdentity.html">IZoneIdentity</a></div>
+    <div><a class="xref" href="ToSic.Eav.Apps.IInAppAndZone.html">IInAppAndZone</a></div>
+    <div><a class="xref" href="ToSic.Eav.Apps.IInZone.html">IInZone</a></div>
+    <div><a class="xref" href="ToSic.Eav.Apps.IInApp.html">IInApp</a></div>
     <div><a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a></div>
-    <div><a class="xref" href="ToSic.Eav.Caching.ICacheKeyProvider.html">ICacheKeyProvider</a></div>
-    <div><a class="xref" href="ToSic.Eav.DataSources.Caches.ICanPurgeListCache.html">ICanPurgeListCache</a></div>
+    <div><a class="xref" href="ToSic.Eav.Caching.ITimestamped.html">ITimestamped</a></div>
+    <div><a class="xref" href="ToSic.Eav.Caching.ICacheKey.html">ICacheKey</a></div>
     <div><a class="xref" href="ToSic.Eav.DataSources.IDataTarget.html">IDataTarget</a></div>
   </div>
   <div class="inheritedMembers">
@@ -132,7 +133,7 @@
   <h6><strong>Assembly</strong>: ToSic.Eav.DataSources.dll</h6>
   <h5 id="ToSic_Eav_DataSources_BaseDataSource_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class BaseDataSource : HasLog, IHasLog, IDataSource, IAppIdentity, IZoneIdentity, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class BaseDataSource : HasLog, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKey, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -163,7 +164,7 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Int32</span></td>
-        <td><p>The App ID</p>
+        <td><p>The App ID this thing belongs to</p>
 </td>
       </tr>
     </tbody>
@@ -306,7 +307,8 @@ It will be used when generating a unique ID for caching the data.</p>
   </span>
   <a id="ToSic_Eav_DataSources_BaseDataSource_CacheTimestamp_" data-uid="ToSic.Eav.DataSources.BaseDataSource.CacheTimestamp*"></a>
   <h4 id="ToSic_Eav_DataSources_BaseDataSource_CacheTimestamp" data-uid="ToSic.Eav.DataSources.BaseDataSource.CacheTimestamp">CacheTimestamp</h4>
-  <div class="markdown level1 summary"><p>System time-stamp of when the data in this cached thing was initialized. </p>
+  <div class="markdown level1 summary"><p>System time-stamp of when the data in this cached thing was initialized or updated.
+Depending on the implementation, this may go up-stream and return an up-stream value. </p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -675,7 +677,7 @@ In rare cases you need the Out, for example to list the stream names in the data
     <tbody>
       <tr>
         <td><span class="xref">System.Int32</span></td>
-        <td><p>The zone ID</p>
+        <td><p>The zone ID this thing belongs to</p>
 </td>
       </tr>
     </tbody>
@@ -852,8 +854,7 @@ In rare cases you need the Out, for example to list the stream names in the data
   </span>
   <a id="ToSic_Eav_DataSources_BaseDataSource_PurgeList_" data-uid="ToSic.Eav.DataSources.BaseDataSource.PurgeList*"></a>
   <h4 id="ToSic_Eav_DataSources_BaseDataSource_PurgeList_System_Boolean_" data-uid="ToSic.Eav.DataSources.BaseDataSource.PurgeList(System.Boolean)">PurgeList(Boolean)</h4>
-  <div class="markdown level1 summary"><p>Remove the current data from the cache, optionally also purge everything upstream</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -872,8 +873,7 @@ In rare cases you need the Out, for example to list the stream names in the data
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">cascade</span></td>
-        <td><p>true to purge all sources as well, default is false</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -885,19 +885,22 @@ In rare cases you need the Out, for example to list the stream names in the data
       <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a>
   </div>
   <div>
-      <a class="xref" href="ToSic.Eav.Apps.IAppIdentity.html">IAppIdentity</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInAppAndZone.html">IInAppAndZone</a>
   </div>
   <div>
-      <a class="xref" href="ToSic.Eav.Apps.IZoneIdentity.html">IZoneIdentity</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInZone.html">IInZone</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.Apps.IInApp.html">IInApp</a>
   </div>
   <div>
       <a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a>
   </div>
   <div>
-      <a class="xref" href="ToSic.Eav.Caching.ICacheKeyProvider.html">ICacheKeyProvider</a>
+      <a class="xref" href="ToSic.Eav.Caching.ITimestamped.html">ITimestamped</a>
   </div>
   <div>
-      <a class="xref" href="ToSic.Eav.DataSources.Caches.ICanPurgeListCache.html">ICanPurgeListCache</a>
+      <a class="xref" href="ToSic.Eav.Caching.ICacheKey.html">ICacheKey</a>
   </div>
   <div>
       <a class="xref" href="ToSic.Eav.DataSources.IDataTarget.html">IDataTarget</a>

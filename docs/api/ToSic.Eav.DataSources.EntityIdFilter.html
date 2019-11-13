@@ -97,11 +97,12 @@
     <h5>Implements</h5>
     <div><a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a></div>
     <div><a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a></div>
-    <div><a class="xref" href="ToSic.Eav.Apps.IAppIdentity.html">IAppIdentity</a></div>
-    <div><a class="xref" href="ToSic.Eav.Apps.IZoneIdentity.html">IZoneIdentity</a></div>
+    <div><a class="xref" href="ToSic.Eav.Apps.IInAppAndZone.html">IInAppAndZone</a></div>
+    <div><a class="xref" href="ToSic.Eav.Apps.IInZone.html">IInZone</a></div>
+    <div><a class="xref" href="ToSic.Eav.Apps.IInApp.html">IInApp</a></div>
     <div><a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a></div>
-    <div><a class="xref" href="ToSic.Eav.Caching.ICacheKeyProvider.html">ICacheKeyProvider</a></div>
-    <div><a class="xref" href="ToSic.Eav.DataSources.Caches.ICanPurgeListCache.html">ICanPurgeListCache</a></div>
+    <div><a class="xref" href="ToSic.Eav.Caching.ITimestamped.html">ITimestamped</a></div>
+    <div><a class="xref" href="ToSic.Eav.Caching.ICacheKey.html">ICacheKey</a></div>
     <div><a class="xref" href="ToSic.Eav.DataSources.IDataTarget.html">IDataTarget</a></div>
   </div>
   <div class="inheritedMembers">
@@ -181,8 +182,12 @@
   <h5 id="ToSic_Eav_DataSources_EntityIdFilter_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.EntityIdFilter, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Filter, DynamicOut = false, NiceName = &quot;ItemIdFilter&quot;, ExpectsDataOfType = &quot;|Config ToSic.Eav.DataSources.EntityIdFilter&quot;, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ItemIdFilter&quot;)]
-public class EntityIdFilter : BaseDataSource, IHasLog, IDataSource, IAppIdentity, IZoneIdentity, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+public class EntityIdFilter : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKey, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
+  <h5 id="ToSic_Eav_DataSources_EntityIdFilter_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.
+But this would be inefficient, so for optimization, many items identify themselves with both the app and zone Ids</p>
+</div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
@@ -190,7 +195,7 @@ public class EntityIdFilter : BaseDataSource, IHasLog, IDataSource, IAppIdentity
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_EntityIdFilter_EntityIds.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.EntityIdFilter.EntityIds%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/EntityIdFilter.cs/#L38">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/EntityIdFilter.cs/#L37">View Source</a>
   </span>
   <a id="ToSic_Eav_DataSources_EntityIdFilter_EntityIds_" data-uid="ToSic.Eav.DataSources.EntityIdFilter.EntityIds*"></a>
   <h4 id="ToSic_Eav_DataSources_EntityIdFilter_EntityIds" data-uid="ToSic.Eav.DataSources.EntityIdFilter.EntityIds">EntityIds</h4>
@@ -224,19 +229,22 @@ public class EntityIdFilter : BaseDataSource, IHasLog, IDataSource, IAppIdentity
       <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a>
   </div>
   <div>
-      <a class="xref" href="ToSic.Eav.Apps.IAppIdentity.html">IAppIdentity</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInAppAndZone.html">IInAppAndZone</a>
   </div>
   <div>
-      <a class="xref" href="ToSic.Eav.Apps.IZoneIdentity.html">IZoneIdentity</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInZone.html">IInZone</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.Apps.IInApp.html">IInApp</a>
   </div>
   <div>
       <a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a>
   </div>
   <div>
-      <a class="xref" href="ToSic.Eav.Caching.ICacheKeyProvider.html">ICacheKeyProvider</a>
+      <a class="xref" href="ToSic.Eav.Caching.ITimestamped.html">ITimestamped</a>
   </div>
   <div>
-      <a class="xref" href="ToSic.Eav.DataSources.Caches.ICanPurgeListCache.html">ICanPurgeListCache</a>
+      <a class="xref" href="ToSic.Eav.Caching.ICacheKey.html">ICacheKey</a>
   </div>
   <div>
       <a class="xref" href="ToSic.Eav.DataSources.IDataTarget.html">IDataTarget</a>
@@ -252,7 +260,7 @@ public class EntityIdFilter : BaseDataSource, IHasLog, IDataSource, IAppIdentity
                     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_EntityIdFilter.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.EntityIdFilter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/EntityIdFilter.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/EntityIdFilter.cs/#L16" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
