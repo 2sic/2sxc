@@ -90,20 +90,35 @@ in which case the metadata must be retrieved from another &quot;remote&quot; loc
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">ToSic.Eav.Data.MetadataOf</span>&lt;<span class="xref">System.String</span>&gt;</div>
+    <div class="level1"><a class="xref" href="ToSic.Eav.Metadata.MetadataOf-1.html">MetadataOf</a>&lt;<span class="xref">System.String</span>&gt;</div>
     <div class="level2"><span class="xref">ContentTypeMetadata</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="ToSic.Eav.Metadata.IMetadataOfItem.html">IMetadataOfItem</a></div>
+    <div><a class="xref" href="ToSic.Eav.Metadata.IMetadataOf.html">IMetadataOf</a></div>
     <div><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a>&gt;</div>
     <div><span class="xref">System.Collections.IEnumerable</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1_Key">MetadataOf&lt;String&gt;.Key</a>
+    </div>
+    <div>
+      <a class="xref" href="ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1_Permissions">MetadataOf&lt;String&gt;.Permissions</a>
+    </div>
+    <div>
+      <a class="xref" href="ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1_GetBestValue__1_System_String_System_String_">MetadataOf&lt;String&gt;.GetBestValue&lt;TVal&gt;(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1_GetBestValue__1_System_String_System_String___">MetadataOf&lt;String&gt;.GetBestValue&lt;TVal&gt;(String, String[])</a>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ToSic.Eav.Data.html">ToSic.Eav.Data</a></h6>
   <h6><strong>Assembly</strong>: ToSic.Eav.Core.dll</h6>
   <h5 id="ToSic_Eav_Data_ContentTypeMetadata_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ContentTypeMetadata : MetadataOf&lt;string&gt;, IMetadataOfItem, IEnumerable&lt;IEntity&gt;, IEnumerable, IHasPermissions, IMetadataWithHiddenItems</code></pre>
+    <pre><code class="lang-csharp hljs">public class ContentTypeMetadata : MetadataOf&lt;string&gt;, IMetadataOf, IEnumerable&lt;IEntity&gt;, IEnumerable, IHasPermissions, IMetadataInternals</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -112,7 +127,7 @@ in which case the metadata must be retrieved from another &quot;remote&quot; loc
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.ContentTypeMetadata.%23ctor(System.String%2CSystem.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L33">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L34">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_ContentTypeMetadata__ctor_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.#ctor*"></a>
   <h4 id="ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_System_Int32_System_Int32_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,System.Int32,System.Int32)">ContentTypeMetadata(String, Int32, Int32)</h4>
@@ -155,19 +170,19 @@ in which case the metadata must be retrieved from another &quot;remote&quot; loc
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_ToSic_Eav_Data_IDeferredEntitiesList_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.ContentTypeMetadata.%23ctor(System.String%2CToSic.Eav.Data.IDeferredEntitiesList)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_ToSic_Eav_Metadata_IHasMetadataSource_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.ContentTypeMetadata.%23ctor(System.String%2CToSic.Eav.Metadata.IHasMetadataSource)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L23">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L24">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_ContentTypeMetadata__ctor_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.#ctor*"></a>
-  <h4 id="ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_ToSic_Eav_Data_IDeferredEntitiesList_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,ToSic.Eav.Data.IDeferredEntitiesList)">ContentTypeMetadata(String, IDeferredEntitiesList)</h4>
+  <h4 id="ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_ToSic_Eav_Metadata_IHasMetadataSource_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,ToSic.Eav.Metadata.IHasMetadataSource)">ContentTypeMetadata(String, IHasMetadataSource)</h4>
   <div class="markdown level1 summary"><p>Used in cases where the metadata-provider is already known</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ContentTypeMetadata(string typeId, IDeferredEntitiesList metaProvider)</code></pre>
+    <pre><code class="lang-csharp hljs">public ContentTypeMetadata(string typeId, IHasMetadataSource metaProvider)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -186,7 +201,7 @@ in which case the metadata must be retrieved from another &quot;remote&quot; loc
 </td>
       </tr>
       <tr>
-        <td><span class="xref">ToSic.Eav.Data.IDeferredEntitiesList</span></td>
+        <td><a class="xref" href="ToSic.Eav.Metadata.IHasMetadataSource.html">IHasMetadataSource</a></td>
         <td><span class="parametername">metaProvider</span></td>
         <td><p>remote / deferred metadata provider</p>
 </td>
@@ -200,7 +215,7 @@ in which case the metadata must be retrieved from another &quot;remote&quot; loc
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_ContentTypeMetadata_Description.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.ContentTypeMetadata.Description%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L42">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L43">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_ContentTypeMetadata_Description_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.Description*"></a>
   <h4 id="ToSic_Eav_Data_ContentTypeMetadata_Description" data-uid="ToSic.Eav.Data.ContentTypeMetadata.Description">Description</h4>
@@ -233,7 +248,7 @@ in which case the metadata must be retrieved from another &quot;remote&quot; loc
     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_ContentTypeMetadata_LoadFromProvider.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L49">View Source</a>
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L50">View Source</a>
   </span>
   <a id="ToSic_Eav_Data_ContentTypeMetadata_LoadFromProvider_" data-uid="ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider*"></a>
   <h4 id="ToSic_Eav_Data_ContentTypeMetadata_LoadFromProvider" data-uid="ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider">LoadFromProvider()</h4>
@@ -246,10 +261,10 @@ Must usually be called a bit later, because the data is initialized from a cache
     <pre><code class="lang-csharp hljs">protected override void LoadFromProvider()</code></pre>
   </div>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ToSic.Eav.Data.MetadataOf&lt;System.String&gt;.LoadFromProvider()</span></div>
+  <div><span class="xref">ToSic.Eav.Metadata.MetadataOf&lt;System.String&gt;.LoadFromProvider()</span></div>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="ToSic.Eav.Metadata.IMetadataOfItem.html">IMetadataOfItem</a>
+      <a class="xref" href="ToSic.Eav.Metadata.IMetadataOf.html">IMetadataOf</a>
   </div>
   <div>
       <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>
@@ -268,7 +283,7 @@ Must usually be called a bit later, because the data is initialized from a cache
                     <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Data_ContentTypeMetadata.md&amp;value=---%0Auid%3A%20ToSic.Eav.Data.ContentTypeMetadata%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Data/ContentTypes/ContentTypeMetadata.cs/#L13" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

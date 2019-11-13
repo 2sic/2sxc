@@ -47,7 +47,7 @@ namespace ToSic.SexyContent.EAVExtensions
         public Guid EntityGuid => _baseEntity.EntityGuid;
 
         /// <inheritdoc />
-        public IMetadataFor MetadataFor => _baseEntity.MetadataFor;
+        public ITarget MetadataFor => _baseEntity.MetadataFor;
 
         /// <inheritdoc cref="IEntity" />
         public Dictionary<string, IAttribute> Attributes => _baseEntity.Attributes;
@@ -116,7 +116,7 @@ namespace ToSic.SexyContent.EAVExtensions
         public int Version => _baseEntity.Version;
 
         /// <inheritdoc cref="IEntity" />
-        public IMetadataOfItem Metadata => _baseEntity.Metadata;
+        public IMetadataOf Metadata => _baseEntity.Metadata;
 
         /// <inheritdoc />
         public IEnumerable<IEntity> Permissions => _baseEntity.Permissions;

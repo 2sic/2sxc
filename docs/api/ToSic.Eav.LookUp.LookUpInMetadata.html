@@ -123,13 +123,13 @@ As of now it&apos;s hardwired to look up Metadata of Entities</p>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_LookUp_LookUpInMetadata__ctor_System_String_System_Guid_ToSic_Eav_Metadata_IMetadataProvider_.md&amp;value=---%0Auid%3A%20ToSic.Eav.LookUp.LookUpInMetadata.%23ctor(System.String%2CSystem.Guid%2CToSic.Eav.Metadata.IMetadataProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_LookUp_LookUpInMetadata__ctor_System_String_System_Guid_ToSic_Eav_Metadata_IMetadataSource_.md&amp;value=---%0Auid%3A%20ToSic.Eav.LookUp.LookUpInMetadata.%23ctor(System.String%2CSystem.Guid%2CToSic.Eav.Metadata.IMetadataSource)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Tokens/LookUp/LookUpInMetadata.cs/#L30">View Source</a>
   </span>
   <a id="ToSic_Eav_LookUp_LookUpInMetadata__ctor_" data-uid="ToSic.Eav.LookUp.LookUpInMetadata.#ctor*"></a>
-  <h4 id="ToSic_Eav_LookUp_LookUpInMetadata__ctor_System_String_System_Guid_ToSic_Eav_Metadata_IMetadataProvider_" data-uid="ToSic.Eav.LookUp.LookUpInMetadata.#ctor(System.String,System.Guid,ToSic.Eav.Metadata.IMetadataProvider)">LookUpInMetadata(String, Guid, IMetadataProvider)</h4>
+  <h4 id="ToSic_Eav_LookUp_LookUpInMetadata__ctor_System_String_System_Guid_ToSic_Eav_Metadata_IMetadataSource_" data-uid="ToSic.Eav.LookUp.LookUpInMetadata.#ctor(System.String,System.Guid,ToSic.Eav.Metadata.IMetadataSource)">LookUpInMetadata(String, Guid, IMetadataSource)</h4>
   <div class="markdown level1 summary"><p>Constructs the object with pre-filled parameters. It won&apos;t access the entity yet, because 
 it&apos;s possible that the data-source wouldn&apos;t be ready yet. The access to the entity will 
 only occur if it&apos;s really needed. </p>
@@ -137,7 +137,7 @@ only occur if it&apos;s really needed. </p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LookUpInMetadata(string name, Guid objectId, IMetadataProvider metaDataSource)</code></pre>
+    <pre><code class="lang-csharp hljs">public LookUpInMetadata(string name, Guid objectId, IMetadataSource metaDataSource)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -162,7 +162,7 @@ only occur if it&apos;s really needed. </p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="ToSic.Eav.Metadata.IMetadataProvider.html">IMetadataProvider</a></td>
+        <td><a class="xref" href="ToSic.Eav.Metadata.IMetadataSource.html">IMetadataSource</a></td>
         <td><span class="parametername">metaDataSource</span></td>
         <td><p>DataSource that provides MetaData</p>
 </td>

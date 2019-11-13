@@ -283,15 +283,15 @@ references:
   commentId: T:ToSic.Eav.Apps.IAppData
   fullName: ToSic.Eav.Apps.IAppData
   nameWithType: IAppData
-- uid: ToSic.Eav.Apps.IAppData.Create(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},System.String,ToSic.Eav.Metadata.IMetadataFor)
-  name: Create(String, Dictionary<String, Object>, String, IMetadataFor)
-  href: api/ToSic.Eav.Apps.IAppData.html#ToSic_Eav_Apps_IAppData_Create_System_String_System_Collections_Generic_Dictionary_System_String_System_Object__System_String_ToSic_Eav_Metadata_IMetadataFor_
-  commentId: M:ToSic.Eav.Apps.IAppData.Create(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},System.String,ToSic.Eav.Metadata.IMetadataFor)
-  name.vb: Create(String, Dictionary(Of String, Object), String, IMetadataFor)
-  fullName: ToSic.Eav.Apps.IAppData.Create(System.String, System.Collections.Generic.Dictionary<System.String, System.Object>, System.String, ToSic.Eav.Metadata.IMetadataFor)
-  fullName.vb: ToSic.Eav.Apps.IAppData.Create(System.String, System.Collections.Generic.Dictionary(Of System.String, System.Object), System.String, ToSic.Eav.Metadata.IMetadataFor)
-  nameWithType: IAppData.Create(String, Dictionary<String, Object>, String, IMetadataFor)
-  nameWithType.vb: IAppData.Create(String, Dictionary(Of String, Object), String, IMetadataFor)
+- uid: ToSic.Eav.Apps.IAppData.Create(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},System.String,ToSic.Eav.Metadata.ITarget)
+  name: Create(String, Dictionary<String, Object>, String, ITarget)
+  href: api/ToSic.Eav.Apps.IAppData.html#ToSic_Eav_Apps_IAppData_Create_System_String_System_Collections_Generic_Dictionary_System_String_System_Object__System_String_ToSic_Eav_Metadata_ITarget_
+  commentId: M:ToSic.Eav.Apps.IAppData.Create(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},System.String,ToSic.Eav.Metadata.ITarget)
+  name.vb: Create(String, Dictionary(Of String, Object), String, ITarget)
+  fullName: ToSic.Eav.Apps.IAppData.Create(System.String, System.Collections.Generic.Dictionary<System.String, System.Object>, System.String, ToSic.Eav.Metadata.ITarget)
+  fullName.vb: ToSic.Eav.Apps.IAppData.Create(System.String, System.Collections.Generic.Dictionary(Of System.String, System.Object), System.String, ToSic.Eav.Metadata.ITarget)
+  nameWithType: IAppData.Create(String, Dictionary<String, Object>, String, ITarget)
+  nameWithType.vb: IAppData.Create(String, Dictionary(Of String, Object), String, ITarget)
 - uid: ToSic.Eav.Apps.IAppData.Create(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.Dictionary{System.String,System.Object}},System.String)
   name: Create(String, IEnumerable<Dictionary<String, Object>>, String)
   href: api/ToSic.Eav.Apps.IAppData.html#ToSic_Eav_Apps_IAppData_Create_System_String_System_Collections_Generic_IEnumerable_System_Collections_Generic_Dictionary_System_String_System_Object___System_String_
@@ -649,15 +649,15 @@ references:
   commentId: M:ToSic.Eav.Data.ContentType.#ctor(System.Int32,System.String,System.String)
   fullName: ToSic.Eav.Data.ContentType.ContentType(System.Int32, System.String, System.String)
   nameWithType: ContentType.ContentType(Int32, String, String)
-- uid: ToSic.Eav.Data.ContentType.#ctor(System.Int32,System.String,System.String,System.Int32,System.String,System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Boolean,ToSic.Eav.Data.IDeferredEntitiesList)
-  name: ContentType(Int32, String, String, Int32, String, String, Nullable<Int32>, Int32, Int32, Boolean, IDeferredEntitiesList)
-  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType__ctor_System_Int32_System_String_System_String_System_Int32_System_String_System_String_System_Nullable_System_Int32__System_Int32_System_Int32_System_Boolean_ToSic_Eav_Data_IDeferredEntitiesList_
-  commentId: M:ToSic.Eav.Data.ContentType.#ctor(System.Int32,System.String,System.String,System.Int32,System.String,System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Boolean,ToSic.Eav.Data.IDeferredEntitiesList)
-  name.vb: ContentType(Int32, String, String, Int32, String, String, Nullable(Of Int32), Int32, Int32, Boolean, IDeferredEntitiesList)
-  fullName: ToSic.Eav.Data.ContentType.ContentType(System.Int32, System.String, System.String, System.Int32, System.String, System.String, System.Nullable<System.Int32>, System.Int32, System.Int32, System.Boolean, ToSic.Eav.Data.IDeferredEntitiesList)
-  fullName.vb: ToSic.Eav.Data.ContentType.ContentType(System.Int32, System.String, System.String, System.Int32, System.String, System.String, System.Nullable(Of System.Int32), System.Int32, System.Int32, System.Boolean, ToSic.Eav.Data.IDeferredEntitiesList)
-  nameWithType: ContentType.ContentType(Int32, String, String, Int32, String, String, Nullable<Int32>, Int32, Int32, Boolean, IDeferredEntitiesList)
-  nameWithType.vb: ContentType.ContentType(Int32, String, String, Int32, String, String, Nullable(Of Int32), Int32, Int32, Boolean, IDeferredEntitiesList)
+- uid: ToSic.Eav.Data.ContentType.#ctor(System.Int32,System.String,System.String,System.Int32,System.String,System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Boolean,ToSic.Eav.Metadata.IHasMetadataSource)
+  name: ContentType(Int32, String, String, Int32, String, String, Nullable<Int32>, Int32, Int32, Boolean, IHasMetadataSource)
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType__ctor_System_Int32_System_String_System_String_System_Int32_System_String_System_String_System_Nullable_System_Int32__System_Int32_System_Int32_System_Boolean_ToSic_Eav_Metadata_IHasMetadataSource_
+  commentId: M:ToSic.Eav.Data.ContentType.#ctor(System.Int32,System.String,System.String,System.Int32,System.String,System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Boolean,ToSic.Eav.Metadata.IHasMetadataSource)
+  name.vb: ContentType(Int32, String, String, Int32, String, String, Nullable(Of Int32), Int32, Int32, Boolean, IHasMetadataSource)
+  fullName: ToSic.Eav.Data.ContentType.ContentType(System.Int32, System.String, System.String, System.Int32, System.String, System.String, System.Nullable<System.Int32>, System.Int32, System.Int32, System.Boolean, ToSic.Eav.Metadata.IHasMetadataSource)
+  fullName.vb: ToSic.Eav.Data.ContentType.ContentType(System.Int32, System.String, System.String, System.Int32, System.String, System.String, System.Nullable(Of System.Int32), System.Int32, System.Int32, System.Boolean, ToSic.Eav.Metadata.IHasMetadataSource)
+  nameWithType: ContentType.ContentType(Int32, String, String, Int32, String, String, Nullable<Int32>, Int32, Int32, Boolean, IHasMetadataSource)
+  nameWithType.vb: ContentType.ContentType(Int32, String, String, Int32, String, String, Nullable(Of Int32), Int32, Int32, Boolean, IHasMetadataSource)
 - uid: ToSic.Eav.Data.ContentType.#ctor*
   name: ContentType
   href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType__ctor_
@@ -895,12 +895,12 @@ references:
   commentId: T:ToSic.Eav.Data.ContentTypeAttribute
   fullName: ToSic.Eav.Data.ContentTypeAttribute
   nameWithType: ContentTypeAttribute
-- uid: ToSic.Eav.Data.ContentTypeAttribute.#ctor(System.Int32,System.String,System.String,System.Boolean,System.Int32,System.Int32,ToSic.Eav.Data.IDeferredEntitiesList,System.Int32)
-  name: ContentTypeAttribute(Int32, String, String, Boolean, Int32, Int32, IDeferredEntitiesList, Int32)
-  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute__ctor_System_Int32_System_String_System_String_System_Boolean_System_Int32_System_Int32_ToSic_Eav_Data_IDeferredEntitiesList_System_Int32_
-  commentId: M:ToSic.Eav.Data.ContentTypeAttribute.#ctor(System.Int32,System.String,System.String,System.Boolean,System.Int32,System.Int32,ToSic.Eav.Data.IDeferredEntitiesList,System.Int32)
-  fullName: ToSic.Eav.Data.ContentTypeAttribute.ContentTypeAttribute(System.Int32, System.String, System.String, System.Boolean, System.Int32, System.Int32, ToSic.Eav.Data.IDeferredEntitiesList, System.Int32)
-  nameWithType: ContentTypeAttribute.ContentTypeAttribute(Int32, String, String, Boolean, Int32, Int32, IDeferredEntitiesList, Int32)
+- uid: ToSic.Eav.Data.ContentTypeAttribute.#ctor(System.Int32,System.String,System.String,System.Boolean,System.Int32,System.Int32,ToSic.Eav.Metadata.IHasMetadataSource,System.Int32)
+  name: ContentTypeAttribute(Int32, String, String, Boolean, Int32, Int32, IHasMetadataSource, Int32)
+  href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute__ctor_System_Int32_System_String_System_String_System_Boolean_System_Int32_System_Int32_ToSic_Eav_Metadata_IHasMetadataSource_System_Int32_
+  commentId: M:ToSic.Eav.Data.ContentTypeAttribute.#ctor(System.Int32,System.String,System.String,System.Boolean,System.Int32,System.Int32,ToSic.Eav.Metadata.IHasMetadataSource,System.Int32)
+  fullName: ToSic.Eav.Data.ContentTypeAttribute.ContentTypeAttribute(System.Int32, System.String, System.String, System.Boolean, System.Int32, System.Int32, ToSic.Eav.Metadata.IHasMetadataSource, System.Int32)
+  nameWithType: ContentTypeAttribute.ContentTypeAttribute(Int32, String, String, Boolean, Int32, Int32, IHasMetadataSource, Int32)
 - uid: ToSic.Eav.Data.ContentTypeAttribute.#ctor(System.Int32,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.Object)
   name: ContentTypeAttribute(Int32, String, String, String, String, String, Nullable<Boolean>, Object)
   href: api/ToSic.Eav.Data.ContentTypeAttribute.html#ToSic_Eav_Data_ContentTypeAttribute__ctor_System_Int32_System_String_System_String_System_String_System_String_System_String_System_Nullable_System_Boolean__System_Object_
@@ -994,12 +994,12 @@ references:
   commentId: M:ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,System.Int32,System.Int32)
   fullName: ToSic.Eav.Data.ContentTypeMetadata.ContentTypeMetadata(System.String, System.Int32, System.Int32)
   nameWithType: ContentTypeMetadata.ContentTypeMetadata(String, Int32, Int32)
-- uid: ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,ToSic.Eav.Data.IDeferredEntitiesList)
-  name: ContentTypeMetadata(String, IDeferredEntitiesList)
-  href: api/ToSic.Eav.Data.ContentTypeMetadata.html#ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_ToSic_Eav_Data_IDeferredEntitiesList_
-  commentId: M:ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,ToSic.Eav.Data.IDeferredEntitiesList)
-  fullName: ToSic.Eav.Data.ContentTypeMetadata.ContentTypeMetadata(System.String, ToSic.Eav.Data.IDeferredEntitiesList)
-  nameWithType: ContentTypeMetadata.ContentTypeMetadata(String, IDeferredEntitiesList)
+- uid: ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,ToSic.Eav.Metadata.IHasMetadataSource)
+  name: ContentTypeMetadata(String, IHasMetadataSource)
+  href: api/ToSic.Eav.Data.ContentTypeMetadata.html#ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_ToSic_Eav_Metadata_IHasMetadataSource_
+  commentId: M:ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,ToSic.Eav.Metadata.IHasMetadataSource)
+  fullName: ToSic.Eav.Data.ContentTypeMetadata.ContentTypeMetadata(System.String, ToSic.Eav.Metadata.IHasMetadataSource)
+  nameWithType: ContentTypeMetadata.ContentTypeMetadata(String, IHasMetadataSource)
 - uid: ToSic.Eav.Data.ContentTypeMetadata.#ctor*
   name: ContentTypeMetadata
   href: api/ToSic.Eav.Data.ContentTypeMetadata.html#ToSic_Eav_Data_ContentTypeMetadata__ctor_
@@ -4395,12 +4395,12 @@ references:
   commentId: T:ToSic.Eav.LookUp.LookUpInMetadata
   fullName: ToSic.Eav.LookUp.LookUpInMetadata
   nameWithType: LookUpInMetadata
-- uid: ToSic.Eav.LookUp.LookUpInMetadata.#ctor(System.String,System.Guid,ToSic.Eav.Metadata.IMetadataProvider)
-  name: LookUpInMetadata(String, Guid, IMetadataProvider)
-  href: api/ToSic.Eav.LookUp.LookUpInMetadata.html#ToSic_Eav_LookUp_LookUpInMetadata__ctor_System_String_System_Guid_ToSic_Eav_Metadata_IMetadataProvider_
-  commentId: M:ToSic.Eav.LookUp.LookUpInMetadata.#ctor(System.String,System.Guid,ToSic.Eav.Metadata.IMetadataProvider)
-  fullName: ToSic.Eav.LookUp.LookUpInMetadata.LookUpInMetadata(System.String, System.Guid, ToSic.Eav.Metadata.IMetadataProvider)
-  nameWithType: LookUpInMetadata.LookUpInMetadata(String, Guid, IMetadataProvider)
+- uid: ToSic.Eav.LookUp.LookUpInMetadata.#ctor(System.String,System.Guid,ToSic.Eav.Metadata.IMetadataSource)
+  name: LookUpInMetadata(String, Guid, IMetadataSource)
+  href: api/ToSic.Eav.LookUp.LookUpInMetadata.html#ToSic_Eav_LookUp_LookUpInMetadata__ctor_System_String_System_Guid_ToSic_Eav_Metadata_IMetadataSource_
+  commentId: M:ToSic.Eav.LookUp.LookUpInMetadata.#ctor(System.String,System.Guid,ToSic.Eav.Metadata.IMetadataSource)
+  fullName: ToSic.Eav.LookUp.LookUpInMetadata.LookUpInMetadata(System.String, System.Guid, ToSic.Eav.Metadata.IMetadataSource)
+  nameWithType: LookUpInMetadata.LookUpInMetadata(String, Guid, IMetadataSource)
 - uid: ToSic.Eav.LookUp.LookUpInMetadata.#ctor(System.String,ToSic.Eav.Data.IEntity)
   name: LookUpInMetadata(String, IEntity)
   href: api/ToSic.Eav.LookUp.LookUpInMetadata.html#ToSic_Eav_LookUp_LookUpInMetadata__ctor_System_String_ToSic_Eav_Data_IEntity_
@@ -4436,187 +4436,398 @@ references:
   commentId: N:ToSic.Eav.Metadata
   fullName: ToSic.Eav.Metadata
   nameWithType: ToSic.Eav.Metadata
-- uid: ToSic.Eav.Metadata.IGlobalMetadataProvider
-  name: IGlobalMetadataProvider
-  href: api/ToSic.Eav.Metadata.IGlobalMetadataProvider.html
-  commentId: T:ToSic.Eav.Metadata.IGlobalMetadataProvider
-  fullName: ToSic.Eav.Metadata.IGlobalMetadataProvider
-  nameWithType: IGlobalMetadataProvider
-- uid: ToSic.Eav.Metadata.IGlobalMetadataProvider.GetType(System.Int32)
-  name: GetType(Int32)
-  href: api/ToSic.Eav.Metadata.IGlobalMetadataProvider.html#ToSic_Eav_Metadata_IGlobalMetadataProvider_GetType_System_Int32_
-  commentId: M:ToSic.Eav.Metadata.IGlobalMetadataProvider.GetType(System.Int32)
-  fullName: ToSic.Eav.Metadata.IGlobalMetadataProvider.GetType(System.Int32)
-  nameWithType: IGlobalMetadataProvider.GetType(Int32)
-- uid: ToSic.Eav.Metadata.IGlobalMetadataProvider.GetType(System.String)
-  name: GetType(String)
-  href: api/ToSic.Eav.Metadata.IGlobalMetadataProvider.html#ToSic_Eav_Metadata_IGlobalMetadataProvider_GetType_System_String_
-  commentId: M:ToSic.Eav.Metadata.IGlobalMetadataProvider.GetType(System.String)
-  fullName: ToSic.Eav.Metadata.IGlobalMetadataProvider.GetType(System.String)
-  nameWithType: IGlobalMetadataProvider.GetType(String)
-- uid: ToSic.Eav.Metadata.IGlobalMetadataProvider.GetType*
-  name: GetType
-  href: api/ToSic.Eav.Metadata.IGlobalMetadataProvider.html#ToSic_Eav_Metadata_IGlobalMetadataProvider_GetType_
-  commentId: Overload:ToSic.Eav.Metadata.IGlobalMetadataProvider.GetType
+- uid: ToSic.Eav.Metadata.IHasMetadataSource
+  name: IHasMetadataSource
+  href: api/ToSic.Eav.Metadata.IHasMetadataSource.html
+  commentId: T:ToSic.Eav.Metadata.IHasMetadataSource
+  fullName: ToSic.Eav.Metadata.IHasMetadataSource
+  nameWithType: IHasMetadataSource
+- uid: ToSic.Eav.Metadata.IHasMetadataSource.Metadata
+  name: Metadata
+  href: api/ToSic.Eav.Metadata.IHasMetadataSource.html#ToSic_Eav_Metadata_IHasMetadataSource_Metadata
+  commentId: P:ToSic.Eav.Metadata.IHasMetadataSource.Metadata
+  fullName: ToSic.Eav.Metadata.IHasMetadataSource.Metadata
+  nameWithType: IHasMetadataSource.Metadata
+- uid: ToSic.Eav.Metadata.IHasMetadataSource.Metadata*
+  name: Metadata
+  href: api/ToSic.Eav.Metadata.IHasMetadataSource.html#ToSic_Eav_Metadata_IHasMetadataSource_Metadata_
+  commentId: Overload:ToSic.Eav.Metadata.IHasMetadataSource.Metadata
   isSpec: "True"
-  fullName: ToSic.Eav.Metadata.IGlobalMetadataProvider.GetType
-  nameWithType: IGlobalMetadataProvider.GetType
-- uid: ToSic.Eav.Metadata.IMetadataFor
-  name: IMetadataFor
-  href: api/ToSic.Eav.Metadata.IMetadataFor.html
-  commentId: T:ToSic.Eav.Metadata.IMetadataFor
-  fullName: ToSic.Eav.Metadata.IMetadataFor
-  nameWithType: IMetadataFor
-- uid: ToSic.Eav.Metadata.IMetadataFor.IsMetadata
-  name: IsMetadata
-  href: api/ToSic.Eav.Metadata.IMetadataFor.html#ToSic_Eav_Metadata_IMetadataFor_IsMetadata
-  commentId: P:ToSic.Eav.Metadata.IMetadataFor.IsMetadata
-  fullName: ToSic.Eav.Metadata.IMetadataFor.IsMetadata
-  nameWithType: IMetadataFor.IsMetadata
-- uid: ToSic.Eav.Metadata.IMetadataFor.IsMetadata*
-  name: IsMetadata
-  href: api/ToSic.Eav.Metadata.IMetadataFor.html#ToSic_Eav_Metadata_IMetadataFor_IsMetadata_
-  commentId: Overload:ToSic.Eav.Metadata.IMetadataFor.IsMetadata
-  isSpec: "True"
-  fullName: ToSic.Eav.Metadata.IMetadataFor.IsMetadata
-  nameWithType: IMetadataFor.IsMetadata
-- uid: ToSic.Eav.Metadata.IMetadataFor.KeyGuid
-  name: KeyGuid
-  href: api/ToSic.Eav.Metadata.IMetadataFor.html#ToSic_Eav_Metadata_IMetadataFor_KeyGuid
-  commentId: P:ToSic.Eav.Metadata.IMetadataFor.KeyGuid
-  fullName: ToSic.Eav.Metadata.IMetadataFor.KeyGuid
-  nameWithType: IMetadataFor.KeyGuid
-- uid: ToSic.Eav.Metadata.IMetadataFor.KeyGuid*
-  name: KeyGuid
-  href: api/ToSic.Eav.Metadata.IMetadataFor.html#ToSic_Eav_Metadata_IMetadataFor_KeyGuid_
-  commentId: Overload:ToSic.Eav.Metadata.IMetadataFor.KeyGuid
-  isSpec: "True"
-  fullName: ToSic.Eav.Metadata.IMetadataFor.KeyGuid
-  nameWithType: IMetadataFor.KeyGuid
-- uid: ToSic.Eav.Metadata.IMetadataFor.KeyNumber
-  name: KeyNumber
-  href: api/ToSic.Eav.Metadata.IMetadataFor.html#ToSic_Eav_Metadata_IMetadataFor_KeyNumber
-  commentId: P:ToSic.Eav.Metadata.IMetadataFor.KeyNumber
-  fullName: ToSic.Eav.Metadata.IMetadataFor.KeyNumber
-  nameWithType: IMetadataFor.KeyNumber
-- uid: ToSic.Eav.Metadata.IMetadataFor.KeyNumber*
-  name: KeyNumber
-  href: api/ToSic.Eav.Metadata.IMetadataFor.html#ToSic_Eav_Metadata_IMetadataFor_KeyNumber_
-  commentId: Overload:ToSic.Eav.Metadata.IMetadataFor.KeyNumber
-  isSpec: "True"
-  fullName: ToSic.Eav.Metadata.IMetadataFor.KeyNumber
-  nameWithType: IMetadataFor.KeyNumber
-- uid: ToSic.Eav.Metadata.IMetadataFor.KeyString
-  name: KeyString
-  href: api/ToSic.Eav.Metadata.IMetadataFor.html#ToSic_Eav_Metadata_IMetadataFor_KeyString
-  commentId: P:ToSic.Eav.Metadata.IMetadataFor.KeyString
-  fullName: ToSic.Eav.Metadata.IMetadataFor.KeyString
-  nameWithType: IMetadataFor.KeyString
-- uid: ToSic.Eav.Metadata.IMetadataFor.KeyString*
-  name: KeyString
-  href: api/ToSic.Eav.Metadata.IMetadataFor.html#ToSic_Eav_Metadata_IMetadataFor_KeyString_
-  commentId: Overload:ToSic.Eav.Metadata.IMetadataFor.KeyString
-  isSpec: "True"
-  fullName: ToSic.Eav.Metadata.IMetadataFor.KeyString
-  nameWithType: IMetadataFor.KeyString
-- uid: ToSic.Eav.Metadata.IMetadataFor.TargetType
-  name: TargetType
-  href: api/ToSic.Eav.Metadata.IMetadataFor.html#ToSic_Eav_Metadata_IMetadataFor_TargetType
-  commentId: P:ToSic.Eav.Metadata.IMetadataFor.TargetType
-  fullName: ToSic.Eav.Metadata.IMetadataFor.TargetType
-  nameWithType: IMetadataFor.TargetType
-- uid: ToSic.Eav.Metadata.IMetadataFor.TargetType*
-  name: TargetType
-  href: api/ToSic.Eav.Metadata.IMetadataFor.html#ToSic_Eav_Metadata_IMetadataFor_TargetType_
-  commentId: Overload:ToSic.Eav.Metadata.IMetadataFor.TargetType
-  isSpec: "True"
-  fullName: ToSic.Eav.Metadata.IMetadataFor.TargetType
-  nameWithType: IMetadataFor.TargetType
-- uid: ToSic.Eav.Metadata.IMetadataOfItem
-  name: IMetadataOfItem
-  href: api/ToSic.Eav.Metadata.IMetadataOfItem.html
-  commentId: T:ToSic.Eav.Metadata.IMetadataOfItem
-  fullName: ToSic.Eav.Metadata.IMetadataOfItem
-  nameWithType: IMetadataOfItem
-- uid: ToSic.Eav.Metadata.IMetadataOfItem.GetBestValue*
+  fullName: ToSic.Eav.Metadata.IHasMetadataSource.Metadata
+  nameWithType: IHasMetadataSource.Metadata
+- uid: ToSic.Eav.Metadata.IMetadataOf
+  name: IMetadataOf
+  href: api/ToSic.Eav.Metadata.IMetadataOf.html
+  commentId: T:ToSic.Eav.Metadata.IMetadataOf
+  fullName: ToSic.Eav.Metadata.IMetadataOf
+  nameWithType: IMetadataOf
+- uid: ToSic.Eav.Metadata.IMetadataOf.GetBestValue*
   name: GetBestValue
-  href: api/ToSic.Eav.Metadata.IMetadataOfItem.html#ToSic_Eav_Metadata_IMetadataOfItem_GetBestValue_
-  commentId: Overload:ToSic.Eav.Metadata.IMetadataOfItem.GetBestValue
+  href: api/ToSic.Eav.Metadata.IMetadataOf.html#ToSic_Eav_Metadata_IMetadataOf_GetBestValue_
+  commentId: Overload:ToSic.Eav.Metadata.IMetadataOf.GetBestValue
   isSpec: "True"
-  fullName: ToSic.Eav.Metadata.IMetadataOfItem.GetBestValue
-  nameWithType: IMetadataOfItem.GetBestValue
-- uid: ToSic.Eav.Metadata.IMetadataOfItem.GetBestValue``1(System.String,System.String)
+  fullName: ToSic.Eav.Metadata.IMetadataOf.GetBestValue
+  nameWithType: IMetadataOf.GetBestValue
+- uid: ToSic.Eav.Metadata.IMetadataOf.GetBestValue``1(System.String,System.String)
   name: GetBestValue<TVal>(String, String)
-  href: api/ToSic.Eav.Metadata.IMetadataOfItem.html#ToSic_Eav_Metadata_IMetadataOfItem_GetBestValue__1_System_String_System_String_
-  commentId: M:ToSic.Eav.Metadata.IMetadataOfItem.GetBestValue``1(System.String,System.String)
+  href: api/ToSic.Eav.Metadata.IMetadataOf.html#ToSic_Eav_Metadata_IMetadataOf_GetBestValue__1_System_String_System_String_
+  commentId: M:ToSic.Eav.Metadata.IMetadataOf.GetBestValue``1(System.String,System.String)
   name.vb: GetBestValue(Of TVal)(String, String)
-  fullName: ToSic.Eav.Metadata.IMetadataOfItem.GetBestValue<TVal>(System.String, System.String)
-  fullName.vb: ToSic.Eav.Metadata.IMetadataOfItem.GetBestValue(Of TVal)(System.String, System.String)
-  nameWithType: IMetadataOfItem.GetBestValue<TVal>(String, String)
-  nameWithType.vb: IMetadataOfItem.GetBestValue(Of TVal)(String, String)
-- uid: ToSic.Eav.Metadata.IMetadataOfItem.GetBestValue``1(System.String,System.String[])
+  fullName: ToSic.Eav.Metadata.IMetadataOf.GetBestValue<TVal>(System.String, System.String)
+  fullName.vb: ToSic.Eav.Metadata.IMetadataOf.GetBestValue(Of TVal)(System.String, System.String)
+  nameWithType: IMetadataOf.GetBestValue<TVal>(String, String)
+  nameWithType.vb: IMetadataOf.GetBestValue(Of TVal)(String, String)
+- uid: ToSic.Eav.Metadata.IMetadataOf.GetBestValue``1(System.String,System.String[])
   name: GetBestValue<TVal>(String, String[])
-  href: api/ToSic.Eav.Metadata.IMetadataOfItem.html#ToSic_Eav_Metadata_IMetadataOfItem_GetBestValue__1_System_String_System_String___
-  commentId: M:ToSic.Eav.Metadata.IMetadataOfItem.GetBestValue``1(System.String,System.String[])
+  href: api/ToSic.Eav.Metadata.IMetadataOf.html#ToSic_Eav_Metadata_IMetadataOf_GetBestValue__1_System_String_System_String___
+  commentId: M:ToSic.Eav.Metadata.IMetadataOf.GetBestValue``1(System.String,System.String[])
   name.vb: GetBestValue(Of TVal)(String, String())
-  fullName: ToSic.Eav.Metadata.IMetadataOfItem.GetBestValue<TVal>(System.String, System.String[])
-  fullName.vb: ToSic.Eav.Metadata.IMetadataOfItem.GetBestValue(Of TVal)(System.String, System.String())
-  nameWithType: IMetadataOfItem.GetBestValue<TVal>(String, String[])
-  nameWithType.vb: IMetadataOfItem.GetBestValue(Of TVal)(String, String())
-- uid: ToSic.Eav.Metadata.IMetadataProvider
-  name: IMetadataProvider
-  href: api/ToSic.Eav.Metadata.IMetadataProvider.html
-  commentId: T:ToSic.Eav.Metadata.IMetadataProvider
-  fullName: ToSic.Eav.Metadata.IMetadataProvider
-  nameWithType: IMetadataProvider
-- uid: ToSic.Eav.Metadata.IMetadataProvider.GetMetadata*
-  name: GetMetadata
-  href: api/ToSic.Eav.Metadata.IMetadataProvider.html#ToSic_Eav_Metadata_IMetadataProvider_GetMetadata_
-  commentId: Overload:ToSic.Eav.Metadata.IMetadataProvider.GetMetadata
+  fullName: ToSic.Eav.Metadata.IMetadataOf.GetBestValue<TVal>(System.String, System.String[])
+  fullName.vb: ToSic.Eav.Metadata.IMetadataOf.GetBestValue(Of TVal)(System.String, System.String())
+  nameWithType: IMetadataOf.GetBestValue<TVal>(String, String[])
+  nameWithType.vb: IMetadataOf.GetBestValue(Of TVal)(String, String())
+- uid: ToSic.Eav.Metadata.IMetadataSource
+  name: IMetadataSource
+  href: api/ToSic.Eav.Metadata.IMetadataSource.html
+  commentId: T:ToSic.Eav.Metadata.IMetadataSource
+  fullName: ToSic.Eav.Metadata.IMetadataSource
+  nameWithType: IMetadataSource
+- uid: ToSic.Eav.Metadata.IMetadataSource.Get*
+  name: Get
+  href: api/ToSic.Eav.Metadata.IMetadataSource.html#ToSic_Eav_Metadata_IMetadataSource_Get_
+  commentId: Overload:ToSic.Eav.Metadata.IMetadataSource.Get
   isSpec: "True"
-  fullName: ToSic.Eav.Metadata.IMetadataProvider.GetMetadata
-  nameWithType: IMetadataProvider.GetMetadata
-- uid: ToSic.Eav.Metadata.IMetadataProvider.GetMetadata``1(System.Int32,``0,System.String)
-  name: GetMetadata<T>(Int32, T, String)
-  href: api/ToSic.Eav.Metadata.IMetadataProvider.html#ToSic_Eav_Metadata_IMetadataProvider_GetMetadata__1_System_Int32___0_System_String_
-  commentId: M:ToSic.Eav.Metadata.IMetadataProvider.GetMetadata``1(System.Int32,``0,System.String)
-  name.vb: GetMetadata(Of T)(Int32, T, String)
-  fullName: ToSic.Eav.Metadata.IMetadataProvider.GetMetadata<T>(System.Int32, T, System.String)
-  fullName.vb: ToSic.Eav.Metadata.IMetadataProvider.GetMetadata(Of T)(System.Int32, T, System.String)
-  nameWithType: IMetadataProvider.GetMetadata<T>(Int32, T, String)
-  nameWithType.vb: IMetadataProvider.GetMetadata(Of T)(Int32, T, String)
-- uid: ToSic.Eav.Metadata.IRemoteMetadataProvider
-  name: IRemoteMetadataProvider
-  href: api/ToSic.Eav.Metadata.IRemoteMetadataProvider.html
-  commentId: T:ToSic.Eav.Metadata.IRemoteMetadataProvider
-  fullName: ToSic.Eav.Metadata.IRemoteMetadataProvider
-  nameWithType: IRemoteMetadataProvider
-- uid: ToSic.Eav.Metadata.IRemoteMetadataProvider.OfApp(System.Int32)
+  fullName: ToSic.Eav.Metadata.IMetadataSource.Get
+  nameWithType: IMetadataSource.Get
+- uid: ToSic.Eav.Metadata.IMetadataSource.Get``1(System.Int32,``0,System.String)
+  name: Get<T>(Int32, T, String)
+  href: api/ToSic.Eav.Metadata.IMetadataSource.html#ToSic_Eav_Metadata_IMetadataSource_Get__1_System_Int32___0_System_String_
+  commentId: M:ToSic.Eav.Metadata.IMetadataSource.Get``1(System.Int32,``0,System.String)
+  name.vb: Get(Of T)(Int32, T, String)
+  fullName: ToSic.Eav.Metadata.IMetadataSource.Get<T>(System.Int32, T, System.String)
+  fullName.vb: ToSic.Eav.Metadata.IMetadataSource.Get(Of T)(System.Int32, T, System.String)
+  nameWithType: IMetadataSource.Get<T>(Int32, T, String)
+  nameWithType.vb: IMetadataSource.Get(Of T)(Int32, T, String)
+- uid: ToSic.Eav.Metadata.IRemoteMetadata
+  name: IRemoteMetadata
+  href: api/ToSic.Eav.Metadata.IRemoteMetadata.html
+  commentId: T:ToSic.Eav.Metadata.IRemoteMetadata
+  fullName: ToSic.Eav.Metadata.IRemoteMetadata
+  nameWithType: IRemoteMetadata
+- uid: ToSic.Eav.Metadata.IRemoteMetadata.OfApp(System.Int32)
   name: OfApp(Int32)
-  href: api/ToSic.Eav.Metadata.IRemoteMetadataProvider.html#ToSic_Eav_Metadata_IRemoteMetadataProvider_OfApp_System_Int32_
-  commentId: M:ToSic.Eav.Metadata.IRemoteMetadataProvider.OfApp(System.Int32)
-  fullName: ToSic.Eav.Metadata.IRemoteMetadataProvider.OfApp(System.Int32)
-  nameWithType: IRemoteMetadataProvider.OfApp(Int32)
-- uid: ToSic.Eav.Metadata.IRemoteMetadataProvider.OfApp*
+  href: api/ToSic.Eav.Metadata.IRemoteMetadata.html#ToSic_Eav_Metadata_IRemoteMetadata_OfApp_System_Int32_
+  commentId: M:ToSic.Eav.Metadata.IRemoteMetadata.OfApp(System.Int32)
+  fullName: ToSic.Eav.Metadata.IRemoteMetadata.OfApp(System.Int32)
+  nameWithType: IRemoteMetadata.OfApp(Int32)
+- uid: ToSic.Eav.Metadata.IRemoteMetadata.OfApp*
   name: OfApp
-  href: api/ToSic.Eav.Metadata.IRemoteMetadataProvider.html#ToSic_Eav_Metadata_IRemoteMetadataProvider_OfApp_
-  commentId: Overload:ToSic.Eav.Metadata.IRemoteMetadataProvider.OfApp
+  href: api/ToSic.Eav.Metadata.IRemoteMetadata.html#ToSic_Eav_Metadata_IRemoteMetadata_OfApp_
+  commentId: Overload:ToSic.Eav.Metadata.IRemoteMetadata.OfApp
   isSpec: "True"
-  fullName: ToSic.Eav.Metadata.IRemoteMetadataProvider.OfApp
-  nameWithType: IRemoteMetadataProvider.OfApp
-- uid: ToSic.Eav.Metadata.IRemoteMetadataProvider.OfZoneAndApp(System.Int32,System.Int32)
+  fullName: ToSic.Eav.Metadata.IRemoteMetadata.OfApp
+  nameWithType: IRemoteMetadata.OfApp
+- uid: ToSic.Eav.Metadata.IRemoteMetadata.OfZoneAndApp(System.Int32,System.Int32)
   name: OfZoneAndApp(Int32, Int32)
-  href: api/ToSic.Eav.Metadata.IRemoteMetadataProvider.html#ToSic_Eav_Metadata_IRemoteMetadataProvider_OfZoneAndApp_System_Int32_System_Int32_
-  commentId: M:ToSic.Eav.Metadata.IRemoteMetadataProvider.OfZoneAndApp(System.Int32,System.Int32)
-  fullName: ToSic.Eav.Metadata.IRemoteMetadataProvider.OfZoneAndApp(System.Int32, System.Int32)
-  nameWithType: IRemoteMetadataProvider.OfZoneAndApp(Int32, Int32)
-- uid: ToSic.Eav.Metadata.IRemoteMetadataProvider.OfZoneAndApp*
+  href: api/ToSic.Eav.Metadata.IRemoteMetadata.html#ToSic_Eav_Metadata_IRemoteMetadata_OfZoneAndApp_System_Int32_System_Int32_
+  commentId: M:ToSic.Eav.Metadata.IRemoteMetadata.OfZoneAndApp(System.Int32,System.Int32)
+  fullName: ToSic.Eav.Metadata.IRemoteMetadata.OfZoneAndApp(System.Int32, System.Int32)
+  nameWithType: IRemoteMetadata.OfZoneAndApp(Int32, Int32)
+- uid: ToSic.Eav.Metadata.IRemoteMetadata.OfZoneAndApp*
   name: OfZoneAndApp
-  href: api/ToSic.Eav.Metadata.IRemoteMetadataProvider.html#ToSic_Eav_Metadata_IRemoteMetadataProvider_OfZoneAndApp_
-  commentId: Overload:ToSic.Eav.Metadata.IRemoteMetadataProvider.OfZoneAndApp
+  href: api/ToSic.Eav.Metadata.IRemoteMetadata.html#ToSic_Eav_Metadata_IRemoteMetadata_OfZoneAndApp_
+  commentId: Overload:ToSic.Eav.Metadata.IRemoteMetadata.OfZoneAndApp
   isSpec: "True"
-  fullName: ToSic.Eav.Metadata.IRemoteMetadataProvider.OfZoneAndApp
-  nameWithType: IRemoteMetadataProvider.OfZoneAndApp
+  fullName: ToSic.Eav.Metadata.IRemoteMetadata.OfZoneAndApp
+  nameWithType: IRemoteMetadata.OfZoneAndApp
+- uid: ToSic.Eav.Metadata.ITarget
+  name: ITarget
+  href: api/ToSic.Eav.Metadata.ITarget.html
+  commentId: T:ToSic.Eav.Metadata.ITarget
+  fullName: ToSic.Eav.Metadata.ITarget
+  nameWithType: ITarget
+- uid: ToSic.Eav.Metadata.ITarget.IsMetadata
+  name: IsMetadata
+  href: api/ToSic.Eav.Metadata.ITarget.html#ToSic_Eav_Metadata_ITarget_IsMetadata
+  commentId: P:ToSic.Eav.Metadata.ITarget.IsMetadata
+  fullName: ToSic.Eav.Metadata.ITarget.IsMetadata
+  nameWithType: ITarget.IsMetadata
+- uid: ToSic.Eav.Metadata.ITarget.IsMetadata*
+  name: IsMetadata
+  href: api/ToSic.Eav.Metadata.ITarget.html#ToSic_Eav_Metadata_ITarget_IsMetadata_
+  commentId: Overload:ToSic.Eav.Metadata.ITarget.IsMetadata
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.ITarget.IsMetadata
+  nameWithType: ITarget.IsMetadata
+- uid: ToSic.Eav.Metadata.ITarget.KeyGuid
+  name: KeyGuid
+  href: api/ToSic.Eav.Metadata.ITarget.html#ToSic_Eav_Metadata_ITarget_KeyGuid
+  commentId: P:ToSic.Eav.Metadata.ITarget.KeyGuid
+  fullName: ToSic.Eav.Metadata.ITarget.KeyGuid
+  nameWithType: ITarget.KeyGuid
+- uid: ToSic.Eav.Metadata.ITarget.KeyGuid*
+  name: KeyGuid
+  href: api/ToSic.Eav.Metadata.ITarget.html#ToSic_Eav_Metadata_ITarget_KeyGuid_
+  commentId: Overload:ToSic.Eav.Metadata.ITarget.KeyGuid
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.ITarget.KeyGuid
+  nameWithType: ITarget.KeyGuid
+- uid: ToSic.Eav.Metadata.ITarget.KeyNumber
+  name: KeyNumber
+  href: api/ToSic.Eav.Metadata.ITarget.html#ToSic_Eav_Metadata_ITarget_KeyNumber
+  commentId: P:ToSic.Eav.Metadata.ITarget.KeyNumber
+  fullName: ToSic.Eav.Metadata.ITarget.KeyNumber
+  nameWithType: ITarget.KeyNumber
+- uid: ToSic.Eav.Metadata.ITarget.KeyNumber*
+  name: KeyNumber
+  href: api/ToSic.Eav.Metadata.ITarget.html#ToSic_Eav_Metadata_ITarget_KeyNumber_
+  commentId: Overload:ToSic.Eav.Metadata.ITarget.KeyNumber
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.ITarget.KeyNumber
+  nameWithType: ITarget.KeyNumber
+- uid: ToSic.Eav.Metadata.ITarget.KeyString
+  name: KeyString
+  href: api/ToSic.Eav.Metadata.ITarget.html#ToSic_Eav_Metadata_ITarget_KeyString
+  commentId: P:ToSic.Eav.Metadata.ITarget.KeyString
+  fullName: ToSic.Eav.Metadata.ITarget.KeyString
+  nameWithType: ITarget.KeyString
+- uid: ToSic.Eav.Metadata.ITarget.KeyString*
+  name: KeyString
+  href: api/ToSic.Eav.Metadata.ITarget.html#ToSic_Eav_Metadata_ITarget_KeyString_
+  commentId: Overload:ToSic.Eav.Metadata.ITarget.KeyString
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.ITarget.KeyString
+  nameWithType: ITarget.KeyString
+- uid: ToSic.Eav.Metadata.ITarget.TargetType
+  name: TargetType
+  href: api/ToSic.Eav.Metadata.ITarget.html#ToSic_Eav_Metadata_ITarget_TargetType
+  commentId: P:ToSic.Eav.Metadata.ITarget.TargetType
+  fullName: ToSic.Eav.Metadata.ITarget.TargetType
+  nameWithType: ITarget.TargetType
+- uid: ToSic.Eav.Metadata.ITarget.TargetType*
+  name: TargetType
+  href: api/ToSic.Eav.Metadata.ITarget.html#ToSic_Eav_Metadata_ITarget_TargetType_
+  commentId: Overload:ToSic.Eav.Metadata.ITarget.TargetType
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.ITarget.TargetType
+  nameWithType: ITarget.TargetType
+- uid: ToSic.Eav.Metadata.ITargetTypes
+  name: ITargetTypes
+  href: api/ToSic.Eav.Metadata.ITargetTypes.html
+  commentId: T:ToSic.Eav.Metadata.ITargetTypes
+  fullName: ToSic.Eav.Metadata.ITargetTypes
+  nameWithType: ITargetTypes
+- uid: ToSic.Eav.Metadata.ITargetTypes.GetId(System.String)
+  name: GetId(String)
+  href: api/ToSic.Eav.Metadata.ITargetTypes.html#ToSic_Eav_Metadata_ITargetTypes_GetId_System_String_
+  commentId: M:ToSic.Eav.Metadata.ITargetTypes.GetId(System.String)
+  fullName: ToSic.Eav.Metadata.ITargetTypes.GetId(System.String)
+  nameWithType: ITargetTypes.GetId(String)
+- uid: ToSic.Eav.Metadata.ITargetTypes.GetId*
+  name: GetId
+  href: api/ToSic.Eav.Metadata.ITargetTypes.html#ToSic_Eav_Metadata_ITargetTypes_GetId_
+  commentId: Overload:ToSic.Eav.Metadata.ITargetTypes.GetId
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.ITargetTypes.GetId
+  nameWithType: ITargetTypes.GetId
+- uid: ToSic.Eav.Metadata.ITargetTypes.GetName(System.Int32)
+  name: GetName(Int32)
+  href: api/ToSic.Eav.Metadata.ITargetTypes.html#ToSic_Eav_Metadata_ITargetTypes_GetName_System_Int32_
+  commentId: M:ToSic.Eav.Metadata.ITargetTypes.GetName(System.Int32)
+  fullName: ToSic.Eav.Metadata.ITargetTypes.GetName(System.Int32)
+  nameWithType: ITargetTypes.GetName(Int32)
+- uid: ToSic.Eav.Metadata.ITargetTypes.GetName*
+  name: GetName
+  href: api/ToSic.Eav.Metadata.ITargetTypes.html#ToSic_Eav_Metadata_ITargetTypes_GetName_
+  commentId: Overload:ToSic.Eav.Metadata.ITargetTypes.GetName
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.ITargetTypes.GetName
+  nameWithType: ITargetTypes.GetName
+- uid: ToSic.Eav.Metadata.MetadataOf`1
+  name: MetadataOf<T>
+  href: api/ToSic.Eav.Metadata.MetadataOf-1.html
+  commentId: T:ToSic.Eav.Metadata.MetadataOf`1
+  name.vb: MetadataOf(Of T)
+  fullName: ToSic.Eav.Metadata.MetadataOf<T>
+  fullName.vb: ToSic.Eav.Metadata.MetadataOf(Of T)
+  nameWithType: MetadataOf<T>
+  nameWithType.vb: MetadataOf(Of T)
+- uid: ToSic.Eav.Metadata.MetadataOf`1.#ctor(System.Int32,`0,System.Int32,System.Int32)
+  name: MetadataOf(Int32, T, Int32, Int32)
+  href: api/ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1__ctor_System_Int32__0_System_Int32_System_Int32_
+  commentId: M:ToSic.Eav.Metadata.MetadataOf`1.#ctor(System.Int32,`0,System.Int32,System.Int32)
+  fullName: ToSic.Eav.Metadata.MetadataOf<T>.MetadataOf(System.Int32, T, System.Int32, System.Int32)
+  fullName.vb: ToSic.Eav.Metadata.MetadataOf(Of T).MetadataOf(System.Int32, T, System.Int32, System.Int32)
+  nameWithType: MetadataOf<T>.MetadataOf(Int32, T, Int32, Int32)
+  nameWithType.vb: MetadataOf(Of T).MetadataOf(Int32, T, Int32, Int32)
+- uid: ToSic.Eav.Metadata.MetadataOf`1.#ctor(System.Int32,`0,ToSic.Eav.Metadata.IHasMetadataSource)
+  name: MetadataOf(Int32, T, IHasMetadataSource)
+  href: api/ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1__ctor_System_Int32__0_ToSic_Eav_Metadata_IHasMetadataSource_
+  commentId: M:ToSic.Eav.Metadata.MetadataOf`1.#ctor(System.Int32,`0,ToSic.Eav.Metadata.IHasMetadataSource)
+  fullName: ToSic.Eav.Metadata.MetadataOf<T>.MetadataOf(System.Int32, T, ToSic.Eav.Metadata.IHasMetadataSource)
+  fullName.vb: ToSic.Eav.Metadata.MetadataOf(Of T).MetadataOf(System.Int32, T, ToSic.Eav.Metadata.IHasMetadataSource)
+  nameWithType: MetadataOf<T>.MetadataOf(Int32, T, IHasMetadataSource)
+  nameWithType.vb: MetadataOf(Of T).MetadataOf(Int32, T, IHasMetadataSource)
+- uid: ToSic.Eav.Metadata.MetadataOf`1.#ctor*
+  name: MetadataOf
+  href: api/ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1__ctor_
+  commentId: Overload:ToSic.Eav.Metadata.MetadataOf`1.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.MetadataOf<T>.MetadataOf
+  fullName.vb: ToSic.Eav.Metadata.MetadataOf(Of T).MetadataOf
+  nameWithType: MetadataOf<T>.MetadataOf
+  nameWithType.vb: MetadataOf(Of T).MetadataOf
+- uid: ToSic.Eav.Metadata.MetadataOf`1.GetBestValue*
+  name: GetBestValue
+  href: api/ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1_GetBestValue_
+  commentId: Overload:ToSic.Eav.Metadata.MetadataOf`1.GetBestValue
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.MetadataOf<T>.GetBestValue
+  fullName.vb: ToSic.Eav.Metadata.MetadataOf(Of T).GetBestValue
+  nameWithType: MetadataOf<T>.GetBestValue
+  nameWithType.vb: MetadataOf(Of T).GetBestValue
+- uid: ToSic.Eav.Metadata.MetadataOf`1.GetBestValue``1(System.String,System.String)
+  name: GetBestValue<TVal>(String, String)
+  href: api/ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1_GetBestValue__1_System_String_System_String_
+  commentId: M:ToSic.Eav.Metadata.MetadataOf`1.GetBestValue``1(System.String,System.String)
+  name.vb: GetBestValue(Of TVal)(String, String)
+  fullName: ToSic.Eav.Metadata.MetadataOf<T>.GetBestValue<TVal>(System.String, System.String)
+  fullName.vb: ToSic.Eav.Metadata.MetadataOf(Of T).GetBestValue(Of TVal)(System.String, System.String)
+  nameWithType: MetadataOf<T>.GetBestValue<TVal>(String, String)
+  nameWithType.vb: MetadataOf(Of T).GetBestValue(Of TVal)(String, String)
+- uid: ToSic.Eav.Metadata.MetadataOf`1.GetBestValue``1(System.String,System.String[])
+  name: GetBestValue<TVal>(String, String[])
+  href: api/ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1_GetBestValue__1_System_String_System_String___
+  commentId: M:ToSic.Eav.Metadata.MetadataOf`1.GetBestValue``1(System.String,System.String[])
+  name.vb: GetBestValue(Of TVal)(String, String())
+  fullName: ToSic.Eav.Metadata.MetadataOf<T>.GetBestValue<TVal>(System.String, System.String[])
+  fullName.vb: ToSic.Eav.Metadata.MetadataOf(Of T).GetBestValue(Of TVal)(System.String, System.String())
+  nameWithType: MetadataOf<T>.GetBestValue<TVal>(String, String[])
+  nameWithType.vb: MetadataOf(Of T).GetBestValue(Of TVal)(String, String())
+- uid: ToSic.Eav.Metadata.MetadataOf`1.Key
+  name: Key
+  href: api/ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1_Key
+  commentId: P:ToSic.Eav.Metadata.MetadataOf`1.Key
+  fullName: ToSic.Eav.Metadata.MetadataOf<T>.Key
+  fullName.vb: ToSic.Eav.Metadata.MetadataOf(Of T).Key
+  nameWithType: MetadataOf<T>.Key
+  nameWithType.vb: MetadataOf(Of T).Key
+- uid: ToSic.Eav.Metadata.MetadataOf`1.Key*
+  name: Key
+  href: api/ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1_Key_
+  commentId: Overload:ToSic.Eav.Metadata.MetadataOf`1.Key
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.MetadataOf<T>.Key
+  fullName.vb: ToSic.Eav.Metadata.MetadataOf(Of T).Key
+  nameWithType: MetadataOf<T>.Key
+  nameWithType.vb: MetadataOf(Of T).Key
+- uid: ToSic.Eav.Metadata.MetadataOf`1.Permissions
+  name: Permissions
+  href: api/ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1_Permissions
+  commentId: P:ToSic.Eav.Metadata.MetadataOf`1.Permissions
+  fullName: ToSic.Eav.Metadata.MetadataOf<T>.Permissions
+  fullName.vb: ToSic.Eav.Metadata.MetadataOf(Of T).Permissions
+  nameWithType: MetadataOf<T>.Permissions
+  nameWithType.vb: MetadataOf(Of T).Permissions
+- uid: ToSic.Eav.Metadata.MetadataOf`1.Permissions*
+  name: Permissions
+  href: api/ToSic.Eav.Metadata.MetadataOf-1.html#ToSic_Eav_Metadata_MetadataOf_1_Permissions_
+  commentId: Overload:ToSic.Eav.Metadata.MetadataOf`1.Permissions
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.MetadataOf<T>.Permissions
+  fullName.vb: ToSic.Eav.Metadata.MetadataOf(Of T).Permissions
+  nameWithType: MetadataOf<T>.Permissions
+  nameWithType.vb: MetadataOf(Of T).Permissions
+- uid: ToSic.Eav.Metadata.Target
+  name: Target
+  href: api/ToSic.Eav.Metadata.Target.html
+  commentId: T:ToSic.Eav.Metadata.Target
+  fullName: ToSic.Eav.Metadata.Target
+  nameWithType: Target
+- uid: ToSic.Eav.Metadata.Target.#ctor
+  name: Target()
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target__ctor
+  commentId: M:ToSic.Eav.Metadata.Target.#ctor
+  fullName: ToSic.Eav.Metadata.Target.Target()
+  nameWithType: Target.Target()
+- uid: ToSic.Eav.Metadata.Target.#ctor(ToSic.Eav.Metadata.ITarget)
+  name: Target(ITarget)
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target__ctor_ToSic_Eav_Metadata_ITarget_
+  commentId: M:ToSic.Eav.Metadata.Target.#ctor(ToSic.Eav.Metadata.ITarget)
+  fullName: ToSic.Eav.Metadata.Target.Target(ToSic.Eav.Metadata.ITarget)
+  nameWithType: Target.Target(ITarget)
+- uid: ToSic.Eav.Metadata.Target.#ctor*
+  name: Target
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target__ctor_
+  commentId: Overload:ToSic.Eav.Metadata.Target.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.Target.Target
+  nameWithType: Target.Target
+- uid: ToSic.Eav.Metadata.Target.IsMetadata
+  name: IsMetadata
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target_IsMetadata
+  commentId: P:ToSic.Eav.Metadata.Target.IsMetadata
+  fullName: ToSic.Eav.Metadata.Target.IsMetadata
+  nameWithType: Target.IsMetadata
+- uid: ToSic.Eav.Metadata.Target.IsMetadata*
+  name: IsMetadata
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target_IsMetadata_
+  commentId: Overload:ToSic.Eav.Metadata.Target.IsMetadata
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.Target.IsMetadata
+  nameWithType: Target.IsMetadata
+- uid: ToSic.Eav.Metadata.Target.KeyGuid
+  name: KeyGuid
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target_KeyGuid
+  commentId: P:ToSic.Eav.Metadata.Target.KeyGuid
+  fullName: ToSic.Eav.Metadata.Target.KeyGuid
+  nameWithType: Target.KeyGuid
+- uid: ToSic.Eav.Metadata.Target.KeyGuid*
+  name: KeyGuid
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target_KeyGuid_
+  commentId: Overload:ToSic.Eav.Metadata.Target.KeyGuid
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.Target.KeyGuid
+  nameWithType: Target.KeyGuid
+- uid: ToSic.Eav.Metadata.Target.KeyNumber
+  name: KeyNumber
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target_KeyNumber
+  commentId: P:ToSic.Eav.Metadata.Target.KeyNumber
+  fullName: ToSic.Eav.Metadata.Target.KeyNumber
+  nameWithType: Target.KeyNumber
+- uid: ToSic.Eav.Metadata.Target.KeyNumber*
+  name: KeyNumber
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target_KeyNumber_
+  commentId: Overload:ToSic.Eav.Metadata.Target.KeyNumber
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.Target.KeyNumber
+  nameWithType: Target.KeyNumber
+- uid: ToSic.Eav.Metadata.Target.KeyString
+  name: KeyString
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target_KeyString
+  commentId: P:ToSic.Eav.Metadata.Target.KeyString
+  fullName: ToSic.Eav.Metadata.Target.KeyString
+  nameWithType: Target.KeyString
+- uid: ToSic.Eav.Metadata.Target.KeyString*
+  name: KeyString
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target_KeyString_
+  commentId: Overload:ToSic.Eav.Metadata.Target.KeyString
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.Target.KeyString
+  nameWithType: Target.KeyString
+- uid: ToSic.Eav.Metadata.Target.TargetType
+  name: TargetType
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target_TargetType
+  commentId: P:ToSic.Eav.Metadata.Target.TargetType
+  fullName: ToSic.Eav.Metadata.Target.TargetType
+  nameWithType: Target.TargetType
+- uid: ToSic.Eav.Metadata.Target.TargetType*
+  name: TargetType
+  href: api/ToSic.Eav.Metadata.Target.html#ToSic_Eav_Metadata_Target_TargetType_
+  commentId: Overload:ToSic.Eav.Metadata.Target.TargetType
+  isSpec: "True"
+  fullName: ToSic.Eav.Metadata.Target.TargetType
+  nameWithType: Target.TargetType
 - uid: ToSic.Sxc.Adam
   name: ToSic.Sxc.Adam
   href: api/ToSic.Sxc.Adam.html
