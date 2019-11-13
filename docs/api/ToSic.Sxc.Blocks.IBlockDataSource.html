@@ -126,9 +126,6 @@ It&apos;s not documented more, as we may still make changes to it.</p>
       <a class="xref" href="ToSic.Eav.Apps.IInApp.html#ToSic_Eav_Apps_IInApp_AppId">IInApp.AppId</a>
     </div>
     <div>
-      <a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html#ToSic_Eav_Caching_ICacheExpiring_CacheTimestamp">ICacheExpiring.CacheTimestamp</a>
-    </div>
-    <div>
       <a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html#ToSic_Eav_Caching_ICacheExpiring_CacheChanged_System_Int64_">ICacheExpiring.CacheChanged(Int64)</a>
     </div>
     <div>
@@ -157,7 +154,7 @@ It&apos;s not documented more, as we may still make changes to it.</p>
   <h6><strong>Assembly</strong>: ToSic.Sxc.dll</h6>
   <h5 id="ToSic_Sxc_Blocks_IBlockDataSource_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IBlockDataSource : IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IBlockDataSource : IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
 </article>
           </div>

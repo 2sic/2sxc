@@ -182,7 +182,7 @@
   <h5 id="ToSic_Eav_DataSources_Shuffle_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.Shuffle, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Sort, DynamicOut = false, ExpectsDataOfType = &quot;38e7822b-1049-4539-bb3f-f99949b1b1d1&quot;, Icon = &quot;shuffle&quot;, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-Shuffle&quot;)]
-public sealed class Shuffle : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+public sealed class Shuffle : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
   <h5 id="ToSic_Eav_DataSources_Shuffle_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.

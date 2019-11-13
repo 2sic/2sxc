@@ -183,7 +183,7 @@ This is not meant for VisualQuery, but for code which pre-processes data in a Da
   <h6><strong>Assembly</strong>: ToSic.Eav.DataSources.dll</h6>
   <h5 id="ToSic_Eav_DataSources_DataTableDataSource_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class DataTableDataSource : ExternalDataDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class DataTableDataSource : ExternalDataDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
   <h5 id="ToSic_Eav_DataSources_DataTableDataSource_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.

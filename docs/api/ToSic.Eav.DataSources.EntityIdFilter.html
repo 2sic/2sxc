@@ -182,7 +182,7 @@
   <h5 id="ToSic_Eav_DataSources_EntityIdFilter_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.EntityIdFilter, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Filter, DynamicOut = false, NiceName = &quot;ItemIdFilter&quot;, ExpectsDataOfType = &quot;|Config ToSic.Eav.DataSources.EntityIdFilter&quot;, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ItemIdFilter&quot;)]
-public class EntityIdFilter : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+public class EntityIdFilter : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
   <h5 id="ToSic_Eav_DataSources_EntityIdFilter_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.

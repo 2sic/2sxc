@@ -5,7 +5,6 @@ using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
-using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.Sxc.Apps.Blocks
 {
@@ -65,7 +64,7 @@ namespace ToSic.Sxc.Apps.Blocks
                     var dataSource = DataSource.GetInitialDataSource(ZoneId, AppId);
                     // ToDo: Should use an indexed Guid filter
                     templateEntity =
-                        Eav.Data.Query.Entity.One(dataSource.List, PreviewTemplateId.Value);
+                        Eav.Data.Query.IEntityExtensions.One(dataSource.List, PreviewTemplateId.Value);
                 }
                 else if (Entity != null)
                     templateEntity = Entity.Children("Template").FirstOrDefault();

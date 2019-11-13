@@ -182,7 +182,7 @@
   <h5 id="ToSic_Eav_DataSources_Paging_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.Paging, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Logic, DynamicOut = false, ExpectsDataOfType = &quot;|Config ToSic.Eav.DataSources.Paging&quot;, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-Paging&quot;)]
-public sealed class Paging : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+public sealed class Paging : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
   <h5 id="ToSic_Eav_DataSources_Paging_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.

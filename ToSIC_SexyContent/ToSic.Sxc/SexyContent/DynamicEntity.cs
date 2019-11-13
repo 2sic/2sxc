@@ -87,7 +87,7 @@ namespace ToSic.SexyContent
             {
                 result = Entity.GetBestValue(attributeName, _dimensions, true);
 
-                if (result is EntityRelationship rel)
+                if (result is IEnumerable<IEntity> rel)
                 {
                     var relList = rel.Select(
                         p => new DynamicEntity(p, _dimensions, CmsInstance)

@@ -183,7 +183,7 @@ Find all Books (desired Entity), whose Authors (related Entity) have a Country (
   <h5 id="ToSic_Eav_DataSources_RelationshipFilter_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.RelationshipFilter, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Lookup, In = new string[]{&quot;Default&quot;, &quot;Fallback&quot;}, DynamicOut = false, ExpectsDataOfType = &quot;|Config ToSic.Eav.DataSources.RelationshipFilter&quot;, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-RelationshipFilter&quot;)]
-public sealed class RelationshipFilter : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+public sealed class RelationshipFilter : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
   <h5 id="ToSic_Eav_DataSources_RelationshipFilter_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.
