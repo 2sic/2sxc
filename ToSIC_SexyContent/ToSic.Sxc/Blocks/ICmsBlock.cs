@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Blocks
     /// Sxc Block to get everything rendered. 
     /// </summary>
     [PublicApi]
-    public interface ICmsBlock: IHasLog, IAppIdentity
+    public interface ICmsBlock: IHasLog, IInAppAndZone
     {
         /// <summary>
         /// The app relevant to this instance - contains much more material like

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Blocks
     /// A unit / block of output in a CMS. 
     /// </summary>
     [PublicApi]
-    public interface IBlock: IAppIdentity
+    public interface IBlock: IInAppAndZone
     {
         [PrivateApi]
         bool ShowTemplateChooser { get; }

@@ -395,44 +395,50 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Apps.IAppDataConfiguration.VersioningEnabled
   nameWithType: IAppDataConfiguration.VersioningEnabled
-- uid: ToSic.Eav.Apps.IAppIdentity
-  name: IAppIdentity
-  href: api/ToSic.Eav.Apps.IAppIdentity.html
-  commentId: T:ToSic.Eav.Apps.IAppIdentity
-  fullName: ToSic.Eav.Apps.IAppIdentity
-  nameWithType: IAppIdentity
-- uid: ToSic.Eav.Apps.IAppIdentity.AppId
+- uid: ToSic.Eav.Apps.IInApp
+  name: IInApp
+  href: api/ToSic.Eav.Apps.IInApp.html
+  commentId: T:ToSic.Eav.Apps.IInApp
+  fullName: ToSic.Eav.Apps.IInApp
+  nameWithType: IInApp
+- uid: ToSic.Eav.Apps.IInApp.AppId
   name: AppId
-  href: api/ToSic.Eav.Apps.IAppIdentity.html#ToSic_Eav_Apps_IAppIdentity_AppId
-  commentId: P:ToSic.Eav.Apps.IAppIdentity.AppId
-  fullName: ToSic.Eav.Apps.IAppIdentity.AppId
-  nameWithType: IAppIdentity.AppId
-- uid: ToSic.Eav.Apps.IAppIdentity.AppId*
+  href: api/ToSic.Eav.Apps.IInApp.html#ToSic_Eav_Apps_IInApp_AppId
+  commentId: P:ToSic.Eav.Apps.IInApp.AppId
+  fullName: ToSic.Eav.Apps.IInApp.AppId
+  nameWithType: IInApp.AppId
+- uid: ToSic.Eav.Apps.IInApp.AppId*
   name: AppId
-  href: api/ToSic.Eav.Apps.IAppIdentity.html#ToSic_Eav_Apps_IAppIdentity_AppId_
-  commentId: Overload:ToSic.Eav.Apps.IAppIdentity.AppId
+  href: api/ToSic.Eav.Apps.IInApp.html#ToSic_Eav_Apps_IInApp_AppId_
+  commentId: Overload:ToSic.Eav.Apps.IInApp.AppId
   isSpec: "True"
-  fullName: ToSic.Eav.Apps.IAppIdentity.AppId
-  nameWithType: IAppIdentity.AppId
-- uid: ToSic.Eav.Apps.IZoneIdentity
-  name: IZoneIdentity
-  href: api/ToSic.Eav.Apps.IZoneIdentity.html
-  commentId: T:ToSic.Eav.Apps.IZoneIdentity
-  fullName: ToSic.Eav.Apps.IZoneIdentity
-  nameWithType: IZoneIdentity
-- uid: ToSic.Eav.Apps.IZoneIdentity.ZoneId
+  fullName: ToSic.Eav.Apps.IInApp.AppId
+  nameWithType: IInApp.AppId
+- uid: ToSic.Eav.Apps.IInAppAndZone
+  name: IInAppAndZone
+  href: api/ToSic.Eav.Apps.IInAppAndZone.html
+  commentId: T:ToSic.Eav.Apps.IInAppAndZone
+  fullName: ToSic.Eav.Apps.IInAppAndZone
+  nameWithType: IInAppAndZone
+- uid: ToSic.Eav.Apps.IInZone
+  name: IInZone
+  href: api/ToSic.Eav.Apps.IInZone.html
+  commentId: T:ToSic.Eav.Apps.IInZone
+  fullName: ToSic.Eav.Apps.IInZone
+  nameWithType: IInZone
+- uid: ToSic.Eav.Apps.IInZone.ZoneId
   name: ZoneId
-  href: api/ToSic.Eav.Apps.IZoneIdentity.html#ToSic_Eav_Apps_IZoneIdentity_ZoneId
-  commentId: P:ToSic.Eav.Apps.IZoneIdentity.ZoneId
-  fullName: ToSic.Eav.Apps.IZoneIdentity.ZoneId
-  nameWithType: IZoneIdentity.ZoneId
-- uid: ToSic.Eav.Apps.IZoneIdentity.ZoneId*
+  href: api/ToSic.Eav.Apps.IInZone.html#ToSic_Eav_Apps_IInZone_ZoneId
+  commentId: P:ToSic.Eav.Apps.IInZone.ZoneId
+  fullName: ToSic.Eav.Apps.IInZone.ZoneId
+  nameWithType: IInZone.ZoneId
+- uid: ToSic.Eav.Apps.IInZone.ZoneId*
   name: ZoneId
-  href: api/ToSic.Eav.Apps.IZoneIdentity.html#ToSic_Eav_Apps_IZoneIdentity_ZoneId_
-  commentId: Overload:ToSic.Eav.Apps.IZoneIdentity.ZoneId
+  href: api/ToSic.Eav.Apps.IInZone.html#ToSic_Eav_Apps_IInZone_ZoneId_
+  commentId: Overload:ToSic.Eav.Apps.IInZone.ZoneId
   isSpec: "True"
-  fullName: ToSic.Eav.Apps.IZoneIdentity.ZoneId
-  nameWithType: IZoneIdentity.ZoneId
+  fullName: ToSic.Eav.Apps.IInZone.ZoneId
+  nameWithType: IInZone.ZoneId
 - uid: ToSic.Eav.Caching
   name: ToSic.Eav.Caching
   href: api/ToSic.Eav.Caching.html
@@ -509,6 +515,309 @@ references:
   commentId: N:ToSic.Eav.Data
   fullName: ToSic.Eav.Data
   nameWithType: ToSic.Eav.Data
+- uid: ToSic.Eav.Data.ContentType
+  name: ContentType
+  href: api/ToSic.Eav.Data.ContentType.html
+  commentId: T:ToSic.Eav.Data.ContentType
+  fullName: ToSic.Eav.Data.ContentType
+  nameWithType: ContentType
+- uid: ToSic.Eav.Data.ContentType.#ctor(System.Int32,System.String,System.String)
+  name: ContentType(Int32, String, String)
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType__ctor_System_Int32_System_String_System_String_
+  commentId: M:ToSic.Eav.Data.ContentType.#ctor(System.Int32,System.String,System.String)
+  fullName: ToSic.Eav.Data.ContentType.ContentType(System.Int32, System.String, System.String)
+  nameWithType: ContentType.ContentType(Int32, String, String)
+- uid: ToSic.Eav.Data.ContentType.#ctor(System.Int32,System.String,System.String,System.Int32,System.String,System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Boolean,ToSic.Eav.Data.IDeferredEntitiesList)
+  name: ContentType(Int32, String, String, Int32, String, String, Nullable<Int32>, Int32, Int32, Boolean, IDeferredEntitiesList)
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType__ctor_System_Int32_System_String_System_String_System_Int32_System_String_System_String_System_Nullable_System_Int32__System_Int32_System_Int32_System_Boolean_ToSic_Eav_Data_IDeferredEntitiesList_
+  commentId: M:ToSic.Eav.Data.ContentType.#ctor(System.Int32,System.String,System.String,System.Int32,System.String,System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Boolean,ToSic.Eav.Data.IDeferredEntitiesList)
+  name.vb: ContentType(Int32, String, String, Int32, String, String, Nullable(Of Int32), Int32, Int32, Boolean, IDeferredEntitiesList)
+  fullName: ToSic.Eav.Data.ContentType.ContentType(System.Int32, System.String, System.String, System.Int32, System.String, System.String, System.Nullable<System.Int32>, System.Int32, System.Int32, System.Boolean, ToSic.Eav.Data.IDeferredEntitiesList)
+  fullName.vb: ToSic.Eav.Data.ContentType.ContentType(System.Int32, System.String, System.String, System.Int32, System.String, System.String, System.Nullable(Of System.Int32), System.Int32, System.Int32, System.Boolean, ToSic.Eav.Data.IDeferredEntitiesList)
+  nameWithType: ContentType.ContentType(Int32, String, String, Int32, String, String, Nullable<Int32>, Int32, Int32, Boolean, IDeferredEntitiesList)
+  nameWithType.vb: ContentType.ContentType(Int32, String, String, Int32, String, String, Nullable(Of Int32), Int32, Int32, Boolean, IDeferredEntitiesList)
+- uid: ToSic.Eav.Data.ContentType.#ctor*
+  name: ContentType
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType__ctor_
+  commentId: Overload:ToSic.Eav.Data.ContentType.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.ContentType
+  nameWithType: ContentType.ContentType
+- uid: ToSic.Eav.Data.ContentType.AlwaysShareConfiguration
+  name: AlwaysShareConfiguration
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_AlwaysShareConfiguration
+  commentId: P:ToSic.Eav.Data.ContentType.AlwaysShareConfiguration
+  fullName: ToSic.Eav.Data.ContentType.AlwaysShareConfiguration
+  nameWithType: ContentType.AlwaysShareConfiguration
+- uid: ToSic.Eav.Data.ContentType.AlwaysShareConfiguration*
+  name: AlwaysShareConfiguration
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_AlwaysShareConfiguration_
+  commentId: Overload:ToSic.Eav.Data.ContentType.AlwaysShareConfiguration
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.AlwaysShareConfiguration
+  nameWithType: ContentType.AlwaysShareConfiguration
+- uid: ToSic.Eav.Data.ContentType.AppId
+  name: AppId
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_AppId
+  commentId: P:ToSic.Eav.Data.ContentType.AppId
+  fullName: ToSic.Eav.Data.ContentType.AppId
+  nameWithType: ContentType.AppId
+- uid: ToSic.Eav.Data.ContentType.AppId*
+  name: AppId
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_AppId_
+  commentId: Overload:ToSic.Eav.Data.ContentType.AppId
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.AppId
+  nameWithType: ContentType.AppId
+- uid: ToSic.Eav.Data.ContentType.Attributes
+  name: Attributes
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Attributes
+  commentId: P:ToSic.Eav.Data.ContentType.Attributes
+  fullName: ToSic.Eav.Data.ContentType.Attributes
+  nameWithType: ContentType.Attributes
+- uid: ToSic.Eav.Data.ContentType.Attributes*
+  name: Attributes
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Attributes_
+  commentId: Overload:ToSic.Eav.Data.ContentType.Attributes
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.Attributes
+  nameWithType: ContentType.Attributes
+- uid: ToSic.Eav.Data.ContentType.ContentTypeId
+  name: ContentTypeId
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_ContentTypeId
+  commentId: P:ToSic.Eav.Data.ContentType.ContentTypeId
+  fullName: ToSic.Eav.Data.ContentType.ContentTypeId
+  nameWithType: ContentType.ContentTypeId
+- uid: ToSic.Eav.Data.ContentType.ContentTypeId*
+  name: ContentTypeId
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_ContentTypeId_
+  commentId: Overload:ToSic.Eav.Data.ContentType.ContentTypeId
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.ContentTypeId
+  nameWithType: ContentType.ContentTypeId
+- uid: ToSic.Eav.Data.ContentType.Description
+  name: Description
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Description
+  commentId: P:ToSic.Eav.Data.ContentType.Description
+  fullName: ToSic.Eav.Data.ContentType.Description
+  nameWithType: ContentType.Description
+- uid: ToSic.Eav.Data.ContentType.Description*
+  name: Description
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Description_
+  commentId: Overload:ToSic.Eav.Data.ContentType.Description
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.Description
+  nameWithType: ContentType.Description
+- uid: ToSic.Eav.Data.ContentType.Is(System.String)
+  name: Is(String)
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Is_System_String_
+  commentId: M:ToSic.Eav.Data.ContentType.Is(System.String)
+  fullName: ToSic.Eav.Data.ContentType.Is(System.String)
+  nameWithType: ContentType.Is(String)
+- uid: ToSic.Eav.Data.ContentType.Is*
+  name: Is
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Is_
+  commentId: Overload:ToSic.Eav.Data.ContentType.Is
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.Is
+  nameWithType: ContentType.Is
+- uid: ToSic.Eav.Data.ContentType.IsDynamic
+  name: IsDynamic
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_IsDynamic
+  commentId: P:ToSic.Eav.Data.ContentType.IsDynamic
+  fullName: ToSic.Eav.Data.ContentType.IsDynamic
+  nameWithType: ContentType.IsDynamic
+- uid: ToSic.Eav.Data.ContentType.IsDynamic*
+  name: IsDynamic
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_IsDynamic_
+  commentId: Overload:ToSic.Eav.Data.ContentType.IsDynamic
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.IsDynamic
+  nameWithType: ContentType.IsDynamic
+- uid: ToSic.Eav.Data.ContentType.Item(System.String)
+  name: Item[String]
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Item_System_String_
+  commentId: P:ToSic.Eav.Data.ContentType.Item(System.String)
+  name.vb: Item(String)
+  fullName: ToSic.Eav.Data.ContentType.Item[System.String]
+  fullName.vb: ToSic.Eav.Data.ContentType.Item(System.String)
+  nameWithType: ContentType.Item[String]
+  nameWithType.vb: ContentType.Item(String)
+- uid: ToSic.Eav.Data.ContentType.Item*
+  name: Item
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Item_
+  commentId: Overload:ToSic.Eav.Data.ContentType.Item
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.Item
+  nameWithType: ContentType.Item
+- uid: ToSic.Eav.Data.ContentType.Metadata
+  name: Metadata
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Metadata
+  commentId: P:ToSic.Eav.Data.ContentType.Metadata
+  fullName: ToSic.Eav.Data.ContentType.Metadata
+  nameWithType: ContentType.Metadata
+- uid: ToSic.Eav.Data.ContentType.Metadata*
+  name: Metadata
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Metadata_
+  commentId: Overload:ToSic.Eav.Data.ContentType.Metadata
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.Metadata
+  nameWithType: ContentType.Metadata
+- uid: ToSic.Eav.Data.ContentType.Name
+  name: Name
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Name
+  commentId: P:ToSic.Eav.Data.ContentType.Name
+  fullName: ToSic.Eav.Data.ContentType.Name
+  nameWithType: ContentType.Name
+- uid: ToSic.Eav.Data.ContentType.Name*
+  name: Name
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Name_
+  commentId: Overload:ToSic.Eav.Data.ContentType.Name
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.Name
+  nameWithType: ContentType.Name
+- uid: ToSic.Eav.Data.ContentType.ParentAppId
+  name: ParentAppId
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_ParentAppId
+  commentId: P:ToSic.Eav.Data.ContentType.ParentAppId
+  fullName: ToSic.Eav.Data.ContentType.ParentAppId
+  nameWithType: ContentType.ParentAppId
+- uid: ToSic.Eav.Data.ContentType.ParentAppId*
+  name: ParentAppId
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_ParentAppId_
+  commentId: Overload:ToSic.Eav.Data.ContentType.ParentAppId
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.ParentAppId
+  nameWithType: ContentType.ParentAppId
+- uid: ToSic.Eav.Data.ContentType.ParentId
+  name: ParentId
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_ParentId
+  commentId: P:ToSic.Eav.Data.ContentType.ParentId
+  fullName: ToSic.Eav.Data.ContentType.ParentId
+  nameWithType: ContentType.ParentId
+- uid: ToSic.Eav.Data.ContentType.ParentId*
+  name: ParentId
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_ParentId_
+  commentId: Overload:ToSic.Eav.Data.ContentType.ParentId
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.ParentId
+  nameWithType: ContentType.ParentId
+- uid: ToSic.Eav.Data.ContentType.ParentZoneId
+  name: ParentZoneId
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_ParentZoneId
+  commentId: P:ToSic.Eav.Data.ContentType.ParentZoneId
+  fullName: ToSic.Eav.Data.ContentType.ParentZoneId
+  nameWithType: ContentType.ParentZoneId
+- uid: ToSic.Eav.Data.ContentType.ParentZoneId*
+  name: ParentZoneId
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_ParentZoneId_
+  commentId: Overload:ToSic.Eav.Data.ContentType.ParentZoneId
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.ParentZoneId
+  nameWithType: ContentType.ParentZoneId
+- uid: ToSic.Eav.Data.ContentType.RepositoryAddress
+  name: RepositoryAddress
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_RepositoryAddress
+  commentId: P:ToSic.Eav.Data.ContentType.RepositoryAddress
+  fullName: ToSic.Eav.Data.ContentType.RepositoryAddress
+  nameWithType: ContentType.RepositoryAddress
+- uid: ToSic.Eav.Data.ContentType.RepositoryAddress*
+  name: RepositoryAddress
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_RepositoryAddress_
+  commentId: Overload:ToSic.Eav.Data.ContentType.RepositoryAddress
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.RepositoryAddress
+  nameWithType: ContentType.RepositoryAddress
+- uid: ToSic.Eav.Data.ContentType.RepositoryType
+  name: RepositoryType
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_RepositoryType
+  commentId: P:ToSic.Eav.Data.ContentType.RepositoryType
+  fullName: ToSic.Eav.Data.ContentType.RepositoryType
+  nameWithType: ContentType.RepositoryType
+- uid: ToSic.Eav.Data.ContentType.RepositoryType*
+  name: RepositoryType
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_RepositoryType_
+  commentId: Overload:ToSic.Eav.Data.ContentType.RepositoryType
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.RepositoryType
+  nameWithType: ContentType.RepositoryType
+- uid: ToSic.Eav.Data.ContentType.Scope
+  name: Scope
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Scope
+  commentId: P:ToSic.Eav.Data.ContentType.Scope
+  fullName: ToSic.Eav.Data.ContentType.Scope
+  nameWithType: ContentType.Scope
+- uid: ToSic.Eav.Data.ContentType.Scope*
+  name: Scope
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_Scope_
+  commentId: Overload:ToSic.Eav.Data.ContentType.Scope
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.Scope
+  nameWithType: ContentType.Scope
+- uid: ToSic.Eav.Data.ContentType.StaticName
+  name: StaticName
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_StaticName
+  commentId: P:ToSic.Eav.Data.ContentType.StaticName
+  fullName: ToSic.Eav.Data.ContentType.StaticName
+  nameWithType: ContentType.StaticName
+- uid: ToSic.Eav.Data.ContentType.StaticName*
+  name: StaticName
+  href: api/ToSic.Eav.Data.ContentType.html#ToSic_Eav_Data_ContentType_StaticName_
+  commentId: Overload:ToSic.Eav.Data.ContentType.StaticName
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentType.StaticName
+  nameWithType: ContentType.StaticName
+- uid: ToSic.Eav.Data.ContentTypeMetadata
+  name: ContentTypeMetadata
+  href: api/ToSic.Eav.Data.ContentTypeMetadata.html
+  commentId: T:ToSic.Eav.Data.ContentTypeMetadata
+  fullName: ToSic.Eav.Data.ContentTypeMetadata
+  nameWithType: ContentTypeMetadata
+- uid: ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,System.Int32,System.Int32)
+  name: ContentTypeMetadata(String, Int32, Int32)
+  href: api/ToSic.Eav.Data.ContentTypeMetadata.html#ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_System_Int32_System_Int32_
+  commentId: M:ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,System.Int32,System.Int32)
+  fullName: ToSic.Eav.Data.ContentTypeMetadata.ContentTypeMetadata(System.String, System.Int32, System.Int32)
+  nameWithType: ContentTypeMetadata.ContentTypeMetadata(String, Int32, Int32)
+- uid: ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,ToSic.Eav.Data.IDeferredEntitiesList)
+  name: ContentTypeMetadata(String, IDeferredEntitiesList)
+  href: api/ToSic.Eav.Data.ContentTypeMetadata.html#ToSic_Eav_Data_ContentTypeMetadata__ctor_System_String_ToSic_Eav_Data_IDeferredEntitiesList_
+  commentId: M:ToSic.Eav.Data.ContentTypeMetadata.#ctor(System.String,ToSic.Eav.Data.IDeferredEntitiesList)
+  fullName: ToSic.Eav.Data.ContentTypeMetadata.ContentTypeMetadata(System.String, ToSic.Eav.Data.IDeferredEntitiesList)
+  nameWithType: ContentTypeMetadata.ContentTypeMetadata(String, IDeferredEntitiesList)
+- uid: ToSic.Eav.Data.ContentTypeMetadata.#ctor*
+  name: ContentTypeMetadata
+  href: api/ToSic.Eav.Data.ContentTypeMetadata.html#ToSic_Eav_Data_ContentTypeMetadata__ctor_
+  commentId: Overload:ToSic.Eav.Data.ContentTypeMetadata.#ctor
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentTypeMetadata.ContentTypeMetadata
+  nameWithType: ContentTypeMetadata.ContentTypeMetadata
+- uid: ToSic.Eav.Data.ContentTypeMetadata.Description
+  name: Description
+  href: api/ToSic.Eav.Data.ContentTypeMetadata.html#ToSic_Eav_Data_ContentTypeMetadata_Description
+  commentId: P:ToSic.Eav.Data.ContentTypeMetadata.Description
+  fullName: ToSic.Eav.Data.ContentTypeMetadata.Description
+  nameWithType: ContentTypeMetadata.Description
+- uid: ToSic.Eav.Data.ContentTypeMetadata.Description*
+  name: Description
+  href: api/ToSic.Eav.Data.ContentTypeMetadata.html#ToSic_Eav_Data_ContentTypeMetadata_Description_
+  commentId: Overload:ToSic.Eav.Data.ContentTypeMetadata.Description
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentTypeMetadata.Description
+  nameWithType: ContentTypeMetadata.Description
+- uid: ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider
+  name: LoadFromProvider()
+  href: api/ToSic.Eav.Data.ContentTypeMetadata.html#ToSic_Eav_Data_ContentTypeMetadata_LoadFromProvider
+  commentId: M:ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider
+  fullName: ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider()
+  nameWithType: ContentTypeMetadata.LoadFromProvider()
+- uid: ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider*
+  name: LoadFromProvider
+  href: api/ToSic.Eav.Data.ContentTypeMetadata.html#ToSic_Eav_Data_ContentTypeMetadata_LoadFromProvider_
+  commentId: Overload:ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider
+  isSpec: "True"
+  fullName: ToSic.Eav.Data.ContentTypeMetadata.LoadFromProvider
+  nameWithType: ContentTypeMetadata.LoadFromProvider
 - uid: ToSic.Eav.Data.EntityBasedType
   name: EntityBasedType
   href: api/ToSic.Eav.Data.EntityBasedType.html
@@ -922,19 +1231,6 @@ references:
   commentId: T:ToSic.Eav.Data.IContentType
   fullName: ToSic.Eav.Data.IContentType
   nameWithType: IContentType
-- uid: ToSic.Eav.Data.IContentType.AppId
-  name: AppId
-  href: api/ToSic.Eav.Data.IContentType.html#ToSic_Eav_Data_IContentType_AppId
-  commentId: P:ToSic.Eav.Data.IContentType.AppId
-  fullName: ToSic.Eav.Data.IContentType.AppId
-  nameWithType: IContentType.AppId
-- uid: ToSic.Eav.Data.IContentType.AppId*
-  name: AppId
-  href: api/ToSic.Eav.Data.IContentType.html#ToSic_Eav_Data_IContentType_AppId_
-  commentId: Overload:ToSic.Eav.Data.IContentType.AppId
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.IContentType.AppId
-  nameWithType: IContentType.AppId
 - uid: ToSic.Eav.Data.IContentType.Attributes
   name: Attributes
   href: api/ToSic.Eav.Data.IContentType.html#ToSic_Eav_Data_IContentType_Attributes
@@ -1344,19 +1640,6 @@ references:
   commentId: T:ToSic.Eav.Data.IEntityLight
   fullName: ToSic.Eav.Data.IEntityLight
   nameWithType: IEntityLight
-- uid: ToSic.Eav.Data.IEntityLight.AppId
-  name: AppId
-  href: api/ToSic.Eav.Data.IEntityLight.html#ToSic_Eav_Data_IEntityLight_AppId
-  commentId: P:ToSic.Eav.Data.IEntityLight.AppId
-  fullName: ToSic.Eav.Data.IEntityLight.AppId
-  nameWithType: IEntityLight.AppId
-- uid: ToSic.Eav.Data.IEntityLight.AppId*
-  name: AppId
-  href: api/ToSic.Eav.Data.IEntityLight.html#ToSic_Eav_Data_IEntityLight_AppId_
-  commentId: Overload:ToSic.Eav.Data.IEntityLight.AppId
-  isSpec: "True"
-  fullName: ToSic.Eav.Data.IEntityLight.AppId
-  nameWithType: IEntityLight.AppId
 - uid: ToSic.Eav.Data.IEntityLight.EntityGuid
   name: EntityGuid
   href: api/ToSic.Eav.Data.IEntityLight.html#ToSic_Eav_Data_IEntityLight_EntityGuid

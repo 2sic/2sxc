@@ -89,10 +89,10 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="ToSic.Eav.Apps.IAppIdentity.html#ToSic_Eav_Apps_IAppIdentity_AppId">IAppIdentity.AppId</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInZone.html#ToSic_Eav_Apps_IInZone_ZoneId">IInZone.ZoneId</a>
     </div>
     <div>
-      <a class="xref" href="ToSic.Eav.Apps.IZoneIdentity.html#ToSic_Eav_Apps_IZoneIdentity_ZoneId">IZoneIdentity.ZoneId</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInApp.html#ToSic_Eav_Apps_IInApp_AppId">IInApp.AppId</a>
     </div>
     <div>
       <a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html#ToSic_Eav_Caching_ICacheExpiring_CacheTimestamp">ICacheExpiring.CacheTimestamp</a>
@@ -114,7 +114,7 @@
   <h6><strong>Assembly</strong>: ToSic.Eav.DataSources.dll</h6>
   <h5 id="ToSic_Eav_DataSources_IDataSource_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IDataSource : IAppIdentity, IZoneIdentity, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IDataSource : IInAppAndZone, IInZone, IInApp, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>

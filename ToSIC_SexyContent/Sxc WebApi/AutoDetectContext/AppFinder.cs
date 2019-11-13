@@ -33,7 +33,7 @@ namespace ToSic.SexyContent.WebApi.AutoDetectContext
         /// </summary>
         /// <param name="appPath"></param>
         /// <returns></returns>
-        internal IAppIdentity GetCurrentAppIdFromPath(string appPath)
+        internal IInAppAndZone GetCurrentAppIdFromPath(string appPath)
         {
             var wrapLog = Log.Call("GetCurrentAppIdFromPath", appPath);
             // check zone
@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.WebApi.AutoDetectContext
         /// Note that this will fail, if both appPath and context are missing
         /// </summary>
         /// <returns></returns>
-        internal IAppIdentity GetAppIdFromPathOrContext(string appPath, /*SxcBlock*/ICmsBlock cmsInstance)
+        internal IInAppAndZone GetAppIdFromPathOrContext(string appPath, /*SxcBlock*/ICmsBlock cmsInstance)
         {
             var wrapLog = Log.Call("GetAppIdFromPathOrContext", $"{appPath}, ...", "detect app from query string parameters");
 
@@ -80,7 +80,7 @@ namespace ToSic.SexyContent.WebApi.AutoDetectContext
         /// It's a temporary solution, because normally we want the control flow to be more obvious
         /// </summary>
         /// <returns></returns>
-        private IAppIdentity GetAppIdentityFromQueryAppZone()
+        private IInAppAndZone GetAppIdentityFromQueryAppZone()
         {
             var allUrlKeyValues = ControllerContext.Request.GetQueryNameValuePairs().ToList();
             var ok1 = int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == Route.ZoneIdKey).Value, out var zoneIdFromQueryString);

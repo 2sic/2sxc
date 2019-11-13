@@ -120,10 +120,10 @@ It&apos;s not documented more, as we may still make changes to it.</p>
       <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html#ToSic_Eav_DataSources_IDataSource_CacheRelevantConfigurations">IDataSource.CacheRelevantConfigurations</a>
     </div>
     <div>
-      <a class="xref" href="ToSic.Eav.Apps.IAppIdentity.html#ToSic_Eav_Apps_IAppIdentity_AppId">IAppIdentity.AppId</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInZone.html#ToSic_Eav_Apps_IInZone_ZoneId">IInZone.ZoneId</a>
     </div>
     <div>
-      <a class="xref" href="ToSic.Eav.Apps.IZoneIdentity.html#ToSic_Eav_Apps_IZoneIdentity_ZoneId">IZoneIdentity.ZoneId</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInApp.html#ToSic_Eav_Apps_IInApp_AppId">IInApp.AppId</a>
     </div>
     <div>
       <a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html#ToSic_Eav_Caching_ICacheExpiring_CacheTimestamp">ICacheExpiring.CacheTimestamp</a>
@@ -157,7 +157,7 @@ It&apos;s not documented more, as we may still make changes to it.</p>
   <h6><strong>Assembly</strong>: ToSic.Sxc.dll</h6>
   <h5 id="ToSic_Sxc_Blocks_IBlockDataSource_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IBlockDataSource : IDataSource, IAppIdentity, IZoneIdentity, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IBlockDataSource : IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
 </article>
           </div>

@@ -100,8 +100,9 @@
     <h5>Implements</h5>
     <div><a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a></div>
     <div><a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a></div>
-    <div><a class="xref" href="ToSic.Eav.Apps.IAppIdentity.html">IAppIdentity</a></div>
-    <div><a class="xref" href="ToSic.Eav.Apps.IZoneIdentity.html">IZoneIdentity</a></div>
+    <div><a class="xref" href="ToSic.Eav.Apps.IInAppAndZone.html">IInAppAndZone</a></div>
+    <div><a class="xref" href="ToSic.Eav.Apps.IInZone.html">IInZone</a></div>
+    <div><a class="xref" href="ToSic.Eav.Apps.IInApp.html">IInApp</a></div>
     <div><a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a></div>
     <div><a class="xref" href="ToSic.Eav.Caching.ICacheKeyProvider.html">ICacheKeyProvider</a></div>
     <div><a class="xref" href="ToSic.Eav.DataSources.Caches.ICanPurgeListCache.html">ICanPurgeListCache</a></div>
@@ -180,7 +181,7 @@
   <h6><strong>Assembly</strong>: ToSic.Eav.DataSources.dll</h6>
   <h5 id="ToSic_Eav_DataSources_ExternalDataDataSource_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class ExternalDataDataSource : BaseDataSource, IHasLog, IDataSource, IAppIdentity, IZoneIdentity, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class ExternalDataDataSource : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ICacheKeyProvider, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -226,10 +227,13 @@
       <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a>
   </div>
   <div>
-      <a class="xref" href="ToSic.Eav.Apps.IAppIdentity.html">IAppIdentity</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInAppAndZone.html">IInAppAndZone</a>
   </div>
   <div>
-      <a class="xref" href="ToSic.Eav.Apps.IZoneIdentity.html">IZoneIdentity</a>
+      <a class="xref" href="ToSic.Eav.Apps.IInZone.html">IInZone</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Eav.Apps.IInApp.html">IInApp</a>
   </div>
   <div>
       <a class="xref" href="ToSic.Eav.Caching.ICacheExpiring.html">ICacheExpiring</a>
