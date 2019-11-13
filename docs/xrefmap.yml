@@ -7,6 +7,12 @@ references:
 - uid: Articles.DynamicEntity
   name: How to Use a Dynamic Entity
   href: articles/dynamic-entity.html
+- uid: Articles.EavCoreDataModels
+  name: EAV Core Data Models
+  href: articles/eav-core-data.html
+- uid: Articles.Home
+  name: Structured Content for .net Platforms
+  href: articles/intro.html
 - uid: ToSic.Eav.Apps
   name: ToSic.Eav.Apps
   href: api/ToSic.Eav.Apps.html
