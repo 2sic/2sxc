@@ -8,7 +8,10 @@ uid: Articles.EavCoreDataModels
 
 If ever you want to know more about the internals of the core data models, here goes...
 
-## Internal Entity Data Model
+## EAV+D = Entity-Attribute-Value + Dimension
+
+> EAV stands for **Entity**, **Attribute**, **Value**
+> The D stands for **Dimension**, it says what Dimension (Language) a Value is for
 
 <img src="/images/data-models/eav-core-data-entity.png" width="100%">
 
@@ -31,7 +34,7 @@ You can find out more in the API docs for
 * @ToSic.Eav.Metadata.MetadataOf`1  
 	sometimes an Entity may itself have more metadata, which would then be stored here.
 
-## Internal ContentType Data Model
+## ContentType - The Schema and Field-Definitions
 
 <img src="/images/data-models/eav-core-data-contenttype.png" width="100%">
 
