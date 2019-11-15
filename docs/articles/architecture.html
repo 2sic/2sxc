@@ -87,7 +87,7 @@
 <h4 id="the-eav-layer">The EAV Layer</h4>
 <p>The data management system underneath everything is called the <strong>EAV</strong> - which stands for <strong>Entity</strong>, <strong>Attribute</strong>, <strong>Value</strong>. 
 Anything in that namespace is about internal data models, reading/saving data etc. 
-So anything inside the <a class="xref" href="../api/ToSic.Eav.Data.html">ToSic.Eav.Data</a> is all about the internals, which you only need in special scenarios. 
+So anything inside the <a class="xref" href="../api/dot-net/ToSic.Eav.Data.html">ToSic.Eav.Data</a> is all about the internals, which you only need in special scenarios. 
 The same applies to @ToSic.Eav.Apps.Interfaces which is the sub-system responsible for combining data into virtual bundles called <strong>Apps</strong>.
 You can usually ignore this. </p>
 <h4 id="the-sxc-layer">The SXC Layer</h4>
@@ -105,19 +105,19 @@ and drill down to the other APIs as needed.</p>
 <p>Inside the EAV you&#39;ll find a whole ecosystem of parts which make the magic happen. </p>
 <h4 id="infrastructure">Infrastructure</h4>
 <p>This is very internal stuff, to make sure everything happens. You will usually not go here. Most if it is also not public API. 
-Areas of interest may be the <a class="xref" href="../api/ToSic.Eav.Logging.html">ToSic.Eav.Logging</a> or @ToSic.Eav.ValueProviders.</p>
+Areas of interest may be the <a class="xref" href="../api/dot-net/ToSic.Eav.Logging.html">ToSic.Eav.Logging</a> or @ToSic.Eav.ValueProviders.</p>
 <h4 id="core-data-models">Core Data Models</h4>
 <p>This is more interesting and relevant to you, when you want to dive deep into the data model. Again you should note that this is advanced stuff. 
-You&#39;ll find it in <a class="xref" href="../api/ToSic.Eav.Data.html">ToSic.Eav.Data</a> - the most common bit you may care about is <a class="xref" href="../api/ToSic.Eav.Data.IEntity.html">IEntity</a> and <a class="xref" href="../api/ToSic.Eav.Data.IContentType.html">IContentType</a>.</p>
+You&#39;ll find it in <a class="xref" href="../api/dot-net/ToSic.Eav.Data.html">ToSic.Eav.Data</a> - the most common bit you may care about is <a class="xref" href="../api/dot-net/ToSic.Eav.Data.IEntity.html">IEntity</a> and <a class="xref" href="../api/dot-net/ToSic.Eav.Data.IContentType.html">IContentType</a>.</p>
 <h4 id="data-processing">Data Processing</h4>
-<p>This is where things get relevant for you. Check out the <a class="xref" href="../api/ToSic.Eav.DataSources.html">ToSic.Eav.DataSources</a> to find all the bits and pieces used to process, filter and cache data.</p>
+<p>This is where things get relevant for you. Check out the <a class="xref" href="../api/dot-net/ToSic.Eav.DataSources.html">ToSic.Eav.DataSources</a> to find all the bits and pieces used to process, filter and cache data.</p>
 <h4 id="storage">Storage</h4>
 <p>This is still more an internal bit, and as of now you shouldn&#39;t use it. </p>
 <h4 id="app-system-and-assets">App System and Assets</h4>
 <p>Another part that you may want to know more about. Here is where data is clustered together into virtual containers called <strong>Apps</strong>. 
 These contain all the content-types and items of an App. It also has view-definitions, Content-Blocks (the logical unit usually called a Module in DNN) and way more. 
 You&#39;ll find it in @ToSic.Eav.Apps.Interfaces. </p>
-<p>The assets - usually using ADAM - are found in <a class="xref" href="../api/ToSic.Eav.Apps.Assets.html">ToSic.Eav.Apps.Assets</a>.</p>
+<p>The assets - usually using ADAM - are found in <a class="xref" href="../api/dot-net/ToSic.Eav.Apps.Assets.html">ToSic.Eav.Apps.Assets</a>.</p>
 <h4 id="web-api">Web API</h4>
 <p>This is ATM an internal section, mainly for connecting DNN WebAPIs to the EAV. Not documented as of now. </p>
 <h2 id="the-fine-line-between-eavapps-and-sxc">The Fine Line Between Eav.Apps and Sxc.*</h2>
