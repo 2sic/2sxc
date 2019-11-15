@@ -4175,19 +4175,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Environment.IContainer.Id
   nameWithType: IContainer.Id
-- uid: ToSic.Eav.Environment.IContainer.IsPrimary
-  name: IsPrimary
-  href: api/dot-net/ToSic.Eav.Environment.IContainer.html#ToSic_Eav_Environment_IContainer_IsPrimary
-  commentId: P:ToSic.Eav.Environment.IContainer.IsPrimary
-  fullName: ToSic.Eav.Environment.IContainer.IsPrimary
-  nameWithType: IContainer.IsPrimary
-- uid: ToSic.Eav.Environment.IContainer.IsPrimary*
-  name: IsPrimary
-  href: api/dot-net/ToSic.Eav.Environment.IContainer.html#ToSic_Eav_Environment_IContainer_IsPrimary_
-  commentId: Overload:ToSic.Eav.Environment.IContainer.IsPrimary
-  isSpec: "True"
-  fullName: ToSic.Eav.Environment.IContainer.IsPrimary
-  nameWithType: IContainer.IsPrimary
 - uid: ToSic.Eav.Environment.IContainer.PageId
   name: PageId
   href: api/dot-net/ToSic.Eav.Environment.IContainer.html#ToSic_Eav_Environment_IContainer_PageId
@@ -5828,77 +5815,6 @@ references:
   commentId: T:ToSic.Sxc.Blocks.IBlockDataSource
   fullName: ToSic.Sxc.Blocks.IBlockDataSource
   nameWithType: IBlockDataSource
-- uid: ToSic.Sxc.Blocks.ICmsBlock
-  name: ICmsBlock
-  href: api/dot-net/ToSic.Sxc.Blocks.ICmsBlock.html
-  commentId: T:ToSic.Sxc.Blocks.ICmsBlock
-  fullName: ToSic.Sxc.Blocks.ICmsBlock
-  nameWithType: ICmsBlock
-- uid: ToSic.Sxc.Blocks.ICmsBlock.App
-  name: App
-  href: api/dot-net/ToSic.Sxc.Blocks.ICmsBlock.html#ToSic_Sxc_Blocks_ICmsBlock_App
-  commentId: P:ToSic.Sxc.Blocks.ICmsBlock.App
-  fullName: ToSic.Sxc.Blocks.ICmsBlock.App
-  nameWithType: ICmsBlock.App
-- uid: ToSic.Sxc.Blocks.ICmsBlock.App*
-  name: App
-  href: api/dot-net/ToSic.Sxc.Blocks.ICmsBlock.html#ToSic_Sxc_Blocks_ICmsBlock_App_
-  commentId: Overload:ToSic.Sxc.Blocks.ICmsBlock.App
-  isSpec: "True"
-  fullName: ToSic.Sxc.Blocks.ICmsBlock.App
-  nameWithType: ICmsBlock.App
-- uid: ToSic.Sxc.Blocks.ICmsBlock.Block
-  name: Block
-  href: api/dot-net/ToSic.Sxc.Blocks.ICmsBlock.html#ToSic_Sxc_Blocks_ICmsBlock_Block
-  commentId: P:ToSic.Sxc.Blocks.ICmsBlock.Block
-  fullName: ToSic.Sxc.Blocks.ICmsBlock.Block
-  nameWithType: ICmsBlock.Block
-- uid: ToSic.Sxc.Blocks.ICmsBlock.Block*
-  name: Block
-  href: api/dot-net/ToSic.Sxc.Blocks.ICmsBlock.html#ToSic_Sxc_Blocks_ICmsBlock_Block_
-  commentId: Overload:ToSic.Sxc.Blocks.ICmsBlock.Block
-  isSpec: "True"
-  fullName: ToSic.Sxc.Blocks.ICmsBlock.Block
-  nameWithType: ICmsBlock.Block
-- uid: ToSic.Sxc.Blocks.ICmsBlock.Render
-  name: Render()
-  href: api/dot-net/ToSic.Sxc.Blocks.ICmsBlock.html#ToSic_Sxc_Blocks_ICmsBlock_Render
-  commentId: M:ToSic.Sxc.Blocks.ICmsBlock.Render
-  fullName: ToSic.Sxc.Blocks.ICmsBlock.Render()
-  nameWithType: ICmsBlock.Render()
-- uid: ToSic.Sxc.Blocks.ICmsBlock.Render*
-  name: Render
-  href: api/dot-net/ToSic.Sxc.Blocks.ICmsBlock.html#ToSic_Sxc_Blocks_ICmsBlock_Render_
-  commentId: Overload:ToSic.Sxc.Blocks.ICmsBlock.Render
-  isSpec: "True"
-  fullName: ToSic.Sxc.Blocks.ICmsBlock.Render
-  nameWithType: ICmsBlock.Render
-- uid: ToSic.Sxc.Blocks.ICmsBlock.UserMayEdit
-  name: UserMayEdit
-  href: api/dot-net/ToSic.Sxc.Blocks.ICmsBlock.html#ToSic_Sxc_Blocks_ICmsBlock_UserMayEdit
-  commentId: P:ToSic.Sxc.Blocks.ICmsBlock.UserMayEdit
-  fullName: ToSic.Sxc.Blocks.ICmsBlock.UserMayEdit
-  nameWithType: ICmsBlock.UserMayEdit
-- uid: ToSic.Sxc.Blocks.ICmsBlock.UserMayEdit*
-  name: UserMayEdit
-  href: api/dot-net/ToSic.Sxc.Blocks.ICmsBlock.html#ToSic_Sxc_Blocks_ICmsBlock_UserMayEdit_
-  commentId: Overload:ToSic.Sxc.Blocks.ICmsBlock.UserMayEdit
-  isSpec: "True"
-  fullName: ToSic.Sxc.Blocks.ICmsBlock.UserMayEdit
-  nameWithType: ICmsBlock.UserMayEdit
-- uid: ToSic.Sxc.Blocks.ICmsBlock.View
-  name: View
-  href: api/dot-net/ToSic.Sxc.Blocks.ICmsBlock.html#ToSic_Sxc_Blocks_ICmsBlock_View
-  commentId: P:ToSic.Sxc.Blocks.ICmsBlock.View
-  fullName: ToSic.Sxc.Blocks.ICmsBlock.View
-  nameWithType: ICmsBlock.View
-- uid: ToSic.Sxc.Blocks.ICmsBlock.View*
-  name: View
-  href: api/dot-net/ToSic.Sxc.Blocks.ICmsBlock.html#ToSic_Sxc_Blocks_ICmsBlock_View_
-  commentId: Overload:ToSic.Sxc.Blocks.ICmsBlock.View
-  isSpec: "True"
-  fullName: ToSic.Sxc.Blocks.ICmsBlock.View
-  nameWithType: ICmsBlock.View
 - uid: ToSic.Sxc.Blocks.IView
   name: IView
   href: api/dot-net/ToSic.Sxc.Blocks.IView.html
@@ -6414,12 +6330,12 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.EngineBase.CustomizeSearch
   nameWithType: EngineBase.CustomizeSearch
-- uid: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Environment.IContainer,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
-  name: Init(IView, IApp, IContainer, IDataSource, Purpose, ICmsBlock, ILog)
-  href: api/dot-net/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Init_ToSic_Sxc_Blocks_IView_ToSic_Sxc_Apps_IApp_ToSic_Eav_Environment_IContainer_ToSic_Eav_DataSources_IDataSource_ToSic_Sxc_Blocks_Purpose_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Eav_Logging_ILog_
-  commentId: M:ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView,ToSic.Sxc.Apps.IApp,ToSic.Eav.Environment.IContainer,ToSic.Eav.DataSources.IDataSource,ToSic.Sxc.Blocks.Purpose,ToSic.Sxc.Blocks.ICmsBlock,ToSic.Eav.Logging.ILog)
-  fullName: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.IView, ToSic.Sxc.Apps.IApp, ToSic.Eav.Environment.IContainer, ToSic.Eav.DataSources.IDataSource, ToSic.Sxc.Blocks.Purpose, ToSic.Sxc.Blocks.ICmsBlock, ToSic.Eav.Logging.ILog)
-  nameWithType: EngineBase.Init(IView, IApp, IContainer, IDataSource, Purpose, ICmsBlock, ILog)
+- uid: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.ICmsBlock,ToSic.Sxc.Blocks.Purpose,ToSic.Eav.Logging.ILog)
+  name: Init(ICmsBlock, Purpose, ILog)
+  href: api/dot-net/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Init_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Sxc_Blocks_Purpose_ToSic_Eav_Logging_ILog_
+  commentId: M:ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.ICmsBlock,ToSic.Sxc.Blocks.Purpose,ToSic.Eav.Logging.ILog)
+  fullName: ToSic.Sxc.Engines.EngineBase.Init(ToSic.Sxc.Blocks.ICmsBlock, ToSic.Sxc.Blocks.Purpose, ToSic.Eav.Logging.ILog)
+  nameWithType: EngineBase.Init(ICmsBlock, Purpose, ILog)
 - uid: ToSic.Sxc.Engines.EngineBase.Init*
   name: Init
   href: api/dot-net/ToSic.Sxc.Engines.EngineBase.html#ToSic_Sxc_Engines_EngineBase_Init_
@@ -6459,6 +6375,19 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.IEngine.CustomizeData
   nameWithType: IEngine.CustomizeData
+- uid: ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.ICmsBlock,ToSic.Sxc.Blocks.Purpose,ToSic.Eav.Logging.ILog)
+  name: Init(ICmsBlock, Purpose, ILog)
+  href: api/dot-net/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Init_ToSic_Sxc_Blocks_ICmsBlock_ToSic_Sxc_Blocks_Purpose_ToSic_Eav_Logging_ILog_
+  commentId: M:ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.ICmsBlock,ToSic.Sxc.Blocks.Purpose,ToSic.Eav.Logging.ILog)
+  fullName: ToSic.Sxc.Engines.IEngine.Init(ToSic.Sxc.Blocks.ICmsBlock, ToSic.Sxc.Blocks.Purpose, ToSic.Eav.Logging.ILog)
+  nameWithType: IEngine.Init(ICmsBlock, Purpose, ILog)
+- uid: ToSic.Sxc.Engines.IEngine.Init*
+  name: Init
+  href: api/dot-net/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Init_
+  commentId: Overload:ToSic.Sxc.Engines.IEngine.Init
+  isSpec: "True"
+  fullName: ToSic.Sxc.Engines.IEngine.Init
+  nameWithType: IEngine.Init
 - uid: ToSic.Sxc.Engines.IEngine.Render
   name: Render()
   href: api/dot-net/ToSic.Sxc.Engines.IEngine.html#ToSic_Sxc_Engines_IEngine_Render
@@ -6472,84 +6401,72 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Engines.IEngine.Render
   nameWithType: IEngine.Render
-- uid: ToSic.Sxc.Engines.Razor
-  name: ToSic.Sxc.Engines.Razor
-  href: api/dot-net/ToSic.Sxc.Engines.Razor.html
-  commentId: N:ToSic.Sxc.Engines.Razor
-  fullName: ToSic.Sxc.Engines.Razor
-  nameWithType: ToSic.Sxc.Engines.Razor
-- uid: ToSic.Sxc.Engines.Razor.RazorEngine
+- uid: ToSic.Sxc.Engines.RazorEngine
   name: RazorEngine
-  href: api/dot-net/ToSic.Sxc.Engines.Razor.RazorEngine.html
-  commentId: T:ToSic.Sxc.Engines.Razor.RazorEngine
-  fullName: ToSic.Sxc.Engines.Razor.RazorEngine
+  href: api/dot-net/ToSic.Sxc.Engines.RazorEngine.html
+  commentId: T:ToSic.Sxc.Engines.RazorEngine
+  fullName: ToSic.Sxc.Engines.RazorEngine
   nameWithType: RazorEngine
-- uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData
+- uid: ToSic.Sxc.Engines.RazorEngine.CustomizeData
   name: CustomizeData()
-  href: api/dot-net/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeData
-  commentId: M:ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData
-  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData()
+  href: api/dot-net/ToSic.Sxc.Engines.RazorEngine.html#ToSic_Sxc_Engines_RazorEngine_CustomizeData
+  commentId: M:ToSic.Sxc.Engines.RazorEngine.CustomizeData
+  fullName: ToSic.Sxc.Engines.RazorEngine.CustomizeData()
   nameWithType: RazorEngine.CustomizeData()
-- uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData*
+- uid: ToSic.Sxc.Engines.RazorEngine.CustomizeData*
   name: CustomizeData
-  href: api/dot-net/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeData_
-  commentId: Overload:ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData
+  href: api/dot-net/ToSic.Sxc.Engines.RazorEngine.html#ToSic_Sxc_Engines_RazorEngine_CustomizeData_
+  commentId: Overload:ToSic.Sxc.Engines.RazorEngine.CustomizeData
   isSpec: "True"
-  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeData
+  fullName: ToSic.Sxc.Engines.RazorEngine.CustomizeData
   nameWithType: RazorEngine.CustomizeData
-- uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+- uid: ToSic.Sxc.Engines.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
   name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
-  href: api/dot-net/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Environment_IContainer_System_DateTime_
-  commentId: M:ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  href: api/dot-net/ToSic.Sxc.Engines.RazorEngine.html#ToSic_Sxc_Engines_RazorEngine_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Environment_IContainer_System_DateTime_
+  commentId: M:ToSic.Sxc.Engines.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
   name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
-  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Environment.IContainer, System.DateTime)
-  fullName.vb: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Environment.IContainer, System.DateTime)
+  fullName: ToSic.Sxc.Engines.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Environment.IContainer, System.DateTime)
+  fullName.vb: ToSic.Sxc.Engines.RazorEngine.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Environment.IContainer, System.DateTime)
   nameWithType: RazorEngine.CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
   nameWithType.vb: RazorEngine.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
-- uid: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch*
+- uid: ToSic.Sxc.Engines.RazorEngine.CustomizeSearch*
   name: CustomizeSearch
-  href: api/dot-net/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_CustomizeSearch_
-  commentId: Overload:ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch
+  href: api/dot-net/ToSic.Sxc.Engines.RazorEngine.html#ToSic_Sxc_Engines_RazorEngine_CustomizeSearch_
+  commentId: Overload:ToSic.Sxc.Engines.RazorEngine.CustomizeSearch
   isSpec: "True"
-  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.CustomizeSearch
+  fullName: ToSic.Sxc.Engines.RazorEngine.CustomizeSearch
   nameWithType: RazorEngine.CustomizeSearch
-- uid: ToSic.Sxc.Engines.Razor.RazorEngine.RenderTemplate
+- uid: ToSic.Sxc.Engines.RazorEngine.RenderTemplate
   name: RenderTemplate()
-  href: api/dot-net/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_RenderTemplate
-  commentId: M:ToSic.Sxc.Engines.Razor.RazorEngine.RenderTemplate
-  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.RenderTemplate()
+  href: api/dot-net/ToSic.Sxc.Engines.RazorEngine.html#ToSic_Sxc_Engines_RazorEngine_RenderTemplate
+  commentId: M:ToSic.Sxc.Engines.RazorEngine.RenderTemplate
+  fullName: ToSic.Sxc.Engines.RazorEngine.RenderTemplate()
   nameWithType: RazorEngine.RenderTemplate()
-- uid: ToSic.Sxc.Engines.Razor.RazorEngine.RenderTemplate*
+- uid: ToSic.Sxc.Engines.RazorEngine.RenderTemplate*
   name: RenderTemplate
-  href: api/dot-net/ToSic.Sxc.Engines.Razor.RazorEngine.html#ToSic_Sxc_Engines_Razor_RazorEngine_RenderTemplate_
-  commentId: Overload:ToSic.Sxc.Engines.Razor.RazorEngine.RenderTemplate
+  href: api/dot-net/ToSic.Sxc.Engines.RazorEngine.html#ToSic_Sxc_Engines_RazorEngine_RenderTemplate_
+  commentId: Overload:ToSic.Sxc.Engines.RazorEngine.RenderTemplate
   isSpec: "True"
-  fullName: ToSic.Sxc.Engines.Razor.RazorEngine.RenderTemplate
+  fullName: ToSic.Sxc.Engines.RazorEngine.RenderTemplate
   nameWithType: RazorEngine.RenderTemplate
-- uid: ToSic.Sxc.Engines.Token
-  name: ToSic.Sxc.Engines.Token
-  href: api/dot-net/ToSic.Sxc.Engines.Token.html
-  commentId: N:ToSic.Sxc.Engines.Token
-  fullName: ToSic.Sxc.Engines.Token
-  nameWithType: ToSic.Sxc.Engines.Token
-- uid: ToSic.Sxc.Engines.Token.TokenEngine
+- uid: ToSic.Sxc.Engines.TokenEngine
   name: TokenEngine
-  href: api/dot-net/ToSic.Sxc.Engines.Token.TokenEngine.html
-  commentId: T:ToSic.Sxc.Engines.Token.TokenEngine
-  fullName: ToSic.Sxc.Engines.Token.TokenEngine
+  href: api/dot-net/ToSic.Sxc.Engines.TokenEngine.html
+  commentId: T:ToSic.Sxc.Engines.TokenEngine
+  fullName: ToSic.Sxc.Engines.TokenEngine
   nameWithType: TokenEngine
-- uid: ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate
+- uid: ToSic.Sxc.Engines.TokenEngine.RenderTemplate
   name: RenderTemplate()
-  href: api/dot-net/ToSic.Sxc.Engines.Token.TokenEngine.html#ToSic_Sxc_Engines_Token_TokenEngine_RenderTemplate
-  commentId: M:ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate
-  fullName: ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate()
+  href: api/dot-net/ToSic.Sxc.Engines.TokenEngine.html#ToSic_Sxc_Engines_TokenEngine_RenderTemplate
+  commentId: M:ToSic.Sxc.Engines.TokenEngine.RenderTemplate
+  fullName: ToSic.Sxc.Engines.TokenEngine.RenderTemplate()
   nameWithType: TokenEngine.RenderTemplate()
-- uid: ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate*
+- uid: ToSic.Sxc.Engines.TokenEngine.RenderTemplate*
   name: RenderTemplate
-  href: api/dot-net/ToSic.Sxc.Engines.Token.TokenEngine.html#ToSic_Sxc_Engines_Token_TokenEngine_RenderTemplate_
-  commentId: Overload:ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate
+  href: api/dot-net/ToSic.Sxc.Engines.TokenEngine.html#ToSic_Sxc_Engines_TokenEngine_RenderTemplate_
+  commentId: Overload:ToSic.Sxc.Engines.TokenEngine.RenderTemplate
   isSpec: "True"
-  fullName: ToSic.Sxc.Engines.Token.TokenEngine.RenderTemplate
+  fullName: ToSic.Sxc.Engines.TokenEngine.RenderTemplate
   nameWithType: TokenEngine.RenderTemplate
 - uid: ToSic.Sxc.LookUp
   name: ToSic.Sxc.LookUp
