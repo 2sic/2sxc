@@ -5542,19 +5542,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Blocks.IBlock.App
   nameWithType: IBlock.App
-- uid: ToSic.Sxc.Blocks.IBlock.Configuration
-  name: Configuration
-  href: api/dot-net/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_Configuration
-  commentId: P:ToSic.Sxc.Blocks.IBlock.Configuration
-  fullName: ToSic.Sxc.Blocks.IBlock.Configuration
-  nameWithType: IBlock.Configuration
-- uid: ToSic.Sxc.Blocks.IBlock.Configuration*
-  name: Configuration
-  href: api/dot-net/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_Configuration_
-  commentId: Overload:ToSic.Sxc.Blocks.IBlock.Configuration
-  isSpec: "True"
-  fullName: ToSic.Sxc.Blocks.IBlock.Configuration
-  nameWithType: IBlock.Configuration
 - uid: ToSic.Sxc.Blocks.IBlock.Data
   name: Data
   href: api/dot-net/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_Data
@@ -5568,19 +5555,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Blocks.IBlock.Data
   nameWithType: IBlock.Data
-- uid: ToSic.Sxc.Blocks.IBlock.IsContentApp
-  name: IsContentApp
-  href: api/dot-net/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_IsContentApp
-  commentId: P:ToSic.Sxc.Blocks.IBlock.IsContentApp
-  fullName: ToSic.Sxc.Blocks.IBlock.IsContentApp
-  nameWithType: IBlock.IsContentApp
-- uid: ToSic.Sxc.Blocks.IBlock.IsContentApp*
-  name: IsContentApp
-  href: api/dot-net/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_IsContentApp_
-  commentId: Overload:ToSic.Sxc.Blocks.IBlock.IsContentApp
-  isSpec: "True"
-  fullName: ToSic.Sxc.Blocks.IBlock.IsContentApp
-  nameWithType: IBlock.IsContentApp
 - uid: ToSic.Sxc.Blocks.IBlock.Tenant
   name: Tenant
   href: api/dot-net/ToSic.Sxc.Blocks.IBlock.html#ToSic_Sxc_Blocks_IBlock_Tenant
@@ -5607,12 +5581,6 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Blocks.IBlock.View
   nameWithType: IBlock.View
-- uid: ToSic.Sxc.Blocks.IBlockDataSource
-  name: IBlockDataSource
-  href: api/dot-net/ToSic.Sxc.Blocks.IBlockDataSource.html
-  commentId: T:ToSic.Sxc.Blocks.IBlockDataSource
-  fullName: ToSic.Sxc.Blocks.IBlockDataSource
-  nameWithType: IBlockDataSource
 - uid: ToSic.Sxc.Blocks.IView
   name: IView
   href: api/dot-net/ToSic.Sxc.Blocks.IView.html

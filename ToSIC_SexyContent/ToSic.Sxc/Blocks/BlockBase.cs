@@ -28,8 +28,10 @@ namespace ToSic.Sxc.Blocks
         public bool DataIsMissing => _dataIsMissing;
 
         public int ContentBlockId { get; protected set; }
-        public string ParentFieldName => null;
-        public int ParentFieldSortOrder => 0;
+        
+        // 2019-11-15 2dm removed, seems unused
+        //public string ParentFieldName => null;
+        //public int ParentFieldSortOrder => 0;
 
         #region Template and extensive template-choice initialization
         private IView _view;
@@ -47,7 +49,7 @@ namespace ToSic.Sxc.Blocks
             set
             {
                 _view = value;
-                _dataSource = null; // reset this
+                _dataSource = null; // reset this if the view changed...
             }
         }
 
@@ -57,6 +59,8 @@ namespace ToSic.Sxc.Blocks
 
         // ReSharper disable once InconsistentNaming
         protected IBlockDataSource _dataSource;
+
+
         public virtual IBlockDataSource Data => null;
 
         public BlockConfiguration Configuration { get; protected set; }
