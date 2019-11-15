@@ -53,13 +53,16 @@ namespace ToSic.Sxc.Blocks
 
         public BlockFromEntity(IBlock parent, int contentBlockId, ILog parentLog) : base(parentLog, "CB.Ent")
         {
+            var wrapLog = Log.Call("constructor");
             contentBlockId = Math.Abs(contentBlockId); // for various reasons this can be introduced as a negative value, make sure we neutralize that
             var cbDef = parent.CmsInstance.App.Data.List.One(contentBlockId);  // get the content-block definition
             _constructor(parent, cbDef);
+            wrapLog($"ok, id:{contentBlockId}");
         }
 
         private void _constructor(IBlock parent, IEntity cbDefinition)
         {
+            var wrapLog = Log.Call("constructor-shared");
             Parent = parent;
             ParseContentBlockDefinition(cbDefinition);
             ParentId = parent.ParentId;
@@ -79,7 +82,7 @@ namespace ToSic.Sxc.Blocks
             }
 
             // 2018-09-22 new, must come before the AppId == 0 check
-            CmsInstance = new CmsInstance(this, Parent.CmsInstance.EnvInstance, Parent.CmsInstance.Parameters, Log);
+            CmsInstance = new CmsInstance(this, Parent.CmsInstance.Container, Parent.CmsInstance.Parameters, Log);
 
             if (AppId == 0) return;
 
@@ -87,9 +90,9 @@ namespace ToSic.Sxc.Blocks
             
             // 2019-11-11 2dm new, with CmsRuntime
             var cms = new CmsRuntime(App, Log, parent.CmsInstance.UserMayEdit,
-                parent.CmsInstance.Environment.PagePublishing.IsEnabled(parent.CmsInstance.EnvInstance.Id));
+                parent.CmsInstance.Environment.PagePublishing.IsEnabled(parent.CmsInstance.Container.Id));
 
-            Configuration = /*App.BlocksManager*/cms.Blocks.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
+            Configuration = cms.Blocks.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 
             // handle cases where the content group is missing - usually because of incomplete import
             if (Configuration.DataIsMissing)
@@ -101,6 +104,8 @@ namespace ToSic.Sxc.Blocks
 
             // use the content-group template, which already covers stored data + module-level stored settings
             ((CmsInstance)CmsInstance).SetTemplateOrOverrideFromUrl(Configuration.View);
+
+            wrapLog("ok");
         }
 
 

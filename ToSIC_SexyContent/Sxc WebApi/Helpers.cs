@@ -5,12 +5,8 @@ using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -26,14 +22,49 @@ namespace ToSic.SexyContent.WebApi
             public string Value{ get; set; }
         }
 
-        internal static /*SxcBlock*/ ICmsBlock GetSxcOfApiRequest(HttpRequestMessage request, bool allowNoContextFound = false, ILog log = null)
+        internal static ICmsBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
         {
-            var cbidHeader = "ContentBlockId";
+            var wrapLog = log.Call<ICmsBlock>(nameof(GetCmsBlock), $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
+
+            const string headerId = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();
 
+            if (allowNoContextFound & moduleInfo == null)
+                return wrapLog("not found, allowed", null);
+            
+            if (moduleInfo == null)
+                log.Add("context/module not found");
 
-            // get url parameters and provide override values to ensure all configuration is 
-            // preserved in AJAX calls
+            var urlParams = PrepareUrlParamsForInternalUse(request);
+            
+            var tenant = moduleInfo == null
+                ? new DnnTenant(null)
+                : new DnnTenant(new PortalSettings(moduleInfo.OwnerPortalID));
+
+            IBlock contentBlock = new BlockFromModule(new DnnInstanceInfo(moduleInfo), log, tenant, urlParams);
+
+            // check if we need an inner block
+            if (request.Headers.Contains(headerId)) { 
+                var blockHeaderId = request.Headers.GetValues(headerId).FirstOrDefault();
+                int.TryParse(blockHeaderId, out var blockId);
+                if (blockId < 0)   // negative id, so it's an inner block
+                {
+                    log.Add($"Inner Content: {blockId}");
+                    contentBlock = new BlockFromEntity(contentBlock, blockId, log);
+                }
+            }
+
+            return wrapLog("ok", contentBlock.CmsInstance);
+        }
+
+        /// <summary>
+        /// get url parameters and provide override values to ensure all configuration is 
+        /// preserved in AJAX calls
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private static List<KeyValuePair<string, string>> PrepareUrlParamsForInternalUse(HttpRequestMessage request)
+        {
             List<KeyValuePair<string, string>> urlParams = null;
             var requestParams = request.GetQueryNameValuePairs();
             var origParams = requestParams.Where(p => p.Key == "originalparameters").ToList();
@@ -41,28 +72,13 @@ namespace ToSic.SexyContent.WebApi
             {
                 var paramSet = origParams.First().Value;
 
-                // Workaround for deserializing KeyValuePair -it requires lowercase properties(case sensitive), which seems to be a bug in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
+                // Workaround for deserializing KeyValuePair -it requires lowercase properties(case sensitive),
+                // which seems to be a bug in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
                 var items = Json.Deserialize<List<UpperCaseStringKeyValuePair>>(paramSet);
                 urlParams = items.Select(a => new KeyValuePair<string, string>(a.Key, a.Value)).ToList();
             }
 
-            if (allowNoContextFound & moduleInfo == null)
-                return null;
-
-            var tenant = moduleInfo == null
-                ? new DnnTenant(null)
-                : new DnnTenant(new PortalSettings(moduleInfo.OwnerPortalID));
-            IBlock contentBlock = new BlockFromModule(new DnnInstanceInfo(moduleInfo), log, tenant, urlParams);
-
-            // check if we need an inner block
-            if (request.Headers.Contains(cbidHeader)) { 
-                var cbidh = request.Headers.GetValues(cbidHeader).FirstOrDefault();
-                int.TryParse(cbidh, out var cbid);
-                if (cbid < 0)   // negative id, so it's an inner block
-                    contentBlock = new BlockFromEntity(contentBlock, cbid, log);
-            }
-
-            return contentBlock.CmsInstance;
+            return urlParams;
         }
 
 

@@ -80,7 +80,7 @@ namespace ToSic.SexyContent.WebApi.Adam
         private void PrepCore(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot)
         {
             Log.Add("PrepCore(...)");
-            var dnn = new DnnHelper(CmsInstance?.EnvInstance);
+            var dnn = new DnnHelper(CmsInstance?.Container);
             var tenant = new DnnTenant(dnn.Portal);
             AdamAppContext = new AdamAppContext(tenant, app, CmsInstance, Log);
             ContainerContext = usePortalRoot
@@ -156,7 +156,7 @@ namespace ToSic.SexyContent.WebApi.Adam
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
             var fieldPermissions = new DnnPermissionCheck(Log,
-                instance: CmsInstance.EnvInstance,
+                instance: CmsInstance.Container,
                 permissions1: Attribute.Permissions,
                 appIdentity: CmsInstance.App);
 

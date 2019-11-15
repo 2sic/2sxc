@@ -9,6 +9,6 @@ uid: Articles.Home
 
 If you got past the basics and really want more, you should continue here:
 
-1. Read about the [architecture](architecture.md) or about [internal data models](xref:Articles.EavCoreDataModels)
+1. Read about the [architecture](xref:Articles.Architecture) or about [internal data models](xref:Articles.EavCoreDataModels)
 1. Read about [breaking changes](breaking-changes.md)
-1. Browse through the [API](/api)
+1. Browse through the [.net API](xref:Api.DotNet)

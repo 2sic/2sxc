@@ -15,7 +15,7 @@ namespace ToSic.SexyContent
 
         internal bool RenderWithDiv = true;
         public bool UserMayEdit => _userMayEdit
-            ?? (_userMayEdit = EnvFac.InstancePermissions(Log, EnvInstance, App).UserMay(GrantSets.WriteSomething)).Value;
+            ?? (_userMayEdit = EnvFac.InstancePermissions(Log, Container, App).UserMay(GrantSets.WriteSomething)).Value;
         private bool? _userMayEdit;
 
 
@@ -117,7 +117,7 @@ namespace ToSic.SexyContent
         public IEngine GetRenderingEngine(Purpose renderingPurpose)
         {
             var engine = EngineFactory.CreateEngine(View);
-            engine.Init(View, App, EnvInstance, Block.Data, renderingPurpose, this, Log);
+            engine.Init(View, App, Container, Block.Data, renderingPurpose, this, Log);
             return engine;
         }
 

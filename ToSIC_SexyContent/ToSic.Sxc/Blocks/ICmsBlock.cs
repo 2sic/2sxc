@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Blocks
 
         // todo: better name, this is kind of the module we're in or something
         [PrivateApi]
-        IContainer EnvInstance { get; }
+        IContainer Container { get; }
 
         [PrivateApi]
         IEnumerable<KeyValuePair<string, string>> Parameters { get; }

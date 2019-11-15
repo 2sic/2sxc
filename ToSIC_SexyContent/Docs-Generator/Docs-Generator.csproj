@@ -46,6 +46,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="api\dot-net\index.md" />
     <None Include="api\index.md" />
     <None Include="articles\eav-core-data.md" />
     <None Include="articles\breaking-changes.md" />
@@ -83,6 +84,7 @@
   <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="api\.gitignore" />
+    <Content Include="api\dot-net\.gitignore" />
     <Content Include="images\architecture\eav-2sxc-dnn.png" />
     <Content Include="images\architecture\eav-internals.png" />
     <Content Include="images\data-models\eav-core-data-contenttype.png" />

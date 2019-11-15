@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Blocks
         internal BlockEditorBase(ICmsBlock cms): base("CG.RefMan", cms.Log)
         {
             CmsContext = cms;
-            ModuleId = CmsContext.EnvInstance.Id;
+            ModuleId = CmsContext.Container.Id;
         }
 
 

@@ -7,10 +7,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class DnnAppAndDataHelpers : AppAndDataHelpersBase, IDynamicCode
     {
-        public DnnAppAndDataHelpers(/*SxcInstance*/ICmsBlock cmsInstance, ILog parentLog = null): base(cmsInstance, new DnnTenant(null), parentLog)
+        public DnnAppAndDataHelpers(ICmsBlock cmsInstance, ILog parentLog = null): base(cmsInstance, new DnnTenant(null), parentLog)
         {
             // Init things than require module-info or similar, but not 2sxc
-            var instance = cmsInstance?.EnvInstance;
+            var instance = cmsInstance?.Container;
             Dnn = new DnnHelper(instance);
             Link = new DnnLinkHelper(Dnn);
         }

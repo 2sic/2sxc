@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
     
     <meta property="docfx:rel" content="../">
     <meta property="docfx:newtab" content="true">
@@ -67,41 +67,13 @@
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
-        
-        <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
-          <div class="sidetoggle collapse" id="sidetoggle">
-            <div id="sidetoc"></div>
-          </div>
-        </div>
-        <div class="article row grid-right">
+        <div class="article row grid">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="this-is-the-2sxc-api-documentation">This is the <strong>2sxc API Documentation</strong></h1>
 
-<h2 id="background-architecture-of-eav-sxc-dnn">Background: Architecture of Eav, Sxc, Dnn</h2>
-<blockquote><p>Before you start, please get familiar with the <a href="../articles/architecture.html">architecture</a> - otherwise you probably won&#39;t understand what you see here.</p>
-</blockquote>
-<p>Note also that the real code of EAV/2sxc/DNN has way more stuff, but that&#39;s inofficial. 
-Please don&#39;t use objects that are not documented here. 
-That allows us to improve the architecture without worrying about breaking your code. 
-Once we&#39;re really sure that certain parts are very final, we&#39;ll publish the API docs for those parts. </p>
-<h2 id="what-youre-probably-looking-for">What You&#39;re Probably Looking for</h2>
-<h3 id="apis-in-razor-templates-and-webapi">APIs in Razor Templates and WebApi</h3>
-<ol>
-<li><p>If you are creating a <strong>Razor</strong> template and want to know what APIs are available, start with <a class="xref" href="dot-net/ToSic.Sxc.Dnn.IRazor.html">IRazor</a> which is mostly an <a class="xref" href="dot-net/ToSic.Sxc.Dnn.IDynamicCode.html">IDynamicCode</a> with an <a class="xref" href="dot-net/ToSic.Sxc.Dnn.IHtmlHelper.html">IHtmlHelper</a>. 
- This is because a Razor Page inherits from that interface, so you&#39;ll see all the commannds you get there. </p>
-</li>
-<li><p>If you&#39;re creating a <strong>WebApi</strong> and need to know everything in it, you also want to check the <a class="xref" href="dot-net/ToSic.Sxc.Dnn.IDynamicWebApi.html">IDynamicWebApi</a>, because all WebApi classes implement that interface. </p>
-</li>
-</ol>
-<h3 id="working-with-entities-and-adam-assets">Working with Entities and ADAM Assets</h3>
-<ol>
-<li>If you&#39;re working with <code>DynamicEntity</code> objects and want to know more about them, check out <a class="xref" href="dot-net/ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a>.<br> In very rare cases you also want to know more about the underlying <a class="xref" href="dot-net/ToSic.Eav.Data.IEntity.html">IEntity</a>.</li>
-<li>If you&#39;re working with <code>ADAM</code> Assets, like from the <code>AsAdam(...)</code> command on <a class="xref" href="dot-net/ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a> objects,<br> you&#39;ll want to read about @ToSic.Sxc.Adam.IAdamFolder and @ToSic.Sxc.Adam.IAdamFile</li>
-</ol>
-<h3 id="programming-with-datasources-and-visualquery">Programming with DataSources and VisualQuery</h3>
-<p>All the DataSources are based on <a class="xref" href="dot-net/ToSic.Eav.DataSources.IDataSource.html">IDataSource</a> and most of them are also <a class="xref" href="dot-net/ToSic.Eav.DataSources.IDataTarget.html">IDataTarget</a> . You can find most of them in <a class="xref" href="dot-net/ToSic.Eav.DataSources.html">ToSic.Eav.DataSources</a> . </p>
+<h2 id="todo">Todo</h2>
+<p>This page should get activated, once we have more apis like JS, Edit-JS, etc.</p>
 </article>
           </div>
           

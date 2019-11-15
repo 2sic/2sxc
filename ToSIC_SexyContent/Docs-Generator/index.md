@@ -8,13 +8,13 @@ This is the documentation for EAV and 2sxc APIs. It's fairly advanced, so if you
 ## If you want to know more, then check out...
 
 1. The [Articles](xref:Articles.Home) which tells you about Architecture, Data Models and more
-1. The [C# API Docs](api/index.md)
+1. The [C# .net API Docs](xref:Api.DotNet)
 
 ## Other stuff
 
 #### Documentation Version
 
-Generated for EAV/2sxc 10.20.02
+Generated for EAV/2sxc 10.20.03
 
 #### Pending Work / Tasks
 

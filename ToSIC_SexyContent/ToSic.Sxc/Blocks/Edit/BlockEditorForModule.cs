@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Blocks
             //=> BlocksManager.SetPreviewTemplate(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
-            => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(CmsContext.EnvInstance, CmsContext.Environment, appId, Log);
+            => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(CmsContext.Container, CmsContext.Environment, appId, Log);
         
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
