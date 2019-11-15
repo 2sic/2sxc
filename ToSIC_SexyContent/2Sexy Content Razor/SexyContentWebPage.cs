@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.Razor
 
         // <2sic>
         [PrivateApi]
-        protected internal /*SxcInstance*/Sxc.Blocks.ICmsBlock Sexy { get; set; }
+        protected internal Sxc.Blocks.ICmsBlock Sexy { get; set; }
         [PrivateApi]
         protected internal DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
         // </2sic>

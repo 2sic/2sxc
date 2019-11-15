@@ -37,7 +37,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         }
 
         public static IDynamicCode CodingHelpers(Sxc.Blocks.ICmsBlock cms) 
-            => new DnnAppAndDataHelpers(cms as CmsInstance);
+            => new DnnAppAndDataHelpers(cms as CmsBlock);
 
         /// <summary>
         /// get a full app-object for accessing data of the app from outside

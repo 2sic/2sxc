@@ -23,9 +23,8 @@ namespace ToSic.Sxc.Engines
         /// so the constructor is off-limits. 
         /// </summary>
         /// <param name="cmsBlock">The block within the cms</param>
-        /// <param name="purpose">Purpose of the engine (show in web, search-index, etc.)</param>
+        /// <param name="purpose">Purpose of the engine (show in web, search-index, etc.). The custom code may adapt its behavior depending on the purpose</param>
         /// <param name="parentLog">Log to chain with</param>
-        [PrivateApi]
         void Init(ICmsBlock cmsBlock, Purpose purpose, ILog parentLog);
 
         /// <summary>

@@ -58,7 +58,7 @@ namespace ToSic.SexyContent.DataSources
 
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal static TokenListFiller GetConfigProviderForModule(int moduleId, IApp app, /*SxcInstance*/ICmsBlock cms)
+        internal static TokenListFiller GetConfigProviderForModule(int moduleId, IApp app, ICmsBlock cms)
         {
             var provider = new TokenListFiller();
 

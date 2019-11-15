@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             ContentBlock = new ClientInfoContentBlock(cms.Block, null, 0, versioning.Requirements(mic.Id));
             ContentGroup = new ClientInfoContentGroup(cms, isCreated);
-            Ui = new Ui(((CmsInstance)cms).UiAutoToolbar);
+            Ui = new Ui(((CmsBlock)cms).UiAutoToolbar);
 
             error = new ClientInfosError(cms.Block);
         }

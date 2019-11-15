@@ -3,7 +3,7 @@
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
 {
-    public partial class CmsInstance
+    public partial class CmsBlock
     {
         internal bool UiAddEditApi
         {

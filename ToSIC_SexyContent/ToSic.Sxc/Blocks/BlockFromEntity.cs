@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Blocks
             }
 
             // 2018-09-22 new, must come before the AppId == 0 check
-            CmsInstance = new CmsInstance(this, Parent.CmsInstance.Container, Parent.CmsInstance.Parameters, Log);
+            CmsInstance = new CmsBlock(this, Parent.CmsInstance.Container, Parent.CmsInstance.Parameters, Log);
 
             if (AppId == 0) return;
 
@@ -103,7 +103,7 @@ namespace ToSic.Sxc.Blocks
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
-            ((CmsInstance)CmsInstance).SetTemplateOrOverrideFromUrl(Configuration.View);
+            ((CmsBlock)CmsInstance).SetTemplateOrOverrideFromUrl(Configuration.View);
 
             wrapLog("ok");
         }

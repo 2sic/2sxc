@@ -12,7 +12,7 @@ namespace ToSic.SexyContent.Serializers
 {
 	public class Serializer: Eav.Serializers.Serializer
 	{
-		public /*SxcInstance*/ICmsBlock Cms { get; internal set; }
+		public ICmsBlock Cms { get; internal set; }
 
         /// <summary>
         /// Standard constructor, important for Unity when opening this class in dependency-injection mode
@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.Serializers
 	    /// </summary>
 	    /// <param name="cmsInstance"></param>
 	    /// <param name="languages"></param>
-	    public Serializer(/*SxcInstance*/ICmsBlock cmsInstance, string[] languages = null)
+	    public Serializer(ICmsBlock cmsInstance, string[] languages = null)
         {
             Cms = cmsInstance;
             Languages = languages;

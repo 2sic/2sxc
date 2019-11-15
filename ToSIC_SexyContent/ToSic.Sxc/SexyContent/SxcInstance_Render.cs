@@ -9,7 +9,7 @@ using ToSic.Sxc.Interfaces;
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
 {
-    public partial class CmsInstance
+    public partial class CmsBlock
     {
 
 

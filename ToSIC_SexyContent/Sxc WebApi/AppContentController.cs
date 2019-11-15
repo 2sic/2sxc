@@ -126,7 +126,7 @@ namespace ToSic.SexyContent.WebApi
 
             // must access engine to ensure pre-processing of data has happened, 
             // especially if the cshtml contains a override void CustomizeData()
-            ((CmsInstance)CmsBlock).GetRenderingEngine(Purpose.PublishData);  
+            ((CmsBlock)CmsBlock).GetRenderingEngine(Purpose.PublishData);  
 
             var dataSource = CmsBlock.Block.Data;
             string json;

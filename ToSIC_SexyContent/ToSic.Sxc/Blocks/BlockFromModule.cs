@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Blocks
 
             // 2018-09-22 new with auto-init-data
             var urlParams = overrideParams ?? SystemWeb.GetUrlParams();
-            CmsInstance = new CmsInstance(this, Container, urlParams, Log);
+            CmsInstance = new CmsBlock(this, Container, urlParams, Log);
 
             if (AppId != 0)
             {
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Blocks
                     return;
                 }
 
-                ((CmsInstance)CmsInstance).SetTemplateOrOverrideFromUrl(Configuration.View);                
+                ((CmsBlock)CmsInstance).SetTemplateOrOverrideFromUrl(Configuration.View);                
             }
 
             wrapLog($"ok a:{AppId}, container:{container.Id}, content-group:{Configuration?.ContentGroupId}");

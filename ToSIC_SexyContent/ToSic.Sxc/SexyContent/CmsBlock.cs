@@ -16,7 +16,7 @@ namespace ToSic.SexyContent
     /// it would be hard to get anything done .
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
-    public partial class CmsInstance : HasLog, ICmsBlock
+    public partial class CmsBlock : HasLog, ICmsBlock
     {
         #region App-level information
 
@@ -48,7 +48,7 @@ namespace ToSic.SexyContent
         #endregion
 
         #region Constructor
-        internal CmsInstance(IBlock  cb, 
+        internal CmsBlock(IBlock  cb, 
             IContainer container, 
             IEnumerable<KeyValuePair<string, string>> urlParams = null, 
             ILog parentLog = null)

@@ -29,7 +29,6 @@ namespace ToSic.Sxc.Engines
         [PrivateApi] protected IView Template;
         [PrivateApi] protected string TemplatePath;
         [PrivateApi] protected IApp App;
-        //[PrivateApi] protected IContainer InstInfo;
         [PrivateApi] protected IDataSource DataSource;
         [PrivateApi] protected Purpose Purpose;
         [PrivateApi] protected ICmsBlock CmsBlock;
@@ -44,9 +43,7 @@ namespace ToSic.Sxc.Engines
         { }
 
         /// <inheritdoc />
-        public void Init(ICmsBlock cmsBlock,
-            Purpose purpose,
-            ILog parentLog)
+        public void Init(ICmsBlock cmsBlock, Purpose purpose, ILog parentLog)
         {
             CmsBlock = cmsBlock;
             var view = CmsBlock.View;
@@ -62,9 +59,8 @@ namespace ToSic.Sxc.Engines
 
             Template = view;
             TemplatePath = templatePath;
-            App = cmsBlock.App /*app*/;
-            //InstInfo = envInstance;
-            DataSource = cmsBlock.Block.Data /*dataSource*/;
+            App = cmsBlock.App;
+            DataSource = cmsBlock.Block.Data;
             Purpose = purpose;
 
             // check common errors

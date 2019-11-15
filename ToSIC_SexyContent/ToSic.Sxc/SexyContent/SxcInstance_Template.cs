@@ -4,7 +4,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.SexyContent
 {
-    public partial class CmsInstance
+    public partial class CmsBlock
     {
 
         public IView View

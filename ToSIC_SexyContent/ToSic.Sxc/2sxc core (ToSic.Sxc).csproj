@@ -184,7 +184,7 @@
     <Compile Include="SexyContent\Settings.cs" />
     <Compile Include="SexyContent\SexyContentException.cs" />
     <Compile Include="SexyContent\SxcHelper.cs" />
-    <Compile Include="SexyContent\CmsInstance.cs" />
+    <Compile Include="SexyContent\CmsBlock.cs" />
     <Compile Include="SexyContent\SxcInstance_Render.cs" />
     <Compile Include="SexyContent\SxcInstance_Template.cs" />
     <Compile Include="SexyContent\SxcInstance_EditUi.cs" />
