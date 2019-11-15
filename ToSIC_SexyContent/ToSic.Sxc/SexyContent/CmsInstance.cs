@@ -66,7 +66,7 @@ namespace ToSic.SexyContent
             IContainer envInstance, 
             IEnumerable<KeyValuePair<string, string>> urlparams = null, 
             ILog parentLog = null)
-            : base("Sxc.Instnc", parentLog, $"get SxcInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
+            : base("Sxc.Instnc", parentLog, $"get BlockInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
         {
             // Log = new Log();
             EnvFac = Factory.Resolve<IEnvironmentFactory>();

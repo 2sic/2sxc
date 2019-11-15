@@ -53,13 +53,16 @@ namespace ToSic.Sxc.Blocks
 
         public BlockFromEntity(IBlock parent, int contentBlockId, ILog parentLog) : base(parentLog, "CB.Ent")
         {
+            var wrapLog = Log.Call("()");
             contentBlockId = Math.Abs(contentBlockId); // for various reasons this can be introduced as a negative value, make sure we neutralize that
             var cbDef = parent.CmsInstance.App.Data.List.One(contentBlockId);  // get the content-block definition
             _constructor(parent, cbDef);
+            wrapLog("ok");
         }
 
         private void _constructor(IBlock parent, IEntity cbDefinition)
         {
+            var wrapLog = Log.Call("()-shared");
             Parent = parent;
             ParseContentBlockDefinition(cbDefinition);
             ParentId = parent.ParentId;
@@ -101,6 +104,8 @@ namespace ToSic.Sxc.Blocks
 
             // use the content-group template, which already covers stored data + module-level stored settings
             ((CmsInstance)CmsInstance).SetTemplateOrOverrideFromUrl(Configuration.View);
+
+            wrapLog("ok");
         }
 
 

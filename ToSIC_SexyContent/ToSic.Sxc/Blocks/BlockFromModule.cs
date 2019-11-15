@@ -36,6 +36,7 @@ namespace ToSic.Sxc.Blocks
         /// <param name="overrideParams">optional override parameters</param>
         public BlockFromModule(IContainer container, ILog parentLog, ITenant tenant, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
         {
+            var wrapLog = Log.Call("()");
             Container = container ?? throw new Exception("Need valid Instance/ModuleInfo / ModuleConfiguration of runtime");
             ParentId = container.Id;
             ContentBlockId = ParentId;
@@ -76,7 +77,7 @@ namespace ToSic.Sxc.Blocks
                 var cms = new CmsRuntime(App, Log, CmsInstance.UserMayEdit,
                     CmsInstance.Environment.PagePublishing.IsEnabled(CmsInstance.EnvInstance.Id));
 
-                Configuration = /*App.BlocksManager*/cms.Blocks.GetInstanceContentGroup(container.Id, container.PageId);
+                Configuration = cms.Blocks.GetInstanceContentGroup(container.Id, container.PageId);
 
                 if (Configuration.DataIsMissing)
                 {
@@ -87,6 +88,8 @@ namespace ToSic.Sxc.Blocks
 
                 ((CmsInstance)CmsInstance).SetTemplateOrOverrideFromUrl(Configuration.View);                
             }
+
+            wrapLog($"ok a:{AppId}, container:{container.Id}");
         }
 
         public override bool IsContentApp => Container.IsPrimary;
