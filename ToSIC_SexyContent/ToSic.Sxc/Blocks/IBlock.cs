@@ -2,6 +2,7 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Engines;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
@@ -30,23 +31,38 @@ namespace ToSic.Sxc.Blocks
         [PrivateApi]
         int ContentBlockId { get; }
 
-        [PrivateApi]
-        string ParentFieldName { get; }
-        [PrivateApi]
-        int ParentFieldSortOrder { get; }
+        // 2019-11-15 2dm removed, seems unused
+        //[PrivateApi]
+        //string ParentFieldName { get; }
+        //[PrivateApi]
+        //int ParentFieldSortOrder { get; }
 
         #region Values related to the current unit of content / the view
         
+        /// <summary>
+        /// Tenant information, like a DNN Portal
+        /// </summary>
         ITenant Tenant { get; }
 
+        /// <summary>
+        /// The view which will be used to render this block
+        /// </summary>
         IView View { get; set; }
 
+        [PrivateApi("unsure if this should be public, or only needed to initialize it?")]
         BlockConfiguration Configuration { get; }
 
+        /// <summary>
+        /// The app this block is running in
+        /// </summary>
         IApp App { get; }
 
+        /// <summary>
+        /// The <see cref="IBlockDataSource"/> which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
+        /// </summary>
         IBlockDataSource Data { get; }
 
+        [PrivateApi("might rename this some time")]
         bool IsContentApp { get; }
         #endregion
 
@@ -56,7 +72,7 @@ namespace ToSic.Sxc.Blocks
         [PrivateApi]
         bool ContentGroupExists { get; }
 
-        [PrivateApi]
+        [PrivateApi("should get rid of this asap - shouldn't be in the Block object")]
         // todo: should get rid of this asap.
         BlockEditorBase Editor { get; }
     }

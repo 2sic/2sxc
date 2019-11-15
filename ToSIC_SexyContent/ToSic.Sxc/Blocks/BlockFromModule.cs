@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
@@ -13,6 +14,7 @@ using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Blocks
 {
+    [PrivateApi("todo: review how it's used and named, probably doesn't have any DNN stuff in it any more, and then Module is a wrong name")]
     internal sealed class BlockFromModule: BlockBase
     {
         public IContainer Container;
