@@ -1,3 +1,6 @@
+---
+uid: Articles.Architecture
+---
 
 # EAV / 2sxc / DNN Architecture
 

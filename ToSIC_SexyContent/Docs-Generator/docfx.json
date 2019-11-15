@@ -29,7 +29,7 @@
       },
       {
         "files": [
-          "api/*.md",
+          "api/**.md",
           "articles/**.md",
           "toc.yml",
           "*.md"

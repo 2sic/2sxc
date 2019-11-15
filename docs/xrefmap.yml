@@ -1,6 +1,12 @@
 ### YamlMime:XRefMap
 sorted: true
 references:
+- uid: Api.DotNet
+  name: This is the 2sxc API Documentation
+  href: api/dot-net/index.html
+- uid: Articles.Architecture
+  name: EAV / 2sxc / DNN Architecture
+  href: articles/architecture.html
 - uid: Articles.ChangeLog.BreakingChanges
   name: Breaking Changes in EAV and 2sxc
   href: articles/breaking-changes.html
