@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Pipeline;
+using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Blocks
                 log.Add($"override template, & pipe#{overrideView.Query?.EntityId}");
                 // Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
                 if (overrideView.Query != null)
-                    new QueryFactory(parentLog).GetAsDataSource(cms.Block.AppId // 2019-11-09, Id not nullable any more // ?? -999
+                    new QueryBuilder(parentLog).GetAsDataSource(cms.Block.AppId // 2019-11-09, Id not nullable any more // ?? -999
                         , overrideView.Query,
                         configurationProvider, viewDataSource, showDrafts: showDrafts);
 
