@@ -117,7 +117,7 @@ namespace ToSic.SexyContent
         public IEngine GetRenderingEngine(Purpose renderingPurpose)
         {
             var engine = EngineFactory.CreateEngine(View);
-            engine.Init(View, App, Container, Block.Data, renderingPurpose, this, Log);
+            engine.Init(this, renderingPurpose, Log);
             return engine;
         }
 

@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Engines
         [PrivateApi] protected IView Template;
         [PrivateApi] protected string TemplatePath;
         [PrivateApi] protected IApp App;
-        [PrivateApi] protected IContainer InstInfo;
+        //[PrivateApi] protected IContainer InstInfo;
         [PrivateApi] protected IDataSource DataSource;
         [PrivateApi] protected Purpose Purpose;
         [PrivateApi] protected ICmsBlock CmsBlock;
@@ -44,9 +44,14 @@ namespace ToSic.Sxc.Engines
         { }
 
         /// <inheritdoc />
-        public void Init(IView view, IApp app, IContainer envInstance, IDataSource dataSource, Purpose purpose, ICmsBlock cmsBlock, ILog parentLog)
+        public void Init(ICmsBlock cmsBlock,
+            Purpose purpose,
+            ILog parentLog)
         {
-            var templatePath = VirtualPathUtility.Combine(SexyContent.Internal.TemplateHelpers.GetTemplatePathRoot(view.Location, app) + "/", view.Path);
+            CmsBlock = cmsBlock;
+            var view = CmsBlock.View;
+
+            var templatePath = VirtualPathUtility.Combine(SexyContent.Internal.TemplateHelpers.GetTemplatePathRoot(view.Location, cmsBlock.App) + "/", view.Path);
 
             Log.LinkTo(parentLog);
 
@@ -57,11 +62,10 @@ namespace ToSic.Sxc.Engines
 
             Template = view;
             TemplatePath = templatePath;
-            App = app;
-            InstInfo = envInstance;
-            DataSource = dataSource;
+            App = cmsBlock.App /*app*/;
+            //InstInfo = envInstance;
+            DataSource = cmsBlock.Block.Data /*dataSource*/;
             Purpose = purpose;
-            CmsBlock = cmsBlock;
 
             // check common errors
             CheckExpectedTemplateErrors();
@@ -155,7 +159,7 @@ namespace ToSic.Sxc.Engines
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
             var templatePermissions = Factory.Resolve<IEnvironmentFactory>()
-                .ItemPermissions(App, Template.Entity, Log, InstInfo);
+                .ItemPermissions(App, Template.Entity, Log, /*InstInfo*/CmsBlock.Container);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
             if (tenant.RefactorUserIsAdmin || !templatePermissions.HasPermissions)

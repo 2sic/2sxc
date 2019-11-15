@@ -2,6 +2,7 @@
 
 using ToSic.Eav.LookUp;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Engines.Token
 {
     internal class TokenReplaceEav: Eav.Tokens.TokenReplace
