@@ -144,7 +144,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Log.Add("update title");
 
             var languages = cmsInstance.Environment.ZoneMapper.CulturesWithState(cmsInstance.Container.TenantId,
-                cmsInstance.ZoneId); // not nullable any more 2019-11-09 // .Value);
+                cmsInstance.Block.ZoneId); // not nullable any more 2019-11-09 // .Value);
 
             // Find Module for default language
             var moduleController = new ModuleController();

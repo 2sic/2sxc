@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Adam
         internal readonly IEnvironmentFileSystem EnvironmentFs;
 
 
-        public AdamAppContext(ITenant tenant, IApp app, /*SxcInstance*/ICmsBlock cmsInstance, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
+        public AdamAppContext(ITenant tenant, IApp app, ICmsBlock cmsInstance, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
         {
             Tenant = tenant;
             _app = app;

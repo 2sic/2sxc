@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Search;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Engines
 {
@@ -24,15 +22,10 @@ namespace ToSic.Sxc.Engines
         /// This is not in the constructor, because IEngines usually get constructed with DI,
         /// so the constructor is off-limits. 
         /// </summary>
-        /// <param name="view">The view configuration</param>
-        /// <param name="app">App this engine will render</param>
-        /// <param name="envInstance">Information about the instance in the environment (DNN)</param>
-        /// <param name="dataSource">Data source to be used for this engine</param>
-        /// <param name="purpose">Purpose of the engine (show in web, search-index, etc.)</param>
         /// <param name="cmsBlock">The block within the cms</param>
+        /// <param name="purpose">Purpose of the engine (show in web, search-index, etc.). The custom code may adapt its behavior depending on the purpose</param>
         /// <param name="parentLog">Log to chain with</param>
-        [PrivateApi]
-        void Init(IView view, IApp app, IContainer envInstance, IDataSource dataSource, Purpose purpose, Blocks.ICmsBlock cmsBlock, ILog parentLog);
+        void Init(ICmsBlock cmsBlock, Purpose purpose, ILog parentLog);
 
         /// <summary>
         /// Renders a template, returning a string with the rendered template.

@@ -9,6 +9,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
+using CmsBlock = ToSic.Sxc.Blocks.CmsBlock;
 using Feats = ToSic.Eav.Configuration.Features;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         private readonly string _jsonTemplate =
             "data-list-context='{{ `parent`: {0}, `field`: `{1}`, `type`: `{2}`, `guid`: `{3}`}}'".Replace("`", "\"");
 
-        internal InPageEditingHelper(/*SxcInstance*/ICmsBlock cmsInstance, ILog parentLog) : base("Edt", parentLog)
+        internal InPageEditingHelper(ICmsBlock cmsInstance, ILog parentLog) : base("Edt", parentLog)
         {
             Enabled = cmsInstance.UserMayEdit;
             CmsInstance = cmsInstance;
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         /// <inheritdoc />
         public bool Enabled { get; }
         [PrivateApi]
-        protected /*SxcInstance*/ ICmsBlock CmsInstance;
+        protected  ICmsBlock CmsInstance;
 
         #region Toolbar
 
@@ -116,7 +117,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "WrapInContext", $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
             return new HtmlString(
-                ((CmsInstance)CmsInstance).RenderingHelper.WrapInContext(content.ToString(),
+                ((CmsBlock)CmsInstance).RenderingHelper.WrapInContext(content.ToString(),
                     instanceId: instanceId > 0
                         ? instanceId
                         : CmsInstance?.Block?.ParentId ?? 0,
@@ -157,7 +158,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
                     throw exp;
             }
 
-            var hostWithInternals = (CmsInstance) CmsInstance;
+            var hostWithInternals = (CmsBlock) CmsInstance;
 
             // only update the values if true, otherwise leave untouched
             if (api.HasValue || forms.HasValue)

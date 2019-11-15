@@ -217,7 +217,7 @@ namespace ToSic.SexyContent.WebApi.View
                 if (templateId > 0)
                 {
                     var template = new CmsRuntime(cbToRender.App, Log, Edit.Enabled, false).Views.Get(templateId);
-                    ((CmsInstance)cbToRender.CmsInstance).View = template;
+                    ((Sxc.Blocks.CmsBlock)cbToRender.CmsInstance).View = template;
                 }
 
                 var rendered = cbToRender.CmsInstance.Render().ToString();

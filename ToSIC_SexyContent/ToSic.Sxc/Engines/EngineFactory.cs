@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Engines.Token;
 
 namespace ToSic.Sxc.Engines
 {
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.Engines
                     // This isn't done well, a setup like the DataSources which are loaded from DLL and
                     // instantiated would be the more correct (and probably faster) way to do this
                     var engineAssembly = Assembly.Load("ToSic.SexyContent.Razor");
-                    engineType = engineAssembly.GetType("ToSic.Sxc.Engines.Razor.RazorEngine");
+                    engineType = engineAssembly.GetType("ToSic.Sxc.Engines.RazorEngine");
                     break;
                 case false:
                     // Load Token Engine

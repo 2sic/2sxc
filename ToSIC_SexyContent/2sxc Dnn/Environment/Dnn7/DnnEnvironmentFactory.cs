@@ -28,6 +28,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
 
-        public AppAndDataHelpersBase AppAndDataHelpers(/*SxcInstance*/Sxc.Blocks.ICmsBlock cms) => new DnnAppAndDataHelpers(cms);
+        public AppAndDataHelpersBase AppAndDataHelpers(Sxc.Blocks.ICmsBlock cms) => new DnnAppAndDataHelpers(cms);
     }
 }

@@ -12,9 +12,10 @@ using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Engines.Token;
 using ToSic.Sxc.LookUp;
 
-namespace ToSic.Sxc.Engines.Token
+namespace ToSic.Sxc.Engines
 {
     /// <summary>
     /// Rendering Engine for Token based templates (html using [Content:Title] kind of placeholders. 
@@ -92,8 +93,8 @@ namespace ToSic.Sxc.Engines.Token
 
         private void InitTokenReplace()
         {
-            var confProv = ConfigurationProvider.GetConfigProviderForModule(InstInfo.Id, CmsBlock.App, CmsBlock);
-            _tokenReplace = new TokenReplaceEav(InstInfo.Id, confProv);
+            var confProv = ConfigurationProvider.GetConfigProviderForModule(/*InstInfo.Id*/CmsBlock.Container.Id, CmsBlock.App, CmsBlock);
+            _tokenReplace = new TokenReplaceEav(/*InstInfo.Id*/CmsBlock.Container.Id, confProv);
             
             // Add the Content and ListContent property sources used always
             _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new LookUpInDynamicEntity(SourcePropertyName.ListContent, _dataHelper.Header));

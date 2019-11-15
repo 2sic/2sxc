@@ -25,7 +25,7 @@ namespace ToSic.SexyContent.Edit.ClientContextInfo
 
             Id = cms.Block.Configuration?.ContentGroupId ?? 0;
             Guid = cms.Block.Configuration?.ContentGroupGuid ?? Guid.Empty;
-            AppId = cms.AppId;// 2019-11-09, Id not nullable any more // ?? 0;
+            AppId = cms.Block.AppId;// 2019-11-09, Id not nullable any more // ?? 0;
             AppUrl = cms.App?.Path ?? "" + "/";
             AppSettingsId = (cms.App?.Settings?.Entity?.Attributes?.Count > 0)
                 ? cms.App?.Settings?.EntityId : null;    // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.Edit.ClientContextInfo
 
             HasContent = cms.View != null && (cms.Block.Configuration?.Exists ?? false);
 
-            ZoneId = cms.ZoneId; // 2019-11-09, Id not nullable any more // ?? 0;
+            ZoneId = cms.Block.ZoneId; // 2019-11-09, Id not nullable any more // ?? 0;
             TemplateId = cms.View?.Id ?? 0;
             QueryId = cms.View?.Query?.EntityId; // will be null if not defined
             ContentTypeName = cms.View?.ContentType ?? "";

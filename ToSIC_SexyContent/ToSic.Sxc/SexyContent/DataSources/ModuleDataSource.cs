@@ -50,7 +50,7 @@ namespace ToSic.SexyContent.DataSources
         }
 
 
-        internal /*SxcInstance*/ICmsBlock CmsInstance
+        internal ICmsBlock CmsInstance
         {
             get
             {

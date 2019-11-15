@@ -17,13 +17,15 @@ using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Search;
 
-namespace ToSic.Sxc.Engines.Razor
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Engines
 {
     /// <summary>
     /// The razor engine, which compiles / runs engine templates
     /// </summary>
     [PublicApi]
     [EngineDefinition(Name = "Razor")]
+    // ReSharper disable once UnusedMember.Global
     public class RazorEngine : EngineBase
     {
         [PrivateApi]
@@ -119,7 +121,7 @@ namespace ToSic.Sxc.Engines.Razor
 
         private void InitHelpers(SexyContentWebPage webPage)
         {
-            webPage.Html = new HtmlHelper();
+            webPage.Html = new Razor.HtmlHelper();
             // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
             // reactivate if it turns out to be used, otherwise delete ca. EOY 2019
             //webPage.Url = new UrlHelper(InstInfo);

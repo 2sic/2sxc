@@ -8,13 +8,11 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Environment;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
@@ -31,11 +29,11 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
         /// Get search info for each dnn module containing 2sxc data
         /// </summary>
         /// <returns></returns>
-        public IList<SearchDocument> GetModifiedSearchDocuments(IContainer instance, DateTime beginDate)
+        public IList<SearchDocument> GetModifiedSearchDocuments(IContainer container, DateTime beginDate)
         {
             var searchDocuments = new List<SearchDocument>();
-            var dnnModule = (instance as Container<ModuleInfo>)?.Original;
-            // always log with method, to ensure errors are cought
+            var dnnModule = (container as Container<ModuleInfo>)?.Original;
+            // always log with method, to ensure errors are caught
             Log.Add($"start search for mod#{dnnModule?.ModuleID}");
 
             History.Add("dnn-search", Log);
@@ -48,13 +46,13 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             var zoneId = new DnnEnvironment(Log).ZoneMapper.GetZoneId(dnnModule.OwnerPortalID);
 
             var appId = !isContentModule
-                ? new DnnMapAppToInstance(Log).GetAppIdFromInstance(instance, zoneId)
+                ? new DnnMapAppToInstance(Log).GetAppIdFromInstance(container, zoneId)
                 : new ZoneRuntime(zoneId, Log).DefaultAppId;
 
             if (!appId.HasValue)
                 return searchDocuments;
 
-            // As PortalSettings.Current is null, instanciate with modules' portal id
+            // As PortalSettings.Current is null, instantiate with modules' portal id
             var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
 
             // Ensure cache builds up with correct primary language
@@ -65,24 +63,24 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
 
             // must find tenant through module, as the PortalSettings.Current is null in search mode
             var tenant = new DnnTenant(portalSettings);
-            var mcb = new BlockFromModule(instance, Log, tenant);
-            var sexy = mcb.CmsInstance;
+            var mcb = new BlockFromModule(container, Log, tenant);
+            var cmsBlock = mcb.CmsInstance;
 
             var language = dnnModule.CultureCode;
 
-            var cms = new CmsRuntime(sexy.App, Log, false, false);
-            var contentGroup = /*sexy.App.BlocksManager*/cms.Blocks.GetInstanceContentGroup(dnnModule.ModuleID, dnnModule.TabID);
+            //var cms = new CmsRuntime(cmsBlock.App, Log, false, false);
+            //var contentGroup = cms.Blocks.GetInstanceContentGroup(dnnModule.ModuleID, dnnModule.TabID);
 
-            var template = contentGroup.View;
+            var view = cmsBlock.View;// contentGroup.View;
 
-            // This list will hold all EAV entities to be indexed
-            var dataSource = sexy.Block.Data;
-			
-            if (template == null)
+            if (view == null)
                 return searchDocuments;
 
-            var engine = EngineFactory.CreateEngine(template);
-            engine.Init(template, sexy.App, new DnnInstanceInfo(dnnModule), dataSource, Purpose.IndexingForSearch, sexy, Log);
+            // This list will hold all EAV entities to be indexed
+            var dataSource = cmsBlock.Block.Data;
+			
+            var engine = EngineFactory.CreateEngine(view);
+            engine.Init(cmsBlock, Purpose.IndexingForSearch, Log);
 
             // see if data customization inside the cshtml works
             try

@@ -19,21 +19,21 @@ namespace ToSic.SexyContent
 {
     public partial class View : PortalModuleBase, IActionable
     {
-        private CmsInstance _sxci;
-        private bool _sxcInstanceLoaded;
+        private CmsBlock _cmsBlock;
+        private bool _cmsBlockLoaded;
 
-        protected CmsInstance CmsInstance
+        protected CmsBlock CmsBlock
         {
             get
             {
-                if (_sxcInstanceLoaded) return _sxci;
-                _sxcInstanceLoaded = true;
-                _sxci = new BlockFromModule(
+                if (_cmsBlockLoaded) return _cmsBlock;
+                _cmsBlockLoaded = true;
+                _cmsBlock = new BlockFromModule(
                         new DnnInstanceInfo(ModuleConfiguration),
                         Log,
                         new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
-                    .CmsInstance as CmsInstance;
-                return _sxci;
+                    .CmsInstance as CmsBlock;
+                return _cmsBlock;
             }
         }
 
@@ -60,19 +60,19 @@ namespace ToSic.SexyContent
             {
                 // throw better error if SxcInstance isn't available
                 // not sure if this doesn't have side-effects...
-                if (CmsInstance == null)
+                if (CmsBlock == null)
                     throw new Exception("Error - can't find 2sxc instance configuration. " +
                                         "Probably trying to show an app or content that has been deleted.");
 
                 // check things if it's a module of this portal (ensure everything is ok, etc.)
                 var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
-                if (!isSharedModule && !CmsInstance.Block.ContentGroupExists && CmsInstance.App != null)
-                    new DnnStuffToRefactor().EnsureTenantIsConfigured(CmsInstance, Server, ControlPath);
+                if (!isSharedModule && !CmsBlock.Block.ContentGroupExists && CmsBlock.App != null)
+                    new DnnStuffToRefactor().EnsureTenantIsConfigured(CmsBlock, Server, ControlPath);
 
                 var renderNaked = Request.QueryString["standalone"] == "true";
                 if (renderNaked)
-                    CmsInstance.RenderWithDiv = false;
-                var renderedTemplate = CmsInstance.Render().ToString();
+                    CmsBlock.RenderWithDiv = false;
+                var renderedTemplate = CmsBlock.Render().ToString();
 
                 // call this after rendering templates, because the template may change what resources are registered
                 RegisterResources();
@@ -122,8 +122,8 @@ namespace ToSic.SexyContent
         /// </summary>
         private void RegisterResources()
         {
-            var loadJs = CmsInstance?.UiAddEditApi ?? false;
-            var loadCss = CmsInstance?.UiAddEditUi ?? false;
+            var loadJs = CmsBlock?.UiAddEditApi ?? false;
+            var loadCss = CmsBlock?.UiAddEditUi ?? false;
 
             if (!loadJs && !loadCss) return;
 
@@ -134,7 +134,7 @@ namespace ToSic.SexyContent
             // register scripts and css
             try
             {
-                new DnnRenderingHelpers(CmsInstance, Log).RegisterClientDependencies(Page, loadJs, loadCss);
+                new DnnRenderingHelpers(CmsBlock, Log).RegisterClientDependencies(Page, loadJs, loadCss);
             }
             catch (Exception ex)
             {
@@ -178,18 +178,18 @@ namespace ToSic.SexyContent
         {
             _moduleActions = new ModuleActionCollection();
             var actions = _moduleActions;
-            var appIsKnown = CmsInstance.AppId > 0;
+            var appIsKnown = CmsBlock.Block.AppId > 0;
 
             if (appIsKnown)
             {
                 // Edit item
-                if (!CmsInstance.View?.UseForList ?? false)
+                if (!CmsBlock.View?.UseForList ?? false)
                     actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif",
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").edit();", "test", true,
                         SecurityAccessLevel.Edit, true, false);
 
                 // Add Item
-                if (CmsInstance.View?.UseForList ?? false)
+                if (CmsBlock.View?.UseForList ?? false)
                     actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif",
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").addItem();", true, SecurityAccessLevel.Edit, true,
                         false);
@@ -204,7 +204,7 @@ namespace ToSic.SexyContent
                 SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo))
             {
                 // Edit Template Button
-                if (appIsKnown && CmsInstance.View != null)
+                if (appIsKnown && CmsBlock.View != null)
                     actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
                         "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").develop();", "test",
                         true,
@@ -212,12 +212,12 @@ namespace ToSic.SexyContent
 
                 // App management
                 if (appIsKnown)
-                    actions.Add(GetNextActionID(), "Admin" + (CmsInstance.Block.IsContentApp ? "" : " " + CmsInstance.App?.Name), "",
+                    actions.Add(GetNextActionID(), "Admin" + (CmsBlock.Block.IsContentApp ? "" : " " + CmsBlock.App?.Name), "",
                         "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
                         SecurityAccessLevel.Admin, true, false);
 
                 // Zone management (app list)
-                if (!CmsInstance.Block.IsContentApp)
+                if (!CmsBlock.Block.IsContentApp)
                     actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action", "", "action_settings.gif",
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminZone();", "", true,
                         SecurityAccessLevel.Admin, true, false);

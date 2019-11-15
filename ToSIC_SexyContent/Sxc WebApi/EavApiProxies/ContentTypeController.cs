@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
@@ -61,10 +62,17 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
 	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool Save(int appId, Dictionary<string, string> item) 
-            => _eavCtc.Save(appId, item);
+        // 2019-11-15 2dm special change: item to be Dictionary<string, object> because in DNN 9.4
+        // it causes problems when a content-type has metadata, where a value then is a deeper object
+        // in future, the JS front-end should send something clearer and not the whole object
+        public bool Save(int appId, Dictionary<string, object> item)
+        {
+            var cleanList = item.ToDictionary(i => i.Key, i => i.Value as string);
+            return _eavCtc.Save(appId, cleanList);
+        }
 
-	    [HttpGet]
+
+        [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public bool CreateGhost(int appId, string sourceStaticName) 
             => _eavCtc.CreateGhost(appId, sourceStaticName);
