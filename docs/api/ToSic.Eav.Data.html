@@ -92,43 +92,43 @@
 </div>
 
 <p><br></p>
-<p>In most cases you only care about the <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> interface and things below that.</p>
+<p>In most cases you only care about the <a class="xref" href="dot-net/ToSic.Eav.Data.IEntity.html">IEntity</a> interface and things below that.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
-      <h4><a class="xref" href="ToSic.Eav.Data.Attribute-1.html">Attribute&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.Attribute-1.html">Attribute&lt;T&gt;</a></h4>
       <section><p>Represents an Attribute / Property of an Entity with Values of a Generic Type</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.ContentType.html">ContentType</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.ContentType.html">ContentType</a></h4>
       <section><p>Represents a ContentType</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.ContentTypeAttribute.html">ContentTypeAttribute</a></h4>
-      <section><p>Defines an attribute with name and the type this attribute has. Part of of a <a class="xref" href="ToSic.Eav.Data.IContentType.html">IContentType</a> definition.</p>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.ContentTypeAttribute.html">ContentTypeAttribute</a></h4>
+      <section><p>Defines an attribute with name and the type this attribute has. Part of of a <a class="xref" href="dot-net/ToSic.Eav.Data.IContentType.html">IContentType</a> definition.</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.ContentTypeMetadata.html">ContentTypeMetadata</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.ContentTypeMetadata.html">ContentTypeMetadata</a></h4>
       <section><p>Provides metadata for a content type. This can be very special, because ContentTypes can be shared (ghosts),
 in which case the metadata must be retrieved from another &quot;remote&quot; location (where the original is defined). </p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.DimensionDefinition.html">DimensionDefinition</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.DimensionDefinition.html">DimensionDefinition</a></h4>
       <section><p>The definition of a dimension / language</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.EntityBasedType.html">EntityBasedType</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.EntityBasedType.html">EntityBasedType</a></h4>
       <section><p>Foundation for a class which gets its data from an Entity. <br>
 This is used for more type safety - because some internal objects need entities for data-storage,
 but when programming they should use typed objects to not accidentally access invalid properties. </p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.EntityBasedWithLog.html">EntityBasedWithLog</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.EntityBasedWithLog.html">EntityBasedWithLog</a></h4>
       <section><p>A strongly typed object which gets its data from an entity, and also logs what it does.</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.EntityRelationship.html">EntityRelationship</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.EntityRelationship.html">EntityRelationship</a></h4>
       <section><p>Represents a Relation between two entities, connecting a parent to a child.</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.Language.html">Language</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.Language.html">Language</a></h4>
       <section><p>Represents a Dimension / Language Assignment</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.LazyEntities.html">LazyEntities</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.LazyEntities.html">LazyEntities</a></h4>
       <section><p>Delivers entities which are needed. <br>
 It&apos;s lazy, because on initialization it only knows the Ids (int/guid) of the items to pick up,
 and only retrieves them when needed. <br></p>
@@ -138,73 +138,73 @@ and only retrieves them when needed. <br></p>
 it won&apos;t actually query the cache if the IDs are already known.</li>
 </ul>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.Value-1.html">Value&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.Value-1.html">Value&lt;T&gt;</a></h4>
       <section><p>Represents a typed Value object in the memory model</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.Zone.html">Zone</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.Zone.html">Zone</a></h4>
       <section><p>Contains all the basic infos about a Zone - usually cached</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
-      <h4><a class="xref" href="ToSic.Eav.Data.IAttribute.html">IAttribute</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IAttribute.html">IAttribute</a></h4>
       <section><p>Represents an Attribute with Values - without knowing what data type is in the value.
-Usually we&apos;ll extend this and use <a class="xref" href="ToSic.Eav.Data.IAttribute-1.html">IAttribute&lt;T&gt;</a> instead.</p>
+Usually we&apos;ll extend this and use <a class="xref" href="dot-net/ToSic.Eav.Data.IAttribute-1.html">IAttribute&lt;T&gt;</a> instead.</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IAttribute-1.html">IAttribute&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IAttribute-1.html">IAttribute&lt;T&gt;</a></h4>
       <section><p>Represents an Attribute (Property), but strongly typed</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IAttributeBase.html">IAttributeBase</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IAttributeBase.html">IAttributeBase</a></h4>
       <section><p>Represents properties we should know about Attributes. This is the base for both</p>
 <ul>
-<li><a class="xref" href="ToSic.Eav.Data.IContentTypeAttribute.html">IContentTypeAttribute</a> (in the IContentType)</li>
+<li><a class="xref" href="dot-net/ToSic.Eav.Data.IContentTypeAttribute.html">IContentTypeAttribute</a> (in the IContentType)</li>
 <li>attribute with values-list (in the IEntity)</li>
 </ul>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IContentType.html">IContentType</a></h4>
-      <section><p>Represents a Content Type information (the schema) used for <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> objects.</p>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IContentType.html">IContentType</a></h4>
+      <section><p>Represents a Content Type information (the schema) used for <a class="xref" href="dot-net/ToSic.Eav.Data.IEntity.html">IEntity</a> objects.</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IContentTypeAttribute.html">IContentTypeAttribute</a></h4>
-      <section><p>Represents an Attribute definition in a ContentType. This is the base for attributes in <a class="xref" href="ToSic.Eav.Data.IContentType.html">IContentType</a></p>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IContentTypeAttribute.html">IContentTypeAttribute</a></h4>
+      <section><p>Represents an Attribute definition in a ContentType. This is the base for attributes in <a class="xref" href="dot-net/ToSic.Eav.Data.IContentType.html">IContentType</a></p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IDimension.html">IDimension</a></h4>
-      <section><p>Represents a Dimension to assign values to. Dimensions are usually languages (<a class="xref" href="ToSic.Eav.Data.ILanguage.html">ILanguage</a>),
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IDimension.html">IDimension</a></h4>
+      <section><p>Represents a Dimension to assign values to. Dimensions are usually languages (<a class="xref" href="dot-net/ToSic.Eav.Data.ILanguage.html">ILanguage</a>),
 but in future they could also be multi-dimensional, like values which are mapped to a language <em>and</em> to a specific edition, use case, etc.</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IEntitiesSource.html">IEntitiesSource</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IEntitiesSource.html">IEntitiesSource</a></h4>
       <section><p>This marks something which can give a list of entities. Usually used for lazy-loading data, where the source is attached, but the data isn&apos;t loaded yet. </p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IEntity.html">IEntity</a></h4>
       <section><p>The primary data-item in the system, IEntity is a generic data-item for any kind of information.
-Note that it inherits <a class="xref" href="ToSic.Eav.Data.IEntityLight.html">IEntityLight</a> which is the basic definition without languages,
+Note that it inherits <a class="xref" href="dot-net/ToSic.Eav.Data.IEntityLight.html">IEntityLight</a> which is the basic definition without languages,
 versioning, publishing etc.</p>
 <blockquote><p>We recommend you read about the <a class="xref" href="../articles/eav-core-data.html">EAV Core Data Models</a></p>
 </blockquote>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IEntityBasedType.html">IEntityBasedType</a></h4>
-      <section><p>Foundation for interfaces which will enhance <a class="xref" href="ToSic.Eav.Data.EntityBasedType.html">EntityBasedType</a> which gets its data from an Entity. <br>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IEntityBasedType.html">IEntityBasedType</a></h4>
+      <section><p>Foundation for interfaces which will enhance <a class="xref" href="dot-net/ToSic.Eav.Data.EntityBasedType.html">EntityBasedType</a> which gets its data from an Entity. <br>
 This is used for more type safety - so you base your interfaces - like IPerson on this,
 otherwise you&apos;re IPerson would be missing the Title, Id, Guid</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IEntityLight.html">IEntityLight</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IEntityLight.html">IEntityLight</a></h4>
       <section><p>Represents a light Entity, which is a very basic entity
 without multi-language capabilities, versions or publishing.
-For the more powerful Entity, use <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a>.</p>
+For the more powerful Entity, use <a class="xref" href="dot-net/ToSic.Eav.Data.IEntity.html">IEntity</a>.</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.ILanguage.html">ILanguage</a></h4>
-      <section><p>Represents a Language Dimension. It&apos;s identical to an <a class="xref" href="ToSic.Eav.Data.IDimension.html">IDimension</a> for now.</p>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.ILanguage.html">ILanguage</a></h4>
+      <section><p>Represents a Language Dimension. It&apos;s identical to an <a class="xref" href="dot-net/ToSic.Eav.Data.IDimension.html">IDimension</a> for now.</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IRelationshipManager.html">IRelationshipManager</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IRelationshipManager.html">IRelationshipManager</a></h4>
       <section><p>Manages relationships of an entity - to it&apos;s children and parents.</p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IValue.html">IValue</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IValue.html">IValue</a></h4>
       <section><p>Represents a Value in the EAV system. Values belong to an attribute and can belong to multiple languages. </p>
 </section>
-      <h4><a class="xref" href="ToSic.Eav.Data.IValue-1.html">IValue&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.IValue-1.html">IValue&lt;T&gt;</a></h4>
       <section><p>Represents a Value with a specific type (string, decimal, etc.).</p>
 </section>
     <h3 id="enums">Enums
   </h3>
-      <h4><a class="xref" href="ToSic.Eav.Data.ValueTypes.html">ValueTypes</a></h4>
+      <h4><a class="xref" href="dot-net/ToSic.Eav.Data.ValueTypes.html">ValueTypes</a></h4>
       <section><p>Attribute Type Enum</p>
 </section>
 </article>

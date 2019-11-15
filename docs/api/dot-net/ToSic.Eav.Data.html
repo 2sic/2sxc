@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Namespace ToSic.Eav.Data
+   | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Namespace ToSic.Eav.Data
+   | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="ToSic.Eav.Data">
+  
+  <h1 id="ToSic_Eav_Data" data-uid="ToSic.Eav.Data" class="text-break">Namespace ToSic.Eav.Data
+  </h1>
+  <div class="markdown level0 summary"><p>The EAV system underlying 2sxc is the core data management system, in charge of Entities and such. For long term stability, we only use interfaces in the API. </p>
+<p>To better understand this stuff, best read about the <a class="xref" href="../../articles/eav-core-data.html">EAV Core Data Models</a>.</p>
+<p><br></p>
+<div style="display: inline-block;">
+    <a class="xref" href="../../articles/eav-core-data.html"><img src="/images/data-models/eav-core-data-entity.png" width="48%" align="left"></a>
+
+    <a class="xref" href="../../articles/eav-core-data.html"><img src="/images/data-models/eav-core-data-contenttype.png" width="48%" align="right"></a>
+</div>
+
+<p><br></p>
+<p>In most cases you only care about the <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> interface and things below that.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+    <h3 id="classes">Classes
+  </h3>
+      <h4><a class="xref" href="ToSic.Eav.Data.Attribute-1.html">Attribute&lt;T&gt;</a></h4>
+      <section><p>Represents an Attribute / Property of an Entity with Values of a Generic Type</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.ContentType.html">ContentType</a></h4>
+      <section><p>Represents a ContentType</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.ContentTypeAttribute.html">ContentTypeAttribute</a></h4>
+      <section><p>Defines an attribute with name and the type this attribute has. Part of of a <a class="xref" href="ToSic.Eav.Data.IContentType.html">IContentType</a> definition.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.ContentTypeMetadata.html">ContentTypeMetadata</a></h4>
+      <section><p>Provides metadata for a content type. This can be very special, because ContentTypes can be shared (ghosts),
+in which case the metadata must be retrieved from another &quot;remote&quot; location (where the original is defined). </p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.DimensionDefinition.html">DimensionDefinition</a></h4>
+      <section><p>The definition of a dimension / language</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.EntityBasedType.html">EntityBasedType</a></h4>
+      <section><p>Foundation for a class which gets its data from an Entity. <br>
+This is used for more type safety - because some internal objects need entities for data-storage,
+but when programming they should use typed objects to not accidentally access invalid properties. </p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.EntityBasedWithLog.html">EntityBasedWithLog</a></h4>
+      <section><p>A strongly typed object which gets its data from an entity, and also logs what it does.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.EntityRelationship.html">EntityRelationship</a></h4>
+      <section><p>Represents a Relation between two entities, connecting a parent to a child.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.Language.html">Language</a></h4>
+      <section><p>Represents a Dimension / Language Assignment</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.LazyEntities.html">LazyEntities</a></h4>
+      <section><p>Delivers entities which are needed. <br>
+It&apos;s lazy, because on initialization it only knows the Ids (int/guid) of the items to pick up,
+and only retrieves them when needed. <br></p>
+<ul>
+<li>Once retrieved, it will cache the result, until the up-stream reports changes.</li>
+<li>An additional optimization: in special cases where we just need the IDs for saving,
+it won&apos;t actually query the cache if the IDs are already known.</li>
+</ul>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.Value-1.html">Value&lt;T&gt;</a></h4>
+      <section><p>Represents a typed Value object in the memory model</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.Zone.html">Zone</a></h4>
+      <section><p>Contains all the basic infos about a Zone - usually cached</p>
+</section>
+    <h3 id="interfaces">Interfaces
+  </h3>
+      <h4><a class="xref" href="ToSic.Eav.Data.IAttribute.html">IAttribute</a></h4>
+      <section><p>Represents an Attribute with Values - without knowing what data type is in the value.
+Usually we&apos;ll extend this and use <a class="xref" href="ToSic.Eav.Data.IAttribute-1.html">IAttribute&lt;T&gt;</a> instead.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.IAttribute-1.html">IAttribute&lt;T&gt;</a></h4>
+      <section><p>Represents an Attribute (Property), but strongly typed</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.IAttributeBase.html">IAttributeBase</a></h4>
+      <section><p>Represents properties we should know about Attributes. This is the base for both</p>
+<ul>
+<li><a class="xref" href="ToSic.Eav.Data.IContentTypeAttribute.html">IContentTypeAttribute</a> (in the IContentType)</li>
+<li>attribute with values-list (in the IEntity)</li>
+</ul>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.IContentType.html">IContentType</a></h4>
+      <section><p>Represents a Content Type information (the schema) used for <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> objects.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.IContentTypeAttribute.html">IContentTypeAttribute</a></h4>
+      <section><p>Represents an Attribute definition in a ContentType. This is the base for attributes in <a class="xref" href="ToSic.Eav.Data.IContentType.html">IContentType</a></p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.IDimension.html">IDimension</a></h4>
+      <section><p>Represents a Dimension to assign values to. Dimensions are usually languages (<a class="xref" href="ToSic.Eav.Data.ILanguage.html">ILanguage</a>),
+but in future they could also be multi-dimensional, like values which are mapped to a language <em>and</em> to a specific edition, use case, etc.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.IEntitiesSource.html">IEntitiesSource</a></h4>
+      <section><p>This marks something which can give a list of entities. Usually used for lazy-loading data, where the source is attached, but the data isn&apos;t loaded yet. </p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a></h4>
+      <section><p>The primary data-item in the system, IEntity is a generic data-item for any kind of information.
+Note that it inherits <a class="xref" href="ToSic.Eav.Data.IEntityLight.html">IEntityLight</a> which is the basic definition without languages,
+versioning, publishing etc.</p>
+<blockquote><p>We recommend you read about the <a class="xref" href="../../articles/eav-core-data.html">EAV Core Data Models</a></p>
+</blockquote>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.IEntityBasedType.html">IEntityBasedType</a></h4>
+      <section><p>Foundation for interfaces which will enhance <a class="xref" href="ToSic.Eav.Data.EntityBasedType.html">EntityBasedType</a> which gets its data from an Entity. <br>
+This is used for more type safety - so you base your interfaces - like IPerson on this,
+otherwise you&apos;re IPerson would be missing the Title, Id, Guid</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.IEntityLight.html">IEntityLight</a></h4>
+      <section><p>Represents a light Entity, which is a very basic entity
+without multi-language capabilities, versions or publishing.
+For the more powerful Entity, use <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a>.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.ILanguage.html">ILanguage</a></h4>
+      <section><p>Represents a Language Dimension. It&apos;s identical to an <a class="xref" href="ToSic.Eav.Data.IDimension.html">IDimension</a> for now.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.IRelationshipManager.html">IRelationshipManager</a></h4>
+      <section><p>Manages relationships of an entity - to it&apos;s children and parents.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.IValue.html">IValue</a></h4>
+      <section><p>Represents a Value in the EAV system. Values belong to an attribute and can belong to multiple languages. </p>
+</section>
+      <h4><a class="xref" href="ToSic.Eav.Data.IValue-1.html">IValue&lt;T&gt;</a></h4>
+      <section><p>Represents a Value with a specific type (string, decimal, etc.).</p>
+</section>
+    <h3 id="enums">Enums
+  </h3>
+      <h4><a class="xref" href="ToSic.Eav.Data.ValueTypes.html">ValueTypes</a></h4>
+      <section><p>Attribute Type Enum</p>
+</section>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/namespaces/Eav.Data.md/#L2" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

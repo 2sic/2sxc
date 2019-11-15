@@ -15,7 +15,7 @@
           ]
         }
       ],
-      "dest": "obj/api",
+      "dest": "obj/api/dot-net",
       "filter": "filterConfig.yml"
     }
   ],

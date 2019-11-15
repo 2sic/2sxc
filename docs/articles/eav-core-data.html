@@ -90,23 +90,23 @@ The D stands for <strong>Dimension</strong>, it says what Dimension (Language) a
 <p><img src="/images/data-models/eav-core-data-entity.png" width="100%"></p>
 <p>You can find out more in the API docs for</p>
 <ul>
-<li><a class="xref" href="../api/ToSic.Eav.Data.html">ToSic.Eav.Data</a> Namespace has almost everything you see here</li>
-<li><a class="xref" href="../api/ToSic.Eav.Data.IEntity.html">IEntity</a> describes the main unit, the Entity</li>
-<li><a class="xref" href="../api/ToSic.Eav.Data.IContentType.html">IContentType</a> defines what fields exist, it&#39;s the ContentType / Schema</li>
-<li><a class="xref" href="../api/ToSic.Eav.Data.IAttributeBase.html">IAttributeBase</a>, <a class="xref" href="../api/ToSic.Eav.Data.IAttribute.html">IAttribute</a>,<br>  <a class="xref" href="../api/ToSic.Eav.Data.IAttribute-1.html">IAttribute&lt;T&gt;</a>, <a class="xref" href="../api/ToSic.Eav.Data.Attribute-1.html">Attribute&lt;T&gt;</a><br>  determine the internal model how an attribute is built</li>
-<li><a class="xref" href="../api/ToSic.Eav.Data.IValue.html">IValue</a>, <a class="xref" href="../api/ToSic.Eav.Data.IValue-1.html">IValue&lt;T&gt;</a>, <a class="xref" href="../api/ToSic.Eav.Data.Value-1.html">Value&lt;T&gt;</a><br>  determines how values in an attribute are stored, because an attribute like <code>Description</code><br>  can have many values in different languages</li>
-<li><a class="xref" href="../api/ToSic.Eav.Data.ILanguage.html">ILanguage</a>, <a class="xref" href="../api/ToSic.Eav.Data.IDimension.html">IDimension</a>, <a class="xref" href="../api/ToSic.Eav.Data.Language.html">Language</a><br>  languages and dimensions determine how the values are used in each language</li>
-<li><a class="xref" href="../api/ToSic.Eav.Metadata.ITarget.html">ITarget</a>, <a class="xref" href="../api/ToSic.Eav.Metadata.Target.html">Target</a><br>  this determines if the Entity is by itself, or if it&#39;s enriching something else -<br>  in which case this Entity is Metadata. </li>
-<li><a class="xref" href="../api/ToSic.Eav.Metadata.MetadataOf-1.html">MetadataOf&lt;T&gt;</a><br>  sometimes an Entity may itself have more metadata, which would then be stored here.</li>
+<li><a class="xref" href="../api/dot-net/ToSic.Eav.Data.html">ToSic.Eav.Data</a> Namespace has almost everything you see here</li>
+<li><a class="xref" href="../api/dot-net/ToSic.Eav.Data.IEntity.html">IEntity</a> describes the main unit, the Entity</li>
+<li><a class="xref" href="../api/dot-net/ToSic.Eav.Data.IContentType.html">IContentType</a> defines what fields exist, it&#39;s the ContentType / Schema</li>
+<li><a class="xref" href="../api/dot-net/ToSic.Eav.Data.IAttributeBase.html">IAttributeBase</a>, <a class="xref" href="../api/dot-net/ToSic.Eav.Data.IAttribute.html">IAttribute</a>,<br>  <a class="xref" href="../api/dot-net/ToSic.Eav.Data.IAttribute-1.html">IAttribute&lt;T&gt;</a>, <a class="xref" href="../api/dot-net/ToSic.Eav.Data.Attribute-1.html">Attribute&lt;T&gt;</a><br>  determine the internal model how an attribute is built</li>
+<li><a class="xref" href="../api/dot-net/ToSic.Eav.Data.IValue.html">IValue</a>, <a class="xref" href="../api/dot-net/ToSic.Eav.Data.IValue-1.html">IValue&lt;T&gt;</a>, <a class="xref" href="../api/dot-net/ToSic.Eav.Data.Value-1.html">Value&lt;T&gt;</a><br>  determines how values in an attribute are stored, because an attribute like <code>Description</code><br>  can have many values in different languages</li>
+<li><a class="xref" href="../api/dot-net/ToSic.Eav.Data.ILanguage.html">ILanguage</a>, <a class="xref" href="../api/dot-net/ToSic.Eav.Data.IDimension.html">IDimension</a>, <a class="xref" href="../api/dot-net/ToSic.Eav.Data.Language.html">Language</a><br>  languages and dimensions determine how the values are used in each language</li>
+<li><a class="xref" href="../api/dot-net/ToSic.Eav.Metadata.ITarget.html">ITarget</a>, <a class="xref" href="../api/dot-net/ToSic.Eav.Metadata.Target.html">Target</a><br>  this determines if the Entity is by itself, or if it&#39;s enriching something else -<br>  in which case this Entity is Metadata. </li>
+<li><a class="xref" href="../api/dot-net/ToSic.Eav.Metadata.MetadataOf-1.html">MetadataOf&lt;T&gt;</a><br>  sometimes an Entity may itself have more metadata, which would then be stored here.</li>
 </ul>
 <h2 id="contenttype---the-schema-and-field-definitions">ContentType - The Schema and Field-Definitions</h2>
 <p><img src="/images/data-models/eav-core-data-contenttype.png" width="100%"></p>
 <p>You can find out more in the API docs for</p>
 <ul>
-<li><a class="xref" href="../api/ToSic.Eav.Data.html">ToSic.Eav.Data</a> Namespace has almost everything you see here</li>
-<li><a class="xref" href="../api/ToSic.Eav.Data.IContentType.html">IContentType</a> defines what fields exist, it&#39;s the ContentType / Schema</li>
-<li><a class="xref" href="../api/ToSic.Eav.Data.IContentTypeAttribute.html">IContentTypeAttribute</a>, <a class="xref" href="../api/ToSic.Eav.Data.ContentTypeAttribute.html">ContentTypeAttribute</a><br>  contains the definition of an attribute</li>
-<li><a class="xref" href="../api/ToSic.Eav.Data.ContentTypeMetadata.html">ContentTypeMetadata</a>, <a class="xref" href="../api/ToSic.Eav.Metadata.MetadataOf-1.html">MetadataOf&lt;T&gt;</a><br>  contains information about the content-type (like nicer descriptions).
+<li><a class="xref" href="../api/dot-net/ToSic.Eav.Data.html">ToSic.Eav.Data</a> Namespace has almost everything you see here</li>
+<li><a class="xref" href="../api/dot-net/ToSic.Eav.Data.IContentType.html">IContentType</a> defines what fields exist, it&#39;s the ContentType / Schema</li>
+<li><a class="xref" href="../api/dot-net/ToSic.Eav.Data.IContentTypeAttribute.html">IContentTypeAttribute</a>, <a class="xref" href="../api/dot-net/ToSic.Eav.Data.ContentTypeAttribute.html">ContentTypeAttribute</a><br>  contains the definition of an attribute</li>
+<li><a class="xref" href="../api/dot-net/ToSic.Eav.Data.ContentTypeMetadata.html">ContentTypeMetadata</a>, <a class="xref" href="../api/dot-net/ToSic.Eav.Metadata.MetadataOf-1.html">MetadataOf&lt;T&gt;</a><br>  contains information about the content-type (like nicer descriptions).
   This is also used for the Attribute-Metadata</li>
 </ul>
 </article>
