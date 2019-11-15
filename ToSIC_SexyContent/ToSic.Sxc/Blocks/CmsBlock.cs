@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Blocks
 {
     /// <summary>
     /// This is an instance-context of a Content-Module. It basically encapsulates the instance-state, incl.
@@ -16,12 +15,11 @@ namespace ToSic.SexyContent
     /// it would be hard to get anything done .
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
+    [PrivateApi("not sure yet what to call this, CmsBlock isn't right, because it's more of a BlockHost or something")]
     public partial class CmsBlock : HasLog, ICmsBlock
     {
         #region App-level information
 
-        public int ZoneId => Block.ZoneId;
-        public int AppId => Block.AppId;
         public IApp App => Block.App;
 
         #endregion
@@ -48,7 +46,7 @@ namespace ToSic.SexyContent
         #endregion
 
         #region Constructor
-        internal CmsBlock(IBlock  cb, 
+        internal CmsBlock(IBlock cb, 
             IContainer container, 
             IEnumerable<KeyValuePair<string, string>> urlParams = null, 
             ILog parentLog = null)

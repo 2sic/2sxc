@@ -62,9 +62,9 @@ namespace ToSic.SexyContent.WebApi.AutoDetectContext
                 Log.Add($"auto detect app and init eav - path:{appPath}, context null: {cmsInstance == null}");
                 appId = appPath == null || appPath == "auto"
                     ? new AppIdentity(
-                        cmsInstance?.ZoneId ??
+                        cmsInstance?.Block?.ZoneId ??
                         throw new ArgumentException("try to get app-id from context, but none found"),
-                        cmsInstance.AppId // not nullable any more 2019-11-09 ?? 0
+                        cmsInstance.Block.AppId // not nullable any more 2019-11-09 ?? 0
                         , Log)
                     : GetCurrentAppIdFromPath(appPath);
             }

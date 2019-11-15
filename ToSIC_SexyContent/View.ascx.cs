@@ -19,21 +19,21 @@ namespace ToSic.SexyContent
 {
     public partial class View : PortalModuleBase, IActionable
     {
-        private CmsBlock _sxci;
-        private bool _sxcInstanceLoaded;
+        private CmsBlock _cmsBlock;
+        private bool _cmsBlockLoaded;
 
         protected CmsBlock CmsBlock
         {
             get
             {
-                if (_sxcInstanceLoaded) return _sxci;
-                _sxcInstanceLoaded = true;
-                _sxci = new BlockFromModule(
+                if (_cmsBlockLoaded) return _cmsBlock;
+                _cmsBlockLoaded = true;
+                _cmsBlock = new BlockFromModule(
                         new DnnInstanceInfo(ModuleConfiguration),
                         Log,
                         new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
                     .CmsInstance as CmsBlock;
-                return _sxci;
+                return _cmsBlock;
             }
         }
 
@@ -178,7 +178,7 @@ namespace ToSic.SexyContent
         {
             _moduleActions = new ModuleActionCollection();
             var actions = _moduleActions;
-            var appIsKnown = CmsBlock.AppId > 0;
+            var appIsKnown = CmsBlock.Block.AppId > 0;
 
             if (appIsKnown)
             {

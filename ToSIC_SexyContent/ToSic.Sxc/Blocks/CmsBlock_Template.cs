@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Blocks
 {
     public partial class CmsBlock
     {

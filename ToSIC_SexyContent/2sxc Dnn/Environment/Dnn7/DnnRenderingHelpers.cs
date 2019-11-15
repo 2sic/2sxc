@@ -119,7 +119,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         // new
         public string UiContextInfos(bool autoToolbars)
             => JsonConvert.SerializeObject(new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, _cmsInstance, _userInfo,
-                _cmsInstance.ZoneId // 2019-11-09, Id not nullable any more // ?? 0
+                _cmsInstance.Block.ZoneId // 2019-11-09, Id not nullable any more // ?? 0
                 , _cmsInstance.Block.ContentGroupExists, autoToolbars, Log));
 
 

@@ -2,12 +2,10 @@
 using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Blocks
 {
     public partial class CmsBlock
     {

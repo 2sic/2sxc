@@ -4,7 +4,6 @@ using ToSic.Eav.DataSources.Pipeline;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
-using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Data;
 
@@ -23,8 +22,8 @@ namespace ToSic.Sxc.Blocks
 
             log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{overrideView?.Name}");
             // Get ModuleDataSource
-            var initialSource = DataSource.GetInitialDataSource(cms.ZoneId, cms.AppId, showDrafts, configurationProvider, parentLog);
-            var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(cms.ZoneId, cms.AppId, initialSource, configurationProvider, parentLog);
+            var initialSource = DataSource.GetInitialDataSource(cms.Block.ZoneId, cms.Block.AppId, showDrafts, configurationProvider, parentLog);
+            var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(cms.Block.ZoneId, cms.Block.AppId, initialSource, configurationProvider, parentLog);
             moduleDataSource.InstanceId = instanceId;
 
             moduleDataSource.OverrideView = overrideView; // new
@@ -36,7 +35,7 @@ namespace ToSic.Sxc.Blocks
                 : null;
             log.Add($"use pipeline upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = DataSource.GetDataSource<BlockDataSource>(cms.ZoneId, cms.AppId, viewDataSourceUpstream, configurationProvider, parentLog);
+            var viewDataSource = DataSource.GetDataSource<BlockDataSource>(cms.Block.ZoneId, cms.Block.AppId, viewDataSourceUpstream, configurationProvider, parentLog);
 
             // Take Publish-Properties from the View-Template
             if (overrideView != null)
@@ -47,7 +46,7 @@ namespace ToSic.Sxc.Blocks
                 log.Add($"override template, & pipe#{overrideView.Query?.EntityId}");
                 // Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
                 if (overrideView.Query != null)
-                    new QueryFactory(parentLog).GetAsDataSource(cms.AppId // 2019-11-09, Id not nullable any more // ?? -999
+                    new QueryFactory(parentLog).GetAsDataSource(cms.Block.AppId // 2019-11-09, Id not nullable any more // ?? -999
                         , overrideView.Query,
                         configurationProvider, viewDataSource, showDrafts: showDrafts);
 

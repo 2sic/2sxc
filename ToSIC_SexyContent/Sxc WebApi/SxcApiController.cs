@@ -217,7 +217,7 @@ namespace ToSic.SexyContent.WebApi
                 throw exp;
 
             return new AdamUploader(CmsBlock, 
-                CmsBlock.AppId, // 2019-11-09 not nullable any more ?? throw new Exception("can't save in adam - full context not available"), 
+                CmsBlock.Block.AppId, // 2019-11-09 not nullable any more ?? throw new Exception("can't save in adam - full context not available"), 
                 Log)
                 .UploadOne(stream, fileName, contentType, guid.Value, field, subFolder, false, true);
         }

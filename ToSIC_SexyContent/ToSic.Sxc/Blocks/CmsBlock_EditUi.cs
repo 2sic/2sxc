@@ -1,7 +1,6 @@
 ﻿
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Blocks
 {
     public partial class CmsBlock
     {

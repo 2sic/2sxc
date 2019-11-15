@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Adam.WebApi
             string folder = "")
         {
             // if app-path specified, use that app, otherwise use from context
-            var appId = CmsBlock.AppId;
+            var appId = CmsBlock.Block.AppId;
             // 2019-11-09 not nullable any more
             //if (appId == null) throw new Exception("Can't detect app-id, module-context missing in http request");
             return Items(appId/*.Value*/, contenttype, guid, field, folder);

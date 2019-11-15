@@ -9,6 +9,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
+using CmsBlock = ToSic.Sxc.Blocks.CmsBlock;
 using Feats = ToSic.Eav.Configuration.Features;
 using IEntity = ToSic.Eav.Data.IEntity;
 

@@ -12,8 +12,8 @@ namespace ToSic.Sxc.Blocks
     /// This is kind of the master-container for a content-management block. It's the wrapper which is in the CMS (DNN), and the module will talk with this
     /// Sxc Block to get everything rendered. 
     /// </summary>
-    [PublicApi]
-    public interface ICmsBlock: IHasLog, IInAppAndZone
+    [PrivateApi("not sure yet what to call this, CmsBlock isn't right, because it's more of a BlockHost or something")]
+    public interface ICmsBlock: IHasLog
     {
         /// <summary>
         /// The app relevant to this instance - contains much more material like
@@ -48,8 +48,9 @@ namespace ToSic.Sxc.Blocks
         [PrivateApi]
         IAppEnvironment Environment { get; }
 
-        // todo: better name, this is kind of the module we're in or something
-        [PrivateApi]
+        /// <summary>
+        /// The container (DNN Module) wrapping this CMS Block
+        /// </summary>
         IContainer Container { get; }
 
         [PrivateApi]

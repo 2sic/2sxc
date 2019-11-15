@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Environment;
+﻿using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -44,10 +43,7 @@ namespace ToSic.Sxc.Blocks
         // #. possible override in url - and allowed by permissions (admin/host), use that
         public IView View
         {
-            get 
-            {
-                return _view; 
-            }
+            get => _view;
             set
             {
                 _view = value;

@@ -12,12 +12,15 @@ namespace ToSic.Sxc.Blocks
     [PublicApi]
     public interface IBlock: IInAppAndZone
     {
-        [PrivateApi]
+        [PrivateApi("should probably be factored out of this object, but not sure yet")]
         bool ShowTemplateChooser { get; }
 
         [PrivateApi]
         bool ParentIsEntity { get; }   // alternative is module
         
+        /// <summary>
+        /// The module ID or the parent-content-block id, probably not ideal here, but not sure
+        /// </summary>
         [PrivateApi]
         int ParentId { get; }
 
