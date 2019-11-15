@@ -8,7 +8,6 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Errors;
-using ToSic.Sxc.Blocks;
 using App = ToSic.Sxc.Apps.App;
 using Factory = ToSic.Eav.Factory;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -84,7 +83,7 @@ namespace ToSic.SexyContent.WebApi.Permissions
 
             // user has edit permissions on this app, and it's the same app as the user is coming from
             return new DnnPermissionCheck(Log,
-                instance: CmsInstance?.EnvInstance,
+                instance: CmsInstance?.Container,
                 app: App,
                 portal: PortalForSecurityCheck,
                 targetType: type,

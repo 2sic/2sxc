@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.WebApi.SaveHelpers
 
         private BlockConfiguration GetBlockConfig(IApp app, Guid blockGuid)
             => new CmsRuntime(app, Log, CmsInstance.UserMayEdit,
-                CmsInstance.Environment.PagePublishing.IsEnabled(CmsInstance.EnvInstance.Id)).Blocks.GetBlockConfig(blockGuid);
+                CmsInstance.Environment.PagePublishing.IsEnabled(CmsInstance.Container.Id)).Blocks.GetBlockConfig(blockGuid);
 
         private void UpdateList<T>(
             int appId,

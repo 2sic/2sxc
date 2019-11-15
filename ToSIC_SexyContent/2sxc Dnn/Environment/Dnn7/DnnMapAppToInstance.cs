@@ -27,6 +27,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public int? GetAppIdFromInstance(IContainer instance, int zoneId)
         {
+            var wrapLog = Log.Call<int?>(nameof(GetAppIdFromInstance), $"..., {zoneId}");
+
             var module = (instance as Container<ModuleInfo>)?.Original
                 ?? throw new Exception("instance is not of type ModuleInfo");
 
@@ -35,7 +37,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             {
                 var appId = new ZoneRuntime(zoneId, null).DefaultAppId;
                 Log.Add($"{msg} - use def app: {appId}");
-                return appId;
+                return wrapLog("default", appId);
             }
 
             if (module.ModuleSettings.ContainsKey(Settings.AppNameString))
@@ -43,11 +45,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 var guid = module.ModuleSettings[Settings.AppNameString].ToString();
                 var appId = AppHelpers.GetAppIdFromGuidName(zoneId, guid);
                 Log.Add($"{msg} AppG:{guid} = app:{appId}");
-                return appId;
+                return wrapLog("ok", appId);
             }
 
             Log.Add($"{msg} not found = null");
-            return null;
+            return wrapLog("not found", null);
         }
 
 
@@ -141,12 +143,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             Log.Add("update title");
 
-            var languages = cmsInstance.Environment.ZoneMapper.CulturesWithState(cmsInstance.EnvInstance.TenantId,
+            var languages = cmsInstance.Environment.ZoneMapper.CulturesWithState(cmsInstance.Container.TenantId,
                 cmsInstance.ZoneId); // not nullable any more 2019-11-09 // .Value);
 
             // Find Module for default language
             var moduleController = new ModuleController();
-            var originalModule = moduleController.GetModule(cmsInstance.EnvInstance.Id);
+            var originalModule = moduleController.GetModule(cmsInstance.Container.Id);
 
             foreach (var dimension in languages)
             {
@@ -164,7 +166,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
                     // Find module for given Culture
                     var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
-                        originalModule.TabID, cmsInstance.EnvInstance.TenantId,
+                        originalModule.TabID, cmsInstance.Container.TenantId,
                         DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
 
                     // Break if no title module found

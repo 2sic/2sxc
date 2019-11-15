@@ -8,6 +8,15 @@ namespace ToSic.Sxc.WebApi.System
     [SxcWebApiExceptionHandling]
     public partial class InsightsController : DnnApiControllerWithFixes
     {
+        /// <summary>
+        /// Enable/disable logging of access to insights
+        /// Only enable this if you have trouble developing insights, otherwise it clutters our logs
+        /// </summary>
+        internal const bool InsightsLoggingEnabled = false;
+
+        internal const string InsightsUrlFragment = "/sys/insights/";
+
+
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext); // very important!!!

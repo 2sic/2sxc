@@ -19,6 +19,5 @@ namespace ToSic.Sxc.WebApi.System
 
             return $"app {appId} has been purged";
         }
-
     }
 }

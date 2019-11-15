@@ -28,7 +28,7 @@ namespace ToSic.SexyContent.DataSources
             return appToUse =>
             {
                 // the module id
-                var envInstanceId = cmsInstance.EnvInstance.Id;
+                var envInstanceId = cmsInstance.Container.Id;
 
                 // check if we'll use the config already on the sxc-instance, or generate a new one
                 var config = useExistingConfig

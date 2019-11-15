@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 	    protected override void Initialize(HttpControllerContext controllerContext)
 	    {
 	        base.Initialize(controllerContext); // very important!!!
-	        Log.Rename("2sCTC");
+	        Log.Rename("Api.SxcCTC");
             _eavCtc = new Eav.WebApi.ContentTypeController(Log);
 	    }
 

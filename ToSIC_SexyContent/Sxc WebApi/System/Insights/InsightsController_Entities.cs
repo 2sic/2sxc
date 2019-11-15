@@ -3,9 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Http;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
-using ToSic.Eav.Interfaces;
 using ToSic.SexyContent.WebApi.Errors;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -118,7 +116,7 @@ namespace ToSic.Sxc.WebApi.System
             var appRead = new AppRuntime(appId.Value, Log);
 
             IEntity ent;
-            if (int.TryParse(entity, out var entityId))
+            if (Int32.TryParse(entity, out var entityId))
                 ent = appRead.Entities.Get(entityId);
             else if (Guid.TryParse(entity, out var entityGuid))
                 ent = appRead.Entities.Get(entityGuid);

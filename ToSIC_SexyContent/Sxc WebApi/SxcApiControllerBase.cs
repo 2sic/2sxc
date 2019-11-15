@@ -19,10 +19,9 @@ namespace ToSic.SexyContent.WebApi
         {
             base.Initialize(controllerContext);
             Log.Rename("Api.CntBas");
-            CmsBlock = Helpers.GetSxcOfApiRequest(Request, true, Log);
+            CmsBlock = Helpers.GetCmsBlock(Request, true, Log);
         }
 
-        // todo: probably rename just to sxc
         internal ICmsBlock CmsBlock { get; private set; }
 
 

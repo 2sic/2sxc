@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             this.LinkLog(parentLog);
             var appRoot = VirtualPathUtility.ToAbsolute("~/");
-            _moduleInfo = cms?.EnvInstance;
+            _moduleInfo = cms?.Container;
             _cmsInstance = cms;
             _portalSettings = PortalSettings.Current;
 

@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Data;
-using ToSic.Eav.Interfaces;
+﻿using System;
+using System.Collections.Generic;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.WebApi.System
                 foreach (var md in metadata)
                 {
                     var mdFor = md.MetadataFor;
-                    var key = !string.IsNullOrEmpty(mdFor.KeyString)
+                    var key = !String.IsNullOrEmpty(mdFor.KeyString)
                         ? "\"" + mdFor.KeyString + "\""
                         : mdFor.KeyNumber != null
                             ? "#" + mdFor.KeyNumber

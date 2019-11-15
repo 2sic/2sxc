@@ -25,8 +25,6 @@ namespace ToSic.Sxc.Blocks
         public override IBlockDataSource Data => _dataSource 
             ?? (_dataSource = BlockDataSource.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log, Container.Id));
 
-        private readonly IEnumerable<KeyValuePair<string, string>> _urlParams;
-
         /// <summary>
         /// Create a module-content block
         /// </summary>
@@ -36,13 +34,10 @@ namespace ToSic.Sxc.Blocks
         /// <param name="overrideParams">optional override parameters</param>
         public BlockFromModule(IContainer container, ILog parentLog, ITenant tenant, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
         {
-            var wrapLog = Log.Call("()");
+            var wrapLog = Log.Call("constructor");
             Container = container ?? throw new Exception("Need valid Instance/ModuleInfo / ModuleConfiguration of runtime");
             ParentId = container.Id;
             ContentBlockId = ParentId;
-
-            // url-params
-            _urlParams = overrideParams ?? SystemWeb.GetUrlParams();
 
             // Ensure we know what portal the stuff is coming from
             // PortalSettings is null, when in search mode
@@ -64,7 +59,8 @@ namespace ToSic.Sxc.Blocks
             }
 
             // 2018-09-22 new with auto-init-data
-            CmsInstance = new CmsInstance(this, Container, _urlParams, Log);
+            var urlParams = overrideParams ?? SystemWeb.GetUrlParams();
+            CmsInstance = new CmsInstance(this, Container, urlParams, Log);
 
             if (AppId != 0)
             {
@@ -75,7 +71,7 @@ namespace ToSic.Sxc.Blocks
 
                 // 2019-11-11 2dm new, with CmsRuntime
                 var cms = new CmsRuntime(App, Log, CmsInstance.UserMayEdit,
-                    CmsInstance.Environment.PagePublishing.IsEnabled(CmsInstance.EnvInstance.Id));
+                    CmsInstance.Environment.PagePublishing.IsEnabled(CmsInstance.Container.Id));
 
                 Configuration = cms.Blocks.GetInstanceContentGroup(container.Id, container.PageId);
 
@@ -89,7 +85,7 @@ namespace ToSic.Sxc.Blocks
                 ((CmsInstance)CmsInstance).SetTemplateOrOverrideFromUrl(Configuration.View);                
             }
 
-            wrapLog($"ok a:{AppId}, container:{container.Id}");
+            wrapLog($"ok a:{AppId}, container:{container.Id}, content-group:{Configuration?.ContentGroupId}");
         }
 
         public override bool IsContentApp => Container.IsPrimary;
