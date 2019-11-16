@@ -1,12 +1,12 @@
 # Data Source: StreamFallback
 
 ## Purpose / Description
-The **StreamFallback** [DataSource][ds] is part of the [Standard EAV Data Sources][eavds]. It will pass on the first stream which has results. The order of evaluation is based on the names of the streams as they enter the StreamFallback. 
+The **StreamFallback** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will pass on the first stream which has results. The order of evaluation is based on the names of the streams as they enter the StreamFallback. 
 
 ## How to use with the Visual Query
-When using the [Visual Query][vqd] you can just drag it into your query. This is what it usually looks like:
+When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:
 
-<img src="assets/data-sources/stream-fallback-4-stream-example.png" width="100%">
+<img src="/assets/data-sources/stream-fallback-4-stream-example.png" width="100%">
 
 The above example shows a query from the [blog app](https://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke):
 
@@ -40,6 +40,5 @@ You should find some examples in this demo App
 1. Introduced in EAV 3.x, 2sxc ?
 
 [//]: # "The following lines are a list of links used in this page, referenced from above"
-[vqd]: http://2sxc.org/en/Learn/Visual-Query-Designer
+
 [eavds]: DotNet-DataSources-All
-[ds]: DotNet-DataSource

@@ -52,6 +52,9 @@
         ]
       }
     ],
+    "xref": [
+      "xrefmap.yml"
+    ],
     "overwrite": [
       {
         "files": [

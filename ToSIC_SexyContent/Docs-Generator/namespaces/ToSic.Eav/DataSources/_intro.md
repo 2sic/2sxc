@@ -140,4 +140,3 @@ Maybe you want to create an XML DataSource or a DNN-Users DataSource. This is ea
 [eav-core-code]: https://github.com/2sic/eav-server/tree/master/ToSic.Eav.Core 
 [blog-custom-ds]: http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query
 [app-ds-code]: http://2sxc.org/en/apps/app/tutorial-use-a-custom-developed-datasource
-[vqd]: http://2sxc.org/en/Learn/Visual-Query-Designer

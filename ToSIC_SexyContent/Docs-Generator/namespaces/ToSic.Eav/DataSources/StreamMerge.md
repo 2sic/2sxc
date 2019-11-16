@@ -1,19 +1,19 @@
 # Data Source: StreamMerge
 
 ## Purpose / Description
-The **StreamMerge** [DataSource][ds] is part of the [Standard EAV Data Sources][eavds]. It will create a new stream containing everything which came into this data source.  
+The **StreamMerge** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will create a new stream containing everything which came into this data source.  
 
 ## How to use with the Visual Query
-When using the [Visual Query][vqd] you can just drag it into your query. This is what it usually looks like:
+When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:
 
-<img src="assets/data-sources/stream-merge-basic.png" width="100%">
+<img src="/assets/data-sources/stream-merge-basic.png" width="100%">
 
 The above example shows two filters finding items and delivering them on the same stream. 
 
 ## Example Using ItemFilterDuplicates
 A common scenario will also combine this using the [ItemFilterDuplicates](DotNet-DataSource-ItemFilterDuplicates), in case various in-streams deliver the same item:
 
-<img src="assets/data-sources/stream-merge-with-item-filter-duplicates.png" width="100%">
+<img src="/assets/data-sources/stream-merge-with-item-filter-duplicates.png" width="100%">
 
 
 ## No Settings
@@ -44,6 +44,5 @@ You should find some examples in this demo App
 1. Introduced in EAV 4.x, 2sxc 9.10
 
 [//]: # "The following lines are a list of links used in this page, referenced from above"
-[vqd]: http://2sxc.org/en/Learn/Visual-Query-Designer
+
 [eavds]: DotNet-DataSources-All
-[ds]: DotNet-DataSource

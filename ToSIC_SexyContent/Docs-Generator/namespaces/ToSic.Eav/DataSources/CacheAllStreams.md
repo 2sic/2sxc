@@ -1,14 +1,14 @@
 # Data Source: CacheAllStreams
 
 ## Purpose / Description
-The **CacheAllStreams** [DataSource][ds] is part of the [Standard EAV Data Sources][eavds]. It will cache all streams passing through it, based on the parameters which led to the current In-state.  
+The **CacheAllStreams** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will cache all streams passing through it, based on the parameters which led to the current In-state.  
 
 
 
 ## How to use with the Visual Query
-When using the [Visual Query][vqd] you can just drag it into your query. You must then edit the settings once to set various timeouts. Note that every in-stream exists with the same name as an out-stream. This is what it usually looks like:
+When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. You must then edit the settings once to set various timeouts. Note that every in-stream exists with the same name as an out-stream. This is what it usually looks like:
 
-<img src="assets/data-sources/cache-all-streams-basic.png" width="100%">
+<img src="/assets/data-sources/cache-all-streams-basic.png" width="100%">
 
 The above example shows:
 
@@ -50,6 +50,5 @@ You should find some examples in this demo App
 1. Introduced in EAV 3.x, 2sxc ?
 
 [//]: # "The following lines are a list of links used in this page, referenced from above"
-[vqd]: http://2sxc.org/en/Learn/Visual-Query-Designer
+
 [eavds]: DotNet-DataSources-All
-[ds]: DotNet-DataSource

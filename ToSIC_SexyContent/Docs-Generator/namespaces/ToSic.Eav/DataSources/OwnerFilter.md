@@ -1,14 +1,14 @@
 # Data Source: OwnerFilter
 
 ## Purpose / Description
-The **OwnerFilter** [DataSource][ds] is part of the [Standard EAV Data Sources][eavds]. It will only let items pass through, which a specific user (often the current one) has created initially. 
+The **OwnerFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will only let items pass through, which a specific user (often the current one) has created initially. 
 
 You will typically use the **OwnerFilter** in scenarios where users create their own data, and should only see/edit items which they own (usually in combination with security settings, which only allow the owner to modify their own items).
 
 ## How to use with the Visual Query
-When using the [Visual Query][vqd] you can just drag it into your query. You must then edit the settings once - and usually you will use the recommended prefilled-form. But you can also do something different. This is what it usually looks like:
+When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. You must then edit the settings once - and usually you will use the recommended prefilled-form. But you can also do something different. This is what it usually looks like:
 
-<img src="assets/data-sources/ownerfilter-configured.png" width="100%">
+<img src="/assets/data-sources/ownerfilter-configured.png" width="100%">
 
 The above example shows:
 
@@ -40,6 +40,5 @@ You should find some examples in this demo App
 1. Introduced in EAV 3.x, 2sxc ?
 
 [//]: # "The following lines are a list of links used in this page, referenced from above"
-[vqd]: http://2sxc.org/en/Learn/Visual-Query-Designer
+
 [eavds]: DotNet-DataSources-All
-[ds]: DotNet-DataSource

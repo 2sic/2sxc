@@ -44,7 +44,7 @@ _read about [ConfigMask here](dotnet-datasource-api-configmask)_
 So how does each scenario work out?
 
 1. If the programmer overwrote the `Delimiter` property, then internally the `Configuration["Delimiter"]` is now not a token any more, but instead just a character like `,`. So the token-engine won't change anything. 
-1. If the programmer didn't do anything but the [visual query][vqd] engine gave a settings-entity to the system, then the token is resolved and whatever the user entered is used. 
+1. If the programmer didn't do anything but the [visual query](xref:Temp.VisualQuery) engine gave a settings-entity to the system, then the token is resolved and whatever the user entered is used. 
 1. if the neither the programmer nor the user provided settings, then the token-engine will resolve to the fallback and use the `\t` as was defined.
 
 ## Also Read
@@ -64,4 +64,3 @@ So how does each scenario work out?
 [eav-core-code]: https://github.com/2sic/eav-server/tree/master/ToSic.Eav.Core 
 [blog-custom-ds]: http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query
 [app-ds-code]: http://2sxc.org/en/apps/app/tutorial-use-a-custom-developed-datasource
-[vqd]: http://2sxc.org/en/Learn/Visual-Query-Designer

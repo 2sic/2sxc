@@ -4,9 +4,9 @@
 2sxc provides a large set of [DataSource](DotNet-DataSource) objects which either get data from somewhere (SQL, CSV, ...) or modify data on the `In` and passing it to `Out`. This page will give you an overview and link you to further sources if you need to know more. 
 
 ## How to use
-Many data-sources are simply used in the [Visual Query][vqd], and if all you want is visual-query, then this reference will give you an overview regarding what things are possible. It will usually look like this: 
+Many data-sources are simply used in the [Visual Query](xref:Temp.VisualQuery), and if all you want is visual-query, then this reference will give you an overview regarding what things are possible. It will usually look like this: 
 
-<img src="assets/data-sources/app-out-2-in-0.png" width="100%">
+<img src="/assets/data-sources/app-out-2-in-0.png" width="100%">
 
 
 If on the other hand you want to program with these [DataSource](DotNet-DataSource) objects, then it will usually look a bit like this: 
@@ -468,4 +468,3 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 
 [//]: # "This is a comment - for those who have never seen this"
 [//]: # "The following lines are a list of links used in this page, referenced from above"
-[vqd]: http://2sxc.org/en/Learn/Visual-Query-Designer

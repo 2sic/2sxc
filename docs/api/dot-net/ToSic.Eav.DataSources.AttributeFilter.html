@@ -552,12 +552,11 @@
   </h1>
   <div class="markdown level0 summary"><p>DataSource to only pass through configured AttributeNames - other attributes/properties are removed from the entities.</p>
 </div>
-  <div class="markdown level0 conceptual"><p>DataSource to only pass through configured AttributeNames - other attributes/properties are removed from the entities.</p>
-<h2 id="purpose--description">Purpose / Description</h2>
-<p>The <strong>AttributeFilter</strong> <a href="DotNet-DataSource">DataSource</a> is part of the <a href="DotNet-DataSources-All">Standard EAV Data Sources</a>. It removes values from items so that the result is smaller, and doesn&#39;t publish confidential data. It&#39;s primarily used when providing data as JSON, so that not all values are published. </p>
+  <div class="markdown level0 conceptual"><h2 id="purpose--description">Purpose / Description</h2>
+<p>The <strong>AttributeFilter</strong> <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">DataSource</a> is part of the <a href="DotNet-DataSources-All">Standard EAV Data Sources</a>. It removes values from items so that the result is smaller, and doesn&#39;t publish confidential data. It&#39;s primarily used when providing data as JSON, so that not all values are published. </p>
 <h2 id="how-to-use-with-the-visual-query">How to use with the Visual Query</h2>
-<p>When using the <a href="http://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a> you can just drag it into your query. Now you can configure what properties you want and not. The following shows a demo which delivers both the data as-is, and also filtered to only deliver <code>Name</code> and <code>Country</code>:</p>
-<p><img src="assets/data-sources/attribute-filter-basic.png" width="100%"></p>
+<p>When using the <a class="xref" href="https://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a> you can just drag it into your query. Now you can configure what properties you want and not. The following shows a demo which delivers both the data as-is, and also filtered to only deliver <code>Name</code> and <code>Country</code>:</p>
+<p><img src="/assets/data-sources/attribute-filter-basic.png" width="100%"></p>
 <p>This is what you get on the default-case (unfiltered):</p>
 <pre><code class="lang-json">&quot;Default&quot;: [
     {
@@ -591,13 +590,18 @@
 ]
 </code></pre><p>As you can see, the secret <code>Notes</code> and the <code>Categories</code> are not in the <em>Cleaned</em> stream any more. 
 There are three common use cases: </p>
-<h2 id="programming-with-the-attributefilter-datasource">Programming With The AttributeFilter DataSource</h2>
-<p><em>Note: We recommend to use the Visual Query where possible, as it&#39;s easier to understand and is consistant for C# and JavaScript. It&#39;s also better because it separates data-retrieval from visualization.</em></p>
-<p>Since this data source is primarily used to slim down results in queries, the code-examples are not provided / maintained. It works, but you&#39;ll probably never need it so we don&#39;t document it. </p>
-<p>FQN: <code>ToSic.Eav.DataSources.AttributeFilter</code></p>
+<h2 id="its-simpler-with-the-visual-query-designer">It&#39;s Simpler with the Visual Query Designer</h2>
+<blockquote><p>We recommend to use the Visual Query where possible, 
+as it&#39;s easier to understand and is identical for C# and JavaScript. 
+It&#39;s also better because it separates data-retrieval from visualization.</p>
+</blockquote>
+<h2 id="its-simpler-with-the-visual-query-designer">It&#39;s Simpler with the Visual Query Designer</h2>
+<blockquote><p>We recommend to use the Visual Query where possible, 
+as it&#39;s easier to understand and is identical for C# and JavaScript. 
+It&#39;s also better because it separates data-retrieval from visualization.</p>
+</blockquote>
 <h2 id="read-also">Read also</h2>
 <ul>
-<li><a href="//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/AttributeFilter.cs">Source code of the AttributeFilter</a></li>
 <li><a href="DotNet-DataSources-All">List of all EAV Data Sources</a></li>
 </ul>
 <h2 id="demo-app-and-further-links">Demo App and further links</h2>
@@ -609,6 +613,8 @@ There are three common use cases: </p>
 <ol>
 <li>Introduced in EAV 3.x, 2sxc ?</li>
 </ol>
+<p>(xref:Temp.VisualQuery): <a href="http://2sxc.org/en/Learn/Visual-Query-Designer">http://2sxc.org/en/Learn/Visual-Query-Designer</a></p>
+<p>(xref:ToSic.Eav.DataSources.IDataSource): DotNet-DataSource</p>
 </div>
   <div class="inheritance">
     <h5>Inheritance</h5>

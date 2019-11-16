@@ -1,20 +1,20 @@
 # Data Source: SqlDataSource
 
 ## Purpose / Description
-The **SqlDataSource** [DataSource][ds] is part of the [Standard EAV Data Sources][eavds]. It lets you use data from SQL databases as if they were entities.  
+The **SqlDataSource** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It lets you use data from SQL databases as if they were entities.  
 
 ## How to use with the Visual Query
-When using the [Visual Query][vqd] you can just drag it into your query. The `Default` out will contain the items from the DB:
+When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. The `Default` out will contain the items from the DB:
 
-<img src="assets/data-sources/sqldatasource-basic.png" width="100%">
+<img src="/assets/data-sources/sqldatasource-basic.png" width="100%">
 
 We recommend that you rename it so you know what it's for: 
 
-<img src="assets/data-sources/sqldatasource-renamed.png" width="100%">
+<img src="/assets/data-sources/sqldatasource-renamed.png" width="100%">
 
 You can then configure your connection to the DB and Query as you need it:
 
-<img src="assets/data-sources/sqldatasource-config-full.png" width="100%">
+<img src="/assets/data-sources/sqldatasource-config-full.png" width="100%">
 
 
 
@@ -23,17 +23,17 @@ You can then configure your connection to the DB and Query as you need it:
 ### Title & Notes
 This is just for your notes, to remind you what this is for and to put notes about anything you wanted to remember. 
 
-<img src="assets/data-sources/sqldatasource-config-title-notes.png" width="100%">
+<img src="/assets/data-sources/sqldatasource-config-title-notes.png" width="100%">
 
 ### Connection
 There are two ways to connect to SQL databases: using a **Connection Name** (which points to a detailed connection string in the _web.config_) or using a detailed **Connection String** as you need it. We recommend to use connection names where possible. If you provide both, the connection name will be used:
 
-<img src="assets/data-sources/sqldatasource-config-connection.png" width="100%">
+<img src="/assets/data-sources/sqldatasource-config-connection.png" width="100%">
 
 ### The SQL-Query 
 The **Query** section has quite a lot of options, most of which are not required but are important for this to work: 
 
-<img src="assets/data-sources/sqldatasource-config-query.png" width="100%">
+<img src="/assets/data-sources/sqldatasource-config-query.png" width="100%">
 
 Here's what you need to know
 * Content Type
@@ -57,12 +57,12 @@ This will automatically use the `id` parameter from the URL to filter the result
 ## Using Another Entity As SQL Parameter
 You can of course use the `In` stream to provide entities which configure the SQL. The following example has a content-type `SqlSetting` with only one item (to make the example easier to understand). The [App DataSource](DotNet-DataSource-App) delivers this in the `AppSetting` stream, which also goes into the Sql as `AppSetting` and is then used as a token in the SQL:
 
-<img src="assets/data-sources/sqldatasource-using-entity-as-config.png" width="100%">
+<img src="/assets/data-sources/sqldatasource-using-entity-as-config.png" width="100%">
 
 ## Using A Value from a Module-Instance as SQL Parameter
 This works like in the App-example: Provide the data from the [ModuleDataSource](DotNet-DataSource-ModuleDataSource) as an `In` stream to the SqlDataSource, and use that to filter:
 
-<img src="assets/data-sources/sqldatasource-using-instance-as-config.png" width="100%">
+<img src="/assets/data-sources/sqldatasource-using-instance-as-config.png" width="100%">
 
 ## Programming With The SqlDataSource DataSource
 _Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
@@ -104,6 +104,5 @@ You should find some examples in this demo App
 1. Introduced in EAV 3.x, in 2sxc ?
 
 [//]: # "The following lines are a list of links used in this page, referenced from above"
-[vqd]: http://2sxc.org/en/Learn/Visual-Query-Designer
+
 [eavds]: DotNet-DataSources-All
-[ds]: DotNet-DataSource

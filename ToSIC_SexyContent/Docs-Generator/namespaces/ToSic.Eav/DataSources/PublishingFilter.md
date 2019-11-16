@@ -1,12 +1,12 @@
 # Data Source: PublishingFilter
 
 ## Purpose / Description
-The **PublishingFilter** [DataSource][ds] is part of the [Standard EAV Data Sources][eavds]. It will hide unpublished items for non-editors and provide these drafts if an editor is viewing the results.  
+The **PublishingFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will hide unpublished items for non-editors and provide these drafts if an editor is viewing the results.  
 
 ## How to use with the Visual Query
-When using the [Visual Query][vqd] you can just drag it into your query. Here's a picture showing app data with or without publishing filter:  
+When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. Here's a picture showing app data with or without publishing filter:  
 
-<img src="assets/data-sources/app-compare-no-in-with-publishing-filter.png" width="100%">
+<img src="/assets/data-sources/app-compare-no-in-with-publishing-filter.png" width="100%">
 
 ## Configuring the PublishingFilter DataSource
 The PublishingFilter has no configuration. 
@@ -38,6 +38,5 @@ You should find some examples in this demo App
 1. Introduced in EAV 3.x, in 2sxc ?
 
 [//]: # "The following lines are a list of links used in this page, referenced from above"
-[vqd]: http://2sxc.org/en/Learn/Visual-Query-Designer
+
 [eavds]: DotNet-DataSources-All
-[ds]: DotNet-DataSource

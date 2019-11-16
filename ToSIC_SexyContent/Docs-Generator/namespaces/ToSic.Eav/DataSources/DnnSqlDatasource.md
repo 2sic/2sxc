@@ -1,11 +1,11 @@
 # Data Source: DnnSqlDataSource
 
 ## Purpose / Description
-The **DnnSqlDataSource** [DataSource][ds] is part of the [Standard DNN Data Sources][eavds]. It lets you use data from the DNN SQL databases as if they were entities. 
+The **DnnSqlDataSource** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard DNN Data Sources][eavds]. It lets you use data from the DNN SQL databases as if they were entities. 
 
 This is what it looks like:
 
-<img src="assets/data-sources/dnnsqldatasource-basic.png" width="100%">
+<img src="/assets/data-sources/dnnsqldatasource-basic.png" width="100%">
 
 ## How to use 
 Internally the DnnSqlDataSource is exactly the same as the [SqlDataSource](DotNet-DataSource-SqlDataSource) just with fewer options, because you cannot choose most of the settings. Please consult the [SqlDataSource documentation](DotNet-DataSource-SqlDataSource) to see how you can use it. 
@@ -30,6 +30,5 @@ You should find some examples in this demo App
 1. Introduced in EAV 3.x, in 2sxc ?
 
 [//]: # "The following lines are a list of links used in this page, referenced from above"
-[vqd]: http://2sxc.org/en/Learn/Visual-Query-Designer
+
 [eavds]: DotNet-DataSources-All
-[ds]: DotNet-DataSource

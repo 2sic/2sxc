@@ -1,12 +1,12 @@
 # Data Source: Module-Instance DataSource
 
 ## Purpose / Description
-The **Module-Instance DataSource** [DataSource][ds] is part of the [Standard 2sxc/DNN Data Sources][eavds]. It is the default data source as it directly delivers module-instance data and is used for all scenarios which don't explicitly have a query, and it can also be used as part of a query.  
+The **Module-Instance DataSource** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard 2sxc/DNN Data Sources][eavds]. It is the default data source as it directly delivers module-instance data and is used for all scenarios which don't explicitly have a query, and it can also be used as part of a query.  
 
 ## How to use with the Visual Query
-When using the [Visual Query][vqd] it is already in the default / initial query: 
+When using the [Visual Query](xref:Temp.VisualQuery) it is already in the default / initial query: 
 
-<img src="assets/data-sources/module-basic.png" width="100%">
+<img src="/assets/data-sources/module-basic.png" width="100%">
 
 The above example shows:
 
@@ -18,7 +18,7 @@ The above example shows:
 ## Using Module/Instance Data For Configuration
 Things get really exciting when you use values which the user edited in the module as a setting in your query. Here's an example: 
 
-<img src="assets/data-sources/module-providing-settings-to-sort.png" width="100%">
+<img src="/assets/data-sources/module-providing-settings-to-sort.png" width="100%">
 
 As you can see, the _Default_ out of the **ModuleDataSource** is passed into the [ValueSort](DotNet-DataSource-ValueSort) data source with the stream-name _Settings_ and is then used in a token to configure behaviour of the sort. 
 
@@ -26,7 +26,7 @@ As you can see, the _Default_ out of the **ModuleDataSource** is passed into the
 ## Manually Assigning a Module Instance ID (2sxc 9.9)
 In 2sxc 9.9 we added the configuration dialog, so you can specify what module the data should come from. This allows you to have configuration-modules or primary-data-modules, which are re-used in queries:
 
-<img src="assets/data-sources/module-instance-configured.png" width="100%">
+<img src="/assets/data-sources/module-instance-configured.png" width="100%">
 
 
 
@@ -53,6 +53,5 @@ You should find some examples in this demo App
 1. Added ability to configure in in the visual-query (2sxc 9.9)
 
 [//]: # "The following lines are a list of links used in this page, referenced from above"
-[vqd]: http://2sxc.org/en/Learn/Visual-Query-Designer
+
 [eavds]: DotNet-DataSources-All
-[ds]: DotNet-DataSource
