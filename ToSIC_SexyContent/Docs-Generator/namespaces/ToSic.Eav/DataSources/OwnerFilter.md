@@ -1,7 +1,7 @@
 # Data Source: OwnerFilter
 
 ## Purpose / Description
-The **OwnerFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will only let items pass through, which a specific user (often the current one) has created initially. 
+The **OwnerFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will only let items pass through, which a specific user (often the current one) has created initially. 
 
 You will typically use the **OwnerFilter** in scenarios where users create their own data, and should only see/edit items which they own (usually in combination with security settings, which only allow the owner to modify their own items).
 
@@ -27,7 +27,7 @@ FQN: `ToSic.Eav.DataSources.OwnerFilter`
 ## Read also
 
 * [Source code of the OwnerFilter](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/OwnerFilter.cs)
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -39,6 +39,6 @@ You should find some examples in this demo App
 
 1. Introduced in EAV 3.x, 2sxc ?
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+
+

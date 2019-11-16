@@ -1,3 +1,6 @@
+---
+uid: Specs.DataSources.Configuration
+---
 
 # DataSource Concept: Configuration Injection using Tokens
 
@@ -60,7 +63,7 @@ So how does each scenario work out?
 1. General Tokens introduced in 2sxc 1.0
 1. Most enhancements were in 2sxc 07.00
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
+
 [eav-core-code]: https://github.com/2sic/eav-server/tree/master/ToSic.Eav.Core 
 [blog-custom-ds]: http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query
 [app-ds-code]: http://2sxc.org/en/apps/app/tutorial-use-a-custom-developed-datasource

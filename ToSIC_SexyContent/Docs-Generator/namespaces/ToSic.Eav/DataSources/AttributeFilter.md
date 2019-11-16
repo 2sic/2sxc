@@ -3,7 +3,7 @@ uid: ToSic.Eav.DataSources.AttributeFilter
 ---
 
 ## Purpose / Description
-The **AttributeFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It removes values from items so that the result is smaller, and doesn't publish confidential data. It's primarily used when providing data as JSON, so that not all values are published. 
+The **AttributeFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It removes values from items so that the result is smaller, and doesn't publish confidential data. It's primarily used when providing data as JSON, so that not all values are published. 
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. Now you can configure what properties you want and not. The following shows a demo which delivers both the data as-is, and also filtered to only deliver `Name` and `Country`:
@@ -57,7 +57,7 @@ There are three common use cases:
 
 ## Read also
 
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -65,10 +65,9 @@ You should find some examples in this demo App
 
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
-1. Introduced in EAV 3.x, 2sxc ?
+1. Introduced in EAV 3.x, 2sxc ca. v6
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+## API Documentation
+

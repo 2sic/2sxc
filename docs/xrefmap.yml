@@ -25,6 +25,21 @@ references:
 - uid: Articles.Roadmap.Roadmap
   name: Roadmap of EAV and 2sxc - Vision of the Future
   href: articles/roadmap/roadmap.html
+- uid: Specs.DataSources.Configuration
+  name: 'DataSource Concept: Configuration Injection using Tokens'
+  href: specs/datasources/configuration.html
+- uid: Specs.DataSources.Custom
+  name: 'EAV DataSources: Creating Custom DataSources (2sxc 9.13)'
+  href: specs/datasources/create-custom.html
+- uid: Specs.DataSources.DataSource
+  name: DataSource Basics (IDataSource in .net code)
+  href: specs/datasources/datasource.html
+- uid: Specs.DataSources.DataStream
+  name: DataStraem Basics (IDataStream in .net code)
+  href: specs/datasources/datastream.html
+- uid: Specs.DataSources.ListAll
+  name: All DataSource Objects in 2sxc / EAV (dotnet)
+  href: specs/datasources/list-all.html
 - uid: Specs.Home
   name: Specifications of EAV and 2sxc
   href: specs/intro.html

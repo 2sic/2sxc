@@ -1,3 +1,7 @@
+---
+uid: Specs.DataSources.Custom
+---
+
 # EAV DataSources: Creating Custom DataSources (2sxc 9.13)
 
 ## Purpose / Description
@@ -102,7 +106,7 @@ You should find some code examples in this visual studio project
 1. API strongly enhanced and simplifield in 2sxc 09.13 
 
 [//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
+
 [CustomizeData]:Razor-SexyContentWebPage.CustomizeData
 [InstancePurpose]:Razor-SexyContentWebPage.InstancePurpose
 [CustomizeSearch]:Razor-SexyContentWebPage.CustomizeSearch

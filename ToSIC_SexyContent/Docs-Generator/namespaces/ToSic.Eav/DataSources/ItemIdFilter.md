@@ -1,7 +1,7 @@
 # Data Source: ItemIdFilter / EntityIdFilter
 
 ## Purpose / Description
-The **ItemIdFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will only return the items with the id specified. 
+The **ItemIdFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will only return the items with the id specified. 
 
 _Warning: You should always use it in combination with a [Content-Type filter](DotNet-DataSource-ContentTypeFilter), as you want to be sure nobody can just crawl any entity you have in your system!_
 
@@ -29,7 +29,7 @@ FQN: `ToSic.Eav.DataSources.EntitydFilter`
 ## Read also
 
 * [Source code of the ItemIdFilter](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/EntityIdFilter.cs)
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -41,6 +41,6 @@ You should find some examples in this demo App
 
 1. Introduced in EAV 4.x, 2sxc ?
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+
+

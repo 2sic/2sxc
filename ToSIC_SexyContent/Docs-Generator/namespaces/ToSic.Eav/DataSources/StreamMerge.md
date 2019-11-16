@@ -1,7 +1,7 @@
 # Data Source: StreamMerge
 
 ## Purpose / Description
-The **StreamMerge** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will create a new stream containing everything which came into this data source.  
+The **StreamMerge** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will create a new stream containing everything which came into this data source.  
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:
@@ -31,7 +31,7 @@ FQN: `ToSic.Eav.DataSources.StreamMerge`
 ## Read also
 
 * [Source code of the StreamMerge](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/StreamMerge.cs)
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -43,6 +43,6 @@ You should find some examples in this demo App
 
 1. Introduced in EAV 4.x, 2sxc 9.10
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+
+

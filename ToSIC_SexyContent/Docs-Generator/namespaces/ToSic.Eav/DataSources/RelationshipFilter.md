@@ -1,7 +1,7 @@
 # Data Source: RelationshipFilter
 
 ## Purpose / Description
-The **RelationshipFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will return only the items which have a relationship to another item - like books having an author, or blog-posts with the tag _grunt_. 
+The **RelationshipFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will return only the items which have a relationship to another item - like books having an author, or blog-posts with the tag _grunt_. 
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:
@@ -75,7 +75,7 @@ FQN: `ToSic.Eav.DataSources.RelationshipFilter`
 ## Read also
 
 * [Source code of the RelationshipFilter](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/RelationshipFilter.cs)
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -90,6 +90,6 @@ You should find some examples in this demo App
 1. Added separator to enable multi-filter in 2sxc 9.9
 1. Added various operators like `count`, `first`, `containsany`, `any`, `not-*` in 2sxc 9.9
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+
+

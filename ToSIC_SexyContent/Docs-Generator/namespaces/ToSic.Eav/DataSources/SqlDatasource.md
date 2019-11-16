@@ -1,7 +1,7 @@
 # Data Source: SqlDataSource
 
 ## Purpose / Description
-The **SqlDataSource** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It lets you use data from SQL databases as if they were entities.  
+The **SqlDataSource** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It lets you use data from SQL databases as if they were entities.  
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. The `Default` out will contain the items from the DB:
@@ -91,7 +91,7 @@ Note that data sources only retrieve data once, and then ignore any further conf
 ## Read also
 
 * [Source code of the SqlDataSource](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/SqlDataSource.cs)
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -103,6 +103,6 @@ You should find some examples in this demo App
 
 1. Introduced in EAV 3.x, in 2sxc ?
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+
+

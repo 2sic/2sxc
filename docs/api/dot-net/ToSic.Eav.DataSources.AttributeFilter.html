@@ -52,10 +52,10 @@
                           <a href="../../articles/intro.html" title="Articles">Articles</a>
                       </li>
                       <li>
-                          <a>Specs</a>
+                          <a href="../../specs/" title="Specs">Specs</a>
                       </li>
                       <li>
-                          <a href="../../api/dot-net/index.html" title=".net API Documentation">.net API Documentation</a>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
                       </li>
                 </ul>    </div>
           </div>
@@ -556,7 +556,7 @@
   <div class="markdown level0 summary"><p>DataSource to only pass through configured AttributeNames - other attributes/properties are removed from the entities.</p>
 </div>
   <div class="markdown level0 conceptual"><h2 id="purpose--description">Purpose / Description</h2>
-<p>The <strong>AttributeFilter</strong> <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">DataSource</a> is part of the <a href="DotNet-DataSources-All">Standard EAV Data Sources</a>. It removes values from items so that the result is smaller, and doesn&#39;t publish confidential data. It&#39;s primarily used when providing data as JSON, so that not all values are published. </p>
+<p>The <strong>AttributeFilter</strong> <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">DataSource</a> is part of the <a class="xref" href="../../specs/datasources/list-all.html">Standard EAV Data Sources</a>. It removes values from items so that the result is smaller, and doesn&#39;t publish confidential data. It&#39;s primarily used when providing data as JSON, so that not all values are published. </p>
 <h2 id="how-to-use-with-the-visual-query">How to use with the Visual Query</h2>
 <p>When using the <a class="xref" href="https://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a> you can just drag it into your query. Now you can configure what properties you want and not. The following shows a demo which delivers both the data as-is, and also filtered to only deliver <code>Name</code> and <code>Country</code>:</p>
 <p><img src="/assets/data-sources/attribute-filter-basic.png" width="100%"></p>
@@ -600,7 +600,7 @@ It&#39;s also better because it separates data-retrieval from visualization.</p>
 </blockquote>
 <h2 id="read-also">Read also</h2>
 <ul>
-<li><a href="DotNet-DataSources-All">List of all EAV Data Sources</a></li>
+<li><a class="xref" href="../../specs/datasources/list-all.html">List of all EAV Data Sources</a></li>
 </ul>
 <h2 id="demo-app-and-further-links">Demo App and further links</h2>
 <p>You should find some examples in this demo App</p>
@@ -609,8 +609,9 @@ It&#39;s also better because it separates data-retrieval from visualization.</p>
 </ul>
 <h2 id="history">History</h2>
 <ol>
-<li>Introduced in EAV 3.x, 2sxc ?</li>
+<li>Introduced in EAV 3.x, 2sxc ca. v6</li>
 </ol>
+<h2 id="api-documentation">API Documentation</h2>
 </div>
   <div class="inheritance">
     <h5>Inheritance</h5>

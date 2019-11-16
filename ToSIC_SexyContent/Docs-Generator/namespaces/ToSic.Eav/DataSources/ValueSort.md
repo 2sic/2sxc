@@ -1,7 +1,7 @@
 # Data Source: ValueSort
 
 ## Purpose / Description
-The **ValueSort** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will reorder items passing through A-Z or Z-A based on a value of each item. 
+The **ValueSort** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will reorder items passing through A-Z or Z-A based on a value of each item. 
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:
@@ -44,7 +44,7 @@ FQN: `ToSic.Eav.DataSources.ValueSort`
 ## Read also
 
 * [Source code of the ValueSort](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/ValueSort.cs)
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -56,6 +56,6 @@ You should find some examples in this demo App
 
 1. Introduced in EAV 3.x, 2sxc ?
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+
+

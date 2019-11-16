@@ -1,0 +1,622 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>All DataSource Objects in 2sxc / EAV (dotnet) | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="All DataSource Objects in 2sxc / EAV (dotnet) | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../../specs/" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../intro.html" title="Introduction" class="">Introduction</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">EAV Internals</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../architecture/architecture.html" title="Architecture" class="">Architecture</a>
+                          </li>
+                          <li class="">
+                            <a href="../architecture/eav-core-data.html" title="EAV Data Models" class="">EAV Data Models</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">EAV DataSources</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../datasources/datasource.html" title="DataSource Basics" class="">DataSource Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/datastream.html" title="DataStream Basics" class="">DataStream Basics</a>
+                          </li>
+                          <li class="active">
+                            <a href="../datasources/list-all.html" title="All DataSources" class="active">All DataSources</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Specs.DataSources.ListAll">
+<h1 id="all-datasource-objects-in-2sxc--eav-dotnet">All DataSource Objects in 2sxc / EAV (dotnet)</h1>
+
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>2sxc provides a large set of <a href="DotNet-DataSource">DataSource</a> objects which either get data from somewhere (SQL, CSV, ...) or modify data on the <code>In</code> and passing it to <code>Out</code>. This page will give you an overview and link you to further sources if you need to know more. </p>
+<h2 id="how-to-use">How to use</h2>
+<p>Many data-sources are simply used in the <a class="xref" href="https://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a>, and if all you want is visual-query, then this reference will give you an overview regarding what things are possible. It will usually look like this: </p>
+<p><img src="/assets/data-sources/app-out-2-in-0.png" width="100%"></p>
+<p>If on the other hand you want to program with these <a href="DotNet-DataSource">DataSource</a> objects, then it will usually look a bit like this: </p>
+<p>An example code </p>
+<pre><code class="lang-c#">// A source which can filter by Content-Type (EntityType)
+var allAuthors = CreateSource&lt;EntityTypeFilter&gt;();
+allAuthors.TypeName = &quot;Author&quot;;
+
+// Sort by FullName
+var sortedAuthors = CreateSource&lt;ValueSort&gt;(allAuthors);
+sortedAuthors.Attributes = &quot;FullName&quot;;
+</code></pre><p>The previous example creates an initial source <code>allAuthors</code> which has all data on the in, then filters to only provide those of type <em>Author</em> to the out. This is then piped to the <code>sortedAuthors</code>, which sorts on the <em>Attributes</em> field. </p>
+<h2 id="understanding-data-flow-and-configuration">Understanding Data-Flow and Configuration</h2>
+<p>This is explained in the <a href="DotNet-DataSource">DataSource documentation</a>. </p>
+<h2 id="all-public-datasources">All Public DataSources</h2>
+<p>These are all the data sources which are either provided in the default installation of 2sxc, or which are available for you to install (manually). </p>
+<table>
+  <tr>
+    <td><strong>Data Source</strong></td>
+    <td><strong>Purpose</strong></td>
+    <td><strong>Description &amp; Details</strong></td>
+  </tr>
+  <tr>
+    <td><a href="DotNet-DataSource-App">App</a></td>
+    <td>Organize</td>
+    <td>
+      <details>
+        <summary>
+          Provides each content-type on the out-stream (...)
+        </summary>
+        Provides each content-type on the out-stream, so that you can use <code>ds[&quot;any-type-name&quot;]</code> as if there was a table for each type.
+      </details>
+  </td></tr>
+  <tr>
+    <td><a href="DotNet-DataSource-AttributeFilter">AttributeFilter</a></td>
+    <td>Modify</td>
+    <td>
+      <details>
+        <summary>
+          Removes properties on the entities (...)
+        </summary>
+          Removes properties on the entities, typically         before you stream it to JSON, so that only the fields you want are
+        transmitted.
+      </details>
+  </td></tr>
+  <tr>
+    <td>BaseCache</td>
+    <td width="84">(internal)</td>
+    <td>
+      <details>
+        <summary>
+          Base class (...)
+        </summary>
+          The
+      base class for all system caches (QuickCache, FarmCache, etc.) <br>
+      <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/Caches/BaseCache.cs">BaseCache code</a>
+      </details>
+  </td></tr>
+  <tr>
+    <td>BaseDataSource</td>
+    <td>(internal)</td>
+    <td>
+      <details>
+        <summary>
+          Base class (...)
+        </summary>
+          This is just a base class. <br>
+          <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/BaseDataSource.cs">BaseDataSource code</a>
+      </details>
+  </td></tr>
+  <tr>
+    <td><a href="DotNet-DataSource-CacheAllStreams">CacheAllStreams</a></td>
+    <td>Caching</td>
+    <td>
+      <details>
+        <summary>
+          Cache all streams passing through (...)
+        </summary>
+        Every stream on this &quot;In&quot; are also available on the &quot;Out&quot; but cached a certain amount of time or till the upstream source is invalidated.
+      </details>
+  </td></tr>
+  <tr>
+    <td><a href="DotNet-DataSource-ContentTypeFilter">ContentTypeFilter</a> EntityTypeFilter </td>
+    <td>Filter</td>
+    <td>
+      <details>
+        <summary>
+          Only items of a specific content-type (...)
+        </summary>
+        Returns
+      only items which are of a certain content-type.<br>
+      Note: was previously called EntityTypeFilter.
+      </details>
+  </td></tr>
+  <tr>
+    <td>CsvDataSource</td>
+    <td>Get Data</td>
+    <td>
+      <details>
+        <summary>
+          Get data from a CSV-file (...)
+        </summary>
+          Lets you read a CSV file and provide the data as
+      Entities for further use.<br>
+      not well documented yet, see <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/CsvDataSource.cs">code here</a><br>
+      <code>ToSic.Eav.DataSources.CsvDataSource</code>
+      </details>  </td></tr>
+  <tr>
+    <td>DataTable DataSource</td>
+    <td>Get Data</td>
+    <td>
+      <details>
+        <summary>
+          Base class for coding only (...)
+        </summary>
+          Lets
+      you convert a .net DataTable object into a DataSource. This is great for when
+      you find it easier to generate a DataTable, and this will auto-provide it as
+      a stream.<br>
+      <code>ToSic.Eav.DataSources.DataTableDataSource</code> <br>
+      <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/DataTableDataSource.cs">DataTable DataSource code</a>
+      </details>
+  </td></tr>
+  <tr>
+    <td>Deferred Pipeline Query</td>
+    <td>(internal)</td>
+    <td>
+      <details>
+        <summary>
+          Internal object to optimize performance (...)
+        </summary>
+          This is used internally, because it will
+      auto-generate an entire query-pipeline from configuration and query it, but
+      only if accessed.<br>
+      <code>ToSic.Eav.DataSources.DeferredPipelineQuery</code> <br>
+      <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/DeferredPipelineQuery.cs">Deferred Pipeline Query code</a>
+      </details>
+  </td></tr>
+  <tr>
+    <td>Dnn FormAndList</td>
+    <td>Get Data</td>
+    <td>
+      <details>
+        <summary>
+          Use old FnL data in 2sxc (...)
+        </summary>
+          Will
+      let you access Form-And-List aka UDT (Universal Data Table) data.<br>
+      <code>ToSic.SexyContent.Environment.Dnn7.<br>
+      DataSources.DnnFormAndList</code> <br>
+      <a href="/2sic/2sxc/blob/master/Environment/Dnn7/DataSources/DnnFormAndList.cs">Dnn FormAndList code</a>
+      </details> 
+  </td></tr>
+  <tr>
+    <td><a href="DotNet-DataSource-DnnSqlDataSource">DnnSql DataSource</a>
+    </td>
+    <td>Get Data</td>
+    <td>
+      <details>
+        <summary>
+          DNN Sql DataSource (...)
+        </summary>
+          SqlDataSource which only uses the DNN DB and nothing else, based on the SqlDataSource
+      </details>
+  </td></tr>
+  <tr>
+    <td>DnnUserProfile DataSource</td>
+    <td>Get Data</td>
+    <td>
+      <details>
+        <summary>
+          Get DNN Users and profiles (...)
+        </summary>
+          Get DNN users and profiles to create user directories, details-pages etc.<br>
+      <code>ToSic.SexyContent.Environment.Dnn7.<br>
+      not well documented, check out the source <a href="/2sic/2sxc/blob/master/Environment/Dnn7/DataSources/DnnUserProfileDataSource.cs">code here</a><br>
+      DataSources.DnnUserProfileDataSource</code>
+      </details>
+  </td></tr>
+  <tr>
+    <td>ExternalData DataSource</td>
+    <td>(internal)</td>
+    <td>
+      <details>
+        <summary>
+          Base Class for external data DataSources (...)
+        </summary>
+          This is a base-class for all kinds of external data
+      sources (like Csv…) because it provides more information related to enabling
+      cachning etc.<br>
+      <code>ToSic.Eav.DataSources.ExternalDataDataSource</code> <br>
+      <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/ExternalDataDataSource.cs">ExternalData DataSource code</a>
+      </details>
+  </td></tr>
+  <tr>
+    <td><a href="DotNet-DataSource-ItemIdFilter">ItemIdFilter</a> EntityIdFilter</td>
+    <td>Filter</td>
+    <td>
+      <details>
+        <summary>
+          One or more items with an Id (...)
+        </summary>
+          Return only 0, 1 or more items which fit the IDs in
+      the string provided.<br>
+      Previously named EntityIdFilter
+      </details>
+  </td></tr>
+
+
+  <tr>
+    <td><a href="DotNet-DataSource-ItemFilterDuplicates">ItemFilterDuplicates</a></td>
+    <td>Logic</td>
+    <td>
+      <details>
+        <summary>
+          Find and remove OR retrieve duplicate items (...)
+        </summary>
+        Use this to remove duplicates or just find them (or both) 
+      </details>
+  </td></tr>
+
+  <tr>
+    <td><a href="DotNet-DataSource-ModuleDataSource">Module-Instance DataSource</a>
+    </td>
+    <td>Get Data</td>
+    <td>
+      <details>
+        <summary>
+          Get current modules data (...)
+        </summary>
+          Will get the content-items assigned to a DNN-Module. This is used internally on each view, but can also be used when using module-data to configure a query.
+      </details>
+  </td></tr>
+  <tr>
+    <td><a href="DotNet-DataSource-OwnerFilter">OwnerFilter</a></td>
+    <td>Filter</td>
+    <td>
+      <details>
+        <summary>
+          Only items which are &quot;owned&quot; by a user (...)
+        </summary>
+          Returns only items which are &quot;owned&quot; =
+      created by a specific person. Great for tools where the users have their own
+      data / registrations which they can still modify.
+      </details>
+  </td></tr>
+  <tr>
+    <td><a href="DotNet-DataSource-Paging">Paging</a></td>
+    <td>Logic</td>
+    <td>
+      <details>
+        <summary>
+          Page through items (...)
+        </summary>
+          Returns only a specific amount of items after skiping another amount; also provides a stream telling you how many items / pages are in the stream, to let you      assemble a pager UI element
+      </details>
+  </td></tr>
+  <tr>
+    <td>PassThrough</td>
+    <td>(internal)</td>
+    <td>
+      <details>
+        <summary>
+          Do-Nothing DataSource (...)
+        </summary>
+          This data source doesn&#39;t actually do anything - it
+      just lets the data on the in to the out. For (internal) and testing stuff.
+      <br>
+      <code>ToSic.Eav.DataSources.PassThrough</code> <br>
+      <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/PassThrough.cs">PassThrough code</a>
+      </details>
+  </td></tr>
+  <tr>
+    <td><a href="DotNet-DataSource-PublishingFilter">PublishingFilter</a></td>
+    <td>Filter</td>
+    <td>
+      <details>
+        <summary>
+          Filters items the current user shouldn&#39;t see (...)
+        </summary>
+          This is
+      part of the &quot;Unpublished-Data&quot; concept. Since each item could be
+      either published or draft, this helps you show the correct ones for the
+      current user based on his edit-rights. It&#39;s automatically in the default
+      pipeline, unless you explicitly don&#39;t want it. 
+      </details>
+  </td></tr>
+  <tr>
+    <td>QuickCache</td>
+    <td>(internal)</td>
+    <td>
+      <details>
+        <summary>
+          Internal cache class (...)
+        </summary>
+          The quick and simple cache used by default
+      internally.<br>
+      <code>ToSic.Eav.DataSources.Caches.QuickCache</code> <br>
+      <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/Caches/QuickCache.cs">QuickCache code</a>
+      </details>
+  </td></tr>
+  <tr>
+    <td><a href="DotNet-DataSource-RelationshipFilter">RelationshipFilter</a></td>
+    <td>Filter</td>
+    <td>
+      <details>
+        <summary>
+          Filter items which have a relationship (...)
+        </summary>
+          This helps you find items which are related to another item - like &quot;All Books by Author Daniel Mettler&quot;<br>
+      New in 8.12: In-Stream &quot;Fallback&quot; which is returned if the filter didn&#39;t return any hits.
+      </details>  </td></tr>
+  <tr>
+    <td><a href="DotNet-DataSource-SqlDataSource">SqlDataSource</a></td>
+    <td>Get Data</td>
+    <td>
+      <details>
+        <summary>
+          Get SQL data as entities (...)
+        </summary>
+          This lets you get data from any SQL data base. It
+      also has powerful script-injection protection, so messy parameters won&#39;t hurt
+      it.
+      </details>
+  </td></tr>
+    <tr>
+    <td><a href="DotNet-DataSource-Shuffle">Shuffle</a></td>
+    <td>Logic</td>
+    <td>
+      <details>
+        <summary>
+          Shuffle/randomize item order (...)
+        </summary>
+        This source mixes up the order of the items, typically for things like &quot;show 3 random quotes&quot;
+      </details>
+  </td></tr>
+  <tr>
+    <td><a href="DotNet-DataSource-StreamFallback">StreamFallback</a></td>
+    <td>Logic</td>
+    <td>
+      <details>
+        <summary>
+          Returns the first in-stream with results (...)
+        </summary>
+        Use this to choose from multiple in-streams which data to show. It will use all the in-streams sorted A-Z, and return the first stream which can deliver data. The remaining streams will not be queried. 
+      </details>
+  </td></tr>
+
+  <tr>
+    <td><a href="DotNet-DataSource-StreamMerge">StreamMerge</a></td>
+    <td>Logic</td>
+    <td>
+      <details>
+        <summary>
+          Merge all in-stream into 1 (...)
+        </summary>
+        Use this to merge multiple in-streams into one output stream. 
+      </details>
+  </td></tr>
+
+
+  <tr>
+    <td><a href="DotNet-DataSource-ValueFilter">ValueFilter</a></td>
+    <td>Filter</td>
+    <td>
+      <details>
+        <summary>
+          Filters by value (...)
+        </summary>
+        Returns all items where a specified property       matches the filter. Very powerfull, with filters like contains, between, etc.<br>
+      New in 8.12: In-Stream &quot;Fallback&quot; which is returned if the filter didn&#39;t return any hits. 
+      </details>  </td></tr>
+  <tr>
+    <td><a href="DotNet-DataSource-ValueSort">ValueSort</a></td>
+    <td>Sort</td>
+    <td>
+      <details>
+        <summary>
+          Sorts all items (...)
+        </summary>
+        Sorts the items in the stream asc/desc based on a property.
+      </details>
+  </td></tr>
+  <tr>
+    <td><a href="/2sic/2sxc/blob/master/SexyContent/DataSources/ViewDataSource.cs">ViewDataSource</a></td>
+    <td>(internal)</td>
+    <td>
+      <details>
+        <summary>
+          Internal class for view-handling (...)
+        </summary>
+        This is technically just the target of a
+      pipeline, which is then routed to the Razor/Token View. Basically just does a
+      full pass-through. <br>
+      <code>ToSic.SexyContent.DataSources.ViewDataSource</code>
+      </details>
+  </td></tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 id="notes-and-clarifications">Notes and Clarifications</h2>
+<p>...</p>
+<h2 id="read-also">Read also</h2>
+<ul>
+<li>...</li>
+</ul>
+<h2 id="demo-app-and-further-links">Demo App and further links</h2>
+<p>You should find some code examples in this demo App</p>
+<ul>
+<li>...</li>
+</ul>
+<p>More links: <a href="http://2sxc.org/en/Docs-Manuals/Feature/feature/2683">Description of the feature on 2sxc docs</a></p>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in 2sxc ??.??</li>
+<li></li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/specs/datasources/list-all.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

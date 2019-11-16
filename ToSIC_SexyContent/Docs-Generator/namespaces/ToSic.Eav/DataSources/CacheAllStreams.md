@@ -1,7 +1,7 @@
 # Data Source: CacheAllStreams
 
 ## Purpose / Description
-The **CacheAllStreams** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will cache all streams passing through it, based on the parameters which led to the current In-state.  
+The **CacheAllStreams** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will cache all streams passing through it, based on the parameters which led to the current In-state.  
 
 
 
@@ -37,7 +37,7 @@ FQN: `ToSic.Eav.DataSources.Caches.CacheAllStreams`
 ## Read also
 
 * [Source code of the CacheAllStreams](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/Caches/CacheAllStreams.cs)
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -49,6 +49,6 @@ You should find some examples in this demo App
 
 1. Introduced in EAV 3.x, 2sxc ?
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+
+

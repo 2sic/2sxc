@@ -1,7 +1,7 @@
 # Data Source: Paging
 
 ## Purpose / Description
-The **Paging** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will limit the items returned to a _page_ containing just a few items, and will also provide a _paging-information_ so that the UI knows what page it's on and how many pages remain.  
+The **Paging** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will limit the items returned to a _page_ containing just a few items, and will also provide a _paging-information_ so that the UI knows what page it's on and how many pages remain.  
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:
@@ -32,7 +32,7 @@ FQN: `ToSic.Eav.DataSources.Paging`
 ## Read also
 
 * [Source code of the Paging](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/Paging.cs)
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -44,6 +44,6 @@ You should find some examples in this demo App
 
 1. Introduced in EAV 4.x, 2sxc ?
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+
+

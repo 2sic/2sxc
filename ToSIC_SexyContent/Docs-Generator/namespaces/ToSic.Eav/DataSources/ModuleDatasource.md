@@ -1,7 +1,7 @@
 # Data Source: Module-Instance DataSource
 
 ## Purpose / Description
-The **Module-Instance DataSource** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard 2sxc/DNN Data Sources][eavds]. It is the default data source as it directly delivers module-instance data and is used for all scenarios which don't explicitly have a query, and it can also be used as part of a query.  
+The **Module-Instance DataSource** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard 2sxc/DNN Data Sources](xref:Specs.DataSources.ListAll). It is the default data source as it directly delivers module-instance data and is used for all scenarios which don't explicitly have a query, and it can also be used as part of a query.  
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) it is already in the default / initial query: 
@@ -39,7 +39,7 @@ FQN: `ToSic.SexyContent.DataSources.ModuleDataSource`
 
 ## Read also
 
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -52,6 +52,6 @@ You should find some examples in this demo App
 1. Introduced in EAV 4.x, 2sxc ?
 1. Added ability to configure in in the visual-query (2sxc 9.9)
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+
+

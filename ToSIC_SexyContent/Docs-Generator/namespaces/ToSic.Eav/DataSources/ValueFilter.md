@@ -1,7 +1,7 @@
 # Data Source: ValueFilter
 
 ## Purpose / Description
-The **ValueFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will filter items based on the values - and if none are found, will optionally return a fallback-list.
+The **ValueFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will filter items based on the values - and if none are found, will optionally return a fallback-list.
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:
@@ -58,7 +58,7 @@ FQN: `ToSic.Eav.DataSources.ValueFilter`
 ## Read also
 
 * [Source code of the ValueFilter](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/ValueFilter.cs)
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -71,6 +71,6 @@ You should find some examples in this demo App
 1. Introduced in EAV 3.x, 2sxc ?
 1. Enhanced in 2sxc 8.12 with fallback
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+
+

@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>DataStraem Basics (IDataStream in .net code) | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="DataStraem Basics (IDataStream in .net code) | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../../specs/" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../intro.html" title="Introduction" class="">Introduction</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">EAV Internals</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../architecture/architecture.html" title="Architecture" class="">Architecture</a>
+                          </li>
+                          <li class="">
+                            <a href="../architecture/eav-core-data.html" title="EAV Data Models" class="">EAV Data Models</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">EAV DataSources</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../datasources/datasource.html" title="DataSource Basics" class="">DataSource Basics</a>
+                          </li>
+                          <li class="active">
+                            <a href="../datasources/datastream.html" title="DataStream Basics" class="active">DataStream Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/list-all.html" title="All DataSources" class="">All DataSources</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Specs.DataSources.DataStream">
+<h1 id="datastraem-basics-idatastream-in-net-code">DataStraem Basics (IDataStream in .net code)</h1>
+
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>DataStreams are objects which behave like a table, delivering a bunch of content-items. Common examples in <a href="Razor-Templates">Razor-templates</a> are:</p>
+<ol>
+<li>the <a href="Razor-Data">Data[&quot;Default&quot;]</a> is a data-stream containing all content-items assigned to this template, ready to show</li>
+<li>the <a href="Razor-App">App.Data[&quot;Tag&quot;]</a> is a data-stream containing all tag-items in the entire app.</li>
+</ol>
+<h2 id="how-to-use">How to use</h2>
+<p>The most commen uses will loop through all items in such a stream and show them. Here&#39;s an example: </p>
+<pre><code class="lang-c#">&lt;ol&gt;
+    @foreach(var person in Data[&quot;Default&quot;])
+    {
+        &lt;li&gt;@AsDynamic(person).FullName&lt;/li&gt;
+    }
+&lt;/ol&gt;
+</code></pre><p>The <code>@foreach</code> will go through all the items. Each item is of the type <a href="DotNet-Entity">IEntity</a>. To make it easier to template, we convert it to a <a href="DotNet-DynamicEntity">Dynamic Entity</a> using <code>AsDynamic</code> and then we can just show the name with <code>.FullName</code>. </p>
+<p>In most cases we will need the loop-item a lot, and would preferr to not write <code>AsDynamic</code> every time. Because of this, we usually write the <code>AsDynamic</code> in the Loop, like this:</p>
+<pre><code class="lang-c#">&lt;ol&gt;
+    @foreach(var person in AsDynamic(Data[&quot;Default&quot;]))
+    {
+        &lt;li&gt;@person.FullName - born @person.Birthday and married to @person.SpouseName&lt;/li&gt;
+    }
+&lt;/ol&gt;
+</code></pre><h2 id="advanced-use-cases">Advanced Use Cases</h2>
+<p>There are some advanced use-cases where you need to know more about the <code>IDataStream</code> object, mostly when using LINQ. This is fairly rare, and if you really need to know more, it&#39;s best to consult the <a href="eav-datasource-code">EAV DataSource code</a>. </p>
+<p>Just a few more details you might care about:</p>
+<ol>
+<li>The stream has a property <code>Source</code> which points to the owning <a href="DotNet-DataSource">DataSource</a>. </li>
+<li>a stream might be attached to many targets for further processing or for templating, but the stream doesn&#39;t know about this</li>
+<li>you can always enumerate the stream itself using LINQ, like<br> <code>var blues = Data[&quot;Default&quot;].Where(x =&gt; AsDynamic(x).Category == &quot;Blue&quot;))</code> </li>
+<li>if you want more control over what you&#39;re looping through, there are two properties: <ol>
+<li>the <code>List</code> property which is a <code>IDictionary&lt;int, IEntity&gt;</code>, and also lets you access it directly with your entityId if known, like <code>Data[&quot;Default&quot;].List[1753]</code></li>
+<li>the <code>LightList</code> which is an <code>IEnumerable&lt;IEntity&gt;</code> </li>
+</ol>
+</li>
+</ol>
+<p>of course there&#39;s always quite a bit more to it, like auto-caching, but you usually don&#39;t need to understand all that.  </p>
+<h2 id="read-also">Read also</h2>
+<ul>
+<li>todo: tutorial links</li>
+<li>you should also read about <a href="DotNet-DataSource">DataSources</a></li>
+<li>todo: api links</li>
+</ul>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in 2sxc 01.00</li>
+<li>Multi-Language since 2sxc 02.00</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/specs/datasources/datastream.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

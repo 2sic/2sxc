@@ -1,7 +1,7 @@
 # Data Source: DnnSqlDataSource
 
 ## Purpose / Description
-The **DnnSqlDataSource** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard DNN Data Sources][eavds]. It lets you use data from the DNN SQL databases as if they were entities. 
+The **DnnSqlDataSource** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard DNN Data Sources](xref:Specs.DataSources.ListAll). It lets you use data from the DNN SQL databases as if they were entities. 
 
 This is what it looks like:
 
@@ -17,7 +17,7 @@ FQN: `ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource`
 ## Read also
 * [Source code of the DnnSqlDataSource](https://github.com/2sic/2sxc/blob/master/Environment/Dnn7/DataSources/DnnSqlDataSource.cs)
 * [Source code of the SqlDataSource](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/SqlDataSource.cs)
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -29,6 +29,6 @@ You should find some examples in this demo App
 
 1. Introduced in EAV 3.x, in 2sxc ?
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+
+
