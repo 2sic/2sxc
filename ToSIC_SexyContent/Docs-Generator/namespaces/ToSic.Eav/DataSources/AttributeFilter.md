@@ -1,9 +1,6 @@
 ﻿---
 uid: ToSic.Eav.DataSources.AttributeFilter
-summary: *content
 ---
-
-DataSource to only pass through configured AttributeNames - other attributes/properties are removed from the entities.
 
 ## Purpose / Description
 The **AttributeFilter** [DataSource][ds] is part of the [Standard EAV Data Sources][eavds]. It removes values from items so that the result is smaller, and doesn't publish confidential data. It's primarily used when providing data as JSON, so that not all values are published. 

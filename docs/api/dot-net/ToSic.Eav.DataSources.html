@@ -661,62 +661,6 @@ For example, it has a variable amount of Out-streams, one for each content-type 
 </section>
       <h4><a class="xref" href="ToSic.Eav.DataSources.AttributeFilter.html">AttributeFilter</a></h4>
       <section><p>DataSource to only pass through configured AttributeNames - other attributes/properties are removed from the entities.</p>
-<h2 id="purpose--description">Purpose / Description</h2>
-<p>The <strong>AttributeFilter</strong> <a href="DotNet-DataSource">DataSource</a> is part of the <a href="DotNet-DataSources-All">Standard EAV Data Sources</a>. It removes values from items so that the result is smaller, and doesn&#39;t publish confidential data. It&#39;s primarily used when providing data as JSON, so that not all values are published. </p>
-<h2 id="how-to-use-with-the-visual-query">How to use with the Visual Query</h2>
-<p>When using the <a href="http://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a> you can just drag it into your query. Now you can configure what properties you want and not. The following shows a demo which delivers both the data as-is, and also filtered to only deliver <code>Name</code> and <code>Country</code>:</p>
-<p><img src="assets/data-sources/attribute-filter-basic.png" width="100%"></p>
-<p>This is what you get on the default-case (unfiltered):</p>
-<pre><code class="lang-json">&quot;Default&quot;: [
-    {
-      &quot;Name&quot;: &quot;2sic&quot;,
-      &quot;Country&quot;: &quot;Switzerland&quot;,
-      &quot;Notes&quot;: &quot;&lt;p&gt;Secret notes&lt;/p&gt;&quot;,
-      &quot;Categories&quot;: [
-        {
-          &quot;Id&quot;: 38646,
-          &quot;Title&quot;: &quot;Second&quot;
-        }
-      ],
-      &quot;Id&quot;: 38653,
-      &quot;Guid&quot;: &quot;46a46d9e-f572-413c-a42e-a82ac40d929d&quot;,
-      &quot;Title&quot;: &quot;2sic&quot;,
-      &quot;Modified&quot;: &quot;2017-11-06T22:38:00.15Z&quot;
-    },
-    ...
-]
-</code></pre><p>This is what you get on the filtered stream:</p>
-<pre><code class="lang-json">&quot;Cleaned&quot;: [
-    {
-      &quot;Name&quot;: &quot;2sic&quot;,
-      &quot;Country&quot;: &quot;Switzerland&quot;,
-      &quot;Id&quot;: 38653,
-      &quot;Guid&quot;: &quot;46a46d9e-f572-413c-a42e-a82ac40d929d&quot;,
-      &quot;Title&quot;: &quot;2sic&quot;,
-      &quot;Modified&quot;: &quot;2017-11-06T22:38:00.15Z&quot;
-    },
-    ...
-]
-</code></pre><p>As you can see, the secret <code>Notes</code> and the <code>Categories</code> are not in the <em>Cleaned</em> stream any more. 
-There are three common use cases: </p>
-<h2 id="programming-with-the-attributefilter-datasource">Programming With The AttributeFilter DataSource</h2>
-<p><em>Note: We recommend to use the Visual Query where possible, as it&#39;s easier to understand and is consistant for C# and JavaScript. It&#39;s also better because it separates data-retrieval from visualization.</em></p>
-<p>Since this data source is primarily used to slim down results in queries, the code-examples are not provided / maintained. It works, but you&#39;ll probably never need it so we don&#39;t document it. </p>
-<p>FQN: <code>ToSic.Eav.DataSources.AttributeFilter</code></p>
-<h2 id="read-also">Read also</h2>
-<ul>
-<li><a href="//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/AttributeFilter.cs">Source code of the AttributeFilter</a></li>
-<li><a href="DotNet-DataSources-All">List of all EAV Data Sources</a></li>
-</ul>
-<h2 id="demo-app-and-further-links">Demo App and further links</h2>
-<p>You should find some examples in this demo App</p>
-<ul>
-<li><a href="https://github.com/2sic/app-demo-visual-query/releases/latest">Demo App with examples for most DataSources</a></li>
-</ul>
-<h2 id="history">History</h2>
-<ol>
-<li>Introduced in EAV 3.x, 2sxc ?</li>
-</ol>
 </section>
       <h4><a class="xref" href="ToSic.Eav.DataSources.BaseDataSource.html">BaseDataSource</a></h4>
       <section><p>The base class, which should always be inherited. Already implements things like Get One / Get many, Caching and a lot more.</p>

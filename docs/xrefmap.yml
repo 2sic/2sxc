@@ -7,9 +7,6 @@ references:
 - uid: Articles.Architecture
   name: EAV / 2sxc / DNN Architecture
   href: articles/architecture/architecture.html
-- uid: Articles.ChangeLog.BreakingChanges
-  name: Breaking Changes in EAV and 2sxc
-  href: articles/changes/breaking-changes.html
 - uid: Articles.DynamicEntity
   name: How to Use a Dynamic Entity
   href: articles/how-to/dynamic-entity.html
@@ -19,9 +16,15 @@ references:
 - uid: Articles.Home
   name: Structured Content for .net Platforms
   href: articles/intro.html
+- uid: Articles.Roadmap.BreakingChanges
+  name: Breaking Changes in EAV and 2sxc
+  href: articles/roadmap/breaking-changes.html
 - uid: Articles.Roadmap.History
   name: History of the EAV and 2sxc Code Base
-  href: articles/changes/history.html
+  href: articles/roadmap/history.html
+- uid: Articles.Roadmap.Roadmap
+  name: Roadmap of EAV and 2sxc - Vision of the Future
+  href: articles/roadmap/roadmap.html
 - uid: ToSic.Eav.Apps
   name: ToSic.Eav.Apps
   href: api/dot-net/ToSic.Eav.Apps.html

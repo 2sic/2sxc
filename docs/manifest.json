@@ -42,7 +42,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/architecture/architecture.html",
-          "hash": "E4Xe1Ut9CXu8KZskMRtFnw=="
+          "hash": "UgTyKF2d5+2jUrO0C40wJw=="
         }
       },
       "is_incremental": false,
@@ -54,34 +54,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/architecture/eav-core-data.html",
-          "hash": "HEEeknhDS0c4j6sHpVy7EQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/changes/breaking-changes.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/changes/breaking-changes.html",
-          "hash": "Yp2OkheXr5SfWrMBUtkYmA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
-      "type": "Conceptual",
-      "source_relative_path": "articles/changes/history.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/changes/history.html",
-          "hash": "3tqQRf3KP1Qe11r4SgaO+g=="
+          "hash": "xW5zEcSzYEy0jKVRZPyskw=="
         }
       },
       "is_incremental": false,
@@ -93,7 +66,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/how-to/dynamic-entity.html",
-          "hash": "ZoAcD2//NsMWAokAca1ufg=="
+          "hash": "6oORkV+jYTwWzju2nHTgGg=="
         }
       },
       "is_incremental": false,
@@ -108,7 +81,46 @@
       "output": {
         ".html": {
           "relative_path": "articles/intro.html",
-          "hash": "d+TChuqczRDKOq4mgD7kNQ=="
+          "hash": "fiDn7rCGenyTb4kDLF6Lig=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/roadmap/breaking-changes.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/roadmap/breaking-changes.html",
+          "hash": "kvnfj231x6O7C3J+7hD4rg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/roadmap/history.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/roadmap/history.html",
+          "hash": "WUSE66Fad8EyU6bbug/Z4g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/roadmap/roadmap.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/roadmap/roadmap.html",
+          "hash": "jkd8oNPx7gKfkIiJCm0Dkw=="
         }
       },
       "is_incremental": false,
@@ -120,7 +132,513 @@
       "output": {
         ".html": {
           "relative_path": "articles/toc.html",
-          "hash": "IQ80WULUMvp0h5y177kGlg=="
+          "hash": "FwCJvAjN1eex7lQvE6cEGg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/app-compare-no-in-with-publishing-filter.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/app-compare-no-in-with-publishing-filter.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/app-from-other-app.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/app-from-other-app.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/app-multiple-apps.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/app-multiple-apps.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/app-out-2-in-0.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/app-out-2-in-0.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/attribute-filter-basic.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/attribute-filter-basic.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/cache-all-streams-basic.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/cache-all-streams-basic.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/content-type-filter-two-examples.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/content-type-filter-two-examples.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/dnnsqldatasource-basic.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/dnnsqldatasource-basic.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/item-filter-duplicates-basic.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/item-filter-duplicates-basic.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/item-id-basic.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/item-id-basic.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/item-id-multiple.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/item-id-multiple.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/item-id-url.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/item-id-url.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/module-basic.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/module-basic.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/module-instance-configured.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/module-instance-configured.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/module-providing-settings-to-sort.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/module-providing-settings-to-sort.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/ownerfilter-configured.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/ownerfilter-configured.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/paging-basic.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/paging-basic.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/paging-page-from-url.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/paging-page-from-url.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/paging-page-size-app-settings.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/paging-page-size-app-settings.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/relationship-filter-basic.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/relationship-filter-basic.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/relationship-filter-count.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/relationship-filter-count.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/relationship-filter-fallback.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/relationship-filter-fallback.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/relationship-filter-other-field.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/relationship-filter-other-field.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/relationship-filter-separator.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/relationship-filter-separator.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/relationship-filter-url.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/relationship-filter-url.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/shuffle-3.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/shuffle-3.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/sqldatasource-basic.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/sqldatasource-basic.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/sqldatasource-config-connection.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/sqldatasource-config-connection.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/sqldatasource-config-full.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/sqldatasource-config-full.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/sqldatasource-config-query.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/sqldatasource-config-query.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/sqldatasource-config-title-notes.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/sqldatasource-config-title-notes.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/sqldatasource-renamed.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/sqldatasource-renamed.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/sqldatasource-using-entity-as-config.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/sqldatasource-using-entity-as-config.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/sqldatasource-using-instance-as-config.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/sqldatasource-using-instance-as-config.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/stream-fallback-4-stream-example.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/stream-fallback-4-stream-example.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/stream-merge-basic.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/stream-merge-basic.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/stream-merge-with-item-filter-duplicates.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/stream-merge-with-item-filter-duplicates.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/value-filter-basic.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/value-filter-basic.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/value-filter-chained.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/value-filter-chained.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/value-filter-fallback.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/value-filter-fallback.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/value-filter-field-value-from-url.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/value-filter-field-value-from-url.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/value-filter-field-value-operator-from-url.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/value-filter-field-value-operator-from-url.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/value-filter-value-from-url.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/value-filter-value-from-url.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/value-sort-multiple.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/value-sort-multiple.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/value-sort-parameterized.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/value-sort-parameterized.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/data-sources/value-sort-standard.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/data-sources/value-sort-standard.png"
         }
       },
       "is_incremental": false,
@@ -301,7 +819,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Eav.Apps.Assets.html",
-          "hash": "HqfHNxD7e8bIA7hqJRCyaw=="
+          "hash": "zhiQxBssM1+ymvylficb1w=="
         }
       },
       "is_incremental": false,
@@ -385,7 +903,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Eav.Apps.html",
-          "hash": "P3R3OvWKPYdYu0iyfKvHxA=="
+          "hash": "8VRv3dXfpRhLqhlRGGmHYw=="
         }
       },
       "is_incremental": false,
@@ -457,7 +975,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Eav.Caching.html",
-          "hash": "cNp66v5WxaUPQy/37GAcoA=="
+          "hash": "aEPH1amDPkOA01eBdZMKJw=="
         }
       },
       "is_incremental": false,
@@ -793,7 +1311,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Eav.Data.html",
-          "hash": "o8oQy8O6upJMbADZQURJWw=="
+          "hash": "quMbLmfeXNh4iBG3powEuw=="
         }
       },
       "is_incremental": false,
@@ -820,7 +1338,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Eav.DataSources.AttributeFilter.html",
-          "hash": "oeFLp9/+y+7iyzHqmYbc1Q=="
+          "hash": "R6A1KziGaq30JFsb7fsAKg=="
         }
       },
       "is_incremental": false,
@@ -1084,7 +1602,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Eav.DataSources.html",
-          "hash": "GbZJSayPzRsUvbbW3zVl1Q=="
+          "hash": "t/cfvvQFyPoG2Eygw8FURA=="
         }
       },
       "is_incremental": false,
@@ -1144,7 +1662,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Eav.Environment.html",
-          "hash": "VacD1GhYfyFF3rlWMQ3QxA=="
+          "hash": "W1CCXE+BEHHZNawE3jvfKw=="
         }
       },
       "is_incremental": false,
@@ -1192,7 +1710,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Eav.Logging.html",
-          "hash": "gUTwgJqnaVFXncp/Iu8f9g=="
+          "hash": "rRGZQWpfiTVfWGtKdNSrMQ=="
         }
       },
       "is_incremental": false,
@@ -1276,7 +1794,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Eav.LookUp.html",
-          "hash": "0ANkSpemLhUAyOtW7liZGw=="
+          "hash": "eun3lmaNx0F0oxnjg/yC6Q=="
         }
       },
       "is_incremental": false,
@@ -1384,7 +1902,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Eav.Metadata.html",
-          "hash": "LDG4LqUOMrAm2YbAYkygkg=="
+          "hash": "vGg6hY+AK0ONdTXnD0E3Rw=="
         }
       },
       "is_incremental": false,
@@ -1468,7 +1986,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Sxc.Adam.html",
-          "hash": "YCj4LHnLoBHEg8fVeXJZHA=="
+          "hash": "jC0gRjDO1ugVXEdBLzdxAQ=="
         }
       },
       "is_incremental": false,
@@ -1504,7 +2022,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Sxc.Apps.html",
-          "hash": "ubUqBCPZFijwn09go2gIjQ=="
+          "hash": "Wi+yPstWKcbOuMT/64bmfw=="
         }
       },
       "is_incremental": false,
@@ -1552,7 +2070,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Sxc.Blocks.html",
-          "hash": "Qv2TnboC7dq3zBz/LLh0Cg=="
+          "hash": "eln8/3ncRBz7Cu6o9NQkAA=="
         }
       },
       "is_incremental": false,
@@ -1576,7 +2094,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Sxc.Data.html",
-          "hash": "xdBa1QCPJ0Hm2s7nu2HM5A=="
+          "hash": "AK2QF110O5FEhK06Xgk55Q=="
         }
       },
       "is_incremental": false,
@@ -1648,7 +2166,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Sxc.Dnn.html",
-          "hash": "JFwTRla4fICyj3aaSqDZww=="
+          "hash": "CrA0eVEHM1coiQgEbvusEA=="
         }
       },
       "is_incremental": false,
@@ -1708,7 +2226,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Sxc.Engines.html",
-          "hash": "XHcBD3XJY0r4IwUcNLNUaw=="
+          "hash": "Q+FPfA+GjqNGNTJiOTeO+Q=="
         }
       },
       "is_incremental": false,
@@ -1732,7 +2250,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Sxc.LookUp.html",
-          "hash": "JVkjEiITf0+hzCXza3yXaQ=="
+          "hash": "T7zEMRU4IhHcdIzDCteTzw=="
         }
       },
       "is_incremental": false,
@@ -1768,7 +2286,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Sxc.Search.html",
-          "hash": "5vqtuNxrh1y0q5CglW6v8A=="
+          "hash": "UiXEpLofDBS81ZEufdi9EQ=="
         }
       },
       "is_incremental": false,
@@ -1816,7 +2334,7 @@
       "output": {
         ".html": {
           "relative_path": "api/dot-net/ToSic.Sxc.Web.html",
-          "hash": "HFi/434sNyVCCHwg1fqLQg=="
+          "hash": "2le+JM1H63eUkPbHQoWoKA=="
         }
       },
       "is_incremental": false,
@@ -1863,24 +2381,24 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 10,
+          "skipped_file_count": 7
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 171,
+          "skipped_file_count": 132
+        },
         "TocDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
           "skipped_file_count": 0
-        },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
-          "incrementalPhase": "build",
-          "total_file_count": 152,
-          "skipped_file_count": 152
-        },
-        "ConceptualDocumentProcessor": {
-          "can_incremental": true,
-          "incrementalPhase": "build",
-          "total_file_count": 9,
-          "skipped_file_count": 7
         }
       }
     },
