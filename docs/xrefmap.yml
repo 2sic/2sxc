@@ -6,16 +6,16 @@ references:
   href: api/dot-net/index.html
 - uid: Articles.Architecture
   name: EAV / 2sxc / DNN Architecture
-  href: articles/architecture.html
+  href: articles/architecture/architecture.html
 - uid: Articles.ChangeLog.BreakingChanges
   name: Breaking Changes in EAV and 2sxc
-  href: articles/breaking-changes.html
+  href: articles/changelog/breaking-changes.html
 - uid: Articles.DynamicEntity
   name: How to Use a Dynamic Entity
-  href: articles/dynamic-entity.html
+  href: articles/how-to/dynamic-entity.html
 - uid: Articles.EavCoreDataModels
   name: EAV Core Data Models
-  href: articles/eav-core-data.html
+  href: articles/architecture/eav-core-data.html
 - uid: Articles.Home
   name: Structured Content for .net Platforms
   href: articles/intro.html

@@ -1,7 +1,8 @@
 #[Introduction](intro.md)
-#[Architecture](xref:Articles.Architecture)
-#[EAV Data Models](eav-core-data.md)
+# EAV Internals
+##[Architecture](xref:Articles.Architecture)
+##[EAV Data Models](xref:Articles.EavCoreDataModels)
 # How to Use...
-##[Dynamic Entity](dynamic-entity.md)
+##[Dynamic Entity](xref:Articles.DynamicEntity)
 # History
-## [Breaking Changes](breaking-changes.md)
+##[Breaking Changes](xref:Articles.ChangeLog.BreakingChanges)
