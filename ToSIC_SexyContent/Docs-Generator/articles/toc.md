@@ -4,5 +4,7 @@
 ##[EAV Data Models](xref:Articles.EavCoreDataModels)
 # How to Use...
 ##[Dynamic Entity](xref:Articles.DynamicEntity)
-# History
-##[Breaking Changes](xref:Articles.ChangeLog.BreakingChanges)
+# Roadmap & History
+##[Roadmap](xref:Articles.Roadmap.Roadmap)
+##[History](xref:Articles.Roadmap.History)
+##[Breaking Changes](xref:Articles.Roadmap.BreakingChanges)

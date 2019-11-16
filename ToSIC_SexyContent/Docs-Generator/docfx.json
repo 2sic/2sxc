@@ -67,6 +67,7 @@
     "dest": "../../docs",
     "template": [
       "default",
+      "statictoc",
       "material/material"
     ],
     "globalMetadata": {

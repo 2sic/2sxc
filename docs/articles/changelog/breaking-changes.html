@@ -44,7 +44,15 @@
                   <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
                 </div>
               </form>
-            </div>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API Documentation">.net API Documentation</a>
+                      </li>
+                </ul>    </div>
           </div>
         </nav>
         
@@ -67,11 +75,56 @@
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
-        
         <div class="sidenav hide-when-search">
           <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
           <div class="sidetoggle collapse" id="sidetoggle">
-            <div id="sidetoc"></div>
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../intro.html" title="Introduction" class="">Introduction</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">EAV Internals</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../architecture/architecture.html" title="Architecture" class="">Architecture</a>
+                          </li>
+                          <li class="">
+                            <a href="../architecture/eav-core-data.html" title="EAV Data Models" class="">EAV Data Models</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">How to Use...</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../how-to/dynamic-entity.html" title="Dynamic Entity" class="">Dynamic Entity</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">History</a>
+                        
+                        <ul class="nav level2">
+                          <li class="active">
+                            <a href="../changelog/breaking-changes.html" title="Breaking Changes" class="active">Breaking Changes</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="article row grid-right">
