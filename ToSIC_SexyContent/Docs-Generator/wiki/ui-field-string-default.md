@@ -11,7 +11,7 @@ Use this field type for configuring simple text UI elements, storing [string/tex
 ## Configuring a String-Default
 This shows the configuration dialog:
 
-<img src="assets/fields/string/string-default-configuration.png" width="100%">
+<img src="/assets/fields/string/string-default-configuration.png" width="100%">
 
 * **Row Count** is for setting the text-box height. Empty means default = 1
 

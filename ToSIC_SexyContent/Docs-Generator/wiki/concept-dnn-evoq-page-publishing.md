@@ -79,7 +79,7 @@ This sounds simple, but it's very complex because 2sxc can be used in many scena
 ### Activating Page Publishing Feature on 2sxc
 You don't have to do anything - 2sxc asks the environment (DNN/Evoq) it it expects any publishing steps, and will automatically adjust its behavoir. 
 
-<img src="assets/concepts/evoq-settings-for-workflow.jpg" width="100%">
+<img src="/assets/concepts/evoq-settings-for-workflow.jpg" width="100%">
 
 ### Making Changes Start a DNN-Page Versioning
 This too happens automatically, if the page has a publishing setup in DNN/Evoq.

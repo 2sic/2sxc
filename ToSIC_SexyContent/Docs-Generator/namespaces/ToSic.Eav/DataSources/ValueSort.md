@@ -1,7 +1,7 @@
 # Data Source: ValueSort
 
 ## Purpose / Description
-The **ValueSort** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will reorder items passing through A-Z or Z-A based on a value of each item. 
+The **ValueSort** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will reorder items passing through A-Z or Z-A based on a value of each item. 
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:

@@ -1,7 +1,7 @@
 # Data Source: ValueFilter
 
 ## Purpose / Description
-The **ValueFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will filter items based on the values - and if none are found, will optionally return a fallback-list.
+The **ValueFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will filter items based on the values - and if none are found, will optionally return a fallback-list.
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:

@@ -10,7 +10,7 @@ Use this field type for complete sets of files (like image galleries), storing [
 
 This shows the configuration dialog:
 
-<img src="assets/fields/hyperlink/hyperlink-library.png" width="100%">
+<img src="/assets/fields/hyperlink/hyperlink-library.png" width="100%">
 
 * **Folder Depth** - if sub folders are allowed and how deply they may be nested. Use 0 for no sub folders, 1 for 1 level only, 2 for 2 levels (like /gallery/subgallery) etc. Use a large number like 100 for practically unlimited sub folders, but not recommended for realistic use cases.
 * **Allow assets In Root Folder** - specifies if files may be placed in the core / root container, or if the user is required to create sub folders. This would be the case if you expect multiple groups of files, but never a top-level list. 

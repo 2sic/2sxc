@@ -16,7 +16,7 @@ The special thing about this is that the items shown for selecting are retrieved
 ## Configuring an Entity-Query
 This shows the configuration dialog:
 
-<img src="assets/fields/entity/entity-query.png" width="100%">
+<img src="/assets/fields/entity/entity-query.png" width="100%">
 
 1. **Query** the name of the query to use
 1. Advanced

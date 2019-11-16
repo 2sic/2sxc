@@ -18,7 +18,7 @@ If a feature is not enabled and code needs to use the feature, it will either sh
 
 This is done through the Apps-Management. This is what it looks like:
 
-<img src="assets/concepts/features-manage.png" width="100%">
+<img src="/assets/concepts/features-manage.png" width="100%">
 
 Read about managing features in the [blog about features-management](https://2sxc.org/en/blog/post/new-features-management-in-2sxc-9-30)
 

@@ -18,7 +18,7 @@ The special thing about this is that the items shown for selecting are retrieved
 ## Configuring a String-Dropdown-Query
 This shows the configuration dialog:
 
-<img src="assets/fields/string/string-dropdown-query.png" width="100%">
+<img src="/assets/fields/string/string-dropdown-query.png" width="100%">
 
 1. **Query** the name of the query to use
 1. Advanced

@@ -12,7 +12,7 @@ Use this field type for configuring dates and/or time values, storing [date/date
 
 This shows the configuration dialog:
 
-<img src="assets/fields/datetime/datetime-default-configuration.png" width="100%">
+<img src="/assets/fields/datetime/datetime-default-configuration.png" width="100%">
 
 * **Use Time-Picker** is for enabling a time-choice.
 

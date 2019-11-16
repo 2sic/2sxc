@@ -1,7 +1,7 @@
 # Data Source: Shuffle
 
 ## Purpose / Description
-The **Shuffle** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will randomize the order of items which came in. This is common for components which show "3 random quotes" and similar scenarios. 
+The **Shuffle** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will randomize the order of items which came in. This is common for components which show "3 random quotes" and similar scenarios. 
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:

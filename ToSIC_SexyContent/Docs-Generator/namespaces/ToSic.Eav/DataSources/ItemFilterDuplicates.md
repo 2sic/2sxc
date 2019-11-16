@@ -1,7 +1,7 @@
 # Data Source: ItemFilterDuplicates
 
 ## Purpose / Description
-The **ItemFilterDuplicates** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will provide two streams, one with all the items (but without the duplicates) and one with all the duplicates, in case you need these. 
+The **ItemFilterDuplicates** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will provide two streams, one with all the items (but without the duplicates) and one with all the duplicates, in case you need these. 
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:

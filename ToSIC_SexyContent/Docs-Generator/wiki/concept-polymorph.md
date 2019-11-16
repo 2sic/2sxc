@@ -9,12 +9,12 @@ _Note that this is not a complete solution yet. We're working on this and have p
 
 Let's compare the perfect multi-edition (polymorph) setup to the classic solution:
 
-<img src="assets/concepts/app-polymorph-classic-vs.png" width="100%">
+<img src="/assets/concepts/app-polymorph-classic-vs.png" width="100%">
 
 ## Progress
 As of now (2sxc 9.35) we have achieved the first step, allowing the WebAPI controllers to be polymorph. So this is the current state of development:
 
-<img src="assets/concepts/app-polymorph-progress.png" width="100%">
+<img src="/assets/concepts/app-polymorph-progress.png" width="100%">
 
 This means that:
 

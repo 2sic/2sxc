@@ -9,7 +9,7 @@ The basic **string** field doesn't have any features, since all the features are
 ## Configuring the All field-type
 Any field you open will contain the UI to configure the _All_ fields. This is what it looks like:
 
-<img src="assets/fields/all/all.png" width="100%">
+<img src="/assets/fields/all/all.png" width="100%">
 
 * **Name** is the is the label to be shown (multi-language)  
 _Important: the name is not the name used in code, which shouldn't change - this is the visible label_

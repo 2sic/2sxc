@@ -15,12 +15,12 @@ Use this field type to create input-fields which let the user pick an icon. It s
 ## Result
 This is what it looks like for the user:
 
-<img src="assets/fields/string/string-font-icon-picker-preview.png" width="100%">
+<img src="/assets/fields/string/string-font-icon-picker-preview.png" width="100%">
 
 ## Configuring a String-Font-Icon-Picker
 This shows the configuration dialog:
 
-<img src="assets/fields/string/string-font-icon-picker.png" width="100%">
+<img src="/assets/fields/string/string-font-icon-picker.png" width="100%">
 
 * **CSS Prefix** tells the UI to find all css-classes that start with this, and build icons with them
 * **Preview CSS Classes** this tells the GUI to add this while showing a preview for icons in the library (so the preview works for Glyphicons etc.)

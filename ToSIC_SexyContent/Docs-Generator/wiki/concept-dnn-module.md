@@ -9,12 +9,12 @@ This is the most common setup - and used in the **Content** module as well as in
 
 Here is how it's mapped:
 
-<img src="assets/concepts/how-modules-relate-to-content-groups.png" width="100%">
+<img src="/assets/concepts/how-modules-relate-to-content-groups.png" width="100%">
 
 ## Manually Managing this Data
 Note: you shoudn't usually do this - but sometimes you have to. Check out this short explanation:
 
-<img src="assets/concepts/administrating-content-group-in-an-app.jpg" width="100%">
+<img src="/assets/concepts/administrating-content-group-in-an-app.jpg" width="100%">
 
 
 

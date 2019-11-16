@@ -14,7 +14,7 @@ The basic **entity** field simply allows you to select items of a specific type,
 ## Shared Settings
 All Entity-Field Types have the following settings:
 
-<img src="assets/fields/entity/entity.png" width="100%">
+<img src="/assets/fields/entity/entity.png" width="100%">
 
 * Basic
   * **Entity Type**

@@ -1,7 +1,7 @@
 # Data Source: StreamFallback
 
 ## Purpose / Description
-The **StreamFallback** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will pass on the first stream which has results. The order of evaluation is based on the names of the streams as they enter the StreamFallback. 
+The **StreamFallback** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will pass on the first stream which has results. The order of evaluation is based on the names of the streams as they enter the StreamFallback. 
 
 ## How to use with the Visual Query
 When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:

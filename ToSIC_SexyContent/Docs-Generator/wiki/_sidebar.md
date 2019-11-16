@@ -1,4 +1,4 @@
-<img src="assets/logos/2sxc10/2sxcV10.06.png" style="width: 100%">
+<img src="/assets/logos/2sxc10/2sxcV10.06.png" style="width: 100%">
 
 [//]: # "Documentation Overview"
 <details>

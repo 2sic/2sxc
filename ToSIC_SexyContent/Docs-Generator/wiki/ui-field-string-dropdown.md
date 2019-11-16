@@ -17,16 +17,16 @@ Use this field type for configuring simple dropdown UI elements, storing [string
 This shows the configuration dialog:
 
 
-<img src="assets/fields/string/string-dropdown-configuration.png" width="100%">
+<img src="/assets/fields/string/string-dropdown-configuration.png" width="100%">
 
 ## Using the Dropdown with the optional free-text-entry (2sxc 9.10)
 This is what the UI looks like, if _Enable Free Text_ is enabled
 
-<img src="assets/fields/string/string-dropdown-with-free-text-initial.png" width="100%">
+<img src="/assets/fields/string/string-dropdown-with-free-text-initial.png" width="100%">
 
 If the user then clicks on the I-bar icon, the input will change to text so you could type something different - like a value which wasn't suggested, or a token.
 
-<img src="assets/fields/string/string-dropdown-with-free-text-typing.png" width="100%">
+<img src="/assets/fields/string/string-dropdown-with-free-text-typing.png" width="100%">
 
 
 ## History

@@ -5,10 +5,10 @@ uid: ToSic.Eav.DataSources.App
 # Data Source: App
 
 ## Purpose / Description
-The **App** [DataSource][ds] is part of the [Standard EAV Data Sources][eavds]. It provides all items of the current App or of another App if needed. 
+The **App** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It provides all items of the current App or of another App if needed. 
 
 ## How to use with the Visual Query
-When using the [Visual Query][vqd] you can just drag it into your query. Now you can create out-connections with the names of the types you need - which looks like this:
+When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. Now you can create out-connections with the names of the types you need - which looks like this:
 
 <img src="/assets/data-sources/app-out-2-in-0.png" width="100%">
 
@@ -59,7 +59,7 @@ Note that data sources only retrieve data once, and then ignore any further conf
 
 * [Razor examples using App.Data](Razor-App)
 * [Source code of the App](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/App.cs)
-* [List of all EAV Data Sources][eavds]
+* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App
@@ -69,8 +69,3 @@ You should find some examples in this demo App
 ## History
 
 1. Introduced in EAV 3.x, in ca. 2sxc 6.x
-
-[//]: # "The following lines are a list of links used in this page, referenced from above"
-[vqd]: http://2sxc.org/en/Learn/Visual-Query-Designer
-[eavds]: DotNet-DataSources-All
-[ds]: DotNet-DataSource

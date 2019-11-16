@@ -6,15 +6,15 @@
 
 Permissions are usually a list of zero or more permissions - like this:
 
-<img src="assets/concepts/permissions-list.jpg" width="100%">
+<img src="/assets/concepts/permissions-list.jpg" width="100%">
 
 When you edit a permission, it looks like this:
 
-<img src="assets/concepts/permissions-edit.jpg" width="100%">
+<img src="/assets/concepts/permissions-edit.jpg" width="100%">
 
 To access the permissions, you'll usually find a person-button in the actions of an item:
 
-<img src="assets/concepts/permissions-access.jpg" width="100%">
+<img src="/assets/concepts/permissions-access.jpg" width="100%">
 
 
 ## Permission Overview

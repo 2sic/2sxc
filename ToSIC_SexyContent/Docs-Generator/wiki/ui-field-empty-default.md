@@ -10,7 +10,7 @@ Use this field type for grouping fields together under a title, storing [empty (
 ## Configuring a Empty-Default
 This shows the configuration dialog:
 
-<img src="assets/fields/empty/empty-default-configuration.png" width="100%">
+<img src="/assets/fields/empty/empty-default-configuration.png" width="100%">
 
 * **Collapsed by default**  is for setting whether the field group is collapsed by default.
 If set to true, then the field group is collapsed by default.
