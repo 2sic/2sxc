@@ -52,12 +52,11 @@ This is what you get on the filtered stream:
 As you can see, the secret `Notes` and the `Categories` are not in the _Cleaned_ stream any more. 
 There are three common use cases: 
 
+## Programming With The Attribute Filter
+
 [!include["simpler-with-vqd"](shared-use-vqd.md)]
 
-
-## Read also
-
-* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
+[!include["Read-Also-Section"](shared-read-also.md)]
 
 ## Demo App and further links
 You should find some examples in this demo App

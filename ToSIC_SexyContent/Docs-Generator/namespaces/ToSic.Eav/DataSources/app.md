@@ -31,7 +31,8 @@ You can also deliver data from different Apps by using multiple App sources:
 <img src="/assets/data-sources/app-multiple-apps.png" width="100%">
 
 ## Programming With The App DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
+
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
 Important: to access data of the current App, please use the `App.Data` as it's a pre-build object with the same streams. For example, use `App.Data["BlogPost"]` to get all the BlogPost items. 
 
@@ -54,12 +55,8 @@ The previous example creates an App source to the zone 2, app 403 and retrieves 
 ### Important When Coding
 Note that data sources only retrieve data once, and then ignore any further configuration. So you must set Zone/App before accessing the data. 
 
-
-## Read also
-
+[!include["Read-Also-Section"](shared-read-also.md)]
 * [Razor examples using App.Data](Razor-App)
-* [Source code of the App](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/App.cs)
-* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
 
 ## Demo App and further links
 You should find some examples in this demo App

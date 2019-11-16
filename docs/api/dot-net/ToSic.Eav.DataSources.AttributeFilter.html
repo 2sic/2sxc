@@ -556,7 +556,7 @@
   <div class="markdown level0 summary"><p>DataSource to only pass through configured AttributeNames - other attributes/properties are removed from the entities.</p>
 </div>
   <div class="markdown level0 conceptual"><h2 id="purpose--description">Purpose / Description</h2>
-<p>The <strong>AttributeFilter</strong> <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">DataSource</a> is part of the <a class="xref" href="../../specs/datasources/list-all.html">Standard EAV Data Sources</a>. It removes values from items so that the result is smaller, and doesn&#39;t publish confidential data. It&#39;s primarily used when providing data as JSON, so that not all values are published. </p>
+<p>The <strong>AttributeFilter</strong> <a class="xref" href="../../specs/datasources/datasource.html">DataSource</a> is part of the <a class="xref" href="../../specs/datasources/list-all.html">Standard EAV Data Sources</a>. It removes values from items so that the result is smaller, and doesn&#39;t publish confidential data. It&#39;s primarily used when providing data as JSON, so that not all values are published. </p>
 <h2 id="how-to-use-with-the-visual-query">How to use with the Visual Query</h2>
 <p>When using the <a class="xref" href="https://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a> you can just drag it into your query. Now you can configure what properties you want and not. The following shows a demo which delivers both the data as-is, and also filtered to only deliver <code>Name</code> and <code>Country</code>:</p>
 <p><img src="/assets/data-sources/attribute-filter-basic.png" width="100%"></p>
@@ -593,7 +593,7 @@
 ]
 </code></pre><p>As you can see, the secret <code>Notes</code> and the <code>Categories</code> are not in the <em>Cleaned</em> stream any more. 
 There are three common use cases: </p>
-<h2 id="its-simpler-with-the-visual-query-designer">It&#39;s Simpler with the Visual Query Designer</h2>
+<h2 id="programming-with-the-attribute-filter">Programming With The Attribute Filter</h2>
 <blockquote><p>We recommend to use the Visual Query where possible, 
 as it&#39;s easier to understand and is identical for C# and JavaScript. 
 It&#39;s also better because it separates data-retrieval from visualization.</p>
@@ -783,7 +783,7 @@ public class AttributeFilter : BaseDataSource, IHasLog, IDataSource, IInAppAndZo
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Eav/DataSources/AttributeFilter.md/#L2" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Eav/DataSources/AttributeFilter.md/#L2" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
                     <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/AttributeFilter.cs/#L17" class="contribution-link">View Source</a>
