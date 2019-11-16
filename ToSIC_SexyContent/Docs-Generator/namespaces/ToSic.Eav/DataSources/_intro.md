@@ -1,6 +1,6 @@
 ﻿---
 uid: ToSic.Eav.DataSources
-summary: *content
+# summary: *content
 ---
 
 ## Purpose / Description

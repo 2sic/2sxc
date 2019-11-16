@@ -6,13 +6,13 @@ references:
   href: api/dot-net/index.html
 - uid: Articles.Architecture
   name: EAV / 2sxc / DNN Architecture
-  href: articles/architecture/architecture.html
+  href: specs/architecture/architecture.html
 - uid: Articles.DynamicEntity
   name: How to Use a Dynamic Entity
   href: articles/how-to/dynamic-entity.html
 - uid: Articles.EavCoreDataModels
   name: EAV Core Data Models
-  href: articles/architecture/eav-core-data.html
+  href: specs/architecture/eav-core-data.html
 - uid: Articles.Home
   name: Structured Content for .net Platforms
   href: articles/intro.html
@@ -25,6 +25,9 @@ references:
 - uid: Articles.Roadmap.Roadmap
   name: Roadmap of EAV and 2sxc - Vision of the Future
   href: articles/roadmap/roadmap.html
+- uid: Specs.Home
+  name: Specifications of EAV and 2sxc
+  href: specs/intro.html
 - uid: ToSic.Eav.Apps
   name: ToSic.Eav.Apps
   href: api/dot-net/ToSic.Eav.Apps.html

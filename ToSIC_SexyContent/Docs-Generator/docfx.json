@@ -31,6 +31,7 @@
         "files": [
           "api/**.md",
           "articles/**.md",
+          "specs/**.md",
           "toc.yml",
           "*.md"
         ],
@@ -60,7 +61,7 @@
         "files": [
           "apidoc/**.md",
           "namespaces/**.md",
-          "shared/**.md"
+          "shared/**.md",
         ],
         "exclude": [
           "obj/**",

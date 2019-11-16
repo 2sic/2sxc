@@ -1,7 +1,4 @@
 #[Introduction](intro.md)
-# EAV Internals
-##[Architecture](xref:Articles.Architecture)
-##[EAV Data Models](xref:Articles.EavCoreDataModels)
 # How to Use...
 ##[Dynamic Entity](xref:Articles.DynamicEntity)
 # Roadmap & History
