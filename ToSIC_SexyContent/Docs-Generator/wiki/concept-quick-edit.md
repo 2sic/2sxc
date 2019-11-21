@@ -55,5 +55,4 @@ You should find some code examples in this demo App
 1. quickE 1.0 in 2sxc v08.04
 2. quickE 2.0 with move/delete dnn module and configurable in 2sxc 08.07.00
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [somethingnotused]:innerlink

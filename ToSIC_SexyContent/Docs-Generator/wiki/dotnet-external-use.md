@@ -40,6 +40,4 @@ App.Data.Create("Tag", vals);
 
 1. Introduced in 2sxc 08.03
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [blog-post]: http://2sxc.org/en/blog/post/using-app-data-outside-of-2sxc-in-razor-custom-webapi-skin-or-another-module-300

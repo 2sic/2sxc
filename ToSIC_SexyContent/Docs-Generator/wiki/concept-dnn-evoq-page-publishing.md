@@ -181,6 +181,4 @@ As mentioned, this is the default setup. In the case of data-oriented apps, whic
 
 1. Introduces in 2sxc 9.5
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [some-link-name]:Razor-SexyContentWebPage.CustomizeData

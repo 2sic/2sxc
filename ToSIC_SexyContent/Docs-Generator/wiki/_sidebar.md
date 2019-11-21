@@ -82,7 +82,7 @@ This is where you can find things like...
 * [2sxc / EAV Architecture](architecture)
 * [Setting up a dev solution](contribute-setup)
 * [How to contribute](contribute)
-* [Internal JSON formats](format-json-v1)
+* [Internal JSON formats](xref:Specs.Data.Formats.JsonV1)
 
 </details>
 

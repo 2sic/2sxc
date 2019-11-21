@@ -80,8 +80,6 @@ You should find some code examples in this demo App
 1. Introduced in 2sxc 8.4
 2. Enhanced in 2sxc 9.5.1 with Base() and with parameter pageId on Link.To
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
 
 

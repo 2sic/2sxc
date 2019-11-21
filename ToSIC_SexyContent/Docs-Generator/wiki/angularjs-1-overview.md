@@ -129,8 +129,6 @@ You should find some code examples in this demo App
 1. Introduced in 2sxc ??.??
 2. sxcToolbar released in 2sxc 8.8.0
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [$2sxc]:JavaScript-$2sxc
 
 

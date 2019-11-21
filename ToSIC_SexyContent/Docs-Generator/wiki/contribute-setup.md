@@ -93,8 +93,6 @@ At the moment not important yet, but some new features we're working on are in t
 * `git clone https://github.com/2sic/2sxc-inpage`
 * `git clone https://github.com/2sic/eav-item-dialog-angular`
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [CustomizeData]:Razor-SexyContentWebPage.CustomizeData
 [InstancePurpose]:Razor-SexyContentWebPage.InstancePurpose
 [CustomizeSearch]:Razor-SexyContentWebPage.CustomizeSearch

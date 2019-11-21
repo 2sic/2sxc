@@ -135,7 +135,6 @@ Maybe you want to create an XML DataSource or a DNN-Users DataSource. This is ea
 
 1. Introduced in 2sxc 04.00
 
-[//]: # "This is a comment - for those who have never seen this"
 
 [eav-core-code]: https://github.com/2sic/eav-server/tree/master/ToSic.Eav.Core 
 [blog-custom-ds]: http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query

@@ -1,3 +1,6 @@
+---
+uid: Specs.Data.Formats.JsonV1-ContentType
+---
 # Format: JSON Content-Types (9.7)
 
 ## Purpose / Description
@@ -8,7 +11,7 @@ JSON based content-types are type-definitions which are stored as JSON. As of no
 
 ### Description
 
-1. As of now, it's using a envolope to package everything and includes a minimal header to ensure we know it's [V1](Format-json-v1). 
+1. As of now, it's using a envolope to package everything and includes a minimal header to ensure we know it's [V1](xref:Specs.Data.Formats.JsonV1). 
 1. It then contains a `ContentType` node containing 
    1. various identification and description
    1. content-type metadata (array of entities) 
@@ -143,7 +146,7 @@ This example is an extract of the Config Content-Type to manage the SqlDataSourc
 
 The format is currently in version 1, and looks like this:
 
-* _ this is the header - containing the version, in case we introduce breaking changes in the future - see also [format v1](format-json-v1)
+* _ this is the header - containing the version, in case we introduce breaking changes in the future - see also [format v1](xref:Specs.Data.Formats.JsonV1)
 * ContentType - this is the content-type
   * Id - internal identifier, also known as the "static name" - often a GUID
   * Name - a nicer name, especially when the Id is a GUID
@@ -155,8 +158,8 @@ The format is currently in version 1, and looks like this:
       * Type - the primary type, like string, number, etc.
       * Description - a short description
       * IsTitle - is this the title field (there must always be one title field)
-      * Metadata [array] of [content-items](format-json-v1-entity) with more information about this field
-* Metadata [array] of [content-items](format-json-v1-entity) with more information about the content-type
+      * Metadata [array] of [content-items](xref:Specs.Data.Formats.JsonV1-Entity) with more information about this field
+* Metadata [array] of [content-items](xref:Specs.Data.Formats.JsonV1-Entity) with more information about the content-type
 
 ## Specials about the JSON Content-Types
 
@@ -170,11 +173,11 @@ The Scope is a name - usually System or something like that. It's primarily used
 
 ### Attributes Have Metadata
 
-Each attribute - let's say a field "Color" has more information which is needed for scenarios like the edit-UI. These items are standard [content-items](format-json-v1-entity) and also have the very same format as JSON entities - you can read about that in this blog.
+Each attribute - let's say a field "Color" has more information which is needed for scenarios like the edit-UI. These items are standard [content-items](xref:Specs.Data.Formats.JsonV1-Entity) and also have the very same format as JSON entities - you can read about that in this blog.
 
 ### Content Types Have Metadata
 
-Content-types can have a lot of metadata - also mostly for the UI. An example is the help-text which is shown. This too is stored as normal JSON [content-items](format-json-v1-entity).
+Content-types can have a lot of metadata - also mostly for the UI. An example is the help-text which is shown. This too is stored as normal JSON [content-items](xref:Specs.Data.Formats.JsonV1-Entity).
 
 ## Limitations
 
@@ -204,7 +207,7 @@ As we're usually working with real-life content-items, multi-language is always 
 
 ## Read also
 
-* [Format: Json V1](Format-json-v1)
+* [Format: Json V1](xref:Specs.Data.Formats.JsonV1)
 * [Concepts: file provided content-types](Concept-File-Provided-Content-Types)
 * [Blog post about json content-type definitions](https://2sxc.org/en/blog/post/deep-dive-json-content-type-definitions)
 

@@ -58,7 +58,6 @@ You should find some code examples in this demo App
 1. Introduced in 2sxc v02.00
 2. Officially released & documented for use in 2sxc v08.06
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [commands]:Html-Js-Commands
 [html-toolbar]:Html-Toolbars-and-Buttons
 [jsapp]:http://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars

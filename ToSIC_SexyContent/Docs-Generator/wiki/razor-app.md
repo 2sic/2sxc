@@ -128,8 +128,6 @@ More links:
 2. Stable since 2sxc 06.00
 3. Data-API was introduced in 2sxc 06.05
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [Blog-App]: http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke
 [iapp]: https://github.com/2sic/2sxc/blob/master/Interfaces/IApp.cs
 [DynamicEntity]:Dynamic-Entity

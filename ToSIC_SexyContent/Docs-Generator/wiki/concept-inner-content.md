@@ -54,5 +54,4 @@ You should find some code examples in this demo App
 3. WYSIWYG mode in v08.09
 
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [accordion]:http://2sxc.org/en/apps/app/accordion-for-collapsible-sections

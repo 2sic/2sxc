@@ -10,4 +10,5 @@
 ##[Configuration System](xref:Specs.DataSources.Configuration)
 # Data & Input Types
 ##[Data Types](xref:Specs.Data.Type.Overview)
-##[Input Types](Specs.Data.Inputs.Overview)
+##[Input Types](xref:Specs.Data.Inputs.Overview)
+##[Json Format](xref:Specs.Data.Formats.JsonV1)

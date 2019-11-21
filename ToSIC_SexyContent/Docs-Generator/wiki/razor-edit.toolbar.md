@@ -180,8 +180,6 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 1. .Toolbar() Introduced in 2sxc 8.04
 2. .TagToolbar() introduced in 2sxc 9.40
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [inner-content]: http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
 [DynamicEntity]: Dynamic-Entity
 [actions-source]: Html-Js-Commands

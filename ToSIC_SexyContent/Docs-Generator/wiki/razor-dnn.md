@@ -194,8 +194,6 @@ The `@Dnn.User` is of the type [UserInfo](user-info). It has the following prope
 1. Introduced in 2sxc 1.0
 2. 
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
 [mod-info]: http://dotnetnukeru.com/dnndocs/api/html/T_DotNetNuke_Entities_Modules_ModuleInfo.htm
 [tab-info]: http://dotnetnukeru.com/dnndocs/api/html/T_DotNetNuke_Entities_Tabs_TabInfo.htm

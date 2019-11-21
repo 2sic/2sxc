@@ -60,5 +60,4 @@ You should find some code examples in this demo App
 1. Introduced in 2sxc v08.04
 2. Enhanced / made configurable in 2sxc 08.06.01
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [somethingnotused]:innerlink

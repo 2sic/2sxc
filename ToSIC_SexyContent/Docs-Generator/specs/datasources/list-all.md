@@ -469,5 +469,4 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 1. Introduced in 2sxc ??.??
 2. 
 
-[//]: # "This is a comment - for those who have never seen this"
 

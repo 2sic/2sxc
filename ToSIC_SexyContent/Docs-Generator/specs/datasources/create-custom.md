@@ -105,7 +105,6 @@ You should find some code examples in this visual studio project
 1. Introduced in 2sxc ca. 4 but with a difficult API
 1. API strongly enhanced and simplifield in 2sxc 09.13 
 
-[//]: # "This is a comment - for those who have never seen this"
 
 [CustomizeData]:Razor-SexyContentWebPage.CustomizeData
 [InstancePurpose]:Razor-SexyContentWebPage.InstancePurpose

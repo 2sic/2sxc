@@ -18,7 +18,7 @@ Basically the app-repository is a folder which contains content-type definitions
 
 We're using the `.data` folder as this is protected from external browsing. 
 
-The format is the [json-format V1](Format-json-v1-content-type)
+The format is the [json-format V1](xref:Specs.Data.Formats.JsonV1-ContentType)
 
 In 2sxc 9.7 you will not find any files or folders in this yet, as v. 9.7 has all the features in place, but doesn't yet distribute any types. This is so we can continue to test and design the new content-types before releasing them "in the wild". 
 
@@ -37,5 +37,3 @@ This should not affect you, as it's not meant to be managed by anybody else than
 
 1. Added in 2sxc 9.7
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"

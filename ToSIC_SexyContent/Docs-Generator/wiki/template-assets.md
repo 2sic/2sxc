@@ -80,5 +80,4 @@ You should find some code examples in this demo App
 1. Enhanced in 08.09 with position head/body/bottom
 
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [dnn-api-docs]:http://www.dnnsoftware.com/wiki/client-resource-management-api

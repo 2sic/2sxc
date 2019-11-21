@@ -183,8 +183,6 @@ You should find some code examples in this demo App
 1. Introduced in 2sxc v01.00
 2. Public API since 2sxc v08.06
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [commands]:Html-Js-Commands
 [jsapp]:http://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars
 [custom-button]:Html-Js-Command-Custom-Code

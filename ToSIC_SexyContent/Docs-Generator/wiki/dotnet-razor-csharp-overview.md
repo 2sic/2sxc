@@ -27,7 +27,6 @@ This is the C# .net API Documentations, usually meant for Razor-Templates, custo
 
 
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [CustomizeData]:Razor-SexyContentWebPage.CustomizeData
 [InstancePurpose]:Razor-SexyContentWebPage.InstancePurpose
 [CustomizeSearch]:Razor-SexyContentWebPage.CustomizeSearch

@@ -34,6 +34,4 @@ Note that you'll find some snippets which should help you in the snippets, to bo
 
 1. ...
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [checklist-sxc-designers]:http://swisschecklist.com/en/fwttmwjx/2sxc-Hide-advanced-features-from-Content-Editors-with-Designer-Security-Role

@@ -165,6 +165,5 @@ You should find some code examples in this demo App
 
 1. Introduced in 2sxc 08.06
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [definitions]: https://github.com/2sic/2sxc-ui/blob/master/src/inpage/commands/commands.definitions.js
 [commands]:Html-Js-Commands

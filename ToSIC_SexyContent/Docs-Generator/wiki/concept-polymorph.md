@@ -70,8 +70,6 @@ _todo_
 
 1. Introduced in 2sxc 9.35 - WebApi Polymorphism
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 [CustomizeData]:Razor-SexyContentWebPage.CustomizeData
 [InstancePurpose]:Razor-SexyContentWebPage.InstancePurpose
 [CustomizeSearch]:Razor-SexyContentWebPage.CustomizeSearch

@@ -1,3 +1,6 @@
+---
+uid: Specs.Data.Formats.JsonV1
+---
 
 # Format: JSON V1 (2sxc 9.4) 
 
@@ -14,8 +17,8 @@ Basically the Json format has a minimal header like
 which just contains the version. Future non-breaking enhancements will leave the version on 1 and optionally add more header information. 
 
 In addition to that, the basic package can contain either
-1. a `ContentType` node ([see specs](Format-json-v1-content-type))
-1. or an `Entity` node ([see specs](format-json-v1-entity))
+1. a `ContentType` node ([see specs](xref:Specs.Data.Formats.JsonV1-ContentType))
+1. or an `Entity` node ([see specs](xref:Specs.Data.Formats.JsonV1-Entity))
 
 This could then look like this: 
 
@@ -36,7 +39,7 @@ As of now (2sxc 9.7) such a package can only contain 1 root item (a content-type
 ## Read also
 [//]: # "Additional links - often within this documentation, but can also go elsewhere"
 
-* [Format: Json V1 Content-types](Format-json-v1-content-type)
+* [Format: Json V1 Content-types](xref:Specs.Data.Formats.JsonV1-ContentType)
 * [Concepts: file provided content-types](Concept-File-Provided-Content-Types)
 
 ## History
@@ -44,5 +47,3 @@ As of now (2sxc 9.7) such a package can only contain 1 root item (a content-type
 
 1. Added in 2sxc 9.7
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
