@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Razor: Rendering Content-Blocks | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Razor: Rendering Content-Blocks | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../index.html" title="Introduction" class="">Introduction</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">EAV Internals</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../architecture/architecture.html" title="Architecture" class="">Architecture</a>
+                          </li>
+                          <li class="">
+                            <a href="../architecture/eav-core-data.html" title="EAV Data Models" class="">EAV Data Models</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">EAV DataSources</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../datasources/datasource.html" title="DataSource Basics" class="">DataSource Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/datastream.html" title="DataStream Basics" class="">DataStream Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/list-all.html" title="All DataSources" class="">All DataSources</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Data & Input Types</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../data-types/_overview.html" title="Data Types" class="">Data Types</a>
+                          </li>
+                          <li class="">
+                            <a href="../input-types/_inputs-overview.html" title="Input Types" class="">Input Types</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="">Json Format</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-entity.html" title="Json Entity" class="">Json Entity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-content-type.html" title="Json ContentType" class="">Json ContentType</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Razor</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a class="">Todo all</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Specs.Razor.Blocks">
+<h1 id="razor-rendering-content-blocks">Razor: Rendering Content-Blocks</h1>
+
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>When using <a href="Concept-Inner-Content">Inner Content</a> the linked content-blocks (apps or pieces of content) must be rendered into the template. Here&#39;s how to do it in Razor. </p>
+<h2 id="how-to-use">How to use</h2>
+<p>There are two common use cases</p>
+<ol>
+<li>Virtual Panes at item level - in this case, the item has it&#39;s own pane for placing apps and content-blocks</li>
+<li>Very Rich Text - where you add content-blocks and apps in the WYSIWYG</li>
+</ol>
+<h2 id="item-level-virtual-panes">Item-Level Virtual Panes</h2>
+<p>Here&#39;s a quick example which renders an area with all content-blocks: </p>
+<pre><code class="lang-razor">@ToSic.SexyContent.ContentBlocks.Render.All(Content, field: &quot;InnerContent&quot;)
+</code></pre><p>This example creates the area for the content-blocks (important so that the UI appears for editors to add more blocks) and renders all existing content-blocks in the predefined order into that area. </p>
+<p>Here&#39;s a more manual example of doing the same thing, but done manually to demonstrate what happens and to allow myself to add more css-classes: </p>
+<pre><code class="lang-html">&lt;div class=&quot;some-class sc-content-block-list&quot; @Edit.ContextAttributes(post, field: &quot;DesignedContent&quot;)&gt;
+    @foreach(var cb in @post.DesignedContent) {
+        @cb.Render();
+    }
+&lt;/div&gt;
+</code></pre><p>If you care about doing it manually, read more about the <a href="Razor-Edit">Edit object</a>.</p>
+<h2 id="very-rich-text--inner-content">Very Rich Text / Inner-Content</h2>
+<p><em>this is new in 2sxc 8.9</em></p>
+<p>Here&#39;s an example how to merge content-blocks with a html-text which has placeholders for each content-block, allowing a mix of text/apps. </p>
+<pre><code class="lang-razor">@ToSic.SexyContent.ContentBlocks.Render.All(post, field: &quot;WysiwygContent&quot;, merge: post.Body)
+</code></pre><p>There is a new parameter merge, where you fill in your WYSIWYG-field that contains the content-block(s).</p>
+<p>Here is a <a href="http://2sxc.org/en/blog/post/tutorial-create-very-rich-text-inner-content-2-with-2sxc">blog tutorial on implementing Very Rich Text</a>.</p>
+<h2 id="notes-and-clarifications">Notes and Clarifications</h2>
+<h3 id="object-and-interfaces">Object and Interfaces</h3>
+<p>The Edit-Object is of type <code>ToSic.SexyContent.Edit.InPageEditingSystem.IInPageEditingSystem</code>.</p>
+<h2 id="read-also">Read also</h2>
+<ul>
+<li>Read more on <a href="Razor-Edit.ContextAttributes">Razor Edit.ContextAttributes</a></li>
+</ul>
+<h2 id="demo-app-and-further-links">Demo App and further links</h2>
+<p>You should find some code examples in this demo App</p>
+<ul>
+<li><a href="http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke">Blog App</a></li>
+</ul>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in 2sxc 8.4</li>
+<li>Clean API and merge capabilitien in 8.9</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/razor/razor-content-blocks.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

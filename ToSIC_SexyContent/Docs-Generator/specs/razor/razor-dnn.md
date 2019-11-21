@@ -1,3 +1,6 @@
+---
+uid: Specs.Razor.Dnn
+---
 # Link / @Dnn Object in Razor / .net
 
 ## Purpose / Description

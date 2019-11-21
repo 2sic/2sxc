@@ -25,6 +25,105 @@ references:
 - uid: Articles.Roadmap.Roadmap
   name: Roadmap of EAV and 2sxc - Vision of the Future
   href: articles/roadmap/roadmap.html
+- uid: Specs.Data.Formats.JsonV1
+  name: 'Format: JSON V1 (2sxc 9.4)'
+  href: specs/data-formats/format-json-v1.html
+- uid: Specs.Data.Formats.JsonV1-ContentType
+  name: 'Format: JSON Content-Types (9.7)'
+  href: specs/data-formats/format-json-v1-content-type.html
+- uid: Specs.Data.Formats.JsonV1-Entity
+  name: 'Format: JSON Entities (2sxc 9.4)'
+  href: specs/data-formats/format-json-v1-entity.html
+- uid: Specs.Data.Inputs.All
+  name: 'UI Field Type: All'
+  href: specs/input-types/ui-field-all.html
+- uid: Specs.Data.Inputs.Boolean
+  name: 'UI Field Type: boolean'
+  href: specs/input-types/ui-field-boolean.html
+- uid: Specs.Data.Inputs.Boolean-Default
+  name: 'UI Field Type: boolean-default'
+  href: specs/input-types/ui-field-boolean-default.html
+- uid: Specs.Data.Inputs.Datetime
+  name: 'UI Field Type: datetime'
+  href: specs/input-types/ui-field-datetime.html
+- uid: Specs.Data.Inputs.Datetime-Default
+  name: 'UI Field Type: datetime-default'
+  href: specs/input-types/ui-field-datetime-default.html
+- uid: Specs.Data.Inputs.Empty
+  name: 'UI Field Type: Empty'
+  href: specs/input-types/ui-field-empty.html
+- uid: Specs.Data.Inputs.Empty-Default
+  name: 'UI Field Type: empty-default'
+  href: specs/input-types/ui-field-empty-default.html
+- uid: Specs.Data.Inputs.Entity
+  name: 'UI Field Type: entity'
+  href: specs/input-types/ui-field-entity.html
+- uid: Specs.Data.Inputs.Entity-Default
+  name: 'UI Field Type: entity-default'
+  href: specs/input-types/ui-field-entity-default.html
+- uid: Specs.Data.Inputs.Entity-Query
+  name: 'UI Field Type: entity-query'
+  href: specs/input-types/ui-field-entity-query.html
+- uid: Specs.Data.Inputs.Hyperlink
+  name: 'UI Field Type: hyperlink / files'
+  href: specs/input-types/ui-field-hyperlink.html
+- uid: Specs.Data.Inputs.Hyperlink-Default
+  name: 'UI Field Type: hyperlink-default'
+  href: specs/input-types/ui-field-hyperlink-default.html
+- uid: Specs.Data.Inputs.Hyperlink-Library
+  name: 'UI Field Type: hyperlink-library'
+  href: specs/input-types/ui-field-hyperlink-library.html
+- uid: Specs.Data.Inputs.Number
+  name: 'UI Field Type: Number'
+  href: specs/input-types/ui-field-number.html
+- uid: Specs.Data.Inputs.Number-Default
+  name: 'UI Field Type: number-default'
+  href: specs/input-types/ui-field-number-default.html
+- uid: Specs.Data.Inputs.Overview
+  name: UI Field Types
+  href: specs/input-types/_inputs-overview.html
+- uid: Specs.Data.Inputs.String
+  name: 'UI Field Type: string'
+  href: specs/input-types/ui-field-string.html
+- uid: Specs.Data.Inputs.String-Default
+  name: 'UI Field Type: string-default'
+  href: specs/input-types/ui-field-string-default.html
+- uid: Specs.Data.Inputs.String-Dropdown
+  name: 'UI Field Type: string-dropdown'
+  href: specs/input-types/ui-field-string-dropdown.html
+- uid: Specs.Data.Inputs.String-Dropdown-Query
+  name: 'UI Field Type: string-dropdown-query (2sxc 9.11+)'
+  href: specs/input-types/ui-field-string-dropdown-query.html
+- uid: Specs.Data.Inputs.String-Font-Icon-Picker
+  name: 'UI Field Type: string-font-icon-picker'
+  href: specs/input-types/ui-field-string-font-icon-picker.html
+- uid: Specs.Data.Inputs.String-Url-Path
+  name: 'UI Field Type: string-url-path'
+  href: specs/input-types/ui-field-string-url-path.html
+- uid: Specs.Data.Type.Boolean
+  name: 'Data Type: Boolean'
+  href: specs/data-types/boolean.html
+- uid: Specs.Data.Type.DateTime
+  name: 'Data Type: DateTime'
+  href: specs/data-types/datetime.html
+- uid: Specs.Data.Type.Empty
+  name: 'Data Type: Empty'
+  href: specs/data-types/empty.html
+- uid: Specs.Data.Type.Entity
+  name: 'Data Type: Entity (List of Entity-Items)'
+  href: specs/data-types/entity.html
+- uid: Specs.Data.Type.Hyperlink
+  name: 'Data Type: Hyperlink'
+  href: specs/data-types/hyperlink.html
+- uid: Specs.Data.Type.Number
+  name: 'Data Type: Number'
+  href: specs/data-types/number.html
+- uid: Specs.Data.Type.Overview
+  name: Data Types
+  href: specs/data-types/_overview.html
+- uid: Specs.Data.Type.String
+  name: 'Data Type: String'
+  href: specs/data-types/string.html
 - uid: Specs.DataSources.Configuration
   name: 'DataSource Concept: Configuration Injection using Tokens'
   href: specs/datasources/configuration.html
@@ -32,17 +131,32 @@ references:
   name: 'EAV DataSources: Creating Custom DataSources (2sxc 9.13)'
   href: specs/datasources/create-custom.html
 - uid: Specs.DataSources.DataSource
-  name: DataSource Basics (IDataSource in .net code)
+  name: DataSource Basics (IDataSource)
   href: specs/datasources/datasource.html
 - uid: Specs.DataSources.DataStream
-  name: DataStraem Basics (IDataStream in .net code)
+  name: DataStream Basics (IDataStream)
   href: specs/datasources/datastream.html
 - uid: Specs.DataSources.ListAll
-  name: All DataSource Objects in 2sxc / EAV (dotnet)
+  name: All DataSource Objects in 2sxc / EAV
   href: specs/datasources/list-all.html
+- uid: Specs.DynamicCode.App
+  name: App /  object in Razor
+  href: specs/razor/app.html
+- uid: Specs.DynamicCode.ContextAttributes
+  name: ContextAttributes in Razor-Output
+  href: specs/razor/contextattributes.html
 - uid: Specs.Home
   name: Specifications of EAV and 2sxc
-  href: specs/intro.html
+  href: specs/index.html
+- uid: Specs.Razor.Blocks
+  name: 'Razor: Rendering Content-Blocks'
+  href: specs/razor/razor-content-blocks.html
+- uid: Specs.Razor.Data
+  name: " in Razor Template"
+  href: specs/razor/razor-data.html
+- uid: Specs.Razor.Dnn
+  name: Link /  Object in Razor / .net
+  href: specs/razor/razor-dnn.html
 - uid: ToSic.Eav.Apps
   name: ToSic.Eav.Apps
   href: api/dot-net/ToSic.Eav.Apps.html

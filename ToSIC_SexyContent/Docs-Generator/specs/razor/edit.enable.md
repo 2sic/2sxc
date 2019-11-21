@@ -1,3 +1,6 @@
+---
+uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+---
 # @Edit.Enable(...) Method in C# Razor
 
 ## Purpose / Description

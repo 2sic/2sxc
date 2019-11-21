@@ -1,3 +1,6 @@
+---
+uid: Specs.DynamicCode.App
+---
 # App / @App object in Razor
 
 ## Purpose / Description

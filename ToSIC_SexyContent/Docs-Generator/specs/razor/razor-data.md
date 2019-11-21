@@ -1,3 +1,6 @@
+---
+uid: Specs.Razor.Data
+---
 # @Data in Razor Template
 ## What is _Data_
 

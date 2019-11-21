@@ -1,0 +1,401 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Format: JSON Content-Types (9.7) | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Format: JSON Content-Types (9.7) | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../index.html" title="Introduction" class="">Introduction</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">EAV Internals</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../architecture/architecture.html" title="Architecture" class="">Architecture</a>
+                          </li>
+                          <li class="">
+                            <a href="../architecture/eav-core-data.html" title="EAV Data Models" class="">EAV Data Models</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">EAV DataSources</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../datasources/datasource.html" title="DataSource Basics" class="">DataSource Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/datastream.html" title="DataStream Basics" class="">DataStream Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/list-all.html" title="All DataSources" class="">All DataSources</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Data & Input Types</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../data-types/_overview.html" title="Data Types" class="">Data Types</a>
+                          </li>
+                          <li class="">
+                            <a href="../input-types/_inputs-overview.html" title="Input Types" class="">Input Types</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="">Json Format</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-entity.html" title="Json Entity" class="">Json Entity</a>
+                                </li>
+                                <li class="active">
+                                  <a href="../data-formats/format-json-v1-content-type.html" title="Json ContentType" class="active">Json ContentType</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Razor</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a class="">Todo all</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Specs.Data.Formats.JsonV1-ContentType">
+<h1 id="format-json-content-types-97">Format: JSON Content-Types (9.7)</h1>
+
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>JSON based content-types are type-definitions which are stored as JSON. As of now we&#39;re using it to provide system-level types to the application (see [Concepts - file provided content-types](Concept-file provided-content-types)) and for various automated testing. </p>
+<h2 id="format-v1">Format V1</h2>
+<h3 id="description">Description</h3>
+<ol>
+<li>As of now, it&#39;s using a envolope to package everything and includes a minimal header to ensure we know it&#39;s <a class="xref" href="format-json-v1.html">V1</a>. </li>
+<li>It then contains a <code>ContentType</code> node containing <ol>
+<li>various identification and description</li>
+<li>content-type metadata (array of entities) </li>
+<li>attributes (array)</li>
+</ol>
+</li>
+<li>the attributes themselves again contain a minimal information + metadata items (entities)</li>
+<li>note that the attribute order is relevant</li>
+</ol>
+<h3 id="example">Example</h3>
+<p>This example is an extract of the Config Content-Type to manage the SqlDataSource (will be releasen in 2sxc 9.8 with more help-text etc.):</p>
+<pre><code class="lang-json">{
+  &quot;_&quot;: { &quot;V&quot;: 1 },
+  &quot;ContentType&quot;: {
+    &quot;Id&quot;: &quot;|Config ToSic.Eav.DataSources.SqlDataSource&quot;,
+    &quot;Name&quot;: &quot;|Config ToSic.Eav.DataSources.SqlDataSource&quot;,
+    &quot;Scope&quot;: &quot;System&quot;,
+    &quot;Description&quot;: &quot;todo&quot;,
+    &quot;Attributes&quot;: [
+      {
+        &quot;Name&quot;: &quot;Title&quot;,
+        &quot;Type&quot;: &quot;String&quot;,
+        &quot;IsTitle&quot;: true,
+        &quot;Metadata&quot;: [
+          {
+            &quot;Id&quot;: 0,
+            &quot;Version&quot;: 1,
+            &quot;Guid&quot;: &quot;00000000-0000-0000-0000-000000000000&quot;,
+            &quot;Type&quot;: {
+              &quot;Name&quot;: &quot;@All&quot;,
+              &quot;Id&quot;: &quot;@All&quot;
+            },
+            &quot;Attributes&quot;: {
+              &quot;String&quot;: {
+                &quot;DefaultValue&quot;: { &quot;*&quot;: &quot;Sql Query&quot; },
+                &quot;InputType&quot;: { &quot;*&quot;: &quot;string-default&quot; }
+              },
+              &quot;Boolean&quot;: { &quot;VisibleInEditUI&quot;: { &quot;*&quot;: true } }
+            }
+          }
+        ]
+      },
+      {
+        &quot;Name&quot;: &quot;ConnectionGroup&quot;,
+        &quot;Type&quot;: &quot;Empty&quot;,
+        &quot;IsTitle&quot;: false,
+        &quot;Metadata&quot;: [
+          {
+            &quot;Id&quot;: 0,
+            &quot;Version&quot;: 1,
+            &quot;Guid&quot;: &quot;00000000-0000-0000-0000-000000000000&quot;,
+            &quot;Type&quot;: {
+              &quot;Name&quot;: &quot;@All&quot;,
+              &quot;Id&quot;: &quot;@All&quot;
+            },
+            &quot;Attributes&quot;: {
+              &quot;String&quot;: {
+                &quot;DefaultValue&quot;: { &quot;*&quot;: &quot;&quot; },
+                &quot;InputType&quot;: { &quot;*&quot;: &quot;empty-default&quot; }
+              },
+              &quot;Boolean&quot;: { &quot;VisibleInEditUI&quot;: { &quot;*&quot;: true } }
+            }
+          }
+        ]
+      },
+      {
+        &quot;Name&quot;: &quot;ConnectionStringName&quot;,
+        &quot;Type&quot;: &quot;String&quot;,
+        &quot;IsTitle&quot;: false,
+        &quot;Metadata&quot;: [
+          {
+            &quot;Id&quot;: 0,
+            &quot;Version&quot;: 1,
+            &quot;Guid&quot;: &quot;00000000-0000-0000-0000-000000000000&quot;,
+            &quot;Type&quot;: {
+              &quot;Name&quot;: &quot;@All&quot;,
+              &quot;Id&quot;: &quot;@All&quot;
+            },
+            &quot;Attributes&quot;: {
+              &quot;String&quot;: {
+                &quot;DefaultValue&quot;: { &quot;*&quot;: &quot;SiteSqlServer&quot; },
+                &quot;InputType&quot;: { &quot;*&quot;: &quot;string-default&quot; }
+              },
+              &quot;Boolean&quot;: { &quot;VisibleInEditUI&quot;: { &quot;*&quot;: true } }
+            }
+          }
+        ]
+      },
+      ...
+      {
+        &quot;Name&quot;: &quot;SelectCommand&quot;,
+        &quot;Type&quot;: &quot;String&quot;,
+        &quot;IsTitle&quot;: false,
+        &quot;Metadata&quot;: [
+          {
+            &quot;Id&quot;: 0,
+            &quot;Version&quot;: 1,
+            &quot;Guid&quot;: &quot;00000000-0000-0000-0000-000000000000&quot;,
+            &quot;Type&quot;: {
+              &quot;Name&quot;: &quot;@All&quot;,
+              &quot;Id&quot;: &quot;@All&quot;
+            },
+            &quot;Attributes&quot;: {
+              &quot;String&quot;: {
+                &quot;DefaultValue&quot;: { &quot;*&quot;: &quot;/****** Script for SelectTopNRows command from SSMS  ******/\r\nSELECT TOP (1000) PortalId as EntityId, HomeDirectory as EntityTitle\r\n      ,[PortalID]\r\n      ,[ExpiryDate]\r\n      ,[AdministratorRoleId]\r\n      ,[GUID]\r\n      ,[DefaultLanguage]\r\n      ,[HomeDirectory]\r\n      ,[CreatedOnDate]\r\n      ,[PortalGroupID]\r\n  FROM [Portals]\r\n  Where ExpiryDate is null&quot; },
+                &quot;InputType&quot;: { &quot;*&quot;: &quot;string-default&quot; }
+              },
+              &quot;Boolean&quot;: { &quot;VisibleInEditUI&quot;: { &quot;*&quot;: true } }
+            }
+          },
+          {
+            &quot;Id&quot;: 0,
+            &quot;Version&quot;: 1,
+            &quot;Guid&quot;: &quot;00000000-0000-0000-0000-000000000000&quot;,
+            &quot;Type&quot;: {
+              &quot;Name&quot;: &quot;@string-default&quot;,
+              &quot;Id&quot;: &quot;@string-default&quot;
+            },
+            &quot;Attributes&quot;: { &quot;Number&quot;: { &quot;RowCount&quot;: { &quot;*&quot;: 10.0 } } }
+          }
+        ]
+      }
+      ...
+    ],
+    &quot;Metadata&quot;: []
+  }
+}
+</code></pre><h2 id="details-about-the-format">Details about the Format</h2>
+<p>The format is currently in version 1, and looks like this:</p>
+<ul>
+<li>_ this is the header - containing the version, in case we introduce breaking changes in the future - see also <a class="xref" href="format-json-v1.html">format v1</a></li>
+<li>ContentType - this is the content-type<ul>
+<li>Id - internal identifier, also known as the &quot;static name&quot; - often a GUID</li>
+<li>Name - a nicer name, especially when the Id is a GUID</li>
+<li>Scope - a term which groups types together; mainly for hiding types the user should normally not see </li>
+<li>Description - a short description for internal use</li>
+<li>Attributes [array]<ul>
+<li>[item]<ul>
+<li>Name - the field-name</li>
+<li>Type - the primary type, like string, number, etc.</li>
+<li>Description - a short description</li>
+<li>IsTitle - is this the title field (there must always be one title field)</li>
+<li>Metadata [array] of <a class="xref" href="format-json-v1-entity.html">content-items</a> with more information about this field</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Metadata [array] of <a class="xref" href="format-json-v1-entity.html">content-items</a> with more information about the content-type</li>
+</ul>
+<h2 id="specials-about-the-json-content-types">Specials about the JSON Content-Types</h2>
+<h3 id="id-is-not-always-a-guid">ID is not always a GUID</h3>
+<p>The ID is usually a GUID, but for special system types it is not. This is mostly historic, as all new content-types will have GUIDs, but old types still exist in the system which have a nice name, but that&#39;s not ideal for various use cases. </p>
+<h3 id="scope-is-like-a-virtual-group">Scope is Like a Virtual Group</h3>
+<p>The Scope is a name - usually System or something like that. It&#39;s primarily used to group types together, so that the editor doesn&#39;t have to see the ca. 50 types in the background which make the solution work. </p>
+<h3 id="attributes-have-metadata">Attributes Have Metadata</h3>
+<p>Each attribute - let&#39;s say a field &quot;Color&quot; has more information which is needed for scenarios like the edit-UI. These items are standard <a class="xref" href="format-json-v1-entity.html">content-items</a> and also have the very same format as JSON entities - you can read about that in this blog.</p>
+<h3 id="content-types-have-metadata">Content Types Have Metadata</h3>
+<p>Content-types can have a lot of metadata - also mostly for the UI. An example is the help-text which is shown. This too is stored as normal JSON <a class="xref" href="format-json-v1-entity.html">content-items</a>.</p>
+<h2 id="limitations">Limitations</h2>
+<p>As of now (2sxc 9.7) the system will pick up the content-types stored there and everything works. BUT there is no built-in mechanism to edit these. We (2sic) can easily create content-types in a normal 2sxc and export them to json for this purpose, but as of now there is no GUI to do so.</p>
+<p>This should not affect you, as it&#39;s not meant to be managed by anybody else than us as of now. </p>
+<h2 id="special-stuff-about-the-json-format">Special Stuff about the JSON Format</h2>
+<p>Here are some things that may seem unusual at first:</p>
+<h3 id="content-type-attributes-must-preserve-sort-order">Content Type Attributes must preserve Sort Order</h3>
+<p>This is important, as it&#39;s relevant to the UI.</p>
+<h3 id="all-attributes-are-grouped-by-type">All Attributes are Grouped by Type</h3>
+<p>Because JSON is itself a very loose data-format, and certain types like dates are not auto-detectable, we decided to have the type-specification as a first-class citizen in the format. This allows for automatic, reliable type-checking when materializing objects. </p>
+<h3 id="all-values-have-language-information">All values have language information</h3>
+<p>As we&#39;re usually working with real-life content-items, multi-language is always a concern. Because of this, every value is multi-language by default. If the language code is *, that means that this value is the default/fallback value for all languages. </p>
+<h3 id="metadata-is-a-recursive-list-of-entities">Metadata is a Recursive List of Entities</h3>
+<p>2sxc and the EAV is all about real-life content-management. As such, many pieces of information have more information attached, called Metadata. Metadata-items could themselves have their own Metadata, which is then of course attached as well. </p>
+<h2 id="read-also">Read also</h2>
+<ul>
+<li><a class="xref" href="format-json-v1.html">Format: Json V1</a></li>
+<li><a href="Concept-File-Provided-Content-Types">Concepts: file provided content-types</a></li>
+<li><a href="https://2sxc.org/en/blog/post/deep-dive-json-content-type-definitions">Blog post about json content-type definitions</a></li>
+</ul>
+<h2 id="history">History</h2>
+<ol>
+<li>Added in 2sxc 9.7</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/data-formats/format-json-v1-content-type.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

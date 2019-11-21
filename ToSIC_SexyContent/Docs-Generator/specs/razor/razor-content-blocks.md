@@ -1,3 +1,6 @@
+---
+uid: Specs.Razor.Blocks
+---
 
 # Razor: Rendering Content-Blocks
 

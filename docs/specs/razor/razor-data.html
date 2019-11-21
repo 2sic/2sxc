@@ -1,0 +1,268 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title> in Razor Template | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content=" in Razor Template | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../index.html" title="Introduction" class="">Introduction</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">EAV Internals</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../architecture/architecture.html" title="Architecture" class="">Architecture</a>
+                          </li>
+                          <li class="">
+                            <a href="../architecture/eav-core-data.html" title="EAV Data Models" class="">EAV Data Models</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">EAV DataSources</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../datasources/datasource.html" title="DataSource Basics" class="">DataSource Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/datastream.html" title="DataStream Basics" class="">DataStream Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/list-all.html" title="All DataSources" class="">All DataSources</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Data & Input Types</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../data-types/_overview.html" title="Data Types" class="">Data Types</a>
+                          </li>
+                          <li class="">
+                            <a href="../input-types/_inputs-overview.html" title="Input Types" class="">Input Types</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="">Json Format</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-entity.html" title="Json Entity" class="">Json Entity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-content-type.html" title="Json ContentType" class="">Json ContentType</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Razor</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a class="">Todo all</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Specs.Razor.Data">
+<h1 id="data-in-razor-template">@Data in Razor Template</h1>
+
+<h2 id="what-is-data">What is <em>Data</em></h2>
+<p>A 2sxc instance is a running <em>2sxc-engine</em> which is about to execute some code (Razor, Token or a web service) together with some content-items which should be used in this case. These content-items are provided to the code in an object called <code>Data</code>.</p>
+<p>2sxc will decide what items to deliver, based on the situation.</p>
+<ol>
+<li><p>In most cases, a DNN-Module will show a 2sxc-template, and the content-editor will manually add items to it using the normal web-UI. In this case, these items will be tied to this use-case and 2sxc will deliver them in the <code>Data</code> object.</p>
+</li>
+<li><p>In other cases, the template (or view) will be configured to get data from a query configered elsewhere. In this case, all data retrieved in the query will be provided in the same <code>Data</code> object.</p>
+</li>
+<li><p>There are also cases, where a template needs both queried data (like <em>all categories</em>) as well as content-items added manually. There are multiple easy ways of doing this <strong>todo - document later</strong></p>
+</li>
+<li><p>Note: if you want <em>all data</em> of a type, like &quot;Get me all Tag-items in the system&quot; you need to use <a href="Razor-App">App-Data</a>.</p>
+</li>
+</ol>
+<h2 id="most-common-way-to-use-the-data-object">Most common way to use the Data object</h2>
+<p>In all Razor-templates and also the web-api files, the <code>Data</code> object is already created and ready to access. Here&#39;s a code example:</p>
+<pre><code class="lang-cs">&lt;div class=&quot;app-blog&quot;&gt;
+    @foreach(var post in AsDynamic(Data[&quot;Default&quot;]))
+    {
+        // do something with the @post here
+    }
+&lt;/div&gt;
+</code></pre><ul>
+<li>the foreach will loop through all items of the data in the <em>Stream</em> <strong>Default</strong> - read more about streams below</li>
+<li>the var post is the inner variable containing the current item</li>
+<li>the AsDynamic will ensure that the items we&#39;re working with are easy to code with, because they are <a href="DotNet-DynamicEntity">Dynamic Entities</a></li>
+</ul>
+<h2 id="the-streams-in-a-data-object">The Streams in a Data Object</h2>
+<p>The data object can have multiple <em>Streams</em>, each containing a list of items. In most cases you&#39;ll just have the <em>Default</em> stream, which you can access using <code>Data[&quot;Default&quot;]</code>. Read more about streams in the <a href="DotNet-DataStream">Stream docs</a></p>
+<p>But you may also have additional streams, depending on what has been configured in the data-preparation stuff (usually a visual query). For example, if you are working on a view showing one product and a menu with all possible categories, then your query may have these streams:</p>
+<ul>
+<li>Book (the current book, this stream has 1 item with the ID matching the ID in the URL)</li>
+<li>Categories (all categories in the system, sorted A-Z)</li>
+</ul>
+<p>The code would then look a bit like this:</p>
+<pre><code class="lang-cs">var book = Data[&quot;Book&quot;].FirstOrDefault();               // returns an IEntity Object
+var cats = Data[&quot;Categories&quot;];                          // returns an IEnumerable of iEntity objects
+</code></pre><p>Or in most cases, because of the simpler syntax later on:</p>
+<pre><code class="lang-cs">var book = AsDynamic(Data[&quot;Book&quot;].FirstOrDefault());    // returns one dynamic entity
+var cats = AsDynamic(Data[&quot;Categories&quot;]);               // returns an IEnumerable of dynamic entities
+</code></pre><h2 id="changing-what-is-provided-by-data">Changing what is provided by Data</h2>
+<p>The main configuration of the template will determine, what data is initially provided to the template.
+Afterwards, other mechanisms can override / change this.</p>
+<ol>
+<li>Initial Sources<ol>
+<li>Default type/list configuration - this can determine that 0, 1 or many items (of a certain type) are delivered<br>if one or many are delivered, then the selection will be based on what the editor added to the module instance.</li>
+<li>Visual Query - if the template has a query attached, this query will deliver the data</li>
+</ol>
+</li>
+<li>Modifications to the source for the template<ol>
+<li>The event <a href="Razor-SexyContentWebPage.CustomizeData">CustomizeData</a> can optionally completely reconfigure what Data contains in your code.</li>
+</ol>
+</li>
+</ol>
+<h2 id="data-object-api">Data Object API</h2>
+<p>The <code>Data</code> object itself is actually a normal <a href="https://github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/IDataSource.cs">EAV IDataSource</a>. So if you need to know more about the internals, read it up there.</p>
+<p>All other properties of the Data object are very special use only, so you probably shouldn&#39;t bother about them - which is why they are not documented here.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/razor/razor-data.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

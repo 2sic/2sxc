@@ -1,13 +1,21 @@
-# @Edit.ContextAttributes(...) Method in Razor / .net
+---
+uid: Specs.DynamicCode.ContextAttributes
+---
+
+# ContextAttributes in Razor-Output
 
 ## Purpose / Description
 Technically the entire Edit-UI is JavaScript based, so all the buttons, events etc. are client side scripts.
 
 These scripts need to know what _Context_ they are in, meaning which DNN-Module, which 2sxc-App, which Zone, permissions etc. 
 
-By default, this context is already provided by the environment, but sometimes a _new context_ must provide overrides. This is rare, but important, for example using [inner-content][inner-content]. 
+## How it works
+The `Edit.ContextAttributes(...)` is always used inside an HTML-tag and will add some attributes with JSON. Any buttons or actions inside that tag will then find this information, and assume that it is has precendence over the global information.
 
-So the `ContextAttributes` will provide this information in some hidden html.
+## What do You need to do?
+By default, this context is already provided by the 2sxc-environment, but sometimes a _new context_ must provide overrides. For example using [inner-content][inner-content]. 
+
+For this you need the `Edit.ContextAttributes` - see [docs here](xref:ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes(ToSic.Sxc.Data.IDynamicEntity,System.String,System.String,System.String,System.Nullable{System.Guid})).
 
 
 ## How to use
@@ -27,9 +35,6 @@ Here's an [inner-content][inner-content] example:
 In this example, the Edit.ContextAttributes will add some attributes with JSON, which will help the toolbars _inside_ that loop to correctly edit those items, and not the main item around it.
 
 
-## How it works
-[//]: # "Some explanations on the functionality"
-The `Edit.ContextAttributes(...)` is always used inside an HTML-tag and will add some attributes with JSON. Any buttons or actions inside that tag will then find this information, and assume that it is has precendence over the global information.
 
 ## Using ContextAttributes
 These context-attributes enhance an HTML-tag, so that buttons inside that tag can be in a different context than the original context. 

@@ -1,9 +1,7 @@
 ---
 uid: Specs.Data.Formats.JsonV1-ContentType
 ---
-# Format: JSON Content-Types (9.7)
-
-## Purpose / Description
+# Format: JSON Content-Types
 
 JSON based content-types are type-definitions which are stored as JSON. As of now we're using it to provide system-level types to the application (see [Concepts - file provided content-types](Concept-file provided-content-types)) and for various automated testing. 
 
@@ -210,6 +208,7 @@ As we're usually working with real-life content-items, multi-language is always 
 * [Format: Json V1](xref:Specs.Data.Formats.JsonV1)
 * [Concepts: file provided content-types](Concept-File-Provided-Content-Types)
 * [Blog post about json content-type definitions](https://2sxc.org/en/blog/post/deep-dive-json-content-type-definitions)
+
 
 ## History
 

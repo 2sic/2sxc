@@ -12,3 +12,7 @@
 ##[Data Types](xref:Specs.Data.Type.Overview)
 ##[Input Types](xref:Specs.Data.Inputs.Overview)
 ##[Json Format](xref:Specs.Data.Formats.JsonV1)
+###[Json Entity](xref:Specs.Data.Formats.JsonV1-Entity)
+###[Json ContentType](xref:Specs.Data.Formats.JsonV1-ContentType)
+# Razor
+##Todo all
