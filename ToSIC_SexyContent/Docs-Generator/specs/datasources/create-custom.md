@@ -100,7 +100,6 @@ You should find some code examples in this visual studio project
 * [Blog about this feature](https://2sxc.org/en/blog/post/tutorial-custom-datasources-for-eav-2sxc-9-13-part-1)
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in 2sxc ca. 4 but with a difficult API
 1. API strongly enhanced and simplifield in 2sxc 09.13 

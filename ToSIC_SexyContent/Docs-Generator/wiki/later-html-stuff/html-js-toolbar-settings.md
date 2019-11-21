@@ -49,13 +49,11 @@ by default any toolbar inside an element with a `sc-element` class will appear o
 ...
 
 ## Read also
-[//]: # "Additional links - often within this documentation, but can also go elsewhere"
 
 * [InstancePurpose][InstancePurpose] - which tells you why the current code is running so you could change the data added
 * [CustomizeData][CustomizeData]
 
 ## Demo App and further links
-[//]: # "Apps which provide sample code using this"
 
 You should find some code examples in this demo App
 * [FAQ with Categories](http://2sxc.org/en/apps/app/faq-with-categories-and-6-views)
@@ -63,7 +61,6 @@ You should find some code examples in this demo App
 More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Manuals/Feature/feature/2683)
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in 2sxc ??.??
 2. 

@@ -2,7 +2,7 @@
 uid: ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes(ToSic.Sxc.Data.IDynamicEntity,System.String,System.String,System.String,System.Nullable{System.Guid})
 ---
 
-All client-side scripts need to know what _Context_ they are in, meaning which DNN-Module, which 2sxc-App, which Zone, permissions etc. Read about it in @Specs.DynamicCode.ContextAttributes. 
+All client-side scripts need to know what _Context_ they are in, meaning which DNN-Module, which 2sxc-App, which Zone, permissions etc. Read about it in @HowTo.DynamicCode.ContextAttributes. 
 
 By default, this context is already provided by the environment, but sometimes a _new context_ must provide overrides. This is rare, but important, for example using [inner-content][inner-content]. 
 

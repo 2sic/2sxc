@@ -4,7 +4,6 @@
 2sxc contains a special helper called *2sxc4ng* which takes care of starting your app inside DNN and providing you with toolbars and data from 2sxc.
 
 ## How to use
-[//]: # "usually start with some demo code, as it's probably the quickest way to learn"
 
 Until we find time to document everything, here's the short version
 
@@ -113,18 +112,15 @@ This is because it needs if for webservice calls. In 2sxc 8.8.1 the bootstrappin
 
 
 ## Read also
-[//]: # "Additional links - often within this documentation, but can also go elsewhere"
 
 * [Full explanation of bootstrapping and how/why etc.][bootstrapping] - which tells you why the current code is running so you could change the data added
 
 ## Demo App and further links
-[//]: # "Apps which provide sample code using this"
 
 You should find some code examples in this demo App
 * [Various AngularJS based apps](http://2sxc.org/en/Apps/tag/AngularJS)
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in 2sxc ??.??
 2. sxcToolbar released in 2sxc 8.8.0

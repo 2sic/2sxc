@@ -1,8 +1,10 @@
 #[Introduction](index.md)
-# EAV Internals
+# Concepts
+## [todo](todo)
+# Architecture
 ##[Architecture](xref:Articles.Architecture)
 ##[EAV Data Models](xref:Articles.EavCoreDataModels)
-# EAV DataSources
+# DataSources
 ##[DataSource Basics](xref:Specs.DataSources.DataSource)
 ##[DataStream Basics](xref:Specs.DataSources.DataStream)
 ##[All DataSources](xref:Specs.DataSources.ListAll)
@@ -14,5 +16,3 @@
 ##[Json Format](xref:Specs.Data.Formats.JsonV1)
 ###[Json Entity](xref:Specs.Data.Formats.JsonV1-Entity)
 ###[Json ContentType](xref:Specs.Data.Formats.JsonV1-ContentType)
-# Razor
-##Todo all

@@ -25,14 +25,35 @@ references:
 - uid: Articles.Roadmap.Roadmap
   name: Roadmap of EAV and 2sxc - Vision of the Future
   href: articles/roadmap/roadmap.html
+- uid: HowTo.DynamicCode.App
+  name: App /  object in Razor
+  href: how-to/dynamic-code/object-app.html
+- uid: HowTo.DynamicCode.ContextAttributes
+  name: ContextAttributes in Razor-Output
+  href: how-to/razor/contextattributes.html
+- uid: HowTo.DynamicCode.Data
+  name: " in Razor Template"
+  href: how-to/dynamic-code/object-data.html
+- uid: HowTo.DynamicCode.Dnn
+  name: Link /  Object in Razor / .net
+  href: how-to/dynamic-code/object-dnn.html
+- uid: HowTo.DynamicCode.Edit
+  name: Edit /  Object in Razor / .net
+  href: how-to/dynamic-code/object-edit.html
+- uid: HowTo.DynamicCode.Link
+  name: Link /  Object in Razor / .net
+  href: how-to/dynamic-code/object-link.html
+- uid: HowTo.Home
+  name: How To Do Things in EAV and 2sxc
+  href: how-to/index.html
 - uid: Specs.Data.Formats.JsonV1
-  name: 'Format: JSON V1 (2sxc 9.4)'
+  name: 'Format: JSON V1'
   href: specs/data-formats/format-json-v1.html
 - uid: Specs.Data.Formats.JsonV1-ContentType
-  name: 'Format: JSON Content-Types (9.7)'
+  name: 'Format: JSON Content-Types'
   href: specs/data-formats/format-json-v1-content-type.html
 - uid: Specs.Data.Formats.JsonV1-Entity
-  name: 'Format: JSON Entities (2sxc 9.4)'
+  name: 'Format: JSON Entities'
   href: specs/data-formats/format-json-v1-entity.html
 - uid: Specs.Data.Inputs.All
   name: 'UI Field Type: All'
@@ -139,24 +160,12 @@ references:
 - uid: Specs.DataSources.ListAll
   name: All DataSource Objects in 2sxc / EAV
   href: specs/datasources/list-all.html
-- uid: Specs.DynamicCode.App
-  name: App /  object in Razor
-  href: specs/razor/app.html
-- uid: Specs.DynamicCode.ContextAttributes
-  name: ContextAttributes in Razor-Output
-  href: specs/razor/contextattributes.html
 - uid: Specs.Home
   name: Specifications of EAV and 2sxc
   href: specs/index.html
 - uid: Specs.Razor.Blocks
   name: 'Razor: Rendering Content-Blocks'
-  href: specs/razor/razor-content-blocks.html
-- uid: Specs.Razor.Data
-  name: " in Razor Template"
-  href: specs/razor/razor-data.html
-- uid: Specs.Razor.Dnn
-  name: Link /  Object in Razor / .net
-  href: specs/razor/razor-dnn.html
+  href: how-to/dynamic-code/razor-content-blocks.html
 - uid: ToSic.Eav.Apps
   name: ToSic.Eav.Apps
   href: api/dot-net/ToSic.Eav.Apps.html
@@ -6853,14 +6862,8 @@ references:
   fullName: ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes
   nameWithType: IInPageEditingSystem.ContextAttributes
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
-  name: Enable(String, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
-  href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
-  commentId: M:ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
-  name.vb: Enable(String, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
-  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>)
-  fullName.vb: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean))
-  nameWithType: IInPageEditingSystem.Enable(String, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
-  nameWithType.vb: IInPageEditingSystem.Enable(String, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+  name: '...) Method in C# Razor'
+  href: how-to/dynamic-code/edit.enable.html
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable*
   name: Enable
   href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_

@@ -93,14 +93,12 @@ todo
 * [Concepts: Polymorphisms](concept-polymorph)
 
 ## Demo App and further links
-[//]: # "Apps which provide sample code using this"
 
 You should find some code examples in this demo App
 * [REST and WebApi Tutorial](http://2sxc.org/en/apps/app/tutorial-javascript-rest-api-using-jquery-and-angularjs)
 
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in 2sxc ??.??
 2. Enhanced with Polymorph Editions in 2sxc 9.35 (allowing subfolder/api)

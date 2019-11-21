@@ -4,7 +4,6 @@
 When a user is logged on and has edit permissions, he should see buttons to edit his content or perform other actions. This is all done in HTML / JavaScript.
 
 ## How to use
-[//]: # "usually start with some demo code, as it's probably the quickest way to learn"
 
 The most common use-case is actually to provide some HTML, which the JavaScript will pick up automatically and convert into a menu. You can read more about this in [Html Toolbars and Buttons](Html-Toolbars-and-Buttons). 
 
@@ -178,7 +177,6 @@ You should find some code examples in this demo App
 * [JS Manage / Toolbar API Tutorial App][jsapp]
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in 2sxc v01.00
 2. Public API since 2sxc v08.06

@@ -82,7 +82,6 @@ The `SxcApiController` provides various command / helpers to get you productiv. 
 * [Concepts: Polymorphisms](concept-polymorph)
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in 2sxc 06.05
 1. Enhanced with Polymorph Editions in 2sxc 9.35 (allowing subfolder/api)

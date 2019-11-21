@@ -31,8 +31,9 @@
         "files": [
           "api/**.md",
           "articles/**.md",
+          "how-to/**.md",
           "specs/**.md",
-          "toc.yml",
+          "toc.md",
           "*.md"
         ],
         "exclude": [

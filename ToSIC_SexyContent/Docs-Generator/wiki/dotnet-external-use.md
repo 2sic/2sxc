@@ -2,7 +2,6 @@
 [//]: # "The title should say if it's an event/method/property, the name, + the Technology like Razor, JavaScript, jQuery"
 
 ## Purpose / Description
-[//]: # "short description / purpose, 2-3 lines"
 Sometimes you want to leverage 2sxc to create a solution, provide data input etc. but want to output or re-use the data in your own Module, Skin, Script or something else. This is easy to do.
 
 ## Simple Example
@@ -30,13 +29,11 @@ App.Data.Create("Tag", vals);
 ```
 
 ## Read also
-[//]: # "Additional links - often within this documentation, but can also go elsewhere"
 
 * To dive deeper, you must check the [blog post][blog-post]
 
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in 2sxc 08.03
 

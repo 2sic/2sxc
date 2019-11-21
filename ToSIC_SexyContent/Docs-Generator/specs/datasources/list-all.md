@@ -451,12 +451,10 @@ These are all the data sources which are either provided in the default installa
 ...
 
 ## Read also
-[//]: # "Additional links - often within this documentation, but can also go elsewhere"
 
 * ...
 
 ## Demo App and further links
-[//]: # "Apps which provide sample code using this"
 
 You should find some code examples in this demo App
 * ...
@@ -464,7 +462,6 @@ You should find some code examples in this demo App
 More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Manuals/Feature/feature/2683)
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in 2sxc ??.??
 2. 

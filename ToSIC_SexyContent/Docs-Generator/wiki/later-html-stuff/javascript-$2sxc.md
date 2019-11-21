@@ -164,7 +164,6 @@ TODO: document the properties, mention that they won't be stable in future versi
 _Till we find time to document more, please consult the [source][source]_
 
 ## Demo App and further links
-[//]: # "Apps which provide sample code using this"
 
 You should find some code examples in this demo App
 * [TimeLineJS][TimeLineJS]
@@ -173,7 +172,6 @@ You should find some code examples in this demo App
 More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Manuals/Feature/feature/2683)
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in 2sxc 04.00
 1. Enhanced with `cms` (see [cms](javascript-$2sxc.cms)) in 9.30

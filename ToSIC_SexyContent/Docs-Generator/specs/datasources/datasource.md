@@ -50,7 +50,6 @@ You will usually use DataSource objects in these common cases:
 1. a query is always a chain of DataSource doing one operation and passing it on to the next DataSource. 
 
 ## How to use
-[//]: # "usually start with some demo code, as it's probably the quickest way to learn"
 
 In your Razor-templates you'll usually work with these three sources:
 1. [Data](Razor-Data)
@@ -111,7 +110,6 @@ Maybe you want to create an XML DataSource or a DNN-Users DataSource. This is ea
 
 
 ## Read also
-[//]: # "Additional links - often within this documentation, but can also go elsewhere"
 
 * about [Data Streams](DotNet-DataStream)
 * [Demo-App showing some coding of DataSources][app-ds-code]
@@ -119,7 +117,6 @@ Maybe you want to create an XML DataSource or a DNN-Users DataSource. This is ea
 
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in 2sxc 04.00
 

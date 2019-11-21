@@ -61,19 +61,16 @@ _this is the default location for JS files_
 * `bottom` meaning it will be loaded at the end of the html document. This is actually great for page-loading performance to improve _above-the-fold_ loading. But it takes a bit of work to perfect its application. 
 
 ## Read also
-[//]: # "Additional links - often within this documentation, but can also go elsewhere"
 
 * [DNN API Documentation][dnn-api-docs]
 * [Blog about problems with the DNN resource management](http://2sxc.org/en/blog/post/the-trouble-with-dnn-javascript-css-minification-aka-client-dependency-resource-management) in case you run into problems
 
 ## Demo App and further links
-[//]: # "Apps which provide sample code using this"
 
 You should find some code examples in this demo App
 * basically this is used in every app in the [app-catalog](http://2sxc.org/en/apps)
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in Version 04.00 with true/false
 1. Enhanced in Version 06.00 with priority numbers

@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Format: JSON V1 (2sxc 9.4) | 2sxc and EAV 10 </title>
+    <title>Format: JSON V1 | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Format: JSON V1 (2sxc 9.4) | 2sxc and EAV 10 ">
+    <meta name="title" content="Format: JSON V1 | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
@@ -48,6 +48,9 @@
                 <ul class="nav level1 navbar-nav">
                       <li>
                           <a href="../../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../../how-to/index.html" title="How To">How To</a>
                       </li>
                       <li>
                           <a href="../../specs/index.html" title="Specs">Specs</a>
@@ -97,7 +100,7 @@
                     </li>
                     <li class="">
                       <span class="expand-stub"></span>
-                      <a class="">EAV Internals</a>
+                      <a class="">Architecture</a>
                         
                         <ul class="nav level2">
                           <li class="">
@@ -109,7 +112,7 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
-                      <a class="">EAV DataSources</a>
+                      <a class="">DataSources</a>
                         
                         <ul class="nav level2">
                           <li class="">
@@ -152,15 +155,6 @@
                                 </li>
                               </ul>  </li>
                         </ul>  </li>
-                    <li class="">
-                      <span class="expand-stub"></span>
-                      <a class="">Razor</a>
-                        
-                        <ul class="nav level2">
-                          <li class="">
-                            <a class="">Todo all</a>
-                          </li>
-                        </ul>  </li>
                   </ul>        </div>
               </div>
             </div>
@@ -169,20 +163,19 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="Specs.Data.Formats.JsonV1">
-<h1 id="format-json-v1-2sxc-94">Format: JSON V1 (2sxc 9.4)</h1>
+<h1 id="format-json-v1">Format: JSON V1</h1>
 
-<h2 id="purpose--description">Purpose / Description</h2>
-<p>JSON based data storage is used to persist data into a text (JSON) format. In 2sxc 9.4 we introduced it to storte entities in the history (for version rollback). Since then it has found many new applications. </p>
+<p>JSON based data storage is used to persist data into a text (JSON) format. In 2sxc 9.4 we introduced it to store entities in the history (for version rollback). Since then it has found many new applications. </p>
 <h2 id="json-format-v1-package">JSON Format V1 Package</h2>
-<p>Basically the Json format has a minimal header like</p>
+<p>The Json format has a minimal header like this:</p>
 <pre><code class="lang-json">{
   &quot;_&quot;: { &quot;V&quot;: 1 }
 }
 </code></pre><p>which just contains the version. Future non-breaking enhancements will leave the version on 1 and optionally add more header information. </p>
 <p>In addition to that, the basic package can contain either</p>
 <ol>
-<li>a <code>ContentType</code> node (<a class="xref" href="format-json-v1-content-type.html">see specs</a>)</li>
-<li>or an <code>Entity</code> node (<a class="xref" href="format-json-v1-entity.html">see specs</a>)</li>
+<li>a <code>ContentType</code> node <a class="xref" href="format-json-v1-content-type.html">see specs</a></li>
+<li>or an <code>Entity</code> node <a class="xref" href="format-json-v1-entity.html">see specs</a></li>
 </ol>
 <p>This could then look like this: </p>
 <pre><code class="lang-json">{
