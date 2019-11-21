@@ -1,7 +1,10 @@
+---
+uid: Specs.Data.Inputs.String-Font-Icon-Picker
+---
 # UI Field Type: string-font-icon-picker
 
 ## Purpose / Description
-Use this field type to create input-fields which let the user pick an icon. It stores a [string/text data](data-type-string). It's an extension of the basic [string field type](ui-field-string).
+Use this field type to create input-fields which let the user pick an icon. It stores a [string/text data](xref:Specs.Data.Type.String). It's an extension of the basic [string field type](xref:Specs.Data.Inputs.String).
 
 ## Features 
 

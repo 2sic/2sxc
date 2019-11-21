@@ -1,7 +1,10 @@
+---
+uid: Specs.Data.Inputs.Hyperlink-Default
+---
 # UI Field Type: hyperlink-default
 
 ## Purpose / Description
-Use this field type for configuring normal links, page or file/image references, storing [Hyperlink](data-type-hyperlink). It's an extension of the [hyperlink field type](ui-field-hyperlink).
+Use this field type for configuring normal links, page or file/image references, storing [Hyperlink](xref:Specs.Data.Type.Hyperlink). It's an extension of the [hyperlink field type](xref:Specs.Data.Inputs.Hyperlink).
 
 ## Features 
 
@@ -15,7 +18,7 @@ Use this field type for configuring normal links, page or file/image references,
 No relevant settings to be configured.
 
 ## History
-1.  Introduced in EAV 1.0 / 2sxc 1.0, originally as part of the [hyperlink field type](ui-field-hyperlink)
+1.  Introduced in EAV 1.0 / 2sxc 1.0, originally as part of the [hyperlink field type](xref:Specs.Data.Inputs.Hyperlink)
 2.	Changed in EAV 3.0 / 2sxc 6.0 (it used to have many configuration fields for all kinds of uses, which were then moved to sub-types)
 
 

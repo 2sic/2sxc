@@ -1,7 +1,10 @@
+---
+uid: Specs.Data.Inputs.String-Dropdown-Query
+---
 # UI Field Type: string-dropdown-query (2sxc 9.11+)
 
 ## Purpose / Description
-Use this field type for configuring a dropdown UI elements, storing [string/text data](data-type-string). It's an extension of the [string field type](ui-field-string).
+Use this field type for configuring a dropdown UI elements, storing [string/text data](xref:Specs.Data.Type.String). It's an extension of the [string field type](xref:Specs.Data.Inputs.String).
 
 The special thing about this is that the items shown for selecting are retrieved from Query and not pre-defined as part of the the field definition. This allows you to look up any kind of data and offer it for selection. 
 
@@ -35,3 +38,4 @@ This shows the configuration dialog:
 
 ## History
 1. Introduced in EAV 4.5 2sxc 9.11
+1. Enhanced with options to allow edit/delete in 10.20

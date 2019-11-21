@@ -1,7 +1,10 @@
+---
+uid: Specs.Data.Type.Entity
+---
 # Data Type: Entity (List of Entity-Items)
 
 ## Purpose / Description
-**Entity** or **Item** data is a basic [data type](data-types) and is used to mark item-relationships, like books-to-authors or blog-to-tags. 
+**Entity** or **Item** data is a basic [data type](xref:Specs.Data.Type.Overview) and is used to mark item-relationships, like books-to-authors or blog-to-tags. 
 
 ## Storage in the SQL Database in the EAV-Model
 This is stored in a special relationships-table, so internally the current DB IDs are used to track relationships. 
@@ -54,7 +57,7 @@ Side-effect: Sometimes you want to have an A-Z order when showing items. As the 
 
 ## Read also
 
-* [String fields](ui-field-entity) documentation about using it in the UI
+* [String fields](xref:Specs.Data.Inputs.Entity) documentation about using it in the UI
 
 ## History
 1. Introduced ca. in EAV 2.0 and 2sxc 3.0

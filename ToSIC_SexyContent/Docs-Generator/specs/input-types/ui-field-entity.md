@@ -1,15 +1,18 @@
+---
+uid: Specs.Data.Inputs.Entity
+---
 # UI Field Type: entity
 
 ## Purpose / Description
-The **entity** field is the base type for input-fields storing [entity-relationships](data-type-entity). It has sub-types.
+The **entity** field is the base type for input-fields storing [entity-relationships](xref:Specs.Data.Type.Entity). It has sub-types.
 
 ## Features 
 The basic **entity** field simply allows you to select items of a specific type, with various add/remove/create/delete features.  
 
 ## Sub-Types of Entity Fields
 
-1. [entity-default](ui-field-entity-default) - standard selector with type, add/remove, one/multi, delete, etc.
-1. [entity-query](ui-field-entity-query) for picking entities which were pre-processed in a query
+1. [entity-default](xref:Specs.Data.Inputs.Entity-Default) - standard selector with type, add/remove, one/multi, delete, etc.
+1. [entity-query](xref:Specs.Data.Inputs.Entity-Query) for picking entities which were pre-processed in a query
 
 ## Shared Settings
 All Entity-Field Types have the following settings:

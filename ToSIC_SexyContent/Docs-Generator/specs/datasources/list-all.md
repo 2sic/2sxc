@@ -1,7 +1,7 @@
 ---
 uid: Specs.DataSources.ListAll
 ---
-# All DataSource Objects in 2sxc / EAV (dotnet)
+# All DataSource Objects in 2sxc / EAV
 
 ## Purpose / Description
 2sxc provides a large set of [DataSource](DotNet-DataSource) objects which either get data from somewhere (SQL, CSV, ...) or modify data on the `In` and passing it to `Out`. This page will give you an overview and link you to further sources if you need to know more. 

@@ -1,8 +1,11 @@
+---
+uid: Specs.Data.Inputs.String-Url-Path
+---
 # UI Field Type: string-url-path
 
 ## Purpose / Description
 Use this field type to manage url-paths which you'll usually use to identify an
-item. For example, if you have a blog and each post has a url with the name, this is the field that you need to match the url to the item. It stores a [string/text data](data-type-string). It's an extension of the basic [string field type](ui-field-string).
+item. For example, if you have a blog and each post has a url with the name, this is the field that you need to match the url to the item. It stores a [string/text data](xref:Specs.Data.Type.String). It's an extension of the basic [string field type](xref:Specs.Data.Inputs.String).
 
 ## Features 
 

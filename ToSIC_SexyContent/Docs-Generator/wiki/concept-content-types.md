@@ -8,7 +8,7 @@ Every _thing_, _record_ or _object_ in 2sxc has a definition of fields it can ha
 
 Each [Entity](concept-entities) has many fields, some containing text, numbers etc. The fields an Entity can have is defined in the **Content-Type**, so each Entity is like a record of that type. The Content-Type will define what fields exist, what is required and what order the fields will appear in when editing the item. 
 
-Each field will be of a simple type like _text/string_, _number_, _boolean (yes/no)_ or other. You can find the list of [types here](data-types).
+Each field will be of a simple type like _text/string_, _number_, _boolean (yes/no)_ or other. You can find the list of [types here](xref:Specs.Data.Type.Overview).
 
 ## How to Use
 

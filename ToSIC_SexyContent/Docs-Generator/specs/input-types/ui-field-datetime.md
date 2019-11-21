@@ -1,3 +1,6 @@
+---
+uid: Specs.Data.Inputs.Datetime
+---
 # UI Field Type: datetime
 
 ## Purpose / Description
@@ -8,7 +11,7 @@ The basic **datetime** field doesn't have any features, since all the features a
 
 ## Sub-Types of DateTime Fields
 
-1. [datetime-default](ui-field-datetime-default) - simple date and/or time input field (basic datepicker and/or timepicker)
+1. [datetime-default](xref:Specs.Data.Inputs.Datetime-Default) - simple date and/or time input field (basic datepicker and/or timepicker)
 
 ## Shared Settings
 Don't have shared settings.

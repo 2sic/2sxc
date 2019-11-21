@@ -3,7 +3,7 @@
   href: articles/
 - name: Specs
   # xref: Specs.Home
-  homepage: specs/
+  homepage: specs/index.md
 - name: .net API
   #href: obj/api/dot-net/
   xref: Api.DotNet

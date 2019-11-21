@@ -14,7 +14,7 @@ Note that other edit-actions happen in-page directly, like _move-up/down_ in a l
 The configuration of these edit-dialogs happens in the **Content Type** configuration, which automatically generates the correct dialog for the user. To understand this better, you may want to research
 
 1. **Content types** which define what fields exist in the edit-dialog
-1. **[Field Data Types](data-types)** and **[Input Types](ui-fields)** which determine what options a field has and how it's stored
+1. **[Field Data Types](xref:Specs.Data.Type.Overview)** and **[Input Types](ui-fields)** which determine what options a field has and how it's stored
 1. **[Custom input types](http://2sxc.org/en/Blog/post/custom-input-type-advanced-dynamic-data)** for special input types not provided by default
 1. **[Presentation Settings](http://2sxc.org/en/docs/Separate-Presentation-Settings-from-Real-Content)** which tell the view how an item is to be shown, check also the [content/data differences](http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content/source/dnnsoftware)
 1. **View/Template configuration** which assigns certain content-types to Templates - check out this [tutorial](https://2sxc.org/en/Learn/Getting-started-with-creating-stuff/First-Content-Template)

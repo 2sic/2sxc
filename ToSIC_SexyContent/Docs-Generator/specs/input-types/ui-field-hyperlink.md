@@ -1,15 +1,18 @@
+---
+uid: Specs.Data.Inputs.Hyperlink
+---
 # UI Field Type: hyperlink / files
 
 ## Purpose / Description
-The **hyperlink (links/files)** field is the base type for input-fields storing [hyperlink](data-type-hyperlink). It has sub-types.
+The **hyperlink (links/files)** field is the base type for input-fields storing [hyperlink](xref:Specs.Data.Type.Hyperlink). It has sub-types.
 
 ## Features 
 The basic **hyperlink (links/files)** field is used for normal links, page or file/image references as well as for complete sets of files (like image galleries)
 
 ## Sub-Types of Hyperlink Fields
 
-1. [hyperlink-default](ui-field-hyperlink-default) - it's input field for normal links, page or file/image references. In menu it has ADAM (automatic digital asset manager), page picker, image manager and file manager.
-1. [hyperlink-library](ui-field-hyperlink-library) - it's for complete sets of files (like image galleries).
+1. [hyperlink-default](xref:Specs.Data.Inputs.Hyperlink-Default) - it's input field for normal links, page or file/image references. In menu it has ADAM (automatic digital asset manager), page picker, image manager and file manager.
+1. [hyperlink-library](xref:Specs.Data.Inputs.Hyperlink-Library) - it's for complete sets of files (like image galleries).
 
 ## Shared Settings
 All Hyperlink-Field Types have the following settings:

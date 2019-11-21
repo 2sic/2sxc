@@ -1,7 +1,10 @@
+---
+uid: Specs.Data.Type.Hyperlink
+---
 # Data Type: Hyperlink
 
 ## Purpose / Description
-Hyperlink data is a basic [data type](data-types) and is actually a string, but on reading it's automatically converts to an output-friendly format. It's used for normal links, page or file/image references as well as for complete sets of files (like image galleries). 
+Hyperlink data is a basic [data type](xref:Specs.Data.Type.Overview) and is actually a string, but on reading it's automatically converts to an output-friendly format. It's used for normal links, page or file/image references as well as for complete sets of files (like image galleries). 
 
 
 ## Storage in the SQL Database in the EAV-Model
@@ -35,7 +38,7 @@ In 99% of all use cases, you want to generate html with a real link, which is wh
 
 ## Read also
 
-* [Hyperlink fields](ui-field-hyperlink) documentation about using it in the UI
+* [Hyperlink fields](xref:Specs.Data.Inputs.Hyperlink) documentation about using it in the UI
 
 ## History
 1. Introduced in EAV 1.0 2sxc 1.0

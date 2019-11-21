@@ -1,3 +1,6 @@
+---
+uid: Specs.Data.Type.Overview
+---
 # Data Types
 
 ## Purpose / Description
@@ -9,16 +12,16 @@ The **data-type** describes how data is stored (persisted) in various formats (S
 The **input-type** describes how the user can enter such data - for example using a text-field or a date-picker. Learn more about the [input types here](ui-fields).
 
 ## Basic Data Types
-EAV 4.5+ and 2sxc 9.0+ currently have the following data types
+EAV and 2sxc 10.0+ currently have the following data types
 
-1. [Boolean](data-type-boolean)
+1. [Boolean](xref:Specs.Data.Type.Boolean)
 1. Custom - for internal (core development) use only, please don't use for anything else
-1. [DateTime](date-type-datetime) - for dates and times
-1. [Empty](data-type-empty) - for non-saved data like group-headings
-1. [Entity](data-type-entity) - for relationships between items - like a book to the author or a blog-post to tags
-1. [Hyperlink](data-type-hyperlink) - a special string with helper objects which resolve "file:72" to the real link
-1. [Number](data-type-number) - for any kind of number like 1, 2, 3 or GPS coordinates
-1. [String](data-type-string) - for standard string types or when you other options don't work
+1. [DateTime](xref:Specs.Data.Type.DateTime) - for dates and times
+1. [Empty](xref:Specs.Data.Type.Empty) - for non-saved data like group-headings
+1. [Entity](xref:Specs.Data.Type.Entity) - for relationships between items - like a book to the author or a blog-post to tags
+1. [Hyperlink](xref:Specs.Data.Type.Hyperlink) - a special string with helper objects which resolve "file:72" to the real link
+1. [Number](xref:Specs.Data.Type.Number) - for any kind of number like 1, 2, 3 or GPS coordinates
+1. [String](xref:Specs.Data.Type.String) - for standard string types or when you other options don't work
 
 
 ## Read also

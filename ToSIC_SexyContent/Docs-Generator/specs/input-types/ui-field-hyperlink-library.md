@@ -1,7 +1,10 @@
+---
+uid: Specs.Data.Inputs.Hyperlink-Library
+---
 # UI Field Type: hyperlink-library
 
 ## Purpose / Description
-Use this field type for complete sets of files (like image galleries), storing [Hyperlink](data-type-hyperlink). It's an extension of the [hyperlink field type](ui-field-hyperlink).
+Use this field type for complete sets of files (like image galleries), storing [Hyperlink](xref:Specs.Data.Type.Hyperlink). It's an extension of the [hyperlink field type](xref:Specs.Data.Inputs.Hyperlink).
 
 ## Features 
 1.  TODO
@@ -17,6 +20,6 @@ This shows the configuration dialog:
 * **Metadata Content Types** - the content-type (or types) to be used for assets in this library. To use this, first create a content-type (like DownloadMetadata or MugshotMetadata) and type the name of the content type into this field.
 
 ## History
-1.  Introduced in EAV 1.0 / 2sxc 1.0, originally as part of the [hyperlink field type](ui-field-hyperlink)
+1.  Introduced in EAV 1.0 / 2sxc 1.0, originally as part of the [hyperlink field type](xref:Specs.Data.Inputs.Hyperlink)
 2.	Changed in EAV 3.0 / 2sxc 6.0 (it used to have many configuration fields for all kinds of uses, which were then moved to sub-types)
 

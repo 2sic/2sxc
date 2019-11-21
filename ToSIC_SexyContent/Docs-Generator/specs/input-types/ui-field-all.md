@@ -1,3 +1,6 @@
+---
+uid: Specs.Data.Inputs.All
+---
 # UI Field Type: All
 
 ## Purpose / Description

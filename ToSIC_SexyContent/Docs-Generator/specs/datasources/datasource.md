@@ -2,7 +2,7 @@
 uid: Specs.DataSources.DataSource
 ---
 
-# DataSource Basics (IDataSource in .net code)
+# DataSource Basics (IDataSource)
 
 ## Purpose / Description
 DataSources are objects which deliver one or many [DataStreams](DotNet-DataStream), which contain a bunch of content-items. 
