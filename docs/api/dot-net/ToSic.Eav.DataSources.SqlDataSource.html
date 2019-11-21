@@ -52,7 +52,10 @@
                           <a href="../../articles/intro.html" title="Articles">Articles</a>
                       </li>
                       <li>
-                          <a href="../../api/dot-net/index.html" title=".net API Documentation">.net API Documentation</a>
+                          <a href="../../specs/" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
                       </li>
                 </ul>    </div>
           </div>
@@ -552,7 +555,86 @@
   </h1>
   <div class="markdown level0 summary"><p>Provide Entities from a SQL Server</p>
 </div>
-  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 conceptual"><h1 id="data-source-sqldatasource">Data Source: SqlDataSource</h1>
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>The <strong>SqlDataSource</strong> <a class="xref" href="../../specs/datasources/datasource.html">DataSource</a> is part of the <a class="xref" href="../../specs/datasources/list-all.html">Standard EAV Data Sources</a>. It lets you use data from SQL databases as if they were entities.  </p>
+<h2 id="how-to-use-with-the-visual-query">How to use with the Visual Query</h2>
+<p>When using the <a class="xref" href="https://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a> you can just drag it into your query. The <code>Default</code> out will contain the items from the DB:</p>
+<p><img src="/assets/data-sources/sqldatasource-basic.png" width="100%"></p>
+<p>We recommend that you rename it so you know what it&#39;s for: </p>
+<p><img src="/assets/data-sources/sqldatasource-renamed.png" width="100%"></p>
+<p>You can then configure your connection to the DB and Query as you need it:</p>
+<p><img src="/assets/data-sources/sqldatasource-config-full.png" width="100%"></p>
+<h2 id="understanding-the-settings">Understanding the Settings</h2>
+<h3 id="title--notes">Title &amp; Notes</h3>
+<p>This is just for your notes, to remind you what this is for and to put notes about anything you wanted to remember. </p>
+<p><img src="/assets/data-sources/sqldatasource-config-title-notes.png" width="100%"></p>
+<h3 id="connection">Connection</h3>
+<p>There are two ways to connect to SQL databases: using a <strong>Connection Name</strong> (which points to a detailed connection string in the <em>web.config</em>) or using a detailed <strong>Connection String</strong> as you need it. We recommend to use connection names where possible. If you provide both, the connection name will be used:</p>
+<p><img src="/assets/data-sources/sqldatasource-config-connection.png" width="100%"></p>
+<h3 id="the-sql-query">The SQL-Query</h3>
+<p>The <strong>Query</strong> section has quite a lot of options, most of which are not required but are important for this to work: </p>
+<p><img src="/assets/data-sources/sqldatasource-config-query.png" width="100%"></p>
+<p>Here&#39;s what you need to know</p>
+<ul>
+<li>Content Type<ul>
+<li>all entities must have a type-name - so you can just enter something here - in most cases the exact name isn&#39;t important, because you usually don&#39;t refer back to this, unless further processing will try to filter this or something</li>
+</ul>
+</li>
+<li>EntityId and EntityTitle<ul>
+<li>when using entities in 2sxc / EAV, each entity must be able to supply a title and an ID which is an integer. This is important for internal data processing to work. </li>
+<li>For this to work with SQL, the source needs to know what data-fields to use for this. By default it will use a field called <code>EntityId</code> and <code>EntityTitle</code>, but you can also use any other field - in which case you must supply the names in the following fields. </li>
+</ul>
+</li>
+</ul>
+<h2 id="using-url-parameters-in-queries">Using URL Parameters in Queries</h2>
+<p>The SQL DataSource can also use queries which use URL Parameters. It&#39;s safe and automatically prevent SQL Injection. For example, you can do the following:</p>
+<pre><code class="lang-sql">SELECT TOP (1000) PortalId as EntityId, HomeDirectory as EntityTitle,PortalID,ExpiryDate,
+AdministratorRoleId,GUID,HomeDirectory,
+CreatedOnDate,PortalGroupID
+  FROM [Portals]
+  Where PortalId = [QueryString:Id]
+</code></pre><p>This will automatically use the <code>id</code> parameter from the URL to filter the result. </p>
+<h2 id="using-another-entity-as-sql-parameter">Using Another Entity As SQL Parameter</h2>
+<p>You can of course use the <code>In</code> stream to provide entities which configure the SQL. The following example has a content-type <code>SqlSetting</code> with only one item (to make the example easier to understand). The <a href="DotNet-DataSource-App">App DataSource</a> delivers this in the <code>AppSetting</code> stream, which also goes into the Sql as <code>AppSetting</code> and is then used as a token in the SQL:</p>
+<p><img src="/assets/data-sources/sqldatasource-using-entity-as-config.png" width="100%"></p>
+<h2 id="using-a-value-from-a-module-instance-as-sql-parameter">Using A Value from a Module-Instance as SQL Parameter</h2>
+<p>This works like in the App-example: Provide the data from the <a href="DotNet-DataSource-ModuleDataSource">ModuleDataSource</a> as an <code>In</code> stream to the SqlDataSource, and use that to filter:</p>
+<p><img src="/assets/data-sources/sqldatasource-using-instance-as-config.png" width="100%"></p>
+<h2 id="programming-with-the-sqldatasource-datasource">Programming With The SqlDataSource DataSource</h2>
+<blockquote><p>We recommend to use the Visual Query where possible, 
+as it&#39;s easier to understand and is identical for C# and JavaScript. 
+It&#39;s also better because it separates data-retrieval from visualization.</p>
+</blockquote>
+<p>An example code </p>
+<pre><code class="lang-razor">@{
+  var sql = CreateSource&lt;ToSic.Eav.DataSources.SqlDataSource&gt;();
+  sql.ConnectionString = &quot;SiteSqlServer&quot;; // use DNN
+  sql.SelectCommand = &quot;Select ... From&quot;; // your sql here
+}
+@foreach(var post in AsDynamic(sql[&quot;Default&quot;]))
+{
+  &lt;div&gt;@post.EntityTitle&lt;/div&gt;
+}
+</code></pre><h3 id="important-when-coding">Important When Coding</h3>
+<p>Note that data sources only retrieve data once, and then ignore any further configuration. So you must set everything before accessing the data. </p>
+<h2 id="read-also">Read also</h2>
+<ul>
+<li>datasource / data stream</li>
+<li><a class="xref" href="../../specs/datasources/list-all.html">List of all EAV Data Sources</a></li>
+<li>query / visual query</li>
+</ul>
+<h2 id="demo-app-and-further-links">Demo App and further links</h2>
+<p>You should find some examples in this demo App</p>
+<ul>
+<li><a href="https://github.com/2sic/app-demo-visual-query/releases/latest">Demo App with examples for most DataSources</a></li>
+</ul>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in EAV 3.x, in 2sxc ?</li>
+</ol>
+<h2 id="api-documentation">API Documentation</h2>
+</div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
@@ -940,7 +1022,7 @@ But this would be inefficient, so for optimization, many items identify themselv
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_SqlDataSource.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.SqlDataSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Eav/DataSources/SqlDatasource.md/#L2" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
                     <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/SqlDataSource.cs/#L20" class="contribution-link">View Source</a>

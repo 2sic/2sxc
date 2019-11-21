@@ -1,3 +1,7 @@
+---
+uid: Todo.ToSic.Eav.DataSources.CacheAllStreams
+---
+
 # Data Source: CacheAllStreams
 
 ## Purpose / Description
@@ -28,27 +32,16 @@ Note that the cache is extremely intelligent - it will ask all in-bound sources 
 
 
 ## Programming With The CacheAllStreams DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
-Because of limited resources we don't have code-examples. It works, but you'll have to figure it ouf if you need it. 
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-FQN: `ToSic.Eav.DataSources.Caches.CacheAllStreams`
-
-## Read also
-
-* [Source code of the CacheAllStreams](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/Caches/CacheAllStreams.cs)
-* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
-
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
 
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 3.x, 2sxc ?
 
 
-
-
+[!include["Start-APIs"](shared-api-start.md)]

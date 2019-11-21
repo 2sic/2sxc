@@ -58,15 +58,11 @@ There are three common use cases:
 
 [!include["Read-Also-Section"](shared-read-also.md)]
 
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
 
-## History
-
+[!include["Heading-History"](shared-history.md)]
 1. Introduced in EAV 3.x, 2sxc ca. v6
 
 
-## API Documentation
-
+[!include["Start-APIs"](shared-api-start.md)]

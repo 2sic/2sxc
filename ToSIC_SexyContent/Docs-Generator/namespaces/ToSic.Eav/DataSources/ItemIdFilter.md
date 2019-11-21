@@ -1,3 +1,7 @@
+---
+uid: ToSic.Eav.DataSources.EntityIdFilter
+---
+
 # Data Source: ItemIdFilter / EntityIdFilter
 
 ## Purpose / Description
@@ -20,27 +24,15 @@ Or URL-parameters:
 
 
 ## Programming With The ItemIdFilter DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
-Because of limited resources we don't have code-examples. It works, but you'll probably never need it so we don't document it. 
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-FQN: `ToSic.Eav.DataSources.EntitydFilter`
-
-## Read also
-
-* [Source code of the ItemIdFilter](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/EntityIdFilter.cs)
-* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
-
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
 
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 4.x, 2sxc ?
 
-
-
-
+[!include["Start-APIs"](shared-api-start.md)]

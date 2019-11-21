@@ -1,3 +1,6 @@
+---
+uid: Todo.ToSic.Eav.DataSources.ContentTypeFilter
+---
 # Data Source: ContentType EntityType Filter
 _Note: this data source used to be called EntityTypeFilter, we renamed it in 2sxc 9.8 for consistency_
 
@@ -16,9 +19,7 @@ The above example shows:
 
 
 ## Programming With The ContentTypeFilter DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
-
-Because of limited resources we don't have many code-examples. Here's a simple one: 
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
 ```c#
 // A source which can filter by Content-Type (EntityType)
@@ -27,23 +28,12 @@ allAuthors.TypeName = "Author";
 
 ```
 
-FQN: `ToSic.Eav.DataSources.EntityTypeFilter`
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-## Read also
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
-* [Source code of the ContentTypeFilter (previously EntityTypeFilter)](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/EntityTypeFilter.cs)
-* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
-
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
-
-
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 3.x, 2sxc ?
 
-
-
-
+[!include["Start-APIs"](shared-api-start.md)]

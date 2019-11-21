@@ -1,3 +1,6 @@
+---
+uid: ToSic.Eav.DataSources.PublishingFilter
+---
 # Data Source: PublishingFilter
 
 ## Purpose / Description
@@ -16,27 +19,15 @@ Since the published/unpublished is a very common query, internally the cache act
 
 
 ## Programming With The PublishingDataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
-Because of limited resources we haven't documented this yet. You'll figure it out based on other examples :).  
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-FQN: `ToSic.Eav.DataSources.PublishingFilter`
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
-## Read also
-
-* [Source code of the PublishingFilter](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/PublishingFilter.cs)
-* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
-
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
-
-
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 3.x, in 2sxc ?
 
 
-
-
+[!include["Start-APIs"](shared-api-start.md)]

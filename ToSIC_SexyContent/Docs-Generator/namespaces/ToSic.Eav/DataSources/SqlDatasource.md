@@ -1,3 +1,6 @@
+---
+uid: ToSic.Eav.DataSources.SqlDataSource
+---
 # Data Source: SqlDataSource
 
 ## Purpose / Description
@@ -65,9 +68,7 @@ This works like in the App-example: Provide the data from the [ModuleDataSource]
 <img src="/assets/data-sources/sqldatasource-using-instance-as-config.png" width="100%">
 
 ## Programming With The SqlDataSource DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
-
-FQN: `ToSic.Eav.DataSources.SqlDataSource`
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
 An example code 
 
@@ -86,23 +87,13 @@ An example code
 ### Important When Coding
 Note that data sources only retrieve data once, and then ignore any further configuration. So you must set everything before accessing the data. 
 
+[!include["Read-Also-Section"](shared-read-also.md)]
 
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
-## Read also
-
-* [Source code of the SqlDataSource](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/SqlDataSource.cs)
-* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
-
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
-
-
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 3.x, in 2sxc ?
 
 
-
-
+[!include["Start-APIs"](shared-api-start.md)]

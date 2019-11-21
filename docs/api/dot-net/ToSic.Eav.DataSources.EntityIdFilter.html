@@ -52,7 +52,10 @@
                           <a href="../../articles/intro.html" title="Articles">Articles</a>
                       </li>
                       <li>
-                          <a href="../../api/dot-net/index.html" title=".net API Documentation">.net API Documentation</a>
+                          <a href="../../specs/" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
                       </li>
                 </ul>    </div>
           </div>
@@ -552,7 +555,39 @@
   </h1>
   <div class="markdown level0 summary"><p>A DataSource that filters Entities by Ids</p>
 </div>
-  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 conceptual"><h1 id="data-source-itemidfilter--entityidfilter">Data Source: ItemIdFilter / EntityIdFilter</h1>
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>The <strong>ItemIdFilter</strong> <a class="xref" href="../../specs/datasources/datasource.html">DataSource</a> is part of the <a class="xref" href="../../specs/datasources/list-all.html">Standard EAV Data Sources</a>. It will only return the items with the id specified. </p>
+<p><em>Warning: You should always use it in combination with a <a href="DotNet-DataSource-ContentTypeFilter">Content-Type filter</a>, as you want to be sure nobody can just crawl any entity you have in your system!</em></p>
+<h2 id="how-to-use-with-the-visual-query">How to use with the Visual Query</h2>
+<p>When using the <a class="xref" href="https://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a> you can just drag it into your query. This is what it usually looks like:</p>
+<p><img src="/assets/data-sources/item-id-basic.png" width="100%"></p>
+<p>You can also use multiple values:</p>
+<p><img src="/assets/data-sources/item-id-multiple.png" width="100%"></p>
+<p>Or URL-parameters:</p>
+<p><img src="/assets/data-sources/item-id-url.png" width="100%"></p>
+<h2 id="programming-with-the-itemidfilter-datasource">Programming With The ItemIdFilter DataSource</h2>
+<blockquote><p>We recommend to use the Visual Query where possible, 
+as it&#39;s easier to understand and is identical for C# and JavaScript. 
+It&#39;s also better because it separates data-retrieval from visualization.</p>
+</blockquote>
+<h2 id="read-also">Read also</h2>
+<ul>
+<li>datasource / data stream</li>
+<li><a class="xref" href="../../specs/datasources/list-all.html">List of all EAV Data Sources</a></li>
+<li>query / visual query</li>
+</ul>
+<h2 id="demo-app-and-further-links">Demo App and further links</h2>
+<p>You should find some examples in this demo App</p>
+<ul>
+<li><a href="https://github.com/2sic/app-demo-visual-query/releases/latest">Demo App with examples for most DataSources</a></li>
+</ul>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in EAV 4.x, 2sxc ?</li>
+</ol>
+<h2 id="api-documentation">API Documentation</h2>
+</div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
@@ -724,7 +759,7 @@ But this would be inefficient, so for optimization, many items identify themselv
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_EntityIdFilter.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.EntityIdFilter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Eav/DataSources/ItemIdFilter.md/#L2" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
                     <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/EntityIdFilter.cs/#L16" class="contribution-link">View Source</a>

@@ -1,3 +1,6 @@
+---
+uid: ToSic.Eav.DataSources.ValueSort
+---
 # Data Source: ValueSort
 
 ## Purpose / Description
@@ -25,9 +28,7 @@ For sorting direction you can use either words or numbers
 * 1/0
 
 ## Programming With The ValueSort DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
-
-Because of limited resources we don't have many code-examples: 
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
 ```c#
 // A source which can filter by Content-Type (EntityType)
@@ -39,23 +40,14 @@ var sortedAuthors = CreateSource<ValueSort>(allAuthors);
 sortedAuthors.Attributes = "FullName";
 
 ```
-FQN: `ToSic.Eav.DataSources.ValueSort`
 
-## Read also
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-* [Source code of the ValueSort](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/ValueSort.cs)
-* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
-
-
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 3.x, 2sxc ?
 
 
-
-
+[!include["Start-APIs"](shared-api-start.md)]

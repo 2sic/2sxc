@@ -1,3 +1,6 @@
+---
+uid: ToSic.Eav.DataSources.RelationshipFilter
+---
 # Data Source: RelationshipFilter
 
 ## Purpose / Description
@@ -66,24 +69,13 @@ Note that as of now (2sxc 9.9) the RelationshipFilter:
 1. can only seek child-items 
 
 ## Programming With The RelationshipFilter DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
-Because of limited resources we don't have code-examples. It works, but you'll probably never need it so we don't document it. 
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-FQN: `ToSic.Eav.DataSources.RelationshipFilter`
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
-## Read also
-
-* [Source code of the RelationshipFilter](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/RelationshipFilter.cs)
-* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
-
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
-
-
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 4.x, 2sxc ?
 1. Added AttributeOnRelationship (to compare other fields that title/id) in 2sxc 9.9
@@ -91,5 +83,4 @@ You should find some examples in this demo App
 1. Added various operators like `count`, `first`, `containsany`, `any`, `not-*` in 2sxc 9.9
 
 
-
-
+[!include["Start-APIs"](shared-api-start.md)]

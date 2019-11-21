@@ -1,3 +1,7 @@
+---
+uid: Todo.ToSic.Eav.DataSources.xxx
+---
+
 # Data Source: Module-Instance DataSource
 
 ## Purpose / Description
@@ -31,27 +35,17 @@ In 2sxc 9.9 we added the configuration dialog, so you can specify what module th
 
 
 ## Programming With The ModuleDataSource DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
-Because of limited resources we don't have code-examples. It works, but you'll probably never need it so we don't document it. The only property you need to set is `InstanceId` (2sxc 9.9+) if you want to provide a different module-id. 
+The only property you need to set is `InstanceId` (2sxc 9.9+) if you want to provide a different module-id. 
 
-FQN: `ToSic.SexyContent.DataSources.ModuleDataSource`
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-## Read also
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
-* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
-
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
-
-
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 4.x, 2sxc ?
 1. Added ability to configure in in the visual-query (2sxc 9.9)
 
-
-
-
+[!include["Start-APIs"](shared-api-start.md)]

@@ -52,7 +52,10 @@
                           <a href="../../articles/intro.html" title="Articles">Articles</a>
                       </li>
                       <li>
-                          <a href="../../api/dot-net/index.html" title=".net API Documentation">.net API Documentation</a>
+                          <a href="../../specs/" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
                       </li>
                 </ul>    </div>
           </div>
@@ -553,7 +556,77 @@
   <div class="markdown level0 summary"><p>Filter Entities by Value in a Related Entity. For example:
 Find all Books (desired Entity), whose Authors (related Entity) have a Country (Attribute) with &apos;Switzerland&apos; (Value). </p>
 </div>
-  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 conceptual"><h1 id="data-source-relationshipfilter">Data Source: RelationshipFilter</h1>
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>The <strong>RelationshipFilter</strong> <a class="xref" href="../../specs/datasources/datasource.html">DataSource</a> is part of the <a class="xref" href="../../specs/datasources/list-all.html">Standard EAV Data Sources</a>. It will return only the items which have a relationship to another item - like books having an author, or blog-posts with the tag <em>grunt</em>. </p>
+<h2 id="how-to-use-with-the-visual-query">How to use with the Visual Query</h2>
+<p>When using the <a class="xref" href="https://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a> you can just drag it into your query. This is what it usually looks like:</p>
+<p><img src="/assets/data-sources/relationship-filter-basic.png" width="100%"></p>
+<h2 id="using-url-parameters">Using Url Parameters</h2>
+<p>You can of course also use URL parameters for both the value as well as the field: </p>
+<p><img src="/assets/data-sources/relationship-filter-url.png" width="100%"></p>
+<h2 id="using-the-fallback">Using the Fallback</h2>
+<p>In case none of the items match the reqiurement, then either no items are returned, or those in the fallback stream: </p>
+<p><img src="/assets/data-sources/relationship-filter-fallback.png" width="100%"></p>
+<p>You can find more fallback examples like chaining them in the <a href="DotNet-DataSource-ValueFilter">ValueFilter DataSource</a></p>
+<h2 id="separators-for-multiple-criterias-2sxc-99">Separators for Multiple Criterias (2sxc 9.9+)</h2>
+<p>Until 2sxc 9.8 you could only check for 1 related item, so you could only say &quot;give me all items which have this one author&quot;. In 2sxc 9.9 we are now able to specify multiple authors, allowing queries like &quot;give me all items which have all these authors&quot; or &quot;give me all items which have any of these authors&quot;. </p>
+<p>This works using the separation-character, which is usually a comma <code>,</code> but could be something different (in case your items have commas in the texts you&#39;re comparing). If you don&#39;t specify a separator, none will be used and the whole <code>Filter</code> criteria is treated as one value. Here&#39;s where you set it:</p>
+<p><img src="/assets/data-sources/relationship-filter-separator.png" width="100%"></p>
+<h2 id="all-operators-2sxc-99">All Operators (2sxc 9.9+)</h2>
+<p>Untill 2sxc 9.8, you could not specify an operator, and <code>contains</code> was the assumed operator. In 9.9 we added a lot more. To explain what each does, assume that our main stream contains items of <code>BlogPost</code> and we only want to keep the posts having certain <code>Tags</code>.</p>
+<p>Here&#39;s the list, each is explained more below:</p>
+<ol>
+<li><code>contains</code> - will return all items (BlogPosts), having <strong>all</strong> the children (tags) specified</li>
+<li><code>containsany</code> - will return all items (BlogPosts) having <strong>any</strong> of the children (tags) specified</li>
+<li><code>not-contains</code> will return all items (BlogPosts) <strong>not-having-all</strong> of the children (tags). So it will also return those items, having some of the children.</li>
+<li><code>not-containsany</code> will return all items (BlogPosts) having <strong>none</strong> of the children (tags) specified.</li>
+<li><code>any</code> will return all items (BlogPosts) having <strong>any children at all</strong> (tags). So the filter is ignored. This is the same as count=0.</li>
+<li><code>not-any</code> will return all items (BlogPosts) having <strong>no children</strong> (tags).</li>
+<li><code>first</code> will return all items (BlogPosts) where the <strong>first child</strong> (tag) is one of the filter-options. This is for scenarios where you say the first tag is a primary-category or similar.</li>
+<li><code>not-first</code> will return  all items (BlogPosts) where the first children (tags) is not one of the filter values.</li>
+<li><code>count</code> will return all items (BlogPosts) having a <strong>specific amount</strong> of children (tags)</li>
+<li><code>not-count</code> will return all items (BlogPosts) <strong>not having a specific amount</strong> of children (tags)</li>
+</ol>
+<h2 id="filtering-on-fields-other-than-title-and-id-99">Filtering On Fields other than Title and ID (9.9+)</h2>
+<p>In 2sxc 9.9 we added the ability to specify which field you want to compare (before it was always Id or Title). Here&#39;s an example:</p>
+<p><img src="/assets/data-sources/relationship-filter-other-field.png" width="100%"></p>
+<h2 id="filtering-by-relationship-count-99">Filtering by Relationship-Count (9.9+)</h2>
+<p>In 2sxc 9.9 we added the ability to filter by amount of relationships - so you could say &quot;give me all blog-posts with exactly 2 tags&quot;:</p>
+<p><img src="/assets/data-sources/relationship-filter-count.png" width="100%"></p>
+<p>Note: you can also reverse this, so instead of <code>count</code> you can use <code>not-count</code> to get all the items that don&#39;t match this requirement. </p>
+<h2 id="filtering-by-has-any-99">Filtering by Has-Any (9.9+)</h2>
+<p>In 2sxc 9.9 we added the ability to filter by </p>
+<h2 id="limitations-of-the-relationshipfilter">Limitations of the RelationshipFilter</h2>
+<p>Note that as of now (2sxc 9.9) the RelationshipFilter:</p>
+<ol>
+<li>can only seek child-items </li>
+</ol>
+<h2 id="programming-with-the-relationshipfilter-datasource">Programming With The RelationshipFilter DataSource</h2>
+<blockquote><p>We recommend to use the Visual Query where possible, 
+as it&#39;s easier to understand and is identical for C# and JavaScript. 
+It&#39;s also better because it separates data-retrieval from visualization.</p>
+</blockquote>
+<h2 id="read-also">Read also</h2>
+<ul>
+<li>datasource / data stream</li>
+<li><a class="xref" href="../../specs/datasources/list-all.html">List of all EAV Data Sources</a></li>
+<li>query / visual query</li>
+</ul>
+<h2 id="demo-app-and-further-links">Demo App and further links</h2>
+<p>You should find some examples in this demo App</p>
+<ul>
+<li><a href="https://github.com/2sic/app-demo-visual-query/releases/latest">Demo App with examples for most DataSources</a></li>
+</ul>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in EAV 4.x, 2sxc ?</li>
+<li>Added AttributeOnRelationship (to compare other fields that title/id) in 2sxc 9.9</li>
+<li>Added separator to enable multi-filter in 2sxc 9.9</li>
+<li>Added various operators like <code>count</code>, <code>first</code>, <code>containsany</code>, <code>any</code>, <code>not-*</code> in 2sxc 9.9</li>
+</ol>
+<h2 id="api-documentation">API Documentation</h2>
+</div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
@@ -882,7 +955,7 @@ other modes like &quot;equals&quot; or &quot;exclude&quot; not implemented</p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_DataSources_RelationshipFilter.md&amp;value=---%0Auid%3A%20ToSic.Eav.DataSources.RelationshipFilter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Eav/DataSources/RelationshipFilter.md/#L2" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
                     <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.DataSources/RelationshipFilter.cs/#L17" class="contribution-link">View Source</a>

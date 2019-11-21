@@ -58,11 +58,10 @@ Note that data sources only retrieve data once, and then ignore any further conf
 [!include["Read-Also-Section"](shared-read-also.md)]
 * [Razor examples using App.Data](Razor-App)
 
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
-
-## History
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 3.x, in ca. 2sxc 6.x
+
+[!include["Start-APIs"](shared-api-start.md)]

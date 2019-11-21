@@ -1,3 +1,6 @@
+---
+uid: ToSic.Eav.DataSources.ItemFilterDuplicates
+---
 # Data Source: ItemFilterDuplicates
 
 ## Purpose / Description
@@ -23,27 +26,16 @@ The ItemFilterDuplicates DataSource has no settings to configure.
 Note that it will automatically merge the streams in A-Z order of the In-Stream names. 
 
 ## Programming With The ItemFilterDuplicates DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
-Because of limited resources we don't have many code-examples: 
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-FQN: `ToSic.Eav.DataSources.ItemFilterDuplicates`
-
-## Read also
-
-* [Source code of the ItemFilterDuplicates](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/ItemFilterDuplicates.cs)
-* [List of all EAV Data Sources](xref:Specs.DataSources.ListAll)
-
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
 
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 4.x, 2sxc 9.10
 
 
-
-
+[!include["Start-APIs"](shared-api-start.md)]
