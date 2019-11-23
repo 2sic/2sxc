@@ -1,4 +1,4 @@
-#[How To Introductions](index.md)
+#[Concepts Introductions](index.md)
 
 # Data Concepts
 ##[Entities](xref:Concepts.Entities)

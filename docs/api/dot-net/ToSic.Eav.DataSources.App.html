@@ -712,10 +712,6 @@ It&#39;s also better because it separates data-retrieval from visualization.</p>
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.App, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Source, Icon = &quot;app&quot;, DynamicOut = true, ExpectsDataOfType = &quot;|Config ToSic.Eav.DataSources.App&quot;, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-App&quot;)]
 public class App : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKey, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
-  <h5 id="ToSic_Eav_DataSources_App_remarks"><strong>Remarks</strong></h5>
-  <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.
-But this would be inefficient, so for optimization, many items identify themselves with both the app and zone Ids</p>
-</div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
@@ -793,9 +789,7 @@ This allows users of the App to query metadata directly through this object. </p
   </span>
   <a id="ToSic_Eav_DataSources_App_Out_" data-uid="ToSic.Eav.DataSources.App.Out*"></a>
   <h4 id="ToSic_Eav_DataSources_App_Out" data-uid="ToSic.Eav.DataSources.App.Out">Out</h4>
-  <div class="markdown level1 summary"><p>Gets the Dictionary of Out-Streams. This is the internal accessor, as usually you&apos;ll use this[&quot;name&quot;] instead. <br>
-In rare cases you need the Out, for example to list the stream names in the data source.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -812,8 +806,7 @@ In rare cases you need the Out, for example to list the stream names in the data
     <tbody>
       <tr>
         <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a>&gt;</td>
-        <td><p>A dictionary of named <a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a> objects</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>

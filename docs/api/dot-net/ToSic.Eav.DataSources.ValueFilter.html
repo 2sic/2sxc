@@ -713,10 +713,6 @@ someAuthors.Value = &quot;Daniel Mettler&quot;;
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.ValueFilter, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Filter, In = new string[]{&quot;Default&quot;, &quot;Fallback&quot;}, DynamicOut = false, ExpectsDataOfType = &quot;|Config ToSic.Eav.DataSources.ValueFilter&quot;, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ValueFilter&quot;)]
 public sealed class ValueFilter : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKey, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
-  <h5 id="ToSic_Eav_DataSources_ValueFilter_remarks"><strong>Remarks</strong></h5>
-  <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.
-But this would be inefficient, so for optimization, many items identify themselves with both the app and zone Ids</p>
-</div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
