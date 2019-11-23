@@ -1,3 +1,0 @@
-## Page has moved...
-
-...to [DotNet-DynamicEntity](DotNet-DynamicEntity)

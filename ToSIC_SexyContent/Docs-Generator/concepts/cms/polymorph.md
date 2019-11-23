@@ -71,6 +71,3 @@ _todo_
 
 1. Introduced in 2sxc 9.35 - WebApi Polymorphism
 
-[CustomizeData]:Razor-SexyContentWebPage.CustomizeData
-[InstancePurpose]:Razor-SexyContentWebPage.InstancePurpose
-[CustomizeSearch]:Razor-SexyContentWebPage.CustomizeSearch

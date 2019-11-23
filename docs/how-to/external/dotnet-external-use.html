@@ -1,0 +1,268 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Use 2sxc Instances or App-Data from External C# Code | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Use 2sxc Instances or App-Data from External C# Code | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../../concepts/index.html" title="Concepts">Concepts</a>
+                      </li>
+                      <li>
+                          <a href="../../how-to/index.html" title="How To">How To</a>
+                      </li>
+                      <li>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../index.html" title="How To Introductions" class="">How To Introductions</a>
+                    </li>
+                    <li class="">
+                      <a href="../dotnet-razor-csharp-overview.html" title="C# / Razor Introduction" class="">C# / Razor Introduction</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Razor & WebApi Objects</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../dynamic-code/entity.html" title="Entity / DynamicEntity" class="">Entity / DynamicEntity</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/object-app.html" title="App Object" class="">App Object</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/object-data.html" title="Data Object" class="">Data Object</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/object-dnn.html" title="Dnn Object" class="">Dnn Object</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../dynamic-code/object-edit.html" title="Edit Object" class="">Edit Object</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../dynamic-code/object-edit.html" title="Edit.Enable (todo)" class="">Edit.Enable (todo)</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <a href="../dynamic-code/object-link.html" title="Link Object" class="">Link Object</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/use-named-parameters.html" title="Use Named Parameters" class="">Use Named Parameters</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Razor</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../razor/contextattributes.html" title="Context Attributes" class="">Context Attributes</a>
+                          </li>
+                          <li class="">
+                            <a class="">Customize Data</a>
+                          </li>
+                          <li class="">
+                            <a href="../razor/razor-customizesearch.html" title="Customize Search" class="">Customize Search</a>
+                          </li>
+                          <li class="">
+                            <a class="">todo template</a>
+                          </li>
+                          <li class="">
+                            <a class="">todo purpose</a>
+                          </li>
+                          <li class="">
+                            <a class="">todo contentblock</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Output/Templates</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../output/assets.html" title="Assets" class="">Assets</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">WebApi</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../webapi/webapis.html" title="WebApis Overview" class="">WebApis Overview</a>
+                          </li>
+                          <li class="">
+                            <a class="">Custom WebApi</a>
+                          </li>
+                          <li class="">
+                            <a href="../webapi/dotnet-webapi-saveinadam.html" title="SaveInAdam" class="">SaveInAdam</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="active">
+                      <a href="../external/dotnet-external-use.html" title="External Use" class="active">External Use</a>
+                    </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="HowTo.External">
+<h1 id="use-2sxc-instances-or-app-data-from-external-c-code">Use 2sxc Instances or App-Data from External C# Code</h1>
+
+<p>Sometimes you want to leverage 2sxc to create a solution, provide data input etc. but want to output or re-use the data in your own Module, Skin, Script or something else. This is easy to do.</p>
+<h2 id="simple-example">Simple Example</h2>
+<p>Imagine this was your C# code in your WebForms Code-Behind:</p>
+<pre><code class="lang-c#">// the app id
+var appId = 42;
+
+// create a simple app object to then access data
+var appSimple = ToSic.SexyContent.Environment.Dnn7.Factory.App(appId);
+
+// example getting all data of content type Tag
+var tags = appSimple.Data[&quot;Tag&quot;];
+
+// example accessing a query
+var tagsSorted = appSimple.Query[&quot;Tags sorted&quot;];
+
+// Creating an entity
+var vals = new Dictionary&lt;string, object&gt;();
+vals.Add(&quot;Tag&quot;, &quot;test-tag&quot;);
+vals.Add(&quot;Label&quot;, &quot;Test Tag&quot;);
+
+App.Data.Create(&quot;Tag&quot;, vals);
+</code></pre><h2 id="read-also">Read also</h2>
+<ul>
+<li>To dive deeper, you must check the <a href="http://2sxc.org/en/blog/post/using-app-data-outside-of-2sxc-in-razor-custom-webapi-skin-or-another-module-300">blog post</a></li>
+</ul>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in 2sxc 08.03</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/how-to/external/dotnet-external-use.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

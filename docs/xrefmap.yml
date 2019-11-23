@@ -31,6 +31,9 @@ references:
 - uid: Concepts.DnnModule
   name: 'Concept: How DNN Modules Connect To Content-Blocks'
   href: concepts/cms/dnn-module.html
+- uid: Concepts.Edit
+  name: 'Overview: Edit Content or Data in DNN / 2sxc'
+  href: concepts/cms/edit.html
 - uid: Concepts.EditContext
   name: 'Concept: In-Page Edit Context'
   href: concepts/cms/edit-context.html
@@ -79,12 +82,15 @@ references:
 - uid: Concepts.Views
   name: 'Concept: Views'
   href: concepts/cms/views.html
+- uid: HowTo.CSharp
+  name: DotNet / C# / Razor API Documentation for DNN / 2sxc
+  href: how-to/dotnet-razor-csharp-overview.html
 - uid: HowTo.DynamicCode.App
   name: App /  object in Razor
   href: how-to/dynamic-code/object-app.html
-- uid: HowTo.DynamicCode.ContextAttributes
-  name: ContextAttributes in Razor-Output
-  href: how-to/razor/contextattributes.html
+- uid: HowTo.DynamicCode.CustomizeData
+  name: Event CustomizeData() on the Razor Page
+  href: how-to/razor/razor-customizedata.html
 - uid: HowTo.DynamicCode.Data
   name: " in Razor Template"
   href: how-to/dynamic-code/object-data.html
@@ -94,12 +100,48 @@ references:
 - uid: HowTo.DynamicCode.Edit
   name: Edit /  Object in Razor / .net
   href: how-to/dynamic-code/object-edit.html
+- uid: HowTo.DynamicCode.Entity
+  name: IEntity / Entity Content-Item
+  href: how-to/dynamic-code/entity.html
 - uid: HowTo.DynamicCode.Link
   name: Link /  Object in Razor / .net
   href: how-to/dynamic-code/object-link.html
+- uid: HowTo.DynamicCode.NamedParameters
+  name: 'Convention: Named Parameters'
+  href: how-to/dynamic-code/use-named-parameters.html
+- uid: HowTo.External
+  name: Use 2sxc Instances or App-Data from External C# Code
+  href: how-to/external/dotnet-external-use.html
 - uid: HowTo.Home
   name: How To Do Things in EAV and 2sxc
   href: how-to/index.html
+- uid: HowTo.Output.Assets
+  name: Optimizing Template Assets / Client Depedencies (JS & CSS)
+  href: how-to/output/assets.html
+- uid: HowTo.Razor.ContextAttributes
+  name: ContextAttributes in Razor-Output
+  href: how-to/razor/contextattributes.html
+- uid: HowTo.Razor.CustomizeSearch
+  name: Event CustomizeSearch() on the Razor Page
+  href: how-to/razor/razor-customizesearch.html
+- uid: HowTo.WebApi.SaveInAdam
+  name: SaveInAdam command in SxcApiController
+  href: how-to/webapi/dotnet-webapi-saveinadam.html
+- uid: HowTo.WebApis
+  name: Http WebAPI and REST API
+  href: how-to/webapi/webapis.html
+- uid: Specs.Angular.Toolbars
+  name: Toolbars in Angular (dnn-sxc-angular)
+  href: specs/angular/dnn-sxc-angular.html
+- uid: Specs.AngularJs
+  name: AngularJs 1 Overview
+  href: specs/angularJs/angularjs-1-overview.html
+- uid: Specs.App.Folders
+  name: Folder structure in the Content App folder
+  href: specs/app/app-folder-structure.html
+- uid: Specs.Contribute
+  name: Contribute to 2sxc / EAV - Setup
+  href: specs/docs/contribute-setup.html
 - uid: Specs.Data.Formats.JsonV1
   name: 'Format: JSON V1'
   href: specs/data-formats/format-json-v1.html
@@ -226,15 +268,36 @@ references:
 - uid: Specs.DataSources.DataStream
   name: DataStream Basics (IDataStream)
   href: specs/datasources/datastream.html
+- uid: Specs.DataSources.Linq
+  name: Querying Data and Data Sources with code and LINQ
+  href: specs/datasources/linq-datasource.html
+- uid: Specs.DataSources.LinqGuide
+  name: Guide to Working with LINQ and 2sxc/EAV Data
+  href: specs/datasources/linq-guide.html
 - uid: Specs.DataSources.ListAll
   name: All DataSource Objects in 2sxc / EAV
   href: specs/datasources/list-all.html
+- uid: Specs.DocsContribute
+  name: How to contribute to this documentation
+  href: specs/docs/contribute.html
+- uid: Specs.DocsTags
+  name: Documentation Tags
+  href: specs/docs/doc-tags.html
+- uid: Specs.Features
+  name: Features API in .net
+  href: specs/configuration/features.html
 - uid: Specs.Home
   name: Specifications of EAV and 2sxc
   href: specs/index.html
 - uid: Specs.Razor.Blocks
   name: 'Razor: Rendering Content-Blocks'
-  href: how-to/dynamic-code/razor-content-blocks.html
+  href: how-to/razor/razor-content-blocks.html
+- uid: Specs.StyleGuide
+  name: Style Guide for DNN / 2sxc
+  href: specs/style-guides/style-guides.html
+- uid: Specs.StyleGuide2020
+  name: 2sxc Style Guide - Best Practices v2020 DRAFT
+  href: specs/style-guides/style-guide-2020.html
 - uid: ToSic.Eav.Apps
   name: ToSic.Eav.Apps
   href: api/dot-net/ToSic.Eav.Apps.html
@@ -6932,7 +6995,7 @@ references:
   nameWithType: IInPageEditingSystem.ContextAttributes
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
   name: '...) Method in C# Razor'
-  href: how-to/dynamic-code/edit.enable.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
+  href: how-to/dynamic-code/edit.enable.html
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable*
   name: Enable
   href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_

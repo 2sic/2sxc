@@ -90,6 +90,9 @@
 <h1 id="this-is-the-eav--2sxc-api-documentation">This is the <strong>EAV &amp; 2sxc API Documentation</strong></h1>
 
 <p>This is the documentation for EAV and 2sxc APIs. It&#39;s fairly advanced, so if you&#39;re new to 2sxc, best start with <a href="https://2sxc.org/">2sxc.org</a>.</p>
+<h2 id="2sxc---the-cms--cmf-of-dnn-dotnetnuke">2sxc - The CMS / CMF of DNN (DotNetNuke)</h2>
+<p>2sxc is a CMS-Plugin for <a href="http://www.dnnsoftware.com/">DNN/DotNetNuke</a>. It makes content editing easier than Wordpress. It&#39;s also a <a href="https://en.wikipedia.org/wiki/List_of_content_management_frameworks">CMF</a> like Drupal. And a very cool EAV data-management system. And an online REST JSON database. And a lot more.</p>
+<p>2sxc is basically used to provide web-site-builder functionality to DNN, both in a simple <strong>Content</strong> mode (where users just add images, designed text/image blocks, links etc.) or in <strong>App</strong> mode, where user add standalone functional apps like blogs, galleries and more. Most apps are on github and can be downloaded from the <a href="https://2sxc.org/en/apps">app-catalog</a>.</p>
 <h2 id="where-to-start">Where to Start</h2>
 <p>2sxc is an easy to use dynamic content system for .net Platforms like DNN. 
 If you are just getting started, then this is probably not where you should be looking. Focus first on:</p>
@@ -101,19 +104,71 @@ If you are just getting started, then this is probably not where you should be l
 <p>With that knowledge, you can already create amazing stuff. </p>
 <blockquote><p>Everything you find here is very advanced and you won&#39;t need it for normal everyday work.</p>
 </blockquote>
+<h2 id="overview-and-links-to-other-documentations">Overview and Links to Other Documentations</h2>
+<p>2sxc is very flexible and can be used for almost any kind of content-management needs or app development needs. Because of this, different documentations help you work with different things. Here&#39;s the overview:</p>
+<ol>
+<li><a href="https://2sxc.org">2sxc.org</a></li>
+<li><a href="http://2sxc.org/en/Learn">Getting started tutorials</a> are found in the <em>Learn</em> section of <a href="http://2sxc.org/en/">2sxc.org</a><br>includes installation, basic instructions, creating your first content-type and similar tutorials &amp;<br>it also include instructions how to export/import data, working with the image resizer and more.</li>
+<li>A <a href="http://2sxc.org/en/docs">list of features</a>, concepts and examples can be found in the <em>Docs</em> section of 2sxc.org, including things not specifically code related</li>
+<li><a href="http://2sxc.org/en/blog">Many solutions and recommendations</a> are found in the <em>Blog</em> on 2sxc.org</li>
+<li><a href="http://2sxc.org/en/Apps">Many demo, template and tutorial Apps</a> are found in the <em>App Catalog</em> on 2sxc.org</li>
+<li><a href="2sxc-Roadmap-and-History">2sxc / EAV Roadmap</a></li>
+<li>APIs and similar are found in this <a href="https://github.com/2sic/2sxc/wiki">wiki</a> - you&#39;ll see the TOC in the box to the right</li>
+<li><a href="App-folder-structure">App folder structure</a> and special files</li>
+<li><a href="Style-Guide-2017">Style Guide (beta)</a> best-practices draft</li>
+</ol>
 <h2 id="if-you-want-to-know-more-then-check-out">If you want to know more, then check out...</h2>
 <ol>
 <li>The <a class="xref" href="articles/intro.html">Articles</a> which tells you about Architecture, Data Models and more</li>
 <li>The <a class="xref" href="api/dot-net/index.html">C# .net API Docs</a></li>
 </ol>
-<h2 id="other-stuff">Other stuff</h2>
 <h4 id="documentation-version">Documentation Version</h4>
 <p>Generated for EAV/2sxc 10.20.03</p>
-<h4 id="pending-work--tasks">Pending Work / Tasks</h4>
+<h2 id="todo">Todo</h2>
 <ol>
-<li>Migrate certain docs from the <a href="https://github.com/2sic/2sxc/wiki">wiki</a> to here</li>
 <li>Document/publish more APIs</li>
 </ol>
+<details>
+    <summary>
+        <strong>Features to document in wiki...</strong>
+    </summary>
+
+These topics are already documented elsewhere, but should become part of the wiki
+
+1. <a href="http://2sxc.org/en/Docs/Feature/feature/4680">View-switching based on url-params</a>
+1. <a href="http://2sxc.org/en/Docs/Feature/feature/4737">Security protecting views like admin-views</a>
+1. <a href="https://2sxc.org/en/blog/tag/datasource">creating custom DataSource objects</a>
+
+</details>
+
+<details>
+    <summary>
+        <strong>More things to document</strong>
+    </summary>
+
+These topics are not or insufficiently documented...
+
+1. URL and REST API for retrieving / changing data (todo)
+1. ADAM - the Automatic Digital Asset Manager (todo) and AsAdam(...)
+1. Metadata system
+1. Enhancing 2sxc with custom extensions
+    1. Custom input field-types
+    2. Custom data-types
+    3. Custom templating engines
+    4. Custom JS connectors to other libraries
+    5. ...
+1. Future topics, lower priority
+    1. Angular2-5 and 2sxc (todo)
+    2. React and 2sxc (todo)
+    3. Knockout and 2sxc (todo)
+    4. jQuery with 2sxc (todo)
+1. etc.
+
+</details>
+
+
+
+<h4 id="pending-work--tasks">Pending Work / Tasks</h4>
 </article>
           </div>
           
@@ -122,7 +177,7 @@ If you are just getting started, then this is probably not where you should be l
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/index.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

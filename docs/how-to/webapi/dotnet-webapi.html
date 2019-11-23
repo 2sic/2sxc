@@ -1,0 +1,309 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ASP.net WebAPI in 2sxc | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="ASP.net WebAPI in 2sxc | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../../concepts/index.html" title="Concepts">Concepts</a>
+                      </li>
+                      <li>
+                          <a href="../../how-to/index.html" title="How To">How To</a>
+                      </li>
+                      <li>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../index.html" title="How To Introductions" class="">How To Introductions</a>
+                    </li>
+                    <li class="">
+                      <a href="../dotnet-razor-csharp-overview.html" title="C# / Razor Introduction" class="">C# / Razor Introduction</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Razor & WebApi Objects</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../dynamic-code/entity.html" title="Entity / DynamicEntity" class="">Entity / DynamicEntity</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/object-app.html" title="App Object" class="">App Object</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/object-data.html" title="Data Object" class="">Data Object</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/object-dnn.html" title="Dnn Object" class="">Dnn Object</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../dynamic-code/object-edit.html" title="Edit Object" class="">Edit Object</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../dynamic-code/object-edit.html" title="Edit.Enable (todo)" class="">Edit.Enable (todo)</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <a href="../dynamic-code/object-link.html" title="Link Object" class="">Link Object</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/use-named-parameters.html" title="Use Named Parameters" class="">Use Named Parameters</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Razor</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../razor/contextattributes.html" title="Context Attributes" class="">Context Attributes</a>
+                          </li>
+                          <li class="">
+                            <a class="">Customize Data</a>
+                          </li>
+                          <li class="">
+                            <a href="../razor/razor-customizesearch.html" title="Customize Search" class="">Customize Search</a>
+                          </li>
+                          <li class="">
+                            <a class="">todo template</a>
+                          </li>
+                          <li class="">
+                            <a class="">todo purpose</a>
+                          </li>
+                          <li class="">
+                            <a class="">todo contentblock</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Output/Templates</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../output/assets.html" title="Assets" class="">Assets</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">WebApi</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../webapi/webapis.html" title="WebApis Overview" class="">WebApis Overview</a>
+                          </li>
+                          <li class="">
+                            <a class="">Custom WebApi</a>
+                          </li>
+                          <li class="">
+                            <a href="../webapi/dotnet-webapi-saveinadam.html" title="SaveInAdam" class="">SaveInAdam</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <a href="../external/dotnet-external-use.html" title="External Use" class="">External Use</a>
+                    </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="HowTo.WebApi.SaveInAdam">
+<h1 id="aspnet-webapi-in-2sxc">ASP.net WebAPI in 2sxc</h1>
+
+<p>You can create your own custom WebAPI in 2sxc to allow external systems to interact with your data.
+The setup builds upon the ASP.net and DNN WebAPI. It enhances the bootstrapping and provides you the syntactical 2sxc goodies in C# known from Razor.</p>
+<h2 id="where-to-store-the-api-files">Where to Store the API Files</h2>
+<p>All your WebAPIs are C# files saved in the special folder called <code>api</code>. The folder must be in root of your 2sxc app, and the files have to end with <code>...Controller.cs</code> (this is a convention in ASP.net).</p>
+<p><em>New in 2sxc 9.35+</em>: you can now also create <code>api</code> folders as <em>subfolders</em> to run the api in multiple editions. This is an experimental <a class="xref" href="../../concepts/cms/polymorph.html">polymorph feature</a> which is still being worked out, but in general you can use the old and the new way:</p>
+<ul>
+<li>classic (single edition)<br><code>[app-folder]/api/YourController.cs</code><br>accessed url: <code>[api-root]/app/auto/api/[Your]</code></li>
+<li>multiple editions:<br><code>[app-folder]/[edition]/api/YourController.cs</code>
+access url: <code>[api-root]/app/auto/[edition]/api/[Your]</code></li>
+</ul>
+<p>Read more about urls in the <a href="webapi">WebApi</a> docs.</p>
+<h2 id="how-to-use">How to use</h2>
+<p>A file named <strong>DemoController.cs</strong> could look like the following:</p>
+<pre><code class="lang-c#">using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
+using ToSic.SexyContent.WebApi;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Web.Http;
+
+public class DemoController : SxcApiController
+{
+      [HttpGet]
+      [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+      [ValidateAntiForgeryToken]
+      public object Get()
+      {
+            return new
+            {
+                  Data = Sxc.Serializer.Prepare(App.Data[&quot;MyData&quot;].List)
+            };
+      }
+}
+</code></pre><p>The custom controller <strong>DemoController</strong> must have the same name as the file and extends the <strong>SxcApiController</strong> controller. It has a method returning all items of the <strong>MyData</strong> data type. The method is decorated with several attributes:</p>
+<ul>
+<li>[HttGet] defines that the method must be invoked with HTTP GET</li>
+<li>[DnnModuleAuthorize(AccessLevel = ...)] defines the permission an invoker must have</li>
+<li>[ValidateAntiForgeryToken] ensures that a security token from the cookies is validated before the mehod is invoked
+You can implement any other methods.</li>
+</ul>
+<p>The custom controller can be called with JavaScript and the 2sxc4ng API like this:</p>
+<pre><code class="lang-JavaScript">return $http.get(&quot;app-api/Demo/Get&quot;).then(function (result) {
+      return results.data.Data;
+});
+</code></pre><p>The 2sxc4ng API ensures that the GET request is send to the correct url /DesktopModules/2sxc/API/app-api/Demo/Get. You can also read more about the jQuery <a href="JavaScript-Sxc-Controller">sxc Controller</a> to use 2sxc-WebApis from jQuery pages.</p>
+<h2 id="special-object--commands-in-sxcapicontroller">Special Object / Commands in SxcApiController</h2>
+<p>The <code>SxcApiController</code> provides various command / helpers to get you productiv. Most are the same as in a normal Razor view, but some are additional. Here are the main ones:</p>
+<ol>
+<li>AsDynamic(...)</li>
+<li>AsEntity(...)</li>
+<li><a href="razor-dnn">Dnn</a></li>
+<li><a class="xref" href="../dynamic-code/object-app.html">App</a> with <code>App.Data</code>, <code>App.Query</code> etc.</li>
+<li><a class="xref" href="../dynamic-code/object-data.html">Data</a></li>
+<li><a href="dotnet-webapi-saveinadam">SaveInAdam(...)</a> <em>new in 9.30</em>
+## Notes</li>
+<li>Instead of <strong>App.Data[&quot;MyData&quot;]</strong> you can fetch data from another data source provided by 2sxc (for exmple from the <strong>App.Query[&quot;MyQueryData&quot;]</strong>)</li>
+<li><strong>Sxc.Serializer.Prepare(...)</strong> converts the object returned by App.Data[&quot;MyData&quot;].List to a dynamic and serializable object</li>
+</ol>
+<h2 id="read-also">Read also</h2>
+<ul>
+<li><a href="webapi">WebApi</a></li>
+<li><a class="xref" href="../../concepts/cms/polymorph.html">Concepts: Polymorphisms</a></li>
+</ul>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in 2sxc 06.05</li>
+<li>Enhanced with Polymorph Editions in 2sxc 9.35 (allowing subfolder/api)</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/how-to/webapi/dotnet-webapi.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

@@ -50,8 +50,8 @@ More explanations
 
 ## Read also
 
-* [InstancePurpose][InstancePurpose] - which tells you why the current code is running so you could change the data added
-* [CustomizeData][CustomizeData]
+* [InstancePurpose](xref:HowTo.DynamicCode.Purpose) - which tells you why the current code is running so you could change the data added
+* [CustomizeData](xref:HowTo.DynamicCode.CustomizeData)
 
 ## Demo App and further links
 
@@ -65,6 +65,3 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 1. Introduced in 2sxc ??.??
 2. 
 
-[CustomizeData]:Razor-SexyContentWebPage.CustomizeData
-[InstancePurpose]:Razor-SexyContentWebPage.InstancePurpose
-[CustomizeSearch]:Razor-SexyContentWebPage.CustomizeSearch

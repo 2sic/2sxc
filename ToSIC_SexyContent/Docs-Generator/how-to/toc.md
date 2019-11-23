@@ -1,9 +1,32 @@
 #[How To Introductions](index.md)
+#[C# / Razor Introduction](xref:HowTo.CSharp)
 
 # Razor & WebApi Objects
+##[Entity / DynamicEntity](xref:HowTo.DynamicCode.Entity)
 ##[App Object](xref:HowTo.DynamicCode.App)
 ##[Data Object](xref:HowTo.DynamicCode.Data)
 ##[Dnn Object](xref:HowTo.DynamicCode.Dnn)
 ##[Edit Object](xref:HowTo.DynamicCode.Edit)
+###Edit.Enable (todo)
+##[Link Object](xref:HowTo.DynamicCode.Link)
+##[Use Named Parameters](xref:HowTo.DynamicCode.NamedParameters)
 
-# Razor Templates
+# Razor
+##[Context Attributes](xref:HowTo.Razor.ContextAttributes)
+##[Customize Data](xref:HowTo.Razor.CustomizeData)
+##[Customize Search](xref:HowTo.Razor.CustomizeSearch)
+## todo template
+## todo purpose
+## todo contentblock
+
+# Output/Templates
+##[Assets](xref:HowTo.Output.Assets)
+
+# WebApi
+##[WebApis Overview](xref:HowTo.WebApis)
+##[Custom WebApi](xref:HowTo.WebApi)
+##[SaveInAdam](xref:HowTo.WebApi.SaveInAdam)
+
+# [External Use](xref:HowTo.External)
+
+

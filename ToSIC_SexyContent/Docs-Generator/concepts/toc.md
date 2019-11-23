@@ -7,7 +7,9 @@
 ##[File Content-Types](xref:Concepts.FileBasedContentTypes)
 ##[Permissions](xref:Concepts.Permissions)
 
+
 # CMS
+##[Edit Content](xref:Concepts.Edit)
 ##[DNN Modules](xref:Concepts.DnnModule)
 ##[Hide Features](xref:Concepts.HideAdvancedFeatures)
 ##[Page Publishing](xref:Concepts.PagePublishing)

@@ -21,6 +21,3 @@ You can create awesome solutions, customizing the edit-experience and working wi
 6. [Angular 1 and 2sxc with 2sxc4ng](AngularJs-1-Overview) (TODO - ca. 75% documented but partially in external articles)
 
 
-[CustomizeData]:Razor-SexyContentWebPage.CustomizeData
-[InstancePurpose]:Razor-SexyContentWebPage.InstancePurpose
-[CustomizeSearch]:Razor-SexyContentWebPage.CustomizeSearch

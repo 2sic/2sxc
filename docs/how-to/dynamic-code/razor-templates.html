@@ -139,8 +139,8 @@
 <h2 id="objects-added-by-2sxc-in-razor-templates">Objects Added by 2sxc in Razor Templates</h2>
 <ol>
 <li><a class="xref" href="object-app.html">App</a> - the current App and all it&#39;s data</li>
-<li>Content (<a href="dotnet-dynamicentity">DynamicEntity</a>) - primary and often the only content-item in the <a href="Razor-Data">Data</a> for this template</li>
-<li><a href="Razor-Data">Data</a> (IDataSource)- this object gives you all the data which was meant to be used by this Templates</li>
+<li>Content (<a href="dotnet-dynamicentity">DynamicEntity</a>) - primary and often the only content-item in the <a class="xref" href="object-data.html">Data</a> for this template</li>
+<li><a class="xref" href="object-data.html">Data</a> (IDataSource)- this object gives you all the data which was meant to be used by this Templates</li>
 <li><a href="Razor-Dnn">Dnn</a> - the common Dnn object providing page, module, user information</li>
 <li><a href="Razor-Edit">Edit</a> - helper providing you with various edit-functionality like <code>Toolbar(...)</code></li>
 <li><a href="Razor-Link">Link</a> - helper to generate links, according to the DNN-environment configuration</li>
@@ -163,7 +163,7 @@
 <ul>
 <li><code>Overrideable</code> <a href="razor-sexycontentwebpage.customizedata">CustomizeData</a> - is like a &quot;before-data-is-used&quot; of the page, used to change what data is delivered to the page - or to the search.<br>Note that this is an older feature and many things this does can also be done using the visual query designer. But sometimes you will need code, and this is the place to do it.</li>
 <li><code>Overridable</code> <a href="razor-sexycontentwebpage.customizesearch">CustomizeSearch</a></li>
-<li><code>string</code> <a href="Razor-SexyContentWebPage.InstancePurpose">InstancePurpose</a> - tells you if the code is running to render into html, or for another reason like populating the search index - so your code can adapt</li>
+<li><code>string</code> <a href="xref:HowTo.DynamicCode.Purpose">InstancePurpose</a> - tells you if the code is running to render into html, or for another reason like populating the search index - so your code can adapt</li>
 </ul>
 </article>
           </div>

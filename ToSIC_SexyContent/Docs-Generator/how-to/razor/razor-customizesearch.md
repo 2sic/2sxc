@@ -1,6 +1,9 @@
+---
+uid: HowTo.Razor.CustomizeSearch
+---
 # Event _CustomizeSearch()_ on the Razor Page
 ## Purpose / Description
-This event is called by the view-engine _after_ calling [CustomizeData][CustomizeData] and before passing the `Data` object to the DNN Search Indexer. 
+This event is called by the view-engine _after_ calling [CustomizeData](xref:HowTo.DynamicCode.CustomizeData) and before passing the `Data` object to the DNN Search Indexer. 
 
 You can override this event to change how data is presented to the search, for example by bundling items together, or by giving items different URLs so that search knows that they are to appear on a sub-page. 
 
@@ -39,7 +42,7 @@ The code above will skip customizing any data (but often you would want that too
 In general everything will work automatically. This is what happens:
 
 1. 2sxc will retrieve the data added to this module
-2. 2sxc will call the [CustomizeData()][CustomizeData] event if the template has such an event. In this event, your code can add more data to the module as needed.
+2. 2sxc will call the [CustomizeData()](xref:HowTo.DynamicCode.CustomizeData) event if the template has such an event. In this event, your code can add more data to the module as needed.
     1. Note that during the search index, no Request-variables exist.
     1. So your method will cause an error if it does something like var x = Request["Category"].
     1. In case of an error, the index will still continue to work, but your changes to the data will fail
@@ -55,8 +58,8 @@ In general everything will work automatically. This is what happens:
 
 
 ## Read also
-* [InstancePurpose][InstancePurpose] - which tells you why the current code is running so you could change the data added
-* [CustomizeData][CustomizeData]
+* [InstancePurpose](xref:HowTo.DynamicCode.Purpose) - which tells you why the current code is running so you could change the data added
+* [CustomizeData](xref:HowTo.DynamicCode.CustomizeData)
 
 ## Demo App and further links
 You should find some code examples in this demo App
@@ -71,6 +74,3 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 
 
 [//]: # "Links referenced in this page"
-[CustomizeData]:Razor-SexyContentWebPage.CustomizeData
-[InstancePurpose]:Razor-SexyContentWebPage.InstancePurpose
-[CustomizeSearch]:Razor-SexyContentWebPage.CustomizeSearch

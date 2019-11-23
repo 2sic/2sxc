@@ -1,3 +1,7 @@
+---
+uid: HowTo.DynamicCode.CustomizeData
+---
+
 # Event _CustomizeData()_ on the Razor Page
 ## Purpose / Description
 This event is called by the view-engine before the rest of the script is parsed - and it's usually empty.
@@ -35,8 +39,8 @@ In general, you can override this event to prepare data. It has a few benefits l
 The CustomizeData event runs both when rendering the template as well as when the search is running. 
 For further details you may want to read about
 
-* [InstancePurpose][InstancePurpose] - which tells you why the current code is running so you could change the data added
-* [CustomizeSearch][CustomizeSearch] - which let's you write code to alter how the data is processed in the search-index
+* [InstancePurpose](xref:HowTo.DynamicCode.Purpose) - which tells you why the current code is running so you could change the data added
+* [CustomizeSearch](xref:HowTo.DynamicCode.CustomizeSearch) - which let's you write code to alter how the data is processed in the search-index
 
 ## Demo App and further links
 You should find some code examples in this demo App
@@ -48,6 +52,3 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 1. Introduced in 2sxc 6.1
 
 [//]: # "Links referenced in this page"
-[CustomizeData]:Razor-SexyContentWebPage.CustomizeData
-[InstancePurpose]:Razor-SexyContentWebPage.InstancePurpose
-[CustomizeSearch]:Razor-SexyContentWebPage.CustomizeSearch

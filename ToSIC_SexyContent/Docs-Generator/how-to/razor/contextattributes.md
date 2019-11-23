@@ -1,5 +1,5 @@
 ---
-uid: HowTo.DynamicCode.ContextAttributes
+uid: HowTo.Razor.ContextAttributes
 ---
 
 # ContextAttributes in Razor-Output

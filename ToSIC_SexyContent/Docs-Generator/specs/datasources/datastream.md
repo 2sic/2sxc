@@ -1,4 +1,3 @@
-
 ---
 uid: Specs.DataSources.DataStream
 ---
