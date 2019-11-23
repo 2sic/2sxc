@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Format: JSON V1 | 2sxc and EAV 10 </title>
+    <title>DataSource API | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Format: JSON V1 | 2sxc and EAV 10 ">
+    <meta name="title" content="DataSource API | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
@@ -142,9 +142,9 @@
                           <li class="">
                             <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
                           </li>
-                          <li class="">
+                          <li class="active">
                             <span class="expand-stub"></span>
-                            <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
+                            <a href="../datasources/api.html" title="Internal APIs" class="active">Internal APIs</a>
                               
                               <ul class="nav level3">
                                 <li class="">
@@ -181,9 +181,9 @@
                           <li class="">
                             <a href="../input-types/_inputs-overview.html" title="Input Types" class="">Input Types</a>
                           </li>
-                          <li class="active">
+                          <li class="">
                             <span class="expand-stub"></span>
-                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="active">Json Format</a>
+                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="">Json Format</a>
                               
                               <ul class="nav level3">
                                 <li class="">
@@ -201,40 +201,48 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Specs.Data.Formats.JsonV1">
-<h1 id="format-json-v1">Format: JSON V1</h1>
+            <article class="content wrap" id="_content" data-uid="Specs.DataSources.Api">
+<h1 id="datasource-api">DataSource API</h1>
 
-<p>JSON based data storage is used to persist data into a text (JSON) format. In 2sxc 9.4 we introduced it to store entities in the history (for version rollback). Since then it has found many new applications. </p>
-<h2 id="json-format-v1-package">JSON Format V1 Package</h2>
-<p>The Json format has a minimal header like this:</p>
-<pre><code class="lang-json">{
-  &quot;_&quot;: { &quot;V&quot;: 1 }
-}
-</code></pre><p>which just contains the version. Future non-breaking enhancements will leave the version on 1 and optionally add more header information. </p>
-<p>In addition to that, the basic package can contain either</p>
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>DataSources are a magic, generic system which can generate new data-items or filter / modify other data. This section explains how they work and the API you need to create your own. </p>
+<h2 id="basics">Basics</h2>
+<p>DataSources have a few important concepts you must first understand:</p>
 <ol>
-<li>a <code>ContentType</code> node <a class="xref" href="format-json-v1-content-type.html">see specs</a></li>
-<li>or an <code>Entity</code> node <a class="xref" href="format-json-v1-entity.html">see specs</a></li>
+<li>An item is a data-object of the type <code>IEntity</code> - it can be a person, product, file-informatio etc.</li>
+<li>A list of items is is a <code>List&lt;IEntity&gt;</code> which contains zero, one or many items</li>
+<li>A <a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.IDataStream.html">stream</a> is an object which has list of items, and a name</li>
+<li>A correctly built <a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.IDataStream.html">stream</a> will offer this list, but only build it if it&#39;s actually requested</li>
+<li>Each <a class="xref" href="datasource.html">DataSource</a> has one or many named <code>Out</code> streams</li>
+<li>Each <a class="xref" href="datasource.html">DataSource</a> <em>can</em> have one or more named <code>In</code> streams coming from other DataSources</li>
+<li>Each <a class="xref" href="datasource.html">DataSource</a> has a <code>ConfigurationProvider</code>, which gives the DataSource information about the environment (like Portal or Tab information), App-Settings and more</li>
+<li>Each <a class="xref" href="datasource.html">DataSource</a> can have custom <strong>Settings</strong>, which the user entered in a dialog. Internally this is also an IEntity object</li>
+<li>DataSources also have cache-identity mechanism, to inform any up-stream cache what parameters actually caused this result, so that the data could be cached if needed</li>
 </ol>
-<p>This could then look like this: </p>
-<pre><code class="lang-json">{
-  &quot;_&quot;: { &quot;V&quot;: 1 },
-  &quot;ContentType&quot;: {
-    &quot;Id&quot;: &quot;|Config ToSic.Eav.DataSources.SqlDataSource&quot;,
-    &quot;Name&quot;: &quot;|Config ToSic.Eav.DataSources.SqlDataSource&quot;,
-    ...
-  }
-}
-</code></pre><h2 id="limitations">Limitations</h2>
-<p>As of now (2sxc 9.7) such a package can only contain 1 root item (a content-type or an entity). Future versions may enhance this.  </p>
-<h2 id="read-also">Read also</h2>
+<h2 id="providing-data">Providing Data</h2>
+<p>To offer data on the <code>Out</code> you will usually use the <code>Provide</code> method. If you&#39;re generating new items, you&#39;ll usually use the <code>AsEntity</code> method. Docs for these: </p>
 <ul>
-<li><a class="xref" href="format-json-v1-content-type.html">Format: Json V1 Content-types</a></li>
-<li><a class="xref" href="../../concepts/data/file-provided-content-types.html">Concepts: file provided content-types</a></li>
+<li><a href="dotnet-datasource-api-provide">DataSource.Provide</a></li>
+<li><a href="dotnet-datasource-api-asentity">DataSource.AsEntity</a></li>
+</ul>
+<h2 id="receiving-data-from-in-for-further-processing">Receiving Data from In for further processing</h2>
+<p>if your DataSource performs filtering or similar actions on existing data, then this data comes in on the <code>In</code> streams. In such scenarios, you would simply iterate over the <code>In[streamname].List</code> and provide the result in your out-stream again. You can find many examples in the EAV DataSources code. </p>
+<h2 id="getting-configuration">Getting Configuration</h2>
+<p>A DataSource gets the configuration from a configuration provider. To better understand this, you should read:</p>
+<ul>
+<li><a class="xref" href="configuration.html">about configuration</a></li>
+<li><a class="xref" href="../../concepts/cms/tokens.html">about tokens</a> </li>
+<li><a class="xref" href="api-configmask.html">ConfigMask(...)</a>.</li>
+</ul>
+<h2 id="configuring-the-ui">Configuring the UI</h2>
+<p>There is a special attribute called <code>VisualQuery</code> to tell the UI how to show your DataSource and provide help etc. </p>
+<ul>
+<li><a href="dotnet-datasource-api-visualquery">VisualQuery attribute</a></li>
 </ul>
 <h2 id="history">History</h2>
 <ol>
-<li>Added in 2sxc 9.7</li>
+<li>Introduced in 2sxc 4 or 5</li>
+<li>enhanced / simplified in 2sxc 9.13</li>
 </ol>
 </article>
           </div>
@@ -244,7 +252,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/data-formats/format-json-v1.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/datasources/api.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

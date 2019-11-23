@@ -113,28 +113,61 @@
                             <a href="../data/relationships.html" title="Relationships" class="">Relationships</a>
                           </li>
                           <li class="">
-                            <span class="expand-stub"></span>
                             <a class="">Content Types</a>
-                              
-                              <ul class="nav level3">
-                                <li class="">
-                                  <a href="../data/file-provided-content-types.html" title="File Based Content-Types" class="">File Based Content-Types</a>
-                                </li>
-                              </ul>  </li>
+                          </li>
+                          <li class="">
+                            <a href="../data/file-provided-content-types.html" title="File Content-Types" class="">File Content-Types</a>
+                          </li>
                           <li class="">
                             <a href="../data/permissions.html" title="Permissions" class="">Permissions</a>
                           </li>
                         </ul>  </li>
                     <li class="">
+                      <span class="expand-stub"></span>
                       <a class="">CMS</a>
-                    </li>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../cms/dnn-module.html" title="DNN Modules" class="">DNN Modules</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/hide-advanced-features.html" title="Hide Features" class="">Hide Features</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/dnn-evoq-page-publishing.html" title="Page Publishing" class="">Page Publishing</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/edit-context.html" title="Edit-Context Data" class="">Edit-Context Data</a>
+                          </li>
+                          <li class="active">
+                            <a href="../cms/inner-content.html" title="Inner Content" class="active">Inner Content</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/inpage-toolbars.html" title="Edit Toolbars" class="">Edit Toolbars</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/quick-edit.html" title="Quick-Edit (QuickE)" class="">Quick-Edit (QuickE)</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/tokens.html" title="Tokens" class="">Tokens</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/views.html" title="Views" class="">Views</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/polymorph.html" title="Polymorph" class="">Polymorph</a>
+                          </li>
+                        </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
                       <a class="">WIP</a>
                         
                         <ul class="nav level2">
                           <li class="">
-                            <a class="">Metadata</a>
+                            <a href="../data/metadata.html" title="Metadata" class="">Metadata</a>
+                          </li>
+                          <li class="">
+                            <a class="">App</a>
                           </li>
                         </ul>  </li>
                   </ul>        </div>
@@ -147,12 +180,11 @@
             <article class="content wrap" id="_content" data-uid="Concepts.InnerContent">
 <h1 id="concept-inner-content-20">Concept: Inner Content 2.0</h1>
 
-<h2 id="purpose--description">Purpose / Description</h2>
 <p>Inner Content is the feature to place content-blocks (apps or common content-items) <em>inside</em> another content-item. </p>
 <p>There are two common scenarios for this:</p>
 <ol>
 <li>Apps with list/details views, with a <strong>feature rich details-view</strong>. For example: a blog, which lets the editor add galleries and other apps into each blog-post. This is called a <a href="https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid)">mashup app</a> as it mixes apps together</li>
-<li>Apps which <strong>wrap</strong> other content/apps, for example an <a href="http://2sxc.org/en/apps/app/accordion-for-collapsible-sections">accordion-app</a> which lets the editor add further content-blocks or apps into each collapsing segment.</li>
+<li>Apps which <strong>wrap</strong> other content/apps, for example an <a class="xref" href="http://2sxc.org/en/apps/app/accordion-for-collapsible-sections">accordion-app</a> which lets the editor add further content-blocks or apps into each collapsing segment.</li>
 </ol>
 <h2 id="basic-concept">Basic Concept</h2>
 <p><em>Inner Content</em> links other content-blocks (apps, content) to a <em>Content Item</em>, allowing the template to then show this inner content where it wants to. </p>
@@ -166,7 +198,7 @@
 <h2 id="standalone-inner-content---like-a-dnn-pane-just-for-this-item">Standalone Inner-Content - like a DNN Pane just for this item</h2>
 <p>A common use case is to provide the editor with an area into which he/she can add as many content-blocks/apps as they want to. This feels like a DNN-pane - the editor just adds apps as he needs them. </p>
 <p>This mode is common for mashup-apps and is mostly used on sophisticated details-pages with a clear area containing additional functionality. It&#39;s also common in
-layout-changing apps like the <a href="http://2sxc.org/en/apps/app/accordion-for-collapsible-sections">accordion app</a>.</p>
+layout-changing apps like the <a class="xref" href="http://2sxc.org/en/apps/app/accordion-for-collapsible-sections">accordion app</a>.</p>
 <h2 id="in-wysiwyg-inner-content">In WYSIWYG Inner-Content</h2>
 <p><em>this is new in 2sxc 8.9</em></p>
 <p>Sometimes you may let the editor add inner-content blocks within a wysiwyg-field, so that normal written content can be interspersed with apps. This is common in news-style apps or blogs, where additional features are needed (galleries, code-snippets, etc.) but mixed with the main text and not in a separate area. </p>
@@ -176,7 +208,7 @@ layout-changing apps like the <a href="http://2sxc.org/en/apps/app/accordion-for
 <ol>
 <li><strong>Data storage</strong>: you need fields in your content-type to link to the external content blocks. Just create entity-fields and use the type <em>Content Block Items</em>. In many cases you also want to hide the field because it&#39;s not important to the content-editor. Just go to the field-settings and set <em>Visible in Edit UI</em> to off. </li>
 <li><strong>Content-Block rendering</strong> in the templates, using the <a href="Razor-Content-Blocks">Razor API</a> - it is prepared both for the standalone-area-mode as well as the merge-with-wysiwyg-mode. </li>
-<li><strong>In-Page Editing</strong>: to allow the editor to add / edit content-blocks in the normal view, the UI must support it. This is handeled automatically by <a href="Concept-Quick-Edit">Quick-Edit</a>. </li>
+<li><strong>In-Page Editing</strong>: to allow the editor to add / edit content-blocks in the normal view, the UI must support it. This is handeled automatically by <a href="xref:Concepts.QuickEdit">Quick-Edit</a>. </li>
 <li>To do the in-page Editing, quickE needs to know some <strong>context information</strong> (what field to store the links in, etc.), provided in an HTML-attribute. It&#39;s either rendered in automatically when using the <a href="Razor-Content-Blocks">Razor commands</a> or you can manually place them using <a href="Razor-Edit.ContextAttributes">context attributes</a>.</li>
 <li>If you want the <strong>WYSIWYG-integration</strong> the wysiwyg must know which field to use to manage the linked content-blocks. This is simply done by convention: as soon as a content-block field follows right after a wysiwyg-field, they will be linked and the button will appear. This also works it the content-block field is set to invisible. </li>
 </ol>
@@ -187,7 +219,7 @@ layout-changing apps like the <a href="http://2sxc.org/en/apps/app/accordion-for
 <h2 id="demo-app-and-further-links">Demo App and further links</h2>
 <p>You should find some code examples in this demo App</p>
 <ul>
-<li><a href="http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke">2sxc blog</a></li>
+<li><a class="xref" href="http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke">2sxc blog</a></li>
 </ul>
 <h2 id="history">History</h2>
 <ol>

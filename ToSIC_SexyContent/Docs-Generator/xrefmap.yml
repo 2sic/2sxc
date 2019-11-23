@@ -2,3 +2,14 @@ references:
 - uid: Temp.VisualQuery
   name: Visual Query
   href: https://2sxc.org/en/Learn/Visual-Query-Designer
+- uid: App.Accordion
+  name: Accordion App
+  href: http://2sxc.org/en/apps/app/accordion-for-collapsible-sections
+- uid: App.Blog
+  name: Blog App
+  href: http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke
+
+
+- uid: Blog.CustomDataSource
+  name: Blog for custom data source
+  href: http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query

@@ -4,7 +4,7 @@ uid: Specs.DataSources.ListAll
 # All DataSource Objects in 2sxc / EAV
 
 ## Purpose / Description
-2sxc provides a large set of [DataSource](DotNet-DataSource) objects which either get data from somewhere (SQL, CSV, ...) or modify data on the `In` and passing it to `Out`. This page will give you an overview and link you to further sources if you need to know more. 
+2sxc provides a large set of [DataSource](xref:Specs.DataSources.DataSource) objects which either get data from somewhere (SQL, CSV, ...) or modify data on the `In` and passing it to `Out`. This page will give you an overview and link you to further sources if you need to know more. 
 
 ## How to use
 Many data-sources are simply used in the [Visual Query](xref:Temp.VisualQuery), and if all you want is visual-query, then this reference will give you an overview regarding what things are possible. It will usually look like this: 
@@ -12,7 +12,7 @@ Many data-sources are simply used in the [Visual Query](xref:Temp.VisualQuery), 
 <img src="/assets/data-sources/app-out-2-in-0.png" width="100%">
 
 
-If on the other hand you want to program with these [DataSource](DotNet-DataSource) objects, then it will usually look a bit like this: 
+If on the other hand you want to program with these [DataSource](xref:Specs.DataSources.DataSource) objects, then it will usually look a bit like this: 
 
 An example code 
 
@@ -30,7 +30,7 @@ sortedAuthors.Attributes = "FullName";
 The previous example creates an initial source `allAuthors` which has all data on the in, then filters to only provide those of type _Author_ to the out. This is then piped to the `sortedAuthors`, which sorts on the _Attributes_ field. 
 
 ## Understanding Data-Flow and Configuration
-This is explained in the [DataSource documentation](DotNet-DataSource). 
+This is explained in the [DataSource documentation](xref:Specs.DataSources.DataSource). 
 
 ## All Public DataSources
 These are all the data sources which are either provided in the default installation of 2sxc, or which are available for you to install (manually). 

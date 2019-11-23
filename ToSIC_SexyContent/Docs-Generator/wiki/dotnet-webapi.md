@@ -7,7 +7,7 @@ The setup builds upon the ASP.net and DNN WebAPI. It enhances the bootstrapping 
 ## Where to Store the API Files
 All your WebAPIs are C# files saved in the special folder called `api`. The folder must be in root of your 2sxc app, and the files have to end with `...Controller.cs` (this is a convention in ASP.net).
 
-_New in 2sxc 9.35+_: you can now also create `api` folders as _subfolders_ to run the api in multiple editions. This is an experimental [polymorph feature](concept-polymorph) which is still being worked out, but in general you can use the old and the new way:
+_New in 2sxc 9.35+_: you can now also create `api` folders as _subfolders_ to run the api in multiple editions. This is an experimental [polymorph feature](xref:Concepts.Polymorphism) which is still being worked out, but in general you can use the old and the new way:
 
 * classic (single edition)  
   `[app-folder]/api/YourController.cs`  
@@ -69,8 +69,8 @@ The `SxcApiController` provides various command / helpers to get you productiv. 
 1. AsDynamic(...)
 1. AsEntity(...)
 1. [Dnn](razor-dnn)
-1. [App](razor-app) with `App.Data`, `App.Query` etc.
-1. [Data](razor-data)
+1. [App](xref:HowTo.DynamicCode.App) with `App.Data`, `App.Query` etc.
+1. [Data](xref:HowTo.DynamicCode.Data)
 1. [SaveInAdam(...)](dotnet-webapi-saveinadam) _new in 9.30_
 ## Notes
 * Instead of **App.Data["MyData"]** you can fetch data from another data source provided by 2sxc (for exmple from the **App.Query["MyQueryData"]**)
@@ -79,7 +79,7 @@ The `SxcApiController` provides various command / helpers to get you productiv. 
 ## Read also
 
 * [WebApi](webapi)
-* [Concepts: Polymorphisms](concept-polymorph)
+* [Concepts: Polymorphisms](xref:Concepts.Polymorphism)
 
 ## History
 

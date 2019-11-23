@@ -5,7 +5,6 @@ uid: Concepts.Polymorphism
 
 <img src="./assets/concepts/polymorph-logo-wide.svg" width="100%">
 
-## Purpose / Description
 Imagine you have a running system and you want to make some changes on the live installation. During the time you work, you would always risk breaking the site, but we usually don't have the time to create a staging environment. Enter Polymorphism.
 
 _Note that this is not a complete solution yet. We're working on this and have parts of it working, and will add functionality step-by-step._

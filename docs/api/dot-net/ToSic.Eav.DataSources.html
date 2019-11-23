@@ -560,7 +560,7 @@
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"><h2 id="purpose--description">Purpose / Description</h2>
-<p>DataSources are objects which deliver one or many <a href="DotNet-DataStream">DataStreams</a>, which contain a bunch of content-items. They are then attached to each other (from one sources <code>Out</code> to another ones <code>In</code>) creating a <code>Query</code>. Queries can be customized at will. The whole system is used to prepare/process data for views, WebApi or anything else.</p>
+<p>DataSources are objects which deliver one or many <a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">DataStreams</a>, which contain a bunch of content-items. They are then attached to each other (from one sources <code>Out</code> to another ones <code>In</code>) creating a <code>Query</code>. Queries can be customized at will. The whole system is used to prepare/process data for views, WebApi or anything else.</p>
 <h2 id="overview">Overview</h2>
 <p>There are many data-sources, and most of them will... </p>
 <ul>
@@ -577,7 +577,7 @@
 <li>and then the result can be used in a Template or streamed as JSON to a JavaScript SPA.</li>
 </ol>
 <h2 id="understanding-data-flow-between-datasource-objects">Understanding Data-Flow between DataSource Objects</h2>
-<p>Each DataSource has a list of out-streams available on the <code>.Out[&quot;StreamName&quot;]</code> property, but usually access directly just with the <code>DataSourceName[&quot;StreamName&quot;]</code>. This is what also happens when you use the <a href="Razor-Data">Data</a> object and write <code>foreach(var item in Data[&quot;Default&quot;])</code>. </p>
+<p>Each DataSource has a list of out-streams available on the <code>.Out[&quot;StreamName&quot;]</code> property, but usually access directly just with the <code>DataSourceName[&quot;StreamName&quot;]</code>. This is what also happens when you use the <a class="xref" href="../../how-to/dynamic-code/object-data.html">Data</a> object and write <code>foreach(var item in Data[&quot;Default&quot;])</code>. </p>
 <p>Aside from consuming data in your your template, most data-sources will simply offer the Out-Stream to other DataSources for further processing. Technically it&#39;s mapped like this:</p>
 <ul>
 <li><code>Cache.Out[&quot;Default&quot;]</code> &gt; <code>ContentTypeFilter.In[&quot;Default&quot;]</code></li>
@@ -592,25 +592,25 @@ Note that we&#39;ve hidden the constructors for all DataSource objects in these 
 <h2 id="creating-your-own-custom-datasource">Creating your own Custom DataSource</h2>
 <ul>
 <li><a href="dotnet-datasources-custom">short instruction to get started</a></li>
-<li><a href="dotnet-datasource-api">here&#39;s docs about the relevant API</a></li>
-<li><a href="dotnet-datasources-configuration">understanding configuration injection</a></li>
+<li><a class="xref" href="../../specs/datasources/api.html">here&#39;s docs about the relevant API</a></li>
+<li><a class="xref" href="../../specs/datasources/configuration.html">understanding configuration injection</a></li>
 </ul>
 <h2 id="understanding-configuration-of-each-datasource-object">Understanding Configuration of Each DataSource Object</h2>
-<p>The configuration uses a sophisticated token system to provide all necessary information. It is explained <a href="dotnet-datasources-configuration">here</a>.</p>
+<p>The configuration uses a sophisticated token system to provide all necessary information. It is explained <a class="xref" href="../../specs/datasources/configuration.html">here</a>.</p>
 <h2 id="common-use-cases-of-datasource-in-c-code">Common Use Cases of DataSource in C# Code</h2>
 <p>You will usually use DataSource objects in these common cases:</p>
 <ol>
-<li>when templating in Razor, the <a href="Razor-Data">Data</a> object is a DataSource, usually having a <code>Default</code> stream (<code>Data[&quot;Default&quot;]</code>) and sometimes further streams like <code>Data[&quot;ListContent&quot;]</code> or <code>Data[&quot;Categories&quot;]</code> etc.</li>
-<li>when templating, the <a href="Razor-App">App.Data</a> is also a DataSource providing a stream for each content-type in this app, like <code>App.Data[&quot;BlogPost&quot;]</code> or <code>App.Data[&quot;Tag&quot;]</code></li>
+<li>when templating in Razor, the <a class="xref" href="../../how-to/dynamic-code/object-data.html">Data</a> object is a DataSource, usually having a <code>Default</code> stream (<code>Data[&quot;Default&quot;]</code>) and sometimes further streams like <code>Data[&quot;ListContent&quot;]</code> or <code>Data[&quot;Categories&quot;]</code> etc.</li>
+<li>when templating, the <a class="xref" href="../../how-to/dynamic-code/object-app.html">App.Data</a> is also a DataSource providing a stream for each content-type in this app, like <code>App.Data[&quot;BlogPost&quot;]</code> or <code>App.Data[&quot;Tag&quot;]</code></li>
 <li>every query is technically a DataSource, and in the query you define which DataStreams it has - if ever you use it in code, you&#39;ll see that <code>App.Query[&quot;SortedTags&quot;]</code> would be a DataSource and typically the <code>Default</code> stream would contain all these tags.</li>
 <li>a query is always a chain of DataSource doing one operation and passing it on to the next DataSource. </li>
 </ol>
 <h2 id="how-to-use">How to use</h2>
 <p>In your Razor-templates you&#39;ll usually work with these three sources:</p>
 <ol>
-<li><a href="Razor-Data">Data</a></li>
-<li><a href="Razor-App">App.Data</a></li>
-<li><a href="Razor-App">App.Query[...]</a></li>
+<li><a class="xref" href="../../how-to/dynamic-code/object-data.html">Data</a></li>
+<li><a class="xref" href="../../how-to/dynamic-code/object-app.html">App.Data</a></li>
+<li><a class="xref" href="../../how-to/dynamic-code/object-app.html">App.Query[...]</a></li>
 </ol>
 <p>Please read more about these in links. </p>
 <h2 id="creating-datasource-objects-in-crazor-code">Creating DataSource Objects in C#/Razor Code</h2>
@@ -649,12 +649,12 @@ sortedAuthorsById.Attributes = &quot;EntityId&quot;;
 <p>The most important thing to notice is that each additional data-source uses the first <code>allAuthors</code> DataSource as the default <strong>upstream</strong> DataSource. So when these sort/filter or do something, they will only receive the data already filtered by the allAuthors.</p>
 <h2 id="developing-your-own-datasource">Developing Your Own DataSource</h2>
 <p>Maybe you want to create an XML DataSource or a DNN-Users DataSource. This is easy to do. </p>
-<p><a href="http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query">Best read the blog post about this</a></p>
+<p><a class="xref" href="http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query">Best read the blog post about this</a></p>
 <h2 id="read-also">Read also</h2>
 <ul>
-<li>about <a href="DotNet-DataStream">Data Streams</a></li>
+<li>about <a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">Data Streams</a></li>
 <li><a href="http://2sxc.org/en/apps/app/tutorial-use-a-custom-developed-datasource">Demo-App showing some coding of DataSources</a></li>
-<li><a href="http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query">Blog about creating your own data-source</a></li>
+<li><a class="xref" href="http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query">Blog about creating your own data-source</a></li>
 </ul>
 <h2 id="history">History</h2>
 <ol>

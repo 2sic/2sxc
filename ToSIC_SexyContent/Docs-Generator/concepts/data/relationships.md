@@ -3,8 +3,6 @@ uid: Concepts.Relationships
 ---
 # Concept: Entity Relationships
 
-## Purpose / Description
-
 Data can be related to other data, like when a `Book` belongs to a `Category` and also has an `Author`. Since all data-items are called `Entities` we call this _Entity Relationships_. 
 
 Additionally, there are also Entities which explicitly enhance/describes another _thing_, but that thing can be anything. That kind of relationship is called _Metadata_.
@@ -22,7 +20,7 @@ There are different types of relationships:
 
 ## Metadata Relationships
 
-This is a very different concept, where an Entity enriches something else. Read more about it in [metadata](concept-metadata).
+This is a very different concept, where an Entity enriches something else. Read more about it in [metadata](xref:Concepts.Metadata).
 
 ## Advanced Topics
 

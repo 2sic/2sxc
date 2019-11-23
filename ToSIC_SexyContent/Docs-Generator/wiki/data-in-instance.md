@@ -1,3 +1,3 @@
 # Page moved
 
-to [Razor-Data](Razor-Data)
+to [Razor-Data](xref:HowTo.DynamicCode.Data)

@@ -8,8 +8,8 @@ uid: Specs.DataSources.DataStream
 ## Purpose / Description
 DataStreams are objects which behave like a table, delivering a bunch of content-items. Common examples in [Razor-templates](Razor-Templates) are:
 
-1. the [Data["Default"]](Razor-Data) is a data-stream containing all content-items assigned to this template, ready to show
-2. the [App.Data["Tag"]](Razor-App) is a data-stream containing all tag-items in the entire app.
+1. the [Data["Default"]](xref:HowTo.DynamicCode.Data) is a data-stream containing all content-items assigned to this template, ready to show
+2. the [App.Data["Tag"]](xref:HowTo.DynamicCode.App) is a data-stream containing all tag-items in the entire app.
 
 ## How to use
 
@@ -37,11 +37,11 @@ In most cases we will need the loop-item a lot, and would preferr to not write `
 ```
 
 ## Advanced Use Cases
-There are some advanced use-cases where you need to know more about the `IDataStream` object, mostly when using LINQ. This is fairly rare, and if you really need to know more, it's best to consult the [EAV DataSource code](eav-datasource-code). 
+There are some advanced use-cases where you need to know more about the `IDataStream` object, mostly when using LINQ. This is fairly rare, and if you really need to know more, it's best to consult the EAV DataSource code. 
 
 Just a few more details you might care about:
 
-1. The stream has a property `Source` which points to the owning [DataSource](DotNet-DataSource). 
+1. The stream has a property `Source` which points to the owning [DataSource](xref:Specs.DataSources.DataSource). 
 1. a stream might be attached to many targets for further processing or for templating, but the stream doesn't know about this
 1. you can always enumerate the stream itself using LINQ, like  
     `var blues = Data["Default"].Where(x => AsDynamic(x).Category == "Blue"))` 
@@ -54,7 +54,7 @@ of course there's always quite a bit more to it, like auto-caching, but you usua
 ## Read also
 
 * todo: tutorial links
-* you should also read about [DataSources](DotNet-DataSource)
+* you should also read about [DataSources](xref:Specs.DataSources.DataSource)
 * todo: api links
 
 ## History

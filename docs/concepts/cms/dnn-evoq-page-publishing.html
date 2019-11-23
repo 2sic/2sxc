@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Concept: DNN/Evoq Page Versioning / Publishing and Workflow (2sxc 9.5+) | 2sxc and EAV 10 </title>
+    <title>Concept: DNN/Evoq Page Versioning / Publishing and Workflow | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Concept: DNN/Evoq Page Versioning / Publishing and Workflow (2sxc 9.5+) | 2sxc and EAV 10 ">
+    <meta name="title" content="Concept: DNN/Evoq Page Versioning / Publishing and Workflow | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
@@ -113,28 +113,61 @@
                             <a href="../data/relationships.html" title="Relationships" class="">Relationships</a>
                           </li>
                           <li class="">
-                            <span class="expand-stub"></span>
                             <a class="">Content Types</a>
-                              
-                              <ul class="nav level3">
-                                <li class="">
-                                  <a href="../data/file-provided-content-types.html" title="File Based Content-Types" class="">File Based Content-Types</a>
-                                </li>
-                              </ul>  </li>
+                          </li>
+                          <li class="">
+                            <a href="../data/file-provided-content-types.html" title="File Content-Types" class="">File Content-Types</a>
+                          </li>
                           <li class="">
                             <a href="../data/permissions.html" title="Permissions" class="">Permissions</a>
                           </li>
                         </ul>  </li>
                     <li class="">
+                      <span class="expand-stub"></span>
                       <a class="">CMS</a>
-                    </li>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../cms/dnn-module.html" title="DNN Modules" class="">DNN Modules</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/hide-advanced-features.html" title="Hide Features" class="">Hide Features</a>
+                          </li>
+                          <li class="active">
+                            <a href="../cms/dnn-evoq-page-publishing.html" title="Page Publishing" class="active">Page Publishing</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/edit-context.html" title="Edit-Context Data" class="">Edit-Context Data</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/inner-content.html" title="Inner Content" class="">Inner Content</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/inpage-toolbars.html" title="Edit Toolbars" class="">Edit Toolbars</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/quick-edit.html" title="Quick-Edit (QuickE)" class="">Quick-Edit (QuickE)</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/tokens.html" title="Tokens" class="">Tokens</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/views.html" title="Views" class="">Views</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/polymorph.html" title="Polymorph" class="">Polymorph</a>
+                          </li>
+                        </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
                       <a class="">WIP</a>
                         
                         <ul class="nav level2">
                           <li class="">
-                            <a class="">Metadata</a>
+                            <a href="../data/metadata.html" title="Metadata" class="">Metadata</a>
+                          </li>
+                          <li class="">
+                            <a class="">App</a>
                           </li>
                         </ul>  </li>
                   </ul>        </div>
@@ -145,9 +178,8 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="Concepts.PagePublishing">
-<h1 id="concept-dnnevoq-page-versioning--publishing-and-workflow-2sxc-95">Concept: <em>DNN/Evoq Page Versioning / Publishing and Workflow (2sxc 9.5+)</em></h1>
+<h1 id="concept-dnnevoq-page-versioning--publishing-and-workflow">Concept: DNN/Evoq Page Versioning / Publishing and Workflow</h1>
 
-<h2 id="purpose--description">Purpose / Description</h2>
 <p>This page explains how a DNN / Evoq does page versioning and workflow, and how to leverage this with 2sxc. </p>
 <h2 id="background-dnn--evoq-pagemodule-versioning">Background: DNN / Evoq Page/Module Versioning</h2>
 <p>DNN / Evoq had a few different ways of doing versioning, but since DNN 7.4.2 it basically uses a model which works as follows:</p>
@@ -237,7 +269,7 @@
 <h2 id="technical-deep-dive---behind-the-scenes">Technical Deep Dive - Behind the Scenes</h2>
 <p>In case you run into trouble or need to know more about the mechanisms, here&#39;s what you need to know</p>
 <h3 id="what-is-an-on-page-change-and-what-is-not">What is an On-Page Change and What is Not</h3>
-<p>By definition, any item created or modified directly from a toolbar button in the front end is regarded as an On-Page change and will start the page-draft process. This is basically all the buttons which normal (non-admin) users see. If you haven&#39;t heard of hiding admin-buttons, please read the <a href="Concept-Hide-Advanced-Features">concept on hiding advanced features</a>. </p>
+<p>By definition, any item created or modified directly from a toolbar button in the front end is regarded as an On-Page change and will start the page-draft process. This is basically all the buttons which normal (non-admin) users see. If you haven&#39;t heard of hiding admin-buttons, please read the <a class="xref" href="hide-advanced-features.html">concept on hiding advanced features</a>. </p>
 <p>Specifically, this includes the following actions:</p>
 <ol>
 <li>editing content directly from a toolbar button</li>
@@ -292,7 +324,7 @@
 <p>As mentioned, this is the default setup. In the case of data-oriented apps, which query data from somewhere, you may have other expectations. At the moment there is no additional mechanism to customize this any further, but we believe that you can easily cover all possible scenarios with this setup. </p>
 <h2 id="read-also">Read also</h2>
 <ul>
-<li><a href="Concept-Dnn-Module">Data Model of DNN-Modules mapping to content</a></li>
+<li><a class="xref" href="dnn-module.html">Data Model of DNN-Modules mapping to content</a></li>
 <li><a href="http://2sxc.org/en/blog/post/understanding-content-binding-to-modules-and-pages-(300)">In-Depth information about content-binding</a></li>
 </ul>
 <h2 id="history">History</h2>

@@ -59,7 +59,7 @@ references:
   name: 'Concept: Metadata - WIP'
   href: concepts/data/metadata.html
 - uid: Concepts.PagePublishing
-  name: 'Concept: DNN/Evoq Page Versioning / Publishing and Workflow (2sxc 9.5+)'
+  name: 'Concept: DNN/Evoq Page Versioning / Publishing and Workflow'
   href: concepts/cms/dnn-evoq-page-publishing.html
 - uid: Concepts.Permissions
   name: 'Concept: Permissions'
@@ -199,11 +199,26 @@ references:
 - uid: Specs.Data.Type.String
   name: 'Data Type: String'
   href: specs/data-types/string.html
+- uid: Specs.DataSources.Api
+  name: DataSource API
+  href: specs/datasources/api.html
+- uid: Specs.DataSources.Api.AsEntity
+  name: 'DataSource API: AsEntity'
+  href: specs/datasources/api-asentity.html
+- uid: Specs.DataSources.Api.ConfigMask
+  name: 'DataSource API: ConfigMask'
+  href: specs/datasources/api-configmask.html
+- uid: Specs.DataSources.Api.EnsureConfigurationIsLoaded
+  name: 'DataSource API: EnsureConfigurationIsLoaded'
+  href: specs/datasources/api-ensureconfigurationisloaded.html
+- uid: Specs.DataSources.Api.Provide
+  name: 'DataSource API: Provide'
+  href: specs/datasources/api-provide.html
 - uid: Specs.DataSources.Configuration
   name: 'DataSource Concept: Configuration Injection using Tokens'
   href: specs/datasources/configuration.html
 - uid: Specs.DataSources.Custom
-  name: 'EAV DataSources: Creating Custom DataSources (2sxc 9.13)'
+  name: 'EAV DataSources: Creating Custom DataSources'
   href: specs/datasources/create-custom.html
 - uid: Specs.DataSources.DataSource
   name: DataSource Basics (IDataSource)

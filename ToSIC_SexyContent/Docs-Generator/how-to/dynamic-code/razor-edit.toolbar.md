@@ -1,8 +1,8 @@
 
 # @Edit.Toolbar(...) Method in Razor / .net
-2sxc has a cool in-page toolbar system - here you'll find a [conceptual overview around the toolbar](Concept-InPage-Toolbars). These toolbars are usually hover-buttons like this:
+2sxc has a cool in-page toolbar system - here you'll find a [conceptual overview around the toolbar](xref:Concepts.EditToolbar). These toolbars are usually hover-buttons like this:
 
-![hover inline toolbar example](./assets/concepts/inpage-toolbar/example-hover-toolbar.png)
+![hover inline toolbar example](/assets/concepts/inpage-toolbar/example-hover-toolbar.png)
 
 Technically the entire Edit-UI is JavaScript based, so all the buttons, events etc. are client side scripts. Writing this JS would be complicated to say the least, so the `@Edit.TagToolbar(...)` and `@Edit.Toolbar(...)` are your tools of choice for adding toolbars from Razor.
 
@@ -177,7 +177,7 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 1. .Toolbar() Introduced in 2sxc 8.04
 2. .TagToolbar() introduced in 2sxc 9.40
 
-[inner-content]: http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
+(xref:Concepts.InnerContent): http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
 [DynamicEntity]: Dynamic-Entity
 [actions-source]: Html-Js-Commands
 [template-content-data]: http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content

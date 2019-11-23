@@ -1,7 +1,10 @@
+---
+uid: Specs.DataSources.Api.EnsureConfigurationIsLoaded
+---
 # DataSource API: EnsureConfigurationIsLoaded
 
 ## Purpose / Description
-If a [DataSource](dotnet-datasource) is [configurable](dotnet-datasources-configuration), then the code must parse any [configuration tokens](concept-tokens) before accessing the values. This is done with `EnsureConfigurationIsLoaded()`.
+If a [DataSource](xref:Specs.DataSources.DataSource) is [configurable](xref:Specs.DataSources.Configuration), then the code must parse any [configuration tokens](xref:Concepts.Tokens) before accessing the values. This is done with `EnsureConfigurationIsLoaded()`.
 
 ## How to use EnsureConfigurationIsLoaded
 Here's a simple example of the [PublishingFilter DataSources](https://github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/PublishingFilter.cs): 
@@ -26,7 +29,7 @@ In some scenarios you may want to overwrite EnsureConfigurationIsLoaded. An exam
 
 ## Read also
 
-* [DataSource API](dotnet-datasource-api) - DataSource API overview
+* [DataSource API](xref:Specs.DataSources.Api) - DataSource API overview
 
 ## Demo Code and further links
 

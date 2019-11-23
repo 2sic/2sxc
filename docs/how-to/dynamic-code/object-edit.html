@@ -50,6 +50,9 @@
                           <a href="../../articles/intro.html" title="Articles">Articles</a>
                       </li>
                       <li>
+                          <a href="../../concepts/index.html" title="Concepts">Concepts</a>
+                      </li>
+                      <li>
                           <a href="../../how-to/index.html" title="How To">How To</a>
                       </li>
                       <li>
@@ -138,7 +141,7 @@
 &lt;/h1&gt;
 &lt;div&gt;...&lt;/div&gt;
 </code></pre><p>This example shows the title and will add the standard editing-buttons for the <code>Content</code> item.</p>
-<p>Here&#39;s an <a href="http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules">inner-content</a> example:</p>
+<p>Here&#39;s an <a class="xref" href="../../concepts/cms/inner-content.html">Concept: Inner Content 2.0</a> example:</p>
 <pre><code class="lang-html">&lt;div class=&quot;app-blog-text sc-content-block-list&quot; @Edit.ContextAttributes(post, field: &quot;DesignedContent&quot;)&gt;
     @foreach(var cb in @post.DesignedContent) {
         @cb.Render();
@@ -172,14 +175,14 @@ it is used inside a tag like<br><code>&lt;div @Edit.TagToolbar(Content)&gt;</cod
 </li>
 <li><p><strong>Edit Context Information</strong> for advanced use cases</p>
 <ol>
-<li><code>Edit.ContextAttributes(...)</code><br>creates Context-Information for other edit-functionality. This is advanced, and currently only needed for <a href="http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules">inner-content</a>) - read about it on <a href="Razor-Edit.ContextAttributes">Razor Edit.ContextAttributes</a></li>
+<li><code>Edit.ContextAttributes(...)</code><br>creates Context-Information for other edit-functionality. This is advanced, and currently only needed for @Concepts.InnerContent) - read about it on <a href="Razor-Edit.ContextAttributes">Razor Edit.ContextAttributes</a></li>
 </ol>
 </li>
 </ol>
 <h2 id="demo-app-and-further-links">Demo App and further links</h2>
 <p>You should find some code examples in this demo App</p>
 <ul>
-<li><a href="http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke">Blog App</a></li>
+<li><a class="xref" href="http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke">Blog App</a></li>
 </ul>
 <h2 id="history">History</h2>
 <ol>
@@ -187,6 +190,7 @@ it is used inside a tag like<br><code>&lt;div @Edit.TagToolbar(Content)&gt;</cod
 <li>Enhanced with <a href="razor-edit.enable">Enable(...)</a> method in 9.30</li>
 <li>Enhanced with <a href="razor-edit.toolbar">TagToolbar(...)</a> in 9.40</li>
 </ol>
+<p>(xref:Concepts.InnerContent): <a href="http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules">http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules</a></p>
 </article>
           </div>
           

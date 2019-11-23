@@ -4,14 +4,14 @@ uid: Specs.DataSources.Configuration
 
 # DataSource Concept: Configuration Injection using Tokens
 
-[DataSource](dotnet-datasource) objects have an sophisticated system to retrieve settings and configuration using tokens and more. 
+[DataSource](xref:Specs.DataSources.DataSource) objects have an sophisticated system to retrieve settings and configuration using tokens and more. 
 
 ## Purpose / Description
-A [DataSource](dotnet-datasource) is usually configurable, meaning that it needs parameters to do it's job. Some examples:
+A [DataSource](xref:Specs.DataSources.DataSource) is usually configurable, meaning that it needs parameters to do it's job. Some examples:
 
 * a [Module data source](dotnet-datasource-moduledatasource) needs to know the module ID 
-* an [Owner-Filter DataSource](dotnet-datasource-ownerfilter) needs to know who the current user is, to find his items
-* a [Paging DataSource](dotnet-datasource-paging) needs to know what page size it should use and what page it's on
+* an [Owner-Filter DataSource](xref:ToSic.Eav.DataSources.OwnerFilter) needs to know who the current user is, to find his items
+* a [Paging ](xref:ToSic.Eav.DataSources.Paging) needs to know what page size it should use and what page it's on
 * A CSV data source needs to know what file it should load
 
 As you can see, some of this information depends on the current context (ModuleId, UserId), others on configured settings (page size) and some on Url-parameters (Page number). In addition, we sometimes want to say _"use the page-size configured in the App-Settings"_ or even more complex _"use from url, but if not specified, try app-settings, and if that isn't defined, use 10"_.
@@ -19,10 +19,10 @@ As you can see, some of this information depends on the current context (ModuleI
 This is what this Token-Configuration-Injection-System is for. 
 
 ## Configuration Basics
-Each configuration of a [DataSource](dotnet-datasource) is either a fixed string value like `17` or a token like `[Settings:PageNumber]`. In most cases it's a token. This token is parsed _before any data is queried_ to ensure that in the end the [DataSource](dotnet-datasource) has a usefull value before actually performing its task. 
+Each configuration of a [DataSource](xref:Specs.DataSources.DataSource) is either a fixed string value like `17` or a token like `[Settings:PageNumber]`. In most cases it's a token. This token is parsed _before any data is queried_ to ensure that in the end the [DataSource](xref:Specs.DataSources.DataSource) has a usefull value before actually performing its task. 
 
 ## Token Basics
-A token is a piece of text that looks like `[Source:Property]`. It is good to understand the full [token concept, discussed here](concept-tokens). You'll also want to read about fallback and recursion to understand the following content. 
+A token is a piece of text that looks like `[Source:Property]`. It is good to understand the full [token concept, discussed here](xref:Concepts.Tokens). You'll also want to read about fallback and recursion to understand the following content. 
 
 ## Shared Token-Suppliers / Token-Sources
 When a DataSource is configured, it has many token-suppliers like `Module`, `QueryString`, `App` etc. These are shared and are identical for all objects. 
@@ -40,9 +40,9 @@ When you're using the visual query designer, the configuration created is saved 
 2. The each property is first initialized with a Token-Template. For example, the CsvDataSource has a  
 `ConfigMask(DelimiterKey, "[Settings:Delimiter||\t]");`   
 This says that the delimiter should come from the Settings-Entity field `Delimiter` and if not provided, fall back to `\t` (which is a tab character)  
-_read about [ConfigMask here](dotnet-datasource-api-configmask)_  
+_read about [ConfigMask here](xref:Specs.DataSources.Api.ConfigMask)_  
 3. For the programmer who wants to set a number or whatever, this would be fairly unreliable to access from outside, so the DataSource should also have a real property which internally also modifies the dictionary. For example, the CsvDataSource has a string-property `Delimiter` which internally will get/set the in the Configuration dictionary.  
-3. When the DataSource is first _sucked_ from, which happens when something tries to access the Out-Property, it will automatically run a token-engine to resolve the values, then run whatever action the data-source wants. _read about [ensuring configuration is parsed](dotnet-datasource-api-ensureconfigurationisloaded) here_
+3. When the DataSource is first _sucked_ from, which happens when something tries to access the Out-Property, it will automatically run a token-engine to resolve the values, then run whatever action the data-source wants. _read about [ensuring configuration is parsed](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded) here_
 
 So how does each scenario work out?
 
@@ -52,10 +52,10 @@ So how does each scenario work out?
 
 ## Also Read
 
-* about [Data Streams](DotNet-DataStream)
-* [Tokens concept](concept-tokens)
-* [DataSource API](dotnet-datasource-api)
-* [Ensuring configuration is parsed](dotnet-datasource-api-ensureconfigurationisloaded)
+* about [Data Streams](xref:ToSic.Eav.DataSources.IDataStream)
+* [Tokens concept](xref:Concepts.Tokens)
+* [DataSource API](xref:Specs.DataSources.Api)
+* [Ensuring configuration is parsed](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded)
 
 
 ## History
@@ -63,7 +63,3 @@ So how does each scenario work out?
 1. General Tokens introduced in 2sxc 1.0
 1. Most enhancements were in 2sxc 07.00
 
-
-[eav-core-code]: https://github.com/2sic/eav-server/tree/master/ToSic.Eav.Core 
-[blog-custom-ds]: http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query
-[app-ds-code]: http://2sxc.org/en/apps/app/tutorial-use-a-custom-developed-datasource

@@ -2,9 +2,8 @@
 uid: Concepts.PagePublishing
 ---
 
-# Concept: _DNN/Evoq Page Versioning / Publishing and Workflow (2sxc 9.5+)_ 
+# Concept: DNN/Evoq Page Versioning / Publishing and Workflow
 
-## Purpose / Description
 This page explains how a DNN / Evoq does page versioning and workflow, and how to leverage this with 2sxc. 
 
 ## Background: DNN / Evoq Page/Module Versioning
@@ -113,7 +112,7 @@ To Restore previous versions of content-items, use the history (clock) icon in t
 In case you run into trouble or need to know more about the mechanisms, here's what you need to know
 
 ### What is an On-Page Change and What is Not
-By definition, any item created or modified directly from a toolbar button in the front end is regarded as an On-Page change and will start the page-draft process. This is basically all the buttons which normal (non-admin) users see. If you haven't heard of hiding admin-buttons, please read the [concept on hiding advanced features](Concept-Hide-Advanced-Features). 
+By definition, any item created or modified directly from a toolbar button in the front end is regarded as an On-Page change and will start the page-draft process. This is basically all the buttons which normal (non-admin) users see. If you haven't heard of hiding admin-buttons, please read the [concept on hiding advanced features](xref:Concepts.HideAdvancedFeatures). 
 
 Specifically, this includes the following actions:
 1. editing content directly from a toolbar button
@@ -175,7 +174,7 @@ As mentioned, this is the default setup. In the case of data-oriented apps, whic
 
 ## Read also
 
-* [Data Model of DNN-Modules mapping to content](Concept-Dnn-Module)
+* [Data Model of DNN-Modules mapping to content](xref:Concepts.DnnModule)
 * [In-Depth information about content-binding](http://2sxc.org/en/blog/post/understanding-content-binding-to-modules-and-pages-(300))
 
 
@@ -183,5 +182,3 @@ As mentioned, this is the default setup. In the case of data-oriented apps, whic
 ## History
 
 1. Introduces in 2sxc 9.5
-
-[some-link-name]:Razor-SexyContentWebPage.CustomizeData

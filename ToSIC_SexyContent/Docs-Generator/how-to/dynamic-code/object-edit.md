@@ -20,7 +20,7 @@ Here's a quick example of using the `Edit` object in a Razor template:
 
 This example shows the title and will add the standard editing-buttons for the `Content` item.
 
-Here's an [inner-content][inner-content] example:
+Here's an @Concepts.InnerContent example:
 
 ```html
 <div class="app-blog-text sc-content-block-list" @Edit.ContextAttributes(post, field: "DesignedContent")>
@@ -63,14 +63,14 @@ The `Edit`-object is always available in all Razor-templates and either...
 1. **Edit Context Information** for advanced use cases
 
     1. `Edit.ContextAttributes(...)`  
-    creates Context-Information for other edit-functionality. This is advanced, and currently only needed for [inner-content][inner-content]) - read about it on [Razor Edit.ContextAttributes](Razor-Edit.ContextAttributes)
+    creates Context-Information for other edit-functionality. This is advanced, and currently only needed for @Concepts.InnerContent) - read about it on [Razor Edit.ContextAttributes](Razor-Edit.ContextAttributes)
 
 
 
 ## Demo App and further links
 
 You should find some code examples in this demo App
-* [Blog App](http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke)
+* [Blog App](xref:App.Blog)
 
 ## History
 
@@ -78,7 +78,7 @@ You should find some code examples in this demo App
 2. Enhanced with [Enable(...)](razor-edit.enable) method in 9.30
 3. Enhanced with [TagToolbar(...)](razor-edit.toolbar) in 9.40
 
-[inner-content]: http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
+(xref:Concepts.InnerContent): http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
 [DynamicEntity]: Dynamic-Entity
 [actions-source]: https://github.com/2sic/2sxc/blob/master/src/inpage/2sxc._actions.js
 [template-content-data]: http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content

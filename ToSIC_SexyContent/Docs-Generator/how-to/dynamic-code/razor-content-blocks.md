@@ -5,7 +5,7 @@ uid: Specs.Razor.Blocks
 # Razor: Rendering Content-Blocks
 
 ## Purpose / Description
-When using [Inner Content](Concept-Inner-Content) the linked content-blocks (apps or pieces of content) must be rendered into the template. Here's how to do it in Razor. 
+When using [Inner Content](xref:Concepts.InnerContent) the linked content-blocks (apps or pieces of content) must be rendered into the template. Here's how to do it in Razor. 
 
 ## How to use
 There are two common use cases
@@ -54,14 +54,14 @@ The Edit-Object is of type `ToSic.SexyContent.Edit.InPageEditingSystem.IInPageEd
 ## Demo App and further links
 
 You should find some code examples in this demo App
-* [Blog App](http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke)
+* [Blog App](xref:App.Blog)
 
 ## History
 
 1. Introduced in 2sxc 8.4
 2. Clean API and merge capabilitien in 8.9
 
-[inner-content]: http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
+(xref:Concepts.InnerContent): http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
 [DynamicEntity]: Dynamic-Entity
 [actions-source]: https://github.com/2sic/2sxc/blob/master/src/inpage/2sxc._actions.js
 [template-content-data]: http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content

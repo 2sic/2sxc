@@ -142,6 +142,33 @@
                           <li class="">
                             <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
                           </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/api-asentity.html" title="AsEntity" class="">AsEntity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-configmask.html" title="ConfigMask" class="">ConfigMask</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-ensureconfigurationisloaded.html" title="EnsureConfigurationIsLoaded" class="">EnsureConfigurationIsLoaded</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-provide.html" title="Provide" class="">Provide</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">todo</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a class="">VisualQuery Attribute</a>
+                          </li>
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
@@ -180,8 +207,8 @@
 <h2 id="purpose--description">Purpose / Description</h2>
 <p>DataStreams are objects which behave like a table, delivering a bunch of content-items. Common examples in <a href="Razor-Templates">Razor-templates</a> are:</p>
 <ol>
-<li>the <a href="Razor-Data">Data[&quot;Default&quot;]</a> is a data-stream containing all content-items assigned to this template, ready to show</li>
-<li>the <a href="Razor-App">App.Data[&quot;Tag&quot;]</a> is a data-stream containing all tag-items in the entire app.</li>
+<li>the <a class="xref" href="../../how-to/dynamic-code/object-data.html">Data[&quot;Default&quot;]</a> is a data-stream containing all content-items assigned to this template, ready to show</li>
+<li>the <a class="xref" href="../../how-to/dynamic-code/object-app.html">App.Data[&quot;Tag&quot;]</a> is a data-stream containing all tag-items in the entire app.</li>
 </ol>
 <h2 id="how-to-use">How to use</h2>
 <p>The most commen uses will loop through all items in such a stream and show them. Here&#39;s an example: </p>
@@ -200,10 +227,10 @@
     }
 &lt;/ol&gt;
 </code></pre><h2 id="advanced-use-cases">Advanced Use Cases</h2>
-<p>There are some advanced use-cases where you need to know more about the <code>IDataStream</code> object, mostly when using LINQ. This is fairly rare, and if you really need to know more, it&#39;s best to consult the <a href="eav-datasource-code">EAV DataSource code</a>. </p>
+<p>There are some advanced use-cases where you need to know more about the <code>IDataStream</code> object, mostly when using LINQ. This is fairly rare, and if you really need to know more, it&#39;s best to consult the EAV DataSource code. </p>
 <p>Just a few more details you might care about:</p>
 <ol>
-<li>The stream has a property <code>Source</code> which points to the owning <a href="DotNet-DataSource">DataSource</a>. </li>
+<li>The stream has a property <code>Source</code> which points to the owning <a class="xref" href="datasource.html">DataSource</a>. </li>
 <li>a stream might be attached to many targets for further processing or for templating, but the stream doesn&#39;t know about this</li>
 <li>you can always enumerate the stream itself using LINQ, like<br> <code>var blues = Data[&quot;Default&quot;].Where(x =&gt; AsDynamic(x).Category == &quot;Blue&quot;))</code> </li>
 <li>if you want more control over what you&#39;re looping through, there are two properties: <ol>
@@ -216,7 +243,7 @@
 <h2 id="read-also">Read also</h2>
 <ul>
 <li>todo: tutorial links</li>
-<li>you should also read about <a href="DotNet-DataSource">DataSources</a></li>
+<li>you should also read about <a class="xref" href="datasource.html">DataSources</a></li>
 <li>todo: api links</li>
 </ul>
 <h2 id="history">History</h2>

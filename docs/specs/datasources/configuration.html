@@ -142,6 +142,33 @@
                           <li class="active">
                             <a href="../datasources/configuration.html" title="Configuration System" class="active">Configuration System</a>
                           </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/api-asentity.html" title="AsEntity" class="">AsEntity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-configmask.html" title="ConfigMask" class="">ConfigMask</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-ensureconfigurationisloaded.html" title="EnsureConfigurationIsLoaded" class="">EnsureConfigurationIsLoaded</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-provide.html" title="Provide" class="">Provide</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">todo</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a class="">VisualQuery Attribute</a>
+                          </li>
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
@@ -177,21 +204,21 @@
             <article class="content wrap" id="_content" data-uid="Specs.DataSources.Configuration">
 <h1 id="datasource-concept-configuration-injection-using-tokens">DataSource Concept: Configuration Injection using Tokens</h1>
 
-<p><a href="dotnet-datasource">DataSource</a> objects have an sophisticated system to retrieve settings and configuration using tokens and more. </p>
+<p><a class="xref" href="datasource.html">DataSource</a> objects have an sophisticated system to retrieve settings and configuration using tokens and more. </p>
 <h2 id="purpose--description">Purpose / Description</h2>
-<p>A <a href="dotnet-datasource">DataSource</a> is usually configurable, meaning that it needs parameters to do it&#39;s job. Some examples:</p>
+<p>A <a class="xref" href="datasource.html">DataSource</a> is usually configurable, meaning that it needs parameters to do it&#39;s job. Some examples:</p>
 <ul>
 <li>a <a href="dotnet-datasource-moduledatasource">Module data source</a> needs to know the module ID </li>
-<li>an <a href="dotnet-datasource-ownerfilter">Owner-Filter DataSource</a> needs to know who the current user is, to find his items</li>
-<li>a <a href="dotnet-datasource-paging">Paging DataSource</a> needs to know what page size it should use and what page it&#39;s on</li>
+<li>an <a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.OwnerFilter.html">Owner-Filter DataSource</a> needs to know who the current user is, to find his items</li>
+<li>a <a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.Paging.html">Paging </a> needs to know what page size it should use and what page it&#39;s on</li>
 <li>A CSV data source needs to know what file it should load</li>
 </ul>
 <p>As you can see, some of this information depends on the current context (ModuleId, UserId), others on configured settings (page size) and some on Url-parameters (Page number). In addition, we sometimes want to say <em>&quot;use the page-size configured in the App-Settings&quot;</em> or even more complex <em>&quot;use from url, but if not specified, try app-settings, and if that isn&#39;t defined, use 10&quot;</em>.</p>
 <p>This is what this Token-Configuration-Injection-System is for. </p>
 <h2 id="configuration-basics">Configuration Basics</h2>
-<p>Each configuration of a <a href="dotnet-datasource">DataSource</a> is either a fixed string value like <code>17</code> or a token like <code>[Settings:PageNumber]</code>. In most cases it&#39;s a token. This token is parsed <em>before any data is queried</em> to ensure that in the end the <a href="dotnet-datasource">DataSource</a> has a usefull value before actually performing its task. </p>
+<p>Each configuration of a <a class="xref" href="datasource.html">DataSource</a> is either a fixed string value like <code>17</code> or a token like <code>[Settings:PageNumber]</code>. In most cases it&#39;s a token. This token is parsed <em>before any data is queried</em> to ensure that in the end the <a class="xref" href="datasource.html">DataSource</a> has a usefull value before actually performing its task. </p>
 <h2 id="token-basics">Token Basics</h2>
-<p>A token is a piece of text that looks like <code>[Source:Property]</code>. It is good to understand the full <a href="concept-tokens">token concept, discussed here</a>. You&#39;ll also want to read about fallback and recursion to understand the following content. </p>
+<p>A token is a piece of text that looks like <code>[Source:Property]</code>. It is good to understand the full <a class="xref" href="../../concepts/cms/tokens.html">token concept, discussed here</a>. You&#39;ll also want to read about fallback and recursion to understand the following content. </p>
 <h2 id="shared-token-suppliers--token-sources">Shared Token-Suppliers / Token-Sources</h2>
 <p>When a DataSource is configured, it has many token-suppliers like <code>Module</code>, <code>QueryString</code>, <code>App</code> etc. These are shared and are identical for all objects. </p>
 <h2 id="advanced-token-source-for-settings">Advanced Token-Source for Settings</h2>
@@ -202,9 +229,9 @@
 <p>When you&#39;re using the visual query designer, the configuration created is saved as an Entity (aka Content-Item) which must be injected into the DataSource configuration automatically. But when you use the object is your code, your code must be able to provide other values. But how does this work?</p>
 <ol>
 <li>Each DataSource object has a property called <code>Configuration</code> which is a dictionary containing all configuration properties the data source will care about. For example, the <code>EntityIdFilter</code> has a Configuration with only one property which is called <code>EntityIds</code>. </li>
-<li>The each property is first initialized with a Token-Template. For example, the CsvDataSource has a<br><code>ConfigMask(DelimiterKey, &quot;[Settings:Delimiter||\t]&quot;);</code><br>This says that the delimiter should come from the Settings-Entity field <code>Delimiter</code> and if not provided, fall back to <code>\t</code> (which is a tab character)<br><em>read about <a href="dotnet-datasource-api-configmask">ConfigMask here</a></em>  </li>
+<li>The each property is first initialized with a Token-Template. For example, the CsvDataSource has a<br><code>ConfigMask(DelimiterKey, &quot;[Settings:Delimiter||\t]&quot;);</code><br>This says that the delimiter should come from the Settings-Entity field <code>Delimiter</code> and if not provided, fall back to <code>\t</code> (which is a tab character)<br><em>read about <a class="xref" href="api-configmask.html">ConfigMask here</a></em>  </li>
 <li>For the programmer who wants to set a number or whatever, this would be fairly unreliable to access from outside, so the DataSource should also have a real property which internally also modifies the dictionary. For example, the CsvDataSource has a string-property <code>Delimiter</code> which internally will get/set the in the Configuration dictionary.  </li>
-<li>When the DataSource is first <em>sucked</em> from, which happens when something tries to access the Out-Property, it will automatically run a token-engine to resolve the values, then run whatever action the data-source wants. <em>read about <a href="dotnet-datasource-api-ensureconfigurationisloaded">ensuring configuration is parsed</a> here</em></li>
+<li>When the DataSource is first <em>sucked</em> from, which happens when something tries to access the Out-Property, it will automatically run a token-engine to resolve the values, then run whatever action the data-source wants. <em>read about <a class="xref" href="api-ensureconfigurationisloaded.html">ensuring configuration is parsed</a> here</em></li>
 </ol>
 <p>So how does each scenario work out?</p>
 <ol>
@@ -214,10 +241,10 @@
 </ol>
 <h2 id="also-read">Also Read</h2>
 <ul>
-<li>about <a href="DotNet-DataStream">Data Streams</a></li>
-<li><a href="concept-tokens">Tokens concept</a></li>
-<li><a href="dotnet-datasource-api">DataSource API</a></li>
-<li><a href="dotnet-datasource-api-ensureconfigurationisloaded">Ensuring configuration is parsed</a></li>
+<li>about <a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.IDataStream.html">Data Streams</a></li>
+<li><a class="xref" href="../../concepts/cms/tokens.html">Tokens concept</a></li>
+<li><a class="xref" href="api.html">DataSource API</a></li>
+<li><a class="xref" href="api-ensureconfigurationisloaded.html">Ensuring configuration is parsed</a></li>
 </ul>
 <h2 id="history">History</h2>
 <ol>
@@ -232,7 +259,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/develop/ToSIC_SexyContent/Docs-Generator/specs/datasources/configuration.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/datasources/configuration.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

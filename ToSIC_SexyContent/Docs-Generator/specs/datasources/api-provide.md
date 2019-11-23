@@ -1,3 +1,6 @@
+---
+uid: Specs.DataSources.Api.Provide
+---
 # DataSource API: Provide
 
 ## Purpose / Description
@@ -48,8 +51,8 @@ public SomeConstructor()
 
 ## Read also
 
-* [DataSource API](dotnet-datasource-api) - DataSource API overview
-* [Ensuring configuration is parsed](dotnet-datasource-api-ensureconfigurationisloaded)
+* [DataSource API](xref:Specs.DataSources.Api) - DataSource API overview
+* [Ensuring configuration is parsed](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded)
 
 ## Demo App and further links
 

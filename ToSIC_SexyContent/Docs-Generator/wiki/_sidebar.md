@@ -26,17 +26,17 @@ This is where you can find things like...
         <strong>Basic Concepts / Features</strong>
     </summary>
 
-* [Views](concept-views)
-* [Data Entities](concept-entities)
-* [Content-Types](concept-content-types)
-* [Relationships](concept-relationships)
+* [Views](xref:Concepts.Views)
+* [Data Entities](xref:Concepts.Entities)
+* [Content-Types](xref:Concepts.ContentTypes)
+* [Relationships](xref:Concepts.Relationships)
 * [Editing content](overview-edit)
 * [Auto-Optimization of JS/CSS Assets](Template-Assets)
-* [Hide advanced features](concept-hide-advnaced-features)
-* [Edit Context](concept-edit-context)
-* [In-Page toolbars](concept-inpage-toolbars)
-* [Quick Edit toolbars (quickE)](concept-quick-edit)
-* [Tokens](concept-tokens)
+* [Hide advanced features](xref:Concepts.HideAdvancedFeatures)
+* [Edit Context](xref:Concepts.EditContext)
+* [In-Page toolbars](xref:Concepts.EditToolbar)
+* [Quick Edit toolbars (quickE)](xref:Concepts.QuickEdit)
+* [Tokens](xref:Concepts.Tokens)
 * TinyMCE WYSIWYG [todoc](doc-tags#todoc)
 * ADAM Automatic Digital Assets Management [todoc](doc-tags#todoc)
 
@@ -50,11 +50,11 @@ This is where you can find things like...
         <strong>Advanced Concepts / Features</strong>
     </summary>
 
-* [Inner Content](concept-inner-content)
-* [Page Publishing](concept-dnn-evoq-page-publishing)
-* [Polymorph Editions](concept-polymorph)
-* [Permissions](concept-permissions)
-* [Features Management](concept-features)
+* [Inner Content](xref:Concepts.InnerContent)
+* [Page Publishing](xref:Concepts.PagePublishing)
+* [Polymorph Editions](xref:Concepts.Polymorphism)
+* [Permissions](xref:Concepts.Permissions)
+* [Features Management](xref:Concepts.Features)
 
 </details>
 
@@ -66,8 +66,8 @@ This is where you can find things like...
         <strong>Developer Concepts / Features</strong>
     </summary>
 
-* [DNN Module and 2sxc Instance](concept-dnn-module)
-* [File provided content types](concept-file-provided-content-types)
+* [DNN Module and 2sxc Instance](xref:Concepts.DnnModule)
+* [File provided content types](xref:Concepts.FileBasedContentTypes)
 
 </details>
 
@@ -112,9 +112,9 @@ This is where you can find things like...
 
 * [C# API in Razor Templates](razor-templates)
 * Main Objects
-  * [App object](razor-app)
+  * [App object](xref:HowTo.DynamicCode.App)
   * Content, a [DynamicEntity](dotnet-dynamicentity)
-  * [Data](razor-data), a [DataSource](dotnet-datasource)
+  * [Data](xref:HowTo.DynamicCode.Data), a [DataSource](xref:Specs.DataSources.DataSource)
   * [DNN](razor-dnn)
   * [Edit](razor-edit) with [Toolbar](razor-edit.toolbar) and [Enable](razor-edit.enable)
   * [Link](razor-link)
@@ -125,7 +125,7 @@ This is where you can find things like...
   * AsDynamic(...) [todoc](doc-tags#todoc)
   * AsEntity(...) [todoc](doc-tags#todoc)
   * CreateInstance(...) [todoc](doc-tags#todoc)
-  * CreateSource<T>(...) [DataSource](dotnet-datasource)
+  * CreateSource<T>(...) [DataSource](xref:Specs.DataSources.DataSource)
 * Customizing Data & Search
   * [InstancePurpose](razor-sexycontentwebpage.instancepurpose)
   * [CustomizeData](razor-sexycontentwebpage.customizedata)
@@ -144,9 +144,9 @@ This is where you can find things like...
 
 * [Overview Custom WebAPI](dotnet-webapi)
 * Main Objects
-  * [App object](razor-app)
+  * [App object](xref:HowTo.DynamicCode.App)
   * Content, a [DynamicEntity](dotnet-dynamicentity)
-  * [Data](razor-data), a [DataSource](dotnet-datasource)
+  * [Data](xref:HowTo.DynamicCode.Data), a [DataSource](xref:Specs.DataSources.DataSource)
   * [DNN](razor-dnn)
   * [Edit](razor-edit) with [Toolbar](razor-edit.toolbar)
   * Permissions [todoc](doc-tags#todoc)
@@ -154,7 +154,7 @@ This is where you can find things like...
   * AsAdam(...) [todoc](doc-tags#todoc)
   * AsDynamic(...) [todoc](doc-tags#todoc)
   * AsEntity(...) [todoc](doc-tags#todoc)
-  * CreateSource<T>(...) [DataSource](dotnet-datasource)
+  * CreateSource<T>(...) [DataSource](xref:Specs.DataSources.DataSource)
   * [SaveInAdam(...)](dotnet-webapi-saveinadam)
 
 </details>
@@ -165,17 +165,17 @@ This is where you can find things like...
         <strong>DataSources</strong>
     </summary>
 
-* [DataSource Overview](dotnet-datasource)
+* [DataSource Overview](xref:Specs.DataSources.DataSource)
 * [List of all sources](dotnet-datasources-all)
 * [Create custom DataSources](dotnet-datasources-custom)
 * DataSource Configuration
-  * [Concept](dotnet-datasources-configuration)
-  * [Tokens](concept-tokens)
+  * [Concept](xref:Specs.DataSources.Configuration)
+  * [Tokens](xref:Concepts.Tokens)
 * API for creating Data Sources
-  * [API overview](dotnet-datasource-api)
+  * [API overview](xref:Specs.DataSources.Api)
   * [AsEntity](dotnet-datasource-api-asentity)
-  * [EnsureConfiguration...](dotnet-datasource-api-ensureconfigurationisloaded)
-  * [ConfigMask](dotnet-datasource-api-configmask)
+  * [EnsureConfiguration...](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded)
+  * [ConfigMask](xref:Specs.DataSources.Api.ConfigMask)
   * [Provide](dotnet-datasource-api-provide)
   * [VisualQuery attribute](dotnet-datasource-api-visualquery)
 

@@ -3,10 +3,9 @@ uid: Concepts.EditToolbar
 ---
 # Concept: In-Page Edit-Item Toolbars and Buttons
 
-## Purpose / Description
 2sxc provides super-fast in-page buttons and toolbars for the content-editor to manage and edit everything. The system is very advanced, so what at first may seem trivial can become very complex as you go deeper into customizing it. This is why we are providing an overview.
 
-![hover inline toolbar example](./assets/concepts/inpage-toolbar/example-hover-toolbar.png)
+![hover inline toolbar example](/assets/concepts/inpage-toolbar/example-hover-toolbar.png)
 
 
 ## Best Practice: Hover vs. Inline Toolbars
@@ -101,13 +100,13 @@ This is a square thingy with an icon, which is will run a _Command_. When the bu
 
 
 ## Read also
-* [quickE - the quick-edit hover toolbar](concept-quick-edit) - the quick-edit hover-toolbar for inserting/moving modules
+* [quickE - the quick-edit hover toolbar](xref:Concepts.QuickEdit) - the quick-edit hover-toolbar for inserting/moving modules
 * [Inner Content Blocks](http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules) - blog about inner content-blocks
 
 
 ## Demo App and further links
 You should find some code examples in this demo App
-* [2sxc blog](http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke)
+* [2sxc blog](xref:App.Blog)
 
 
 ## History

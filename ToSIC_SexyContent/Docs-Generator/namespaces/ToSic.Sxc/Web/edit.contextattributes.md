@@ -4,7 +4,7 @@ uid: ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes(ToSic.Sxc.Data.IDynami
 
 All client-side scripts need to know what _Context_ they are in, meaning which DNN-Module, which 2sxc-App, which Zone, permissions etc. Read about it in @HowTo.DynamicCode.ContextAttributes. 
 
-By default, this context is already provided by the environment, but sometimes a _new context_ must provide overrides. This is rare, but important, for example using [inner-content][inner-content]. 
+By default, this context is already provided by the environment, but sometimes a _new context_ must provide overrides. This is rare, but important, for example using @Concepts.InnerContent. 
 
 So the `ContextAttributes` will provide this information in some hidden html.
 
@@ -13,7 +13,7 @@ So the `ContextAttributes` will provide this information in some hidden html.
 
 This example shows the title and will add the standard editing-buttons for the `Content` item.
 
-Here's an [inner-content][inner-content] example:
+Here's an @Concepts.InnerContent example:
 
 ```html
 <div class="app-blog-text sc-content-block-list" @Edit.ContextAttributes(post, field: "DesignedContent")>
@@ -38,7 +38,7 @@ Here's a common example: imagine you have a 2sxc-instance (a module showing 2sxc
 ## The parameters
 
 1. `target` required  
-    the content-item for which the new context should be. this item usually has a field (see the next property) which has [inner-content][inner-content]
+    the content-item for which the new context should be. this item usually has a field (see the next property) which has @Concepts.InnerContent
 1. `field` string  
     the field of this content-item, which contains the inner-content-items 
 1. `contentType` string  
@@ -59,19 +59,19 @@ To promote long term API stability, we require all parameters except for the fir
 
 ## Read also
 
-* [About Inner Content][inner-content]
+* [About Inner Content](xref:Concepts.InnerContent)
 
 ## Demo App and further links
 
 You should find some code examples in this demo App
-* [Blog App](http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke)
+* [Blog App](xref:App.Blog)
 
 
 ## History
 
 1. Introduced in 2sxc 8.4
 
-[inner-content]: http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
+(xref:Concepts.InnerContent): http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
 [DynamicEntity]: Dynamic-Entity
 [actions-source]: https://github.com/2sic/2sxc/blob/master/src/inpage/2sxc._actions.js
 [template-content-data]: http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content

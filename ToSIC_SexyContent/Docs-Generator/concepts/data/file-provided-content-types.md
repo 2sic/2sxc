@@ -4,7 +4,6 @@ uid: Concepts.FileBasedContentTypes
 
 # Concept: File/Folder Based Content-Types (9.7) 
 
-## Purpose / Description
 We're adding support to use content-type definitions stored in a json-file, in addition to the SQL data base. 
 
 This will primarily be used in providing future _shared_ content types which are used across all portals and apps. Examples of such types are

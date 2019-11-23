@@ -3,8 +3,6 @@ uid: Concepts.Views
 ---
 # Concept: Views
 
-## Purpose / Description
-
 Views are what the user will see - and contains things like Html, CSS, Javascript and data from the content. 
 
 ## How it Works
@@ -38,7 +36,7 @@ todo: recipes to create, change etc.
 
 ## Future Features & Wishes
 
-1. Out-of the box support for [polymorphism](concept-polymorph)
+1. Out-of the box support for [polymorphism](xref:Concepts.Polymorphism)
 
 ## Read also
 

@@ -5,7 +5,7 @@ quickE (pronounced quicky) is the quick-edit feature inside 2sxc to quickly add 
 This page explains the In-Browser things you must know, incl. JSON configuration
 
 ## Concept and Background
-For this please read [Concept-Quick-Edit](Concept-Quick-Edit), which also explains how to include it in a Skin etc.
+For this please read [Concept-Quick-Edit](xref:Concepts.QuickEdit), which also explains how to include it in a Skin etc.
 
 ## How to use
 Assuming that the $quickE is already on the page and you're logged on, there is not much to do for now. 
@@ -54,7 +54,7 @@ If you want to add this attribute only when the user is editing the page, the be
 ## Demo App and further links
 You should find some code examples in this demo App
 * [Accordion (collapsible sections)](https://github.com/2sic/app-accordion-bootstrap3)
-* [2sxc blog](http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke)
+* [2sxc blog](xref:App.Blog)
 
 ## History
 1. Introduced in 2sxc v08.04

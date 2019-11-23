@@ -25,7 +25,7 @@ By default, it is automatically added if the system detects that the current use
 
 ## Inner-Context for Inner Content
 
-When [inner content](concept-inner-content) is used, each block of inner-content will change the context, because it will have different IDs etc. So inner-content blocks will add their own context-attributes. See also [Edit.ContextAttributes](razor-edit.contextattributes).
+When [inner content](xref:Concepts.InnerContent) is used, each block of inner-content will change the context, because it will have different IDs etc. So inner-content blocks will add their own context-attributes. See also [Edit.ContextAttributes](razor-edit.contextattributes).
 
 ## How JS Picks up the Context
 

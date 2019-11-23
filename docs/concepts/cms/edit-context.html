@@ -113,28 +113,61 @@
                             <a href="../data/relationships.html" title="Relationships" class="">Relationships</a>
                           </li>
                           <li class="">
-                            <span class="expand-stub"></span>
                             <a class="">Content Types</a>
-                              
-                              <ul class="nav level3">
-                                <li class="">
-                                  <a href="../data/file-provided-content-types.html" title="File Based Content-Types" class="">File Based Content-Types</a>
-                                </li>
-                              </ul>  </li>
+                          </li>
+                          <li class="">
+                            <a href="../data/file-provided-content-types.html" title="File Content-Types" class="">File Content-Types</a>
+                          </li>
                           <li class="">
                             <a href="../data/permissions.html" title="Permissions" class="">Permissions</a>
                           </li>
                         </ul>  </li>
                     <li class="">
+                      <span class="expand-stub"></span>
                       <a class="">CMS</a>
-                    </li>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../cms/dnn-module.html" title="DNN Modules" class="">DNN Modules</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/hide-advanced-features.html" title="Hide Features" class="">Hide Features</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/dnn-evoq-page-publishing.html" title="Page Publishing" class="">Page Publishing</a>
+                          </li>
+                          <li class="active">
+                            <a href="../cms/edit-context.html" title="Edit-Context Data" class="active">Edit-Context Data</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/inner-content.html" title="Inner Content" class="">Inner Content</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/inpage-toolbars.html" title="Edit Toolbars" class="">Edit Toolbars</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/quick-edit.html" title="Quick-Edit (QuickE)" class="">Quick-Edit (QuickE)</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/tokens.html" title="Tokens" class="">Tokens</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/views.html" title="Views" class="">Views</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/polymorph.html" title="Polymorph" class="">Polymorph</a>
+                          </li>
+                        </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
                       <a class="">WIP</a>
                         
                         <ul class="nav level2">
                           <li class="">
-                            <a class="">Metadata</a>
+                            <a href="../data/metadata.html" title="Metadata" class="">Metadata</a>
+                          </li>
+                          <li class="">
+                            <a class="">App</a>
                           </li>
                         </ul>  </li>
                   </ul>        </div>
@@ -161,7 +194,7 @@
 </code></pre><h2 id="how-the-edit-context-is-added">How the Edit-Context is Added</h2>
 <p>By default, it is automatically added if the system detects that the current user has edit-permissions. In 2sxc 9.30 a feature was added to add the context in code, using the <a href="razor-edit.enable">Edit.Enable(...)</a> command.</p>
 <h2 id="inner-context-for-inner-content">Inner-Context for Inner Content</h2>
-<p>When <a href="concept-inner-content">inner content</a> is used, each block of inner-content will change the context, because it will have different IDs etc. So inner-content blocks will add their own context-attributes. See also <a href="razor-edit.contextattributes">Edit.ContextAttributes</a>.</p>
+<p>When <a class="xref" href="inner-content.html">inner content</a> is used, each block of inner-content will change the context, because it will have different IDs etc. So inner-content blocks will add their own context-attributes. See also <a href="razor-edit.contextattributes">Edit.ContextAttributes</a>.</p>
 <h2 id="how-js-picks-up-the-context">How JS Picks up the Context</h2>
 <p>In most cases the context is picked up automatically - like in such a code:</p>
 <pre><code class="lang-html">&lt;a onclick=&quot;$2sxc(this).run(&#39;edit&#39;, ...)&quot;&gt;edit&lt;/a&gt;

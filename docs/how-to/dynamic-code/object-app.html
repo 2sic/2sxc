@@ -50,6 +50,9 @@
                           <a href="../../articles/intro.html" title="Articles">Articles</a>
                       </li>
                       <li>
+                          <a href="../../concepts/index.html" title="Concepts">Concepts</a>
+                      </li>
+                      <li>
                           <a href="../../how-to/index.html" title="How To">How To</a>
                       </li>
                       <li>
@@ -162,7 +165,7 @@
 <h2 id="using-app-data-appdata">Using App Data (App.Data)</h2>
 <p>The App object gives you immediate acccess to all data in the app, through the <code>Data</code> property. Basically you can use it as follows:</p>
 <h3 id="get-all-data-items-of-a-content-type">Get All Data Items of a Content Type</h3>
-<p><code>App.Data[&quot;ContentTypeName&quot;]</code> will give you a <a href="DotNet-DataStream">stream</a> of all entities of that type. In most cases you&#39;ll use an <code>AsDynamic(...)</code> to use it efficiently in loops etc. because most of the razor templating will prefer a <a href="Dynamic-Entity">DynamicEntity</a> to a pure IEntity-object. Here&#39;s an example:</p>
+<p><code>App.Data[&quot;ContentTypeName&quot;]</code> will give you a <a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.IDataStream.html">stream</a> of all entities of that type. In most cases you&#39;ll use an <code>AsDynamic(...)</code> to use it efficiently in loops etc. because most of the razor templating will prefer a <a href="Dynamic-Entity">DynamicEntity</a> to a pure IEntity-object. Here&#39;s an example:</p>
 <pre><code class="lang-cs">@foreach(var post in AsDynamic(App.Data[&quot;BlogPost&quot;]))
 {
     @RenderPage(&quot;_list-item.cshtml&quot;, new { Post = post })
@@ -181,8 +184,8 @@
 <pre><code class="lang-html">@foreach(var tag in AsDynamic(App.Query[&quot;SortedTags&quot;][&quot;Default&quot;])) {
     &lt;li class=&#39;@(&quot;app-blog-tag&quot; + tag.ManualWeight)&#39;&gt;&lt;a href=&#39;@Link.To(&quot;tag= &quot; tag.Tag)&#39; title=&quot;@tag.Name&quot;&gt;@tag.Name&lt;/a&gt;&lt;/li&gt;
 }
-</code></pre><p>Technically the <code>App.Query</code> is a <code>IDictionary&lt;string, IDataSource&gt;</code>, meaning that it&#39;s a dictionary using string identifiers (names), returning an <a href="DotNet-DataSource"><code>IDataSource</code></a> object. </p>
-<p>It&#39;s important to realize that a <a href="DotNet-DataSource">DataSource</a> can deliver multiple <a href="DotNet-DataStream">streams of data</a> - a bit like delivering multiple tables. Each stream has a name, and you must specify which stream you want to work with. In the above example, we&#39;re using the <code>Default</code> stream as defined with <code>App.Query[&quot;SortedTags&quot;][&quot;Default&quot;]</code>.</p>
+</code></pre><p>Technically the <code>App.Query</code> is a <code>IDictionary&lt;string, IDataSource&gt;</code>, meaning that it&#39;s a dictionary using string identifiers (names), returning an <a class="xref" href="../../specs/datasources/datasource.html"><code>IDataSource</code></a> object. </p>
+<p>It&#39;s important to realize that a <a class="xref" href="../../specs/datasources/datasource.html">DataSource</a> can deliver multiple <a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.IDataStream.html">streams of data</a> - a bit like delivering multiple tables. Each stream has a name, and you must specify which stream you want to work with. In the above example, we&#39;re using the <code>Default</code> stream as defined with <code>App.Query[&quot;SortedTags&quot;][&quot;Default&quot;]</code>.</p>
 <h2 id="note-about-unpublished--draft-content-items">Note about Unpublished / Draft Content-Items</h2>
 <p>In case you&#39;re not aware of the draft/unpublished features in 2sxc, we want to note that each item can be live/draft, and each item could have a corresponding counterpart. So a draft-item <em>could</em> have a live-item (but doesn&#39;t have to), and a live-item <em>could</em> have a draft item.</p>
 <p>This is important, because the admin/editor will see all the draft items, while the end-user will only see the live ones. So the exact items shown and the item-count can differ if you are logged in. </p>

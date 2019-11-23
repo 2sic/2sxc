@@ -10,6 +10,14 @@
 ##[All DataSources](xref:Specs.DataSources.ListAll)
 ##[Create Custom DataSource](xref:Specs.DataSources.Custom)
 ##[Configuration System](xref:Specs.DataSources.Configuration)
+##[Internal APIs](xref:Specs.DataSources.Api)
+###[AsEntity](xref:Specs.DataSources.Api.AsEntity)
+###[ConfigMask](xref:Specs.DataSources.Api.ConfigMask)
+###[EnsureConfigurationIsLoaded](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded)
+###[Provide](xref:Specs.DataSources.Api.Provide)
+# todo
+## VisualQuery Attribute
+
 # Data & Input Types
 ##[Data Types](xref:Specs.Data.Type.Overview)
 ##[Input Types](xref:Specs.Data.Inputs.Overview)

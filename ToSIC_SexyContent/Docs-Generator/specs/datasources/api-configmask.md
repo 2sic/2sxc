@@ -1,3 +1,6 @@
+---
+uid: Specs.DataSources.Api.ConfigMask
+---
 # DataSource API: ConfigMask
 
 ## Purpose / Description
@@ -21,7 +24,7 @@ public DnnFormAndList()
 This example adds 3 configuration masks - let's find out what exactly happens.
 
 ## Tokens for Configuration Injection
-The EAV-System has a sophisticated system to get configuration based on tokens. You can read about  [configuration injection using tokens here](dotnet-datasources-configuration). 
+The EAV-System has a sophisticated system to get configuration based on tokens. You can read about  [configuration injection using tokens here](xref:Specs.DataSources.Configuration). 
 
 ## Registering and Resolving these Tokens with ConfigMask
 Internally a lot happens, but you just need to know the ConfigMask command. The syntax is:
@@ -35,8 +38,8 @@ This will do the following
 
 ## Read also
 
-* [Configuration using Tokens](dotnet-datasources-configuration)
-* [Ensuring configuration is parsed](dotnet-datasource-api-ensureconfigurationisloaded)
+* [Configuration using Tokens](xref:Specs.DataSources.Configuration)
+* [Ensuring configuration is parsed](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded)
 
 ## Demo App and further links
 

@@ -3,10 +3,9 @@ uid: Concepts.QuickE
 ---
 # Concept: quickE - Quick Edit 2.0
 
-## Purpose / Description
 quickE (pronounced _quick-e_) is the quick-edit feature inside 2sxc to quickly add / move modules and inner content blocks. It supports touch and usually is used with a mouseover.
 
-![Example showing quickE](./assets/concepts/inpage-toolbar/example-quicke.png)
+![Example showing quickE](/assets/concepts/inpage-toolbar/example-quicke.png)
 
 In the current version, it allows you to do the following in normal view-mode:
 
@@ -47,15 +46,13 @@ Read more about this in the [Html Js documentation](Html-Js-$quickE) page
 
 
 ## Read also
-* [Inpage Toolbars](concept-inpage-toolbars) - the item-scoped toolbars used for editing
+* [Inpage Toolbars](xref:Concepts.EditToolbar) - the item-scoped toolbars used for editing
 * [Inner Content Blocks](http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules) - blog about inner content-blocks
 
 ## Demo App and further links
 You should find some code examples in this demo App
-* [2sxc blog](http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke)
+* [2sxc blog](xref:App.Blog)
 
 ## History
 1. quickE 1.0 in 2sxc v08.04
 2. quickE 2.0 with move/delete dnn module and configurable in 2sxc 08.07.00
-
-[somethingnotused]:innerlink

@@ -3,13 +3,12 @@ uid: Concepts.InnerContent
 ---
 # Concept: Inner Content 2.0
 
-## Purpose / Description
 Inner Content is the feature to place content-blocks (apps or common content-items) _inside_ another content-item. 
 
 There are two common scenarios for this:
 
 1. Apps with list/details views, with a **feature rich details-view**. For example: a blog, which lets the editor add galleries and other apps into each blog-post. This is called a [mashup app](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid)) as it mixes apps together
-2. Apps which **wrap** other content/apps, for example an [accordion-app][accordion] which lets the editor add further content-blocks or apps into each collapsing segment.
+2. Apps which **wrap** other content/apps, for example an [accordion-app](xref:App.Accordion) which lets the editor add further content-blocks or apps into each collapsing segment.
 
 ## Basic Concept
 _Inner Content_ links other content-blocks (apps, content) to a _Content Item_, allowing the template to then show this inner content where it wants to. 
@@ -26,7 +25,7 @@ To achieve this flexibility, the _Inner Content_ items are linked not only to a 
 A common use case is to provide the editor with an area into which he/she can add as many content-blocks/apps as they want to. This feels like a DNN-pane - the editor just adds apps as he needs them. 
 
 This mode is common for mashup-apps and is mostly used on sophisticated details-pages with a clear area containing additional functionality. It's also common in
-layout-changing apps like the [accordion app][accordion].
+layout-changing apps like the [accordion app](xref:App.Accordion).
 
 ## In WYSIWYG Inner-Content
 _this is new in 2sxc 8.9_
@@ -40,7 +39,7 @@ For _Inner Content_ to work, the following parts play together:
 
 1. **Data storage**: you need fields in your content-type to link to the external content blocks. Just create entity-fields and use the type _Content Block Items_. In many cases you also want to hide the field because it's not important to the content-editor. Just go to the field-settings and set _Visible in Edit UI_ to off. 
 2. **Content-Block rendering** in the templates, using the [Razor API](Razor-Content-Blocks) - it is prepared both for the standalone-area-mode as well as the merge-with-wysiwyg-mode. 
-2. **In-Page Editing**: to allow the editor to add / edit content-blocks in the normal view, the UI must support it. This is handeled automatically by [Quick-Edit](Concept-Quick-Edit). 
+2. **In-Page Editing**: to allow the editor to add / edit content-blocks in the normal view, the UI must support it. This is handeled automatically by [Quick-Edit](xref:Concepts.QuickEdit). 
 3. To do the in-page Editing, quickE needs to know some **context information** (what field to store the links in, etc.), provided in an HTML-attribute. It's either rendered in automatically when using the [Razor commands](Razor-Content-Blocks) or you can manually place them using [context attributes](Razor-Edit.ContextAttributes).
 4. If you want the **WYSIWYG-integration** the wysiwyg must know which field to use to manage the linked content-blocks. This is simply done by convention: as soon as a content-block field follows right after a wysiwyg-field, they will be linked and the button will appear. This also works it the content-block field is set to invisible. 
 
@@ -49,12 +48,9 @@ For _Inner Content_ to work, the following parts play together:
 
 ## Demo App and further links
 You should find some code examples in this demo App
-* [2sxc blog](http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke)
+* [2sxc blog](xref:App.Blog)
 
 ## History
 1. Inner Content 1.0 in 2sxc v08.04
 2. Enhanced Razor API in v08.09
 3. WYSIWYG mode in v08.09
-
-
-[accordion]:http://2sxc.org/en/apps/app/accordion-for-collapsible-sections

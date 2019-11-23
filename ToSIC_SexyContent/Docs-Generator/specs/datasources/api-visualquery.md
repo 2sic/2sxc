@@ -52,7 +52,7 @@ Other Properties You Should Not Set:
 
 ## Read also
 
-* [DataSource API](dotnet-datasource-api) - DataSource API overview
+* [DataSource API](xref:Specs.DataSources.Api) - DataSource API overview
 
 ## Demo Code and further links
 

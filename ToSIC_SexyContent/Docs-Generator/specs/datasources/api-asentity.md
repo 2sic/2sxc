@@ -1,3 +1,6 @@
+---
+uid: Specs.DataSources.Api.AsEntity
+---
 # DataSource API: AsEntity
 
 ## Purpose / Description
@@ -77,7 +80,7 @@ All paramaters are optional, except the values. Here's what each one does:
 
 ## Read also
 
-* [DataSource API](dotnet-datasource-api) - DataSource API overview
+* [DataSource API](xref:Specs.DataSources.Api) - DataSource API overview
 
 ## Demo Code and further links
 

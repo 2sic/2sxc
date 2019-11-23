@@ -8,7 +8,7 @@ Visit the [App Catalog][app-cat] where almost all apps use Razor. There you can 
 
 ## Objects Added by 2sxc in Razor Templates
 
-1. [App](Razor-App) - the current App and all it's data
+1. [App](xref:HowTo.DynamicCode.App) - the current App and all it's data
 1. Content ([DynamicEntity][DynamicEntity]) - primary and often the only content-item in the [Data][Data] for this template
 1. [Data][Data] (IDataSource)- this object gives you all the data which was meant to be used by this Templates
 1. [Dnn](Razor-Dnn) - the common Dnn object providing page, module, user information

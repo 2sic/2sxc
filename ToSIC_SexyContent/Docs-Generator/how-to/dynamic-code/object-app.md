@@ -48,7 +48,7 @@ The App object gives you immediate acccess to all data in the app, through the `
 
 
 ### Get All Data Items of a Content Type
-`App.Data["ContentTypeName"]` will give you a [stream](DotNet-DataStream) of all entities of that type. In most cases you'll use an `AsDynamic(...)` to use it efficiently in loops etc. because most of the razor templating will prefer a [DynamicEntity][DynamicEntity] to a pure IEntity-object. Here's an example:
+`App.Data["ContentTypeName"]` will give you a [stream](xref:ToSic.Eav.DataSources.IDataStream) of all entities of that type. In most cases you'll use an `AsDynamic(...)` to use it efficiently in loops etc. because most of the razor templating will prefer a [DynamicEntity][DynamicEntity] to a pure IEntity-object. Here's an example:
 
 ```cs
 @foreach(var post in AsDynamic(App.Data["BlogPost"]))
@@ -79,9 +79,9 @@ The queries you create in the app-configuration dialogs can do many things like 
 }
 ```
 
-Technically the `App.Query` is a `IDictionary<string, IDataSource>`, meaning that it's a dictionary using string identifiers (names), returning an [`IDataSource`](DotNet-DataSource) object. 
+Technically the `App.Query` is a `IDictionary<string, IDataSource>`, meaning that it's a dictionary using string identifiers (names), returning an [`IDataSource`](xref:Specs.DataSources.DataSource) object. 
 
-It's important to realize that a [DataSource](DotNet-DataSource) can deliver multiple [streams of data](DotNet-DataStream) - a bit like delivering multiple tables. Each stream has a name, and you must specify which stream you want to work with. In the above example, we're using the `Default` stream as defined with `App.Query["SortedTags"]["Default"]`.
+It's important to realize that a [DataSource](xref:Specs.DataSources.DataSource) can deliver multiple [streams of data](xref:ToSic.Eav.DataSources.IDataStream) - a bit like delivering multiple tables. Each stream has a name, and you must specify which stream you want to work with. In the above example, we're using the `Default` stream as defined with `App.Query["SortedTags"]["Default"]`.
 
 ## Note about Unpublished / Draft Content-Items
 In case you're not aware of the draft/unpublished features in 2sxc, we want to note that each item can be live/draft, and each item could have a corresponding counterpart. So a draft-item _could_ have a live-item (but doesn't have to), and a live-item _could_ have a draft item.

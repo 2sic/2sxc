@@ -3,6 +3,7 @@ uid: Concepts.Tokens
 ---
 
 # Concept: Tokens
+
 Often you need a text-based code which should be replaced at runtime with a real value from elsewhere. In DNN / 2sxc this is called a **token**, and they usually look like `[Source:Property]`. At runtime, this will then show a value like `27`. 
 
 _Note: this article applies to tokens as they are handled server-side. There is a special token-like syntax in JavaScript, which is not discussed here._
@@ -45,7 +46,7 @@ Some situations will have token sources beyond the default. For example, when co
 * `Settings` - used like `[Settings:PageSize]`
 * There is another special override-token system (not documented) which is used for testing
 
-For more on this, read the [DataSource Configuration](dotnet-datasources-configuration) section. 
+For more on this, read the [DataSource Configuration](xref:Specs.DataSources.Configuration) section. 
 
 ## History
 

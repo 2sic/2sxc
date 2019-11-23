@@ -65,7 +65,7 @@ To promote long term API stability, we require all parameters to be [named](conv
 ## Demo App and further links
 
 You should find some code examples in this demo App
-* [Blog App](http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke)
+* [Blog App](xref:App.Blog)
 
 ## History
 

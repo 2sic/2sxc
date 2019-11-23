@@ -50,6 +50,9 @@
                           <a href="../../articles/intro.html" title="Articles">Articles</a>
                       </li>
                       <li>
+                          <a href="../../concepts/index.html" title="Concepts">Concepts</a>
+                      </li>
+                      <li>
                           <a href="../../how-to/index.html" title="How To">How To</a>
                       </li>
                       <li>
@@ -139,7 +142,7 @@
 </li>
 <li><p>There are also cases, where a template needs both queried data (like <em>all categories</em>) as well as content-items added manually. There are multiple easy ways of doing this <strong>todo - document later</strong></p>
 </li>
-<li><p>Note: if you want <em>all data</em> of a type, like &quot;Get me all Tag-items in the system&quot; you need to use <a href="Razor-App">App-Data</a>.</p>
+<li><p>Note: if you want <em>all data</em> of a type, like &quot;Get me all Tag-items in the system&quot; you need to use <a class="xref" href="object-app.html">App-Data</a>.</p>
 </li>
 </ol>
 <h2 id="most-common-way-to-use-the-data-object">Most common way to use the Data object</h2>
@@ -156,7 +159,7 @@
 <li>the AsDynamic will ensure that the items we&#39;re working with are easy to code with, because they are <a href="DotNet-DynamicEntity">Dynamic Entities</a></li>
 </ul>
 <h2 id="the-streams-in-a-data-object">The Streams in a Data Object</h2>
-<p>The data object can have multiple <em>Streams</em>, each containing a list of items. In most cases you&#39;ll just have the <em>Default</em> stream, which you can access using <code>Data[&quot;Default&quot;]</code>. Read more about streams in the <a href="DotNet-DataStream">Stream docs</a></p>
+<p>The data object can have multiple <em>Streams</em>, each containing a list of items. In most cases you&#39;ll just have the <em>Default</em> stream, which you can access using <code>Data[&quot;Default&quot;]</code>. Read more about streams in the <a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.IDataStream.html">Stream docs</a></p>
 <p>But you may also have additional streams, depending on what has been configured in the data-preparation stuff (usually a visual query). For example, if you are working on a view showing one product and a menu with all possible categories, then your query may have these streams:</p>
 <ul>
 <li>Book (the current book, this stream has 1 item with the ID matching the ID in the URL)</li>

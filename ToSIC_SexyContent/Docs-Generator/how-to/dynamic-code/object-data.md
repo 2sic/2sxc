@@ -14,7 +14,7 @@ A 2sxc instance is a running _2sxc-engine_ which is about to execute some code (
 
 1. There are also cases, where a template needs both queried data (like _all categories_) as well as content-items added manually. There are multiple easy ways of doing this **todo - document later**
 
-1. Note: if you want _all data_ of a type, like "Get me all Tag-items in the system" you need to use [App-Data](Razor-App).
+1. Note: if you want _all data_ of a type, like "Get me all Tag-items in the system" you need to use [App-Data](xref:HowTo.DynamicCode.App).
 
 
 ## Most common way to use the Data object
@@ -35,7 +35,7 @@ In all Razor-templates and also the web-api files, the `Data` object is already 
 
 
 ## The Streams in a Data Object
-The data object can have multiple _Streams_, each containing a list of items. In most cases you'll just have the _Default_ stream, which you can access using `Data["Default"]`. Read more about streams in the [Stream docs](DotNet-DataStream)
+The data object can have multiple _Streams_, each containing a list of items. In most cases you'll just have the _Default_ stream, which you can access using `Data["Default"]`. Read more about streams in the [Stream docs](xref:ToSic.Eav.DataSources.IDataStream)
 
 But you may also have additional streams, depending on what has been configured in the data-preparation stuff (usually a visual query). For example, if you are working on a view showing one product and a menu with all possible categories, then your query may have these streams:
 

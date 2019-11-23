@@ -4,7 +4,7 @@ uid: ToSic.Eav.DataSources
 ---
 
 ## Purpose / Description
-DataSources are objects which deliver one or many [DataStreams](DotNet-DataStream), which contain a bunch of content-items. They are then attached to each other (from one sources `Out` to another ones `In`) creating a `Query`. Queries can be customized at will. The whole system is used to prepare/process data for views, WebApi or anything else.
+DataSources are objects which deliver one or many [DataStreams](xref:ToSic.Eav.DataSources.IDataStream), which contain a bunch of content-items. They are then attached to each other (from one sources `Out` to another ones `In`) creating a `Query`. Queries can be customized at will. The whole system is used to prepare/process data for views, WebApi or anything else.
 
 ## Overview
 There are many data-sources, and most of them will... 
@@ -23,7 +23,7 @@ So DataSources can be joined together into a [Query](dotnet-query) to do amazing
 
 
 ## Understanding Data-Flow between DataSource Objects
-Each DataSource has a list of out-streams available on the `.Out["StreamName"]` property, but usually access directly just with the `DataSourceName["StreamName"]`. This is what also happens when you use the [Data](Razor-Data) object and write `foreach(var item in Data["Default"])`. 
+Each DataSource has a list of out-streams available on the `.Out["StreamName"]` property, but usually access directly just with the `DataSourceName["StreamName"]`. This is what also happens when you use the [Data](xref:HowTo.DynamicCode.Data) object and write `foreach(var item in Data["Default"])`. 
 
 Aside from consuming data in your your template, most data-sources will simply offer the Out-Stream to other DataSources for further processing. Technically it's mapped like this:
 
@@ -45,28 +45,28 @@ Note that we've hidden the constructors for all DataSource objects in these docs
 
 ## Creating your own Custom DataSource
 * [short instruction to get started](dotnet-datasources-custom)
-* [here's docs about the relevant API](dotnet-datasource-api)
-* [understanding configuration injection](dotnet-datasources-configuration)
+* [here's docs about the relevant API](xref:Specs.DataSources.Api)
+* [understanding configuration injection](xref:Specs.DataSources.Configuration)
 
 ## Understanding Configuration of Each DataSource Object
-The configuration uses a sophisticated token system to provide all necessary information. It is explained [here](dotnet-datasources-configuration).
+The configuration uses a sophisticated token system to provide all necessary information. It is explained [here](xref:Specs.DataSources.Configuration).
 
 
 ## Common Use Cases of DataSource in C# Code 
 
 You will usually use DataSource objects in these common cases:
 
-1. when templating in Razor, the [Data](Razor-Data) object is a DataSource, usually having a `Default` stream (`Data["Default"]`) and sometimes further streams like `Data["ListContent"]` or `Data["Categories"]` etc.
-1. when templating, the [App.Data](Razor-App) is also a DataSource providing a stream for each content-type in this app, like `App.Data["BlogPost"]` or `App.Data["Tag"]`
+1. when templating in Razor, the [Data](xref:HowTo.DynamicCode.Data) object is a DataSource, usually having a `Default` stream (`Data["Default"]`) and sometimes further streams like `Data["ListContent"]` or `Data["Categories"]` etc.
+1. when templating, the [App.Data](xref:HowTo.DynamicCode.App) is also a DataSource providing a stream for each content-type in this app, like `App.Data["BlogPost"]` or `App.Data["Tag"]`
 1. every query is technically a DataSource, and in the query you define which DataStreams it has - if ever you use it in code, you'll see that `App.Query["SortedTags"]` would be a DataSource and typically the `Default` stream would contain all these tags.
 1. a query is always a chain of DataSource doing one operation and passing it on to the next DataSource. 
 
 ## How to use
 
 In your Razor-templates you'll usually work with these three sources:
-1. [Data](Razor-Data)
-1. [App.Data](Razor-App)
-1. [App.Query[...]](Razor-App)
+1. [Data](xref:HowTo.DynamicCode.Data)
+1. [App.Data](xref:HowTo.DynamicCode.App)
+1. [App.Query[...]](xref:HowTo.DynamicCode.App)
 
 Please read more about these in links. 
 
@@ -118,14 +118,14 @@ The most important thing to notice is that each additional data-source uses the 
 ## Developing Your Own DataSource
 Maybe you want to create an XML DataSource or a DNN-Users DataSource. This is easy to do. 
 
-[Best read the blog post about this][blog-custom-ds]
+[Best read the blog post about this](xref:Blog.CustomDataSource)
 
 
 ## Read also
 
-* about [Data Streams](DotNet-DataStream)
+* about [Data Streams](xref:ToSic.Eav.DataSources.IDataStream)
 * [Demo-App showing some coding of DataSources][app-ds-code]
-* [Blog about creating your own data-source][blog-custom-ds]
+* [Blog about creating your own data-source](xref:Blog.CustomDataSource)
 
 
 ## History
@@ -134,5 +134,5 @@ Maybe you want to create an XML DataSource or a DNN-Users DataSource. This is ea
 
 
 [eav-core-code]: https://github.com/2sic/eav-server/tree/master/ToSic.Eav.Core 
-[blog-custom-ds]: http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query
+
 [app-ds-code]: http://2sxc.org/en/apps/app/tutorial-use-a-custom-developed-datasource

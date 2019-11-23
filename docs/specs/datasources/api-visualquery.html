@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Format: JSON V1 | 2sxc and EAV 10 </title>
+    <title>DataSource API: VisualQuery Attribute | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Format: JSON V1 | 2sxc and EAV 10 ">
+    <meta name="title" content="DataSource API: VisualQuery Attribute | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
@@ -181,9 +181,9 @@
                           <li class="">
                             <a href="../input-types/_inputs-overview.html" title="Input Types" class="">Input Types</a>
                           </li>
-                          <li class="active">
+                          <li class="">
                             <span class="expand-stub"></span>
-                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="active">Json Format</a>
+                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="">Json Format</a>
                               
                               <ul class="nav level3">
                                 <li class="">
@@ -201,40 +201,66 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Specs.Data.Formats.JsonV1">
-<h1 id="format-json-v1">Format: JSON V1</h1>
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="datasource-api-visualquery-attribute">DataSource API: VisualQuery Attribute</h1>
 
-<p>JSON based data storage is used to persist data into a text (JSON) format. In 2sxc 9.4 we introduced it to store entities in the history (for version rollback). Since then it has found many new applications. </p>
-<h2 id="json-format-v1-package">JSON Format V1 Package</h2>
-<p>The Json format has a minimal header like this:</p>
-<pre><code class="lang-json">{
-  &quot;_&quot;: { &quot;V&quot;: 1 }
-}
-</code></pre><p>which just contains the version. Future non-breaking enhancements will leave the version on 1 and optionally add more header information. </p>
-<p>In addition to that, the basic package can contain either</p>
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>To help the Visual Query Designer properly guide the user, there is a C# <em>Attribute</em> called <strong>VisualQuery</strong> to configure everything. </p>
+<h2 id="how-to-use-visualquery">How to use VisualQuery</h2>
+<p>Here&#39;s a simple example of the <a href="https://github.com/2sic/dnn-datasource-form-and-list">FormAndList DataSource</a>: </p>
+<pre><code class="lang-c#">[VisualQuery(
+    GlobalName = &quot;0a0924a5-ca2f-4db5-8fc7-1a21fdbb2fbb&quot;,
+    NiceName = &quot;Dnn FormAndList&quot;,
+    Type = DataSourceType.Source, 
+    ExpectsDataOfType = &quot;d98db323-7c33-4f2a-b173-ef91c0875124&quot;,
+    HelpLink = &quot;https://github.com/2sic/dnn-datasource-form-and-list/wiki&quot;)]  
+</code></pre><p>This example shows how the the FormAndList DataSource tells the UI things like:</p>
+<ul>
+<li>the global name</li>
+<li>the nice name to use in the UI</li>
+<li>that it&#39;s a source (and not a filter) - affecting the icon shown</li>
+<li>that it has a content-type which should be used for the UI to configure it</li>
+<li>the help-link in the UI</li>
+</ul>
+<h2 id="what-you-can-configure-on-visualquery">What you can Configure on VisualQuery</h2>
+<p>These are the things you can configure:</p>
 <ol>
-<li>a <code>ContentType</code> node <a class="xref" href="format-json-v1-content-type.html">see specs</a></li>
-<li>or an <code>Entity</code> node <a class="xref" href="format-json-v1-entity.html">see specs</a></li>
+<li><code>string GlobalName</code> - <em>required</em> this should be a unique id, ideally a GUID<br><em>important: old code use string names like a .net namespace. This should not be done any more and will be deprecated in the future</em></li>
+<li><code>DataSourceType Type</code> - a type which basically controlls the icon shown in the designer. Supported values are <ul>
+<li>Cache</li>
+<li>Filter</li>
+<li>Logic</li>
+<li>Lookup</li>
+<li>Modify</li>
+<li>Security</li>
+<li>Sort</li>
+<li>Source</li>
+<li>Target</li>
+</ul>
+</li>
+<li><code>string ExpectsDataOfType</code> - if your datasource expects configuration, use this to tell the UI which content-type should be opened. Should be a GUID.<br><em>important: old code sometimes uses string-names. This will be deprecated in the future, so use GUIDs only</em></li>
+<li><code>string[] In</code> - optional information if your source expects multiple in-sources (default is empty)</li>
+<li><code>string HelpLink</code> - a url to a page giving the user help on this DataSource</li>
+<li><code>string NiceName</code> - a nicer name to show in the UI instead of the GlobalName</li>
 </ol>
-<p>This could then look like this: </p>
-<pre><code class="lang-json">{
-  &quot;_&quot;: { &quot;V&quot;: 1 },
-  &quot;ContentType&quot;: {
-    &quot;Id&quot;: &quot;|Config ToSic.Eav.DataSources.SqlDataSource&quot;,
-    &quot;Name&quot;: &quot;|Config ToSic.Eav.DataSources.SqlDataSource&quot;,
-    ...
-  }
-}
-</code></pre><h2 id="limitations">Limitations</h2>
-<p>As of now (2sxc 9.7) such a package can only contain 1 root item (a content-type or an entity). Future versions may enhance this.  </p>
+<p>Other Properties You Should Not Set:</p>
+<ul>
+<li><code>string[] PreviousNames</code> - still work in progress and may change</li>
+<li><code>string Icon</code> - still work in progress  and may change</li>
+<li><code>bool DynamicOut</code> - still work in progress and may change</li>
+<li><code>DifficultyBeta Difficulty</code> - still work in progress and may change</li>
+</ul>
 <h2 id="read-also">Read also</h2>
 <ul>
-<li><a class="xref" href="format-json-v1-content-type.html">Format: Json V1 Content-types</a></li>
-<li><a class="xref" href="../../concepts/data/file-provided-content-types.html">Concepts: file provided content-types</a></li>
+<li><a class="xref" href="api.html">DataSource API</a> - DataSource API overview</li>
+</ul>
+<h2 id="demo-code-and-further-links">Demo Code and further links</h2>
+<ul>
+<li><a href="https://github.com/2sic/dnn-datasource-form-and-list">FnL DataSource</a></li>
 </ul>
 <h2 id="history">History</h2>
 <ol>
-<li>Added in 2sxc 9.7</li>
+<li>Introduced in EAV 4.x, 2sxc 09.13</li>
 </ol>
 </article>
           </div>
@@ -244,7 +270,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/data-formats/format-json-v1.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/datasources/api-visualquery.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

@@ -142,6 +142,33 @@
                           <li class="">
                             <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
                           </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/api-asentity.html" title="AsEntity" class="">AsEntity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-configmask.html" title="ConfigMask" class="">ConfigMask</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-ensureconfigurationisloaded.html" title="EnsureConfigurationIsLoaded" class="">EnsureConfigurationIsLoaded</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-provide.html" title="Provide" class="">Provide</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">todo</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a class="">VisualQuery Attribute</a>
+                          </li>
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
@@ -178,11 +205,11 @@
 <h1 id="all-datasource-objects-in-2sxc--eav">All DataSource Objects in 2sxc / EAV</h1>
 
 <h2 id="purpose--description">Purpose / Description</h2>
-<p>2sxc provides a large set of <a href="DotNet-DataSource">DataSource</a> objects which either get data from somewhere (SQL, CSV, ...) or modify data on the <code>In</code> and passing it to <code>Out</code>. This page will give you an overview and link you to further sources if you need to know more. </p>
+<p>2sxc provides a large set of <a class="xref" href="datasource.html">DataSource</a> objects which either get data from somewhere (SQL, CSV, ...) or modify data on the <code>In</code> and passing it to <code>Out</code>. This page will give you an overview and link you to further sources if you need to know more. </p>
 <h2 id="how-to-use">How to use</h2>
 <p>Many data-sources are simply used in the <a class="xref" href="https://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a>, and if all you want is visual-query, then this reference will give you an overview regarding what things are possible. It will usually look like this: </p>
 <p><img src="/assets/data-sources/app-out-2-in-0.png" width="100%"></p>
-<p>If on the other hand you want to program with these <a href="DotNet-DataSource">DataSource</a> objects, then it will usually look a bit like this: </p>
+<p>If on the other hand you want to program with these <a class="xref" href="datasource.html">DataSource</a> objects, then it will usually look a bit like this: </p>
 <p>An example code </p>
 <pre><code class="lang-c#">// A source which can filter by Content-Type (EntityType)
 var allAuthors = CreateSource&lt;EntityTypeFilter&gt;();
@@ -193,7 +220,7 @@ var sortedAuthors = CreateSource&lt;ValueSort&gt;(allAuthors);
 sortedAuthors.Attributes = &quot;FullName&quot;;
 </code></pre><p>The previous example creates an initial source <code>allAuthors</code> which has all data on the in, then filters to only provide those of type <em>Author</em> to the out. This is then piped to the <code>sortedAuthors</code>, which sorts on the <em>Attributes</em> field. </p>
 <h2 id="understanding-data-flow-and-configuration">Understanding Data-Flow and Configuration</h2>
-<p>This is explained in the <a href="DotNet-DataSource">DataSource documentation</a>. </p>
+<p>This is explained in the <a class="xref" href="datasource.html">DataSource documentation</a>. </p>
 <h2 id="all-public-datasources">All Public DataSources</h2>
 <p>These are all the data sources which are either provided in the default installation of 2sxc, or which are available for you to install (manually). </p>
 <table>

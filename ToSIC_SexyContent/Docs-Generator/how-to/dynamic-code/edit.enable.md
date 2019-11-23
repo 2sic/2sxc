@@ -23,14 +23,14 @@ This example ensures that
 
 1. `api`: basic JS for editing are loaded, allowing you to then run javascript commands like `$2sxc(...).run(...)`
 1. `forms`: additional JS is loaded, enabling the standard form dialogs to open
-1. `context`: the html contains context-information about the app, so that the dialogs actually work - see also [edit context](concept-edit-context)
+1. `context`: the html contains context-information about the app, so that the dialogs actually work - see also [edit context](xref:Concepts.EditContext)
 1. the auto-toolbars are disabled (this would generate a default toolbar if no toolbar was specified)
 
 ## Usage Notes
 
 This command simply enables editing - but doesn't provide any permissions or show any buttons yet. Here are a few things you must know to get this to work:
 
-1. remember to set [permissions](concept-permissions) to allow what you want to do (like create new draft items for public users)
+1. remember to set [permissions](xref:Concepts.Permissions) to allow what you want to do (like create new draft items for public users)
 1. Edit.Enable uses [named parameters](convention-named-parameters), so you always have to use the `api: true` syntax
 1. the Edit.Enable won't output anything in the position it's added, because it controls the main wrapper
 1. you must also create a link or toolbar in your code for the public users, as they won't have a button to press otherwise
@@ -42,7 +42,7 @@ This command simply enables editing - but doesn't provide any permissions or sho
 1. `forms` bool, optional  
     ensures javascripts are loaded enabling forms to open
 1. `context` bool, optional  
-    ensures that the [context information](concept-edit-context) is provided in the DOM
+    ensures that the [context information](xref:Concepts.EditContext) is provided in the DOM
 1. `styles` bool, optional
     ensures styles to be loaded, which would be necessary for the standard toolbars to look right
 1. `autoToolbar` bool, optional

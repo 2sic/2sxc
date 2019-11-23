@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Format: JSON V1 | 2sxc and EAV 10 </title>
+    <title>DataSource API: ConfigMask | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Format: JSON V1 | 2sxc and EAV 10 ">
+    <meta name="title" content="DataSource API: ConfigMask | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
@@ -150,8 +150,8 @@
                                 <li class="">
                                   <a href="../datasources/api-asentity.html" title="AsEntity" class="">AsEntity</a>
                                 </li>
-                                <li class="">
-                                  <a href="../datasources/api-configmask.html" title="ConfigMask" class="">ConfigMask</a>
+                                <li class="active">
+                                  <a href="../datasources/api-configmask.html" title="ConfigMask" class="active">ConfigMask</a>
                                 </li>
                                 <li class="">
                                   <a href="../datasources/api-ensureconfigurationisloaded.html" title="EnsureConfigurationIsLoaded" class="">EnsureConfigurationIsLoaded</a>
@@ -181,9 +181,9 @@
                           <li class="">
                             <a href="../input-types/_inputs-overview.html" title="Input Types" class="">Input Types</a>
                           </li>
-                          <li class="active">
+                          <li class="">
                             <span class="expand-stub"></span>
-                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="active">Json Format</a>
+                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="">Json Format</a>
                               
                               <ul class="nav level3">
                                 <li class="">
@@ -201,40 +201,48 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Specs.Data.Formats.JsonV1">
-<h1 id="format-json-v1">Format: JSON V1</h1>
+            <article class="content wrap" id="_content" data-uid="Specs.DataSources.Api.ConfigMask">
+<h1 id="datasource-api-configmask">DataSource API: ConfigMask</h1>
 
-<p>JSON based data storage is used to persist data into a text (JSON) format. In 2sxc 9.4 we introduced it to store entities in the history (for version rollback). Since then it has found many new applications. </p>
-<h2 id="json-format-v1-package">JSON Format V1 Package</h2>
-<p>The Json format has a minimal header like this:</p>
-<pre><code class="lang-json">{
-  &quot;_&quot;: { &quot;V&quot;: 1 }
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>DataSources often need settings which come from the App or from a settings dialog. The ConfigMask builds a configuration token which will be used to get this setting, and also ensures that cachings mechanims vary the cache based on the result of the configuration. </p>
+<h2 id="how-to-use-configmask">How to use ConfigMask</h2>
+<p>Here&#39;s a simple example of the constructor of the <a href="https://github.com/2sic/dnn-datasource-form-and-list">DnnFormAndList DataSource</a>, which expects 3 settings: </p>
+<pre><code class="lang-c#">public DnnFormAndList()
+{
+    // Specify what out-streams this data-source provides. Usually just one, called &quot;Default&quot;
+    Provide(GetList);
+
+    // Register the configurations we want as tokens, so that the values will be injected later on
+    ConfigMask(&quot;ModuleId&quot;, &quot;[Settings:ModuleId||0]&quot;);
+    ConfigMask(&quot;TitleField&quot;, &quot;[Settings:TitleFieldName]&quot;);
+    ConfigMask(&quot;ContentType&quot;, &quot;[Settings:ContentTypeName||FnL]&quot;);
 }
-</code></pre><p>which just contains the version. Future non-breaking enhancements will leave the version on 1 and optionally add more header information. </p>
-<p>In addition to that, the basic package can contain either</p>
+</code></pre><p>This example adds 3 configuration masks - let&#39;s find out what exactly happens.</p>
+<h2 id="tokens-for-configuration-injection">Tokens for Configuration Injection</h2>
+<p>The EAV-System has a sophisticated system to get configuration based on tokens. You can read about  <a class="xref" href="configuration.html">configuration injection using tokens here</a>. </p>
+<h2 id="registering-and-resolving-these-tokens-with-configmask">Registering and Resolving these Tokens with ConfigMask</h2>
+<p>Internally a lot happens, but you just need to know the ConfigMask command. The syntax is:</p>
+<ul>
+<li><code>ConfigMask(key, mask)</code></li>
+</ul>
+<p>This will do the following</p>
 <ol>
-<li>a <code>ContentType</code> node <a class="xref" href="format-json-v1-content-type.html">see specs</a></li>
-<li>or an <code>Entity</code> node <a class="xref" href="format-json-v1-entity.html">see specs</a></li>
+<li>Add this mask (using this name) to the configuration list</li>
+<li>register this key to be cache-relevant</li>
 </ol>
-<p>This could then look like this: </p>
-<pre><code class="lang-json">{
-  &quot;_&quot;: { &quot;V&quot;: 1 },
-  &quot;ContentType&quot;: {
-    &quot;Id&quot;: &quot;|Config ToSic.Eav.DataSources.SqlDataSource&quot;,
-    &quot;Name&quot;: &quot;|Config ToSic.Eav.DataSources.SqlDataSource&quot;,
-    ...
-  }
-}
-</code></pre><h2 id="limitations">Limitations</h2>
-<p>As of now (2sxc 9.7) such a package can only contain 1 root item (a content-type or an entity). Future versions may enhance this.  </p>
 <h2 id="read-also">Read also</h2>
 <ul>
-<li><a class="xref" href="format-json-v1-content-type.html">Format: Json V1 Content-types</a></li>
-<li><a class="xref" href="../../concepts/data/file-provided-content-types.html">Concepts: file provided content-types</a></li>
+<li><a class="xref" href="configuration.html">Configuration using Tokens</a></li>
+<li><a class="xref" href="api-ensureconfigurationisloaded.html">Ensuring configuration is parsed</a></li>
+</ul>
+<h2 id="demo-app-and-further-links">Demo App and further links</h2>
+<ul>
+<li><a href="https://github.com/2sic/dnn-datasource-form-and-list">FnL DataSource Demo Code</a></li>
 </ul>
 <h2 id="history">History</h2>
 <ol>
-<li>Added in 2sxc 9.7</li>
+<li>Introduced in 2sxc 9.13 to aid custom data sources </li>
 </ol>
 </article>
           </div>
@@ -244,7 +252,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/data-formats/format-json-v1.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/datasources/api-configmask.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

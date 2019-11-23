@@ -2,7 +2,7 @@
 uid: Specs.DataSources.Custom
 ---
 
-# EAV DataSources: Creating Custom DataSources (2sxc 9.13)
+# EAV DataSources: Creating Custom DataSources
 
 ## Purpose / Description
 If you want to create your own DataSource and use it in the VisualQuery designer, this is for you
@@ -104,7 +104,3 @@ You should find some code examples in this visual studio project
 1. Introduced in 2sxc ca. 4 but with a difficult API
 1. API strongly enhanced and simplifield in 2sxc 09.13 
 
-
-[CustomizeData]:Razor-SexyContentWebPage.CustomizeData
-[InstancePurpose]:Razor-SexyContentWebPage.InstancePurpose
-[CustomizeSearch]:Razor-SexyContentWebPage.CustomizeSearch
