@@ -88,9 +88,6 @@ references:
 - uid: HowTo.DynamicCode.App
   name: App /  object in Razor
   href: how-to/dynamic-code/object-app.html
-- uid: HowTo.DynamicCode.CustomizeData
-  name: Event CustomizeData() on the Razor Page
-  href: how-to/razor/razor-customizedata.html
 - uid: HowTo.DynamicCode.Data
   name: " in Razor Template"
   href: how-to/dynamic-code/object-data.html
@@ -118,12 +115,30 @@ references:
 - uid: HowTo.Output.Assets
   name: Optimizing Template Assets / Client Depedencies (JS & CSS)
   href: how-to/output/assets.html
+- uid: HowTo.Razor.Blocks
+  name: 'Razor: Rendering Content-Blocks'
+  href: how-to/razor/blocks.html
 - uid: HowTo.Razor.ContextAttributes
   name: ContextAttributes in Razor-Output
   href: how-to/razor/contextattributes.html
+- uid: HowTo.Razor.CustomizeData
+  name: Event CustomizeData() on the Razor Page
+  href: how-to/razor/customizedata.html
 - uid: HowTo.Razor.CustomizeSearch
   name: Event CustomizeSearch() on the Razor Page
-  href: how-to/razor/razor-customizesearch.html
+  href: how-to/razor/customizesearch.html
+- uid: HowTo.Razor.EditToolbar
+  name: '...) Method in Razor / .net'
+  href: how-to/razor/edittoolbar.html
+- uid: HowTo.Razor.Purpose
+  name: Property Purpose / InstancePurpose on a Razor page
+  href: how-to/razor/purpose.html
+- uid: HowTo.Razor.Templates
+  name: SexyContentWebPage (Razor Templates)
+  href: how-to/razor/templates.html
+- uid: HowTo.WebApi
+  name: ASP.net WebAPI in 2sxc
+  href: how-to/webapi/dotnet-webapi.html
 - uid: HowTo.WebApi.SaveInAdam
   name: SaveInAdam command in SxcApiController
   href: how-to/webapi/dotnet-webapi-saveinadam.html
@@ -289,9 +304,6 @@ references:
 - uid: Specs.Home
   name: Specifications of EAV and 2sxc
   href: specs/index.html
-- uid: Specs.Razor.Blocks
-  name: 'Razor: Rendering Content-Blocks'
-  href: how-to/razor/razor-content-blocks.html
 - uid: Specs.StyleGuide
   name: Style Guide for DNN / 2sxc
   href: specs/style-guides/style-guides.html
@@ -6995,7 +7007,7 @@ references:
   nameWithType: IInPageEditingSystem.ContextAttributes
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
   name: '...) Method in C# Razor'
-  href: how-to/dynamic-code/edit.enable.html
+  href: how-to/dynamic-code/edit.enable.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable*
   name: Enable
   href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_

@@ -1,3 +1,6 @@
+---
+uid: HowTo.Razor.EditToolbar
+---
 
 # @Edit.Toolbar(...) Method in Razor / .net
 2sxc has a cool in-page toolbar system - here you'll find a [conceptual overview around the toolbar](xref:Concepts.EditToolbar). These toolbars are usually hover-buttons like this:
@@ -44,7 +47,7 @@ As you can see, the `actions: "new"` tells the toolbar to only show this one but
 
 
 ## How it works
-This command is part of the [Edit](Razor-Edit) object and used in Razor templates. It provides a simple API to generate in-page buttons if the current user is an editor.
+This command is part of the [Edit](xref:HowTo.DynamicCode.Edit) object and used in Razor templates. It provides a simple API to generate in-page buttons if the current user is an editor.
 
 It also checks if edit should be enabled (based on security specs) and will then generate some HTML/JavaScript at that location. 
 
@@ -62,7 +65,7 @@ TODO TODO MORE SIMPLE EXAMPLES
 ## Edit.Toolbar API
 The `Edit.Toolbar()` has these parameters 
 
-1. `target` a [DynamicEntity][DynamicEntity] content-item, _optional_  
+1. `target` a [DynamicEntity](xref:HowTo.DynamicCode.Entity) content-item, _optional_  
 this is a content item which will be affected by the toolbar
 2. `actions` string, _optional, must be [named](convention-named-parameters)_  
 this is a comma-separated string overriding the default buttons which the toolbar will create, containing [command names](Html-Js-Commands). 

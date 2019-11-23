@@ -21,11 +21,11 @@ To ensure that client-side commands like _edit_ can work (this includes all tool
 
 ## How the Edit-Context is Added
 
-By default, it is automatically added if the system detects that the current user has edit-permissions. In 2sxc 9.30 a feature was added to add the context in code, using the [Edit.Enable(...)](razor-edit.enable) command.
+By default, it is automatically added if the system detects that the current user has edit-permissions. In 2sxc 9.30 a feature was added to add the context in code, using the [Edit.Enable(...)](xref:Razor.EditEnable] command.
 
 ## Inner-Context for Inner Content
 
-When [inner content](xref:Concepts.InnerContent) is used, each block of inner-content will change the context, because it will have different IDs etc. So inner-content blocks will add their own context-attributes. See also [Edit.ContextAttributes](razor-edit.contextattributes).
+When [inner content](xref:Concepts.InnerContent) is used, each block of inner-content will change the context, because it will have different IDs etc. So inner-content blocks will add their own context-attributes. See also [Edit.ContextAttributes](xref:Razor.ContextAttributes].
 
 ## How JS Picks up the Context
 

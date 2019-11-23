@@ -113,7 +113,7 @@
                             <a href="../data/relationships.html" title="Relationships" class="">Relationships</a>
                           </li>
                           <li class="">
-                            <a class="">Content Types</a>
+                            <a href="../data/content-types.html" title="Content Types" class="">Content Types</a>
                           </li>
                           <li class="">
                             <a href="../data/file-provided-content-types.html" title="File Content-Types" class="">File Content-Types</a>
@@ -197,13 +197,13 @@
 <li><p>Server side code detects that editing is allowed. This automatically adds <strong>context-information</strong> to the module in the form of a hidden JSON attribute. You can see these large attributes in the source-code if you are logged in. It also ensures that the edit-javascripts are loaded by the page.</p>
 <ol>
 <li>This is either auto-detected, because the user has edit-rights</li>
-<li>Or it was explicitly enabled using <a href="razor-edit.enable"><code>@Edit.Enable(...)</code> in razor</a>.</li>
+<li>Or it was explicitly enabled using [<code>@Edit.Enable(...)</code> in razor](xref:Razor.EditEnable].</li>
 </ol>
 </li>
 <li><p>Server side code adds stuff to mark where toolbars should appear...</p>
 <ol>
-<li>...either (new in 2sxc 9.40) it adds hidden JSON attributes called <code>sxc-toolbar=&#39;{...}&#39;</code> to any tag that should have a hover-menu with the desired <strong>configuration</strong> and <strong>settings</strong>, added like this<br><a href="razor-edit.toolbar"><code>&lt;div @Edit.TagToolbar(...)&gt;...&lt;/div&gt;</code> in razor</a></li>
-<li>...or it adds an empty <code>&lt;ul toolbar=&#39;{...}&#39; settings=&#39;{...}&gt;</code> tag to the page, also with the <strong>configuration</strong> and <strong>settings</strong>, added using <a href="razor-edit.toolbar"><code>@Edit.Toolbar(...)</code> in razor</a> or the <code>[Content.Toolbar]</code> equivalent in <a href="http://2sxc.org/en/Learn/Token-Templates-and-Views">tokens</a>. These toolbars can also hover using an old convention of adding an <code>sc-element</code> class, but that is deprecated since 2sxc 9.40.</li>
+<li>...either (new in 2sxc 9.40) it adds hidden JSON attributes called <code>sxc-toolbar=&#39;{...}&#39;</code> to any tag that should have a hover-menu with the desired <strong>configuration</strong> and <strong>settings</strong>, added like this<br><a class="xref" href="../../how-to/razor/edittoolbar.html"><code>&lt;div @Edit.TagToolbar(...)&gt;...&lt;/div&gt;</code> in razor</a></li>
+<li>...or it adds an empty <code>&lt;ul toolbar=&#39;{...}&#39; settings=&#39;{...}&gt;</code> tag to the page, also with the <strong>configuration</strong> and <strong>settings</strong>, added using <a class="xref" href="../../how-to/razor/edittoolbar.html"><code>@Edit.Toolbar(...)</code> in razor</a> or the <code>[Content.Toolbar]</code> equivalent in <a href="http://2sxc.org/en/Learn/Token-Templates-and-Views">tokens</a>. These toolbars can also hover using an old convention of adding an <code>sc-element</code> class, but that is deprecated since 2sxc 9.40.</li>
 </ol>
 </li>
 <li><p>JavaScript on the client looks at the HTML and picks up both the special <code>&lt;ul&gt;</code> tags as well as all tags having the <code>sxc-toolbar</code> attribute, reads the configuration and generates the necessary html-tags with the buttons and hover-effects. Based on the <strong>context-information</strong> and the <strong>configuration</strong> it will choose if advanced button should appear (like edit-template, which only admins should see). Special hover-placement and other visual things are picked up from the <strong>settings</strong>.</p>
@@ -237,8 +237,8 @@
 <h2 id="how-to-use">How to Use</h2>
 <p>We&#39;ll try to provide you with full details of the toolbars for advanced use cases. But in most cases you will need the default toolbars minimal or no customizations. For these common cases you should continue on.</p>
 <ul>
-<li><a href="Razor-Edit.Toolbar">Razor @Edit.TagToolbar(...) attribute</a> (hovering, recommended)</li>
-<li><a href="Razor-Edit.Toolbar">Razor @Edit.Toolbar(...)</a> (non-hovering)</li>
+<li><a class="xref" href="../../how-to/razor/edittoolbar.html">Razor @Edit.TagToolbar(...) attribute</a> (hovering, recommended)</li>
+<li><a class="xref" href="../../how-to/razor/edittoolbar.html">Razor @Edit.Toolbar(...)</a> (non-hovering)</li>
 <li><a href="http://2sxc.org/en/Learn/Token-Templates-and-Views">Token Toolbars</a> (using simpler placeholder templates)</li>
 </ul>
 <h2 id="core-javascript-architecture-parts">Core JavaScript Architecture Parts</h2>
@@ -261,7 +261,7 @@
 </ol>
 <h2 id="read-also">Read also</h2>
 <ul>
-<li><a href="xref:Concepts.QuickEdit">quickE - the quick-edit hover toolbar</a> - the quick-edit hover-toolbar for inserting/moving modules</li>
+<li><a class="xref" href="quick-edit.html">quickE - the quick-edit hover toolbar</a> - the quick-edit hover-toolbar for inserting/moving modules</li>
 <li><a href="http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules">Inner Content Blocks</a> - blog about inner content-blocks</li>
 </ul>
 <h2 id="demo-app-and-further-links">Demo App and further links</h2>

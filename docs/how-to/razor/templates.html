@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Razor: Rendering Content-Blocks | 2sxc and EAV 10 </title>
+    <title>SexyContentWebPage (Razor Templates) | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Razor: Rendering Content-Blocks | 2sxc and EAV 10 ">
+    <meta name="title" content="SexyContentWebPage (Razor Templates) | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
@@ -146,10 +146,10 @@
                             <a href="../razor/contextattributes.html" title="Context Attributes" class="">Context Attributes</a>
                           </li>
                           <li class="">
-                            <a class="">Customize Data</a>
+                            <a href="../razor/customizedata.html" title="Customize Data" class="">Customize Data</a>
                           </li>
                           <li class="">
-                            <a href="../razor/razor-customizesearch.html" title="Customize Search" class="">Customize Search</a>
+                            <a href="../razor/customizesearch.html" title="Customize Search" class="">Customize Search</a>
                           </li>
                           <li class="">
                             <a class="">todo template</a>
@@ -179,7 +179,7 @@
                             <a href="../webapi/webapis.html" title="WebApis Overview" class="">WebApis Overview</a>
                           </li>
                           <li class="">
-                            <a class="">Custom WebApi</a>
+                            <a href="../webapi/dotnet-webapi.html" title="Custom WebApi" class="">Custom WebApi</a>
                           </li>
                           <li class="">
                             <a href="../webapi/dotnet-webapi-saveinadam.html" title="SaveInAdam" class="">SaveInAdam</a>
@@ -195,52 +195,42 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Specs.Razor.Blocks">
-<h1 id="razor-rendering-content-blocks">Razor: Rendering Content-Blocks</h1>
+            <article class="content wrap" id="_content" data-uid="HowTo.Razor.Templates">
+<h1 id="sexycontentwebpage-razor-templates">SexyContentWebPage (Razor Templates)</h1>
 
-<h2 id="purpose--description">Purpose / Description</h2>
-<p>When using <a class="xref" href="../../concepts/cms/inner-content.html">Inner Content</a> the linked content-blocks (apps or pieces of content) must be rendered into the template. Here&#39;s how to do it in Razor. </p>
-<h2 id="how-to-use">How to use</h2>
-<p>There are two common use cases</p>
+<h2 id="what-are-razor-templates">What are Razor Templates</h2>
+<p>All razor Templates derive from the SexyContentWebPage, so the following variables and objects are available for you to work with.</p>
+<h2 id="example">Example</h2>
+<p>Visit the <a class="xref" href="http://2sxc.org/en/apps">App Catalog</a> where almost all apps use Razor. There you can find hundreds of examples. </p>
+<h2 id="objects-added-by-2sxc-in-razor-templates">Objects Added by 2sxc in Razor Templates</h2>
 <ol>
-<li>Virtual Panes at item level - in this case, the item has it&#39;s own pane for placing apps and content-blocks</li>
-<li>Very Rich Text - where you add content-blocks and apps in the WYSIWYG</li>
+<li><a class="xref" href="../dynamic-code/object-app.html">App</a> - the current App and all it&#39;s data</li>
+<li>Content (<a class="xref" href="../dynamic-code/entity.html">DynamicEntity</a>) - primary and often the only content-item in the <a class="xref" href="../dynamic-code/object-data.html">Data</a> for this template</li>
+<li><a class="xref" href="../dynamic-code/object-data.html">Data</a> (IDataSource)- this object gives you all the data which was meant to be used by this Templates</li>
+<li><a class="xref" href="../dynamic-code/object-dnn.html">Dnn</a> - the common Dnn object providing page, module, user information</li>
+<li><a class="xref" href="../dynamic-code/object-edit.html">Edit</a> - helper providing you with various edit-functionality like <code>Toolbar(...)</code></li>
+<li><a class="xref" href="../dynamic-code/object-link.html">Link</a> - helper to generate links, according to the DNN-environment configuration</li>
+<li><del>List</del> - old, use <code>Data[&quot;Default&quot;]</code> instead for more consistant programming style</li>
+<li>ListContent (<a class="xref" href="../dynamic-code/entity.html">DynamicEntity</a>) - the header data if the template expects to be a list</li>
+<li><del>ListPresentation</del> - old - use <code>ListContent.Presentation</code> instead for more consistant programming style</li>
+<li>Permissions - ???</li>
+<li><del>Presentation</del> - old - use <code>Content.Presentation</code> instead for more consistant programming style</li>
 </ol>
-<h2 id="item-level-virtual-panes">Item-Level Virtual Panes</h2>
-<p>Here&#39;s a quick example which renders an area with all content-blocks: </p>
-<pre><code class="lang-razor">@ToSic.SexyContent.ContentBlocks.Render.All(Content, field: &quot;InnerContent&quot;)
-</code></pre><p>This example creates the area for the content-blocks (important so that the UI appears for editors to add more blocks) and renders all existing content-blocks in the predefined order into that area. </p>
-<p>Here&#39;s a more manual example of doing the same thing, but done manually to demonstrate what happens and to allow myself to add more css-classes: </p>
-<pre><code class="lang-html">&lt;div class=&quot;some-class sc-content-block-list&quot; @Edit.ContextAttributes(post, field: &quot;DesignedContent&quot;)&gt;
-    @foreach(var cb in @post.DesignedContent) {
-        @cb.Render();
-    }
-&lt;/div&gt;
-</code></pre><p>If you care about doing it manually, read more about the <a href="Razor-Edit">Edit object</a>.</p>
-<h2 id="very-rich-text--inner-content">Very Rich Text / Inner-Content</h2>
-<p><em>this is new in 2sxc 8.9</em></p>
-<p>Here&#39;s an example how to merge content-blocks with a html-text which has placeholders for each content-block, allowing a mix of text/apps. </p>
-<pre><code class="lang-razor">@ToSic.SexyContent.ContentBlocks.Render.All(post, field: &quot;WysiwygContent&quot;, merge: post.Body)
-</code></pre><p>There is a new parameter merge, where you fill in your WYSIWYG-field that contains the content-block(s).</p>
-<p>Here is a <a href="http://2sxc.org/en/blog/post/tutorial-create-very-rich-text-inner-content-2-with-2sxc">blog tutorial on implementing Very Rich Text</a>.</p>
-<h2 id="notes-and-clarifications">Notes and Clarifications</h2>
-<h3 id="object-and-interfaces">Object and Interfaces</h3>
-<p>The Edit-Object is of type <code>ToSic.SexyContent.Edit.InPageEditingSystem.IInPageEditingSystem</code>.</p>
-<h2 id="read-also">Read also</h2>
+<h2 id="helper-commands-provided-by-2sxc">Helper Commands provided by 2sxc</h2>
 <ul>
-<li>Read more on <a href="Razor-Edit.ContextAttributes">Razor Edit.ContextAttributes</a></li>
+<li>AsAdam()</li>
+<li>AsDynamic(...) - takes just about anything (an iEntity, a list of iEntities, a dynamic, ...) and casts it to a <a class="xref" href="../dynamic-code/entity.html">DynamicEntity</a></li>
+<li>AsEntity(...) - takes just about anything (iEntity, DynamicEntity, list of that) and casts it to an <a href="DotNet-Entity">iEntity</a></li>
+<li><del>CreateSource(...)</del> (IDataSource) - old, better to use the <code>CreateSource&lt;T&gt;(...)</code> syntax</li>
+<li>CreateInstance(...) - to create an object of a parsed CSHTML file, for example to then access methods of that code</li>
+<li>CreateSource&lt;T>(...) (IDataSource) - more modern, generic, type-proof syntax for create-source</li>
 </ul>
-<h2 id="demo-app-and-further-links">Demo App and further links</h2>
-<p>You should find some code examples in this demo App</p>
+<h2 id="customizing-data--search">Customizing Data &amp; Search</h2>
 <ul>
-<li><a class="xref" href="http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke">Blog App</a></li>
+<li><code>Overrideable</code> <a class="xref" href="customizedata.html">CustomizeData</a> - is like a &quot;before-data-is-used&quot; of the page, used to change what data is delivered to the page - or to the search.<br>Note that this is an older feature and many things this does can also be done using the visual query designer. But sometimes you will need code, and this is the place to do it.</li>
+<li><code>Overridable</code> <a class="xref" href="customizesearch.html">CustomizeSearch</a></li>
+<li><code>string</code> <a class="xref" href="purpose.html">InstancePurpose</a> - tells you if the code is running to render into html, or for another reason like populating the search index - so your code can adapt</li>
 </ul>
-<h2 id="history">History</h2>
-<ol>
-<li>Introduced in 2sxc 8.4</li>
-<li>Clean API and merge capabilitien in 8.9</li>
-</ol>
-<p>(xref:Concepts.InnerContent): <a href="http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules">http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules</a></p>
 </article>
           </div>
           
@@ -249,7 +239,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/how-to/razor/razor-content-blocks.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/how-to/razor/templates.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

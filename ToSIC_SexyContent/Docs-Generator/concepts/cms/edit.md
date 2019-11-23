@@ -28,9 +28,9 @@ The configuration of these edit-dialogs happens in the **Content Type** configur
 
 1. In-Page Item Edit Toolbars
     1. Most of the concept is explained in [Concept InPage Toolbars](xref:Concepts.EditToolbar).
-    1. You will usually create such toolbars from the Razor templates - read about [Edit.TagToolbar and Edit.Toolbar](razor-edit.toolbar)
+    1. You will usually create such toolbars from the Razor templates - read about [Edit.TagToolbar and Edit.Toolbar](xref:HowTo.Razor.EditToolbar)
 
-2. The hovering insert-modules toolbar-system is called [quickE for quick-edit](xref:Concepts.QuickEdit). There you will also see how to customize the editing experience. 
+2. The hovering insert-modules toolbar-system is called [quickE for quick-edit](xref:Concepts.QuickE). There you will also see how to customize the editing experience. 
 
 
 ## Advanced JavaScript & HTML Based Toolbars and Buttons

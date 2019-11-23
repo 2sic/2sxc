@@ -598,7 +598,9 @@ it won&apos;t actually query the cache if the IDs are already known.</li>
   </span>
   <a id="ToSic_Eav_Data_LazyEntities_CacheTimestamp_" data-uid="ToSic.Eav.Data.LazyEntities.CacheTimestamp*"></a>
   <h4 id="ToSic_Eav_Data_LazyEntities_CacheTimestamp" data-uid="ToSic.Eav.Data.LazyEntities.CacheTimestamp">CacheTimestamp</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>System time-stamp of when the data in this cached thing was initialized or updated.
+Depending on the implementation, this may go up-stream and return an up-stream value. </p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -615,7 +617,8 @@ it won&apos;t actually query the cache if the IDs are already known.</li>
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
+        <td><p>A timestamp as a long number</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -662,7 +665,8 @@ Special mechanism to get identifiers to DB storage, without loading the entities
   </span>
   <a id="ToSic_Eav_Data_LazyEntities_CacheChanged_" data-uid="ToSic.Eav.Data.LazyEntities.CacheChanged*"></a>
   <h4 id="ToSic_Eav_Data_LazyEntities_CacheChanged" data-uid="ToSic.Eav.Data.LazyEntities.CacheChanged">CacheChanged()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Find out if the source it depends on has changed.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -679,7 +683,8 @@ Special mechanism to get identifiers to DB storage, without loading the entities
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>True if the upstream cache returns a newer timestamp</p>
+</td>
       </tr>
     </tbody>
   </table>

@@ -28,14 +28,14 @@ This is where you can find things like...
 
 * [Views](xref:Concepts.Views)
 * [Data Entities](xref:Concepts.Entities)
-* [Content-Types](xref:Concepts.ContentTypes)
+* [Content-Types](xref:Concepts.ContentType)
 * [Relationships](xref:Concepts.Relationships)
 * [Editing content](overview-edit)
 * [Auto-Optimization of JS/CSS Assets](Template-Assets)
 * [Hide advanced features](xref:Concepts.HideAdvancedFeatures)
 * [Edit Context](xref:Concepts.EditContext)
 * [In-Page toolbars](xref:Concepts.EditToolbar)
-* [Quick Edit toolbars (quickE)](xref:Concepts.QuickEdit)
+* [Quick Edit toolbars (quickE)](xref:Concepts.QuickE)
 * [Tokens](xref:Concepts.Tokens)
 * TinyMCE WYSIWYG [todoc](doc-tags#todoc)
 * ADAM Automatic Digital Assets Management [todoc](doc-tags#todoc)
@@ -115,9 +115,9 @@ This is where you can find things like...
   * [App object](xref:HowTo.DynamicCode.App)
   * Content, a [DynamicEntity](dotnet-dynamicentity)
   * [Data](xref:HowTo.DynamicCode.Data), a [DataSource](xref:Specs.DataSources.DataSource)
-  * [DNN](razor-dnn)
-  * [Edit](razor-edit) with [Toolbar](razor-edit.toolbar) and [Enable](razor-edit.enable)
-  * [Link](razor-link)
+  * [DNN](xref:HowTo.DynamicCode.Dnn)
+  * [Edit](xref:HowTo.DynamicCode.Edit) with [Toolbar](xref:HowTo.Razor.EditToolbar) and [Enable](xref:Razor.EditEnable]
+  * [Link](xref:HowTo.DynamicCode.Link)
   * ListContent, a [DynamicEntity](dotnet-dynamicentity)
   * Permissions [todoc](doc-tags#todoc)
 * Helper Commands
@@ -128,8 +128,8 @@ This is where you can find things like...
   * CreateSource<T>(...) [DataSource](xref:Specs.DataSources.DataSource)
 * Customizing Data & Search
   * [InstancePurpose](razor-sexycontentwebpage.instancepurpose)
-  * [CustomizeData](razor-sexycontentwebpage.customizedata)
-  * [CustomizeSearch](razor-sexycontentwebpage.customizesearch)
+  * [CustomizeData](xref:HowTo.Razor.CustomizeData)
+  * [CustomizeSearch](xref:HowTo.Razor.CustomizeSearch)
 * RazorBlade API
   * [RazorBlade Tutorials](https://2sxc.org/dnn-tutorials/en/razor/blade/home)
   * [RazorBlade fluent API](https://2sxc.org/dnn-tutorials/en/razor/blade800/page)
@@ -147,8 +147,8 @@ This is where you can find things like...
   * [App object](xref:HowTo.DynamicCode.App)
   * Content, a [DynamicEntity](dotnet-dynamicentity)
   * [Data](xref:HowTo.DynamicCode.Data), a [DataSource](xref:Specs.DataSources.DataSource)
-  * [DNN](razor-dnn)
-  * [Edit](razor-edit) with [Toolbar](razor-edit.toolbar)
+  * [DNN](xref:HowTo.DynamicCode.Dnn)
+  * [Edit](xref:HowTo.DynamicCode.Edit) with [Toolbar](xref:HowTo.Razor.EditToolbar)
   * Permissions [todoc](doc-tags#todoc)
 * Helper Commands
   * AsAdam(...) [todoc](doc-tags#todoc)

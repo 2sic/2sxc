@@ -1,5 +1,5 @@
 ---
-uid: HowTo.WebApi.SaveInAdam
+uid: HowTo.WebApi
 ---
 # ASP.net WebAPI in 2sxc
 
@@ -70,7 +70,7 @@ The `SxcApiController` provides various command / helpers to get you productiv. 
 
 1. AsDynamic(...)
 1. AsEntity(...)
-1. [Dnn](razor-dnn)
+1. [Dnn](xref:HowTo.DynamicCode.Dnn)
 1. [App](xref:HowTo.DynamicCode.App) with `App.Data`, `App.Query` etc.
 1. [Data](xref:HowTo.DynamicCode.Data)
 1. [SaveInAdam(...)](dotnet-webapi-saveinadam) _new in 9.30_

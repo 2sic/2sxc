@@ -1,5 +1,5 @@
 ---
-uid: Specs.Razor.Blocks
+uid: HowTo.Razor.Blocks
 ---
 
 # Razor: Rendering Content-Blocks
@@ -29,7 +29,7 @@ Here's a more manual example of doing the same thing, but done manually to demon
     }
 </div>
 ```
-If you care about doing it manually, read more about the [Edit object](Razor-Edit).
+If you care about doing it manually, read more about the [Edit object](xref:HowTo.DynamicCode.Edit).
 
 ## Very Rich Text / Inner-Content
 _this is new in 2sxc 8.9_
@@ -48,7 +48,7 @@ Here is a [blog tutorial on implementing Very Rich Text](http://2sxc.org/en/blog
 The Edit-Object is of type `ToSic.SexyContent.Edit.InPageEditingSystem.IInPageEditingSystem`.
 
 ## Read also
-* Read more on [Razor Edit.ContextAttributes](Razor-Edit.ContextAttributes)
+* Read more on [Razor Edit.ContextAttributes](xref:Razor.ContextAttributes]
 
 
 ## Demo App and further links

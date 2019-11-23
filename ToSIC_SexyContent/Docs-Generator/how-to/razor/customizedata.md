@@ -1,5 +1,5 @@
 ---
-uid: HowTo.DynamicCode.CustomizeData
+uid: HowTo.Razor.CustomizeData
 ---
 
 # Event _CustomizeData()_ on the Razor Page
@@ -39,8 +39,8 @@ In general, you can override this event to prepare data. It has a few benefits l
 The CustomizeData event runs both when rendering the template as well as when the search is running. 
 For further details you may want to read about
 
-* [InstancePurpose](xref:HowTo.DynamicCode.Purpose) - which tells you why the current code is running so you could change the data added
-* [CustomizeSearch](xref:HowTo.DynamicCode.CustomizeSearch) - which let's you write code to alter how the data is processed in the search-index
+* [InstancePurpose](xref:HowTo.Razor.Purpose) - which tells you why the current code is running so you could change the data added
+* [CustomizeSearch](xref:HowTo.Razor.CustomizeSearch) - which let's you write code to alter how the data is processed in the search-index
 
 ## Demo App and further links
 You should find some code examples in this demo App

@@ -10,9 +10,9 @@ This is the C# .net API Documentations, usually meant for Razor-Templates, custo
 1. Core Objects:
     1. [App](xref:HowTo.DynamicCode.App) (includes App.Data)
     1. [Data](xref:HowTo.DynamicCode.Data)
-    1. [Dnn](Razor-Dnn)
-    1. [Edit](Razor-Edit)
-    1. [Link](Razor-Link)
+    1. [Dnn](xref:HowTo.DynamicCode.Dnn)
+    1. [Edit](xref:HowTo.DynamicCode.Edit)
+    1. [Link](xref:HowTo.DynamicCode.Link)
 1. [LINQ Data Handling examples](DotNet-Query-Linq) on working with relationships, filtering etc.
 
 ## Important APIs when Working with Content-Items/Data

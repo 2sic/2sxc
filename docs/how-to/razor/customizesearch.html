@@ -146,10 +146,10 @@
                             <a href="../razor/contextattributes.html" title="Context Attributes" class="">Context Attributes</a>
                           </li>
                           <li class="">
-                            <a class="">Customize Data</a>
+                            <a href="../razor/customizedata.html" title="Customize Data" class="">Customize Data</a>
                           </li>
                           <li class="active">
-                            <a href="../razor/razor-customizesearch.html" title="Customize Search" class="active">Customize Search</a>
+                            <a href="../razor/customizesearch.html" title="Customize Search" class="active">Customize Search</a>
                           </li>
                           <li class="">
                             <a class="">todo template</a>
@@ -179,7 +179,7 @@
                             <a href="../webapi/webapis.html" title="WebApis Overview" class="">WebApis Overview</a>
                           </li>
                           <li class="">
-                            <a class="">Custom WebApi</a>
+                            <a href="../webapi/dotnet-webapi.html" title="Custom WebApi" class="">Custom WebApi</a>
                           </li>
                           <li class="">
                             <a href="../webapi/dotnet-webapi-saveinadam.html" title="SaveInAdam" class="">SaveInAdam</a>
@@ -199,7 +199,7 @@
 <h1 id="event-customizesearch-on-the-razor-page">Event <em>CustomizeSearch()</em> on the Razor Page</h1>
 
 <h2 id="purpose--description">Purpose / Description</h2>
-<p>This event is called by the view-engine <em>after</em> calling <a class="xref" href="razor-customizedata.html">CustomizeData</a> and before passing the <code>Data</code> object to the DNN Search Indexer. </p>
+<p>This event is called by the view-engine <em>after</em> calling <a class="xref" href="customizedata.html">CustomizeData</a> and before passing the <code>Data</code> object to the DNN Search Indexer. </p>
 <p>You can override this event to change how data is presented to the search, for example by bundling items together, or by giving items different URLs so that search knows that they are to appear on a sub-page. </p>
 <h2 id="how-to-use">How to use</h2>
 <p>In your razor page (.cshtml file) you can add a script block implementing this, as follows:</p>
@@ -231,7 +231,7 @@
 <p>In general everything will work automatically. This is what happens:</p>
 <ol>
 <li>2sxc will retrieve the data added to this module</li>
-<li>2sxc will call the <a class="xref" href="razor-customizedata.html">CustomizeData()</a> event if the template has such an event. In this event, your code can add more data to the module as needed.<ol>
+<li>2sxc will call the <a class="xref" href="customizedata.html">CustomizeData()</a> event if the template has such an event. In this event, your code can add more data to the module as needed.<ol>
 <li>Note that during the search index, no Request-variables exist.</li>
 <li>So your method will cause an error if it does something like var x = Request[&quot;Category&quot;].</li>
 <li>In case of an error, the index will still continue to work, but your changes to the data will fail</li>
@@ -253,8 +253,8 @@
 </ol>
 <h2 id="read-also">Read also</h2>
 <ul>
-<li><a href="xref:HowTo.DynamicCode.Purpose">InstancePurpose</a> - which tells you why the current code is running so you could change the data added</li>
-<li><a class="xref" href="razor-customizedata.html">CustomizeData</a></li>
+<li><a class="xref" href="purpose.html">InstancePurpose</a> - which tells you why the current code is running so you could change the data added</li>
+<li><a class="xref" href="customizedata.html">CustomizeData</a></li>
 </ul>
 <h2 id="demo-app-and-further-links">Demo App and further links</h2>
 <p>You should find some code examples in this demo App</p>
@@ -275,7 +275,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/how-to/razor/razor-customizesearch.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/how-to/razor/customizesearch.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

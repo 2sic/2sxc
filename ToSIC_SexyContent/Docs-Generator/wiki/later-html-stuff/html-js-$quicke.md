@@ -5,7 +5,7 @@ quickE (pronounced quicky) is the quick-edit feature inside 2sxc to quickly add 
 This page explains the In-Browser things you must know, incl. JSON configuration
 
 ## Concept and Background
-For this please read [Concept-Quick-Edit](xref:Concepts.QuickEdit), which also explains how to include it in a Skin etc.
+For this please read [Concept-Quick-Edit](xref:Concepts.QuickE), which also explains how to include it in a Skin etc.
 
 ## How to use
 Assuming that the $quickE is already on the page and you're logged on, there is not much to do for now. 

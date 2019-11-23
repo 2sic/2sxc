@@ -66,7 +66,7 @@ Afterwards, other mechanisms can override / change this.
     if one or many are delivered, then the selection will be based on what the editor added to the module instance.
     1. Visual Query - if the template has a query attached, this query will deliver the data
 2. Modifications to the source for the template
-    1. The event [CustomizeData](xref:HowTo.DynamicCode.CustomizeData) can optionally completely reconfigure what Data contains in your code.
+    1. The event [CustomizeData](xref:HowTo.Razor.CustomizeData) can optionally completely reconfigure what Data contains in your code.
 
 
 ## Data Object API

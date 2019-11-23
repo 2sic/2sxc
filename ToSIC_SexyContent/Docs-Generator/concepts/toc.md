@@ -3,7 +3,7 @@
 # Data Concepts
 ##[Entities](xref:Concepts.Entities)
 ##[Relationships](xref:Concepts.Relationships)
-##[Content Types](xref:Concepts.ContentTypes)
+##[Content Types](xref:Concepts.ContentType)
 ##[File Content-Types](xref:Concepts.FileBasedContentTypes)
 ##[Permissions](xref:Concepts.Permissions)
 

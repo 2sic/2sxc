@@ -30,7 +30,7 @@ The app-object uses the `IApp` interface ([see code][iapp]) has the following si
 
 1. `AppId` number, current App id
 2. `AppGuid` guid, internal use global id
-3. `Configuration` [DynamicEntity][DynamicEntity], contains the [configuration content-item][app-configuration]
+3. `Configuration` [DynamicEntity](xref:HowTo.DynamicCode.Entity), contains the [configuration content-item][app-configuration]
 4. `Data` IAppData, to access all App-data (see below)
 5. `Folder` string, storage folder name in portal/#/2sxc/...
 6. `Hidden` bool, info if the app cannot be selected in the UIs
@@ -38,8 +38,8 @@ The app-object uses the `IApp` interface ([see code][iapp]) has the following si
 8. `Path` string, the path as used in URLs in  html
 9. `PhysicalPath` string, the path as used on the server C:\...
 10. `Query["QueryName"]` dictionary of queries (see below) 
-11. `Resources` [DynamicEntity][DynamicEntity], all the multi-language labels etc. (see below)
-12. `Settings` [DynamicEntity][DynamicEntity], all the app-settings (see below)
+11. `Resources` [DynamicEntity](xref:HowTo.DynamicCode.Entity), all the multi-language labels etc. (see below)
+12. `Settings` [DynamicEntity](xref:HowTo.DynamicCode.Entity), all the app-settings (see below)
 13. `ZoneId` number, current Zone ID (similar to PortalId)
 
 
@@ -48,7 +48,7 @@ The App object gives you immediate acccess to all data in the app, through the `
 
 
 ### Get All Data Items of a Content Type
-`App.Data["ContentTypeName"]` will give you a [stream](xref:ToSic.Eav.DataSources.IDataStream) of all entities of that type. In most cases you'll use an `AsDynamic(...)` to use it efficiently in loops etc. because most of the razor templating will prefer a [DynamicEntity][DynamicEntity] to a pure IEntity-object. Here's an example:
+`App.Data["ContentTypeName"]` will give you a [stream](xref:ToSic.Eav.DataSources.IDataStream) of all entities of that type. In most cases you'll use an `AsDynamic(...)` to use it efficiently in loops etc. because most of the razor templating will prefer a [DynamicEntity](xref:HowTo.DynamicCode.Entity) to a pure IEntity-object. Here's an example:
 
 ```cs
 @foreach(var post in AsDynamic(App.Data["BlogPost"]))

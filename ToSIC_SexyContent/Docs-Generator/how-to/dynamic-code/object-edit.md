@@ -38,12 +38,12 @@ The `Edit`-object is always available in all Razor-templates and either...
 1. **Enabled State**
 
     1. `Edit.Enable(...)`  
-    allows you to enable editing functionality even if it's not available by user permissions, see [more](razor-edit.enable)
+    allows you to enable editing functionality even if it's not available by user permissions, see [more](xref:Razor.EditEnable]
 
     1. `Edit.Enabled` (boolean)  
     Tells you if it's edit-mode or not, allowing your code to output other things if edit is enabled.
 
-1. **Toolbars** - creates a Toolbar, see [Razor Edit Toolbar](Razor-Edit.Toolbar).
+1. **Toolbars** - creates a Toolbar, see [Razor Edit Toolbar](xref:HowTo.Razor.EditToolbar).
 
     1. `Edit.TagToolbar(...)` attribute (_2sxc 9.40+_, recommended)
     it is used inside a tag like  
@@ -63,7 +63,7 @@ The `Edit`-object is always available in all Razor-templates and either...
 1. **Edit Context Information** for advanced use cases
 
     1. `Edit.ContextAttributes(...)`  
-    creates Context-Information for other edit-functionality. This is advanced, and currently only needed for @Concepts.InnerContent) - read about it on [Razor Edit.ContextAttributes](Razor-Edit.ContextAttributes)
+    creates Context-Information for other edit-functionality. This is advanced, and currently only needed for @Concepts.InnerContent) - read about it on [Razor Edit.ContextAttributes](xref:Razor.ContextAttributes]
 
 
 
@@ -75,8 +75,8 @@ You should find some code examples in this demo App
 ## History
 
 1. Introduced in 2sxc 8.04
-2. Enhanced with [Enable(...)](razor-edit.enable) method in 9.30
-3. Enhanced with [TagToolbar(...)](razor-edit.toolbar) in 9.40
+2. Enhanced with [Enable(...)](xref:Razor.EditEnable] method in 9.30
+3. Enhanced with [TagToolbar(...)](xref:HowTo.Razor.EditToolbar) in 9.40
 
 (xref:Concepts.InnerContent): http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
 [DynamicEntity]: Dynamic-Entity

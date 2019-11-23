@@ -239,8 +239,8 @@ Note: there are a few system files which will also reside in this folder, especi
 
 ## Read also
 
-* [InstancePurpose](xref:HowTo.DynamicCode.Purpose) - which tells you why the current code is running so you could change the data added
-* [CustomizeData](xref:HowTo.DynamicCode.CustomizeData)
+* [InstancePurpose](xref:HowTo.Razor.Purpose) - which tells you why the current code is running so you could change the data added
+* [CustomizeData](xref:HowTo.Razor.CustomizeData)
 
 ## Demo App and further links
 

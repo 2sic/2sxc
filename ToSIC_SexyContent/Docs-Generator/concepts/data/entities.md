@@ -7,7 +7,7 @@ Every _thing_, _record_ or _object_ in 2sxc is called an **Entity**. So if you h
 
 ## How it Works
 
-Each _Entity_ has many fields, some containing text, numbers etc. The fields an Entity can have is defined in the [Content-Type](xref:Concepts.ContentTypes), so each Entity is like a record of that type. 
+Each _Entity_ has many fields, some containing text, numbers etc. The fields an Entity can have is defined in the [Content-Type](xref:Concepts.ContentType), so each Entity is like a record of that type. 
 
 This basic principle is used everywhere in 2sxc. For example, all these things are Entities:
 

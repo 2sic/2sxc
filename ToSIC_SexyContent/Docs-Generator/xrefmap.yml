@@ -2,6 +2,10 @@ references:
 - uid: Temp.VisualQuery
   name: Visual Query
   href: https://2sxc.org/en/Learn/Visual-Query-Designer
+
+- uid: AppsCatalog
+  name: Apps Catalog
+  href: http://2sxc.org/en/apps
 - uid: App.Accordion
   name: Accordion App
   href: http://2sxc.org/en/apps/app/accordion-for-collapsible-sections

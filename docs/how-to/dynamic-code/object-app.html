@@ -146,10 +146,10 @@
                             <a href="../razor/contextattributes.html" title="Context Attributes" class="">Context Attributes</a>
                           </li>
                           <li class="">
-                            <a class="">Customize Data</a>
+                            <a href="../razor/customizedata.html" title="Customize Data" class="">Customize Data</a>
                           </li>
                           <li class="">
-                            <a href="../razor/razor-customizesearch.html" title="Customize Search" class="">Customize Search</a>
+                            <a href="../razor/customizesearch.html" title="Customize Search" class="">Customize Search</a>
                           </li>
                           <li class="">
                             <a class="">todo template</a>
@@ -179,7 +179,7 @@
                             <a href="../webapi/webapis.html" title="WebApis Overview" class="">WebApis Overview</a>
                           </li>
                           <li class="">
-                            <a class="">Custom WebApi</a>
+                            <a href="../webapi/dotnet-webapi.html" title="Custom WebApi" class="">Custom WebApi</a>
                           </li>
                           <li class="">
                             <a href="../webapi/dotnet-webapi-saveinadam.html" title="SaveInAdam" class="">SaveInAdam</a>
@@ -216,7 +216,7 @@
 <ol>
 <li><code>AppId</code> number, current App id</li>
 <li><code>AppGuid</code> guid, internal use global id</li>
-<li><code>Configuration</code> <a href="Dynamic-Entity">DynamicEntity</a>, contains the <a href="http://2sxc.org/en/Docs-Manuals/Feature/feature/8182">configuration content-item</a></li>
+<li><code>Configuration</code> <a class="xref" href="entity.html">DynamicEntity</a>, contains the <a href="http://2sxc.org/en/Docs-Manuals/Feature/feature/8182">configuration content-item</a></li>
 <li><code>Data</code> IAppData, to access all App-data (see below)</li>
 <li><code>Folder</code> string, storage folder name in portal/#/2sxc/...</li>
 <li><code>Hidden</code> bool, info if the app cannot be selected in the UIs</li>
@@ -224,14 +224,14 @@
 <li><code>Path</code> string, the path as used in URLs in  html</li>
 <li><code>PhysicalPath</code> string, the path as used on the server C:...</li>
 <li><code>Query[&quot;QueryName&quot;]</code> dictionary of queries (see below) </li>
-<li><code>Resources</code> <a href="Dynamic-Entity">DynamicEntity</a>, all the multi-language labels etc. (see below)</li>
-<li><code>Settings</code> <a href="Dynamic-Entity">DynamicEntity</a>, all the app-settings (see below)</li>
+<li><code>Resources</code> <a class="xref" href="entity.html">DynamicEntity</a>, all the multi-language labels etc. (see below)</li>
+<li><code>Settings</code> <a class="xref" href="entity.html">DynamicEntity</a>, all the app-settings (see below)</li>
 <li><code>ZoneId</code> number, current Zone ID (similar to PortalId)</li>
 </ol>
 <h2 id="using-app-data-appdata">Using App Data (App.Data)</h2>
 <p>The App object gives you immediate acccess to all data in the app, through the <code>Data</code> property. Basically you can use it as follows:</p>
 <h3 id="get-all-data-items-of-a-content-type">Get All Data Items of a Content Type</h3>
-<p><code>App.Data[&quot;ContentTypeName&quot;]</code> will give you a <a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.IDataStream.html">stream</a> of all entities of that type. In most cases you&#39;ll use an <code>AsDynamic(...)</code> to use it efficiently in loops etc. because most of the razor templating will prefer a <a href="Dynamic-Entity">DynamicEntity</a> to a pure IEntity-object. Here&#39;s an example:</p>
+<p><code>App.Data[&quot;ContentTypeName&quot;]</code> will give you a <a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.IDataStream.html">stream</a> of all entities of that type. In most cases you&#39;ll use an <code>AsDynamic(...)</code> to use it efficiently in loops etc. because most of the razor templating will prefer a <a class="xref" href="entity.html">DynamicEntity</a> to a pure IEntity-object. Here&#39;s an example:</p>
 <pre><code class="lang-cs">@foreach(var post in AsDynamic(App.Data[&quot;BlogPost&quot;]))
 {
     @RenderPage(&quot;_list-item.cshtml&quot;, new { Post = post })
