@@ -1,3 +1,6 @@
+---
+uid: Concepts.Relationships
+---
 # Concept: Entity Relationships
 
 ## Purpose / Description

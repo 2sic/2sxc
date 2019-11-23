@@ -1,3 +1,6 @@
+---
+uid: Concepts.Metadata
+---
 # Concept: Metadata - WIP
 
 ## Purpose / Description

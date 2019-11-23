@@ -1,3 +1,6 @@
+---
+uid: Concepts.HideAdvancedFeatures
+---
 
 # Concept: Hide Advanced Features From Non-Admins 
 

@@ -1,3 +1,6 @@
+---
+uid: Concepts.EditToolbar
+---
 # Concept: In-Page Edit-Item Toolbars and Buttons
 
 ## Purpose / Description

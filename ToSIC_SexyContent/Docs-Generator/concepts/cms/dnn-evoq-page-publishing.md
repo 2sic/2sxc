@@ -1,3 +1,6 @@
+---
+uid: Concepts.PagePublishing
+---
 
 # Concept: _DNN/Evoq Page Versioning / Publishing and Workflow (2sxc 9.5+)_ 
 

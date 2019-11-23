@@ -1,3 +1,6 @@
+---
+uid: Concepts.QuickE
+---
 # Concept: quickE - Quick Edit 2.0
 
 ## Purpose / Description

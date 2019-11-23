@@ -1,3 +1,6 @@
+---
+uid: Concepts.InnerContent
+---
 # Concept: Inner Content 2.0
 
 ## Purpose / Description

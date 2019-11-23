@@ -1,3 +1,6 @@
+---
+uid: Concepts.Permissions
+---
 # Concept: Permissions
 
 2sxc / EAV permissions help you configure who may edit/create data - optionally with "may only save as draft" (new in 9.30). Note that if something doesn't have custom permissions, you'll still have default permissions that apply (see below):

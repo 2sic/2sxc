@@ -162,7 +162,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
             // only update the values if true, otherwise leave untouched
             if (api.HasValue || forms.HasValue)
-                hostWithInternals.UiAddEditApi = api ?? forms.Value;
+                hostWithInternals.UiAddEditApi = (api ?? false) || (forms ?? false);
 
             if (styles.HasValue)
                 hostWithInternals.UiAddEditUi = styles.Value;

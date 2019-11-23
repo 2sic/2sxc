@@ -1,3 +1,6 @@
+---
+uid: Concepts.Views
+---
 # Concept: Views
 
 ## Purpose / Description

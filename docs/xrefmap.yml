@@ -25,6 +25,60 @@ references:
 - uid: Articles.Roadmap.Roadmap
   name: Roadmap of EAV and 2sxc - Vision of the Future
   href: articles/roadmap/roadmap.html
+- uid: Concepts.ContentType
+  name: 'Concept: Content-Types (Schemas, Object-Types)'
+  href: concepts/data/content-types.html
+- uid: Concepts.DnnModule
+  name: 'Concept: How DNN Modules Connect To Content-Blocks'
+  href: concepts/cms/dnn-module.html
+- uid: Concepts.EditContext
+  name: 'Concept: In-Page Edit Context'
+  href: concepts/cms/edit-context.html
+- uid: Concepts.EditToolbar
+  name: 'Concept: In-Page Edit-Item Toolbars and Buttons'
+  href: concepts/cms/inpage-toolbars.html
+- uid: Concepts.Entities
+  name: 'Concept: Entities (Data, Records, Items)'
+  href: concepts/data/entities.html
+- uid: Concepts.Features
+  name: 'Concept: Features new in 9.30'
+  href: concepts/concept-features.html
+- uid: Concepts.FileBasedContentTypes
+  name: 'Concept: File/Folder Based Content-Types (9.7)'
+  href: concepts/data/file-provided-content-types.html
+- uid: Concepts.HideAdvancedFeatures
+  name: 'Concept: Hide Advanced Features From Non-Admins'
+  href: concepts/cms/hide-advanced-features.html
+- uid: Concepts.Home
+  name: Concepts of 2sxc and EAV
+  href: concepts/index.html
+- uid: Concepts.InnerContent
+  name: 'Concept: Inner Content 2.0'
+  href: concepts/cms/inner-content.html
+- uid: Concepts.Metadata
+  name: 'Concept: Metadata - WIP'
+  href: concepts/data/metadata.html
+- uid: Concepts.PagePublishing
+  name: 'Concept: DNN/Evoq Page Versioning / Publishing and Workflow (2sxc 9.5+)'
+  href: concepts/cms/dnn-evoq-page-publishing.html
+- uid: Concepts.Permissions
+  name: 'Concept: Permissions'
+  href: concepts/data/permissions.html
+- uid: Concepts.Polymorphism
+  name: 'Concept: Polymorph / Editions / Open-Heart-Surgery (WIP)'
+  href: concepts/cms/polymorph.html
+- uid: Concepts.QuickE
+  name: 'Concept: quickE - Quick Edit 2.0'
+  href: concepts/cms/quick-edit.html
+- uid: Concepts.Relationships
+  name: 'Concept: Entity Relationships'
+  href: concepts/data/relationships.html
+- uid: Concepts.Tokens
+  name: 'Concept: Tokens'
+  href: concepts/cms/tokens.html
+- uid: Concepts.Views
+  name: 'Concept: Views'
+  href: concepts/cms/views.html
 - uid: HowTo.DynamicCode.App
   name: App /  object in Razor
   href: how-to/dynamic-code/object-app.html
@@ -6863,7 +6917,7 @@ references:
   nameWithType: IInPageEditingSystem.ContextAttributes
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
   name: '...) Method in C# Razor'
-  href: how-to/dynamic-code/edit.enable.html
+  href: how-to/dynamic-code/edit.enable.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable*
   name: Enable
   href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_

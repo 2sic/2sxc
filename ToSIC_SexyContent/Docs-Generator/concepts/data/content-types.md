@@ -1,3 +1,6 @@
+---
+uid: Concepts.ContentType
+---
 # Concept: Content-Types (Schemas, Object-Types)
 
 ## Purpose / Description

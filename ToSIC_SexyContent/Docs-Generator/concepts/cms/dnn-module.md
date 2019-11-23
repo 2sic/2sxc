@@ -1,3 +1,6 @@
+---
+uid: Concepts.DnnModule
+---
 
 # Concept: _How DNN Modules Connect To Content-Blocks_ 
 

@@ -1,3 +1,6 @@
+---
+uid: Concepts.FileBasedContentTypes
+---
 
 # Concept: File/Folder Based Content-Types (9.7) 
 

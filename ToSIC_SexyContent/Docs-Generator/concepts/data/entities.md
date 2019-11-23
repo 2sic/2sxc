@@ -1,3 +1,6 @@
+---
+uid: Concepts.Entities
+---
 # Concept: Entities (Data, Records, Items)
 
 ## Purpose / Description

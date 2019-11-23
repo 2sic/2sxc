@@ -1,0 +1,340 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Concept: DNN/Evoq Page Versioning / Publishing and Workflow (2sxc 9.5+) | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Concept: DNN/Evoq Page Versioning / Publishing and Workflow (2sxc 9.5+) | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../../concepts/index.html" title="Concepts">Concepts</a>
+                      </li>
+                      <li>
+                          <a href="../../how-to/index.html" title="How To">How To</a>
+                      </li>
+                      <li>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../index.html" title="How To Introductions" class="">How To Introductions</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Data Concepts</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../data/entities.html" title="Entities" class="">Entities</a>
+                          </li>
+                          <li class="">
+                            <a href="../data/relationships.html" title="Relationships" class="">Relationships</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a class="">Content Types</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../data/file-provided-content-types.html" title="File Based Content-Types" class="">File Based Content-Types</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <a href="../data/permissions.html" title="Permissions" class="">Permissions</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <a class="">CMS</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">WIP</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a class="">Metadata</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Concepts.PagePublishing">
+<h1 id="concept-dnnevoq-page-versioning--publishing-and-workflow-2sxc-95">Concept: <em>DNN/Evoq Page Versioning / Publishing and Workflow (2sxc 9.5+)</em></h1>
+
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>This page explains how a DNN / Evoq does page versioning and workflow, and how to leverage this with 2sxc. </p>
+<h2 id="background-dnn--evoq-pagemodule-versioning">Background: DNN / Evoq Page/Module Versioning</h2>
+<p>DNN / Evoq had a few different ways of doing versioning, but since DNN 7.4.2 it basically uses a model which works as follows:</p>
+<p>Each page has a live version number (for this demo we&#39;ll say version P27 - for page 27). On this page, various modules exist, each having their own version number. Let&#39;s say we have a gallery-module which is currently on version 6 (MG6) and a module with a form in version 12 (MF12). So the page information currently has:</p>
+<ul>
+<li>P27 <em>live</em><ul>
+<li>Module 1: MG6 <em>live</em></li>
+<li>Module 2: MF12 <em>live</em></li>
+</ul>
+</li>
+</ul>
+<h3 id="basic-example-with-adding-module">Basic Example with Adding Module</h3>
+<p>If a new module with a form is added in between, DNN will do the following</p>
+<ul>
+<li>P28 <em>draft</em> (P27 is still <em>live</em>)<ul>
+<li>Mod 1: MG6 <em>live</em> (same version on <em>live</em> and <em>draft</em>)</li>
+<li>Mod 2: MF1 <em>new</em>, regarded as <em>draft</em></li>
+<li>Mod 3: MF13 <em>draft</em> (the position has changed, so the module info has changed)</li>
+</ul>
+</li>
+</ul>
+<p>As further changes to modules additions / removals / reordering happen, this happens on the P28 version only. So even if we delete or rename a module, the live version will not show this. </p>
+<p>So DNN mechanims incl. moving/renaming of modules is a DNN/Evoq responsiblity, and is versioned by DNN/Evoq. We&#39;ll talk about the internal content of a module further down. </p>
+<h3 id="publishing-a-page">Publishing a Page</h3>
+<p>Basically when an editor publishes a page, DNN will do the following:</p>
+<ol>
+<li>set P28 to the published page</li>
+<li>tell each module to publish in that version (in case the module support inner versioning - read on...)</li>
+</ol>
+<h3 id="dnn--evoq-workflows">DNN / Evoq Workflows</h3>
+<p>Because these topics are almost undocumented - and exist in different implementations, they are confusing. You need to know the following about workflows:</p>
+<ol>
+<li>Workflows apply to the page only, so pages need to know if they have a workflow and which one</li>
+<li>Modules don&#39;t know about these workflows...</li>
+<li>...because Modules only get notified when the workflow reaches a &quot;publish&quot; state</li>
+</ol>
+<h2 id="background-module-insideinner-versioning">Background: Module Inside/Inner Versioning</h2>
+<p>Modules have their own content which may or may not be versioned. <em>99% of all modules don&#39;t version their content</em> and have no history. And 99.9% <em>don&#39;t support DNN/Evoq page versions &amp; publishing</em>. </p>
+<p>So IF a module doesn&#39;t know about these mechanisms, then changes <em>inside</em> that module will not be versioned and they will be live immediately as they are applied. But let&#39;s assume our modules do support this, and let&#39;s say the gallery with module-info in V6 (it was moved a few times, so it has 6 versions) still has the initial V1 content, which we&#39;ll call MGi1 (Module Gallery <em>inside</em> V1).</p>
+<h3 id="module-version-tree-with-inner-version">Module Version Tree with Inner Version</h3>
+<p>So let&#39;s look at the <strong>versioning tree</strong> as it really is</p>
+<ul>
+<li>P27 <em>live</em><ul>
+<li>Mod 1: MG6 <em>live</em> with MGi1</li>
+<li>Mod 2: MF12 <em>live</em> with MFi26 (had made configuration changes, each versioned)</li>
+</ul>
+</li>
+</ul>
+<p>Now let&#39;s simulate a change...</p>
+<h3 id="inner-content-changes">Inner Content Changes</h3>
+<p>Let&#39;s say the editor makes a small change to the Form-module. This will notify DNN of a change. As this happens, it must tell DNN that it has a new version - like this, so DNN will also place the page in a new version (for later publishing):</p>
+<ul>
+<li>P28 <em>draft</em><ul>
+<li>Mod 1: MG6 <em>live</em> with MGi1 <em>live</em></li>
+<li>Mod 2: MF12 <em>live</em> with MFi27 <em>draft</em></li>
+</ul>
+</li>
+</ul>
+<p>Note that if the form module makes more changes, it can choose to report this or not, since basically the newest version is a draft already, on a draft-page. </p>
+<h3 id="inner-content-publishing">Inner Content Publishing</h3>
+<p>Now once the user decides to publish this page, each module (incl. the Forms-Module) will be notified to publish it&#39;s version. DNN will tell the form which version it should publish (in this case v27). The form must take care of whatever processing to ensure that this version is now live / public. </p>
+<h2 id="2sxc-support-for-dnn--evoq-publishing">2sxc Support for DNN / Evoq Publishing</h2>
+<p>2sxc support the core parts of DNN/Evoq Publishing and versioning. To be more specific, it will</p>
+<ol>
+<li>detect if the page requires a publishing workflow</li>
+<li>tell DNN/Evoq that on-page content was edited</li>
+<li>modify the GUI to only allow draft/publish options as it corresponds with the page information</li>
+<li>listen to DNN/Evoq messages to publish on-page information</li>
+</ol>
+<p>This sounds simple, but it&#39;s very complex because 2sxc can be used in many scenarios, and in some it&#39;s not always clear when to draft or publish something. So there are some exceptions, which are documented below. </p>
+<h3 id="activating-page-publishing-feature-on-2sxc">Activating Page Publishing Feature on 2sxc</h3>
+<p>You don&#39;t have to do anything - 2sxc asks the environment (DNN/Evoq) it it expects any publishing steps, and will automatically adjust its behavoir. </p>
+<p><img src="/assets/concepts/evoq-settings-for-workflow.jpg" width="100%"></p>
+<h3 id="making-changes-start-a-dnn-page-versioning">Making Changes Start a DNN-Page Versioning</h3>
+<p>This too happens automatically, if the page has a publishing setup in DNN/Evoq.</p>
+<h2 id="auto-draft-and-auto-publish-explained">Auto-Draft and Auto-Publish explained</h2>
+<p>To be sure you understand what&#39;s going on, please note the following:</p>
+<p><strong>Only changes which directly relate to a page cause auto-draft / auto-publish</strong></p>
+<p>Example 1: A user changes a blog post on a blog-page. The page will get a new <em>draft</em> version and the live blog will show the old one, while the <em>draft</em> will show the new one. When the page is published, the draft will become live. </p>
+<p><strong>Changes to content-items which are not directly tied to a page, will <em>not</em> cause drafting / publishing</strong></p>
+<p>Example 2: When the user edits the blog post he also creates another category (which is used as <em>data</em> and not as on-page content). This category is immediately live, but will probably not show up as it&#39;s only used in the edited blog-post. </p>
+<p>Example 3: An admin-user goes into the admin UI and creates a blog post from within the admin-UI. It will <em>not auto-default to draft</em>, as this is not specific to any page. But if the user <em>manually</em> sets it to draft, it will be published when a page showing it is released. </p>
+<h2 id="restoring-previous-versions">Restoring Previous Versions</h2>
+<p>DNN / Evoq has a mechanism for restoring previous page versions, and when implemented perfectly, all modules inside it could also revert back to the state it was in at that time. Such a perfect world is hard to implement and nearly impossible in a dynamic-content setup. For example, apps may have been deleted or content-types (schemas) may have changed. So the idea sounds good, but is impossible to implement correctly. </p>
+<p>So 2sxc goes the pragmatic way: You can restore any item to a previous version - so you can always roll back a blog-post to a previous copy, but putting the page back into an old version will not roll back anything inside a 2sxc-module. </p>
+<p>To Restore previous versions of content-items, use the history (clock) icon in the toolbar. </p>
+<h2 id="technical-deep-dive---behind-the-scenes">Technical Deep Dive - Behind the Scenes</h2>
+<p>In case you run into trouble or need to know more about the mechanisms, here&#39;s what you need to know</p>
+<h3 id="what-is-an-on-page-change-and-what-is-not">What is an On-Page Change and What is Not</h3>
+<p>By definition, any item created or modified directly from a toolbar button in the front end is regarded as an On-Page change and will start the page-draft process. This is basically all the buttons which normal (non-admin) users see. If you haven&#39;t heard of hiding admin-buttons, please read the <a href="Concept-Hide-Advanced-Features">concept on hiding advanced features</a>. </p>
+<p>Specifically, this includes the following actions:</p>
+<ol>
+<li>editing content directly from a toolbar button</li>
+<li>adding new content to the page from a toolbar button</li>
+<li>moving items up/down in a content-item list using a toolbar button</li>
+<li>replacing an item on a page using the toolbar button</li>
+</ol>
+<p>The following actions are not regarded as on-page changes, and don&#39;t auto-force drafting:</p>
+<ol>
+<li>editing any data from the Admin-UI</li>
+<li>editing app-resources or app-settings</li>
+<li>creating / modifying views</li>
+<li>importing data / importing apps</li>
+</ol>
+<h3 id="what-is-published-on-page-publish-and-what-not">What is Published on Page-Publish and What Not</h3>
+<p>When a page is published, DNN/Evoq will tell each module that it should now publish that specific version assigned to that page version. When this happens, 2sxc does the following:</p>
+<ol>
+<li>Retrieves the (usually invisible/secret) content-group entity which contains the information, what template and what items are shown on this module. This one is probably stored as a draft from previous changes, as this one keeps track of the items to show and the order to show them in. This draft is then published. </li>
+<li>Reviews all items on the four primary in-streams, checks each entity and publishes draft versions. The streams it will process are:<ol>
+<li>Default (this is the one provided on Content)</li>
+<li>Presentation </li>
+<li>ListContent (the header-content item)</li>
+<li>ListPresentation (the header presentation item)</li>
+</ol>
+</li>
+</ol>
+<p>Note that other streams are not auto-published. This is to prevent side-effects. For example, a Blog-View could have additional streams to visualize authors, categories etc. but these will not be auto-published, as it is assumed that these are helper-data and not specifically on-page data for this page. </p>
+<h3 id="publishing-additional-items">Publishing Additional Items</h3>
+<p>If you want to auto-publish additional items, just add them to a stream <strong>PartOfPage</strong>.</p>
+<h2 id="inner-content-handling-very-rich-content">Inner Content Handling (Very Rich Content)</h2>
+<p>Inner Content is not currently treated as belonging to the page, as it is inside content which is already drafted/published. So inner-content is always published when created. </p>
+<p>Note that this is not fully tested/implemented, you may have unexpected consequences when working with inner content. </p>
+<h2 id="image-and-asset-handling">Image And Asset Handling</h2>
+<p>Images and assets are not versioned / published, as DNN provides no effective way to enable this. So as of now, the following will happen:</p>
+<ol>
+<li>if a content-type has a file-field using ADAM with a single file (not library), then draging in an additional file will behave like the publishing, because the new file has a new number, and this is not in use till the item is published</li>
+<li>if the user drags in an updated file with the same name, it will internally receive a number at the end, and also stay unpublished, as it&#39;s a different file on the server</li>
+<li>if a user manually replaces a file (not drag-drop in ADAM) or <em>deletes</em> a file and then uploads the file with the same name, then this file is live, as it really changed the file on the server</li>
+<li>if you are using a library-field in ADAM (often used in galleries), then these files are automatically live as well, and deleted files are also removed immediately </li>
+</ol>
+<p>In case you are using an ADAM library and would like to only show the files which existed before you created an unpublished draft, this can be done in your template. Just remember that certain changes (like file-changes on the server) could change the modified date, and that deleting files also really removes live files as well. Here&#39;s how you can change your Razor:</p>
+<pre><code class="lang-razor">@* before, showing all files *@
+@foreach(var pic in AsAdam(Content, &quot;Files&quot;).Files) {
+    &lt;span&gt;@pic.FileName, @pic.LastModificationTime&lt;/span&gt;&lt;br&gt;
+}
+
+@* only showing &quot;older&quot; files *@
+@foreach(var pic in ((IEnumerable&lt;ToSic.SexyContent.Adam.AdamFile&gt;)AsAdam(Content, &quot;Files&quot;).Files).Where(f =&gt; f.LastModificationTime &lt;= Content.Modified)) {
+    &lt;span&gt;@pic.FileName, @pic.LastModificationTime&lt;/span&gt;&lt;br&gt;
+}
+</code></pre><h2 id="notes-and-clarifications">Notes and Clarifications</h2>
+<p>As mentioned, this is the default setup. In the case of data-oriented apps, which query data from somewhere, you may have other expectations. At the moment there is no additional mechanism to customize this any further, but we believe that you can easily cover all possible scenarios with this setup. </p>
+<h2 id="read-also">Read also</h2>
+<ul>
+<li><a href="Concept-Dnn-Module">Data Model of DNN-Modules mapping to content</a></li>
+<li><a href="http://2sxc.org/en/blog/post/understanding-content-binding-to-modules-and-pages-(300)">In-Depth information about content-binding</a></li>
+</ul>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduces in 2sxc 9.5</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/concepts/cms/dnn-evoq-page-publishing.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>
