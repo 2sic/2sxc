@@ -60,7 +60,7 @@ Here are a few snippets that you'll typically need, saving you from reading all 
 4. `Edit.Toolbar(actions: "new", contentType: "BlogPost")` creates a toolbar with one button, namely `new` which will open a new `BlogPost` form.
 5. `@Edit.Toolbar(actions: "new", contentType: "BlogPost",  prefill: new { Title = "Hello", Color = "red" } )` creates a toolbar with one button, namely `new` which will open a new `BlogPost` form, and prefills the `Title` and `Color` field.
 
-TODO TODO MORE SIMPLE EXAMPLES
+TODO MORE SIMPLE EXAMPLES
 
 ## Edit.Toolbar API
 The `Edit.Toolbar()` has these parameters 

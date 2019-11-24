@@ -2,7 +2,7 @@
 uid: Specs.StyleGuide
 ---
 
-# Style Guide for DNN / 2sxc
+# Style Guide for DNN / 2sxc Solutions
 
 Provide a clear, common guideline for DNN and 2sxc development. 
 

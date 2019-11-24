@@ -6,9 +6,6 @@ uid: Specs.Data.Inputs.Hyperlink-Library
 ## Purpose / Description
 Use this field type for complete sets of files (like image galleries), storing [Hyperlink](xref:Specs.Data.Type.Hyperlink). It's an extension of the [hyperlink field type](xref:Specs.Data.Inputs.Hyperlink).
 
-## Features 
-1.  TODO
-
 ## Configuring an Hyperlink-Library
 
 This shows the configuration dialog:

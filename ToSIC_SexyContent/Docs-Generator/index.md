@@ -29,7 +29,7 @@ it also include instructions how to export/import data, working with the image r
 
 ## If you want to know more, then check out...
 
-1. The [Articles](xref:Articles.Home) which tells you about Architecture, Data Models and more
+1. The [Specs](xref:Specs.Home) which tells you about Architecture, Data Models and more
 1. The [C# .net API Docs](xref:Api.DotNet)
 
 
@@ -37,27 +37,17 @@ it also include instructions how to export/import data, working with the image r
 
 Generated for EAV/2sxc 10.20.03
 
-## Todo
 
-1. Document/publish more APIs
+#### Pending Work / Tasks
 
-<details>
-    <summary>
-        <strong>Features to document in wiki...</strong>
-    </summary>
+Next to document
 
-These topics are already documented elsewhere, but should become part of the wiki
-
-1. [View-switching based on url-params](http://2sxc.org/en/Docs/Feature/feature/4680)
-1. [Security protecting views like admin-views](http://2sxc.org/en/Docs/Feature/feature/4737)
-1. [creating custom DataSource objects](https://2sxc.org/en/blog/tag/datasource)
-
-</details>
-
-<details>
-    <summary>
-        <strong>More things to document</strong>
-    </summary>
+1. Finish metadata documentation
+1. Publish the VisualQuery attribute, link - see also specs/datasources/api-visualquery
+1. explain Query in general, as linked in specs/datasources/datasource.md
+1. Publish the 2sxc data sources in correct namespace, link
+    1. module DS
+    1. view DS
 
 These topics are not or insufficiently documented...
 
@@ -77,9 +67,8 @@ These topics are not or insufficiently documented...
     4. jQuery with 2sxc (todo)
 1. etc.
 
-</details>
+These topics are already documented elsewhere, but should become part of these docs
 
-
-
-#### Pending Work / Tasks
-
+1. [View-switching based on url-params](http://2sxc.org/en/Docs/Feature/feature/4680)
+1. [Security protecting views like admin-views](http://2sxc.org/en/Docs/Feature/feature/4737)
+1. [creating custom DataSource objects](https://2sxc.org/en/blog/tag/datasource)

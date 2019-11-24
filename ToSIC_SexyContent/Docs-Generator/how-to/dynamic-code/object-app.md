@@ -18,7 +18,7 @@ Here's are two simple examples taken from the [Blog App](xref:App.Blog):
 }
 ```
 
-The `<link...` and `<script...` use the app-path to ensure that the file is correctly loaded, no matter what portal or app-name is currently valid. Here you can discover more about the [optimizations](Template-Assets).
+The `<link...` and `<script...` use the app-path to ensure that the file is correctly loaded, no matter what portal or app-name is currently valid. Here you can discover more about the [optimizations](xref:HowTo.Output.Assets).
 
 The loop iterates through all tags with the `@foreach(var tag in AsDynamic(App.Data["Tag"]))`, creates `<li>` items and links these to a page defined in the `App.Settings`.  
 

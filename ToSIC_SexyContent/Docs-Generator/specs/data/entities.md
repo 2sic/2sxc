@@ -21,17 +21,9 @@ This basic principle is used everywhere in 2sxc. For example, all these things a
 
 Entities are much more than just records, as they can have [relationships](xref:Concepts.Relationships) and each field can also be multilanguage, so there are actually many `Descriptions` in a multi-language product Entity. 
 
-## How to Use
-
-todo: recipes to create, change etc.
-
 ## Future Features & Wishes
 
-1. _none as of now_
-
-## Read also
-
-* _none_
+1. Dynamic Attributes using JSON data or similar
 
 ## History
 

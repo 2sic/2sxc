@@ -47,13 +47,10 @@
                 
                 <ul class="nav level1 navbar-nav">
                       <li>
-                          <a href="../../concepts/index.html" title="Concepts">Concepts</a>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
                       </li>
                       <li>
                           <a href="../../how-to/index.html" title="How To">How To</a>
-                      </li>
-                      <li>
-                          <a href="../../specs/index.html" title="Specs">Specs</a>
                       </li>
                       <li>
                           <a href="../..//api/dot-net/index.html" title=".net API">.net API</a>
@@ -152,13 +149,13 @@
                             <a href="../razor/customizesearch.html" title="Customize Search" class="">Customize Search</a>
                           </li>
                           <li class="">
-                            <a class="">todo template</a>
+                            <a href="../razor/templates.html" title="Razor Templates" class="">Razor Templates</a>
                           </li>
                           <li class="">
-                            <a class="">todo purpose</a>
+                            <a href="../razor/purpose.html" title="Execution Purpose" class="">Execution Purpose</a>
                           </li>
                           <li class="">
-                            <a class="">todo contentblock</a>
+                            <a href="../razor/blocks.html" title="Content Black" class="">Content Black</a>
                           </li>
                         </ul>  </li>
                     <li class="">
@@ -207,7 +204,7 @@
 @foreach(var tag in AsDynamic(App.Data[&quot;Tag&quot;])) {
     &lt;li class=&#39;@(&quot;app-blog-tag&quot; + tag.ManualWeight)&#39;&gt;&lt;a href=&quot;@App.Settings.DetailsPage/tag/@tag.Tag&quot; title=&quot;@tag.Name&quot;&gt;@tag.Name&lt;/a&gt;&lt;/li&gt;
 }
-</code></pre><p>The <code>&lt;link...</code> and <code>&lt;script...</code> use the app-path to ensure that the file is correctly loaded, no matter what portal or app-name is currently valid. Here you can discover more about the <a href="Template-Assets">optimizations</a>.</p>
+</code></pre><p>The <code>&lt;link...</code> and <code>&lt;script...</code> use the app-path to ensure that the file is correctly loaded, no matter what portal or app-name is currently valid. Here you can discover more about the <a class="xref" href="../output/assets.html">optimizations</a>.</p>
 <p>The loop iterates through all tags with the <code>@foreach(var tag in AsDynamic(App.Data[&quot;Tag&quot;]))</code>, creates <code>&lt;li&gt;</code> items and links these to a page defined in the <code>App.Settings</code>.  </p>
 <h2 id="how-it-works">How it works</h2>
 <p>Whenever a 2sxc-instance is created to render a page or to deliver JSON data, the <code>App</code> object is created and prepared to deliver everything you need. It&#39;s very performant, because it doesn&#39;t actually get any data or run any queries unless these are accessed. </p>

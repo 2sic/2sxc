@@ -73,7 +73,7 @@ The `SxcApiController` provides various command / helpers to get you productiv. 
 1. [Dnn](xref:HowTo.DynamicCode.Dnn)
 1. [App](xref:HowTo.DynamicCode.App) with `App.Data`, `App.Query` etc.
 1. [Data](xref:HowTo.DynamicCode.Data)
-1. [SaveInAdam(...)](dotnet-webapi-saveinadam) _new in 9.30_
+1. [SaveInAdam(...)](xref:HowTo.WebApi.SaveInAdam) _new in 9.30_
 ## Notes
 * Instead of **App.Data["MyData"]** you can fetch data from another data source provided by 2sxc (for exmple from the **App.Query["MyQueryData"]**)
 * **Sxc.Serializer.Prepare(...)** converts the object returned by App.Data["MyData"].List to a dynamic and serializable object

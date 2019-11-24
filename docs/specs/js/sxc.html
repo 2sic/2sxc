@@ -109,7 +109,7 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
-                      <a class="">Data Concepts</a>
+                      <a class="">Data Specs</a>
                         
                         <ul class="nav level2">
                           <li class="">
@@ -125,8 +125,26 @@
                             <a href="../data/file-provided-content-types.html" title="File Content-Types" class="">File Content-Types</a>
                           </li>
                           <li class="">
-                            <a href="../data/permissions.html" title="Permissions" class="">Permissions</a>
+                            <a href="../data/metadata.html" title="Metadata (WIP)" class="">Metadata (WIP)</a>
                           </li>
+                          <li class="">
+                            <a href="../data-types/_overview.html" title="Value Data Types" class="">Value Data Types</a>
+                          </li>
+                          <li class="">
+                            <a href="../input-types/_inputs-overview.html" title="Value Input Types" class="">Value Input Types</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="">Json Format</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-entity.html" title="Json Entity" class="">Json Entity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-content-type.html" title="Json ContentType" class="">Json ContentType</a>
+                                </li>
+                              </ul>  </li>
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
@@ -138,6 +156,9 @@
                           </li>
                           <li class="">
                             <a href="../cms/dnn-module.html" title="DNN Modules" class="">DNN Modules</a>
+                          </li>
+                          <li class="">
+                            <a href="../app/app-folder-structure.html" title="App Folder Structure" class="">App Folder Structure</a>
                           </li>
                           <li class="">
                             <a href="../cms/hide-advanced-features.html" title="Hide Features" class="">Hide Features</a>
@@ -165,6 +186,9 @@
                           </li>
                           <li class="">
                             <a href="../cms/polymorph.html" title="Polymorph" class="">Polymorph</a>
+                          </li>
+                          <li class="">
+                            <a href="../data/permissions.html" title="Permissions" class="">Permissions</a>
                           </li>
                         </ul>  </li>
                     <li class="">
@@ -214,16 +238,7 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
-                      <a class="">Apps</a>
-                        
-                        <ul class="nav level2">
-                          <li class="">
-                            <a href="../app/app-folder-structure.html" title="Folder Structure" class="">Folder Structure</a>
-                          </li>
-                        </ul>  </li>
-                    <li class="">
-                      <span class="expand-stub"></span>
-                      <a class="">Configuration</a>
+                      <a class="">System Configuration</a>
                         
                         <ul class="nav level2">
                           <li class="">
@@ -232,30 +247,6 @@
                           <li class="">
                             <a href="../configuration/features.html" title="Features API" class="">Features API</a>
                           </li>
-                        </ul>  </li>
-                    <li class="">
-                      <span class="expand-stub"></span>
-                      <a class="">Data & Input Types</a>
-                        
-                        <ul class="nav level2">
-                          <li class="">
-                            <a href="../data-types/_overview.html" title="Data Types" class="">Data Types</a>
-                          </li>
-                          <li class="">
-                            <a href="../input-types/_inputs-overview.html" title="Input Types" class="">Input Types</a>
-                          </li>
-                          <li class="">
-                            <span class="expand-stub"></span>
-                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="">Json Format</a>
-                              
-                              <ul class="nav level3">
-                                <li class="">
-                                  <a href="../data-formats/format-json-v1-entity.html" title="Json Entity" class="">Json Entity</a>
-                                </li>
-                                <li class="">
-                                  <a href="../data-formats/format-json-v1-content-type.html" title="Json ContentType" class="">Json ContentType</a>
-                                </li>
-                              </ul>  </li>
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
@@ -368,18 +359,6 @@
                             <a href="../docs/doc-tags.html" title="Tags in Docs" class="">Tags in Docs</a>
                           </li>
                         </ul>  </li>
-                    <li class="">
-                      <span class="expand-stub"></span>
-                      <a class="">todo / WIP</a>
-                        
-                        <ul class="nav level2">
-                          <li class="">
-                            <a class="">VisualQuery Attribute</a>
-                          </li>
-                          <li class="">
-                            <a href="../data/metadata.html" title="Metadata" class="">Metadata</a>
-                          </li>
-                        </ul>  </li>
                   </ul>        </div>
               </div>
             </div>
@@ -435,22 +414,20 @@ sxc.webApi.post(&quot;Form/ProcessForm&quot;)
 <li>The structure of the returned data</li>
 </ol>
 <p>Short note: The data is loaded using jQuery and when it&#39;s returned and processed, a callback will be executed. This is different from modern promise-implementations but easy to use anyhow. We haven&#39;t changed this, because it&#39;s trivial and we don&#39;t want to break existing code. </p>
-<p><em>Till we find time to document more, please consult the (<a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)(https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)(https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js</a>)</em></p>
+<p><em>Till we find time to document more, please consult the <a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">$2sxc API</a></em></p>
 <h2 id="working-with-rest-api-to-readwrite-content-items">Working with REST Api to Read/Write content-items</h2>
 <p>Read about it in the <a class="xref" href="sxcewebapi.html">Sxc WebApi</a> page.</p>
 <h2 id="using-app-queries-with-2sxc">Using App-Queries with $2sxc</h2>
 <p>Read about it in the <a class="xref" href="sxcewebapi.html">Sxc WebApi</a> page.</p>
 <h2 id="working-with-custom-c-app-webapis">Working with Custom C# App WebAPIs</h2>
 <p>Read about it in the <a class="xref" href="sxcewebapi.html">Sxc WebApi</a> page.</p>
-<h2 id="technical-features-explained">Technical Features Explained</h2>
-<p>TODO</p>
 <h2 id="additional-properties-of-a-module-controller">Additional Properties of a Module Controller</h2>
 <p>TODO - must document more about properties like</p>
 <ol>
 <li>isLoaded, lastRefresh, etc.</li>
 <li>that these are all internal-use and not guaranteed to stay stable in future versions</li>
 </ol>
-<p><em>Till we find time to document more, please consult the (<a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)(https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)(https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js</a>)</em></p>
+<p><em>Till we find time to document more, please consult the <a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">$2sxc API</a></em></p>
 <h2 id="demo-app-and-further-links">Demo App and further links</h2>
 <p>You should find some code examples in this demo App</p>
 <ul>

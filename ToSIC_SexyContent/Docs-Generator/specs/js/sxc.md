@@ -66,7 +66,7 @@ Read the [manage](xref:Specs.Js.Sxc.Manage) documentation to discover more about
 
 Short note: The data is loaded using jQuery and when it's returned and processed, a callback will be executed. This is different from modern promise-implementations but easy to use anyhow. We haven't changed this, because it's trivial and we don't want to break existing code. 
 
-_Till we find time to document more, please consult the (https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)(https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)_
+_Till we find time to document more, please consult the [$2sxc API](https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)_
 
 ## Working with REST Api to Read/Write content-items
 Read about it in the [Sxc WebApi](xref:Specs.Js.Sxc.WebApi) page.
@@ -81,14 +81,6 @@ Read about it in the [Sxc WebApi](xref:Specs.Js.Sxc.WebApi) page.
 
 
 
-
-## Technical Features Explained
-TODO
-
-
-
-
-
 ## Additional Properties of a Module Controller
 
 TODO - must document more about properties like
@@ -96,9 +88,7 @@ TODO - must document more about properties like
 1. isLoaded, lastRefresh, etc.
 2. that these are all internal-use and not guaranteed to stay stable in future versions
 
-_Till we find time to document more, please consult the (https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)(https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)_
-
-
+_Till we find time to document more, please consult the [$2sxc API](https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)_
 
 
 ## Demo App and further links

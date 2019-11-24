@@ -53,11 +53,6 @@ This command simply enables editing - but doesn't provide any permissions or sho
 * [Tutorial app for Public Forms](https://2sxc.org/en/apps/app/tutorial-public-forms-with-2sxc-9-30)
 * [Blog Recipe for using Public Forms with 2sxc](https://2sxc.org/en/blog/post/recipe-create-public-forms-with-2sxc)
 
-## Demo App and further links
-
-You should find some code examples in this demo App
-* TODO
-
 
 ## History
 

@@ -1,5 +1,5 @@
 ---
-uid: Todo.ToSic.Eav.DataSources.EntityTypeFilter
+uid: ToSic.Eav.DataSources.EntityTypeFilter
 ---
 # Data Source: ContentType EntityType Filter
 _Note: this data source used to be called EntityTypeFilter, we renamed it in 2sxc 9.8 for consistency_

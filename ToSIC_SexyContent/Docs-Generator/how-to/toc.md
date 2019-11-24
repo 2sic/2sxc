@@ -16,9 +16,9 @@
 ##[Context Attributes](xref:HowTo.Razor.ContextAttributes)
 ##[Customize Data](xref:HowTo.Razor.CustomizeData)
 ##[Customize Search](xref:HowTo.Razor.CustomizeSearch)
-## todo template
-## todo purpose
-## todo contentblock
+##[Razor Templates](xref:HowTo.Razor.Templates)
+##[Execution Purpose](xref:HowTo.Razor.Purpose)
+##[Content Black](xref:HowTo.Razor.Blocks)
 
 # Output/Templates
 ##[Assets](xref:HowTo.Output.Assets)

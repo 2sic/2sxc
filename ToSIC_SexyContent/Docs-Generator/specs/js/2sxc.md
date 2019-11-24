@@ -164,7 +164,7 @@ As mentioned above, you never need to work with this, it's included for complete
 
 TODO: document the properties, mention that they won't be stable in future versions
 
-_Till we find time to document more, please consult the (https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)(https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)_
+_Till we find time to document more, please consult the [$2sxc API](https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)_
 
 ## Demo App and further links
 

@@ -27,18 +27,6 @@ This is a very different concept, where an Entity enriches something else. Read 
 * [Razor LINQ tutorial showing how to navigate between relationships](https://2sxc.org/dnn-tutorials/en/razor/linq/home)
 * [RelationshipFilter Data Source to find items related to another item](xref:ToSic.Eav.DataSources.RelationshipFilter)
 
-## How to Use
-
-todo: recipes to create, change etc.
-
-## Future Features & Wishes
-
-1. _none as of now_
-
-## Read also
-
-* _none_
-
 ## History
 
 1. Introduced in 2sxc 2.0

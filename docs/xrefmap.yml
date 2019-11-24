@@ -341,7 +341,7 @@ references:
   name: Roadmap of EAV and 2sxc - Vision of the Future
   href: specs/roadmap/roadmap.html
 - uid: Specs.StyleGuide
-  name: Style Guide for DNN / 2sxc
+  name: Style Guide for DNN / 2sxc Solutions
   href: specs/style-guides/style-guides.html
 - uid: Specs.StyleGuide2020
   name: 2sxc Style Guide - Best Practices v2020 DRAFT
@@ -7043,7 +7043,7 @@ references:
   nameWithType: IInPageEditingSystem.ContextAttributes
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
   name: '...) Method in C# Razor'
-  href: how-to/dynamic-code/edit.enable.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
+  href: how-to/dynamic-code/edit.enable.html
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable*
   name: Enable
   href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_

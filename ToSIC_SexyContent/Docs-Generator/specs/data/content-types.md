@@ -11,18 +11,6 @@ Each [Entity](xref:Concepts.Entities) has many fields, some containing text, num
 
 Each field will be of a simple type like _text/string_, _number_, _boolean (yes/no)_ or other. You can find the list of [types here](xref:Specs.Data.Type.Overview).
 
-## How to Use
-
-todo: recipes to create, change etc.
-
-## Future Features & Wishes
-
-1. _none as of now_
-
-## Read also
-
-* _none_
-
 ## History
 
 1. Introduced in 2sxc 1.0

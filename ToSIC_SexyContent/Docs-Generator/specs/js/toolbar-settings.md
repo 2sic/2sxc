@@ -47,9 +47,6 @@ determines where the toolbar appears when the mouse hovers over the area (usuall
 by default any toolbar inside an element with a `sc-element` class will appear on hover
 1. string `classes`: **(null)** | _any kind of string_   
 
-## Notes and Clarifications
-TODO
-
 ## Read also
 
 * [InstancePurpose](xref:HowTo.Razor.Purpose) - which tells you why the current code is running so you could change the data added

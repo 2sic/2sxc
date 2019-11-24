@@ -29,10 +29,6 @@ As of now (2sxc 9.7) the system will pick up the content-types stored there and 
 
 This should not affect you, as it's not meant to be managed by anybody else than us as of now. 
 
-## Read also
-
-* (-)
-
 ## History
 
 1. Added in 2sxc 9.7

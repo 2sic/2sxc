@@ -4,12 +4,17 @@
 ##[Architecture](xref:Articles.Architecture)
 ##[EAV Data Models](xref:Articles.EavCoreDataModels)
 
-# Data Concepts
+# Data Specs
 ##[Entities](xref:Concepts.Entities)
 ##[Relationships](xref:Concepts.Relationships)
 ##[Content Types](xref:Concepts.ContentType)
 ##[File Content-Types](xref:Concepts.FileBasedContentTypes)
-##[Permissions](xref:Concepts.Permissions)
+##[Metadata (WIP)](xref:Concepts.Metadata)
+##[Value Data Types](xref:Specs.Data.Type.Overview)
+##[Value Input Types](xref:Specs.Data.Inputs.Overview)
+##[Json Format](xref:Specs.Data.Formats.JsonV1)
+###[Json Entity](xref:Specs.Data.Formats.JsonV1-Entity)
+###[Json ContentType](xref:Specs.Data.Formats.JsonV1-ContentType)
 
 # CMS Concepts
 ##[Edit Content](xref:Concepts.Edit)
@@ -24,6 +29,7 @@
 ##[Tokens](xref:Concepts.Tokens)
 ##[Views](xref:Concepts.Views)
 ##[Polymorph](xref:Concepts.Polymorphism)
+##[Permissions](xref:Concepts.Permissions)
 
 # DataSources
 ##[DataSource Basics](xref:Specs.DataSources.DataSource)
@@ -39,18 +45,11 @@
 ###[EnsureConfigurationIsLoaded](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded)
 ###[Provide](xref:Specs.DataSources.Api.Provide)
 
-# Configuration
+# System Configuration
 ##[Features Concept](xref:Specs.Features.Concept)
 ##[Features API](xref:Specs.Features.Api)
 
-# Data & Input Types
-##[Data Types](xref:Specs.Data.Type.Overview)
-##[Input Types](xref:Specs.Data.Inputs.Overview)
-##[Json Format](xref:Specs.Data.Formats.JsonV1)
-###[Json Entity](xref:Specs.Data.Formats.JsonV1-Entity)
-###[Json ContentType](xref:Specs.Data.Formats.JsonV1-ContentType)
-
-#[JavaScript and Html](xref:Specs.Js.Overview)
+# [JavaScript and Html](xref:Specs.Js.Overview)
 ##[Global $2sxc](xref:Specs.Js.$2sxc)
 ###[$2sxc.cms...](xref:Specs.Js.$2sxc.Cms)
 ##[Instance Sxc](xref:Specs.Js.Sxc)
@@ -82,8 +81,3 @@
 ##[Contribute to Code](xref:Specs.Contribute)
 ##[Contribute to Docs](xref:Specs.DocsContribute)
 ##[Tags in Docs](xref:Specs.DocsTags)
-
-# todo / WIP
-## VisualQuery Attribute
-##[Metadata](xref:Concepts.Metadata)
-
