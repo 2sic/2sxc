@@ -8,7 +8,7 @@ The `App` object gives you full access to everything you need to know about the 
 
 ## How to use
 
-Here's are two simple examples taken from the [Blog App][Blog-App]:
+Here's are two simple examples taken from the [Blog App](xref:App.Blog):
 
 ```html
 <link rel="stylesheet" href="@App.Path/assets/style.css"  data-enableoptimizations="true"/>
@@ -26,11 +26,11 @@ The loop iterates through all tags with the `@foreach(var tag in AsDynamic(App.D
 Whenever a 2sxc-instance is created to render a page or to deliver JSON data, the `App` object is created and prepared to deliver everything you need. It's very performant, because it doesn't actually get any data or run any queries unless these are accessed. 
 
 ## App Properties
-The app-object uses the `IApp` interface ([see code][iapp]) has the following simple properties:
+The app-object uses the `IApp` interface ([see code](xref:ToSic.Sxc.Apps.IApp)) has the following simple properties:
 
 1. `AppId` number, current App id
 2. `AppGuid` guid, internal use global id
-3. `Configuration` [DynamicEntity](xref:HowTo.DynamicCode.Entity), contains the [configuration content-item][app-configuration]
+3. `Configuration` [DynamicEntity](xref:HowTo.DynamicCode.Entity), contains the [configuration content-item](xref:Feat.AppConfig)
 4. `Data` IAppData, to access all App-data (see below)
 5. `Folder` string, storage folder name in portal/#/2sxc/...
 6. `Hidden` bool, info if the app cannot be selected in the UIs
@@ -67,7 +67,7 @@ In addition to giving access to all entities in this app, you can also create, e
 1. `App.Data.Update(entityId, values, userName)`
 1. `App.Data.Delete(entityId, userName)`
 
-You can read more about this in the [App Data API Feature][app-data-api]
+You can read more about this in the [App Data API Feature](xref:Feat.AppDataApi)
 
 
 ## Using App Queries (App.Query)
@@ -120,20 +120,13 @@ As you can see, the `HeadingsDecorators` or `DisclaimerPage` are best placed in 
 
 ## Demo App and further links
 You should find some code examples in this demo App
-* [Blog App][Blog-App] showing many such features
+* [Blog App](xref:App.Blog) showing many such features
 
 More links:
-* [App Data Create/Update/Delete][app-data-api]
+* [App Data Create/Update/Delete](xref:Feat.AppDataApi)
 
 
 ## History
 1. Introduced in 2sxc 05.05
 2. Stable since 2sxc 06.00
 3. Data-API was introduced in 2sxc 06.05
-
-[Blog-App]: http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke
-[iapp]: https://github.com/2sic/2sxc/blob/master/Interfaces/IApp.cs
-[DynamicEntity]:Dynamic-Entity
-[linq]: https://msdn.microsoft.com/en-us/library/mt693024.aspx
-[app-data-api]: http://2sxc.org/en/Docs-Manuals/Feature/feature/3360
-[app-configuration]: http://2sxc.org/en/Docs-Manuals/Feature/feature/8182

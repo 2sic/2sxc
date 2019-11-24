@@ -16,7 +16,7 @@ this is to ensure that multiple Angular apps can run on the same page, and to pr
 2. To get your current sxc-controller there are two objects *$2sxc* and *sxc* which you can just include it in your function definition, like  
 `module.controller('AppCatalogCtrl', function ($2sxc, sxc, $http, ...) {`
   1. The sxc is the one you want most, it is already set to your current instance, so you can ask it things like `sxc.manage` etc.
-  2. The $2sxc is the same as the global [$2sxc][$2sxc] object you know from jquery. You could of course also do `$2sxc(27).manage` to acces the manage, but that's unnecessarily complicated
+  2. The $2sxc is the same as the global [$2sxc](xref:Specs.Js.$2sxc) object you know from jquery. You could of course also do `$2sxc(27).manage` to acces the manage, but that's unnecessarily complicated
 3. Additional services provided when bootstrapping with *2sxc4ng* is
   1. `content(typename)` - a service which requests content-data from the current app / context, can also delete / create items etc.
   2. `query(queryname)` - a service which gets data from app-queries

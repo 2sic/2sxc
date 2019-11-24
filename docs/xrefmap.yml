@@ -307,7 +307,7 @@ references:
 - uid: Specs.Js.$2sxc
   name: 'JS: The $2sxc Manager'
   href: specs/js/2sxc.html
-- uid: Specs.Js.$2sxc.cms
+- uid: Specs.Js.$2sxc.Cms
   name: 'JS: The $2sxc.cms API'
   href: specs/js/2sxc.cms.html
 - uid: Specs.Js.Commands

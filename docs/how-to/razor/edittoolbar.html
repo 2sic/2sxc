@@ -252,22 +252,22 @@
 <li>template / view buttons</li>
 <li>app buttons</li>
 </ol>
-<p>The actions can be a combination of known button-names. Here&#39;s the current <a href="Html-Js-Commands">JavaScript catalog of commands</a>: </p>
-<p>The following commands all require <code>target</code> to be set, or they only make sense in a List-setup - see also <a href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content and not as data</a>. </p>
+<p>The actions can be a combination of known button-names. Here&#39;s the current <a class="xref" href="../../specs/js/commands.html">JavaScript catalog of commands</a>: </p>
+<p>The following commands all require <code>target</code> to be set, or they only make sense in a List-setup - see also <a class="xref" href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content and not as data</a>[template-content-data]. </p>
 <ol>
 <li><code>new</code> open a dialog to create a new item, requires a <code>target</code> <em>or</em> a <code>contentType</code> parameter</li>
 <li><code>edit</code> to edit the current item</li>
 <li><code>publish</code> will optionally show the publish-button, but only if the current item is not published.</li>
-<li><code>add</code> opens a dialog to create a new item just like new, but will add it below the current item in the <a href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content list</a></li>
-<li><code>remove</code> will remove (not delete) this item from the <a href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content list</a></li>
-<li><code>moveup</code> will move the item up one position in the <a href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content list</a></li>
-<li><code>movedown</code> will move the item down one position in the <a href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content list</a></li>
-<li><code>sort</code> will open the sort dialog of the <a href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content list</a></li>
+<li><code>add</code> opens a dialog to create a new item just like new, but will add it below the current item in the <a class="xref" href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content list</a></li>
+<li><code>remove</code> will remove (not delete) this item from the <a class="xref" href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content list</a></li>
+<li><code>moveup</code> will move the item up one position in the <a class="xref" href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content list</a></li>
+<li><code>movedown</code> will move the item down one position in the <a class="xref" href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content list</a></li>
+<li><code>sort</code> will open the sort dialog of the <a class="xref" href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content list</a></li>
 <li><code>replace</code> will open a dialog to swap the current item in the 
-<a href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content list</a></li>
+<a class="xref" href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content list</a></li>
 </ol>
-<p><em>Note: the command <code>metadata</code> - is a bit special, not supported in the <code>actions</code> parameter - use the complex  <code>toolbar:</code> instead and read the instructions for the <a href="Html-Js-Commands">JS Commands</a>.</em></p>
-<p>For many more commands you should check the <a href="Html-Js-Commands">JS Commands</a>), which covers many more like <code>app-import</code>, <code>layout</code>, <code>develop</code>, <code>contenttype</code>, <code>contentitems</code>, <code>app</code>, <code>zone</code>, <code>more</code> etc.  </p>
+<p><em>Note: the command <code>metadata</code> - is a bit special, not supported in the <code>actions</code> parameter - use the complex  <code>toolbar:</code> instead and read the instructions for the <a class="xref" href="../../specs/js/commands.html">JS Commands</a>.</em></p>
+<p>For many more commands you should check the <a class="xref" href="../../specs/js/commands.html">JS Commands</a>), which covers many more like <code>app-import</code>, <code>layout</code>, <code>develop</code>, <code>contenttype</code>, <code>contentitems</code>, <code>app</code>, <code>zone</code>, <code>more</code> etc.  </p>
 <h2 id="more-about-the-prefill">More About the Prefill</h2>
 <p>Basically this is a .net object which will be serialized to JSON and used to prefill a new item. Usually you&#39;ll just create a new, anonymous object like <code>new { Title = &quot;xyz&quot;, Date = ... }</code>.</p>
 <p>example</p>
@@ -288,7 +288,7 @@
 <h3 id="floating-the-toolbar">Floating the Toolbar</h3>
 <p>This happens automatically, if a surrounding HTML-tag has a class &quot;sc-element&quot;. <a href="http://2sxc.org/en/Docs-Manuals/Feature/feature/2875">more...</a></p>
 <h2 id="what-really-happens-with-the-toolbar">What Really Happens with the toolbar</h2>
-<p>As previously noted, the toolbar actually puts some html/js into the page, which the javascript <a href="JavaScript-$2sxc">$2sxc</a> object will pick up and work with. Quite a lot happens on the client, and that will be documented some other day. Here just the short version:</p>
+<p>As previously noted, the toolbar actually puts some html/js into the page, which the javascript <a class="xref" href="../../specs/js/2sxc.html">$2sxc</a> object will pick up and work with. Quite a lot happens on the client, and that will be documented some other day. Here just the short version:</p>
 <ol>
 <li>js runs, picks up Toolbars</li>
 <li>jc reviews DOM to see what context it&#39;s in (either the module-instance or an inner-content)</li>
@@ -327,7 +327,6 @@
 <li>.Toolbar() Introduced in 2sxc 8.04</li>
 <li>.TagToolbar() introduced in 2sxc 9.40</li>
 </ol>
-<p>(xref:Concepts.InnerContent): <a href="http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules">http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules</a></p>
 </article>
           </div>
           

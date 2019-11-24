@@ -88,7 +88,7 @@ The second example shows 3 additional variables which are available inside the c
 ## Demo App and further links
 You should find some code examples in this demo App
 
-* [JS Manage / Toolbar API Tutorial App][jsapp]
+* [JS Manage / Toolbar API Tutorial App](xref:App.TutorialJsToolbars)
 
 [jsapp]:http://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars
 

@@ -36,7 +36,7 @@ Here's a simple example of a template-file:
 
 The code above shows
 
-1. how to include the api-file in the best way, [minified and optimized][asset-optimization] (so it will be picked up by the client-dependency framework)
+1. how to include the api-file in the best way, [minified and optimized](xref:HowTo.Output.Assets) (so it will be picked up by the client-dependency framework)
 2. how the sxc-object is resolved
 3. how to ask if we're in edit-mode
 
@@ -125,7 +125,7 @@ In the [module sxc controller](xref:Specs.Js.Sxc) you'll read about:
 Each template that needs the $2sxc-file when not logged in must include it, to be sure it's always there when needed. Note that we've included various features to prevent duplicate execution.
 
 1. if the file is included multiple times, it will only execute once
-2. if the file is included [minified][asset-optimization] and unminified, it too will only be executed once
+2. if the file is included [minified](xref:HowTo.Output.Assets) and unminified, it too will only be executed once
 3. if you need to debug the JS for whatever reason with [F12 in the browser](http://2sxc.org/en/blog/post/debugging-javascript-errors-with-a-modern-browser-and-f12-(200)) a sourcemap is included
 4. for more advanced debuging, just include the unminified version
 
@@ -159,7 +159,7 @@ As mentioned above, you never need to work with this, it's included for complete
 
 ## Additional properties of the $2sxc Controller
 
-* In 2sxc 9.30 a new object `$2sxc.cms` was added - read about it in [$2sxc.cms](xref:Specs.Js.Sxc.Cms)
+* In 2sxc 9.30 a new object `$2sxc.cms` was added - read about it in [$2sxc.cms](xref:Specs.Js.$2sxc.Cms)
 
 
 TODO: document the properties, mention that they won't be stable in future versions
@@ -177,7 +177,7 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 ## History
 
 1. Introduced in 2sxc 04.00
-1. Enhanced with `cms` (see [cms](xref:Specs.Js.Sxc.Cms)) in 9.30
+1. Enhanced with `cms` (see [cms](xref:Specs.Js.$2sxc.Cms)) in 9.30
 
 [asset-optimization]:Template-Assets
 [content-blocks]: http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules

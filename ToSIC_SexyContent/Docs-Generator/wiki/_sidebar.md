@@ -208,7 +208,7 @@ This is where you can find things like...
         <strong>Field Input Types</strong>
     </summary>
 
-* [Input Fields Overview](ui-fields)
+* [Input Fields Overview](xref:Specs.Data.Inputs.All)
 * [All (config for all types)](xref:Specs.Data.Inputs.All)
 * [Boolean (overview)](xref:Specs.Data.Inputs.Boolean)
   * [boolean-default](xref:Specs.Data.Inputs.Boolean-Default)
@@ -247,7 +247,7 @@ This is where you can find things like...
 
 * [JavaScript API Overview](xref:Specs.Js.Overview)
 * [$2sxc Controller](xref:Specs.Js.$2sxc)
-* [$2sxc.cms](xref:Specs.Js.Sxc.Cms)
+* [$2sxc.cms](xref:Specs.Js.$2sxc.Cms)
 * [sxc instance](xref:Specs.Js.Sxc)
 * [sxc webapi](xref:Specs.Js.Sxc.WebApi)
 * [manage controller (edit-api)](xref:Specs.Js.Sxc.Manage)

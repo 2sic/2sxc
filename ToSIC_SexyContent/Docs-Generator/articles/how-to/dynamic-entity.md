@@ -3,7 +3,7 @@ uid: Articles.DynamicEntity
 ---
 # How to Use a Dynamic Entity
 
-Whenever you create a content-type - like _Person_ - and want to work with the data in your C# Razor templates, you'll be working with a _Dynamic Entity_. The main code for this is the [DynamicEntity.cs][link-main-code] and also the [Entity.cs][link-entity-code].
+Whenever you create a content-type - like _Person_ - and want to work with the data in your C# Razor templates, you'll be working with a _Dynamic Entity_. 
 
 ## Code example using a Dynamic Entity
 We'll assume we have a _Content Type_ called *Book* with the following properties:
@@ -78,6 +78,3 @@ The following properties/methods exist, but shouldn't be used. They are document
 1. Parents introduced in 2sxc 9.42, and added to interface IDynamicEntity in 10.07
 1. IsDemoItem property added in 2sxc 10.06
 
-
-[link-main-code]:https://github.com/2sic/2sxc/blob/master/SexyContent/DynamicEntity.cs
-[link-entity-code]:https://github.com/2sic/eav-server/blob/master/ToSic.Eav.Core/Entity.cs

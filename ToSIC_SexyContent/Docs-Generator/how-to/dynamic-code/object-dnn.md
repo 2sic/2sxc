@@ -29,7 +29,7 @@ These are the main properties:
 4. User
 
 ## The @Dnn.Module Properties
-The `@Dnn.Module` is of the type [ModuleInfo](mod-info). It has the following properties:
+The `@Dnn.Module` is of the type [ModuleInfo](https://www.dnndocs.com/api/DotNetNuke.Entities.Modules.ModuleInfo.html). It has the following properties:
 
 1.	Dnn.Module.AllModules
 2.	Dnn.Module.AllTabs
@@ -71,7 +71,7 @@ The `@Dnn.Module` is of the type [ModuleInfo](mod-info). It has the following pr
 
 
 ## The @Dnn.Portal Properties
-The `@Dnn.Portal` is of the type [PortalSettings](port-info). It has the following properties:
+The `@Dnn.Portal` is of the type [PortalSettings](https://www.dnndocs.com/api/DotNetNuke.Entities.Portals.PortalInfo.html). It has the following properties:
 
 1.	Dnn.Portal.ActiveTab
 2.	Dnn.Portal.AdministratorId
@@ -128,7 +128,7 @@ The `@Dnn.Portal` is of the type [PortalSettings](port-info). It has the followi
 
 
 ## The @Dnn.Tab Properties
-The `@Dnn.Tab` is of the type [TabInfo](tab-info). It has the following properties:
+The `@Dnn.Tab` is of the type [TabInfo](https://www.dnndocs.com/api/DotNetNuke.Entities.Tabs.TabInfo.html). It has the following properties:
 
 1.	Dnn.Tab.ChildModules
 2.	Dnn.Tab.ContainerPath
@@ -175,7 +175,7 @@ The `@Dnn.Tab` is of the type [TabInfo](tab-info). It has the following properti
 
 
 ## The @Dnn.User Properties
-The `@Dnn.User` is of the type [UserInfo](user-info). It has the following properties:
+The `@Dnn.User` is of the type [UserInfo](https://www.dnndocs.com/api/DotNetNuke.Entities.Users.UserInfo.html). It has the following properties:
 
 1.	Dnn.User.DisplayName
 2.	Dnn.User.Email
@@ -198,8 +198,4 @@ The `@Dnn.User` is of the type [UserInfo](user-info). It has the following prope
 2. 
 
 
-[mod-info]: http://dotnetnukeru.com/dnndocs/api/html/T_DotNetNuke_Entities_Modules_ModuleInfo.htm
-[tab-info]: http://dotnetnukeru.com/dnndocs/api/html/T_DotNetNuke_Entities_Tabs_TabInfo.htm
-[port-info]: http://dotnetnukeru.com/dnndocs/api/html/T_DotNetNuke_Entities_Portals_PortalSettings.htm
-[user-info]: http://www.dotnetnukeru.com/dnndocs/api/html/T_DotNetNuke_Entities_Users_UserInfo.htm
 

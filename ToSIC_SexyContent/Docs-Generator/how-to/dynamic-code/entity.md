@@ -63,7 +63,7 @@ var entity = AsEntity(Content);
 
 ## Read also
 
-* To dive deeper, you must check the [EAV code][eav-core-code]
+* To dive deeper, you must check the @Repo.EavServer
 
 
 ## History
@@ -71,5 +71,3 @@ var entity = AsEntity(Content);
 1. Introduced in 2sxc 01.00
 1. Multi-Language since 2sxc 02.00
 1. Added `Value` and `Value<T>`, `PrimaryValue<T>` as well as `Parents()` and `Children(...)` in 09.42. Note that Value does not do the same thing as GetBestValue.
-
-[eav-core-code]: https://github.com/2sic/eav-server/tree/master/ToSic.Eav.Core 

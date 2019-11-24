@@ -87,24 +87,24 @@ _Note:_ at the moment, the buttons are grouped into bundles like
 4. app buttons
 
 
-The actions can be a combination of known button-names. Here's the current [JavaScript catalog of commands][actions-source]: 
+The actions can be a combination of known button-names. Here's the current [JavaScript catalog of commands](xref:Specs.Js.Commands): 
 
-The following commands all require `target` to be set, or they only make sense in a List-setup - see also [content and not as data][template-content-data]. 
+The following commands all require `target` to be set, or they only make sense in a List-setup - see also [content and not as data](xref:Blog.DataVsContent)[template-content-data]. 
 
 1. `new` open a dialog to create a new item, requires a `target` _or_ a `contentType` parameter
 2. `edit` to edit the current item
 1. `publish` will optionally show the publish-button, but only if the current item is not published.
-1. `add` opens a dialog to create a new item just like new, but will add it below the current item in the [content list][template-content-data]
-1. `remove` will remove (not delete) this item from the [content list][template-content-data]
-1. `moveup` will move the item up one position in the [content list][template-content-data]
-1. `movedown` will move the item down one position in the [content list][template-content-data]
-1. `sort` will open the sort dialog of the [content list][template-content-data]
+1. `add` opens a dialog to create a new item just like new, but will add it below the current item in the [content list](xref:Blog.DataVsContent)
+1. `remove` will remove (not delete) this item from the [content list](xref:Blog.DataVsContent)
+1. `moveup` will move the item up one position in the [content list](xref:Blog.DataVsContent)
+1. `movedown` will move the item down one position in the [content list](xref:Blog.DataVsContent)
+1. `sort` will open the sort dialog of the [content list](xref:Blog.DataVsContent)
 1. `replace` will open a dialog to swap the current item in the 
-[content list][template-content-data]
+[content list](xref:Blog.DataVsContent)
 
-_Note: the command `metadata` - is a bit special, not supported in the `actions` parameter - use the complex  `toolbar:` instead and read the instructions for the [JS Commands][actions-source]._
+_Note: the command `metadata` - is a bit special, not supported in the `actions` parameter - use the complex  `toolbar:` instead and read the instructions for the [JS Commands](xref:Specs.Js.Commands)._
 
-For many more commands you should check the [JS Commands][actions-source]), which covers many more like `app-import`, `layout`, `develop`, `contenttype`, `contentitems`, `app`, `zone`, `more` etc.  
+For many more commands you should check the [JS Commands](xref:Specs.Js.Commands)), which covers many more like `app-import`, `layout`, `develop`, `contenttype`, `contentitems`, `app`, `zone`, `more` etc.  
 
 ## More About the Prefill
 Basically this is a .net object which will be serialized to JSON and used to prefill a new item. Usually you'll just create a new, anonymous object like `new { Title = "xyz", Date = ... }`.
@@ -131,10 +131,10 @@ For this you must simply provide an array of strings, like this:
 ## Styling the Toolbar
 As of now there are only limited stying functions: 
 ### Floating the Toolbar
-This happens automatically, if a surrounding HTML-tag has a class "sc-element". [more...][float-toolbar]
+This happens automatically, if a surrounding HTML-tag has a class "sc-element". [more...](http://2sxc.org/en/Docs-Manuals/Feature/feature/2875)
 
 ## What Really Happens with the toolbar
-As previously noted, the toolbar actually puts some html/js into the page, which the javascript [$2sxc][$2sxc] object will pick up and work with. Quite a lot happens on the client, and that will be documented some other day. Here just the short version:
+As previously noted, the toolbar actually puts some html/js into the page, which the javascript [$2sxc](xref:Specs.Js.$2sxc) object will pick up and work with. Quite a lot happens on the client, and that will be documented some other day. Here just the short version:
 
 1. js runs, picks up Toolbars
 2. jc reviews DOM to see what context it's in (either the module-instance or an inner-content)
@@ -179,10 +179,3 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 
 1. .Toolbar() Introduced in 2sxc 8.04
 2. .TagToolbar() introduced in 2sxc 9.40
-
-(xref:Concepts.InnerContent): http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
-[DynamicEntity]: Dynamic-Entity
-[actions-source]: Html-Js-Commands
-[template-content-data]: http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content
-[float-toolbar]: http://2sxc.org/en/Docs-Manuals/Feature/feature/2875
-[$2sxc]: JavaScript-$2sxc

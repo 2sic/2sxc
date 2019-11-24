@@ -15,7 +15,7 @@ For many users 2sxc is too powerful, so there are various mechanisms for hiding 
 
 ## Auto-Hide Advanced Buttons From Non-Admins
 
-This is very simple - 2sxc asks DNN if there is a security group called **2sxc Designers**. If such a group exists, then only users in that group (and all host-users) see the advanced button, any other user will not see advanced buttons any more. You can find more [instructions in this 2sxc Designers checklist][checklist-sxc-designers].
+This is very simple - 2sxc asks DNN if there is a security group called **2sxc Designers**. If such a group exists, then only users in that group (and all host-users) see the advanced button, any other user will not see advanced buttons any more. You can find more [instructions in this 2sxc Designers checklist](xref:Checklist.AdminsNoAdvFeatures).
 
 ## Custom Toolbars
 
@@ -28,12 +28,10 @@ Note that you'll find some snippets which should help you in the snippets, to bo
 
 ## Read also
 
-* [Checklist to setup 2sxc Designers security group][checklist-sxc-designers]
+* [Checklist to setup 2sxc Designers security group](xref:Checklist.AdminsNoAdvFeatures)
 
 
 
 ## History
 
 1. ...
-
-[checklist-sxc-designers]:http://swisschecklist.com/en/fwttmwjx/2sxc-Hide-advanced-features-from-Content-Editors-with-Designer-Security-Role

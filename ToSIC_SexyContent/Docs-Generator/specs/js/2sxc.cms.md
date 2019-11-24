@@ -1,5 +1,5 @@
 ---
-uid: Specs.Js.$2sxc.cms
+uid: Specs.Js.$2sxc.Cms
 ---
 # JS: The $2sxc.cms API
 

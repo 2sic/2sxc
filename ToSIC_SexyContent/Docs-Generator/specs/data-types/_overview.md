@@ -9,7 +9,7 @@ The EAV (Entity-Attribute-Value) system and 2sxc is all about data. Here some mi
 ## Difference Between Data-Type and Input-Type
 The **data-type** describes how data is stored (persisted) in various formats (SQL, JSON, XML) and how it's used in code (C#, JavaScript, Tokens, Angular, ...). 
 
-The **input-type** describes how the user can enter such data - for example using a text-field or a date-picker. Learn more about the [input types here](ui-fields).
+The **input-type** describes how the user can enter such data - for example using a text-field or a date-picker. Learn more about the [input types here](xref:Specs.Data.Inputs.All).
 
 ## Basic Data Types
 EAV and 2sxc 10.0+ currently have the following data types
@@ -26,7 +26,7 @@ EAV and 2sxc 10.0+ currently have the following data types
 
 ## Read also
 
-* [input types](ui-fields) documentation about input types
+* [input types](xref:Specs.Data.Inputs.All) documentation about input types
 
 ## History
 1. Almost all types were introduced in EAV 1.0 2sxc 1.0

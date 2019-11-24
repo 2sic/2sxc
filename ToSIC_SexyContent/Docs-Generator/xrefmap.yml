@@ -1,7 +1,15 @@
 references:
+
+# Temp
 - uid: Temp.VisualQuery
   name: Visual Query
   href: https://2sxc.org/en/Learn/Visual-Query-Designer
+
+# Repos
+- uid: Repo.EavServer
+  name: EAV Server Code
+  href: https://github.com/2sic/eav-server/tree/master/ToSic.Eav.Core 
+
 
 # Apps
 - uid: AppsCatalog
@@ -16,9 +24,30 @@ references:
 - uid: App.TimelineJs
   name: TimelineJs App
   href: http://2sxc.org/en/apps/app/timelinejs-app-for-dnn-dotnetnuke
+- uid: App.TutorialJsToolbars
+  name: App Tutorial JS Toolbars
+  href: http://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars
 
 
 # Blogs
 - uid: Blog.CustomDataSource
   name: Blog for custom data source
   href: http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query
+- uid: Blog.DataVsContent
+  name: Differences Templating Data vs. Content
+  href: http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content
+
+
+# Checklists
+- uid: Checklist.AdminsNoAdvFeatures
+  name: Prevent Admins from Using Advanced Features
+  href: https://azing.org/2sxc/r/t104-orQ
+
+
+# Features
+- uid: Feat.AppDataApi
+  name: App Data API
+  href: http://2sxc.org/en/Docs-Manuals/Feature/feature/3360
+- uid: Feat.AppConfig
+  name: App Configuration
+  href: http://2sxc.org/en/Docs-Manuals/Feature/feature/8182

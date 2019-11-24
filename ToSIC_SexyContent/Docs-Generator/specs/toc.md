@@ -36,7 +36,7 @@
 
 #[JavaScript and Html](xref:Specs.Js.Overview)
 ##[Global $2sxc](xref:Specs.Js.$2sxc)
-###[$2sxc.cms...](xref:Specs.Js.$2sxc.cms)
+###[$2sxc.cms...](xref:Specs.Js.$2sxc.Cms)
 ##[Instance Sxc](xref:Specs.Js.Sxc)
 ###[Sxc.manage...](xref:Specs.Js.Sxc.Manage)
 ###[Sxc.webapi](xref:Specs.Js.Sxc.WebApi)

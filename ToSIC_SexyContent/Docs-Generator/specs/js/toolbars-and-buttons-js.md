@@ -171,13 +171,13 @@ var tb2 = {
 You can customize _hover behavior_, _show behavior_ and more. Read about it in the [toolbar settings](xref:Specs.Js.Toolbar.Settings).
 
 ## Custom Buttons with Custom Commands
-You can easily create custom buttons with custom icons, parameters and even custom scripts. It's not well documented yet, but it's best to just look through the tutorial app below. It's also explained more in the [Html Custom Code][custom-button] 
+You can easily create custom buttons with custom icons, parameters and even custom scripts. It's not well documented yet, but it's best to just look through the tutorial app below. It's also explained more in the [Html Custom Code](xref:Specs.Js.Commands.Code) 
 
 
 ## Demo App and further links
 You should find some code examples in this demo App
 
-* [JS Manage / Toolbar API Tutorial App][jsapp]
+* [JS Manage / Toolbar API Tutorial App](xref:App.TutorialJsToolbars)
 
 ## History
 
@@ -186,4 +186,3 @@ You should find some code examples in this demo App
 
 
 [jsapp]:http://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars
-[custom-button]:Html-Js-Command-Custom-Code

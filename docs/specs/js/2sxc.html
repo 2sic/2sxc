@@ -342,7 +342,7 @@
 &lt;/script&gt;
 </code></pre><p>The code above shows</p>
 <ol>
-<li>how to include the api-file in the best way, <a href="Template-Assets">minified and optimized</a> (so it will be picked up by the client-dependency framework)</li>
+<li>how to include the api-file in the best way, <a class="xref" href="../../how-to/output/assets.html">minified and optimized</a> (so it will be picked up by the client-dependency framework)</li>
 <li>how the sxc-object is resolved</li>
 <li>how to ask if we&#39;re in edit-mode</li>
 </ol>
@@ -401,7 +401,7 @@ $(function(){
 <p>Each template that needs the $2sxc-file when not logged in must include it, to be sure it&#39;s always there when needed. Note that we&#39;ve included various features to prevent duplicate execution.</p>
 <ol>
 <li>if the file is included multiple times, it will only execute once</li>
-<li>if the file is included <a href="Template-Assets">minified</a> and unminified, it too will only be executed once</li>
+<li>if the file is included <a class="xref" href="../../how-to/output/assets.html">minified</a> and unminified, it too will only be executed once</li>
 <li>if you need to debug the JS for whatever reason with <a href="http://2sxc.org/en/blog/post/debugging-javascript-errors-with-a-modern-browser-and-f12-(200)">F12 in the browser</a> a sourcemap is included</li>
 <li>for more advanced debuging, just include the unminified version</li>
 </ol>
@@ -424,7 +424,7 @@ so don&#39;t read/rely on that JSON, use the $2sxc to access any information. </
 <p>As mentioned above, you never need to work with this, it&#39;s included for completeness. Since the now recommended method to initialized $2sxc is not with the moduleId but with a DOM-node, that call will automatically resolve everything correctly.</p>
 <h2 id="additional-properties-of-the-2sxc-controller">Additional properties of the $2sxc Controller</h2>
 <ul>
-<li>In 2sxc 9.30 a new object <code>$2sxc.cms</code> was added - read about it in <a href="xref:Specs.Js.Sxc.Cms">$2sxc.cms</a></li>
+<li>In 2sxc 9.30 a new object <code>$2sxc.cms</code> was added - read about it in <a class="xref" href="2sxc.cms.html">$2sxc.cms</a></li>
 </ul>
 <p>TODO: document the properties, mention that they won&#39;t be stable in future versions</p>
 <p><em>Till we find time to document more, please consult the <a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">source</a></em></p>
@@ -438,7 +438,7 @@ so don&#39;t read/rely on that JSON, use the $2sxc to access any information. </
 <h2 id="history">History</h2>
 <ol>
 <li>Introduced in 2sxc 04.00</li>
-<li>Enhanced with <code>cms</code> (see <a href="xref:Specs.Js.Sxc.Cms">cms</a>) in 9.30</li>
+<li>Enhanced with <code>cms</code> (see <a class="xref" href="2sxc.cms.html">cms</a>) in 9.30</li>
 </ol>
 </article>
           </div>

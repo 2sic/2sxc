@@ -31,11 +31,9 @@ App.Data.Create("Tag", vals);
 
 ## Read also
 
-* To dive deeper, you must check the [blog post][blog-post]
+* To dive deeper, you must check the [blog post](http://2sxc.org/en/blog/post/using-app-data-outside-of-2sxc-in-razor-custom-webapi-skin-or-another-module-300)
 
 
 ## History
 
 1. Introduced in 2sxc 08.03
-
-[blog-post]: http://2sxc.org/en/blog/post/using-app-data-outside-of-2sxc-in-razor-custom-webapi-skin-or-another-module-300

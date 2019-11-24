@@ -323,7 +323,7 @@
 <li>To use 2sxc4ng you must include a JS file in your template, and you must bootstrap your app using this (not using the standard angularjs bootstrapping)<br>this is to ensure that multiple Angular apps can run on the same page, and to provide your app with the necessary context so it knows what module it&#39;s working on, etc.<br><a href="http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng">Here&#39;s an introduction to that</a>.</li>
 <li>To get your current sxc-controller there are two objects <em>$2sxc</em> and <em>sxc</em> which you can just include it in your function definition, like<br><code>module.controller(&#39;AppCatalogCtrl&#39;, function ($2sxc, sxc, $http, ...) {</code><ol>
 <li>The sxc is the one you want most, it is already set to your current instance, so you can ask it things like <code>sxc.manage</code> etc.</li>
-<li>The $2sxc is the same as the global <a href="JavaScript-$2sxc">$2sxc</a> object you know from jquery. You could of course also do <code>$2sxc(27).manage</code> to acces the manage, but that&#39;s unnecessarily complicated</li>
+<li>The $2sxc is the same as the global <a class="xref" href="../js/2sxc.html">$2sxc</a> object you know from jquery. You could of course also do <code>$2sxc(27).manage</code> to acces the manage, but that&#39;s unnecessarily complicated</li>
 </ol>
 </li>
 <li>Additional services provided when bootstrapping with <em>2sxc4ng</em> is<ol>

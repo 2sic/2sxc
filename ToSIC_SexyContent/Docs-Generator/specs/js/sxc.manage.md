@@ -55,7 +55,7 @@ We try to keep APIs very light, so all the internal properties/objects are not d
 ## Demo App and further links
 You should find some code examples in this demo App
 
-* [JS Manage / Toolbar API Tutorial App][jsapp]
+* [JS Manage / Toolbar API Tutorial App](xref:App.TutorialJsToolbars)
 
 ## History
 1. Introduced in 2sxc v02.00

@@ -3,7 +3,7 @@ uid: Concepts.Polymorphism
 ---
 # Concept: Polymorph / Editions / Open-Heart-Surgery (WIP)
 
-<img src="./assets/concepts/polymorph-logo-wide.svg" width="100%">
+<img src="/assets/concepts/polymorph-logo-wide.svg" width="100%">
 
 Imagine you have a running system and you want to make some changes on the live installation. During the time you work, you would always risk breaking the site, but we usually don't have the time to create a staging environment. Enter Polymorphism.
 

@@ -21,6 +21,6 @@ You can create awesome solutions, customizing the edit-experience and working wi
 1. customizing the [quickE (quick edit) experience](xref:Specs.Js.QuickE)
 
 ## Using 2sxc with Popular JS Libraries (TODO)
-6. [Angular 1 and 2sxc with 2sxc4ng](AngularJs-1-Overview) (TODO - ca. 75% documented but partially in external articles)
+6. [Angular 1 and 2sxc with 2sxc4ng](xref:Specs.AngularJs) (TODO - ca. 75% documented but partially in external articles)
 
 
