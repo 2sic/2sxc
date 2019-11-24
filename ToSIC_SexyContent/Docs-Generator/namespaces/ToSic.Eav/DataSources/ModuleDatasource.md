@@ -15,7 +15,7 @@ When using the [Visual Query](xref:Temp.VisualQuery) it is already in the defaul
 The above example shows:
 
 1. all data start in the cache _ICache_
-1. it is then by default passed through the [PublishingFilter](DotNet-DataSource-PublishingFilter)
+1. it is then by default passed through the [PublishingFilter](xref:ToSic.Eav.DataSources.PublishingFilter)
 1. then it enters this Instance/Module, which gets the current ModuleInstance and passes on the data which has been assigned to it
 
 
@@ -24,7 +24,7 @@ Things get really exciting when you use values which the user edited in the modu
 
 <img src="/assets/data-sources/module-providing-settings-to-sort.png" width="100%">
 
-As you can see, the _Default_ out of the **ModuleDataSource** is passed into the [ValueSort](DotNet-DataSource-ValueSort) data source with the stream-name _Settings_ and is then used in a token to configure behaviour of the sort. 
+As you can see, the _Default_ out of the **ModuleDataSource** is passed into the [ValueSort](xref:ToSic.Eav.DataSources.ValueSort) data source with the stream-name _Settings_ and is then used in a token to configure behaviour of the sort. 
 
 
 ## Manually Assigning a Module Instance ID (2sxc 9.9)

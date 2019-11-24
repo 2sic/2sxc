@@ -109,7 +109,7 @@ $(function () {
 You can also find an example of finding all of our nodes and initializing them in the [TimeLineJS App][TimeLineJS]. If you're interested, here's the [js-initializer](https://github.com/2sic/app-TimeLineJS/blob/master/assets/scripts.js).  
 
 ## Everything about the Module-Level `sxc` Controller
-In the [module sxc controller](JavaScript-Sxc-Controller) you'll read about:
+In the [module sxc controller](xref:Specs.Js.Sxc) you'll read about:
 
 1. The API of a module-level controller
 2. Calling commands, creating toolbars and buttons
@@ -159,7 +159,7 @@ As mentioned above, you never need to work with this, it's included for complete
 
 ## Additional properties of the $2sxc Controller
 
-* In 2sxc 9.30 a new object `$2sxc.cms` was added - read about it in [$2sxc.cms](javascript-$2sxc.cms)
+* In 2sxc 9.30 a new object `$2sxc.cms` was added - read about it in [$2sxc.cms](xref:Specs.Js.Sxc.Cms)
 
 
 TODO: document the properties, mention that they won't be stable in future versions
@@ -177,7 +177,7 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 ## History
 
 1. Introduced in 2sxc 04.00
-1. Enhanced with `cms` (see [cms](javascript-$2sxc.cms)) in 9.30
+1. Enhanced with `cms` (see [cms](xref:Specs.Js.Sxc.Cms)) in 9.30
 
 [F12]: http://2sxc.org/en/blog/post/debugging-javascript-errors-with-a-modern-browser-and-f12-(200)
 [asset-optimization]:Template-Assets

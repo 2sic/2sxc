@@ -67,16 +67,16 @@ The `Edit.Toolbar()` has these parameters
 
 1. `target` a [DynamicEntity](xref:HowTo.DynamicCode.Entity) content-item, _optional_  
 this is a content item which will be affected by the toolbar
-2. `actions` string, _optional, must be [named](convention-named-parameters)_  
-this is a comma-separated string overriding the default buttons which the toolbar will create, containing [command names](Html-Js-Commands). 
-3. `contentType` string, _optional, must be [named](convention-named-parameters)_  
+2. `actions` string, _optional, must be [named](xref:HowTo.DynamicCode.NamedParameters)_  
+this is a comma-separated string overriding the default buttons which the toolbar will create, containing [command names](xref:Specs.Js.Commands). 
+3. `contentType` string, _optional, must be [named](xref:HowTo.DynamicCode.NamedParameters)_  
 this is necessary if you want a _new_ button which would open the dialog to create a new item, and you don't have a target-item which already tells the system what type to use. This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
-4. `prefill` object, _optional, must be [named](convention-named-parameters)_  
+4. `prefill` object, _optional, must be [named](xref:HowTo.DynamicCode.NamedParameters)_  
 allows a _new_ dialog to receive values as a prefill, for example to already specify a date, title, category, etc.
-1. `toolbar` object, _optional, must be [named](convention-named-parameters)_ (v08.06+)  
-a full toolbar configuration object - see the [JS documentation for Toolbar](Html-Toolbars-and-Buttons). If you use this, you cannot also specify _actions_, _contentType_ or _prefill_ as those would want to configure the same information. 
-1. `settings` object, _optional, must be [named](convention-named-parameters)_ (v08.06+)  
-the settings used by a toolbar like alignment - see the [JS documentation for settings](Html-Js-Toolbar-Settings)
+1. `toolbar` object, _optional, must be [named](xref:HowTo.DynamicCode.NamedParameters)_ (v08.06+)  
+a full toolbar configuration object - see the [JS documentation for Toolbar](xref:Specs.Js.Toolbar.Intro). If you use this, you cannot also specify _actions_, _contentType_ or _prefill_ as those would want to configure the same information. 
+1. `settings` object, _optional, must be [named](xref:HowTo.DynamicCode.NamedParameters)_ (v08.06+)  
+the settings used by a toolbar like alignment - see the [JS documentation for settings](xref:Specs.Js.Toolbar.Settings)
 
 ## The Toolbar Actions
 _Note:_ at the moment, the buttons are grouped into bundles like
@@ -144,7 +144,7 @@ As previously noted, the toolbar actually puts some html/js into the page, which
 ## Notes and Clarifications
 
 ### Enforced Parameter Naming
-To promote long term API stability, we require all parameters except for the first content-item `target` to be [named](convention-named-parameters) when used.
+To promote long term API stability, we require all parameters except for the first content-item `target` to be [named](xref:HowTo.DynamicCode.NamedParameters) when used.
 
 ```html
 <!-- this will work -->

@@ -32,7 +32,7 @@ Aside from consuming data in your your template, most data-sources will simply o
 Most DataSources will only have one In-stream and one Out-stream, but this is very variable depending on your need. 
 
 ## Creating your own Custom DataSource
-* [short instruction to get started](dotnet-datasources-custom)
+* [short instruction to get started](xref:Specs.DataSources.Custom)
 * [here's docs about the relevant API](xref:Specs.DataSources.Api)
 * [understanding configuration injection](xref:Specs.DataSources.Configuration)
 

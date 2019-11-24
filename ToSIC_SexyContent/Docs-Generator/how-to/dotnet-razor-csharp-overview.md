@@ -19,12 +19,12 @@ This is the C# .net API Documentations, usually meant for Razor-Templates, custo
 1. [Dynamic Entities](DotNet-DynamicEntity) (DynamicEntity / AsDynamic)
 1. [IEntity](DotNet-Entity) - the complex data object for advanced use cases
 1. [DataSource](xref:Specs.DataSources.DataSource) and [DataStream](xref:ToSic.Eav.DataSources.IDataStream), the core concept for data read/processing/delivery
-    1. [List of all DataSource Objects](DotNet-DataSources-All)
+    1. [List of all DataSource Objects](xref:Specs.DataSources.ListAll)
     2. [Querying Data and Data Sources with code and LINQ](DotNet-Query-Linq)
     3. [how to create custom data sources](http://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query)
 
 ## Advanced APIs
-1. [WebService API](DotNet-WebApi) to create your own web services in your apps
+1. [WebService API](xref:HowTo.WebApi) to create your own web services in your apps
 1. [External API](DotNet-External-Use) to access 2sxc-instances on the server from WebForms or other MVC components
 1. [Content-Blocks API](Razor-Content-Blocks) to render inner-content (see also the [concept](xref:Concepts.InnerContent))
 

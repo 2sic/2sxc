@@ -208,7 +208,7 @@
 </li>
 <li><p>JavaScript on the client looks at the HTML and picks up both the special <code>&lt;ul&gt;</code> tags as well as all tags having the <code>sxc-toolbar</code> attribute, reads the configuration and generates the necessary html-tags with the buttons and hover-effects. Based on the <strong>context-information</strong> and the <strong>configuration</strong> it will choose if advanced button should appear (like edit-template, which only admins should see). Special hover-placement and other visual things are picked up from the <strong>settings</strong>.</p>
 </li>
-<li><p>If an editor interacts with the menu, each click will result in JavaScript looking at the <em>closest</em> <strong>context-information</strong> in the page, and using this information to run a <a href="html-js-commands">command</a> like <code>edit</code>, <code>new</code> or <code>template-develop</code>.</p>
+<li><p>If an editor interacts with the menu, each click will result in JavaScript looking at the <em>closest</em> <strong>context-information</strong> in the page, and using this information to run a <a class="xref" href="../../specs/js/commands.html">command</a> like <code>edit</code>, <code>new</code> or <code>template-develop</code>.</p>
 </li>
 <li><p>When a command has completed, certain code may reload the view, either using ajax or by reloading the page if ajax is not supported by this particular view.</p>
 </li>
@@ -244,7 +244,7 @@
 <h2 id="core-javascript-architecture-parts">Core JavaScript Architecture Parts</h2>
 <h3 id="commands">Commands</h3>
 <p>This is what is executed when a button is clicked. Commands are things like <code>edit</code>. Some commands need additional parameters like <code>EntityId</code>, resulting in a command more like <code>run(&#39;edit&#39;, {EntityId: 27})</code>.  Commands can also be run without toolbars, for example from <em>edit</em> links in tables etc.</p>
-<p>You can read more about Commands, incl. the full list of current command, parameters and how to create custom commands in the <a href="Html-Js-Commands">Commands</a> section.</p>
+<p>You can read more about Commands, incl. the full list of current command, parameters and how to create custom commands in the <a class="xref" href="../../specs/js/commands.html">Commands</a> section.</p>
 <h3 id="buttons">Buttons</h3>
 <p>This is a square thingy with an icon, which is will run a <em>Command</em>. When the button is created, it is fully configured with icon, commmand and command-parameters.</p>
 <ol>

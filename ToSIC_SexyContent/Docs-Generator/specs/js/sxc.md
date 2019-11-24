@@ -11,7 +11,7 @@ The module-specific `sxc`-controller is the core JavaScript object helping you i
 1. if you wish to work with WebAPI REST calls - of your own App-WebApi, 2sxc-WebApi or DNN-WebApi
 
 ## How to use
-First you must ensure that you have the [`$2sxc` manager](JavaScript-$2sxc) on your page, which will get you a module-specific `sxc` controller. Read about the [$2sxc manager](JavaScript-$2sxc) here. 
+First you must ensure that you have the [`$2sxc` manager](xref:Specs.Js.$2sxc) on your page, which will get you a module-specific `sxc` controller. Read about the [$2sxc manager](xref:Specs.Js.$2sxc) here. 
 
 Here's a simple example (assuming you have the $2sxc manager):
 
@@ -37,7 +37,7 @@ sxc.webApi.post("Form/ProcessForm")
 ```
 
 ## How to Get the Current Context's `sxc` Controller
-Before you continue, make sure you know how to resolve/get your `sxc`-controller, as it is unique for each DNN-Module. This is because each action needs to know which module it belongs to. Read about the 3 ways to get this in the [$2sxc Manager docs](JavaScript-$2sxc).
+Before you continue, make sure you know how to resolve/get your `sxc`-controller, as it is unique for each DNN-Module. This is because each action needs to know which module it belongs to. Read about the 3 ways to get this in the [$2sxc Manager docs](xref:Specs.Js.$2sxc).
 
 
 ## The API of an Initialized Module `sxc` Controller
@@ -69,15 +69,15 @@ Short note: The data is loaded using jQuery and when it's returned and processed
 _Till we find time to document more, please consult the [source][source]_
 
 ## Working with REST Api to Read/Write content-items
-Read about it in the [Sxc WebApi](JavaScript-Sxc-WebApi) page.
+Read about it in the [Sxc WebApi](xref:Specs.Js.Sxc.WebApi) page.
 
 
 ## Using App-Queries with $2sxc
-Read about it in the [Sxc WebApi](JavaScript-Sxc-WebApi) page.
+Read about it in the [Sxc WebApi](xref:Specs.Js.Sxc.WebApi) page.
 
 
 ## Working with Custom C# App WebAPIs
-Read about it in the [Sxc WebApi](JavaScript-Sxc-WebApi) page.
+Read about it in the [Sxc WebApi](xref:Specs.Js.Sxc.WebApi) page.
 
 
 

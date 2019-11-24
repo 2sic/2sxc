@@ -45,7 +45,7 @@ This is new in 2sxc v9.5.1. It ensures that the url can be used for SPAs, as som
 The Edit-Object is of type `ToSic.SexyContent.Interfaces.ILinkHelper`.
 
 ### Enforced Parameter Naming
-To promote long term API stability, we require all parameters to be [named](convention-named-parameters) when used. This allows us to add further parameters later on, and the calls will still work.
+To promote long term API stability, we require all parameters to be [named](xref:HowTo.DynamicCode.NamedParameters) when used. This allows us to add further parameters later on, and the calls will still work.
 
 ```html
 <!-- this will work -->

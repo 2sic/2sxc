@@ -61,8 +61,8 @@ _todo_
 
 ## Read also
 
-* [WebApi](webapi)
-* [DotNet-WebApi](dotnet-webapi)
+* [WebApi](xref:HowTo.WebApis)
+* [DotNet-WebApi](xref:HowTo.WebApi)
 
 ## Demo App and further links
 _todo_

@@ -111,7 +111,7 @@ Every action in the UI is a command, and for it to run, it must know a few thing
 ```
 
 ## Command With Custom Code
-There is a command called **custom** which is meant to be used for this. Check out the example on [Custom Code](Html-Js-Command-Custom-Code)
+There is a command called **custom** which is meant to be used for this. Check out the example on [Custom Code](xref:Specs.Js.Commands.Code)
 
 ## All Commands & Parameters (todo - update)
 
@@ -539,8 +539,9 @@ To understand the internals, check out the [source code][actionsjs]. These are t
 
 
 ## Beta Features
-1. Work in Progress: [ContentItems with Filters](Html-Js-Command-Content-Items)
-1. Work in Progress: [Delete](Html-Js-Command-Delete)
+1. Work in Progress: [ContentItems with Filters](xref:Specs.Js.Commands.ContentItems)
+1. Work in Progress: [Delete](xref:Specs.Js.Commands.Delete)
+1. Work in Progress: [Code](xref:Specs.Js.Commands.Code)
 
 ## Demo App and further links
 You should find some code examples in this demo App

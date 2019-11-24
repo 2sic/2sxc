@@ -30,7 +30,7 @@ This is where you can find things like...
 * [Data Entities](xref:Concepts.Entities)
 * [Content-Types](xref:Concepts.ContentType)
 * [Relationships](xref:Concepts.Relationships)
-* [Editing content](overview-edit)
+* [Editing content](xref:Concepts.Edit)
 * [Auto-Optimization of JS/CSS Assets](Template-Assets)
 * [Hide advanced features](xref:Concepts.HideAdvancedFeatures)
 * [Edit Context](xref:Concepts.EditContext)
@@ -80,8 +80,8 @@ This is where you can find things like...
     </summary>
 
 * [2sxc / EAV Architecture](architecture)
-* [Setting up a dev solution](contribute-setup)
-* [How to contribute](contribute)
+* [Setting up a dev solution](xref:Specs.Contribute)
+* [How to contribute](xref:Specs.DocsContribute)
 * [Internal JSON formats](xref:Specs.Data.Formats.JsonV1)
 
 </details>
@@ -99,7 +99,7 @@ This is where you can find things like...
 * [C# API Overview](DotNet-Razor-CSharp-Overview)
 * [LINQ tipps](dotnet-query-linq)
 * [Using objects from non-2sxc code](dotnet-external-use)
-* [WebApi](dotnet-webapi)
+* [WebApi](xref:HowTo.WebApi)
 * [Features API](dotnet-features)
 
 </details>
@@ -142,7 +142,7 @@ This is where you can find things like...
         <strong>C# API in WebAPI</strong>
     </summary>
 
-* [Overview Custom WebAPI](dotnet-webapi)
+* [Overview Custom WebAPI](xref:HowTo.WebApi)
 * Main Objects
   * [App object](xref:HowTo.DynamicCode.App)
   * Content, a [DynamicEntity](dotnet-dynamicentity)
@@ -166,17 +166,17 @@ This is where you can find things like...
     </summary>
 
 * [DataSource Overview](xref:Specs.DataSources.DataSource)
-* [List of all sources](dotnet-datasources-all)
-* [Create custom DataSources](dotnet-datasources-custom)
+* [List of all sources](xref:Specs.DataSources.ListAll)
+* [Create custom DataSources](xref:Specs.DataSources.Custom)
 * DataSource Configuration
   * [Concept](xref:Specs.DataSources.Configuration)
   * [Tokens](xref:Concepts.Tokens)
 * API for creating Data Sources
   * [API overview](xref:Specs.DataSources.Api)
-  * [AsEntity](dotnet-datasource-api-asentity)
+  * [AsEntity](xref:Specs.DataSources.Api.AsEntity)
   * [EnsureConfiguration...](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded)
   * [ConfigMask](xref:Specs.DataSources.Api.ConfigMask)
-  * [Provide](dotnet-datasource-api-provide)
+  * [Provide](xref:Specs.DataSources.Api.Provide)
   * [VisualQuery attribute](dotnet-datasource-api-visualquery)
 
 </details>
@@ -245,17 +245,17 @@ This is where you can find things like...
         <strong>HTML & JS API</strong>
     </summary>
 
-* [JavaScript API Overview](javascript-overview)
-* [$2sxc Controller](javascript-$2sxc)
-* [$2sxc.cms](javascript-$2sxc.cms)
-* [sxc instance](javascript-sxc-controller)
-* [sxc webapi](javascript-sxc-webapi)
-* [manage controller (edit-api)](javascript-manage-controller)
-* [toolbars, buttons, actions](javascript-toolbars-and-buttons)
-  * [button object](html-js-button)
-  * [commands](html-js-commands)
-  * [toolbar-settings](html-js-toolbar-settings)
-* [$quicke quick-edit controller](html-js-$quicke)
+* [JavaScript API Overview](xref:Specs.Js.Overview)
+* [$2sxc Controller](xref:Specs.Js.$2sxc)
+* [$2sxc.cms](xref:Specs.Js.Sxc.Cms)
+* [sxc instance](xref:Specs.Js.Sxc)
+* [sxc webapi](xref:Specs.Js.Sxc.WebApi)
+* [manage controller (edit-api)](xref:Specs.Js.Sxc.Manage)
+* [toolbars, buttons, actions](xref:Specs.Js.Toolbar.Js)
+  * [button object](xref:Specs.Js.Toolbar.Buttons)
+  * [commands](xref:Specs.Js.Commands)
+  * [toolbar-settings](xref:Specs.Js.Toolbar.Settings)
+* [$quicke quick-edit controller](xref:Specs.Js.QuickE)
 
 </details>
 
@@ -276,8 +276,8 @@ This is where you can find things like...
         <strong>REST API / WebApi</strong>
     </summary>
 
-* [WebAPI and REST endpoints](webapi)
-* [Create your own WebAPI (.net)](dotnet-webapi)
+* [WebAPI and REST endpoints](xref:HowTo.WebApis)
+* [Create your own WebAPI (.net)](xref:HowTo.WebApi)
 </details>
 
 

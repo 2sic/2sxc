@@ -62,5 +62,3 @@ You should find some code examples in this demo App
 ## History
 1. Introduced in 2sxc v08.04
 2. Enhanced / made configurable in 2sxc 08.06.01
-
-[somethingnotused]:innerlink

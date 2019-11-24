@@ -18,7 +18,7 @@ _New in 2sxc 9.35+_: you can now also create `api` folders as _subfolders_ to ru
   `[app-folder]/[edition]/api/YourController.cs`
   access url: `[api-root]/app/auto/[edition]/api/[Your]`
 
-Read more about urls in the [WebApi](webapi) docs.
+Read more about urls in the [WebApi](xref:HowTo.WebApis) docs.
 
 ## How to use
 A file named **DemoController.cs** could look like the following:
@@ -62,7 +62,7 @@ return $http.get("app-api/Demo/Get").then(function (result) {
 });
 ```
 
-The 2sxc4ng API ensures that the GET request is send to the correct url /DesktopModules/2sxc/API/app-api/Demo/Get. You can also read more about the jQuery [sxc Controller](JavaScript-Sxc-Controller) to use 2sxc-WebApis from jQuery pages.
+The 2sxc4ng API ensures that the GET request is send to the correct url /DesktopModules/2sxc/API/app-api/Demo/Get. You can also read more about the jQuery [sxc Controller](xref:Specs.Js.Sxc) to use 2sxc-WebApis from jQuery pages.
 
 ## Special Object / Commands in SxcApiController
 
@@ -80,7 +80,7 @@ The `SxcApiController` provides various command / helpers to get you productiv. 
 
 ## Read also
 
-* [WebApi](webapi)
+* [WebApi](xref:HowTo.WebApis)
 * [Concepts: Polymorphisms](xref:Concepts.Polymorphism)
 
 ## History

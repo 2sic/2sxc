@@ -21,7 +21,7 @@ In case none of the items match the reqiurement, then either no items are return
 
 <img src="/assets/data-sources/relationship-filter-fallback.png" width="100%">
 
-You can find more fallback examples like chaining them in the [ValueFilter DataSource](DotNet-DataSource-ValueFilter)
+You can find more fallback examples like chaining them in the [ValueFilter DataSource](xref:ToSic.Eav.DataSources.ValueFilter)
 
 ## Separators for Multiple Criterias (2sxc 9.9+)
 Until 2sxc 9.8 you could only check for 1 related item, so you could only say "give me all items which have this one author". In 2sxc 9.9 we are now able to specify multiple authors, allowing queries like "give me all items which have all these authors" or "give me all items which have any of these authors". 

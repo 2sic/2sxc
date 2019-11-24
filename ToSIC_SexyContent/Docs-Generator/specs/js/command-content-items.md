@@ -64,7 +64,7 @@ The filters-object is a JS-object with properties. We're still working on the fo
 
 
 ## Read also
-* [commands](Html-Js-Commands)
+* [commands](xref:Specs.Js.Commands)
 
 ## Demo App and further links
 * [Mobius Forms](https://2sxc.org/en/apps/app/mobius-forms) uses the contentitems command to let the admin see the forms-records for his use case only

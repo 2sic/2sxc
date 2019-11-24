@@ -10,7 +10,7 @@ The WebApi object on the module-specific `sxc`-controller is for AJAX calls. It 
 1. to access your apps WebApi controllers
 
 ## How to use
-First you must ensure that you have the [`$2sxc` manager](JavaScript-$2sxc) on your page, which will get you a module-specific `sxc` controller. Read about the [$2sxc manager](JavaScript-$2sxc) here. 
+First you must ensure that you have the [`$2sxc` manager](xref:Specs.Js.$2sxc) on your page, which will get you a module-specific `sxc` controller. Read about the [$2sxc manager](xref:Specs.Js.$2sxc) here. 
 
 Here's a simple example (assuming you have the $2sxc manager):
 
@@ -37,7 +37,7 @@ sxc.webApi.post("Form/ProcessForm")
 ```
 
 ## How to Get the Current Context's `sxc` Controller
-Before you continue, make sure you know how to resolve/get your `sxc`-controller, as it is unique for each DNN-Module. This is because each action needs to know which module it belongs to. Read about the 3 ways to get this in the [$2sxc Manager docs](JavaScript-$2sxc). Here you'll also find out more about the [sxc-controller](JavaScript-Sxc-Controller).
+Before you continue, make sure you know how to resolve/get your `sxc`-controller, as it is unique for each DNN-Module. This is because each action needs to know which module it belongs to. Read about the 3 ways to get this in the [$2sxc Manager docs](xref:Specs.Js.$2sxc). Here you'll also find out more about the [sxc-controller](xref:Specs.Js.Sxc).
 
 
 ## Working with REST / HTTP Async Stuff
@@ -92,7 +92,7 @@ In short:
 1. use `$2sxc(...).webApi.get(...)` or `$2sxc(...).webApi.post(...)` etc.
 2. for the path-parameter, use a path starting with `app/auto/api/[controller]/[action]` - 2sxc will take care of all the path resolutions if the path starts with `app/auto/api/` 
 
-You can read more about the [C# WebApi Server Side](DotNet-WebApi)
+You can read more about the [C# WebApi Server Side](xref:HowTo.WebApi)
 
 Short note: the WebAPIs work like classic javascript promises. So not like the data.on(event) implementation which is a bit special, this is very standard jQuery promise. 
 

@@ -36,12 +36,12 @@ The configuration of these edit-dialogs happens in the **Content Type** configur
 ## Advanced JavaScript & HTML Based Toolbars and Buttons
 If you want to do more than the default toolbars do, you want to read about:
 
-1. [Html toolbars and buttons](Html-toolbars-and-Buttons) to customize the toolbars
-2. [Toolbar settings](Html-Js-Toolbar-Settings) to configure alignment, hover etc.
-3. [Buttons](Html-Js-Button) to understand in details how buttons work and how to customize them
-4. There is also a more technical article if you want to see deeper into the [JavaScript](JavaScript-Toolbars-and-Buttons).
-5. [Commands](Html-Js-Commands) to understand which commands the CMS can run, and how to call them from normal links
-6. [Custom Code Buttons](Html-Js-Command-Custom-Code) to create buttons which run your custom code
+1. [Html toolbars and buttons](xref:Specs.Js.Toolbar.Intro) to customize the toolbars
+2. [Toolbar settings](xref:Specs.Js.Toolbar.Settings) to configure alignment, hover etc.
+3. [Buttons](xref:Specs.Js.Toolbar.Buttons) to understand in details how buttons work and how to customize them
+4. There is also a more technical article if you want to see deeper into the [JavaScript](xref:Specs.Js.Toolbar.Js).
+5. [Commands](xref:Specs.Js.Commands) to understand which commands the CMS can run, and how to call them from normal links
+6. [Custom Code Buttons](xref:Specs.Js.Commands.Code) to create buttons which run your custom code
 
 
 ## Read also

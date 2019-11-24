@@ -16,7 +16,7 @@ The above example shows two filters finding items and delivering them on the sam
 Because 1 item would have been delivered 2x (2sic is in Switzerland), the default-stream now only contains each item once, and the duplicates can also be retrieved from the _Duplicates_ stream if needed.
 
 ## Example Using StreamMerge
-A common scenario will also combine this using the [StreamMerge](DotNet-DataSource-StreamMerge). It's demonstrated there. 
+A common scenario will also combine this using the [StreamMerge](xref:ToSic.Eav.DataSources.StreamMerge). It's demonstrated there. 
 
 
 

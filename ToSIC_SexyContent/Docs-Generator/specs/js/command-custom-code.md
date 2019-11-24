@@ -22,7 +22,7 @@ Here's a basic example showing a 2sxc-toolbar with a custom code:
 }'></ul>
 
 ```
-This shows 2sxc-toolbar with 1 button, calling the [command][commands] **custom** and giving it the code **customCode** which will be executed. 
+This shows 2sxc-toolbar with 1 button, calling the [command](xref:Specs.Js.Commands) **custom** and giving it the code **customCode** which will be executed. 
 
 Here's a more extensive example:
 ```html
@@ -83,7 +83,7 @@ The second example shows 3 additional variables which are available inside the c
 
 ## Read also
 
-* [commands][commands] 
+* [commands](xref:Specs.Js.Commands) 
 
 ## Demo App and further links
 You should find some code examples in this demo App
@@ -94,5 +94,3 @@ You should find some code examples in this demo App
 
 ## History
 1. Introduced in 2sxc v08.06
-
-[commands]:Html-Js-Commands

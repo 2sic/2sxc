@@ -574,7 +574,7 @@ Find all Books (desired Entity), whose Authors (related Entity) have a Country (
 <h2 id="using-the-fallback">Using the Fallback</h2>
 <p>In case none of the items match the reqiurement, then either no items are returned, or those in the fallback stream: </p>
 <p><img src="/assets/data-sources/relationship-filter-fallback.png" width="100%"></p>
-<p>You can find more fallback examples like chaining them in the <a href="DotNet-DataSource-ValueFilter">ValueFilter DataSource</a></p>
+<p>You can find more fallback examples like chaining them in the <a class="xref" href="ToSic.Eav.DataSources.ValueFilter.html">ValueFilter DataSource</a></p>
 <h2 id="separators-for-multiple-criterias-2sxc-99">Separators for Multiple Criterias (2sxc 9.9+)</h2>
 <p>Until 2sxc 9.8 you could only check for 1 related item, so you could only say &quot;give me all items which have this one author&quot;. In 2sxc 9.9 we are now able to specify multiple authors, allowing queries like &quot;give me all items which have all these authors&quot; or &quot;give me all items which have any of these authors&quot;. </p>
 <p>This works using the separation-character, which is usually a comma <code>,</code> but could be something different (in case your items have commas in the texts you&#39;re comparing). If you don&#39;t specify a separator, none will be used and the whole <code>Filter</code> criteria is treated as one value. Here&#39;s where you set it:</p>

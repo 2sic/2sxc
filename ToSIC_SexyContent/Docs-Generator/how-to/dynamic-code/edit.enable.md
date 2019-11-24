@@ -31,7 +31,7 @@ This example ensures that
 This command simply enables editing - but doesn't provide any permissions or show any buttons yet. Here are a few things you must know to get this to work:
 
 1. remember to set [permissions](xref:Concepts.Permissions) to allow what you want to do (like create new draft items for public users)
-1. Edit.Enable uses [named parameters](convention-named-parameters), so you always have to use the `api: true` syntax
+1. Edit.Enable uses [named parameters](xref:HowTo.DynamicCode.NamedParameters), so you always have to use the `api: true` syntax
 1. the Edit.Enable won't output anything in the position it's added, because it controls the main wrapper
 1. you must also create a link or toolbar in your code for the public users, as they won't have a button to press otherwise
 

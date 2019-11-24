@@ -200,7 +200,7 @@
 
 <p><em>note that this documentation is for 2sxc 8.10+. Previous versions aready support most of these features with a different URL which still works, but those URLs are deprecated for the future.</em></p>
 <h2 id="purpose--description">Purpose / Description</h2>
-<p>The WebApi is a set of http APIs which let you access content-items, lists of items, queries or even custom c# APIs. You can find some jQuery examples on the <a href="javascript-$2sxc">$2sxc-WebApi page</a>.</p>
+<p>The WebApi is a set of http APIs which let you access content-items, lists of items, queries or even custom c# APIs. You can find some jQuery examples on the <a class="xref" href="../../specs/js/2sxc.html">$2sxc-WebApi page</a>.</p>
 <p>For example, assume you have the <a class="xref" href="http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke">blog-app</a> installed and your JS would request a JSON from this endpoint (logged in as host, so security is not an issue):</p>
 <p><code>[root-path]/app/auto/content/BlogPost</code></p>
 <p>...then your JS would receive a JSON with all BlogPost items. More examples:</p>
@@ -224,7 +224,7 @@
 </ul>
 <p>Note that Query endpoints only support the http-verb GET.</p>
 <h3 id="c-webapi-endpoints">C# WebAPI Endpoints</h3>
-<p><a href="DotNet-WebApi">C# / .net WebApis</a> are custom WebAPIs of an app. You can find a good example on the <a href="https://2sxc.org/en/apps/app/mobius-forms">Mobius Forms App</a>. Calling these is as follows:</p>
+<p><a class="xref" href="dotnet-webapi.html">C# / .net WebApis</a> are custom WebAPIs of an app. You can find a good example on the <a href="https://2sxc.org/en/apps/app/mobius-forms">Mobius Forms App</a>. Calling these is as follows:</p>
 <ul>
 <li><code>.../app/auto/api/[YourName]</code> when accessing a WebApi of the current app (from a dnn-page with this module), as then 2sxc uses auto-detect</li>
 <li><code>.../app/[app-folder]/api/[YourName]</code> when using this endpoint from external, as auto-detect can&#39;t work then.</li>
@@ -235,7 +235,7 @@
 <li><code>.../app/auto/[edition]/api/[YourName]</code> when accessing from a 2sxc-module directly with auto-detect</li>
 <li><code>.../app/[app-folder]/[edition]/api/[YourName]</code> when auto-detect can&#39;t work (external access).</li>
 </ul>
-<p>Read more about <a class="xref" href="../../concepts/cms/polymorph.html">Polymorph</a> and <a href="dotnet-webapi">C# WebApi</a>.</p>
+<p>Read more about <a class="xref" href="../../concepts/cms/polymorph.html">Polymorph</a> and <a class="xref" href="dotnet-webapi.html">C# WebApi</a>.</p>
 <h4 id="webapi-security--permissions">WebAPI Security / Permissions</h4>
 <p>Your C# code determines what security is applied, and what http verbs are supported.</p>
 <h3 id="content-items-services">Content Items Services</h3>
@@ -269,7 +269,7 @@
 </ol>
 <h2 id="read-also">Read also</h2>
 <ul>
-<li><a href="dotnet-webapi">DotNet WebApi</a></li>
+<li><a class="xref" href="dotnet-webapi.html">DotNet WebApi</a></li>
 <li><a class="xref" href="../../concepts/cms/polymorph.html">Concepts: Polymorphisms</a></li>
 </ul>
 <h2 id="demo-app-and-further-links">Demo App and further links</h2>

@@ -211,12 +211,63 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
-                      <a href="../style-guides/style-guides.html" title="Style Guide" class="">Style Guide</a>
+                      <a href="../js/overview.html" title="JavaScript and Html" class="">JavaScript and Html</a>
                         
                         <ul class="nav level2">
                           <li class="">
-                            <a href="../style-guides/style-guide-2020.html" title="Style Guide 2020 WIP" class="">Style Guide 2020 WIP</a>
+                            <span class="expand-stub"></span>
+                            <a href="../js/2sxc.html" title="Global $2sxc" class="">Global $2sxc</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/2sxc.cms.html" title="$2sxc.cms..." class="">$2sxc.cms...</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/sxc.html" title="Instance Sxc" class="">Instance Sxc</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/sxc.manage.html" title="Sxc.manage..." class="">Sxc.manage...</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/sxcewebapi.html" title="Sxc.webapi" class="">Sxc.webapi</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <a href="../js/quicke.html" title="QuickE" class="">QuickE</a>
                           </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/toolbars-and-buttons-intro.html" title="Toolbars" class="">Toolbars</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/toolbars-and-buttons-js.html" title="JS Toolbar API" class="">JS Toolbar API</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/toolbar-settings.html" title="Settings" class="">Settings</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/toolbar-button.html" title="Single Button" class="">Single Button</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/commands.html" title="Commands" class="">Commands</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/command-custom-code.html" title="Custom Code" class="">Custom Code</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/command-content-items.html" title="Content Items" class="">Content Items</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/command-delete.html" title="Delete" class="">Delete</a>
+                                </li>
+                              </ul>  </li>
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
@@ -228,6 +279,15 @@
                           </li>
                           <li class="">
                             <a href="../angularJs/angularjs-1-overview.html" title="AngularJs (old)" class="">AngularJs (old)</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../style-guides/style-guides.html" title="Style Guide" class="">Style Guide</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../style-guides/style-guide-2020.html" title="Style Guide 2020 WIP" class="">Style Guide 2020 WIP</a>
                           </li>
                         </ul>  </li>
                     <li class="">
@@ -258,11 +318,11 @@
 <p>This documentation is a wiki, stored in a github repository. This means that</p>
 <h3 id="edit-online">Edit online</h3>
 <p>You can edit the documentation online directly if you want to - this is ideal for new pages, small changes, correction etc. All you need is a valid github account, and you&#39;re ready to go. Just use the edit-button on every page.</p>
-<p><img src="assets/contribute/Edit-in-a-page.png" alt="Edit buttons"></p>
+<p><img src="/assets/contribute/Edit-in-a-page.png" alt="Edit buttons"></p>
 <h2 id="edit-offline">Edit offline</h2>
 <p>You can download the entire documentation as a git repository, make loads of changes, and commit these again. The git repository is called <code>https://github.com/2sic/2sxc.wiki.git</code></p>
 <p>Right now I&#39;m using <a href="https://code.visualstudio.com/">Visual Studio Code</a> to edit this, and I must say I like the fact that I can make many changes and commit in one go, + the instant preview while typing is really nice: </p>
-<p><img src="assets/contribute/edit-in-vs-code.png" alt="Edit in Visual Studio Code"></p>
+<p><img src="/assets/contribute/edit-in-vs-code.png" alt="Edit in Visual Studio Code"></p>
 <h2 id="working-with-images-and-asset-files">Working with images and asset-files</h2>
 <p>Adding images is very difficult when editing online (there&#39;s no upload feature) but it&#39;s very easy when editing offline, because you can create folders and push them back. Please use the following structure for now</p>
 <ul>
@@ -288,7 +348,7 @@ you can also add nice hover-labels which are consistent using <code>[Link-name]:
 <li><strong>bold</strong> uses two * chars around the text, <em>_italic_</em> uses one _ char, escaping chars uses the \ slash (so any character right after a \ is shown and doesn&#39;t format)</li>
 <li>Linking has many options, better read the <a href="/adam-p/markdown-here/wiki/Markdown-Cheatsheet">manuals</a></li>
 <li>Lists have many options, better read the <a href="/adam-p/markdown-here/wiki/Markdown-Cheatsheet">manuals</a></li>
-<li>Images use a ![alt-text](assets/path/file.ext) syntax</li>
+<li>Images use a ![alt-text](/assets/path/file.ext) syntax</li>
 <li>Note that line-breaks usually don&#39;t cause a line-break in the result (except in code-samples). You can enforce a simple line break by adding two spaces at the end of a line like &quot;check out:  &quot; (two spaces after the &quot;:&quot;) </li>
 </ul>
 <p>Inline code starts and ends with a &quot;`&quot; character - like `code` - it will then look like <code>code</code></p>

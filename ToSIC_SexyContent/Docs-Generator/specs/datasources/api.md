@@ -22,8 +22,8 @@ DataSources have a few important concepts you must first understand:
 ## Providing Data
 To offer data on the `Out` you will usually use the `Provide` method. If you're generating new items, you'll usually use the `AsEntity` method. Docs for these: 
 
-* [DataSource.Provide](dotnet-datasource-api-provide)
-* [DataSource.AsEntity](dotnet-datasource-api-asentity)
+* [DataSource.Provide](xref:Specs.DataSources.Api.Provide)
+* [DataSource.AsEntity](xref:Specs.DataSources.Api.AsEntity)
 
 ## Receiving Data from In for further processing
 if your DataSource performs filtering or similar actions on existing data, then this data comes in on the `In` streams. In such scenarios, you would simply iterate over the `In[streamname].List` and provide the result in your out-stream again. You can find many examples in the EAV DataSources code. 

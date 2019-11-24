@@ -81,8 +81,8 @@ Mostly smaller bugfixes
 
 ### Version 9.10 - Combobox and more DataSources (WIP)
 * [x] Combobox input type allowing a [dropdown with values](xref:Specs.Data.Inputs.String-Dropdown), but also allowing manual typing (to select pre-defined values, but also use Tokens)
-* [x] [StreamMerge DataSource](dotnet-datasource-streammerge)
-* [x] [ItemFilterDuplicates DataSource](dotnet-datasource-itemfilterduplicates)
+* [x] [StreamMerge DataSource](xref:ToSic.Eav.DataSources.StreamMerge)
+* [x] [ItemFilterDuplicates DataSource](xref:ToSic.Eav.DataSources.ItemFilterDuplicates)
 * [x] feature to export Json ContentTypes
 * [x] multiple file-repos which deliver Content-Types, allows for any module to provide additional contenttypes
 

@@ -7,14 +7,14 @@ This documentation is a wiki, stored in a github repository. This means that
 ### Edit online
 You can edit the documentation online directly if you want to - this is ideal for new pages, small changes, correction etc. All you need is a valid github account, and you're ready to go. Just use the edit-button on every page.
 
-![Edit buttons](assets/contribute/Edit-in-a-page.png)
+![Edit buttons](/assets/contribute/Edit-in-a-page.png)
 
 ## Edit offline
 You can download the entire documentation as a git repository, make loads of changes, and commit these again. The git repository is called `https://github.com/2sic/2sxc.wiki.git`
 
 Right now I'm using [Visual Studio Code][vs-code] to edit this, and I must say I like the fact that I can make many changes and commit in one go, + the instant preview while typing is really nice: 
 
-![Edit in Visual Studio Code](assets/contribute/edit-in-vs-code.png)
+![Edit in Visual Studio Code](/assets/contribute/edit-in-vs-code.png)
 
 ## Working with images and asset-files
 Adding images is very difficult when editing online (there's no upload feature) but it's very easy when editing offline, because you can create folders and push them back. Please use the following structure for now
@@ -42,7 +42,7 @@ If you're new to wikis or github comments / documentation, you may be a bit lost
 * **bold** uses two \* chars around the text, _\_italic\__ uses one \_ char, escaping chars uses the \ slash (so any character right after a \\ is shown and doesn't format)
 * Linking has many options, better read the [manuals][git-manual]
 * Lists have many options, better read the [manuals][git-manual]
-* Images use a \!\[alt-text\](assets/path/file.ext) syntax
+* Images use a \!\[alt-text\](/assets/path/file.ext) syntax
 * Note that line-breaks usually don't cause a line-break in the result (except in code-samples). You can enforce a simple line break by adding two spaces at the end of a line like "check out:  " (two spaces after the ":") 
 
 Inline code starts and ends with a "\`" character - like \`code\` - it will then look like `code`

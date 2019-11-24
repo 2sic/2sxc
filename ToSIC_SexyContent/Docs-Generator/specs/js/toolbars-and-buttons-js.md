@@ -8,7 +8,7 @@ When a user is logged on and has edit permissions, he should see buttons to edit
 
 ## How to use
 
-The most common use-case is actually to provide some HTML, which the JavaScript will pick up automatically and convert into a menu. You can read more about this in [Html Toolbars and Buttons](Html-Toolbars-and-Buttons). 
+The most common use-case is actually to provide some HTML, which the JavaScript will pick up automatically and convert into a menu. You can read more about this in [Html Toolbars and Buttons](xref:Specs.Js.Toolbar.Intro). 
 
 You can also generate the html as needed - for example when working with a javascript template in AngularJS, React, Ember etc. Here's a small example:
 
@@ -35,7 +35,7 @@ The rest of the magic lies in the configuration objects which you pass into thes
 
 The following terms help you understand what we're doing:
 
-1. 2sxc has many [commands](Html-Js-Commands) like `new`, `edit` etc. which you can **run** with parameters like:  
+1. 2sxc has many [commands](xref:Specs.Js.Commands) like `new`, `edit` etc. which you can **run** with parameters like:  
 `command = { action: 'new', contentType: 'BlogPost'};`
 3. a **button** will run such a command when clicked, but for it to work, the button must have the command ready, including the necessary parameters. In JavaScript a button is defined like:   
 `btn = { command: { action: "...", ...}, icon: "...", ... };`  
@@ -91,9 +91,9 @@ In most cases you just care about the shorthand. But in advanced cases where you
 
 ## Buttons and Commands
 
-1. [Buttons are explained in more details here](Html-Js-Button)
-1. [Commands which run when a button is pressed are here](Html-Js-Commands)
-1. [Custom commands which run your JS are here](Html-Js-Command-Custom-Code)
+1. [Buttons are explained in more details here](xref:Specs.Js.Toolbar.Buttons)
+1. [Commands which run when a button is pressed are here](xref:Specs.Js.Commands)
+1. [Custom commands which run your JS are here](xref:Specs.Js.Commands.Code)
 
 ## Button group
 
@@ -168,7 +168,7 @@ var tb2 = {
 ```
 
 ## Toolbar settings
-You can customize _hover behavior_, _show behavior_ and more. Read about it in the [toolbar settings](Html-Js-Toolbar-Settings).
+You can customize _hover behavior_, _show behavior_ and more. Read about it in the [toolbar settings](xref:Specs.Js.Toolbar.Settings).
 
 ## Custom Buttons with Custom Commands
 You can easily create custom buttons with custom icons, parameters and even custom scripts. It's not well documented yet, but it's best to just look through the tutorial app below. It's also explained more in the [Html Custom Code][custom-button] 
@@ -184,6 +184,6 @@ You should find some code examples in this demo App
 1. Introduced in 2sxc v01.00
 2. Public API since 2sxc v08.06
 
-[commands]:Html-Js-Commands
+
 [jsapp]:http://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars
 [custom-button]:Html-Js-Command-Custom-Code

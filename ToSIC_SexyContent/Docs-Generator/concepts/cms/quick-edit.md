@@ -42,7 +42,7 @@ Since quickE 2.0 (released in 2sxc 8.7) you can now also configure it a bit. Her
 1. enable / disable module quick-edit
 1. enable / disable inner-block quick edit
 
-Read more about this in the [Html Js documentation](Html-Js-$quickE) page
+Read more about this in the [Html Js documentation](xref:Specs.Js.QuickE) page
 
 
 ## Read also

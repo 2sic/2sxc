@@ -4,7 +4,7 @@ uid: Specs.Js.Sxc.Manage
 # JS: Manage Everything With the `manage` Controller
 
 ## Purpose / Description
-The `manage` object helps you manage content, allowing you to `run(...)` [commands][commands] or to get [buttons or toolbars][html-toolbar]. 
+The `manage` object helps you manage content, allowing you to `run(...)` [commands](xref:Specs.Js.Commands) or to get [buttons or toolbars][html-toolbar]. 
 
 ## How to use
 Each content-block (usually a DNN-Module) has it's own 2sxc-controller, which also gives you a prepared manage-object to work with. Here's an example
@@ -48,7 +48,7 @@ Basically the manage-property _only exists_ when the user has edit permissions, 
 ## Properties and Methods
 We try to keep APIs very light, so all the internal properties/objects are not documented and should not be used. These properties and methods can be treated as stable:
 
-* void `.run(...)` - used to run a [command][commands]
+* void `.run(...)` - used to run a [command](xref:Specs.Js.Commands)
 * string `.getButton(...)` - used to generate HTML for a single button (which when pressed, runs a command) - see [buttons and toolbars][html-toolbar]
 * string `.getToolbar(...)` - used to generate HTML for a toolbar (with buttons, which run commands) - see [buttons and toolbars][html-toolbar]
 
@@ -61,6 +61,6 @@ You should find some code examples in this demo App
 1. Introduced in 2sxc v02.00
 2. Officially released & documented for use in 2sxc v08.06
 
-[commands]:Html-Js-Commands
+
 [html-toolbar]:Html-Toolbars-and-Buttons
 [jsapp]:http://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars

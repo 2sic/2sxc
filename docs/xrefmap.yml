@@ -304,6 +304,51 @@ references:
 - uid: Specs.Home
   name: Specifications of EAV and 2sxc
   href: specs/index.html
+- uid: Specs.Js.$2sxc
+  name: 'JS: The $2sxc Manager'
+  href: specs/js/2sxc.html
+- uid: Specs.Js.$2sxc.cms
+  name: 'JS: The $2sxc.cms API'
+  href: specs/js/2sxc.cms.html
+- uid: Specs.Js.Commands
+  name: 'Html & JS: Calling Commands of the CMS'
+  href: specs/js/commands.html
+- uid: Specs.Js.Commands.Code
+  name: 'Html & Js: Buttons with Custom Code in a Toolbar'
+  href: specs/js/command-custom-code.html
+- uid: Specs.Js.Commands.ContentItems
+  name: 'Html & Js: contentitems Command'
+  href: specs/js/command-content-items.html
+- uid: Specs.Js.Commands.Delete
+  name: 'Html & Js: delete Command'
+  href: specs/js/command-delete.html
+- uid: Specs.Js.Overview
+  name: JavaScript / HTML API Documentation for DNN / 2sxc
+  href: specs/js/overview.html
+- uid: Specs.Js.QuickE
+  name: 'Html & JS: quickE - Quick Edit 2.0'
+  href: specs/js/quicke.html
+- uid: Specs.Js.Sxc
+  name: 'JS: The Module-Instance Sxc Controller'
+  href: specs/js/sxc.html
+- uid: Specs.Js.Sxc.Manage
+  name: 'JS: Manage Everything With the manage Controller'
+  href: specs/js/sxc.manage.html
+- uid: Specs.Js.Sxc.WebApi
+  name: 'JS: The WebApi Helpers on the Sxc Controller'
+  href: specs/js/sxcewebapi.html
+- uid: Specs.Js.Toolbar.Buttons
+  name: 'Html & JS: Button Definitions'
+  href: specs/js/toolbar-button.html
+- uid: Specs.Js.Toolbar.Intro
+  name: 'Html: In-Page Edit Toolbars and Buttons'
+  href: specs/js/toolbars-and-buttons-intro.html
+- uid: Specs.Js.Toolbar.Js
+  name: 'JS: Toolbars and Buttons'
+  href: specs/js/toolbars-and-buttons-js.html
+- uid: Specs.Js.Toolbar.Settings
+  name: 'Html & JS: Toolbar Settings'
+  href: specs/js/toolbar-settings.html
 - uid: Specs.StyleGuide
   name: Style Guide for DNN / 2sxc
   href: specs/style-guides/style-guides.html

@@ -23,7 +23,7 @@ it also include instructions how to export/import data, working with the image r
 1. [Many demo, template and tutorial Apps](http://2sxc.org/en/Apps) are found in the _App Catalog_ on 2sxc.org
 1. [2sxc / EAV Roadmap](2sxc-Roadmap-and-History)
 1. APIs and similar are found in this [wiki](https://github.com/2sic/2sxc/wiki) - you'll see the TOC in the box to the right
-1. [App folder structure](App-folder-structure) and special files
+1. [App folder structure](xref:Specs.App.Folders) and special files
 1. [Style Guide (beta)](Style-Guide-2017) best-practices draft
 
 

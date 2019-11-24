@@ -34,7 +34,7 @@ To make the magic work, these parts are involved:
 
 3. JavaScript on the client looks at the HTML and picks up both the special `<ul>` tags as well as all tags having the `sxc-toolbar` attribute, reads the configuration and generates the necessary html-tags with the buttons and hover-effects. Based on the **context-information** and the **configuration** it will choose if advanced button should appear (like edit-template, which only admins should see). Special hover-placement and other visual things are picked up from the **settings**.
 
-4. If an editor interacts with the menu, each click will result in JavaScript looking at the _closest_ **context-information** in the page, and using this information to run a [command](html-js-commands) like `edit`, `new` or `template-develop`.
+4. If an editor interacts with the menu, each click will result in JavaScript looking at the _closest_ **context-information** in the page, and using this information to run a [command](xref:Specs.Js.Commands) like `edit`, `new` or `template-develop`.
 
 5. When a command has completed, certain code may reload the view, either using ajax or by reloading the page if ajax is not supported by this particular view.
 
@@ -82,7 +82,7 @@ We'll try to provide you with full details of the toolbars for advanced use case
 ### Commands
 This is what is executed when a button is clicked. Commands are things like `edit`. Some commands need additional parameters like `EntityId`, resulting in a command more like `run('edit', {EntityId: 27})`.  Commands can also be run without toolbars, for example from _edit_ links in tables etc.
 
-You can read more about Commands, incl. the full list of current command, parameters and how to create custom commands in the [Commands](Html-Js-Commands) section.
+You can read more about Commands, incl. the full list of current command, parameters and how to create custom commands in the [Commands](xref:Specs.Js.Commands) section.
 
 
 ### Buttons

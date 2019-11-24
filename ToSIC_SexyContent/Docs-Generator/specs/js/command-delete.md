@@ -38,7 +38,7 @@ requires id, title and guid. otherwise the button won't appear
 
 ## Read also
 
-* [commands][commands] 
+* [commands](xref:Specs.Js.Commands) 
 
 ## Demo App and further links
 
@@ -47,4 +47,3 @@ todo
 ## History
 1. Introduced in 2sxc v08.09
 
-[commands]:Html-Js-Commands

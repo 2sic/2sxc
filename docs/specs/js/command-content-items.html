@@ -1,0 +1,416 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Html &amp; Js: contentitems Command | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Html &amp; Js: contentitems Command | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../../concepts/index.html" title="Concepts">Concepts</a>
+                      </li>
+                      <li>
+                          <a href="../../how-to/index.html" title="How To">How To</a>
+                      </li>
+                      <li>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../index.html" title="Introduction" class="">Introduction</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Architecture</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../architecture/architecture.html" title="Architecture" class="">Architecture</a>
+                          </li>
+                          <li class="">
+                            <a href="../architecture/eav-core-data.html" title="EAV Data Models" class="">EAV Data Models</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">DataSources</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../datasources/datasource.html" title="DataSource Basics" class="">DataSource Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/datastream.html" title="DataStream Basics" class="">DataStream Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/linq-guide.html" title="Linq Guide" class="">Linq Guide</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/linq-datasource.html" title="Linq with DataSources" class="">Linq with DataSources</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/list-all.html" title="All DataSources" class="">All DataSources</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/api-asentity.html" title="AsEntity" class="">AsEntity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-configmask.html" title="ConfigMask" class="">ConfigMask</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-ensureconfigurationisloaded.html" title="EnsureConfigurationIsLoaded" class="">EnsureConfigurationIsLoaded</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-provide.html" title="Provide" class="">Provide</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">todo</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a class="">VisualQuery Attribute</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Apps</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../app/app-folder-structure.html" title="Folder Structure" class="">Folder Structure</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Configuration (todo: specs?)</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../configuration/features.html" title="Features" class="">Features</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Data & Input Types</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../data-types/_overview.html" title="Data Types" class="">Data Types</a>
+                          </li>
+                          <li class="">
+                            <a href="../input-types/_inputs-overview.html" title="Input Types" class="">Input Types</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="">Json Format</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-entity.html" title="Json Entity" class="">Json Entity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-content-type.html" title="Json ContentType" class="">Json ContentType</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../js/overview.html" title="JavaScript and Html" class="">JavaScript and Html</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/2sxc.html" title="Global $2sxc" class="">Global $2sxc</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/2sxc.cms.html" title="$2sxc.cms..." class="">$2sxc.cms...</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/sxc.html" title="Instance Sxc" class="">Instance Sxc</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/sxc.manage.html" title="Sxc.manage..." class="">Sxc.manage...</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/sxcewebapi.html" title="Sxc.webapi" class="">Sxc.webapi</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <a href="../js/quicke.html" title="QuickE" class="">QuickE</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/toolbars-and-buttons-intro.html" title="Toolbars" class="">Toolbars</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/toolbars-and-buttons-js.html" title="JS Toolbar API" class="">JS Toolbar API</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/toolbar-settings.html" title="Settings" class="">Settings</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/toolbar-button.html" title="Single Button" class="">Single Button</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/commands.html" title="Commands" class="">Commands</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/command-custom-code.html" title="Custom Code" class="">Custom Code</a>
+                                </li>
+                                <li class="active">
+                                  <a href="../js/command-content-items.html" title="Content Items" class="active">Content Items</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/command-delete.html" title="Delete" class="">Delete</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Angular Dnn-Sxc-Angular</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../angular/dnn-sxc-angular.html" title="Toolbars" class="">Toolbars</a>
+                          </li>
+                          <li class="">
+                            <a href="../angularJs/angularjs-1-overview.html" title="AngularJs (old)" class="">AngularJs (old)</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../style-guides/style-guides.html" title="Style Guide" class="">Style Guide</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../style-guides/style-guide-2020.html" title="Style Guide 2020 WIP" class="">Style Guide 2020 WIP</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Documentation</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../docs/contribute-setup.html" title="Contribute to Code" class="">Contribute to Code</a>
+                          </li>
+                          <li class="">
+                            <a href="../docs/contribute.html" title="Contribute to Docs" class="">Contribute to Docs</a>
+                          </li>
+                          <li class="">
+                            <a href="../docs/doc-tags.html" title="Tags in Docs" class="">Tags in Docs</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Specs.Js.Commands.ContentItems">
+<h1 id="html--js-contentitems-command">Html &amp; Js: contentitems Command</h1>
+
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>This button opens the admin-dialog with all content-items. It has a (beta) feature which also allows you to add filters (since 2sxc 8.7).</p>
+<h2 id="how-to-use">How to use</h2>
+<p>Here&#39;s a basic example showing a 2sxc-toolbar with a custom code:</p>
+<pre><code class="lang-razor">@* Example using hover TagToolbar (recommended) *@
+&lt;div @Edit.TagToolbar(toolbar: new {
+    action = &quot;contentitems&quot;,
+    contentType= &quot;Tag&quot;,
+    filters = new {  ManualWeight = 2 })&gt;
+...
+&lt;/div&gt;
+
+@* Example using inline Toolbar (not recommended) *@
+&lt;div&gt;
+    @Edit.Toolbar(toolbar: new {
+        action = &quot;contentitems&quot;,
+        contentType= &quot;Tag&quot;,
+        filters = new {  ManualWeight = 2 })
+...
+&lt;/div&gt;
+</code></pre><p>This shows a button which opens the table with all <strong>Tag</strong> items and filters for ManualWeight = 2. Let&#39;s try a more complex setup:</p>
+<pre><code class="lang-razor">@* Example using hover TagToolbar (recommended) *@
+&lt;div @Edit.TagToolbar(
+    toolbar: new object[] {
+        new { action = &quot;contentitems&quot;,
+            contentType= &quot;Tag&quot;,
+            filters = new {  ManualWeight = 2 }
+        },
+        new { action = &quot;contentitems&quot;,
+            contentType= &quot;BlogPost&quot;,
+            filters = new {Tags = new[] { tag.Tag } }
+        }
+    },
+    settings: new { show = &quot;always&quot; })&gt;
+...
+&lt;/div&gt;
+</code></pre><p>This shows 2sxc-toolbar with 2 buttons, one opening tag-management (filtered by ManualWeight), the other opens all BlogPosts filtering by Tag. It also has some settings which always show it, even if the mouse is not hovering.</p>
+<h2 id="possible-filters-on-contentitems">Possible filters on contentitems</h2>
+<p>The filters-object is a JS-object with properties. We&#39;re still working on the format, but for now it&#39;s probably</p>
+<ol>
+<li>NumberPropertyName: ##</li>
+<li>StringPropertyName: &quot;...&quot;</li>
+<li>BoolPropertyName: true</li>
+<li>EntityPropertyName: [&quot;title1&quot;, &quot;title2&quot;, ...]</li>
+<li>IsPublished: true</li>
+<li>IsMetadata: true</li>
+</ol>
+<h2 id="read-also">Read also</h2>
+<ul>
+<li><a class="xref" href="commands.html">commands</a></li>
+</ul>
+<h2 id="demo-app-and-further-links">Demo App and further links</h2>
+<ul>
+<li><a href="https://2sxc.org/en/apps/app/mobius-forms">Mobius Forms</a> uses the contentitems command to let the admin see the forms-records for his use case only</li>
+</ul>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in 2sxc v08.06</li>
+<li>Filters introduced in 2sxc v08.08</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/js/command-content-items.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

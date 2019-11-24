@@ -47,7 +47,7 @@ foreach(var file in files)
 
 ## Notes and Clarifications
 
-* all parameters (`stream`, `fileName`, ...) must be named by [convention](convention-named-parameters)
+* all parameters (`stream`, `fileName`, ...) must be named by [convention](xref:HowTo.DynamicCode.NamedParameters)
 * the uploaded files are placed in the container of the field...
 * ...and not added as a link to the file, so you will usually use library fields
 * the field must be a field of type hyperlink, library or wysiwyg, other fields cannot receive files

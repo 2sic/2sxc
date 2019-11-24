@@ -14,7 +14,7 @@ When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into y
 The above example shows two filters finding items and delivering them on the same stream. 
 
 ## Example Using ItemFilterDuplicates
-A common scenario will also combine this using the [ItemFilterDuplicates](DotNet-DataSource-ItemFilterDuplicates), in case various in-streams deliver the same item:
+A common scenario will also combine this using the [ItemFilterDuplicates](xref:ToSic.Eav.DataSources.ItemFilterDuplicates), in case various in-streams deliver the same item:
 
 <img src="/assets/data-sources/stream-merge-with-item-filter-duplicates.png" width="100%">
 

@@ -136,11 +136,11 @@ But you could also do a whole lot more, including custom buttons and code (since
 All the configuration is in the `sxc-toolbar` attribute, which contains two main nodes:
 
 1. `toolbar` - see below
-2. `settings` - see [Toolbar Settings](Html-Js-Toolbar-Settings)
+2. `settings` - see [Toolbar Settings](xref:Specs.Js.Toolbar.Settings)
 
 In the old syntax (before 2sxc 9.40, using the `<ul>` tag, two attributes are handled
 1. `toolbar` or `data-toolbar` - see below
-2. `settings` or `data-settings` - see [Toolbar Settings](Html-Js-Toolbar-Settings)
+2. `settings` or `data-settings` - see [Toolbar Settings](xref:Specs.Js.Toolbar.Settings)
 
 
 ## More Background
@@ -165,7 +165,7 @@ The `toolbar` information is:
 `{ groups: [...], defaults: {...}, params: {...} }`
 
 
-For a full scope of what is possible, you should read the [js toolbar documentation](JavaScript-Toolbars-and-Buttons).
+For a full scope of what is possible, you should read the [js toolbar documentation](xref:Specs.Js.Toolbar.Js).
 
 ## Demo App and further links
 * [JS Manage / Toolbar API Tutorial App](http://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars)

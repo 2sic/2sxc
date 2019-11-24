@@ -47,7 +47,7 @@ Here's a common example: imagine you have a 2sxc-instance (a module showing 2sxc
 ## Notes and Clarifications
 
 ### Enforced Parameter Naming
-To promote long term API stability, we require all parameters except for the first content-item `target` to be named when used - see [convention](convention-named-parameters).
+To promote long term API stability, we require all parameters except for the first content-item `target` to be named when used - see [convention](xref:HowTo.DynamicCode.NamedParameters).
 
 ```html
 <!-- this will work -->

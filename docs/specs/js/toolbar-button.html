@@ -1,0 +1,495 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Html &amp; JS: Button Definitions | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Html &amp; JS: Button Definitions | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../../concepts/index.html" title="Concepts">Concepts</a>
+                      </li>
+                      <li>
+                          <a href="../../how-to/index.html" title="How To">How To</a>
+                      </li>
+                      <li>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../index.html" title="Introduction" class="">Introduction</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Architecture</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../architecture/architecture.html" title="Architecture" class="">Architecture</a>
+                          </li>
+                          <li class="">
+                            <a href="../architecture/eav-core-data.html" title="EAV Data Models" class="">EAV Data Models</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">DataSources</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../datasources/datasource.html" title="DataSource Basics" class="">DataSource Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/datastream.html" title="DataStream Basics" class="">DataStream Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/linq-guide.html" title="Linq Guide" class="">Linq Guide</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/linq-datasource.html" title="Linq with DataSources" class="">Linq with DataSources</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/list-all.html" title="All DataSources" class="">All DataSources</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/api-asentity.html" title="AsEntity" class="">AsEntity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-configmask.html" title="ConfigMask" class="">ConfigMask</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-ensureconfigurationisloaded.html" title="EnsureConfigurationIsLoaded" class="">EnsureConfigurationIsLoaded</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-provide.html" title="Provide" class="">Provide</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">todo</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a class="">VisualQuery Attribute</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Apps</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../app/app-folder-structure.html" title="Folder Structure" class="">Folder Structure</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Configuration (todo: specs?)</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../configuration/features.html" title="Features" class="">Features</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Data & Input Types</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../data-types/_overview.html" title="Data Types" class="">Data Types</a>
+                          </li>
+                          <li class="">
+                            <a href="../input-types/_inputs-overview.html" title="Input Types" class="">Input Types</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="">Json Format</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-entity.html" title="Json Entity" class="">Json Entity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-content-type.html" title="Json ContentType" class="">Json ContentType</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../js/overview.html" title="JavaScript and Html" class="">JavaScript and Html</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/2sxc.html" title="Global $2sxc" class="">Global $2sxc</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/2sxc.cms.html" title="$2sxc.cms..." class="">$2sxc.cms...</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/sxc.html" title="Instance Sxc" class="">Instance Sxc</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/sxc.manage.html" title="Sxc.manage..." class="">Sxc.manage...</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/sxcewebapi.html" title="Sxc.webapi" class="">Sxc.webapi</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <a href="../js/quicke.html" title="QuickE" class="">QuickE</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/toolbars-and-buttons-intro.html" title="Toolbars" class="">Toolbars</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/toolbars-and-buttons-js.html" title="JS Toolbar API" class="">JS Toolbar API</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/toolbar-settings.html" title="Settings" class="">Settings</a>
+                                </li>
+                                <li class="active">
+                                  <a href="../js/toolbar-button.html" title="Single Button" class="active">Single Button</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/commands.html" title="Commands" class="">Commands</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/command-custom-code.html" title="Custom Code" class="">Custom Code</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/command-content-items.html" title="Content Items" class="">Content Items</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/command-delete.html" title="Delete" class="">Delete</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Angular Dnn-Sxc-Angular</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../angular/dnn-sxc-angular.html" title="Toolbars" class="">Toolbars</a>
+                          </li>
+                          <li class="">
+                            <a href="../angularJs/angularjs-1-overview.html" title="AngularJs (old)" class="">AngularJs (old)</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../style-guides/style-guides.html" title="Style Guide" class="">Style Guide</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../style-guides/style-guide-2020.html" title="Style Guide 2020 WIP" class="">Style Guide 2020 WIP</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Documentation</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../docs/contribute-setup.html" title="Contribute to Code" class="">Contribute to Code</a>
+                          </li>
+                          <li class="">
+                            <a href="../docs/contribute.html" title="Contribute to Docs" class="">Contribute to Docs</a>
+                          </li>
+                          <li class="">
+                            <a href="../docs/doc-tags.html" title="Tags in Docs" class="">Tags in Docs</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Specs.Js.Toolbar.Buttons">
+<h1 id="html--js-button-definitions">Html &amp; JS: Button Definitions</h1>
+
+<h2 id="purpose--description">Purpose / Description</h2>
+<p>When you create custom buttons in a floating toolbar you can customize everything including the icon and more. This is explained here. </p>
+<p>Buttons are of html, basically a <code>&lt;a click=&quot;...&quot;&gt;[some-icon]&lt;/a&gt;</code>. When the button is created, it must already know what it&#39;s for, which is why the command must be prepared when the button is created. </p>
+<h2 id="how-to-use">How to use</h2>
+<p>A short example of a slightly customized button definition:</p>
+<pre><code class="lang-html">var btns = [{
+    command: { 
+        action: &quot;new&quot;,
+        contentType: &quot;Category&quot;
+    },
+    title: &quot;create Category&quot;
+}, {
+    command: { 
+        action: &quot;new&quot;,
+        contentType: &quot;Author&quot;
+    },
+    title: &quot;create Author&quot;
+}];
+</code></pre><p>This simple example shows two <code>new</code> buttons creating different kinds of things, and we customized the label so the mouse-over would tell the editor which button is which. </p>
+<p>Let&#39;s get a bit more sophisticated </p>
+<pre><code class="lang-javascript">var btn = {
+    command: { 
+        // some command here
+    },
+    icon: &quot;icon-sxc-code&quot;, 
+    title: &quot;this is my special button&quot;, 
+    classes: &quot;redButton&quot;,
+};
+</code></pre><p>The above example shows all than can currently be configured one a button. </p>
+<p>And here&#39;s a much more complex example. This is the <strong>full</strong> object-structure which the button generator <code>getButton(...)</code> understands:</p>
+<pre><code class="lang-javascript">// full version
+var btn = {
+    title: &quot;some title - ideally from translation table&quot;,
+    icon: &quot;some icon like icon-sxc-bomb&quot;,
+    command: {
+        action: &quot;some action name like new&quot;,
+        moreParamsAsNeeded: &quot;...&quot;
+    },
+    showCondition: someValueOr function(itemSettings) {
+        return true;
+    },
+    classes: &quot;btn-xyz my-class&quot;,
+    dynamicClasses: function(itemSettings) {
+        if( (new Date()).getDay() === 1 )
+            return &quot;color-monday&quot;;
+    }
+};
+
+// typically more compact edition (will be expanded at runtime)
+var btn2 = {
+    title: &quot;my button!&quot;,
+    icon: &quot;icon-sxc-list&quot;,
+    action: &quot;layout&quot;
+};
+
+// or the totally compact edition
+var btn3 = &quot;layout&quot;;
+</code></pre><h2 id="some-functioning-code">Some functioning code</h2>
+<p>You may wonder how to actually use this. Here&#39;s an JSON example:</p>
+<pre><code class="lang-html">&lt;p class=&quot;sc-element&quot;&gt;
+    mouse over this to see inline-json version
+    &lt;ul class=&quot;sc-menu&quot; data-toolbar=&#39;[{
+            &quot;command&quot;: { 
+                &quot;action&quot;: &quot;new&quot;,
+                &quot;contentType&quot;: &quot;Category&quot;
+            },
+            &quot;title&quot;: &quot;create Category&quot;
+        }, {
+            &quot;command&quot;: { 
+                &quot;action&quot;: &quot;new&quot;,
+                &quot;contentType&quot;: &quot;Author&quot;
+            },
+            &quot;title&quot;: &quot;create Author&quot;
+    }]&#39;&gt;&lt;/ul&gt;
+&lt;/p&gt;
+</code></pre><p>Here&#39;s a more sophisticated (but also more reusable) example:</p>
+<pre><code class="lang-html">&lt;p class=&quot;sc-element&quot;&gt;
+    mouse over this to see the js toolbar generated by the buttons-list
+    &lt;toolbars2Buttons&gt;&lt;/toolbars2Buttons&gt;
+&lt;/p&gt;
+&lt;script&gt;
+    var toolbars2Buttons =  [{
+            command: { 
+                action: &quot;new&quot;,
+                contentType: &quot;Category&quot;
+            },
+            title: &quot;create Category&quot;
+        }, {
+            command: { 
+                action: &quot;new&quot;,
+                contentType: &quot;Author&quot;
+            },
+            title: &quot;create Author&quot;
+    }];
+
+    // note that we cannot create the toolbars before the page-onready. Because of this
+    // our code which creates the toolbar must be delayed, like in a $(our-code);
+    $(function(){
+        if(typeof $2sxc != &quot;undefined&quot;)   // continue if $2sxc exists; it may be missing in non-edit modes
+            $(&quot;toolbars2Buttons&quot;).each(function(index, element){
+                var controller = $2sxc(element);
+                if(!controller.isEditMode())    // check if this specific module currently allows editing
+                    return;
+
+                var toolbar = controller.manage.getToolbar(toolbars2Buttons);
+                $(element).replaceWith(toolbar);
+            });
+    });
+&lt;/script&gt;
+</code></pre><h2 id="how-it-works">How it works</h2>
+<p>Buttons are used in toolbars all the time, and before they are rendered, the must be fully configured/expanded, as shown in the larger example. Internally the button is built with whatever is given, and anything not defined yet is automatically filled with the defaults. The defaults are taken from the <a href="https://github.com/2sic/2sxc-ui/blob/master/src/inpage/commands/commands.definitions.js">commands definitions</a>. </p>
+<p>Here&#39;s how the <em>get defaults</em> works: </p>
+<ol>
+<li>if all that is knows about a button is the name like <code>var btn = &quot;new&quot;</code>, then it gets <code>all</code> the configuration from the defaults</li>
+<li>if some properties are known, like <code>var btn = { command: {action: &quot;new&quot;}, icon: &quot;myicon&quot; }</code>, then only the missing properties are taken from the defaults.</li>
+</ol>
+<p>Note that retrieving defaults requires the button to know which command it&#39;s for, so the name of the command is essential. </p>
+<h2 id="the-button-properties">The Button Properties</h2>
+<ol>
+<li>object <code>command</code> the internal command which will be called, should contain both the name and the parameters like <code>{ action: &quot;new&quot;, contentType: &quot;BlogPost&quot;}</code> see also <a class="xref" href="commands.html">commands</a></li>
+<li>string <code>icon</code> a css class giving the button the icon. It can be one of the icons 2sxc provides, or it can be your own - just be sure to include a CSS &amp; font which resolves the icon</li>
+<li>string <code>title</code> a text which is shown on mouse-over. Note that 2sxc will try to run it through the translator, so you can also use placeholders like <code>Toolbar.Metadata</code></li>
+<li>string <code>classes</code> comma separated list of class-names like <code>makeRed,glowHover</code></li>
+<li>function <code>dynamicClasses(settings)</code> can be used to dynamically build classes depending on the situation</li>
+<li>bool/function <del><code>showCondition</code></del> (<em>API still experimental</em>) - used to dynamically choose if this button should be shown or not</li>
+<li>bool <del><code>disabled</code></del> (<em>API still experimental</em>) would disable the click on a button</li>
+<li>bool <code>partOfPage</code> (<em>API still experimental</em>, <em>new in 2sxc 9.5</em>) determines if resulting changes should effect the <a class="xref" href="../../concepts/cms/dnn-evoq-page-publishing.html">Evoq/DNN Page Publishing</a> - note that it only effects the page-lifecyle, if the resulting dialogs and APIs respect this setting</li>
+</ol>
+<h2 id="some-more-notes">Some more Notes</h2>
+<p>Because the button is often passed around as plain text/html, it can&#39;t rely on hidden variables to keep track of anything. This is why the <code>onclick</code> is so verbose, like <code>onclick=&quot;$2sxc(4030).manage.run({&quot;action&quot;: &quot;edit&quot;, &quot;entityId&quot;: 42 })</code>. This is to ensure it always survives the text-round-trip. </p>
+<h2 id="demo-app-and-further-links">Demo App and further links</h2>
+<p>You should find some code examples in this demo App</p>
+<ul>
+<li><a href="http://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars">JS Manage / Toolbar API Tutorial App</a></li>
+</ul>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in 2sxc 08.06</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/js/toolbar-button.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

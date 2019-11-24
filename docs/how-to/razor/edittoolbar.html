@@ -238,11 +238,11 @@
 <p>The <code>Edit.Toolbar()</code> has these parameters </p>
 <ol>
 <li><code>target</code> a <a class="xref" href="../dynamic-code/entity.html">DynamicEntity</a> content-item, <em>optional</em><br>this is a content item which will be affected by the toolbar</li>
-<li><code>actions</code> string, <em>optional, must be <a href="convention-named-parameters">named</a></em><br>this is a comma-separated string overriding the default buttons which the toolbar will create, containing <a href="Html-Js-Commands">command names</a>. </li>
-<li><code>contentType</code> string, <em>optional, must be <a href="convention-named-parameters">named</a></em><br>this is necessary if you want a <em>new</em> button which would open the dialog to create a new item, and you don&#39;t have a target-item which already tells the system what type to use. This allows you to create a button for a new &quot;Category&quot; and another button for a new &quot;BlogPost&quot; etc.</li>
-<li><code>prefill</code> object, <em>optional, must be <a href="convention-named-parameters">named</a></em><br>allows a <em>new</em> dialog to receive values as a prefill, for example to already specify a date, title, category, etc.</li>
-<li><code>toolbar</code> object, <em>optional, must be <a href="convention-named-parameters">named</a></em> (v08.06+)<br>a full toolbar configuration object - see the <a href="Html-Toolbars-and-Buttons">JS documentation for Toolbar</a>. If you use this, you cannot also specify <em>actions</em>, <em>contentType</em> or <em>prefill</em> as those would want to configure the same information. </li>
-<li><code>settings</code> object, <em>optional, must be <a href="convention-named-parameters">named</a></em> (v08.06+)<br>the settings used by a toolbar like alignment - see the <a href="Html-Js-Toolbar-Settings">JS documentation for settings</a></li>
+<li><code>actions</code> string, <em>optional, must be <a class="xref" href="../dynamic-code/use-named-parameters.html">named</a></em><br>this is a comma-separated string overriding the default buttons which the toolbar will create, containing <a class="xref" href="../../specs/js/commands.html">command names</a>. </li>
+<li><code>contentType</code> string, <em>optional, must be <a class="xref" href="../dynamic-code/use-named-parameters.html">named</a></em><br>this is necessary if you want a <em>new</em> button which would open the dialog to create a new item, and you don&#39;t have a target-item which already tells the system what type to use. This allows you to create a button for a new &quot;Category&quot; and another button for a new &quot;BlogPost&quot; etc.</li>
+<li><code>prefill</code> object, <em>optional, must be <a class="xref" href="../dynamic-code/use-named-parameters.html">named</a></em><br>allows a <em>new</em> dialog to receive values as a prefill, for example to already specify a date, title, category, etc.</li>
+<li><code>toolbar</code> object, <em>optional, must be <a class="xref" href="../dynamic-code/use-named-parameters.html">named</a></em> (v08.06+)<br>a full toolbar configuration object - see the <a class="xref" href="../../specs/js/toolbars-and-buttons-intro.html">JS documentation for Toolbar</a>. If you use this, you cannot also specify <em>actions</em>, <em>contentType</em> or <em>prefill</em> as those would want to configure the same information. </li>
+<li><code>settings</code> object, <em>optional, must be <a class="xref" href="../dynamic-code/use-named-parameters.html">named</a></em> (v08.06+)<br>the settings used by a toolbar like alignment - see the <a class="xref" href="../../specs/js/toolbar-settings.html">JS documentation for settings</a></li>
 </ol>
 <h2 id="the-toolbar-actions">The Toolbar Actions</h2>
 <p><em>Note:</em> at the moment, the buttons are grouped into bundles like</p>
@@ -297,7 +297,7 @@
 </ol>
 <h2 id="notes-and-clarifications">Notes and Clarifications</h2>
 <h3 id="enforced-parameter-naming">Enforced Parameter Naming</h3>
-<p>To promote long term API stability, we require all parameters except for the first content-item <code>target</code> to be <a href="convention-named-parameters">named</a> when used.</p>
+<p>To promote long term API stability, we require all parameters except for the first content-item <code>target</code> to be <a class="xref" href="../dynamic-code/use-named-parameters.html">named</a> when used.</p>
 <pre><code class="lang-html">&lt;!-- this will work --&gt;
 @Edit.Toolbar(target: postItem, actions: &quot;add,edit,more&quot;)
 @Edit.Toolbar(postItem, actions: &quot;add&quot;)
