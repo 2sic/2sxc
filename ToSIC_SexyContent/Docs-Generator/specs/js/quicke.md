@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.QuickE
+---
 # Html & JS: quickE - Quick Edit 2.0
 
 ## Purpose / Description

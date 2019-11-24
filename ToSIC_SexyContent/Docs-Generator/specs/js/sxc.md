@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.Sxc
+---
 # JS: The Module-Instance Sxc Controller
 
 ## Purpose / Description

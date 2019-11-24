@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.Toolbar.Js
+---
 # JS: Toolbars and Buttons
 
 ## Purpose / Description

@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.Sxc.WebApi
+---
 # JS: The WebApi Helpers on the Sxc Controller
 
 ## Purpose / Description

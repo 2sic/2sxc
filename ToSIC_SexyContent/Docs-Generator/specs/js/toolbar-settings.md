@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.Toolbar.Settings
+---
 # Html & JS: Toolbar Settings
 
 ## Purpose / Description

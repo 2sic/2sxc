@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.Commands.Delete
+---
 # Html & Js: delete Command
 
 ## Purpose / Description 

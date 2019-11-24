@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.$2sxc
+---
 # JS: The $2sxc Manager
 
 ## Purpose / Description

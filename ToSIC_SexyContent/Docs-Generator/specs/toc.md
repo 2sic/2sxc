@@ -34,9 +34,21 @@
 ###[Json Entity](xref:Specs.Data.Formats.JsonV1-Entity)
 ###[Json ContentType](xref:Specs.Data.Formats.JsonV1-ContentType)
 
-# JavaScript
-## Overview
-## 
+#[JavaScript and Html](xref:Specs.Js.Overview)
+##[$2sxc Manager](xref:Specs.Js.$2sxc)
+###[$2sxc.cms...](xref:Specs.Js.$2sxc.cms)
+##[Sxc Instance](xref:Specs.Js.Sxc)
+###[Sxc.manage...](xref:Specs.Js.Sxc.Manage)
+###[Sxc.webapi](xref:Specs.Js.Sxc.WebApi)
+##[QuickE](xref:Specs.Js.QuickE)
+##[Toolbars](xref:Specs.Js.Toolbar.Intro)
+###[JS Toolbar API](xref:Specs.Js.Toolbar.Js)
+###[Settings](xref:Specs.Js.Toolbar.Settings)
+###[Single Button](xref:Specs.Js.Toolbar.Button)
+##[Commands](xref:Specs.Js.Commands)
+###[Custom Code](xref:Specs.Js.Commands.Code)
+###[Content Items](xref:Specs.Js.Commands.ContentItems)
+###[Delete](xref:Specs.Js.Commands.Delete)
 
 # Angular Dnn-Sxc-Angular
 ##[Toolbars](xref:Specs.Angular.Toolbars)

@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.Commands.Code
+---
 # Html & Js: Buttons with Custom Code in a Toolbar
 
 ## Purpose / Description

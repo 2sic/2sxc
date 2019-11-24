@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.Commands
+---
 # Html & JS: Calling Commands of the CMS
 
 ## Purpose / Description

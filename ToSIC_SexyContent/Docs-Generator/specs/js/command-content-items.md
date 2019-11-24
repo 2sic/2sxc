@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.Commands.ContentItems
+---
 # Html & Js: contentitems Command
 
 ## Purpose / Description

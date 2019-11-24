@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.Toolbar.Button
+---
 # Html & JS: Button Definitions
 
 ## Purpose / Description

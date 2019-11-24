@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.Overview
+---
 # JavaScript / HTML API Documentation for DNN / 2sxc
 
 You can create awesome solutions, customizing the edit-experience and working with 2sxc-data in your javascript.

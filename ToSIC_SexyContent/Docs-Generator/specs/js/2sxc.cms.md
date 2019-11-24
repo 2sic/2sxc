@@ -1,4 +1,7 @@
-# JS: The $2sxc.cms API _new in 9.30_
+---
+uid: Specs.Js.$2sxc.cms
+---
+# JS: The $2sxc.cms API
 
 ## Purpose / Description
 

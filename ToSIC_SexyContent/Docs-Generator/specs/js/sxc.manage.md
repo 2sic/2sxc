@@ -1,3 +1,6 @@
+---
+uid: Specs.Js.Sxc.Manage
+---
 # JS: Manage Everything With the `manage` Controller
 
 ## Purpose / Description
