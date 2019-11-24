@@ -30,7 +30,8 @@
 ##[Folder Structure](xref:Specs.App.Folders)
 
 # Configuration
-##[Features](xref:Specs.Features)
+##[Features Concept](xref:Concepts.Features)
+##[Features API](xref:Specs.Features)
 
 # Data & Input Types
 ##[Data Types](xref:Specs.Data.Type.Overview)
