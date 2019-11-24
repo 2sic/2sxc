@@ -13,6 +13,10 @@ references:
 - uid: App.Blog
   name: Blog App
   href: http://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke
+- uid: App.TimelineJs
+  name: TimelineJs App
+  href: http://2sxc.org/en/apps/app/timelinejs-app-for-dnn-dotnetnuke
+
 
 # Blogs
 - uid: Blog.CustomDataSource

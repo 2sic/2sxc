@@ -127,8 +127,8 @@ _Till we find time to document more, please consult the [source][source]_
 ## Demo App and further links
 
 You should find some code examples in this demo App
-* [TimeLineJS][TimeLineJS]
-* all the JS-apps including AngularJS in the [app-catalog][catalog]
+* [TimeLineJS](xref:App.TimelineJs)
+* all the JS-apps including AngularJS in the [app-catalog](xref:AppsCatalog)
 
 More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Manuals/Feature/feature/2683)
 
@@ -139,7 +139,4 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 [F12]: http://2sxc.org/en/blog/post/debugging-javascript-errors-with-a-modern-browser-and-f12-(200)
 [asset-optimization]:Template-Assets
 [content-blocks]: http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
-[TimeLineJS]: http://2sxc.org/en/apps/app/timelinejs-app-for-dnn-dotnetnuke
-[catalog]: http://2sxc.org/en/apps
 [source]: https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js
-[manage]: JavaScript-Manage-Controller

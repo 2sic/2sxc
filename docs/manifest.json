@@ -26,18 +26,6 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "api/index.md",
-      "output": {
-        ".html": {
-          "relative_path": "api/index.html",
-          "hash": "CA5UdYi9HNjsEcIq7seZnQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
       "source_relative_path": "articles/how-to/dynamic-entity.md",
       "output": {
         ".html": {
@@ -1616,15 +1604,12 @@
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "concepts/cms/inner-content.md",
       "output": {
         ".html": {
           "relative_path": "concepts/cms/inner-content.html",
-          "hash": "qGpDX99hTE9EKdAi03rtUw=="
+          "hash": "dyH1yFu8ipElp6H6MjPWfA=="
         }
       },
       "is_incremental": false,
@@ -1802,15 +1787,12 @@
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "how-to/dotnet-razor-csharp-overview.md",
       "output": {
         ".html": {
           "relative_path": "how-to/dotnet-razor-csharp-overview.html",
-          "hash": "DbcOxMH1RaQ4tu/aHksJTw=="
+          "hash": "9Dmj3EmnPmDcOP+2QYVq8Q=="
         }
       },
       "is_incremental": false,
@@ -1853,22 +1835,19 @@
       "output": {
         ".html": {
           "relative_path": "how-to/dynamic-code/object-app.html",
-          "hash": "vmLYfQT8GB/zIvl9dojXTw=="
+          "hash": "V1ucbcO5i5owAFSvpKHDmw=="
         }
       },
       "is_incremental": false,
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "how-to/dynamic-code/object-data.md",
       "output": {
         ".html": {
           "relative_path": "how-to/dynamic-code/object-data.html",
-          "hash": "+4dOjz5F5fVt30QLvY5SCw=="
+          "hash": "7GlNJPz7VVrqVjsWqhW2ZA=="
         }
       },
       "is_incremental": false,
@@ -2037,15 +2016,12 @@
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "how-to/razor/templates.md",
       "output": {
         ".html": {
           "relative_path": "how-to/razor/templates.html",
-          "hash": "QXvhGaJBIjCr7fTUapmc9A=="
+          "hash": "37c/65X6yxpgKOeiT3pXww=="
         }
       },
       "is_incremental": false,
@@ -3766,6 +3742,9 @@
       "version": ""
     },
     {
+      "log_codes": [
+        "DuplicateUids"
+      ],
       "type": "ManagedReference",
       "source_relative_path": "obj/api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.yml",
       "output": {
@@ -3976,15 +3955,12 @@
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "specs/data-types/entity.md",
       "output": {
         ".html": {
           "relative_path": "specs/data-types/entity.html",
-          "hash": "0ciog0HWab2NbzHBgVYzEg=="
+          "hash": "aPe9B7nRHK+zzq/hIxrLKA=="
         }
       },
       "is_incremental": false,
@@ -4095,7 +4071,7 @@
       "output": {
         ".html": {
           "relative_path": "specs/datasources/api.html",
-          "hash": "1vnLC6AWxIvwz8xrskyfnQ=="
+          "hash": "zYU5saUC3sdXTm7IRxneRA=="
         }
       },
       "is_incremental": false,
@@ -4144,45 +4120,36 @@
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "specs/datasources/datastream.md",
       "output": {
         ".html": {
           "relative_path": "specs/datasources/datastream.html",
-          "hash": "6qToqXsJq0Y/RhvuZBUHog=="
+          "hash": "DZt+7HjRbLjGmbJFf5cbaA=="
         }
       },
       "is_incremental": false,
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "specs/datasources/linq-datasource.md",
       "output": {
         ".html": {
           "relative_path": "specs/datasources/linq-datasource.html",
-          "hash": "GLwkYEsTeA9KQqJpiH8/Eg=="
+          "hash": "fpKsBoyNkgtKW98E4R8QJg=="
         }
       },
       "is_incremental": false,
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "specs/datasources/linq-guide.md",
       "output": {
         ".html": {
           "relative_path": "specs/datasources/linq-guide.html",
-          "hash": "CER5V1+vHySBTKm7oKGxLA=="
+          "hash": "Qx9nbBeyCdOThZW4fHlUZw=="
         }
       },
       "is_incremental": false,
@@ -4546,7 +4513,7 @@
       "output": {
         ".html": {
           "relative_path": "specs/js/2sxc.html",
-          "hash": "79InWXur8RS6SrclTLiC2Q=="
+          "hash": "2T9E56O8pOtDhanh1xwd6w=="
         }
       },
       "is_incremental": false,
@@ -4628,30 +4595,24 @@
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "specs/js/sxc.manage.md",
       "output": {
         ".html": {
           "relative_path": "specs/js/sxc.manage.html",
-          "hash": "fAyE3Ay8w+qf+A/d8ZW99A=="
+          "hash": "ScqgXw6jH5I88tXHe/ugtQ=="
         }
       },
       "is_incremental": false,
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "specs/js/sxc.md",
       "output": {
         ".html": {
           "relative_path": "specs/js/sxc.html",
-          "hash": "KDnucfOWUBFkH8V081nzQg=="
+          "hash": "AP9WREjoA64Nyx/3zVN69g=="
         }
       },
       "is_incremental": false,
@@ -4663,7 +4624,7 @@
       "output": {
         ".html": {
           "relative_path": "specs/js/sxcewebapi.html",
-          "hash": "DaXxPdlTgau1B+JMqgj3tg=="
+          "hash": "GEFh5ps9El3YW9kBiHfXaQ=="
         }
       },
       "is_incremental": false,
@@ -4785,24 +4746,24 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
-          "incrementalPhase": "build",
-          "total_file_count": 175,
-          "skipped_file_count": 170
-        },
-        "ConceptualDocumentProcessor": {
-          "can_incremental": true,
-          "incrementalPhase": "build",
-          "total_file_count": 122,
-          "skipped_file_count": 118
-        },
         "ResourceDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
           "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 175,
+          "skipped_file_count": 175
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 121,
+          "skipped_file_count": 117
         }
       }
     },

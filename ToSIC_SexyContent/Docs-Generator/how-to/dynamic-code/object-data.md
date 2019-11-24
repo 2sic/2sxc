@@ -31,7 +31,7 @@ In all Razor-templates and also the web-api files, the `Data` object is already 
 
 * the foreach will loop through all items of the data in the _Stream_ **Default** - read more about streams below
 * the var post is the inner variable containing the current item
-* the AsDynamic will ensure that the items we're working with are easy to code with, because they are [Dynamic Entities](DotNet-DynamicEntity)
+* the AsDynamic will ensure that the items we're working with are easy to code with, because they are [Dynamic Entities](xref:Articles.DynamicEntity)
 
 
 ## The Streams in a Data Object

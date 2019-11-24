@@ -316,7 +316,7 @@
 <h1 id="datastream-basics-idatastream">DataStream Basics (IDataStream)</h1>
 
 <h2 id="purpose--description">Purpose / Description</h2>
-<p>DataStreams are objects which behave like a table, delivering a bunch of content-items. Common examples in <a href="Razor-Templates">Razor-templates</a> are:</p>
+<p>DataStreams are objects which behave like a table, delivering a bunch of content-items. Common examples in <a class="xref" href="../../how-to/razor/templates.html">Razor-templates</a> are:</p>
 <ol>
 <li>the <a class="xref" href="../../how-to/dynamic-code/object-data.html">Data[&quot;Default&quot;]</a> is a data-stream containing all content-items assigned to this template, ready to show</li>
 <li>the <a class="xref" href="../../how-to/dynamic-code/object-app.html">App.Data[&quot;Tag&quot;]</a> is a data-stream containing all tag-items in the entire app.</li>
@@ -329,7 +329,7 @@
         &lt;li&gt;@AsDynamic(person).FullName&lt;/li&gt;
     }
 &lt;/ol&gt;
-</code></pre><p>The <code>@foreach</code> will go through all the items. Each item is of the type <a href="DotNet-Entity">IEntity</a>. To make it easier to template, we convert it to a <a href="DotNet-DynamicEntity">Dynamic Entity</a> using <code>AsDynamic</code> and then we can just show the name with <code>.FullName</code>. </p>
+</code></pre><p>The <code>@foreach</code> will go through all the items. Each item is of the type <a class="xref" href="../../how-to/dynamic-code/entity.html">IEntity</a>. To make it easier to template, we convert it to a <a class="xref" href="../../articles/how-to/dynamic-entity.html">Dynamic Entity</a> using <code>AsDynamic</code> and then we can just show the name with <code>.FullName</code>. </p>
 <p>In most cases we will need the loop-item a lot, and would preferr to not write <code>AsDynamic</code> every time. Because of this, we usually write the <code>AsDynamic</code> in the Loop, like this:</p>
 <pre><code class="lang-c#">&lt;ol&gt;
     @foreach(var person in AsDynamic(Data[&quot;Default&quot;]))

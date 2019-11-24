@@ -210,9 +210,9 @@ layout-changing apps like the <a class="xref" href="http://2sxc.org/en/apps/app/
 <p>For <em>Inner Content</em> to work, the following parts play together:</p>
 <ol>
 <li><strong>Data storage</strong>: you need fields in your content-type to link to the external content blocks. Just create entity-fields and use the type <em>Content Block Items</em>. In many cases you also want to hide the field because it&#39;s not important to the content-editor. Just go to the field-settings and set <em>Visible in Edit UI</em> to off. </li>
-<li><strong>Content-Block rendering</strong> in the templates, using the <a href="Razor-Content-Blocks">Razor API</a> - it is prepared both for the standalone-area-mode as well as the merge-with-wysiwyg-mode. </li>
+<li><strong>Content-Block rendering</strong> in the templates, using the <a class="xref" href="../../how-to/razor/blocks.html">Razor API</a> - it is prepared both for the standalone-area-mode as well as the merge-with-wysiwyg-mode. </li>
 <li><strong>In-Page Editing</strong>: to allow the editor to add / edit content-blocks in the normal view, the UI must support it. This is handeled automatically by <a class="xref" href="quick-edit.html">Quick-Edit</a>. </li>
-<li>To do the in-page Editing, quickE needs to know some <strong>context information</strong> (what field to store the links in, etc.), provided in an HTML-attribute. It&#39;s either rendered in automatically when using the <a href="Razor-Content-Blocks">Razor commands</a> or you can manually place them using [context attributes](xref:Razor.ContextAttributes].</li>
+<li>To do the in-page Editing, quickE needs to know some <strong>context information</strong> (what field to store the links in, etc.), provided in an HTML-attribute. It&#39;s either rendered in automatically when using the <a class="xref" href="../../how-to/razor/blocks.html">Razor commands</a> or you can manually place them using [context attributes](xref:Razor.ContextAttributes].</li>
 <li>If you want the <strong>WYSIWYG-integration</strong> the wysiwyg must know which field to use to manage the linked content-blocks. This is simply done by convention: as soon as a content-block field follows right after a wysiwyg-field, they will be linked and the button will appear. This also works it the content-block field is set to invisible. </li>
 </ol>
 <h2 id="read-also">Read also</h2>

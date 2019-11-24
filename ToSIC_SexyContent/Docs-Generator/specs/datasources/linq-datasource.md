@@ -3,7 +3,7 @@ uid: Specs.DataSources.Linq
 ---
 # Querying Data and Data Sources with code and LINQ
 
-To get started, we recommend you read the [LINQ Guide](dotnet-query-linq-guide) and play around with the [Razor Tutorial App](https://2sxc.org/en/apps/app/razor-tutorial)
+To get started, we recommend you read the [LINQ Guide](xref:Specs.DataSources.LinqGuide) and play around with the [Razor Tutorial App](https://2sxc.org/en/apps/app/razor-tutorial)
 
 These common (extension) methods can be used on lists from 2sxc data streams (they all inherit from types implementing [IEnumerable](https://msdn.microsoft.com/de-de/library/system.collections.ienumerable(v=vs.110).aspx)):
 * [.Where()](#where) - filter a list (IEnumerable) based on a specific criteria
@@ -19,7 +19,7 @@ For a full list of all `System.Linq` methods, check out the [methods of IEnumera
 
 ## Using Statements
 
-As explained in the [guide](dotnet-query-linq-guide) we recommend the following using statements in Razor:
+As explained in the [guide](xref:Specs.DataSources.LinqGuide) we recommend the following using statements in Razor:
 
 ```razor
 @using System.Linq;

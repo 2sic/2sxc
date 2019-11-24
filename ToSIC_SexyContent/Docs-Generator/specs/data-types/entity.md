@@ -52,7 +52,7 @@ If the user said a book has 2 authors:
 
 Then it's sometimes usefull to preserve the order - in this case Daniel was probably the _main author_ and Abraham helped out a bit. To allow for this, the **Entity** field will keep the order of items as they were added. 
 
-Side-effect: Sometimes you want to have an A-Z order when showing items. As the order is not auto-sorted, you will have to do this yourself if you want to have them sorted. Use [LINQ](dotnet-query-linq) to do that. 
+Side-effect: Sometimes you want to have an A-Z order when showing items. As the order is not auto-sorted, you will have to do this yourself if you want to have them sorted. Use [LINQ](xref:Specs.DataSources.Linq) to do that. 
 
 
 ## Read also

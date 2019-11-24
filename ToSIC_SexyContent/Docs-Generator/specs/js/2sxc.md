@@ -106,7 +106,7 @@ $(function () {
 })
 ```
 
-You can also find an example of finding all of our nodes and initializing them in the [TimeLineJS App][TimeLineJS]. If you're interested, here's the [js-initializer](https://github.com/2sic/app-TimeLineJS/blob/master/assets/scripts.js).  
+You can also find an example of finding all of our nodes and initializing them in the [TimeLineJS App](xref:App.TimelineJs). If you're interested, here's the [js-initializer](https://github.com/2sic/app-TimeLineJS/blob/master/assets/scripts.js).  
 
 ## Everything about the Module-Level `sxc` Controller
 In the [module sxc controller](xref:Specs.Js.Sxc) you'll read about:
@@ -126,7 +126,7 @@ Each template that needs the $2sxc-file when not logged in must include it, to b
 
 1. if the file is included multiple times, it will only execute once
 2. if the file is included [minified][asset-optimization] and unminified, it too will only be executed once
-3. if you need to debug the JS for whatever reason with [F12 in the browser][F12] a sourcemap is included
+3. if you need to debug the JS for whatever reason with [F12 in the browser](http://2sxc.org/en/blog/post/debugging-javascript-errors-with-a-modern-browser-and-f12-(200)) a sourcemap is included
 4. for more advanced debuging, just include the unminified version
 
 Note that the entire code is packed in an IIFE, so the only global variable created is the `$2sxc`.
@@ -169,8 +169,8 @@ _Till we find time to document more, please consult the [source][source]_
 ## Demo App and further links
 
 You should find some code examples in this demo App
-* [TimeLineJS][TimeLineJS]
-* all the JS-apps including AngularJS in the [app-catalog][catalog]
+* [TimeLineJS](xref:App.TimelineJs)
+* all the JS-apps including AngularJS in the [app-catalog](xref:AppsCatalog)
 
 More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Manuals/Feature/feature/2683)
 
@@ -179,10 +179,6 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 1. Introduced in 2sxc 04.00
 1. Enhanced with `cms` (see [cms](xref:Specs.Js.Sxc.Cms)) in 9.30
 
-[F12]: http://2sxc.org/en/blog/post/debugging-javascript-errors-with-a-modern-browser-and-f12-(200)
 [asset-optimization]:Template-Assets
 [content-blocks]: http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
-[TimeLineJS]: http://2sxc.org/en/apps/app/timelinejs-app-for-dnn-dotnetnuke
-[catalog]: http://2sxc.org/en/apps
 [source]: https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js
-[manage]: JavaScript-Manage-Controller

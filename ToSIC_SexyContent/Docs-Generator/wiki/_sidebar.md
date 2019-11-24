@@ -97,7 +97,7 @@ This is where you can find things like...
     </summary>
 
 * [C# API Overview](DotNet-Razor-CSharp-Overview)
-* [LINQ tipps](dotnet-query-linq)
+* [LINQ tipps](xref:Specs.DataSources.Linq)
 * [Using objects from non-2sxc code](dotnet-external-use)
 * [WebApi](xref:HowTo.WebApi)
 * [Features API](dotnet-features)

@@ -5,7 +5,7 @@ uid: Specs.DataSources.DataStream
 # DataStream Basics (IDataStream)
 
 ## Purpose / Description
-DataStreams are objects which behave like a table, delivering a bunch of content-items. Common examples in [Razor-templates](Razor-Templates) are:
+DataStreams are objects which behave like a table, delivering a bunch of content-items. Common examples in [Razor-templates](xref:HowTo.Razor.Templates) are:
 
 1. the [Data["Default"]](xref:HowTo.DynamicCode.Data) is a data-stream containing all content-items assigned to this template, ready to show
 2. the [App.Data["Tag"]](xref:HowTo.DynamicCode.App) is a data-stream containing all tag-items in the entire app.
@@ -22,7 +22,7 @@ The most commen uses will loop through all items in such a stream and show them.
     }
 </ol>
 ```
-The `@foreach` will go through all the items. Each item is of the type [IEntity](DotNet-Entity). To make it easier to template, we convert it to a [Dynamic Entity](DotNet-DynamicEntity) using `AsDynamic` and then we can just show the name with `.FullName`. 
+The `@foreach` will go through all the items. Each item is of the type [IEntity](xref:HowTo.DynamicCode.Entity). To make it easier to template, we convert it to a [Dynamic Entity](xref:Articles.DynamicEntity) using `AsDynamic` and then we can just show the name with `.FullName`. 
 
 In most cases we will need the loop-item a lot, and would preferr to not write `AsDynamic` every time. Because of this, we usually write the `AsDynamic` in the Loop, like this:
 

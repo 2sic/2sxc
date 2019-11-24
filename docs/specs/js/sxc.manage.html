@@ -316,7 +316,7 @@
 <h1 id="js-manage-everything-with-the-manage-controller">JS: Manage Everything With the <code>manage</code> Controller</h1>
 
 <h2 id="purpose--description">Purpose / Description</h2>
-<p>The <code>manage</code> object helps you manage content, allowing you to <code>run(...)</code> <a class="xref" href="commands.html">commands</a> or to get <a href="Html-Toolbars-and-Buttons">buttons or toolbars</a>. </p>
+<p>The <code>manage</code> object helps you manage content, allowing you to <code>run(...)</code> <a class="xref" href="commands.html">commands</a> or to get <a class="xref" href="toolbars-and-buttons-intro.html">buttons or toolbars</a>. </p>
 <h2 id="how-to-use">How to use</h2>
 <p>Each content-block (usually a DNN-Module) has it&#39;s own 2sxc-controller, which also gives you a prepared manage-object to work with. Here&#39;s an example</p>
 <pre><code class="lang-html">&lt;a onclick=&#39;$2sxc(this).manage.run(&quot;layout&quot;)&#39;&gt;layout&lt;/a&gt;
@@ -350,8 +350,8 @@
 <p>We try to keep APIs very light, so all the internal properties/objects are not documented and should not be used. These properties and methods can be treated as stable:</p>
 <ul>
 <li>void <code>.run(...)</code> - used to run a <a class="xref" href="commands.html">command</a></li>
-<li>string <code>.getButton(...)</code> - used to generate HTML for a single button (which when pressed, runs a command) - see <a href="Html-Toolbars-and-Buttons">buttons and toolbars</a></li>
-<li>string <code>.getToolbar(...)</code> - used to generate HTML for a toolbar (with buttons, which run commands) - see <a href="Html-Toolbars-and-Buttons">buttons and toolbars</a></li>
+<li>string <code>.getButton(...)</code> - used to generate HTML for a single button (which when pressed, runs a command) - see <a class="xref" href="toolbars-and-buttons-intro.html">buttons and toolbars</a></li>
+<li>string <code>.getToolbar(...)</code> - used to generate HTML for a toolbar (with buttons, which run commands) - see <a class="xref" href="toolbars-and-buttons-intro.html">buttons and toolbars</a></li>
 </ul>
 <h2 id="demo-app-and-further-links">Demo App and further links</h2>
 <p>You should find some code examples in this demo App</p>

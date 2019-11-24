@@ -320,7 +320,7 @@ we must update these docs
 Especially the compare / contains etc. actually works now, even with dyn-objects</p>
 </blockquote>
 <p>In many cases you will want to sort, filter or group some data, or quickly check if any data was found. When using Razor or working in WebApi, this is best done with LINQ. This guide will assist you to get everything working.</p>
-<p>For a more API-oriented documentation, see <a href="dotnet-query-linq">DotNet Query LINQ</a>. We also recommend to play around with the <a href="https://2sxc.org/en/apps/app/razor-tutorial">Razor Tutorial App</a></p>
+<p>For a more API-oriented documentation, see <a class="xref" href="linq-datasource.html">DotNet Query LINQ</a>. We also recommend to play around with the <a href="https://2sxc.org/en/apps/app/razor-tutorial">Razor Tutorial App</a></p>
 <h2 id="linq-basics">LINQ Basics</h2>
 <p>The way LINQ works is that the namespace <code>System.Linq</code> contains a bunch of <a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods">extension methods</a> like <code>.Count()</code>, <code>.Where(...)</code> and more. So to use LINQ you need to add a <code>@using</code> statement to razor or just <code>using</code> in a WebApi class. Here&#39;s a simple razor example:</p>
 <pre><code class="lang-razor">@using System.Linq;
@@ -457,7 +457,7 @@ list = links.Where(x =&gt; x.Show != false); // take true &amp; null, skip false
 list = links.Where(x =&gt; x.Show == null);  // take null, skip true &amp; false
 </code></pre><h2 id="read-also-demo-app-and-further-links">Read also, Demo App and further links</h2>
 <ol>
-<li><a href="dotnet-query-linq">LINQ API Docs</a></li>
+<li><a class="xref" href="linq-datasource.html">LINQ API Docs</a></li>
 <li><a href="https://2sxc.org/en/apps/app/razor-tutorial">Razor Tutorial App showing all kinds of Queries</a></li>
 </ol>
 <h2 id="history">History</h2>

@@ -28,7 +28,7 @@ Visit the [App Catalog](xref:AppsCatalog) where almost all apps use Razor. There
 
 * AsAdam()
 * AsDynamic(...) - takes just about anything (an iEntity, a list of iEntities, a dynamic, ...) and casts it to a [DynamicEntity](xref:HowTo.DynamicCode.Entity)
-* AsEntity(...) - takes just about anything (iEntity, DynamicEntity, list of that) and casts it to an [iEntity](DotNet-Entity)
+* AsEntity(...) - takes just about anything (iEntity, DynamicEntity, list of that) and casts it to an [iEntity](xref:HowTo.DynamicCode.Entity)
 * ~~CreateSource(...)~~ (IDataSource) - old, better to use the `CreateSource<T>(...)` syntax
 * CreateInstance(...) - to create an object of a parsed CSHTML file, for example to then access methods of that code
 * CreateSource\<T\>(...) (IDataSource) - more modern, generic, type-proof syntax for create-source

@@ -114,8 +114,8 @@ As you can see, the `HeadingsDecorators` or `DisclaimerPage` are best placed in 
 
 
 ## Read also
-* If you need to get an App object for other apps, read [External App Use](DotNet-External-Use)
-* If you want to use the App object from non 2sxc-code, like other MVC pages, check out [External App Use](DotNet-External-Use)
+* If you need to get an App object for other apps, read [External App Use](xref:HowTo.External)
+* If you want to use the App object from non 2sxc-code, like other MVC pages, check out [External App Use](xref:HowTo.External)
 
 
 ## Demo App and further links
