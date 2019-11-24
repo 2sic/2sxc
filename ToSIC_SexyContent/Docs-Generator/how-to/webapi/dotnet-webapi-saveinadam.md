@@ -56,7 +56,7 @@ foreach(var file in files)
 
 You should find some code examples in these apps
 
-* [Mobius Forms v2 in App Catalog](https://2sxc.org/en/apps/app/mobius-forms-2-with-file-upload)
+* [Mobius Forms v2 in App Catalog](xref:App.Mobius)
 * [Mobius Forms v2 on Github](https://github.com/2sic/app-mobius-forms)
 * [Blog Recipe for uploading into ADAM in your WebAPI](https://2sxc.org/en/blog/post/recipe-form-files-saveinadam-in-your-custom-webapi)
 

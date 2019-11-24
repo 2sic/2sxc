@@ -5,9 +5,9 @@
 ##[EAV Data Models](xref:Articles.EavCoreDataModels)
 
 # Roadmap & History
-##[Roadmap](xref:Articles.Roadmap.Roadmap)
-##[History](xref:Articles.Roadmap.History)
-##[Breaking Changes](xref:Articles.Roadmap.BreakingChanges)
+##[Roadmap](xref:Specs.Roadmap.Roadmap)
+##[History](xref:Specs.Roadmap.History)
+##[Breaking Changes](xref:Specs.Roadmap.BreakingChanges)
 
 # DataSources
 ##[DataSource Basics](xref:Specs.DataSources.DataSource)
@@ -29,7 +29,7 @@
 # Apps
 ##[Folder Structure](xref:Specs.App.Folders)
 
-# Configuration (todo: specs?)
+# Configuration
 ##[Features](xref:Specs.Features)
 
 # Data & Input Types

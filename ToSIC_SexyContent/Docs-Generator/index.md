@@ -21,7 +21,7 @@ it also include instructions how to export/import data, working with the image r
 1. A [list of features](http://2sxc.org/en/docs), concepts and examples can be found in the _Docs_ section of 2sxc.org, including things not specifically code related
 1. [Many solutions and recommendations](http://2sxc.org/en/blog) are found in the _Blog_ on 2sxc.org
 1. [Many demo, template and tutorial Apps](http://2sxc.org/en/Apps) are found in the _App Catalog_ on 2sxc.org
-1. [2sxc / EAV Roadmap](xref:Articles.Roadmap.Roadmap)
+1. [2sxc / EAV Roadmap](xref:Specs.Roadmap.Roadmap)
 1. APIs and similar are found in this [wiki](https://github.com/2sic/2sxc/wiki) - you'll see the TOC in the box to the right
 1. [App folder structure](xref:Specs.App.Folders) and special files
 1. [Style Guide 2020 (beta)](xref:Specs.StyleGuide2020) best-practices draft

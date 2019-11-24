@@ -7,18 +7,6 @@ references:
 - uid: Articles.EavCoreDataModels
   name: EAV Core Data Models
   href: specs/architecture/eav-core-data.html
-- uid: Articles.Home
-  name: Structured Content for .net Platforms
-  href: articles/intro.html
-- uid: Articles.Roadmap.BreakingChanges
-  name: Breaking Changes in EAV and 2sxc
-  href: specs/roadmap/breaking-changes.html
-- uid: Articles.Roadmap.History
-  name: History of the EAV and 2sxc Code Base
-  href: specs/roadmap/history.html
-- uid: Articles.Roadmap.Roadmap
-  name: Roadmap of EAV and 2sxc - Vision of the Future
-  href: specs/roadmap/roadmap.html
 - uid: Concepts.ContentType
   name: 'Concept: Content-Types (Schemas, Object-Types)'
   href: concepts/data/content-types.html
@@ -346,6 +334,15 @@ references:
 - uid: Specs.Js.Toolbar.Settings
   name: 'Html & JS: Toolbar Settings'
   href: specs/js/toolbar-settings.html
+- uid: Specs.Roadmap.BreakingChanges
+  name: Breaking Changes in EAV and 2sxc
+  href: specs/roadmap/breaking-changes.html
+- uid: Specs.Roadmap.History
+  name: History of the EAV and 2sxc Code Base
+  href: specs/roadmap/history.html
+- uid: Specs.Roadmap.Roadmap
+  name: Roadmap of EAV and 2sxc - Vision of the Future
+  href: specs/roadmap/roadmap.html
 - uid: Specs.StyleGuide
   name: Style Guide for DNN / 2sxc
   href: specs/style-guides/style-guides.html
@@ -7049,7 +7046,7 @@ references:
   nameWithType: IInPageEditingSystem.ContextAttributes
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
   name: '...) Method in C# Razor'
-  href: how-to/dynamic-code/edit.enable.html
+  href: how-to/dynamic-code/edit.enable.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable*
   name: Enable
   href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_

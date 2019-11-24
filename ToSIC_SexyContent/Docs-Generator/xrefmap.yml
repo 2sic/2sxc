@@ -33,6 +33,9 @@ references:
 - uid: App.TutorialJsToolbars
   name: App Tutorial JS Toolbars
   href: http://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars
+- uid: App.Mobius
+  name: Mobius Forms App
+  href: (xref:App.Mobius)
 
 
 # Blogs

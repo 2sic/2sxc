@@ -31,7 +31,6 @@
       {
         "files": [
           "api/**.md",
-          "articles/**.md",
           "concepts/**.md",
           "how-to/**.md",
           "specs/**.md",

@@ -3,13 +3,11 @@ uid: Specs.Features
 ---
 # Features API in .net
 
-## Purpose / Description
-
 2sxc / EAV in 9.30+ has a [features management](https://2sxc.org/en/blog/post/new-features-management-in-2sxc-9-30). In certain cases it would be good if the razor-view could verify that the feature is enabled - for example to show a warning when it isn't enabled yet. This is what the Features API is for.
 
 ## How To Use
 
-This example is taken from [Mobius Forms](https://2sxc.org/en/apps/app/mobius-forms-2-with-file-upload) and the code can be found in the [Mobius Github Repo](https://github.com/2sic/app-mobius-forms/blob/master/_Shared-Feature-UploadInAdam.cshtml).
+This example is taken from [Mobius Forms](xref:App.Mobius) and the code can be found in the [Mobius Github Repo](https://github.com/2sic/app-mobius-forms/blob/master/_Shared-Feature-UploadInAdam.cshtml).
 
 ```c#
 @using ToSic.Eav.Configuration

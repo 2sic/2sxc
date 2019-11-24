@@ -1,5 +1,5 @@
 ---
-uid: Articles.Roadmap.Roadmap
+uid: Specs.Roadmap.Roadmap
 ---
 
 # Roadmap of EAV and 2sxc - Vision of the Future

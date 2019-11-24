@@ -1,5 +1,5 @@
 ---
-uid: Articles.Roadmap.BreakingChanges
+uid: Specs.Roadmap.BreakingChanges
 ---
 
 # Breaking Changes in EAV and 2sxc
