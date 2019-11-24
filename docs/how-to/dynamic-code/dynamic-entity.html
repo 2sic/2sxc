@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Roadmap of EAV and 2sxc - Vision of the Future | 2sxc and EAV 10 </title>
+    <title>How to Use a Dynamic Entity | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Roadmap of EAV and 2sxc - Vision of the Future | 2sxc and EAV 10 ">
+    <meta name="title" content="How to Use a Dynamic Entity | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="../../styles/main.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
     <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="../../articles/toc.html">
     
     <meta property="docfx:rel" content="../../">
     <meta property="docfx:newtab" content="true">
@@ -99,7 +99,7 @@
                   
                   <ul class="nav level1">
                     <li class="">
-                      <a href="../intro.html" title="Introduction" class="">Introduction</a>
+                      <a href="../../articles/intro.html" title="Introduction" class="">Introduction</a>
                     </li>
                     <li class="">
                       <span class="expand-stub"></span>
@@ -107,7 +107,7 @@
                         
                         <ul class="nav level2">
                           <li class="">
-                            <a href="../../how-to/dynamic-code/dynamic-entity.html" title="Dynamic Entity" class="">Dynamic Entity</a>
+                            <a href="../../articles/../how-to/dynamic-code/dynamic-entity.html" title="Dynamic Entity" class="">Dynamic Entity</a>
                           </li>
                         </ul>  </li>
                     <li class="">
@@ -115,14 +115,14 @@
                       <a class="">Roadmap & History</a>
                         
                         <ul class="nav level2">
-                          <li class="active">
-                            <a href="../roadmap/roadmap.html" title="Roadmap" class="active">Roadmap</a>
+                          <li class="">
+                            <a href="../../articles/roadmap/roadmap.html" title="Roadmap" class="">Roadmap</a>
                           </li>
                           <li class="">
-                            <a href="../roadmap/history.html" title="History" class="">History</a>
+                            <a href="../../articles/roadmap/history.html" title="History" class="">History</a>
                           </li>
                           <li class="">
-                            <a href="../roadmap/breaking-changes.html" title="Breaking Changes" class="">Breaking Changes</a>
+                            <a href="../../articles/roadmap/breaking-changes.html" title="Breaking Changes" class="">Breaking Changes</a>
                           </li>
                         </ul>  </li>
                   </ul>        </div>
@@ -132,60 +132,76 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Articles.Roadmap.Roadmap">
-<h1 id="roadmap-of-eav-and-2sxc---vision-of-the-future">Roadmap of EAV and 2sxc - Vision of the Future</h1>
+            <article class="content wrap" id="_content" data-uid="HowTo.DynamicCode.DynamicEntity">
+<h1 id="how-to-use-a-dynamic-entity">How to Use a Dynamic Entity</h1>
 
-<p>The 2sxc roadmap contains the things we think are fairly important to tackle next. Since we&#39;re all working for free, there is no commitment to do this in the order you see below. And sometimes a customer will need a feature quickly - and pay for it - then it will appear sooner. <em>You too can sponsor a feature!</em></p>
-<h2 id="next-priorities-eoy-2019-and-2020-q1">Next Priorities (EOY 2019 and 2020 Q1)</h2>
+<p>Whenever you create a content-type - like <em>Person</em> - and want to work with the data in your C# Razor templates, you&#39;ll be working with a <em>Dynamic Entity</em>. </p>
+<h2 id="code-example-using-a-dynamic-entity">Code example using a Dynamic Entity</h2>
+<p>We&#39;ll assume we have a <em>Content Type</em> called <em>Book</em> with the following properties:</p>
+<ul>
+<li>Title (text, 1-line)</li>
+<li>Teaser (text, multi-line)</li>
+<li>Description (text, html)</li>
+<li>ReleaseDate (date)</li>
+<li>Author (entity - another content item)</li>
+</ul>
+<p>Here&#39;s a code example in a C# Razor template:</p>
+<pre><code class="lang-html">&lt;!--
+  The default variable for the current item is Content, 
+  we&#39;ll just use another name for this sample
+  note that .Title is automatically provided, 
+  because the content-type has the property title. 
+--&gt;
+&lt;h1&gt;@Content.Title&lt;/h1&gt;
+&lt;div&gt;@Content.Description&lt;/div&gt;
+&lt;div&gt;Author: @Content.Author[0].FullName&lt;/div&gt;
+</code></pre><p>So basically all properties of this book can be shown using <code>[Object].[PropertyName]</code> - for example <code>Content.ReleaseDate</code>.</p>
+<h2 id="what-dynamic-entity-really-does---and-how">What Dynamic Entity really does - and how...</h2>
+<p>Technically the dynamic entity object is like a read-helper for the more complex <a class="xref" href="../../api/dot-net/ToSic.Eav.Data.IEntity.html">IEntity</a>. So actually the <em>dynamic entity</em> object will keep a reference to the underlying read-only <code>IEntity</code> item on a property <code>Entity</code>, and whenever your code accesses a property, the dynamic entity will query it from the underlying <code>Entity</code>.</p>
+<p>The main things that the <em>dynamic entity</em> does for you, are</p>
 <ol>
-<li>Create this site (docs.2sxc.org) and migrate much of the old wiki into this</li>
-<li>Build new Admin-UI based on Angular 8</li>
+<li>Give you a nice, short syntax to access a property - so <code>Content.FirstName</code> instead of <code>Object.Attributes[&quot;FirstName&quot;][&quot;en&quot;]</code> which would be necessary using the more advanced <code>IEntity</code> object</li>
+<li>Ensure that the language used in retrieving a value is the current user language</li>
+<li>Give conveniant access to related information like the <code>Presentation</code> object</li>
+<li>Automatically handle some data-not-found errors</li>
+<li>Automatically do conversions, like convert related entities (like <code>.Children</code>) into dynamic objects to make your code more consistant  </li>
 </ol>
-<h2 id="old-notes---todo-must-sort">Old Notes - TODO must sort</h2>
-<p>these things must be re-organized, as they were the old roadmap. A lot has been implemented, but someone must update these docs.</p>
-<h3 id="version-9">Version 9.?</h3>
-<ul>
-<li>[ ] ability for templates to support multiple CSS frameworks at once</li>
-</ul>
-<h3 id="version-9-1">Version 9.?</h3>
-<ul>
-<li>[ ] RelationshipItems DataSource</li>
-<li>[ ] Files DataSource</li>
-<li>[ ] ADAM DataSource</li>
-<li>[ ] Pages DataSource</li>
-<li>[ ] Navigation DataSource</li>
-</ul>
-<h3 id="version-9---angular5-upgrade">Version 9.? - Angular5 Upgrade</h3>
-<ul>
-<li>[ ] migrate quick-dialog to Angular 5</li>
-<li>[ ] built-in support for Angular 5</li>
-</ul>
-<h3 id="version-9---app-level-json-content-types">Version 9.? - app-level JSON content-types</h3>
-<ul>
-<li>[ ] Enable slow (hybrid) migration of existing (installed) system-types to new json-types</li>
-<li>[ ] Provide ability for Apps to also include app-level json types</li>
-<li>[ ] Import json content-type</li>
-</ul>
-<h3 id="version-9---in-page-list-management">Version 9.? - In-Page List-Management</h3>
-<ul>
-<li>[ ] Provide functionality to add/remove items in sub-lists (like tags) of an item, directly on the page</li>
-</ul>
-<h3 id="version-9---anonymous-data-creation">Version 9.? - Anonymous Data Creation</h3>
-<ul>
-<li>[ ] Ability to use WebAPIs to create data from end-users, automatically saving that data as draft</li>
-<li>[ ] Ability to use WebAPIs to edit data for certain user groups, automatically saving changes as draft</li>
-</ul>
-<h3 id="version-9---typescript-upgrade">Version 9.? - TypeScript Upgrade</h3>
-<ul>
-<li>[ ] Refactor on-page JavaScript code to use TypeScript</li>
-<li>[ ] Enhance toolbar generation to provide &quot;default-toolbar-with-minor-changes&quot;</li>
-<li>[ ] Provide typings for all kinds of toolbar-generationg JS, making it easier to create custom toolbars</li>
-</ul>
-<h2 id="future">Future</h2>
-<ul>
-<li>[ ] Support for persisting data to the file-system instead of DB</li>
-<li>[ ] ...or whatever is needed next :)</li>
-</ul>
+<h2 id="properties-of-a-dynamic-entity">Properties of a Dynamic Entity</h2>
+<p>Read the API docs in the @ToSic.Sxc.Interfaces.IDynamicEntity.</p>
+<p>Additional properties that work (they are dynamic, so don&#39;t appear in the code)</p>
+<ol>
+<li><strong>EntityType</strong> <em>string</em> - the type name like <em>Person</em></li>
+<li><strong>IsPublished</strong> <em>bool</em> - true/false if this item is currently published</li>
+<li><strong><em>AnyProperty</em></strong> <em>dynamic, but actually bool | string | decimal | datetime | List<dynamicentity></dynamicentity></em> any normal property of the content-item can be accessd directly. It&#39;s correctly .net typed (string, etc.)</li>
+</ol>
+<p>The following Methods exist on all dynamic entities</p>
+<ol>
+<li><strong>Render()</strong> - will render HTML for the current item, if there is a configuration for this. Almost always returns a simple HTML-comment, unless used as inner-content (added in 2sxc 8.3)</li>
+</ol>
+<h2 id="working-with-unpublisheddraft-items">Working with unpublished/draft items</h2>
+<p>TODO: write something about how-to-check if published/unpublished, navigating it, etc. - or link to such a page</p>
+<h2 id="appendix">Appendix</h2>
+<p>The following properties/methods exist, but shouldn&#39;t be used. They are documented here so that you know that they are not meant for public use:</p>
+<ol>
+<li>Created - the created date</li>
+<li>Author - the person who created this item</li>
+<li>Owner - the current owner of the item, usually the author</li>
+<li>Metadadata - currently use <code>AsEntity(theObject).Metadata</code></li>
+<li>Permissions - permissions of the current item (if any are defined)</li>
+</ol>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in 2sxc 01.00</li>
+<li>Changed to use interface IDynamicEntity in 6.x</li>
+<li>Draft/Published introduced in 2sxc 7.x</li>
+<li>Presentation introduced in 2sxc 7.x</li>
+<li>Modified introduced in 2sxc 8.x</li>
+<li>Implemented .net equality comparer in 2sxc 9.42</li>
+<li>Parents added in 2sxc 9.42</li>
+<li>Get added in 2sxc 9.42 and added to interface IDynamicEntity in 10.07</li>
+<li>Parents introduced in 2sxc 9.42, and added to interface IDynamicEntity in 10.07</li>
+<li>IsDemoItem property added in 2sxc 10.06</li>
+</ol>
 </article>
           </div>
           
@@ -194,7 +210,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/articles/roadmap/roadmap.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/how-to/dynamic-code/dynamic-entity.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

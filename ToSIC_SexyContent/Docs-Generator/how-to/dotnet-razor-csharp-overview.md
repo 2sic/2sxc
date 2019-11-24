@@ -16,7 +16,7 @@ This is the C# .net API Documentations, usually meant for Razor-Templates, custo
 1. [LINQ Data Handling examples](xref:Specs.DataSources.Linq) on working with relationships, filtering etc.
 
 ## Important APIs when Working with Content-Items/Data
-1. [Dynamic Entities](xref:Articles.DynamicEntity) (DynamicEntity / AsDynamic)
+1. [Dynamic Entities](xref:HowTo.DynamicCode.DynamicEntity) (DynamicEntity / AsDynamic)
 1. [IEntity](xref:HowTo.DynamicCode.Entity) - the complex data object for advanced use cases
 1. [DataSource](xref:Specs.DataSources.DataSource) and [DataStream](xref:ToSic.Eav.DataSources.IDataStream), the core concept for data read/processing/delivery
     1. [List of all DataSource Objects](xref:Specs.DataSources.ListAll)

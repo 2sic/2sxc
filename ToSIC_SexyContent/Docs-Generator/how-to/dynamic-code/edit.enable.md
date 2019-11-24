@@ -56,7 +56,7 @@ This command simply enables editing - but doesn't provide any permissions or sho
 ## Demo App and further links
 
 You should find some code examples in this demo App
-* [Todo](todo)
+* TODO
 
 
 ## History

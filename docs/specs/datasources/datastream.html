@@ -329,7 +329,7 @@
         &lt;li&gt;@AsDynamic(person).FullName&lt;/li&gt;
     }
 &lt;/ol&gt;
-</code></pre><p>The <code>@foreach</code> will go through all the items. Each item is of the type <a class="xref" href="../../how-to/dynamic-code/entity.html">IEntity</a>. To make it easier to template, we convert it to a <a class="xref" href="../../articles/how-to/dynamic-entity.html">Dynamic Entity</a> using <code>AsDynamic</code> and then we can just show the name with <code>.FullName</code>. </p>
+</code></pre><p>The <code>@foreach</code> will go through all the items. Each item is of the type <a class="xref" href="../../how-to/dynamic-code/entity.html">IEntity</a>. To make it easier to template, we convert it to a <a class="xref" href="../../how-to/dynamic-code/dynamic-entity.html">Dynamic Entity</a> using <code>AsDynamic</code> and then we can just show the name with <code>.FullName</code>. </p>
 <p>In most cases we will need the loop-item a lot, and would preferr to not write <code>AsDynamic</code> every time. Because of this, we usually write the <code>AsDynamic</code> in the Loop, like this:</p>
 <pre><code class="lang-c#">&lt;ol&gt;
     @foreach(var person in AsDynamic(Data[&quot;Default&quot;]))

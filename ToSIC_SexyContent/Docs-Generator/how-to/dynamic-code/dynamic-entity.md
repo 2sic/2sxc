@@ -1,5 +1,5 @@
 ---
-uid: Articles.DynamicEntity
+uid: HowTo.DynamicCode.DynamicEntity
 ---
 # How to Use a Dynamic Entity
 

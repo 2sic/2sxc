@@ -4,7 +4,7 @@ uid: Specs.Data.Inputs.Datetime
 # UI Field Type: datetime
 
 ## Purpose / Description
-The **datetime** field is the base type for dates and/or time storing [datetime data](data-type-datetime). It has one sub-type.
+The **datetime** field is the base type for dates and/or time storing [datetime data](xref:Specs.Data.Type.DateTime). It has one sub-type.
 
 ## Features 
 The basic **datetime** field doesn't have any features, since all the features are in the sub-types. 

@@ -4,7 +4,7 @@ uid: Articles.EavCoreDataModels
 # EAV Core Data Models
 
 > Before you start: Remember that you usually don't need this if you are just creating Razor templates 
-> or WebApis - for that, you want to use @Articles.DynamicEntity stuff.
+> or WebApis - for that, you want to use @HowTo.DynamicCode.DynamicEntity stuff.
 
 If ever you want to know more about the internals of the core data models, here goes...
 

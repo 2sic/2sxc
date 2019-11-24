@@ -22,7 +22,7 @@ The most commen uses will loop through all items in such a stream and show them.
     }
 </ol>
 ```
-The `@foreach` will go through all the items. Each item is of the type [IEntity](xref:HowTo.DynamicCode.Entity). To make it easier to template, we convert it to a [Dynamic Entity](xref:Articles.DynamicEntity) using `AsDynamic` and then we can just show the name with `.FullName`. 
+The `@foreach` will go through all the items. Each item is of the type [IEntity](xref:HowTo.DynamicCode.Entity). To make it easier to template, we convert it to a [Dynamic Entity](xref:HowTo.DynamicCode.DynamicEntity) using `AsDynamic` and then we can just show the name with `.FullName`. 
 
 In most cases we will need the loop-item a lot, and would preferr to not write `AsDynamic` every time. Because of this, we usually write the `AsDynamic` in the Loop, like this:
 
