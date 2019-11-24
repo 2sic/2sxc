@@ -9,61 +9,55 @@ references:
   href: specs/architecture/eav-core-data.html
 - uid: Concepts.ContentType
   name: 'Concept: Content-Types (Schemas, Object-Types)'
-  href: concepts/data/content-types.html
+  href: specs/data/content-types.html
 - uid: Concepts.DnnModule
   name: 'Concept: How DNN Modules Connect To Content-Blocks'
-  href: concepts/cms/dnn-module.html
+  href: specs/cms/dnn-module.html
 - uid: Concepts.Edit
   name: 'Overview: Edit Content or Data in DNN / 2sxc'
-  href: concepts/cms/edit.html
+  href: specs/cms/edit.html
 - uid: Concepts.EditContext
   name: 'Concept: In-Page Edit Context'
-  href: concepts/cms/edit-context.html
+  href: specs/cms/edit-context.html
 - uid: Concepts.EditToolbar
   name: 'Concept: In-Page Edit-Item Toolbars and Buttons'
-  href: concepts/cms/inpage-toolbars.html
+  href: specs/cms/inpage-toolbars.html
 - uid: Concepts.Entities
   name: 'Concept: Entities (Data, Records, Items)'
-  href: concepts/data/entities.html
-- uid: Concepts.Features
-  name: 'Concept: Features new in 9.30'
-  href: concepts/concept-features.html
+  href: specs/data/entities.html
 - uid: Concepts.FileBasedContentTypes
   name: 'Concept: File/Folder Based Content-Types (9.7)'
-  href: concepts/data/file-provided-content-types.html
+  href: specs/data/file-provided-content-types.html
 - uid: Concepts.HideAdvancedFeatures
   name: 'Concept: Hide Advanced Features From Non-Admins'
-  href: concepts/cms/hide-advanced-features.html
-- uid: Concepts.Home
-  name: Concepts of 2sxc and EAV
-  href: concepts/index.html
+  href: specs/cms/hide-advanced-features.html
 - uid: Concepts.InnerContent
   name: 'Concept: Inner Content 2.0'
-  href: concepts/cms/inner-content.html
+  href: specs/cms/inner-content.html
 - uid: Concepts.Metadata
   name: 'Concept: Metadata - WIP'
-  href: concepts/data/metadata.html
+  href: specs/data/metadata.html
 - uid: Concepts.PagePublishing
   name: 'Concept: DNN/Evoq Page Versioning / Publishing and Workflow'
-  href: concepts/cms/dnn-evoq-page-publishing.html
+  href: specs/cms/dnn-evoq-page-publishing.html
 - uid: Concepts.Permissions
   name: 'Concept: Permissions'
-  href: concepts/data/permissions.html
+  href: specs/data/permissions.html
 - uid: Concepts.Polymorphism
   name: 'Concept: Polymorph / Editions / Open-Heart-Surgery (WIP)'
-  href: concepts/cms/polymorph.html
+  href: specs/cms/polymorph.html
 - uid: Concepts.QuickE
   name: 'Concept: quickE - Quick Edit 2.0'
-  href: concepts/cms/quick-edit.html
+  href: specs/cms/quick-edit.html
 - uid: Concepts.Relationships
   name: 'Concept: Entity Relationships'
-  href: concepts/data/relationships.html
+  href: specs/data/relationships.html
 - uid: Concepts.Tokens
   name: 'Concept: Tokens'
-  href: concepts/cms/tokens.html
+  href: specs/cms/tokens.html
 - uid: Concepts.Views
   name: 'Concept: Views'
-  href: concepts/cms/views.html
+  href: specs/cms/views.html
 - uid: HowTo.CSharp
   name: DotNet / C# / Razor API Documentation for DNN / 2sxc
   href: how-to/dotnet-razor-csharp-overview.html
@@ -283,9 +277,12 @@ references:
 - uid: Specs.DocsTags
   name: Documentation Tags
   href: specs/docs/doc-tags.html
-- uid: Specs.Features
+- uid: Specs.Features.Api
   name: Features API in .net
   href: specs/configuration/features.html
+- uid: Specs.Features.Concept
+  name: 'Concept: Features'
+  href: specs/configuration/features-concept.html
 - uid: Specs.Home
   name: Specifications of EAV and 2sxc
   href: specs/index.html

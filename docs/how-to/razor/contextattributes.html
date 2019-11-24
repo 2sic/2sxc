@@ -47,13 +47,10 @@
                 
                 <ul class="nav level1 navbar-nav">
                       <li>
-                          <a href="../../concepts/index.html" title="Concepts">Concepts</a>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
                       </li>
                       <li>
                           <a href="../../how-to/index.html" title="How To">How To</a>
-                      </li>
-                      <li>
-                          <a href="../../specs/index.html" title="Specs">Specs</a>
                       </li>
                       <li>
                           <a href="../..//api/dot-net/index.html" title=".net API">.net API</a>
@@ -204,11 +201,11 @@
 <h2 id="how-it-works">How it works</h2>
 <p>The <code>Edit.ContextAttributes(...)</code> is always used inside an HTML-tag and will add some attributes with JSON. Any buttons or actions inside that tag will then find this information, and assume that it is has precendence over the global information.</p>
 <h2 id="what-do-you-need-to-do">What do You need to do?</h2>
-<p>By default, this context is already provided by the 2sxc-environment, but sometimes a <em>new context</em> must provide overrides. For example using <a class="xref" href="../../concepts/cms/inner-content.html">Concept: Inner Content 2.0</a>. </p>
+<p>By default, this context is already provided by the 2sxc-environment, but sometimes a <em>new context</em> must provide overrides. For example using <a class="xref" href="../../specs/cms/inner-content.html">Concept: Inner Content 2.0</a>. </p>
 <p>For this you need the <code>Edit.ContextAttributes</code> - see <a class="xref" href="../../api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_ContextAttributes_ToSic_Sxc_Data_IDynamicEntity_System_String_System_String_System_String_System_Nullable_System_Guid__">docs here</a>.</p>
 <h2 id="how-to-use">How to use</h2>
 <p>This example shows the title and will add the standard editing-buttons for the <code>Content</code> item.</p>
-<p>Here&#39;s an <a class="xref" href="../../concepts/cms/inner-content.html">Concept: Inner Content 2.0</a> example:</p>
+<p>Here&#39;s an <a class="xref" href="../../specs/cms/inner-content.html">Concept: Inner Content 2.0</a> example:</p>
 <pre><code class="lang-html">&lt;div class=&quot;app-blog-text sc-content-block-list&quot; @Edit.ContextAttributes(post, field: &quot;DesignedContent&quot;)&gt;
     @foreach(var cb in @post.DesignedContent) {
         @cb.Render();
@@ -220,7 +217,7 @@
 <p>Here&#39;s a common example: imagine you have a 2sxc-instance (a module showing 2sxc-data) and all the buttons there know the App-ID, the Zone, the Content-Type etc. Inside this module, you can have multiple items but they all still work well in the original context (all items are in the same app, so an edit-dialog will also know the AppId). </p>
 <h2 id="the-parameters">The parameters</h2>
 <ol>
-<li><code>target</code> required<br> the content-item for which the new context should be. this item usually has a field (see the next property) which has <a class="xref" href="../../concepts/cms/inner-content.html">Concept: Inner Content 2.0</a></li>
+<li><code>target</code> required<br> the content-item for which the new context should be. this item usually has a field (see the next property) which has <a class="xref" href="../../specs/cms/inner-content.html">Concept: Inner Content 2.0</a></li>
 <li><code>field</code> string<br> the field of this content-item, which contains the inner-content-items </li>
 <li><code>contentType</code> string<br> this should not be used yet, it&#39;s for a future feature</li>
 </ol>
@@ -234,7 +231,7 @@
 @Edit.ContextAttributes(postItem, &quot;InnerContent&quot;)
 </code></pre><h2 id="read-also">Read also</h2>
 <ul>
-<li><a class="xref" href="../../concepts/cms/inner-content.html">Concept: Inner Content 2.0</a></li>
+<li><a class="xref" href="../../specs/cms/inner-content.html">Concept: Inner Content 2.0</a></li>
 </ul>
 <h2 id="demo-app-and-further-links">Demo App and further links</h2>
 <p>You should find some code examples in this demo App</p>

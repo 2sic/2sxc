@@ -4,10 +4,26 @@
 ##[Architecture](xref:Articles.Architecture)
 ##[EAV Data Models](xref:Articles.EavCoreDataModels)
 
-# Roadmap & History
-##[Roadmap](xref:Specs.Roadmap.Roadmap)
-##[History](xref:Specs.Roadmap.History)
-##[Breaking Changes](xref:Specs.Roadmap.BreakingChanges)
+# Data Concepts
+##[Entities](xref:Concepts.Entities)
+##[Relationships](xref:Concepts.Relationships)
+##[Content Types](xref:Concepts.ContentType)
+##[File Content-Types](xref:Concepts.FileBasedContentTypes)
+##[Permissions](xref:Concepts.Permissions)
+
+# CMS Concepts
+##[Edit Content](xref:Concepts.Edit)
+##[DNN Modules](xref:Concepts.DnnModule)
+##[App Folder Structure](xref:Specs.App.Folders)
+##[Hide Features](xref:Concepts.HideAdvancedFeatures)
+##[Page Publishing](xref:Concepts.PagePublishing)
+##[Edit-Context Data](xref:Concepts.EditContext)
+##[Inner Content](xref:Concepts.InnerContent)
+##[Edit Toolbars](xref:Concepts.EditToolbar)
+##[Quick-Edit (QuickE)](xref:Concepts.QuickE)
+##[Tokens](xref:Concepts.Tokens)
+##[Views](xref:Concepts.Views)
+##[Polymorph](xref:Concepts.Polymorphism)
 
 # DataSources
 ##[DataSource Basics](xref:Specs.DataSources.DataSource)
@@ -23,15 +39,9 @@
 ###[EnsureConfigurationIsLoaded](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded)
 ###[Provide](xref:Specs.DataSources.Api.Provide)
 
-# todo
-## VisualQuery Attribute
-
-# Apps
-##[Folder Structure](xref:Specs.App.Folders)
-
 # Configuration
-##[Features Concept](xref:Concepts.Features)
-##[Features API](xref:Specs.Features)
+##[Features Concept](xref:Specs.Features.Concept)
+##[Features API](xref:Specs.Features.Api)
 
 # Data & Input Types
 ##[Data Types](xref:Specs.Data.Type.Overview)
@@ -60,13 +70,20 @@
 ##[Toolbars](xref:Specs.Angular.Toolbars)
 ##[AngularJs (old)](xref:Specs.AngularJs)
 
-#[Style Guide](xref:Specs.StyleGuide)
+# [Style Guide (WIP)](xref:Specs.StyleGuide)
 ##[Style Guide 2020 WIP](xref:Specs.StyleGuide2020)
 
+# Roadmap & History
+##[Roadmap](xref:Specs.Roadmap.Roadmap)
+##[History](xref:Specs.Roadmap.History)
+##[Breaking Changes](xref:Specs.Roadmap.BreakingChanges)
 
-
-# Documentation
+# Contribute & Docs
 ##[Contribute to Code](xref:Specs.Contribute)
 ##[Contribute to Docs](xref:Specs.DocsContribute)
 ##[Tags in Docs](xref:Specs.DocsTags)
+
+# todo / WIP
+## VisualQuery Attribute
+##[Metadata](xref:Concepts.Metadata)
 

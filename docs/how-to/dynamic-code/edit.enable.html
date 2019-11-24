@@ -47,13 +47,10 @@
                 
                 <ul class="nav level1 navbar-nav">
                       <li>
-                          <a href="../../concepts/index.html" title="Concepts">Concepts</a>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
                       </li>
                       <li>
                           <a href="../../how-to/index.html" title="How To">How To</a>
-                      </li>
-                      <li>
-                          <a href="../../specs/index.html" title="Specs">Specs</a>
                       </li>
                       <li>
                           <a href="../..//api/dot-net/index.html" title=".net API">.net API</a>
@@ -210,13 +207,13 @@
 <ol>
 <li><code>api</code>: basic JS for editing are loaded, allowing you to then run javascript commands like <code>$2sxc(...).run(...)</code></li>
 <li><code>forms</code>: additional JS is loaded, enabling the standard form dialogs to open</li>
-<li><code>context</code>: the html contains context-information about the app, so that the dialogs actually work - see also <a class="xref" href="../../concepts/cms/edit-context.html">edit context</a></li>
+<li><code>context</code>: the html contains context-information about the app, so that the dialogs actually work - see also <a class="xref" href="../../specs/cms/edit-context.html">edit context</a></li>
 <li>the auto-toolbars are disabled (this would generate a default toolbar if no toolbar was specified)</li>
 </ol>
 <h2 id="usage-notes">Usage Notes</h2>
 <p>This command simply enables editing - but doesn&#39;t provide any permissions or show any buttons yet. Here are a few things you must know to get this to work:</p>
 <ol>
-<li>remember to set <a class="xref" href="../../concepts/data/permissions.html">permissions</a> to allow what you want to do (like create new draft items for public users)</li>
+<li>remember to set <a class="xref" href="../../specs/data/permissions.html">permissions</a> to allow what you want to do (like create new draft items for public users)</li>
 <li>Edit.Enable uses <a class="xref" href="use-named-parameters.html">named parameters</a>, so you always have to use the <code>api: true</code> syntax</li>
 <li>the Edit.Enable won&#39;t output anything in the position it&#39;s added, because it controls the main wrapper</li>
 <li>you must also create a link or toolbar in your code for the public users, as they won&#39;t have a button to press otherwise</li>
@@ -225,7 +222,7 @@
 <ol>
 <li><code>api</code> bool, optional<br> ensures javascripts are loaded enabling commands to run</li>
 <li><code>forms</code> bool, optional<br> ensures javascripts are loaded enabling forms to open</li>
-<li><code>context</code> bool, optional<br> ensures that the <a class="xref" href="../../concepts/cms/edit-context.html">context information</a> is provided in the DOM</li>
+<li><code>context</code> bool, optional<br> ensures that the <a class="xref" href="../../specs/cms/edit-context.html">context information</a> is provided in the DOM</li>
 <li><code>styles</code> bool, optional
  ensures styles to be loaded, which would be necessary for the standard toolbars to look right</li>
 <li><code>autoToolbar</code> bool, optional

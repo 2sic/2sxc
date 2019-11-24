@@ -1,5 +1,5 @@
 ---
-uid: Specs.Features
+uid: Specs.Features.Api
 ---
 # Features API in .net
 

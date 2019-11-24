@@ -49,13 +49,10 @@
                 
                 <ul class="nav level1 navbar-nav">
                       <li>
-                          <a href="../../concepts/index.html" title="Concepts">Concepts</a>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
                       </li>
                       <li>
                           <a href="../../how-to/index.html" title="How To">How To</a>
-                      </li>
-                      <li>
-                          <a href="../../specs/index.html" title="Specs">Specs</a>
                       </li>
                       <li>
                           <a href="../..//api/dot-net/index.html" title=".net API">.net API</a>
@@ -733,11 +730,11 @@ these will be added to a wrapper tag (usually a div)
 so that in-page editing knows what the context is</p>
 </div>
   <div class="markdown level1 conceptual"><p>All client-side scripts need to know what <em>Context</em> they are in, meaning which DNN-Module, which 2sxc-App, which Zone, permissions etc. Read about it in <a class="xref" href="../../how-to/razor/contextattributes.html">ContextAttributes in Razor-Output</a>. </p>
-<p>By default, this context is already provided by the environment, but sometimes a <em>new context</em> must provide overrides. This is rare, but important, for example using <a class="xref" href="../../concepts/cms/inner-content.html">Concept: Inner Content 2.0</a>. </p>
+<p>By default, this context is already provided by the environment, but sometimes a <em>new context</em> must provide overrides. This is rare, but important, for example using <a class="xref" href="../../specs/cms/inner-content.html">Concept: Inner Content 2.0</a>. </p>
 <p>So the <code>ContextAttributes</code> will provide this information in some hidden html.</p>
 <h5 id="how-to-use">How to use</h5>
 <p>This example shows the title and will add the standard editing-buttons for the <code>Content</code> item.</p>
-<p>Here&#39;s an <a class="xref" href="../../concepts/cms/inner-content.html">Concept: Inner Content 2.0</a> example:</p>
+<p>Here&#39;s an <a class="xref" href="../../specs/cms/inner-content.html">Concept: Inner Content 2.0</a> example:</p>
 <pre><code class="lang-html">&lt;div class=&quot;app-blog-text sc-content-block-list&quot; @Edit.ContextAttributes(post, field: &quot;DesignedContent&quot;)&gt;
     @foreach(var cb in @post.DesignedContent) {
         @cb.Render();
@@ -751,7 +748,7 @@ so that in-page editing knows what the context is</p>
 <p>Here&#39;s a common example: imagine you have a 2sxc-instance (a module showing 2sxc-data) and all the buttons there know the App-ID, the Zone, the Content-Type etc. Inside this module, you can have multiple items but they all still work well in the original context (all items are in the same app, so an edit-dialog will also know the AppId). </p>
 <h2 id="the-parameters">The parameters</h2>
 <ol>
-<li><code>target</code> required<br> the content-item for which the new context should be. this item usually has a field (see the next property) which has <a class="xref" href="../../concepts/cms/inner-content.html">Concept: Inner Content 2.0</a></li>
+<li><code>target</code> required<br> the content-item for which the new context should be. this item usually has a field (see the next property) which has <a class="xref" href="../../specs/cms/inner-content.html">Concept: Inner Content 2.0</a></li>
 <li><code>field</code> string<br> the field of this content-item, which contains the inner-content-items </li>
 <li><code>contentType</code> string<br> this should not be used yet, it&#39;s for a future feature</li>
 </ol>
@@ -765,7 +762,7 @@ so that in-page editing knows what the context is</p>
 @Edit.ContextAttributes(postItem, &quot;InnerContent&quot;)
 </code></pre><h2 id="read-also">Read also</h2>
 <ul>
-<li><a class="xref" href="../../concepts/cms/inner-content.html">About Inner Content</a></li>
+<li><a class="xref" href="../../specs/cms/inner-content.html">About Inner Content</a></li>
 </ul>
 <h2 id="demo-app-and-further-links">Demo App and further links</h2>
 <p>You should find some code examples in this demo App</p>

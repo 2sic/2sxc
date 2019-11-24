@@ -1,7 +1,7 @@
 ---
-uid: Concepts.Features
+uid: Specs.Features.Concept
 ---
-# Concept: Features _new in 9.30_
+# Concept: Features
 
 To increase the security of 2sxc, many features are [only available if actively enabled](https://2sxc.org/en/blog/post/new-features-management-in-2sxc-9-30). This [reduced the security surface and hardens the installation](https://2sxc.org/en/blog/post/new-features-management-in-2sxc-9-30).
 
