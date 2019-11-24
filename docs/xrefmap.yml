@@ -12,13 +12,13 @@ references:
   href: articles/intro.html
 - uid: Articles.Roadmap.BreakingChanges
   name: Breaking Changes in EAV and 2sxc
-  href: articles/roadmap/breaking-changes.html
+  href: specs/roadmap/breaking-changes.html
 - uid: Articles.Roadmap.History
   name: History of the EAV and 2sxc Code Base
-  href: articles/roadmap/history.html
+  href: specs/roadmap/history.html
 - uid: Articles.Roadmap.Roadmap
   name: Roadmap of EAV and 2sxc - Vision of the Future
-  href: articles/roadmap/roadmap.html
+  href: specs/roadmap/roadmap.html
 - uid: Concepts.ContentType
   name: 'Concept: Content-Types (Schemas, Object-Types)'
   href: concepts/data/content-types.html
@@ -7049,7 +7049,7 @@ references:
   nameWithType: IInPageEditingSystem.ContextAttributes
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
   name: '...) Method in C# Razor'
-  href: how-to/dynamic-code/edit.enable.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
+  href: how-to/dynamic-code/edit.enable.html
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable*
   name: Enable
   href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_

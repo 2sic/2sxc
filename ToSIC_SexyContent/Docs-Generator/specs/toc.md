@@ -4,6 +4,11 @@
 ##[Architecture](xref:Articles.Architecture)
 ##[EAV Data Models](xref:Articles.EavCoreDataModels)
 
+# Roadmap & History
+##[Roadmap](xref:Articles.Roadmap.Roadmap)
+##[History](xref:Articles.Roadmap.History)
+##[Breaking Changes](xref:Articles.Roadmap.BreakingChanges)
+
 # DataSources
 ##[DataSource Basics](xref:Specs.DataSources.DataSource)
 ##[DataStream Basics](xref:Specs.DataSources.DataStream)

@@ -3,6 +3,7 @@
 
 # Razor & WebApi Objects
 ##[Entity / DynamicEntity](xref:HowTo.DynamicCode.Entity)
+##[Dynamic Entity](xref:HowTo.DynamicCode.DynamicEntity)
 ##[App Object](xref:HowTo.DynamicCode.App)
 ##[Data Object](xref:HowTo.DynamicCode.Data)
 ##[Dnn Object](xref:HowTo.DynamicCode.Dnn)

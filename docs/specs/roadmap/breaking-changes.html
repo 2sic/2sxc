@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>JS: The WebApi Helpers on the Sxc Controller | 2sxc and EAV 10 </title>
+    <title>Breaking Changes in EAV and 2sxc | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="JS: The WebApi Helpers on the Sxc Controller | 2sxc and EAV 10 ">
+    <meta name="title" content="Breaking Changes in EAV and 2sxc | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
@@ -121,8 +121,8 @@
                           <li class="">
                             <a href="../roadmap/history.html" title="History" class="">History</a>
                           </li>
-                          <li class="">
-                            <a href="../roadmap/breaking-changes.html" title="Breaking Changes" class="">Breaking Changes</a>
+                          <li class="active">
+                            <a href="../roadmap/breaking-changes.html" title="Breaking Changes" class="active">Breaking Changes</a>
                           </li>
                         </ul>  </li>
                     <li class="">
@@ -243,8 +243,8 @@
                                 <li class="">
                                   <a href="../js/sxc.manage.html" title="Sxc.manage..." class="">Sxc.manage...</a>
                                 </li>
-                                <li class="active">
-                                  <a href="../js/sxcewebapi.html" title="Sxc.webapi" class="active">Sxc.webapi</a>
+                                <li class="">
+                                  <a href="../js/sxcewebapi.html" title="Sxc.webapi" class="">Sxc.webapi</a>
                                 </li>
                               </ul>  </li>
                           <li class="">
@@ -324,99 +324,120 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Specs.Js.Sxc.WebApi">
-<h1 id="js-the-webapi-helpers-on-the-sxc-controller">JS: The WebApi Helpers on the Sxc Controller</h1>
+            <article class="content wrap" id="_content" data-uid="Articles.Roadmap.BreakingChanges">
+<h1 id="breaking-changes-in-eav-and-2sxc">Breaking Changes in EAV and 2sxc</h1>
 
-<h2 id="purpose--description">Purpose / Description</h2>
-<p>The WebApi object on the module-specific <code>sxc</code>-controller is for AJAX calls. It helps you in these advanced cases:  </p>
+<p>We try to minimize breaking changes, and most breaking changes won&#39;t affect your work, because it&#39;s internal API. 
+We&#39;re documenting it here to ensure you know what happened, in case you still run into this.</p>
+<h2 id="version-10">Version 10</h2>
+<blockquote><p>Version 10 has a lot of small breaking changes because 
+we restructured the internal API so it&#39;s consistent when we publish it. 
+All these things shouldn&#39;t affect you, because they were internal APIs, 
+but in case it does - here&#39;s what we did.</p>
+</blockquote>
+<h4 id="version-102002-ca-2019-11-22">Version 10.20.02 (ca. 2019-11-22)</h4>
+<p>More internal changes which shouldn&#39;t affect anybody, but make the API ready for public docs...</p>
 <ol>
-<li>to read/write content-items using REST</li>
-<li>to access your apps WebApi controllers</li>
+<li>Moved/renamed the internal <code>Eav.AppDataPackage</code> to <code>Eav.Apps.AppState</code></li>
+<li>Moved/renamed some internal interfaces like <code>Entity...</code></li>
+<li>Did a major change for how <code>Attribute&lt;T&gt;</code> for relationships work.<br> Before they were <code>Attribute&lt;EntityRelationship&gt;</code> and now they are <code>Attribute&lt;IEnumerable&lt;IEntity&gt;&gt;</code>.<br> This also affects <code>Value&lt;EntityRelationship&gt;</code> which is now <code>Value&lt;IEnumerable&lt;IEntity&gt;&gt;</code></li>
+<li>Moved <code>Tenant&lt;T&gt;</code> and <code>Container&lt;T&gt;</code> including matching interfaces to <code>Eav.Environment</code></li>
+<li>Renamed <code>IAppIdentity</code> to <code>IInAppAndZone</code> and <code>IZoneIdentity</code> to <code>IInZone</code></li>
+<li>Renamed <code>ICacheKeyProvider</code> to <code>ICacheKey</code></li>
+<li>Renamed <code>CacheChainedIEnumerable&lt;T&gt;</code> to <code>SynchronizedList&lt;T&gt;</code></li>
+<li>Moved/Renamed <code>MetadataFor</code> to <code>Eav.Metadata.Target</code>. Left old name compatible.</li>
+<li>Moved some extension methods for IEntity from <code>ToSic.Eav.Data.Query</code> to <code>ToSic.Eav.Data</code></li>
+<li>Changed <code>Permissions</code> to be strongly typed EntityBased objects</li>
 </ol>
-<h2 id="how-to-use">How to use</h2>
-<p>First you must ensure that you have the <a class="xref" href="2sxc.html"><code>$2sxc</code> manager</a> on your page, which will get you a module-specific <code>sxc</code> controller. Read about the <a class="xref" href="2sxc.html">$2sxc manager</a> here. </p>
-<p>Here&#39;s a simple example (assuming you have the $2sxc manager):</p>
-<pre><code class="lang-HTML">&lt;a onclick=&quot;$2sxc(this).webApi.get(&#39;app/auto/content/Category&#39;).then(handleResult);&quot;&gt;
-    get all Categories 
-&lt;/a&gt;
-</code></pre><p>The code above shows</p>
+<h4 id="version-102001-2019-11-12">Version 10.20.01 (2019-11-12)</h4>
 <ol>
-<li>how the sxc-object is retrieved using the <code>$2sxc(...)</code> manager, based on the current context <code>this</code></li>
-<li>how all items of type &quot;Category&quot; are requested</li>
-<li>how the result (promise) is passed on to <code>handleResults</code> for updating the view etc.</li>
+<li>Internal code now uses the term <code>Header</code> instead of <code>ListContent</code>. External code provides both for backward-compatibility</li>
+<li>moved internal interfaces for engines (Razor/Token) to final namespaces <code>ToSic.Sxc.Engines</code><ol>
+<li><code>IEngine</code></li>
+<li><code>EngineBase</code></li>
+<li><code>ITokenEngine</code></li>
+<li><code>IRazorEngine</code></li>
 </ol>
-<p>Here&#39;s another quick example, calling a C# web-api endpoint: </p>
-<pre><code class="lang-JavaScript">var sxc = $2sxc(27);
-sxc.webApi.post(&quot;Form/ProcessForm&quot;)
-    .success(function(result) {
-        // ....
-    });
-</code></pre><h2 id="how-to-get-the-current-contexts-sxc-controller">How to Get the Current Context&#39;s <code>sxc</code> Controller</h2>
-<p>Before you continue, make sure you know how to resolve/get your <code>sxc</code>-controller, as it is unique for each DNN-Module. This is because each action needs to know which module it belongs to. Read about the 3 ways to get this in the <a class="xref" href="2sxc.html">$2sxc Manager docs</a>. Here you&#39;ll also find out more about the <a class="xref" href="sxc.html">sxc-controller</a>.</p>
-<h2 id="working-with-rest--http-async-stuff">Working with REST / HTTP Async Stuff</h2>
-<p>Short note: the WebAPIs work like classic javascript promises, supporting <code>.then(...)</code>, <code>.error(...)</code> etc.</p>
-<p>The $2sxc(...).webApi has 4 commands</p>
-<ul>
-<li><code>.webApi.get(url, ...)</code> </li>
-<li><code>.webApi.post(url, ...)</code></li>
-<li><code>.webApi.delete(url, ...)</code></li>
-<li><code>.webApi.put(url, ...)</code></li>
-</ul>
-<p>Each of these has the following parameters</p>
-<ol>
-<li><code>url</code> or <code>settings</code> <em>required</em> string|object: a Url for the end-point OR a <code>{ ... }</code> settings object  </li>
-<li><code>params</code> <em>optional</em> object: the url params like <code>{ id: 27, name: &quot;hello&quot; }</code></li>
-<li><code>data</code> <em>optional</em> object: the data - in case of post / put, like <code>{ ... }</code></li>
-<li><code>preventAutoFail</code> <em>optional</em> bool: if true, won&#39;t automatically show a default message on error, so that you can handle errors differently</li>
+</li>
+<li>corrected architecture - some template-management code had slipped into <code>Eav.Apps</code>, was moved back to <code>Sxc.Apps</code></li>
+<li>The <code>Template</code> object was moved from <code>Eav.Apps</code> to <code>Sxc.Views</code> and we added an interface <code>IView</code>. 
+ We also renamed the internal properti <code>ViewNameInUrl</code> to <code>UrlIdentifier</code>. </li>
+<li>To correct the API a CmsManager was created extending the AppManager, which is in charge of Views</li>
+<li>Moving internal stuff related to content blocks<ol>
+<li><code>IContentBlock</code> from <code>SexyContent.Interfaces</code> to <code>Sxc.Blocks</code></li>
+<li>from <code>ToSic.SexyContent.ISxcInstance</code> to <code>ToSic.Sxc.Blocks.IBlockContext</code></li>
+<li>actually moved a lot of things there incl. <code>ContentBlock</code> now <code>BlockConfiguration</code> and more - all internal stuff</li>
 </ol>
-<p>Quick examples:</p>
-<pre><code class="lang-JavaScript">var sxc = $2sxc(27);
-sxc.webApi.post(&quot;Form/ProcessForm&quot;, {}, data, true)
-    .success(function() {
-        // ....
-    })
-    .error(function() {
-        // ...
-    });
-</code></pre><p>This will call the C# WebApi controller <code>FormController</code> in the <code>api</code> folder and go for its <code>ProcessForm</code> command. It will use no url-params, but put a <code>data</code> object in the body (as json), and will do error-handling itself. </p>
-<p><em>Till we find time to document more, please consult the <a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">source</a></em></p>
-<h2 id="using-app-queries-with-2sxc--todo">Using App-Queries with $2sxc  (TODO)</h2>
-<p>Todo: must document more about this</p>
-<p>In short: </p>
-<ol>
-<li>use <code>$2sxc(...).webApi.get(...)</code> or <code>$2sxc(...).webApi.post(...)</code> etc.</li>
-<li>for the path-parameter, use a path starting with <code>app/auto/query/[queryname]</code> - 2sxc will take care of all the path resolutions if the path starts with <code>app/auto/query/</code> </li>
+</li>
+<li>Moving the <code>ToSic.SexyContent.App</code> to <code>ToSic.Sxc.Apps.App</code></li>
+<li>In a razor page, we added the preferred <code>Purpose</code>. The old <code>InstancePurpose</code> will still work</li>
+<li>Placed some things we just moved in 10.20 to a final place - since it&#39;s a very recent change, we updated the docs in the 10.20.00 section</li>
 </ol>
-<p><em>Till we find time to document more, please consult the <a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">source</a></em></p>
-<h2 id="working-with-custom-c-app-webapis-todo">Working with Custom C# App WebAPIs (TODO)</h2>
-<p>TODO - must document more about what the web-apis are (link to more documentation)</p>
-<p>In short: </p>
+<h4 id="changed-but-completely-internal">Changed, but completely internal</h4>
 <ol>
-<li>use <code>$2sxc(...).webApi.get(...)</code> or <code>$2sxc(...).webApi.post(...)</code> etc.</li>
-<li>for the path-parameter, use a path starting with <code>app/auto/api/[controller]/[action]</code> - 2sxc will take care of all the path resolutions if the path starts with <code>app/auto/api/</code> </li>
+<li>Some namespaces on <code>SexyContent.ContentBlocks</code> were moved to <code>Sxc.Blocks</code></li>
 </ol>
-<p>You can read more about the <a class="xref" href="../../how-to/webapi/dotnet-webapi.html">C# WebApi Server Side</a></p>
-<p>Short note: the WebAPIs work like classic javascript promises. So not like the data.on(event) implementation which is a bit special, this is very standard jQuery promise. </p>
-<p><em>Till we find time to document more, please consult the <a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">source</a></em></p>
-<h2 id="technical-features-explained">Technical Features Explained</h2>
-<p>todo</p>
-<h2 id="additional-properties-of-a-module-controller">Additional Properties of a Module Controller</h2>
-<p>TODO - must document more about properties like</p>
+<h4 id="version-102000-2019-11-05">Version 10.20.00 (2019-11-05)</h4>
 <ol>
-<li>isLoaded, lastRefresh, etc.</li>
-<li>that these are all internal-use and not guaranteed to stay stable in future versions</li>
+<li>the internal interface <code>IInPageEditingHelpers</code> was moved from <code>ToSic.SexyContent.Interfaces</code> to the namespace <code>ToSic.Sxc.Web</code></li>
+<li>the internal interface <code>ILinkHelper</code> was moved to <code>ToSic.Sxc.Web</code></li>
+<li>the internal interface <code>IHtmlHelper</code> was moved to <code>ToSic.Sxc.Dnn</code></li>
+<li>the property <code>Configuration</code> on dynamic entities was deprecated in 2sxc 4 and removed in 2sxc 10 - we don&#39;t think it was ever used</li>
+<li>moved internal Metadata interfaces (ca. 5) into final namespace <a class="xref" href="../../api/dot-net/ToSic.Eav.Metadata.html">ToSic.Eav.Metadata</a></li>
+<li>Moved a bunch of internal interfaces which we believe were never used externally from <code>ToSic.Eav.Interfaces</code> to <code>ToSic.Eav.Data</code><ol>
+<li><code>ToSic.Eav.Data.IAttribute</code></li>
+<li><code>ToSic.Eav.IAttribute&lt;T&gt;</code></li>
+<li><code>IAttributeBase</code></li>
+<li><code>IAttributeDefinition</code></li>
+<li><code>IChildEntities</code> </li>
+<li><code>IContentType</code></li>
+<li><code>IDimension</code></li>
+<li><code>IEntityLight</code></li>
+<li><code>ILanguage</code></li>
+<li><code>IRelationshipManager</code></li>
+<li><code>IValue</code></li>
+<li><code>IValue&lt;T&gt;</code></li>
+<li><code>IValueOfDimension&lt;T&gt;</code></li>
 </ol>
-<p><em>Till we find time to document more, please consult the <a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">source</a></em></p>
-<h2 id="demo-app-and-further-links">Demo App and further links</h2>
-<p>You should find some code examples in this demo App</p>
-<ul>
-<li><a class="xref" href="http://2sxc.org/en/apps/app/timelinejs-app-for-dnn-dotnetnuke">TimeLineJS</a></li>
-<li>all the JS-apps including AngularJS in the <a class="xref" href="http://2sxc.org/en/apps">app-catalog</a></li>
-</ul>
-<p>More links: <a href="http://2sxc.org/en/Docs-Manuals/Feature/feature/2683">Description of the feature on 2sxc docs</a></p>
-<h2 id="history">History</h2>
+</li>
+<li>Moved a bunch of internal interfaces which we believe were never used externally from <code>ToSic.Eav.Apps.Interfaces</code> to <code>ToSic.Eav.Apps</code><ol>
+<li><code>IApp</code></li>
+<li><code>IAppData</code></li>
+<li><code>IAppDataConfiguration</code></li>
+<li><code>IAppEnvironment</code></li>
+<li><code>IEnvironmentFactory</code></li>
+<li><code>IInstanceInfo</code></li>
+<li><code>IItemListAction</code></li>
+<li><code>IPagePublishing</code></li>
+<li><code>ITenant</code></li>
+<li><code>IZoneMapper</code></li>
+</ol>
+</li>
+<li>the internal namespace <code>ToSic.Eav.ValueProvider</code> was changed to <code>ToSic.Eav.LookUp</code> and inside it<br> we renamed a bunch of internal interfaces and objects which we believe were never used externally</li>
+</ol>
+<h5 id="deprecatedchanged-but-not-broken">Deprecated/Changed, but not broken</h5>
 <ol>
-<li>Introduced in 2sxc 04.00</li>
+<li>the internal interface <code>ToSic.SexyContent.IAppAndDataHelpers</code> was renamed to <code>ToSic.Sxc.IDynamicCode</code> but the old interface still exists, so it shouldn&#39;t break<br> <em>it was used by Mobius Forms</em></li>
+<li>moved <code>ToSic.Eav.Interfaces.IEntity</code> to <code>ToSic.Eav.Data.IEntity</code> - but preserved the old interface for compatibility
+ <em>it was used everywhere</em></li>
+</ol>
+<h5 id="clean-up-but-not-broken">Clean-Up, but not broken</h5>
+<ol>
+<li>We&#39;re transitioning to the term <code>Header</code> instead of <code>ListContent</code> in templates.<br> The Razor pages and WebApi have this starting now, while old terms still work. 
+ Note that we&#39;re <em>not</em> creating a <code>HeaderPresentation</code>, because you should use <code>Header.Presentation</code></li>
+</ol>
+<h2 id="version-9">Version 9</h2>
+<h4 id="version-92000-2018-03-04">Version 9.20.00 (2018-03-04)</h4>
+<ol>
+<li>Minor breaking change in ADAM properties, like <code>Id</code> instead of <code>FolderID</code> which was a leftover of DNN naming.<br> see full <a href="https://2sxc.org/en/blog/post/working-with-the-breaking-change-adam-objects-2sxc-9-20">blog post</a></li>
+</ol>
+<h4 id="version-090800-2017-11-28">Version 09.08.00 (2017-11-28)</h4>
+<ol>
+<li>Minor breaking change <code>List&lt;IEntity&gt;</code> instead of <code>Dictionary&lt;int, IEntity&gt;</code> on the <code>IDataSource</code><br> see full <a href="https://2sxc.org/en/blog/post/fixing-the-breaking-change-in-2sxc-9-8-list-instead-of-dictionary">blog post</a></li>
+</ol>
+<h4 id="version-090300-2017-10-08">Version 09.03.00 (2017-10-08)</h4>
+<ol>
+<li>Breaking change on inconsistent naming <code>ToSic.Eav.IEntity</code> instead of <code>ToSic.Eav.Interfaces.IEntity</code>.<br> see full <a href="https://2sxc.org/en/blog/post/fixing-the-breaking-change-on-tosic-eav-ientity-in-2sxc-9-3">blog post</a></li>
 </ol>
 </article>
           </div>
@@ -426,7 +447,7 @@ sxc.webApi.post(&quot;Form/ProcessForm&quot;, {}, data, true)
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/js/sxcewebapi.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/roadmap/breaking-changes.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

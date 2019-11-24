@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>JS: The WebApi Helpers on the Sxc Controller | 2sxc and EAV 10 </title>
+    <title>Roadmap of EAV and 2sxc - Vision of the Future | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="JS: The WebApi Helpers on the Sxc Controller | 2sxc and EAV 10 ">
+    <meta name="title" content="Roadmap of EAV and 2sxc - Vision of the Future | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
@@ -115,8 +115,8 @@
                       <a class="">Roadmap & History</a>
                         
                         <ul class="nav level2">
-                          <li class="">
-                            <a href="../roadmap/roadmap.html" title="Roadmap" class="">Roadmap</a>
+                          <li class="active">
+                            <a href="../roadmap/roadmap.html" title="Roadmap" class="active">Roadmap</a>
                           </li>
                           <li class="">
                             <a href="../roadmap/history.html" title="History" class="">History</a>
@@ -243,8 +243,8 @@
                                 <li class="">
                                   <a href="../js/sxc.manage.html" title="Sxc.manage..." class="">Sxc.manage...</a>
                                 </li>
-                                <li class="active">
-                                  <a href="../js/sxcewebapi.html" title="Sxc.webapi" class="active">Sxc.webapi</a>
+                                <li class="">
+                                  <a href="../js/sxcewebapi.html" title="Sxc.webapi" class="">Sxc.webapi</a>
                                 </li>
                               </ul>  </li>
                           <li class="">
@@ -324,100 +324,60 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Specs.Js.Sxc.WebApi">
-<h1 id="js-the-webapi-helpers-on-the-sxc-controller">JS: The WebApi Helpers on the Sxc Controller</h1>
+            <article class="content wrap" id="_content" data-uid="Articles.Roadmap.Roadmap">
+<h1 id="roadmap-of-eav-and-2sxc---vision-of-the-future">Roadmap of EAV and 2sxc - Vision of the Future</h1>
 
-<h2 id="purpose--description">Purpose / Description</h2>
-<p>The WebApi object on the module-specific <code>sxc</code>-controller is for AJAX calls. It helps you in these advanced cases:  </p>
+<p>The 2sxc roadmap contains the things we think are fairly important to tackle next. Since we&#39;re all working for free, there is no commitment to do this in the order you see below. And sometimes a customer will need a feature quickly - and pay for it - then it will appear sooner. <em>You too can sponsor a feature!</em></p>
+<h2 id="next-priorities-eoy-2019-and-2020-q1">Next Priorities (EOY 2019 and 2020 Q1)</h2>
 <ol>
-<li>to read/write content-items using REST</li>
-<li>to access your apps WebApi controllers</li>
+<li>Create this site (docs.2sxc.org) and migrate much of the old wiki into this</li>
+<li>Build new Admin-UI based on Angular 8</li>
 </ol>
-<h2 id="how-to-use">How to use</h2>
-<p>First you must ensure that you have the <a class="xref" href="2sxc.html"><code>$2sxc</code> manager</a> on your page, which will get you a module-specific <code>sxc</code> controller. Read about the <a class="xref" href="2sxc.html">$2sxc manager</a> here. </p>
-<p>Here&#39;s a simple example (assuming you have the $2sxc manager):</p>
-<pre><code class="lang-HTML">&lt;a onclick=&quot;$2sxc(this).webApi.get(&#39;app/auto/content/Category&#39;).then(handleResult);&quot;&gt;
-    get all Categories 
-&lt;/a&gt;
-</code></pre><p>The code above shows</p>
-<ol>
-<li>how the sxc-object is retrieved using the <code>$2sxc(...)</code> manager, based on the current context <code>this</code></li>
-<li>how all items of type &quot;Category&quot; are requested</li>
-<li>how the result (promise) is passed on to <code>handleResults</code> for updating the view etc.</li>
-</ol>
-<p>Here&#39;s another quick example, calling a C# web-api endpoint: </p>
-<pre><code class="lang-JavaScript">var sxc = $2sxc(27);
-sxc.webApi.post(&quot;Form/ProcessForm&quot;)
-    .success(function(result) {
-        // ....
-    });
-</code></pre><h2 id="how-to-get-the-current-contexts-sxc-controller">How to Get the Current Context&#39;s <code>sxc</code> Controller</h2>
-<p>Before you continue, make sure you know how to resolve/get your <code>sxc</code>-controller, as it is unique for each DNN-Module. This is because each action needs to know which module it belongs to. Read about the 3 ways to get this in the <a class="xref" href="2sxc.html">$2sxc Manager docs</a>. Here you&#39;ll also find out more about the <a class="xref" href="sxc.html">sxc-controller</a>.</p>
-<h2 id="working-with-rest--http-async-stuff">Working with REST / HTTP Async Stuff</h2>
-<p>Short note: the WebAPIs work like classic javascript promises, supporting <code>.then(...)</code>, <code>.error(...)</code> etc.</p>
-<p>The $2sxc(...).webApi has 4 commands</p>
+<h2 id="old-notes---todo-must-sort">Old Notes - TODO must sort</h2>
+<p>these things must be re-organized, as they were the old roadmap. A lot has been implemented, but someone must update these docs.</p>
+<h3 id="version-9">Version 9.?</h3>
 <ul>
-<li><code>.webApi.get(url, ...)</code> </li>
-<li><code>.webApi.post(url, ...)</code></li>
-<li><code>.webApi.delete(url, ...)</code></li>
-<li><code>.webApi.put(url, ...)</code></li>
+<li>[ ] ability for templates to support multiple CSS frameworks at once</li>
 </ul>
-<p>Each of these has the following parameters</p>
-<ol>
-<li><code>url</code> or <code>settings</code> <em>required</em> string|object: a Url for the end-point OR a <code>{ ... }</code> settings object  </li>
-<li><code>params</code> <em>optional</em> object: the url params like <code>{ id: 27, name: &quot;hello&quot; }</code></li>
-<li><code>data</code> <em>optional</em> object: the data - in case of post / put, like <code>{ ... }</code></li>
-<li><code>preventAutoFail</code> <em>optional</em> bool: if true, won&#39;t automatically show a default message on error, so that you can handle errors differently</li>
-</ol>
-<p>Quick examples:</p>
-<pre><code class="lang-JavaScript">var sxc = $2sxc(27);
-sxc.webApi.post(&quot;Form/ProcessForm&quot;, {}, data, true)
-    .success(function() {
-        // ....
-    })
-    .error(function() {
-        // ...
-    });
-</code></pre><p>This will call the C# WebApi controller <code>FormController</code> in the <code>api</code> folder and go for its <code>ProcessForm</code> command. It will use no url-params, but put a <code>data</code> object in the body (as json), and will do error-handling itself. </p>
-<p><em>Till we find time to document more, please consult the <a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">source</a></em></p>
-<h2 id="using-app-queries-with-2sxc--todo">Using App-Queries with $2sxc  (TODO)</h2>
-<p>Todo: must document more about this</p>
-<p>In short: </p>
-<ol>
-<li>use <code>$2sxc(...).webApi.get(...)</code> or <code>$2sxc(...).webApi.post(...)</code> etc.</li>
-<li>for the path-parameter, use a path starting with <code>app/auto/query/[queryname]</code> - 2sxc will take care of all the path resolutions if the path starts with <code>app/auto/query/</code> </li>
-</ol>
-<p><em>Till we find time to document more, please consult the <a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">source</a></em></p>
-<h2 id="working-with-custom-c-app-webapis-todo">Working with Custom C# App WebAPIs (TODO)</h2>
-<p>TODO - must document more about what the web-apis are (link to more documentation)</p>
-<p>In short: </p>
-<ol>
-<li>use <code>$2sxc(...).webApi.get(...)</code> or <code>$2sxc(...).webApi.post(...)</code> etc.</li>
-<li>for the path-parameter, use a path starting with <code>app/auto/api/[controller]/[action]</code> - 2sxc will take care of all the path resolutions if the path starts with <code>app/auto/api/</code> </li>
-</ol>
-<p>You can read more about the <a class="xref" href="../../how-to/webapi/dotnet-webapi.html">C# WebApi Server Side</a></p>
-<p>Short note: the WebAPIs work like classic javascript promises. So not like the data.on(event) implementation which is a bit special, this is very standard jQuery promise. </p>
-<p><em>Till we find time to document more, please consult the <a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">source</a></em></p>
-<h2 id="technical-features-explained">Technical Features Explained</h2>
-<p>todo</p>
-<h2 id="additional-properties-of-a-module-controller">Additional Properties of a Module Controller</h2>
-<p>TODO - must document more about properties like</p>
-<ol>
-<li>isLoaded, lastRefresh, etc.</li>
-<li>that these are all internal-use and not guaranteed to stay stable in future versions</li>
-</ol>
-<p><em>Till we find time to document more, please consult the <a href="https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js">source</a></em></p>
-<h2 id="demo-app-and-further-links">Demo App and further links</h2>
-<p>You should find some code examples in this demo App</p>
+<h3 id="version-9-1">Version 9.?</h3>
 <ul>
-<li><a class="xref" href="http://2sxc.org/en/apps/app/timelinejs-app-for-dnn-dotnetnuke">TimeLineJS</a></li>
-<li>all the JS-apps including AngularJS in the <a class="xref" href="http://2sxc.org/en/apps">app-catalog</a></li>
+<li>[ ] RelationshipItems DataSource</li>
+<li>[ ] Files DataSource</li>
+<li>[ ] ADAM DataSource</li>
+<li>[ ] Pages DataSource</li>
+<li>[ ] Navigation DataSource</li>
 </ul>
-<p>More links: <a href="http://2sxc.org/en/Docs-Manuals/Feature/feature/2683">Description of the feature on 2sxc docs</a></p>
-<h2 id="history">History</h2>
-<ol>
-<li>Introduced in 2sxc 04.00</li>
-</ol>
+<h3 id="version-9---angular5-upgrade">Version 9.? - Angular5 Upgrade</h3>
+<ul>
+<li>[ ] migrate quick-dialog to Angular 5</li>
+<li>[ ] built-in support for Angular 5</li>
+</ul>
+<h3 id="version-9---app-level-json-content-types">Version 9.? - app-level JSON content-types</h3>
+<ul>
+<li>[ ] Enable slow (hybrid) migration of existing (installed) system-types to new json-types</li>
+<li>[ ] Provide ability for Apps to also include app-level json types</li>
+<li>[ ] Import json content-type</li>
+</ul>
+<h3 id="version-9---in-page-list-management">Version 9.? - In-Page List-Management</h3>
+<ul>
+<li>[ ] Provide functionality to add/remove items in sub-lists (like tags) of an item, directly on the page</li>
+</ul>
+<h3 id="version-9---anonymous-data-creation">Version 9.? - Anonymous Data Creation</h3>
+<ul>
+<li>[ ] Ability to use WebAPIs to create data from end-users, automatically saving that data as draft</li>
+<li>[ ] Ability to use WebAPIs to edit data for certain user groups, automatically saving changes as draft</li>
+</ul>
+<h3 id="version-9---typescript-upgrade">Version 9.? - TypeScript Upgrade</h3>
+<ul>
+<li>[ ] Refactor on-page JavaScript code to use TypeScript</li>
+<li>[ ] Enhance toolbar generation to provide &quot;default-toolbar-with-minor-changes&quot;</li>
+<li>[ ] Provide typings for all kinds of toolbar-generationg JS, making it easier to create custom toolbars</li>
+</ul>
+<h2 id="future">Future</h2>
+<ul>
+<li>[ ] Support for persisting data to the file-system instead of DB</li>
+<li>[ ] ...or whatever is needed next :)</li>
+</ul>
 </article>
           </div>
           
@@ -426,7 +386,7 @@ sxc.webApi.post(&quot;Form/ProcessForm&quot;, {}, data, true)
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/js/sxcewebapi.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/roadmap/roadmap.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
