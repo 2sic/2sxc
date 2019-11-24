@@ -61,7 +61,7 @@
                           <a href="../../specs/index.html" title="Specs">Specs</a>
                       </li>
                       <li>
-                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
+                          <a href="../..//api/dot-net/index.html" title=".net API">.net API</a>
                       </li>
                 </ul>    </div>
           </div>
@@ -602,7 +602,7 @@ CreatedOnDate,PortalGroupID
   Where PortalId = [QueryString:Id]
 </code></pre><p>This will automatically use the <code>id</code> parameter from the URL to filter the result. </p>
 <h2 id="using-another-entity-as-sql-parameter">Using Another Entity As SQL Parameter</h2>
-<p>You can of course use the <code>In</code> stream to provide entities which configure the SQL. The following example has a content-type <code>SqlSetting</code> with only one item (to make the example easier to understand). The <a href="DotNet-DataSource-App">App DataSource</a> delivers this in the <code>AppSetting</code> stream, which also goes into the Sql as <code>AppSetting</code> and is then used as a token in the SQL:</p>
+<p>You can of course use the <code>In</code> stream to provide entities which configure the SQL. The following example has a content-type <code>SqlSetting</code> with only one item (to make the example easier to understand). The <a class="xref" href="ToSic.Eav.DataSources.App.html">App DataSource</a> delivers this in the <code>AppSetting</code> stream, which also goes into the Sql as <code>AppSetting</code> and is then used as a token in the SQL:</p>
 <p><img src="/assets/data-sources/sqldatasource-using-entity-as-config.png" width="100%"></p>
 <h2 id="using-a-value-from-a-module-instance-as-sql-parameter">Using A Value from a Module-Instance as SQL Parameter</h2>
 <p>This works like in the App-example: Provide the data from the <a href="DotNet-DataSource-ModuleDataSource">ModuleDataSource</a> as an <code>In</code> stream to the SqlDataSource, and use that to filter:</p>

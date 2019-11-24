@@ -58,7 +58,7 @@ CreatedOnDate,PortalGroupID
 This will automatically use the `id` parameter from the URL to filter the result. 
 
 ## Using Another Entity As SQL Parameter
-You can of course use the `In` stream to provide entities which configure the SQL. The following example has a content-type `SqlSetting` with only one item (to make the example easier to understand). The [App DataSource](DotNet-DataSource-App) delivers this in the `AppSetting` stream, which also goes into the Sql as `AppSetting` and is then used as a token in the SQL:
+You can of course use the `In` stream to provide entities which configure the SQL. The following example has a content-type `SqlSetting` with only one item (to make the example easier to understand). The [App DataSource](xref:ToSic.Eav.DataSources.App) delivers this in the `AppSetting` stream, which also goes into the Sql as `AppSetting` and is then used as a token in the SQL:
 
 <img src="/assets/data-sources/sqldatasource-using-entity-as-config.png" width="100%">
 

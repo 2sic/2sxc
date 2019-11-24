@@ -12,7 +12,7 @@ Until we find time to document everything, here's the short version
 
 1. To use 2sxc4ng you must include a JS file in your template, and you must bootstrap your app using this (not using the standard angularjs bootstrapping)  
 this is to ensure that multiple Angular apps can run on the same page, and to provide your app with the necessary context so it knows what module it's working on, etc.  
-[Here's an introduction to that][bootstrapping].
+[Here's an introduction to that](http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng).
 2. To get your current sxc-controller there are two objects *$2sxc* and *sxc* which you can just include it in your function definition, like  
 `module.controller('AppCatalogCtrl', function ($2sxc, sxc, $http, ...) {`
   1. The sxc is the one you want most, it is already set to your current instance, so you can ask it things like `sxc.manage` etc.
@@ -56,7 +56,7 @@ Quick example - this requires 2sxc 8.8
 
 ## Content Service
 This is a quick example of the _content_ service
-Todo: you can find some infos till then in the [bootstrapping][bootstrapping] article
+Todo: you can find some infos till then in the (http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng)(http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng) article
 
 Important: you can use the `content` service to 
 
@@ -77,7 +77,7 @@ var deletePromise = cSrv.delete(7740);
 ## Query Service
 This is a quick example of the _query_ service
 
-Todo: you can find some infos till then in the [bootstrapping][bootstrapping] article 
+Todo: you can find some infos till then in the (http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng)(http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng) article 
 
 ```JavaScript
 // this example assumes you added the query service in your constructor
@@ -101,10 +101,6 @@ When working with queries that expect parameters, you can pass them in the `get(
 qAll.get({ data: { "sort": "EntityTitle" },  }).then(...)
 ```
 
-## How it works
-[//]: # "Some explanations on the functionality"
-todo
-
 ## Notes and Clarifications On Bootstrapping
 Just fyi: in 2sxc 6.0 till 2sxc 8.8.0 the AngularJS bootstrapping needed to know the module-id. This was done by either
 
@@ -116,7 +112,7 @@ This is because it needs if for webservice calls. In 2sxc 8.8.1 the bootstrappin
 
 ## Read also
 
-* [Full explanation of bootstrapping and how/why etc.][bootstrapping] - which tells you why the current code is running so you could change the data added
+* [Full explanation of bootstrapping and how/why etc.](http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng) - which tells you why the current code is running so you could change the data added
 
 ## Demo App and further links
 
@@ -128,7 +124,3 @@ You should find some code examples in this demo App
 1. Introduced in 2sxc ??.??
 2. sxcToolbar released in 2sxc 8.8.0
 
-[$2sxc]:JavaScript-$2sxc
-
-
-[bootstrapping]:http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng

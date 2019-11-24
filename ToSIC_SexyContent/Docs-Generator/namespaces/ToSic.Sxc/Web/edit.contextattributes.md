@@ -27,7 +27,6 @@ In this example, the Edit.ContextAttributes will add some attributes with JSON, 
 
 
 ## How it works
-[//]: # "Some explanations on the functionality"
 The `Edit.ContextAttributes(...)` is always used inside an HTML-tag and will add some attributes with JSON. Any buttons or actions inside that tag will then find this information, and assume that it is has precendence over the global information.
 
 ## Using ContextAttributes
@@ -70,8 +69,3 @@ You should find some code examples in this demo App
 ## History
 
 1. Introduced in 2sxc 8.4
-
-(xref:Concepts.InnerContent): http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
-[DynamicEntity]: Dynamic-Entity
-[actions-source]: https://github.com/2sic/2sxc/blob/master/src/inpage/2sxc._actions.js
-[template-content-data]: http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content

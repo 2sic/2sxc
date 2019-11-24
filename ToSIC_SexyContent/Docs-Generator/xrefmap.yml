@@ -1,5 +1,11 @@
 references:
 
+# Important links
+- uid: Api.DotNet
+  name: .net API
+  href: /api/dot-net/index.html
+
+
 # Temp
 - uid: Temp.VisualQuery
   name: Visual Query
@@ -36,6 +42,9 @@ references:
 - uid: Blog.DataVsContent
   name: Differences Templating Data vs. Content
   href: http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content
+- uid: Blog.F12
+  name: Debugging with F12
+  href: http://2sxc.org/en/blog/post/debugging-javascript-errors-with-a-modern-browser-and-f12-(200)
 
 
 # Checklists

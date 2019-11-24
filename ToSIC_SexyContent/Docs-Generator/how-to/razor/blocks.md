@@ -61,9 +61,4 @@ You should find some code examples in this demo App
 1. Introduced in 2sxc 8.4
 2. Clean API and merge capabilitien in 8.9
 
-(xref:Concepts.InnerContent): http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
-[DynamicEntity]: Dynamic-Entity
-[actions-source]: https://github.com/2sic/2sxc/blob/master/src/inpage/2sxc._actions.js
-[template-content-data]: http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content
-[float-toolbar]: http://2sxc.org/en/Docs-Manuals/Feature/feature/2875
 

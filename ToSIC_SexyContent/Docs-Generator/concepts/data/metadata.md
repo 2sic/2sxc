@@ -41,11 +41,11 @@ Short explanation for the code
 More explanations 
 
 ## How it works
-[//]: # "Some explanations on the functionality"
+TODO
 ...
 
 ## Notes and Clarifications
-[//]: # "just add your special cases etc. here"
+TODO
 ...
 
 ## Read also

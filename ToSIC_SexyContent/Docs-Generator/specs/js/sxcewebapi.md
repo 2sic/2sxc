@@ -136,7 +136,4 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 
 1. Introduced in 2sxc 04.00
 
-[F12]: http://2sxc.org/en/blog/post/debugging-javascript-errors-with-a-modern-browser-and-f12-(200)
-[asset-optimization]:Template-Assets
-[content-blocks]: http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
 [source]: https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js

@@ -164,7 +164,7 @@ As mentioned above, you never need to work with this, it's included for complete
 
 TODO: document the properties, mention that they won't be stable in future versions
 
-_Till we find time to document more, please consult the [source][source]_
+_Till we find time to document more, please consult the (https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)(https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)_
 
 ## Demo App and further links
 
@@ -179,6 +179,4 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 1. Introduced in 2sxc 04.00
 1. Enhanced with `cms` (see [cms](xref:Specs.Js.$2sxc.Cms)) in 9.30
 
-[asset-optimization]:Template-Assets
 [content-blocks]: http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
-[source]: https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js

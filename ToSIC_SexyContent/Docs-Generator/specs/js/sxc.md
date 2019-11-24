@@ -66,7 +66,7 @@ Read the [manage](xref:Specs.Js.Sxc.Manage) documentation to discover more about
 
 Short note: The data is loaded using jQuery and when it's returned and processed, a callback will be executed. This is different from modern promise-implementations but easy to use anyhow. We haven't changed this, because it's trivial and we don't want to break existing code. 
 
-_Till we find time to document more, please consult the [source][source]_
+_Till we find time to document more, please consult the (https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)(https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)_
 
 ## Working with REST Api to Read/Write content-items
 Read about it in the [Sxc WebApi](xref:Specs.Js.Sxc.WebApi) page.
@@ -96,7 +96,7 @@ TODO - must document more about properties like
 1. isLoaded, lastRefresh, etc.
 2. that these are all internal-use and not guaranteed to stay stable in future versions
 
-_Till we find time to document more, please consult the [source][source]_
+_Till we find time to document more, please consult the (https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)(https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)_
 
 
 
@@ -113,6 +113,3 @@ More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Ma
 
 1. Introduced in 2sxc 04.00
 
-[asset-optimization]:Template-Assets
-[content-blocks]: http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules
-[source]: https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js

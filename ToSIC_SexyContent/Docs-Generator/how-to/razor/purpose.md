@@ -42,5 +42,3 @@ Sometimes you also have code which requires a user to be visiting a page - like 
 ## History
 
 * 2sxc 10.20 - changed to `Purpose` from `InstancePurpose` - old code still works
-
-[//]: # "Links referenced in this page"

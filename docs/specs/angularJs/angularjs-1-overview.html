@@ -59,7 +59,7 @@
                           <a href="../../specs/index.html" title="Specs">Specs</a>
                       </li>
                       <li>
-                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
+                          <a href="../..//api/dot-net/index.html" title=".net API">.net API</a>
                       </li>
                 </ul>    </div>
           </div>
@@ -359,7 +359,7 @@
 &lt;/li&gt;
 </code></pre><h2 id="content-service">Content Service</h2>
 <p>This is a quick example of the <em>content</em> service
-Todo: you can find some infos till then in the <a href="http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng">bootstrapping</a> article</p>
+Todo: you can find some infos till then in the (<a href="http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng)(http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng">http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng)(http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng</a>) article</p>
 <p>Important: you can use the <code>content</code> service to </p>
 <ol>
 <li>get all of a type</li>
@@ -375,7 +375,7 @@ var createPromise = cSrv.create({ &quot;Title&quot;: &quot;hello&quot;, &quot;Bo
 var deletePromise = cSrv.delete(7740); 
 </code></pre><h2 id="query-service">Query Service</h2>
 <p>This is a quick example of the <em>query</em> service</p>
-<p>Todo: you can find some infos till then in the <a href="http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng">bootstrapping</a> article </p>
+<p>Todo: you can find some infos till then in the (<a href="http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng)(http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng">http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng)(http://2sxc.org/en/Learn/Simple-AngularJS-in-DNN-with-2sxc4ng</a>) article </p>
 <pre><code class="lang-JavaScript">// this example assumes you added the query service in your constructor
 // it also assumes you created a visual-query called &quot;All-blog-items&quot;
 var qAll = query(&quot;All-blog-items&quot;);
@@ -392,9 +392,7 @@ qCurrent.get().then(function (result) {
 });
 </code></pre><p>When working with queries that expect parameters, you can pass them in the <code>get()</code> call</p>
 <pre><code>qAll.get({ data: { &quot;sort&quot;: &quot;EntityTitle&quot; },  }).then(...)
-</code></pre><h2 id="how-it-works">How it works</h2>
-<p>todo</p>
-<h2 id="notes-and-clarifications-on-bootstrapping">Notes and Clarifications On Bootstrapping</h2>
+</code></pre><h2 id="notes-and-clarifications-on-bootstrapping">Notes and Clarifications On Bootstrapping</h2>
 <p>Just fyi: in 2sxc 6.0 till 2sxc 8.8.0 the AngularJS bootstrapping needed to know the module-id. This was done by either</p>
 <ol>
 <li>providing an attribute like <code>iid=&quot;@Dnn.Module.ModuleId&quot;</code> or for tokens <code>iid=&quot;[Module:ModuleId]&quot;</code></li>

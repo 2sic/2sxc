@@ -61,5 +61,3 @@ You should find some code examples in this demo App
 1. Introduced in 2sxc v02.00
 2. Officially released & documented for use in 2sxc v08.06
 
-
-[jsapp]:http://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars

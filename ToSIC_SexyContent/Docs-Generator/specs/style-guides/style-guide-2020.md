@@ -234,8 +234,7 @@ Note: there are a few system files which will also reside in this folder, especi
 
 
 ## Notes and Clarifications
-[//]: # "just add your special cases etc. here"
-...
+TOOD...
 
 ## Read also
 

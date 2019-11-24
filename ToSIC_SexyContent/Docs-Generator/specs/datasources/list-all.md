@@ -446,14 +446,6 @@ These are all the data sources which are either provided in the default installa
 
 
 
-## Notes and Clarifications
-[//]: # "just add your special cases etc. here"
-...
-
-## Read also
-
-* ...
-
 ## Demo App and further links
 
 You should find some code examples in this demo App

@@ -115,7 +115,7 @@ There is a command called **custom** which is meant to be used for this. Check o
 
 ## All Commands & Parameters (todo - update)
 
-To understand the internals, check out the [source code][actionsjs]. These are the currently available actions and their parameters:
+To understand the internals, check out the [source code](https://github.com/2sic/2sxc-ui/blob/master/src/inpage/commands/commands.definitions.js). These are the currently available actions and their parameters:
 
 
 
@@ -552,5 +552,3 @@ You should find some code examples in this demo App
 ## History
 1. Used inside 2sxc since 01.00
 2. Official API since 2sxc 08.06
-
-[actionsjs]: https://github.com/2sic/2sxc-ui/blob/master/src/inpage/commands/commands.definitions.js

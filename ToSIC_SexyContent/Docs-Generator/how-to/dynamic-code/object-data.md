@@ -70,11 +70,7 @@ Afterwards, other mechanisms can override / change this.
 
 
 ## Data Object API
-The `Data` object itself is actually a normal [EAV IDataSource][code-eav-datasource]. So if you need to know more about the internals, read it up there.
+The `Data` object itself is actually a normal [EAV IDataSource](xref:ToSic.Eav.DataSources.IDataSource). So if you need to know more about the internals, read it up there.
 
 All other properties of the Data object are very special use only, so you probably shouldn't bother about them - which is why they are not documented here.
 
-
-
-[//]: # "Links referenced in this page"
-[code-eav-datasource]:https://github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/IDataSource.cs

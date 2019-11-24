@@ -48,8 +48,7 @@ by default any toolbar inside an element with a `sc-element` class will appear o
 1. string `classes`: **(null)** | _any kind of string_   
 
 ## Notes and Clarifications
-[//]: # "just add your special cases etc. here"
-...
+TODO
 
 ## Read also
 

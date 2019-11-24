@@ -90,7 +90,5 @@ You should find some code examples in this demo App
 
 * [JS Manage / Toolbar API Tutorial App](xref:App.TutorialJsToolbars)
 
-[jsapp]:http://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars
-
 ## History
 1. Introduced in 2sxc v08.06

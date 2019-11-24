@@ -21,7 +21,6 @@ Here's a quick example of using the `Link` object in a Razor template:
 This example creates a link to the current page, adding _either_ `?id=27` _or_ `/id/27`, depending on the DNN configuration. 
 
 ## How it works
-[//]: # "Some explanations on the functionality"
 The `Link`-object is always available in all Razor-templates. Internally it uses the DNN API to get the correct url. 
 
 ## Using @Link.To()
@@ -71,9 +70,3 @@ You should find some code examples in this demo App
 
 1. Introduced in 2sxc 8.4
 2. Enhanced in 2sxc 9.5.1 with Base() and with parameter pageId on Link.To
-
-
-
-
-[float-toolbar]: http://2sxc.org/en/Docs-Manuals/Feature/feature/2875
-
