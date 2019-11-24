@@ -694,10 +694,6 @@ It&#39;s also better because it separates data-retrieval from visualization.</p>
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.StreamFallback, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Logic, DynamicOut = false, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-StreamFallback&quot;)]
 public sealed class StreamFallback : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKey, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
-  <h5 id="ToSic_Eav_DataSources_StreamFallback_remarks"><strong>Remarks</strong></h5>
-  <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.
-But this would be inefficient, so for optimization, many items identify themselves with both the app and zone Ids</p>
-</div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a>
