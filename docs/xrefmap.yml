@@ -131,13 +131,13 @@ references:
   name: File-Based Content-Types
   href: specs/data/file-provided-content-types.html
 - uid: Specs.Data.Formats.JsonV1
-  name: 'Format: JSON V1'
+  name: JSON Format V1
   href: specs/data-formats/format-json-v1.html
 - uid: Specs.Data.Formats.JsonV1-ContentType
-  name: 'Format: JSON Content-Types'
+  name: JSON Content-Type V1
   href: specs/data-formats/format-json-v1-content-type.html
 - uid: Specs.Data.Formats.JsonV1-Entity
-  name: 'Format: JSON Entities'
+  name: JSON Entity V1
   href: specs/data-formats/format-json-v1-entity.html
 - uid: Specs.Data.Inputs.All
   name: Field Input-Type All

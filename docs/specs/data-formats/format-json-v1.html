@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Format: JSON V1 | 2sxc and EAV 10 </title>
+    <title>JSON Format V1 | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Format: JSON V1 | 2sxc and EAV 10 ">
+    <meta name="title" content="JSON Format V1 | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
@@ -478,10 +478,10 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="Specs.Data.Formats.JsonV1">
-<h1 id="format-json-v1">Format: JSON V1</h1>
+<h1 id="json-format-v1">JSON Format V1</h1>
 
 <p>JSON based data storage is used to persist data into a text (JSON) format. In 2sxc 9.4 we introduced it to store entities in the history (for version rollback). Since then it has found many new applications. </p>
-<h2 id="json-format-v1-package">JSON Format V1 Package</h2>
+<h2 id="json-package">JSON Package</h2>
 <p>The Json format has a minimal header like this:</p>
 <pre><code class="lang-json">{
   &quot;_&quot;: { &quot;V&quot;: 1 }
@@ -501,7 +501,12 @@
     ...
   }
 }
-</code></pre><h2 id="limitations">Limitations</h2>
+</code></pre><h2 id="special-stuff-about-the-json-format">Special Stuff about the JSON Format</h2>
+<h4 id="all-values-have-language-information">All values have language information</h4>
+<p>As we&#39;re usually working with real-life content-items, multi-language is always a concern. Because of this, every value is multi-language by default. If the language code is *, that means that this value is the default/fallback value for all languages. </p>
+<h4 id="metadata-is-a-recursive-list-of-entities">Metadata is a Recursive List of Entities</h4>
+<p>2sxc and the EAV is all about real-life content-management. As such, many pieces of information have more information attached, called Metadata. Metadata-items could themselves have their own Metadata, which is then of course attached as well. </p>
+<h2 id="limitations">Limitations</h2>
 <p>As of now (2sxc 9.7) such a package can only contain 1 root item (a content-type or an entity). Future versions may enhance this.  </p>
 <h2 id="read-also">Read also</h2>
 <ul>

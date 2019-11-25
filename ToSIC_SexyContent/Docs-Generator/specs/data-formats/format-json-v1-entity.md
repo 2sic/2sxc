@@ -2,12 +2,11 @@
 uid: Specs.Data.Formats.JsonV1-Entity
 ---
 
-# Format: JSON Entities 
+# JSON Entity V1
 
 JSON based entities are items which are stored as JSON. This is used in the history, in dynamic-entities in the DB and more. 
 
-## Format V1
-### Description
+## Description
 1. As of now, it's using a envolope to package everything and includes a minimal header to ensure we know it's [V1](xref:Specs.Data.Formats.JsonV1). 
 2. It then contains a `ContentType` node containing 
    1. various identification and description
@@ -16,7 +15,7 @@ JSON based entities are items which are stored as JSON. This is used in the hist
 3. the attributes themselves again contain a minimal information + metadata items (entities)
 4. note that the attribute order is relevant
 
-### Example
+## Example
 This example is an extract of the Config Content-Type to manage the SqlDataSource (will be releasen in 2sxc 9.8 with more help-text etc.):
 
 ```json
@@ -94,7 +93,7 @@ This example is an extract of the Config Content-Type to manage the SqlDataSourc
 
 ## Read also
 
-* [Format: Json V1](xref:Specs.Data.Formats.JsonV1)
+* @Specs.Data.Formats.JsonV1
 * [Blog post about the entity json format](https://2sxc.org/en/blog/post/deep-dive-json-stored-content-items-entities)
 
 ## History

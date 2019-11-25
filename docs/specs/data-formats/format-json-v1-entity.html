@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Format: JSON Entities | 2sxc and EAV 10 </title>
+    <title>JSON Entity V1 | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Format: JSON Entities | 2sxc and EAV 10 ">
+    <meta name="title" content="JSON Entity V1 | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
@@ -478,11 +478,10 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="Specs.Data.Formats.JsonV1-Entity">
-<h1 id="format-json-entities">Format: JSON Entities</h1>
+<h1 id="json-entity-v1">JSON Entity V1</h1>
 
 <p>JSON based entities are items which are stored as JSON. This is used in the history, in dynamic-entities in the DB and more. </p>
-<h2 id="format-v1">Format V1</h2>
-<h3 id="description">Description</h3>
+<h2 id="description">Description</h2>
 <ol>
 <li>As of now, it&#39;s using a envolope to package everything and includes a minimal header to ensure we know it&#39;s <a class="xref" href="format-json-v1.html">V1</a>. </li>
 <li>It then contains a <code>ContentType</code> node containing <ol>
@@ -494,7 +493,7 @@
 <li>the attributes themselves again contain a minimal information + metadata items (entities)</li>
 <li>note that the attribute order is relevant</li>
 </ol>
-<h3 id="example">Example</h3>
+<h2 id="example">Example</h2>
 <p>This example is an extract of the Config Content-Type to manage the SqlDataSource (will be releasen in 2sxc 9.8 with more help-text etc.):</p>
 <pre><code class="lang-json">{
     &quot;_&quot;: {
@@ -583,7 +582,7 @@
 </ul>
 <h2 id="read-also">Read also</h2>
 <ul>
-<li><a class="xref" href="format-json-v1.html">Format: Json V1</a></li>
+<li><a class="xref" href="format-json-v1.html">JSON Format V1</a></li>
 <li><a href="https://2sxc.org/en/blog/post/deep-dive-json-stored-content-items-entities">Blog post about the entity json format</a></li>
 </ul>
 <h2 id="history">History</h2>

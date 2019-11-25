@@ -2,11 +2,11 @@
 uid: Specs.Data.Formats.JsonV1
 ---
 
-# Format: JSON V1
+# JSON Format V1
 
 JSON based data storage is used to persist data into a text (JSON) format. In 2sxc 9.4 we introduced it to store entities in the history (for version rollback). Since then it has found many new applications. 
 
-## JSON Format V1 Package
+## JSON Package
 The Json format has a minimal header like this:
 
 ```json
@@ -33,6 +33,17 @@ This could then look like this:
   }
 }
 ```
+
+## Special Stuff about the JSON Format
+
+#### All values have language information
+
+As we're usually working with real-life content-items, multi-language is always a concern. Because of this, every value is multi-language by default. If the language code is *, that means that this value is the default/fallback value for all languages. 
+
+#### Metadata is a Recursive List of Entities
+
+2sxc and the EAV is all about real-life content-management. As such, many pieces of information have more information attached, called Metadata. Metadata-items could themselves have their own Metadata, which is then of course attached as well. 
+
 
 ## Limitations
 As of now (2sxc 9.7) such a package can only contain 1 root item (a content-type or an entity). Future versions may enhance this.  
