@@ -1,7 +1,7 @@
 ---
 uid: Concepts.EditContext
 ---
-# Concept: In-Page Edit Context
+# Concept: In-Page Editing Context
 
 To ensure that client-side commands like _edit_ can work (this includes all toolbar functionalities), the in-page scripts must pick up various things like AppId and more. This is provided as an **Edit-Context** and looks a bit like this:
 
@@ -21,11 +21,11 @@ To ensure that client-side commands like _edit_ can work (this includes all tool
 
 ## How the Edit-Context is Added
 
-By default, it is automatically added if the system detects that the current user has edit-permissions. In 2sxc 9.30 a feature was added to add the context in code, using the [Edit.Enable(...)](xref:Razor.EditEnable] command.
+By default, it is automatically added if the system detects that the current user has edit-permissions. In 2sxc 9.30 a feature was added to add the context in code, using the [Edit.Enable(...)](xref:HowTo.Razor.Edit.Enable) command.
 
 ## Inner-Context for Inner Content
 
-When [inner content](xref:Concepts.InnerContent) is used, each block of inner-content will change the context, because it will have different IDs etc. So inner-content blocks will add their own context-attributes. See also [Edit.ContextAttributes](xref:Razor.ContextAttributes].
+When [inner content](xref:Specs.Cms.InnerContent) is used, each block of inner-content will change the context, because it will have different IDs etc. So inner-content blocks will add their own context-attributes. See also [Edit.ContextAttributes](xref:Razor.ContextAttributes].
 
 ## How JS Picks up the Context
 

@@ -1,9 +1,7 @@
 ---
-uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+uid: HowTo.Razor.Edit.Enable
 ---
-# @Edit.Enable(...) Method in C# Razor
-
-## Purpose / Description
+# @Edit.Enable Method in C# Razor
 
 Editing or adding data to a 2sxc app requires the UI to have some JS, CSS and context information. This is only loaded/included for editors/admin/super-users, and not available for users with limited permissions.
 
@@ -35,18 +33,6 @@ This command simply enables editing - but doesn't provide any permissions or sho
 1. the Edit.Enable won't output anything in the position it's added, because it controls the main wrapper
 1. you must also create a link or toolbar in your code for the public users, as they won't have a button to press otherwise
 
-## The parameters
-
-1. `api` bool, optional  
-    ensures javascripts are loaded enabling commands to run
-1. `forms` bool, optional  
-    ensures javascripts are loaded enabling forms to open
-1. `context` bool, optional  
-    ensures that the [context information](xref:Concepts.EditContext) is provided in the DOM
-1. `styles` bool, optional
-    ensures styles to be loaded, which would be necessary for the standard toolbars to look right
-1. `autoToolbar` bool, optional
-    disables the automatic generation of a toolbar (this is important, as there usually won't be a toolbar in public pages, which would then trigger the fallback-toolbar to be generated)
 
 ## Read also
 

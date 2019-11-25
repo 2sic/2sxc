@@ -14,7 +14,7 @@ references:
   name: 'Overview: Edit Content or Data in DNN / 2sxc'
   href: specs/cms/edit.html
 - uid: Concepts.EditContext
-  name: 'Concept: In-Page Edit Context'
+  name: 'Concept: In-Page Editing Context'
   href: specs/cms/edit-context.html
 - uid: Concepts.EditToolbar
   name: 'Concept: In-Page Edit-Item Toolbars and Buttons'
@@ -22,9 +22,6 @@ references:
 - uid: Concepts.HideAdvancedFeatures
   name: 'Concept: Hide Advanced Features From Non-Admins'
   href: specs/cms/hide-advanced-features.html
-- uid: Concepts.InnerContent
-  name: 'Concept: Inner Content 2.0'
-  href: specs/cms/inner-content.html
 - uid: Concepts.PagePublishing
   name: 'Concept: DNN/Evoq Page Versioning / Publishing and Workflow'
   href: specs/cms/dnn-evoq-page-publishing.html
@@ -37,9 +34,6 @@ references:
 - uid: Concepts.QuickE
   name: 'Concept: quickE - Quick Edit 2.0'
   href: specs/cms/quick-edit.html
-- uid: Concepts.Tokens
-  name: 'Concept: Tokens'
-  href: specs/cms/tokens.html
 - uid: Concepts.Views
   name: 'Concept: Views'
   href: specs/cms/views.html
@@ -58,9 +52,6 @@ references:
 - uid: HowTo.DynamicCode.DynamicEntity
   name: How to Use a Dynamic Entity
   href: how-to/dynamic-code/dynamic-entity.html
-- uid: HowTo.DynamicCode.Edit
-  name: Edit /  Object in Razor / .net
-  href: how-to/dynamic-code/object-edit.html
 - uid: HowTo.DynamicCode.Entity
   name: IEntity / Entity Content-Item
   href: how-to/dynamic-code/entity.html
@@ -84,16 +75,22 @@ references:
   href: how-to/razor/blocks.html
 - uid: HowTo.Razor.ContextAttributes
   name: ContextAttributes in Razor-Output
-  href: how-to/razor/contextattributes.html
+  href: how-to/razor/edit.contextattributes.html
 - uid: HowTo.Razor.CustomizeData
   name: Event CustomizeData() on the Razor Page
   href: how-to/razor/customizedata.html
 - uid: HowTo.Razor.CustomizeSearch
   name: Event CustomizeSearch() on the Razor Page
   href: how-to/razor/customizesearch.html
-- uid: HowTo.Razor.EditToolbar
-  name: '...) Method in Razor / .net'
-  href: how-to/razor/edittoolbar.html
+- uid: HowTo.Razor.Edit
+  name: Edit /  Object in Razor / .net
+  href: how-to/razor/edit.html
+- uid: HowTo.Razor.Edit.Enable
+  name: " Method in C# Razor"
+  href: how-to/razor/edit.enable.html
+- uid: HowTo.Razor.Edit.Toolbar
+  name: " and  Methods in Razor / .net"
+  href: how-to/razor/edit.toolbar.html
 - uid: HowTo.Razor.Purpose
   name: Property Purpose / InstancePurpose on a Razor page
   href: how-to/razor/purpose.html
@@ -118,6 +115,9 @@ references:
 - uid: Specs.App.Folders
   name: Folder structure in the Content App folder
   href: specs/app/app-folder-structure.html
+- uid: Specs.Cms.InnerContent
+  name: 'Concept: Inner Content 2.0'
+  href: specs/cms/inner-content.html
 - uid: Specs.Contribute
   name: Contribute to 2sxc / EAV - Setup
   href: specs/docs/contribute-setup.html
@@ -262,6 +262,9 @@ references:
 - uid: Specs.DataSources.Configuration
   name: 'DataSource Concept: Configuration Injection using Tokens'
   href: specs/datasources/configuration.html
+- uid: Specs.DataSources.ConfigurationTokens
+  name: 'Concept: Tokens'
+  href: specs/datasources/configuration-tokens.html
 - uid: Specs.DataSources.Custom
   name: 'EAV DataSources: Creating Custom DataSources'
   href: specs/datasources/create-custom.html
@@ -995,6 +998,91 @@ references:
   fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).Upstream
   nameWithType: SynchronizedList<T>.Upstream
   nameWithType.vb: SynchronizedList(Of T).Upstream
+- uid: ToSic.Eav.Configuration
+  name: ToSic.Eav.Configuration
+  href: api/dot-net/ToSic.Eav.Configuration.html
+  commentId: N:ToSic.Eav.Configuration
+  fullName: ToSic.Eav.Configuration
+  nameWithType: ToSic.Eav.Configuration
+- uid: ToSic.Eav.Configuration.Features
+  name: Features
+  href: api/dot-net/ToSic.Eav.Configuration.Features.html
+  commentId: T:ToSic.Eav.Configuration.Features
+  fullName: ToSic.Eav.Configuration.Features
+  nameWithType: Features
+- uid: ToSic.Eav.Configuration.Features.Enabled(System.Collections.Generic.IEnumerable{System.Guid})
+  name: Enabled(IEnumerable<Guid>)
+  href: api/dot-net/ToSic.Eav.Configuration.Features.html#ToSic_Eav_Configuration_Features_Enabled_System_Collections_Generic_IEnumerable_System_Guid__
+  commentId: M:ToSic.Eav.Configuration.Features.Enabled(System.Collections.Generic.IEnumerable{System.Guid})
+  name.vb: Enabled(IEnumerable(Of Guid))
+  fullName: ToSic.Eav.Configuration.Features.Enabled(System.Collections.Generic.IEnumerable<System.Guid>)
+  fullName.vb: ToSic.Eav.Configuration.Features.Enabled(System.Collections.Generic.IEnumerable(Of System.Guid))
+  nameWithType: Features.Enabled(IEnumerable<Guid>)
+  nameWithType.vb: Features.Enabled(IEnumerable(Of Guid))
+- uid: ToSic.Eav.Configuration.Features.Enabled(System.Guid)
+  name: Enabled(Guid)
+  href: api/dot-net/ToSic.Eav.Configuration.Features.html#ToSic_Eav_Configuration_Features_Enabled_System_Guid_
+  commentId: M:ToSic.Eav.Configuration.Features.Enabled(System.Guid)
+  fullName: ToSic.Eav.Configuration.Features.Enabled(System.Guid)
+  nameWithType: Features.Enabled(Guid)
+- uid: ToSic.Eav.Configuration.Features.Enabled*
+  name: Enabled
+  href: api/dot-net/ToSic.Eav.Configuration.Features.html#ToSic_Eav_Configuration_Features_Enabled_
+  commentId: Overload:ToSic.Eav.Configuration.Features.Enabled
+  isSpec: "True"
+  fullName: ToSic.Eav.Configuration.Features.Enabled
+  nameWithType: Features.Enabled
+- uid: ToSic.Eav.Configuration.Features.Valid
+  name: Valid
+  href: api/dot-net/ToSic.Eav.Configuration.Features.html#ToSic_Eav_Configuration_Features_Valid
+  commentId: P:ToSic.Eav.Configuration.Features.Valid
+  fullName: ToSic.Eav.Configuration.Features.Valid
+  nameWithType: Features.Valid
+- uid: ToSic.Eav.Configuration.Features.Valid*
+  name: Valid
+  href: api/dot-net/ToSic.Eav.Configuration.Features.html#ToSic_Eav_Configuration_Features_Valid_
+  commentId: Overload:ToSic.Eav.Configuration.Features.Valid
+  isSpec: "True"
+  fullName: ToSic.Eav.Configuration.Features.Valid
+  nameWithType: Features.Valid
+- uid: ToSic.Eav.Configuration.Fingerprint
+  name: Fingerprint
+  href: api/dot-net/ToSic.Eav.Configuration.Fingerprint.html
+  commentId: T:ToSic.Eav.Configuration.Fingerprint
+  fullName: ToSic.Eav.Configuration.Fingerprint
+  nameWithType: Fingerprint
+- uid: ToSic.Eav.Configuration.Fingerprint.System
+  name: System
+  href: api/dot-net/ToSic.Eav.Configuration.Fingerprint.html#ToSic_Eav_Configuration_Fingerprint_System
+  commentId: P:ToSic.Eav.Configuration.Fingerprint.System
+  fullName: ToSic.Eav.Configuration.Fingerprint.System
+  nameWithType: Fingerprint.System
+- uid: ToSic.Eav.Configuration.Fingerprint.System*
+  name: System
+  href: api/dot-net/ToSic.Eav.Configuration.Fingerprint.html#ToSic_Eav_Configuration_Fingerprint_System_
+  commentId: Overload:ToSic.Eav.Configuration.Fingerprint.System
+  isSpec: "True"
+  fullName: ToSic.Eav.Configuration.Fingerprint.System
+  nameWithType: Fingerprint.System
+- uid: ToSic.Eav.Configuration.IFingerprintProvider
+  name: IFingerprintProvider
+  href: api/dot-net/ToSic.Eav.Configuration.IFingerprintProvider.html
+  commentId: T:ToSic.Eav.Configuration.IFingerprintProvider
+  fullName: ToSic.Eav.Configuration.IFingerprintProvider
+  nameWithType: IFingerprintProvider
+- uid: ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint
+  name: GetSystemFingerprint()
+  href: api/dot-net/ToSic.Eav.Configuration.IFingerprintProvider.html#ToSic_Eav_Configuration_IFingerprintProvider_GetSystemFingerprint
+  commentId: M:ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint
+  fullName: ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint()
+  nameWithType: IFingerprintProvider.GetSystemFingerprint()
+- uid: ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint*
+  name: GetSystemFingerprint
+  href: api/dot-net/ToSic.Eav.Configuration.IFingerprintProvider.html#ToSic_Eav_Configuration_IFingerprintProvider_GetSystemFingerprint_
+  commentId: Overload:ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint
+  isSpec: "True"
+  fullName: ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint
+  nameWithType: IFingerprintProvider.GetSystemFingerprint
 - uid: ToSic.Eav.Data
   name: ToSic.Eav.Data
   href: api/dot-net/ToSic.Eav.Data.html
@@ -7050,9 +7138,15 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes
   nameWithType: IInPageEditingSystem.ContextAttributes
-- uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
-  name: '...) Method in C# Razor'
-  href: how-to/dynamic-code/edit.enable.html
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name: Enable(String, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
+  commentId: M:ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name.vb: Enable(String, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>)
+  fullName.vb: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean))
+  nameWithType: IInPageEditingSystem.Enable(String, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  nameWithType.vb: IInPageEditingSystem.Enable(String, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable*
   name: Enable
   href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_

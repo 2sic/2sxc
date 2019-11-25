@@ -123,8 +123,8 @@
                             <a href="../dynamic-code/object-edit.html" title="Edit Object" class="">Edit Object</a>
                               
                               <ul class="nav level3">
-                                <li class="">
-                                  <a href="../dynamic-code/object-edit.html" title="Edit.Enable (todo)" class="">Edit.Enable (todo)</a>
+                                <li class="active">
+                                  <a href="../dynamic-code/edit.enable.html" title="Edit.Enable" class="active">Edit.Enable</a>
                                 </li>
                               </ul>  </li>
                           <li class="">
@@ -192,10 +192,9 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+            <article class="content wrap" id="_content" data-uid="HowTo.DynamicCode.Edit.Enable">
 <h1 id="editenable-method-in-c-razor">@Edit.Enable(...) Method in C# Razor</h1>
 
-<h2 id="purpose--description">Purpose / Description</h2>
 <p>Editing or adding data to a 2sxc app requires the UI to have some JS, CSS and context information. This is only loaded/included for editors/admin/super-users, and not available for users with limited permissions.</p>
 <p>If you want to enable this for more restricted users - for example when you want to use the 2sxc-form to let users add data - this must be enabled. That&#39;s what <code>Edit.Enable(...)</code> is for.</p>
 <h2 id="how-to-use">How to use</h2>
@@ -217,16 +216,6 @@
 <li>Edit.Enable uses <a class="xref" href="use-named-parameters.html">named parameters</a>, so you always have to use the <code>api: true</code> syntax</li>
 <li>the Edit.Enable won&#39;t output anything in the position it&#39;s added, because it controls the main wrapper</li>
 <li>you must also create a link or toolbar in your code for the public users, as they won&#39;t have a button to press otherwise</li>
-</ol>
-<h2 id="the-parameters">The parameters</h2>
-<ol>
-<li><code>api</code> bool, optional<br> ensures javascripts are loaded enabling commands to run</li>
-<li><code>forms</code> bool, optional<br> ensures javascripts are loaded enabling forms to open</li>
-<li><code>context</code> bool, optional<br> ensures that the <a class="xref" href="../../specs/cms/edit-context.html">context information</a> is provided in the DOM</li>
-<li><code>styles</code> bool, optional
- ensures styles to be loaded, which would be necessary for the standard toolbars to look right</li>
-<li><code>autoToolbar</code> bool, optional
- disables the automatic generation of a toolbar (this is important, as there usually won&#39;t be a toolbar in public pages, which would then trigger the fallback-toolbar to be generated)</li>
 </ol>
 <h2 id="read-also">Read also</h2>
 <ul>

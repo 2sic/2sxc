@@ -5,7 +5,7 @@ uid: HowTo.Razor.Blocks
 # Razor: Rendering Content-Blocks
 
 ## Purpose / Description
-When using [Inner Content](xref:Concepts.InnerContent) the linked content-blocks (apps or pieces of content) must be rendered into the template. Here's how to do it in Razor. 
+When using [Inner Content](xref:Specs.Cms.InnerContent) the linked content-blocks (apps or pieces of content) must be rendered into the template. Here's how to do it in Razor. 
 
 ## How to use
 There are two common use cases
@@ -29,7 +29,7 @@ Here's a more manual example of doing the same thing, but done manually to demon
     }
 </div>
 ```
-If you care about doing it manually, read more about the [Edit object](xref:HowTo.DynamicCode.Edit).
+If you care about doing it manually, read more about the [Edit object](xref:HowTo.Razor.Edit).
 
 ## Very Rich Text / Inner-Content
 _this is new in 2sxc 8.9_

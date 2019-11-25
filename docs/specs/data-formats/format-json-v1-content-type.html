@@ -290,9 +290,6 @@
                             <a href="../cms/quick-edit.html" title="Quick-Edit (QuickE)" class="">Quick-Edit (QuickE)</a>
                           </li>
                           <li class="">
-                            <a href="../cms/tokens.html" title="Tokens" class="">Tokens</a>
-                          </li>
-                          <li class="">
                             <a href="../cms/views.html" title="Views" class="">Views</a>
                           </li>
                           <li class="">
@@ -326,8 +323,14 @@
                             <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
                           </li>
                           <li class="">
+                            <span class="expand-stub"></span>
                             <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
-                          </li>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/configuration-tokens.html" title="Configuration Tokens" class="">Configuration Tokens</a>
+                                </li>
+                              </ul>  </li>
                           <li class="">
                             <span class="expand-stub"></span>
                             <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
@@ -648,7 +651,6 @@
 <p>As of now (2sxc 9.7) the system will pick up the content-types stored there and everything works. BUT there is no built-in mechanism to edit these. We (2sic) can easily create content-types in a normal 2sxc and export them to json for this purpose, but as of now there is no GUI to do so.</p>
 <p>This should not affect you, as it&#39;s not meant to be managed by anybody else than us as of now. </p>
 <h2 id="special-stuff-about-the-json-format">Special Stuff about the JSON Format</h2>
-<p>Here are some things that may seem unusual at first:</p>
 <h4 id="content-type-attributes-must-preserve-sort-order">Content Type Attributes must preserve Sort Order</h4>
 <p>This is important, as it&#39;s relevant to the UI.</p>
 <h4 id="all-attributes-are-grouped-by-type">All Attributes are Grouped by Type</h4>

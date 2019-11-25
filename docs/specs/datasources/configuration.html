@@ -290,9 +290,6 @@
                             <a href="../cms/quick-edit.html" title="Quick-Edit (QuickE)" class="">Quick-Edit (QuickE)</a>
                           </li>
                           <li class="">
-                            <a href="../cms/tokens.html" title="Tokens" class="">Tokens</a>
-                          </li>
-                          <li class="">
                             <a href="../cms/views.html" title="Views" class="">Views</a>
                           </li>
                           <li class="">
@@ -326,8 +323,14 @@
                             <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
                           </li>
                           <li class="active">
+                            <span class="expand-stub"></span>
                             <a href="../datasources/configuration.html" title="Configuration System" class="active">Configuration System</a>
-                          </li>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/configuration-tokens.html" title="Configuration Tokens" class="">Configuration Tokens</a>
+                                </li>
+                              </ul>  </li>
                           <li class="">
                             <span class="expand-stub"></span>
                             <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
@@ -494,7 +497,7 @@
 <h2 id="configuration-basics">Configuration Basics</h2>
 <p>Each configuration of a <a class="xref" href="datasource.html">DataSource</a> is either a fixed string value like <code>17</code> or a token like <code>[Settings:PageNumber]</code>. In most cases it&#39;s a token. This token is parsed <em>before any data is queried</em> to ensure that in the end the <a class="xref" href="datasource.html">DataSource</a> has a usefull value before actually performing its task. </p>
 <h2 id="token-basics">Token Basics</h2>
-<p>A token is a piece of text that looks like <code>[Source:Property]</code>. It is good to understand the full <a class="xref" href="../cms/tokens.html">token concept, discussed here</a>. You&#39;ll also want to read about fallback and recursion to understand the following content. </p>
+<p>A token is a piece of text that looks like <code>[Source:Property]</code>. It is good to understand the full <a class="xref" href="configuration-tokens.html">token concept, discussed here</a>. You&#39;ll also want to read about fallback and recursion to understand the following content. </p>
 <h2 id="shared-token-suppliers--token-sources">Shared Token-Suppliers / Token-Sources</h2>
 <p>When a DataSource is configured, it has many token-suppliers like <code>Module</code>, <code>QueryString</code>, <code>App</code> etc. These are shared and are identical for all objects. </p>
 <h2 id="advanced-token-source-for-settings">Advanced Token-Source for Settings</h2>
@@ -518,7 +521,7 @@
 <h2 id="also-read">Also Read</h2>
 <ul>
 <li>about <a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.IDataStream.html">Data Streams</a></li>
-<li><a class="xref" href="../cms/tokens.html">Tokens concept</a></li>
+<li><a class="xref" href="configuration-tokens.html">Tokens concept</a></li>
 <li><a class="xref" href="api.html">DataSource API</a></li>
 <li><a class="xref" href="api-ensureconfigurationisloaded.html">Ensuring configuration is parsed</a></li>
 </ul>

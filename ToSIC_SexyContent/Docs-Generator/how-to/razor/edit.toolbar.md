@@ -1,8 +1,8 @@
 ---
-uid: HowTo.Razor.EditToolbar
+uid: HowTo.Razor.Edit.Toolbar
 ---
 
-# @Edit.Toolbar(...) Method in Razor / .net
+# @Edit.TagToolbar and @Edit.Toolbar Methods in Razor / .net
 2sxc has a cool in-page toolbar system - here you'll find a [conceptual overview around the toolbar](xref:Concepts.EditToolbar). These toolbars are usually hover-buttons like this:
 
 ![hover inline toolbar example](/assets/concepts/inpage-toolbar/example-hover-toolbar.png)
@@ -47,7 +47,7 @@ As you can see, the `actions: "new"` tells the toolbar to only show this one but
 
 
 ## How it works
-This command is part of the [Edit](xref:HowTo.DynamicCode.Edit) object and used in Razor templates. It provides a simple API to generate in-page buttons if the current user is an editor.
+This command is part of the [Edit](xref:HowTo.Razor.Edit) object and used in Razor templates. It provides a simple API to generate in-page buttons if the current user is an editor.
 
 It also checks if edit should be enabled (based on security specs) and will then generate some HTML/JavaScript at that location. 
 
@@ -60,24 +60,6 @@ Here are a few snippets that you'll typically need, saving you from reading all 
 4. `Edit.Toolbar(actions: "new", contentType: "BlogPost")` creates a toolbar with one button, namely `new` which will open a new `BlogPost` form.
 5. `@Edit.Toolbar(actions: "new", contentType: "BlogPost",  prefill: new { Title = "Hello", Color = "red" } )` creates a toolbar with one button, namely `new` which will open a new `BlogPost` form, and prefills the `Title` and `Color` field.
 
-TODO MORE SIMPLE EXAMPLES
-
-## Edit.Toolbar API
-The `Edit.Toolbar()` has these parameters 
-
-1. `target` a [DynamicEntity](xref:HowTo.DynamicCode.Entity) content-item, _optional_  
-this is a content item which will be affected by the toolbar
-2. `actions` string, _optional, must be [named](xref:HowTo.DynamicCode.NamedParameters)_  
-this is a comma-separated string overriding the default buttons which the toolbar will create, containing [command names](xref:Specs.Js.Commands). 
-3. `contentType` string, _optional, must be [named](xref:HowTo.DynamicCode.NamedParameters)_  
-this is necessary if you want a _new_ button which would open the dialog to create a new item, and you don't have a target-item which already tells the system what type to use. This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
-4. `prefill` object, _optional, must be [named](xref:HowTo.DynamicCode.NamedParameters)_  
-allows a _new_ dialog to receive values as a prefill, for example to already specify a date, title, category, etc.
-1. `toolbar` object, _optional, must be [named](xref:HowTo.DynamicCode.NamedParameters)_ (v08.06+)  
-a full toolbar configuration object - see the [JS documentation for Toolbar](xref:Specs.Js.Toolbar.Intro). If you use this, you cannot also specify _actions_, _contentType_ or _prefill_ as those would want to configure the same information. 
-1. `settings` object, _optional, must be [named](xref:HowTo.DynamicCode.NamedParameters)_ (v08.06+)  
-the settings used by a toolbar like alignment - see the [JS documentation for settings](xref:Specs.Js.Toolbar.Settings)
-
 ## The Toolbar Actions
 _Note:_ at the moment, the buttons are grouped into bundles like
 
@@ -89,7 +71,7 @@ _Note:_ at the moment, the buttons are grouped into bundles like
 
 The actions can be a combination of known button-names. Here's the current [JavaScript catalog of commands](xref:Specs.Js.Commands): 
 
-The following commands all require `target` to be set, or they only make sense in a List-setup - see also [content and not as data](xref:Blog.DataVsContent)[template-content-data]. 
+The following commands all require `target` to be set, or they only make sense in a List-setup - see also [content and not as data](xref:Blog.DataVsContent). 
 
 1. `new` open a dialog to create a new item, requires a `target` _or_ a `contentType` parameter
 2. `edit` to edit the current item
@@ -118,10 +100,6 @@ example
 
 This example will prefill the title, the color and in the link field add a reference to the current page. 
 
-TODO: get more examples with prefilling
-* a related entity (like a category)
-* a date
-
 ## Multiple Entities Prefil 
 For this you must simply provide an array of strings, like this:
 ```Razor
@@ -130,6 +108,7 @@ For this you must simply provide an array of strings, like this:
 
 ## Styling the Toolbar
 As of now there are only limited stying functions: 
+
 ### Floating the Toolbar
 This happens automatically, if a surrounding HTML-tag has a class "sc-element". [more...](http://2sxc.org/en/Docs-Manuals/Feature/feature/2875)
 
@@ -141,36 +120,17 @@ As previously noted, the toolbar actually puts some html/js into the page, which
 3. js generates buttons
 4. if a button is clicked, an action-manager then executes the correct action on the correct item 
 
-## Notes and Clarifications
-
-### Enforced Parameter Naming
-To promote long term API stability, we require all parameters except for the first content-item `target` to be [named](xref:HowTo.DynamicCode.NamedParameters) when used.
-
-```html
-<!-- this will work -->
-@Edit.Toolbar(target: postItem, actions: "add,edit,more")
-@Edit.Toolbar(postItem, actions: "add")
-
-<!-- this won't work -->
-@Edit.Toolbar(postItem, "add")
-
-<!-- this will work -->
-@Edit.Toolbar(actions: "new", contentType: "BlogPost")
-
-<!-- this won't -->
-@Edit.Toolbar("new", "BlogPost")
-```
-
-### Older @Content.Toolbar Syntax Is Deprecated
+## Older @Content.Toolbar Syntax Is Deprecated
 _Note_: there was an older `@SomeContentItem.Toolbar` syntax and this still works, but we ran into architecture issues, so we decided to place all advanced functions into the `Edit.Toolbar(...)` method. This is the way to go from now on, the old syntax will continue to work but is not recommended any more. 
 
 ## Read also
 
-* todo
+* @Specs.Js.Toolbar.Intro
+* @Specs.Js.Toolbar.Settings
+* @Specs.Js.Toolbar.Buttons
 
 ## Demo App and further links
 
-You should find some code examples in this demo App
 * [FAQ with Categories](http://2sxc.org/en/apps/app/faq-with-categories-and-6-views)
 
 More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Manuals/Feature/feature/2683)

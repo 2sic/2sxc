@@ -1,5 +1,5 @@
 ---
-uid: Concepts.InnerContent
+uid: Specs.Cms.InnerContent
 ---
 # Concept: Inner Content 2.0
 

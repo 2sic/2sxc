@@ -124,7 +124,7 @@
                               
                               <ul class="nav level3">
                                 <li class="">
-                                  <a href="../dynamic-code/object-edit.html" title="Edit.Enable (todo)" class="">Edit.Enable (todo)</a>
+                                  <a href="../dynamic-code/edit.enable.html" title="Edit.Enable" class="">Edit.Enable</a>
                                 </li>
                               </ul>  </li>
                           <li class="">
@@ -215,21 +215,7 @@
 <h2 id="using-contextattributes">Using ContextAttributes</h2>
 <p>These context-attributes enhance an HTML-tag, so that buttons inside that tag can be in a different context than the original context. </p>
 <p>Here&#39;s a common example: imagine you have a 2sxc-instance (a module showing 2sxc-data) and all the buttons there know the App-ID, the Zone, the Content-Type etc. Inside this module, you can have multiple items but they all still work well in the original context (all items are in the same app, so an edit-dialog will also know the AppId). </p>
-<h2 id="the-parameters">The parameters</h2>
-<ol>
-<li><code>target</code> required<br> the content-item for which the new context should be. this item usually has a field (see the next property) which has <a class="xref" href="../../specs/cms/inner-content.html">Concept: Inner Content 2.0</a></li>
-<li><code>field</code> string<br> the field of this content-item, which contains the inner-content-items </li>
-<li><code>contentType</code> string<br> this should not be used yet, it&#39;s for a future feature</li>
-</ol>
-<h2 id="notes-and-clarifications">Notes and Clarifications</h2>
-<h3 id="enforced-parameter-naming">Enforced Parameter Naming</h3>
-<p>To promote long term API stability, we require all parameters except for the first content-item <code>target</code> to be named when used - see <a class="xref" href="../dynamic-code/use-named-parameters.html">convention</a>.</p>
-<pre><code class="lang-html">&lt;!-- this will work --&gt;
-@Edit.ContextAttributes(target: postItem, field: &quot;InnerContent&quot;)
-
-&lt;!-- this won&#39;t work --&gt;
-@Edit.ContextAttributes(postItem, &quot;InnerContent&quot;)
-</code></pre><h2 id="read-also">Read also</h2>
+<h2 id="read-also">Read also</h2>
 <ul>
 <li><a class="xref" href="../../specs/cms/inner-content.html">Concept: Inner Content 2.0</a></li>
 </ul>

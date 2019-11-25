@@ -62,7 +62,7 @@
         "files": [
           "apidoc/**.md",
           "namespaces/**.md",
-          "shared/**.md",
+          "shared/**.md"
         ],
         "exclude": [
           "obj/**",

@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Concept: In-Page Edit Context | 2sxc and EAV 10 </title>
+    <title>Concept: In-Page Editing Context | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Concept: In-Page Edit Context | 2sxc and EAV 10 ">
+    <meta name="title" content="Concept: In-Page Editing Context | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
@@ -290,9 +290,6 @@
                             <a href="../cms/quick-edit.html" title="Quick-Edit (QuickE)" class="">Quick-Edit (QuickE)</a>
                           </li>
                           <li class="">
-                            <a href="../cms/tokens.html" title="Tokens" class="">Tokens</a>
-                          </li>
-                          <li class="">
                             <a href="../cms/views.html" title="Views" class="">Views</a>
                           </li>
                           <li class="">
@@ -326,8 +323,14 @@
                             <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
                           </li>
                           <li class="">
+                            <span class="expand-stub"></span>
                             <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
-                          </li>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/configuration-tokens.html" title="Configuration Tokens" class="">Configuration Tokens</a>
+                                </li>
+                              </ul>  </li>
                           <li class="">
                             <span class="expand-stub"></span>
                             <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
@@ -478,7 +481,7 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="Concepts.EditContext">
-<h1 id="concept-in-page-edit-context">Concept: In-Page Edit Context</h1>
+<h1 id="concept-in-page-editing-context">Concept: In-Page Editing Context</h1>
 
 <p>To ensure that client-side commands like <em>edit</em> can work (this includes all toolbar functionalities), the in-page scripts must pick up various things like AppId and more. This is provided as an <strong>Edit-Context</strong> and looks a bit like this:</p>
 <pre><code class="lang-html">&lt;div data-edit-context=&#39;{
@@ -492,7 +495,7 @@
   &lt;span&gt;more stuff...&lt;/span&gt;
 &lt;/div&gt;
 </code></pre><h2 id="how-the-edit-context-is-added">How the Edit-Context is Added</h2>
-<p>By default, it is automatically added if the system detects that the current user has edit-permissions. In 2sxc 9.30 a feature was added to add the context in code, using the [Edit.Enable(...)](xref:Razor.EditEnable] command.</p>
+<p>By default, it is automatically added if the system detects that the current user has edit-permissions. In 2sxc 9.30 a feature was added to add the context in code, using the <a class="xref" href="../../how-to/razor/edit.enable.html">Edit.Enable(...)</a> command.</p>
 <h2 id="inner-context-for-inner-content">Inner-Context for Inner Content</h2>
 <p>When <a class="xref" href="inner-content.html">inner content</a> is used, each block of inner-content will change the context, because it will have different IDs etc. So inner-content blocks will add their own context-attributes. See also [Edit.ContextAttributes](xref:Razor.ContextAttributes].</p>
 <h2 id="how-js-picks-up-the-context">How JS Picks up the Context</h2>

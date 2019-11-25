@@ -21,16 +21,39 @@ namespace ToSic.Sxc.Web
         bool Enabled { get; }
 
         /// <summary>
-        /// Generate a toolbar tag - must be used in normal html, not as an attribute
+        /// Generate a toolbar tag - must be used in normal html, not as an attribute. <br/>
+        /// See also @HowTo.Razor.Edit.Toolbar
         /// </summary>
-        /// <param name="target">The item this toolbar is for, can be null</param>
+        /// <param name="target">
+        /// The content-item this toolbar is for, can be null. <br/>
+        /// Usually a @HowTo.DynamicCode.DynamicEntity?text=DynamicEntity or a @HowTo.DynamicCode.Entity?text=Entity
+        /// </param>
         /// <param name="noParameterOrder">see @HowTo.DynamicCode.NamedParameters</param>
-        /// <param name="actions">list of actions on this toolbar, null means default actions for this item</param>
-        /// <param name="contentType">content-type of this toolbar, used when it offers new/add buttons</param>
-        /// <param name="prefill">prefill information, for new items</param>
-        /// <param name="toolbar">complex manual toolbar configuration if needed - providing this will cause actions to be ignored</param>
-        /// <param name="settings">toolbar settings controlling hover etc.</param>
-        /// <returns>If the user is an editor, it returns HTML UL tag containing all the toolbar configuration</returns>
+        /// <param name="actions">
+        /// List of actions on this toolbar. If null, will use default actions for this item.
+        /// If provided, must be comma-separated action-names - see @Specs.Js.Commands.
+        /// </param>
+        /// <param name="contentType">Content-type of this toolbar, used when it has `new` or `add` buttons.
+        /// This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
+        /// </param>
+        /// <param name="prefill">
+        /// Allows a `new` dialog to receive values as a prefill.
+        /// For example to already specify a date, title, category, etc. <br/>
+        /// It's a dynamic object, see also the JS documentation on the prefill.
+        /// </param>
+        /// <param name="toolbar">
+        /// Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
+        /// See @Specs.Js.Toolbar.Js
+        /// </param>
+        /// <param name="settings">
+        /// Toolbar settings controlling hover etc. <br/>
+        /// See @Specs.Js.Toolbar.Settings
+        /// </param>
+        /// <returns>If the user is an editor, it returns HTML UL tag containing all the toolbar configuration.</returns>
+        /// <remarks>
+        /// **History**
+        /// 1. Added in 2sxc 8.04
+        /// </remarks>
         HtmlString Toolbar(object target = null,
             string noParameterOrder = Eav.Constants.RandomProtectionParameter,
             string actions = null,
@@ -40,16 +63,39 @@ namespace ToSic.Sxc.Web
             object settings = null);
 
         /// <summary>
-        /// Generate a toolbar attribute inside an html-tag
+        /// Generate a toolbar attribute inside an html-tag <br/>
+        /// See also @HowTo.Razor.Edit.Toolbar
         /// </summary>
-        /// <param name="target">The item this toolbar is for, can be null</param>
+        /// <param name="target">
+        /// The content-item this toolbar is for, can be null. <br/>
+        /// Usually a @HowTo.DynamicCode.DynamicEntity?text=DynamicEntity or a @HowTo.DynamicCode.Entity?text=Entity
+        /// </param>
         /// <param name="noParameterOrder">see @HowTo.DynamicCode.NamedParameters</param>
-        /// <param name="actions">list of actions on this toolbar, null means default actions for this item</param>
-        /// <param name="contentType">content-type of this toolbar, used when it offers new/add buttons</param>
-        /// <param name="prefill">prefill information, for new items</param>
-        /// <param name="toolbar">complex manual toolbar configuration if needed - providing this will cause actions to be ignored</param>
-        /// <param name="settings">toolbar settings controlling hover etc.</param>
-        /// <returns>If the user is an editor, it returns the attribute containing all the toolbar configuration</returns>
+        /// <param name="actions">
+        /// List of actions on this toolbar. If null, will use default actions for this item.
+        /// If provided, must be comma-separated action-names - see @Specs.Js.Commands.
+        /// </param>
+        /// <param name="contentType">Content-type of this toolbar, used when it has `new` or `add` buttons.
+        /// This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
+        /// </param>
+        /// <param name="prefill">
+        /// Allows a `new` dialog to receive values as a prefill.
+        /// For example to already specify a date, title, category, etc. <br/>
+        /// It's a dynamic object, see also the JS documentation on the prefill.
+        /// </param>
+        /// <param name="toolbar">
+        /// Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
+        /// See @Specs.Js.Toolbar.Js
+        /// </param>
+        /// <param name="settings">
+        /// Toolbar settings controlling hover etc. <br/>
+        /// See @Specs.Js.Toolbar.Settings
+        /// </param>
+        /// <returns>If the user is an editor, it returns the attribute containing all the toolbar configuration.</returns>
+        /// <remarks>
+        /// **History**
+        /// 1. Added in 2sxc 9.40
+        /// </remarks>
         HtmlString TagToolbar(object target = null,
             string noParameterOrder = Eav.Constants.RandomProtectionParameter,
             string actions = null,
@@ -61,14 +107,16 @@ namespace ToSic.Sxc.Web
         /// <summary>
         /// Get html-attributes to mark the current context
         /// these will be added to a wrapper tag (usually a div)
-        /// so that in-page editing knows what the context is
+        /// so that in-page editing knows what the context is <br/>
+        /// Please read more about @Specs.Cms.InnerContent
         /// </summary>
-        /// <param name="target">the object for is part of the context</param>
+        /// <param name="target">The content-item for which the new context should be.
+        /// This item usually has a field which has @Concepts.InnerContent</param>
         /// <param name="noParameterOrder">see @HowTo.DynamicCode.NamedParameters</param>
-        /// <param name="field">the field name - in case of list-contexts</param>
-        /// <param name="contentType">type name for new items - usually for inner-content and list-contexts</param>
+        /// <param name="field">the field of this content-item, which contains the inner-content-items</param>
+        /// <param name="contentType">type name used for 'new' items in a toolbar - usually for inner-content and list-contexts</param>
         /// <param name="newGuid">the guid of a new item - use null for auto-generate</param>
-        /// <returns></returns>
+        /// <returns>An <see cref="HtmlString"/> object containing an html-attribute to add to the wrapper of the inner content</returns>
         /// <remarks>
         /// **History** <br/>
         /// 1. Introduced in 2sxc 8.4
@@ -106,7 +154,7 @@ namespace ToSic.Sxc.Web
         );
 
         /// <summary>
-        /// Ensure that the UI will load the correct assets to enable editing. See @HowTo.DynamicCode.Edit.Enable?text=How+to+use+Edit.Enable
+        /// Ensure that the UI will load the correct assets to enable editing. See @HowTo.Razor.Edit.Enable?text=How+to+use+Edit.Enable
         /// </summary>
         /// <param name="noParameterOrder">see @HowTo.DynamicCode.NamedParameters</param>
         /// <param name="js">optional, default false. automatically true if `api` or `forms` is true<br/>

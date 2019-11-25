@@ -4,6 +4,8 @@ uid: HowTo.Razor.Templates
 # SexyContentWebPage (Razor Templates)
 
 ## What are Razor Templates
+Razor Templates are files beginning with an underscore `_` and ending with `.cshtml`. They contain both normal HTML intermixed with Razor placeholders like `@Content.FirstName` or longer code blocks usually marked with `@{ ...}`.
+
 All razor Templates derive from the SexyContentWebPage, so the following variables and objects are available for you to work with.
 
 ## Example
@@ -16,7 +18,7 @@ Visit the [App Catalog](xref:AppsCatalog) where almost all apps use Razor. There
 1. Content ([DynamicEntity](xref:HowTo.DynamicCode.Entity)) - primary and often the only content-item in the [Data](xref:HowTo.DynamicCode.Data) for this template
 1. [Data](xref:HowTo.DynamicCode.Data) (IDataSource)- this object gives you all the data which was meant to be used by this Templates
 1. [Dnn](xref:HowTo.DynamicCode.Dnn) - the common Dnn object providing page, module, user information
-1. [Edit](xref:HowTo.DynamicCode.Edit) - helper providing you with various edit-functionality like `Toolbar(...)`
+1. [Edit](xref:HowTo.Razor.Edit) - helper providing you with various edit-functionality like `Toolbar(...)`
 1. [Link](xref:HowTo.DynamicCode.Link) - helper to generate links, according to the DNN-environment configuration
 1. ~~List~~ - old, use `Data["Default"]` instead for more consistant programming style
 1. ListContent ([DynamicEntity](xref:HowTo.DynamicCode.Entity)) - the header data if the template expects to be a list

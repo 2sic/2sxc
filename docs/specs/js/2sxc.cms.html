@@ -290,9 +290,6 @@
                             <a href="../cms/quick-edit.html" title="Quick-Edit (QuickE)" class="">Quick-Edit (QuickE)</a>
                           </li>
                           <li class="">
-                            <a href="../cms/tokens.html" title="Tokens" class="">Tokens</a>
-                          </li>
-                          <li class="">
                             <a href="../cms/views.html" title="Views" class="">Views</a>
                           </li>
                           <li class="">
@@ -326,8 +323,14 @@
                             <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
                           </li>
                           <li class="">
+                            <span class="expand-stub"></span>
                             <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
-                          </li>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/configuration-tokens.html" title="Configuration Tokens" class="">Configuration Tokens</a>
+                                </li>
+                              </ul>  </li>
                           <li class="">
                             <span class="expand-stub"></span>
                             <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
@@ -490,7 +493,7 @@
 <p>Before you start, ensure you have the necessary JS scripts loaded:</p>
 <ol>
 <li>in edit-mode this happens automatically</li>
-<li>if you want to provide this to low-priviledge users, use <code>@Edit.Enable(...)</code> in [razor](xref:Razor.EditEnable]</li>
+<li>if you want to provide this to low-priviledge users, use <code>@Edit.Enable(...)</code> in <a class="xref" href="../../how-to/razor/edit.enable.html">razor</a></li>
 </ol>
 <p>Simple example:</p>
 <pre><code class="lang-html">@* enable the editing *@

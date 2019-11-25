@@ -1,0 +1,653 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface IFingerprintProvider
+   | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface IFingerprintProvider
+   | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../how-to/index.html" title="How To">How To</a>
+                      </li>
+                      <li>
+                          <a href="../..//api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.Apps.html" title="ToSic.Eav.Apps" class="">ToSic.Eav.Apps</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.Apps.IApp.html" title="IApp" class="">IApp</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Apps.IAppData.html" title="IAppData" class="">IAppData</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Apps.IAppDataConfiguration.html" title="IAppDataConfiguration" class="">IAppDataConfiguration</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Apps.IInApp.html" title="IInApp" class="">IInApp</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Apps.IInAppAndZone.html" title="IInAppAndZone" class="">IInAppAndZone</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Apps.IInZone.html" title="IInZone" class="">IInZone</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.Apps.Assets.html" title="ToSic.Eav.Apps.Assets" class="">ToSic.Eav.Apps.Assets</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.Apps.Assets.IAsset.html" title="IAsset" class="">IAsset</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Apps.Assets.IFile.html" title="IFile" class="">IFile</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Apps.Assets.IFolder.html" title="IFolder" class="">IFolder</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.Caching.html" title="ToSic.Eav.Caching" class="">ToSic.Eav.Caching</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.Caching.ICacheDependent.html" title="ICacheDependent" class="">ICacheDependent</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Caching.ICacheExpiring.html" title="ICacheExpiring" class="">ICacheExpiring</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Caching.ICacheKey.html" title="ICacheKey" class="">ICacheKey</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Caching.ITimestamped.html" title="ITimestamped" class="">ITimestamped</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Caching.SynchronizedList-1.html" title="SynchronizedList&lt;T&gt;" class="">SynchronizedList&lt;T&gt;</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.Configuration.html" title="ToSic.Eav.Configuration" class="">ToSic.Eav.Configuration</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.Configuration.Features.html" title="Features" class="">Features</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Configuration.Fingerprint.html" title="Fingerprint" class="">Fingerprint</a>
+                          </li>
+                          <li class="active">
+                            <a href="ToSic.Eav.Configuration.IFingerprintProvider.html" title="IFingerprintProvider" class="active">IFingerprintProvider</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.Data.html" title="ToSic.Eav.Data" class="">ToSic.Eav.Data</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.Data.Attribute-1.html" title="Attribute&lt;T&gt;" class="">Attribute&lt;T&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.ContentType.html" title="ContentType" class="">ContentType</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.ContentTypeAttribute.html" title="ContentTypeAttribute" class="">ContentTypeAttribute</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.ContentTypeMetadata.html" title="ContentTypeMetadata" class="">ContentTypeMetadata</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.DimensionDefinition.html" title="DimensionDefinition" class="">DimensionDefinition</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.EntityBasedType.html" title="EntityBasedType" class="">EntityBasedType</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.EntityBasedWithLog.html" title="EntityBasedWithLog" class="">EntityBasedWithLog</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.EntityRelationship.html" title="EntityRelationship" class="">EntityRelationship</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IAttribute.html" title="IAttribute" class="">IAttribute</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IAttribute-1.html" title="IAttribute&lt;T&gt;" class="">IAttribute&lt;T&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IAttributeBase.html" title="IAttributeBase" class="">IAttributeBase</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IContentType.html" title="IContentType" class="">IContentType</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IContentTypeAttribute.html" title="IContentTypeAttribute" class="">IContentTypeAttribute</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IDimension.html" title="IDimension" class="">IDimension</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IEntitiesSource.html" title="IEntitiesSource" class="">IEntitiesSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IEntity.html" title="IEntity" class="">IEntity</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IEntityBasedType.html" title="IEntityBasedType" class="">IEntityBasedType</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IEntityLight.html" title="IEntityLight" class="">IEntityLight</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.ILanguage.html" title="ILanguage" class="">ILanguage</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IRelationshipManager.html" title="IRelationshipManager" class="">IRelationshipManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IValue.html" title="IValue" class="">IValue</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.IValue-1.html" title="IValue&lt;T&gt;" class="">IValue&lt;T&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.Language.html" title="Language" class="">Language</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.LazyEntities.html" title="LazyEntities" class="">LazyEntities</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.Value-1.html" title="Value&lt;T&gt;" class="">Value&lt;T&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.ValueTypes.html" title="ValueTypes" class="">ValueTypes</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Data.Zone.html" title="Zone" class="">Zone</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.DataSources.html" title="ToSic.Eav.DataSources" class="">ToSic.Eav.DataSources</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.App.html" title="App" class="">App</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.AttributeFilter.html" title="AttributeFilter" class="">AttributeFilter</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.BaseDataSource.html" title="BaseDataSource" class="">BaseDataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.CsvDataSource.html" title="CsvDataSource" class="">CsvDataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.DataTableDataSource.html" title="DataTableDataSource" class="">DataTableDataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.EntityIdFilter.html" title="EntityIdFilter" class="">EntityIdFilter</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.EntityTypeFilter.html" title="EntityTypeFilter" class="">EntityTypeFilter</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.ExternalDataDataSource.html" title="ExternalDataDataSource" class="">ExternalDataDataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.IDataSource.html" title="IDataSource" class="">IDataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.IDataStream.html" title="IDataStream" class="">IDataStream</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.IDataTarget.html" title="IDataTarget" class="">IDataTarget</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.ItemFilterDuplicates.html" title="ItemFilterDuplicates" class="">ItemFilterDuplicates</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.OwnerFilter.html" title="OwnerFilter" class="">OwnerFilter</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.Paging.html" title="Paging" class="">Paging</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.PassThrough.html" title="PassThrough" class="">PassThrough</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.PublishingFilter.html" title="PublishingFilter" class="">PublishingFilter</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.RelationshipFilter.html" title="RelationshipFilter" class="">RelationshipFilter</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.Shuffle.html" title="Shuffle" class="">Shuffle</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.SqlDataSource.html" title="SqlDataSource" class="">SqlDataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.StreamFallback.html" title="StreamFallback" class="">StreamFallback</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.StreamMerge.html" title="StreamMerge" class="">StreamMerge</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.ValueFilter.html" title="ValueFilter" class="">ValueFilter</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.ValueSort.html" title="ValueSort" class="">ValueSort</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.Environment.html" title="ToSic.Eav.Environment" class="">ToSic.Eav.Environment</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.Environment.Container-1.html" title="Container&lt;T&gt;" class="">Container&lt;T&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Environment.IContainer.html" title="IContainer" class="">IContainer</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Environment.ITenant.html" title="ITenant" class="">ITenant</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Environment.Tenant-1.html" title="Tenant&lt;T&gt;" class="">Tenant&lt;T&gt;</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.Logging.html" title="ToSic.Eav.Logging" class="">ToSic.Eav.Logging</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.Logging.HasLog.html" title="HasLog" class="">HasLog</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Logging.IHasLog.html" title="IHasLog" class="">IHasLog</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Logging.ILog.html" title="ILog" class="">ILog</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.LookUp.html" title="ToSic.Eav.LookUp" class="">ToSic.Eav.LookUp</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.LookUp.ILookUp.html" title="ILookUp" class="">ILookUp</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.LookUp.LookUpBase.html" title="LookUpBase" class="">LookUpBase</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.LookUp.LookUpInEntity.html" title="LookUpInEntity" class="">LookUpInEntity</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.LookUp.LookUpInLookUps.html" title="LookUpInLookUps" class="">LookUpInLookUps</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.LookUp.LookUpInMetadata.html" title="LookUpInMetadata" class="">LookUpInMetadata</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.LookUp.LookUpInNameValueCollection.html" title="LookUpInNameValueCollection" class="">LookUpInNameValueCollection</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.Metadata.html" title="ToSic.Eav.Metadata" class="">ToSic.Eav.Metadata</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.Metadata.IHasMetadataSource.html" title="IHasMetadataSource" class="">IHasMetadataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Metadata.IMetadataOf.html" title="IMetadataOf" class="">IMetadataOf</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Metadata.IMetadataSource.html" title="IMetadataSource" class="">IMetadataSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Metadata.IRemoteMetadata.html" title="IRemoteMetadata" class="">IRemoteMetadata</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Metadata.ITarget.html" title="ITarget" class="">ITarget</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Metadata.ITargetTypes.html" title="ITargetTypes" class="">ITargetTypes</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Metadata.MetadataOf-1.html" title="MetadataOf&lt;T&gt;" class="">MetadataOf&lt;T&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Metadata.Target.html" title="Target" class="">Target</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.Security.Permissions.html" title="ToSic.Eav.Security.Permissions" class="">ToSic.Eav.Security.Permissions</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.Security.Permissions.IHasPermissions.html" title="IHasPermissions" class="">IHasPermissions</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.Security.Permissions.Permission.html" title="Permission" class="">Permission</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Sxc.Adam.html" title="ToSic.Sxc.Adam" class="">ToSic.Sxc.Adam</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Sxc.Adam.IAsset.html" title="IAsset" class="">IAsset</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Adam.IFile.html" title="IFile" class="">IFile</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Adam.IFolder.html" title="IFolder" class="">IFolder</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Sxc.Apps.html" title="ToSic.Sxc.Apps" class="">ToSic.Sxc.Apps</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Sxc.Apps.AppConfiguration.html" title="AppConfiguration" class="">AppConfiguration</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Apps.IApp.html" title="IApp" class="">IApp</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Sxc.Blocks.html" title="ToSic.Sxc.Blocks" class="">ToSic.Sxc.Blocks</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Sxc.Blocks.IBlock.html" title="IBlock" class="">IBlock</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Blocks.IView.html" title="IView" class="">IView</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Blocks.Purpose.html" title="Purpose" class="">Purpose</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Sxc.Data.html" title="ToSic.Sxc.Data" class="">ToSic.Sxc.Data</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Sxc.Data.IDynamicEntity.html" title="IDynamicEntity" class="">IDynamicEntity</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Sxc.Dnn.html" title="ToSic.Sxc.Dnn" class="">ToSic.Sxc.Dnn</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Sxc.Dnn.IDnnContext.html" title="IDnnContext" class="">IDnnContext</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Dnn.IDynamicCode.html" title="IDynamicCode" class="">IDynamicCode</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Dnn.IDynamicWebApi.html" title="IDynamicWebApi" class="">IDynamicWebApi</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Dnn.IHtmlHelper.html" title="IHtmlHelper" class="">IHtmlHelper</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Dnn.IRazor.html" title="IRazor" class="">IRazor</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Sxc.Engines.html" title="ToSic.Sxc.Engines" class="">ToSic.Sxc.Engines</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Sxc.Engines.EngineBase.html" title="EngineBase" class="">EngineBase</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Engines.IEngine.html" title="IEngine" class="">IEngine</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Engines.RazorEngine.html" title="RazorEngine" class="">RazorEngine</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Engines.TokenEngine.html" title="TokenEngine" class="">TokenEngine</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Sxc.LookUp.html" title="ToSic.Sxc.LookUp" class="">ToSic.Sxc.LookUp</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Sxc.LookUp.LookUpInDynamicEntity.html" title="LookUpInDynamicEntity" class="">LookUpInDynamicEntity</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Sxc.Search.html" title="ToSic.Sxc.Search" class="">ToSic.Sxc.Search</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Sxc.Search.ISearchItem.html" title="ISearchItem" class="">ISearchItem</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Search.SearchItem.html" title="SearchItem" class="">SearchItem</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ToSic.Sxc.Web.html" title="ToSic.Sxc.Web" class="">ToSic.Sxc.Web</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Sxc.Web.IDynamicCode.html" title="IDynamicCode" class="">IDynamicCode</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Web.IInPageEditingSystem.html" title="IInPageEditingSystem" class="">IInPageEditingSystem</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Web.ILinkHelper.html" title="ILinkHelper" class="">ILinkHelper</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="ToSic.Eav.Configuration.IFingerprintProvider">
+  
+  
+  <h1 id="ToSic_Eav_Configuration_IFingerprintProvider" data-uid="ToSic.Eav.Configuration.IFingerprintProvider" class="text-break">Interface IFingerprintProvider
+  </h1>
+  <div class="markdown level0 summary"><p>Defines all classes which can provide fingerprints - to delegate fingerprint-creation to the environment. </p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="ToSic.Eav.Configuration.html">ToSic.Eav.Configuration</a></h6>
+  <h6><strong>Assembly</strong>: ToSic.Eav.Core.dll</h6>
+  <h5 id="ToSic_Eav_Configuration_IFingerprintProvider_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IFingerprintProvider</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Configuration_IFingerprintProvider_GetSystemFingerprint.md&amp;value=---%0Auid%3A%20ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Configuration/IFingerprintProvider.cs/#L11">View Source</a>
+  </span>
+  <a id="ToSic_Eav_Configuration_IFingerprintProvider_GetSystemFingerprint_" data-uid="ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint*"></a>
+  <h4 id="ToSic_Eav_Configuration_IFingerprintProvider_GetSystemFingerprint" data-uid="ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint">GetSystemFingerprint()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string GetSystemFingerprint()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Configuration_IFingerprintProvider.md&amp;value=---%0Auid%3A%20ToSic.Eav.Configuration.IFingerprintProvider%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Configuration/IFingerprintProvider.cs/#L8" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

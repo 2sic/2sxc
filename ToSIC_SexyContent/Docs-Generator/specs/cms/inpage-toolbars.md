@@ -25,12 +25,12 @@ To make the magic work, these parts are involved:
 
 1. Server side code detects that editing is allowed. This automatically adds **context-information** to the module in the form of a hidden JSON attribute. You can see these large attributes in the source-code if you are logged in. It also ensures that the edit-javascripts are loaded by the page.
     1. This is either auto-detected, because the user has edit-rights
-    2. Or it was explicitly enabled using [`@Edit.Enable(...)` in razor](xref:Razor.EditEnable].
+    2. Or it was explicitly enabled using [`@Edit.Enable(...)` in razor](xref:HowTo.Razor.Edit.Enable).
 
 2. Server side code adds stuff to mark where toolbars should appear...
     1. ...either (new in 2sxc 9.40) it adds hidden JSON attributes called `sxc-toolbar='{...}'` to any tag that should have a hover-menu with the desired **configuration** and **settings**, added like this  
-    [`<div @Edit.TagToolbar(...)>...</div>` in razor](xref:HowTo.Razor.EditToolbar)
-    1. ...or it adds an empty `<ul toolbar='{...}' settings='{...}>` tag to the page, also with the **configuration** and **settings**, added using [`@Edit.Toolbar(...)` in razor](xref:HowTo.Razor.EditToolbar) or the `[Content.Toolbar]` equivalent in [tokens](http://2sxc.org/en/Learn/Token-Templates-and-Views). These toolbars can also hover using an old convention of adding an `sc-element` class, but that is deprecated since 2sxc 9.40.
+    [`<div @Edit.TagToolbar(...)>...</div>` in razor](xref:HowTo.Razor.Edit.Toolbar)
+    1. ...or it adds an empty `<ul toolbar='{...}' settings='{...}>` tag to the page, also with the **configuration** and **settings**, added using [`@Edit.Toolbar(...)` in razor](xref:HowTo.Razor.Edit.Toolbar) or the `[Content.Toolbar]` equivalent in [tokens](http://2sxc.org/en/Learn/Token-Templates-and-Views). These toolbars can also hover using an old convention of adding an `sc-element` class, but that is deprecated since 2sxc 9.40.
 
 3. JavaScript on the client looks at the HTML and picks up both the special `<ul>` tags as well as all tags having the `sxc-toolbar` attribute, reads the configuration and generates the necessary html-tags with the buttons and hover-effects. Based on the **context-information** and the **configuration** it will choose if advanced button should appear (like edit-template, which only admins should see). Special hover-placement and other visual things are picked up from the **settings**.
 
@@ -72,8 +72,8 @@ The next example is similar, but instead of all default buttons it only shows th
 ## How to Use
 We'll try to provide you with full details of the toolbars for advanced use cases. But in most cases you will need the default toolbars minimal or no customizations. For these common cases you should continue on.
 
-* [Razor @Edit.TagToolbar(...) attribute](xref:HowTo.Razor.EditToolbar) (hovering, recommended)
-* [Razor @Edit.Toolbar(...)](xref:HowTo.Razor.EditToolbar) (non-hovering)
+* [Razor @Edit.TagToolbar(...) attribute](xref:HowTo.Razor.Edit.Toolbar) (hovering, recommended)
+* [Razor @Edit.Toolbar(...)](xref:HowTo.Razor.Edit.Toolbar) (non-hovering)
 * [Token Toolbars](http://2sxc.org/en/Learn/Token-Templates-and-Views) (using simpler placeholder templates)
 
 

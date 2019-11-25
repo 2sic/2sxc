@@ -1,5 +1,5 @@
 ---
-uid: Concepts.Tokens
+uid: Specs.DataSources.ConfigurationTokens
 ---
 
 # Concept: Tokens

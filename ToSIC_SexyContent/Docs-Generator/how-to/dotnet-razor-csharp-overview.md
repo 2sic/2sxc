@@ -11,7 +11,7 @@ This is the C# .net API Documentations, usually meant for Razor-Templates, custo
     1. [App](xref:HowTo.DynamicCode.App) (includes App.Data)
     1. [Data](xref:HowTo.DynamicCode.Data)
     1. [Dnn](xref:HowTo.DynamicCode.Dnn)
-    1. [Edit](xref:HowTo.DynamicCode.Edit)
+    1. [Edit](xref:HowTo.Razor.Edit)
     1. [Link](xref:HowTo.DynamicCode.Link)
 1. [LINQ Data Handling examples](xref:Specs.DataSources.Linq) on working with relationships, filtering etc.
 
@@ -26,7 +26,7 @@ This is the C# .net API Documentations, usually meant for Razor-Templates, custo
 ## Advanced APIs
 1. [WebService API](xref:HowTo.WebApi) to create your own web services in your apps
 1. [External API](xref:HowTo.External) to access 2sxc-instances on the server from WebForms or other MVC components
-1. [Content-Blocks API](xref:HowTo.Razor.Blocks) to render inner-content (see also the [concept](xref:Concepts.InnerContent))
+1. [Content-Blocks API](xref:HowTo.Razor.Blocks) to render inner-content (see also the [concept](xref:Specs.Cms.InnerContent))
 
 
 

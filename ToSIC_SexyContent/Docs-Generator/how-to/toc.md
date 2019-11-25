@@ -7,16 +7,17 @@
 ##[App Object](xref:HowTo.DynamicCode.App)
 ##[Data Object](xref:HowTo.DynamicCode.Data)
 ##[Dnn Object](xref:HowTo.DynamicCode.Dnn)
-##[Edit Object](xref:HowTo.DynamicCode.Edit)
-###Edit.Enable (todo)
 ##[Link Object](xref:HowTo.DynamicCode.Link)
 ##[Use Named Parameters](xref:HowTo.DynamicCode.NamedParameters)
 
 # Razor
-##[Context Attributes](xref:HowTo.Razor.ContextAttributes)
+##[Razor Templates](xref:HowTo.Razor.Templates)
+##[Edit Object](xref:HowTo.Razor.Edit)
+###[Edit.TagToolbar Edit.Toolbar](xref:HowTo.Razor.Edit.Toolbar)
+###[Edit.Enable](xref:HowTo.Razor.Edit.Enable)
+###[Edit.ContextAttributes](xref:HowTo.Razor.ContextAttributes)
 ##[Customize Data](xref:HowTo.Razor.CustomizeData)
 ##[Customize Search](xref:HowTo.Razor.CustomizeSearch)
-##[Razor Templates](xref:HowTo.Razor.Templates)
 ##[Execution Purpose](xref:HowTo.Razor.Purpose)
 ##[Content Black](xref:HowTo.Razor.Blocks)
 

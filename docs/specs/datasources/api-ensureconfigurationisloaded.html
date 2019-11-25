@@ -290,9 +290,6 @@
                             <a href="../cms/quick-edit.html" title="Quick-Edit (QuickE)" class="">Quick-Edit (QuickE)</a>
                           </li>
                           <li class="">
-                            <a href="../cms/tokens.html" title="Tokens" class="">Tokens</a>
-                          </li>
-                          <li class="">
                             <a href="../cms/views.html" title="Views" class="">Views</a>
                           </li>
                           <li class="">
@@ -326,8 +323,14 @@
                             <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
                           </li>
                           <li class="">
+                            <span class="expand-stub"></span>
                             <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
-                          </li>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/configuration-tokens.html" title="Configuration Tokens" class="">Configuration Tokens</a>
+                                </li>
+                              </ul>  </li>
                           <li class="">
                             <span class="expand-stub"></span>
                             <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
@@ -481,7 +484,7 @@
 <h1 id="datasource-api-ensureconfigurationisloaded">DataSource API: EnsureConfigurationIsLoaded</h1>
 
 <h2 id="purpose--description">Purpose / Description</h2>
-<p>If a <a class="xref" href="datasource.html">DataSource</a> is <a class="xref" href="configuration.html">configurable</a>, then the code must parse any <a class="xref" href="../cms/tokens.html">configuration tokens</a> before accessing the values. This is done with <code>EnsureConfigurationIsLoaded()</code>.</p>
+<p>If a <a class="xref" href="datasource.html">DataSource</a> is <a class="xref" href="configuration.html">configurable</a>, then the code must parse any <a class="xref" href="configuration-tokens.html">configuration tokens</a> before accessing the values. This is done with <code>EnsureConfigurationIsLoaded()</code>.</p>
 <h2 id="how-to-use-ensureconfigurationisloaded">How to use EnsureConfigurationIsLoaded</h2>
 <p>Here&#39;s a simple example of the <a href="https://github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/PublishingFilter.cs">PublishingFilter DataSources</a>: </p>
 <pre><code class="lang-c#">// get the correct stream, depending on ShowDrafts
