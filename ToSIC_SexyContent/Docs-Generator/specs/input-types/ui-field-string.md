@@ -1,10 +1,9 @@
 ---
 uid: Specs.Data.Inputs.String
 ---
-# UI Field Type: string
+# Field Input-Type **string**
 
-## Purpose / Description
-The **string** field is the base type for input-fields storing [string/text data](xref:Specs.Data.Type.String). It offers many sub-types.
+The **string** field is the base type for input-fields storing [string/text data](xref:Specs.Data.Values.String). It offers many sub-types.
 
 ## Features 
 The basic **string** field doesn't have any features, since all the features are in the sub-types. 
@@ -14,10 +13,9 @@ The basic **string** field doesn't have any features, since all the features are
 1. [string-default](xref:Specs.Data.Inputs.String-Default) - simple one or multi-line inputs
 1. [drop-down](xref:Specs.Data.Inputs.String-Dropdown) for simple dropdowns
 1. [drop-down-query](xref:Specs.Data.Inputs.String-Dropdown-Query) for dropdowns which retrieve the data from a server
-1. wysiwyg
+1. [wysiwyg](xref:Specs.Data.Inputs.String-Wysiwyg)
 1. [font-icon-picker](xref:Specs.Data.Inputs.String-Font-Icon-Picker)
 1. [url-path](xref:Specs.Data.Inputs.String-Url-Path)
-1. custom
 
 ## Shared Settings
 All string field types currently don't have shared settings. 

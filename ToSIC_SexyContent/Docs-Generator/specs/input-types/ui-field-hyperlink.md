@@ -1,10 +1,9 @@
 ---
 uid: Specs.Data.Inputs.Hyperlink
 ---
-# UI Field Type: hyperlink / files
+# Field Input-Type **hyperlink** / **files**
 
-## Purpose / Description
-The **hyperlink (links/files)** field is the base type for input-fields storing [hyperlink](xref:Specs.Data.Type.Hyperlink). It has sub-types.
+The **hyperlink (links/files)** field is the base type for input-fields storing [hyperlink](xref:Specs.Data.Values.Hyperlink). It has sub-types.
 
 ## Features 
 The basic **hyperlink (links/files)** field is used for normal links, page or file/image references as well as for complete sets of files (like image galleries)

@@ -1,10 +1,9 @@
 ---
 uid: Specs.Data.Inputs.Hyperlink-Default
 ---
-# UI Field Type: hyperlink-default
+# Field Input-Type **hyperlink-default**
 
-## Purpose / Description
-Use this field type for configuring normal links, page or file/image references, storing [Hyperlink](xref:Specs.Data.Type.Hyperlink). It's an extension of the [hyperlink field type](xref:Specs.Data.Inputs.Hyperlink).
+Use this field type for configuring normal links, page or file/image references, storing [Hyperlink](xref:Specs.Data.Values.Hyperlink). It's an extension of the [hyperlink field type](xref:Specs.Data.Inputs.Hyperlink).
 
 ## Features 
 

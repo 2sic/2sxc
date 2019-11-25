@@ -1,10 +1,9 @@
 ---
 uid: Specs.Data.Inputs.String-Default
 ---
-# UI Field Type: string-default
+# Field Input-Type **string-default**
 
-## Purpose / Description
-Use this field type for configuring simple text UI elements, storing [string/text data](xref:Specs.Data.Type.String). It's an extension of the basic [string field type](xref:Specs.Data.Inputs.String).
+Use this field type for configuring simple text UI elements, storing [string/text data](xref:Specs.Data.Values.String). It's an extension of the basic [string field type](xref:Specs.Data.Inputs.String).
 
 ## Features 
 

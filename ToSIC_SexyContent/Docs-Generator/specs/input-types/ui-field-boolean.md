@@ -1,10 +1,9 @@
 ---
 uid: Specs.Data.Inputs.Boolean
 ---
-# UI Field Type: boolean
+# Field Input-Type **boolean**
 
-## Purpose / Description
-The **boolean** field is the base type for boolean-fields storing [boolean data](xref:Specs.Data.Type.Boolean). It has one sub-type.
+The **boolean** field is the base type for boolean-fields storing [boolean data](xref:Specs.Data.Values.Boolean). It has one sub-type.
 
 ## Features 
 The basic **boolean** field doesn't have any features, since all the features are in the sub-types. 

@@ -1,7 +1,7 @@
 ---
-uid: Concepts.Relationships
+uid: Specs.Data.Relationships
 ---
-# Concept: Entity Relationships
+# Entity Relationships
 
 Data can be related to other data, like when a `Book` belongs to a `Category` and also has an `Author`. Since all data-items are called `Entities` we call this _Entity Relationships_. 
 
@@ -20,11 +20,14 @@ There are different types of relationships:
 
 ## Metadata Relationships
 
-This is a very different concept, where an Entity enriches something else. Read more about it in [metadata](xref:Concepts.Metadata).
+This is a very different concept, where an Entity enriches something else. Read more about it in [metadata](xref:Specs.Data.Metadata).
 
 ## Advanced Topics
 
 * [Razor LINQ tutorial showing how to navigate between relationships](https://2sxc.org/dnn-tutorials/en/razor/linq/home)
+
+## APIs
+
 * [RelationshipFilter Data Source to find items related to another item](xref:ToSic.Eav.DataSources.RelationshipFilter)
 
 ## History

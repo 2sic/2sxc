@@ -1,5 +1,5 @@
 ---
-uid: Todo.ToSic.Eav.DataSources.CacheAllStreams
+uid: ToSic.Eav.DataSources.CacheAllStreams
 ---
 
 # Data Source: CacheAllStreams

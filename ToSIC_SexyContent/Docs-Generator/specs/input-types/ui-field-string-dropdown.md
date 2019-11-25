@@ -1,10 +1,9 @@
 ---
 uid: Specs.Data.Inputs.String-Dropdown
 ---
-# UI Field Type: string-dropdown
+# Field Input-Type **string-dropdown**
 
-## Purpose / Description
-Use this field type for configuring simple dropdown UI elements, storing [string/text data](xref:Specs.Data.Type.String). It's an extension of the [string field type](xref:Specs.Data.Inputs.String).
+Use this field type for configuring simple dropdown UI elements, storing [string/text data](xref:Specs.Data.Values.String). It's an extension of the [string field type](xref:Specs.Data.Inputs.String).
 
 ## Features 
 

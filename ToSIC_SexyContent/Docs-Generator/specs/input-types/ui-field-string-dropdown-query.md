@@ -1,10 +1,9 @@
 ---
 uid: Specs.Data.Inputs.String-Dropdown-Query
 ---
-# UI Field Type: string-dropdown-query (2sxc 9.11+)
+# Field Input-Type **string-dropdown-query**
 
-## Purpose / Description
-Use this field type for configuring a dropdown UI elements, storing [string/text data](xref:Specs.Data.Type.String). It's an extension of the [string field type](xref:Specs.Data.Inputs.String).
+Use this field type for configuring a dropdown UI elements, storing [string/text data](xref:Specs.Data.Values.String). It's an extension of the [string field type](xref:Specs.Data.Inputs.String).
 
 The special thing about this is that the items shown for selecting are retrieved from Query and not pre-defined as part of the the field definition. This allows you to look up any kind of data and offer it for selection. 
 

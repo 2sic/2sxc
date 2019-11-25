@@ -69,6 +69,7 @@ These topics are not or insufficiently documented...
 
 These topics are already documented elsewhere, but should become part of these docs
 
+1. ADAM doesn't seem to be documented anywhere here
 1. [View-switching based on url-params](http://2sxc.org/en/Docs/Feature/feature/4680)
 1. [Security protecting views like admin-views](http://2sxc.org/en/Docs/Feature/feature/4737)
 1. [creating custom DataSource objects](https://2sxc.org/en/blog/tag/datasource)

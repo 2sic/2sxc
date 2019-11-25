@@ -63,3 +63,11 @@ references:
 - uid: Feat.AppConfig
   name: App Configuration
   href: http://2sxc.org/en/Docs-Manuals/Feature/feature/8182
+
+# Razor Blade Tutorials
+- uid: Tut.RazorBlade.Text.Has
+  name: RazorBlade Text.Has(...) Tutorial
+  href: https://2sxc.org/dnn-tutorials/en/razor/blade120/page
+- uid: Tut.RazorBlade.Text.First
+  name: RazorBlade Text.First(...) Tutorial
+  href: https://2sxc.org/dnn-tutorials/en/razor/blade130/page

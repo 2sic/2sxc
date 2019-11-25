@@ -1,10 +1,9 @@
 ---
 uid: Specs.Data.Inputs.Number-Default
 ---
-# UI Field Type: number-default
+# Field Input-Type **number-default**
 
-## Purpose / Description
-Use this field type for configuring simple number UI elements, storing [number](xref:Specs.Data.Type.Number). It's an extension of the basic [number field type](xref:Specs.Data.Inputs.Number).
+Use this field type for configuring simple number UI elements, storing [number](xref:Specs.Data.Values.Number). It's an extension of the basic [number field type](xref:Specs.Data.Inputs.Number).
 
 ## Features 
 

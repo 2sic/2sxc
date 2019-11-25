@@ -1,10 +1,9 @@
 ---
 uid: Specs.Data.Inputs.Entity-Default
 ---
-# UI Field Type: entity-default
+# Field Input-Type **entity-default**
 
-## Purpose / Description
-Use this field type for configuring an entity-picker storing Entity [relationships](xref:Specs.Data.Type.Entity). It's an extension of the [entity field type](xref:Specs.Data.Inputs.Entity).
+Use this field type for configuring an entity-picker storing Entity [relationships](xref:Specs.Data.Values.Entity). It's an extension of the [entity field type](xref:Specs.Data.Inputs.Entity).
 
 ## Features 
 1.  Selector where you can select entity items of a specific type

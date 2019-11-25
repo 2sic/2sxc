@@ -1,10 +1,9 @@
 ---
 uid: Specs.Data.Inputs.Entity-Query
 ---
-# UI Field Type: entity-query
+# Field Input-Type **entity-query**
 
-## Purpose / Description
-Use this field type for configuring an entity-picker storing [relationships](xref:Specs.Data.Type.Entity). It's an extension of the [entity field type](xref:Specs.Data.Inputs.Entity).
+Use this field type for configuring an entity-picker storing [relationships](xref:Specs.Data.Values.Entity). It's an extension of the [entity field type](xref:Specs.Data.Inputs.Entity).
 
 The special thing about this is that the items shown for selecting are retrieved from Query and not based on a content-type name. This allows you to look up any kind of data and offer it for selection. 
 
@@ -30,7 +29,7 @@ In addition to these settings, you also have the [basic entity settings](xref:Sp
 
 
 ## Important Notes
-Note that this stores [item-relationships](xref:Specs.Data.Type.Entity) so you can only use it to select items which exist in the 2sxc/EAV database. You cannot use it to select items provided from non-entity sources, like Sql-data or File-lists. To select such data, you'll need the [String-Dropdown-Query](xref:Specs.Data.Inputs.String-Dropdown-Query) instead. 
+Note that this stores [item-relationships](xref:Specs.Data.Values.Entity) so you can only use it to select items which exist in the 2sxc/EAV database. You cannot use it to select items provided from non-entity sources, like Sql-data or File-lists. To select such data, you'll need the [String-Dropdown-Query](xref:Specs.Data.Inputs.String-Dropdown-Query) instead. 
 
 ## History
 1. Introduced in EAV 4.x 2sxc 9.11

@@ -1,7 +1,7 @@
 ---
-uid: Concepts.Metadata
+uid: Specs.Data.Metadata
 ---
-# Concept: Metadata - WIP
+# Metadata - WIP
 
 ## Purpose / Description
 ...

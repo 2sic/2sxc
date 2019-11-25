@@ -3,7 +3,6 @@ uid: Specs.Data.Inputs.Overview
 ---
 # UI Field Types
 
-## Purpose / Description
 The UI has many field types, most of which are not especially documented. Here's what's currently documented.
 
 ## Main Types
@@ -11,8 +10,8 @@ Click on the type to discover more about this type, and to learn about the sub-t
 
 1. [All](xref:Specs.Data.Inputs.All) - not really a field-type, but contains core information about a field like name, help-text and more
 1. [Boolean](xref:Specs.Data.Inputs.Boolean) - a basic yes/on input field
-1. Custom - a custom data-type, currently for internal use only (specs WIP)
-1. [DateTime](xref:Specs.Data.Inputs.Datetime) - a basic date/time input field
+1. [Custom](xref:Specs.Data.Inputs.Custom) - a custom data-type, currently for internal use only (specs WIP)
+1. [DateTime](xref:Specs.Data.Inputs.DateTime) - a basic date/time input field
 1. [Empty](xref:Specs.Data.Inputs.Empty) - a UI-only field for things like grouping fields together under a title
 1. [Entity](xref:Specs.Data.Inputs.Entity) - an item-picker field to choose existing items
 1. [Hyperlink](xref:Specs.Data.Inputs.Hyperlink) - a link field - this is internally stored as a string, but is modified when being used

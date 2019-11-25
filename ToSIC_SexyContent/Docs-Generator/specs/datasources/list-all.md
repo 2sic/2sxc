@@ -92,7 +92,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
-    <td><a href="xref:Todo.ToSic.Eav.DataSources.CacheAllStreams">CacheAllStreams</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.CacheAllStreams">CacheAllStreams</a></td>
     <td>Caching</td>
     <td>
       <details>

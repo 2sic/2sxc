@@ -40,7 +40,7 @@ As of now (2sxc 9.7) such a package can only contain 1 root item (a content-type
 ## Read also
 
 * [Format: Json V1 Content-types](xref:Specs.Data.Formats.JsonV1-ContentType)
-* [Concepts: file provided content-types](xref:Concepts.FileBasedContentTypes)
+* [Concepts: file provided content-types](xref:Specs.Data.FileBasedContentTypes)
 
 ## History
 

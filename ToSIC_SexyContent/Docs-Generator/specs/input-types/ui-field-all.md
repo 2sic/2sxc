@@ -1,9 +1,8 @@
 ---
 uid: Specs.Data.Inputs.All
 ---
-# UI Field Type: All
+# Field Input-Type **All**
 
-## Purpose / Description
 The **All** field type isn't really a field type in itself, it's the information every field has to describe it's label, help-text etc. 
 
 ## Features 

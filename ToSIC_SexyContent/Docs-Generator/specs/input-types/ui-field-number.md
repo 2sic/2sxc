@@ -1,10 +1,9 @@
 ---
 uid: Specs.Data.Inputs.Number
 ---
-# UI Field Type: Number
+# Field Input-Type **Number**
 
-## Purpose / Description
-The **number** field is the base type for number-fields storing [number data](xref:Specs.Data.Type.Number). It has one sub-type.
+The **number** field is the base type for number-fields storing [number data](xref:Specs.Data.Values.Number). It has one sub-type.
 
 ## Features 
 The basic **number** field doesn't have any features, since all the features are in the sub-types. 

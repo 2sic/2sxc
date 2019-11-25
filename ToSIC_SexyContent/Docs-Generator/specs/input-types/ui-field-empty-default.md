@@ -1,10 +1,9 @@
 ---
 uid: Specs.Data.Inputs.Empty-Default
 ---
-# UI Field Type: empty-default
+# Field Input-Type **empty-default**
 
-## Purpose / Description
-Use this field type for grouping fields together under a title, storing [empty (groups/title)](xref:Specs.Data.Type.Empty). It's an extension of the basic [empty field type](xref:Specs.Data.Inputs.Empty).
+Use this field type for grouping fields together under a title, storing [empty (groups/title)](xref:Specs.Data.Values.Empty). It's an extension of the basic [empty field type](xref:Specs.Data.Inputs.Empty).
 
 ## Features 
 

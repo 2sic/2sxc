@@ -1,10 +1,9 @@
 ---
-uid: Specs.Data.Type.Entity
+uid: Specs.Data.Values.Entity
 ---
 # Data Type: Entity (List of Entity-Items)
 
-## Purpose / Description
-**Entity** or **Item** data is a basic [data type](xref:Specs.Data.Type.Overview) and is used to mark item-relationships, like books-to-authors or blog-to-tags. 
+**Entity** or **Item** data is a basic [data type](xref:Specs.Data.Values.Overview) and is used to mark item-relationships, like books-to-authors or blog-to-tags. 
 
 ## Storage in the SQL Database in the EAV-Model
 This is stored in a special relationships-table, so internally the current DB IDs are used to track relationships. 
@@ -54,10 +53,13 @@ Then it's sometimes usefull to preserve the order - in this case Daniel was prob
 
 Side-effect: Sometimes you want to have an A-Z order when showing items. As the order is not auto-sorted, you will have to do this yourself if you want to have them sorted. Use [LINQ](xref:Specs.DataSources.Linq) to do that. 
 
+## Null Values not Possible
+These fields will never return a null. If there is no content, you'll just get an empty list.
 
 ## Read also
 
-* [String fields](xref:Specs.Data.Inputs.Entity) documentation about using it in the UI
+* @Specs.Data.Inputs.Entity
+* [Razor LINQ Tutorials](https://2sxc.org/dnn-tutorials/en/razor/linq/home)
 
 ## History
 1. Introduced ca. in EAV 2.0 and 2sxc 3.0

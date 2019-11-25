@@ -1,10 +1,9 @@
 ---
-uid: Specs.Data.Type.Hyperlink
+uid: Specs.Data.Values.Hyperlink
 ---
 # Data Type: Hyperlink
 
-## Purpose / Description
-Hyperlink data is a basic [data type](xref:Specs.Data.Type.Overview) and is actually a string, but on reading it's automatically converts to an output-friendly format. It's used for normal links, page or file/image references as well as for complete sets of files (like image galleries). 
+Hyperlink data is a basic [data type](xref:Specs.Data.Values.Overview) and is actually a string, but on reading it's automatically converts to an output-friendly format. It's used for normal links, page or file/image references as well as for complete sets of files (like image galleries). 
 
 
 ## Storage in the SQL Database in the EAV-Model
@@ -13,7 +12,7 @@ This is simply stored as a string in the DB, in the original format like `page:2
 ## Storage in the SQL Database in the JSON-Model
 This is simply stored as a JSON string in the original format like `page:22`.
 
-## Special: Automatic Conversions
+## Automatic Conversions
 The hyperlink data internally can contain values like:
 1. `http://whatever/whatever` - will not be converted
 1. `/some-relative-url` - will not be converted
@@ -35,10 +34,22 @@ In 99% of all use cases, you want to generate html with a real link, which is wh
   <img src="/portals/0/adam/20603963uaothutaoer/daniel.jpg">
 ```
 
+## Accessing the Real Inner Value
+In rare cases you may want the originl `page:22` instead of the converted value. To do this, use `AsEntity(yourObject)` and then use the EAV API on @ToSic.Eav.Data.IEntity to read the underlying original value.
+
+## Special: Hyperlink Libraries
+A special use case is Libraries - where a hyperlink-field doesn't actually contain anything, but is a placeholder for ADAM assets. 
+In such a scenario, you will use `AsAdam(...)` in your code to get the folders/files in the ADAM repository.
+
+[!include["Note-Null"](./notes-null.md)]
+
+> A common shorthand to work with this is either the `??` operator or using [RazorBlade](https://razor-blade.net/api/ToSic.Razor.Blade.Text.html) with `Text.Has(...)` or `Text.First(...)`.
 
 ## Read also
 
-* [Hyperlink fields](xref:Specs.Data.Inputs.Hyperlink) documentation about using it in the UI
+* @Specs.Data.Inputs.Hyperlink
+* @Tut.RazorBlade.Text.Has
+* @Tut.RazorBlade.Text.First
 
 ## History
 1. Introduced in EAV 1.0 2sxc 1.0

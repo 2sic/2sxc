@@ -1,10 +1,9 @@
 ---
-uid: Specs.Data.Inputs.Datetime-Default
+uid: Specs.Data.Inputs.DateTime-Default
 ---
-# UI Field Type: datetime-default
+# Field Input-Type **datetime-default**
 
-## Purpose / Description
-Use this field type for configuring dates and/or time values, storing [date/datetime data](xref:Specs.Data.Type.DateTime). It's an extension of the basic [datetime field type](xref:Specs.Data.Inputs.Datetime).
+Use this field type for configuring dates and/or time values, storing [date/datetime data](xref:Specs.Data.Values.DateTime). It's an extension of the basic [datetime field type](xref:Specs.Data.Inputs.DateTime).
 
 ## Features 
 
