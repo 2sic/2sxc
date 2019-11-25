@@ -3,7 +3,6 @@ uid: ToSic.Eav.DataSources.StreamMerge
 ---
 # Data Source: StreamMerge
 
-## Purpose / Description
 The **StreamMerge** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will create a new stream containing everything which came into this data source.  
 
 ## How to use with the Visual Query

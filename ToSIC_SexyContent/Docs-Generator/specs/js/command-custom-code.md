@@ -3,7 +3,6 @@ uid: Specs.Js.Commands.Code
 ---
 # Html & Js: Buttons with Custom Code in a Toolbar
 
-## Purpose / Description
 In some cases you want to add buttons to a toolbar, which run custom JavaScript code. 
 
 ## How to use

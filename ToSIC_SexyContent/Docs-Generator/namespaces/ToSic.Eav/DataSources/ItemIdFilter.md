@@ -4,7 +4,6 @@ uid: ToSic.Eav.DataSources.EntityIdFilter
 
 # Data Source: ItemIdFilter / EntityIdFilter
 
-## Purpose / Description
 The **ItemIdFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will only return the items with the id specified. 
 
 _Warning: You should always use it in combination with a [Content-Type filter](xref:ToSic.Eav.DataSources.EntityTypeFilter), as you want to be sure nobody can just crawl any entity you have in your system!_

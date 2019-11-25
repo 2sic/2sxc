@@ -1,7 +1,7 @@
 ---
-uid: Concepts.EditContext
+uid: Specs.Cms.EditContext
 ---
-# Concept: In-Page Editing Context
+# In-Page Editing Context (technical)
 
 To ensure that client-side commands like _edit_ can work (this includes all toolbar functionalities), the in-page scripts must pick up various things like AppId and more. This is provided as an **Edit-Context** and looks a bit like this:
 

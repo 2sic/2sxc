@@ -3,7 +3,6 @@ uid: Specs.DataSources.Api.EnsureConfigurationIsLoaded
 ---
 # DataSource API: EnsureConfigurationIsLoaded
 
-## Purpose / Description
 If a [DataSource](xref:Specs.DataSources.DataSource) is [configurable](xref:Specs.DataSources.Configuration), then the code must parse any [configuration tokens](xref:Specs.DataSources.ConfigurationTokens) before accessing the values. This is done with `EnsureConfigurationIsLoaded()`.
 
 ## How to use EnsureConfigurationIsLoaded

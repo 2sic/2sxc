@@ -3,7 +3,7 @@ uid: HowTo.Razor.Edit.Toolbar
 ---
 
 # @Edit.TagToolbar and @Edit.Toolbar Methods in Razor / .net
-2sxc has a cool in-page toolbar system - here you'll find a [conceptual overview around the toolbar](xref:Concepts.EditToolbar). These toolbars are usually hover-buttons like this:
+2sxc has a cool in-page toolbar system - here you'll find a [conceptual overview around the toolbar](xref:Specs.Cms.Toolbars). These toolbars are usually hover-buttons like this:
 
 ![hover inline toolbar example](/assets/concepts/inpage-toolbar/example-hover-toolbar.png)
 

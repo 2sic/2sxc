@@ -1,8 +1,8 @@
 ---
-uid: Concepts.DnnModule
+uid: Specs.Cms.DnnModule
 ---
 
-# Concept: How DNN Modules Connect To Content-Blocks
+# How DNN Modules Connect To Content-Blocks
 
 This page explains how a DNN module is mapped to content which is shown inside this module. 
 

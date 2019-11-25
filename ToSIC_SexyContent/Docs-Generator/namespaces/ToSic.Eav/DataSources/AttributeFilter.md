@@ -2,7 +2,6 @@
 uid: ToSic.Eav.DataSources.AttributeFilter
 ---
 
-## Purpose / Description
 The **AttributeFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It removes values from items so that the result is smaller, and doesn't publish confidential data. It's primarily used when providing data as JSON, so that not all values are published. 
 
 ## How to use with the Visual Query

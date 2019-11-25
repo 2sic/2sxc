@@ -4,39 +4,15 @@ references:
 - uid: Articles.Architecture
   name: EAV / 2sxc / DNN Architecture
   href: specs/architecture/architecture.html
-- uid: Concepts.DnnModule
-  name: 'Concept: How DNN Modules Connect To Content-Blocks'
-  href: specs/cms/dnn-module.html
 - uid: Concepts.EavDataModels
   name: Data Models in the EAV
   href: specs/architecture/eav-core-data.html
-- uid: Concepts.Edit
-  name: 'Overview: Edit Content or Data in DNN / 2sxc'
-  href: specs/cms/edit.html
-- uid: Concepts.EditContext
-  name: 'Concept: In-Page Editing Context'
-  href: specs/cms/edit-context.html
-- uid: Concepts.EditToolbar
-  name: 'Concept: In-Page Edit-Item Toolbars and Buttons'
-  href: specs/cms/inpage-toolbars.html
 - uid: Concepts.HideAdvancedFeatures
-  name: 'Concept: Hide Advanced Features From Non-Admins'
+  name: Hide Advanced Features From Non-Admins
   href: specs/cms/hide-advanced-features.html
-- uid: Concepts.PagePublishing
-  name: 'Concept: DNN/Evoq Page Versioning / Publishing and Workflow'
-  href: specs/cms/dnn-evoq-page-publishing.html
 - uid: Concepts.Permissions
   name: 'Concept: Permissions'
   href: specs/data/permissions.html
-- uid: Concepts.Polymorphism
-  name: 'Concept: Polymorph / Editions / Open-Heart-Surgery (WIP)'
-  href: specs/cms/polymorph.html
-- uid: Concepts.QuickE
-  name: 'Concept: quickE - Quick Edit 2.0'
-  href: specs/cms/quick-edit.html
-- uid: Concepts.Views
-  name: 'Concept: Views'
-  href: specs/cms/views.html
 - uid: HowTo.CSharp
   name: DotNet / C# / Razor API Documentation for DNN / 2sxc
   href: how-to/dotnet-razor-csharp-overview.html
@@ -115,9 +91,33 @@ references:
 - uid: Specs.App.Folders
   name: Folder structure in the Content App folder
   href: specs/app/app-folder-structure.html
+- uid: Specs.Cms.DnnModule
+  name: How DNN Modules Connect To Content-Blocks
+  href: specs/cms/dnn-module.html
+- uid: Specs.Cms.Edit
+  name: Edit Content or Data in DNN / 2sxc
+  href: specs/cms/edit.html
+- uid: Specs.Cms.EditContext
+  name: In-Page Editing Context (technical)
+  href: specs/cms/edit-context.html
 - uid: Specs.Cms.InnerContent
-  name: 'Concept: Inner Content 2.0'
+  name: Inner Content (Content Within Other Content)
   href: specs/cms/inner-content.html
+- uid: Specs.Cms.PagePublishing
+  name: DNN/Evoq Page Versioning / Publishing and Workflow
+  href: specs/cms/dnn-evoq-page-publishing.html
+- uid: Specs.Cms.Polymorphism
+  name: Polymorphism aka Editions aka Open-Heart-Surgery (WIP)
+  href: specs/cms/polymorph.html
+- uid: Specs.Cms.QuickE
+  name: QuickE (Quick Edit)
+  href: specs/cms/quick-edit.html
+- uid: Specs.Cms.Toolbars
+  name: In-Page Edit-Item Toolbars and Buttons
+  href: specs/cms/inpage-toolbars.html
+- uid: Specs.Cms.Views
+  name: Views and Templates
+  href: specs/cms/views.html
 - uid: Specs.Contribute
   name: Contribute to 2sxc / EAV - Setup
   href: specs/docs/contribute-setup.html
@@ -266,7 +266,7 @@ references:
   name: 'Concept: Tokens'
   href: specs/datasources/configuration-tokens.html
 - uid: Specs.DataSources.Custom
-  name: 'EAV DataSources: Creating Custom DataSources'
+  name: 'EAV DataSources: Create Your Custom DataSources'
   href: specs/datasources/create-custom.html
 - uid: Specs.DataSources.DataSource
   name: DataSource Basics (IDataSource)
@@ -283,6 +283,9 @@ references:
 - uid: Specs.DataSources.ListAll
   name: All DataSource Objects in 2sxc / EAV
   href: specs/datasources/list-all.html
+- uid: Specs.DataSources.Queries
+  name: Queries Basics
+  href: specs/datasources/query.html
 - uid: Specs.DocsContribute
   name: How to contribute to this documentation
   href: specs/docs/contribute.html
@@ -4261,6 +4264,208 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.DataSources.ValueSort.Languages
   nameWithType: ValueSort.Languages
+- uid: ToSic.Eav.DataSources.VisualQuery
+  name: ToSic.Eav.DataSources.VisualQuery
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.html
+  commentId: N:ToSic.Eav.DataSources.VisualQuery
+  fullName: ToSic.Eav.DataSources.VisualQuery
+  nameWithType: ToSic.Eav.DataSources.VisualQuery
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType
+  name: DataSourceType
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html
+  commentId: T:ToSic.Eav.DataSources.VisualQuery.DataSourceType
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType
+  nameWithType: DataSourceType
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Cache
+  name: Cache
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Cache
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Cache
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Cache
+  nameWithType: DataSourceType.Cache
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Filter
+  name: Filter
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Filter
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Filter
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Filter
+  nameWithType: DataSourceType.Filter
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Logic
+  name: Logic
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Logic
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Logic
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Logic
+  nameWithType: DataSourceType.Logic
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Lookup
+  name: Lookup
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Lookup
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Lookup
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Lookup
+  nameWithType: DataSourceType.Lookup
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Modify
+  name: Modify
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Modify
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Modify
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Modify
+  nameWithType: DataSourceType.Modify
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Security
+  name: Security
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Security
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Security
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Security
+  nameWithType: DataSourceType.Security
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Sort
+  name: Sort
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Sort
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Sort
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Sort
+  nameWithType: DataSourceType.Sort
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Source
+  name: Source
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Source
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Source
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Source
+  nameWithType: DataSourceType.Source
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Target
+  name: Target
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Target
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Target
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Target
+  nameWithType: DataSourceType.Target
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute
+  name: VisualQueryAttribute
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html
+  commentId: T:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute
+  nameWithType: VisualQueryAttribute
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.DynamicOut
+  name: DynamicOut
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_DynamicOut
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.DynamicOut
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.DynamicOut
+  nameWithType: VisualQueryAttribute.DynamicOut
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.DynamicOut*
+  name: DynamicOut
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_DynamicOut_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.DynamicOut
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.DynamicOut
+  nameWithType: VisualQueryAttribute.DynamicOut
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.EnableConfig
+  name: EnableConfig
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_EnableConfig
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.EnableConfig
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.EnableConfig
+  nameWithType: VisualQueryAttribute.EnableConfig
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.EnableConfig*
+  name: EnableConfig
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_EnableConfig_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.EnableConfig
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.EnableConfig
+  nameWithType: VisualQueryAttribute.EnableConfig
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.ExpectsDataOfType
+  name: ExpectsDataOfType
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_ExpectsDataOfType
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.ExpectsDataOfType
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.ExpectsDataOfType
+  nameWithType: VisualQueryAttribute.ExpectsDataOfType
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.ExpectsDataOfType*
+  name: ExpectsDataOfType
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_ExpectsDataOfType_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.ExpectsDataOfType
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.ExpectsDataOfType
+  nameWithType: VisualQueryAttribute.ExpectsDataOfType
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.GlobalName
+  name: GlobalName
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_GlobalName
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.GlobalName
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.GlobalName
+  nameWithType: VisualQueryAttribute.GlobalName
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.GlobalName*
+  name: GlobalName
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_GlobalName_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.GlobalName
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.GlobalName
+  nameWithType: VisualQueryAttribute.GlobalName
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.HelpLink
+  name: HelpLink
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_HelpLink
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.HelpLink
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.HelpLink
+  nameWithType: VisualQueryAttribute.HelpLink
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.HelpLink*
+  name: HelpLink
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_HelpLink_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.HelpLink
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.HelpLink
+  nameWithType: VisualQueryAttribute.HelpLink
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Icon
+  name: Icon
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_Icon
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Icon
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Icon
+  nameWithType: VisualQueryAttribute.Icon
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Icon*
+  name: Icon
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_Icon_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Icon
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Icon
+  nameWithType: VisualQueryAttribute.Icon
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.In
+  name: In
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_In
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.In
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.In
+  nameWithType: VisualQueryAttribute.In
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.In*
+  name: In
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_In_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.In
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.In
+  nameWithType: VisualQueryAttribute.In
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.NiceName
+  name: NiceName
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_NiceName
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.NiceName
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.NiceName
+  nameWithType: VisualQueryAttribute.NiceName
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.NiceName*
+  name: NiceName
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_NiceName_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.NiceName
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.NiceName
+  nameWithType: VisualQueryAttribute.NiceName
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.PreviousNames
+  name: PreviousNames
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_PreviousNames
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.PreviousNames
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.PreviousNames
+  nameWithType: VisualQueryAttribute.PreviousNames
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.PreviousNames*
+  name: PreviousNames
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_PreviousNames_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.PreviousNames
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.PreviousNames
+  nameWithType: VisualQueryAttribute.PreviousNames
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type
+  name: Type
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_Type
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type
+  nameWithType: VisualQueryAttribute.Type
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type*
+  name: Type
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_Type_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type
+  nameWithType: VisualQueryAttribute.Type
 - uid: ToSic.Eav.Environment
   name: ToSic.Eav.Environment
   href: api/dot-net/ToSic.Eav.Environment.html

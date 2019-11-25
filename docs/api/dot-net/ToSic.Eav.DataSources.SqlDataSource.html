@@ -333,6 +333,18 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.DataSources.VisualQuery.html" title="ToSic.Eav.DataSources.VisualQuery" class="">ToSic.Eav.DataSources.VisualQuery</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.VisualQuery.DataSourceType.html" title="DataSourceType" class="">DataSourceType</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html" title="VisualQueryAttribute" class="">VisualQueryAttribute</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
                       <a href="ToSic.Eav.Environment.html" title="ToSic.Eav.Environment" class="">ToSic.Eav.Environment</a>
                         
                         <ul class="nav level2">
@@ -571,7 +583,6 @@
   <div class="markdown level0 summary"><p>Provide Entities from a SQL Server</p>
 </div>
   <div class="markdown level0 conceptual"><h1 id="data-source-sqldatasource">Data Source: SqlDataSource</h1>
-<h2 id="purpose--description">Purpose / Description</h2>
 <p>The <strong>SqlDataSource</strong> <a class="xref" href="../../specs/datasources/datasource.html">DataSource</a> is part of the <a class="xref" href="../../specs/datasources/list-all.html">Standard EAV Data Sources</a>. It lets you use data from SQL databases as if they were entities.  </p>
 <h2 id="how-to-use-with-the-visual-query">How to use with the Visual Query</h2>
 <p>When using the <a class="xref" href="https://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a> you can just drag it into your query. The <code>Default</code> out will contain the items from the DB:</p>
@@ -614,7 +625,7 @@ CreatedOnDate,PortalGroupID
 <p>You can of course use the <code>In</code> stream to provide entities which configure the SQL. The following example has a content-type <code>SqlSetting</code> with only one item (to make the example easier to understand). The <a class="xref" href="ToSic.Eav.DataSources.App.html">App DataSource</a> delivers this in the <code>AppSetting</code> stream, which also goes into the Sql as <code>AppSetting</code> and is then used as a token in the SQL:</p>
 <p><img src="/assets/data-sources/sqldatasource-using-entity-as-config.png" width="100%"></p>
 <h2 id="using-a-value-from-a-module-instance-as-sql-parameter">Using A Value from a Module-Instance as SQL Parameter</h2>
-<p>This works like in the App-example: Provide the data from the <a href="DotNet-DataSource-ModuleDataSource">ModuleDataSource</a> as an <code>In</code> stream to the SqlDataSource, and use that to filter:</p>
+<p>This works like in the App-example: Provide the data from the <code>ModuleDataSource</code> as an <code>In</code> stream to the SqlDataSource, and use that to filter:</p>
 <p><img src="/assets/data-sources/sqldatasource-using-instance-as-config.png" width="100%"></p>
 <h2 id="programming-with-the-sqldatasource-datasource">Programming With The SqlDataSource DataSource</h2>
 <blockquote><p>We recommend to use the Visual Query where possible, 
@@ -749,6 +760,10 @@ It&#39;s also better because it separates data-retrieval from visualization.</p>
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.SqlDataSource, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Source, DynamicOut = false, Icon = &quot;database&quot;, ExpectsDataOfType = &quot;c76901b5-0345-4866-9fa3-6208de7f8543&quot;, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-SqlDataSource&quot;)]
 public class SqlDataSource : ExternalDataDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKey, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
+  <h5 id="ToSic_Eav_DataSources_SqlDataSource_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.
+But this would be inefficient, so for optimization, many items identify themselves with both the app and zone Ids</p>
+</div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">

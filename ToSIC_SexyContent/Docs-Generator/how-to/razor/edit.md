@@ -3,7 +3,6 @@ uid: HowTo.Razor.Edit
 ---
 # Edit / @Edit Object in Razor / .net
 
-## Purpose / Description
 
 Technically the entire Edit-UI is JavaScript based, so all the buttons, events etc. are client side scripts. Writing this JS would be complicated to say the least, so the `Edit` object provides the Razor-Template an intelligent, fast way to generate what's necessary.
 

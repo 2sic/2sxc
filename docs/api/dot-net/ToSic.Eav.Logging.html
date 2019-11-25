@@ -333,6 +333,18 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.DataSources.VisualQuery.html" title="ToSic.Eav.DataSources.VisualQuery" class="">ToSic.Eav.DataSources.VisualQuery</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.VisualQuery.DataSourceType.html" title="DataSourceType" class="">DataSourceType</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html" title="VisualQueryAttribute" class="">VisualQueryAttribute</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
                       <a href="ToSic.Eav.Environment.html" title="ToSic.Eav.Environment" class="">ToSic.Eav.Environment</a>
                         
                         <ul class="nav level2">
@@ -567,18 +579,7 @@
   
   <h1 id="ToSic_Eav_Logging" data-uid="ToSic.Eav.Logging" class="text-break">Namespace ToSic.Eav.Logging
   </h1>
-  <div class="markdown level0 summary"><p>The EAV system has a powerful internal logging system. It&#39;s the backbone to Insights.</p>
-<p>This is where it resides - usually you don&#39;t want to know about it ;).</p>
-<p>If you do, here a short conceptual background:</p>
-<ul>
-<li><p>Any object can have a property - usually called <code>Log</code> which is an <a class="xref" href="ToSic.Eav.Logging.ILog.html">ILog</a> .<br>  Using this the object can call the <code>Log.Add(...)</code> to add messages. Many other commands help in various scenarios. </p>
-</li>
-<li><p>The real power comes from chaining these - because each logger can know what parent-logger it reports to.<br>  This allows us to reproduce the chain of events in the original code, because you can track where<br>  loggers were made, and how they relate. </p>
-</li>
-<li><p>Most objects which use the Log, implement the <a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a>, often by inheriting<br>  <a class="xref" href="ToSic.Eav.Logging.HasLog.html">HasLog</a> which automates things when initializing - like the chaining of the Loggers. </p>
-</li>
-</ul>
-</div>
+  <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
@@ -604,9 +605,6 @@ Basically this is the backbone of Insights.</p>
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
-                  <li>
-                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Eav/Eav.Logging.md/#L2" class="contribution-link">Improve this Doc</a>
-                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

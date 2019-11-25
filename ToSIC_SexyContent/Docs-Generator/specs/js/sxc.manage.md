@@ -3,7 +3,6 @@ uid: Specs.Js.Sxc.Manage
 ---
 # JS: Manage Everything With the `manage` Controller
 
-## Purpose / Description
 The `manage` object helps you manage content, allowing you to `run(...)` [commands](xref:Specs.Js.Commands) or to get [buttons or toolbars](xref:Specs.Js.Toolbar.Intro). 
 
 ## How to use

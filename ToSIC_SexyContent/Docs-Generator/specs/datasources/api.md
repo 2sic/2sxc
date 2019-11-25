@@ -3,7 +3,6 @@ uid: Specs.DataSources.Api
 ---
 # DataSource API
 
-## Purpose / Description
 DataSources are a magic, generic system which can generate new data-items or filter / modify other data. This section explains how they work and the API you need to create your own. 
 
 ## Basics
@@ -38,7 +37,7 @@ A DataSource gets the configuration from a configuration provider. To better und
 ## Configuring the UI
 There is a special attribute called `VisualQuery` to tell the UI how to show your DataSource and provide help etc. 
 
-* [VisualQuery attribute](dotnet-datasource-api-visualquery)
+* @ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute
 
 ## History
 

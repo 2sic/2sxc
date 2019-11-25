@@ -1,7 +1,7 @@
 ---
-uid: Concepts.EditToolbar
+uid: Specs.Cms.Toolbars
 ---
-# Concept: In-Page Edit-Item Toolbars and Buttons
+# In-Page Edit-Item Toolbars and Buttons
 
 2sxc provides super-fast in-page buttons and toolbars for the content-editor to manage and edit everything. The system is very advanced, so what at first may seem trivial can become very complex as you go deeper into customizing it. This is why we are providing an overview.
 
@@ -100,7 +100,7 @@ This is a square thingy with an icon, which is will run a _Command_. When the bu
 
 
 ## Read also
-* [quickE - the quick-edit hover toolbar](xref:Concepts.QuickE) - the quick-edit hover-toolbar for inserting/moving modules
+* [quickE - the quick-edit hover toolbar](xref:Specs.Cms.QuickE) - the quick-edit hover-toolbar for inserting/moving modules
 * [Inner Content Blocks](http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules) - blog about inner content-blocks
 
 

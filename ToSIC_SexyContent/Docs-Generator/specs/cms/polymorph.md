@@ -1,7 +1,7 @@
 ---
-uid: Concepts.Polymorphism
+uid: Specs.Cms.Polymorphism
 ---
-# Concept: Polymorph / Editions / Open-Heart-Surgery (WIP)
+# Polymorphism aka Editions aka Open-Heart-Surgery (WIP)
 
 <img src="/assets/concepts/polymorph-logo-wide.svg" width="100%">
 

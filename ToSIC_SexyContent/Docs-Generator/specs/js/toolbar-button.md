@@ -3,7 +3,6 @@ uid: Specs.Js.Toolbar.Buttons
 ---
 # Html & JS: Button Definitions
 
-## Purpose / Description
 When you create custom buttons in a floating toolbar you can customize everything including the icon and more. This is explained here. 
 
 Buttons are of html, basically a `<a click="...">[some-icon]</a>`. When the button is created, it must already know what it's for, which is why the command must be prepared when the button is created. 
@@ -154,7 +153,7 @@ Note that retrieving defaults requires the button to know which command it's for
 1. function `dynamicClasses(settings)` can be used to dynamically build classes depending on the situation
 1. bool/function ~~`showCondition`~~ (_API still experimental_) - used to dynamically choose if this button should be shown or not
 1. bool ~~`disabled`~~ (_API still experimental_) would disable the click on a button
-1. bool `partOfPage` (_API still experimental_, _new in 2sxc 9.5_) determines if resulting changes should effect the [Evoq/DNN Page Publishing](xref:Concepts.PagePublishing) - note that it only effects the page-lifecyle, if the resulting dialogs and APIs respect this setting
+1. bool `partOfPage` (_API still experimental_, _new in 2sxc 9.5_) determines if resulting changes should effect the [Evoq/DNN Page Publishing](xref:Specs.Cms.PagePublishing) - note that it only effects the page-lifecyle, if the resulting dialogs and APIs respect this setting
 
 ## Some more Notes
 Because the button is often passed around as plain text/html, it can't rely on hidden variables to keep track of anything. This is why the `onclick` is so verbose, like `onclick="$2sxc(4030).manage.run({"action": "edit", "entityId": 42 })`. This is to ensure it always survives the text-round-trip. 

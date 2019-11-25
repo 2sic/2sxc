@@ -3,7 +3,6 @@ uid: Specs.DataSources.ListAll
 ---
 # All DataSource Objects in 2sxc / EAV
 
-## Purpose / Description
 2sxc provides a large set of [DataSource](xref:Specs.DataSources.DataSource) objects which either get data from somewhere (SQL, CSV, ...) or modify data on the `In` and passing it to `Out`. This page will give you an overview and link you to further sources if you need to know more. 
 
 ## How to use
@@ -92,7 +91,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
-    <td><a href="xref:ToSic.Eav.DataSources.CacheAllStreams">CacheAllStreams</a></td>
+    <td>CacheAllStreams</td>
     <td>Caching</td>
     <td>
       <details>
@@ -116,7 +115,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
-    <td>CsvDataSource</td>
+    <td>[CsvDataSource](xref:ToSic.Eav.DataSources.CsvDataSource)</td>
     <td>Get Data</td>
     <td>
       <details>
@@ -172,8 +171,7 @@ These are all the data sources which are either provided in the default installa
       </details> 
   </tr>
   <tr>
-    <td><a href="DotNet-DataSource-DnnSqlDataSource">DnnSql DataSource</a>
-    </td>
+    <td>DnnSql DataSource</td>
     <td>Get Data</td>
     <td>
       <details>
@@ -240,8 +238,7 @@ These are all the data sources which are either provided in the default installa
   </tr>
 
   <tr>
-    <td><a href="DotNet-DataSource-ModuleDataSource">Module-Instance DataSource</a>
-    </td>
+    <td>Module-Instance DataSource</td>
     <td>Get Data</td>
     <td>
       <details>
@@ -276,7 +273,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
-    <td>PassThrough</td>
+    <td>[PassThrough](xref:ToSic.Eav.DataSources.PassThrough)</td>
     <td>(internal)</td>
     <td>
       <details>
@@ -285,9 +282,6 @@ These are all the data sources which are either provided in the default installa
         </summary>
           This data source doesn't actually do anything - it
       just lets the data on the in to the out. For (internal) and testing stuff.
-      <br>
-      <code>ToSic.Eav.DataSources.PassThrough</code> <br>
-      <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/PassThrough.cs">PassThrough code</a>
       </details>
   </tr>
   <tr >

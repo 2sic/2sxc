@@ -21,7 +21,7 @@ This example ensures that
 
 1. `api`: basic JS for editing are loaded, allowing you to then run javascript commands like `$2sxc(...).run(...)`
 1. `forms`: additional JS is loaded, enabling the standard form dialogs to open
-1. `context`: the html contains context-information about the app, so that the dialogs actually work - see also [edit context](xref:Concepts.EditContext)
+1. `context`: the html contains context-information about the app, so that the dialogs actually work - see also [edit context](xref:Specs.Cms.EditContext)
 1. the auto-toolbars are disabled (this would generate a default toolbar if no toolbar was specified)
 
 ## Usage Notes

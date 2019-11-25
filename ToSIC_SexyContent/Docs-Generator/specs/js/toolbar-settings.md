@@ -3,7 +3,6 @@ uid: Specs.Js.Toolbar.Settings
 ---
 # Html & JS: Toolbar Settings
 
-## Purpose / Description
 Each in page toolbar can have some settings which control how it works and how it's shown. 
 
 _note: there is a [blog post on using toolbar settings](http://2sxc.org/en/blog/post/customize-edit-toolbar-hover-alignment-more-button-look-and-feel)._

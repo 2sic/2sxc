@@ -198,7 +198,6 @@
             <article class="content wrap" id="_content" data-uid="HowTo.Razor.Edit">
 <h1 id="edit--edit-object-in-razor--net">Edit / @Edit Object in Razor / .net</h1>
 
-<h2 id="purpose--description">Purpose / Description</h2>
 <p>Technically the entire Edit-UI is JavaScript based, so all the buttons, events etc. are client side scripts. Writing this JS would be complicated to say the least, so the <code>Edit</code> object provides the Razor-Template an intelligent, fast way to generate what&#39;s necessary.</p>
 <h2 id="how-to-use">How to use</h2>
 <p>Here&#39;s a quick example of using the <code>Edit</code> object in a Razor template:</p>
@@ -207,7 +206,7 @@
 &lt;/h1&gt;
 &lt;div&gt;...&lt;/div&gt;
 </code></pre><p>This example shows the title and will add the standard editing-buttons for the <code>Content</code> item.</p>
-<p>Here&#39;s an <a class="xref" href="../../specs/cms/inner-content.html">Concept: Inner Content 2.0</a> example:</p>
+<p>Here&#39;s an <a class="xref" href="../../specs/cms/inner-content.html">Inner Content (Content Within Other Content)</a> example:</p>
 <pre><code class="lang-html">&lt;div class=&quot;app-blog-text sc-content-block-list&quot; @Edit.ContextAttributes(post, field: &quot;DesignedContent&quot;)&gt;
     @foreach(var cb in @post.DesignedContent) {
         @cb.Render();

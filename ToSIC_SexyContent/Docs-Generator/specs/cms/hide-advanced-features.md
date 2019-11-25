@@ -2,7 +2,7 @@
 uid: Concepts.HideAdvancedFeatures
 ---
 
-# Concept: Hide Advanced Features From Non-Admins 
+# Hide Advanced Features From Non-Admins 
 
 For many users 2sxc is too powerful, so there are various mechanisms for hiding the complexity from normal editors. 
 
@@ -24,8 +24,6 @@ You can create any kind of toolbar, and you can decide to show/hide which ever y
 Note that you'll find some snippets which should help you in the snippets, to both check what group a user is in, and to generate various custom toolbars. 
 
 
-
-
 ## Read also
 
 * [Checklist to setup 2sxc Designers security group](xref:Checklist.AdminsNoAdvFeatures)
@@ -34,4 +32,4 @@ Note that you'll find some snippets which should help you in the snippets, to bo
 
 ## History
 
-1. ...
+1. Added ca. 2sxc 2.x

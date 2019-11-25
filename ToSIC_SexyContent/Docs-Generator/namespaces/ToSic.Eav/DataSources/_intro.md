@@ -3,7 +3,6 @@ uid: ToSic.Eav.DataSources
 # summary: *content
 ---
 
-## Purpose / Description
 DataSources are objects which deliver one or many [DataStreams](xref:ToSic.Eav.DataSources.IDataStream), which contain a bunch of content-items. They are then attached to each other (from one sources `Out` to another ones `In`) creating a `Query`. Queries can be customized at will. The whole system is used to prepare/process data for views, WebApi or anything else.
 
 ## Overview

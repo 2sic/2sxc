@@ -259,14 +259,26 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
-                      <a class="">CMS Concepts</a>
+                      <a href="../cms/edit.html" title="CMS Edit Content" class="">CMS Edit Content</a>
                         
                         <ul class="nav level2">
                           <li class="">
-                            <a href="../cms/edit.html" title="Edit Content" class="">Edit Content</a>
+                            <a href="../cms/inpage-toolbars.html" title="Edit Toolbars" class="">Edit Toolbars</a>
                           </li>
                           <li class="">
-                            <a href="../cms/dnn-module.html" title="DNN Modules" class="">DNN Modules</a>
+                            <a href="../cms/quick-edit.html" title="Quick-Edit (QuickE)" class="">Quick-Edit (QuickE)</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/dnn-evoq-page-publishing.html" title="Page Publishing" class="">Page Publishing</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">CMS Create and Design</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../cms/views.html" title="Views" class="">Views</a>
                           </li>
                           <li class="">
                             <a href="../app/app-folder-structure.html" title="App Folder Structure" class="">App Folder Structure</a>
@@ -275,33 +287,30 @@
                             <a href="../cms/hide-advanced-features.html" title="Hide Features" class="">Hide Features</a>
                           </li>
                           <li class="">
-                            <a href="../cms/dnn-evoq-page-publishing.html" title="Page Publishing" class="">Page Publishing</a>
-                          </li>
-                          <li class="">
-                            <a href="../cms/edit-context.html" title="Edit-Context Data" class="">Edit-Context Data</a>
-                          </li>
-                          <li class="">
-                            <a href="../cms/inner-content.html" title="Inner Content" class="">Inner Content</a>
-                          </li>
-                          <li class="">
-                            <a href="../cms/inpage-toolbars.html" title="Edit Toolbars" class="">Edit Toolbars</a>
-                          </li>
-                          <li class="">
-                            <a href="../cms/quick-edit.html" title="Quick-Edit (QuickE)" class="">Quick-Edit (QuickE)</a>
-                          </li>
-                          <li class="">
-                            <a href="../cms/views.html" title="Views" class="">Views</a>
+                            <a href="../data/permissions.html" title="Permissions" class="">Permissions</a>
                           </li>
                           <li class="">
                             <a href="../cms/polymorph.html" title="Polymorph" class="">Polymorph</a>
                           </li>
                           <li class="">
-                            <a href="../data/permissions.html" title="Permissions" class="">Permissions</a>
+                            <a href="../cms/inner-content.html" title="Inner Content" class="">Inner Content</a>
                           </li>
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
-                      <a class="">DataSources</a>
+                      <a class="">CMS Technical</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../cms/dnn-module.html" title="DNN Modules" class="">DNN Modules</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/edit-context.html" title="Edit-Context Data" class="">Edit-Context Data</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">DataSource Basics</a>
                         
                         <ul class="nav level2">
                           <li class="">
@@ -310,17 +319,11 @@
                           <li class="">
                             <a href="../datasources/datastream.html" title="DataStream Basics" class="">DataStream Basics</a>
                           </li>
-                          <li class="">
-                            <a href="../datasources/linq-guide.html" title="Linq Guide" class="">Linq Guide</a>
-                          </li>
-                          <li class="">
-                            <a href="../datasources/linq-datasource.html" title="Linq with DataSources" class="">Linq with DataSources</a>
-                          </li>
                           <li class="active">
                             <a href="../datasources/list-all.html" title="All DataSources" class="active">All DataSources</a>
                           </li>
                           <li class="">
-                            <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
+                            <a href="../datasources/query.html" title="Queries and Visual Query" class="">Queries and Visual Query</a>
                           </li>
                           <li class="">
                             <span class="expand-stub"></span>
@@ -331,6 +334,21 @@
                                   <a href="../datasources/configuration-tokens.html" title="Configuration Tokens" class="">Configuration Tokens</a>
                                 </li>
                               </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../datasources/linq-guide.html" title="Data Lists and LINQ" class="">Data Lists and LINQ</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../datasources/linq-datasource.html" title="Linq with DataSources" class="">Linq with DataSources</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
+                        
+                        <ul class="nav level2">
                           <li class="">
                             <span class="expand-stub"></span>
                             <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
@@ -483,7 +501,6 @@
             <article class="content wrap" id="_content" data-uid="Specs.DataSources.ListAll">
 <h1 id="all-datasource-objects-in-2sxc--eav">All DataSource Objects in 2sxc / EAV</h1>
 
-<h2 id="purpose--description">Purpose / Description</h2>
 <p>2sxc provides a large set of <a class="xref" href="datasource.html">DataSource</a> objects which either get data from somewhere (SQL, CSV, ...) or modify data on the <code>In</code> and passing it to <code>Out</code>. This page will give you an overview and link you to further sources if you need to know more. </p>
 <h2 id="how-to-use">How to use</h2>
 <p>Many data-sources are simply used in the <a class="xref" href="https://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a>, and if all you want is visual-query, then this reference will give you an overview regarding what things are possible. It will usually look like this: </p>
@@ -555,7 +572,7 @@ sortedAuthors.Attributes = &quot;FullName&quot;;
       </details>
   </td></tr>
   <tr>
-    <td><a href="xref:ToSic.Eav.DataSources.CacheAllStreams">CacheAllStreams</a></td>
+    <td>CacheAllStreams</td>
     <td>Caching</td>
     <td>
       <details>
@@ -579,7 +596,7 @@ sortedAuthors.Attributes = &quot;FullName&quot;;
       </details>
   </td></tr>
   <tr>
-    <td>CsvDataSource</td>
+    <td><a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.CsvDataSource.html">CsvDataSource</a></td>
     <td>Get Data</td>
     <td>
       <details>
@@ -635,8 +652,7 @@ sortedAuthors.Attributes = &quot;FullName&quot;;
       </details> 
   </td></tr>
   <tr>
-    <td><a href="DotNet-DataSource-DnnSqlDataSource">DnnSql DataSource</a>
-    </td>
+    <td>DnnSql DataSource</td>
     <td>Get Data</td>
     <td>
       <details>
@@ -703,8 +719,7 @@ sortedAuthors.Attributes = &quot;FullName&quot;;
   </td></tr>
 
   <tr>
-    <td><a href="DotNet-DataSource-ModuleDataSource">Module-Instance DataSource</a>
-    </td>
+    <td>Module-Instance DataSource</td>
     <td>Get Data</td>
     <td>
       <details>
@@ -739,7 +754,7 @@ sortedAuthors.Attributes = &quot;FullName&quot;;
       </details>
   </td></tr>
   <tr>
-    <td>PassThrough</td>
+    <td><a class="xref" href="../../api/dot-net/ToSic.Eav.DataSources.PassThrough.html">PassThrough</a></td>
     <td>(internal)</td>
     <td>
       <details>
@@ -748,9 +763,6 @@ sortedAuthors.Attributes = &quot;FullName&quot;;
         </summary>
           This data source doesn&#39;t actually do anything - it
       just lets the data on the in to the out. For (internal) and testing stuff.
-      <br>
-      <code>ToSic.Eav.DataSources.PassThrough</code> <br>
-      <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/PassThrough.cs">PassThrough code</a>
       </details>
   </td></tr>
   <tr>

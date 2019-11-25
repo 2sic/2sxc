@@ -3,7 +3,6 @@ uid: Specs.Js.$2sxc
 ---
 # JS: The $2sxc Manager
 
-## Purpose / Description
 The $2sxc-object is the core JavaScript object helping you to access data of your view or WebAPIs of your 2sxc-App.
 
 You need this in advanced use cases. _otherwise you don't need this_. Such advanced cases are:

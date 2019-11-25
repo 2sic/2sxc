@@ -3,7 +3,6 @@ uid: Specs.DataSources.Api.ConfigMask
 ---
 # DataSource API: ConfigMask
 
-## Purpose / Description
 DataSources often need settings which come from the App or from a settings dialog. The ConfigMask builds a configuration token which will be used to get this setting, and also ensures that cachings mechanims vary the cache based on the result of the configuration. 
 
 ## How to use ConfigMask

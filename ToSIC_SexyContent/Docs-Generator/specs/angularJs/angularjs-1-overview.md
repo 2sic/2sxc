@@ -3,7 +3,6 @@ uid: Specs.AngularJs
 ---
 # AngularJs 1 Overview
 
-## Purpose / Description
 2sxc contains a special helper called *2sxc4ng* which takes care of starting your app inside DNN and providing you with toolbars and data from 2sxc.
 
 ## How to use

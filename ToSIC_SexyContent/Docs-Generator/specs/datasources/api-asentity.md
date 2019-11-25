@@ -3,7 +3,6 @@ uid: Specs.DataSources.Api.AsEntity
 ---
 # DataSource API: AsEntity
 
-## Purpose / Description
 Many data sources generate new content items - either because they deliver some kind of information, or because they convert data from another source into standardized entities. This is where AsEntity helps. 
 
 ## How to use AsEntity

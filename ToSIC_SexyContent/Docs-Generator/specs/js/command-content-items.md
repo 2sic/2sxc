@@ -3,7 +3,6 @@ uid: Specs.Js.Commands.ContentItems
 ---
 # Html & Js: contentitems Command
 
-## Purpose / Description
 This button opens the admin-dialog with all content-items. It has a (beta) feature which also allows you to add filters (since 2sxc 8.7).
 
 ## How to use

@@ -10,7 +10,7 @@ You can create awesome solutions, customizing the edit-experience and working wi
 1. [sxc Controller](xref:Specs.Js.Sxc) with is the module-specific controller (TODO ca. 70% documented)
 
 ## The Editing Experience
-1. [Overview to Editing Content](xref:Concepts.Edit) 
+1. [Overview to Editing Content](xref:Specs.Cms.Edit) 
 1. Customize the edit experience (buttons, toolbars...) with the [manage controller](xref:Specs.Js.Sxc.Manage)
 
 ## Toolbars, Buttons and Commands

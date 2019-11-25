@@ -1,9 +1,9 @@
 ---
-uid: Concepts.QuickE
+uid: Specs.Cms.QuickE
 ---
-# Concept: quickE - Quick Edit 2.0
+# QuickE (Quick Edit)
 
-quickE (pronounced _quick-e_) is the quick-edit feature inside 2sxc to quickly add / move modules and inner content blocks. It supports touch and usually is used with a mouseover.
+QuickE (pronounced _quick-e_) is the quick-edit feature inside 2sxc to quickly add / move modules and inner content blocks. It supports touch and usually is used with a mouseover.
 
 ![Example showing quickE](/assets/concepts/inpage-toolbar/example-quicke.png)
 
@@ -46,7 +46,7 @@ Read more about this in the [Html Js documentation](xref:Specs.Js.QuickE) page
 
 
 ## Read also
-* [Inpage Toolbars](xref:Concepts.EditToolbar) - the item-scoped toolbars used for editing
+* [Inpage Toolbars](xref:Specs.Cms.Toolbars) - the item-scoped toolbars used for editing
 * [Inner Content Blocks](http://2sxc.org/en/blog/post/designing-articles-with-inner-content-blocks-new-in-8-4-like-modules-inside-modules) - blog about inner content-blocks
 
 ## Demo App and further links

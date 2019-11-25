@@ -3,7 +3,6 @@ uid: Specs.Js.Commands
 ---
 # Html & JS: Calling Commands of the CMS
 
-## Purpose / Description
 Whenever you press a button in the edit-ui, a edit-command is handled by the javascript layer. These commands  are things like
 
 * `edit` an item on the screen

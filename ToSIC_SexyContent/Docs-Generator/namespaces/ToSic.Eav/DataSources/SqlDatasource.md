@@ -3,7 +3,6 @@ uid: ToSic.Eav.DataSources.SqlDataSource
 ---
 # Data Source: SqlDataSource
 
-## Purpose / Description
 The **SqlDataSource** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It lets you use data from SQL databases as if they were entities.  
 
 ## How to use with the Visual Query
@@ -63,7 +62,7 @@ You can of course use the `In` stream to provide entities which configure the SQ
 <img src="/assets/data-sources/sqldatasource-using-entity-as-config.png" width="100%">
 
 ## Using A Value from a Module-Instance as SQL Parameter
-This works like in the App-example: Provide the data from the [ModuleDataSource](DotNet-DataSource-ModuleDataSource) as an `In` stream to the SqlDataSource, and use that to filter:
+This works like in the App-example: Provide the data from the `ModuleDataSource` as an `In` stream to the SqlDataSource, and use that to filter:
 
 <img src="/assets/data-sources/sqldatasource-using-instance-as-config.png" width="100%">
 

@@ -333,6 +333,18 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.DataSources.VisualQuery.html" title="ToSic.Eav.DataSources.VisualQuery" class="">ToSic.Eav.DataSources.VisualQuery</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.VisualQuery.DataSourceType.html" title="DataSourceType" class="">DataSourceType</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html" title="VisualQueryAttribute" class="">VisualQueryAttribute</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
                       <a href="ToSic.Eav.Environment.html" title="ToSic.Eav.Environment" class="">ToSic.Eav.Environment</a>
                         
                         <ul class="nav level2">
@@ -571,7 +583,6 @@
   <div class="markdown level0 summary"><p>A DataSource that merges two streams</p>
 </div>
   <div class="markdown level0 conceptual"><h1 id="data-source-itemfilterduplicates">Data Source: ItemFilterDuplicates</h1>
-<h2 id="purpose--description">Purpose / Description</h2>
 <p>The <strong>ItemFilterDuplicates</strong> <a class="xref" href="../../specs/datasources/datasource.html">DataSource</a> is part of the <a class="xref" href="../../specs/datasources/list-all.html">Standard EAV Data Sources</a>. It will provide two streams, one with all the items (but without the duplicates) and one with all the duplicates, in case you need these. </p>
 <h2 id="how-to-use-with-the-visual-query">How to use with the Visual Query</h2>
 <p>When using the <a class="xref" href="https://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a> you can just drag it into your query. This is what it usually looks like:</p>
@@ -703,6 +714,10 @@ It&#39;s also better because it separates data-retrieval from visualization.</p>
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.ItemFilterDuplicates, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Logic, DynamicOut = false, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ItemFilterDuplicates&quot;)]
 public sealed class ItemFilterDuplicates : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKey, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
+  <h5 id="ToSic_Eav_DataSources_ItemFilterDuplicates_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.
+But this would be inefficient, so for optimization, many items identify themselves with both the app and zone Ids</p>
+</div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a>

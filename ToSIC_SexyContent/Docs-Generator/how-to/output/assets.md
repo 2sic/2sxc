@@ -3,7 +3,6 @@ uid: HowTo.Output.Assets
 ---
 # Optimizing Template Assets / Client Depedencies (JS & CSS)
 
-## Purpose / Description
 This page is about using DNN Client-Resource-Management aka DNN Client-Depedency-Management in 2sxc templates. 
 
 Whenever a template needs additional files, specifically

@@ -333,6 +333,18 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
+                      <a href="ToSic.Eav.DataSources.VisualQuery.html" title="ToSic.Eav.DataSources.VisualQuery" class="">ToSic.Eav.DataSources.VisualQuery</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.VisualQuery.DataSourceType.html" title="DataSourceType" class="">DataSourceType</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html" title="VisualQueryAttribute" class="">VisualQueryAttribute</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
                       <a href="ToSic.Eav.Environment.html" title="ToSic.Eav.Environment" class="">ToSic.Eav.Environment</a>
                         
                         <ul class="nav level2">
@@ -572,7 +584,6 @@
 Find all Books (desired Entity), whose Authors (related Entity) have a Country (Attribute) with &apos;Switzerland&apos; (Value). </p>
 </div>
   <div class="markdown level0 conceptual"><h1 id="data-source-relationshipfilter">Data Source: RelationshipFilter</h1>
-<h2 id="purpose--description">Purpose / Description</h2>
 <p>The <strong>RelationshipFilter</strong> <a class="xref" href="../../specs/datasources/datasource.html">DataSource</a> is part of the <a class="xref" href="../../specs/datasources/list-all.html">Standard EAV Data Sources</a>. It will return only the items which have a relationship to another item - like books having an author, or blog-posts with the tag <em>grunt</em>. </p>
 <h2 id="how-to-use-with-the-visual-query">How to use with the Visual Query</h2>
 <p>When using the <a class="xref" href="https://2sxc.org/en/Learn/Visual-Query-Designer">Visual Query</a> you can just drag it into your query. This is what it usually looks like:</p>
@@ -740,6 +751,10 @@ It&#39;s also better because it separates data-retrieval from visualization.</p>
     <pre><code class="lang-csharp hljs">[VisualQuery(GlobalName = &quot;ToSic.Eav.DataSources.RelationshipFilter, ToSic.Eav.DataSources&quot;, Type = DataSourceType.Lookup, In = new string[]{&quot;Default&quot;, &quot;Fallback&quot;}, DynamicOut = false, ExpectsDataOfType = &quot;|Config ToSic.Eav.DataSources.RelationshipFilter&quot;, HelpLink = &quot;https://github.com/2sic/2sxc/wiki/DotNet-DataSource-RelationshipFilter&quot;)]
 public sealed class RelationshipFilter : BaseDataSource, IHasLog, IDataSource, IInAppAndZone, IInZone, IInApp, ICacheExpiring, ITimestamped, ICacheKey, ICanPurgeListCache, IDataTarget</code></pre>
   </div>
+  <h5 id="ToSic_Eav_DataSources_RelationshipFilter_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>Technically many things could just identify the app they belong to, and let the system look up the zone.
+But this would be inefficient, so for optimization, many items identify themselves with both the app and zone Ids</p>
+</div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">

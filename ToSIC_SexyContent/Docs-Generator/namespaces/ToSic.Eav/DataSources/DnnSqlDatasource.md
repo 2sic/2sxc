@@ -3,7 +3,6 @@ uid: Todo.ToSic.Eav.DataSources.AttributeFilter
 ---
 # Data Source: DnnSqlDataSource
 
-## Purpose / Description
 The **DnnSqlDataSource** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard DNN Data Sources](xref:Specs.DataSources.ListAll). It lets you use data from the DNN SQL databases as if they were entities. 
 
 This is what it looks like:

@@ -3,7 +3,6 @@ uid: Specs.Js.$2sxc.Cms
 ---
 # JS: The $2sxc.cms API
 
-## Purpose / Description
 
 The `$2sxc.cms` object is the core JavaScript API to perform CMS actions such as opening edit-dialogs etc. As of now (2sxc 9.30) it only has 1 command `run(...)` but will be enhanced in the future to do more.
 
@@ -40,7 +39,7 @@ Simple example:
 
 ```
 
-1. the first parameter is an HTML tag in the DOM, which is used to look up the context automatically (see [edit-context](xref:Concepts.EditContext))
+1. the first parameter is an HTML tag in the DOM, which is used to look up the context automatically (see [edit-context](xref:Specs.Cms.EditContext))
 1. the second parameter is the verb for the [cms-command](xref:Specs.Js.Commands) to run
 1. the third parameter is additional parameters for that command
 

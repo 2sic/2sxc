@@ -30,7 +30,7 @@ Each _Entity_ has many fields, some containing text, numbers etc. The fields an 
 This basic principle is used everywhere in 2sxc. For example, all these things are Entities:
 
 * _Simple Content_ items in the _Content-App_ are entities containing a title, body and image
-* [View](xref:Concepts.Views) configurations are entities containing name, thumbnail, template-name etc.
+* [View](xref:Specs.Cms.Views) configurations are entities containing name, thumbnail, template-name etc.
 * _Blog_ posts in the [Blog App](https://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke) are entities containing around 20 fields
 * _Tag_ items in the [Blog App](https://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke) are also entities
 * Anything you define in your apps will result in entities

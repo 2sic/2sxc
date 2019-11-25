@@ -2,7 +2,6 @@
 uid: HowTo.Razor.CustomizeSearch
 ---
 # Event _CustomizeSearch()_ on the Razor Page
-## Purpose / Description
 This event is called by the view-engine _after_ calling [CustomizeData](xref:HowTo.Razor.CustomizeData) and before passing the `Data` object to the DNN Search Indexer. 
 
 You can override this event to change how data is presented to the search, for example by bundling items together, or by giving items different URLs so that search knows that they are to appear on a sub-page. 

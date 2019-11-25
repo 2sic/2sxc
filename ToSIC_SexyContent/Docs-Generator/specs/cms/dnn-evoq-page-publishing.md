@@ -1,8 +1,8 @@
 ---
-uid: Concepts.PagePublishing
+uid: Specs.Cms.PagePublishing
 ---
 
-# Concept: DNN/Evoq Page Versioning / Publishing and Workflow
+# DNN/Evoq Page Versioning / Publishing and Workflow
 
 This page explains how a DNN / Evoq does page versioning and workflow, and how to leverage this with 2sxc. 
 
@@ -174,7 +174,7 @@ As mentioned, this is the default setup. In the case of data-oriented apps, whic
 
 ## Read also
 
-* [Data Model of DNN-Modules mapping to content](xref:Concepts.DnnModule)
+* [Data Model of DNN-Modules mapping to content](xref:Specs.Cms.DnnModule)
 * [In-Depth information about content-binding](http://2sxc.org/en/blog/post/understanding-content-binding-to-modules-and-pages-(300))
 
 

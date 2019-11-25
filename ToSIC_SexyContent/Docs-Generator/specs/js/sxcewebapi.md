@@ -3,7 +3,6 @@ uid: Specs.Js.Sxc.WebApi
 ---
 # JS: The WebApi Helpers on the Sxc Controller
 
-## Purpose / Description
 The WebApi object on the module-specific `sxc`-controller is for AJAX calls. It helps you in these advanced cases:  
 
 1. to read/write content-items using REST

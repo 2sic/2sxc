@@ -2,7 +2,6 @@
 uid: HowTo.Razor.Purpose
 ---
 # Property _Purpose_ / _InstancePurpose_ on a Razor page
-## Purpose / Description
 To let your code know, if it's running to produce HTML or if it's running to fill the search-index.
 
 ## How to use

@@ -3,7 +3,6 @@ uid: Specs.Js.Toolbar.Js
 ---
 # JS: Toolbars and Buttons
 
-## Purpose / Description
 When a user is logged on and has edit permissions, he should see buttons to edit his content or perform other actions. This is all done in HTML / JavaScript.
 
 ## How to use

@@ -3,7 +3,6 @@ uid: Specs.Data.Metadata
 ---
 # Metadata - WIP
 
-## Purpose / Description
 ...
 
 

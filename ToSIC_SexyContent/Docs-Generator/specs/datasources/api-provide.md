@@ -3,7 +3,6 @@ uid: Specs.DataSources.Api.Provide
 ---
 # DataSource API: Provide
 
-## Purpose / Description
 DataSources always provide data on an `Out` stream. The `Provide` method makes it very easy to do. 
 
 ## How to use Provide

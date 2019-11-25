@@ -3,7 +3,6 @@ uid: Specs.Js.Sxc
 ---
 # JS: The Module-Instance Sxc Controller
 
-## Purpose / Description
 The module-specific `sxc`-controller is the core JavaScript object helping you in these advanced cases:  
 
 1. if you want full control over the edit-experience with custom buttons etc. 

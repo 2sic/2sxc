@@ -4,7 +4,6 @@ uid: ToSic.Eav.DataSources.CacheAllStreams
 
 # Data Source: CacheAllStreams
 
-## Purpose / Description
 The **CacheAllStreams** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will cache all streams passing through it, based on the parameters which led to the current In-state.  
 
 

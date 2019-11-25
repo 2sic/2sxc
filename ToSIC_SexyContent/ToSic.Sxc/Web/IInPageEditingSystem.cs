@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Web
         /// Please read more about @Specs.Cms.InnerContent
         /// </summary>
         /// <param name="target">The content-item for which the new context should be.
-        /// This item usually has a field which has @Concepts.InnerContent</param>
+        /// This item usually has a field which has @Specs.Cms.InnerContent</param>
         /// <param name="noParameterOrder">see @HowTo.DynamicCode.NamedParameters</param>
         /// <param name="field">the field of this content-item, which contains the inner-content-items</param>
         /// <param name="contentType">type name used for 'new' items in a toolbar - usually for inner-content and list-contexts</param>
@@ -166,7 +166,7 @@ namespace ToSic.Sxc.Web
         /// <param name="forms">optional, default false. <br/>
         ///     Ensures javascripts are loaded enabling forms to open</param>
         /// <param name="context">optional, default false. <br/>
-        ///     If context (@Concepts.EditContext) should be added, to ensure in-instance data editing</param>
+        ///     If context (@Specs.Cms.EditContext) should be added, to ensure in-instance data editing</param>
         /// <param name="autoToolbar">optional, default false. <br/>
         ///     Disables the automatic generation of a toolbar (this is important, as there usually won't be a toolbar in public pages, which would then trigger the fallback-toolbar to be generated)</param>
         /// <param name="styles">optional, default false. <br/>

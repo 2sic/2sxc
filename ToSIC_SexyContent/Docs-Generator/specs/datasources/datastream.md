@@ -4,7 +4,6 @@ uid: Specs.DataSources.DataStream
 
 # DataStream Basics (IDataStream)
 
-## Purpose / Description
 DataStreams are objects which behave like a table, delivering a bunch of content-items. Common examples in [Razor-templates](xref:HowTo.Razor.Templates) are:
 
 1. the [Data["Default"]](xref:HowTo.DynamicCode.Data) is a data-stream containing all content-items assigned to this template, ready to show

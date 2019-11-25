@@ -4,7 +4,6 @@ uid: HowTo.DynamicCode.Link
 
 # Link / @Link Object in Razor / .net
 
-## Purpose / Description
 Basically you can always link around to other pages, websites or views using normal `<a href="...">text</a>` html. And often you just want to add some parameters to the current Url like `?id=27` - but the behavior of this can be very different depending on the DNN settings. The `Link` object helps you handle this. 
 
 _Note:_ DNN often has a problem with links, because depending on what page you are on, the behaviour is a bit different. This is especially important on the home page. Use `@Link.To(...)` to make sure everything works no matter what. 

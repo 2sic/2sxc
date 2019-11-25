@@ -4,7 +4,6 @@ uid: ToSic.Eav.DataSources.App
 
 # Data Source: App
 
-## Purpose / Description
 The **App** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It provides all items of the current App or of another App if needed. 
 
 ## How to use with the Visual Query

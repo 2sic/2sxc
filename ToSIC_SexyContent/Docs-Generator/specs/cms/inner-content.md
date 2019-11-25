@@ -1,7 +1,7 @@
 ---
 uid: Specs.Cms.InnerContent
 ---
-# Concept: Inner Content 2.0
+# Inner Content (Content Within Other Content)
 
 Inner Content is the feature to place content-blocks (apps or common content-items) _inside_ another content-item. 
 
@@ -39,7 +39,7 @@ For _Inner Content_ to work, the following parts play together:
 
 1. **Data storage**: you need fields in your content-type to link to the external content blocks. Just create entity-fields and use the type _Content Block Items_. In many cases you also want to hide the field because it's not important to the content-editor. Just go to the field-settings and set _Visible in Edit UI_ to off. 
 2. **Content-Block rendering** in the templates, using the [Razor API](xref:HowTo.Razor.Blocks) - it is prepared both for the standalone-area-mode as well as the merge-with-wysiwyg-mode. 
-2. **In-Page Editing**: to allow the editor to add / edit content-blocks in the normal view, the UI must support it. This is handeled automatically by [Quick-Edit](xref:Concepts.QuickE). 
+2. **In-Page Editing**: to allow the editor to add / edit content-blocks in the normal view, the UI must support it. This is handeled automatically by [Quick-Edit](xref:Specs.Cms.QuickE). 
 3. To do the in-page Editing, quickE needs to know some **context information** (what field to store the links in, etc.), provided in an HTML-attribute. It's either rendered in automatically when using the [Razor commands](xref:HowTo.Razor.Blocks) or you can manually place them using [context attributes](xref:Razor.ContextAttributes].
 4. If you want the **WYSIWYG-integration** the wysiwyg must know which field to use to manage the linked content-blocks. This is simply done by convention: as soon as a content-block field follows right after a wysiwyg-field, they will be linked and the button will appear. This also works it the content-block field is set to invisible. 
 

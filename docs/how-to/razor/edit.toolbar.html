@@ -242,7 +242,7 @@
 <li>app buttons</li>
 </ol>
 <p>The actions can be a combination of known button-names. Here&#39;s the current <a class="xref" href="../../specs/js/commands.html">JavaScript catalog of commands</a>: </p>
-<p>The following commands all require <code>target</code> to be set, or they only make sense in a List-setup - see also <a class="xref" href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content and not as data</a>[template-content-data]. </p>
+<p>The following commands all require <code>target</code> to be set, or they only make sense in a List-setup - see also <a class="xref" href="http://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content">content and not as data</a>. </p>
 <ol>
 <li><code>new</code> open a dialog to create a new item, requires a <code>target</code> <em>or</em> a <code>contentType</code> parameter</li>
 <li><code>edit</code> to edit the current item</li>
@@ -264,11 +264,6 @@
   contentType: &quot;BlogPost&quot;, 
   prefill: new { Title = &quot;Hello&quot;, Color = &quot;red&quot;, Link = &quot;page:&quot; + Dnn.Tab.TabID } )
 </code></pre><p>This example will prefill the title, the color and in the link field add a reference to the current page. </p>
-<p>TODO: get more examples with prefilling</p>
-<ul>
-<li>a related entity (like a category)</li>
-<li>a date</li>
-</ul>
 <h2 id="multiple-entities-prefil">Multiple Entities Prefil</h2>
 <p>For this you must simply provide an array of strings, like this:</p>
 <pre><code class="lang-Razor">@Edit.Toolbar(actions: &quot;new&quot;, contentType: &quot;BlogPost&quot;, prefill: new { Tags = new string[] {&quot;08387a10-1aac-494a-9eb5-1383e31490eb&quot;,&quot;b498a694-047a-4e51-a285-50f9a64edda1&quot;} })
@@ -284,29 +279,15 @@
 <li>js generates buttons</li>
 <li>if a button is clicked, an action-manager then executes the correct action on the correct item </li>
 </ol>
-<h2 id="notes-and-clarifications">Notes and Clarifications</h2>
-<h3 id="enforced-parameter-naming">Enforced Parameter Naming</h3>
-<p>To promote long term API stability, we require all parameters except for the first content-item <code>target</code> to be <a class="xref" href="../dynamic-code/use-named-parameters.html">named</a> when used.</p>
-<pre><code class="lang-html">&lt;!-- this will work --&gt;
-@Edit.Toolbar(target: postItem, actions: &quot;add,edit,more&quot;)
-@Edit.Toolbar(postItem, actions: &quot;add&quot;)
-
-&lt;!-- this won&#39;t work --&gt;
-@Edit.Toolbar(postItem, &quot;add&quot;)
-
-&lt;!-- this will work --&gt;
-@Edit.Toolbar(actions: &quot;new&quot;, contentType: &quot;BlogPost&quot;)
-
-&lt;!-- this won&#39;t --&gt;
-@Edit.Toolbar(&quot;new&quot;, &quot;BlogPost&quot;)
-</code></pre><h3 id="older-contenttoolbar-syntax-is-deprecated">Older @Content.Toolbar Syntax Is Deprecated</h3>
+<h2 id="older-contenttoolbar-syntax-is-deprecated">Older @Content.Toolbar Syntax Is Deprecated</h2>
 <p><em>Note</em>: there was an older <code>@SomeContentItem.Toolbar</code> syntax and this still works, but we ran into architecture issues, so we decided to place all advanced functions into the <code>Edit.Toolbar(...)</code> method. This is the way to go from now on, the old syntax will continue to work but is not recommended any more. </p>
 <h2 id="read-also">Read also</h2>
 <ul>
-<li>todo</li>
+<li><a class="xref" href="../../specs/js/toolbars-and-buttons-intro.html">Html: In-Page Edit Toolbars and Buttons</a></li>
+<li><a class="xref" href="../../specs/js/toolbar-settings.html">Html &amp; JS: Toolbar Settings</a></li>
+<li><a class="xref" href="../../specs/js/toolbar-button.html">Html &amp; JS: Button Definitions</a></li>
 </ul>
 <h2 id="demo-app-and-further-links">Demo App and further links</h2>
-<p>You should find some code examples in this demo App</p>
 <ul>
 <li><a href="http://2sxc.org/en/apps/app/faq-with-categories-and-6-views">FAQ with Categories</a></li>
 </ul>

@@ -9,7 +9,7 @@ The setup builds upon the ASP.net and DNN WebAPI. It enhances the bootstrapping 
 ## Where to Store the API Files
 All your WebAPIs are C# files saved in the special folder called `api`. The folder must be in root of your 2sxc app, and the files have to end with `...Controller.cs` (this is a convention in ASP.net).
 
-_New in 2sxc 9.35+_: you can now also create `api` folders as _subfolders_ to run the api in multiple editions. This is an experimental [polymorph feature](xref:Concepts.Polymorphism) which is still being worked out, but in general you can use the old and the new way:
+_New in 2sxc 9.35+_: you can now also create `api` folders as _subfolders_ to run the api in multiple editions. This is an experimental [polymorph feature](xref:Specs.Cms.Polymorphism) which is still being worked out, but in general you can use the old and the new way:
 
 * classic (single edition)  
   `[app-folder]/api/YourController.cs`  
@@ -81,7 +81,7 @@ The `SxcApiController` provides various command / helpers to get you productiv. 
 ## Read also
 
 * [WebApi](xref:HowTo.WebApis)
-* [Concepts: Polymorphisms](xref:Concepts.Polymorphism)
+* [Concepts: Polymorphisms](xref:Specs.Cms.Polymorphism)
 
 ## History
 

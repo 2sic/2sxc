@@ -1,7 +1,7 @@
 ---
-uid: Concepts.Views
+uid: Specs.Cms.Views
 ---
-# Concept: Views
+# Views and Templates
 
 Views are what the user will see - and contains things like Html, CSS, Javascript and data from the content. 
 
@@ -30,13 +30,9 @@ A view has a lot of configuration options, but they are all explained in the edi
 * [Differences between features when using Content or App](https://2sxc.org/en/blog/post/2sxc-app-vs-2sxc-content-which-one-should-i-use)
 * [Protecting Views for certain users using permissions](https://2sxc.org/en/Docs/Feature/feature/4737)
 
-## How to Use
-
-todo: recipes to create, change etc.
-
 ## Future Features & Wishes
 
-1. Out-of the box support for [polymorphism](xref:Concepts.Polymorphism)
+1. Out-of the box support for [polymorphism](xref:Specs.Cms.Polymorphism)
 
 ## Read also
 

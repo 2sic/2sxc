@@ -3,7 +3,6 @@ uid: HowTo.DynamicCode.Dnn
 ---
 # Link / @Dnn Object in Razor / .net
 
-## Purpose / Description
 The `Dnn` is a helper object which contains properties to access information about the current tab, portal, user, module etc.
 
 

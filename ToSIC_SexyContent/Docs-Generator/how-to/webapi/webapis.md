@@ -6,7 +6,6 @@ _note that this documentation is for 2sxc 8.10+. Previous versions aready suppor
 
 
 
-## Purpose / Description
 The WebApi is a set of http APIs which let you access content-items, lists of items, queries or even custom c# APIs. You can find some jQuery examples on the [$2sxc-WebApi page](xref:Specs.Js.$2sxc).
 
 For example, assume you have the [blog-app](xref:App.Blog) installed and your JS would request a JSON from this endpoint (logged in as host, so security is not an issue):
@@ -51,12 +50,12 @@ Note that Query endpoints only support the http-verb GET.
 * `.../app/[app-folder]/api/[YourName]` when using this endpoint from external, as auto-detect can't work then.
 
 #### New in 9.35: Polymorphism / Multi-Edition Controllers
-In 2sxc 9.35 we're introducing an experimental feature to publish the **same** api controller in multiple editions, to enable open-heart-surgery. It's called [Polymorph](xref:Concepts.Polymorphism), and if you use it to place controllers in a `subfolder/api` you'll access it as follows:
+In 2sxc 9.35 we're introducing an experimental feature to publish the **same** api controller in multiple editions, to enable open-heart-surgery. It's called [Polymorph](xref:Specs.Cms.Polymorphism), and if you use it to place controllers in a `subfolder/api` you'll access it as follows:
 
 * `.../app/auto/[edition]/api/[YourName]` when accessing from a 2sxc-module directly with auto-detect
 * `.../app/[app-folder]/[edition]/api/[YourName]` when auto-detect can't work (external access).
 
-Read more about [Polymorph](xref:Concepts.Polymorphism) and [C# WebApi](xref:HowTo.WebApi).
+Read more about [Polymorph](xref:Specs.Cms.Polymorphism) and [C# WebApi](xref:HowTo.WebApi).
 
 #### WebAPI Security / Permissions
 Your C# code determines what security is applied, and what http verbs are supported.
@@ -93,7 +92,7 @@ todo
 ## Read also
 
 * [DotNet WebApi](xref:HowTo.WebApi)
-* [Concepts: Polymorphisms](xref:Concepts.Polymorphism)
+* [Concepts: Polymorphisms](xref:Specs.Cms.Polymorphism)
 
 ## Demo App and further links
 

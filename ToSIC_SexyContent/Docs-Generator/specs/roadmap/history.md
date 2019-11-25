@@ -44,7 +44,7 @@ Mostly smaller bugfixes
 * [x] Drop all dependencies to Telerik - file browser using ADAM
 
 ### Version 9.5
-* [x] [Support for DNN/Evoq Page Publishing](xref:Concepts.PagePublishing)
+* [x] [Support for DNN/Evoq Page Publishing](xref:Specs.Cms.PagePublishing)
 
 ### Version 9.6
 * [x] [Extensive logging system to watch all internals](https://2sxc.org/en/blog/post/releasing-2sxc-9-6-with-extensive-logging)

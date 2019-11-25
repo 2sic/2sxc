@@ -4,7 +4,6 @@ uid: HowTo.Razor.Blocks
 
 # Razor: Rendering Content-Blocks
 
-## Purpose / Description
 When using [Inner Content](xref:Specs.Cms.InnerContent) the linked content-blocks (apps or pieces of content) must be rendered into the template. Here's how to do it in Razor. 
 
 ## How to use

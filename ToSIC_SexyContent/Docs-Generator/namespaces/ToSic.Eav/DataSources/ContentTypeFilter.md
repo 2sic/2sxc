@@ -4,7 +4,6 @@ uid: ToSic.Eav.DataSources.EntityTypeFilter
 # Data Source: ContentType EntityType Filter
 _Note: this data source used to be called EntityTypeFilter, we renamed it in 2sxc 9.8 for consistency_
 
-## Purpose / Description
 The **ContentTypeFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will only let items pass through, which are of a specific type. 
 
 ## How to use with the Visual Query

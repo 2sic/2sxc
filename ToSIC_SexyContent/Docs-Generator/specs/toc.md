@@ -48,29 +48,36 @@
 ###[Json Entity](xref:Specs.Data.Formats.JsonV1-Entity)
 ###[Json ContentType](xref:Specs.Data.Formats.JsonV1-ContentType)
 
-# CMS Concepts
-##[Edit Content](xref:Concepts.Edit)
-##[DNN Modules](xref:Concepts.DnnModule)
+# [CMS Edit Content](xref:Specs.Cms.Edit)
+##[Edit Toolbars](xref:Specs.Cms.Toolbars)
+##[Quick-Edit (QuickE)](xref:Specs.Cms.QuickE)
+##[Page Publishing](xref:Specs.Cms.PagePublishing)
+
+# CMS Create and Design
+##[Views](xref:Specs.Cms.Views)
 ##[App Folder Structure](xref:Specs.App.Folders)
 ##[Hide Features](xref:Concepts.HideAdvancedFeatures)
-##[Page Publishing](xref:Concepts.PagePublishing)
-##[Edit-Context Data](xref:Concepts.EditContext)
-##[Inner Content](xref:Specs.Cms.InnerContent)
-##[Edit Toolbars](xref:Concepts.EditToolbar)
-##[Quick-Edit (QuickE)](xref:Concepts.QuickE)
-##[Views](xref:Concepts.Views)
-##[Polymorph](xref:Concepts.Polymorphism)
 ##[Permissions](xref:Concepts.Permissions)
+##[Polymorph](xref:Specs.Cms.Polymorphism)
+##[Inner Content](xref:Specs.Cms.InnerContent)
 
-# DataSources
+# CMS Technical
+##[DNN Modules](xref:Specs.Cms.DnnModule)
+##[Edit-Context Data](xref:Specs.Cms.EditContext)
+
+
+# DataSource Basics
 ##[DataSource Basics](xref:Specs.DataSources.DataSource)
 ##[DataStream Basics](xref:Specs.DataSources.DataStream)
-##[Linq Guide](xref:Specs.DataSources.LinqGuide)
-##[Linq with DataSources](xref:Specs.DataSources.Linq)
 ##[All DataSources](xref:Specs.DataSources.ListAll)
-##[Create Custom DataSource](xref:Specs.DataSources.Custom)
+##[Queries and Visual Query](xref:Specs.DataSources.Queries)
 ##[Configuration System](xref:Specs.DataSources.Configuration)
 ###[Configuration Tokens](xref:Specs.DataSources.ConfigurationTokens)
+
+# [Data Lists and LINQ](xref:Specs.DataSources.LinqGuide)
+##[Linq with DataSources](xref:Specs.DataSources.Linq)
+
+# [Create Custom DataSource](xref:Specs.DataSources.Custom)
 ##[Internal APIs](xref:Specs.DataSources.Api)
 ###[AsEntity](xref:Specs.DataSources.Api.AsEntity)
 ###[ConfigMask](xref:Specs.DataSources.Api.ConfigMask)

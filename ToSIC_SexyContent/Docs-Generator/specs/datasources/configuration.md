@@ -6,10 +6,9 @@ uid: Specs.DataSources.Configuration
 
 [DataSource](xref:Specs.DataSources.DataSource) objects have an sophisticated system to retrieve settings and configuration using tokens and more. 
 
-## Purpose / Description
 A [DataSource](xref:Specs.DataSources.DataSource) is usually configurable, meaning that it needs parameters to do it's job. Some examples:
 
-* a [Module data source](dotnet-datasource-moduledatasource) needs to know the module ID 
+* a `ModuleDataSource` needs to know the module ID 
 * an [Owner-Filter DataSource](xref:ToSic.Eav.DataSources.OwnerFilter) needs to know who the current user is, to find his items
 * a [Paging ](xref:ToSic.Eav.DataSources.Paging) needs to know what page size it should use and what page it's on
 * A CSV data source needs to know what file it should load

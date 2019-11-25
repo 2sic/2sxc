@@ -4,7 +4,6 @@ uid: Todo.ToSic.Eav.DataSources.xxx
 
 # Data Source: Module-Instance DataSource
 
-## Purpose / Description
 The **Module-Instance DataSource** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard 2sxc/DNN Data Sources](xref:Specs.DataSources.ListAll). It is the default data source as it directly delivers module-instance data and is used for all scenarios which don't explicitly have a query, and it can also be used as part of a query.  
 
 ## How to use with the Visual Query

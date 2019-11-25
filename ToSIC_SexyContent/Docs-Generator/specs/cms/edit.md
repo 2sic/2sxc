@@ -1,9 +1,8 @@
 ---
-uid: Concepts.Edit
+uid: Specs.Cms.Edit
 ---
-# Overview: Edit Content or Data in DNN / 2sxc
+# Edit Content or Data in DNN / 2sxc
 
-## Purpose / Description
 When users edit content they usually use in-page buttons to access edit-dialogs and more. Here is a short overview and links to what you need to know.
 
 ## The Standard Edit Dialogs
@@ -27,10 +26,10 @@ The configuration of these edit-dialogs happens in the **Content Type** configur
 ## All about Toolbars and Editing
 
 1. In-Page Item Edit Toolbars
-    1. Most of the concept is explained in [Concept InPage Toolbars](xref:Concepts.EditToolbar).
+    1. Most of the concept is explained in [Concept InPage Toolbars](xref:Specs.Cms.Toolbars).
     1. You will usually create such toolbars from the Razor templates - read about [Edit.TagToolbar and Edit.Toolbar](xref:HowTo.Razor.Edit.Toolbar)
 
-2. The hovering insert-modules toolbar-system is called [quickE for quick-edit](xref:Concepts.QuickE). There you will also see how to customize the editing experience. 
+2. The hovering insert-modules toolbar-system is called [quickE for quick-edit](xref:Specs.Cms.QuickE). There you will also see how to customize the editing experience. 
 
 
 ## Advanced JavaScript & HTML Based Toolbars and Buttons

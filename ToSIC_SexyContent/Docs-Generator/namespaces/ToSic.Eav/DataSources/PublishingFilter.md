@@ -3,7 +3,6 @@ uid: ToSic.Eav.DataSources.PublishingFilter
 ---
 # Data Source: PublishingFilter
 
-## Purpose / Description
 The **PublishingFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will hide unpublished items for non-editors and provide these drafts if an editor is viewing the results.  
 
 ## How to use with the Visual Query
