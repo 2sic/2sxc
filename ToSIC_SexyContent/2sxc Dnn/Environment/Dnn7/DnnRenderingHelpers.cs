@@ -84,24 +84,23 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
 
-        public void RegisterClientDependencies(Page page, bool js, bool css)
+        public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss)
         {
             Log.Add("will auto-register client dependencies (js/css");
             var root = "~/desktopmodules/tosic_sexycontent/";
             root = page.ResolveUrl(root);
-            var breakCache = "?sxcver=" + Settings.Version;
-            var ext = IsDebugUrl(page.Request) ? ".min.js" : ".js" + breakCache;
+            //var breakCache = "?sxcver=" + Settings.Version;
+            var ext = IsDebugUrl(page.Request) ? ".min.js" : ".js";// + breakCache;
             var ver = Settings.Version.ToString();
 
             // add edit-mode CSS
-            if (css)
-                RegisterCss(page, root + "dist/inpage/inpage.min.css");
+            if (editCss) RegisterCss(page, root + "dist/inpage/inpage.min.css");
 
-            if (js)
-            {
-                RegisterJs(page, ver, root + "js/2sxc.api" + ext);
-                RegisterJs(page, ver, root + "dist/inpage/inpage.min.js");// + ext);
-            }
+            // add read-js
+            if(readJs|| editJs) RegisterJs(page, ver, root + "js/2sxc.api" + ext);
+
+            // add edit-js (commands, manage, etc.)
+            if (editJs) RegisterJs(page, ver, root + "dist/inpage/inpage.min.js");
         }
 
         #region add scripts / css with bypassing the official ClientResourceManager
@@ -112,7 +111,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
             page.ClientScript.RegisterClientScriptInclude(typeof(Page), path, url);
         }
 
-        private static void RegisterCss(Page page, string path) => ClientResourceManager.RegisterStyleSheet(page, path);
+        private static void RegisterCss(Page page, string path) 
+            => ClientResourceManager.RegisterStyleSheet(page, path);
 
         #endregion
 

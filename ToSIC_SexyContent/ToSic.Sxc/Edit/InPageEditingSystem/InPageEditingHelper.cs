@@ -35,24 +35,24 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         /// <inheritdoc />
         public HtmlString Toolbar(object target = null, 
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
+            string noParameterOrder = Eav.Constants.RandomProtectionParameter, 
             string actions = null, 
             string contentType = null, 
             object prefill = null, 
             object toolbar = null, 
             object settings = null) 
-            => ToolbarInternal(false, target, dontRelyOnParameterOrder, actions, contentType, prefill, toolbar,
+            => ToolbarInternal(false, target, noParameterOrder, actions, contentType, prefill, toolbar,
             settings);
 
         /// <inheritdoc/>
         public HtmlString TagToolbar(object target = null,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string noParameterOrder = Eav.Constants.RandomProtectionParameter,
             string actions = null,
             string contentType = null,
             object prefill = null,
             object toolbar = null,
             object settings = null) 
-            => ToolbarInternal(true, target, dontRelyOnParameterOrder, actions, contentType, prefill, toolbar,
+            => ToolbarInternal(true, target, noParameterOrder, actions, contentType, prefill, toolbar,
             settings);
 
         private HtmlString ToolbarInternal(bool inline, object target,
@@ -84,14 +84,14 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         /// <inheritdoc/>
         public HtmlString ContextAttributes(IDynamicEntity target,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
+            string noParameterOrder = Eav.Constants.RandomProtectionParameter, 
             string field = null,
             string contentType = null, 
             Guid? newGuid = null)
         {
             Log.Add("ctx attribs - enabled:{Enabled}");
             if (!Enabled) return null;
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(noParameterOrder, "ContextAttributes", $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
 
             if (field == null) throw new Exception("need parameter 'field'");
 
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         /// <inheritdoc/>
         [PrivateApi]
         public HtmlString WrapInContext(object content,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string noParameterOrder = Eav.Constants.RandomProtectionParameter,
             string tag = Constants.DefaultContextTag,
             bool full = false,
             bool? enableEdit = null,
@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             int contentBlockId = 0
         )
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "WrapInContext", $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(noParameterOrder, "WrapInContext", $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
             return new HtmlString(
                 ((CmsBlock)CmsInstance).RenderingHelper.WrapInContext(content.ToString(),
@@ -145,9 +145,10 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         #region Scripts and CSS includes
 
         /// <inheritdoc/>
-        public string Enable(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, bool? api = null, bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
+        public string Enable(string noParameterOrder = "random-y023n", bool? js = null, bool? api = null,
+            bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Enable", $"{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(noParameterOrder, "Enable", $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
 
             // check if feature enabled - if more than the api is needed
             // extend this list if new parameters are added
@@ -159,6 +160,9 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             }
 
             var hostWithInternals = (CmsBlock) CmsInstance;
+
+            if (js.HasValue || api.HasValue || forms.HasValue)
+                hostWithInternals.UiAddJsApi = (js ?? false) || (api ?? false) || (forms ?? false);
 
             // only update the values if true, otherwise leave untouched
             if (api.HasValue || forms.HasValue)

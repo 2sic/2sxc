@@ -1,8 +1,8 @@
 ﻿using DotNetNuke.Application;
-using ToSic.Eav.Interfaces;
 using System.Data.SqlClient;
 using System.Text;
 using System.Security.Cryptography;
+using ToSic.Eav.Configuration;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {

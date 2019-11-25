@@ -122,10 +122,12 @@ namespace ToSic.SexyContent
         /// </summary>
         private void RegisterResources()
         {
-            var loadJs = CmsBlock?.UiAddEditApi ?? false;
-            var loadCss = CmsBlock?.UiAddEditUi ?? false;
+            var editJs = CmsBlock?.UiAddEditApi ?? false;
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            var readJs = CmsBlock?.UiAddJsApi ?? editJs;
+            var editCss = CmsBlock?.UiAddEditUi ?? false;
 
-            if (!loadJs && !loadCss) return;
+            if (!readJs && !editJs && !editCss) return;
 
             Log.Add("user is editor, or template requested js/css, will add client material");
 
@@ -134,7 +136,7 @@ namespace ToSic.SexyContent
             // register scripts and css
             try
             {
-                new DnnRenderingHelpers(CmsBlock, Log).RegisterClientDependencies(Page, loadJs, loadCss);
+                new DnnRenderingHelpers(CmsBlock, Log).RegisterClientDependencies(Page, readJs, editJs, editCss);
             }
             catch (Exception ex)
             {
