@@ -1,0 +1,654 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Breaking Changes in EAV and 2sxc | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Breaking Changes in EAV and 2sxc | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../how-to/index.html" title="How To">How To</a>
+                      </li>
+                      <li>
+                          <a href="../..//api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../index.html" title="Introduction" class="">Introduction</a>
+                    </li>
+                    <li class="">
+                      <a href="../architecture/architecture.html" title="Architecture" class="">Architecture</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../architecture/eav-core-data.html" title="Data Models in EAV" class="">Data Models in EAV</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../data/content-types.html" title="Content Types" class="">Content Types</a>
+                          </li>
+                          <li class="">
+                            <a href="../data/entities.html" title="Entities" class="">Entities</a>
+                          </li>
+                          <li class="">
+                            <a href="../data/relationships.html" title="Entity Relationships" class="">Entity Relationships</a>
+                          </li>
+                          <li class="">
+                            <a href="../data/file-provided-content-types.html" title="File Based Content-Types" class="">File Based Content-Types</a>
+                          </li>
+                          <li class="">
+                            <a href="../data/metadata.html" title="Metadata (WIP)" class="">Metadata (WIP)</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../data-types/_overview.html" title="Value Data Types" class="">Value Data Types</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../data-types/boolean.html" title="Boolean" class="">Boolean</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/custom.html" title="Custom" class="">Custom</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/datetime.html" title="DateTime" class="">DateTime</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/empty.html" title="Empty" class="">Empty</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/entity.html" title="Entity" class="">Entity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/hyperlink.html" title="Hyperlink" class="">Hyperlink</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/number.html" title="Number" class="">Number</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/string.html" title="String" class="">String</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../input-types/_inputs-overview.html" title="Value Input Types" class="">Value Input Types</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../input-types/ui-field-all.html" title="All" class="">All</a>
+                                </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-boolean.html" title="Boolean" class="">Boolean</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-boolean-default.html" title="boolean-default" class="">boolean-default</a>
+                                      </li>
+                                    </ul>  </li>
+                                <li class="">
+                                  <a href="../input-types/custom.html" title="Custom" class="">Custom</a>
+                                </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-datetime.html" title="DateTime" class="">DateTime</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-datetime-default.html" title="datetime-default" class="">datetime-default</a>
+                                      </li>
+                                    </ul>  </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-empty.html" title="Empty" class="">Empty</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-empty-default.html" title="empty-default" class="">empty-default</a>
+                                      </li>
+                                    </ul>  </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-entity.html" title="Entity" class="">Entity</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-entity-default.html" title="entity-default" class="">entity-default</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/ui-field-entity-query.html" title="entity-query" class="">entity-query</a>
+                                      </li>
+                                    </ul>  </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-hyperlink.html" title="Hyperlink" class="">Hyperlink</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-hyperlink-default.html" title="hyperlink-default" class="">hyperlink-default</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/ui-field-hyperlink-library.html" title="hyperlink-library" class="">hyperlink-library</a>
+                                      </li>
+                                    </ul>  </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-number.html" title="Number" class="">Number</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-number-default.html" title="number-default" class="">number-default</a>
+                                      </li>
+                                    </ul>  </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-string.html" title="String" class="">String</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-string-default.html" title="string-default" class="">string-default</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/ui-field-string-dropdown.html" title="drop-down" class="">drop-down</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/ui-field-string-dropdown-query.html" title="drop-down-query" class="">drop-down-query</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/string-wysiwyg.html" title="wysiwyg" class="">wysiwyg</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/ui-field-string-font-icon-picker.html" title="font-icon-picker" class="">font-icon-picker</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/ui-field-string-url-path.html" title="url-path" class="">url-path</a>
+                                      </li>
+                                    </ul>  </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="">Json Format</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-entity.html" title="Json Entity" class="">Json Entity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-content-type.html" title="Json ContentType" class="">Json ContentType</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../cms/edit.html" title="CMS Edit Content" class="">CMS Edit Content</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../cms/inpage-toolbars.html" title="Edit Toolbars" class="">Edit Toolbars</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/quick-edit.html" title="Quick-Edit (QuickE)" class="">Quick-Edit (QuickE)</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/dnn-evoq-page-publishing.html" title="Page Publishing" class="">Page Publishing</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">CMS Create and Design</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../cms/views.html" title="Views" class="">Views</a>
+                          </li>
+                          <li class="">
+                            <a href="../app/app-folder-structure.html" title="App Folder Structure" class="">App Folder Structure</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/hide-advanced-features.html" title="Hide Features" class="">Hide Features</a>
+                          </li>
+                          <li class="">
+                            <a href="../data/permissions.html" title="Permissions" class="">Permissions</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/polymorph.html" title="Polymorph" class="">Polymorph</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/inner-content.html" title="Inner Content" class="">Inner Content</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">CMS Technical</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../cms/dnn-module.html" title="DNN Modules" class="">DNN Modules</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/edit-context.html" title="Edit-Context Data" class="">Edit-Context Data</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">DataSource Basics</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../datasources/datasource.html" title="DataSource Basics" class="">DataSource Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/datastream.html" title="DataStream Basics" class="">DataStream Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/list-all.html" title="All DataSources" class="">All DataSources</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/query.html" title="Queries and Visual Query" class="">Queries and Visual Query</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/configuration-tokens.html" title="Configuration Tokens" class="">Configuration Tokens</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../datasources/linq-guide.html" title="Data Lists and LINQ" class="">Data Lists and LINQ</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../datasources/linq-datasource.html" title="Linq with DataSources" class="">Linq with DataSources</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/api-asentity.html" title="AsEntity" class="">AsEntity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-configmask.html" title="ConfigMask" class="">ConfigMask</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-ensureconfigurationisloaded.html" title="EnsureConfigurationIsLoaded" class="">EnsureConfigurationIsLoaded</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-provide.html" title="Provide" class="">Provide</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">System Configuration</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../configuration/features-concept.html" title="Features Concept" class="">Features Concept</a>
+                          </li>
+                          <li class="">
+                            <a href="../configuration/features.html" title="Features API" class="">Features API</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../js/overview.html" title="JavaScript and Html" class="">JavaScript and Html</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/2sxc.html" title="Global $2sxc" class="">Global $2sxc</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/2sxc.cms.html" title="$2sxc.cms..." class="">$2sxc.cms...</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/sxc.html" title="Instance Sxc" class="">Instance Sxc</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/sxc.manage.html" title="Sxc.manage..." class="">Sxc.manage...</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/sxcewebapi.html" title="Sxc.webapi" class="">Sxc.webapi</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <a href="../js/quicke.html" title="QuickE" class="">QuickE</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/toolbars-and-buttons-intro.html" title="Toolbars" class="">Toolbars</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/toolbars-and-buttons-js.html" title="JS Toolbar API" class="">JS Toolbar API</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/toolbar-settings.html" title="Settings" class="">Settings</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/toolbar-button.html" title="Single Button" class="">Single Button</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/commands.html" title="Commands" class="">Commands</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/command-custom-code.html" title="Custom Code" class="">Custom Code</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/command-content-items.html" title="Content Items" class="">Content Items</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/command-delete.html" title="Delete" class="">Delete</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Angular Dnn-Sxc-Angular</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../angular/dnn-sxc-angular.html" title="Toolbars" class="">Toolbars</a>
+                          </li>
+                          <li class="">
+                            <a href="../angularJs/angularjs-1-overview.html" title="AngularJs (old)" class="">AngularJs (old)</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../style-guides/style-guides.html" title="Style Guide (WIP)" class="">Style Guide (WIP)</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../style-guides/style-guide-2020.html" title="Style Guide 2020 WIP" class="">Style Guide 2020 WIP</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Roadmap & History</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../roadmap/roadmap.html" title="Roadmap" class="">Roadmap</a>
+                          </li>
+                          <li class="">
+                            <a href="../roadmap/history.html" title="History" class="">History</a>
+                          </li>
+                          <li class="active">
+                            <a href="../roadmap/breaking-changes.html" title="Breaking Changes" class="active">Breaking Changes</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Contribute & Docs</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../docs/contribute-setup.html" title="Contribute to Code" class="">Contribute to Code</a>
+                          </li>
+                          <li class="">
+                            <a href="../docs/contribute.html" title="Contribute to Docs" class="">Contribute to Docs</a>
+                          </li>
+                          <li class="">
+                            <a href="../docs/doc-tags.html" title="Tags in Docs" class="">Tags in Docs</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Specs.Roadmap.BreakingChanges">
+<h1 id="breaking-changes-in-eav-and-2sxc">Breaking Changes in EAV and 2sxc</h1>
+
+<p>We try to minimize breaking changes, and most breaking changes won&#39;t affect your work, because it&#39;s internal API. 
+We&#39;re documenting it here to ensure you know what happened, in case you still run into this.</p>
+<h2 id="version-10">Version 10</h2>
+<blockquote><p>Version 10 has a lot of small breaking changes because 
+we restructured the internal API so it&#39;s consistent when we publish it. 
+All these things shouldn&#39;t affect you, because they were internal APIs, 
+but in case it does - here&#39;s what we did.</p>
+</blockquote>
+<h4 id="version-102002-ca-2019-11-22">Version 10.20.02 (ca. 2019-11-22)</h4>
+<p>More internal changes which shouldn&#39;t affect anybody, but make the API ready for public docs...</p>
+<ol>
+<li>Moved/renamed the internal <code>Eav.AppDataPackage</code> to <code>Eav.Apps.AppState</code></li>
+<li>Moved/renamed some internal interfaces like <code>Entity...</code></li>
+<li>Did a major change for how <code>Attribute&lt;T&gt;</code> for relationships work.<br> Before they were <code>Attribute&lt;EntityRelationship&gt;</code> and now they are <code>Attribute&lt;IEnumerable&lt;IEntity&gt;&gt;</code>.<br> This also affects <code>Value&lt;EntityRelationship&gt;</code> which is now <code>Value&lt;IEnumerable&lt;IEntity&gt;&gt;</code></li>
+<li>Moved <code>Tenant&lt;T&gt;</code> and <code>Container&lt;T&gt;</code> including matching interfaces to <code>Eav.Environment</code></li>
+<li>Renamed <code>IAppIdentity</code> to <code>IInAppAndZone</code> and <code>IZoneIdentity</code> to <code>IInZone</code></li>
+<li>Renamed <code>ICacheKeyProvider</code> to <code>ICacheKey</code></li>
+<li>Renamed <code>CacheChainedIEnumerable&lt;T&gt;</code> to <code>SynchronizedList&lt;T&gt;</code></li>
+<li>Moved/Renamed <code>MetadataFor</code> to <code>Eav.Metadata.Target</code>. Left old name compatible.</li>
+<li>Moved some extension methods for IEntity from <code>ToSic.Eav.Data.Query</code> to <code>ToSic.Eav.Data</code></li>
+<li>Changed <code>Permissions</code> to be strongly typed EntityBased objects</li>
+</ol>
+<h4 id="version-102001-2019-11-12">Version 10.20.01 (2019-11-12)</h4>
+<ol>
+<li>Internal code now uses the term <code>Header</code> instead of <code>ListContent</code>. External code provides both for backward-compatibility</li>
+<li>moved internal interfaces for engines (Razor/Token) to final namespaces <code>ToSic.Sxc.Engines</code><ol>
+<li><code>IEngine</code></li>
+<li><code>EngineBase</code></li>
+<li><code>ITokenEngine</code></li>
+<li><code>IRazorEngine</code></li>
+</ol>
+</li>
+<li>corrected architecture - some template-management code had slipped into <code>Eav.Apps</code>, was moved back to <code>Sxc.Apps</code></li>
+<li>The <code>Template</code> object was moved from <code>Eav.Apps</code> to <code>Sxc.Views</code> and we added an interface <code>IView</code>. 
+ We also renamed the internal properti <code>ViewNameInUrl</code> to <code>UrlIdentifier</code>. </li>
+<li>To correct the API a CmsManager was created extending the AppManager, which is in charge of Views</li>
+<li>Moving internal stuff related to content blocks<ol>
+<li><code>IContentBlock</code> from <code>SexyContent.Interfaces</code> to <code>Sxc.Blocks</code></li>
+<li>from <code>ToSic.SexyContent.ISxcInstance</code> to <code>ToSic.Sxc.Blocks.IBlockContext</code></li>
+<li>actually moved a lot of things there incl. <code>ContentBlock</code> now <code>BlockConfiguration</code> and more - all internal stuff</li>
+</ol>
+</li>
+<li>Moving the <code>ToSic.SexyContent.App</code> to <code>ToSic.Sxc.Apps.App</code></li>
+<li>In a razor page, we added the preferred <code>Purpose</code>. The old <code>InstancePurpose</code> will still work</li>
+<li>Placed some things we just moved in 10.20 to a final place - since it&#39;s a very recent change, we updated the docs in the 10.20.00 section</li>
+</ol>
+<h4 id="changed-but-completely-internal">Changed, but completely internal</h4>
+<ol>
+<li>Some namespaces on <code>SexyContent.ContentBlocks</code> were moved to <code>Sxc.Blocks</code></li>
+</ol>
+<h4 id="version-102000-2019-11-05">Version 10.20.00 (2019-11-05)</h4>
+<ol>
+<li>the internal interface <code>IInPageEditingHelpers</code> was moved from <code>ToSic.SexyContent.Interfaces</code> to the namespace <code>ToSic.Sxc.Web</code></li>
+<li>the internal interface <code>ILinkHelper</code> was moved to <code>ToSic.Sxc.Web</code></li>
+<li>the internal interface <code>IHtmlHelper</code> was moved to <code>ToSic.Sxc.Dnn</code></li>
+<li>the property <code>Configuration</code> on dynamic entities was deprecated in 2sxc 4 and removed in 2sxc 10 - we don&#39;t think it was ever used</li>
+<li>moved internal Metadata interfaces (ca. 5) into final namespace <a class="xref" href="../../api/dot-net/ToSic.Eav.Metadata.html">ToSic.Eav.Metadata</a></li>
+<li>Moved a bunch of internal interfaces which we believe were never used externally from <code>ToSic.Eav.Interfaces</code> to <code>ToSic.Eav.Data</code><ol>
+<li><code>ToSic.Eav.Data.IAttribute</code></li>
+<li><code>ToSic.Eav.IAttribute&lt;T&gt;</code></li>
+<li><code>IAttributeBase</code></li>
+<li><code>IAttributeDefinition</code></li>
+<li><code>IChildEntities</code> </li>
+<li><code>IContentType</code></li>
+<li><code>IDimension</code></li>
+<li><code>IEntityLight</code></li>
+<li><code>ILanguage</code></li>
+<li><code>IRelationshipManager</code></li>
+<li><code>IValue</code></li>
+<li><code>IValue&lt;T&gt;</code></li>
+<li><code>IValueOfDimension&lt;T&gt;</code></li>
+</ol>
+</li>
+<li>Moved a bunch of internal interfaces which we believe were never used externally from <code>ToSic.Eav.Apps.Interfaces</code> to <code>ToSic.Eav.Apps</code><ol>
+<li><code>IApp</code></li>
+<li><code>IAppData</code></li>
+<li><code>IAppDataConfiguration</code></li>
+<li><code>IAppEnvironment</code></li>
+<li><code>IEnvironmentFactory</code></li>
+<li><code>IInstanceInfo</code></li>
+<li><code>IItemListAction</code></li>
+<li><code>IPagePublishing</code></li>
+<li><code>ITenant</code></li>
+<li><code>IZoneMapper</code></li>
+</ol>
+</li>
+<li>the internal namespace <code>ToSic.Eav.ValueProvider</code> was changed to <code>ToSic.Eav.LookUp</code> and inside it<br> we renamed a bunch of internal interfaces and objects which we believe were never used externally</li>
+</ol>
+<h5 id="deprecatedchanged-but-not-broken">Deprecated/Changed, but not broken</h5>
+<ol>
+<li>the internal interface <code>ToSic.SexyContent.IAppAndDataHelpers</code> was renamed to <code>ToSic.Sxc.IDynamicCode</code> but the old interface still exists, so it shouldn&#39;t break<br> <em>it was used by Mobius Forms</em></li>
+<li>moved <code>ToSic.Eav.Interfaces.IEntity</code> to <code>ToSic.Eav.Data.IEntity</code> - but preserved the old interface for compatibility
+ <em>it was used everywhere</em></li>
+</ol>
+<h5 id="clean-up-but-not-broken">Clean-Up, but not broken</h5>
+<ol>
+<li>We&#39;re transitioning to the term <code>Header</code> instead of <code>ListContent</code> in templates.<br> The Razor pages and WebApi have this starting now, while old terms still work. 
+ Note that we&#39;re <em>not</em> creating a <code>HeaderPresentation</code>, because you should use <code>Header.Presentation</code></li>
+</ol>
+<h2 id="version-9">Version 9</h2>
+<h4 id="version-92000-2018-03-04">Version 9.20.00 (2018-03-04)</h4>
+<ol>
+<li>Minor breaking change in ADAM properties, like <code>Id</code> instead of <code>FolderID</code> which was a leftover of DNN naming.<br> see full <a href="https://2sxc.org/en/blog/post/working-with-the-breaking-change-adam-objects-2sxc-9-20">blog post</a></li>
+</ol>
+<h4 id="version-090800-2017-11-28">Version 09.08.00 (2017-11-28)</h4>
+<ol>
+<li>Minor breaking change <code>List&lt;IEntity&gt;</code> instead of <code>Dictionary&lt;int, IEntity&gt;</code> on the <code>IDataSource</code><br> see full <a href="https://2sxc.org/en/blog/post/fixing-the-breaking-change-in-2sxc-9-8-list-instead-of-dictionary">blog post</a></li>
+</ol>
+<h4 id="version-090300-2017-10-08">Version 09.03.00 (2017-10-08)</h4>
+<ol>
+<li>Breaking change on inconsistent naming <code>ToSic.Eav.IEntity</code> instead of <code>ToSic.Eav.Interfaces.IEntity</code>.<br> see full <a href="https://2sxc.org/en/blog/post/fixing-the-breaking-change-on-tosic-eav-ientity-in-2sxc-9-3">blog post</a></li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/roadmap/breaking-changes.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

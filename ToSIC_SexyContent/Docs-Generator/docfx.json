@@ -11,7 +11,8 @@
           "exclude": [
             "**/obj/**",
             "**/bin/**",
-            "_site/**"
+            "_site/**",
+            "**/*Testing/**"
           ]
         }
       ],
@@ -30,8 +31,9 @@
       {
         "files": [
           "api/**.md",
-          "articles/**.md",
-          "toc.yml",
+          "how-to/**.md",
+          "specs/**.md",
+          "toc.md",
           "*.md"
         ],
         "exclude": [
@@ -43,13 +45,17 @@
     "resource": [
       {
         "files": [
-          "images/**"
+          "images/**",
+          "/assets/**"
         ],
         "exclude": [
           "obj/**",
           "_site/**"
         ]
       }
+    ],
+    "xref": [
+      "xrefmap.yml"
     ],
     "overwrite": [
       {
@@ -66,7 +72,9 @@
     ],
     "dest": "../../docs",
     "template": [
-      "default"
+      "default",
+      "statictoc",
+      "material/material"
     ],
     "globalMetadata": {
       "_appTitle": "2sxc and EAV 10",

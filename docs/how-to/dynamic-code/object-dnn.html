@@ -1,0 +1,418 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Link /  Object in Razor / .net | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Link /  Object in Razor / .net | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../how-to/index.html" title="How To">How To</a>
+                      </li>
+                      <li>
+                          <a href="../..//api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../index.html" title="How To Introductions" class="">How To Introductions</a>
+                    </li>
+                    <li class="">
+                      <a href="../dotnet-razor-csharp-overview.html" title="C# / Razor Introduction" class="">C# / Razor Introduction</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Razor & WebApi Objects</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../dynamic-code/entity.html" title="Entity / DynamicEntity" class="">Entity / DynamicEntity</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/dynamic-entity.html" title="Dynamic Entity" class="">Dynamic Entity</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/object-app.html" title="App Object" class="">App Object</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/object-data.html" title="Data Object" class="">Data Object</a>
+                          </li>
+                          <li class="active">
+                            <a href="../dynamic-code/object-dnn.html" title="Dnn Object" class="active">Dnn Object</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/object-link.html" title="Link Object" class="">Link Object</a>
+                          </li>
+                          <li class="">
+                            <a href="../dynamic-code/use-named-parameters.html" title="Use Named Parameters" class="">Use Named Parameters</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Razor</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../razor/templates.html" title="Razor Templates" class="">Razor Templates</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../razor/edit.html" title="Edit Object" class="">Edit Object</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../razor/edit.toolbar.html" title="Edit.TagToolbar Edit.Toolbar" class="">Edit.TagToolbar Edit.Toolbar</a>
+                                </li>
+                                <li class="">
+                                  <a href="../razor/edit.enable.html" title="Edit.Enable" class="">Edit.Enable</a>
+                                </li>
+                                <li class="">
+                                  <a href="../razor/edit.contextattributes.html" title="Edit.ContextAttributes" class="">Edit.ContextAttributes</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <a href="../razor/customizedata.html" title="Customize Data" class="">Customize Data</a>
+                          </li>
+                          <li class="">
+                            <a href="../razor/customizesearch.html" title="Customize Search" class="">Customize Search</a>
+                          </li>
+                          <li class="">
+                            <a href="../razor/purpose.html" title="Execution Purpose" class="">Execution Purpose</a>
+                          </li>
+                          <li class="">
+                            <a href="../razor/blocks.html" title="Content Black" class="">Content Black</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Output/Templates</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../output/assets.html" title="Assets" class="">Assets</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">WebApi</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../webapi/webapis.html" title="WebApis Overview" class="">WebApis Overview</a>
+                          </li>
+                          <li class="">
+                            <a href="../webapi/dotnet-webapi.html" title="Custom WebApi" class="">Custom WebApi</a>
+                          </li>
+                          <li class="">
+                            <a href="../webapi/dotnet-webapi-saveinadam.html" title="SaveInAdam" class="">SaveInAdam</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <a href="../external/dotnet-external-use.html" title="External Use" class="">External Use</a>
+                    </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="HowTo.DynamicCode.Dnn">
+<h1 id="link--dnn-object-in-razor--net">Link / @Dnn Object in Razor / .net</h1>
+
+<p>The <code>Dnn</code> is a helper object which contains properties to access information about the current tab, portal, user, module etc.</p>
+<h2 id="how-to-use">How to use</h2>
+<p>Here&#39;s a quick example of using the <code>Dnn</code> object in a Razor template: </p>
+<pre><code class="lang-html">&lt;!-- show the current users nice name --&gt;
+@Dnn.User.DisplayName
+</code></pre><h2 id="how-it-works">How it works</h2>
+<p>There&#39;s not much to explain here, we&#39;re just providing the standard DNN objects to the template.</p>
+<h2 id="the-main-properties-of-the-dnn-object">The Main Properties of the @Dnn Object</h2>
+<p>These are the main properties:</p>
+<ol>
+<li>Module  </li>
+<li>Portal</li>
+<li>Tab</li>
+<li>User</li>
+</ol>
+<h2 id="the-dnnmodule-properties">The @Dnn.Module Properties</h2>
+<p>The <code>@Dnn.Module</code> is of the type <a href="https://www.dnndocs.com/api/DotNetNuke.Entities.Modules.ModuleInfo.html">ModuleInfo</a>. It has the following properties:</p>
+<ol>
+<li>Dnn.Module.AllModules</li>
+<li>Dnn.Module.AllTabs</li>
+<li>Dnn.Module.Border</li>
+<li>Dnn.Module.Cacheability</li>
+<li>Dnn.Module.CacheMethod</li>
+<li>Dnn.Module.CacheTime</li>
+<li>Dnn.Module.ContainerPath</li>
+<li>Dnn.Module.ContainerSrc</li>
+<li>Dnn.Module.DefaultCacheTime</li>
+<li>Dnn.Module.DesktopModule</li>
+<li>Dnn.Module.DesktopModuleId</li>
+<li>Dnn.Module.DisplayTitle</li>
+<li>Dnn.Module.EndDate - for show/hide</li>
+<li>Dnn.Module.Footer</li>
+<li>Dnn.Module.Header</li>
+<li>Dnn.Module.ModuleControl</li>
+<li>Dnn.Module.ModuleControlId</li>
+<li>Dnn.Module.ModuleDefID -  note: large D</li>
+<li>Dnn.Module.ModuleDefinition</li>
+<li>Dnn.Module.ModuleID - probably the most used value, note the large ID</li>
+<li>Dnn.Module.ModuleName</li>
+<li>Dnn.Module.ModuleOrder</li>
+<li>Dnn.Module.ModulePermissions</li>
+<li>Dnn.Module.ModuleSettings</li>
+<li>Dnn.Module.ModuleTitle</li>
+<li>Dnn.Module.PaneModuleCount</li>
+<li>Dnn.Module.PaneModuleIndex</li>
+<li>Dnn.Module.PaneName</li>
+<li>Dnn.Module.ParentTab - a TabInfo, same as Dnn.Tab</li>
+<li>Dnn.Module.PortalID - note large D</li>
+<li>Dnn.Module.StartDate - for show/hide rules</li>
+<li>Dnn.Module.TabID - note large D</li>
+<li>Dnn.Module.TabModuleID - note large D</li>
+<li>Dnn.Module.TabModuleSettings</li>
+<li>Dnn.Module.UniqueId</li>
+<li>Dnn.Module.Visibility</li>
+</ol>
+<h2 id="the-dnnportal-properties">The @Dnn.Portal Properties</h2>
+<p>The <code>@Dnn.Portal</code> is of the type <a href="https://www.dnndocs.com/api/DotNetNuke.Entities.Portals.PortalInfo.html">PortalSettings</a>. It has the following properties:</p>
+<ol>
+<li>Dnn.Portal.ActiveTab</li>
+<li>Dnn.Portal.AdministratorId</li>
+<li>Dnn.Portal.AdministratorRoleId</li>
+<li>Dnn.Portal.AdministratoRoleName</li>
+<li>Dnn.Portal.AdminTabId</li>
+<li>Dnn.Portal.CultureCode</li>
+<li>Dnn.Portal.Currency</li>
+<li>Dnn.Portal.Current - static method returning the current portal portal-settings</li>
+<li>Dnn.Portal.Default... (AdminContainer, AdminSkin, ControlPanelMode, etc.)</li>
+<li>Dnn.Portal.DefaultLanguage</li>
+<li>Dnn.Portal.DefaultModuleId</li>
+<li>Dnn.Portal.DefaultPortalContainer</li>
+<li>Dnn.Portal.DefaultTabId</li>
+<li>Dnn.Portal.Description</li>
+<li>Dnn.Portal.Email</li>
+<li>Dnn.Portal.EnableBrowserLanguage</li>
+<li>Dnn.Portal.EnableUrlLanguage</li>
+<li>Dnn.Portal.ExpiryDate</li>
+<li>Dnn.Portal.FooterText</li>
+<li>Dnn.Portal.GetProperty(string, string, cultureInfo, UserInfo, scope, boolean) - ?</li>
+<li>Dnn.Portal.GUID - notice all large letters</li>
+<li>Dnn.Portal.HomeDirectory</li>
+<li>Dnn.Portal.HomeDirectoryMapPath</li>
+<li>Dnn.Portal.HomeTabId - the root page</li>
+<li>Dnn.Portal.KeyWords</li>
+<li>Dnn.Portal.LoginTabId - where the normal login usually goes to</li>
+<li>Dnn.Portal.LogoFile</li>
+<li>Dnn.Portal.Pages</li>
+<li>Dnn.Portal.PortalAlias</li>
+<li>Dnn.Portal.PortalId - very important - notice the small d</li>
+<li>Dnn.Portal.PortalName</li>
+<li>Dnn.Portal.PortalSkin</li>
+<li>Dnn.Portal.RegisteredRoleId</li>
+<li>Dnn.Portal.RegisteredRoleName</li>
+<li>Dnn.Portal.RegisterTabId</li>
+<li>Dnn.Portal.Search... (various values like IncludeCommon, IncludeTagInfoFilter etc.)</li>
+<li>Dnn.Portal.SearchTabId</li>
+<li>Dnn.Portal.SiteLogHistory</li>
+<li>Dnn.Portal.SplashTabId</li>
+<li>Dnn.Portal.SSLEnabled</li>
+<li>Dnn.Portal.SSLEnforced</li>
+<li>Dnn.Portal.SSLURL - all caps</li>
+<li>Dnn.Portal.STDURL - all caps</li>
+<li>Dnn.Portal.SuperTabId</li>
+<li>Dnn.Portal.TimeZoneOffset</li>
+<li>Dnn.Portal.UserId</li>
+<li>Dnn.Portal.UserInfo</li>
+<li>Dnn.Portal.UserMode</li>
+<li>Dnn.Portal.UserQuota</li>
+<li>Dnn.Portal.UserRegistration</li>
+<li>Dnn.Portal.Users</li>
+<li>Dnn.Portal.UserTabId</li>
+</ol>
+<h2 id="the-dnntab-properties">The @Dnn.Tab Properties</h2>
+<p>The <code>@Dnn.Tab</code> is of the type <a href="https://www.dnndocs.com/api/DotNetNuke.Entities.Tabs.TabInfo.html">TabInfo</a>. It has the following properties:</p>
+<ol>
+<li>Dnn.Tab.ChildModules</li>
+<li>Dnn.Tab.ContainerPath</li>
+<li>Dnn.Tab.ContainerSrc</li>
+<li>Dnn.Tab.CultureCode</li>
+<li>Dnn.Tab.DefaultLanguageGuid</li>
+<li>Dnn.Tab.DefaultLanguageTab</li>
+<li>Dnn.Tab.Description</li>
+<li>Dnn.Tab.EndDate - for show/hide of this tab</li>
+<li>Dnn.Tab.FullUrl</li>
+<li>Dnn.Tab.HasChildren</li>
+<li>Dnn.Tab.IsDefaultLanguage</li>
+<li>Dnn.Tab.IsDeleted</li>
+<li>Dnn.Tab.IsNeutralCulture</li>
+<li>Dnn.Tab.IsSecure</li>
+<li>Dnn.Tab.IsTranslated</li>
+<li>Dnn.Tab.IsVisible</li>
+<li>Dnn.Tab.KeyWords</li>
+<li>Dnn.Tab.Level</li>
+<li>Dnn.Tab.LocalizedTabName</li>
+<li>Dnn.Tab.LocalizedTabs</li>
+<li>Dnn.Tab.Modules</li>
+<li>Dnn.Tab.PageHeadtext</li>
+<li>Dnn.Tab.Panes</li>
+<li>Dnn.Tab.ParentId</li>
+<li>Dnn.Tab.PermanentRedirect</li>
+<li>Dnn.Tab.PortalID - notice the large D</li>
+<li>Dnn.Tab.RefreshInterval</li>
+<li>Dnn.Tab.SiteMapPriority</li>
+<li>Dnn.Tab.SkinDoctype</li>
+<li>Dnn.Tab.SkinPath</li>
+<li>Dnn.Tab.SkinSrc</li>
+<li>Dnn.Tab.StartDate - for show/hide</li>
+<li>Dnn.Tab.TabID - the current Tab-number - notice the large D</li>
+<li>Dnn.Tab.TabName</li>
+<li>Dnn.Tab.TabOrder</li>
+<li>Dnn.Tab.TabPath</li>
+<li>Dnn.Tab.TabPermissions</li>
+<li>Dnn.Tab.TabSettings</li>
+<li>Dnn.Tab.TabType</li>
+<li>Dnn.Tab.Title</li>
+<li>Dnn.Tab.UniqueId - small &quot;d&quot;</li>
+<li>Dnn.Tab.Url</li>
+</ol>
+<h2 id="the-dnnuser-properties">The @Dnn.User Properties</h2>
+<p>The <code>@Dnn.User</code> is of the type <a href="https://www.dnndocs.com/api/DotNetNuke.Entities.Users.UserInfo.html">UserInfo</a>. It has the following properties:</p>
+<ol>
+<li>Dnn.User.DisplayName</li>
+<li>Dnn.User.Email</li>
+<li>Dnn.User.FirstName</li>
+<li>Dnn.User.FullName</li>
+<li>Dnn.User.IsDeleted</li>
+<li>Dnn.User.IsInRole(string RoleName)</li>
+<li>Dnn.User.IsSuperUser</li>
+<li>Dnn.User.LastName</li>
+<li>Dnn.User.Membership - these are asp.net memberships, you probably don&#39;t need them</li>
+<li>Dnn.User.PortalId</li>
+<li>Dnn.User.Roles - these are DNN roles</li>
+<li>Dnn.User.UserID - note the large D</li>
+<li>Dnn.User.Username</li>
+</ol>
+<h2 id="history">History</h2>
+<ol>
+<li>Introduced in 2sxc 1.0</li>
+<li></li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/how-to/dynamic-code/object-dnn.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

@@ -1,7 +1,3 @@
----
-uid: Api.DotNet
----
-
 # This is the **2sxc API Documentation**
 
 ## Background: Architecture of Eav, Sxc, Dnn

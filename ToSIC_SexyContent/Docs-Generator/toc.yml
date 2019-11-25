@@ -1,7 +1,0 @@
-
-- name: Articles
-  href: articles/
-- name: .net API Documentation
-  #href: obj/api/dot-net/
-  xref: Api.DotNet
-  homepage: api/dot-net/index.md

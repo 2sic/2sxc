@@ -1,0 +1,691 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Guide to Working with LINQ and 2sxc/EAV Data | 2sxc and EAV 10 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Guide to Working with LINQ and 2sxc/EAV Data | 2sxc and EAV 10 ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../images/logos/favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logos/2sxc-10-50.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../../specs/index.html" title="Specs">Specs</a>
+                      </li>
+                      <li>
+                          <a href="../../how-to/index.html" title="How To">How To</a>
+                      </li>
+                      <li>
+                          <a href="../..//api/dot-net/index.html" title=".net API">.net API</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <a href="../index.html" title="Introduction" class="">Introduction</a>
+                    </li>
+                    <li class="">
+                      <a href="../architecture/architecture.html" title="Architecture" class="">Architecture</a>
+                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../architecture/eav-core-data.html" title="Data Models in EAV" class="">Data Models in EAV</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../data/content-types.html" title="Content Types" class="">Content Types</a>
+                          </li>
+                          <li class="">
+                            <a href="../data/entities.html" title="Entities" class="">Entities</a>
+                          </li>
+                          <li class="">
+                            <a href="../data/relationships.html" title="Entity Relationships" class="">Entity Relationships</a>
+                          </li>
+                          <li class="">
+                            <a href="../data/file-provided-content-types.html" title="File Based Content-Types" class="">File Based Content-Types</a>
+                          </li>
+                          <li class="">
+                            <a href="../data/metadata.html" title="Metadata (WIP)" class="">Metadata (WIP)</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../data-types/_overview.html" title="Value Data Types" class="">Value Data Types</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../data-types/boolean.html" title="Boolean" class="">Boolean</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/custom.html" title="Custom" class="">Custom</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/datetime.html" title="DateTime" class="">DateTime</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/empty.html" title="Empty" class="">Empty</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/entity.html" title="Entity" class="">Entity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/hyperlink.html" title="Hyperlink" class="">Hyperlink</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/number.html" title="Number" class="">Number</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-types/string.html" title="String" class="">String</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../input-types/_inputs-overview.html" title="Value Input Types" class="">Value Input Types</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../input-types/ui-field-all.html" title="All" class="">All</a>
+                                </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-boolean.html" title="Boolean" class="">Boolean</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-boolean-default.html" title="boolean-default" class="">boolean-default</a>
+                                      </li>
+                                    </ul>  </li>
+                                <li class="">
+                                  <a href="../input-types/custom.html" title="Custom" class="">Custom</a>
+                                </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-datetime.html" title="DateTime" class="">DateTime</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-datetime-default.html" title="datetime-default" class="">datetime-default</a>
+                                      </li>
+                                    </ul>  </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-empty.html" title="Empty" class="">Empty</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-empty-default.html" title="empty-default" class="">empty-default</a>
+                                      </li>
+                                    </ul>  </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-entity.html" title="Entity" class="">Entity</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-entity-default.html" title="entity-default" class="">entity-default</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/ui-field-entity-query.html" title="entity-query" class="">entity-query</a>
+                                      </li>
+                                    </ul>  </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-hyperlink.html" title="Hyperlink" class="">Hyperlink</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-hyperlink-default.html" title="hyperlink-default" class="">hyperlink-default</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/ui-field-hyperlink-library.html" title="hyperlink-library" class="">hyperlink-library</a>
+                                      </li>
+                                    </ul>  </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-number.html" title="Number" class="">Number</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-number-default.html" title="number-default" class="">number-default</a>
+                                      </li>
+                                    </ul>  </li>
+                                <li class="">
+                                  <span class="expand-stub"></span>
+                                  <a href="../input-types/ui-field-string.html" title="String" class="">String</a>
+                                    
+                                    <ul class="nav level4">
+                                      <li class="">
+                                        <a href="../input-types/ui-field-string-default.html" title="string-default" class="">string-default</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/ui-field-string-dropdown.html" title="drop-down" class="">drop-down</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/ui-field-string-dropdown-query.html" title="drop-down-query" class="">drop-down-query</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/string-wysiwyg.html" title="wysiwyg" class="">wysiwyg</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/ui-field-string-font-icon-picker.html" title="font-icon-picker" class="">font-icon-picker</a>
+                                      </li>
+                                      <li class="">
+                                        <a href="../input-types/ui-field-string-url-path.html" title="url-path" class="">url-path</a>
+                                      </li>
+                                    </ul>  </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../data-formats/format-json-v1.html" title="Json Format" class="">Json Format</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-entity.html" title="Json Entity" class="">Json Entity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../data-formats/format-json-v1-content-type.html" title="Json ContentType" class="">Json ContentType</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../cms/edit.html" title="CMS Edit Content" class="">CMS Edit Content</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../cms/inpage-toolbars.html" title="Edit Toolbars" class="">Edit Toolbars</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/quick-edit.html" title="Quick-Edit (QuickE)" class="">Quick-Edit (QuickE)</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/dnn-evoq-page-publishing.html" title="Page Publishing" class="">Page Publishing</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">CMS Create and Design</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../cms/views.html" title="Views" class="">Views</a>
+                          </li>
+                          <li class="">
+                            <a href="../app/app-folder-structure.html" title="App Folder Structure" class="">App Folder Structure</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/hide-advanced-features.html" title="Hide Features" class="">Hide Features</a>
+                          </li>
+                          <li class="">
+                            <a href="../data/permissions.html" title="Permissions" class="">Permissions</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/polymorph.html" title="Polymorph" class="">Polymorph</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/inner-content.html" title="Inner Content" class="">Inner Content</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">CMS Technical</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../cms/dnn-module.html" title="DNN Modules" class="">DNN Modules</a>
+                          </li>
+                          <li class="">
+                            <a href="../cms/edit-context.html" title="Edit-Context Data" class="">Edit-Context Data</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">DataSource Basics</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../datasources/datasource.html" title="DataSource Basics" class="">DataSource Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/datastream.html" title="DataStream Basics" class="">DataStream Basics</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/list-all.html" title="All DataSources" class="">All DataSources</a>
+                          </li>
+                          <li class="">
+                            <a href="../datasources/query.html" title="Queries and Visual Query" class="">Queries and Visual Query</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../datasources/configuration.html" title="Configuration System" class="">Configuration System</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/configuration-tokens.html" title="Configuration Tokens" class="">Configuration Tokens</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="active">
+                      <span class="expand-stub"></span>
+                      <a href="../datasources/linq-guide.html" title="Data Lists and LINQ" class="active">Data Lists and LINQ</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../datasources/linq-datasource.html" title="Linq with DataSources" class="">Linq with DataSources</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../datasources/create-custom.html" title="Create Custom DataSource" class="">Create Custom DataSource</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../datasources/api.html" title="Internal APIs" class="">Internal APIs</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../datasources/api-asentity.html" title="AsEntity" class="">AsEntity</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-configmask.html" title="ConfigMask" class="">ConfigMask</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-ensureconfigurationisloaded.html" title="EnsureConfigurationIsLoaded" class="">EnsureConfigurationIsLoaded</a>
+                                </li>
+                                <li class="">
+                                  <a href="../datasources/api-provide.html" title="Provide" class="">Provide</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">System Configuration</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../configuration/features-concept.html" title="Features Concept" class="">Features Concept</a>
+                          </li>
+                          <li class="">
+                            <a href="../configuration/features.html" title="Features API" class="">Features API</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../js/overview.html" title="JavaScript and Html" class="">JavaScript and Html</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/2sxc.html" title="Global $2sxc" class="">Global $2sxc</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/2sxc.cms.html" title="$2sxc.cms..." class="">$2sxc.cms...</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/sxc.html" title="Instance Sxc" class="">Instance Sxc</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/sxc.manage.html" title="Sxc.manage..." class="">Sxc.manage...</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/sxcewebapi.html" title="Sxc.webapi" class="">Sxc.webapi</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <a href="../js/quicke.html" title="QuickE" class="">QuickE</a>
+                          </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/toolbars-and-buttons-intro.html" title="Toolbars" class="">Toolbars</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/toolbars-and-buttons-js.html" title="JS Toolbar API" class="">JS Toolbar API</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/toolbar-settings.html" title="Settings" class="">Settings</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/toolbar-button.html" title="Single Button" class="">Single Button</a>
+                                </li>
+                              </ul>  </li>
+                          <li class="">
+                            <span class="expand-stub"></span>
+                            <a href="../js/commands.html" title="Commands" class="">Commands</a>
+                              
+                              <ul class="nav level3">
+                                <li class="">
+                                  <a href="../js/command-custom-code.html" title="Custom Code" class="">Custom Code</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/command-content-items.html" title="Content Items" class="">Content Items</a>
+                                </li>
+                                <li class="">
+                                  <a href="../js/command-delete.html" title="Delete" class="">Delete</a>
+                                </li>
+                              </ul>  </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Angular Dnn-Sxc-Angular</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../angular/dnn-sxc-angular.html" title="Toolbars" class="">Toolbars</a>
+                          </li>
+                          <li class="">
+                            <a href="../angularJs/angularjs-1-overview.html" title="AngularJs (old)" class="">AngularJs (old)</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="../style-guides/style-guides.html" title="Style Guide (WIP)" class="">Style Guide (WIP)</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../style-guides/style-guide-2020.html" title="Style Guide 2020 WIP" class="">Style Guide 2020 WIP</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Roadmap & History</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../roadmap/roadmap.html" title="Roadmap" class="">Roadmap</a>
+                          </li>
+                          <li class="">
+                            <a href="../roadmap/history.html" title="History" class="">History</a>
+                          </li>
+                          <li class="">
+                            <a href="../roadmap/breaking-changes.html" title="Breaking Changes" class="">Breaking Changes</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Contribute & Docs</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="../docs/contribute-setup.html" title="Contribute to Code" class="">Contribute to Code</a>
+                          </li>
+                          <li class="">
+                            <a href="../docs/contribute.html" title="Contribute to Docs" class="">Contribute to Docs</a>
+                          </li>
+                          <li class="">
+                            <a href="../docs/doc-tags.html" title="Tags in Docs" class="">Tags in Docs</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Specs.DataSources.LinqGuide">
+<h1 id="guide-to-working-with-linq-and-2sxceav-data">Guide to Working with LINQ and 2sxc/EAV Data</h1>
+
+<blockquote><p>Warning: some of this is old and doesn&#39;t apply any more
+we must update these docs
+Especially the compare / contains etc. actually works now, even with dyn-objects</p>
+</blockquote>
+<p>In many cases you will want to sort, filter or group some data, or quickly check if any data was found. When using Razor or working in WebApi, this is best done with LINQ. This guide will assist you to get everything working.</p>
+<p>For a more API-oriented documentation, see <a class="xref" href="linq-datasource.html">DotNet Query LINQ</a>. We also recommend to play around with the <a href="https://2sxc.org/en/apps/app/razor-tutorial">Razor Tutorial App</a></p>
+<h2 id="linq-basics">LINQ Basics</h2>
+<p>The way LINQ works is that the namespace <code>System.Linq</code> contains a bunch of <a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods">extension methods</a> like <code>.Count()</code>, <code>.Where(...)</code> and more. So to use LINQ you need to add a <code>@using</code> statement to razor or just <code>using</code> in a WebApi class. Here&#39;s a simple razor example:</p>
+<pre><code class="lang-razor">@using System.Linq;
+@{
+var newestPosts = AsDynamic(App.Data[&quot;BlogPost&quot;])
+    .OrderByDescending(b =&gt; b.PublicationDate)
+    .Take(3);
+}
+</code></pre><p>This demonstrates:</p>
+<ol>
+<li>adding the <code>using</code> statement</li>
+<li>getting all the <em>BlogPost</em> items using <code>App.Data[&quot;BlogPost&quot;]</code></li>
+<li>converting it to a list of <code>dynamic</code> objects which will allow the nice syntax using <code>AsDynamic(...)</code></li>
+<li>sorting these with newest on top using <code>.OrderByDescending(...)</code> on the property <em>PublicationDate</em></li>
+<li>keeping only the first 3 using <code>.Take(3)</code></li>
+<li>it also shows how placing the parts on separate lines makes the code easier to read</li>
+</ol>
+<h2 id="important-working-with-linq-and-dynamic-objects">Important: Working with LINQ and dynamic objects</h2>
+<h3 id="linq-needs-ienumerable">LINQ needs IEnumerable&lt;...&gt;</h3>
+<p>Before we continue, it&#39;s important that you really understand that LINQ commands are stored as <a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods">extension methods</a> of <code>IEnumerable&lt;T&gt;</code>. So this works:</p>
+<pre><code class="lang-razor">@using System.Linq;
+@{
+  var list = new List&lt;string&gt; { &quot;word&quot;, &quot;word&quot; };
+  var x = list.First();
+}
+</code></pre><p>...whereas this does not:</p>
+<pre><code class="lang-razor">@using System.Linq;
+@{
+  var y = 27.First();
+}
+</code></pre><p>This sounds obvious, but there&#39;s an important catch: if the compiler doesn&#39;t know that something is an <code>IEnumerable</code>, it will not even try to use the LINQ extension methods, because it doesn&#39;t know that it can. So let&#39;s look at that...</p>
+<h3 id="linqs-problems-with-dynamic-objects-1">LINQs Problems with dynamic objects #1</h3>
+<p>Here&#39;s an example that would fail:</p>
+<pre><code class="lang-razor">@using System.Linq;
+@{
+  dynamic list = new List&lt;string&gt; { &quot;word&quot;, &quot;word&quot; };
+  var x = list.First();
+}
+</code></pre><p>The only difference to before is that <em>list</em> ist now <code>dynamic</code>. It contains the same object, but the compiler doesn&#39;t treat it that way. In Razor, we use <code>dynamic</code> objects all the time, where we run into this problem. Here&#39;s an example which fails:</p>
+<pre><code class="lang-razor">@using System.Linq;
+@{
+  var books = AsDynamic(App.Data[&quot;Books&quot;]);
+  var booksWithoutAuthors = books
+    .Where(b =&gt; !b.Authors.Any());
+}
+</code></pre><p>Internally the <em>b.Authors</em> returns a list of authors, but the compiler doesn&#39;t know this, since it&#39;s treated as a <code>dynamic</code> object. You would get an error. To solve this, we must tell the compiler that <em>b.Authors</em> is an IEnumerable, like this:</p>
+<pre><code class="lang-razor">@using System.Linq;
+@using System.Collections.Generic;
+@{
+  var books = AsDynamic(App.Data[&quot;Books&quot;]);
+  var booksWithoutAuthors = books
+    .Where(b =&gt; !(b.Authors as IEnumerable&lt;dynamic&gt;).Any());
+}
+</code></pre><p>But let&#39;s be honest - it&#39;s ugly, long and prone to typos. Especially in a complex query where you could have many of these. So we recommend to define a shorthand for it, like this:</p>
+<pre><code class="lang-razor">@using System.Linq;
+@using Dynlist = System.Collections.Generic.IEnumerable&lt;dynamic&gt;;
+@{
+  var books = AsDynamic(App.Data[&quot;Books&quot;]);
+  var booksWithoutAuthors = books
+    .Where(b =&gt; !(b.Authors as Dynlist).Any());
+}
+</code></pre><h3 id="linqs-problem-with-dynamic-objects-2">LINQs problem with dynamic objects #2</h3>
+<p>LINQ methods often have multiple signatures. This means the same command can be written in different ways and with different parameters. To detect the right method, the compiler needs to know the data-types used in the parameters. This causes problem with <code>dynamic</code> objects because the compiler doesn&#39;t know what it is until runtime. Check this out:</p>
+<pre><code class="lang-razor">@using System.Linq;
+@{
+  var dogString = &quot;dog&quot;
+  dynamic dogDyn = &quot;dog&quot;;
+  var list = new List&lt;string&gt; { &quot;dog&quot;, &quot;cat&quot;, &quot;hound&quot; };
+  var x = list.Contains(dogString); // this works
+  var x = list.Contains(dogDyn);    // this fails
+}
+</code></pre><p>To fix this, we must tell the compiler it&#39;s an object:</p>
+<pre><code class="lang-razor">@using System.Linq;
+@{
+  dynamic dynDog = &quot;dog&quot;;
+  var list = new List&lt;string&gt; { &quot;dog&quot;, &quot;cat&quot;, &quot;hound&quot; };
+  var x = list.Contains(dynDog as object);
+}
+</code></pre><p>The above example is a bit trivial but here&#39;s a real life example, taken from the <a href="https://2sxc.org/en/apps/app/razor-tutorial">2sxc razor tutorial</a>:</p>
+<pre><code class="lang-razor">@using System.Linq;
+@using Dynlist = System.Collections.Generic.IEnumerable&lt;dynamic&gt;;
+@{
+  var persons = AsDynamic(App.Data[&quot;Persons&quot;]);
+  var books = AsDynamic(App.Data[&quot;Books&quot;]);
+  var booksWithAwardedAuthors = books
+    .Where(b =&gt; (b.Authors as Dynlist)
+      .SelectMany(a =&gt; a.Awards as Dynlist)
+      .Any()
+    );
+  var otherBooks = books
+    .Where(b =&gt; !(booksWithAwardedAuthors as Dynlist)
+      .Contains(b as object)
+    );
+}
+</code></pre><h3 id="linqs-problem-with-dynamic-object-3">LINQs problem with dynamic object #3</h3>
+<p>The last bit has to do with how <code>dynamic</code> objects are built, since they are usually wrapper-objects to help write nicer template code. As wrappers, they are different objects every time. This shows the problem:</p>
+<pre><code class="lang-razor">@using System.Linq;
+@using Dynlist = System.Collections.Generic.IEnumerable&lt;dynamic&gt;;
+@{
+  // this is just the data object, &quot;@bookData.Author&quot; wouldn&#39;t work
+  var bookData1 = App.Data[&quot;Books&quot;].First();
+  var bookData2 = App.Data[&quot;Books&quot;].First();
+
+  // this is now a dynamic object, allowing @bookDyn1.Author&quot;
+  var bookDyn1 = AsDynamic(bookData1);
+  var bookDyn2 = AsDynamic(bookData2);
+
+  var dataIsSame = bookData1 == bookData2; // true
+  var dynIsSame = bookDyn1 == bookDyn2; // false before 2sxc 9.42
+}
+</code></pre><p>This doesn&#39;t sound like a big deal, but it is. Look at this code from the example above:</p>
+<pre><code class="lang-razor">  var otherBooks = books
+    .Where(b =&gt; !(booksWithAwardedAuthors as Dynlist)
+      .Contains(b as object)
+    );
+</code></pre><p>The <code>.Contains(...)</code> clause receives a variable <code>b</code> which is actually the dynamic wrapper, and will <em>not</em> be the same as the dynamic wrapper of dynamic wrappers given in <code>booksWithAwardedAuthors</code>. So contains would always say &quot;nope, didn&#39;t find it&quot;.</p>
+<p>Solving the comparison / equality problem requires the underlying wrapper object to tell the .net framework, that <code>==</code>, <code>!=</code> and a few internal methods must work differently. 2sxc 9.42 does this, so the above code would actually work in 2sxc 9.42, but not in previous versions. If another system gives you <code>dynamic</code> objects, you will probably have to write it like this:</p>
+<pre><code class="lang-razor">  // this example is for non-2sxc objects or 2sxc before 9.42
+  var otherBooks = books
+    .Where(b =&gt; !(booksWithAwardedAuthors as Dynlist)
+      .Contains(bookWithAward =&gt; bookWithAward != null &amp;&amp; bookWithAward.SomeProperty == b.SomeProperty)
+    );
+</code></pre><h3 id="linqs-problem-with-boolean-null-objects">LINQs problem with boolean null-objects</h3>
+<p>In many cases, dynamic objects could have a property like <code>Show</code> which could be a boolean, but it could also be <code>null</code>. So this could cause an error:</p>
+<pre><code class="lang-razor">var show = links.Where(x =&gt; x.Show);
+</code></pre><p>To fix this, the easiest way is to really compare it with <code>true</code> or <code>false</code> as you want, each way will result in treating the <code>null</code> as the opposite (so you decide if null should be yes or no):</p>
+<pre><code class="lang-razor">@using System.Linq;
+@using Dynlist = System.Collections.Generic.IEnumerable&lt;dynamic&gt;;
+Dynlist list;
+list = links.Where(x =&gt; x.Show == true);  // take true, skip false &amp; null
+list = links.Where(x =&gt; x.Show != true);  // take false &amp; null, skip true
+list = links.Where(x =&gt; x.Show == false); // take false, skip true &amp; null
+list = links.Where(x =&gt; x.Show != false); // take true &amp; null, skip false
+list = links.Where(x =&gt; x.Show == null);  // take null, skip true &amp; false
+</code></pre><h2 id="read-also-demo-app-and-further-links">Read also, Demo App and further links</h2>
+<ol>
+<li><a class="xref" href="linq-datasource.html">LINQ API Docs</a></li>
+<li><a href="https://2sxc.org/en/apps/app/razor-tutorial">Razor Tutorial App showing all kinds of Queries</a></li>
+</ol>
+<h2 id="history">History</h2>
+<ol>
+<li>Guide created 2019-03</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/specs/datasources/linq-guide.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

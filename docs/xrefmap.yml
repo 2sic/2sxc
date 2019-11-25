@@ -1,24 +1,366 @@
 ### YamlMime:XRefMap
 sorted: true
 references:
-- uid: Api.DotNet
-  name: This is the 2sxc API Documentation
-  href: api/dot-net/index.html
 - uid: Articles.Architecture
   name: EAV / 2sxc / DNN Architecture
-  href: articles/architecture.html
-- uid: Articles.ChangeLog.BreakingChanges
-  name: Breaking Changes in EAV and 2sxc
-  href: articles/breaking-changes.html
-- uid: Articles.DynamicEntity
+  href: specs/architecture/architecture.html
+- uid: Concepts.EavDataModels
+  name: Data Models in the EAV
+  href: specs/architecture/eav-core-data.html
+- uid: Concepts.HideAdvancedFeatures
+  name: Hide Advanced Features From Non-Admins
+  href: specs/cms/hide-advanced-features.html
+- uid: Concepts.Permissions
+  name: 'Concept: Permissions'
+  href: specs/data/permissions.html
+- uid: HowTo.CSharp
+  name: DotNet / C# / Razor API Documentation for DNN / 2sxc
+  href: how-to/dotnet-razor-csharp-overview.html
+- uid: HowTo.DynamicCode.App
+  name: App /  object in Razor
+  href: how-to/dynamic-code/object-app.html
+- uid: HowTo.DynamicCode.Data
+  name: " in Razor Template"
+  href: how-to/dynamic-code/object-data.html
+- uid: HowTo.DynamicCode.Dnn
+  name: Link /  Object in Razor / .net
+  href: how-to/dynamic-code/object-dnn.html
+- uid: HowTo.DynamicCode.DynamicEntity
   name: How to Use a Dynamic Entity
-  href: articles/dynamic-entity.html
-- uid: Articles.EavCoreDataModels
-  name: EAV Core Data Models
-  href: articles/eav-core-data.html
-- uid: Articles.Home
-  name: Structured Content for .net Platforms
-  href: articles/intro.html
+  href: how-to/dynamic-code/dynamic-entity.html
+- uid: HowTo.DynamicCode.Entity
+  name: IEntity / Entity Content-Item
+  href: how-to/dynamic-code/entity.html
+- uid: HowTo.DynamicCode.Link
+  name: Link /  Object in Razor / .net
+  href: how-to/dynamic-code/object-link.html
+- uid: HowTo.DynamicCode.NamedParameters
+  name: 'Convention: Named Parameters'
+  href: how-to/dynamic-code/use-named-parameters.html
+- uid: HowTo.External
+  name: Use 2sxc Instances or App-Data from External C# Code
+  href: how-to/external/dotnet-external-use.html
+- uid: HowTo.Home
+  name: How To Do Things in EAV and 2sxc
+  href: how-to/index.html
+- uid: HowTo.Output.Assets
+  name: Optimizing Template Assets / Client Depedencies (JS & CSS)
+  href: how-to/output/assets.html
+- uid: HowTo.Razor.Blocks
+  name: 'Razor: Rendering Content-Blocks'
+  href: how-to/razor/blocks.html
+- uid: HowTo.Razor.ContextAttributes
+  name: ContextAttributes in Razor-Output
+  href: how-to/razor/edit.contextattributes.html
+- uid: HowTo.Razor.CustomizeData
+  name: Event CustomizeData() on the Razor Page
+  href: how-to/razor/customizedata.html
+- uid: HowTo.Razor.CustomizeSearch
+  name: Event CustomizeSearch() on the Razor Page
+  href: how-to/razor/customizesearch.html
+- uid: HowTo.Razor.Edit
+  name: Edit /  Object in Razor / .net
+  href: how-to/razor/edit.html
+- uid: HowTo.Razor.Edit.Enable
+  name: " Method in C# Razor"
+  href: how-to/razor/edit.enable.html
+- uid: HowTo.Razor.Edit.Toolbar
+  name: " and  Methods in Razor / .net"
+  href: how-to/razor/edit.toolbar.html
+- uid: HowTo.Razor.Purpose
+  name: Property Purpose / InstancePurpose on a Razor page
+  href: how-to/razor/purpose.html
+- uid: HowTo.Razor.Templates
+  name: SexyContentWebPage (Razor Templates)
+  href: how-to/razor/templates.html
+- uid: HowTo.WebApi
+  name: ASP.net WebAPI in 2sxc
+  href: how-to/webapi/dotnet-webapi.html
+- uid: HowTo.WebApi.SaveInAdam
+  name: SaveInAdam command in SxcApiController
+  href: how-to/webapi/dotnet-webapi-saveinadam.html
+- uid: HowTo.WebApis
+  name: Http WebAPI and REST API
+  href: how-to/webapi/webapis.html
+- uid: Specs.Angular.Toolbars
+  name: Toolbars in Angular (dnn-sxc-angular)
+  href: specs/angular/dnn-sxc-angular.html
+- uid: Specs.AngularJs
+  name: AngularJs 1 Overview
+  href: specs/angularJs/angularjs-1-overview.html
+- uid: Specs.App.Folders
+  name: Folder structure in the Content App folder
+  href: specs/app/app-folder-structure.html
+- uid: Specs.Cms.DnnModule
+  name: How DNN Modules Connect To Content-Blocks
+  href: specs/cms/dnn-module.html
+- uid: Specs.Cms.Edit
+  name: Edit Content or Data in DNN / 2sxc
+  href: specs/cms/edit.html
+- uid: Specs.Cms.EditContext
+  name: In-Page Editing Context (technical)
+  href: specs/cms/edit-context.html
+- uid: Specs.Cms.InnerContent
+  name: Inner Content (Content Within Other Content)
+  href: specs/cms/inner-content.html
+- uid: Specs.Cms.PagePublishing
+  name: DNN/Evoq Page Versioning / Publishing and Workflow
+  href: specs/cms/dnn-evoq-page-publishing.html
+- uid: Specs.Cms.Polymorphism
+  name: Polymorphism aka Editions aka Open-Heart-Surgery (WIP)
+  href: specs/cms/polymorph.html
+- uid: Specs.Cms.QuickE
+  name: QuickE (Quick Edit)
+  href: specs/cms/quick-edit.html
+- uid: Specs.Cms.Toolbars
+  name: In-Page Edit-Item Toolbars and Buttons
+  href: specs/cms/inpage-toolbars.html
+- uid: Specs.Cms.Views
+  name: Views and Templates
+  href: specs/cms/views.html
+- uid: Specs.Contribute
+  name: Contribute to 2sxc / EAV - Setup
+  href: specs/docs/contribute-setup.html
+- uid: Specs.Data.ContentTypes
+  name: Content-Types, aka Schemas/Object-Types
+  href: specs/data/content-types.html
+- uid: Specs.Data.Entities
+  name: Entities (Data, Records, Items)
+  href: specs/data/entities.html
+- uid: Specs.Data.FileBasedContentTypes
+  name: File-Based Content-Types
+  href: specs/data/file-provided-content-types.html
+- uid: Specs.Data.Formats.JsonV1
+  name: JSON Format V1
+  href: specs/data-formats/format-json-v1.html
+- uid: Specs.Data.Formats.JsonV1-ContentType
+  name: JSON Content-Type V1
+  href: specs/data-formats/format-json-v1-content-type.html
+- uid: Specs.Data.Formats.JsonV1-Entity
+  name: JSON Entity V1
+  href: specs/data-formats/format-json-v1-entity.html
+- uid: Specs.Data.Inputs.All
+  name: Field Input-Type All
+  href: specs/input-types/ui-field-all.html
+- uid: Specs.Data.Inputs.Boolean
+  name: Field Input-Type boolean
+  href: specs/input-types/ui-field-boolean.html
+- uid: Specs.Data.Inputs.Boolean-Default
+  name: Field Input-Type boolean-default
+  href: specs/input-types/ui-field-boolean-default.html
+- uid: Specs.Data.Inputs.Custom
+  name: Field Input-Type Custom
+  href: specs/input-types/custom.html
+- uid: Specs.Data.Inputs.DateTime
+  name: Field Input-Type datetime
+  href: specs/input-types/ui-field-datetime.html
+- uid: Specs.Data.Inputs.DateTime-Default
+  name: Field Input-Type datetime-default
+  href: specs/input-types/ui-field-datetime-default.html
+- uid: Specs.Data.Inputs.Empty
+  name: Field Input-Type Empty
+  href: specs/input-types/ui-field-empty.html
+- uid: Specs.Data.Inputs.Empty-Default
+  name: Field Input-Type empty-default
+  href: specs/input-types/ui-field-empty-default.html
+- uid: Specs.Data.Inputs.Entity
+  name: Field Input-Type entity
+  href: specs/input-types/ui-field-entity.html
+- uid: Specs.Data.Inputs.Entity-Default
+  name: Field Input-Type entity-default
+  href: specs/input-types/ui-field-entity-default.html
+- uid: Specs.Data.Inputs.Entity-Query
+  name: Field Input-Type entity-query
+  href: specs/input-types/ui-field-entity-query.html
+- uid: Specs.Data.Inputs.Hyperlink
+  name: Field Input-Type hyperlink / files
+  href: specs/input-types/ui-field-hyperlink.html
+- uid: Specs.Data.Inputs.Hyperlink-Default
+  name: Field Input-Type hyperlink-default
+  href: specs/input-types/ui-field-hyperlink-default.html
+- uid: Specs.Data.Inputs.Hyperlink-Library
+  name: Field Input-Type hyperlink-library
+  href: specs/input-types/ui-field-hyperlink-library.html
+- uid: Specs.Data.Inputs.Number
+  name: Field Input-Type Number
+  href: specs/input-types/ui-field-number.html
+- uid: Specs.Data.Inputs.Number-Default
+  name: Field Input-Type number-default
+  href: specs/input-types/ui-field-number-default.html
+- uid: Specs.Data.Inputs.Overview
+  name: UI Field Types
+  href: specs/input-types/_inputs-overview.html
+- uid: Specs.Data.Inputs.String
+  name: Field Input-Type string
+  href: specs/input-types/ui-field-string.html
+- uid: Specs.Data.Inputs.String-Default
+  name: Field Input-Type string-default
+  href: specs/input-types/ui-field-string-default.html
+- uid: Specs.Data.Inputs.String-Dropdown
+  name: Field Input-Type string-dropdown
+  href: specs/input-types/ui-field-string-dropdown.html
+- uid: Specs.Data.Inputs.String-Dropdown-Query
+  name: Field Input-Type string-dropdown-query
+  href: specs/input-types/ui-field-string-dropdown-query.html
+- uid: Specs.Data.Inputs.String-Font-Icon-Picker
+  name: Field Input-Type string-font-icon-picker
+  href: specs/input-types/ui-field-string-font-icon-picker.html
+- uid: Specs.Data.Inputs.String-Url-Path
+  name: Field Input-Type string-url-path
+  href: specs/input-types/ui-field-string-url-path.html
+- uid: Specs.Data.Inputs.String-Wysiwyg
+  name: Field Input-Type string-wysiwyg
+  href: specs/input-types/string-wysiwyg.html
+- uid: Specs.Data.Metadata
+  name: Metadata - WIP
+  href: specs/data/metadata.html
+- uid: Specs.Data.Relationships
+  name: Entity Relationships
+  href: specs/data/relationships.html
+- uid: Specs.Data.Values.Boolean
+  name: 'Data Type: Boolean'
+  href: specs/data-types/boolean.html
+- uid: Specs.Data.Values.Custom
+  name: 'Data Type: Custom'
+  href: specs/data-types/custom.html
+- uid: Specs.Data.Values.DateTime
+  name: 'Data Type: DateTime'
+  href: specs/data-types/datetime.html
+- uid: Specs.Data.Values.Empty
+  name: 'Data Type: Empty'
+  href: specs/data-types/empty.html
+- uid: Specs.Data.Values.Entity
+  name: 'Data Type: Entity (List of Entity-Items)'
+  href: specs/data-types/entity.html
+- uid: Specs.Data.Values.Hyperlink
+  name: 'Data Type: Hyperlink'
+  href: specs/data-types/hyperlink.html
+- uid: Specs.Data.Values.Number
+  name: 'Data Type: Number'
+  href: specs/data-types/number.html
+- uid: Specs.Data.Values.Overview
+  name: Value Data Types
+  href: specs/data-types/_overview.html
+- uid: Specs.Data.Values.String
+  name: 'Data Type: String'
+  href: specs/data-types/string.html
+- uid: Specs.DataSources.Api
+  name: DataSource API
+  href: specs/datasources/api.html
+- uid: Specs.DataSources.Api.AsEntity
+  name: 'DataSource API: AsEntity'
+  href: specs/datasources/api-asentity.html
+- uid: Specs.DataSources.Api.ConfigMask
+  name: 'DataSource API: ConfigMask'
+  href: specs/datasources/api-configmask.html
+- uid: Specs.DataSources.Api.EnsureConfigurationIsLoaded
+  name: 'DataSource API: EnsureConfigurationIsLoaded'
+  href: specs/datasources/api-ensureconfigurationisloaded.html
+- uid: Specs.DataSources.Api.Provide
+  name: 'DataSource API: Provide'
+  href: specs/datasources/api-provide.html
+- uid: Specs.DataSources.Configuration
+  name: 'DataSource Concept: Configuration Injection using Tokens'
+  href: specs/datasources/configuration.html
+- uid: Specs.DataSources.ConfigurationTokens
+  name: 'Concept: Tokens'
+  href: specs/datasources/configuration-tokens.html
+- uid: Specs.DataSources.Custom
+  name: 'EAV DataSources: Create Your Custom DataSources'
+  href: specs/datasources/create-custom.html
+- uid: Specs.DataSources.DataSource
+  name: DataSource Basics (IDataSource)
+  href: specs/datasources/datasource.html
+- uid: Specs.DataSources.DataStream
+  name: DataStream Basics (IDataStream)
+  href: specs/datasources/datastream.html
+- uid: Specs.DataSources.Linq
+  name: Querying Data and Data Sources with code and LINQ
+  href: specs/datasources/linq-datasource.html
+- uid: Specs.DataSources.LinqGuide
+  name: Guide to Working with LINQ and 2sxc/EAV Data
+  href: specs/datasources/linq-guide.html
+- uid: Specs.DataSources.ListAll
+  name: All DataSource Objects in 2sxc / EAV
+  href: specs/datasources/list-all.html
+- uid: Specs.DataSources.Queries
+  name: Queries Basics
+  href: specs/datasources/query.html
+- uid: Specs.DocsContribute
+  name: How to contribute to this documentation
+  href: specs/docs/contribute.html
+- uid: Specs.DocsTags
+  name: Documentation Tags
+  href: specs/docs/doc-tags.html
+- uid: Specs.Features.Api
+  name: Features API in .net
+  href: specs/configuration/features.html
+- uid: Specs.Features.Concept
+  name: 'Concept: Features'
+  href: specs/configuration/features-concept.html
+- uid: Specs.Home
+  name: Specifications of EAV and 2sxc
+  href: specs/index.html
+- uid: Specs.Js.$2sxc
+  name: 'JS: The $2sxc Manager'
+  href: specs/js/2sxc.html
+- uid: Specs.Js.$2sxc.Cms
+  name: 'JS: The $2sxc.cms API'
+  href: specs/js/2sxc.cms.html
+- uid: Specs.Js.Commands
+  name: 'Html & JS: Calling Commands of the CMS'
+  href: specs/js/commands.html
+- uid: Specs.Js.Commands.Code
+  name: 'Html & Js: Buttons with Custom Code in a Toolbar'
+  href: specs/js/command-custom-code.html
+- uid: Specs.Js.Commands.ContentItems
+  name: 'Html & Js: contentitems Command'
+  href: specs/js/command-content-items.html
+- uid: Specs.Js.Commands.Delete
+  name: 'Html & Js: delete Command'
+  href: specs/js/command-delete.html
+- uid: Specs.Js.Overview
+  name: JavaScript / HTML API Documentation for DNN / 2sxc
+  href: specs/js/overview.html
+- uid: Specs.Js.QuickE
+  name: 'Html & JS: quickE - Quick Edit 2.0'
+  href: specs/js/quicke.html
+- uid: Specs.Js.Sxc
+  name: 'JS: The Module-Instance Sxc Controller'
+  href: specs/js/sxc.html
+- uid: Specs.Js.Sxc.Manage
+  name: 'JS: Manage Everything With the manage Controller'
+  href: specs/js/sxc.manage.html
+- uid: Specs.Js.Sxc.WebApi
+  name: 'JS: The WebApi Helpers on the Sxc Controller'
+  href: specs/js/sxcewebapi.html
+- uid: Specs.Js.Toolbar.Buttons
+  name: 'Html & JS: Button Definitions'
+  href: specs/js/toolbar-button.html
+- uid: Specs.Js.Toolbar.Intro
+  name: 'Html: In-Page Edit Toolbars and Buttons'
+  href: specs/js/toolbars-and-buttons-intro.html
+- uid: Specs.Js.Toolbar.Js
+  name: 'JS: Toolbars and Buttons'
+  href: specs/js/toolbars-and-buttons-js.html
+- uid: Specs.Js.Toolbar.Settings
+  name: 'Html & JS: Toolbar Settings'
+  href: specs/js/toolbar-settings.html
+- uid: Specs.Roadmap.BreakingChanges
+  name: Breaking Changes in EAV and 2sxc
+  href: specs/roadmap/breaking-changes.html
+- uid: Specs.Roadmap.History
+  name: History of the EAV and 2sxc Code Base
+  href: specs/roadmap/history.html
+- uid: Specs.Roadmap.Roadmap
+  name: Roadmap of EAV and 2sxc - Vision of the Future
+  href: specs/roadmap/roadmap.html
+- uid: Specs.StyleGuide
+  name: Style Guide for DNN / 2sxc Solutions
+  href: specs/style-guides/style-guides.html
+- uid: Specs.StyleGuide2020
+  name: 2sxc Style Guide - Best Practices v2020 DRAFT
+  href: specs/style-guides/style-guide-2020.html
 - uid: ToSic.Eav.Apps
   name: ToSic.Eav.Apps
   href: api/dot-net/ToSic.Eav.Apps.html
@@ -659,6 +1001,91 @@ references:
   fullName.vb: ToSic.Eav.Caching.SynchronizedList(Of T).Upstream
   nameWithType: SynchronizedList<T>.Upstream
   nameWithType.vb: SynchronizedList(Of T).Upstream
+- uid: ToSic.Eav.Configuration
+  name: ToSic.Eav.Configuration
+  href: api/dot-net/ToSic.Eav.Configuration.html
+  commentId: N:ToSic.Eav.Configuration
+  fullName: ToSic.Eav.Configuration
+  nameWithType: ToSic.Eav.Configuration
+- uid: ToSic.Eav.Configuration.Features
+  name: Features
+  href: api/dot-net/ToSic.Eav.Configuration.Features.html
+  commentId: T:ToSic.Eav.Configuration.Features
+  fullName: ToSic.Eav.Configuration.Features
+  nameWithType: Features
+- uid: ToSic.Eav.Configuration.Features.Enabled(System.Collections.Generic.IEnumerable{System.Guid})
+  name: Enabled(IEnumerable<Guid>)
+  href: api/dot-net/ToSic.Eav.Configuration.Features.html#ToSic_Eav_Configuration_Features_Enabled_System_Collections_Generic_IEnumerable_System_Guid__
+  commentId: M:ToSic.Eav.Configuration.Features.Enabled(System.Collections.Generic.IEnumerable{System.Guid})
+  name.vb: Enabled(IEnumerable(Of Guid))
+  fullName: ToSic.Eav.Configuration.Features.Enabled(System.Collections.Generic.IEnumerable<System.Guid>)
+  fullName.vb: ToSic.Eav.Configuration.Features.Enabled(System.Collections.Generic.IEnumerable(Of System.Guid))
+  nameWithType: Features.Enabled(IEnumerable<Guid>)
+  nameWithType.vb: Features.Enabled(IEnumerable(Of Guid))
+- uid: ToSic.Eav.Configuration.Features.Enabled(System.Guid)
+  name: Enabled(Guid)
+  href: api/dot-net/ToSic.Eav.Configuration.Features.html#ToSic_Eav_Configuration_Features_Enabled_System_Guid_
+  commentId: M:ToSic.Eav.Configuration.Features.Enabled(System.Guid)
+  fullName: ToSic.Eav.Configuration.Features.Enabled(System.Guid)
+  nameWithType: Features.Enabled(Guid)
+- uid: ToSic.Eav.Configuration.Features.Enabled*
+  name: Enabled
+  href: api/dot-net/ToSic.Eav.Configuration.Features.html#ToSic_Eav_Configuration_Features_Enabled_
+  commentId: Overload:ToSic.Eav.Configuration.Features.Enabled
+  isSpec: "True"
+  fullName: ToSic.Eav.Configuration.Features.Enabled
+  nameWithType: Features.Enabled
+- uid: ToSic.Eav.Configuration.Features.Valid
+  name: Valid
+  href: api/dot-net/ToSic.Eav.Configuration.Features.html#ToSic_Eav_Configuration_Features_Valid
+  commentId: P:ToSic.Eav.Configuration.Features.Valid
+  fullName: ToSic.Eav.Configuration.Features.Valid
+  nameWithType: Features.Valid
+- uid: ToSic.Eav.Configuration.Features.Valid*
+  name: Valid
+  href: api/dot-net/ToSic.Eav.Configuration.Features.html#ToSic_Eav_Configuration_Features_Valid_
+  commentId: Overload:ToSic.Eav.Configuration.Features.Valid
+  isSpec: "True"
+  fullName: ToSic.Eav.Configuration.Features.Valid
+  nameWithType: Features.Valid
+- uid: ToSic.Eav.Configuration.Fingerprint
+  name: Fingerprint
+  href: api/dot-net/ToSic.Eav.Configuration.Fingerprint.html
+  commentId: T:ToSic.Eav.Configuration.Fingerprint
+  fullName: ToSic.Eav.Configuration.Fingerprint
+  nameWithType: Fingerprint
+- uid: ToSic.Eav.Configuration.Fingerprint.System
+  name: System
+  href: api/dot-net/ToSic.Eav.Configuration.Fingerprint.html#ToSic_Eav_Configuration_Fingerprint_System
+  commentId: P:ToSic.Eav.Configuration.Fingerprint.System
+  fullName: ToSic.Eav.Configuration.Fingerprint.System
+  nameWithType: Fingerprint.System
+- uid: ToSic.Eav.Configuration.Fingerprint.System*
+  name: System
+  href: api/dot-net/ToSic.Eav.Configuration.Fingerprint.html#ToSic_Eav_Configuration_Fingerprint_System_
+  commentId: Overload:ToSic.Eav.Configuration.Fingerprint.System
+  isSpec: "True"
+  fullName: ToSic.Eav.Configuration.Fingerprint.System
+  nameWithType: Fingerprint.System
+- uid: ToSic.Eav.Configuration.IFingerprintProvider
+  name: IFingerprintProvider
+  href: api/dot-net/ToSic.Eav.Configuration.IFingerprintProvider.html
+  commentId: T:ToSic.Eav.Configuration.IFingerprintProvider
+  fullName: ToSic.Eav.Configuration.IFingerprintProvider
+  nameWithType: IFingerprintProvider
+- uid: ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint
+  name: GetSystemFingerprint()
+  href: api/dot-net/ToSic.Eav.Configuration.IFingerprintProvider.html#ToSic_Eav_Configuration_IFingerprintProvider_GetSystemFingerprint
+  commentId: M:ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint
+  fullName: ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint()
+  nameWithType: IFingerprintProvider.GetSystemFingerprint()
+- uid: ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint*
+  name: GetSystemFingerprint
+  href: api/dot-net/ToSic.Eav.Configuration.IFingerprintProvider.html#ToSic_Eav_Configuration_IFingerprintProvider_GetSystemFingerprint_
+  commentId: Overload:ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint
+  isSpec: "True"
+  fullName: ToSic.Eav.Configuration.IFingerprintProvider.GetSystemFingerprint
+  nameWithType: IFingerprintProvider.GetSystemFingerprint
 - uid: ToSic.Eav.Data
   name: ToSic.Eav.Data
   href: api/dot-net/ToSic.Eav.Data.html
@@ -3837,6 +4264,208 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.DataSources.ValueSort.Languages
   nameWithType: ValueSort.Languages
+- uid: ToSic.Eav.DataSources.VisualQuery
+  name: ToSic.Eav.DataSources.VisualQuery
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.html
+  commentId: N:ToSic.Eav.DataSources.VisualQuery
+  fullName: ToSic.Eav.DataSources.VisualQuery
+  nameWithType: ToSic.Eav.DataSources.VisualQuery
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType
+  name: DataSourceType
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html
+  commentId: T:ToSic.Eav.DataSources.VisualQuery.DataSourceType
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType
+  nameWithType: DataSourceType
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Cache
+  name: Cache
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Cache
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Cache
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Cache
+  nameWithType: DataSourceType.Cache
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Filter
+  name: Filter
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Filter
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Filter
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Filter
+  nameWithType: DataSourceType.Filter
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Logic
+  name: Logic
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Logic
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Logic
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Logic
+  nameWithType: DataSourceType.Logic
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Lookup
+  name: Lookup
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Lookup
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Lookup
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Lookup
+  nameWithType: DataSourceType.Lookup
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Modify
+  name: Modify
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Modify
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Modify
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Modify
+  nameWithType: DataSourceType.Modify
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Security
+  name: Security
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Security
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Security
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Security
+  nameWithType: DataSourceType.Security
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Sort
+  name: Sort
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Sort
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Sort
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Sort
+  nameWithType: DataSourceType.Sort
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Source
+  name: Source
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Source
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Source
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Source
+  nameWithType: DataSourceType.Source
+- uid: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Target
+  name: Target
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.DataSourceType.html#ToSic_Eav_DataSources_VisualQuery_DataSourceType_Target
+  commentId: F:ToSic.Eav.DataSources.VisualQuery.DataSourceType.Target
+  fullName: ToSic.Eav.DataSources.VisualQuery.DataSourceType.Target
+  nameWithType: DataSourceType.Target
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute
+  name: VisualQueryAttribute
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html
+  commentId: T:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute
+  nameWithType: VisualQueryAttribute
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.DynamicOut
+  name: DynamicOut
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_DynamicOut
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.DynamicOut
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.DynamicOut
+  nameWithType: VisualQueryAttribute.DynamicOut
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.DynamicOut*
+  name: DynamicOut
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_DynamicOut_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.DynamicOut
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.DynamicOut
+  nameWithType: VisualQueryAttribute.DynamicOut
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.EnableConfig
+  name: EnableConfig
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_EnableConfig
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.EnableConfig
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.EnableConfig
+  nameWithType: VisualQueryAttribute.EnableConfig
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.EnableConfig*
+  name: EnableConfig
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_EnableConfig_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.EnableConfig
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.EnableConfig
+  nameWithType: VisualQueryAttribute.EnableConfig
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.ExpectsDataOfType
+  name: ExpectsDataOfType
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_ExpectsDataOfType
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.ExpectsDataOfType
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.ExpectsDataOfType
+  nameWithType: VisualQueryAttribute.ExpectsDataOfType
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.ExpectsDataOfType*
+  name: ExpectsDataOfType
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_ExpectsDataOfType_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.ExpectsDataOfType
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.ExpectsDataOfType
+  nameWithType: VisualQueryAttribute.ExpectsDataOfType
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.GlobalName
+  name: GlobalName
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_GlobalName
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.GlobalName
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.GlobalName
+  nameWithType: VisualQueryAttribute.GlobalName
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.GlobalName*
+  name: GlobalName
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_GlobalName_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.GlobalName
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.GlobalName
+  nameWithType: VisualQueryAttribute.GlobalName
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.HelpLink
+  name: HelpLink
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_HelpLink
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.HelpLink
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.HelpLink
+  nameWithType: VisualQueryAttribute.HelpLink
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.HelpLink*
+  name: HelpLink
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_HelpLink_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.HelpLink
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.HelpLink
+  nameWithType: VisualQueryAttribute.HelpLink
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Icon
+  name: Icon
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_Icon
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Icon
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Icon
+  nameWithType: VisualQueryAttribute.Icon
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Icon*
+  name: Icon
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_Icon_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Icon
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Icon
+  nameWithType: VisualQueryAttribute.Icon
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.In
+  name: In
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_In
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.In
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.In
+  nameWithType: VisualQueryAttribute.In
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.In*
+  name: In
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_In_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.In
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.In
+  nameWithType: VisualQueryAttribute.In
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.NiceName
+  name: NiceName
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_NiceName
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.NiceName
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.NiceName
+  nameWithType: VisualQueryAttribute.NiceName
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.NiceName*
+  name: NiceName
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_NiceName_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.NiceName
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.NiceName
+  nameWithType: VisualQueryAttribute.NiceName
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.PreviousNames
+  name: PreviousNames
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_PreviousNames
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.PreviousNames
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.PreviousNames
+  nameWithType: VisualQueryAttribute.PreviousNames
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.PreviousNames*
+  name: PreviousNames
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_PreviousNames_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.PreviousNames
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.PreviousNames
+  nameWithType: VisualQueryAttribute.PreviousNames
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type
+  name: Type
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_Type
+  commentId: P:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type
+  nameWithType: VisualQueryAttribute.Type
+- uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type*
+  name: Type
+  href: api/dot-net/ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.html#ToSic_Eav_DataSources_VisualQuery_VisualQueryAttribute_Type_
+  commentId: Overload:ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type
+  isSpec: "True"
+  fullName: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute.Type
+  nameWithType: VisualQueryAttribute.Type
 - uid: ToSic.Eav.Environment
   name: ToSic.Eav.Environment
   href: api/dot-net/ToSic.Eav.Environment.html
@@ -6714,15 +7343,15 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes
   nameWithType: IInPageEditingSystem.ContextAttributes
-- uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
-  name: Enable(String, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
-  href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
-  commentId: M:ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
-  name.vb: Enable(String, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
-  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>)
-  fullName.vb: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean))
-  nameWithType: IInPageEditingSystem.Enable(String, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
-  nameWithType.vb: IInPageEditingSystem.Enable(String, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+- uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name: Enable(String, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
+  commentId: M:ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name.vb: Enable(String, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+  fullName: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>)
+  fullName.vb: ToSic.Sxc.Web.IInPageEditingSystem.Enable(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean))
+  nameWithType: IInPageEditingSystem.Enable(String, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  nameWithType.vb: IInPageEditingSystem.Enable(String, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
 - uid: ToSic.Sxc.Web.IInPageEditingSystem.Enable*
   name: Enable
   href: api/dot-net/ToSic.Sxc.Web.IInPageEditingSystem.html#ToSic_Sxc_Web_IInPageEditingSystem_Enable_
