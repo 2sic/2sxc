@@ -15,19 +15,11 @@ namespace ToSic.Sxc.Apps
     public class App : Eav.Apps.App, IApp
     {
         #region Dynamic Properties: Configuration, Settings, Resources
-        public AppConfiguration Configuration
-        {
-            get
-            {
-                _appConfig = !_configLoaded && AppConfiguration != null
-                    ? new AppConfiguration(AppConfiguration, Log)
-                    : new AppConfiguration(null, Log);
+        public AppConfiguration Configuration => _appConfig
+                                                 // Create config object. Note that AppConfiguration could be null, then it would use default values
+                                                 ?? (_appConfig = new AppConfiguration(AppConfiguration, Log));
 
-                _configLoaded = true;
-                return _appConfig;
-            }
-        }
-        private bool _configLoaded;
+        //private bool _configLoaded;
         //private dynamic _config;
         private AppConfiguration _appConfig;
 
