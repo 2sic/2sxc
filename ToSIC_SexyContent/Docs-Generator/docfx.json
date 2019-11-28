@@ -16,7 +16,7 @@
           ]
         }
       ],
-      "dest": "obj/api/dot-net",
+      "dest": "obj/api/dot-net/",
       "filter": "filterConfig.yml"
     }
   ],
@@ -33,7 +33,7 @@
           "api/**.md",
           "how-to/**.md",
           "specs/**.md",
-          "toc.md",
+          "toc.yml",
           "*.md"
         ],
         "exclude": [

@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="api\dot-net\index.md" />
-    <None Include="api\index.md" />
     <None Include="articles\eav-core-data.md" />
     <None Include="articles\breaking-changes.md" />
     <None Include="articles\dynamic-entity.md" />
@@ -165,6 +164,7 @@
     <None Include="namespaces\ToSic.Sxc\Web\IDynamicCode.Data.md" />
     <None Include="namespaces\ToSic.Sxc\Web\_Sxc.Web.md" />
     <None Include="packages.config" />
+    <None Include="shared\before-you-start-idynamicentity.md" />
     <None Include="shared\where-to-start.md" />
     <None Include="specs\angularJs\angularjs-1-overview.md" />
     <None Include="specs\angular\dnn-sxc-angular.md" />
@@ -257,7 +257,8 @@
     <None Include="specs\style-guides\style-guide-2020.md" />
     <None Include="specs\style-guides\style-guides.md" />
     <None Include="specs\toc.md" />
-    <None Include="toc.md" />
+    <None Include="toc.md.old" />
+    <None Include="toc.yml" />
     <None Include="wiki\source-material\diagrams-and-illustrations\2sxc and DNN mockups.bmpr" />
     <None Include="wiki\source-material\List of JavaScript Actions.xlsx" />
     <None Include="wiki\_footer.md" />
@@ -435,11 +436,11 @@
     <Folder Include="wiki\later-html-stuff\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\..\..\..\eav-server\packages\docfx.console.2.46.0\build\docfx.console.targets" Condition="Exists('..\..\..\..\..\eav-server\packages\docfx.console.2.46.0\build\docfx.console.targets')" />
+  <Import Project="..\..\..\..\..\eav-server\packages\docfx.console.2.47.0\build\docfx.console.targets" Condition="Exists('..\..\..\..\..\eav-server\packages\docfx.console.2.47.0\build\docfx.console.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\..\..\eav-server\packages\docfx.console.2.46.0\build\docfx.console.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\..\eav-server\packages\docfx.console.2.46.0\build\docfx.console.targets'))" />
+    <Error Condition="!Exists('..\..\..\..\..\eav-server\packages\docfx.console.2.47.0\build\docfx.console.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\..\eav-server\packages\docfx.console.2.47.0\build\docfx.console.targets'))" />
   </Target>
 </Project>
