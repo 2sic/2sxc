@@ -18,7 +18,9 @@ using ToSic.Eav.Apps.ItemListActions;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
 using ToSic.Eav.Security.Permissions;
+using ToSic.SexyContent;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
@@ -27,7 +29,7 @@ using Assembly = System.Reflection.Assembly;
 using Factory = ToSic.Eav.Factory;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.SexyContent.WebApi.View
+namespace ToSic.Sxc.WebApi.Cms
 {
     [ValidateAntiForgeryToken]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
@@ -205,11 +207,11 @@ namespace ToSic.SexyContent.WebApi.View
                 if (!string.IsNullOrEmpty(lang))
                     try
                     {
-                        var culture = System.Globalization.CultureInfo.GetCultureInfo(lang);
-                        System.Threading.Thread.CurrentThread.CurrentCulture = culture;
+                        var culture = global::System.Globalization.CultureInfo.GetCultureInfo(lang);
+                        global::System.Threading.Thread.CurrentThread.CurrentCulture = culture;
                     }
                     // Fallback / ignore if the language specified has not been found
-                    catch (System.Globalization.CultureNotFoundException) { }
+                    catch (global::System.Globalization.CultureNotFoundException) { }
 
                 var cbToRender = CmsBlock.Block;
 

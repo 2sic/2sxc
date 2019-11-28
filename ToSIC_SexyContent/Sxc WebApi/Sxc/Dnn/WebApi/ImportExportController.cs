@@ -1,6 +1,4 @@
 ﻿using System;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -9,19 +7,19 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Xml.Linq;
+using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.ImportExport;
-using ToSic.SexyContent.WebApi.Dnn;
 using ToSic.SexyContent.WebApi.ImportExport;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Dnn.WebApi;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.Dnn.WebApi
 {
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
     // token, which fails in the cases where the url is called using get, which should result in a download

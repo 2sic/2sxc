@@ -10,7 +10,7 @@ using ToSic.Sxc.Adam.WebApi;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi;
 
-namespace ToSic.SexyContent.WebApi.Dnn
+namespace ToSic.Sxc.Dnn.WebApi
 {
 	[SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]

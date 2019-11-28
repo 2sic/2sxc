@@ -3,6 +3,7 @@ using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent;
 using ToSic.SexyContent.WebApi;
+using ToSic.Sxc.WebApi.Cms;
 using UiController = ToSic.Sxc.WebApi.Cms.UiController;
 
 namespace ToSic.Sxc.WebApi
@@ -26,8 +27,9 @@ namespace ToSic.Sxc.WebApi
             var stdNsAdam = new[] {"ToSic.Sxc.Adam.WebApi"};
 
             #region EAV and View-routes
+            // 2019-11-28 moved namespace for this stuff
             mapRouteManager.MapHttpRoute("2sxc", "EAV", "EAV/{controller}/{action}", new[] { /*"ToSic.SexyContent.WebApi.EavApiProxies"*/ typeof(UiController).Namespace });
-            mapRouteManager.MapHttpRoute("2sxc", "View", "view/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi.View" });
+            mapRouteManager.MapHttpRoute("2sxc", "View", "view/{controller}/{action}", new[] { /*"ToSic.SexyContent.WebApi.View"*/ typeof(ModuleController).Namespace });
             #endregion
 
             #region old API routes before 08.10

@@ -4,7 +4,7 @@ using ToSic.Eav.DataSources;
 using ToSic.SexyContent.Serializers;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight
+namespace ToSic.Sxc.WebApi.Cms.Refactor
 {
     internal class GetContentBlockDataLight
     {
