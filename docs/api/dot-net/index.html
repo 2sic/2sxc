@@ -8,7 +8,7 @@
     <title>This is the 2sxc API Documentation | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="This is the 2sxc API Documentation | 2sxc and EAV 10 ">
-    <meta name="generator" content="docfx 2.46.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../../images/logos/favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -53,7 +53,7 @@
                           <a href="../../how-to/index.html" title="How To">How To</a>
                       </li>
                       <li>
-                          <a href="../..//api/dot-net/index.html" title=".net API">.net API</a>
+                          <a href="../../api/dot-net/index.html" title=".net API">.net API</a>
                       </li>
                 </ul>    </div>
           </div>
@@ -592,16 +592,16 @@ Once we&#39;re really sure that certain parts are very final, we&#39;ll publish 
 <h2 id="what-youre-probably-looking-for">What You&#39;re Probably Looking for</h2>
 <h3 id="apis-in-razor-templates-and-webapi">APIs in Razor Templates and WebApi</h3>
 <ol>
-<li><p>If you are creating a <strong>Razor</strong> template and want to know what APIs are available, start with @ToSic.Sxc.Dnn.IRazor which is mostly an <a class="xref" href="ToSic.Sxc.Dnn.IDynamicCode.html">IDynamicCode</a> with an <a class="xref" href="ToSic.Sxc.Dnn.IHtmlHelper.html">IHtmlHelper</a>. 
- This is because a Razor Page inherits from that interface, so you&#39;ll see all the commannds you get there. </p>
+<li><p>If you are creating a <strong>Razor</strong> template and want to know what APIs are available, start with <a class="xref" href="ToSic.Sxc.Dnn.RazorComponent.html">RazorComponent</a>. 
+ This is because new Razor Components inherits from that, so you&#39;ll see all the commannds you get there. </p>
 </li>
-<li><p>If you&#39;re creating a <strong>WebApi</strong> and need to know everything in it, you also want to check the <a class="xref" href="ToSic.Sxc.Dnn.IDynamicWebApi.html">IDynamicWebApi</a>, because all WebApi classes implement that interface. </p>
+<li><p>If you&#39;re creating a <strong>WebApi</strong> and need to know everything in it, you also want to check the <a class="xref" href="ToSic.Sxc.Dnn.ApiController.html">ApiController</a>, because all new WebApi classes inherit that. </p>
 </li>
 </ol>
 <h3 id="working-with-entities-and-adam-assets">Working with Entities and ADAM Assets</h3>
 <ol>
 <li>If you&#39;re working with <code>DynamicEntity</code> objects and want to know more about them, check out <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a>.<br> In very rare cases you also want to know more about the underlying <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a>.</li>
-<li>If you&#39;re working with <code>ADAM</code> Assets, like from the <code>AsAdam(...)</code> command on <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a> objects,<br> you&#39;ll want to read about @ToSic.Sxc.Adam.IAdamFolder and @ToSic.Sxc.Adam.IAdamFile</li>
+<li>If you&#39;re working with <code>ADAM</code> Assets, like from the <code>AsAdam(...)</code> command on <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a> objects,<br> you&#39;ll want to read about <a class="xref" href="ToSic.Sxc.Adam.IFolder.html">IFolder</a> and <a class="xref" href="ToSic.Sxc.Adam.IFile.html">IFile</a></li>
 </ol>
 <h3 id="programming-with-datasources-and-visualquery">Programming with DataSources and VisualQuery</h3>
 <p>All the DataSources are based on <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a> and most of them are also <a class="xref" href="ToSic.Eav.DataSources.IDataTarget.html">IDataTarget</a> . You can find most of them in <a class="xref" href="ToSic.Eav.DataSources.html">ToSic.Eav.DataSources</a> . </p>
