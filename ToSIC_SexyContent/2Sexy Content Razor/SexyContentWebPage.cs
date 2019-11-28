@@ -10,6 +10,7 @@ using ToSic.SexyContent.Search;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Engines.Razor;
@@ -25,16 +26,12 @@ namespace ToSic.SexyContent.Razor
     /// The core page type for delivering a 2sxc page
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
-    public abstract class SexyContentWebPage : RazorPageBase, IRazor
+    public abstract class SexyContentWebPage : RazorPageBase, IRazor, ISexyContentWebPage
     {
-        #region Helpers
+        #region Helpers linked through AppAndData Helpers
 
         public ILinkHelper Link => DynCodeHelper.Link;
 
-
-        #endregion
-
-        #region AppAndDataHelpers implementation
 
         /// <summary>
         /// Helper commands to enable in-page editing functionality
@@ -134,46 +131,33 @@ namespace ToSic.SexyContent.Razor
 
         #endregion
 
+        #region Customize Data & Search
 
         /// <inheritdoc />
-        public virtual void CustomizeData()
-        {
-        }
+        public virtual void CustomizeData() {}
 
         /// <inheritdoc />
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
-            DateTime beginDate)
-        {
-        }
+            DateTime beginDate) { }
 
         [PrivateApi("this is the old signature, should still be supported")]
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
-        {
-        }
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate) { }
 
         public Purpose Purpose { get; internal set; }
 
         [Obsolete("left for compatibility, use Purpose instead")]
         public InstancePurposes InstancePurpose { get; internal set; }
 
+        #endregion
+
 
         #region Adam 
 
-        /// <summary>
-        /// Provides an Adam instance for this item and field
-        /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
-        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
-        /// <returns>An Adam object for navigating the assets</returns>
+        /// <inheritdoc />
         public IFolder AsAdam(IDynamicEntity entity, string fieldName) => DynCodeHelper.AsAdam(entity, fieldName);
 
 
-        /// <summary>
-        /// Provides an Adam instance for this item and field
-        /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
-        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
-        /// <returns>An Adam object for navigating the assets</returns>
+        /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName) => DynCodeHelper.AsAdam(entity, fieldName);
 
         #endregion

@@ -158,13 +158,6 @@ namespace ToSic.Sxc.Web
         /// <returns>A typed DataSource object</returns>
         new T CreateSource<T>(IDataStream inStream) where T: IDataSource;
 
-        ///// <summary>
-        ///// Create a <see cref="IDataSource"/> which will process data from the given stream.
-        ///// </summary>
-        ///// <returns>A typed DataSource object</returns>
-        //[Obsolete("Please use the CreateSource<T> overload instead.")]
-        //[PrivateApi]
-        //new IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ITokenListFiller configurationProvider = null);
 
         /// <summary>
         /// Create a <see cref="IDataSource"/> which will process data from the given stream.
