@@ -17,9 +17,10 @@ using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.ImportExport;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.WebApi.ImportExport;
 
-namespace ToSic.Sxc.Dnn.WebApi
+namespace ToSic.Sxc.WebApi.Cms
 {
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
     // token, which fails in the cases where the url is called using get, which should result in a download
