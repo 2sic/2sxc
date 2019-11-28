@@ -51,17 +51,18 @@ namespace ToSic.Sxc.Engines
         protected HttpContextBase HttpContext 
             => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
 
-        [PrivateApi("not sure if this is actually sued anywhere?")]
-        public Type RequestedModelType()
-        {
-            if (Webpage != null)
-            {
-                var webpageType = Webpage.GetType();
-                if (webpageType.BaseType.IsGenericType)
-                    return webpageType.BaseType.GetGenericArguments()[0];
-            }
-            return null;
-        }
+        // 2019-11-28 2dm disabled, don't think it's used
+        //[PrivateApi("not sure if this is actually used anywhere?")]
+        //public Type RequestedModelType()
+        //{
+        //    if (Webpage != null)
+        //    {
+        //        var webpageType = Webpage.GetType();
+        //        if (webpageType.BaseType.IsGenericType)
+        //            return webpageType.BaseType.GetGenericArguments()[0];
+        //    }
+        //    return null;
+        //}
 
         [PrivateApi]
         public void Render(TextWriter writer)
