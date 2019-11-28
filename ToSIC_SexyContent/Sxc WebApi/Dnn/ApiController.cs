@@ -4,7 +4,6 @@ using System.IO;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.SexyContent;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
@@ -18,19 +17,16 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 
 namespace ToSic.Sxc.Dnn
 {
-    /// <inheritdoc cref="SxcApiControllerBase" />
     /// <summary>
-    /// This is the base class for API Controllers which need the full context
-    /// incl. the current App, DNN, Data, etc.
-    /// For others, please use the SxiApiControllerBase, which doesn't have all that, and is usually then
-    /// safer because it can't accidentally mix the App with a different appId in the params
+    /// This is the base class for all custom API Controllers. <br/>
+    /// With this, your code receives the full context  incl. the current App, DNN, Data, etc.
     /// </summary>
+    [PublicApi]
     [SxcWebApiExceptionHandling]
     public abstract partial class ApiController : DynamicApiController, IDynamicWebApi, IDynamicCodeBeforeV10
     {
-
         /// <inheritdoc />
-        public IDnnContext Dnn => DynCodeHelpers.Dnn;
+        public new IDnnContext Dnn => base.Dnn;// DynCodeHelpers.Dnn;
 
         [PrivateApi]
         public SxcHelper Sxc => DynCodeHelpers.Sxc;

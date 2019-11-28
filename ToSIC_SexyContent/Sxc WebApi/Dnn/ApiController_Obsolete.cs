@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Dnn
 {
     public partial class ApiController
     {
+        [PrivateApi]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
             ITokenListFiller configurationProvider = null)
             => DynCodeHelpers.CreateSource(typeName, inSource, configurationProvider);
@@ -16,20 +17,28 @@ namespace ToSic.Sxc.Dnn
         /// <summary>
         /// presentation item of the content-item. 
         /// </summary>
+        [PrivateApi]
         [Obsolete("please use Content.Presentation instead")]
-        public dynamic Presentation => DynCodeHelpers.Content?.Presentation;
+        public dynamic Presentation 
+            => DynCodeHelpers.Content?.Presentation;
 
+        [PrivateApi]
         [Obsolete("use Header instead")]
-        public dynamic ListContent => DynCodeHelpers.Header;
+        public dynamic ListContent 
+            => DynCodeHelpers.Header;
 
         /// <summary>
         /// presentation item of the content-item. 
         /// </summary>
+        [PrivateApi]
         [Obsolete("please use Header.Presentation instead")]
-        public dynamic ListPresentation => DynCodeHelpers.Header?.Presentation;
+        public dynamic ListPresentation 
+            => DynCodeHelpers.Header?.Presentation;
 
+        [PrivateApi]
         [Obsolete("This is an old way used to loop things. Use Data[\"Default\"] instead. Will be removed in 2sxc v10")]
-        public object List => DynCodeHelpers.List;
+        public object List 
+            => DynCodeHelpers.List;
 
 
 
@@ -51,7 +60,7 @@ namespace ToSic.Sxc.Dnn
 
 
         //// todo: only in "old" controller, not in new one
-        ///// <inheritdoc />
+        [PrivateApi]
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DynCodeHelpers.AsDynamic(entityKeyValuePair.Value);
 
     }
