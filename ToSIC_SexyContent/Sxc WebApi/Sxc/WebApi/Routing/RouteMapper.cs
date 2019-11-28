@@ -3,7 +3,8 @@ using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent;
 using ToSic.SexyContent.WebApi;
-using ToSic.Sxc.WebApi.Cms;
+using ToSic.Sxc.Dnn.WebApi;
+using ModuleController = ToSic.Sxc.WebApi.Cms.ModuleController;
 using UiController = ToSic.Sxc.WebApi.Cms.UiController;
 
 namespace ToSic.Sxc.WebApi
@@ -103,7 +104,7 @@ namespace ToSic.Sxc.WebApi
             // mapRouteManager.MapHttpRoute("2sxc", "app", "app/{controller}/{action}", stdNsWebApi);
             // 2017-02-17 2dm: new alternate route to replace the "app" route, because I want app to be reserved!
             mapRouteManager.MapHttpRoute("2sxc", "app-sys", "app-sys/{controller}/{action}", stdNsWebApi);  
-			mapRouteManager.MapHttpRoute("2sxc", "dnn", "dnn/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi.Dnn" });
+			mapRouteManager.MapHttpRoute("2sxc", "dnn", "dnn/{controller}/{action}", new[] { /*"ToSic.SexyContent.WebApi.Dnn"*/ typeof(HyperlinkController).Namespace });
             mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", stdNsWebApi);
             mapRouteManager.MapHttpRoute("2sxc", "insights", "sys/insights/{action}", new { controller = "Insights", action = "help"}, new[] {"ToSic.Sxc.WebApi.System"});
             #endregion
