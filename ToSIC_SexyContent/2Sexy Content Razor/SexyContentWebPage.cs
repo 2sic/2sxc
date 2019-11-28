@@ -11,6 +11,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
+using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Engines.Razor;
@@ -26,7 +27,7 @@ namespace ToSic.SexyContent.Razor
     /// The core page type for delivering a 2sxc page
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
-    public abstract class SexyContentWebPage : RazorComponentBase, IRazor, ISexyContentWebPage
+    public abstract class SexyContentWebPage : RazorComponentBase, IRazorComponent, ISexyContentWebPage
     {
         #region Helpers linked through AppAndData Helpers
 

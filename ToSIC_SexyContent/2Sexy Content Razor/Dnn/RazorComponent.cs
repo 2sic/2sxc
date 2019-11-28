@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi]
-    public abstract partial class RazorComponent : RazorComponentBase, IRazor
+    public abstract partial class RazorComponent : RazorComponentBase, IRazorComponent
     {
 
         #region AppAndDataHelpers implementation
