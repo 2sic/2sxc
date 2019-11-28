@@ -19,7 +19,16 @@ apiRules:
     uidRegex: ^System\.Attribute
 
 - exclude:
-    uidRegex: ^System\.Web\.WebPages
+    uidRegex: ^System\.IDisposable$
+
+- exclude:
+    uidRegex: ^System\.Web
+    # includes System.Web.WebPages and System.Web.ApiController
+
+- exclude:
+    uidRegex: ^DotNetNuke\.
+    # hides things like DotNetNuke.Web.Api.DnnApiController etc.
+
 
 # Exclude any tests
 - exclude:

@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class Permission
+    <title>Class ApiController
    | 2sxc and EAV 10 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class Permission
+    <meta name="title" content="Class ApiController
    | 2sxc and EAV 10 ">
     <meta name="generator" content="docfx 2.46.0.0">
     
@@ -432,14 +432,14 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
-                      <a href="ToSic.Eav.Security.Permissions.html" title="ToSic.Eav.Security.Permissions" class="">ToSic.Eav.Security.Permissions</a>
+                      <a href="ToSic.Eav.Security.html" title="ToSic.Eav.Security" class="">ToSic.Eav.Security</a>
                         
                         <ul class="nav level2">
                           <li class="">
-                            <a href="ToSic.Eav.Security.Permissions.IHasPermissions.html" title="IHasPermissions" class="">IHasPermissions</a>
+                            <a href="ToSic.Eav.Security.IHasPermissions.html" title="IHasPermissions" class="">IHasPermissions</a>
                           </li>
-                          <li class="active">
-                            <a href="ToSic.Eav.Security.Permissions.Permission.html" title="Permission" class="active">Permission</a>
+                          <li class="">
+                            <a href="ToSic.Eav.Security.Permission.html" title="Permission" class="">Permission</a>
                           </li>
                         </ul>  </li>
                     <li class="">
@@ -498,6 +498,9 @@
                       <a href="ToSic.Sxc.Dnn.html" title="ToSic.Sxc.Dnn" class="">ToSic.Sxc.Dnn</a>
                         
                         <ul class="nav level2">
+                          <li class="active">
+                            <a href="ToSic.Sxc.Dnn.ApiController.html" title="ApiController" class="active">ApiController</a>
+                          </li>
                           <li class="">
                             <a href="ToSic.Sxc.Dnn.IDnnContext.html" title="IDnnContext" class="">IDnnContext</a>
                           </li>
@@ -511,7 +514,7 @@
                             <a href="ToSic.Sxc.Dnn.IHtmlHelper.html" title="IHtmlHelper" class="">IHtmlHelper</a>
                           </li>
                           <li class="">
-                            <a href="ToSic.Sxc.Dnn.IRazor.html" title="IRazor" class="">IRazor</a>
+                            <a href="ToSic.Sxc.Dnn.IRazorComponent.html" title="IRazorComponent" class="">IRazorComponent</a>
                           </li>
                           <li class="">
                             <a href="ToSic.Sxc.Dnn.RazorComponent.html" title="RazorComponent" class="">RazorComponent</a>
@@ -578,64 +581,298 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ToSic.Eav.Security.Permissions.Permission">
+            <article class="content wrap" id="_content" data-uid="ToSic.Sxc.Dnn.ApiController">
   
   
-  <h1 id="ToSic_Eav_Security_Permissions_Permission" data-uid="ToSic.Eav.Security.Permissions.Permission" class="text-break">Class Permission
+  <h1 id="ToSic_Sxc_Dnn_ApiController" data-uid="ToSic.Sxc.Dnn.ApiController" class="text-break">Class ApiController
   </h1>
-  <div class="markdown level0 summary"><p>Helper object for constants related to the permissions-type</p>
+  <div class="markdown level0 summary"><p>This is the base class for all custom API Controllers. <br>
+With this, your code receives the full context  incl. the current App, DNN, Data, etc.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="ToSic.Eav.Data.EntityBasedType.html">EntityBasedType</a></div>
-    <div class="level2"><span class="xref">Permission</span></div>
+    <div class="level1"><span class="xref">System.Web.Http.ApiController</span></div>
+    <div class="level2"><span class="xref">DotNetNuke.Web.Api.DnnApiController</span></div>
+    <div class="level3"><span class="xref">ToSic.Sxc.Dnn.WebApi.DnnApiControllerWithFixes</span></div>
+    <div class="level4"><span class="xref">ToSic.Sxc.WebApi.SxcApiControllerBase</span></div>
+    <div class="level5"><span class="xref">ToSic.SexyContent.WebApi.DynamicApiController</span></div>
+    <div class="level6"><span class="xref">ApiController</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="ToSic.Eav.Data.IEntityBasedType.html">IEntityBasedType</a></div>
+    <div><a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a></div>
+    <div><a class="xref" href="ToSic.Sxc.Dnn.IDynamicWebApi.html">IDynamicWebApi</a></div>
+    <div><a class="xref" href="ToSic.Sxc.Dnn.IDynamicCode.html">IDynamicCode</a></div>
+    <div><a class="xref" href="ToSic.Sxc.Web.IDynamicCode.html">IDynamicCode</a></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Entity">EntityBasedType.Entity</a>
-    </div>
-    <div>
-      <a class="xref" href="ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Title">EntityBasedType.Title</a>
-    </div>
-    <div>
-      <a class="xref" href="ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Id">EntityBasedType.Id</a>
-    </div>
-    <div>
-      <a class="xref" href="ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Guid">EntityBasedType.Guid</a>
-    </div>
-    <div>
-      <a class="xref" href="ToSic.Eav.Data.EntityBasedType.html#ToSic_Eav_Data_EntityBasedType_Get__1_System_String___0_">EntityBasedType.Get&lt;T&gt;(String, T)</a>
-    </div>
-  </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="ToSic.Eav.Security.Permissions.html">ToSic.Eav.Security.Permissions</a></h6>
-  <h6><strong>Assembly</strong>: ToSic.Eav.Core.dll</h6>
-  <h5 id="ToSic_Eav_Security_Permissions_Permission_syntax">Syntax</h5>
+  <h6><strong>Namespace</strong>: <a class="xref" href="ToSic.Sxc.Dnn.html">ToSic.Sxc.Dnn</a></h6>
+  <h6><strong>Assembly</strong>: ToSic.SexyContent.WebApi.dll</h6>
+  <h5 id="ToSic_Sxc_Dnn_ApiController_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Permission : EntityBasedType, IEntityBasedType</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class ApiController : DynamicApiController, IHttpController, IDisposable, IHasLog, IDynamicWebApi, IDynamicCode, IDynamicCode, IAppAndDataHelpers, ISharedCodeBuilder, IDynamicCodeBeforeV10</code></pre>
   </div>
-  <h3 id="constructors">Constructors
+  <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Security_Permissions_Permission__ctor_ToSic_Eav_Data_IEntity_.md&amp;value=---%0Auid%3A%20ToSic.Eav.Security.Permissions.Permission.%23ctor(ToSic.Eav.Data.IEntity)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Sxc/Dnn/ApiController.App.md/#L2">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Security/Permissions/Permission.cs/#L19">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L35">View Source</a>
   </span>
-  <a id="ToSic_Eav_Security_Permissions_Permission__ctor_" data-uid="ToSic.Eav.Security.Permissions.Permission.#ctor*"></a>
-  <h4 id="ToSic_Eav_Security_Permissions_Permission__ctor_ToSic_Eav_Data_IEntity_" data-uid="ToSic.Eav.Security.Permissions.Permission.#ctor(ToSic.Eav.Data.IEntity)">Permission(IEntity)</h4>
-  <div class="markdown level1 summary"></div>
+  <a id="ToSic_Sxc_Dnn_ApiController_App_" data-uid="ToSic.Sxc.Dnn.ApiController.App*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_App" data-uid="ToSic.Sxc.Dnn.ApiController.App">App</h4>
+  <div class="markdown level1 summary"><p>A fully prepared <a class="xref" href="ToSic.Sxc.Apps.IApp.html">IApp</a> object letting you access all the data and queries in the current app. </p>
+</div>
+  <div class="markdown level1 conceptual"><p>You&#39;ll usually want to access the data, like <code>App.Data[&quot;Categories&quot;]</code> or the queries <code>App.Query[&quot;AllPosts&quot;]</code>.  </p>
+<pre><code class="lang-cs">foreach(var cat in AsDynamic(App.Data[&quot;Categories&quot;])) {
+    @cat.Name
+}
+</code></pre></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IApp App { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Sxc.Apps.IApp.html">IApp</a></td>
+        <td><p>The current app</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_Content.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.Content%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L79">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_Content_" data-uid="ToSic.Sxc.Dnn.ApiController.Content*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_Content" data-uid="ToSic.Sxc.Dnn.ApiController.Content">Content</h4>
+  <div class="markdown level1 summary"><p>The content object of the current razor view - IF the current view has content.
+If the view is a list, it will return the first item. 
+Will be null otherwise.
+To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_IsDemoItem">IsDemoItem</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Permission(IEntity entity)</code></pre>
+    <pre><code class="lang-csharp hljs">public dynamic Content { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><p>A <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a> object with the current content - or null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Sxc/Dnn/ApiController.Data.md/#L2">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L38">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_Data_" data-uid="ToSic.Sxc.Dnn.ApiController.Data*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_Data" data-uid="ToSic.Sxc.Dnn.ApiController.Data">Data</h4>
+  <div class="markdown level1 summary"><p>The data prepared for the current Code. Usually user data which was manually added to the instance, but can also be a query.</p>
+</div>
+  <div class="markdown level1 conceptual"><p>You&#39;ll usually want to access the &quot;Default&quot; stream like <code>Data[&quot;Default&quot;]</code>.  </p>
+<pre><code class="lang-cs">foreach(var person in AsDynamic(Data[&quot;Default&quot;])) {
+    @person.Name
+}
+</code></pre></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IBlockDataSource Data { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">ToSic.Sxc.Blocks.IBlockDataSource</span></td>
+        <td><p>An <span class="xref">ToSic.Sxc.Blocks.IBlockDataSource</span> which is as <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_Dnn.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.Dnn%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L29">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_Dnn_" data-uid="ToSic.Sxc.Dnn.ApiController.Dnn*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_Dnn" data-uid="ToSic.Sxc.Dnn.ApiController.Dnn">Dnn</h4>
+  <div class="markdown level1 summary"><p>The DNN context.  </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDnnContext Dnn { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Sxc.Dnn.IDnnContext.html">IDnnContext</a></td>
+        <td><p>The DNN context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_Edit.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.Edit%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L115">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_Edit_" data-uid="ToSic.Sxc.Dnn.ApiController.Edit*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_Edit" data-uid="ToSic.Sxc.Dnn.ApiController.Edit">Edit</h4>
+  <div class="markdown level1 summary"><p>Helper commands to enable in-page editing functionality
+Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IInPageEditingSystem Edit { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Sxc.Web.IInPageEditingSystem.html">IInPageEditingSystem</a></td>
+        <td><p>An <a class="xref" href="ToSic.Sxc.Web.IInPageEditingSystem.html">IInPageEditingSystem</a> object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_Header.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.Header%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L82">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_Header_" data-uid="ToSic.Sxc.Dnn.ApiController.Header*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_Header" data-uid="ToSic.Sxc.Dnn.ApiController.Header">Header</h4>
+  <div class="markdown level1 summary"><p>The header object of the current razor view, if it&apos;s a list and has a header object.
+If it&apos;s a list and doesn&apos;t have a header (and no default), it will return null.
+To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html#ToSic_Sxc_Data_IDynamicEntity_IsDemoItem">IsDemoItem</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public dynamic Header { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><p>A <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a> object with the current content.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="ToSic_Sxc_Dnn_ApiController_Header_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Introduced in 2sxc 10.10 - previously it was called ListContent, now deprecated.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_Link.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.Link%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L112">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_Link_" data-uid="ToSic.Sxc.Dnn.ApiController.Link*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_Link" data-uid="ToSic.Sxc.Dnn.ApiController.Link">Link</h4>
+  <div class="markdown level1 summary"><p>Link helper object to create the correct links</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ILinkHelper Link { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Sxc.Web.ILinkHelper.html">ILinkHelper</a></td>
+        <td><p>A <a class="xref" href="ToSic.Sxc.Web.ILinkHelper.html">ILinkHelper</a> object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_AsAdam_ToSic_Eav_Data_IEntity_System_String_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.AsAdam(ToSic.Eav.Data.IEntity%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L94">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_AsAdam_" data-uid="ToSic.Sxc.Dnn.ApiController.AsAdam*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_AsAdam_ToSic_Eav_Data_IEntity_System_String_" data-uid="ToSic.Sxc.Dnn.ApiController.AsAdam(ToSic.Eav.Data.IEntity,System.String)">AsAdam(IEntity, String)</h4>
+  <div class="markdown level1 summary"><p>Provides an Adam instance for this item and field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IFolder AsAdam(IEntity entity, string fieldName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -650,27 +887,18 @@
       <tr>
         <td><a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a></td>
         <td><span class="parametername">entity</span></td>
-        <td></td>
+        <td><p>The entity, often Content or similar</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">fieldName</span></td>
+        <td><p>The field name, like &quot;Gallery&quot; or &quot;Pics&quot;</p>
+</td>
       </tr>
     </tbody>
   </table>
-  <h3 id="fields">Fields
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Security_Permissions_Permission_FieldCondition.md&amp;value=---%0Auid%3A%20ToSic.Eav.Security.Permissions.Permission.FieldCondition%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Security/Permissions/Permission.cs/#L15">View Source</a>
-  </span>
-  <h4 id="ToSic_Eav_Security_Permissions_Permission_FieldCondition" data-uid="ToSic.Eav.Security.Permissions.Permission.FieldCondition">FieldCondition</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string FieldCondition = &quot;Condition&quot;</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -680,147 +908,53 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
+        <td><a class="xref" href="ToSic.Sxc.Adam.IFolder.html">IFolder</a></td>
+        <td><p>An Adam object for navigating the assets</p>
+</td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Security_Permissions_Permission_FieldGrant.md&amp;value=---%0Auid%3A%20ToSic.Eav.Security.Permissions.Permission.FieldGrant%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_AsAdam_ToSic_Sxc_Data_IDynamicEntity_System_String_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.AsAdam(ToSic.Sxc.Data.IDynamicEntity%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Security/Permissions/Permission.cs/#L16">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L91">View Source</a>
   </span>
-  <h4 id="ToSic_Eav_Security_Permissions_Permission_FieldGrant" data-uid="ToSic.Eav.Security.Permissions.Permission.FieldGrant">FieldGrant</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string FieldGrant = &quot;Grant&quot;</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Security_Permissions_Permission_FieldIdentity.md&amp;value=---%0Auid%3A%20ToSic.Eav.Security.Permissions.Permission.FieldIdentity%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Security/Permissions/Permission.cs/#L14">View Source</a>
-  </span>
-  <h4 id="ToSic_Eav_Security_Permissions_Permission_FieldIdentity" data-uid="ToSic.Eav.Security.Permissions.Permission.FieldIdentity">FieldIdentity</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string FieldIdentity = &quot;Identity&quot;</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Security_Permissions_Permission_FieldOwner.md&amp;value=---%0Auid%3A%20ToSic.Eav.Security.Permissions.Permission.FieldOwner%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Security/Permissions/Permission.cs/#L17">View Source</a>
-  </span>
-  <h4 id="ToSic_Eav_Security_Permissions_Permission_FieldOwner" data-uid="ToSic.Eav.Security.Permissions.Permission.FieldOwner">FieldOwner</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string FieldOwner = &quot;Owner&quot;</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Security_Permissions_Permission_TypeName.md&amp;value=---%0Auid%3A%20ToSic.Eav.Security.Permissions.Permission.TypeName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Security/Permissions/Permission.cs/#L13">View Source</a>
-  </span>
-  <h4 id="ToSic_Eav_Security_Permissions_Permission_TypeName" data-uid="ToSic.Eav.Security.Permissions.Permission.TypeName">TypeName</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string TypeName = &quot;PermissionConfiguration&quot;</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Security_Permissions_Permission_Condition.md&amp;value=---%0Auid%3A%20ToSic.Eav.Security.Permissions.Permission.Condition%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Security/Permissions/Permission.cs/#L27">View Source</a>
-  </span>
-  <a id="ToSic_Eav_Security_Permissions_Permission_Condition_" data-uid="ToSic.Eav.Security.Permissions.Permission.Condition*"></a>
-  <h4 id="ToSic_Eav_Security_Permissions_Permission_Condition" data-uid="ToSic.Eav.Security.Permissions.Permission.Condition">Condition</h4>
-  <div class="markdown level1 summary"><p>The condition in this permission - like &quot;this rule applies to admins&quot;
-The condition is usually a text-code by the hosting CMS</p>
+  <a id="ToSic_Sxc_Dnn_ApiController_AsAdam_" data-uid="ToSic.Sxc.Dnn.ApiController.AsAdam*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_AsAdam_ToSic_Sxc_Data_IDynamicEntity_System_String_" data-uid="ToSic.Sxc.Dnn.ApiController.AsAdam(ToSic.Sxc.Data.IDynamicEntity,System.String)">AsAdam(IDynamicEntity, String)</h4>
+  <div class="markdown level1 summary"><p>Provides an Adam instance for this item and field</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Condition { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IFolder AsAdam(IDynamicEntity entity, string fieldName)</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a></td>
+        <td><span class="parametername">entity</span></td>
+        <td><p>The entity, often Content or similar</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">fieldName</span></td>
+        <td><p>The field name, like &quot;Gallery&quot; or &quot;Pics&quot;</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -830,28 +964,46 @@ The condition is usually a text-code by the hosting CMS</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
+        <td><a class="xref" href="ToSic.Sxc.Adam.IFolder.html">IFolder</a></td>
+        <td><p>An Adam object for navigating the assets</p>
+</td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Security_Permissions_Permission_Grant.md&amp;value=---%0Auid%3A%20ToSic.Eav.Security.Permissions.Permission.Grant%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_AsDynamic_System_Collections_Generic_IEnumerable_ToSic_Eav_Data_IEntity__.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.AsDynamic(System.Collections.Generic.IEnumerable%7BToSic.Eav.Data.IEntity%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Security/Permissions/Permission.cs/#L40">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L58">View Source</a>
   </span>
-  <a id="ToSic_Eav_Security_Permissions_Permission_Grant_" data-uid="ToSic.Eav.Security.Permissions.Permission.Grant*"></a>
-  <h4 id="ToSic_Eav_Security_Permissions_Permission_Grant" data-uid="ToSic.Eav.Security.Permissions.Permission.Grant">Grant</h4>
-  <div class="markdown level1 summary"><p>The rights granted by this permission, usually a series of characters like r=read, u=update, etc.</p>
+  <a id="ToSic_Sxc_Dnn_ApiController_AsDynamic_" data-uid="ToSic.Sxc.Dnn.ApiController.AsDynamic*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_AsDynamic_System_Collections_Generic_IEnumerable_ToSic_Eav_Data_IEntity__" data-uid="ToSic.Sxc.Dnn.ApiController.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Data.IEntity})">AsDynamic(IEnumerable&lt;IEntity&gt;)</h4>
+  <div class="markdown level1 summary"><p>Converts a list of <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> objects into a list of <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a> objects. </p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Grant { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;dynamic&gt; AsDynamic(IEnumerable&lt;IEntity&gt; entities)</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a>&gt;</td>
+        <td><span class="parametername">entities</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -861,29 +1013,47 @@ The condition is usually a text-code by the hosting CMS</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><p>a list of <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a> objects</p>
+</td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Security_Permissions_Permission_Identity.md&amp;value=---%0Auid%3A%20ToSic.Eav.Security.Permissions.Permission.Identity%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_AsDynamic_System_Object_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.AsDynamic(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Security/Permissions/Permission.cs/#L34">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L47">View Source</a>
   </span>
-  <a id="ToSic_Eav_Security_Permissions_Permission_Identity_" data-uid="ToSic.Eav.Security.Permissions.Permission.Identity*"></a>
-  <h4 id="ToSic_Eav_Security_Permissions_Permission_Identity" data-uid="ToSic.Eav.Security.Permissions.Permission.Identity">Identity</h4>
-  <div class="markdown level1 summary"><p>The identity this rule should apply to 
-This is usually a user guid or group-id; exact specs vary based on the hosting CMS</p>
+  <a id="ToSic_Sxc_Dnn_ApiController_AsDynamic_" data-uid="ToSic.Sxc.Dnn.ApiController.AsDynamic*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_AsDynamic_System_Object_" data-uid="ToSic.Sxc.Dnn.ApiController.AsDynamic(System.Object)">AsDynamic(Object)</h4>
+  <div class="markdown level1 summary"><p>Convert a dynamic entity and return itself again. This is so coders don&apos;t have to worry if the original object was an <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> or a <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a> in the first place. </p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Identity { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public dynamic AsDynamic(dynamic dynamicEntity)</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">dynamicEntity</span></td>
+        <td><p>the original object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -893,14 +1063,396 @@ This is usually a user guid or group-id; exact specs vary based on the hosting C
     </thead>
     <tbody>
       <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><p>a dynamic object for easier coding</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_AsDynamic_ToSic_Eav_Data_IEntity_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.AsDynamic(ToSic.Eav.Data.IEntity)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L44">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_AsDynamic_" data-uid="ToSic.Sxc.Dnn.ApiController.AsDynamic*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_AsDynamic_ToSic_Eav_Data_IEntity_" data-uid="ToSic.Sxc.Dnn.ApiController.AsDynamic(ToSic.Eav.Data.IEntity)">AsDynamic(IEntity)</h4>
+  <div class="markdown level1 summary"><p>Wraps an entity into a <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public dynamic AsDynamic(IEntity entity)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a></td>
+        <td><span class="parametername">entity</span></td>
+        <td><p>the original object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><p>a dynamic object for easier coding</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_AsDynamic_ToSic_Eav_DataSources_IDataStream_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.AsDynamic(ToSic.Eav.DataSources.IDataStream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L52">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_AsDynamic_" data-uid="ToSic.Sxc.Dnn.ApiController.AsDynamic*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_AsDynamic_ToSic_Eav_DataSources_IDataStream_" data-uid="ToSic.Sxc.Dnn.ApiController.AsDynamic(ToSic.Eav.DataSources.IDataStream)">AsDynamic(IDataStream)</h4>
+  <div class="markdown level1 summary"><p>Converts a list of entities from a <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a> into a list of <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a> objects. </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;dynamic&gt; AsDynamic(IDataStream stream)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a></td>
+        <td><span class="parametername">stream</span></td>
+        <td><p>the stream containing <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a> items</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><p>a list of <a class="xref" href="ToSic.Sxc.Data.IDynamicEntity.html">IDynamicEntity</a> objects</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_AsEntity_System_Object_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.AsEntity(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L55">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_AsEntity_" data-uid="ToSic.Sxc.Dnn.ApiController.AsEntity*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_AsEntity_System_Object_" data-uid="ToSic.Sxc.Dnn.ApiController.AsEntity(System.Object)">AsEntity(Object)</h4>
+  <div class="markdown level1 summary"><p>Unwraps a dynamic entity back into the underlying <a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEntity AsEntity(dynamic dynamicEntity)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">dynamicEntity</span></td>
+        <td><p>the wrapped IEntity</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.Data.IEntity.html">IEntity</a></td>
+        <td><p>A normal IEntity</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_LookUp_ITokenListFiller_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.CreateSource%60%601(ToSic.Eav.DataSources.IDataSource%2CToSic.Eav.LookUp.ITokenListFiller)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L66">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_CreateSource_" data-uid="ToSic.Sxc.Dnn.ApiController.CreateSource*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_LookUp_ITokenListFiller_" data-uid="ToSic.Sxc.Dnn.ApiController.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.LookUp.ITokenListFiller)">CreateSource&lt;T&gt;(IDataSource, ITokenListFiller)</h4>
+  <div class="markdown level1 summary"><p>Create a <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a> which will process data from the given stream.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T CreateSource&lt;T&gt;(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
+    where T : IDataSource</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a></td>
+        <td><span class="parametername">inSource</span></td>
+        <td><p>The data source which will be the default In of the new data-source.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">ToSic.Eav.LookUp.ITokenListFiller</span></td>
+        <td><span class="parametername">configurationProvider</span></td>
+        <td><p>An alternate configuration provider for the DataSource</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>A typed DataSource object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>A data-source type - must be inherited from IDataSource</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_CreateSource__1_ToSic_Eav_DataSources_IDataStream_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.CreateSource%60%601(ToSic.Eav.DataSources.IDataStream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L71">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_CreateSource_" data-uid="ToSic.Sxc.Dnn.ApiController.CreateSource*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_CreateSource__1_ToSic_Eav_DataSources_IDataStream_" data-uid="ToSic.Sxc.Dnn.ApiController.CreateSource``1(ToSic.Eav.DataSources.IDataStream)">CreateSource&lt;T&gt;(IDataStream)</h4>
+  <div class="markdown level1 summary"><p>Create a <a class="xref" href="ToSic.Eav.DataSources.IDataSource.html">IDataSource</a> which will process data from the given stream.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T CreateSource&lt;T&gt;(IDataStream inStream)
+    where T : IDataSource</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Eav.DataSources.IDataStream.html">IDataStream</a></td>
+        <td><span class="parametername">inStream</span></td>
+        <td><p>The stream which will be the default In of the new data-source.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>A typed DataSource object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>A data-source type - must be inherited from IDataSource</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController_SaveInAdam_System_String_System_IO_Stream_System_String_System_String_System_Nullable_System_Guid__System_String_System_String_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController.SaveInAdam(System.String%2CSystem.IO.Stream%2CSystem.String%2CSystem.String%2CSystem.Nullable%7BSystem.Guid%7D%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController.cs/#L98">View Source</a>
+  </span>
+  <a id="ToSic_Sxc_Dnn_ApiController_SaveInAdam_" data-uid="ToSic.Sxc.Dnn.ApiController.SaveInAdam*"></a>
+  <h4 id="ToSic_Sxc_Dnn_ApiController_SaveInAdam_System_String_System_IO_Stream_System_String_System_String_System_Nullable_System_Guid__System_String_System_String_" data-uid="ToSic.Sxc.Dnn.ApiController.SaveInAdam(System.String,System.IO.Stream,System.String,System.String,System.Nullable{System.Guid},System.String,System.String)">SaveInAdam(String, Stream, String, String, Nullable&lt;Guid&gt;, String, String)</h4>
+  <div class="markdown level1 summary"><p>Save a file from a stream (usually an upload from the browser) into an adam-field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IFile SaveInAdam(string dontRelyOnParameterOrder = &quot;random-y023n&quot;, Stream stream = null, string fileName = null, string contentType = null, Guid? guid = default(Guid? ), string field = null, string subFolder = &quot;&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
         <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">dontRelyOnParameterOrder</span></td>
+        <td><p>ensure that all parameters use names, so the api can change in future</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.IO.Stream</span></td>
+        <td><span class="parametername">stream</span></td>
+        <td><p>the stream</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">fileName</span></td>
+        <td><p>file name to save to</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">contentType</span></td>
+        <td><p>content-type of the target item (important for security checks)</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Guid</span>&gt;</td>
+        <td><span class="parametername">guid</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">subFolder</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ToSic.Sxc.Adam.IFile.html">IFile</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="ToSic.Eav.Data.IEntityBasedType.html">IEntityBasedType</a>
+      <a class="xref" href="ToSic.Eav.Logging.IHasLog.html">IHasLog</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Sxc.Dnn.IDynamicWebApi.html">IDynamicWebApi</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Sxc.Dnn.IDynamicCode.html">IDynamicCode</a>
+  </div>
+  <div>
+      <a class="xref" href="ToSic.Sxc.Web.IDynamicCode.html">IDynamicCode</a>
   </div>
 </article>
           </div>
@@ -910,10 +1462,10 @@ This is usually a user guid or group-id; exact specs vary based on the hosting C
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2sic/eav-server/new/develop/apiSpec/new?filename=ToSic_Eav_Security_Permissions_Permission.md&amp;value=---%0Auid%3A%20ToSic.Eav.Security.Permissions.Permission%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_ApiController.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.ApiController%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/2sic/eav-server/blob/develop/ToSic.Eav.Core/Security/Permissions/Permission.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Sxc WebApi/Dnn/ApiController_Obsolete.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

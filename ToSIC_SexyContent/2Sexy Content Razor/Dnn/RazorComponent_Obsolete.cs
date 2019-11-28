@@ -81,6 +81,8 @@ namespace ToSic.Sxc.Dnn
         #endregion
 
         //[PrivateApi("this is the old signature, should still be supported")]
+        // we're not creating an error/overload here, because it may lead to signature issues 
+        // where two methods have almost the same signature
         //public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
         //    => throw new Exception($"ListPresentation {NotSupportedIn10}. Use Header.Presentation");
 

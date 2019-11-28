@@ -147,7 +147,9 @@
     <None Include="namespaces\ToSic.Eav\Eav.LookUp.md" />
     <None Include="namespaces\ToSic.Eav\Eav.Metadata.md" />
     <None Include="namespaces\ToSic.Eav\Eav.Security.md" />
+    <None Include="namespaces\ToSic.Sxc\Dnn\ApiController.App.md" />
     <None Include="namespaces\ToSic.Sxc\Dnn\RazorComponent.App.md" />
+    <None Include="namespaces\ToSic.Sxc\Dnn\ApiController.Data.md" />
     <None Include="namespaces\ToSic.Sxc\Dnn\RazorComponent.md" />
     <None Include="namespaces\ToSic.Sxc\Dnn\RazorComponent.Data.md" />
     <None Include="namespaces\ToSic.Sxc\Sxc.Adam.md" />
@@ -255,10 +257,12 @@
     <None Include="specs\style-guides\style-guide-2020.md" />
     <None Include="specs\style-guides\style-guides.md" />
     <None Include="specs\toc.md" />
+    <None Include="toc.md" />
     <None Include="wiki\source-material\diagrams-and-illustrations\2sxc and DNN mockups.bmpr" />
     <None Include="wiki\source-material\List of JavaScript Actions.xlsx" />
     <None Include="wiki\_footer.md" />
     <None Include="wiki\_sidebar.md" />
+    <None Include="xrefmap.yml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
