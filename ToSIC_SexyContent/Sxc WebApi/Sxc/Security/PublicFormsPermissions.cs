@@ -3,7 +3,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.WebApi;
 
-namespace ToSic.SexyContent.WebApi.Permissions
+namespace ToSic.Sxc.Security
 {
     internal static class PublicFormsPermissions
     {

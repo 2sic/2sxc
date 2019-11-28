@@ -5,7 +5,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Blocks;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.SexyContent.WebApi.Permissions
+namespace ToSic.Sxc.Security
 {
     internal class MultiPermissionsItems: MultiPermissionsApp
     {

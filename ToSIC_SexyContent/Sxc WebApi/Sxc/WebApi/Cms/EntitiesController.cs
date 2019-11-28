@@ -11,8 +11,9 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Security;
 using ToSic.Sxc.SxcTemp;
 using ToSic.Sxc.WebApi;
 using Guid = System.Guid;
@@ -57,7 +58,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             // before we start, we have to convert the indexes into something more useful, because
             // otherwise in content-list scenarios we don't have the type
             var appForSecurityChecks = GetApp.LightWithoutData(new DnnTenant(PortalSettings), SystemRuntime.ZoneIdOfApp(appId), appId, Log);
-            items = new SaveHelpers.ContentGroupList(CmsBlock, Log).ConvertListIndexToId(items, appForSecurityChecks);
+            items = new ContentGroupList(CmsBlock, Log).ConvertListIndexToId(items, appForSecurityChecks);
 
             // to do full security check, we'll have to see what content-type is requested
             var permCheck = new MultiPermissionsTypes(CmsBlock, appId, items, Log);
@@ -99,7 +100,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var appRead = new AppRuntime(appId, Log);
             #region check if it's an update, and do more security checks - shared with UiController.Save
             // basic permission checks
-            var permCheck = new SaveHelpers.Security(CmsBlock, Log)
+            var permCheck = new Security(CmsBlock, Log)
                 .DoPreSaveSecurityCheck(appId, items);
 
             var foundItems = items.Where(i => i.EntityId != 0 && i.EntityGuid != Guid.Empty)
@@ -111,7 +112,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
                 throw exception;
             #endregion
 
-            return new SaveHelpers.DnnPublishing(CmsBlock, Log)
+            return new DnnPublishing(CmsBlock, Log)
                 .SaveWithinDnnPagePublishing(appId, items, partOfPage,
                     forceSaveAsDraft => SaveOldFormatKeepTillReplaced(appId, items, partOfPage, forceSaveAsDraft),
                     permCheck);

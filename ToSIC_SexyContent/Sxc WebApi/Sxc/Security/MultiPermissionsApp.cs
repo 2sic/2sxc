@@ -14,7 +14,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.SexyContent.WebApi.Permissions
+namespace ToSic.Sxc.Security
 {
     internal class MultiPermissionsApp: MultiPermissionsBase
     {

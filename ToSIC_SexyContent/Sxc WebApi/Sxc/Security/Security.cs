@@ -3,10 +3,10 @@ using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.WebApi;
 
-namespace ToSic.SexyContent.WebApi.SaveHelpers
+namespace ToSic.Sxc.Security
 {
     internal class Security:SaveHelperBase
     {

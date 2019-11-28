@@ -10,7 +10,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor.Helpers;
-using ToSic.SexyContent.WebApi.Permissions;
+using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi;
 using SysConf = ToSic.Eav.Configuration;
 using Feats = ToSic.Eav.Configuration.Features;

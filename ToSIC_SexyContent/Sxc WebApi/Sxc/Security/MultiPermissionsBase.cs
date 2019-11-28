@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 
-namespace ToSic.SexyContent.WebApi.Permissions
+namespace ToSic.Sxc.Security
 {
     /// <summary>
     /// A permission checker which is initialized with various items which must be checked

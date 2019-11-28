@@ -2,7 +2,7 @@
 using System.Web.Http;
 using ToSic.Eav.Security.Permissions;
 
-namespace ToSic.SexyContent.WebApi.Permissions
+namespace ToSic.Sxc.Security
 {
     internal interface IMultiPermissionCheck
     {

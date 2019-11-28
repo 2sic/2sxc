@@ -117,12 +117,11 @@
     <Compile Include="Sxc\Security\MultiPermissionsItems.cs" />
     <Compile Include="Sxc\Security\PermissionCheckWithEnsure.cs" />
     <Compile Include="Sxc\Security\PublicFormsPermissions.cs" />
-    <Compile Include="Sxc\Security\ReuseApp.cs" />
     <Compile Include="Sxc\WebApi\Routing\RouteParts.cs" />
-    <Compile Include="SaveHelpers\ContentGroupList.cs" />
-    <Compile Include="SaveHelpers\DnnPublishing.cs" />
-    <Compile Include="SaveHelpers\SaveHelperBase.cs" />
-    <Compile Include="SaveHelpers\Security.cs" />
+    <Compile Include="Sxc\WebApi\ContentGroupList.cs" />
+    <Compile Include="Sxc\Dnn\DnnPublishing.cs" />
+    <Compile Include="Sxc\WebApi\SaveHelperBase.cs" />
+    <Compile Include="Sxc\Security\Security.cs" />
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController_IsAlive.cs" />
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController_App.cs" />
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController_Help.cs" />

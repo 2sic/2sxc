@@ -10,6 +10,8 @@ using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Security;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
@@ -47,7 +49,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
             // basic permission checks
-            var permCheck = new SaveHelpers.Security(CmsBlock, Log)
+            var permCheck = new Security(CmsBlock, Log)
                 .DoPreSaveSecurityCheck(appId, package.Items);
 
             var foundItems = package.Items.Where(i => i.EntityId != 0 && i.EntityGuid != Guid.Empty)
@@ -94,7 +96,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
 
             Log.Add("items to save generated, all data tests passed");
 
-            return new SaveHelpers.DnnPublishing(CmsBlock, Log)
+            return new DnnPublishing(CmsBlock, Log)
                 .SaveWithinDnnPagePublishing(appId, items, partOfPage,
                     forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);

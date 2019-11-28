@@ -6,7 +6,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
-namespace ToSic.SexyContent.WebApi.Permissions
+namespace ToSic.Sxc.Security
 {
     internal class MultiPermissionsTypes: MultiPermissionsApp
     {

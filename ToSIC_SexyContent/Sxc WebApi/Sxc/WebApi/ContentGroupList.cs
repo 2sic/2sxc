@@ -11,7 +11,7 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.SexyContent.WebApi.SaveHelpers
+namespace ToSic.Sxc.WebApi
 {
     internal class ContentGroupList: SaveHelperBase
     {
