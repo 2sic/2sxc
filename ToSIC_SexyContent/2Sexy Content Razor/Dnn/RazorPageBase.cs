@@ -3,7 +3,6 @@ using System.Web.Hosting;
 using System.Web.WebPages;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Dnn.Web;
 using File = System.IO.File;
 
 namespace ToSic.Sxc.Dnn
@@ -18,9 +17,9 @@ namespace ToSic.Sxc.Dnn
     {
         public IHtmlHelper Html { get; internal set; }
 
-        [PrivateApi]
-        // todo: see if we can drop this, I believe it's also attached to the DynCodeHelper
-        protected internal Blocks.ICmsBlock Sexy { get; set; }
+        // 2019-11-28 2dm: see if we can drop this, I believe it's also attached to the DynCodeHelper
+        //[PrivateApi]
+        //protected internal Blocks.ICmsBlock Sexy { get; set; }
         [PrivateApi]
         protected internal DynamicCodeHelper DynCodeHelper { get; set; }
 
@@ -41,7 +40,7 @@ namespace ToSic.Sxc.Dnn
 
             // Forward the context
             Html = typedParent.Html;
-            Sexy = typedParent.Sexy;
+            //Sexy = typedParent.Sexy;
             DynCodeHelper = typedParent.DynCodeHelper;
         }
 

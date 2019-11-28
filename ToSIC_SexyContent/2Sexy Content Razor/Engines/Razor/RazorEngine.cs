@@ -12,10 +12,9 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
-using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Search;
 
 // ReSharper disable once CheckNamespace
@@ -30,7 +29,7 @@ namespace ToSic.Sxc.Engines
     public class RazorEngine : EngineBase
     {
         [PrivateApi]
-        protected SexyContentWebPage Webpage { get; set; }
+        protected /*SexyContentWebPage*/ RazorPageBase  Webpage { get; set; }
 
         /// <inheritdoc />
         [PrivateApi]
@@ -120,7 +119,7 @@ namespace ToSic.Sxc.Engines
             }
         }
 
-        private void InitHelpers(SexyContentWebPage webPage)
+        private void InitHelpers(RazorPageBase webPage)
         {
             webPage.Html = new Razor.HtmlHelper();
             // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
@@ -128,7 +127,7 @@ namespace ToSic.Sxc.Engines
             //webPage.Url = new UrlHelper(InstInfo);
 
             // deprecated 2019-11-28 2dm, it's also in the CmsBlock
-            webPage.Sexy = CmsBlock;
+            // webPage.Sexy = CmsBlock;
             webPage.DynCodeHelper = new DynamicCodeHelper(CmsBlock);
 
         }
@@ -142,23 +141,25 @@ namespace ToSic.Sxc.Engines
             if (objectValue == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", TemplatePath));
 
-            Webpage = objectValue as SexyContentWebPage;
+            Webpage = objectValue as RazorPageBase;// SexyContentWebPage;
 
             if ((Webpage == null))
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from SexyContentWebPage.", TemplatePath));
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
-            Webpage.Purpose = Purpose;
+            if(Webpage is RazorTemplate rzrPage)
+                rzrPage.Purpose = Purpose;
 #pragma warning disable 618
-            Webpage.InstancePurpose = (InstancePurposes) Purpose;
+            if(Webpage is SexyContentWebPage oldPage)
+                oldPage.InstancePurpose = (InstancePurposes) Purpose;
 #pragma warning restore 618
             InitHelpers(Webpage);
         }
 
         /// <inheritdoc />
         public override void CustomizeData() 
-            => Webpage?.CustomizeData();
+            => (Webpage as IRazor)?.CustomizeData();
 
         /// <inheritdoc />
         public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate)
@@ -166,11 +167,11 @@ namespace ToSic.Sxc.Engines
             if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
 
             // call new signature
-            Webpage.CustomizeSearch(searchInfos, moduleInfo, beginDate);
+            (Webpage as RazorTemplate)?.CustomizeSearch(searchInfos, moduleInfo, beginDate);
 
             // also call old signature
             var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());
-            Webpage.CustomizeSearch(oldSignature, ((Container<ModuleInfo>) moduleInfo).Original, beginDate);
+            (Webpage as SexyContentWebPage)?.CustomizeSearch(oldSignature, ((Container<ModuleInfo>) moduleInfo).Original, beginDate);
         }
     }
 }

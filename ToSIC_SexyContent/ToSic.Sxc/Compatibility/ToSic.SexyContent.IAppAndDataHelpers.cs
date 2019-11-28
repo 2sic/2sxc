@@ -16,7 +16,7 @@ namespace ToSic.SexyContent
     /// We'll probably keep it forever, but don't add any more features. Instead, put it on the new interface
     /// This will force developers to use the new interface without breaking compatibility
     /// </remarks>
-    [Obsolete("Avoid this - it's in an old namespace. Use the ToSic.Sxc.Interfaces.IAppAndDataHelpers")]
+    [Obsolete("Avoid this - it's in an old namespace. Use the ToSic.Sxc.Web.IDynamicCode")]
     public interface IAppAndDataHelpers
     {
         IApp App { get; }

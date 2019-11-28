@@ -5,9 +5,8 @@ using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Interfaces;
-using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
-using DynamicCodeHelper = ToSic.Sxc.Dnn.Web.DynamicCodeHelper;
+using DynamicCodeHelper = ToSic.Sxc.Dnn.DynamicCodeHelper;
 using IApp = ToSic.Eav.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 

@@ -6,10 +6,9 @@ using ToSic.Eav.Environment;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
 using App = ToSic.Sxc.Apps.App;
-using DynamicCodeHelper = ToSic.Sxc.Dnn.Web.DynamicCodeHelper;
+using DynamicCodeHelper = ToSic.Sxc.Dnn.DynamicCodeHelper;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace

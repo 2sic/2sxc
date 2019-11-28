@@ -53,7 +53,7 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public IBlockDataSource Data => DynCodeHelper.Data;
 
-        public RazorPermissions Permissions => new RazorPermissions(Sexy);
+        public RazorPermissions Permissions => new RazorPermissions(DynCodeHelper.CmsBlock);
 
         #region AsDynamic in many variations
         /// <inheritdoc />

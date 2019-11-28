@@ -4,7 +4,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.SexyContent.WebApi.Dnn;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent.WebApi
 {
