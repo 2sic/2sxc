@@ -13,8 +13,6 @@ using System.Web.Http.Dispatcher;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.WebApi;
-using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.WebApi.System;
 

@@ -104,8 +104,8 @@
     <Compile Include="Sxc\Adam\WebApi\UploadResult.cs" />
     <Compile Include="Sxc\WebApi\App\AppContentEntityBuilder.cs" />
     <Compile Include="Sxc\WebApi\Routing\Route.cs" />
-    <Compile Include="Sxc\WebApi\Cms\UiController_Save.cs" />
-    <Compile Include="Sxc\WebApi\Cms\UiController_Load.cs" />
+    <Compile Include="Sxc\WebApi\Cms\EditUi\UiController_Save.cs" />
+    <Compile Include="Sxc\WebApi\Cms\EditUi\UiController_Load.cs" />
     <Compile Include="Sxc\WebApi\Helpers\ValidatorBase.cs" />
     <Compile Include="Sxc\WebApi\Cms\SaveDataValidator.cs" />
     <Compile Include="Sxc\WebApi\Routing\AppFinder.cs" />
@@ -134,8 +134,8 @@
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController_AppActions.cs" />
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController_Html.cs" />
     <Compile Include="Sxc\WebApi\Cms\SystemController_Features.cs" />
-    <Compile Include="Sxc\WebApi\Cms\AllInOne.cs" />
-    <Compile Include="Sxc\WebApi\Cms\UiController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\EditUi\AllInOne.cs" />
+    <Compile Include="Sxc\WebApi\Cms\EditUi\UiController.cs" />
     <Compile Include="Sxc\WebApi\Helpers\HttpErrors.cs" />
     <Compile Include="Sxc\WebApi\Cms\FeaturesManagementUtils.cs" />
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController.cs" />
@@ -154,7 +154,7 @@
     <Compile Include="Sxc\WebApi\Cms\ContentImportController.cs" />
     <Compile Include="Sxc\WebApi\Cms\ContentTypeController.cs" />
     <Compile Include="Sxc\WebApi\Cms\EntitiesController.cs" />
-    <Compile Include="Sxc\WebApi\Cms\EntityPickerController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\EditUi\EntityPickerController.cs" />
     <Compile Include="Sxc\WebApi\Cms\MetadataController.cs" />
     <Compile Include="Sxc\WebApi\Cms\PipelineDesignerController.cs" />
     <Compile Include="Sxc\WebApi\Helpers\Helpers.cs" />
@@ -168,7 +168,7 @@
     <Compile Include="Sxc\WebApi\Helpers\SxcWebApiExceptionHandling.cs" />
     <Compile Include="Sxc\WebApi\Cms\SystemController.cs" />
     <Compile Include="Sxc\WebApi\Cms\TemplateController.cs" />
-    <Compile Include="Sxc\WebApi\Cms\GetContentBlockDataLight.cs" />
+    <Compile Include="Sxc\WebApi\Cms\Refactor\GetContentBlockDataLight.cs" />
     <Compile Include="Sxc\WebApi\Cms\ModuleController.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -209,9 +209,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Sxc\WebApi\Cms\EditUi\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

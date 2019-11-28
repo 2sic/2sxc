@@ -4,7 +4,7 @@ using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi.Cms
 {
     public class FeaturesManagementUtils
     {

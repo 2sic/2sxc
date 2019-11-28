@@ -1,6 +1,6 @@
 ﻿using System.Web.Http.Routing;
 
-namespace ToSic.SexyContent.WebApi.AutoDetectContext
+namespace ToSic.Sxc.WebApi
 {
     internal class Route
     {
