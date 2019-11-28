@@ -5,10 +5,11 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
+using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.Sxc.Internal;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
-namespace ToSic.SexyContent.WebApi.AutoDetectContext
+namespace ToSic.Sxc.WebApi
 {
     /// <summary>
     /// This helps API calls to get the app which is currently needed
