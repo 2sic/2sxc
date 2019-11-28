@@ -1,5 +1,6 @@
 ﻿using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {

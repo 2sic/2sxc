@@ -13,6 +13,7 @@ using ToSic.SexyContent.Environment.Dnn7.ValueProviders;
 using ToSic.SexyContent.WebApi.Dnn;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {

@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
 {
     public partial class InsightsController

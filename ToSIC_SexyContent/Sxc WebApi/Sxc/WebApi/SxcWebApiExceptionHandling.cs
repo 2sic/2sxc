@@ -3,10 +3,10 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Filters;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
+using ToSic.SexyContent;
 using ToSic.SexyContent.Razor.Helpers;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi
 {
     public class SxcWebApiExceptionHandling : ExceptionFilterAttribute
     {
@@ -27,15 +27,15 @@ namespace ToSic.SexyContent.WebApi
                     var dnnContext = context.Request.Properties.ContainsKey(Constants.DnnContextKey) 
                         ? context.Request.Properties[Constants.DnnContextKey] as DnnHelper
                         : null;
-                    Environment.Dnn7.Logging.LogToDnn("2sxc-Api", "Auto-Log Exception", log, dnnContext, force: true);
+                    SexyContent.Environment.Dnn7.Logging.LogToDnn("2sxc-Api", "Auto-Log Exception", log, dnnContext, force: true);
                 }
                 else
-                    Environment.Dnn7.Logging.LogToDnn("2sxc-Api",
+                    SexyContent.Environment.Dnn7.Logging.LogToDnn("2sxc-Api",
                         "exception, but no additional internal log to add, EavLog doesn't exist", force: true);
             }
             catch
             {
-                Environment.Dnn7.Logging.TryToReportLoggingFailure("SxcWebApiExceptionHandling");
+                SexyContent.Environment.Dnn7.Logging.TryToReportLoggingFailure("SxcWebApiExceptionHandling");
             }
 
             // special manual exception maker, because otherwise IIS at runtime removes all messages

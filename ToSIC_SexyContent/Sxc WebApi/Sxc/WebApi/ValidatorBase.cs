@@ -1,9 +1,7 @@
 ﻿using System.Web.Http;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.WebApi.Errors;
 
-namespace ToSic.SexyContent.WebApi.EavApiProxies
+namespace ToSic.Sxc.WebApi
 {
     internal abstract class ValidatorBase: HasLog
     {

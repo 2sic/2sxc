@@ -14,6 +14,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.SxcTemp;
+using ToSic.Sxc.WebApi;
 using Guid = System.Guid;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies

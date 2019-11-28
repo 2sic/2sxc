@@ -16,6 +16,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.SxcTemp;
+using ToSic.Sxc.WebApi;
 using Assembly = System.Reflection.Assembly;
 using IApp = ToSic.Sxc.Apps.IApp;
 

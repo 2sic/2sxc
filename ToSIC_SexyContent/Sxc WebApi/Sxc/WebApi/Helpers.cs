@@ -8,7 +8,7 @@ using ToSic.Eav.Logging;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi
 {
     public static class Helpers
     {
@@ -86,7 +86,7 @@ namespace ToSic.SexyContent.WebApi
         {
             // this is to fix a dnn-bug, which adds a cookie to set the language
             // but always defaults to the main language, which is simply wrong. 
-            var cookies = System.Web.HttpContext.Current?.Response.Cookies;
+            var cookies = global::System.Web.HttpContext.Current?.Response.Cookies;
             cookies?.Remove("language"); // try to remove, otherwise no exception will be thrown
         }
     }

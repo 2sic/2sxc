@@ -2,7 +2,6 @@
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Dnn.WebApi;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
 {
     [SxcWebApiExceptionHandling]

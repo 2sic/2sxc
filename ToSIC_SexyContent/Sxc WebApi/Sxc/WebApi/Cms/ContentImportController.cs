@@ -4,6 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {

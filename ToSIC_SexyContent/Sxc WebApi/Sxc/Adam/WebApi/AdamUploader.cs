@@ -6,8 +6,8 @@ using System.Web.Configuration;
 using System.Web.Http;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.WebApi.Errors;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.WebApi;
 
 
 namespace ToSic.Sxc.Adam.WebApi

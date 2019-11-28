@@ -102,14 +102,14 @@
     <Compile Include="Sxc\Adam\WebApi\AdamUploader.cs" />
     <Compile Include="Sxc\Adam\WebApi\SecurityChecks.cs" />
     <Compile Include="Sxc\Adam\WebApi\UploadResult.cs" />
-    <Compile Include="SexyContent\WebApi\AppContentEntityBuilder.cs" />
+    <Compile Include="Sxc\WebApi\App\AppContentEntityBuilder.cs" />
     <Compile Include="SexyContent\WebApi\AutoDetectContext\Route.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\UiController_Save.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\UiController_Load.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\ValidatorBase.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\SaveDataValidator.cs" />
+    <Compile Include="Sxc\WebApi\Cms\UiController_Save.cs" />
+    <Compile Include="Sxc\WebApi\Cms\UiController_Load.cs" />
+    <Compile Include="Sxc\WebApi\ValidatorBase.cs" />
+    <Compile Include="Sxc\WebApi\Cms\SaveDataValidator.cs" />
     <Compile Include="SexyContent\WebApi\AutoDetectContext\AppFinder.cs" />
-    <Compile Include="SexyContent\WebApi\ImportExport\ExtensionsForIApp.cs" />
+    <Compile Include="Sxc\WebApi\ImportExport\ExtensionsForIApp.cs" />
     <Compile Include="Sxc\Permissions\IMultiPermissionCheck.cs" />
     <Compile Include="Sxc\Permissions\MultiPermissionsBase.cs" />
     <Compile Include="Sxc\Permissions\MultiPermissionsApp.cs" />
@@ -118,7 +118,7 @@
     <Compile Include="Sxc\Permissions\PermissionCheckWithEnsure.cs" />
     <Compile Include="Sxc\Permissions\PublicFormsPermissions.cs" />
     <Compile Include="Sxc\Permissions\ReuseApp.cs" />
-    <Compile Include="SexyContent\WebApi\RouteParts.cs" />
+    <Compile Include="Sxc\WebApi\RouteParts.cs" />
     <Compile Include="SaveHelpers\ContentGroupList.cs" />
     <Compile Include="SaveHelpers\DnnPublishing.cs" />
     <Compile Include="SaveHelpers\SaveHelperBase.cs" />
@@ -135,42 +135,42 @@
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController_AppActions.cs" />
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController_Html.cs" />
     <Compile Include="SexyContent\WebApi\EavApiProxies\SystemController.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\AllInOne.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\UiController.cs" />
-    <Compile Include="SexyContent\WebApi\Errors\Http.cs" />
-    <Compile Include="SexyContent\WebApi\FeaturesManagementUtils.cs" />
+    <Compile Include="Sxc\WebApi\Cms\AllInOne.cs" />
+    <Compile Include="Sxc\WebApi\Cms\UiController.cs" />
+    <Compile Include="Sxc\WebApi\HttpErrors.cs" />
+    <Compile Include="Sxc\WebApi\Cms\FeaturesManagementUtils.cs" />
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController.cs" />
-    <Compile Include="SexyContent\WebApi\SxcApiControllerBase.cs" />
-    <Compile Include="SexyContent\WebApi\WebApiLogDetails.cs" />
+    <Compile Include="Sxc\WebApi\SxcApiControllerBase.cs" />
+    <Compile Include="Sxc\WebApi\WebApiLogDetails.cs" />
     <Compile Include="Sxc\Adam\WebApi\AdamController.cs" />
-    <Compile Include="SexyContent\WebApi\AppApiControllerSelector.cs" />
-    <Compile Include="SexyContent\WebApi\AppAssetsController.cs" />
-    <Compile Include="SexyContent\WebApi\AppContentController.cs" />
-    <Compile Include="SexyContent\WebApi\AppQueryController.cs" />
-    <Compile Include="SexyContent\WebApi\ContentGroupController.cs" />
+    <Compile Include="Sxc\WebApi\AppApiControllerSelector.cs" />
+    <Compile Include="Sxc\WebApi\Cms\AppAssetsController.cs" />
+    <Compile Include="Sxc\WebApi\App\AppContentController.cs" />
+    <Compile Include="Sxc\WebApi\App\AppQueryController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\ContentGroupController.cs" />
     <Compile Include="Sxc\Dnn\WebApi\DnnApiControllerWithFixes.cs" />
     <Compile Include="SexyContent\WebApi\Dnn\HyperlinkController.cs" />
     <Compile Include="SexyContent\WebApi\Dnn\ModuleController.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\ContentExportController.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\ContentImportController.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\ContentTypeController.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\EntitiesController.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\EntityPickerController.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\MetadataController.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\PipelineDesignerController.cs" />
-    <Compile Include="SexyContent\WebApi\Helpers.cs" />
-    <Compile Include="SexyContent\WebApi\ImportExportController.cs" />
-    <Compile Include="SexyContent\WebApi\ImportExport\HttpResponseMessageHelper.cs" />
-    <Compile Include="SexyContent\WebApi\ImportExport\SxcAppForWebApi.cs" />
-    <Compile Include="SexyContent\WebApi\InstallerController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\ContentExportController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\ContentImportController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\ContentTypeController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\EntitiesController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\EntityPickerController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\MetadataController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\PipelineDesignerController.cs" />
+    <Compile Include="Sxc\WebApi\Helpers.cs" />
+    <Compile Include="Sxc\WebApi\Cms\ImportExportController.cs" />
+    <Compile Include="Sxc\WebApi\ImportExport\HttpResponseMessageHelper.cs" />
+    <Compile Include="Sxc\WebApi\ImportExport\SxcAppForWebApi.cs" />
+    <Compile Include="Sxc\WebApi\Cms\InstallerController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SexyContent\WebApi\RouteMapper.cs" />
+    <Compile Include="Sxc\WebApi\RouteMapper.cs" />
     <Compile Include="SexyContent\WebApi\SxcApiController.cs" />
-    <Compile Include="SexyContent\WebApi\SxcWebApiExceptionHandling.cs" />
-    <Compile Include="SexyContent\WebApi\SystemController.cs" />
-    <Compile Include="SexyContent\WebApi\TemplateController.cs" />
-    <Compile Include="SexyContent\ToRefactorDeliverCBDataLight\GetContentBlockDataLight.cs" />
-    <Compile Include="SexyContent\WebApi\View\ModuleController.cs" />
+    <Compile Include="Sxc\WebApi\SxcWebApiExceptionHandling.cs" />
+    <Compile Include="Sxc\WebApi\Cms\SystemController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\TemplateController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\GetContentBlockDataLight.cs" />
+    <Compile Include="Sxc\WebApi\Cms\ModuleController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">
@@ -210,7 +210,13 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="SexyContent\ToRefactorDeliverCBDataLight\" />
+    <Folder Include="SexyContent\WebApi\Errors\" />
+    <Folder Include="SexyContent\WebApi\View\" />
+    <Folder Include="Sxc\WebApi\Helpers\" />
+    <Folder Include="Sxc\WebApi\Routing\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

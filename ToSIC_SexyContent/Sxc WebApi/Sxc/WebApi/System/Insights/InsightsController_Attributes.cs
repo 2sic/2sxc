@@ -2,9 +2,7 @@
 using System.Web.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.SexyContent.WebApi.Errors;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
 {
     public partial class InsightsController

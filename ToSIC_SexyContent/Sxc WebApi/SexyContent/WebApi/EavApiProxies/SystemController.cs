@@ -8,6 +8,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.WebApi.Permissions;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {

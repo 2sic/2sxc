@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.WebApi.Errors;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.SexyContent.WebApi.Permissions
 {

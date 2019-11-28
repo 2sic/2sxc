@@ -7,6 +7,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Data;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.WebApi;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.SexyContent.WebApi

@@ -5,6 +5,7 @@ using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.WebApi.Dnn;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {

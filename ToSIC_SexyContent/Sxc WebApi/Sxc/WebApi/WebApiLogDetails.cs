@@ -1,9 +1,10 @@
 ﻿using System.Web.Http.Filters;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent.Razor.Helpers;
+using ToSic.SexyContent;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.SexyContent.Razor.Helpers;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi
 {
     public class WebApiLogDetails : ActionFilterAttribute
     {

@@ -1,4 +1,4 @@
-﻿namespace ToSic.SexyContent.WebApi
+﻿namespace ToSic.Sxc.WebApi
 {
     internal class RouteParts
     {

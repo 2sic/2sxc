@@ -11,7 +11,7 @@ using DotNetNuke.Web.Api;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.WebApi;
-using ToSic.SexyContent.WebApi.Errors;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Adam.WebApi
 {

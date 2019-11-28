@@ -10,6 +10,7 @@ using DotNetNuke.Web.Api;
 using ToSic.SexyContent.AppAssets;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.SxcTemp;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.SexyContent.WebApi
 {

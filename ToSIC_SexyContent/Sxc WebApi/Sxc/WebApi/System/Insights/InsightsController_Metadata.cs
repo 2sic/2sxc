@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
 {
     public partial class InsightsController

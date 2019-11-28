@@ -8,6 +8,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.Sxc.Adam.WebApi;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {

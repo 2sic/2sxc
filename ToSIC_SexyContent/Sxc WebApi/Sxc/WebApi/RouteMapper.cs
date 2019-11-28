@@ -1,8 +1,10 @@
-﻿using DotNetNuke.Web.Api;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Http.Dispatcher;
+using DotNetNuke.Web.Api;
+using ToSic.SexyContent;
+using ToSic.SexyContent.WebApi;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi
 {
     public class RouteMapper : IServiceRouteMapper
     {

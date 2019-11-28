@@ -3,7 +3,7 @@ using System.Web.Http;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.WebApi.Errors;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.SexyContent.WebApi.Permissions
 {

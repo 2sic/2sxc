@@ -4,7 +4,6 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources.Caches;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
 {
     public partial class InsightsController 

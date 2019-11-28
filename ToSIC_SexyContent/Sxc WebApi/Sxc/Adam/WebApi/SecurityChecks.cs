@@ -6,7 +6,7 @@ using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using JetBrains.Annotations;
 using ToSic.Eav.Security.Files;
-using ToSic.SexyContent.WebApi.Errors;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Adam.WebApi
 {

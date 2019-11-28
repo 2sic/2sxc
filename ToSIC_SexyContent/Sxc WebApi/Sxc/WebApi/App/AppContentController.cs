@@ -18,6 +18,7 @@ using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi.Permissions;
 using ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.WebApi;
 using App = ToSic.Sxc.Apps.App;
 using Factory = ToSic.Eav.Factory;
 using IEntity = ToSic.Eav.Data.IEntity;

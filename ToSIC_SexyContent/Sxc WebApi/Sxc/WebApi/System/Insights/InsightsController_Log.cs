@@ -6,7 +6,6 @@ using System.Web.Http;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System
 {
     public partial class InsightsController

@@ -1,13 +1,12 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.SexyContent.WebApi;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
-using ToSic.SexyContent.WebApi.Dnn;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.WebApi;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi
 {
     /// <summary>
     /// This class is the base class of 2sxc API access
