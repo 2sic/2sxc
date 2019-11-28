@@ -67,7 +67,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 ok = UserIsTenantAdmin()
                      || UserIsModuleAdmin()
                      || UserIsModuleEditor();
-            if (ok) GrantedBecause = ConditionType.EnvironmentGlobal;
+            if (ok) GrantedBecause = Conditions.EnvironmentGlobal;
             logWrap($"{ok} because:{GrantedBecause}");
             return ok;
         }

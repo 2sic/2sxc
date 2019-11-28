@@ -51,8 +51,8 @@ namespace ToSic.Sxc.Adam.WebApi
 
             var firstChecker = PermissionCheckers.First().Value;
             var userMayAdminSomeFiles = firstChecker.UserMay(GrantSets.WritePublished);
-            UserMayAdminSiteFiles = firstChecker.GrantedBecause == ConditionType.EnvironmentGlobal ||
-                                   firstChecker.GrantedBecause == ConditionType.EnvironmentInstance;
+            UserMayAdminSiteFiles = firstChecker.GrantedBecause == Conditions.EnvironmentGlobal ||
+                                   firstChecker.GrantedBecause == Conditions.EnvironmentInstance;
 
             UserIsRestricted = !(usePortalRoot
                 ? UserMayAdminSiteFiles
