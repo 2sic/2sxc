@@ -8,6 +8,7 @@ using ToSic.Sxc.Adam.WebApi;
 using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.WebApi;
@@ -48,7 +49,8 @@ namespace ToSic.SexyContent.WebApi
         }
         #endregion
 
-        private DynamicCodeHelper DynCodeHelpers { get; set; }
+        [PrivateApi]
+        protected DynamicCodeHelper DynCodeHelpers { get; private set; }
 
         public IDnnContext Dnn => DynCodeHelpers.Dnn;
 
@@ -88,10 +90,6 @@ namespace ToSic.SexyContent.WebApi
 
         /// <inheritdoc />
         public dynamic AsDynamic(dynamic dynamicEntity) =>  DynCodeHelpers.AsDynamic(dynamicEntity);
-
-        //// todo: only in "old" controller, not in new one
-        ///// <inheritdoc />
-        //public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  DynCodeHelpers.AsDynamic(entityKeyValuePair.Value);
 
         /// <inheritdoc />
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  DynCodeHelpers.AsDynamic(stream.List);
@@ -133,7 +131,7 @@ namespace ToSic.SexyContent.WebApi
 
      //   #endregion
 
-        #region Content, Presentation & List
+        #region Content, Presentation & List - probably delete afterwards
      //   /// <summary>
      //   /// content item of the current view
      //   /// </summary>
