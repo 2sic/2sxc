@@ -1,40 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using DotNetNuke.Entities.Modules;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.Eav.LookUp;
-using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Search;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Engines.Razor;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent.Razor
+
+namespace ToSic.Sxc.Dnn
 {
     /// <summary>
     /// The core page type for delivering a 2sxc page
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
-    public abstract class SexyContentWebPage : RazorPageBase, IRazor
+    [PrivateApi("still WIP")]
+    public abstract class RazorPage : RazorPageBase, IRazor
     {
-        #region Helpers
-
-        public ILinkHelper Link => DnnAppAndDataHelpers.Link;
-
-
-        #endregion
 
         #region AppAndDataHelpers implementation
+
+        /// <inheritdoc />
+        public ILinkHelper Link => DnnAppAndDataHelpers.Link;
 
         /// <summary>
         /// Helper commands to enable in-page editing functionality
@@ -117,22 +111,24 @@ namespace ToSic.SexyContent.Razor
         #region Content, Header, etc. and List
         public dynamic Content => DnnAppAndDataHelpers.Content;
 
-        [Obsolete("use Content.Presentation instead")]
-        public dynamic Presentation => DnnAppAndDataHelpers.Content?.Presentation;
+        //[Obsolete("use Content.Presentation instead")]
+        //public dynamic Presentation => DnnAppAndDataHelpers.Content?.Presentation;
 
         public dynamic Header => DnnAppAndDataHelpers.Header;
 
-        [Obsolete("Use Header instead")]
-        public dynamic ListContent => DnnAppAndDataHelpers.Header;
+        //[Obsolete("Use Header instead")]
+        //public dynamic ListContent => DnnAppAndDataHelpers.Header;
 
-        [Obsolete("Use Header.Presentation instead")]
-        public dynamic ListPresentation => DnnAppAndDataHelpers.Header?.Presentation;
+        //[Obsolete("Use Header.Presentation instead")]
+        //public dynamic ListPresentation => DnnAppAndDataHelpers.Header?.Presentation;
 
-        [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
-        public List<Element> List => DnnAppAndDataHelpers.List;
+        //[Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
+        //public List<Element> List => DnnAppAndDataHelpers.List;
         #endregion
 
         #endregion
+
+
 
 
         /// <inheritdoc />
@@ -146,39 +142,27 @@ namespace ToSic.SexyContent.Razor
         {
         }
 
-        [PrivateApi("this is the old signature, should still be supported")]
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
-        {
-        }
+        //[PrivateApi("this is the old signature, should still be supported")]
+        //public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
+        //{
+        //}
 
         public Purpose Purpose { get; internal set; }
 
-        [Obsolete("left for compatibility, use Purpose instead")]
-        public InstancePurposes InstancePurpose { get; internal set; }
+        //[Obsolete("left for compatibility, use Purpose instead")]
+        //public InstancePurposes InstancePurpose { get; internal set; }
 
 
         #region Adam 
 
-        /// <summary>
-        /// Provides an Adam instance for this item and field
-        /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
-        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
-        /// <returns>An Adam object for navigating the assets</returns>
+        /// <inheritdoc />
         public IFolder AsAdam(IDynamicEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
 
-        /// <summary>
-        /// Provides an Adam instance for this item and field
-        /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
-        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
-        /// <returns>An Adam object for navigating the assets</returns>
+        /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
         #endregion
 
     }
-
-
 }

@@ -183,7 +183,7 @@
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\Settings.cs" />
     <Compile Include="SexyContent\SexyContentException.cs" />
-    <Compile Include="SexyContent\SxcHelper.cs" />
+    <Compile Include="Code\SxcHelper.cs" />
     <Compile Include="Blocks\CmsBlock.cs" />
     <Compile Include="Blocks\CmsBlock_Render.cs" />
     <Compile Include="Blocks\CmsBlock_Template.cs" />

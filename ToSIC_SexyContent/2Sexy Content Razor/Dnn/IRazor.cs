@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.Sxc.Blocks;

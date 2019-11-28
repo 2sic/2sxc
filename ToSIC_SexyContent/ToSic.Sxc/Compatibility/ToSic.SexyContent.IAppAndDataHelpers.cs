@@ -6,6 +6,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent

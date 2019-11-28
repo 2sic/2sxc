@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Apps
     /// <summary>
     /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
     /// </summary>
-    public class App : Eav.Apps.App, IApp
+    public class App : Eav.Apps.App, ToSic.Sxc.Apps.IApp
     {
         #region Dynamic Properties: Configuration, Settings, Resources
         public AppConfiguration Configuration => _appConfig

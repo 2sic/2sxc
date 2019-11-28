@@ -1,8 +1,10 @@
-﻿using ToSic.SexyContent.Serializers;
+﻿using ToSic.Eav.Documentation;
+using ToSic.SexyContent.Serializers;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Code
 {
+    [PrivateApi("this is an internal API, not sure if location is final.")]
 	public class SxcHelper
 	{
 		public readonly ICmsBlock Cms;
