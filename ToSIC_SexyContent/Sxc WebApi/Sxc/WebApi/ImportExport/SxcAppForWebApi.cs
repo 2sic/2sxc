@@ -4,7 +4,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.SxcTemp;
 
-namespace ToSic.SexyContent.WebApi.ImportExport
+namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class SxcAppForWebApi
     {

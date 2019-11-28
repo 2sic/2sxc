@@ -5,12 +5,12 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Data;
+using ToSic.SexyContent;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.WebApi;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi.Cms
 {
 	[SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]

@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi
             IEnumerable<IGrouping<string, BundleWithHeader<T>>> groupItems)
         {
             var wrapLog = Log.Call(nameof(UpdateList), $"{appId}");
-            var app = new App(new DnnTenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
+            var app = new Apps.App(new DnnTenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
                 ConfigurationProvider.Build(CmsInstance, true), false, Log);
 
             foreach (var entitySets in groupItems)
@@ -119,7 +119,7 @@ namespace ToSic.Sxc.WebApi
                 }
 
                 var contentGroup = GetBlockConfig(app, identifier.Group.Guid);//  app.BlocksManager.GetBlockConfig(identifier.Group.Guid);
-                var contentTypeStaticName = (contentGroup.View as Sxc.Blocks.View)?.GetTypeStaticName(identifier.Group.Part) ?? "";
+                var contentTypeStaticName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Group.Part) ?? "";
 
                 // if there is no content-type for this, then skip it (don't deliver anything)
                 if (contentTypeStaticName == "")

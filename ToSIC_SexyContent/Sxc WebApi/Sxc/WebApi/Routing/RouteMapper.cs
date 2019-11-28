@@ -2,13 +2,17 @@
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent;
-using ToSic.SexyContent.WebApi;
+using ToSic.Sxc.Adam.WebApi;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.WebApi.App;
+using ToSic.Sxc.WebApi.Cms;
+using ToSic.Sxc.WebApi.System;
 using ModuleController = ToSic.Sxc.WebApi.Cms.ModuleController;
 using UiController = ToSic.Sxc.WebApi.Cms.UiController;
 
 namespace ToSic.Sxc.WebApi
 {
+    // ReSharper disable once UnusedMember.Global
     public class RouteMapper : IServiceRouteMapper
     {
 
@@ -23,14 +27,35 @@ namespace ToSic.Sxc.WebApi
             // app-query    will try to request a query
             // app-api      will call custom c# web-apis of a specific app
 
-            var stdNsWebApi = new[] {"ToSic.SexyContent.WebApi"};
-            var stdNsApps = new[] {"ToSic.SexyContent.Apps"};
-            var stdNsAdam = new[] {"ToSic.Sxc.Adam.WebApi"};
+            var stdNsWebApi = new[]
+            {
+                /*"ToSic.SexyContent.WebApi",*/
+                typeof(TemplateController).Namespace, 
+                typeof(AppContentController).Namespace
+            };
+            var stdNsApps = new[]
+            {
+                //"ToSic.SexyContent.Apps",
+                typeof(AppContentController).Namespace
+            };
+            var stdNsAdam = new[]
+            {
+                //"ToSic.Sxc.Adam.WebApi",
+                typeof(AdamController).Namespace
+            };
 
             #region EAV and View-routes
             // 2019-11-28 moved namespace for this stuff
-            mapRouteManager.MapHttpRoute("2sxc", "EAV", "EAV/{controller}/{action}", new[] { /*"ToSic.SexyContent.WebApi.EavApiProxies"*/ typeof(UiController).Namespace });
-            mapRouteManager.MapHttpRoute("2sxc", "View", "view/{controller}/{action}", new[] { /*"ToSic.SexyContent.WebApi.View"*/ typeof(ModuleController).Namespace });
+            mapRouteManager.MapHttpRoute("2sxc", "EAV", "EAV/{controller}/{action}", new[]
+            {
+                //"ToSic.SexyContent.WebApi.EavApiProxies"
+                typeof(UiController).Namespace
+            });
+            mapRouteManager.MapHttpRoute("2sxc", "View", "view/{controller}/{action}", new[]
+            {
+                //"ToSic.SexyContent.WebApi.View"
+                typeof(ModuleController).Namespace
+            });
             #endregion
 
             #region old API routes before 08.10
@@ -104,9 +129,17 @@ namespace ToSic.Sxc.WebApi
             // mapRouteManager.MapHttpRoute("2sxc", "app", "app/{controller}/{action}", stdNsWebApi);
             // 2017-02-17 2dm: new alternate route to replace the "app" route, because I want app to be reserved!
             mapRouteManager.MapHttpRoute("2sxc", "app-sys", "app-sys/{controller}/{action}", stdNsWebApi);  
-			mapRouteManager.MapHttpRoute("2sxc", "dnn", "dnn/{controller}/{action}", new[] { /*"ToSic.SexyContent.WebApi.Dnn"*/ typeof(HyperlinkController).Namespace });
+			mapRouteManager.MapHttpRoute("2sxc", "dnn", "dnn/{controller}/{action}", new[]
+            {
+                //"ToSic.SexyContent.WebApi.Dnn",
+                typeof(HyperlinkController).Namespace
+            });
             mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "insights", "sys/insights/{action}", new { controller = "Insights", action = "help"}, new[] {"ToSic.Sxc.WebApi.System"});
+            mapRouteManager.MapHttpRoute("2sxc", "insights", "sys/insights/{action}", new { controller = "Insights", action = "help"}, new[]
+            {
+                //"ToSic.Sxc.WebApi.System",
+                typeof(InsightsController).Namespace
+            });
             #endregion
 
             // Add custom service locator into the chain of service-locators

@@ -1,5 +1,4 @@
 ﻿using System.Web.Http.Controllers;
-using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.Sxc.WebApi.System

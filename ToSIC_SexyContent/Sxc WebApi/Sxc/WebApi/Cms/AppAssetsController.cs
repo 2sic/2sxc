@@ -7,12 +7,12 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.SexyContent;
 using ToSic.SexyContent.AppAssets;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.SxcTemp;
-using ToSic.Sxc.WebApi;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi.Cms
 {
     /// <summary>
     /// This one supplies portal-wide (or cross-portal) settings / configuration
@@ -133,12 +133,12 @@ namespace ToSic.SexyContent.WebApi
             if (global && !allowFullAccess)
                 throw new NotSupportedException("only host user may access global files");
 
-            var appPath = Internal.TemplateHelpers.GetTemplatePathRoot(global
+            var appPath = SexyContent.Internal.TemplateHelpers.GetTemplatePathRoot(global
                 ? Settings.TemplateLocations.HostFileSystem
                 : Settings.TemplateLocations.PortalFileSystem
                 , thisApp); // get root in global system
 
-            appPath = System.Web.Hosting.HostingEnvironment.MapPath(appPath);
+            appPath = global::System.Web.Hosting.HostingEnvironment.MapPath(appPath);
             return appPath;
         }
 

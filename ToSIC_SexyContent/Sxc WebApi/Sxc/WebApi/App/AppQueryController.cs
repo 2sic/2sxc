@@ -5,17 +5,14 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
-using ToSic.Sxc;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.WebApi;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi.App
 {
     /// <inheritdoc />
     /// <summary>
@@ -46,7 +43,7 @@ namespace ToSic.SexyContent.WebApi
         {
             Log.Add($"public query path:{appPath}, name:{name}");
             var appIdentity = AppFinder.GetCurrentAppIdFromPath(appPath);
-            var queryApp = new App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId,
+            var queryApp = new Apps.App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId,
                 ConfigurationProvider.Build(false, false), false, Log);
 
             // now just run the default query check and serializer

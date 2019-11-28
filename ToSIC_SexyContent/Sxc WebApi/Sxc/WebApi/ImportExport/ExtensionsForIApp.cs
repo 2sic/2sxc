@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Sxc.Apps;
 
-namespace ToSic.SexyContent.WebApi.ImportExport
+namespace ToSic.Sxc.WebApi.ImportExport
 {
     internal static class ExtensionsForIApp
     {

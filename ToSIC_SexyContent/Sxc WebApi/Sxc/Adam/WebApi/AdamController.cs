@@ -10,7 +10,6 @@ using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Adam.WebApi

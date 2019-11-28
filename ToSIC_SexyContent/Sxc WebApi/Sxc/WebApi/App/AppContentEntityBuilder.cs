@@ -7,7 +7,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Logging;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi.App
 {
     internal class AppContentEntityBuilder: HasLog
     {

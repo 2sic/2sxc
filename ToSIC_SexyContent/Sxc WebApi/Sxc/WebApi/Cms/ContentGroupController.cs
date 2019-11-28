@@ -9,9 +9,8 @@ using ToSic.Eav.Apps.Environment;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.WebApi;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi.Cms
 {
     [SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]

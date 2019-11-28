@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace ToSic.SexyContent.WebApi.ImportExport
+namespace ToSic.Sxc.WebApi.ImportExport
 {
     public static class HttpResponseMessageHelper
     {

@@ -12,16 +12,15 @@ using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
+using ToSic.SexyContent;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.SxcTemp;
-using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Cms;
 using Assembly = System.Reflection.Assembly;
 using IApp = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi.Cms
 {
     /// <summary>
     /// This one supplies portal-wide (or cross-portal) settings / configuration
