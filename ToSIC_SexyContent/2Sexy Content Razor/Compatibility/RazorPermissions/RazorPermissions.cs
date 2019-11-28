@@ -1,8 +1,10 @@
 ﻿using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Engines.Razor
+namespace ToSic.Sxc.Compatibility.RazorPermissions
 {
-    // temp - should be elsewhere, but quickly need it so Permissions-object still works after refactoring
+    /// <summary>
+    /// This is a compatibily leftover from old code - new code uses Edit.Enabled
+    /// </summary>
     public class RazorPermissions
     {
         protected readonly ICmsBlock CmsInstance;
