@@ -432,14 +432,14 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
-                      <a href="ToSic.Eav.Security.Permissions.html" title="ToSic.Eav.Security.Permissions" class="">ToSic.Eav.Security.Permissions</a>
+                      <a href="ToSic.Eav.Security.html" title="ToSic.Eav.Security" class="">ToSic.Eav.Security</a>
                         
                         <ul class="nav level2">
                           <li class="">
-                            <a href="ToSic.Eav.Security.Permissions.IHasPermissions.html" title="IHasPermissions" class="">IHasPermissions</a>
+                            <a href="ToSic.Eav.Security.IHasPermissions.html" title="IHasPermissions" class="">IHasPermissions</a>
                           </li>
                           <li class="">
-                            <a href="ToSic.Eav.Security.Permissions.Permission.html" title="Permission" class="">Permission</a>
+                            <a href="ToSic.Eav.Security.Permission.html" title="Permission" class="">Permission</a>
                           </li>
                         </ul>  </li>
                     <li class="">
@@ -511,7 +511,7 @@
                             <a href="ToSic.Sxc.Dnn.IHtmlHelper.html" title="IHtmlHelper" class="">IHtmlHelper</a>
                           </li>
                           <li class="">
-                            <a href="ToSic.Sxc.Dnn.IRazor.html" title="IRazor" class="">IRazor</a>
+                            <a href="ToSic.Sxc.Dnn.IRazorComponent.html" title="IRazorComponent" class="">IRazorComponent</a>
                           </li>
                           <li class="active">
                             <a href="ToSic.Sxc.Dnn.RazorComponent.html" title="RazorComponent" class="active">RazorComponent</a>
@@ -583,7 +583,7 @@
   
   <h1 id="ToSic_Sxc_Dnn_RazorComponent" data-uid="ToSic.Sxc.Dnn.RazorComponent" class="text-break">Class RazorComponent
   </h1>
-  <div class="markdown level0 summary"><p>The thing bind Razor-Components in 2sxc 10+ <br>
+  <div class="markdown level0 summary"><p>The base class for Razor-Components in 2sxc 10+ <br>
 Provides context infos like the Dnn object, helpers like Edit and much more. <br></p>
 </div>
   <div class="markdown level0 conceptual"><p>To use this, create <code>cshtml</code> files like <code>_person-list.cshtml</code> in your app-folder. 
@@ -604,7 +604,7 @@ We recommend to use this from now on. To do it, your code file must begin with a
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="ToSic.Sxc.Dnn.IRazor.html">IRazor</a></div>
+    <div><a class="xref" href="ToSic.Sxc.Dnn.IRazorComponent.html">IRazorComponent</a></div>
     <div><a class="xref" href="ToSic.Sxc.Dnn.IDynamicCode.html">IDynamicCode</a></div>
     <div><a class="xref" href="ToSic.Sxc.Web.IDynamicCode.html">IDynamicCode</a></div>
   </div>
@@ -612,7 +612,7 @@ We recommend to use this from now on. To do it, your code file must begin with a
   <h6><strong>Assembly</strong>: ToSic.SexyContent.Razor.dll</h6>
   <h5 id="ToSic_Sxc_Dnn_RazorComponent_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class RazorComponent : RazorComponentBase, ITemplateFile, IRazor, IDynamicCode, IDynamicCode, IAppAndDataHelpers, ISharedCodeBuilder</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class RazorComponent : RazorComponentBase, ITemplateFile, IRazorComponent, IDynamicCode, IDynamicCode, IAppAndDataHelpers, ISharedCodeBuilder</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -621,13 +621,13 @@ We recommend to use this from now on. To do it, your code file must begin with a
     <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Sxc/Dnn/RazorComponent.App.md/#L2">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L44">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L43">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_App_" data-uid="ToSic.Sxc.Dnn.RazorComponent.App*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_App" data-uid="ToSic.Sxc.Dnn.RazorComponent.App">App</h4>
   <div class="markdown level1 summary"><p>A fully prepared <a class="xref" href="ToSic.Sxc.Apps.IApp.html">IApp</a> object letting you access all the data and queries in the current app. </p>
 </div>
-  <div class="markdown level1 conceptual"><p>You&#39;ll usually want to access the data, like <code>App.Data[&quot;Categories&quot;]</code> or the queries <code>App.Query[&quot;AllPosts&quot;]</code>.<br>Often used like this: <code>AsDynamic(App.Data[&quot;Categories&quot;])</code></p>
+  <div class="markdown level1 conceptual"><p>You&#39;ll usually want to access the data, like <code>App.Data[&quot;Categories&quot;]</code> or the queries <code>App.Query[&quot;AllPosts&quot;]</code>.  </p>
 <pre><code class="lang-cs">foreach(var cat in AsDynamic(App.Data[&quot;Categories&quot;])) {
     @cat.Name
 }
@@ -657,7 +657,7 @@ We recommend to use this from now on. To do it, your code file must begin with a
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_Content.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.Content%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L88">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L85">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_Content_" data-uid="ToSic.Sxc.Dnn.RazorComponent.Content*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_Content" data-uid="ToSic.Sxc.Dnn.RazorComponent.Content">Content</h4>
@@ -692,13 +692,13 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Sxc/Dnn/RazorComponent.Data.md/#L2">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L47">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L46">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_Data_" data-uid="ToSic.Sxc.Dnn.RazorComponent.Data*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_Data" data-uid="ToSic.Sxc.Dnn.RazorComponent.Data">Data</h4>
   <div class="markdown level1 summary"><p>The data prepared for the current Code. Usually user data which was manually added to the instance, but can also be a query.</p>
 </div>
-  <div class="markdown level1 conceptual"><p>You&#39;ll usually want to access the &quot;Default&quot; stream like <code>Data[&quot;Default&quot;]</code>.<br>Often used like this: <code>AsDynamic(Data[&quot;Default&quot;])</code></p>
+  <div class="markdown level1 conceptual"><p>You&#39;ll usually want to access the &quot;Default&quot; stream like <code>Data[&quot;Default&quot;]</code>.  </p>
 <pre><code class="lang-cs">foreach(var person in AsDynamic(Data[&quot;Default&quot;])) {
     @person.Name
 }
@@ -728,7 +728,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_Dnn.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.Dnn%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L37">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L36">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_Dnn_" data-uid="ToSic.Sxc.Dnn.RazorComponent.Dnn*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_Dnn" data-uid="ToSic.Sxc.Dnn.RazorComponent.Dnn">Dnn</h4>
@@ -760,7 +760,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_Edit.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.Edit%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L34">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L33">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_Edit_" data-uid="ToSic.Sxc.Dnn.RazorComponent.Edit*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_Edit" data-uid="ToSic.Sxc.Dnn.RazorComponent.Edit">Edit</h4>
@@ -793,7 +793,7 @@ Use it to check if edit is enabled, generate context-json infos and provide tool
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_Header.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.Header%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L91">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L88">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_Header_" data-uid="ToSic.Sxc.Dnn.RazorComponent.Header*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_Header" data-uid="ToSic.Sxc.Dnn.RazorComponent.Header">Header</h4>
@@ -830,7 +830,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_Link.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.Link%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L31">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L30">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_Link_" data-uid="ToSic.Sxc.Dnn.RazorComponent.Link*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_Link" data-uid="ToSic.Sxc.Dnn.RazorComponent.Link">Link</h4>
@@ -862,7 +862,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_Purpose.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.Purpose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L111">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L108">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_Purpose_" data-uid="ToSic.Sxc.Dnn.RazorComponent.Purpose*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_Purpose" data-uid="ToSic.Sxc.Dnn.RazorComponent.Purpose">Purpose</h4>
@@ -896,7 +896,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_AsAdam_ToSic_Eav_Data_IEntity_System_String_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Eav.Data.IEntity%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L123">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L120">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_AsAdam_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsAdam*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_AsAdam_ToSic_Eav_Data_IEntity_System_String_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Eav.Data.IEntity,System.String)">AsAdam(IEntity, String)</h4>
@@ -952,7 +952,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_AsAdam_ToSic_Sxc_Data_IDynamicEntity_System_String_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Sxc.Data.IDynamicEntity%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L119">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L116">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_AsAdam_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsAdam*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_AsAdam_ToSic_Sxc_Data_IDynamicEntity_System_String_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Sxc.Data.IDynamicEntity,System.String)">AsAdam(IDynamicEntity, String)</h4>
@@ -1008,7 +1008,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_AsDynamic_System_Collections_Generic_IEnumerable_ToSic_Eav_Data_IEntity__.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Collections.Generic.IEnumerable%7BToSic.Eav.Data.IEntity%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L67">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L64">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_AsDynamic_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsDynamic*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_AsDynamic_System_Collections_Generic_IEnumerable_ToSic_Eav_Data_IEntity__" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Data.IEntity})">AsDynamic(IEnumerable&lt;IEntity&gt;)</h4>
@@ -1057,7 +1057,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_AsDynamic_System_Object_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L58">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L55">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_AsDynamic_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsDynamic*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_AsDynamic_System_Object_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Object)">AsDynamic(Object)</h4>
@@ -1107,7 +1107,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_AsDynamic_ToSic_Eav_Data_IEntity_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.Data.IEntity)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L55">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L52">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_AsDynamic_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsDynamic*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_AsDynamic_ToSic_Eav_Data_IEntity_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.Data.IEntity)">AsDynamic(IEntity)</h4>
@@ -1157,7 +1157,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_AsDynamic_ToSic_Eav_DataSources_IDataStream_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.DataSources.IDataStream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L61">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L58">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_AsDynamic_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsDynamic*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_AsDynamic_ToSic_Eav_DataSources_IDataStream_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.DataSources.IDataStream)">AsDynamic(IDataStream)</h4>
@@ -1207,7 +1207,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_AsEntity_System_Object_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.AsEntity(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L64">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L61">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_AsEntity_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsEntity*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_AsEntity_System_Object_" data-uid="ToSic.Sxc.Dnn.RazorComponent.AsEntity(System.Object)">AsEntity(Object)</h4>
@@ -1257,7 +1257,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_LookUp_ITokenListFiller_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.CreateSource%60%601(ToSic.Eav.DataSources.IDataSource%2CToSic.Eav.LookUp.ITokenListFiller)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L76">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L73">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_CreateSource_" data-uid="ToSic.Sxc.Dnn.RazorComponent.CreateSource*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_LookUp_ITokenListFiller_" data-uid="ToSic.Sxc.Dnn.RazorComponent.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.LookUp.ITokenListFiller)">CreateSource&lt;T&gt;(IDataSource, ITokenListFiller)</h4>
@@ -1330,7 +1330,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_CreateSource__1_ToSic_Eav_DataSources_IDataStream_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.CreateSource%60%601(ToSic.Eav.DataSources.IDataStream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L81">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L78">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_CreateSource_" data-uid="ToSic.Sxc.Dnn.RazorComponent.CreateSource*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_CreateSource__1_ToSic_Eav_DataSources_IDataStream_" data-uid="ToSic.Sxc.Dnn.RazorComponent.CreateSource``1(ToSic.Eav.DataSources.IDataStream)">CreateSource&lt;T&gt;(IDataStream)</h4>
@@ -1397,7 +1397,7 @@ To tell if it&apos;s the demo/default item, use <a class="xref" href="ToSic.Sxc.
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_CustomizeData.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.CustomizeData%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L100">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L97">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_CustomizeData_" data-uid="ToSic.Sxc.Dnn.RazorComponent.CustomizeData*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_CustomizeData" data-uid="ToSic.Sxc.Dnn.RazorComponent.CustomizeData">CustomizeData()</h4>
@@ -1414,7 +1414,7 @@ If you don&apos;t override this, nothing will be changed/customized. </p>
     <a href="https://github.com/2sic/2sxc/new/docs-wiki/apiSpec/new?filename=ToSic_Sxc_Dnn_RazorComponent_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Environment_IContainer_System_DateTime_.md&amp;value=---%0Auid%3A%20ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary%7BSystem.String%2CSystem.Collections.Generic.List%7BToSic.Sxc.Search.ISearchItem%7D%7D%2CToSic.Eav.Environment.IContainer%2CSystem.DateTime)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L105">View Source</a>
+    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent.cs/#L102">View Source</a>
   </span>
   <a id="ToSic_Sxc_Dnn_RazorComponent_CustomizeSearch_" data-uid="ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch*"></a>
   <h4 id="ToSic_Sxc_Dnn_RazorComponent_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Environment_IContainer_System_DateTime_" data-uid="ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)">CustomizeSearch(Dictionary&lt;String, List&lt;ISearchItem&gt;&gt;, IContainer, DateTime)</h4>
@@ -1454,7 +1454,7 @@ If you don&apos;t override this, nothing will be changed/customized. </p>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="ToSic.Sxc.Dnn.IRazor.html">IRazor</a>
+      <a class="xref" href="ToSic.Sxc.Dnn.IRazorComponent.html">IRazorComponent</a>
   </div>
   <div>
       <a class="xref" href="ToSic.Sxc.Dnn.IDynamicCode.html">IDynamicCode</a>
@@ -1473,7 +1473,7 @@ If you don&apos;t override this, nothing will be changed/customized. </p>
                     <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Sxc/Dnn/RazorComponent.md/#L2" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorTemplate_Compatibilty.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/2Sexy Content Razor/Dnn/RazorComponent_Compatibilty.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

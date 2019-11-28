@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.Razor
     /// The core page type for delivering a 2sxc page
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
-    public abstract class SexyContentWebPage : RazorComponentBase, IRazorComponent, ISexyContentWebPage
+    public abstract class SexyContentWebPage : RazorComponentBase, IRazorComponent, IDynamicCodeBeforeV10
     {
         #region Helpers linked through AppAndData Helpers
 
@@ -118,7 +118,12 @@ namespace ToSic.SexyContent.Razor
         [Obsolete("use Content.Presentation instead")]
         public dynamic Presentation => DynCodeHelper.Content?.Presentation;
 
-        public dynamic Header => DynCodeHelper.Header;
+        /// <summary>
+        /// We are blocking this property on purpose, so that people will want to migrate to the new RazorComponent
+        /// </summary>
+        public dynamic Header 
+            => throw new Exception("The header property is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent));
+            //=> DynCodeHelper.Header;
 
         [Obsolete("Use Header instead")]
         public dynamic ListContent => DynCodeHelper.Header;

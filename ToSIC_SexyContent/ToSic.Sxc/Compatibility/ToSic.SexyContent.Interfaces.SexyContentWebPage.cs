@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Compatibility
 	/// <summary>
     /// Old interface for the SexyContent Web Page
     /// </summary>
-    public interface ISexyContentWebPage
+    public interface IDynamicCodeBeforeV10
     {
 
         /// <summary>
