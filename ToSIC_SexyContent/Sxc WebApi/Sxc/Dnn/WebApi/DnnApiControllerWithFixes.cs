@@ -1,14 +1,15 @@
-﻿using System;
-using System.Web;
+﻿using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.WebApi.Helpers;
+using ToSic.SexyContent;
 using ToSic.SexyContent.Environment;
+using ToSic.SexyContent.WebApi;
 
-namespace ToSic.SexyContent.WebApi.Dnn
+namespace ToSic.Sxc.Dnn.WebApi
 {
     [WebApiLogDetails, JsonResponse]
     public class DnnApiControllerWithFixes: DnnApiController, IHasLog

@@ -4,6 +4,7 @@ using System.Web.Http.Controllers;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.WebApi.Dnn;
+using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.SexyContent.WebApi.EavApiProxies
 {

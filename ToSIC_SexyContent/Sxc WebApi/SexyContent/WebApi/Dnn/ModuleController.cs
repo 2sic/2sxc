@@ -2,6 +2,7 @@
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {

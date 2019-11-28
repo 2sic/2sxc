@@ -19,6 +19,7 @@ using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.WebApi.Dnn;
 using ToSic.SexyContent.WebApi.ImportExport;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.SexyContent.WebApi
 {

@@ -1,6 +1,6 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.SexyContent.WebApi;
-using ToSic.SexyContent.WebApi.Dnn;
+using ToSic.Sxc.Dnn.WebApi;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.System

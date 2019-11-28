@@ -148,7 +148,7 @@
     <Compile Include="SexyContent\WebApi\AppContentController.cs" />
     <Compile Include="SexyContent\WebApi\AppQueryController.cs" />
     <Compile Include="SexyContent\WebApi\ContentGroupController.cs" />
-    <Compile Include="Sxc\Dnn\Web\DnnApiControllerWithFixes.cs" />
+    <Compile Include="Sxc\Dnn\WebApi\DnnApiControllerWithFixes.cs" />
     <Compile Include="SexyContent\WebApi\Dnn\HyperlinkController.cs" />
     <Compile Include="SexyContent\WebApi\Dnn\ModuleController.cs" />
     <Compile Include="SexyContent\WebApi\EavApiProxies\ContentExportController.cs" />
