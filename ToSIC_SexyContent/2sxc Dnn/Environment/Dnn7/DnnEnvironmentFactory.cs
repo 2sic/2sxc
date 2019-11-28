@@ -9,6 +9,7 @@ using ToSic.Sxc.Web;
 using DynamicCodeHelper = ToSic.Sxc.Dnn.DynamicCodeHelper;
 using IApp = ToSic.Eav.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
+using PermissionCheckBase = ToSic.Eav.Security.PermissionCheckBase;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {

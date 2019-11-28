@@ -99,7 +99,7 @@
     <Compile Include="Dnn\IHtmlHelper.cs" />
     <Compile Include="Dnn\RazorComponent.cs" />
     <Compile Include="Web\RazorComponentBase.cs" />
-    <Compile Include="Dnn\RazorTemplate_Compatibilty.cs" />
+    <Compile Include="Dnn\RazorComponent_Compatibilty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engines\Razor\HtmlHelper.cs" />
     <Compile Include="Engines\Razor\RazorEngine.cs" />

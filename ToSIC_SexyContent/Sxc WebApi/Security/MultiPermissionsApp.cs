@@ -4,6 +4,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;

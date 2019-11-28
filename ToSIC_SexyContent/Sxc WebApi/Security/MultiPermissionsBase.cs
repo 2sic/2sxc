@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.Sxc.Security

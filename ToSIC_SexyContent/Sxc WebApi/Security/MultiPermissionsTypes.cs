@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;

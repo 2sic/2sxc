@@ -7,6 +7,7 @@ using System.Web.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor.Helpers;

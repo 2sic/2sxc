@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Blocks;
 using IEntity = ToSic.Eav.Data.IEntity;
