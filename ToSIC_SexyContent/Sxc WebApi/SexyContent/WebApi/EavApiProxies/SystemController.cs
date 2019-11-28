@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
     [SupportedModules("2sxc,2sxc-app")]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public class SystemController : SxcApiControllerBase, ISystemController
+    public partial class SystemController : SxcApiControllerBase, ISystemController
     {
 
         [HttpGet]

@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.WebApi
     [SxcWebApiExceptionHandling]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class SystemController : SxcApiControllerBase
+    public partial class SystemController : SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {

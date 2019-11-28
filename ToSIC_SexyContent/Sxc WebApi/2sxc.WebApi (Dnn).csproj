@@ -108,7 +108,7 @@
     <Compile Include="Sxc\WebApi\Cms\UiController_Load.cs" />
     <Compile Include="Sxc\WebApi\Helpers\ValidatorBase.cs" />
     <Compile Include="Sxc\WebApi\Cms\SaveDataValidator.cs" />
-    <Compile Include="Sxc\WebApi\AppFinder.cs" />
+    <Compile Include="Sxc\WebApi\Routing\AppFinder.cs" />
     <Compile Include="Sxc\WebApi\ImportExport\ExtensionsForIApp.cs" />
     <Compile Include="Sxc\Security\IMultiPermissionCheck.cs" />
     <Compile Include="Sxc\Security\MultiPermissionsBase.cs" />
@@ -118,9 +118,9 @@
     <Compile Include="Sxc\Security\PermissionCheckWithEnsure.cs" />
     <Compile Include="Sxc\Security\PublicFormsPermissions.cs" />
     <Compile Include="Sxc\WebApi\Routing\RouteParts.cs" />
-    <Compile Include="Sxc\WebApi\ContentGroupList.cs" />
+    <Compile Include="Sxc\WebApi\Helpers\ContentGroupList.cs" />
     <Compile Include="Sxc\Dnn\DnnPublishing.cs" />
-    <Compile Include="Sxc\WebApi\SaveHelperBase.cs" />
+    <Compile Include="Sxc\WebApi\Helpers\SaveHelperBase.cs" />
     <Compile Include="Sxc\Security\Security.cs" />
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController_IsAlive.cs" />
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController_App.cs" />
@@ -140,7 +140,7 @@
     <Compile Include="Sxc\WebApi\Cms\FeaturesManagementUtils.cs" />
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController.cs" />
     <Compile Include="Sxc\WebApi\SxcApiControllerBase.cs" />
-    <Compile Include="Sxc\WebApi\WebApiLogDetails.cs" />
+    <Compile Include="Sxc\WebApi\Helpers\WebApiLogDetails.cs" />
     <Compile Include="Sxc\Adam\WebApi\AdamController.cs" />
     <Compile Include="Sxc\WebApi\Routing\AppApiControllerSelector.cs" />
     <Compile Include="Sxc\WebApi\Cms\AppAssetsController.cs" />
