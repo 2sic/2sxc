@@ -9,9 +9,8 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Security;
-using ToSic.Sxc.WebApi;
 
-namespace ToSic.SexyContent.WebApi.EavApiProxies
+namespace ToSic.Sxc.WebApi.Cms
 {
     /// <summary>
     /// Web API Controller for Content-Type structures, fields etc.

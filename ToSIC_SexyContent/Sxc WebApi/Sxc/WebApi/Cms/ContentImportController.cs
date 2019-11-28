@@ -4,9 +4,8 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Sxc.WebApi;
 
-namespace ToSic.SexyContent.WebApi.EavApiProxies
+namespace ToSic.Sxc.WebApi.Cms
 {
     /// <summary>
     /// Web API Controller for the Pipeline Designer UI

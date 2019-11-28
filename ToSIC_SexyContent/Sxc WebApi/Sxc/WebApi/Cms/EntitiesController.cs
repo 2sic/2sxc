@@ -15,10 +15,9 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.SxcTemp;
-using ToSic.Sxc.WebApi;
 using Guid = System.Guid;
 
-namespace ToSic.SexyContent.WebApi.EavApiProxies
+namespace ToSic.Sxc.WebApi.Cms
 {
 	/// <summary>
 	/// Proxy Class to the EAV EntitiesController (Web API Controller)
@@ -100,7 +99,7 @@ namespace ToSic.SexyContent.WebApi.EavApiProxies
             var appRead = new AppRuntime(appId, Log);
             #region check if it's an update, and do more security checks - shared with UiController.Save
             // basic permission checks
-            var permCheck = new Security(CmsBlock, Log)
+            var permCheck = new Security.Security(CmsBlock, Log)
                 .DoPreSaveSecurityCheck(appId, items);
 
             var foundItems = items.Where(i => i.EntityId != 0 && i.EntityGuid != Guid.Empty)

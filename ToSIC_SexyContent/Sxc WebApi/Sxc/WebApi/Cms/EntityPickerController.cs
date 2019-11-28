@@ -4,9 +4,8 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Security;
-using ToSic.Sxc.WebApi;
 
-namespace ToSic.SexyContent.WebApi.EavApiProxies
+namespace ToSic.Sxc.WebApi.Cms
 {
     [SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]

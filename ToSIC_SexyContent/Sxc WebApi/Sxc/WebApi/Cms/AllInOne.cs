@@ -4,7 +4,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.ImportExport.Json.Format;
 using ToSic.Eav.WebApi.Formats;
 
-namespace ToSic.SexyContent.WebApi.EavApiProxies
+namespace ToSic.Sxc.WebApi.Cms
 {
     public class AllInOne
     {

@@ -3,11 +3,9 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.SexyContent.WebApi.Dnn;
 using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.WebApi;
 
-namespace ToSic.SexyContent.WebApi.EavApiProxies
+namespace ToSic.Sxc.WebApi.Cms
 {
     /// <summary>
     /// Web API Controller for the Pipeline Designer UI

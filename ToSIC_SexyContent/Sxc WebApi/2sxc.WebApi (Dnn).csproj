@@ -133,7 +133,7 @@
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController_Types.cs" />
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController_AppActions.cs" />
     <Compile Include="Sxc\WebApi\System\Insights\InsightsController_Html.cs" />
-    <Compile Include="SexyContent\WebApi\EavApiProxies\SystemController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\SystemController_Features.cs" />
     <Compile Include="Sxc\WebApi\Cms\AllInOne.cs" />
     <Compile Include="Sxc\WebApi\Cms\UiController.cs" />
     <Compile Include="Sxc\WebApi\Helpers\HttpErrors.cs" />
@@ -148,8 +148,8 @@
     <Compile Include="Sxc\WebApi\App\AppQueryController.cs" />
     <Compile Include="Sxc\WebApi\Cms\ContentGroupController.cs" />
     <Compile Include="Sxc\Dnn\WebApi\DnnApiControllerWithFixes.cs" />
-    <Compile Include="SexyContent\WebApi\Dnn\HyperlinkController.cs" />
-    <Compile Include="SexyContent\WebApi\Dnn\ModuleController.cs" />
+    <Compile Include="Sxc\WebApi\Cms\HyperlinkController.cs" />
+    <Compile Include="Sxc\Dnn\WebApi\ModuleController.cs" />
     <Compile Include="Sxc\WebApi\Cms\ContentExportController.cs" />
     <Compile Include="Sxc\WebApi\Cms\ContentImportController.cs" />
     <Compile Include="Sxc\WebApi\Cms\ContentTypeController.cs" />
@@ -209,7 +209,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Sxc\WebApi\Cms\EditUi\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

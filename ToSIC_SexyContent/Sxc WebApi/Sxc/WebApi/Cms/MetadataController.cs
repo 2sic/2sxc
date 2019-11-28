@@ -3,9 +3,8 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Sxc.WebApi;
 
-namespace ToSic.SexyContent.WebApi.EavApiProxies
+namespace ToSic.Sxc.WebApi.Cms
 {
     /// <inheritdoc cref="IMetadataController" />
     [SupportedModules("2sxc,2sxc-app")]

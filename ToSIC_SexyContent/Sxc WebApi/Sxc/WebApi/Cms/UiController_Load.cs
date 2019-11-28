@@ -15,10 +15,9 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.SxcTemp;
-using ToSic.Sxc.WebApi;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.SexyContent.WebApi.EavApiProxies
+namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class UiController
     {
