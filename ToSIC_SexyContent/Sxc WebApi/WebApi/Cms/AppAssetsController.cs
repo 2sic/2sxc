@@ -162,10 +162,35 @@ namespace ToSic.Sxc.WebApi.Cms
             if (content.Content == null)
                 content.Content = "";
 
+            path = SanitizePathAndContent(path, content);
+
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var assetEditor = new AssetEditor(thisApp, path, UserInfo.IsSuperUser, isAdmin, global, Log);
             assetEditor.EnsureUserMayEditAsset(path);
             return assetEditor.Create(content.Content);
+        }
+
+        private static string SanitizePathAndContent(string path, ContentHelper content)
+        {
+            var name = Path.GetFileName(path);
+            var folder = Path.GetDirectoryName(path);
+            var ext = Path.GetExtension(path);
+            
+            if (ext?.ToLowerInvariant() != AssetEditor.CshtmlExtension) return path;
+
+            if (name == null) name = "missing-name.txt";
+
+            if (!name.StartsWith(AssetEditor.CshtmlPrefix))
+            {
+                name = AssetEditor.CshtmlPrefix + name;
+                path = (string.IsNullOrWhiteSpace(folder) ? "" : folder + "\\") + name;
+            }
+
+            // if we're creating a cshtml and it's empty, or has the dummy-text from the old 2sxc 9 admin-UI, then replace it
+            if (string.IsNullOrEmpty(content.Content) || content.Content.StartsWith("<p>You successfully"))
+                content.Content = AssetEditor.DefaultCshtmlBody;
+
+            return path;
         }
 
         /// <summary>
@@ -175,6 +200,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             public string Content;
         }
+
 
         #endregion
 

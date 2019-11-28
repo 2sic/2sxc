@@ -9,9 +9,9 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.Sxc.WebApi;
+using ToSic.Sxc.Dnn.WebApi;
 
-namespace ToSic.Sxc.Dnn.WebApi
+namespace ToSic.Sxc.WebApi.Cms
 {
     [SupportedModules("2sxc,2sxc-app")]
     [SxcWebApiExceptionHandling]
