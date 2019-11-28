@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Security;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
@@ -8,7 +7,7 @@ using ToSic.Eav.LookUp;
 
 namespace ToSic.Sxc.Dnn
 {
-    public partial class RazorTemplate
+    public partial class RazorComponent
     {
         // Obsolete stuff - not supported any more in RazorPage10 - maybe re-activate to show helpfull error messages
 

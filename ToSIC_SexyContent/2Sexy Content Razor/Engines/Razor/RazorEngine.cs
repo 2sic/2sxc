@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Engines
     public class RazorEngine : EngineBase
     {
         [PrivateApi]
-        protected /*SexyContentWebPage*/ RazorPageBase  Webpage { get; set; }
+        protected /*SexyContentWebPage*/ RazorComponentBase  Webpage { get; set; }
 
         /// <inheritdoc />
         [PrivateApi]
@@ -120,7 +120,7 @@ namespace ToSic.Sxc.Engines
             }
         }
 
-        private void InitHelpers(RazorPageBase webPage)
+        private void InitHelpers(RazorComponentBase webPage)
         {
             webPage.Html = new Razor.HtmlHelper();
             // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
@@ -142,14 +142,14 @@ namespace ToSic.Sxc.Engines
             if (objectValue == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", TemplatePath));
 
-            Webpage = objectValue as RazorPageBase;// SexyContentWebPage;
+            Webpage = objectValue as RazorComponentBase;// SexyContentWebPage;
 
             if ((Webpage == null))
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from SexyContentWebPage.", TemplatePath));
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
-            if(Webpage is RazorTemplate rzrPage)
+            if(Webpage is RazorComponent rzrPage)
                 rzrPage.Purpose = Purpose;
 #pragma warning disable 618
             if(Webpage is SexyContentWebPage oldPage)
@@ -168,7 +168,7 @@ namespace ToSic.Sxc.Engines
             if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
 
             // call new signature
-            (Webpage as RazorTemplate)?.CustomizeSearch(searchInfos, moduleInfo, beginDate);
+            (Webpage as RazorComponent)?.CustomizeSearch(searchInfos, moduleInfo, beginDate);
 
             // also call old signature
             var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());

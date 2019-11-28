@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract class RazorPageBase: WebPageBase, ISharedCodeBuilder
+    public abstract class RazorComponentBase: WebPageBase, ISharedCodeBuilder
     {
         public IHtmlHelper Html { get; internal set; }
 
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn
             Context = parentPage.Context;
 
             // Return if parent page is not a SexyContentWebPage
-            if (!(parentPage is RazorPageBase typedParent)) return;
+            if (!(parentPage is RazorComponentBase typedParent)) return;
 
             // Forward the context
             Html = typedParent.Html;
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Dnn
 
         protected dynamic CreateInstanceCshtml(string path)
         {
-            var webPage = (RazorPageBase)CreateInstanceFromVirtualPath(path);
+            var webPage = (RazorComponentBase)CreateInstanceFromVirtualPath(path);
             webPage.ConfigurePage(this);
             return webPage;
         }

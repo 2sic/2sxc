@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -114,12 +113,13 @@ namespace ToSic.Sxc.Web
         new dynamic AsDynamic(dynamic dynamicEntity);
 
 
-        /// <summary>
-        /// Converts a dictionary-style list of many <see cref="IEntity"/> objects into a key-value pair of <see cref="IDynamicEntity"/> objects. 
-        /// </summary>
-        /// <param name="entityKeyValuePair"></param>
-        /// <returns></returns>
-        new dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair);
+        // 2019-11-28 2dm removed from primary IDynamicCode interface, now only in legacyinterface
+        ///// <summary>
+        ///// Converts a dictionary-style list of many <see cref="IEntity"/> objects into a key-value pair of <see cref="IDynamicEntity"/> objects. 
+        ///// </summary>
+        ///// <param name="entityKeyValuePair"></param>
+        ///// <returns></returns>
+        //new dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair);
 
 
         /// <summary>

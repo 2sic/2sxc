@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
     [PrivateApi("still WIP")]
-    public abstract partial class RazorTemplate : RazorPageBase, IRazor
+    public abstract partial class RazorComponent : RazorComponentBase, IRazor
     {
 
         #region AppAndDataHelpers implementation

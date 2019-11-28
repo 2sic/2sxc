@@ -94,6 +94,7 @@ namespace ToSic.SexyContent.WebApi
         /// <inheritdoc cref="IDynamicCode" />
         public dynamic AsDynamic(dynamic dynamicEntity) =>  DnnAppAndDataHelpers.AsDynamic(dynamicEntity);
 
+        // todo: only in "old" controller, not in new one
         /// <inheritdoc cref="IDynamicCode" />
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
 
@@ -163,26 +164,16 @@ namespace ToSic.SexyContent.WebApi
         [Obsolete("This is an old way used to loop things. Use Data[\"Default\"] instead. Will be removed in 2sxc v10")]
         public List<Element> List => DnnAppAndDataHelpers.List;
 
-	    #endregion
+        #endregion
 
 
         #region Adam
 
-        /// <summary>
-        /// Provides an Adam instance for this item and field
-        /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
-        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
-        /// <returns>An Adam object for navigating the assets</returns>
+        /// <inheritdoc />
         public IFolder AsAdam(IDynamicEntity entity, string fieldName)
 	        => DnnAppAndDataHelpers.AsAdam(AsEntity(entity), fieldName);
 
-        /// <summary>
-        /// Provides an Adam instance for this item and field
-        /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
-        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
-        /// <returns>An Adam object for navigating the assets</returns>
+        /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
 
 

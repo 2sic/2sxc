@@ -82,13 +82,13 @@ namespace ToSic.Sxc.Web
         /// <returns></returns>
         public dynamic AsDynamic(dynamic dynamicEntity) => dynamicEntity;
 
-        /// <inheritdoc />
-        /// <summary>
-        /// Returns the value of a KeyValuePair as DynamicEntity
-        /// </summary>
-        /// <param name="entityKeyValuePair"></param>
-        /// <returns></returns>
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
+        ///// <inheritdoc />
+        ///// <summary>
+        ///// Returns the value of a KeyValuePair as DynamicEntity
+        ///// </summary>
+        ///// <param name="entityKeyValuePair"></param>
+        ///// <returns></returns>
+        //public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]

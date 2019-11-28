@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.Razor
     /// The core page type for delivering a 2sxc page
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
-    public abstract class SexyContentWebPage : RazorPageBase, IRazor, ISexyContentWebPage
+    public abstract class SexyContentWebPage : RazorComponentBase, IRazor, ISexyContentWebPage
     {
         #region Helpers linked through AppAndData Helpers
 
@@ -60,7 +60,7 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public dynamic AsDynamic(dynamic dynamicEntity) => DynCodeHelper.AsDynamic(dynamicEntity);
 
-
+        // todo: only in "old" controller, not in new one
         /// <inheritdoc />
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DynCodeHelper.AsDynamic(entityKeyValuePair.Value);
 
