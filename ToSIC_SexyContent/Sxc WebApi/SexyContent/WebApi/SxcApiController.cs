@@ -22,6 +22,7 @@ using IDynamicCode = ToSic.Sxc.Dnn.IDynamicCode;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.WebApi
 {
     /// <inheritdoc cref="SxcApiControllerBase" />
