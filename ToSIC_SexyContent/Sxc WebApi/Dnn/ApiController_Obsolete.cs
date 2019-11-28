@@ -9,59 +9,76 @@ namespace ToSic.Sxc.Dnn
 {
     public partial class ApiController
     {
-        [PrivateApi]
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-            ITokenListFiller configurationProvider = null)
-            => DynCodeHelpers.CreateSource(typeName, inSource, configurationProvider);
+        // Obsolete stuff - not supported any more in RazorPage10 - maybe re-activate to show helpfull error messages
 
-        /// <summary>
-        /// presentation item of the content-item. 
-        /// </summary>
-        [PrivateApi]
-        [Obsolete("please use Content.Presentation instead")]
-        public dynamic Presentation 
-            => DynCodeHelpers.Content?.Presentation;
+        #region Shared Code Block between RazorComponent_Obsolete and ApiController_Obsolete
+
+        private const string NotSupportedIn10 = "is not supported in RazorPage";
+
+        #region Obsolete CreateSource
 
         [PrivateApi]
-        [Obsolete("use Header instead")]
-        public dynamic ListContent 
-            => DynCodeHelpers.Header;
+        [Obsolete("for compatibility only, will throw error with instructions how to fix. Use CreateSource<type> instead.")]
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ITokenListFiller configurationProvider = null)
+            => throw new Exception($"CreateSource(string, ...) {NotSupportedIn10}. Please use CreateSource<DataSourceTypeName>(...) instead.");
 
-        /// <summary>
-        /// presentation item of the content-item. 
-        /// </summary>
-        [PrivateApi]
-        [Obsolete("please use Header.Presentation instead")]
-        public dynamic ListPresentation 
-            => DynCodeHelpers.Header?.Presentation;
-
-        [PrivateApi]
-        [Obsolete("This is an old way used to loop things. Use Data[\"Default\"] instead. Will be removed in 2sxc v10")]
-        public object List 
-            => DynCodeHelpers.List;
-
-
-
-        #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
-        [PrivateApi]
-        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DynCodeHelpers.AsDynamic(entity);
-
-
-        [PrivateApi]
-        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DynCodeHelpers.AsDynamic(entityKeyValuePair.Value);
-
-        [PrivateApi]
-        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DynCodeHelpers.AsDynamic(entities);
         #endregion
 
+        #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
 
-
-        //// todo: only in "old" controller, not in new one
         [PrivateApi]
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DynCodeHelpers.AsDynamic(entityKeyValuePair.Value);
+        [Obsolete("for compatibility only, will throw error with instructions how to fix. Cast your entities to ToSic.Eav.Data.IEntity")]
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity)
+            => throw new Exception($"AsDynamic(Eav.Interfaces.IEntity) {NotSupportedIn10}. Please cast your data to ToSic.Eav.Data.IEntity.");
+
+
+        [PrivateApi]
+        [Obsolete("for compatibility only, will throw error with instructions how to fix. Cast your entities to ToSic.Eav.Data.IEntity")]
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair)
+            => throw new Exception($"AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity>) {NotSupportedIn10}. Please cast your data to ToSic.Eav.Data.IEntity.");
+
+        [PrivateApi]
+        [Obsolete("for compatibility only, will throw error with instructions how to fix. Cast your entities to ToSic.Eav.Data.IEntity")]
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities)
+            => throw new Exception($"AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) {NotSupportedIn10}. Please cast your data to ToSic.Eav.Data.IEntity.");
+
+        #endregion
+
+        #region AsDynamic<int, IEntity>
+
+        [PrivateApi]
+        [Obsolete("for compatibility only, will throw error with instructions how to fix. Use AsDynamic(IEnumerable<IEntity>...)")]
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair)
+            => throw new Exception($"AsDynamic(KeyValuePair<int, IEntity> {NotSupportedIn10}. Use AsDynamic(IEnumerable<IEntity>...).");
+
+        #endregion
+
+        #region Presentation, ListContent, ListPresentation, List
+
+        [PrivateApi]
+        [Obsolete("use Content.Presentation instead")]
+        public dynamic Presentation
+            => throw new Exception($"Presentation {NotSupportedIn10}. Use Content.Presentation.");
+
+
+        [PrivateApi]
+        [Obsolete("Use Header instead")]
+        public dynamic ListContent
+            => throw new Exception($"ListContent {NotSupportedIn10}. Use Header.");
+
+        [PrivateApi]
+        [Obsolete("Use Header.Presentation instead")]
+        public dynamic ListPresentation
+            => throw new Exception($"ListPresentation {NotSupportedIn10}. Use Header.Presentation");
+
+        [PrivateApi]
+        [Obsolete("This is an old way used to loop things - removed in RazorComponent")]
+        public object List
+            => throw new Exception($"List {NotSupportedIn10}. Use Data[\"DefaultAuthenticationEventArgs\"].List");
+
+        #endregion
+
+        #endregion
 
     }
 }

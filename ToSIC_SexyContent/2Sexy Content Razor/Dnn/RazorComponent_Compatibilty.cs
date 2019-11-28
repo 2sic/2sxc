@@ -11,10 +11,12 @@ namespace ToSic.Sxc.Dnn
     {
         // Obsolete stuff - not supported any more in RazorPage10 - maybe re-activate to show helpfull error messages
 
+        #region Shared Code Block between RazorComponent_Obsolete and ApiController_Obsolete
+
         private const string NotSupportedIn10 = "is not supported in RazorPage";
 
         #region Obsolete CreateSource
-        /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
+
         [PrivateApi]
         [Obsolete("for compatibility only, will throw error with instructions how to fix. Use CreateSource<type> instead.")]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ITokenListFiller configurationProvider = null)
@@ -44,15 +46,14 @@ namespace ToSic.Sxc.Dnn
 
         #region AsDynamic<int, IEntity>
 
-        /// <inheritdoc />
         [PrivateApi]
         [Obsolete("for compatibility only, will throw error with instructions how to fix. Use AsDynamic(IEnumerable<IEntity>...)")]
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair)
             => throw new Exception($"AsDynamic(KeyValuePair<int, IEntity> {NotSupportedIn10}. Use AsDynamic(IEnumerable<IEntity>...).");
 
-
         #endregion
 
+        #region Presentation, ListContent, ListPresentation, List
 
         [PrivateApi]
         [Obsolete("use Content.Presentation instead")]
@@ -74,6 +75,10 @@ namespace ToSic.Sxc.Dnn
         [Obsolete("This is an old way used to loop things - removed in RazorComponent")]
         public object List
             => throw new Exception($"List {NotSupportedIn10}. Use Data[\"DefaultAuthenticationEventArgs\"].List");
+
+        #endregion
+
+        #endregion
 
         //[PrivateApi("this is the old signature, should still be supported")]
         //public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
