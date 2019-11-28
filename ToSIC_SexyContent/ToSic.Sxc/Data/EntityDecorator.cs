@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -10,10 +11,10 @@ using IEntity = ToSic.Eav.Data.IEntity;
 namespace ToSic.SexyContent.EAVExtensions
 {
     /// <summary>
-    /// This is an <see cref="IEntity"/> which has more properties and information.
-    /// Everything in the original <see cref="IEntity"/> is passed through invisibly.
+    /// This is an <see/> which has more properties and information.
+    /// Everything in the original <see/> is passed through invisibly.
     /// </summary>
-    [PublicApi]
+    [PrivateApi]
     public abstract class EntityDecorator : IEntity
     {
         private readonly IEntity _baseEntity;
@@ -50,19 +51,19 @@ namespace ToSic.SexyContent.EAVExtensions
         /// <inheritdoc />
         public ITarget MetadataFor => _baseEntity.MetadataFor;
 
-        /// <inheritdoc cref="IEntity" />
+        /// <inheritdoc />
         public Dictionary<string, IAttribute> Attributes => _baseEntity.Attributes;
 
         /// <inheritdoc />
         public IContentType Type => _baseEntity.Type;
 
-        /// <inheritdoc cref="IEntity" />
+        /// <inheritdoc />
         public IAttribute Title => _baseEntity.Title;
 
         /// <inheritdoc />
         public DateTime Modified => _baseEntity.Modified;
 
-         /// <inheritdoc cref="IEntity" />
+         /// <inheritdoc />
        public IAttribute this[string attributeName] => _baseEntity[attributeName];
 
         /// <inheritdoc />
@@ -80,11 +81,11 @@ namespace ToSic.SexyContent.EAVExtensions
             => _baseEntity.GetBestValue(attributeName, resolveHyperlinks);
 
 
-        /// <inheritdoc cref="IEntity" />
+        /// <inheritdoc />
         public object GetBestValue(string attributeName, string[] languages, bool resolveHyperlinks = false)
             => _baseEntity.GetBestValue(attributeName, languages, resolveHyperlinks);
 
-        /// <inheritdoc cref="IEntity" />
+        /// <inheritdoc />
         public T GetBestValue<T>(string attributeName, string[] languages, bool resolveHyperlinks = false) 
             => _baseEntity.GetBestValue<T>(attributeName, languages, resolveHyperlinks);
 
@@ -103,7 +104,7 @@ namespace ToSic.SexyContent.EAVExtensions
         /// <inheritdoc />
         public string GetBestTitle() => _baseEntity.GetBestTitle();
 
-        /// <inheritdoc cref="IEntity" />
+        /// <inheritdoc />
         public string GetBestTitle(string[] dimensions)
             => _baseEntity.GetBestTitle(dimensions);
 
@@ -113,10 +114,10 @@ namespace ToSic.SexyContent.EAVExtensions
         /// <inheritdoc />
         object IEntityLight.this[string attributeName] => ((IEntityLight) _baseEntity)[attributeName];
 
-        /// <inheritdoc cref="IEntity" />
+        /// <inheritdoc />
         public int Version => _baseEntity.Version;
 
-        /// <inheritdoc cref="IEntity" />
+        /// <inheritdoc />
         public IMetadataOf Metadata => _baseEntity.Metadata;
 
         /// <inheritdoc />
@@ -125,10 +126,10 @@ namespace ToSic.SexyContent.EAVExtensions
         #endregion
 
 
-        /// <inheritdoc cref="IEntity" />
+        /// <inheritdoc />
         public List<IEntity> Children(string field = null, string type = null) => _baseEntity.Children(field, type);
 
-        /// <inheritdoc cref="IEntity" />
+        /// <inheritdoc />
         public List<IEntity> Parents(string type = null, string field = null) => _baseEntity.Parents(type, field);
 
 

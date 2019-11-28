@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -21,6 +22,20 @@ namespace ToSic.Sxc.Web
     public interface IDynamicCode: SexyContent.IAppAndDataHelpers, ISharedCodeBuilder // inherit from old namespace to ensure compatibility
 #pragma warning restore 618
     {
+
+        /// <summary>
+        /// A fully prepared <see cref="IApp"/> object letting you access all the data and queries in the current app. 
+        /// </summary>
+        /// <returns>The current app</returns>
+        new IApp App { get; }
+
+        /// <summary>
+        /// The data prepared for the current Code. Usually user data which was manually added to the instance, but can also be a query.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="IBlockDataSource"/> which is as <see cref="IDataSource"/>.</returns>
+        new IBlockDataSource Data { get; }
+
         #region Content and Header
         /// <summary>
         /// The content object of the current razor view - IF the current view has content.
@@ -88,6 +103,13 @@ namespace ToSic.Sxc.Web
         IInPageEditingSystem Edit { get; }
         #endregion
 
+        //#region Configure a just generated object
+
+        //[PrivateApi("WIP")]
+        //void ConfigurePage(IDynamicCode parentPage);
+
+
+        //#endregion
 
         #region AsDynamic and AsEntity
 
@@ -107,12 +129,13 @@ namespace ToSic.Sxc.Web
         new dynamic AsDynamic(dynamic dynamicEntity);
 
 
-        /// <summary>
-        /// Converts a dictionary-style list of many <see cref="IEntity"/> objects into a key-value pair of <see cref="IDynamicEntity"/> objects. 
-        /// </summary>
-        /// <param name="entityKeyValuePair"></param>
-        /// <returns></returns>
-        new dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair);
+        // 2019-11-28 2dm removed from primary IDynamicCode interface, now only in legacyinterface
+        ///// <summary>
+        ///// Converts a dictionary-style list of many <see cref="IEntity"/> objects into a key-value pair of <see cref="IDynamicEntity"/> objects. 
+        ///// </summary>
+        ///// <param name="entityKeyValuePair"></param>
+        ///// <returns></returns>
+        //new dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair);
 
 
         /// <summary>
@@ -151,13 +174,6 @@ namespace ToSic.Sxc.Web
         /// <returns>A typed DataSource object</returns>
         new T CreateSource<T>(IDataStream inStream) where T: IDataSource;
 
-        /// <summary>
-        /// Create a <see cref="IDataSource"/> which will process data from the given stream.
-        /// </summary>
-        /// <returns>A typed DataSource object</returns>
-        [Obsolete("Please use the CreateSource<T> overload instead.")]
-        [PrivateApi]
-        new IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ITokenListFiller configurationProvider = null);
 
         /// <summary>
         /// Create a <see cref="IDataSource"/> which will process data from the given stream.

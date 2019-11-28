@@ -6,6 +6,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
@@ -15,7 +16,7 @@ namespace ToSic.SexyContent
     /// We'll probably keep it forever, but don't add any more features. Instead, put it on the new interface
     /// This will force developers to use the new interface without breaking compatibility
     /// </remarks>
-    [Obsolete("Avoid this - it's in an old namespace. Use the ToSic.Sxc.Interfaces.IAppAndDataHelpers")]
+    [Obsolete("Avoid this - it's in an old namespace. Use the ToSic.Sxc.Web.IDynamicCode")]
     public interface IAppAndDataHelpers
     {
         IApp App { get; }
@@ -32,32 +33,12 @@ namespace ToSic.SexyContent
 
 
         /// <summary>
-        /// this is for compatibility with old systems, to ensure that things cast to IEntity in a razor can still be cast back
-        /// </summary>
-        [PrivateApi]
-        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        dynamic AsDynamic(Eav.Interfaces.IEntity entity);
-
-        /// <summary>
         /// Makes sure a dynamicEntity could be wrapped in AsDynamic()
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
         dynamic AsDynamic(dynamic dynamicEntity);
 
-        /// <summary>
-        /// Returns the value of a KeyValuePair as DynamicEntity
-        /// </summary>
-        /// <param name="entityKeyValuePair"></param>
-        /// <returns></returns>
-        dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair);
-
-        /// <summary>
-        /// this is for compatibility with old systems, to ensure that things cast to IEntity in a razor can still be cast back
-        /// </summary>
-        [PrivateApi]
-        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair);
 
         /// <summary>
         /// In case AsDynamic is used with Data["name"]
@@ -79,12 +60,6 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities);
 
-        /// <summary>
-        /// this is for compatibility with old systems, to ensure that things cast to IEntity in a razor can still be cast back
-        /// </summary>
-        [PrivateApi]
-        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities);
 
         #region Create Data Sources
         /// <summary>

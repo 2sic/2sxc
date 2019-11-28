@@ -432,14 +432,14 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
-                      <a href="ToSic.Eav.Security.Permissions.html" title="ToSic.Eav.Security.Permissions" class="">ToSic.Eav.Security.Permissions</a>
+                      <a href="ToSic.Eav.Security.html" title="ToSic.Eav.Security" class="">ToSic.Eav.Security</a>
                         
                         <ul class="nav level2">
                           <li class="">
-                            <a href="ToSic.Eav.Security.Permissions.IHasPermissions.html" title="IHasPermissions" class="">IHasPermissions</a>
+                            <a href="ToSic.Eav.Security.IHasPermissions.html" title="IHasPermissions" class="">IHasPermissions</a>
                           </li>
                           <li class="">
-                            <a href="ToSic.Eav.Security.Permissions.Permission.html" title="Permission" class="">Permission</a>
+                            <a href="ToSic.Eav.Security.Permission.html" title="Permission" class="">Permission</a>
                           </li>
                         </ul>  </li>
                     <li class="">
@@ -499,6 +499,9 @@
                         
                         <ul class="nav level2">
                           <li class="">
+                            <a href="ToSic.Sxc.Dnn.ApiController.html" title="ApiController" class="">ApiController</a>
+                          </li>
+                          <li class="">
                             <a href="ToSic.Sxc.Dnn.IDnnContext.html" title="IDnnContext" class="">IDnnContext</a>
                           </li>
                           <li class="">
@@ -511,7 +514,10 @@
                             <a href="ToSic.Sxc.Dnn.IHtmlHelper.html" title="IHtmlHelper" class="">IHtmlHelper</a>
                           </li>
                           <li class="">
-                            <a href="ToSic.Sxc.Dnn.IRazor.html" title="IRazor" class="">IRazor</a>
+                            <a href="ToSic.Sxc.Dnn.IRazorComponent.html" title="IRazorComponent" class="">IRazorComponent</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Dnn.RazorComponent.html" title="RazorComponent" class="">RazorComponent</a>
                           </li>
                         </ul>  </li>
                     <li class="">
@@ -612,7 +618,8 @@
   </span>
   <a id="ToSic_Eav_LookUp_LookUpBase_Name_" data-uid="ToSic.Eav.LookUp.LookUpBase.Name*"></a>
   <h4 id="ToSic_Eav_LookUp_LookUpBase_Name" data-uid="ToSic.Eav.LookUp.LookUpBase.Name">Name</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the Name of this LookUp, e.g. QueryString or PipelineSettings</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -629,7 +636,8 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td></td>
+        <td><p>The name which is used to identify this LookUp, like in a <span class="xref">ToSic.Eav.LookUp.ITokenListFiller</span></p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -644,7 +652,8 @@
   </span>
   <a id="ToSic_Eav_LookUp_LookUpBase_Get_" data-uid="ToSic.Eav.LookUp.LookUpBase.Get*"></a>
   <h4 id="ToSic_Eav_LookUp_LookUpBase_Get_System_String_" data-uid="ToSic.Eav.LookUp.LookUpBase.Get(System.String)">Get(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Shorthand version, will simply return the string or a null-value</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -678,7 +687,8 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td></td>
+        <td><p>The resolved value, or an empty string if not found. Note that it could also resolve to an empty string if found - use Has to check for that case.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -691,7 +701,8 @@
   </span>
   <a id="ToSic_Eav_LookUp_LookUpBase_Get_" data-uid="ToSic.Eav.LookUp.LookUpBase.Get*"></a>
   <h4 id="ToSic_Eav_LookUp_LookUpBase_Get_System_String_System_String_System_Boolean__" data-uid="ToSic.Eav.LookUp.LookUpBase.Get(System.String,System.String,System.Boolean@)">Get(String, String, ref Boolean)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a value by Name/key and tries to format it in a special way (like for dates)</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -710,17 +721,20 @@
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Name of the Property</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">format</span></td>
-        <td></td>
+        <td><p>Format String</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">notFound</span></td>
-        <td></td>
+        <td><p>referenced Bool to set if Property was not found on AssignedEntity</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -735,7 +749,8 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td></td>
+        <td><p>A string with the result, empty-string if not found.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -748,7 +763,8 @@
   </span>
   <a id="ToSic_Eav_LookUp_LookUpBase_Has_" data-uid="ToSic.Eav.LookUp.LookUpBase.Has*"></a>
   <h4 id="ToSic_Eav_LookUp_LookUpBase_Has_System_String_" data-uid="ToSic.Eav.LookUp.LookUpBase.Has(System.String)">Has(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Checks if this value provider has a key.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -767,7 +783,8 @@
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>The key to check</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -782,7 +799,8 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>true if found, false if not</p>
+</td>
       </tr>
     </tbody>
   </table>

@@ -284,7 +284,7 @@ references:
   name: All DataSource Objects in 2sxc / EAV
   href: specs/datasources/list-all.html
 - uid: Specs.DataSources.Queries
-  name: Queries Basics
+  name: Query Basics
   href: specs/datasources/query.html
 - uid: Specs.DocsContribute
   name: How to contribute to this documentation
@@ -5692,118 +5692,118 @@ references:
   isSpec: "True"
   fullName: ToSic.Eav.Metadata.Target.TargetType
   nameWithType: Target.TargetType
-- uid: ToSic.Eav.Security.Permissions
-  name: ToSic.Eav.Security.Permissions
-  href: api/dot-net/ToSic.Eav.Security.Permissions.html
-  commentId: N:ToSic.Eav.Security.Permissions
-  fullName: ToSic.Eav.Security.Permissions
-  nameWithType: ToSic.Eav.Security.Permissions
-- uid: ToSic.Eav.Security.Permissions.IHasPermissions
+- uid: ToSic.Eav.Security
+  name: ToSic.Eav.Security
+  href: api/dot-net/ToSic.Eav.Security.html
+  commentId: N:ToSic.Eav.Security
+  fullName: ToSic.Eav.Security
+  nameWithType: ToSic.Eav.Security
+- uid: ToSic.Eav.Security.IHasPermissions
   name: IHasPermissions
-  href: api/dot-net/ToSic.Eav.Security.Permissions.IHasPermissions.html
-  commentId: T:ToSic.Eav.Security.Permissions.IHasPermissions
-  fullName: ToSic.Eav.Security.Permissions.IHasPermissions
+  href: api/dot-net/ToSic.Eav.Security.IHasPermissions.html
+  commentId: T:ToSic.Eav.Security.IHasPermissions
+  fullName: ToSic.Eav.Security.IHasPermissions
   nameWithType: IHasPermissions
-- uid: ToSic.Eav.Security.Permissions.IHasPermissions.Permissions
+- uid: ToSic.Eav.Security.IHasPermissions.Permissions
   name: Permissions
-  href: api/dot-net/ToSic.Eav.Security.Permissions.IHasPermissions.html#ToSic_Eav_Security_Permissions_IHasPermissions_Permissions
-  commentId: P:ToSic.Eav.Security.Permissions.IHasPermissions.Permissions
-  fullName: ToSic.Eav.Security.Permissions.IHasPermissions.Permissions
+  href: api/dot-net/ToSic.Eav.Security.IHasPermissions.html#ToSic_Eav_Security_IHasPermissions_Permissions
+  commentId: P:ToSic.Eav.Security.IHasPermissions.Permissions
+  fullName: ToSic.Eav.Security.IHasPermissions.Permissions
   nameWithType: IHasPermissions.Permissions
-- uid: ToSic.Eav.Security.Permissions.IHasPermissions.Permissions*
+- uid: ToSic.Eav.Security.IHasPermissions.Permissions*
   name: Permissions
-  href: api/dot-net/ToSic.Eav.Security.Permissions.IHasPermissions.html#ToSic_Eav_Security_Permissions_IHasPermissions_Permissions_
-  commentId: Overload:ToSic.Eav.Security.Permissions.IHasPermissions.Permissions
+  href: api/dot-net/ToSic.Eav.Security.IHasPermissions.html#ToSic_Eav_Security_IHasPermissions_Permissions_
+  commentId: Overload:ToSic.Eav.Security.IHasPermissions.Permissions
   isSpec: "True"
-  fullName: ToSic.Eav.Security.Permissions.IHasPermissions.Permissions
+  fullName: ToSic.Eav.Security.IHasPermissions.Permissions
   nameWithType: IHasPermissions.Permissions
-- uid: ToSic.Eav.Security.Permissions.Permission
+- uid: ToSic.Eav.Security.Permission
   name: Permission
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html
-  commentId: T:ToSic.Eav.Security.Permissions.Permission
-  fullName: ToSic.Eav.Security.Permissions.Permission
+  href: api/dot-net/ToSic.Eav.Security.Permission.html
+  commentId: T:ToSic.Eav.Security.Permission
+  fullName: ToSic.Eav.Security.Permission
   nameWithType: Permission
-- uid: ToSic.Eav.Security.Permissions.Permission.#ctor(ToSic.Eav.Data.IEntity)
+- uid: ToSic.Eav.Security.Permission.#ctor(ToSic.Eav.Data.IEntity)
   name: Permission(IEntity)
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission__ctor_ToSic_Eav_Data_IEntity_
-  commentId: M:ToSic.Eav.Security.Permissions.Permission.#ctor(ToSic.Eav.Data.IEntity)
-  fullName: ToSic.Eav.Security.Permissions.Permission.Permission(ToSic.Eav.Data.IEntity)
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission__ctor_ToSic_Eav_Data_IEntity_
+  commentId: M:ToSic.Eav.Security.Permission.#ctor(ToSic.Eav.Data.IEntity)
+  fullName: ToSic.Eav.Security.Permission.Permission(ToSic.Eav.Data.IEntity)
   nameWithType: Permission.Permission(IEntity)
-- uid: ToSic.Eav.Security.Permissions.Permission.#ctor*
+- uid: ToSic.Eav.Security.Permission.#ctor*
   name: Permission
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission__ctor_
-  commentId: Overload:ToSic.Eav.Security.Permissions.Permission.#ctor
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission__ctor_
+  commentId: Overload:ToSic.Eav.Security.Permission.#ctor
   isSpec: "True"
-  fullName: ToSic.Eav.Security.Permissions.Permission.Permission
+  fullName: ToSic.Eav.Security.Permission.Permission
   nameWithType: Permission.Permission
-- uid: ToSic.Eav.Security.Permissions.Permission.Condition
+- uid: ToSic.Eav.Security.Permission.Condition
   name: Condition
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission_Condition
-  commentId: P:ToSic.Eav.Security.Permissions.Permission.Condition
-  fullName: ToSic.Eav.Security.Permissions.Permission.Condition
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission_Condition
+  commentId: P:ToSic.Eav.Security.Permission.Condition
+  fullName: ToSic.Eav.Security.Permission.Condition
   nameWithType: Permission.Condition
-- uid: ToSic.Eav.Security.Permissions.Permission.Condition*
+- uid: ToSic.Eav.Security.Permission.Condition*
   name: Condition
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission_Condition_
-  commentId: Overload:ToSic.Eav.Security.Permissions.Permission.Condition
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission_Condition_
+  commentId: Overload:ToSic.Eav.Security.Permission.Condition
   isSpec: "True"
-  fullName: ToSic.Eav.Security.Permissions.Permission.Condition
+  fullName: ToSic.Eav.Security.Permission.Condition
   nameWithType: Permission.Condition
-- uid: ToSic.Eav.Security.Permissions.Permission.FieldCondition
+- uid: ToSic.Eav.Security.Permission.FieldCondition
   name: FieldCondition
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission_FieldCondition
-  commentId: F:ToSic.Eav.Security.Permissions.Permission.FieldCondition
-  fullName: ToSic.Eav.Security.Permissions.Permission.FieldCondition
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission_FieldCondition
+  commentId: F:ToSic.Eav.Security.Permission.FieldCondition
+  fullName: ToSic.Eav.Security.Permission.FieldCondition
   nameWithType: Permission.FieldCondition
-- uid: ToSic.Eav.Security.Permissions.Permission.FieldGrant
+- uid: ToSic.Eav.Security.Permission.FieldGrant
   name: FieldGrant
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission_FieldGrant
-  commentId: F:ToSic.Eav.Security.Permissions.Permission.FieldGrant
-  fullName: ToSic.Eav.Security.Permissions.Permission.FieldGrant
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission_FieldGrant
+  commentId: F:ToSic.Eav.Security.Permission.FieldGrant
+  fullName: ToSic.Eav.Security.Permission.FieldGrant
   nameWithType: Permission.FieldGrant
-- uid: ToSic.Eav.Security.Permissions.Permission.FieldIdentity
+- uid: ToSic.Eav.Security.Permission.FieldIdentity
   name: FieldIdentity
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission_FieldIdentity
-  commentId: F:ToSic.Eav.Security.Permissions.Permission.FieldIdentity
-  fullName: ToSic.Eav.Security.Permissions.Permission.FieldIdentity
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission_FieldIdentity
+  commentId: F:ToSic.Eav.Security.Permission.FieldIdentity
+  fullName: ToSic.Eav.Security.Permission.FieldIdentity
   nameWithType: Permission.FieldIdentity
-- uid: ToSic.Eav.Security.Permissions.Permission.FieldOwner
+- uid: ToSic.Eav.Security.Permission.FieldOwner
   name: FieldOwner
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission_FieldOwner
-  commentId: F:ToSic.Eav.Security.Permissions.Permission.FieldOwner
-  fullName: ToSic.Eav.Security.Permissions.Permission.FieldOwner
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission_FieldOwner
+  commentId: F:ToSic.Eav.Security.Permission.FieldOwner
+  fullName: ToSic.Eav.Security.Permission.FieldOwner
   nameWithType: Permission.FieldOwner
-- uid: ToSic.Eav.Security.Permissions.Permission.Grant
+- uid: ToSic.Eav.Security.Permission.Grant
   name: Grant
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission_Grant
-  commentId: P:ToSic.Eav.Security.Permissions.Permission.Grant
-  fullName: ToSic.Eav.Security.Permissions.Permission.Grant
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission_Grant
+  commentId: P:ToSic.Eav.Security.Permission.Grant
+  fullName: ToSic.Eav.Security.Permission.Grant
   nameWithType: Permission.Grant
-- uid: ToSic.Eav.Security.Permissions.Permission.Grant*
+- uid: ToSic.Eav.Security.Permission.Grant*
   name: Grant
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission_Grant_
-  commentId: Overload:ToSic.Eav.Security.Permissions.Permission.Grant
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission_Grant_
+  commentId: Overload:ToSic.Eav.Security.Permission.Grant
   isSpec: "True"
-  fullName: ToSic.Eav.Security.Permissions.Permission.Grant
+  fullName: ToSic.Eav.Security.Permission.Grant
   nameWithType: Permission.Grant
-- uid: ToSic.Eav.Security.Permissions.Permission.Identity
+- uid: ToSic.Eav.Security.Permission.Identity
   name: Identity
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission_Identity
-  commentId: P:ToSic.Eav.Security.Permissions.Permission.Identity
-  fullName: ToSic.Eav.Security.Permissions.Permission.Identity
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission_Identity
+  commentId: P:ToSic.Eav.Security.Permission.Identity
+  fullName: ToSic.Eav.Security.Permission.Identity
   nameWithType: Permission.Identity
-- uid: ToSic.Eav.Security.Permissions.Permission.Identity*
+- uid: ToSic.Eav.Security.Permission.Identity*
   name: Identity
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission_Identity_
-  commentId: Overload:ToSic.Eav.Security.Permissions.Permission.Identity
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission_Identity_
+  commentId: Overload:ToSic.Eav.Security.Permission.Identity
   isSpec: "True"
-  fullName: ToSic.Eav.Security.Permissions.Permission.Identity
+  fullName: ToSic.Eav.Security.Permission.Identity
   nameWithType: Permission.Identity
-- uid: ToSic.Eav.Security.Permissions.Permission.TypeName
+- uid: ToSic.Eav.Security.Permission.TypeName
   name: TypeName
-  href: api/dot-net/ToSic.Eav.Security.Permissions.Permission.html#ToSic_Eav_Security_Permissions_Permission_TypeName
-  commentId: F:ToSic.Eav.Security.Permissions.Permission.TypeName
-  fullName: ToSic.Eav.Security.Permissions.Permission.TypeName
+  href: api/dot-net/ToSic.Eav.Security.Permission.html#ToSic_Eav_Security_Permission_TypeName
+  commentId: F:ToSic.Eav.Security.Permission.TypeName
+  fullName: ToSic.Eav.Security.Permission.TypeName
   nameWithType: Permission.TypeName
 - uid: ToSic.Sxc.Adam
   name: ToSic.Sxc.Adam
@@ -6492,6 +6492,210 @@ references:
   commentId: N:ToSic.Sxc.Dnn
   fullName: ToSic.Sxc.Dnn
   nameWithType: ToSic.Sxc.Dnn
+- uid: ToSic.Sxc.Dnn.ApiController
+  name: ApiController
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html
+  commentId: T:ToSic.Sxc.Dnn.ApiController
+  fullName: ToSic.Sxc.Dnn.ApiController
+  nameWithType: ApiController
+- uid: ToSic.Sxc.Dnn.ApiController.App
+  name: App
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_App
+  commentId: P:ToSic.Sxc.Dnn.ApiController.App
+  fullName: ToSic.Sxc.Dnn.ApiController.App
+  nameWithType: ApiController.App
+- uid: ToSic.Sxc.Dnn.ApiController.App*
+  name: App
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_App_
+  commentId: Overload:ToSic.Sxc.Dnn.ApiController.App
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.ApiController.App
+  nameWithType: ApiController.App
+- uid: ToSic.Sxc.Dnn.ApiController.AsAdam(ToSic.Eav.Data.IEntity,System.String)
+  name: AsAdam(IEntity, String)
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_AsAdam_ToSic_Eav_Data_IEntity_System_String_
+  commentId: M:ToSic.Sxc.Dnn.ApiController.AsAdam(ToSic.Eav.Data.IEntity,System.String)
+  fullName: ToSic.Sxc.Dnn.ApiController.AsAdam(ToSic.Eav.Data.IEntity, System.String)
+  nameWithType: ApiController.AsAdam(IEntity, String)
+- uid: ToSic.Sxc.Dnn.ApiController.AsAdam(ToSic.Sxc.Data.IDynamicEntity,System.String)
+  name: AsAdam(IDynamicEntity, String)
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_AsAdam_ToSic_Sxc_Data_IDynamicEntity_System_String_
+  commentId: M:ToSic.Sxc.Dnn.ApiController.AsAdam(ToSic.Sxc.Data.IDynamicEntity,System.String)
+  fullName: ToSic.Sxc.Dnn.ApiController.AsAdam(ToSic.Sxc.Data.IDynamicEntity, System.String)
+  nameWithType: ApiController.AsAdam(IDynamicEntity, String)
+- uid: ToSic.Sxc.Dnn.ApiController.AsAdam*
+  name: AsAdam
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_AsAdam_
+  commentId: Overload:ToSic.Sxc.Dnn.ApiController.AsAdam
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.ApiController.AsAdam
+  nameWithType: ApiController.AsAdam
+- uid: ToSic.Sxc.Dnn.ApiController.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Data.IEntity})
+  name: AsDynamic(IEnumerable<IEntity>)
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_AsDynamic_System_Collections_Generic_IEnumerable_ToSic_Eav_Data_IEntity__
+  commentId: M:ToSic.Sxc.Dnn.ApiController.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Data.IEntity})
+  name.vb: AsDynamic(IEnumerable(Of IEntity))
+  fullName: ToSic.Sxc.Dnn.ApiController.AsDynamic(System.Collections.Generic.IEnumerable<ToSic.Eav.Data.IEntity>)
+  fullName.vb: ToSic.Sxc.Dnn.ApiController.AsDynamic(System.Collections.Generic.IEnumerable(Of ToSic.Eav.Data.IEntity))
+  nameWithType: ApiController.AsDynamic(IEnumerable<IEntity>)
+  nameWithType.vb: ApiController.AsDynamic(IEnumerable(Of IEntity))
+- uid: ToSic.Sxc.Dnn.ApiController.AsDynamic(System.Object)
+  name: AsDynamic(Object)
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_AsDynamic_System_Object_
+  commentId: M:ToSic.Sxc.Dnn.ApiController.AsDynamic(System.Object)
+  fullName: ToSic.Sxc.Dnn.ApiController.AsDynamic(System.Object)
+  nameWithType: ApiController.AsDynamic(Object)
+- uid: ToSic.Sxc.Dnn.ApiController.AsDynamic(ToSic.Eav.Data.IEntity)
+  name: AsDynamic(IEntity)
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_AsDynamic_ToSic_Eav_Data_IEntity_
+  commentId: M:ToSic.Sxc.Dnn.ApiController.AsDynamic(ToSic.Eav.Data.IEntity)
+  fullName: ToSic.Sxc.Dnn.ApiController.AsDynamic(ToSic.Eav.Data.IEntity)
+  nameWithType: ApiController.AsDynamic(IEntity)
+- uid: ToSic.Sxc.Dnn.ApiController.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  name: AsDynamic(IDataStream)
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_AsDynamic_ToSic_Eav_DataSources_IDataStream_
+  commentId: M:ToSic.Sxc.Dnn.ApiController.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  fullName: ToSic.Sxc.Dnn.ApiController.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  nameWithType: ApiController.AsDynamic(IDataStream)
+- uid: ToSic.Sxc.Dnn.ApiController.AsDynamic*
+  name: AsDynamic
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_AsDynamic_
+  commentId: Overload:ToSic.Sxc.Dnn.ApiController.AsDynamic
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.ApiController.AsDynamic
+  nameWithType: ApiController.AsDynamic
+- uid: ToSic.Sxc.Dnn.ApiController.AsEntity(System.Object)
+  name: AsEntity(Object)
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_AsEntity_System_Object_
+  commentId: M:ToSic.Sxc.Dnn.ApiController.AsEntity(System.Object)
+  fullName: ToSic.Sxc.Dnn.ApiController.AsEntity(System.Object)
+  nameWithType: ApiController.AsEntity(Object)
+- uid: ToSic.Sxc.Dnn.ApiController.AsEntity*
+  name: AsEntity
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_AsEntity_
+  commentId: Overload:ToSic.Sxc.Dnn.ApiController.AsEntity
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.ApiController.AsEntity
+  nameWithType: ApiController.AsEntity
+- uid: ToSic.Sxc.Dnn.ApiController.Content
+  name: Content
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_Content
+  commentId: P:ToSic.Sxc.Dnn.ApiController.Content
+  fullName: ToSic.Sxc.Dnn.ApiController.Content
+  nameWithType: ApiController.Content
+- uid: ToSic.Sxc.Dnn.ApiController.Content*
+  name: Content
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_Content_
+  commentId: Overload:ToSic.Sxc.Dnn.ApiController.Content
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.ApiController.Content
+  nameWithType: ApiController.Content
+- uid: ToSic.Sxc.Dnn.ApiController.CreateSource*
+  name: CreateSource
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_CreateSource_
+  commentId: Overload:ToSic.Sxc.Dnn.ApiController.CreateSource
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.ApiController.CreateSource
+  nameWithType: ApiController.CreateSource
+- uid: ToSic.Sxc.Dnn.ApiController.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.LookUp.ITokenListFiller)
+  name: CreateSource<T>(IDataSource, ITokenListFiller)
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_LookUp_ITokenListFiller_
+  commentId: M:ToSic.Sxc.Dnn.ApiController.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.LookUp.ITokenListFiller)
+  name.vb: CreateSource(Of T)(IDataSource, ITokenListFiller)
+  fullName: ToSic.Sxc.Dnn.ApiController.CreateSource<T>(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.LookUp.ITokenListFiller)
+  fullName.vb: ToSic.Sxc.Dnn.ApiController.CreateSource(Of T)(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.LookUp.ITokenListFiller)
+  nameWithType: ApiController.CreateSource<T>(IDataSource, ITokenListFiller)
+  nameWithType.vb: ApiController.CreateSource(Of T)(IDataSource, ITokenListFiller)
+- uid: ToSic.Sxc.Dnn.ApiController.CreateSource``1(ToSic.Eav.DataSources.IDataStream)
+  name: CreateSource<T>(IDataStream)
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_CreateSource__1_ToSic_Eav_DataSources_IDataStream_
+  commentId: M:ToSic.Sxc.Dnn.ApiController.CreateSource``1(ToSic.Eav.DataSources.IDataStream)
+  name.vb: CreateSource(Of T)(IDataStream)
+  fullName: ToSic.Sxc.Dnn.ApiController.CreateSource<T>(ToSic.Eav.DataSources.IDataStream)
+  fullName.vb: ToSic.Sxc.Dnn.ApiController.CreateSource(Of T)(ToSic.Eav.DataSources.IDataStream)
+  nameWithType: ApiController.CreateSource<T>(IDataStream)
+  nameWithType.vb: ApiController.CreateSource(Of T)(IDataStream)
+- uid: ToSic.Sxc.Dnn.ApiController.Data
+  name: Data
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_Data
+  commentId: P:ToSic.Sxc.Dnn.ApiController.Data
+  fullName: ToSic.Sxc.Dnn.ApiController.Data
+  nameWithType: ApiController.Data
+- uid: ToSic.Sxc.Dnn.ApiController.Data*
+  name: Data
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_Data_
+  commentId: Overload:ToSic.Sxc.Dnn.ApiController.Data
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.ApiController.Data
+  nameWithType: ApiController.Data
+- uid: ToSic.Sxc.Dnn.ApiController.Dnn
+  name: Dnn
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_Dnn
+  commentId: P:ToSic.Sxc.Dnn.ApiController.Dnn
+  fullName: ToSic.Sxc.Dnn.ApiController.Dnn
+  nameWithType: ApiController.Dnn
+- uid: ToSic.Sxc.Dnn.ApiController.Dnn*
+  name: Dnn
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_Dnn_
+  commentId: Overload:ToSic.Sxc.Dnn.ApiController.Dnn
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.ApiController.Dnn
+  nameWithType: ApiController.Dnn
+- uid: ToSic.Sxc.Dnn.ApiController.Edit
+  name: Edit
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_Edit
+  commentId: P:ToSic.Sxc.Dnn.ApiController.Edit
+  fullName: ToSic.Sxc.Dnn.ApiController.Edit
+  nameWithType: ApiController.Edit
+- uid: ToSic.Sxc.Dnn.ApiController.Edit*
+  name: Edit
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_Edit_
+  commentId: Overload:ToSic.Sxc.Dnn.ApiController.Edit
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.ApiController.Edit
+  nameWithType: ApiController.Edit
+- uid: ToSic.Sxc.Dnn.ApiController.Header
+  name: Header
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_Header
+  commentId: P:ToSic.Sxc.Dnn.ApiController.Header
+  fullName: ToSic.Sxc.Dnn.ApiController.Header
+  nameWithType: ApiController.Header
+- uid: ToSic.Sxc.Dnn.ApiController.Header*
+  name: Header
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_Header_
+  commentId: Overload:ToSic.Sxc.Dnn.ApiController.Header
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.ApiController.Header
+  nameWithType: ApiController.Header
+- uid: ToSic.Sxc.Dnn.ApiController.Link
+  name: Link
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_Link
+  commentId: P:ToSic.Sxc.Dnn.ApiController.Link
+  fullName: ToSic.Sxc.Dnn.ApiController.Link
+  nameWithType: ApiController.Link
+- uid: ToSic.Sxc.Dnn.ApiController.Link*
+  name: Link
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_Link_
+  commentId: Overload:ToSic.Sxc.Dnn.ApiController.Link
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.ApiController.Link
+  nameWithType: ApiController.Link
+- uid: ToSic.Sxc.Dnn.ApiController.SaveInAdam(System.String,System.IO.Stream,System.String,System.String,System.Nullable{System.Guid},System.String,System.String)
+  name: SaveInAdam(String, Stream, String, String, Nullable<Guid>, String, String)
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_SaveInAdam_System_String_System_IO_Stream_System_String_System_String_System_Nullable_System_Guid__System_String_System_String_
+  commentId: M:ToSic.Sxc.Dnn.ApiController.SaveInAdam(System.String,System.IO.Stream,System.String,System.String,System.Nullable{System.Guid},System.String,System.String)
+  name.vb: SaveInAdam(String, Stream, String, String, Nullable(Of Guid), String, String)
+  fullName: ToSic.Sxc.Dnn.ApiController.SaveInAdam(System.String, System.IO.Stream, System.String, System.String, System.Nullable<System.Guid>, System.String, System.String)
+  fullName.vb: ToSic.Sxc.Dnn.ApiController.SaveInAdam(System.String, System.IO.Stream, System.String, System.String, System.Nullable(Of System.Guid), System.String, System.String)
+  nameWithType: ApiController.SaveInAdam(String, Stream, String, String, Nullable<Guid>, String, String)
+  nameWithType.vb: ApiController.SaveInAdam(String, Stream, String, String, Nullable(Of Guid), String, String)
+- uid: ToSic.Sxc.Dnn.ApiController.SaveInAdam*
+  name: SaveInAdam
+  href: api/dot-net/ToSic.Sxc.Dnn.ApiController.html#ToSic_Sxc_Dnn_ApiController_SaveInAdam_
+  commentId: Overload:ToSic.Sxc.Dnn.ApiController.SaveInAdam
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.ApiController.SaveInAdam
+  nameWithType: ApiController.SaveInAdam
 - uid: ToSic.Sxc.Dnn.IDnnContext
   name: IDnnContext
   href: api/dot-net/ToSic.Sxc.Dnn.IDnnContext.html
@@ -6610,67 +6814,297 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Dnn.IHtmlHelper.Raw
   nameWithType: IHtmlHelper.Raw
-- uid: ToSic.Sxc.Dnn.IRazor
-  name: IRazor
-  href: api/dot-net/ToSic.Sxc.Dnn.IRazor.html
-  commentId: T:ToSic.Sxc.Dnn.IRazor
-  fullName: ToSic.Sxc.Dnn.IRazor
-  nameWithType: IRazor
-- uid: ToSic.Sxc.Dnn.IRazor.CustomizeData
+- uid: ToSic.Sxc.Dnn.IRazorComponent
+  name: IRazorComponent
+  href: api/dot-net/ToSic.Sxc.Dnn.IRazorComponent.html
+  commentId: T:ToSic.Sxc.Dnn.IRazorComponent
+  fullName: ToSic.Sxc.Dnn.IRazorComponent
+  nameWithType: IRazorComponent
+- uid: ToSic.Sxc.Dnn.IRazorComponent.CustomizeData
   name: CustomizeData()
-  href: api/dot-net/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeData
-  commentId: M:ToSic.Sxc.Dnn.IRazor.CustomizeData
-  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeData()
-  nameWithType: IRazor.CustomizeData()
-- uid: ToSic.Sxc.Dnn.IRazor.CustomizeData*
+  href: api/dot-net/ToSic.Sxc.Dnn.IRazorComponent.html#ToSic_Sxc_Dnn_IRazorComponent_CustomizeData
+  commentId: M:ToSic.Sxc.Dnn.IRazorComponent.CustomizeData
+  fullName: ToSic.Sxc.Dnn.IRazorComponent.CustomizeData()
+  nameWithType: IRazorComponent.CustomizeData()
+- uid: ToSic.Sxc.Dnn.IRazorComponent.CustomizeData*
   name: CustomizeData
-  href: api/dot-net/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeData_
-  commentId: Overload:ToSic.Sxc.Dnn.IRazor.CustomizeData
+  href: api/dot-net/ToSic.Sxc.Dnn.IRazorComponent.html#ToSic_Sxc_Dnn_IRazorComponent_CustomizeData_
+  commentId: Overload:ToSic.Sxc.Dnn.IRazorComponent.CustomizeData
   isSpec: "True"
-  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeData
-  nameWithType: IRazor.CustomizeData
-- uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  fullName: ToSic.Sxc.Dnn.IRazorComponent.CustomizeData
+  nameWithType: IRazorComponent.CustomizeData
+- uid: ToSic.Sxc.Dnn.IRazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
   name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
-  href: api/dot-net/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Environment_IContainer_System_DateTime_
-  commentId: M:ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  href: api/dot-net/ToSic.Sxc.Dnn.IRazorComponent.html#ToSic_Sxc_Dnn_IRazorComponent_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Environment_IContainer_System_DateTime_
+  commentId: M:ToSic.Sxc.Dnn.IRazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
   name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
-  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Environment.IContainer, System.DateTime)
-  fullName.vb: ToSic.Sxc.Dnn.IRazor.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Environment.IContainer, System.DateTime)
-  nameWithType: IRazor.CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
-  nameWithType.vb: IRazor.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
-- uid: ToSic.Sxc.Dnn.IRazor.CustomizeSearch*
+  fullName: ToSic.Sxc.Dnn.IRazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Environment.IContainer, System.DateTime)
+  fullName.vb: ToSic.Sxc.Dnn.IRazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Environment.IContainer, System.DateTime)
+  nameWithType: IRazorComponent.CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
+  nameWithType.vb: IRazorComponent.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
+- uid: ToSic.Sxc.Dnn.IRazorComponent.CustomizeSearch*
   name: CustomizeSearch
-  href: api/dot-net/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_CustomizeSearch_
-  commentId: Overload:ToSic.Sxc.Dnn.IRazor.CustomizeSearch
+  href: api/dot-net/ToSic.Sxc.Dnn.IRazorComponent.html#ToSic_Sxc_Dnn_IRazorComponent_CustomizeSearch_
+  commentId: Overload:ToSic.Sxc.Dnn.IRazorComponent.CustomizeSearch
   isSpec: "True"
-  fullName: ToSic.Sxc.Dnn.IRazor.CustomizeSearch
-  nameWithType: IRazor.CustomizeSearch
-- uid: ToSic.Sxc.Dnn.IRazor.Html
+  fullName: ToSic.Sxc.Dnn.IRazorComponent.CustomizeSearch
+  nameWithType: IRazorComponent.CustomizeSearch
+- uid: ToSic.Sxc.Dnn.IRazorComponent.Html
   name: Html
-  href: api/dot-net/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_Html
-  commentId: P:ToSic.Sxc.Dnn.IRazor.Html
-  fullName: ToSic.Sxc.Dnn.IRazor.Html
-  nameWithType: IRazor.Html
-- uid: ToSic.Sxc.Dnn.IRazor.Html*
+  href: api/dot-net/ToSic.Sxc.Dnn.IRazorComponent.html#ToSic_Sxc_Dnn_IRazorComponent_Html
+  commentId: P:ToSic.Sxc.Dnn.IRazorComponent.Html
+  fullName: ToSic.Sxc.Dnn.IRazorComponent.Html
+  nameWithType: IRazorComponent.Html
+- uid: ToSic.Sxc.Dnn.IRazorComponent.Html*
   name: Html
-  href: api/dot-net/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_Html_
-  commentId: Overload:ToSic.Sxc.Dnn.IRazor.Html
+  href: api/dot-net/ToSic.Sxc.Dnn.IRazorComponent.html#ToSic_Sxc_Dnn_IRazorComponent_Html_
+  commentId: Overload:ToSic.Sxc.Dnn.IRazorComponent.Html
   isSpec: "True"
-  fullName: ToSic.Sxc.Dnn.IRazor.Html
-  nameWithType: IRazor.Html
-- uid: ToSic.Sxc.Dnn.IRazor.Purpose
+  fullName: ToSic.Sxc.Dnn.IRazorComponent.Html
+  nameWithType: IRazorComponent.Html
+- uid: ToSic.Sxc.Dnn.IRazorComponent.Purpose
   name: Purpose
-  href: api/dot-net/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_Purpose
-  commentId: P:ToSic.Sxc.Dnn.IRazor.Purpose
-  fullName: ToSic.Sxc.Dnn.IRazor.Purpose
-  nameWithType: IRazor.Purpose
-- uid: ToSic.Sxc.Dnn.IRazor.Purpose*
+  href: api/dot-net/ToSic.Sxc.Dnn.IRazorComponent.html#ToSic_Sxc_Dnn_IRazorComponent_Purpose
+  commentId: P:ToSic.Sxc.Dnn.IRazorComponent.Purpose
+  fullName: ToSic.Sxc.Dnn.IRazorComponent.Purpose
+  nameWithType: IRazorComponent.Purpose
+- uid: ToSic.Sxc.Dnn.IRazorComponent.Purpose*
   name: Purpose
-  href: api/dot-net/ToSic.Sxc.Dnn.IRazor.html#ToSic_Sxc_Dnn_IRazor_Purpose_
-  commentId: Overload:ToSic.Sxc.Dnn.IRazor.Purpose
+  href: api/dot-net/ToSic.Sxc.Dnn.IRazorComponent.html#ToSic_Sxc_Dnn_IRazorComponent_Purpose_
+  commentId: Overload:ToSic.Sxc.Dnn.IRazorComponent.Purpose
   isSpec: "True"
-  fullName: ToSic.Sxc.Dnn.IRazor.Purpose
-  nameWithType: IRazor.Purpose
+  fullName: ToSic.Sxc.Dnn.IRazorComponent.Purpose
+  nameWithType: IRazorComponent.Purpose
+- uid: ToSic.Sxc.Dnn.RazorComponent
+  name: RazorComponent
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html
+  commentId: T:ToSic.Sxc.Dnn.RazorComponent
+  fullName: ToSic.Sxc.Dnn.RazorComponent
+  nameWithType: RazorComponent
+- uid: ToSic.Sxc.Dnn.RazorComponent.App
+  name: App
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_App
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.App
+  fullName: ToSic.Sxc.Dnn.RazorComponent.App
+  nameWithType: RazorComponent.App
+- uid: ToSic.Sxc.Dnn.RazorComponent.App*
+  name: App
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_App_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.App
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.App
+  nameWithType: RazorComponent.App
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Eav.Data.IEntity,System.String)
+  name: AsAdam(IEntity, String)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsAdam_ToSic_Eav_Data_IEntity_System_String_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Eav.Data.IEntity,System.String)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Eav.Data.IEntity, System.String)
+  nameWithType: RazorComponent.AsAdam(IEntity, String)
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Sxc.Data.IDynamicEntity,System.String)
+  name: AsAdam(IDynamicEntity, String)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsAdam_ToSic_Sxc_Data_IDynamicEntity_System_String_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Sxc.Data.IDynamicEntity,System.String)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Sxc.Data.IDynamicEntity, System.String)
+  nameWithType: RazorComponent.AsAdam(IDynamicEntity, String)
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsAdam*
+  name: AsAdam
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsAdam_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.AsAdam
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsAdam
+  nameWithType: RazorComponent.AsAdam
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Data.IEntity})
+  name: AsDynamic(IEnumerable<IEntity>)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsDynamic_System_Collections_Generic_IEnumerable_ToSic_Eav_Data_IEntity__
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Data.IEntity})
+  name.vb: AsDynamic(IEnumerable(Of IEntity))
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Collections.Generic.IEnumerable<ToSic.Eav.Data.IEntity>)
+  fullName.vb: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Collections.Generic.IEnumerable(Of ToSic.Eav.Data.IEntity))
+  nameWithType: RazorComponent.AsDynamic(IEnumerable<IEntity>)
+  nameWithType.vb: RazorComponent.AsDynamic(IEnumerable(Of IEntity))
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Object)
+  name: AsDynamic(Object)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsDynamic_System_Object_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Object)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Object)
+  nameWithType: RazorComponent.AsDynamic(Object)
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.Data.IEntity)
+  name: AsDynamic(IEntity)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsDynamic_ToSic_Eav_Data_IEntity_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.Data.IEntity)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.Data.IEntity)
+  nameWithType: RazorComponent.AsDynamic(IEntity)
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  name: AsDynamic(IDataStream)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsDynamic_ToSic_Eav_DataSources_IDataStream_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  nameWithType: RazorComponent.AsDynamic(IDataStream)
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsDynamic*
+  name: AsDynamic
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsDynamic_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.AsDynamic
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsDynamic
+  nameWithType: RazorComponent.AsDynamic
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsEntity(System.Object)
+  name: AsEntity(Object)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsEntity_System_Object_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsEntity(System.Object)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsEntity(System.Object)
+  nameWithType: RazorComponent.AsEntity(Object)
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsEntity*
+  name: AsEntity
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsEntity_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.AsEntity
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsEntity
+  nameWithType: RazorComponent.AsEntity
+- uid: ToSic.Sxc.Dnn.RazorComponent.Content
+  name: Content
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Content
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Content
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Content
+  nameWithType: RazorComponent.Content
+- uid: ToSic.Sxc.Dnn.RazorComponent.Content*
+  name: Content
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Content_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Content
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Content
+  nameWithType: RazorComponent.Content
+- uid: ToSic.Sxc.Dnn.RazorComponent.CreateSource*
+  name: CreateSource
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CreateSource_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.CreateSource
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CreateSource
+  nameWithType: RazorComponent.CreateSource
+- uid: ToSic.Sxc.Dnn.RazorComponent.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.LookUp.ITokenListFiller)
+  name: CreateSource<T>(IDataSource, ITokenListFiller)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_LookUp_ITokenListFiller_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.LookUp.ITokenListFiller)
+  name.vb: CreateSource(Of T)(IDataSource, ITokenListFiller)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CreateSource<T>(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.LookUp.ITokenListFiller)
+  fullName.vb: ToSic.Sxc.Dnn.RazorComponent.CreateSource(Of T)(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.LookUp.ITokenListFiller)
+  nameWithType: RazorComponent.CreateSource<T>(IDataSource, ITokenListFiller)
+  nameWithType.vb: RazorComponent.CreateSource(Of T)(IDataSource, ITokenListFiller)
+- uid: ToSic.Sxc.Dnn.RazorComponent.CreateSource``1(ToSic.Eav.DataSources.IDataStream)
+  name: CreateSource<T>(IDataStream)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CreateSource__1_ToSic_Eav_DataSources_IDataStream_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.CreateSource``1(ToSic.Eav.DataSources.IDataStream)
+  name.vb: CreateSource(Of T)(IDataStream)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CreateSource<T>(ToSic.Eav.DataSources.IDataStream)
+  fullName.vb: ToSic.Sxc.Dnn.RazorComponent.CreateSource(Of T)(ToSic.Eav.DataSources.IDataStream)
+  nameWithType: RazorComponent.CreateSource<T>(IDataStream)
+  nameWithType.vb: RazorComponent.CreateSource(Of T)(IDataStream)
+- uid: ToSic.Sxc.Dnn.RazorComponent.CustomizeData
+  name: CustomizeData()
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CustomizeData
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.CustomizeData
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CustomizeData()
+  nameWithType: RazorComponent.CustomizeData()
+- uid: ToSic.Sxc.Dnn.RazorComponent.CustomizeData*
+  name: CustomizeData
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CustomizeData_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.CustomizeData
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CustomizeData
+  nameWithType: RazorComponent.CustomizeData
+- uid: ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Environment_IContainer_System_DateTime_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Environment.IContainer, System.DateTime)
+  fullName.vb: ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Environment.IContainer, System.DateTime)
+  nameWithType: RazorComponent.CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
+  nameWithType.vb: RazorComponent.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
+- uid: ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch*
+  name: CustomizeSearch
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CustomizeSearch_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch
+  nameWithType: RazorComponent.CustomizeSearch
+- uid: ToSic.Sxc.Dnn.RazorComponent.Data
+  name: Data
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Data
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Data
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Data
+  nameWithType: RazorComponent.Data
+- uid: ToSic.Sxc.Dnn.RazorComponent.Data*
+  name: Data
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Data_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Data
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Data
+  nameWithType: RazorComponent.Data
+- uid: ToSic.Sxc.Dnn.RazorComponent.Dnn
+  name: Dnn
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Dnn
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Dnn
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Dnn
+  nameWithType: RazorComponent.Dnn
+- uid: ToSic.Sxc.Dnn.RazorComponent.Dnn*
+  name: Dnn
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Dnn_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Dnn
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Dnn
+  nameWithType: RazorComponent.Dnn
+- uid: ToSic.Sxc.Dnn.RazorComponent.Edit
+  name: Edit
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Edit
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Edit
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Edit
+  nameWithType: RazorComponent.Edit
+- uid: ToSic.Sxc.Dnn.RazorComponent.Edit*
+  name: Edit
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Edit_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Edit
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Edit
+  nameWithType: RazorComponent.Edit
+- uid: ToSic.Sxc.Dnn.RazorComponent.Header
+  name: Header
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Header
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Header
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Header
+  nameWithType: RazorComponent.Header
+- uid: ToSic.Sxc.Dnn.RazorComponent.Header*
+  name: Header
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Header_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Header
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Header
+  nameWithType: RazorComponent.Header
+- uid: ToSic.Sxc.Dnn.RazorComponent.Link
+  name: Link
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Link
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Link
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Link
+  nameWithType: RazorComponent.Link
+- uid: ToSic.Sxc.Dnn.RazorComponent.Link*
+  name: Link
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Link_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Link
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Link
+  nameWithType: RazorComponent.Link
+- uid: ToSic.Sxc.Dnn.RazorComponent.Purpose
+  name: Purpose
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Purpose
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Purpose
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Purpose
+  nameWithType: RazorComponent.Purpose
+- uid: ToSic.Sxc.Dnn.RazorComponent.Purpose*
+  name: Purpose
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Purpose_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Purpose
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Purpose
+  nameWithType: RazorComponent.Purpose
 - uid: ToSic.Sxc.Engines
   name: ToSic.Sxc.Engines
   href: api/dot-net/ToSic.Sxc.Engines.html
@@ -7150,6 +7584,19 @@ references:
   commentId: T:ToSic.Sxc.Web.IDynamicCode
   fullName: ToSic.Sxc.Web.IDynamicCode
   nameWithType: IDynamicCode
+- uid: ToSic.Sxc.Web.IDynamicCode.App
+  name: App
+  href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_App
+  commentId: P:ToSic.Sxc.Web.IDynamicCode.App
+  fullName: ToSic.Sxc.Web.IDynamicCode.App
+  nameWithType: IDynamicCode.App
+- uid: ToSic.Sxc.Web.IDynamicCode.App*
+  name: App
+  href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_App_
+  commentId: Overload:ToSic.Sxc.Web.IDynamicCode.App
+  isSpec: "True"
+  fullName: ToSic.Sxc.Web.IDynamicCode.App
+  nameWithType: IDynamicCode.App
 - uid: ToSic.Sxc.Web.IDynamicCode.AsAdam(ToSic.Eav.Data.IEntity,System.String)
   name: AsAdam(IEntity, String)
   href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsAdam_ToSic_Eav_Data_IEntity_System_String_
@@ -7178,15 +7625,6 @@ references:
   fullName.vb: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable(Of ToSic.Eav.Data.IEntity))
   nameWithType: IDynamicCode.AsDynamic(IEnumerable<IEntity>)
   nameWithType.vb: IDynamicCode.AsDynamic(IEnumerable(Of IEntity))
-- uid: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair{System.Int32,ToSic.Eav.Data.IEntity})
-  name: AsDynamic(KeyValuePair<Int32, IEntity>)
-  href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsDynamic_System_Collections_Generic_KeyValuePair_System_Int32_ToSic_Eav_Data_IEntity__
-  commentId: M:ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair{System.Int32,ToSic.Eav.Data.IEntity})
-  name.vb: AsDynamic(KeyValuePair(Of Int32, IEntity))
-  fullName: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair<System.Int32, ToSic.Eav.Data.IEntity>)
-  fullName.vb: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair(Of System.Int32, ToSic.Eav.Data.IEntity))
-  nameWithType: IDynamicCode.AsDynamic(KeyValuePair<Int32, IEntity>)
-  nameWithType.vb: IDynamicCode.AsDynamic(KeyValuePair(Of Int32, IEntity))
 - uid: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Object)
   name: AsDynamic(Object)
   href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsDynamic_System_Object_
@@ -7263,6 +7701,19 @@ references:
   fullName.vb: ToSic.Sxc.Web.IDynamicCode.CreateSource(Of T)(ToSic.Eav.DataSources.IDataStream)
   nameWithType: IDynamicCode.CreateSource<T>(IDataStream)
   nameWithType.vb: IDynamicCode.CreateSource(Of T)(IDataStream)
+- uid: ToSic.Sxc.Web.IDynamicCode.Data
+  name: Data
+  href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Data
+  commentId: P:ToSic.Sxc.Web.IDynamicCode.Data
+  fullName: ToSic.Sxc.Web.IDynamicCode.Data
+  nameWithType: IDynamicCode.Data
+- uid: ToSic.Sxc.Web.IDynamicCode.Data*
+  name: Data
+  href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Data_
+  commentId: Overload:ToSic.Sxc.Web.IDynamicCode.Data
+  isSpec: "True"
+  fullName: ToSic.Sxc.Web.IDynamicCode.Data
+  nameWithType: IDynamicCode.Data
 - uid: ToSic.Sxc.Web.IDynamicCode.Edit
   name: Edit
   href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Edit

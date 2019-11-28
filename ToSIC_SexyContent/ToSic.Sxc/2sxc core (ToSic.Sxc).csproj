@@ -36,6 +36,9 @@
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -44,6 +47,10 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
@@ -137,7 +144,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Search.ISearchInfo.cs" />
     <Compile Include="Apps\App.cs" />
-    <Compile Include="SexyContent\AppAndDataHelpersBase.cs" />
+    <Compile Include="Web\DynamicCodeHelper.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditor.cs" />
     <Compile Include="SexyContent\Constants.cs" />
@@ -183,7 +190,7 @@
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\Settings.cs" />
     <Compile Include="SexyContent\SexyContentException.cs" />
-    <Compile Include="SexyContent\SxcHelper.cs" />
+    <Compile Include="Code\SxcHelper.cs" />
     <Compile Include="Blocks\CmsBlock.cs" />
     <Compile Include="Blocks\CmsBlock_Render.cs" />
     <Compile Include="Blocks\CmsBlock_Template.cs" />
@@ -225,6 +232,7 @@
     <None Include="Adam\Assets\Helper Excel to build list of all bad file extensions.xlsx" />
     <None Include="app.config" />
     <None Include="Apps\Readme.md" />
+    <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.SexyContentWebPage.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

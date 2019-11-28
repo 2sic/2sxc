@@ -8,6 +8,7 @@ using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web;
 using App = ToSic.Sxc.Apps.App;
+using DynamicCodeHelper = ToSic.Sxc.Dnn.DynamicCodeHelper;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace
@@ -37,7 +38,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         }
 
         public static IDynamicCode CodingHelpers(Sxc.Blocks.ICmsBlock cms) 
-            => new DnnAppAndDataHelpers(cms as Sxc.Blocks.CmsBlock);
+            => new DynamicCodeHelper(cms as Sxc.Blocks.CmsBlock);
 
         /// <summary>
         /// get a full app-object for accessing data of the app from outside

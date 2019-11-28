@@ -187,7 +187,6 @@
     <Content Include="razorblade-old\bin\Connect.Razor.Dnn.dll" />
     <Content Include="razorblade-old\License.txt" />
     <Content Include="razorblade-old\ReleaseNotes.txt" />
-    <Content Include="packages.config" />
     <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
     <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
@@ -276,6 +275,7 @@
     <Content Include="BuildScripts\readme.md" />
     <Content Include="koi\Resources.zip" />
     <Content Include=".data\readme.md" />
+    <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>

@@ -9,8 +9,10 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using IEntity = ToSic.Eav.Data.IEntity;
+using PermissionCheckBase = ToSic.Eav.Security.PermissionCheckBase;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -65,7 +67,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 ok = UserIsTenantAdmin()
                      || UserIsModuleAdmin()
                      || UserIsModuleEditor();
-            if (ok) GrantedBecause = ConditionType.EnvironmentGlobal;
+            if (ok) GrantedBecause = Conditions.EnvironmentGlobal;
             logWrap($"{ok} because:{GrantedBecause}");
             return ok;
         }

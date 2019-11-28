@@ -50,8 +50,8 @@ namespace ToSic.Sxc.Code
 
         public dynamic AsDynamic(dynamic dynamicEntity) => Parent?.AsDynamic(dynamicEntity);
 
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) 
-            => Parent?.AsDynamic(entityKeyValuePair);
+        //public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) 
+        //    => Parent?.AsDynamic(entityKeyValuePair);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]

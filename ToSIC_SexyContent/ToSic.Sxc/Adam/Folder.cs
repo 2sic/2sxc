@@ -17,16 +17,16 @@ namespace ToSic.Sxc.Adam
             _fileSystem = fileSystem;
         }
 
-        /// <inheritdoc cref="IAsset" />
+        /// <inheritdoc />
         public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true) as dynamic;
 
-        /// <inheritdoc cref="IAsset" />
+        /// <inheritdoc />
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
 
-        /// <inheritdoc cref="IAsset" />
+        /// <inheritdoc />
         public string Url => AppContext.Tenant.ContentPath + Path;
 
-        /// <inheritdoc cref="IAsset" />
+        /// <inheritdoc />
         public string Type => Classification.Folder;
 
         [PrivateApi]

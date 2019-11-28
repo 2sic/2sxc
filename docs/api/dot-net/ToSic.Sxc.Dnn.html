@@ -432,14 +432,14 @@
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
-                      <a href="ToSic.Eav.Security.Permissions.html" title="ToSic.Eav.Security.Permissions" class="">ToSic.Eav.Security.Permissions</a>
+                      <a href="ToSic.Eav.Security.html" title="ToSic.Eav.Security" class="">ToSic.Eav.Security</a>
                         
                         <ul class="nav level2">
                           <li class="">
-                            <a href="ToSic.Eav.Security.Permissions.IHasPermissions.html" title="IHasPermissions" class="">IHasPermissions</a>
+                            <a href="ToSic.Eav.Security.IHasPermissions.html" title="IHasPermissions" class="">IHasPermissions</a>
                           </li>
                           <li class="">
-                            <a href="ToSic.Eav.Security.Permissions.Permission.html" title="Permission" class="">Permission</a>
+                            <a href="ToSic.Eav.Security.Permission.html" title="Permission" class="">Permission</a>
                           </li>
                         </ul>  </li>
                     <li class="">
@@ -499,6 +499,9 @@
                         
                         <ul class="nav level2">
                           <li class="">
+                            <a href="ToSic.Sxc.Dnn.ApiController.html" title="ApiController" class="">ApiController</a>
+                          </li>
+                          <li class="">
                             <a href="ToSic.Sxc.Dnn.IDnnContext.html" title="IDnnContext" class="">IDnnContext</a>
                           </li>
                           <li class="">
@@ -511,7 +514,10 @@
                             <a href="ToSic.Sxc.Dnn.IHtmlHelper.html" title="IHtmlHelper" class="">IHtmlHelper</a>
                           </li>
                           <li class="">
-                            <a href="ToSic.Sxc.Dnn.IRazor.html" title="IRazor" class="">IRazor</a>
+                            <a href="ToSic.Sxc.Dnn.IRazorComponent.html" title="IRazorComponent" class="">IRazorComponent</a>
+                          </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Dnn.RazorComponent.html" title="RazorComponent" class="">RazorComponent</a>
                           </li>
                         </ul>  </li>
                     <li class="">
@@ -579,9 +585,21 @@
   
   <h1 id="ToSic_Sxc_Dnn" data-uid="ToSic.Sxc.Dnn" class="text-break">Namespace ToSic.Sxc.Dnn
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>This contains interfaces that are specific to 2sxc in DNN. </p>
+<p>The purpose is that both the EAV and 2sxc are meant to be platform agnostic, but Razor and WebApi developers in DNN still need access to some helpers like the <a class="xref" href="ToSic.Sxc.Dnn.IDnnContext.html">DNN object</a>. </p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
+    <h3 id="classes">Classes
+  </h3>
+      <h4><a class="xref" href="ToSic.Sxc.Dnn.ApiController.html">ApiController</a></h4>
+      <section><p>This is the base class for all custom API Controllers. <br>
+With this, your code receives the full context  incl. the current App, DNN, Data, etc.</p>
+</section>
+      <h4><a class="xref" href="ToSic.Sxc.Dnn.RazorComponent.html">RazorComponent</a></h4>
+      <section><p>The base class for Razor-Components in 2sxc 10+ <br>
+Provides context infos like the Dnn object, helpers like Edit and much more. <br></p>
+</section>
     <h3 id="interfaces">Interfaces
   </h3>
       <h4><a class="xref" href="ToSic.Sxc.Dnn.IDnnContext.html">IDnnContext</a></h4>
@@ -599,7 +617,7 @@ It&apos;s important, because if 2sxc also runs on other CMS platforms, then the 
       <h4><a class="xref" href="ToSic.Sxc.Dnn.IHtmlHelper.html">IHtmlHelper</a></h4>
       <section><p>helper to quickly &quot;raw&quot; some html</p>
 </section>
-      <h4><a class="xref" href="ToSic.Sxc.Dnn.IRazor.html">IRazor</a></h4>
+      <h4><a class="xref" href="ToSic.Sxc.Dnn.IRazorComponent.html">IRazorComponent</a></h4>
       <section><p>All DNN Razor Pages inherit from this class</p>
 </section>
 </article>
@@ -609,6 +627,9 @@ It&apos;s important, because if 2sxc also runs on other CMS platforms, then the 
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2sic/2sxc/blob/docs-wiki/ToSIC_SexyContent/Docs-Generator/namespaces/ToSic.Sxc/Dnn/_Sxc.Dnn.md/#L2" class="contribution-link">Improve this Doc</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

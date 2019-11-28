@@ -11,7 +11,7 @@ There are many data-sources, and most of them will...
 * ...either get data from somewhere external like SQL, CSV, REST or the EAV-cache and provide this for further use - then it's a pure `IDataSource`
 * ...or receive data from _another_ DataSource, then process/filter this and provide the result for further use, in which case it's both an `IDataSource` as well as an `IDataTarget` 
 
-So DataSources can be joined together into a [Query](dotnet-query) to do amazing things, like
+So DataSources can be joined together into a [Query](xref:Specs.DataSources.Queries) to do amazing things, like
 
 1. a `CsvDataSource` can read a CSV-file and provide the data as a stream on Entities on `csvDs["Default"]`...
 2. ...and pipe the result it to a `CacheDataSource` which caches the data for x-minutes

@@ -2,7 +2,7 @@
 uid: Specs.DataSources.Queries
 ---
 
-# Queries Basics
+# Query Basics
 
 Queries are special Data-Sources which internally chain various other Data-Sources to query the underlying data. They can be built in two ways:
 
