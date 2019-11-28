@@ -12,13 +12,12 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.WebApi.Errors;
 using ToSic.SexyContent.WebApi.Permissions;
-using ToSic.Sxc.Adam;
 using SysConf = ToSic.Eav.Configuration;
 using Feats = ToSic.Eav.Configuration.Features;
 using IApp = ToSic.Sxc.Apps.IApp;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
-namespace ToSic.SexyContent.WebApi.Adam
+namespace ToSic.Sxc.Adam.WebApi
 {
     internal class AdamSecureState: MultiPermissionsTypes
     {

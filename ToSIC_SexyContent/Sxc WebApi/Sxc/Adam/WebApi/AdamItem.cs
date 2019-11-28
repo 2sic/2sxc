@@ -1,9 +1,7 @@
 ﻿using System;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.WebApi.Adam;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Adam.WebApi
 {
     public class AdamItem

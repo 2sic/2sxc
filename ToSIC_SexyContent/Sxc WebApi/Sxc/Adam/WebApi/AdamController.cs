@@ -11,10 +11,8 @@ using DotNetNuke.Web.Api;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.WebApi;
-using ToSic.SexyContent.WebApi.Adam;
 using ToSic.SexyContent.WebApi.Errors;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Adam.WebApi
 {
     /// <summary>

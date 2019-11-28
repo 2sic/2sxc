@@ -5,10 +5,10 @@ using DotNetNuke.Entities.Host;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using JetBrains.Annotations;
-using ToSic.SexyContent.WebApi.Errors;
 using ToSic.Eav.Security.Files;
+using ToSic.SexyContent.WebApi.Errors;
 
-namespace ToSic.SexyContent.WebApi.Adam
+namespace ToSic.Sxc.Adam.WebApi
 {
     internal class SecurityChecks
     {

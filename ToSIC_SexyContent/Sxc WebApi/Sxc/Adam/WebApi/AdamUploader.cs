@@ -6,13 +6,10 @@ using System.Web.Configuration;
 using System.Web.Http;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent;
-using ToSic.SexyContent.WebApi.Adam;
 using ToSic.SexyContent.WebApi.Errors;
 using ToSic.Sxc.Blocks;
 
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Adam.WebApi
 {
     internal class AdamUploader: HasLog

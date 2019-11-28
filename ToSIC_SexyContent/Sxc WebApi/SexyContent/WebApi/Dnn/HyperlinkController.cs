@@ -6,8 +6,8 @@ using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
-using ToSic.SexyContent.WebApi.Adam;
 using ToSic.SexyContent.WebApi.Permissions;
+using ToSic.Sxc.Adam.WebApi;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
