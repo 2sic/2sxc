@@ -164,6 +164,7 @@
     <None Include="namespaces\ToSic.Sxc\Web\IDynamicCode.Data.md" />
     <None Include="namespaces\ToSic.Sxc\Web\_Sxc.Web.md" />
     <None Include="packages.config" />
+    <None Include="shared\before-you-start-idynamicentity.md" />
     <None Include="shared\where-to-start.md" />
     <None Include="specs\angularJs\angularjs-1-overview.md" />
     <None Include="specs\angular\dnn-sxc-angular.md" />
