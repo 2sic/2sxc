@@ -98,7 +98,7 @@
     <Compile Include="Dnn\IRazor.cs" />
     <Compile Include="Dnn\IHtmlHelper.cs" />
     <Compile Include="Dnn\RazorPage.cs" />
-    <Compile Include="Dnn\SexyContentWebPage.cs" />
+    <Compile Include="Dnn\RazorPageBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engines\Razor\HtmlHelper.cs" />
     <Compile Include="Engines\Razor\RazorEngine.cs" />

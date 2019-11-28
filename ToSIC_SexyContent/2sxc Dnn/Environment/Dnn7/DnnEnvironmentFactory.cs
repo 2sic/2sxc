@@ -5,6 +5,9 @@ using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Web;
+using DynamicCodeHelper = ToSic.Sxc.Dnn.Web.DynamicCodeHelper;
 using IApp = ToSic.Eav.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -28,6 +31,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
 
-        public AppAndDataHelpersBase AppAndDataHelpers(Sxc.Blocks.ICmsBlock cms) => new DnnAppAndDataHelpers(cms);
+        public Sxc.Web.DynamicCodeHelper AppAndDataHelpers(Sxc.Blocks.ICmsBlock cms) => new DynamicCodeHelper(cms);
     }
 }

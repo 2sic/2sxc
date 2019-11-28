@@ -94,7 +94,7 @@
     <Compile Include="Dnn\Interfaces\IDynamicWebApi.cs" />
     <Compile Include="Dnn\Interfaces\IDynamicCode.cs" />
     <Compile Include="Dnn\SecurityHelpers.cs" />
-    <Compile Include="Environment\Dnn7\DnnAppAndDataHelpers.cs" />
+    <Compile Include="Dnn\Web\DynamicCodeHelper.cs" />
     <Compile Include="Environment\Dnn7\ClientDependencyManager.cs" />
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosAll.cs" />
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosEnvironment.cs" />

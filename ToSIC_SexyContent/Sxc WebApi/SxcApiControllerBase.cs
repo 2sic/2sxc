@@ -4,6 +4,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi.AutoDetectContext;
 using ToSic.SexyContent.WebApi.Dnn;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn.Web;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -25,8 +26,8 @@ namespace ToSic.SexyContent.WebApi
         internal ICmsBlock CmsBlock { get; private set; }
 
 
-        internal static DnnAppAndDataHelpers GetContext(ICmsBlock cmsInstance, ILog log) 
-            => new DnnAppAndDataHelpers(cmsInstance, cmsInstance?.Log ?? log);
+        internal static DynamicCodeHelper GetContext(ICmsBlock cmsInstance, ILog log) 
+            => new DynamicCodeHelper(cmsInstance, cmsInstance?.Log ?? log);
 
 
         #region App-Helpers for anonyous access APIs

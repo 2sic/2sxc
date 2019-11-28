@@ -1,9 +1,10 @@
 ﻿using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Web;
 
 namespace ToSic.SexyContent.Interfaces
 {
     public interface IWebFactoryTemp
     {
-        AppAndDataHelpersBase AppAndDataHelpers(ICmsBlock cms);
+        DynamicCodeHelper AppAndDataHelpers(ICmsBlock cms);
     }
 }

@@ -15,6 +15,7 @@ using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 
 // ReSharper disable once CheckNamespace
@@ -125,8 +126,10 @@ namespace ToSic.Sxc.Engines
             // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
             // reactivate if it turns out to be used, otherwise delete ca. EOY 2019
             //webPage.Url = new UrlHelper(InstInfo);
+
+            // deprecated 2019-11-28 2dm, it's also in the CmsBlock
             webPage.Sexy = CmsBlock;
-            webPage.DnnAppAndDataHelpers = new DnnAppAndDataHelpers(CmsBlock);
+            webPage.DynCodeHelper = new DynamicCodeHelper(CmsBlock);
 
         }
 

@@ -28,93 +28,93 @@ namespace ToSic.Sxc.Dnn
         #region AppAndDataHelpers implementation
 
         /// <inheritdoc />
-        public ILinkHelper Link => DnnAppAndDataHelpers.Link;
+        public ILinkHelper Link => DynCodeHelper.Link;
 
         /// <summary>
         /// Helper commands to enable in-page editing functionality
         /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
         /// </summary>
-        public IInPageEditingSystem Edit => DnnAppAndDataHelpers.Edit;
+        public IInPageEditingSystem Edit => DynCodeHelper.Edit;
 
-        public IDnnContext Dnn => DnnAppAndDataHelpers.Dnn;
-
-        /// <inheritdoc />
-        public SxcHelper Sxc => DnnAppAndDataHelpers.Sxc;
+        public IDnnContext Dnn => DynCodeHelper.Dnn;
 
         /// <inheritdoc />
-        public new IApp App => DnnAppAndDataHelpers.App;
+        public SxcHelper Sxc => DynCodeHelper.Sxc;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => DnnAppAndDataHelpers.Data;
+        public new IApp App => DynCodeHelper.App;
+
+        /// <inheritdoc />
+        public IBlockDataSource Data => DynCodeHelper.Data;
 
         public RazorPermissions Permissions => new RazorPermissions(Sexy);
 
         #region AsDynamic in many variations
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => DnnAppAndDataHelpers.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => DynCodeHelper.AsDynamic(entity);
 
 
         /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) => DnnAppAndDataHelpers.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(dynamic dynamicEntity) => DynCodeHelper.AsDynamic(dynamicEntity);
 
 
         /// <inheritdoc />
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DynCodeHelper.AsDynamic(entityKeyValuePair.Value);
 
 
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DnnAppAndDataHelpers.AsDynamic(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCodeHelper.AsDynamic(stream.List);
 
 
         /// <inheritdoc />
-        public IEntity AsEntity(dynamic dynamicEntity) => DnnAppAndDataHelpers.AsEntity(dynamicEntity);
+        public IEntity AsEntity(dynamic dynamicEntity) => DynCodeHelper.AsEntity(dynamicEntity);
 
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => DnnAppAndDataHelpers.AsDynamic(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => DynCodeHelper.AsDynamic(entities);
 
         #endregion
 
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DnnAppAndDataHelpers.AsDynamic(entity);
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DynCodeHelper.AsDynamic(entity);
 
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DnnAppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DynCodeHelper.AsDynamic(entityKeyValuePair.Value);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DnnAppAndDataHelpers.AsDynamic(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DynCodeHelper.AsDynamic(entities);
         #endregion
 
 
         #region Data Source Stuff
         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ITokenListFiller configurationProvider = null)
-            => DnnAppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
+            => DynCodeHelper.CreateSource(typeName, inSource, configurationProvider);
 
         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
         public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
             where T : IDataSource
-            => DnnAppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
+            => DynCodeHelper.CreateSource<T>(inSource, configurationProvider);
 
         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-            => DnnAppAndDataHelpers.CreateSource<T>(inStream);
+            => DynCodeHelper.CreateSource<T>(inStream);
 
         #endregion
 
         #region Content, Header, etc. and List
-        public dynamic Content => DnnAppAndDataHelpers.Content;
+        public dynamic Content => DynCodeHelper.Content;
 
         //[Obsolete("use Content.Presentation instead")]
         //public dynamic Presentation => DnnAppAndDataHelpers.Content?.Presentation;
 
-        public dynamic Header => DnnAppAndDataHelpers.Header;
+        public dynamic Header => DynCodeHelper.Header;
 
         //[Obsolete("Use Header instead")]
         //public dynamic ListContent => DnnAppAndDataHelpers.Header;
@@ -156,11 +156,11 @@ namespace ToSic.Sxc.Dnn
         #region Adam 
 
         /// <inheritdoc />
-        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => DynCodeHelper.AsAdam(entity, fieldName);
 
 
         /// <inheritdoc />
-        public IFolder AsAdam(IEntity entity, string fieldName) => DnnAppAndDataHelpers.AsAdam(entity, fieldName);
+        public IFolder AsAdam(IEntity entity, string fieldName) => DynCodeHelper.AsAdam(entity, fieldName);
 
         #endregion
 

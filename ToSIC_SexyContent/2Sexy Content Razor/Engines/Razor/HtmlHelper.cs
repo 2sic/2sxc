@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Engines.Razor
     /// <summary>
     /// helper to quickly "raw" some html.
     /// </summary>
-    [PrivateApi()]
+    [PrivateApi]
     public class HtmlHelper: IHtmlHelper
     {
         /// <inheritdoc/>

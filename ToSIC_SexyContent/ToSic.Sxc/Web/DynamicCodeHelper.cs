@@ -8,27 +8,25 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.SexyContent;
 using ToSic.Sxc.Adam;
-using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.InPageEditingSystem;
-using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
-// ReSharper disable once CheckNamespace - probably in use publicly somewhere, but unsure; otherwise move some day
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Web
 {
-    public abstract class AppAndDataHelpersBase : HasLog, IDynamicCode
+    public abstract class DynamicCodeHelper : HasLog, IDynamicCode
     {
         protected readonly ICmsBlock CmsInstance;
 
         private readonly ITenant _tenant;
-        protected AppAndDataHelpersBase(ICmsBlock cmsInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsInstance?.Log)
+        protected DynamicCodeHelper(ICmsBlock cmsInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsInstance?.Log)
         {
             if (cmsInstance == null)
                 return;

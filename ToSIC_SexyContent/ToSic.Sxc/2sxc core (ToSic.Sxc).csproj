@@ -137,7 +137,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Search.ISearchInfo.cs" />
     <Compile Include="Apps\App.cs" />
-    <Compile Include="SexyContent\AppAndDataHelpersBase.cs" />
+    <Compile Include="Web\DynamicCodeHelper.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditor.cs" />
     <Compile Include="SexyContent\Constants.cs" />

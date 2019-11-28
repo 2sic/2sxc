@@ -17,7 +17,9 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
+using DynamicCodeHelper = ToSic.Sxc.Dnn.Web.DynamicCodeHelper;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDynamicCode = ToSic.Sxc.Dnn.IDynamicCode;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -41,7 +43,7 @@ namespace ToSic.SexyContent.WebApi
         {
             base.Initialize(controllerContext);
             // Note that the SxcBlock is created by the BaseClass, if it's detectable. Otherwise it's null
-            DnnAppAndDataHelpers = new DnnAppAndDataHelpers(CmsBlock, CmsBlock?.Log ?? Log);
+            DnnAppAndDataHelpers = new DynamicCodeHelper(CmsBlock, CmsBlock?.Log ?? Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (DnnAppAndDataHelpers.App == null)
@@ -55,7 +57,7 @@ namespace ToSic.SexyContent.WebApi
         }
         #endregion
 
-        private DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
+        private DynamicCodeHelper DnnAppAndDataHelpers { get; set; }
 
         public IDnnContext Dnn => DnnAppAndDataHelpers.Dnn;
 

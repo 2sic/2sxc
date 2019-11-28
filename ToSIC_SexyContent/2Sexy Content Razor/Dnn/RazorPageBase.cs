@@ -2,8 +2,8 @@
 using System.Web.Hosting;
 using System.Web.WebPages;
 using ToSic.Eav.Documentation;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.Web;
 using File = System.IO.File;
 
 namespace ToSic.Sxc.Dnn
@@ -19,9 +19,10 @@ namespace ToSic.Sxc.Dnn
         public IHtmlHelper Html { get; internal set; }
 
         [PrivateApi]
+        // todo: see if we can drop this, I believe it's also attached to the DynCodeHelper
         protected internal Blocks.ICmsBlock Sexy { get; set; }
         [PrivateApi]
-        protected internal DnnAppAndDataHelpers DnnAppAndDataHelpers { get; set; }
+        protected internal DynamicCodeHelper DynCodeHelper { get; set; }
 
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.Dnn
             // Forward the context
             Html = typedParent.Html;
             Sexy = typedParent.Sexy;
-            DnnAppAndDataHelpers = typedParent.DnnAppAndDataHelpers;
+            DynCodeHelper = typedParent.DynCodeHelper;
         }
 
         #region Compile Helpers
@@ -61,7 +62,7 @@ namespace ToSic.Sxc.Dnn
             var path = NormalizePath(virtualPath);
             VerifyFileExists(path);
             return path.EndsWith(CodeCompiler.CsFileExtension)
-                ? DnnAppAndDataHelpers.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
+                ? DynCodeHelper.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
                 : CreateInstanceCshtml(path);
         }
 
