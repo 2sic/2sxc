@@ -12,11 +12,11 @@ using ToSic.Sxc.WebApi;
 namespace ToSic.Sxc.Dnn.WebApi
 {
     [WebApiLogDetails, JsonResponse]
-    public class DnnApiControllerWithFixes: DnnApiController, IHasLog
+    public abstract class DnnApiControllerWithFixes: DnnApiController, IHasLog
     {
         protected IAppEnvironment Env;
 
-	    public DnnApiControllerWithFixes() 
+        protected DnnApiControllerWithFixes() 
 	    {
             // ensure that the sql connection string is correct
             // this is technically only necessary, when dnn just restarted and didn't already set this

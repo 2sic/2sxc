@@ -6671,6 +6671,236 @@ references:
   isSpec: "True"
   fullName: ToSic.Sxc.Dnn.IRazor.Purpose
   nameWithType: IRazor.Purpose
+- uid: ToSic.Sxc.Dnn.RazorComponent
+  name: RazorComponent
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html
+  commentId: T:ToSic.Sxc.Dnn.RazorComponent
+  fullName: ToSic.Sxc.Dnn.RazorComponent
+  nameWithType: RazorComponent
+- uid: ToSic.Sxc.Dnn.RazorComponent.App
+  name: App
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_App
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.App
+  fullName: ToSic.Sxc.Dnn.RazorComponent.App
+  nameWithType: RazorComponent.App
+- uid: ToSic.Sxc.Dnn.RazorComponent.App*
+  name: App
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_App_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.App
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.App
+  nameWithType: RazorComponent.App
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Eav.Data.IEntity,System.String)
+  name: AsAdam(IEntity, String)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsAdam_ToSic_Eav_Data_IEntity_System_String_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Eav.Data.IEntity,System.String)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Eav.Data.IEntity, System.String)
+  nameWithType: RazorComponent.AsAdam(IEntity, String)
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Sxc.Data.IDynamicEntity,System.String)
+  name: AsAdam(IDynamicEntity, String)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsAdam_ToSic_Sxc_Data_IDynamicEntity_System_String_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Sxc.Data.IDynamicEntity,System.String)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsAdam(ToSic.Sxc.Data.IDynamicEntity, System.String)
+  nameWithType: RazorComponent.AsAdam(IDynamicEntity, String)
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsAdam*
+  name: AsAdam
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsAdam_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.AsAdam
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsAdam
+  nameWithType: RazorComponent.AsAdam
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Data.IEntity})
+  name: AsDynamic(IEnumerable<IEntity>)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsDynamic_System_Collections_Generic_IEnumerable_ToSic_Eav_Data_IEntity__
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Collections.Generic.IEnumerable{ToSic.Eav.Data.IEntity})
+  name.vb: AsDynamic(IEnumerable(Of IEntity))
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Collections.Generic.IEnumerable<ToSic.Eav.Data.IEntity>)
+  fullName.vb: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Collections.Generic.IEnumerable(Of ToSic.Eav.Data.IEntity))
+  nameWithType: RazorComponent.AsDynamic(IEnumerable<IEntity>)
+  nameWithType.vb: RazorComponent.AsDynamic(IEnumerable(Of IEntity))
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Object)
+  name: AsDynamic(Object)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsDynamic_System_Object_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Object)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(System.Object)
+  nameWithType: RazorComponent.AsDynamic(Object)
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.Data.IEntity)
+  name: AsDynamic(IEntity)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsDynamic_ToSic_Eav_Data_IEntity_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.Data.IEntity)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.Data.IEntity)
+  nameWithType: RazorComponent.AsDynamic(IEntity)
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  name: AsDynamic(IDataStream)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsDynamic_ToSic_Eav_DataSources_IDataStream_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsDynamic(ToSic.Eav.DataSources.IDataStream)
+  nameWithType: RazorComponent.AsDynamic(IDataStream)
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsDynamic*
+  name: AsDynamic
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsDynamic_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.AsDynamic
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsDynamic
+  nameWithType: RazorComponent.AsDynamic
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsEntity(System.Object)
+  name: AsEntity(Object)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsEntity_System_Object_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.AsEntity(System.Object)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsEntity(System.Object)
+  nameWithType: RazorComponent.AsEntity(Object)
+- uid: ToSic.Sxc.Dnn.RazorComponent.AsEntity*
+  name: AsEntity
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_AsEntity_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.AsEntity
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.AsEntity
+  nameWithType: RazorComponent.AsEntity
+- uid: ToSic.Sxc.Dnn.RazorComponent.Content
+  name: Content
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Content
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Content
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Content
+  nameWithType: RazorComponent.Content
+- uid: ToSic.Sxc.Dnn.RazorComponent.Content*
+  name: Content
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Content_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Content
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Content
+  nameWithType: RazorComponent.Content
+- uid: ToSic.Sxc.Dnn.RazorComponent.CreateSource*
+  name: CreateSource
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CreateSource_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.CreateSource
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CreateSource
+  nameWithType: RazorComponent.CreateSource
+- uid: ToSic.Sxc.Dnn.RazorComponent.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.LookUp.ITokenListFiller)
+  name: CreateSource<T>(IDataSource, ITokenListFiller)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CreateSource__1_ToSic_Eav_DataSources_IDataSource_ToSic_Eav_LookUp_ITokenListFiller_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.CreateSource``1(ToSic.Eav.DataSources.IDataSource,ToSic.Eav.LookUp.ITokenListFiller)
+  name.vb: CreateSource(Of T)(IDataSource, ITokenListFiller)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CreateSource<T>(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.LookUp.ITokenListFiller)
+  fullName.vb: ToSic.Sxc.Dnn.RazorComponent.CreateSource(Of T)(ToSic.Eav.DataSources.IDataSource, ToSic.Eav.LookUp.ITokenListFiller)
+  nameWithType: RazorComponent.CreateSource<T>(IDataSource, ITokenListFiller)
+  nameWithType.vb: RazorComponent.CreateSource(Of T)(IDataSource, ITokenListFiller)
+- uid: ToSic.Sxc.Dnn.RazorComponent.CreateSource``1(ToSic.Eav.DataSources.IDataStream)
+  name: CreateSource<T>(IDataStream)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CreateSource__1_ToSic_Eav_DataSources_IDataStream_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.CreateSource``1(ToSic.Eav.DataSources.IDataStream)
+  name.vb: CreateSource(Of T)(IDataStream)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CreateSource<T>(ToSic.Eav.DataSources.IDataStream)
+  fullName.vb: ToSic.Sxc.Dnn.RazorComponent.CreateSource(Of T)(ToSic.Eav.DataSources.IDataStream)
+  nameWithType: RazorComponent.CreateSource<T>(IDataStream)
+  nameWithType.vb: RazorComponent.CreateSource(Of T)(IDataStream)
+- uid: ToSic.Sxc.Dnn.RazorComponent.CustomizeData
+  name: CustomizeData()
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CustomizeData
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.CustomizeData
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CustomizeData()
+  nameWithType: RazorComponent.CustomizeData()
+- uid: ToSic.Sxc.Dnn.RazorComponent.CustomizeData*
+  name: CustomizeData
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CustomizeData_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.CustomizeData
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CustomizeData
+  nameWithType: RazorComponent.CustomizeData
+- uid: ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  name: CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CustomizeSearch_System_Collections_Generic_Dictionary_System_String_System_Collections_Generic_List_ToSic_Sxc_Search_ISearchItem___ToSic_Eav_Environment_IContainer_System_DateTime_
+  commentId: M:ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{ToSic.Sxc.Search.ISearchItem}},ToSic.Eav.Environment.IContainer,System.DateTime)
+  name.vb: CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<ToSic.Sxc.Search.ISearchItem>>, ToSic.Eav.Environment.IContainer, System.DateTime)
+  fullName.vb: ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch(System.Collections.Generic.Dictionary(Of System.String, System.Collections.Generic.List(Of ToSic.Sxc.Search.ISearchItem)), ToSic.Eav.Environment.IContainer, System.DateTime)
+  nameWithType: RazorComponent.CustomizeSearch(Dictionary<String, List<ISearchItem>>, IContainer, DateTime)
+  nameWithType.vb: RazorComponent.CustomizeSearch(Dictionary(Of String, List(Of ISearchItem)), IContainer, DateTime)
+- uid: ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch*
+  name: CustomizeSearch
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_CustomizeSearch_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.CustomizeSearch
+  nameWithType: RazorComponent.CustomizeSearch
+- uid: ToSic.Sxc.Dnn.RazorComponent.Data
+  name: Data
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Data
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Data
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Data
+  nameWithType: RazorComponent.Data
+- uid: ToSic.Sxc.Dnn.RazorComponent.Data*
+  name: Data
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Data_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Data
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Data
+  nameWithType: RazorComponent.Data
+- uid: ToSic.Sxc.Dnn.RazorComponent.Dnn
+  name: Dnn
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Dnn
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Dnn
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Dnn
+  nameWithType: RazorComponent.Dnn
+- uid: ToSic.Sxc.Dnn.RazorComponent.Dnn*
+  name: Dnn
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Dnn_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Dnn
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Dnn
+  nameWithType: RazorComponent.Dnn
+- uid: ToSic.Sxc.Dnn.RazorComponent.Edit
+  name: Edit
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Edit
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Edit
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Edit
+  nameWithType: RazorComponent.Edit
+- uid: ToSic.Sxc.Dnn.RazorComponent.Edit*
+  name: Edit
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Edit_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Edit
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Edit
+  nameWithType: RazorComponent.Edit
+- uid: ToSic.Sxc.Dnn.RazorComponent.Header
+  name: Header
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Header
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Header
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Header
+  nameWithType: RazorComponent.Header
+- uid: ToSic.Sxc.Dnn.RazorComponent.Header*
+  name: Header
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Header_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Header
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Header
+  nameWithType: RazorComponent.Header
+- uid: ToSic.Sxc.Dnn.RazorComponent.Link
+  name: Link
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Link
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Link
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Link
+  nameWithType: RazorComponent.Link
+- uid: ToSic.Sxc.Dnn.RazorComponent.Link*
+  name: Link
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Link_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Link
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Link
+  nameWithType: RazorComponent.Link
+- uid: ToSic.Sxc.Dnn.RazorComponent.Purpose
+  name: Purpose
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Purpose
+  commentId: P:ToSic.Sxc.Dnn.RazorComponent.Purpose
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Purpose
+  nameWithType: RazorComponent.Purpose
+- uid: ToSic.Sxc.Dnn.RazorComponent.Purpose*
+  name: Purpose
+  href: api/dot-net/ToSic.Sxc.Dnn.RazorComponent.html#ToSic_Sxc_Dnn_RazorComponent_Purpose_
+  commentId: Overload:ToSic.Sxc.Dnn.RazorComponent.Purpose
+  isSpec: "True"
+  fullName: ToSic.Sxc.Dnn.RazorComponent.Purpose
+  nameWithType: RazorComponent.Purpose
 - uid: ToSic.Sxc.Engines
   name: ToSic.Sxc.Engines
   href: api/dot-net/ToSic.Sxc.Engines.html
@@ -7150,6 +7380,19 @@ references:
   commentId: T:ToSic.Sxc.Web.IDynamicCode
   fullName: ToSic.Sxc.Web.IDynamicCode
   nameWithType: IDynamicCode
+- uid: ToSic.Sxc.Web.IDynamicCode.App
+  name: App
+  href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_App
+  commentId: P:ToSic.Sxc.Web.IDynamicCode.App
+  fullName: ToSic.Sxc.Web.IDynamicCode.App
+  nameWithType: IDynamicCode.App
+- uid: ToSic.Sxc.Web.IDynamicCode.App*
+  name: App
+  href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_App_
+  commentId: Overload:ToSic.Sxc.Web.IDynamicCode.App
+  isSpec: "True"
+  fullName: ToSic.Sxc.Web.IDynamicCode.App
+  nameWithType: IDynamicCode.App
 - uid: ToSic.Sxc.Web.IDynamicCode.AsAdam(ToSic.Eav.Data.IEntity,System.String)
   name: AsAdam(IEntity, String)
   href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsAdam_ToSic_Eav_Data_IEntity_System_String_
@@ -7178,15 +7421,6 @@ references:
   fullName.vb: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.IEnumerable(Of ToSic.Eav.Data.IEntity))
   nameWithType: IDynamicCode.AsDynamic(IEnumerable<IEntity>)
   nameWithType.vb: IDynamicCode.AsDynamic(IEnumerable(Of IEntity))
-- uid: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair{System.Int32,ToSic.Eav.Data.IEntity})
-  name: AsDynamic(KeyValuePair<Int32, IEntity>)
-  href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsDynamic_System_Collections_Generic_KeyValuePair_System_Int32_ToSic_Eav_Data_IEntity__
-  commentId: M:ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair{System.Int32,ToSic.Eav.Data.IEntity})
-  name.vb: AsDynamic(KeyValuePair(Of Int32, IEntity))
-  fullName: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair<System.Int32, ToSic.Eav.Data.IEntity>)
-  fullName.vb: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Collections.Generic.KeyValuePair(Of System.Int32, ToSic.Eav.Data.IEntity))
-  nameWithType: IDynamicCode.AsDynamic(KeyValuePair<Int32, IEntity>)
-  nameWithType.vb: IDynamicCode.AsDynamic(KeyValuePair(Of Int32, IEntity))
 - uid: ToSic.Sxc.Web.IDynamicCode.AsDynamic(System.Object)
   name: AsDynamic(Object)
   href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_AsDynamic_System_Object_
@@ -7263,6 +7497,19 @@ references:
   fullName.vb: ToSic.Sxc.Web.IDynamicCode.CreateSource(Of T)(ToSic.Eav.DataSources.IDataStream)
   nameWithType: IDynamicCode.CreateSource<T>(IDataStream)
   nameWithType.vb: IDynamicCode.CreateSource(Of T)(IDataStream)
+- uid: ToSic.Sxc.Web.IDynamicCode.Data
+  name: Data
+  href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Data
+  commentId: P:ToSic.Sxc.Web.IDynamicCode.Data
+  fullName: ToSic.Sxc.Web.IDynamicCode.Data
+  nameWithType: IDynamicCode.Data
+- uid: ToSic.Sxc.Web.IDynamicCode.Data*
+  name: Data
+  href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Data_
+  commentId: Overload:ToSic.Sxc.Web.IDynamicCode.Data
+  isSpec: "True"
+  fullName: ToSic.Sxc.Web.IDynamicCode.Data
+  nameWithType: IDynamicCode.Data
 - uid: ToSic.Sxc.Web.IDynamicCode.Edit
   name: Edit
   href: api/dot-net/ToSic.Sxc.Web.IDynamicCode.html#ToSic_Sxc_Web_IDynamicCode_Edit

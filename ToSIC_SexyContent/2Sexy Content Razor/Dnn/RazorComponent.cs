@@ -8,7 +8,6 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Engines.Razor;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -18,10 +17,10 @@ using IEntity = ToSic.Eav.Data.IEntity;
 namespace ToSic.Sxc.Dnn
 {
     /// <summary>
-    /// The core page type for delivering a 2sxc page
-    /// Provides context infos like the Dnn object, helpers like Edit and much more. 
+    /// The thing bind Razor-Components in 2sxc 10+ <br/>
+    /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
-    [PrivateApi("still WIP")]
+    [PublicApi]
     public abstract partial class RazorComponent : RazorComponentBase, IRazor
     {
 
@@ -46,28 +45,22 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public IBlockDataSource Data => DynCodeHelper.Data;
 
-        [PrivateApi]
-        public RazorPermissions Permissions => new RazorPermissions(DynCodeHelper.CmsBlock);
         #endregion
 
         #region AsDynamic in many variations
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public dynamic AsDynamic(IEntity entity) => DynCodeHelper.AsDynamic(entity);
 
-
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public dynamic AsDynamic(dynamic dynamicEntity) => DynCodeHelper.AsDynamic(dynamicEntity);
 
-
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCodeHelper.AsDynamic(stream.List);
 
-
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public IEntity AsEntity(dynamic dynamicEntity) => DynCodeHelper.AsEntity(dynamicEntity);
 
-
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => DynCodeHelper.AsDynamic(entities);
 
         #endregion
@@ -76,21 +69,22 @@ namespace ToSic.Sxc.Dnn
 
         #region Data Source Stuff
 
-        /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
+        /// <inheritdoc/>
         public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
             where T : IDataSource
             => DynCodeHelper.CreateSource<T>(inSource, configurationProvider);
 
-        /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
+        /// <inheritdoc/>
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
             => DynCodeHelper.CreateSource<T>(inStream);
 
         #endregion
 
         #region Content, Header, etc. and List
+        /// <inheritdoc/>
         public dynamic Content => DynCodeHelper.Content;
 
-
+        /// <inheritdoc />
         public dynamic Header => DynCodeHelper.Header;
 
         #endregion

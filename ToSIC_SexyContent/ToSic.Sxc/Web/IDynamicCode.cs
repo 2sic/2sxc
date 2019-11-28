@@ -2,6 +2,8 @@
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -20,6 +22,20 @@ namespace ToSic.Sxc.Web
     public interface IDynamicCode: SexyContent.IAppAndDataHelpers, ISharedCodeBuilder // inherit from old namespace to ensure compatibility
 #pragma warning restore 618
     {
+
+        /// <summary>
+        /// A fully prepared <see cref="IApp"/> object letting you access all the data and queries in the current app. 
+        /// </summary>
+        /// <returns>The current app</returns>
+        new IApp App { get; }
+
+        /// <summary>
+        /// The data prepared for the current Code. Usually user data which was manually added to the instance, but can also be a query.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="IBlockDataSource"/> which is as <see cref="IDataSource"/>.</returns>
+        new IBlockDataSource Data { get; }
+
         #region Content and Header
         /// <summary>
         /// The content object of the current razor view - IF the current view has content.

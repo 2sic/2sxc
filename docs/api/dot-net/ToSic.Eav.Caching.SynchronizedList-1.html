@@ -513,6 +513,9 @@
                           <li class="">
                             <a href="ToSic.Sxc.Dnn.IRazor.html" title="IRazor" class="">IRazor</a>
                           </li>
+                          <li class="">
+                            <a href="ToSic.Sxc.Dnn.RazorComponent.html" title="RazorComponent" class="">RazorComponent</a>
+                          </li>
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
@@ -703,7 +706,9 @@
   </span>
   <a id="ToSic_Eav_Caching_SynchronizedList_1_CacheTimestamp_" data-uid="ToSic.Eav.Caching.SynchronizedList`1.CacheTimestamp*"></a>
   <h4 id="ToSic_Eav_Caching_SynchronizedList_1_CacheTimestamp" data-uid="ToSic.Eav.Caching.SynchronizedList`1.CacheTimestamp">CacheTimestamp</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>System time-stamp of when the data in this cached thing was initialized or updated.
+Depending on the implementation, this may go up-stream and return an up-stream value. </p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -720,7 +725,8 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
+        <td><p>A timestamp as a long number</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -735,7 +741,8 @@
   </span>
   <a id="ToSic_Eav_Caching_SynchronizedList_1_CacheChanged_" data-uid="ToSic.Eav.Caching.SynchronizedList`1.CacheChanged*"></a>
   <h4 id="ToSic_Eav_Caching_SynchronizedList_1_CacheChanged" data-uid="ToSic.Eav.Caching.SynchronizedList`1.CacheChanged">CacheChanged()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Find out if the source it depends on has changed.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -752,7 +759,8 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>True if the upstream cache returns a newer timestamp</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -765,7 +773,9 @@
   </span>
   <a id="ToSic_Eav_Caching_SynchronizedList_1_CacheChanged_" data-uid="ToSic.Eav.Caching.SynchronizedList`1.CacheChanged*"></a>
   <h4 id="ToSic_Eav_Caching_SynchronizedList_1_CacheChanged_System_Int64_" data-uid="ToSic.Eav.Caching.SynchronizedList`1.CacheChanged(System.Int64)">CacheChanged(Int64)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Detect if the cache has old data, by comparing it to a timestamp which may be newer. <br>
+This is implemented in each object, because sometimes it compares its own timestamp, sometimes that of another underlying object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -784,7 +794,8 @@
       <tr>
         <td><span class="xref">System.Int64</span></td>
         <td><span class="parametername">newCacheTimeStamp</span></td>
-        <td></td>
+        <td><p>New time stamp to compare with</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -799,7 +810,8 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>True if the timestamps differ, false if it&apos;s the same</p>
+</td>
       </tr>
     </tbody>
   </table>

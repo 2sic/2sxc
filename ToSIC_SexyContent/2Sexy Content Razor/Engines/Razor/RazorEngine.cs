@@ -16,6 +16,8 @@ using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Search;
+using ToSic.Sxc.Web;
+using DynamicCodeHelper = ToSic.Sxc.Dnn.DynamicCodeHelper;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Engines

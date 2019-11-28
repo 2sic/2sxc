@@ -37,6 +37,10 @@ namespace ToSic.Sxc.Dnn
         void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
             DateTime beginDate);
 
+        /// <summary>
+        /// The purpose of the current execution. The code might be called for showing to a user, or search-indexing.
+        /// </summary>
+        /// <returns>The value of the current purpose.</returns>
         Purpose Purpose { get; }
 
     }

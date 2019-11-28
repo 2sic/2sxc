@@ -1,6 +1,5 @@
 ﻿using System;
 using ToSic.SexyContent.Adam;
-using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam
 {
@@ -17,7 +16,7 @@ namespace ToSic.Sxc.Adam
             AppContext = appContext;
         }
 
-        /// <inheritdoc cref="IDynamicEntity" />
+        /// <inheritdoc />
         public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, false) as dynamic;
 
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;

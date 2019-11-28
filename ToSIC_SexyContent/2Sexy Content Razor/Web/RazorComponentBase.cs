@@ -3,9 +3,10 @@ using System.Web.Hosting;
 using System.Web.WebPages;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn;
 using File = System.IO.File;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Web
 {
     /// <summary>
     /// The base page type for razor pages
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Dnn
         //[PrivateApi]
         //protected internal Blocks.ICmsBlock Sexy { get; set; }
         [PrivateApi]
-        protected internal DynamicCodeHelper DynCodeHelper { get; set; }
+        protected internal Dnn.DynamicCodeHelper DynCodeHelper { get; set; }
 
 
         /// <summary>

@@ -70,7 +70,8 @@ namespace ToSic.Sxc.Dnn
         public dynamic ListPresentation
             => throw new Exception($"ListPresentation {NotSupportedIn10}. Use Header.Presentation");
 
-        [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
+        [PrivateApi]
+        [Obsolete("This is an old way used to loop things - removed in RazorComponent")]
         public object List
             => throw new Exception($"List {NotSupportedIn10}. Use Data[\"DefaultAuthenticationEventArgs\"].List");
 

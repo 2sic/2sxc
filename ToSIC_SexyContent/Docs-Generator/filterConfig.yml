@@ -18,6 +18,9 @@ apiRules:
 - exclude:
     uidRegex: ^System\.Attribute
 
+- exclude:
+    uidRegex: ^System\.Web\.WebPages
+
 # Exclude any tests
 - exclude:
     uidRegex: ^Tests
