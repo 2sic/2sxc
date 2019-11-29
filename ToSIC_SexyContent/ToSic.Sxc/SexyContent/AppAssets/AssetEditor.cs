@@ -23,6 +23,28 @@ namespace ToSic.SexyContent.AppAssets
     Put your content here
 </div>";
 
+        public const string CsExtension = ".cs";
+
+        public const string CsApiFolder = "api";
+        // copied from the razor tutorial
+        public const string DefaultCsBody = @"using System.Web.Http;		// this enables [HttpGet] and [AllowAnonymous]
+using DotNetNuke.Web.Api;	// this is to verify the AntiForgeryToken
+
+[AllowAnonymous]			// define that all commands can be accessed without a login
+[ValidateAntiForgeryToken]	// protects the API from users not on your site (CSRF protection)
+// Inherit from ToSic...ApiController to get features like App, Data or Dnn - see https://rebrand.ly/CustomWebApi
+public class VerifiedController : ToSic.Sxc.Dnn.ApiController
+{
+
+	[HttpGet]				// [HttpGet] says we're listening to GET requests
+	public string Hello()
+	{
+		return ""Hello from the controller with ValidateAntiForgeryToken in /api"";
+	}
+
+}
+";
+
 
         public AssetEditInfo EditInfo { get; }
 
