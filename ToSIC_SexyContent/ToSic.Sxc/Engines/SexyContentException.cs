@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Engines
 {
     public class SexyContentException : Exception
     {

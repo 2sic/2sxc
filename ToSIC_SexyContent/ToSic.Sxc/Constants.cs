@@ -1,4 +1,4 @@
-﻿namespace ToSic.SexyContent
+﻿namespace ToSic.Sxc
 {
     internal class Constants : Eav.Constants // inherit from EAV constants to make coding easier
     {

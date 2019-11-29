@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Environment;
+using ToSic.Sxc;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -13,7 +14,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public override string Name => Original.PortalName;
 
-        public override string SxcPath => Path.Combine(Original.HomeDirectory, SexyContent.Settings.AppsRootFolder);
+        public override string SxcPath => Path.Combine(Original.HomeDirectory, Settings.AppsRootFolder);
 
         public override bool RefactorUserIsAdmin
             => Original.UserInfo.IsInRole(Original.AdministratorRoleName);

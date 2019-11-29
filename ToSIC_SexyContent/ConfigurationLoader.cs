@@ -19,6 +19,7 @@ using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Apps.ImportExport;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Serializers;
 
 namespace ToSic.SexyContent
 {
@@ -59,7 +60,7 @@ namespace ToSic.SexyContent
         {
             Eav.Factory.ActivateNetCoreDi(sc =>
             {
-                sc.AddTransient<Eav.Serializers.Serializer, Serializers.Serializer>();
+                sc.AddTransient<Eav.Serializers.Serializer, Serializer>();
                 sc.AddTransient<IEavValueConverter, DnnValueConverter>();
                 sc.AddTransient<IUser, DnnUser>();
 

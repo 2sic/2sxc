@@ -11,7 +11,9 @@ using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc;
 using ToSic.Sxc.Interfaces;
+using Constants = ToSic.Sxc.Constants;
 using Exception = System.Exception;
 
 namespace ToSic.SexyContent.Environment.Dnn7.Installation

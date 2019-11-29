@@ -7,10 +7,10 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Serializers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Serializers;
 
 namespace ToSic.Sxc.WebApi.App
 {

@@ -10,6 +10,7 @@ using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Internal;
+using ToSic.Sxc;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Interfaces;

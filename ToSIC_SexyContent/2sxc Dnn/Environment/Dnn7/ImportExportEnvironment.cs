@@ -12,6 +12,7 @@ using ToSic.Eav.Persistence;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.SexyContent.Internal;
+using ToSic.Sxc;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.SxcTemp;
 

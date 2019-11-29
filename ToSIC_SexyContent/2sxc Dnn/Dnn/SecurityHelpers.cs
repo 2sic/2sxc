@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Roles;
+using ToSic.Sxc;
 
 namespace ToSic.SexyContent.Dnn
 {

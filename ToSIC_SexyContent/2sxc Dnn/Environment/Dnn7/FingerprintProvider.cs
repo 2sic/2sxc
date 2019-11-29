@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Security.Cryptography;
 using ToSic.Eav.Configuration;
+using ToSic.Sxc;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {

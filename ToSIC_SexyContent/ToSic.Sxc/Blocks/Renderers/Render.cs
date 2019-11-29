@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Web;
-using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Data;
 
-namespace ToSic.SexyContent.ContentBlocks
+namespace ToSic.Sxc.Blocks.Renderers
 {
     public class Render
     {

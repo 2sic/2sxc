@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using ToSic.Eav.Plumbing.Booting;
- 
-namespace ToSic.SexyContent
+
+namespace ToSic.Sxc
 {
     public class Settings
     {
@@ -10,9 +10,9 @@ namespace ToSic.SexyContent
         // reason is that we must ensure that the static constructor is called 
         // whenever anything is accessed
         public static readonly string ContentGroupGuidString = "ToSIC_SexyContent_ContentGroupGuid";
-        public static readonly string AppIDString = "AppId";
+        //public static readonly string AppIDString = "AppId";
         public static readonly string AppNameString = "ToSIC_SexyContent_AppName";
-        public static readonly string SettingsShowTemplateChooser = "ToSIC_SexyContent_ShowTemplateChooser";
+        //public static readonly string SettingsShowTemplateChooser = "ToSIC_SexyContent_ShowTemplateChooser";
         public static readonly string PreviewTemplateIdString = "ToSIC_SexyContent_PreviewTemplateId";
         internal static readonly string InternalUserName = "Internal";
 

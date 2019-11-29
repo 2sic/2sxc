@@ -2,13 +2,12 @@
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Serializers;
-using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Interfaces;
 using IDynamicEntity = ToSic.Sxc.Data.IDynamicEntity;
 
-namespace ToSic.SexyContent.Serializers
+namespace ToSic.Sxc.Serializers
 {
 	public class Serializer: Eav.Serializers.Serializer
 	{

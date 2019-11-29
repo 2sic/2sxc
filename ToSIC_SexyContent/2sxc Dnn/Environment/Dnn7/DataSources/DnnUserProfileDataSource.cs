@@ -8,6 +8,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.VisualQuery;
+using ToSic.Sxc;
 
 namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 {
