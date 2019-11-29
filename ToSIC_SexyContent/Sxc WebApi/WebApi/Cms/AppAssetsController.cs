@@ -57,8 +57,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 : SearchOption.TopDirectoryOnly;
 
             // try to collect all files, ignoring long paths errors and similar etc.
-            var files = new List<FileInfo>();  // List that will hold the files and subfiles in path
-            var folders = new List<DirectoryInfo>(); // List that hold direcotries that cannot be accessed
+            var files = new List<FileInfo>();  // List that will hold the files and sub-files in path
+            var folders = new List<DirectoryInfo>(); // List that hold directories that cannot be accessed
             var di = new DirectoryInfo(fullPath);
             FullDirList(di, mask, folders, files, opt);
 

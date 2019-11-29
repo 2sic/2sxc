@@ -15,10 +15,10 @@ namespace ToSic.SexyContent.AppAssets
         public const string CshtmlExtension = ".cshtml";
         public const string CshtmlPrefix = "_";
 
-        public const string DefaultCshtmlBody = @"@* This tells the compiler to use the new RazorComponent - see https://rebrand.ly/RazorComponent *@ 
+        public const string DefaultCshtmlBody = @"@* This tells the compiler to use the new RazorComponent - see https://r.2sxc.org/RazorComponent *@ 
 @inherits ToSic.Sxc.Dnn.RazorComponent
 
-@* The following DIV will show a edit-hover-toolbar to admins - see https://rebrand.ly/EditToolbar *@
+@* The following DIV will show a edit-hover-toolbar to admins - see https://r.2sxc.org/EditToolbar *@
 <div @Edit.TagToolbar(Content)>
     Put your content here
 </div>";
@@ -32,7 +32,7 @@ using DotNetNuke.Web.Api;	// this is to verify the AntiForgeryToken
 
 [AllowAnonymous]			// define that all commands can be accessed without a login
 [ValidateAntiForgeryToken]	// protects the API from users not on your site (CSRF protection)
-// Inherit from ToSic...ApiController to get features like App, Data or Dnn - see https://rebrand.ly/CustomWebApi
+// Inherit from ToSic...ApiController to get features like App, Data or Dnn - see https://r.2sxc.org/CustomWebApi
 public class VerifiedController : ToSic.Sxc.Dnn.ApiController
 {
 
