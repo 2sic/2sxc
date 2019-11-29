@@ -8,6 +8,7 @@ using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.Sxc.LookUp;
 using ToSic.Sxc.WebApi;
 using App = ToSic.Sxc.Apps.App;
 using Factory = ToSic.Eav.Factory;

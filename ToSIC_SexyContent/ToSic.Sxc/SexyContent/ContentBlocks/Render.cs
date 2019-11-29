@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Web;
-using ToSic.Sxc;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Data;
 

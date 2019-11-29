@@ -6,11 +6,10 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Interfaces;
-using ToSic.Sxc.LookUp;
 using IApp = ToSic.Sxc.Apps.IApp;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
-namespace ToSic.SexyContent.DataSources
+namespace ToSic.Sxc.LookUp
 {
     public class ConfigurationProvider
     {
@@ -23,7 +22,7 @@ namespace ToSic.SexyContent.DataSources
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
         /// </summary>
-        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(ICmsBlock cmsInstance, bool useExistingConfig)
+        internal static Func<App, IAppDataConfiguration> Build(ICmsBlock cmsInstance, bool useExistingConfig)
         {
             return appToUse =>
             {
@@ -44,13 +43,13 @@ namespace ToSic.SexyContent.DataSources
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based existing stuff
         /// </summary>
-        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(bool userMayEdit, bool publishEnabled, ITokenListFiller config) 
+        internal static Func<App, IAppDataConfiguration> Build(bool userMayEdit, bool publishEnabled, ITokenListFiller config) 
             => appToUse => new AppDataConfiguration(userMayEdit, publishEnabled, config);
 
         /// <summary>
         /// Generate a delegate which will be used to build a basic configuration with very little context
         /// </summary>
-        internal static Func<Eav.Apps.App, IAppDataConfiguration> Build(bool userMayEdit, bool publishEnabled)
+        internal static Func<App, IAppDataConfiguration> Build(bool userMayEdit, bool publishEnabled)
             => appToUse => new AppDataConfiguration(userMayEdit, publishEnabled,
                 GetConfigProviderForModule(0, appToUse as IApp, null));
 
@@ -99,7 +98,7 @@ namespace ToSic.SexyContent.DataSources
             // provide the current SxcInstance to the children where necessary
             if (!provider.Sources.ContainsKey(SxcInstanceKey))
             {
-                var sxci = new SxcInstanceLookUp(SxcInstanceKey, null, cms);
+                var sxci = new LookUpCmsBlock(SxcInstanceKey, null, cms);
                 provider.Sources.Add(sxci.Name, sxci);
             }
             return provider;

@@ -9,6 +9,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.LookUp;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi

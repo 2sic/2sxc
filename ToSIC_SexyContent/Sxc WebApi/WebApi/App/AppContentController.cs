@@ -17,6 +17,7 @@ using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Serializers;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi.Cms.Refactor;
 using Factory = ToSic.Eav.Factory;

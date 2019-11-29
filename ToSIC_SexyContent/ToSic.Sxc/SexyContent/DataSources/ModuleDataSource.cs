@@ -12,6 +12,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.LookUp;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -59,8 +60,8 @@ namespace ToSic.SexyContent.DataSources
                 if(!HasSxcContext)
                     throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
-                var sxciProvider = ConfigurationProvider.Sources[DataSources.ConfigurationProvider.SxcInstanceKey];
-                _cmsContext = (sxciProvider as SxcInstanceLookUp)?
+                var sxciProvider = ConfigurationProvider.Sources[Sxc.LookUp.ConfigurationProvider.SxcInstanceKey];
+                _cmsContext = (sxciProvider as LookUpCmsBlock)?
                               .CmsInstance 
                               ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
@@ -68,7 +69,7 @@ namespace ToSic.SexyContent.DataSources
             }
         }
 
-        internal bool HasSxcContext => ConfigurationProvider.Sources.ContainsKey(DataSources.ConfigurationProvider.SxcInstanceKey);
+        internal bool HasSxcContext => ConfigurationProvider.Sources.ContainsKey(Sxc.LookUp.ConfigurationProvider.SxcInstanceKey);
 
 		private BlockConfiguration _blockConfiguration;
 		private BlockConfiguration BlockConfiguration
