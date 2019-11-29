@@ -1,4 +1,5 @@
 ﻿//using DotNetNuke.Entities.Modules;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.VisualQuery;
-using ToSic.SexyContent.EAVExtensions;
+using ToSic.Eav.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -16,20 +17,22 @@ using ToSic.Sxc.LookUp;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.SexyContent.DataSources
+namespace ToSic.Sxc.DataSources
 {
 
     [VisualQuery(
-        GlobalName = "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent",
+        GlobalName = "ToSic.Sxc.DataSources.ModuleDataSource, ToSic.SexyContent",
         Type = DataSourceType.Source, 
         ExpectsDataOfType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
-        HelpLink = "https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ModuleDataSource")]
+        HelpLink = "https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ModuleDataSource",
+        PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
     public sealed class ModuleDataSource : BaseDataSource
     {
         public override string LogId => "DS.Module";
 
         private ICmsBlock _cmsContext;
 
+        [PrivateApi]
         public enum Settings
         {
             InstanceId
@@ -60,7 +63,7 @@ namespace ToSic.SexyContent.DataSources
                 if(!HasSxcContext)
                     throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
-                var sxciProvider = ConfigurationProvider.Sources[Sxc.LookUp.ConfigurationProvider.SxcInstanceKey];
+                var sxciProvider = ConfigurationProvider.Sources[LookUp.ConfigurationProvider.SxcInstanceKey];
                 _cmsContext = (sxciProvider as LookUpCmsBlock)?
                               .CmsInstance 
                               ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
@@ -69,7 +72,7 @@ namespace ToSic.SexyContent.DataSources
             }
         }
 
-        internal bool HasSxcContext => ConfigurationProvider.Sources.ContainsKey(Sxc.LookUp.ConfigurationProvider.SxcInstanceKey);
+        internal bool HasSxcContext => ConfigurationProvider.Sources.ContainsKey(LookUp.ConfigurationProvider.SxcInstanceKey);
 
 		private BlockConfiguration _blockConfiguration;
 		private BlockConfiguration BlockConfiguration

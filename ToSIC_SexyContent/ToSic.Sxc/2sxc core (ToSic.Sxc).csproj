@@ -182,7 +182,6 @@
     <Compile Include="Engines\Token\TokenEngine.cs" />
     <Compile Include="Engines\Token\TokenReplaceEAV.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.IAppAndDataHelpers.cs" />
-    <Compile Include="SexyContent\IEditContentControl.cs" />
     <Compile Include="Apps\AppHelpers.cs" />
     <Compile Include="Interfaces\Internal\IMapAppToInstance.cs" />
     <Compile Include="Engines\TemplateHelpers.cs" />

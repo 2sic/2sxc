@@ -4,8 +4,8 @@ using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
-using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Blocks
 {
