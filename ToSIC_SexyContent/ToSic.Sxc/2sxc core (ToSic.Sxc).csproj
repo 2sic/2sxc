@@ -161,10 +161,10 @@
     <Compile Include="Apps\Parts\BlocksManager.cs" />
     <Compile Include="Data\DataPublishing.cs" />
     <Compile Include="LookUp\ConfigurationProvider.cs" />
-    <Compile Include="Blocks\DataSource\IBlockDataSource.cs" />
+    <Compile Include="DataSources\IBlockDataSource.cs" />
     <Compile Include="DataSources\CmsBlockDataSource.cs" />
     <Compile Include="LookUp\LookUpCmsBlock.cs" />
-    <Compile Include="Blocks\DataSource\BlockDataSource.cs" />
+    <Compile Include="DataSources\BlockDataSource.cs" />
     <Compile Include="Data\DynamicEntity.cs" />
     <Compile Include="Data\DynamicEntityList.cs" />
     <Compile Include="Data\EntityDecorator.cs" />

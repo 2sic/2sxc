@@ -19,7 +19,14 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.DataSources
 {
-
+    /// <summary>
+    /// This data-source delivers the core data for a CMS Block. <br/>
+    /// It will look up the configuration in the CMS (like the Module-Settings in DNN) to determine what data is needed for the block. <br/>
+    /// Usually it will then find a reference to a ContentBlock, from which it determines what content-items are assigned. <br/>
+    /// It could also find that the template specifies a query, in which case it would retrieve that. <br/>
+    /// <em>Was previously called ModuleDataSource</em>
+    /// </summary>
+    [PublicApi]
     [VisualQuery(
         GlobalName = "ToSic.Sxc.DataSources.CmsBlockDataSource, ToSic.SexyContent",
         Type = DataSourceType.Source, 
@@ -28,7 +35,8 @@ namespace ToSic.Sxc.DataSources
         PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
     public sealed class CmsBlockDataSource : BaseDataSource
     {
-        public override string LogId => "DS.Module";
+        /// <inheritdoc />
+        public override string LogId => "Sxc.CmsBDs";
 
         private ICmsBlock _cmsContext;
 
@@ -39,8 +47,8 @@ namespace ToSic.Sxc.DataSources
         }
 
         /// <summary>
-        /// The instance-id of the 2sxc instance - this is the same as the DNN ModuleId,
-        /// but named Instance-Id to be more neutral as we're opening it to other platforms
+        /// The instance-id of the CmsBlock (2sxc instance, DNN ModuleId). <br/>
+        /// It's named Instance-Id to be more neutral as we're opening it to other platforms
         /// </summary>
         public int? InstanceId
         {
@@ -53,7 +61,7 @@ namespace ToSic.Sxc.DataSources
             set => Configuration["ModuleId"] = value.ToString();
         }
 
-
+        [PrivateApi]
         internal ICmsBlock CmsInstance
         {
             get
@@ -72,6 +80,7 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
+        [PrivateApi]
         internal bool HasSxcContext => ConfigurationProvider.Sources.ContainsKey(LookUp.ConfigurationProvider.SxcInstanceKey);
 
 		private BlockConfiguration _blockConfiguration;
@@ -250,13 +259,18 @@ namespace ToSic.Sxc.DataSources
 
 
 
-        public bool UseSxcInstanceContentGroup = false;
+        internal bool UseSxcInstanceContentGroup = false;
 
+        /// <summary>
+        /// This allows external settings to override the view given by the configuration. This is used to temporarily use an alternate view.
+        /// For example, when previewing a different template. 
+        /// </summary>
         public IView OverrideView { get; set; }
 
 
         #region obsolete stuff
         [Obsolete("became obsolete in 2sxc 9.9, use InstanceId instead")]
+        [PrivateApi]
         public int? ModuleId
         {
             get => InstanceId;

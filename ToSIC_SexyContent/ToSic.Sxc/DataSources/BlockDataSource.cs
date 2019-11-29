@@ -1,18 +1,26 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 
-namespace ToSic.Sxc.Blocks
+namespace ToSic.Sxc.DataSources
 {
+    /// <summary>
+    /// The main data source for Blocks. Internally often uses <see cref="CmsBlockDataSource"/> to find what it should provide.
+    /// It's based on the <see cref="PassThrough"/> data source, because it's just a coordination-wrapper.
+    /// </summary>
+    [PublicApi]
     public class BlockDataSource : PassThrough, IBlockDataSource
     {
-        public override string LogId => "DS.View";
+        [PrivateApi]
+        public override string LogId => "Sxc.BlckDs";
 
+        [PrivateApi("older use case, probably don't publish")]
         public DataPublishing Publish { get; }= new DataPublishing();
 
         internal static IBlockDataSource ForContentGroupInSxc(ICmsBlock cms, IView overrideView, ITokenListFiller configurationProvider, ILog parentLog, int instanceId = 0)
@@ -26,8 +34,8 @@ namespace ToSic.Sxc.Blocks
             var moduleDataSource = DataSource.GetDataSource<CmsBlockDataSource>(cms.Block.ZoneId, cms.Block.AppId, initialSource, configurationProvider, parentLog);
             moduleDataSource.InstanceId = instanceId;
 
-            moduleDataSource.OverrideView = overrideView; // new
-            moduleDataSource.UseSxcInstanceContentGroup = true; // new
+            moduleDataSource.OverrideView = overrideView;
+            moduleDataSource.UseSxcInstanceContentGroup = true;
 
             // If the Template has a Data-Pipeline, use an empty upstream, else use the ModuleDataSource created above
             var viewDataSourceUpstream = overrideView?.Query == null

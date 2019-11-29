@@ -2,16 +2,16 @@
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Blocks
+namespace ToSic.Sxc.DataSources
 {
     /// <summary>
-    /// A special data-source for a block, which also knows about data-publishing (to ensure page-versioning if necessary). <br/>
-    /// It's not documented more, as we may still make changes to it.
+    /// This marks data sources which are meant for Blocks (Modules, Content-Block Instances). <br/>
+    /// They have some internal functionality which isn't published as of now.
     /// </summary>
-    [PrivateApi("not sure yet if it should be in blocks, or DataSources")]
+    [PublicApi]
     public interface IBlockDataSource: IDataSource, IDataTarget
     {
-        [PrivateApi]
+        [PrivateApi("older use case, will probably become obsolete some day")]
         DataPublishing Publish { get; }
 
     }
