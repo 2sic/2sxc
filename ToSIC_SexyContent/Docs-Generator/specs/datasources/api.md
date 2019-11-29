@@ -37,7 +37,7 @@ A DataSource gets the configuration from a configuration provider. To better und
 ## Configuring the UI
 There is a special attribute called `VisualQuery` to tell the UI how to show your DataSource and provide help etc. 
 
-* @ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute
+* @ToSic.Eav.DataSources.Query.VisualQuery
 
 ## History
 
