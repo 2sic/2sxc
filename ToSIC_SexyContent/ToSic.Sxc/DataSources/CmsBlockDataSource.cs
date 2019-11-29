@@ -21,12 +21,12 @@ namespace ToSic.Sxc.DataSources
 {
 
     [VisualQuery(
-        GlobalName = "ToSic.Sxc.DataSources.ModuleDataSource, ToSic.SexyContent",
+        GlobalName = "ToSic.Sxc.DataSources.CmsBlockDataSource, ToSic.SexyContent",
         Type = DataSourceType.Source, 
         ExpectsDataOfType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
         HelpLink = "https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ModuleDataSource",
         PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
-    public sealed class ModuleDataSource : BaseDataSource
+    public sealed class CmsBlockDataSource : BaseDataSource
     {
         public override string LogId => "DS.Module";
 
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
-        public ModuleDataSource()
+        public CmsBlockDataSource()
         {
             Out.Add(Eav.Constants.DefaultStreamName, new DataStream(this, Eav.Constants.DefaultStreamName, GetContent));
             Out.Add(ViewParts.ListContent, new DataStream(this, Eav.Constants.DefaultStreamName, GetListContent));

@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Blocks
             log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{overrideView?.Name}");
             // Get ModuleDataSource
             var initialSource = DataSource.GetInitialDataSource(cms.Block.ZoneId, cms.Block.AppId, showDrafts, configurationProvider, parentLog);
-            var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(cms.Block.ZoneId, cms.Block.AppId, initialSource, configurationProvider, parentLog);
+            var moduleDataSource = DataSource.GetDataSource<CmsBlockDataSource>(cms.Block.ZoneId, cms.Block.AppId, initialSource, configurationProvider, parentLog);
             moduleDataSource.InstanceId = instanceId;
 
             moduleDataSource.OverrideView = overrideView; // new
