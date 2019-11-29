@@ -175,7 +175,14 @@ namespace ToSic.Sxc.WebApi.Cms
             var name = Path.GetFileName(path);
             var folder = Path.GetDirectoryName(path);
             var ext = Path.GetExtension(path);
-            
+
+            if (ext?.ToLowerInvariant() == AssetEditor.CsExtension)
+            {
+                if ((folder?.ToLower().IndexOf(AssetEditor.CsApiFolder) ?? -1) > -1) 
+                    content.Content = AssetEditor.DefaultCsBody;
+                return path;
+            }
+
             if (ext?.ToLowerInvariant() != AssetEditor.CshtmlExtension) return path;
 
             if (name == null) name = "missing-name.txt";

@@ -70,7 +70,7 @@
         ]
       }
     ],
-    "dest": "../../docs",
+    "dest": "../../docs/docs",
     "template": [
       "default",
       "statictoc",
