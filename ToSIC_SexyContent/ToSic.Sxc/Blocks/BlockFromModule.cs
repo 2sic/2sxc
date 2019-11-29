@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Blocks
 
 
         public override IBlockDataSource Data => _dataSource 
-            ?? (_dataSource = BlockDataSource.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log, Container.Id));
+            ?? (_dataSource = Block.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log, Container.Id));
 
         /// <summary>
         /// Create a module-content block

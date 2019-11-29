@@ -121,7 +121,7 @@
     <None Include="namespaces\ToSic.Eav\DataSources\DnnSqlDatasource.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\ItemFilterDuplicates.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\ItemIdFilter.md" />
-    <None Include="namespaces\ToSic.Eav\DataSources\ModuleDatasource.md" />
+    <None Include="namespaces\ToSic.Sxc\DataSources\CmsBlock.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\OwnerFilter.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\Paging.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\PublishingFilter.md" />

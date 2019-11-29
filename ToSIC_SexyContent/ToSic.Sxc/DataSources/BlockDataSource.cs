@@ -11,11 +11,11 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.DataSources
 {
     /// <summary>
-    /// The main data source for Blocks. Internally often uses <see cref="CmsBlockDataSource"/> to find what it should provide.
+    /// The main data source for Blocks. Internally often uses <see cref="CmsBlock"/> to find what it should provide.
     /// It's based on the <see cref="PassThrough"/> data source, because it's just a coordination-wrapper.
     /// </summary>
     [PublicApi]
-    public class BlockDataSource : PassThrough, IBlockDataSource
+    public class Block : PassThrough, IBlockDataSource
     {
         [PrivateApi]
         public override string LogId => "Sxc.BlckDs";
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.DataSources
             log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{overrideView?.Name}");
             // Get ModuleDataSource
             var initialSource = DataSource.GetInitialDataSource(cms.Block.ZoneId, cms.Block.AppId, showDrafts, configurationProvider, parentLog);
-            var moduleDataSource = DataSource.GetDataSource<CmsBlockDataSource>(cms.Block.ZoneId, cms.Block.AppId, initialSource, configurationProvider, parentLog);
+            var moduleDataSource = DataSource.GetDataSource<CmsBlock>(cms.Block.ZoneId, cms.Block.AppId, initialSource, configurationProvider, parentLog);
             moduleDataSource.InstanceId = instanceId;
 
             moduleDataSource.OverrideView = overrideView;
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             log.Add($"use pipeline upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = DataSource.GetDataSource<BlockDataSource>(cms.Block.ZoneId, cms.Block.AppId, viewDataSourceUpstream, configurationProvider, parentLog);
+            var viewDataSource = DataSource.GetDataSource<Block>(cms.Block.ZoneId, cms.Block.AppId, viewDataSourceUpstream, configurationProvider, parentLog);
 
             // Take Publish-Properties from the View-Template
             if (overrideView != null)

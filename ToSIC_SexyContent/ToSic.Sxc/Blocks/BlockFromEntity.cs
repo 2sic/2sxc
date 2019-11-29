@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Blocks
         public override bool ParentIsEntity => false;
 
         public override IBlockDataSource Data => _dataSource 
-            ?? (_dataSource = BlockDataSource.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log));
+            ?? (_dataSource = Block.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log));
 
         #region ContentBlock Definition Entity
 
