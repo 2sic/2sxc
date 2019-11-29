@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ToSic.SexyContent;
 
-namespace ToSic.SexyContent.AppAssets
+namespace ToSic.Sxc.Apps.Assets
 {
     /// <summary>
     /// Information class needed by the edit-ui, to provide optimal syntax helpers etc.

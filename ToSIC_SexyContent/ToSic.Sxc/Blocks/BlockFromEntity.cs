@@ -4,7 +4,6 @@ using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Blocks
 {

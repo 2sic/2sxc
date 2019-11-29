@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Web;
-using ToSic.Sxc.Data;
+using ToSic.SexyContent;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Data
 {
     /// <summary>
     /// More or less just an overload of IList-of-DynamicEntity providing edit-context-commands

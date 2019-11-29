@@ -145,8 +145,8 @@
     <Compile Include="Compatibility\ToSic.SexyContent.Search.ISearchInfo.cs" />
     <Compile Include="Apps\App.cs" />
     <Compile Include="Web\DynamicCodeHelper.cs" />
-    <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
-    <Compile Include="SexyContent\AppAssets\AssetEditor.cs" />
+    <Compile Include="Apps\Assets\AssetEditInfo.cs" />
+    <Compile Include="Apps\Assets\AssetEditor.cs" />
     <Compile Include="SexyContent\Constants.cs" />
     <Compile Include="Blocks\BlockBase.cs" />
     <Compile Include="Blocks\Edit\BlockEditorBase.cs" />
@@ -165,8 +165,8 @@
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
     <Compile Include="SexyContent\DataSources\SxcInstanceLookUp.cs" />
     <Compile Include="Blocks\DataSource\BlockDataSource.cs" />
-    <Compile Include="SexyContent\DynamicEntity.cs" />
-    <Compile Include="SexyContent\DynamicEntityList.cs" />
+    <Compile Include="Data\DynamicEntity.cs" />
+    <Compile Include="Data\DynamicEntityList.cs" />
     <Compile Include="Data\EntityDecorator.cs" />
     <Compile Include="Data\EntityInContentGroup.cs" />
     <Compile Include="Interfaces\Internal\IHasEditingData.cs" />
@@ -183,9 +183,9 @@
     <Compile Include="Engines\Token\TokenReplaceEAV.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.IAppAndDataHelpers.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
-    <Compile Include="SexyContent\Internal\AppHelpers.cs" />
+    <Compile Include="Apps\AppHelpers.cs" />
     <Compile Include="Interfaces\Internal\IMapAppToInstance.cs" />
-    <Compile Include="SexyContent\Internal\TemplateHelpers.cs" />
+    <Compile Include="Engines\TemplateHelpers.cs" />
     <Compile Include="Blocks\ICmsBlock.cs" />
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\Settings.cs" />

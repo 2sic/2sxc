@@ -3,12 +3,12 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Apps;
+using ToSic.SexyContent;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Engines;
 
 
-// todo: move to Sxc.Adam
-namespace ToSic.SexyContent.AppAssets
+namespace ToSic.Sxc.Apps.Assets
 {
     internal class AssetEditor : HasLog
     {
@@ -55,7 +55,7 @@ public class VerifiedController : ToSic.Sxc.Dnn.ApiController
         private readonly IApp _app;
 
         public AssetEditor(IApp app, int templateId, bool isSuperUser, bool isAdmin, ILog parentLog)
-            : base("Sxc.AstEdt", parentLog, className: nameof(AppAssets))
+            : base("Sxc.AstEdt", parentLog, className: nameof(AssetEditor))
         {
             _app = app;
             _userIsSuperUser = isSuperUser;
@@ -67,7 +67,7 @@ public class VerifiedController : ToSic.Sxc.Dnn.ApiController
         }
 
         public AssetEditor(IApp app, string path, bool isSuperUser, bool isAdmin, bool global, ILog parentLog)
-            : base("Sxc.AstEdt", parentLog, className: nameof(AppAssets))
+            : base("Sxc.AstEdt", parentLog, className: nameof(AssetEditor))
         {
             _app = app;
             _userIsSuperUser = isSuperUser;
@@ -139,7 +139,7 @@ public class VerifiedController : ToSic.Sxc.Dnn.ApiController
 
         public string InternalPath => HttpContext.Current.Server.MapPath(
             Path.Combine(
-                Internal.TemplateHelpers.GetTemplatePathRoot(EditInfo.LocationScope, _app),
+                TemplateHelpers.GetTemplatePathRoot(EditInfo.LocationScope, _app),
                 EditInfo.FileName));
 
 
@@ -186,7 +186,7 @@ public class VerifiedController : ToSic.Sxc.Dnn.ApiController
             if (File.Exists(absolutePath)) return false;
 
             // ensure the web.config exists (usually missing in the global area)
-            new Internal.TemplateHelpers(_app).EnsureTemplateFolderExists(EditInfo.LocationScope);
+            new TemplateHelpers(_app).EnsureTemplateFolderExists(EditInfo.LocationScope);
 
             // check if the folder to it already exists, or create it...
             var foundFolder = absolutePath.LastIndexOf("\\", StringComparison.InvariantCulture);

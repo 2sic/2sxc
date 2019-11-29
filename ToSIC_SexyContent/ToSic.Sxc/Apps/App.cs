@@ -6,6 +6,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Apps
 {

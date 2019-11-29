@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps;
+﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Apps
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Apps
             EnablePublishing = app.EnablePublishing;
         }
 
-        // todo: drop this interface asap.
+        [Obsolete("todo: drop this interface asap")]
         public CmsManager(IInAppAndZone app, bool showDrafts, bool enablePublishing, ILog parentLog) : base(app, parentLog)
         {
             ShowDrafts = showDrafts;

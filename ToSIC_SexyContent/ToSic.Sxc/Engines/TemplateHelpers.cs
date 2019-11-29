@@ -1,9 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Web.Hosting;
+using ToSic.SexyContent;
 using ToSic.Sxc.Apps;
 
-namespace ToSic.SexyContent.Internal
+namespace ToSic.Sxc.Engines
 {
     internal class TemplateHelpers
     {

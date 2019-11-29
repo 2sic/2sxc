@@ -88,10 +88,12 @@
     <None Include="how-to\index.md" />
     <None Include="how-to\output\assets.md" />
     <None Include="how-to\razor\blocks.md" />
-    <None Include="how-to\razor\contextattributes.md" />
     <None Include="how-to\razor\customizedata.md" />
     <None Include="how-to\razor\customizesearch.md" />
-    <None Include="how-to\razor\edittoolbar.md" />
+    <None Include="how-to\razor\edit.contextattributes.md" />
+    <None Include="how-to\razor\edit.enable.md" />
+    <None Include="how-to\razor\edit.md" />
+    <None Include="how-to\razor\edit.toolbar.md" />
     <None Include="how-to\razor\purpose.md" />
     <None Include="how-to\razor\templates.md" />
     <None Include="how-to\toc.md" />

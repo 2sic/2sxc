@@ -3,24 +3,21 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Web;
-using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Data
 {
     [PrivateApi]
     public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>
     {
 
         public IEntity Entity { get; }
+
         /// <inheritdoc />
-        [Obsolete]
+        [Obsolete("use Edit.Toolbar instead")]
         public HtmlString Toolbar {
             get
             {
@@ -135,7 +132,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public bool IsDemoItem => Entity is EntityInContentGroup entInCg && entInCg.IsDemoItem;
 
-        public IHtmlString Render() => ContentBlocks.Render.One(this);
+        public IHtmlString Render() => SexyContent.ContentBlocks.Render.One(this);
 
 
         #region Changing comparison operation to internally compare the entities, not this wrapper

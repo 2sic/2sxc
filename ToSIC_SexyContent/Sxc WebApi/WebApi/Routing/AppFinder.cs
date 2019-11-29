@@ -5,7 +5,7 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Apps;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
 namespace ToSic.Sxc.WebApi

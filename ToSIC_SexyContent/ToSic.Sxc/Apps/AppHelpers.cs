@@ -1,11 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.SexyContent;
 
-namespace ToSic.Sxc.Internal
+namespace ToSic.Sxc.Apps
 {
     internal class AppHelpers
     {
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Internal
             // ReSharper disable once UnusedVariable
             var dummy = baseCache.CacheTimestamp;
 
-            if (String.IsNullOrEmpty(appName))
+            if (string.IsNullOrEmpty(appName))
                 return 0; 
 
             var appId = baseCache.ZoneApps[zoneId].Apps
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.Internal
                             AppConstants.TypeAppConfig)
                         .FirstOrDefault();
                     var folder = appMetaData?.GetBestValue("Folder").ToString();
-                    if (!String.IsNullOrEmpty(folder) && folder.ToLower() == nameLower)
+                    if (!string.IsNullOrEmpty(folder) && folder.ToLower() == nameLower)
                         return p.Key;
                 }
             }
