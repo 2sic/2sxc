@@ -137,7 +137,7 @@
     <None Include="namespaces\ToSic.Eav\DataSources\StreamMerge.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\ValueFilter.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\ValueSort.md" />
-    <None Include="namespaces\ToSic.Eav\DataSources\VisualQuery\api-visualquery.md" />
+    <None Include="namespaces\ToSic.Eav\DataSources\Query\api-visualquery.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\_intro.md" />
     <None Include="namespaces\ToSic.Eav\Eav.Apps.Assets.md" />
     <None Include="namespaces\ToSic.Eav\Eav.Apps.md" />
@@ -256,6 +256,9 @@
     <None Include="specs\js\toolbar-settings.md" />
     <None Include="specs\js\toolbars-and-buttons-intro.md" />
     <None Include="specs\js\toolbars-and-buttons-js.md" />
+    <None Include="specs\roadmap\breaking-changes.md" />
+    <None Include="specs\roadmap\history.md" />
+    <None Include="specs\roadmap\roadmap.md" />
     <None Include="specs\style-guides\style-guide-2020.md" />
     <None Include="specs\style-guides\style-guides.md" />
     <None Include="specs\toc.md" />

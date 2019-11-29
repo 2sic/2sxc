@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.VisualQuery;
+using ToSic.Eav.DataSources.Query;
 
 namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 {

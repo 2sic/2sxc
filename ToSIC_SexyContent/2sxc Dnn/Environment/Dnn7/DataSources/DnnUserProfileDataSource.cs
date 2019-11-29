@@ -7,7 +7,7 @@ using DotNetNuke.Entities.Users;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.VisualQuery;
+using ToSic.Eav.DataSources.Query;
 using ToSic.Sxc;
 
 namespace ToSic.SexyContent.Environment.Dnn7.DataSources
