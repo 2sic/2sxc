@@ -8,17 +8,25 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Query;
-using ToSic.Sxc;
+using ToSic.Eav.Documentation;
 
-namespace ToSic.SexyContent.Environment.Dnn7.DataSources
+namespace ToSic.Sxc.Dnn.DataSources
 {
-
+    /// <summary>
+    /// Get DNN user profiles as <see cref="IEntity"/> objects of one or many users.
+    /// </summary>
+    [PublicApi]
 	[VisualQuery(
-        GlobalName = "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent",
+        GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.SexyContent",
         Type = DataSourceType.Source, 
         DynamicOut = true,
-	    ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource")]
-	public class DnnUserProfileDataSource : ExternalDataDataSource
+	    ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource",
+        PreviousNames = new []
+        {
+            "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"
+        }
+        )]
+	public class DnnUserProfile : ExternalDataDataSource
 	{
 		#region Configuration-properties
 		private const string PropertiesKey = "Properties";
@@ -30,39 +38,45 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 		private const string EntityTitleDefaultKeyToken = "[Settings:TitleFieldName||DisplayName]";
 		private const string ContentTypeDefaultToken = "[Settings:ContentTypeName||DnnUserInfo]";
 
+        /// <summary>
+        /// The user id list of users to retrieve, comma-separated
+        /// </summary>
 		public string UserIds
 		{
-			get { return Configuration[UserIdsKey]; }
-			set { Configuration[UserIdsKey] = value; }
-		}
+			get => Configuration[UserIdsKey];
+            set => Configuration[UserIdsKey] = value;
+        }
 
+        /// <summary>
+        /// List of profile-properties to retrieve, comma-separated
+        /// </summary>
 		public string Properties
 		{
-			get { return Configuration[PropertiesKey]; }
-			set { Configuration[PropertiesKey] = value; }
-		}
+			get => Configuration[PropertiesKey];
+            set => Configuration[PropertiesKey] = value;
+        }
 
 		/// <summary>
-		/// Gets or sets the Name of the ContentType Attribute 
+		/// Gets or sets the Name of the ContentType to simulate
 		/// </summary>
 		public string ContentType
 		{
-			get { return Configuration[ContentTypeKey]; }
-			set { Configuration[ContentTypeKey] = value; }
-		}
+			get => Configuration[ContentTypeKey];
+            set => Configuration[ContentTypeKey] = value;
+        }
 
 		/// <summary>
 		/// Gets or sets the Name of the Title Attribute of the DNN-UserInfo
 		/// </summary>
 		public string TitleField
 		{
-			get { return Configuration[TitleFieldKey]; }
-			set { Configuration[TitleFieldKey] = value; }
-		}
+			get => Configuration[TitleFieldKey];
+            set => Configuration[TitleFieldKey] = value;
+        }
 
 		#endregion
 
-		public DnnUserProfileDataSource()
+		public DnnUserProfile()
 		{
 			Out.Add(Constants.DefaultStreamName, new DataStream(this, Constants.DefaultStreamName, GetList));
 			Configuration.Add(UserIdsKey, UserIdsDefaultKeyToken);

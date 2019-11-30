@@ -2,11 +2,16 @@
 using System.Globalization;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent.Environment.Dnn7.ValueProviders
+namespace ToSic.Sxc.Dnn.LookUp
 {
+    /// <summary>
+    /// Translator component which creates a LookUp object and internally accesses
+    /// DNN PropertyAccess objects (which DNN uses for the same concept as LookUp)
+    /// </summary>
+    [PublicApi]
     public class LookUpInDnnPropertyAccess: LookUpBase
     {
         private readonly IPropertyAccess _source;
@@ -23,8 +28,8 @@ namespace ToSic.SexyContent.Environment.Dnn7.ValueProviders
 
         public override string Get(string key, string format, ref bool notFound)
         {
-            bool blnNotFound = true;
-            string result = _source.GetProperty(key, format, _loc, _user, Scope.DefaultSettings, ref blnNotFound);
+            var blnNotFound = true;
+            var result = _source.GetProperty(key, format, _loc, _user, Scope.DefaultSettings, ref blnNotFound);
             return result;
         }
 

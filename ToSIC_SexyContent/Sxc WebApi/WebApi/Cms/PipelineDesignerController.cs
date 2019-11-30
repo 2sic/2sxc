@@ -9,8 +9,8 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.SexyContent.Environment.Dnn7.ValueProviders;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.Sxc.WebApi.Cms

@@ -3,7 +3,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Interfaces;
 
-namespace ToSic.SexyContent.Environment.Dnn7.ValueProviders
+namespace ToSic.Sxc.Dnn.LookUp
 {
     public class DnnLookUps : IEnvironmentLookUps
     {
