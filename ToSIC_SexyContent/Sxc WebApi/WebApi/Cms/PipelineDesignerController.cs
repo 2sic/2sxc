@@ -64,7 +64,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	    {
 	        var modId = ActiveModule?.ModuleID ?? 0;
 	        Log.Call("QueryPipeline", $"app:{appId}, id:{id}", $"mid:{modId}");
-	        var dnnConfigProvider = new DnnEngine().GetEngine(modId);
+	        var dnnConfigProvider = new GetDnnEngine().GetEngine(modId);
             return _eavCont.QueryPipeline(appId, id, dnnConfigProvider);
         }
 

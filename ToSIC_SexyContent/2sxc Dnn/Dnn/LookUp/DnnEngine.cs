@@ -4,10 +4,14 @@ using ToSic.Eav.LookUp;
 
 namespace ToSic.Sxc.Dnn.LookUp
 {
-    public class DnnEngine : IGetEngine
+    /// <summary>
+    /// Retrieves the current engine for a specific module. <br/>
+    /// Internally it asks DNN for the current Property-Access objects and prepares them for use in EAV.
+    /// </summary>
+    public class GetDnnEngine : IGetEngine
     {
-
-        public LookUpEngine GetEngine(int instanceId)
+        /// <inheritdoc />
+        public ILookUpEngine GetEngine(int instanceId)
         {
             var providers = new LookUpEngine();
             var portalSettings = PortalSettings.Current;
