@@ -48,6 +48,8 @@
 ###[Json Entity](xref:Specs.Data.Formats.JsonV1-Entity)
 ###[Json ContentType](xref:Specs.Data.Formats.JsonV1-ContentType)
 
+# [LookUp and LookUpEngine](xref:Specs.LookUp)
+
 # [CMS Edit Content](xref:Specs.Cms.Edit)
 ##[Edit Toolbars](xref:Specs.Cms.Toolbars)
 ##[Quick-Edit (QuickE)](xref:Specs.Cms.QuickE)

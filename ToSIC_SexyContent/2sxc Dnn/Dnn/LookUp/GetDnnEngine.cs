@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 
 namespace ToSic.Sxc.Dnn.LookUp
@@ -8,6 +9,7 @@ namespace ToSic.Sxc.Dnn.LookUp
     /// Retrieves the current engine for a specific module. <br/>
     /// Internally it asks DNN for the current Property-Access objects and prepares them for use in EAV.
     /// </summary>
+    [PublicApi]
     public class GetDnnEngine : IGetEngine
     {
         /// <inheritdoc />

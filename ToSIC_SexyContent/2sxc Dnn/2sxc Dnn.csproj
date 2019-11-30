@@ -130,7 +130,7 @@
     <Compile Include="Search\SearchIndexException.cs" />
     <Compile Include="Environment\Dnn7\DnnEnvironmentFactory.cs" />
     <Compile Include="Environment\Dnn7\DnnUser.cs" />
-    <Compile Include="Dnn\LookUp\DnnEngine.cs" />
+    <Compile Include="Dnn\LookUp\GetDnnEngine.cs" />
     <Compile Include="Dnn\LookUp\TokenReplaceDnn.cs" />
     <Compile Include="Dnn\LookUp\LookUpInDnnPropertyAccess.cs" />
     <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
