@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
@@ -46,7 +45,7 @@ namespace ToSic.Sxc.Dnn
             if (partOfPage)
             {
                 Log.Add("partOfPage - save with publishing");
-                var versioning = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
+                var versioning = Eav.Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 var context = SxcApiControllerBase.GetContext(CmsInstance, Log);
                 versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID,
                     args => postSaveIds = SaveAndSaveGroups(internalSaveMethod, forceDraft));

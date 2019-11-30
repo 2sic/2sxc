@@ -1,15 +1,9 @@
-﻿using DotNetNuke.Entities.Modules;
+﻿using System;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Environment;
-using ToSic.Eav.LookUp;
-using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Web;
-using App = ToSic.Sxc.Apps.App;
-using DynamicCodeHelper = ToSic.Sxc.Dnn.DynamicCodeHelper;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace
@@ -19,56 +13,73 @@ namespace ToSic.SexyContent.Environment.Dnn7
     /// This is a factory to create 2sxc-instance objects and related objects from
     /// non-2sxc environments.
     /// </summary>
+    [Obsolete("use ToSic.Sxc.Dnn.Factory instead")]
     public static class Factory
     {
-        public static Sxc.Blocks.ICmsBlock SxcInstanceForModule(int modId, int tabId)
-        {
-            var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
-            var instance = new DnnInstanceInfo(moduleInfo);
-            return SxcInstanceForModule(instance);
-        }
+        [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(tabId, modId) instead")]
+        public static ICmsBlock SxcInstanceForModule(int modId, int tabId)
+            => Sxc.Dnn.Factory.CmsBlock(tabId, modId);
+        //{
+        //    var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
+        //    var instance = new DnnInstanceInfo(moduleInfo);
+        //    return SxcInstanceForModule(instance);
+        //}
 
-        public static Sxc.Blocks.ICmsBlock SxcInstanceForModule(ModuleInfo moduleInfo)
-            => SxcInstanceForModule(new DnnInstanceInfo(moduleInfo));
+        [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(...) instead")]
+        public static ICmsBlock SxcInstanceForModule(ModuleInfo moduleInfo)
+            => Sxc.Dnn.Factory.CmsBlock(moduleInfo);
+            //=> SxcInstanceForModule(new DnnInstanceInfo(moduleInfo));
 
-        public static Sxc.Blocks.ICmsBlock SxcInstanceForModule(IContainer moduleInfo)
-        {
-            var dnnModule = ((Container<ModuleInfo>) moduleInfo).Original;
-            var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
-            return new BlockFromModule(moduleInfo, parentLog: null, tenant: tenant).CmsInstance;
-        }
+        [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(...) instead")]
+        public static ICmsBlock SxcInstanceForModule(IContainer moduleInfo)
+            => Sxc.Dnn.Factory.CmsBlock(moduleInfo);
+        //{
+        //    var dnnModule = ((Container<ModuleInfo>) moduleInfo).Original;
+        //    var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
+        //    return new BlockFromModule(moduleInfo, parentLog: null, tenant: tenant).CmsInstance;
+        //}
 
-        public static IDynamicCode CodingHelpers(Sxc.Blocks.ICmsBlock cms) 
-            => new DynamicCodeHelper(cms as Sxc.Blocks.CmsBlock);
+        [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(...) instead")]
+        public static IDynamicCode CodeHelpers(ICmsBlock cms) 
+            => Sxc.Dnn.Factory.CodeHelpers(cms);
+            //=> new DynamicCodeHelper(cms as CmsBlock);
 
         /// <summary>
         /// get a full app-object for accessing data of the app from outside
         /// </summary>
         /// <returns></returns>
-        public static IApp App(int appId, bool versioningEnabled = false, bool showDrafts = false) 
-            => App(appId, PortalSettings.Current, versioningEnabled, showDrafts);
+        [Obsolete("use ToSic.Sxc.Dnn.Factory.App(...) instead")]
+        public static IApp App(int appId, bool versioningEnabled = false, bool showDrafts = false)
+            => Sxc.Dnn.Factory.App(appId, versioningEnabled, showDrafts);
+        //=> App(appId, PortalSettings.Current, versioningEnabled, showDrafts);
 
         /// <summary>
         /// get a full app-object for accessing data of the app from outside
         /// </summary>
         /// <returns></returns>
+        [Obsolete("use ToSic.Sxc.Dnn.Factory.App(...) instead")]
         public static IApp App(int zoneId, int appId, bool versioningEnabled = false, bool showDrafts = false) 
-            => App(zoneId, appId, PortalSettings.Current, versioningEnabled, showDrafts);
+            => Sxc.Dnn.Factory.App(appId, versioningEnabled, showDrafts);
+            //=> App(zoneId, appId, PortalSettings.Current, versioningEnabled, showDrafts);
 
+        [Obsolete("use ToSic.Sxc.Dnn.Factory.App(...) instead")]
         public static IApp App(int appId, PortalSettings ownerPortalSettings, bool versioningEnabled = false, bool showDrafts = false)
-        {
-            // 2018-09-22 new
-            var appStuff = new App(new DnnTenant(ownerPortalSettings), Eav.Apps.App.AutoLookupZone, appId, 
-                ConfigurationProvider.Build(showDrafts, versioningEnabled, new TokenListFiller()), true, null);
-            return appStuff;
-        }
+            => Sxc.Dnn.Factory.App(appId, ownerPortalSettings, versioningEnabled, showDrafts);
+        //{
+        //    // 2018-09-22 new
+        //    var appStuff = new App(new DnnTenant(ownerPortalSettings), Eav.Apps.App.AutoLookupZone, appId, 
+        //        ConfigurationProvider.Build(showDrafts, versioningEnabled, new TokenListFiller()), true, null);
+        //    return appStuff;
+        //}
 
+        [Obsolete("use ToSic.Sxc.Dnn.Factory.App(...) instead")]
         public static IApp App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool versioningEnabled = false, bool showDrafts = false)
-        {
-            var appStuff = new App(new DnnTenant(ownerPortalSettings), zoneId, appId,
-                ConfigurationProvider.Build(showDrafts, versioningEnabled, new TokenListFiller()), true, null);
-            return appStuff;
-        }
+            => Sxc.Dnn.Factory.App(appId, ownerPortalSettings, versioningEnabled, showDrafts);
+        //{
+        //    var appStuff = new App(new DnnTenant(ownerPortalSettings), zoneId, appId,
+        //        ConfigurationProvider.Build(showDrafts, versioningEnabled, new TokenListFiller()), true, null);
+        //    return appStuff;
+        //}
 
     }
 }

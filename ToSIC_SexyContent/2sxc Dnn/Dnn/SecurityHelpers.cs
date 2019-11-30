@@ -1,8 +1,7 @@
 ﻿using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Roles;
-using ToSic.Sxc;
 
-namespace ToSic.SexyContent.Dnn
+namespace ToSic.Sxc.Dnn
 {
     public class SecurityHelpers
     {

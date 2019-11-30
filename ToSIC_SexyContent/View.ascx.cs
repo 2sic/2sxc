@@ -10,10 +10,10 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Dnn;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent
 {

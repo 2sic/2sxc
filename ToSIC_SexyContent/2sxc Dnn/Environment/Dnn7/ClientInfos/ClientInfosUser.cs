@@ -1,6 +1,6 @@
 ﻿using DotNetNuke.Entities.Users;
-using ToSic.SexyContent.Dnn;
 using ToSic.SexyContent.Internal;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
