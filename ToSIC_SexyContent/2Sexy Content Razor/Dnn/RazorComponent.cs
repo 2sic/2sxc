@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Dnn
         #region Data Source Stuff
 
         /// <inheritdoc/>
-        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
             => DynCodeHelper.CreateSource<T>(inSource, configurationProvider);
 

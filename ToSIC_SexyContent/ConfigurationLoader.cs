@@ -6,6 +6,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.Eav.ImportExport.Persistence.File;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Plumbing.Booting;
 using ToSic.SexyContent.Dnn920;
@@ -81,7 +82,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IMapAppToInstance, DnnMapAppToInstance>();
                 sc.AddTransient<IEnvironmentInstaller, InstallationController>();
                 sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
-                sc.AddTransient<IEnvironmentLookUps, DnnLookUps>();
+                sc.AddTransient<IGetEngine, DnnEngine>();
                 sc.AddTransient<IFingerprintProvider, FingerprintProvider>();
 
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);

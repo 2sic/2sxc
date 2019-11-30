@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Dnn
         public static IApp App(int appId, PortalSettings ownerPortalSettings, bool publishingEnabled = false, bool showDrafts = false)
         {
             var appStuff = new App(new DnnTenant(ownerPortalSettings), Eav.Apps.App.AutoLookupZone, appId,
-                ConfigurationProvider.Build(showDrafts, publishingEnabled, new TokenListFiller()), true, null);
+                ConfigurationProvider.Build(showDrafts, publishingEnabled, new LookUpEngine()), true, null);
             return appStuff;
         }
 

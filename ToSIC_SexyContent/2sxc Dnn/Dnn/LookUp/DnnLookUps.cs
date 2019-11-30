@@ -1,23 +1,22 @@
 ﻿using System.Threading;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Dnn.LookUp
 {
-    public class DnnLookUps : IEnvironmentLookUps
+    public class DnnEngine : IGetEngine
     {
 
-        public TokenListFiller GetLookUps(int instanceId)
+        public LookUpEngine GetEngine(int instanceId)
         {
-            var providers = new TokenListFiller();
+            var providers = new LookUpEngine();
             var portalSettings = PortalSettings.Current;
 
             if (portalSettings == null) return providers;
 
             var dnnUsr = portalSettings.UserInfo;
             var dnnCult = Thread.CurrentThread.CurrentCulture;
-            var dnn = new TokenReplaceDnn(instanceId, portalSettings, dnnUsr);
+            var dnn = new DnnTokenReplace(instanceId, portalSettings, dnnUsr);
             var stdSources = dnn.PropertySources;
             foreach (var propertyAccess in stdSources)
                 providers.Sources.Add(propertyAccess.Key,

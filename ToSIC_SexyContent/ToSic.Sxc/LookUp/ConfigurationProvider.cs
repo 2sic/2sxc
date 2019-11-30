@@ -5,7 +5,6 @@ using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc.Interfaces;
 using IApp = ToSic.Sxc.Apps.IApp;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
@@ -43,7 +42,7 @@ namespace ToSic.Sxc.LookUp
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based existing stuff
         /// </summary>
-        internal static Func<App, IAppDataConfiguration> Build(bool userMayEdit, bool publishingEnabled, ITokenListFiller config) 
+        internal static Func<App, IAppDataConfiguration> Build(bool userMayEdit, bool publishingEnabled, ILookUpEngine config) 
             => appToUse => new AppDataConfiguration(userMayEdit, publishingEnabled, config);
 
         /// <summary>
@@ -57,9 +56,9 @@ namespace ToSic.Sxc.LookUp
 
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal static TokenListFiller GetConfigProviderForModule(int moduleId, IApp app, ICmsBlock cms)
+        internal static LookUpEngine GetConfigProviderForModule(int moduleId, IApp app, ICmsBlock cms)
         {
-            var provider = new TokenListFiller();
+            var provider = new LookUpEngine();
 
             // only add these in running inside an http-context. Otherwise leave them away!
             if (HttpContext.Current != null)
@@ -81,7 +80,7 @@ namespace ToSic.Sxc.LookUp
             }
 
             // Add the standard DNN property sources if PortalSettings object is available (changed 2018-03-05)
-            var envProvs = Factory.Resolve<IEnvironmentLookUps>().GetLookUps(moduleId).Sources;
+            var envProvs = Factory.Resolve<IGetEngine>().GetEngine(moduleId).Sources;
             foreach (var prov in envProvs)
                 provider.Sources.Add(prov.Key, prov.Value);
 

@@ -80,10 +80,10 @@ namespace ToSic.SexyContent.WebApi
 
         #region CreateSource implementations
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-	        ITokenListFiller configurationProvider = null)
+	        ILookUpEngine configurationProvider = null)
 	        => DynCodeHelpers.CreateSource(typeName, inSource, configurationProvider);
 
-        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
             =>  DynCodeHelpers.CreateSource<T>(inSource, configurationProvider);
 

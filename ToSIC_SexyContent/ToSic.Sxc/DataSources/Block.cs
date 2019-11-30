@@ -23,7 +23,7 @@ namespace ToSic.Sxc.DataSources
         [PrivateApi("older use case, probably don't publish")]
         public DataPublishing Publish { get; }= new DataPublishing();
 
-        internal static IBlockDataSource ForContentGroupInSxc(ICmsBlock cms, IView overrideView, ITokenListFiller configurationProvider, ILog parentLog, int instanceId = 0)
+        internal static IBlockDataSource ForContentGroupInSxc(ICmsBlock cms, IView overrideView, ILookUpEngine configurationProvider, ILog parentLog, int instanceId = 0)
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
             var showDrafts = cms.UserMayEdit;
