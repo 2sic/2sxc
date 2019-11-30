@@ -6,7 +6,7 @@ uid: ToSic.Eav.DataSources.SqlDataSource
 The **SqlDataSource** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It lets you use data from SQL databases as if they were entities.  
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. The `Default` out will contain the items from the DB:
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Query.VisualQueryAttribute) you can just drag it into your query. The `Default` out will contain the items from the DB:
 
 <img src="/assets/data-sources/sqldatasource-basic.png" width="100%">
 

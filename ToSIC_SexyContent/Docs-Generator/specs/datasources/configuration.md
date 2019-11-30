@@ -46,7 +46,7 @@ _read about [ConfigMask here](xref:Specs.DataSources.Api.ConfigMask)_
 So how does each scenario work out?
 
 1. If the programmer overwrote the `Delimiter` property, then internally the `Configuration["Delimiter"]` is now not a token any more, but instead just a character like `,`. So the token-engine won't change anything. 
-1. If the programmer didn't do anything but the [visual query](xref:Temp.VisualQuery) engine gave a settings-entity to the system, then the token is resolved and whatever the user entered is used. 
+1. If the programmer didn't do anything but the [visual query](xref:ToSic.Eav.DataSources.Query.VisualQueryAttribute) engine gave a settings-entity to the system, then the token is resolved and whatever the user entered is used. 
 1. if the neither the programmer nor the user provided settings, then the token-engine will resolve to the fallback and use the `\t` as was defined.
 
 ## Also Read

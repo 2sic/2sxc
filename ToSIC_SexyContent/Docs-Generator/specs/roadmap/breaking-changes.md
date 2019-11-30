@@ -19,6 +19,7 @@ We're documenting it here to ensure you know what happened, in case you still ru
 1. Renamed `DataTableDataSource` to `DataTable`
 1. Renamed `ExternalDataDataSource` to `ExternalData`
 1. Renamed `ToSic.SexyContent.DataSources.ModuleDataSource` to `ToSic.Sxc.DataSources.CmsBlock`
+1. Renamed `ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute` to `ToSic.Eav.DataSources.Query.VisualQueryAttribute`
 
 #### Version 10.20.02 (ca. 2019-11-22)
 

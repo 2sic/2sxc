@@ -1,6 +1,6 @@
 ﻿attributeRules:
 - include: 
-    uid: ToSic.Eav.DataSources.Query.VisualQuery
+    uid: ToSic.Eav.DataSources.Query.VisualQueryAttribute
     type: Type
     type: Class
     type: Interface

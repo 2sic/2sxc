@@ -9,7 +9,7 @@ The **CacheAllStreams** [DataSource](xref:Specs.DataSources.DataSource) is part 
 
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. You must then edit the settings once to set various timeouts. Note that every in-stream exists with the same name as an out-stream. This is what it usually looks like:
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Query.VisualQueryAttribute) you can just drag it into your query. You must then edit the settings once to set various timeouts. Note that every in-stream exists with the same name as an out-stream. This is what it usually looks like:
 
 <img src="/assets/data-sources/cache-all-streams-basic.png" width="100%">
 

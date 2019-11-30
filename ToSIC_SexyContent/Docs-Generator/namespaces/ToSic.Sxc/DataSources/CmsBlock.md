@@ -7,7 +7,7 @@ uid: ToSic.Sxc.DataSources.CmsBlock
 The **Module-Instance DataSource** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard 2sxc/DNN Data Sources](xref:Specs.DataSources.ListAll). It is the default data source as it directly delivers module-instance data and is used for all scenarios which don't explicitly have a query, and it can also be used as part of a query.  
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) it is already in the default / initial query: 
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Query.VisualQueryAttribute) it is already in the default / initial query: 
 
 <img src="/assets/data-sources/module-basic.png" width="100%">
 
@@ -34,17 +34,17 @@ In 2sxc 9.9 we added the configuration dialog, so you can specify what module th
 
 
 ## Programming With The ModuleDataSource DataSource
-[!include["simpler-with-vqd"](shared-use-vqd.md)]
+[!include["simpler-with-vqd"](../../ToSic.Eav/DataSources/shared-use-vqd.md)]
 
 The only property you need to set is `InstanceId` (2sxc 9.9+) if you want to provide a different module-id. 
 
-[!include["Read-Also-Section"](shared-read-also.md)]
+[!include["Read-Also-Section"](../../ToSic.Eav/DataSources/shared-read-also.md)]
 
-[!include["Demo-App-Intro"](shared-demo-app.md)]
+[!include["Demo-App-Intro"](../../ToSic.Eav/DataSources/shared-demo-app.md)]
 
-[!include["Heading-History"](shared-history.md)]
+[!include["Heading-History"](../../ToSic.Eav/DataSources/shared-history.md)]
 
 1. Introduced in EAV 4.x, 2sxc ?
 1. Added ability to configure in in the visual-query (2sxc 9.9)
 
-[!include["Start-APIs"](shared-api-start.md)]
+[!include["Start-APIs"](../../ToSic.Eav/DataSources/shared-api-start.md)]
