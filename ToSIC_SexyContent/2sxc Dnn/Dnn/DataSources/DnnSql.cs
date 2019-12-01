@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         },
 	    HelpLink = "https://github.com/2sic/2sxc/wiki/DotNet-DataSource-DnnSqlDataSource",
 	    ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnSqlDataSource")]
-	public class DnnSql : SqlDataSource
+	public class DnnSql : Sql
 	{
 		public DnnSql()
 		{

@@ -1,5 +1,5 @@
 ---
-uid: ToSic.Eav.DataSources.SqlDataSource
+uid: ToSic.Eav.DataSources.Sql
 ---
 # Data Source: SqlDataSource
 
@@ -73,7 +73,7 @@ An example code
 
 ```razor
 @{
-  var sql = CreateSource<ToSic.Eav.DataSources.SqlDataSource>();
+  var sql = CreateSource<ToSic.Eav.DataSources.Sql>();
   sql.ConnectionString = "SiteSqlServer"; // use DNN
   sql.SelectCommand = "Select ... From"; // your sql here
 }

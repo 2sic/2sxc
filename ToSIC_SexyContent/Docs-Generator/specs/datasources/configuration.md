@@ -51,10 +51,11 @@ So how does each scenario work out?
 
 ## Also Read
 
-* about [Data Streams](xref:ToSic.Eav.DataSources.IDataStream)
-* [Tokens concept](xref:Specs.DataSources.ConfigurationTokens)
-* [DataSource API](xref:Specs.DataSources.Api)
-* [Ensuring configuration is parsed](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded)
+* @Specs.LookUp
+* @Specs.DataSources.ConfigurationTokens
+* @Specs.DataSources.Api
+* @Specs.DataSources.Api.EnsureConfigurationIsLoaded
+* @ToSic.Eav.DataSources.IDataStream
 
 
 ## History

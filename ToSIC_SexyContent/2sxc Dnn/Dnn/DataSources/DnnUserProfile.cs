@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Dnn.DataSources
             "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"
         }
         )]
-	public class DnnUserProfile : ExternalDataDataSource
+	public class DnnUserProfile : ExternalData
 	{
 		#region Configuration-properties
 		private const string PropertiesKey = "Properties";

@@ -33,7 +33,7 @@ namespace ToSic.Sxc.DataSources
         ExpectsDataOfType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
         HelpLink = "https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ModuleDataSource",
         PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
-    public sealed class CmsBlock : BaseDataSource
+    public sealed class CmsBlock : DataSourceBase
     {
         /// <inheritdoc />
         public override string LogId => "Sxc.CmsBDs";

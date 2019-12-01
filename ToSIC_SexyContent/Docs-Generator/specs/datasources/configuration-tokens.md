@@ -48,6 +48,15 @@ Some situations will have token sources beyond the default. For example, when co
 
 For more on this, read the [DataSource Configuration](xref:Specs.DataSources.Configuration) section. 
 
+## Also Read
+
+* @Specs.LookUp
+* @Specs.DataSources.Configuration
+* @ToSic.Eav.DataSources.IDataStream
+* @Specs.DataSources.Api
+* @Specs.DataSources.Api.EnsureConfigurationIsLoaded
+
+
 ## History
 
 1. General Tokens introduced in 2sxc 1.0
