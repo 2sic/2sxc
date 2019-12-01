@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Implementations.ValueConverter;
+using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Persistence.File;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.LookUp;
@@ -62,7 +62,7 @@ namespace ToSic.SexyContent
             Eav.Factory.ActivateNetCoreDi(sc =>
             {
                 sc.AddTransient<Eav.Serializers.Serializer, Serializer>();
-                sc.AddTransient<IEavValueConverter, DnnValueConverter>();
+                sc.AddTransient<IValueConverter, DnnValueConverter>();
                 sc.AddTransient<IUser, DnnUser>();
 
                 sc.AddTransient<XmlExporter, DnnXmlExporter>();

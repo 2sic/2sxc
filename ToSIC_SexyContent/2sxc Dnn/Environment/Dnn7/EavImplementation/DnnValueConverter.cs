@@ -10,11 +10,11 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Implementations.ValueConverter;
+using ToSic.Eav.Data;
 
 namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
 {
-    public class DnnValueConverter : IEavValueConverter
+    public class DnnValueConverter : IValueConverter
     {
         public string ToReference(string value)
             => TryToResolveOneLinkToInternalDnnCode(value);
