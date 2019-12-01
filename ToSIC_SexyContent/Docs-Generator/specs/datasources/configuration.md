@@ -51,7 +51,7 @@ So how does each scenario work out?
 
 ## Also Read
 
-* @Specs.LookUp
+* @Specs.LookUp.Intro
 * @Specs.DataSources.ConfigurationTokens
 * @Specs.DataSources.Api
 * @Specs.DataSources.Api.EnsureConfigurationIsLoaded

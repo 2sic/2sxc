@@ -1,5 +1,5 @@
 ---
-uid: Concepts.EavDataModels
+uid: Specs.Data.Intro
 ---
 # Data Models in the EAV
 

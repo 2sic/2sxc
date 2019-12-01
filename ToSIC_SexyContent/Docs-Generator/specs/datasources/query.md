@@ -1,5 +1,5 @@
 ---
-uid: Specs.DataSources.Queries
+uid: Specs.DataSources.Query
 ---
 
 # Query Basics

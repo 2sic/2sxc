@@ -2,11 +2,12 @@
 uid: Specs.DataSources.ConfigurationTokens
 ---
 
-# Concept: Tokens
+# Placeholder Tokens
 
 Often you need a text-based code which should be replaced at runtime with a real value from elsewhere. In DNN / 2sxc this is called a **token**, and they usually look like `[Source:Property]`. At runtime, this will then show a value like `27`. 
 
-_Note: this article applies to tokens as they are handled server-side. There is a special token-like syntax in JavaScript, which is not discussed here._
+> [!NOTE]
+> this article applies to tokens as they are handled server-side. There is a special token-like syntax in JavaScript, which is not discussed here.
 
 ## Token Basics
 A token is a piece of text that looks like `[Source:Property]`, which will be replaced by an engine so that it will then be a value. For example, `[QueryString:Page]` is replaced with `2` if the current url has `?page=2` in it. You can research more about tokens [in older docs here](https://2sxc.org/en/Learn/Token-Templates-and-Views) and in the [full list of standard tokens](https://2sxc.org/dnn-app-demos/en/Apps/Tutorial-Tokens), it's a standard DNN concept. 
@@ -50,7 +51,7 @@ For more on this, read the [DataSource Configuration](xref:Specs.DataSources.Con
 
 ## Also Read
 
-* @Specs.LookUp
+* @Specs.LookUp.Intro
 * @Specs.DataSources.Configuration
 * @ToSic.Eav.DataSources.IDataStream
 * @Specs.DataSources.Api

@@ -16,4 +16,4 @@ These would look like `[App:Path]` or `[QueryString:Ui]`.
 The tool which takes a list of these and looks all of them up is the @ToSic.Eav.LookUp.ILookupEngine. 
 
 > [!TIP]
-> Read more about this in @Specs.LookUp
+> Read more about this in @Specs.LookUp.Intro

@@ -1,5 +1,5 @@
 ---
-uid: Specs.LookUp
+uid: Specs.LookUp.Intro
 ---
 
 # LookUp and LookUpEngine
