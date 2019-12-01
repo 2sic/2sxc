@@ -113,7 +113,7 @@
     <Compile Include="Dnn\Tenant.cs" />
     <Compile Include="Dnn\ValueConverter.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.Factory.cs" />
-    <Compile Include="Environment\Dnn7\FingerprintProvider.cs" />
+    <Compile Include="Dnn\FingerprintProvider.cs" />
     <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
     <Compile Include="Environment\Dnn7\ImportExport\DnnXmlExporter.cs" />
     <Compile Include="Environment\Dnn7\Installation\Helpers.cs" />

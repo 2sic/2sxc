@@ -1,12 +1,16 @@
-﻿using DotNetNuke.Application;
-using System.Data.SqlClient;
-using System.Text;
+﻿using System.Data.SqlClient;
 using System.Security.Cryptography;
+using System.Text;
+using DotNetNuke.Application;
 using ToSic.Eav.Configuration;
-using ToSic.Sxc;
+using ToSic.Eav.Documentation;
 
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn
 {
+    /// <summary>
+    /// DNN implementation of the Fingerprinting system for extra security.
+    /// </summary>
+    [PrivateApi("probably not useful in the API docs.")]
     public class FingerprintProvider: IFingerprintProvider
     {
         public string GetSystemFingerprint()
@@ -33,21 +37,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return connBuilder.InitialCatalog;
         }
 
-        //public static string Base64Encode(string plainText)
-        //{
-        //    var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-        //    return System.Convert.ToBase64String(plainTextBytes);
-        //}
-
         public static string Hash(string randomString)
         {
-            var crypt = new SHA256Managed();
             var hash = new StringBuilder();
-            byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(randomString));
-            foreach (byte theByte in crypto)
+            using (var crypt = new SHA256Managed())
             {
-                hash.Append(theByte.ToString("x2"));
-            }
+                var crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(randomString));
+                foreach (var theByte in crypto) 
+                    hash.Append(theByte.ToString("x2"));
+            } 
             return hash.ToString();
         }
     }

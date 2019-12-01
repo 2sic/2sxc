@@ -13,7 +13,7 @@ This is achieved through 2 special object types, the @ToSic.Eav.LookUp.ILookUp a
 
 ## LookUp Objects
 
-LookUp objects (@ToSic.Eav.LookUp.ILookUp) have a `Name` similar to a namespace or a scope. For example, when a Module is being rendered, there are LookUp objects with names like `QueryString`, `Module`, `Portal` etc. 
+[LookUp objects](xref:ToSic.Eav.LookUp.ILookUp) have a `Name` similar to a namespace or a scope. For example, when a Module is being rendered, there are LookUp objects with names like `QueryString`, `Module`, `Portal` etc. 
 
 They also have a list of properties they can look up, like `Id`, `PortalId` or parameters from the url. 
 

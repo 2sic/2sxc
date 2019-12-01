@@ -1,8 +1,6 @@
 #[Introduction](index.md)
 
 # [Architecture](xref:Articles.Architecture)
-## @Specs.LookUp.Tokens
-## @Specs.LookUp.Intro
 
 # [Data Models in EAV](xref:Specs.Data.Intro)
 ##[Content Types](xref:Specs.Data.ContentTypes)
@@ -76,6 +74,8 @@
 ## @Specs.DataSources.Query
 ## @Specs.DataSources.VisualQuery
 ##[Configuration System](xref:Specs.DataSources.Configuration)
+## @Specs.LookUp.Tokens
+## @Specs.LookUp.Intro
 
 ## @Specs.DataSources.LinqGuide
 ##[Linq with DataSources](xref:Specs.DataSources.Linq)
