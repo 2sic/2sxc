@@ -3,7 +3,6 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.Eav.LookUp;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;
@@ -12,7 +11,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.Sxc.Dnn
 {
     /// <summary>
-    /// This is a factory to create 2sxc instance objects and related objects from DNN.
+    /// This is a factory to create CmsBlocks, Apps etc. and related objects from DNN.
     /// </summary>
     [PublicApi]
     public static class Factory
