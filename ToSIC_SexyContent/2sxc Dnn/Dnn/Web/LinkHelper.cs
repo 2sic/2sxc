@@ -1,20 +1,23 @@
 ﻿using System;
-using ToSic.Sxc;
-using ToSic.Sxc.Dnn;
-using ToSic.Sxc.Interfaces;
+using ToSic.Eav.Documentation;
 using ToSic.Sxc.Web;
 
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn
 {
-    public class DnnLinkHelper: ILinkHelper
+    /// <summary>
+    /// The DNN implementation of the <see cref="ILinkHelper"/>.
+    /// </summary>
+    [PublicApi]
+    public class LinkHelper: ILinkHelper
     {
         private readonly IDnnContext _dnn;
 
-        public DnnLinkHelper(IDnnContext dnn)
+        public LinkHelper(IDnnContext dnn)
         {
             _dnn = dnn;
         }
 
+        /// <inheritdoc />
         public string To(string requiresNamedParameters = null, int? pageId = null, string parameters = null)
         {
             // prevent incorrect use without named parameters
@@ -30,6 +33,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         }
 
+        /// <inheritdoc />
         public string Base()
         {
             // helper to generate a base path which is also valid on home (special DNN behaviour)

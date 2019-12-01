@@ -7,6 +7,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -38,8 +39,8 @@ namespace ToSic.Sxc.WebApi
             var urlParams = PrepareUrlParamsForInternalUse(request);
             
             var tenant = moduleInfo == null
-                ? new DnnTenant(null)
-                : new DnnTenant(new PortalSettings(moduleInfo.OwnerPortalID));
+                ? new Tenant(null)
+                : new Tenant(new PortalSettings(moduleInfo.OwnerPortalID));
 
             IBlock contentBlock = new BlockFromModule(new DnnInstanceInfo(moduleInfo), log, tenant, urlParams);
 

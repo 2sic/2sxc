@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Dnn
         public static ICmsBlock CmsBlock(IContainer container)
         {
             var dnnModule = ((Container<ModuleInfo>)container).Original;
-            var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
+            var tenant = new Tenant(new PortalSettings(dnnModule.OwnerPortalID));
             return new BlockFromModule(container, parentLog: null, tenant: tenant).CmsInstance;
         }
 
@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Dnn
         /// <returns>An initialized App object which you can use to access App.Data</returns>
         public static IApp App(int appId, PortalSettings ownerPortalSettings, bool publishingEnabled = false, bool showDrafts = false)
         {
-            var appStuff = new App(new DnnTenant(ownerPortalSettings), Eav.Apps.App.AutoLookupZone, appId,
+            var appStuff = new App(new Tenant(ownerPortalSettings), Eav.Apps.App.AutoLookupZone, appId,
                 ConfigurationProvider.Build(showDrafts, publishingEnabled, new LookUpEngine()), true, null);
             return appStuff;
         }

@@ -14,6 +14,7 @@ using ToSic.SexyContent.Search;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Environment;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Search;
@@ -62,7 +63,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             cache.PreLoadCache(portalSettings.DefaultLanguage.ToLower());
 
             // must find tenant through module, as the PortalSettings.Current is null in search mode
-            var tenant = new DnnTenant(portalSettings);
+            var tenant = new Tenant(portalSettings);
             var mcb = new BlockFromModule(container, Log, tenant);
             var cmsBlock = mcb.CmsInstance;
 

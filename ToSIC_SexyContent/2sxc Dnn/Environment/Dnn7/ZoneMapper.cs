@@ -8,6 +8,7 @@ using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Sxc;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -63,7 +64,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     return zid == zoneId ? new PortalSettings(p) : null;
                 })
                 .FirstOrDefault(f => f != null);
-            return found != null ? new DnnTenant(found) : null;
+            return found != null ? new Tenant(found) : null;
         }
 
 

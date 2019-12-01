@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -11,14 +10,21 @@ using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
+using ToSic.Eav.Documentation;
 
-namespace ToSic.SexyContent.Environment.Dnn7.EavImplementation
+namespace ToSic.Sxc.Dnn
 {
-    public class DnnValueConverter : IValueConverter
+    /// <summary>
+    /// The DNN implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
+    /// </summary>
+    [PublicApi]
+    public class ValueConverter : IValueConverter
     {
+        /// <inheritdoc />
         public string ToReference(string value)
             => TryToResolveOneLinkToInternalDnnCode(value);
 
+        /// <inheritdoc />
         public string ToValue(Guid itemGuid, string reference)
             => TryToResolveDnnCodeToLink(itemGuid, reference);
 

@@ -13,6 +13,7 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.SexyContent.Internal;
 using ToSic.Sxc;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.SxcTemp;
 
@@ -94,7 +95,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public string TemplatesRoot(int zoneId, int appId)
         {
-            var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), zoneId, appId, false, Log);
+            var app = GetApp.LightWithoutData(new Tenant(PortalSettings.Current), zoneId, appId, false, Log);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
             var templateRoot =  HttpContext.Current.Server.MapPath(TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));

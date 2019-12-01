@@ -13,6 +13,7 @@ using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Dnn;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 // ReSharper disable once CheckNamespace
@@ -110,7 +111,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
                 var instanceInfo = new DnnInstanceInfo(dnnModule);
                 // must find tenant through module, as the PortalSettings.Current is null in search mode
-                var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
+                var tenant = new Tenant(new PortalSettings(dnnModule.OwnerPortalID));
                 var cb = new BlockFromModule(instanceInfo, Log, tenant);
 
                 Log.Add($"found dnn mod {instanceInfo.Id}, tenant {tenant.Id}, cb exists: {cb.ContentGroupExists}");

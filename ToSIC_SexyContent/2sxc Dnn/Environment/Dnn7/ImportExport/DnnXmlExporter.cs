@@ -7,6 +7,7 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.SxcTemp;
 
 namespace ToSic.SexyContent.ImportExport
@@ -18,7 +19,7 @@ namespace ToSic.SexyContent.ImportExport
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
-            var tenant = new DnnTenant(PortalSettings.Current);
+            var tenant = new Tenant(PortalSettings.Current);
             var app = GetApp.LightWithoutData(tenant, zoneId, appId, parentLog: Log);
             AdamAppContext = new AdamAppContext(tenant, app, null, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
