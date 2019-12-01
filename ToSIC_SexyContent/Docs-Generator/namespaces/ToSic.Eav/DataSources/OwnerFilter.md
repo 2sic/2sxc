@@ -1,7 +1,6 @@
 ---
 uid: ToSic.Eav.DataSources.OwnerFilter
 ---
-# Data Source: OwnerFilter
 
 The **OwnerFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will only let items pass through, which a specific user (often the current one) has created initially. 
 

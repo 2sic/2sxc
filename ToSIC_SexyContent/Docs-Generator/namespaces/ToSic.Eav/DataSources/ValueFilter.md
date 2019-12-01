@@ -1,7 +1,6 @@
 ---
 uid: ToSic.Eav.DataSources.ValueFilter
 ---
-# Data Source: ValueFilter
 
 The **ValueFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will filter items based on the values - and if none are found, will optionally return a fallback-list.
 

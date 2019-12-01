@@ -1,7 +1,6 @@
 ---
 uid: ToSic.Eav.DataSources.ValueSort
 ---
-# Data Source: ValueSort
 
 The **ValueSort** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will reorder items passing through A-Z or Z-A based on a value of each item. 
 

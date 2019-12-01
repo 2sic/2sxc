@@ -1,7 +1,6 @@
 ---
 uid: ToSic.Eav.DataSources.ItemFilterDuplicates
 ---
-# Data Source: ItemFilterDuplicates
 
 The **ItemFilterDuplicates** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will provide two streams, one with all the items (but without the duplicates) and one with all the duplicates, in case you need these. 
 

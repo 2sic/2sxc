@@ -1,7 +1,6 @@
 ---
 uid: ToSic.Eav.DataSources.Sql
 ---
-# Data Source: SqlDataSource
 
 The **SqlDataSource** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It lets you use data from SQL databases as if they were entities.  
 

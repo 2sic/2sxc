@@ -1,7 +1,6 @@
 ---
 uid: ToSic.Eav.DataSources.Paging
 ---
-# Data Source: Paging
 
 The **Paging** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will limit the items returned to a _page_ containing just a few items, and will also provide a _paging-information_ so that the UI knows what page it's on and how many pages remain.  
 

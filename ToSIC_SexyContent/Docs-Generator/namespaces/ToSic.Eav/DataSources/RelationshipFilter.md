@@ -1,7 +1,6 @@
 ---
 uid: ToSic.Eav.DataSources.RelationshipFilter
 ---
-# Data Source: RelationshipFilter
 
 The **RelationshipFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will return only the items which have a relationship to another item - like books having an author, or blog-posts with the tag _grunt_. 
 

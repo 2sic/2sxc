@@ -1,7 +1,6 @@
 ---
 uid: ToSic.Eav.DataSources.StreamFallback
 ---
-# Data Source: StreamFallback
 
 The **StreamFallback** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will pass on the first stream which has results. The order of evaluation is based on the names of the streams as they enter the StreamFallback. 
 

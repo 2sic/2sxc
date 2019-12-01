@@ -1,7 +1,6 @@
 ---
 uid: ToSic.Eav.DataSources.Shuffle
 ---
-# Data Source: Shuffle
 
 The **Shuffle** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will randomize the order of items which came in. This is common for components which show "3 random quotes" and similar scenarios. 
 
