@@ -3,7 +3,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 

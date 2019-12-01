@@ -2,7 +2,6 @@
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources.Caches;
-using ToSic.SexyContent;
 
 namespace ToSic.Sxc.Apps
 {

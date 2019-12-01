@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ToSic.SexyContent;
 
 namespace ToSic.Sxc.Apps.Assets
 {

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn.LookUp
     /// This class is mainly here to deliver all standard DNN-token lists to 2sxc. 
     /// So it mainly initializes the normal DNN Token provider and offers a property called Property-Access which then contains all value-resolvers
     /// </summary>
-    [PrivateApi("not for public use, it's an internal class just needed to retrieve DNN stuf")]
+    [PrivateApi("not for public use, it's an internal class just needed to retrieve DNN stuff")]
     internal sealed class DnnTokenReplace : TokenReplace
     {
 
