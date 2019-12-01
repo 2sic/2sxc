@@ -31,7 +31,7 @@ if your DataSource performs filtering or similar actions on existing data, then 
 A DataSource gets the configuration from a configuration provider. To better understand this, you should read:
 
 * [about configuration](xref:Specs.DataSources.Configuration)
-* [about tokens](xref:Specs.DataSources.ConfigurationTokens) 
+* [about tokens](xref:Specs.LookUp.Tokens) 
 * [ConfigMask(...)](xref:Specs.DataSources.Api.ConfigMask).
 
 ## Configuring the UI

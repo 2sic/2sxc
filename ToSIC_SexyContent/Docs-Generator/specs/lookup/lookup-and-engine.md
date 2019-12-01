@@ -2,12 +2,14 @@
 uid: Specs.LookUp.Intro
 ---
 
-# LookUp and LookUpEngine
+# LookUp & LookUpEngine
 
 Many things in the EAV and 2sxc require it to look up parameters. 
 For example, when a Query is created, it may need to know the current PortalId or the current time, to properly filter/sort something. 
 
 This is achieved through 2 special object types, the @ToSic.Eav.LookUp.ILookUp and @ToSic.Eav.LookUp.ILookUpEngine, both in the @ToSic.Eav.LookUp namespace. 
+
+
 
 ## LookUp Objects
 
@@ -53,7 +55,7 @@ Just to give you an idea of the power of LookUp objects, here are some in use:
 ## Also Read
 
 * @Specs.DataSources.Configuration
-* @Specs.DataSources.ConfigurationTokens
+* @Specs.LookUp.Tokens
 * @Specs.DataSources.Api.EnsureConfigurationIsLoaded
 * @ToSic.Eav.LookUp
 * @ToSic.Sxc.LookUp

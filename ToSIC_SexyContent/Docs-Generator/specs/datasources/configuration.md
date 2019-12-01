@@ -21,7 +21,7 @@ This is what this Token-Configuration-Injection-System is for.
 Each configuration of a [DataSource](xref:Specs.DataSources.DataSource) is either a fixed string value like `17` or a token like `[Settings:PageNumber]`. In most cases it's a token. This token is parsed _before any data is queried_ to ensure that in the end the [DataSource](xref:Specs.DataSources.DataSource) has a usefull value before actually performing its task. 
 
 ## Token Basics
-A token is a piece of text that looks like `[Source:Property]`. It is good to understand the full [token concept, discussed here](xref:Specs.DataSources.ConfigurationTokens). You'll also want to read about fallback and recursion to understand the following content. 
+A token is a piece of text that looks like `[Source:Property]`. It is good to understand the full [token concept, discussed here](xref:Specs.LookUp.Tokens). You'll also want to read about fallback and recursion to understand the following content. 
 
 ## Shared Token-Suppliers / Token-Sources
 When a DataSource is configured, it has many token-suppliers like `Module`, `QueryString`, `App` etc. These are shared and are identical for all objects. 
@@ -52,7 +52,7 @@ So how does each scenario work out?
 ## Also Read
 
 * @Specs.LookUp.Intro
-* @Specs.DataSources.ConfigurationTokens
+* @Specs.LookUp.Tokens
 * @Specs.DataSources.Api
 * @Specs.DataSources.Api.EnsureConfigurationIsLoaded
 * @ToSic.Eav.DataSources.IDataStream

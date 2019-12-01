@@ -1,5 +1,5 @@
 ---
-uid: Specs.DataSources.ConfigurationTokens
+uid: Specs.LookUp.Tokens
 ---
 
 # Placeholder Tokens
@@ -9,8 +9,13 @@ Often you need a text-based code which should be replaced at runtime with a real
 > [!NOTE]
 > this article applies to tokens as they are handled server-side. There is a special token-like syntax in JavaScript, which is not discussed here.
 
+> [!NOTE] 
+> There is also a [TokenEngine](xref:ToSic.Sxc.Engines.TokenEngine) which uses the same Token mechanism to generate HTML. What you see here also applies to that, but it's actually a separate topic.
+
 ## Token Basics
 A token is a piece of text that looks like `[Source:Property]`, which will be replaced by an engine so that it will then be a value. For example, `[QueryString:Page]` is replaced with `2` if the current url has `?page=2` in it. You can research more about tokens [in older docs here](https://2sxc.org/en/Learn/Token-Templates-and-Views) and in the [full list of standard tokens](https://2sxc.org/dnn-app-demos/en/Apps/Tutorial-Tokens), it's a standard DNN concept. 
+
+Internally it uses a LookUp-Engine which itself uses LookUp-Sources - see @Specs.LookUp.Intro. 
 
 ## Additional Token Features in 2sxc/EAV
 The EAV and 2sxc have enhanced Tokens to a new level with these features:
@@ -46,8 +51,6 @@ Some situations will have token sources beyond the default. For example, when co
 * `In` - used like `[In:Default:PageSize]`
 * `Settings` - used like `[Settings:PageSize]`
 * There is another special override-token system (not documented) which is used for testing
-
-For more on this, read the [DataSource Configuration](xref:Specs.DataSources.Configuration) section. 
 
 ## Also Read
 
