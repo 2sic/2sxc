@@ -104,14 +104,14 @@
     <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.DataSources.DnnSqlDataSource.cs" />
     <Compile Include="Environment\Dnn7\DnnFileSystem.cs" />
-    <Compile Include="Environment\Dnn7\DnnLinkHelper.cs" />
+    <Compile Include="Dnn\Web\LinkHelper.cs" />
     <Compile Include="Environment\Dnn7\DnnMapAppToInstance.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
     <Compile Include="Environment\Dnn7\DnnInstanceInfo.cs" />
     <Compile Include="Environment\Dnn7\DnnPermissionCheck.cs" />
     <Compile Include="Environment\Dnn7\DnnRenderingHelpers.cs" />
-    <Compile Include="Environment\Dnn7\DnnTenant.cs" />
-    <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
+    <Compile Include="Dnn\Tenant.cs" />
+    <Compile Include="Dnn\ValueConverter.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.Factory.cs" />
     <Compile Include="Environment\Dnn7\FingerprintProvider.cs" />
     <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
