@@ -1,20 +1,29 @@
 ﻿using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn
 {
-    public class DnnInstanceInfo: Container<ModuleInfo>
+    /// <summary>
+    /// The DNN implementation of a Block Container (a Module).
+    /// </summary>
+    [PublicApi]
+    public class Container: Container<ModuleInfo>
     {
-        public DnnInstanceInfo(ModuleInfo item) : base(item)
+        public Container(ModuleInfo item) : base(item)
         {
         }
 
+        /// <inheritdoc />
         public override int Id => Original.ModuleID;
 
+        /// <inheritdoc />
         public override int PageId => Original.TabID;
 
+        /// <inheritdoc />
         public override int TenantId => Original.PortalID;
 
+        /// <inheritdoc />
         public override bool IsPrimary => Original.DesktopModule.ModuleName == "2sxc";
     }
 }

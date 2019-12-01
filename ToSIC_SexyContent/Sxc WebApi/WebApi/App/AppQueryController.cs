@@ -61,7 +61,7 @@ namespace ToSic.Sxc.WebApi.App
                 throw HttpErr(HttpStatusCode.NotFound, "query not found", $"query '{name}' not found");
 
             var permissionChecker = new DnnPermissionCheck(log, targetItem: query.QueryDefinition, 
-                instance: new DnnInstanceInfo(module), appIdentity: app);
+                instance: new Container(module), appIdentity: app);
             var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 
             var isAdmin = module != null && DotNetNuke.Security.Permissions

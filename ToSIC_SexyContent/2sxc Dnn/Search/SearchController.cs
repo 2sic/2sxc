@@ -135,7 +135,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             // check if the cshtml has search customizations
             try
             {
-                engine.CustomizeSearch(searchInfoDictionary, new DnnInstanceInfo(dnnModule), beginDate);
+                engine.CustomizeSearch(searchInfoDictionary, new Container(dnnModule), beginDate);
             }
             catch (Exception e)
             {

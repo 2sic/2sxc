@@ -29,7 +29,7 @@ namespace ToSic.SexyContent
                 if (_cmsBlockLoaded) return _cmsBlock;
                 _cmsBlockLoaded = true;
                 _cmsBlock = new BlockFromModule(
-                        new DnnInstanceInfo(ModuleConfiguration),
+                        new Container(ModuleConfiguration),
                         Log,
                         new Tenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
                     .CmsInstance as CmsBlock;

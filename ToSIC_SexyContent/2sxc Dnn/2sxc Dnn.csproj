@@ -107,7 +107,7 @@
     <Compile Include="Dnn\Web\LinkHelper.cs" />
     <Compile Include="Environment\Dnn7\DnnMapAppToInstance.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
-    <Compile Include="Environment\Dnn7\DnnInstanceInfo.cs" />
+    <Compile Include="Dnn\Container.cs" />
     <Compile Include="Environment\Dnn7\DnnPermissionCheck.cs" />
     <Compile Include="Environment\Dnn7\DnnRenderingHelpers.cs" />
     <Compile Include="Dnn\Tenant.cs" />
