@@ -232,6 +232,7 @@
     <None Include="app.config" />
     <None Include="Apps\Readme.md" />
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.SexyContentWebPage.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.ContentBlocks.Render.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

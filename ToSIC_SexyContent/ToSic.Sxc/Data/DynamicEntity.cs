@@ -132,7 +132,7 @@ namespace ToSic.Sxc.Data
         /// <returns></returns>
         public bool IsDemoItem => Entity is EntityInContentGroup entInCg && entInCg.IsDemoItem;
 
-        public IHtmlString Render() => Blocks.Renderers.Render.One(this);
+        public IHtmlString Render() => Blocks.Render.One(this);
 
 
         #region Changing comparison operation to internally compare the entities, not this wrapper
