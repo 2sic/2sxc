@@ -47,13 +47,9 @@ Next to document
 These topics are not or insufficiently documented...
 
 1. URL and REST API for retrieving / changing data (todo)
-1. ADAM - the Automatic Digital Asset Manager (todo) and AsAdam(...)
-1. Metadata system
 1. Enhancing 2sxc with custom extensions
     1. Custom input field-types
     2. Custom data-types
-    3. Custom templating engines
-    4. Custom JS connectors to other libraries
     5. ...
 1. Future topics, lower priority
     1. Angular2-5 and 2sxc (todo)
