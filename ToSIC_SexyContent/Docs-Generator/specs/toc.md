@@ -1,6 +1,8 @@
 #[Introduction](index.md)
 
-# [Architecture](xref:Articles.Architecture)
+# [Architecture](xref:Specs.Architecture.Intro)
+## [Data Flow](xref:Specs.Architecture.DataFlow)
+
 
 # [Data Models in EAV](xref:Specs.Data.Intro)
 ## @Specs.Data.AppState

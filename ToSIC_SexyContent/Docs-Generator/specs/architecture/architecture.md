@@ -1,5 +1,5 @@
 ---
-uid: Articles.Architecture
+uid: Specs.Architecture.Intro
 ---
 
 # EAV / 2sxc / DNN Architecture

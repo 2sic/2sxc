@@ -105,9 +105,6 @@ namespace ToSic.Sxc.DataSources
 
                     var cms = new CmsRuntime(ZoneId, AppId, Log, HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value));
                     var cgm = cms.Blocks;
-                    //var cgm = new BlocksManager(ZoneId, AppId,
-                    //    HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value),
-                    //    Log);
 
                     _blockConfiguration = cgm.GetInstanceContentGroup(InstanceId.Value, null);
                 }
