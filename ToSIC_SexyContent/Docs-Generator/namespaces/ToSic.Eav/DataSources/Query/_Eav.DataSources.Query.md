@@ -1,5 +1,5 @@
 ﻿---
-uid: ToSic.Eav.DataSources.Query
+uid: ToSic.Eav.DataSources.Queries
 ---
 
 Query objects in the EAV contain a configuration how to wire up various Data-Sources to retrieve data. 
