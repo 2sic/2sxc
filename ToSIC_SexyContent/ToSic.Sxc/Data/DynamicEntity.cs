@@ -11,7 +11,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi]
-    public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>
+    public class DynamicEntity : System.Dynamic.DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>
     {
 
         public IEntity Entity { get; }

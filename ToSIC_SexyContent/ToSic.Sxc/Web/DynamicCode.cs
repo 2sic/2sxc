@@ -23,11 +23,18 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 
 namespace ToSic.Sxc.Web
 {
+    /// <summary>
+    /// Base class for any dynamic code.
+    /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
+    /// </summary>
+    [PublicApi]
     public abstract class DynamicCode : HasLog, IDynamicCode
     {
+        [PrivateApi]
         protected readonly ICmsBlock CmsInstance;
 
         private readonly ITenant _tenant;
+        [PrivateApi]
         protected DynamicCode(ICmsBlock cmsInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsInstance?.Log)
         {
             if (cmsInstance == null)
@@ -41,29 +48,26 @@ namespace ToSic.Sxc.Web
             Edit = new InPageEditingHelper(cmsInstance, Log);
         }
 
+        [PrivateApi]
         internal void LateAttachApp(IApp app) => App = app;
 
 
-        /// <summary>
-        /// The current app containing the data and read/write commands
-        /// </summary>
+        /// <inheritdoc />
         public IApp App { get; private set; }
 
-        /// <summary>
-        /// The view data
-        /// </summary>
+        /// <inheritdoc />
         public IBlockDataSource Data { get; }
 
+        [PrivateApi]
 		public SxcHelper Sxc { get; }
 
-        /// <summary>
-        /// Link helper object to create the correct links
-        /// </summary>
+        /// <inheritdoc />
         public ILinkHelper Link { get; protected set; }
 
 
         #region AsDynamic Implementations
 
+        [PrivateApi]
         public const string EmptyJson = "{}";
         private const string JsonStarter = "{";
         private const string JsonErrorCode = "error";
@@ -74,7 +78,7 @@ namespace ToSic.Sxc.Web
             if (!string.IsNullOrWhiteSpace(json) && json.Contains(JsonStarter))
                 try
                 {
-                    return JObject.Parse(json);
+                    return new DynamicObject(JObject.Parse(json));
                 }
                 catch
                 {
@@ -84,15 +88,10 @@ namespace ToSic.Sxc.Web
             // fallback
             return fallback == null
                 ? null
-                : JObject.Parse(fallback);
+                : new DynamicObject(JObject.Parse(fallback));
         }
 
         /// <inheritdoc />
-        /// <summary>
-        /// Transform a IEntity to a DynamicEntity as dynamic object
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
         public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, CmsInstance);
 
         [PrivateApi]
@@ -101,20 +100,7 @@ namespace ToSic.Sxc.Web
 
 
         /// <inheritdoc />
-        /// <summary>
-        /// Makes sure a dynamicEntity could be wrapped in AsDynamic()
-        /// </summary>
-        /// <param name="dynamicEntity"></param>
-        /// <returns></returns>
         public dynamic AsDynamic(dynamic dynamicEntity) => dynamicEntity;
-
-        ///// <inheritdoc />
-        ///// <summary>
-        ///// Returns the value of a KeyValuePair as DynamicEntity
-        ///// </summary>
-        ///// <param name="entityKeyValuePair"></param>
-        ///// <returns></returns>
-        //public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
@@ -127,22 +113,13 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <returns></returns>
         [Obsolete("2019-03-07 2dm: probably not needed any more, as 2sxc 9.40.01 adds the IEnumerable to the IDatastream")]
+        [PrivateApi]
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AsDynamic(stream.List);
 
         /// <inheritdoc />
-        /// <summary>
-        /// Transform a DynamicEntity dynamic object back to a IEntity instance
-        /// </summary>
-        /// <param name="dynamicEntity"></param>
-        /// <returns></returns>
         public IEntity AsEntity(dynamic dynamicEntity) => ((IDynamicEntity) dynamicEntity).Entity;
 
         /// <inheritdoc />
-        /// <summary>
-        /// Returns a list of DynamicEntities
-        /// </summary>
-        /// <param name="entities">List of entities</param>
-        /// <returns></returns>
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => entities.Select(e => AsDynamic(e));
 
 
@@ -159,36 +136,25 @@ namespace ToSic.Sxc.Web
             => _configurationProvider ??
                (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.ConfigurationProvider);
 
-        /// <summary>
-        /// Create a data-source by type-name. Note that it's better to use the typed version
-        /// CreateSource T instead
-        /// </summary>
-        /// <param name="typeName"></param>
-        /// <param name="inSource"></param>
-        /// <param name="configurationProvider"></param>
-        /// <returns></returns>
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+        /// <inheritdoc />
+        [PrivateApi("obsolete")]
+        [Obsolete("you should use the CreateSource<T> instead")]
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
         {
-            if (configurationProvider == null)
-                configurationProvider = ConfigurationProvider;
+            if (lookUpEngine == null)
+                lookUpEngine = ConfigurationProvider;
 
             if (inSource != null)
-                return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
+                return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, lookUpEngine);
 
             var userMayEdit = CmsInstance.UserMayEdit;
 
             var initialSource = DataSource.GetInitialDataSource(CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as LookUpEngine);
-            return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
+            return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, lookUpEngine) : initialSource;
         }
 
-        /// <summary>
-        /// Create a data-source in code of the expected type
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="inSource"></param>
-        /// <param name="configurationProvider"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource
         {
             if (configurationProvider == null)
@@ -205,12 +171,6 @@ namespace ToSic.Sxc.Web
         }
 
         /// <inheritdoc />
-        /// <summary>
-        /// Create a source with initial stream to attach...
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="inStream"></param>
-        /// <returns></returns>
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
         {
             // if it has a source, then use this, otherwise it's null and that works too. Reason: some sources like DataTable or SQL won't have an upstream source
@@ -225,9 +185,7 @@ namespace ToSic.Sxc.Web
 
         #region basic properties like Content, Presentation, ListContent, ListPresentation
 
-        /// <summary>
-        /// content item of the current view
-        /// </summary>
+        /// <inheritdoc />
         public dynamic Content {
             get
             {
@@ -237,10 +195,8 @@ namespace ToSic.Sxc.Web
         }
         private dynamic _content;
 
-        
-        /// <summary>
-        /// List item of the current view
-        /// </summary>
+
+        /// <inheritdoc />
 		public dynamic Header {
             get
             {
@@ -250,6 +206,7 @@ namespace ToSic.Sxc.Web
         }
         private dynamic _header;
 
+        [PrivateApi]
         [Obsolete("use Header instead")]
         public dynamic ListContent => Header;
 
@@ -268,6 +225,7 @@ namespace ToSic.Sxc.Web
         }
 
 #pragma warning disable 618
+        [PrivateApi]
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
         public List<Element> List {
             get
@@ -319,22 +277,12 @@ namespace ToSic.Sxc.Web
 
         #region Adam
 
-        /// <summary>
-        /// Provides an Adam instance for this item and field
-        /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
-        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
-        /// <returns>An Adam object for navigating the assets</returns>
+        /// <inheritdoc />
         public IFolder AsAdam(IDynamicEntity entity, string fieldName)
             => AsAdam(AsEntity(entity), fieldName);
 
 
-        /// <summary>
-        /// Provides an Adam instance for this item and field
-        /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
-        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
-        /// <returns>An Adam object for navigating the assets</returns>
+        /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName)
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
@@ -349,14 +297,12 @@ namespace ToSic.Sxc.Web
 
         #region Edit
 
-        /// <summary>
-        /// Helper commands to enable in-page editing functionality
-        /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
-        /// </summary>
+        /// <inheritdoc />
         public IInPageEditingSystem Edit { get; }
         #endregion
 
         #region SharedCode Compiler
+        /// <inheritdoc />
         public dynamic CreateInstance(string virtualPath,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null,
@@ -380,6 +326,7 @@ namespace ToSic.Sxc.Web
 
         #endregion
 
+        /// <inheritdoc />
         public string SharedCodeVirtualRoot { get; set; }
     }
 }

@@ -103,8 +103,8 @@ namespace ToSic.SexyContent.Razor
 
         #region Data Source Stuff
         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-            => DynCode.CreateSource(typeName, inSource, configurationProvider);
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
+            => DynCode.CreateSource(typeName, inSource, lookUpEngine);
 
         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)

@@ -83,8 +83,8 @@ namespace ToSic.Sxc.Code
 
         [Obsolete("use CreateSource<T> instead")]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-            ILookUpEngine configurationProvider = null)
-            => Parent?.CreateSource(typeName, inSource, configurationProvider);
+            ILookUpEngine lookUpEngine = null)
+            => Parent?.CreateSource(typeName, inSource, lookUpEngine);
 
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
