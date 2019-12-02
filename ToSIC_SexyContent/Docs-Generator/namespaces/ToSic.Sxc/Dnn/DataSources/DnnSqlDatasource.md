@@ -10,7 +10,7 @@ This is what it looks like:
 <img src="/assets/data-sources/dnnsqldatasource-basic.png" width="100%">
 
 ## How to use 
-Internally the DnnSqlDataSource is exactly the same as the [SqlDataSource](xref:ToSic.Eav.DataSources.SqlDataSource) just with fewer options, because you cannot choose most of the settings. Please consult the [SqlDataSource documentation](xref:ToSic.Eav.DataSources.SqlDataSource) to see how you can use it. 
+Internally the DnnSqlDataSource is exactly the same as the [Sql DataSource](xref:ToSic.Eav.DataSources.Sql) just with fewer options, because you cannot choose most of the settings. Please consult the [Sql DataSource documentation](xref:ToSic.Eav.DataSources.Sql) to see how you can use it. 
 
 
 [!include["simpler-with-vqd"](../../../ToSic.Eav/DataSources/shared-use-vqd.md)]

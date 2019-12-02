@@ -93,8 +93,8 @@ namespace ToSic.Sxc.Engines
 
         private void InitTokenReplace()
         {
-            var confProv = ConfigurationProvider.GetConfigProviderForModule(/*InstInfo.Id*/CmsBlock.Container.Id, CmsBlock.App, CmsBlock);
-            _tokenReplace = new TokenReplaceEav(/*InstInfo.Id*/CmsBlock.Container.Id, confProv);
+            var confProv = ConfigurationProvider.GetConfigProviderForModule(CmsBlock.Container.Id, CmsBlock.App, CmsBlock);
+            _tokenReplace = new TokenReplaceEav(CmsBlock.Container.Id, confProv);
             
             // Add the Content and ListContent property sources used always
             _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new LookUpInDynamicEntity(SourcePropertyName.ListContent, _dataHelper.Header));

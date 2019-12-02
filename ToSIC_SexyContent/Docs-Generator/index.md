@@ -30,7 +30,7 @@ it also include instructions how to export/import data, working with the image r
 ## If you want to know more, then check out...
 
 1. The [Specs](xref:Specs.Home) which tells you about Architecture, Data Models and more
-1. The [C# .net API Docs](xref:Api.DotNet)
+1. The [C# .net API Docs](/api/dot-net/index.html)
 
 
 #### Documentation Version

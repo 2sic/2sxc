@@ -58,7 +58,10 @@
 ##[Page Publishing](xref:Specs.Cms.PagePublishing)
 
 # CMS Create and Design
-##[Views](xref:Specs.Cms.Views)
+##[Views and Templates](xref:Specs.Cms.Views)
+##[Template Files](xref:Specs.Cms.Templates)
+##[Razor Templates](xref:Specs.Cms.Templates.Razor)
+##[Token Templates](xref:Specs.Cms.Templates.Token)
 ##[App Folder Structure](xref:Specs.App.Folders)
 ##[Hide Features](xref:Concepts.HideAdvancedFeatures)
 ##[Permissions](xref:Concepts.Permissions)

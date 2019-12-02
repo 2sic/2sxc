@@ -178,7 +178,7 @@ These are all the data sources which are either provided in the default installa
         <summary>
           DNN Sql DataSource (...)
         </summary>
-          SqlDataSource which only uses the DNN DB and nothing else, based on the SqlDataSource
+          Sql which only uses the DNN DB and nothing else, based on the Sql DataSource
       </details>
   </tr>
   <tr>
@@ -325,7 +325,7 @@ These are all the data sources which are either provided in the default installa
       New in 8.12: In-Stream "Fallback" which is returned if the filter didn't return any hits.
       </details>  </tr>
   <tr>
-    <td><a href="xref:ToSic.Eav.DataSources.SqlDataSource">SqlDataSource</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.Sql">Sql</a></td>
     <td>Get Data</td>
     <td>
       <details>
