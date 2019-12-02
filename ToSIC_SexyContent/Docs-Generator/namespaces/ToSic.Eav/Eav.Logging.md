@@ -1,6 +1,5 @@
 ﻿---
 uid: ToSic.Eav.Logging
-summary: *content
 ---
 
 The EAV system has a powerful internal logging system. It's the backbone to Insights.

@@ -1,6 +1,5 @@
 ﻿---
 uid: ToSic.Eav.Environment
-summary: *content
 ---
 
 The EAV will usually be used in another environment, which knows things the EAV doesn't. 

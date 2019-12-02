@@ -1,6 +1,5 @@
 ﻿---
 uid: ToSic.Eav.LookUp
-summary: *content
 ---
 
 Sometimes objects need to get values from the context - like...

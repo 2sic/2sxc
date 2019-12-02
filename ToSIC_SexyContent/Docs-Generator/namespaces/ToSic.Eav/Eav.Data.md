@@ -1,9 +1,8 @@
 ﻿---
 uid: ToSic.Eav.Data
-summary: *content
 ---
 
-The EAV system underlying 2sxc is the core data management system, in charge of Entities and such. For long term stability, we only use interfaces in the API. 
+The EAV Data system underlying 2sxc is the core data management system, in charge of Entities and such. For long term stability, we only use interfaces in the API. 
 
 To better understand this stuff, best read about the [](xref:Specs.Data.Intro).
 

@@ -43,13 +43,8 @@ Generated for EAV/2sxc 10.20.03
 Next to document
 
 1. Finish metadata documentation
-1. write about adam
 1. write about visual query
-1. Publish the VisualQuery attribute, link - see also specs/datasources/api-visualquery
 1. explain Query in general, as linked in specs/datasources/datasource.md
-1. Publish the 2sxc data sources in correct namespace, link
-    1. module DS
-    1. view DS
 
 These topics are not or insufficiently documented...
 
@@ -71,7 +66,6 @@ These topics are not or insufficiently documented...
 
 These topics are already documented elsewhere, but should become part of these docs
 
-1. ADAM doesn't seem to be documented anywhere here
 1. Visual Query doesn't seem to be documented anywhere here
 1. [View-switching based on url-params](http://2sxc.org/en/Docs/Feature/feature/4680)
 1. [Security protecting views like admin-views](http://2sxc.org/en/Docs/Feature/feature/4737)

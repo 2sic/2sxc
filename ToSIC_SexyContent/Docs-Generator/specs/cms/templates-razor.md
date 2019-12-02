@@ -29,6 +29,9 @@ to make sure that it has all the new features.
 > But they inherit from a different class, so certain features won't work exactly as documented. 
 
 > [!TIP]
+> Check out the [How-To Razor](xref:HowTo.Razor.Templates) section
+
+> [!TIP]
 > You can see the full API available to to your code out-of-the box in the [RazorComponent API](xref:ToSic.Sxc.Dnn.RazorComponent)
 
 ## Reusing Html-Helpers in Razor 

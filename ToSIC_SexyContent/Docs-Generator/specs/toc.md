@@ -51,6 +51,7 @@
 ###[Json Entity](xref:Specs.Data.Formats.JsonV1-Entity)
 ###[Json ContentType](xref:Specs.Data.Formats.JsonV1-ContentType)
 
+# [ADAM - Automatic Digital Asset Management](xref:Specs.Adam.Intro)
 
 # [CMS Edit Content](xref:Specs.Cms.Edit)
 ##[Edit Toolbars](xref:Specs.Cms.Toolbars)
