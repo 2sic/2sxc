@@ -23,7 +23,7 @@ Each [Entity](xref:Specs.Data.Entities) has many fields, some containing text, n
 
 #### Storage
 Most Content-Types are stored in the database, including all the Content-Types in your App. 
-Special global Content-Types are stored in the file system. They are called @Specs.Data.FileBasedContentTypes
+Special global Content-Types are stored in the file system. They are called [](xref:Specs.Data.FileBasedContentTypes)
 
 #### Metadata of Content-Types and Attributes
 Both the Content-Type and Attributes can have _Metadata_ providing more information about them. 

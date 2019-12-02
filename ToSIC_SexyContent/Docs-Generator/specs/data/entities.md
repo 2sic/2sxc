@@ -48,7 +48,7 @@ The input mask is automatically generated from the [Content-Type](xref:Specs.Dat
 ## APIs
 
 * @ToSic.Eav.Data Namespace has almost everything you see here
-* @ToSic.Eav.Data.IEntity describes the main unit, the Entity
+* [](xref:ToSic.Eav.Data.IEntity) describes the main unit, the Entity
 * @ToSic.Eav.Data.IContentType defines what fields exist, it's the ContentType / Schema
 * @ToSic.Eav.Data.IAttributeBase, @ToSic.Eav.Data.IAttribute,  
 	@ToSic.Eav.Data.IAttribute`1, @ToSic.Eav.Data.Attribute`1  
@@ -67,7 +67,7 @@ The input mask is automatically generated from the [Content-Type](xref:Specs.Dat
 
 ## Future Features & Wishes
 
-1. Dynamic Attributes using JSON data or similar - see @Specs.Data.Values.Custom
+1. Dynamic Attributes using JSON data or similar - see [](xref:Specs.Data.Values.Custom)
 
 ## History
 

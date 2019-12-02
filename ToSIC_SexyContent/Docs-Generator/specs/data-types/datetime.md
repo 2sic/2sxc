@@ -15,7 +15,7 @@ This is stored as a string-value in json using the standard ISO format, as there
 
 ## Read also
 
-* @Specs.Data.Inputs.DateTime documentation about using it in the UI
+* [](xref:Specs.Data.Inputs.DateTime) documentation about using it in the UI
 
 ## History
 1. Introduced in EAV 1.0 2sxc 1.0

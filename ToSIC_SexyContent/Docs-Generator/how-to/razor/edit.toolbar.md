@@ -125,9 +125,9 @@ _Note_: there was an older `@SomeContentItem.Toolbar` syntax and this still work
 
 ## Read also
 
-* @Specs.Js.Toolbar.Intro
-* @Specs.Js.Toolbar.Settings
-* @Specs.Js.Toolbar.Buttons
+* [](xref:Specs.Js.Toolbar.Intro)
+* [](xref:Specs.Js.Toolbar.Settings)
+* [](xref:Specs.Js.Toolbar.Buttons)
 
 ## Demo App and further links
 

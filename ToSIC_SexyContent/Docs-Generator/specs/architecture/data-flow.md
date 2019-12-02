@@ -17,7 +17,7 @@ This is similar to how [ReactiveX](http://reactivex.io/) or [NgRx](https://ngrx.
 
 ### Rule #2: Data is Read-Only
 
-Any data the code receives as @ToSic.Eav.Data.IEntity objects is read-only. 
+Any data the code receives as [](xref:ToSic.Eav.Data.IEntity) objects is read-only. 
 This allows for a much more robust data model and API which in a CMS environment is usually 99% read, 1% write. 
 
 ### Rule #3: Data Always Comes from DataSources

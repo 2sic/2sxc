@@ -17,7 +17,7 @@ This is simply stored as a `true` or `false` in json.
 
 ## Read also
 
-* @Specs.Data.Inputs.Boolean
+* [](xref:Specs.Data.Inputs.Boolean)
 
 ## History
 1. Introduced in EAV 1.0 2sxc 1.0

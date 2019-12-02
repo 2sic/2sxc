@@ -38,12 +38,13 @@ The template files usually reside inside app root folder or sub folder. As of no
 
 ## Future Features & Wishes
 
-1. Out-of the box support for [polymorphism](xref:Specs.Cms.Polymorphism)
+1. Out-of the box support for [](xref:Specs.Cms.Polymorphism)
 
 ## Read also
 
-* [Views](xref:Specs.Cms.Views)
-* [Razor Tutorial](https://2sxc.org/dnn-tutorials/en/razor)
+* [](xref:Specs.Cms.Views)
+* [](xref:Tut.Razor.Home)
+* [](xref:Tut.RazorBlade.Home)
 
 ## History
 

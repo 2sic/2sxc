@@ -45,7 +45,7 @@ Now you can loop through the data as you would otherwise, for example:
 ## Read also
 
 * [Blog Posts about Visual Query Designer](https://2sxc.org/en/blog/tag/visual-query-designer)
-* @Specs.DataSources.DataSource
+* [](xref:Specs.DataSources.DataSource)
 
 ## History
 

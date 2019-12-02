@@ -35,7 +35,7 @@ In 99% of all use cases, you want to generate html with a real link, which is wh
 ```
 
 ## Accessing the Real Inner Value
-In rare cases you may want the originl `page:22` instead of the converted value. To do this, use `AsEntity(yourObject)` and then use the EAV API on @ToSic.Eav.Data.IEntity to read the underlying original value.
+In rare cases you may want the originl `page:22` instead of the converted value. To do this, use `AsEntity(yourObject)` and then use the EAV API on [](xref:ToSic.Eav.Data.IEntity) to read the underlying original value.
 
 ## Special: Hyperlink Libraries
 A special use case is Libraries - where a hyperlink-field doesn't actually contain anything, but is a placeholder for ADAM assets. 
@@ -47,9 +47,9 @@ In such a scenario, you will use `AsAdam(...)` in your code to get the folders/f
 
 ## Read also
 
-* @Specs.Data.Inputs.Hyperlink
-* @Tut.RazorBlade.Text.Has
-* @Tut.RazorBlade.Text.First
+* [](xref:Specs.Data.Inputs.Hyperlink)
+* [](xref:Tut.RazorBlade.Text.Has)
+* [](xref:Tut.RazorBlade.Text.First)
 
 ## History
 1. Introduced in EAV 1.0 2sxc 1.0

@@ -93,7 +93,7 @@ This example is an extract of the Config Content-Type to manage the SqlDataSourc
 
 ## Read also
 
-* @Specs.Data.Formats.JsonV1
+* [](xref:Specs.Data.Formats.JsonV1)
 * [Blog post about the entity json format](https://2sxc.org/en/blog/post/deep-dive-json-stored-content-items-entities)
 
 ## History

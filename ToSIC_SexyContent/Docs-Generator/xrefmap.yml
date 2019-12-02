@@ -66,6 +66,12 @@ references:
   href: https://2sxc.org/en/Docs-Manuals/Feature/feature/8182
 
 # Razor Blade Tutorials
+- uid: Tut.Razor.Home
+  name: Razor Tutorials
+  href: https://2sxc.org/dnn-tutorials/en/razor
+- uid: Tut.RazorBlade.Home
+  name: RazorBlade Tutorials
+  href: https://2sxc.org/dnn-tutorials/en/razor/
 - uid: Tut.RazorBlade.Text.Has
   name: RazorBlade Text.Has(...) Tutorial
   href: https://2sxc.org/dnn-tutorials/en/razor/blade120/page

@@ -15,7 +15,7 @@ This is simply stored as a number in json.
 
 ## Read also
 
-* @Specs.Data.Inputs.Number
+* [](xref:Specs.Data.Inputs.Number)
 
 ## History
 1. Introduced in EAV 1.0 2sxc 1.0

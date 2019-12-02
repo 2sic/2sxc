@@ -22,11 +22,11 @@ Once we're really sure that certain parts are very final, we'll publish the API 
 ### Working with Entities and ADAM Assets
 
 1. If you're working with `DynamicEntity` objects and want to know more about them, check out @ToSic.Sxc.Data.IDynamicEntity.  
-	In very rare cases you also want to know more about the underlying @ToSic.Eav.Data.IEntity.
+	In very rare cases you also want to know more about the underlying [](xref:ToSic.Eav.Data.IEntity).
 1. If you're working with `ADAM` Assets, like from the `AsAdam(...)` command on @ToSic.Sxc.Data.IDynamicEntity objects,  
 	you'll want to read about @ToSic.Sxc.Adam.IFolder and @ToSic.Sxc.Adam.IFile
 
 ### Programming with DataSources and VisualQuery
 
-All the DataSources are based on @ToSic.Eav.DataSources.IDataSource and most of them are also @ToSic.Eav.DataSources.IDataTarget . You can find most of them in @ToSic.Eav.DataSources . 
+All the DataSources are based on [](xref:ToSic.Eav.DataSources.IDataSource) and most of them are also [](xref:ToSic.Eav.DataSources.IDataTarget) . You can find most of them in [](xref:ToSic.Eav.DataSources) . 
 

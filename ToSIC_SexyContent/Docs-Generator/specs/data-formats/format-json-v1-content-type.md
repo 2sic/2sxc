@@ -193,8 +193,8 @@ Because JSON is itself a very loose data-format, and certain types like dates ar
 
 ## Read also
 
-* @Specs.Data.Formats.JsonV1
-* @Specs.Data.FileBasedContentTypes
+* [](xref:Specs.Data.Formats.JsonV1)
+* [](xref:Specs.Data.FileBasedContentTypes)
 * [Blog post about json content-type definitions](https://2sxc.org/en/blog/post/deep-dive-json-content-type-definitions)
 
 
