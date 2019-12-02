@@ -1,6 +1,13 @@
 
 - name: Specs
   href: specs/
+  # href: specs/index.md
+  # topicHref: specs/index.md
+  homepage: specs/index.md
+  #items:
+  #  - name: Temp
+  #    href: specs/toc.yml
+  #    topicHref: specs/index.md
 #  topicUid: Specs.Home
 - name: How To
   topicUid: HowTo.Home

@@ -1,0 +1,260 @@
+
+- name: Introduction
+  topicUid: Specs.Home
+#  href: index.md
+
+- name: Architecture
+  topicUid: Specs.Architecture.Intro
+  items:
+    - name: Data Flow
+      topicUid: Specs.Architecture.DataFlow
+
+
+- name: Data Models in EAV
+  topicUid: Specs.Data.Intro
+  items:
+    - name: AppState
+      topicUid: Specs.Data.AppState
+    - name: Content Types
+      topicUid: Specs.Data.ContentTypes
+    - name: Entities
+      topicUid: Specs.Data.Entities
+    - name: Entity Relationships
+      topicUid: Specs.Data.Relationships
+    - name: File Based Content-Types
+      topicUid: Specs.Data.FileBasedContentTypes
+    - name: Metadata (WIP)
+      topicUid: Specs.Data.Metadata
+
+    - name: Value Data Types
+      topicUid: Specs.Data.Values.Overview
+      items:
+        - name: Boolean
+          topicUid: Specs.Data.Values.Boolean
+        - name: Custom
+          topicUid: Specs.Data.Values.Custom
+        - name: DateTime
+          topicUid: Specs.Data.Values.DateTime 
+        - name: Empty
+          topicUid: Specs.Data.Values.Empty 
+        - name: Entity
+          topicUid: Specs.Data.Values.Entity
+        - name: Hyperlink
+          topicUid: Specs.Data.Values.Hyperlink
+        - name: Number
+          topicUid: Specs.Data.Values.Number
+        - name: String
+          topicUid: Specs.Data.Values.String
+
+    - name: Value Input Types
+      topicUid: Specs.Data.Inputs.Overview
+      items:
+        - name: All
+          topicUid: Specs.Data.Inputs.All 
+        - name: Boolean
+          topicUid: Specs.Data.Inputs.Boolean 
+          items:
+            - name: boolean-default
+              topicUid: Specs.Data.Inputs.Boolean-Default
+        - name: Custom
+          topicUid: Specs.Data.Inputs.Custom 
+        - name: DateTime
+          topicUid: Specs.Data.Inputs.DateTime 
+          items:
+            - name: datetime-default
+              topicUid: Specs.Data.Inputs.DateTime-Default
+        - name: Empty
+          topicUid: Specs.Data.Inputs.Empty 
+          items:
+            - name: empty-default
+              topicUid: Specs.Data.Inputs.Empty-Default
+        - name: Entity
+          topicUid: Specs.Data.Inputs.Entity 
+          items:
+            - name: entity-default
+              topicUid: Specs.Data.Inputs.Entity-Default 
+            - name: entity-query
+              topicUid: Specs.Data.Inputs.Entity-Query
+        - name: Hyperlink
+          topicUid: Specs.Data.Inputs.Hyperlink 
+          items:
+            - name: hyperlink-default
+              topicUid: Specs.Data.Inputs.Hyperlink-Default 
+            - name: hyperlink-library
+              topicUid: Specs.Data.Inputs.Hyperlink-Library 
+        - name: Number
+          topicUid: Specs.Data.Inputs.Number 
+          items:
+            - name: number-default
+              topicUid: Specs.Data.Inputs.Number-Default
+        - name: String
+          topicUid: Specs.Data.Inputs.String 
+          items:
+            - name: string-default
+              topicUid: Specs.Data.Inputs.String-Default
+            - name: drop-down
+              topicUid: Specs.Data.Inputs.String-Dropdown
+            - name: drop-down-query
+              topicUid: Specs.Data.Inputs.String-Dropdown-Query
+            - name: wysiwyg
+              topicUid: Specs.Data.Inputs.String-Wysiwyg
+            - name: font-icon-picker
+              topicUid: Specs.Data.Inputs.String-Font-Icon-Picker
+            - name: url-path
+              topicUid: Specs.Data.Inputs.String-Url-Path
+
+    - name: Json Format
+      topicUid: Specs.Data.Formats.JsonV1
+      items:
+        - name: Json Entity
+          topicUid: Specs.Data.Formats.JsonV1-Entity
+        - name: Json ContentType
+          topicUid: Specs.Data.Formats.JsonV1-ContentType
+
+- name: ADAM - Automatic Digital Asset Management
+  topicUid: Specs.Adam.Intro
+
+- name: CMS Edit Content
+  topicUid: Specs.Cms.Edit
+  items:
+    - name: Edit Toolbars
+      topicUid: Specs.Cms.Toolbars
+    - name: Quick-Edit (QuickE
+      topicUid: Specs.Cms.QuickE
+    - name: Page Publishing
+      topicUid: Specs.Cms.PagePublishing
+
+- name: CMS Create and Design
+  items:
+    - name: Views and Templates
+      topicUid: Specs.Cms.Views
+    - name: Template Files
+      topicUid: Specs.Cms.Templates
+    - name: Razor Templates
+      topicUid: Specs.Cms.Templates.Razor
+    - name: Token Templates
+      topicUid: Specs.Cms.Templates.Token
+    - name: App Folder Structure
+      topicUid: Specs.App.Folders
+    - name: Hide Features
+      topicUid: Concepts.HideAdvancedFeatures
+    - name: Permissions
+      topicUid: Concepts.Permissions
+    - name: Polymorph
+      topicUid: Specs.Cms.Polymorphism
+    - name: Inner Content
+      topicUid: Specs.Cms.InnerContent
+
+- name: CMS Technical
+  items:
+    - name: DNN Modules
+      topicUid: Specs.Cms.DnnModule
+    - name: Edit-Context Data
+      topicUid: Specs.Cms.EditContext
+
+
+- topicUid: Specs.DataSources.Intro
+  items:
+    - topicUid: Specs.DataSources.DataSource
+    - topicUid: Specs.DataSources.DataStream
+    - name: All DataSources
+      topicUid: Specs.DataSources.ListAll
+    - topicUid: Specs.DataSources.Query
+    - topicUid: Specs.DataSources.VisualQuery
+    - name: Configuration System
+      topicUid: Specs.DataSources.Configuration
+    - topicUid: Specs.LookUp.Tokens
+    - topicUid: Specs.LookUp.Intro
+
+    - topicUid: Specs.DataSources.LinqGuide
+    - name: Linq with DataSources
+      topicUid: Specs.DataSources.Linq
+
+    - name: Create Custom DataSource
+      topicUid: Specs.DataSources.Custom
+      items:
+        - name: Internal APIs
+          topicUid: Specs.DataSources.Api
+          items:
+            - name: AsEntity
+              topicUid: Specs.DataSources.Api.AsEntity
+            - name: ConfigMask
+              topicUid: Specs.DataSources.Api.ConfigMask
+            - name: EnsureConfigurationIsLoaded
+              topicUid: Specs.DataSources.Api.EnsureConfigurationIsLoaded
+            - name: Provide
+              topicUid: Specs.DataSources.Api.Provide
+
+- name: System Configuration
+  items:
+    - name: Features Concept
+      topicUid: Specs.Features.Concept
+    - name: Features API
+      topicUid: Specs.Features.Api
+
+- name: JavaScript and Html
+  topicUid: Specs.Js.Overview
+  items:
+    - name: Global $2sxc
+      topicUid: Specs.Js.$2sxc
+      items:
+        - name: $2sxc.cms...
+          topicUid: Specs.Js.$2sxc.Cms
+    - name: Instance Sxc
+      topicUid: Specs.Js.Sxc
+      items:
+        - name: Sxc.manage...
+          topicUid: Specs.Js.Sxc.Manage
+        - name: Sxc.webapi
+          topicUid: Specs.Js.Sxc.WebApi
+    - name: QuickE
+      topicUid: Specs.Js.QuickE
+    - name: Toolbars
+      topicUid: Specs.Js.Toolbar.Intro
+      items:
+        - name: JS Toolbar API
+          topicUid: Specs.Js.Toolbar.Js
+        - name: Settings
+          topicUid: Specs.Js.Toolbar.Settings
+        - name: Single Button
+          topicUid: Specs.Js.Toolbar.Buttons
+    - name: Commands
+      topicUid: Specs.Js.Commands
+      items:
+        - name: Custom Code
+          topicUid: Specs.Js.Commands.Code
+        - name: Content Items
+          topicUid: Specs.Js.Commands.ContentItems
+        - name: Delete
+          topicUid: Specs.Js.Commands.Delete
+
+- name: Angular Dnn-Sxc-Angular
+  items:
+    - name: Toolbars
+      topicUid: Specs.Angular.Toolbars
+    - name: AngularJs (old
+      topicUid: Specs.AngularJs
+
+- name: Style Guide (WIP
+  topicUid: Specs.StyleGuide
+  items:
+    - name: Style Guide 2020 WIP
+      topicUid: Specs.StyleGuide2020
+
+- name: Roadmap & History
+  items:
+    - name: Roadmap
+      topicUid: Specs.Roadmap.Roadmap
+    - name: History
+      topicUid: Specs.Roadmap.History
+    - name: Breaking Changes
+      topicUid: Specs.Roadmap.BreakingChanges
+
+- name: Contribute & Docs
+  items:
+    - name: Contribute to Code
+      topicUid: Specs.Contribute
+    - name: Contribute to Docs
+      topicUid: Specs.DocsContribute
+    - name: Tags in Docs
+      topicUid: Specs.DocsTags

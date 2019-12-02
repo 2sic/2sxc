@@ -34,6 +34,7 @@
           "api/**.md",
           "how-to/**.md",
           "specs/**.md",
+          "specs/**.yml",
           "toc.yml",
           "*.md"
         ],
