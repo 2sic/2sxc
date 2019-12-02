@@ -128,7 +128,7 @@ namespace ToSic.Sxc.Web
         /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
         /// If you provide null for the fallback, then you will get null back.
         /// </returns>
-        dynamic AsDynamic(string json, string fallback = "{}");
+        dynamic AsDynamic(string json, string fallback = DynamicCode.EmptyJson);
 
         #endregion 
 

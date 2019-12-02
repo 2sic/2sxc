@@ -17,6 +17,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
+using DynamicCode = ToSic.Sxc.Web.DynamicCode;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -56,7 +57,7 @@ namespace ToSic.SexyContent.Razor
         #region AsDynamic in many variations
 
         /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = "{}") => DynCode.AsDynamic(json);
+        public dynamic AsDynamic(string json, string fallback = DynamicCode.EmptyJson) => DynCode.AsDynamic(json, fallback);
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);

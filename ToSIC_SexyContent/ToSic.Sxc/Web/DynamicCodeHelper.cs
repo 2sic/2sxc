@@ -64,12 +64,12 @@ namespace ToSic.Sxc.Web
 
         #region AsDynamic Implementations
 
-        private const string EmptyJsonObject = "{}";
+        public const string EmptyJson = "{}";
         private const string JsonStarter = "{";
         private const string JsonErrorCode = "error";
 
         /// <inheritdoc />
-        public dynamic AsDynamic(string json, string fallback = "{}")
+        public dynamic AsDynamic(string json, string fallback = EmptyJson)
         {
             if (!string.IsNullOrWhiteSpace(json) && json.Contains(JsonStarter))
                 try

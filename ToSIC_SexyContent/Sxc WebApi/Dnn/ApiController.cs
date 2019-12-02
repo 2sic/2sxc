@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Dnn
 
         #region AsDynamic implementations
         /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = "{}") => DynCode.AsDynamic(json);
+        public dynamic AsDynamic(string json, string fallback = Web.DynamicCode.EmptyJson) => DynCode.AsDynamic(json, fallback);
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);

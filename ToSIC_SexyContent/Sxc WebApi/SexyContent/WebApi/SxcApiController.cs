@@ -4,7 +4,6 @@ using ToSic.Eav.DataSources;
 using System.IO;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
@@ -12,6 +11,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
+using DynamicCode = ToSic.Sxc.Web.DynamicCode;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
@@ -42,7 +42,7 @@ namespace ToSic.SexyContent.WebApi
 
         #region AsDynamic implementations
         /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = "{}") => throw new Exception("AsDynamic for strings requires the new RazorComponent in 2sxc 10. See https://r.2sxc.org/RazorComponent");
+        public dynamic AsDynamic(string json, string fallback = DynamicCode.EmptyJson) => throw new Exception("AsDynamic for strings requires the new RazorComponent in 2sxc 10. See https://r.2sxc.org/RazorComponent");
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
