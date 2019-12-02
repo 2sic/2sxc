@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.DataSources.Caching;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.WebApi.App
@@ -27,7 +28,7 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"create ent dic a#{appId}, type:{contentType}");
             // Retrieve content-type definition and check all the fields that this content-type has
-            var cache = (BaseCache)DataSource.GetCache(null, appId);
+            var cache = (RootCacheBase)DataSource.GetCache(null, appId);
             var listOfTypes = cache.GetContentType(contentType);
             var attribs = listOfTypes.Attributes;
 

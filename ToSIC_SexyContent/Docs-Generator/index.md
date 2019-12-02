@@ -43,8 +43,6 @@ Generated for EAV/2sxc 10.20.03
 Next to document
 
 1. Finish metadata documentation
-1. write about visual query
-1. explain Query in general, as linked in specs/datasources/datasource.md
 
 These topics are not or insufficiently documented...
 
@@ -60,13 +58,11 @@ These topics are not or insufficiently documented...
 1. Future topics, lower priority
     1. Angular2-5 and 2sxc (todo)
     2. React and 2sxc (todo)
-    3. Knockout and 2sxc (todo)
     4. jQuery with 2sxc (todo)
 1. etc.
 
 These topics are already documented elsewhere, but should become part of these docs
 
-1. Visual Query doesn't seem to be documented anywhere here
 1. [View-switching based on url-params](http://2sxc.org/en/Docs/Feature/feature/4680)
 1. [Security protecting views like admin-views](http://2sxc.org/en/Docs/Feature/feature/4737)
 1. [creating custom DataSource objects](https://2sxc.org/en/blog/tag/datasource)
