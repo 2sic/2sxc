@@ -7,6 +7,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
@@ -67,8 +68,8 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <returns></returns>
         T CreateSource<T>(IDataStream inStream) where T : IDataSource;
-        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ITokenListFiller configurationProvider = null);
-        T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null) where T : IDataSource;
+        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null);
+        T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
         #endregion
 
     }

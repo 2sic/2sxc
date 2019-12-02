@@ -2,14 +2,12 @@
 uid: ToSic.Eav.DataSources.EntityIdFilter
 ---
 
-# Data Source: ItemIdFilter / EntityIdFilter
-
 The **ItemIdFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will only return the items with the id specified. 
 
 _Warning: You should always use it in combination with a [Content-Type filter](xref:ToSic.Eav.DataSources.EntityTypeFilter), as you want to be sure nobody can just crawl any entity you have in your system!_
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Query.VisualQueryAttribute) you can just drag it into your query. This is what it usually looks like:
 
 <img src="/assets/data-sources/item-id-basic.png" width="100%">
 

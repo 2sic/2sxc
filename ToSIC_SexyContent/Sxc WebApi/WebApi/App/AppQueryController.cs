@@ -6,11 +6,12 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Serializers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn;
+using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Serializers;
 
 namespace ToSic.Sxc.WebApi.App
 {
@@ -43,7 +44,7 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"public query path:{appPath}, name:{name}");
             var appIdentity = AppFinder.GetCurrentAppIdFromPath(appPath);
-            var queryApp = new Apps.App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId,
+            var queryApp = new Apps.App(new Tenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId,
                 ConfigurationProvider.Build(false, false), false, Log);
 
             // now just run the default query check and serializer
@@ -60,7 +61,7 @@ namespace ToSic.Sxc.WebApi.App
                 throw HttpErr(HttpStatusCode.NotFound, "query not found", $"query '{name}' not found");
 
             var permissionChecker = new DnnPermissionCheck(log, targetItem: query.QueryDefinition, 
-                instance: new DnnInstanceInfo(module), appIdentity: app);
+                instance: new Container(module), appIdentity: app);
             var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 
             var isAdmin = module != null && DotNetNuke.Security.Permissions

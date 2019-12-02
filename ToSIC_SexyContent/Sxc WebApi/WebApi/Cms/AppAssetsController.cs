@@ -8,8 +8,10 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent;
-using ToSic.SexyContent.AppAssets;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.Sxc.Apps.Assets;
+using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.SxcTemp;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -57,8 +59,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 : SearchOption.TopDirectoryOnly;
 
             // try to collect all files, ignoring long paths errors and similar etc.
-            var files = new List<FileInfo>();  // List that will hold the files and subfiles in path
-            var folders = new List<DirectoryInfo>(); // List that hold direcotries that cannot be accessed
+            var files = new List<FileInfo>();  // List that will hold the files and sub-files in path
+            var folders = new List<DirectoryInfo>(); // List that hold directories that cannot be accessed
             var di = new DirectoryInfo(fullPath);
             FullDirList(di, mask, folders, files, opt);
 
@@ -128,12 +130,12 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private string ResolveAppPath(int appId, bool global,  bool allowFullAccess)
         {
-            var thisApp = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
+            var thisApp = GetApp.LightWithoutData(new Tenant(PortalSettings.Current), appId, Log);
 
             if (global && !allowFullAccess)
                 throw new NotSupportedException("only host user may access global files");
 
-            var appPath = SexyContent.Internal.TemplateHelpers.GetTemplatePathRoot(global
+            var appPath = TemplateHelpers.GetTemplatePathRoot(global
                 ? Settings.TemplateLocations.HostFileSystem
                 : Settings.TemplateLocations.PortalFileSystem
                 , thisApp); // get root in global system
@@ -157,7 +159,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"create a#{appId}, path:{path}, global:{global}, cont-length:{content.Content?.Length}");
             path = path.Replace("/", "\\");
 
-            var thisApp = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
+            var thisApp = GetApp.LightWithoutData(new Tenant(PortalSettings.Current), appId, Log);
 
             if (content.Content == null)
                 content.Content = "";

@@ -9,6 +9,7 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -31,7 +32,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Log.Add("install package:" + packageUrl);
             var zoneId = Env.ZoneMapper.GetZoneId(ActiveModule.PortalID);
-            var appId = new DnnMapAppToInstance(Log).GetAppIdFromInstance(new DnnInstanceInfo(ActiveModule), zoneId);
+            var appId = new DnnMapAppToInstance(Log).GetAppIdFromInstance(new Container(ActiveModule), zoneId);
             bool success;
 
             // Install package

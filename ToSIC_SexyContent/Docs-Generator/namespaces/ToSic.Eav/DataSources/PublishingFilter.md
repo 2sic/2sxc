@@ -1,12 +1,11 @@
 ---
 uid: ToSic.Eav.DataSources.PublishingFilter
 ---
-# Data Source: PublishingFilter
 
 The **PublishingFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will hide unpublished items for non-editors and provide these drafts if an editor is viewing the results.  
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. Here's a picture showing app data with or without publishing filter:  
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Query.VisualQueryAttribute) you can just drag it into your query. Here's a picture showing app data with or without publishing filter:  
 
 <img src="/assets/data-sources/app-compare-no-in-with-publishing-filter.png" width="100%">
 

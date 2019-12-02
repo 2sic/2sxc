@@ -1,5 +1,5 @@
 ---
-uid: Articles.Architecture
+uid: Specs.Architecture.Intro
 ---
 
 # EAV / 2sxc / DNN Architecture
@@ -19,14 +19,14 @@ This is fairly straight forward - data can be stored in SQL (spread across table
 The data management system underneath everything is called the **EAV** - which stands for **Entity**, **Attribute**, **Value**. 
 Anything in that namespace is about internal data models, reading/saving data etc. 
 So anything inside the @ToSic.Eav.Data is all about the internals, which you only need in special scenarios. 
-The same applies to @ToSic.Eav.Apps.Interfaces which is the sub-system responsible for combining data into virtual bundles called **Apps**.
+The same applies to @ToSic.Eav.Apps which is the sub-system responsible for combining data into virtual bundles called **Apps**.
 You can usually ignore this. 
 
 #### The SXC Layer
 
 On top of the _EAV_ layer we have the **Sxc** layer. 
 It's responsible for _Content Management_ on top of the _App_ model provided by the _EAV_. 
-The _Sxc_ layer provides things like @ToSic.Sxc.Interfaces.IDynamicEntity to let you code like `@Content.Title`. 
+The _Sxc_ layer provides things like @ToSic.Sxc.Data.IDynamicEntity to let you code like `@Content.Title`. 
 This is usually more interesting for you, but still fairly generic, because 2sxc is also meant to work with other 
 platforms like NopCommerce, Orchard or Oqtane, but it hasn't been implemented yet.
 
@@ -45,7 +45,7 @@ Inside the EAV you'll find a whole ecosystem of parts which make the magic happe
 #### Infrastructure
 
 This is very internal stuff, to make sure everything happens. You will usually not go here. Most if it is also not public API. 
-Areas of interest may be the @ToSic.Eav.Logging or @ToSic.Eav.ValueProviders.
+Areas of interest may be the @ToSic.Eav.Logging or @ToSic.Eav.LookUp.
 
 #### Core Data Models
 
@@ -65,7 +65,7 @@ This is still more an internal bit, and as of now you shouldn't use it.
 
 Another part that you may want to know more about. Here is where data is clustered together into virtual containers called **Apps**. 
 These contain all the content-types and items of an App. It also has view-definitions, Content-Blocks (the logical unit usually called a Module in DNN) and way more. 
-You'll find it in @ToSic.Eav.Apps.Interfaces. 
+You'll find it in @ToSic.Eav.Apps. 
 
 The assets - usually using ADAM - are found in @ToSic.Eav.Apps.Assets.
 

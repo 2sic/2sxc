@@ -14,6 +14,15 @@ We're documenting it here to ensure you know what happened, in case you still ru
 > All these things shouldn't affect you, because they were internal APIs, 
 > but in case it does - here's what we did.
 
+#### Version 10.20.03 (ca. 2019-12-01)
+
+1. Renamed `DataTableDataSource` to `DataTable`, old name still works.
+1. Renamed `ExternalDataDataSource` to `ExternalData`, old name still works.
+1. Renamed `ToSic.SexyContent.DataSources.ModuleDataSource` to `ToSic.Sxc.DataSources.CmsBlock`, old name still works.
+1. Renamed `ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute` to `ToSic.Eav.DataSources.Query.VisualQueryAttribute`, old name still works.
+1. Renamed `ToSic.SexyContent.Environment.Dnn7.Factory` to `ToSic.Sxc.Dnn.Factory`, old name still works.
+1. Renamed `ToSic.Eav.DataSources.BaseDataSource` to `ToSic.Eav.DataSources.DataSourceBase` for consistency, old name still works.
+
 #### Version 10.20.02 (ca. 2019-11-22)
 
 More internal changes which shouldn't affect anybody, but make the API ready for public docs...

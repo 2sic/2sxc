@@ -1,8 +1,11 @@
 #[Introduction](index.md)
 
-# [Architecture](xref:Articles.Architecture)
+# [Architecture](xref:Specs.Architecture.Intro)
+## [Data Flow](xref:Specs.Architecture.DataFlow)
 
-# [Data Models in EAV](xref:Concepts.EavDataModels)
+
+# [Data Models in EAV](xref:Specs.Data.Intro)
+## @Specs.Data.AppState
 ##[Content Types](xref:Specs.Data.ContentTypes)
 ##[Entities](xref:Specs.Data.Entities)
 ##[Entity Relationships](xref:Specs.Data.Relationships)
@@ -48,6 +51,7 @@
 ###[Json Entity](xref:Specs.Data.Formats.JsonV1-Entity)
 ###[Json ContentType](xref:Specs.Data.Formats.JsonV1-ContentType)
 
+
 # [CMS Edit Content](xref:Specs.Cms.Edit)
 ##[Edit Toolbars](xref:Specs.Cms.Toolbars)
 ##[Quick-Edit (QuickE)](xref:Specs.Cms.QuickE)
@@ -66,23 +70,25 @@
 ##[Edit-Context Data](xref:Specs.Cms.EditContext)
 
 
-# DataSource Basics
-##[DataSource Basics](xref:Specs.DataSources.DataSource)
-##[DataStream Basics](xref:Specs.DataSources.DataStream)
+# @Specs.DataSources.Intro
+## @Specs.DataSources.DataSource
+## @Specs.DataSources.DataStream
 ##[All DataSources](xref:Specs.DataSources.ListAll)
-##[Queries and Visual Query](xref:Specs.DataSources.Queries)
+## @Specs.DataSources.Query
+## @Specs.DataSources.VisualQuery
 ##[Configuration System](xref:Specs.DataSources.Configuration)
-###[Configuration Tokens](xref:Specs.DataSources.ConfigurationTokens)
+## @Specs.LookUp.Tokens
+## @Specs.LookUp.Intro
 
-# [Data Lists and LINQ](xref:Specs.DataSources.LinqGuide)
+## @Specs.DataSources.LinqGuide
 ##[Linq with DataSources](xref:Specs.DataSources.Linq)
 
-# [Create Custom DataSource](xref:Specs.DataSources.Custom)
-##[Internal APIs](xref:Specs.DataSources.Api)
-###[AsEntity](xref:Specs.DataSources.Api.AsEntity)
-###[ConfigMask](xref:Specs.DataSources.Api.ConfigMask)
-###[EnsureConfigurationIsLoaded](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded)
-###[Provide](xref:Specs.DataSources.Api.Provide)
+## [Create Custom DataSource](xref:Specs.DataSources.Custom)
+###[Internal APIs](xref:Specs.DataSources.Api)
+####[AsEntity](xref:Specs.DataSources.Api.AsEntity)
+####[ConfigMask](xref:Specs.DataSources.Api.ConfigMask)
+####[EnsureConfigurationIsLoaded](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded)
+####[Provide](xref:Specs.DataSources.Api.Provide)
 
 # System Configuration
 ##[Features Concept](xref:Specs.Features.Concept)

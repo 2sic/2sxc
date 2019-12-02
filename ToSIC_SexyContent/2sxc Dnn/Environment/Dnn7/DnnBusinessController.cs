@@ -8,6 +8,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment.Dnn7.Installation;
 using ToSic.SexyContent.Environment.Dnn7.Search;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -95,7 +96,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             try
             {
-                return new SearchController(Log).GetModifiedSearchDocuments(new DnnInstanceInfo(moduleInfo), beginDate);
+                return new SearchController(Log).GetModifiedSearchDocuments(new Container(moduleInfo), beginDate);
             }
             catch (Exception e)
             {

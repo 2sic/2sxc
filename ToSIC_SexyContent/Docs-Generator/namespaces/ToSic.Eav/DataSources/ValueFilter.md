@@ -1,12 +1,11 @@
 ---
 uid: ToSic.Eav.DataSources.ValueFilter
 ---
-# Data Source: ValueFilter
 
 The **ValueFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will filter items based on the values - and if none are found, will optionally return a fallback-list.
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Query.VisualQueryAttribute) you can just drag it into your query. This is what it usually looks like:
 
 <img src="/assets/data-sources/value-filter-basic.png" width="100%">
 

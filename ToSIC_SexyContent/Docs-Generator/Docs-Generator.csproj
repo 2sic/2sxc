@@ -88,10 +88,12 @@
     <None Include="how-to\index.md" />
     <None Include="how-to\output\assets.md" />
     <None Include="how-to\razor\blocks.md" />
-    <None Include="how-to\razor\contextattributes.md" />
     <None Include="how-to\razor\customizedata.md" />
     <None Include="how-to\razor\customizesearch.md" />
-    <None Include="how-to\razor\edittoolbar.md" />
+    <None Include="how-to\razor\edit.contextattributes.md" />
+    <None Include="how-to\razor\edit.enable.md" />
+    <None Include="how-to\razor\edit.md" />
+    <None Include="how-to\razor\edit.toolbar.md" />
     <None Include="how-to\razor\purpose.md" />
     <None Include="how-to\razor\templates.md" />
     <None Include="how-to\toc.md" />
@@ -119,7 +121,7 @@
     <None Include="namespaces\ToSic.Eav\DataSources\DnnSqlDatasource.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\ItemFilterDuplicates.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\ItemIdFilter.md" />
-    <None Include="namespaces\ToSic.Eav\DataSources\ModuleDatasource.md" />
+    <None Include="namespaces\ToSic.Sxc\DataSources\CmsBlock.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\OwnerFilter.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\Paging.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\PublishingFilter.md" />
@@ -135,7 +137,7 @@
     <None Include="namespaces\ToSic.Eav\DataSources\StreamMerge.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\ValueFilter.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\ValueSort.md" />
-    <None Include="namespaces\ToSic.Eav\DataSources\VisualQuery\api-visualquery.md" />
+    <None Include="namespaces\ToSic.Eav\DataSources\Query\api-visualquery.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\_intro.md" />
     <None Include="namespaces\ToSic.Eav\Eav.Apps.Assets.md" />
     <None Include="namespaces\ToSic.Eav\Eav.Apps.md" />
@@ -254,6 +256,9 @@
     <None Include="specs\js\toolbar-settings.md" />
     <None Include="specs\js\toolbars-and-buttons-intro.md" />
     <None Include="specs\js\toolbars-and-buttons-js.md" />
+    <None Include="specs\roadmap\breaking-changes.md" />
+    <None Include="specs\roadmap\history.md" />
+    <None Include="specs\roadmap\roadmap.md" />
     <None Include="specs\style-guides\style-guide-2020.md" />
     <None Include="specs\style-guides\style-guides.md" />
     <None Include="specs\toc.md" />

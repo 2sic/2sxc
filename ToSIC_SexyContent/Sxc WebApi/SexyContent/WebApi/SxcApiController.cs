@@ -8,6 +8,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
@@ -79,10 +80,10 @@ namespace ToSic.SexyContent.WebApi
 
         #region CreateSource implementations
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-	        ITokenListFiller configurationProvider = null)
+	        ILookUpEngine configurationProvider = null)
 	        => DynCodeHelpers.CreateSource(typeName, inSource, configurationProvider);
 
-        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
             =>  DynCodeHelpers.CreateSource<T>(inSource, configurationProvider);
 

@@ -13,6 +13,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
@@ -97,11 +98,11 @@ namespace ToSic.SexyContent.Razor
 
         #region Data Source Stuff
         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ITokenListFiller configurationProvider = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             => DynCodeHelper.CreateSource(typeName, inSource, configurationProvider);
 
         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
-        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
             => DynCodeHelper.CreateSource<T>(inSource, configurationProvider);
 

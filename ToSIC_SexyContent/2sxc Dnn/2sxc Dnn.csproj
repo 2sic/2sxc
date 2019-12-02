@@ -84,10 +84,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\AppDataDnnHelpers.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource.cs" />
     <Compile Include="Dnn920\SharpZipLibRedirect.cs" />
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
     <Compile Include="DnnHelper.cs" />
+    <Compile Include="Dnn\Factory.cs" />
     <Compile Include="Dnn\Interfaces\IDynamicWebApi.cs" />
     <Compile Include="Dnn\Interfaces\IDynamicCode.cs" />
     <Compile Include="Dnn\SecurityHelpers.cs" />
@@ -97,20 +100,20 @@
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosEnvironment.cs" />
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosLanguages.cs" />
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosUser.cs" />
-    <Compile Include="Environment\Dnn7\DataSources\DnnSqlDataSource.cs" />
-    <Compile Include="Environment\Dnn7\DataSources\DnnUserProfileDataSource.cs" />
-    <Compile Include="Environment\Dnn7\Deprecated\DnnSqlDataSource.cs" />
+    <Compile Include="Dnn\DataSources\DnnSql.cs" />
+    <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.DataSources.DnnSqlDataSource.cs" />
     <Compile Include="Environment\Dnn7\DnnFileSystem.cs" />
-    <Compile Include="Environment\Dnn7\DnnLinkHelper.cs" />
+    <Compile Include="Dnn\Web\LinkHelper.cs" />
     <Compile Include="Environment\Dnn7\DnnMapAppToInstance.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
-    <Compile Include="Environment\Dnn7\DnnInstanceInfo.cs" />
+    <Compile Include="Dnn\Container.cs" />
     <Compile Include="Environment\Dnn7\DnnPermissionCheck.cs" />
     <Compile Include="Environment\Dnn7\DnnRenderingHelpers.cs" />
-    <Compile Include="Environment\Dnn7\DnnTenant.cs" />
-    <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
-    <Compile Include="Environment\Dnn7\Factory.cs" />
-    <Compile Include="Environment\Dnn7\FingerprintProvider.cs" />
+    <Compile Include="Dnn\Tenant.cs" />
+    <Compile Include="Dnn\ValueConverter.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.Factory.cs" />
+    <Compile Include="Dnn\FingerprintProvider.cs" />
     <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
     <Compile Include="Environment\Dnn7\ImportExport\DnnXmlExporter.cs" />
     <Compile Include="Environment\Dnn7\Installation\Helpers.cs" />
@@ -127,9 +130,9 @@
     <Compile Include="Search\SearchIndexException.cs" />
     <Compile Include="Environment\Dnn7\DnnEnvironmentFactory.cs" />
     <Compile Include="Environment\Dnn7\DnnUser.cs" />
-    <Compile Include="Environment\Dnn7\ValueProviders\DnnLookUps.cs" />
-    <Compile Include="Environment\Dnn7\ValueProviders\TokenReplaceDnn.cs" />
-    <Compile Include="Environment\Dnn7\ValueProviders\LookUpInDnnPropertyAccess.cs" />
+    <Compile Include="Dnn\LookUp\GetDnnEngine.cs" />
+    <Compile Include="Dnn\LookUp\TokenReplaceDnn.cs" />
+    <Compile Include="Dnn\LookUp\LookUpInDnnPropertyAccess.cs" />
     <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
     <Compile Include="Environment\DnnEnvironment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

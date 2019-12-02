@@ -8,6 +8,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -70,7 +71,7 @@ namespace ToSic.Sxc.Dnn
         #region Data Source Stuff
 
         /// <inheritdoc/>
-        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
             => DynCodeHelper.CreateSource<T>(inSource, configurationProvider);
 

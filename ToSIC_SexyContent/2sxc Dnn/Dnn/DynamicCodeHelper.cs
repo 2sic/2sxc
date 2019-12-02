@@ -9,13 +9,13 @@ namespace ToSic.Sxc.Dnn
     {
         public ICmsBlock CmsBlock;
 
-        public DynamicCodeHelper(ICmsBlock cmsBlock, ILog parentLog = null): base(cmsBlock, new DnnTenant(null), parentLog)
+        public DynamicCodeHelper(ICmsBlock cmsBlock, ILog parentLog = null): base(cmsBlock, new Tenant(null), parentLog)
         {
             CmsBlock = cmsBlock;
             // Init things than require module-info or similar, but not 2sxc
             var instance = cmsBlock?.Container;
             Dnn = new DnnHelper(instance);
-            Link = new DnnLinkHelper(Dnn);
+            Link = new LinkHelper(Dnn);
         }
 
         #region IHasDnnContext

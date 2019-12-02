@@ -1,12 +1,11 @@
 ---
 uid: ToSic.Eav.DataSources.StreamFallback
 ---
-# Data Source: StreamFallback
 
 The **StreamFallback** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will pass on the first stream which has results. The order of evaluation is based on the names of the streams as they enter the StreamFallback. 
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Query.VisualQueryAttribute) you can just drag it into your query. This is what it usually looks like:
 
 <img src="/assets/data-sources/stream-fallback-4-stream-example.png" width="100%">
 

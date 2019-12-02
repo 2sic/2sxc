@@ -8,6 +8,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
 using Constants = ToSic.Eav.Constants;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -78,10 +79,10 @@ namespace ToSic.Sxc.Code
 
         [Obsolete("use CreateSource<T> instead")]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-            ITokenListFiller configurationProvider = null)
+            ILookUpEngine configurationProvider = null)
             => Parent?.CreateSource(typeName, inSource, configurationProvider);
 
-        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
             => Parent.CreateSource<T>(inSource, configurationProvider);
 

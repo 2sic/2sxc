@@ -5,7 +5,6 @@ using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
 using ToSic.Sxc.Adam.WebApi;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi;
@@ -52,7 +51,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 		        var lookupPage = hyperlink.Trim().StartsWith("page", StringComparison.OrdinalIgnoreCase);
 
 		        // look it up first, because we need to know if the result is in ADAM or not (different security scenario)
-		        var conv = new DnnValueConverter();
+		        var conv = new ValueConverter();
                 var resolved = conv.ToValue(guid, hyperlink);
 
 		        if (lookupPage)

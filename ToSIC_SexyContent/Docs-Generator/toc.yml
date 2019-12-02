@@ -1,6 +1,7 @@
 
 - name: Specs
-  topicUid: Specs.Home
+  href: specs/
+#  topicUid: Specs.Home
 - name: How To
   topicUid: HowTo.Home
 - name: .net API

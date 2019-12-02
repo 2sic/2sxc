@@ -6,6 +6,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
@@ -182,7 +183,7 @@ namespace ToSic.Sxc.Web
         /// <param name="configurationProvider">An alternate configuration provider for the DataSource</param>
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
-        new T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null) where T : IDataSource;
+        new T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
         #endregion
 
 

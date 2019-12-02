@@ -3,7 +3,7 @@
 ## Background: Architecture of Eav, Sxc, Dnn
 
 > [!TIP]
-> Before you start, please get familiar with the [architecture](xref:Articles.Architecture) - otherwise you probably won't understand what you see here.
+> Before you start, please get familiar with the [architecture](xref:Specs.Architecture.Intro) - otherwise you probably won't understand what you see here.
 
 Note also that the real code of EAV/2sxc/DNN has way more stuff, but that's inofficial. 
 Please don't use objects that are not documented here. 

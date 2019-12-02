@@ -10,10 +10,10 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Dnn;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent
 {
@@ -29,9 +29,9 @@ namespace ToSic.SexyContent
                 if (_cmsBlockLoaded) return _cmsBlock;
                 _cmsBlockLoaded = true;
                 _cmsBlock = new BlockFromModule(
-                        new DnnInstanceInfo(ModuleConfiguration),
+                        new Container(ModuleConfiguration),
                         Log,
-                        new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
+                        new Tenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
                     .CmsInstance as CmsBlock;
                 return _cmsBlock;
             }

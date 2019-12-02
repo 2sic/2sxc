@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Environment;
+using ToSic.Sxc;
 
 // ReSharper disable InconsistentNaming
 namespace ToSic.SexyContent.Environment.Dnn7

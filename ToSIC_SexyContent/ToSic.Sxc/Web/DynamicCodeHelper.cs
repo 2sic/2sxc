@@ -13,6 +13,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using IApp = ToSic.Sxc.Apps.IApp;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
@@ -127,9 +128,9 @@ namespace ToSic.Sxc.Web
         #endregion
 
         #region DataSource and ConfigurationProvider (for DS) section
-        private ITokenListFiller _configurationProvider;
+        private ILookUpEngine _configurationProvider;
 
-        private ITokenListFiller ConfigurationProvider
+        private ILookUpEngine ConfigurationProvider
             => _configurationProvider ??
                (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.ConfigurationProvider);
 
@@ -141,7 +142,7 @@ namespace ToSic.Sxc.Web
         /// <param name="inSource"></param>
         /// <param name="configurationProvider"></param>
         /// <returns></returns>
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ITokenListFiller configurationProvider = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
         {
             if (configurationProvider == null)
                 configurationProvider = ConfigurationProvider;
@@ -152,7 +153,7 @@ namespace ToSic.Sxc.Web
             var userMayEdit = CmsInstance.UserMayEdit;
 
             var initialSource = DataSource.GetInitialDataSource(CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
-                userMayEdit, ConfigurationProvider as TokenListFiller);
+                userMayEdit, ConfigurationProvider as LookUpEngine);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
@@ -163,7 +164,7 @@ namespace ToSic.Sxc.Web
         /// <param name="inSource"></param>
         /// <param name="configurationProvider"></param>
         /// <returns></returns>
-        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null) where T : IDataSource
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource
         {
             if (configurationProvider == null)
                 configurationProvider = ConfigurationProvider;
@@ -174,7 +175,7 @@ namespace ToSic.Sxc.Web
             var userMayEdit = CmsInstance.UserMayEdit;
 
             var initialSource = DataSource.GetInitialDataSource(CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
-                userMayEdit, ConfigurationProvider as TokenListFiller);
+                userMayEdit, ConfigurationProvider as LookUpEngine);
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider, Log);
         }
 

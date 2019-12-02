@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.SexyContent.Serializers;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Serializers;
 
 namespace ToSic.Sxc.Code
 {

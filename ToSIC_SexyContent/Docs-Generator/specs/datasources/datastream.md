@@ -2,7 +2,7 @@
 uid: Specs.DataSources.DataStream
 ---
 
-# DataStream Basics (IDataStream)
+# DataStreams
 
 DataStreams are objects which behave like a table, delivering a bunch of content-items. Common examples in [Razor-templates](xref:HowTo.Razor.Templates) are:
 

@@ -3,22 +3,24 @@ using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Implementations.ValueConverter;
+using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Persistence.File;
 using ToSic.Eav.Interfaces;
+using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Plumbing.Booting;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.Environment;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Environment.Dnn7.EavImplementation;
 using ToSic.SexyContent.Environment.Dnn7.Installation;
-using ToSic.SexyContent.Environment.Dnn7.ValueProviders;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Apps.ImportExport;
+using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Serializers;
 
 namespace ToSic.SexyContent
 {
@@ -59,8 +61,8 @@ namespace ToSic.SexyContent
         {
             Eav.Factory.ActivateNetCoreDi(sc =>
             {
-                sc.AddTransient<Eav.Serializers.Serializer, Serializers.Serializer>();
-                sc.AddTransient<IEavValueConverter, DnnValueConverter>();
+                sc.AddTransient<Eav.Serializers.Serializer, Serializer>();
+                sc.AddTransient<IValueConverter, ValueConverter>();
                 sc.AddTransient<IUser, DnnUser>();
 
                 sc.AddTransient<XmlExporter, DnnXmlExporter>();
@@ -80,7 +82,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IMapAppToInstance, DnnMapAppToInstance>();
                 sc.AddTransient<IEnvironmentInstaller, InstallationController>();
                 sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
-                sc.AddTransient<IEnvironmentLookUps, DnnLookUps>();
+                sc.AddTransient<IGetEngine, GetDnnEngine>();
                 sc.AddTransient<IFingerprintProvider, FingerprintProvider>();
 
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);

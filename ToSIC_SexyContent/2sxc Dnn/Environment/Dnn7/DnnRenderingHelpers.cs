@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Sxc;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7

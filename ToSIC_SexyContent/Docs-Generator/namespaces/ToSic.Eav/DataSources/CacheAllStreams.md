@@ -2,14 +2,12 @@
 uid: ToSic.Eav.DataSources.CacheAllStreams
 ---
 
-# Data Source: CacheAllStreams
-
 The **CacheAllStreams** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will cache all streams passing through it, based on the parameters which led to the current In-state.  
 
 
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. You must then edit the settings once to set various timeouts. Note that every in-stream exists with the same name as an out-stream. This is what it usually looks like:
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Query.VisualQueryAttribute) you can just drag it into your query. You must then edit the settings once to set various timeouts. Note that every in-stream exists with the same name as an out-stream. This is what it usually looks like:
 
 <img src="/assets/data-sources/cache-all-streams-basic.png" width="100%">
 

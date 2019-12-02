@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn
 
         [PrivateApi]
         [Obsolete("for compatibility only, will throw error with instructions how to fix. Use CreateSource<type> instead.")]
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ITokenListFiller configurationProvider = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             => throw new Exception($"CreateSource(string, ...) {NotSupportedIn10}. Please use CreateSource<DataSourceTypeName>(...) instead.");
 
         #endregion

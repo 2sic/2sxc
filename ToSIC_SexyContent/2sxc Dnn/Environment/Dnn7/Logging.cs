@@ -4,6 +4,7 @@ using System.Web.Http;
 using DotNetNuke.Services.Log.EventLog;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Razor.Helpers;
+using ToSic.Sxc;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {

@@ -1,8 +1,9 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.SxcTemp;
+using Factory = ToSic.SexyContent.Environment.Dnn7.Factory;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
@@ -29,7 +30,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         private SxcAppForWebApi(int zoneId, int appId)
         {
-            App = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), zoneId, appId, false, null);
+            App = GetApp.LightWithoutData(new Tenant(PortalSettings.Current), zoneId, appId, false, null);
         }
 
     }
