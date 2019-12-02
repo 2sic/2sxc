@@ -7,7 +7,7 @@ The **OwnerFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of t
 You will typically use the **OwnerFilter** in scenarios where users create their own data, and should only see/edit items which they own (usually in combination with security settings, which only allow the owner to modify their own items).
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:ToSic.Eav.DataSources.Query.VisualQueryAttribute) you can just drag it into your query. You must then edit the settings once - and usually you will use the recommended prefilled-form. But you can also do something different. This is what it usually looks like:
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Queries.VisualQueryAttribute) you can just drag it into your query. You must then edit the settings once - and usually you will use the recommended prefilled-form. But you can also do something different. This is what it usually looks like:
 
 <img src="/assets/data-sources/ownerfilter-configured.png" width="100%">
 
