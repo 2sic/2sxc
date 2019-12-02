@@ -1,0 +1,19 @@
+#    - name: Value Data Types
+#      topicUid: Specs.Data.Values.Overview
+#      items:
+- name: Boolean
+  topicUid: Specs.Data.Values.Boolean
+- name: Custom
+  topicUid: Specs.Data.Values.Custom
+- name: DateTime
+  topicUid: Specs.Data.Values.DateTime 
+- name: Empty
+  topicUid: Specs.Data.Values.Empty 
+- name: Entity
+  topicUid: Specs.Data.Values.Entity
+- name: Hyperlink
+  topicUid: Specs.Data.Values.Hyperlink
+- name: Number
+  topicUid: Specs.Data.Values.Number
+- name: String
+  topicUid: Specs.Data.Values.String
