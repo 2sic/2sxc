@@ -112,7 +112,27 @@ namespace ToSic.Sxc.Web
 
         //#endregion
 
-        #region AsDynamic and AsEntity
+        #region AsDynamic for Strings
+
+        /// <summary>
+        /// Take a json and provide it as a dynamic object to the code
+        /// </summary>
+        /// <remarks>
+        /// New in 2sxc 10.20
+        /// </remarks>
+        /// <param name="json">the original json string</param>
+        /// <param name="fallback">
+        /// Alternate string to use, if the original json can't parse.
+        /// Can also be null or the word "error" if you would prefer an error to be thrown.</param>
+        /// <returns>A dynamic object representing the original json.
+        /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
+        /// If you provide null for the fallback, then you will get null back.
+        /// </returns>
+        dynamic AsDynamic(string json, string fallback = "{}");
+
+        #endregion 
+
+        #region AsDynamic for Entities
 
         /// <summary>
         /// Wraps an entity into a <see cref="IDynamicEntity"/>
@@ -154,7 +174,9 @@ namespace ToSic.Sxc.Web
         /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
         new IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities);
 
+        #endregion
 
+        #region AsEntity
 
         /// <summary>
         /// Unwraps a dynamic entity back into the underlying <see cref="IEntity"/>

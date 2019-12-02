@@ -70,7 +70,9 @@ namespace ToSic.Sxc.Data
 
             if (attributeName == "Toolbar")
 #pragma warning disable 612
+#pragma warning disable 618
                 return Toolbar.ToString();
+#pragma warning restore 618
 #pragma warning restore 612
 
             if (attributeName == ViewParts.Presentation)

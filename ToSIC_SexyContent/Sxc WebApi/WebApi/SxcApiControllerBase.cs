@@ -24,8 +24,8 @@ namespace ToSic.Sxc.WebApi
         internal ICmsBlock CmsBlock { get; private set; }
 
 
-        internal static DynamicCodeHelper GetContext(ICmsBlock cmsInstance, ILog log) 
-            => new DynamicCodeHelper(cmsInstance, cmsInstance?.Log ?? log);
+        internal static DynamicCode GetContext(ICmsBlock cmsInstance, ILog log) 
+            => new DynamicCode(cmsInstance, cmsInstance?.Log ?? log);
 
 
         #region App-Helpers for anonyous access APIs

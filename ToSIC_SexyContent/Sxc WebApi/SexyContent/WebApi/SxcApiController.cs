@@ -31,64 +31,66 @@ namespace ToSic.SexyContent.WebApi
     {
         public new IDnnContext Dnn => base.Dnn;//  DynCodeHelpers.Dnn;
 
-        public SxcHelper Sxc => DynCodeHelpers.Sxc;
+        public SxcHelper Sxc => DynCode.Sxc;
 
         /// <inheritdoc />
-        public IApp App => DynCodeHelpers.App;
+        public IApp App => DynCode.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => DynCodeHelpers.Data;
+        public IBlockDataSource Data => DynCode.Data;
 
 
         #region AsDynamic implementations
+        /// <inheritdoc/>
+        public dynamic AsDynamic(string json, string fallback = "{}") => throw new Exception("AsDynamic for strings requires the new RazorComponent in 2sxc 10. See https://r.2sxc.org/RazorComponent");
 
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => DynCodeHelpers.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) =>  DynCodeHelpers.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(dynamic dynamicEntity) =>  DynCode.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
         [PrivateApi("old api, only available in old API controller")]
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  DynCodeHelpers.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  DynCode.AsDynamic(entityKeyValuePair.Value);
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  DynCodeHelpers.AsDynamic(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  DynCode.AsDynamic(stream.List);
 
         /// <inheritdoc />
-        public IEntity AsEntity(dynamic dynamicEntity) =>  DynCodeHelpers.AsEntity(dynamicEntity);
+        public IEntity AsEntity(dynamic dynamicEntity) =>  DynCode.AsEntity(dynamicEntity);
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DynCodeHelpers.AsDynamic(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DynCode.AsDynamic(entities);
         #endregion
 
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DynCodeHelpers.AsDynamic(entity);
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DynCode.AsDynamic(entity);
 
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DynCodeHelpers.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DynCodeHelpers.AsDynamic(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DynCode.AsDynamic(entities);
         #endregion
 
 
         #region CreateSource implementations
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
 	        ILookUpEngine configurationProvider = null)
-	        => DynCodeHelpers.CreateSource(typeName, inSource, configurationProvider);
+	        => DynCode.CreateSource(typeName, inSource, configurationProvider);
 
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
-            =>  DynCodeHelpers.CreateSource<T>(inSource, configurationProvider);
+            =>  DynCode.CreateSource<T>(inSource, configurationProvider);
 
 	    public T CreateSource<T>(IDataStream inStream) where T : IDataSource 
-            => DynCodeHelpers.CreateSource<T>(inStream);
+            => DynCode.CreateSource<T>(inStream);
 
         #endregion
 
@@ -96,27 +98,27 @@ namespace ToSic.SexyContent.WebApi
         /// <summary>
         /// content item of the current view
         /// </summary>
-        public dynamic Content => DynCodeHelpers.Content;
+        public dynamic Content => DynCode.Content;
 
         /// <summary>
         /// presentation item of the content-item. 
         /// </summary>
         [Obsolete("please use Content.Presentation instead")]
-        public dynamic Presentation => DynCodeHelpers.Content?.Presentation;
+        public dynamic Presentation => DynCode.Content?.Presentation;
 
-        public dynamic Header => DynCodeHelpers.Header;
+        public dynamic Header => DynCode.Header;
 
         [Obsolete("use Header instead")]
-	    public dynamic ListContent => DynCodeHelpers.Header;
+	    public dynamic ListContent => DynCode.Header;
 
         /// <summary>
         /// presentation item of the content-item. 
         /// </summary>
         [Obsolete("please use Header.Presentation instead")]
-	    public dynamic ListPresentation => DynCodeHelpers.Header?.Presentation;
+	    public dynamic ListPresentation => DynCode.Header?.Presentation;
 
         [Obsolete("This is an old way used to loop things. Use Data[\"Default\"] instead. Will be removed in 2sxc v10")]
-        public List<Element> List => DynCodeHelpers.List;
+        public List<Element> List => DynCode.List;
 
         #endregion
 
@@ -125,10 +127,10 @@ namespace ToSic.SexyContent.WebApi
 
         /// <inheritdoc />
         public IFolder AsAdam(IDynamicEntity entity, string fieldName)
-	        => DynCodeHelpers.AsAdam(AsEntity(entity), fieldName);
+	        => DynCode.AsAdam(AsEntity(entity), fieldName);
 
         /// <inheritdoc />
-        public IFolder AsAdam(IEntity entity, string fieldName) => DynCodeHelpers.AsAdam(entity, fieldName);
+        public IFolder AsAdam(IEntity entity, string fieldName) => DynCode.AsAdam(entity, fieldName);
 
 
         /// <summary>
@@ -154,8 +156,8 @@ namespace ToSic.SexyContent.WebApi
         #endregion
 
         #region Link & Edit - added in 2sxc 10.01
-        public ILinkHelper Link => DynCodeHelpers?.Link;
-        public IInPageEditingSystem Edit => DynCodeHelpers?.Edit;
+        public ILinkHelper Link => DynCode?.Link;
+        public IInPageEditingSystem Edit => DynCode?.Edit;
 
         #endregion
 

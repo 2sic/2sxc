@@ -43,6 +43,10 @@ namespace ToSic.Sxc.Code
 
 
         #region AsDynamic and AsEntity
+
+        /// <inheritdoc />
+        public dynamic AsDynamic(string json, string fallback = "{}") => Parent?.AsDynamic(json);
+
         public dynamic AsDynamic(IEntity entity) => Parent?.AsDynamic(entity);
 
         [PrivateApi]

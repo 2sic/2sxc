@@ -11,7 +11,6 @@ using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.WebApi;
-using DynamicCodeHelper = ToSic.Sxc.Dnn.DynamicCodeHelper;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace
@@ -32,10 +31,10 @@ namespace ToSic.SexyContent.WebApi
         {
             base.Initialize(controllerContext);
             // Note that the SxcBlock is created by the BaseClass, if it's detectable. Otherwise it's null
-            DynCodeHelpers = new DynamicCodeHelper(CmsBlock, CmsBlock?.Log ?? Log);
+            DynCode = new DynamicCode(CmsBlock, CmsBlock?.Log ?? Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
-            if (DynCodeHelpers.App == null)
+            if (DynCode.App == null)
                 TryToAttachAppFromUrlParams();
 
             // must run this after creating AppAndDataHelpers
@@ -46,9 +45,9 @@ namespace ToSic.SexyContent.WebApi
         }
 
         [PrivateApi]
-        protected DynamicCodeHelper DynCodeHelpers { get; private set; }
+        protected DynamicCode DynCode { get; private set; }
 
-        public IDnnContext Dnn => DynCodeHelpers.Dnn;
+        public IDnnContext Dnn => DynCode.Dnn;
 
         private void TryToAttachAppFromUrlParams()
         {
@@ -62,7 +61,7 @@ namespace ToSic.SexyContent.WebApi
                 var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);
                 var app = Environment.Dnn7.Factory.App(appId, publishingEnabled);
-                DynCodeHelpers.LateAttachApp(app);
+                DynCode.LateAttachApp(app);
                 found = true;
             } catch { /* ignore */ }
 
@@ -108,7 +107,7 @@ namespace ToSic.SexyContent.WebApi
             string name = null, 
             string relativePath = null, 
             bool throwOnError = true) =>
-            DynCodeHelpers.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
+            DynCode.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
                 SharedCodeVirtualRoot, throwOnError);
     }
 }

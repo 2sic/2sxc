@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Newtonsoft.Json.Linq;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
@@ -22,12 +23,12 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 
 namespace ToSic.Sxc.Web
 {
-    public abstract class DynamicCodeHelper : HasLog, IDynamicCode
+    public abstract class DynamicCode : HasLog, IDynamicCode
     {
         protected readonly ICmsBlock CmsInstance;
 
         private readonly ITenant _tenant;
-        protected DynamicCodeHelper(ICmsBlock cmsInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsInstance?.Log)
+        protected DynamicCode(ICmsBlock cmsInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsInstance?.Log)
         {
             if (cmsInstance == null)
                 return;
@@ -62,6 +63,30 @@ namespace ToSic.Sxc.Web
 
 
         #region AsDynamic Implementations
+
+        private const string EmptyJsonObject = "{}";
+        private const string JsonStarter = "{";
+        private const string JsonErrorCode = "error";
+
+        /// <inheritdoc />
+        public dynamic AsDynamic(string json, string fallback = "{}")
+        {
+            if (!string.IsNullOrWhiteSpace(json) && json.Contains(JsonStarter))
+                try
+                {
+                    return JObject.Parse(json);
+                }
+                catch
+                {
+                    if (fallback == JsonErrorCode) throw;
+                }
+
+            // fallback
+            return fallback == null
+                ? null
+                : JObject.Parse(fallback);
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object

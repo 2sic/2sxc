@@ -30,33 +30,35 @@ namespace ToSic.Sxc.Dnn
         public new IDnnContext Dnn => base.Dnn;// DynCodeHelpers.Dnn;
 
         [PrivateApi]
-        public SxcHelper Sxc => DynCodeHelpers.Sxc;
+        public SxcHelper Sxc => DynCode.Sxc;
 
         /// <inheritdoc />
-        public IApp App => DynCodeHelpers.App;
+        public IApp App => DynCode.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => DynCodeHelpers.Data;
+        public IBlockDataSource Data => DynCode.Data;
 
 
         #region AsDynamic implementations
+        /// <inheritdoc/>
+        public dynamic AsDynamic(string json, string fallback = "{}") => DynCode.AsDynamic(json);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => DynCodeHelpers.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) =>  DynCodeHelpers.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(dynamic dynamicEntity) =>  DynCode.AsDynamic(dynamicEntity);
 
 
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  DynCodeHelpers.AsDynamic(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  DynCode.AsDynamic(stream.List);
 
         /// <inheritdoc />
-        public IEntity AsEntity(dynamic dynamicEntity) =>  DynCodeHelpers.AsEntity(dynamicEntity);
+        public IEntity AsEntity(dynamic dynamicEntity) =>  DynCode.AsEntity(dynamicEntity);
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DynCodeHelpers.AsDynamic(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DynCode.AsDynamic(entities);
         #endregion
 
 
@@ -66,21 +68,21 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
-            =>  DynCodeHelpers.CreateSource<T>(inSource, configurationProvider);
+            =>  DynCode.CreateSource<T>(inSource, configurationProvider);
 
         /// <inheritdoc />
 	    public T CreateSource<T>(IDataStream inStream) where T : IDataSource 
-            => DynCodeHelpers.CreateSource<T>(inStream);
+            => DynCode.CreateSource<T>(inStream);
 
         #endregion
 
         #region Content, Presentation & List
 
         /// <inheritdoc />
-        public dynamic Content => DynCodeHelpers.Content;
+        public dynamic Content => DynCode.Content;
 
         /// <inheritdoc />
-        public dynamic Header => DynCodeHelpers.Header;
+        public dynamic Header => DynCode.Header;
 
 
         #endregion
@@ -89,10 +91,10 @@ namespace ToSic.Sxc.Dnn
         #region Adam
 
         /// <inheritdoc />
-        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => DynCodeHelpers.AsAdam(AsEntity(entity), fieldName);
+        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => DynCode.AsAdam(AsEntity(entity), fieldName);
 
         /// <inheritdoc />
-        public IFolder AsAdam(IEntity entity, string fieldName) => DynCodeHelpers.AsAdam(entity, fieldName);
+        public IFolder AsAdam(IEntity entity, string fieldName) => DynCode.AsAdam(entity, fieldName);
 
 
         /// <inheritdoc />
@@ -110,10 +112,10 @@ namespace ToSic.Sxc.Dnn
         #region Link & Edit - added to API in 2sxc 10.01
 
         /// <inheritdoc />
-        public ILinkHelper Link => DynCodeHelpers?.Link;
+        public ILinkHelper Link => DynCode?.Link;
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => DynCodeHelpers?.Edit;
+        public IInPageEditingSystem Edit => DynCode?.Edit;
 
         #endregion
 
