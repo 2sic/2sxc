@@ -18,7 +18,7 @@ This is fairly straight forward - data can be stored in SQL (spread across table
 
 The data management system underneath everything is called the **EAV** - which stands for **Entity**, **Attribute**, **Value**. 
 Anything in that namespace is about internal data models, reading/saving data etc. 
-So anything inside the @ToSic.Eav.Data is all about the internals, which you only need in special scenarios. 
+So anything inside the [](xref:ToSic.Eav.Data) is all about the internals, which you only need in special scenarios. 
 The same applies to [](xref:ToSic.Eav.Apps) which is the sub-system responsible for combining data into virtual bundles called **Apps**.
 You can usually ignore this. 
 
@@ -26,7 +26,7 @@ You can usually ignore this.
 
 On top of the _EAV_ layer we have the **Sxc** layer. 
 It's responsible for _Content Management_ on top of the _App_ model provided by the _EAV_. 
-The _Sxc_ layer provides things like @ToSic.Sxc.Data.IDynamicEntity to let you code like `@Content.Title`. 
+The _Sxc_ layer provides things like [](xref:ToSic.Sxc.Data.IDynamicEntity) to let you code like `@Content.Title`. 
 This is usually more interesting for you, but still fairly generic, because 2sxc is also meant to work with other 
 platforms like NopCommerce, Orchard or Oqtane, but it hasn't been implemented yet.
 
@@ -50,7 +50,7 @@ Areas of interest may be the [](xref:ToSic.Eav.Logging) or [](xref:ToSic.Eav.Loo
 #### Core Data Models
 
 This is more interesting and relevant to you, when you want to dive deep into the data model. Again you should note that this is advanced stuff. 
-You'll find it in @ToSic.Eav.Data - the most common bit you may care about is [](xref:ToSic.Eav.Data.IEntity) and @ToSic.Eav.Data.IContentType.
+You'll find it in [](xref:ToSic.Eav.Data) - the most common bit you may care about is [](xref:ToSic.Eav.Data.IEntity) and [](xref:ToSic.Eav.Data.IContentType).
 
 #### Data Processing
 

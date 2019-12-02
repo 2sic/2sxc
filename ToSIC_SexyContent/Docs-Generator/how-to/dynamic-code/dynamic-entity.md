@@ -41,7 +41,7 @@ The main things that the _dynamic entity_ does for you, are
 
 ## Properties of a Dynamic Entity
 
-Read the API docs in the @ToSic.Sxc.Data.IDynamicEntity.
+Read the API docs in the [](xref:ToSic.Sxc.Data.IDynamicEntity).
 
 Additional properties that work (they are dynamic, so don't appear in the code)
 

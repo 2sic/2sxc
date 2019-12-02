@@ -40,11 +40,11 @@ The input mask is automatically generated from the [Content-Type](xref:Specs.Dat
 
 ## APIs
 
-* @ToSic.Eav.Data Namespace has almost everything you see here
-* @ToSic.Eav.Data.IContentType defines what fields exist, it's the ContentType / Schema
-* @ToSic.Eav.Data.IContentTypeAttribute, @ToSic.Eav.Data.ContentTypeAttribute  
+* @[](xref:ToSic.Eav.Data) Namespace has almost everything you see here
+* @[](xref:ToSic.Eav.Data.IContentType) defines what fields exist, it's the ContentType / Schema
+* @[](xref:ToSic.Eav.Data.IContentTypeAttribute), [](xref:ToSic.Eav.Data.ContentTypeAttribute)  
 	contains the definition of an attribute
-* @ToSic.Eav.Data.ContentTypeMetadata, @ToSic.Eav.Metadata.MetadataOf`1  
+* [](xref:ToSic.Eav.Data.ContentTypeMetadata), [](xref:ToSic.Eav.Metadata.MetadataOf`1)  
 	contains information about the content-type (like nicer descriptions).
 	This is also used for the Attribute-Metadata
 

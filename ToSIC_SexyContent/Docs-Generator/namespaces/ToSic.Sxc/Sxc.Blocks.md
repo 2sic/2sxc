@@ -7,4 +7,4 @@ A unit of output it 2sxc is called a **Block**. In DNN-Link, this can be like a 
 
 Looking at it from the Platform like DNN, the entry object is an ICmsBlock which contains context information (in DNNs case, ModuleId etc.). Inside it is an IBlock which can itself contain more IBlocks. 
 
-Note that each _Block_ itself has _Views_ @ToSic.Sxc.Blocks.IView and data specific to that block. 
+Note that each _Block_ itself has _Views_ [](xref:ToSic.Sxc.Blocks.IView) and data specific to that block. 

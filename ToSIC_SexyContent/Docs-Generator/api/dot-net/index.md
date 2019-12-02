@@ -14,17 +14,17 @@ Once we're really sure that certain parts are very final, we'll publish the API 
 
 ### APIs in Razor Templates and WebApi
 
-1. If you are creating a **Razor** template and want to know what APIs are available, start with @ToSic.Sxc.Dnn.RazorComponent. 
+1. If you are creating a **Razor** template and want to know what APIs are available, start with [](xref:ToSic.Sxc.Dnn.RazorComponent). 
 	This is because new Razor Components inherits from that, so you'll see all the commannds you get there. 
 
-1. If you're creating a **WebApi** and need to know everything in it, you also want to check the @ToSic.Sxc.Dnn.ApiController, because all new WebApi classes inherit that. 
+1. If you're creating a **WebApi** and need to know everything in it, you also want to check the [](xref:ToSic.Sxc.Dnn.ApiController), because all new WebApi classes inherit that. 
 
 ### Working with Entities and ADAM Assets
 
-1. If you're working with `DynamicEntity` objects and want to know more about them, check out @ToSic.Sxc.Data.IDynamicEntity.  
+1. If you're working with `DynamicEntity` objects and want to know more about them, check out [](xref:ToSic.Sxc.Data.IDynamicEntity).  
 	In very rare cases you also want to know more about the underlying [](xref:ToSic.Eav.Data.IEntity).
-1. If you're working with `ADAM` Assets, like from the `AsAdam(...)` command on @ToSic.Sxc.Data.IDynamicEntity objects,  
-	you'll want to read about @ToSic.Sxc.Adam.IFolder and @ToSic.Sxc.Adam.IFile
+1. If you're working with `ADAM` Assets, like from the `AsAdam(...)` command on [](xref:ToSic.Sxc.Data.IDynamicEntity) objects,  
+	you'll want to read about [](xref:ToSic.Sxc.Adam.IFolder) and [](xref:ToSic.Sxc.Adam.IFile)
 
 ### Programming with DataSources and VisualQuery
 
