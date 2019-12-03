@@ -14,7 +14,7 @@ We're documenting it here to ensure you know what happened, in case you still ru
 > All these things shouldn't affect you, because they were internal APIs, 
 > but in case it does - here's what we did.
 
-#### Version 10.20.03 (ca. 2019-12-01)
+#### Version 10.20.04 (ca. 2019-12-03)
 
 1. Renamed `DataTableDataSource` to `DataTable`, old name still works.
 1. Renamed `ExternalDataDataSource` to `ExternalData`, old name still works.
