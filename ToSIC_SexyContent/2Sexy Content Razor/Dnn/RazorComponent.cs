@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.Dnn
         #region AsDynamic in many variations
 
         /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = Web.DynamicCode.EmptyJson) => DynCode.AsDynamic(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynCode.AsDynamic(json, fallback);
 
         /// <inheritdoc/>
         public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);

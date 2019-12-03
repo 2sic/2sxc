@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.Code
         #region AsDynamic and AsEntity
 
         /// <inheritdoc />
-        public dynamic AsDynamic(string json, string fallback = DynamicCode.EmptyJson) => Parent?.AsDynamic(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => Parent?.AsDynamic(json, fallback);
 
         public dynamic AsDynamic(IEntity entity) => Parent?.AsDynamic(entity);
 

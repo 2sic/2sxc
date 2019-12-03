@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -128,7 +129,7 @@ namespace ToSic.Sxc.Web
         /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
         /// If you provide null for the fallback, then you will get null back.
         /// </returns>
-        dynamic AsDynamic(string json, string fallback = DynamicCode.EmptyJson);
+        dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson);
 
         #endregion 
 
