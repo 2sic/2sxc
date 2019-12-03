@@ -12,10 +12,10 @@ exports.preTransform = function (model) {
  * This method will be called at the end of exports.transform in toc.html.js
  */
 exports.postTransform = function (model) {
-  console.warn('2dm-postTransform:');
+  // console.warn('2dm-postTransform:');
 
   if(isApiToc(model))
-    transformItem(model, 1);
+    shortenNamspaces(model, 1);
 
   return model;
 }
@@ -43,10 +43,12 @@ function isApiToc(model) {
   return match;
 }
 
+// check if a string is likely a namespace API prefix
 function isNamespace(name) {
   return name && (name.indexOf(prefix1) === 0 || name.indexOf(prefix2) === 0);
 }
 
+// repeat a string X times
 function repeatString(part, count) {
   if(count <= 0) return "";
   var result = "";
@@ -57,15 +59,8 @@ function repeatString(part, count) {
 
 const keepParts = 3;
 
-function transformItem(item, level) {
-  console.warn('2dm-transformItem');
-  // set to null incase mustache looks up
-  // item.topicHref = item.topicHref || null;
-  // item.tocHref = item.tocHref || null;
-  // item.name = item.name || null;
-
-  // <new 2dm
-  //const prefix1 = 'ToSic.Sxc.';
+function shortenNamspaces(item, level) {
+  // console.warn('2dm-shortenNamspaces');
 
   // only do this on namespaces
   if(isNamespace(item.name)) {
@@ -79,28 +74,14 @@ function transformItem(item, level) {
     }
   }
 
-  // const replace1 = 'Sxc';
-  // console.warn('2dm-name-and-index:' + item.name  + ';idx:' + (item.name && item.name.indexOf(prefix1)));
-  // if(item.name && item.name.indexOf(prefix1) == 0) {
-  //   console.warn('2dm-replacing "' + item.name + '"');
-  //   item.name = item.name.replace(prefix1, replace1);
-  //   item._shortname = item.name;
-  // }
-  // item.XXX = 'YYY';
-  // new 2dm>
+  // do recursively if necessary, but should only matter on the 1st or 2nd recursion
+  if(level > 2) return; 
 
   item.level = level;
   if (item.items && item.items.length > 0) {
     var length = item.items.length;
     for (var i = 0; i < length; i++) {
-      transformItem(item.items[i], level + 1);
+      shortenNamspaces(item.items[i], level + 1);
     };
   } 
-  else {
-    // console.warn('2dm-toc-post-TI:' + JSON.stringify(item));
-  }
-  // else {
-  //   item.items = [];
-  //   item.leaf = true;
-  // }
 }
