@@ -5,7 +5,7 @@
         {
           "files": [
             "2sxc-dnn742/Website/DesktopModules/**.csproj",
-            "XXXeav-server/**.csproj"
+            "eav-server/**.csproj"
           ],
           "cwd": "c:/projects/",
           "exclude": [
@@ -32,9 +32,9 @@
       {
         "files": [
           "api/**.md",
-          "XXXhow-to/**.md",
-          "XXXspecs/**.md",
-          "XXXspecs/**.yml",
+          "how-to/**.md",
+          "specs/**.md",
+          "specs/**.yml",
           "toc.yml",
           "*.md"
         ],

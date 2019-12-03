@@ -38,8 +38,8 @@ function isApiToc(model) {
   // if(!(firstName.indexOf(prefix1) === 0 || firstName.indexOf(prefix2) === 0))
   //   return false;
 
-  if(match)
-    console.warn('2dm-addlevel: its the right TOC!' + first100);
+  // if(match)
+  //   console.warn('2dm-addlevel: its the right TOC!' + first100);
   return match;
 }
 
