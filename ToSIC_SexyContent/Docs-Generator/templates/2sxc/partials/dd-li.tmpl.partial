@@ -1,0 +1,3 @@
+{{#items}}
+  <li><a href="{{topicHref}}">tada! {{name}} {{XXX}}/{{{XXX}}}/{{name}}</a></li>
+{{/items}}

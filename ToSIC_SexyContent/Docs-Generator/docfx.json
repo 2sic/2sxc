@@ -5,7 +5,7 @@
         {
           "files": [
             "2sxc-dnn742/Website/DesktopModules/**.csproj",
-            "eav-server/**.csproj"
+            "XXXeav-server/**.csproj"
           ],
           "cwd": "c:/projects/",
           "exclude": [
@@ -32,9 +32,9 @@
       {
         "files": [
           "api/**.md",
-          "how-to/**.md",
-          "specs/**.md",
-          "specs/**.yml",
+          "XXXhow-to/**.md",
+          "XXXspecs/**.md",
+          "XXXspecs/**.yml",
           "toc.yml",
           "*.md"
         ],
@@ -76,7 +76,8 @@
     "template": [
       "default",
       "statictoc",
-      "material/material"
+      "material/material",
+      "templates/2sxc"
     ],
     "globalMetadata": {
       "_appTitle": "2sxc and EAV 10",
