@@ -12,6 +12,6 @@ Every App contains [Content-Types](xref:Specs.Data.ContentTypes) and [Entities](
 <br><br>
 
 * **Content Types** are the schema, they define what fields an entity has.  
-	read more about it in @Specs.Data.ContentTypes
+	read more about it in [](xref:Specs.Data.ContentTypes)
 * **Entities** are the data-items, they contain the content.  
-	read more about it in @Specs.Data.Entities
+	read more about it in [](xref:Specs.Data.Entities)

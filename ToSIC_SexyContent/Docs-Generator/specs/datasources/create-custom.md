@@ -60,7 +60,7 @@ namespace ToSic.Tutorial.DataSource
 ## How it works
 Basically what you need are
 
-1. The @ToSic.Eav.DataSources.Query.VisualQueryAttribute attribute, so that this data-source will be shown in VisualQuery
+1. The [](xref:ToSic.Eav.DataSources).Query.VisualQueryAttribute attribute, so that this data-source will be shown in VisualQuery
 1. The **constructor**, which tells the source what Out-streams it has, in this case it's just the Default
 1. A **method** which gets the items, if ever requested
 
@@ -71,7 +71,7 @@ This source will only become available in the UI for use, if this attribute is g
 * NiceName (optional) a nice label in the UI
 * HelpLink (optional) a help-link
 
-there are more properties, but these are the important ones. See @ToSic.Eav.DataSources.Query.VisualQueryAttribute
+there are more properties, but these are the important ones. See [](xref:ToSic.Eav.DataSources).Query.VisualQueryAttribute
 
 ### More on the Constructor and Provide
 The constructor is in charge of _wiring up_ the data-source. It should not get any data - because the data may not be needed and because configuration isn't loaded yet. 
@@ -89,7 +89,7 @@ Note that `AsEntity` has many more features, which are not in this demo to keep 
 
 ## Demo App and further links
 
-* @Specs.DataSources.Api.AsEntity
+* [](xref:Specs.DataSources.Api.AsEntity)
 * [Basic DataSources for EAV and 2sxc](https://github.com/2sic/2sxc-eav-tutorial-custom-datasource)
 * [Blog about this feature](https://2sxc.org/en/blog/post/tutorial-custom-datasources-for-eav-2sxc-9-13-part-1)
 

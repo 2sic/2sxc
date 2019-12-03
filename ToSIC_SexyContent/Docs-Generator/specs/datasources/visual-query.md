@@ -17,7 +17,7 @@ Then you will usually configure a view to use this.
 ## Read also
 
 * [Blog Posts about Visual Query Designer](https://2sxc.org/en/blog/tag/visual-query-designer)
-* @Specs.DataSources.DataSource
+* [](xref:Specs.DataSources.DataSource)
 
 ## History
 

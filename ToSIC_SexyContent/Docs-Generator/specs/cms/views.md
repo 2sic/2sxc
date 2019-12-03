@@ -7,12 +7,12 @@ Views are what the user will see - and contains things like Html, CSS, Javascrip
 
 ## How it Works
 
-Views use template files inside app root folder or sub folder. As of now, there are two types:
+Views configure what [templates](xref:Specs.Cms.Templates) are combined with what [Content-Type](xref:Specs.Data.ContentTypes) to then produce an output. 
 
-* **Razor / MVC** - These always begin with an `_` and end with `.cshtml`. Placeholders and code usually is marked with `@` like `@Content.Name`
-* **Tokens** - these always end with `.html`. Placeholders usually look like `[Content.Name]`. Tokens cannot have any server-side code aside from the basic placeholders. 
+> [!TIP]
+> Views can also specify more Content-Types for using in the Header or Presentation. In addition, they could also say that the data comes from a Query instead of from user/editor input. 
 
-_If your view just hosts a JavaScript SPA, it will also be one of these types of files._
+Read more about [Templates here](xref:Specs.Cms.Templates)
 
 The template-file is just part of the view. To be used as a view, it must be configured in the App configuration as a view, where you add things like
 

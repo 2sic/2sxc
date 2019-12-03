@@ -13,7 +13,7 @@ This is not stored, as it is specifically meant to not store data.
 
 ## Read also
 
-* @Specs.Data.Inputs.Empty
+* [](xref:Specs.Data.Inputs.Empty)
 
 ## History
 1. Introduced in EAV 1.0 2sxc 1.0

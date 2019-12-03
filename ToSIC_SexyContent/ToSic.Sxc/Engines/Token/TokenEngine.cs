@@ -8,7 +8,6 @@ using System.Web.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.SexyContent;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines.Token;
@@ -74,7 +73,7 @@ namespace ToSic.Sxc.Engines
         #endregion
 
 
-        private DynamicCodeHelper _dataHelper;
+        private DynamicCode _data;
 
         private TokenReplaceEav _tokenReplace;
 
@@ -88,18 +87,18 @@ namespace ToSic.Sxc.Engines
 
         private void InitDataHelper()
         {
-            _dataHelper = Factory.Resolve<IWebFactoryTemp>().AppAndDataHelpers(CmsBlock) ;
+            _data = Factory.Resolve<IWebFactoryTemp>().AppAndDataHelpers(CmsBlock) ;
         }
 
         private void InitTokenReplace()
         {
-            var confProv = ConfigurationProvider.GetConfigProviderForModule(/*InstInfo.Id*/CmsBlock.Container.Id, CmsBlock.App, CmsBlock);
-            _tokenReplace = new TokenReplaceEav(/*InstInfo.Id*/CmsBlock.Container.Id, confProv);
+            var confProv = ConfigurationProvider.GetConfigProviderForModule(CmsBlock.Container.Id, CmsBlock.App, CmsBlock);
+            _tokenReplace = new TokenReplaceEav(CmsBlock.Container.Id, confProv);
             
             // Add the Content and ListContent property sources used always
-            _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new LookUpInDynamicEntity(SourcePropertyName.ListContent, _dataHelper.Header));
+            _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new LookUpInDynamicEntity(SourcePropertyName.ListContent, _data.Header));
 #pragma warning disable 618
-            var contentProperty = _dataHelper.List.FirstOrDefault();
+            var contentProperty = _data.List.FirstOrDefault();
 #pragma warning restore 618
             if (contentProperty != null)
             {
@@ -159,7 +158,7 @@ namespace ToSic.Sxc.Engines
             {
                 // Create property sources for the current data item (for the current data item and its list information)
                 var propertySources = new Dictionary<string, ILookUp>();
-                propertySources.Add(sourceName, new LookUpInDynamicEntity(sourceName, _dataHelper.AsDynamic(dataItems.ElementAt(i)), i, itemsCount));
+                propertySources.Add(sourceName, new LookUpInDynamicEntity(sourceName, _data.AsDynamic(dataItems.ElementAt(i)), i, itemsCount));
                 builder.Append(RenderSection(template, propertySources));
             }
 

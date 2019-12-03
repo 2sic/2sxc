@@ -17,7 +17,7 @@ using ToSic.SexyContent.Search;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
-using DynamicCodeHelper = ToSic.Sxc.Dnn.DynamicCodeHelper;
+using DynamicCode = ToSic.Sxc.Dnn.DynamicCode;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Engines
@@ -131,7 +131,7 @@ namespace ToSic.Sxc.Engines
 
             // deprecated 2019-11-28 2dm, it's also in the CmsBlock
             // webPage.Sexy = CmsBlock;
-            webPage.DynCodeHelper = new DynamicCodeHelper(CmsBlock);
+            webPage.DynCode = new DynamicCode(CmsBlock);
 
         }
 

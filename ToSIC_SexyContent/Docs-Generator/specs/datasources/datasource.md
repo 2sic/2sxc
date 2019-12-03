@@ -4,7 +4,7 @@ uid: Specs.DataSources.DataSource
 
 # DataSources
 
-DataSources are @ToSic.Eav.DataSources.IDataSource objects which deliver one or many [DataStreams](xref:ToSic.Eav.DataSources.IDataStream), which contain a bunch of content-items. 
+DataSources are [](xref:ToSic.Eav.DataSources.IDataSource) objects which deliver one or many [DataStreams](xref:ToSic.Eav.DataSources.IDataStream), which contain a bunch of content-items. 
 There are many data-sources, and most of them will... 
 
 * ...either get data from somewhere external like SQL, CSV, REST or the EAV-cache and provide this for further use - then it's a pure `IDataSource`

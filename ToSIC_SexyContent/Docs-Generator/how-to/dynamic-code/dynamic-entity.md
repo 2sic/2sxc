@@ -29,7 +29,7 @@ Here's a code example in a C# Razor template:
 So basically all properties of this book can be shown using `[Object].[PropertyName]` - for example `Content.ReleaseDate`.
 
 ## What Dynamic Entity really does - and how...
-Technically the dynamic entity object is like a read-helper for the more complex @ToSic.Eav.Data.IEntity. So actually the _dynamic entity_ object will keep a reference to the underlying read-only `IEntity` item on a property `Entity`, and whenever your code accesses a property, the dynamic entity will query it from the underlying `Entity`.
+Technically the dynamic entity object is like a read-helper for the more complex [](xref:ToSic.Eav.Data.IEntity). So actually the _dynamic entity_ object will keep a reference to the underlying read-only `IEntity` item on a property `Entity`, and whenever your code accesses a property, the dynamic entity will query it from the underlying `Entity`.
 
 The main things that the _dynamic entity_ does for you, are
 
@@ -41,7 +41,7 @@ The main things that the _dynamic entity_ does for you, are
 
 ## Properties of a Dynamic Entity
 
-Read the API docs in the @ToSic.Sxc.Data.IDynamicEntity.
+Read the API docs in the [](xref:ToSic.Sxc.Data.IDynamicEntity).
 
 Additional properties that work (they are dynamic, so don't appear in the code)
 

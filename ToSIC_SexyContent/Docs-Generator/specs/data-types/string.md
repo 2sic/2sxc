@@ -15,9 +15,9 @@ This is simply stored as a JSON string.
 
 ## Read also
 
-* @Specs.Data.Inputs.String
-* @Tut.RazorBlade.Text.Has
-* @Tut.RazorBlade.Text.First
+* [](xref:Specs.Data.Inputs.String)
+* [](xref:Tut.RazorBlade.Text.Has)
+* [](xref:Tut.RazorBlade.Text.First)
 
 ## History
 1. Introduced in EAV 1.0 2sxc 1.0

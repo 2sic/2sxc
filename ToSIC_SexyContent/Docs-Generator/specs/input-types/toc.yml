@@ -1,0 +1,55 @@
+#- name: Value Input Types xyz
+#  topicUid: Specs.Data.Inputs.Overview
+- name: All
+  topicUid: Specs.Data.Inputs.All 
+- name: Boolean
+  topicUid: Specs.Data.Inputs.Boolean 
+  items:
+    - name: boolean-default
+      topicUid: Specs.Data.Inputs.Boolean-Default
+- name: Custom
+  topicUid: Specs.Data.Inputs.Custom 
+- name: DateTime
+  topicUid: Specs.Data.Inputs.DateTime 
+  items:
+    - name: datetime-default
+      topicUid: Specs.Data.Inputs.DateTime-Default
+- name: Empty
+  topicUid: Specs.Data.Inputs.Empty 
+  items:
+    - name: empty-default
+      topicUid: Specs.Data.Inputs.Empty-Default
+- name: Entity
+  topicUid: Specs.Data.Inputs.Entity 
+  items:
+    - name: entity-default
+      topicUid: Specs.Data.Inputs.Entity-Default 
+    - name: entity-query
+      topicUid: Specs.Data.Inputs.Entity-Query
+- name: Hyperlink
+  topicUid: Specs.Data.Inputs.Hyperlink 
+  items:
+    - name: hyperlink-default
+      topicUid: Specs.Data.Inputs.Hyperlink-Default 
+    - name: hyperlink-library
+      topicUid: Specs.Data.Inputs.Hyperlink-Library 
+- name: Number
+  topicUid: Specs.Data.Inputs.Number 
+  items:
+    - name: number-default
+      topicUid: Specs.Data.Inputs.Number-Default
+- name: String
+  topicUid: Specs.Data.Inputs.String 
+  items:
+    - name: string-default
+      topicUid: Specs.Data.Inputs.String-Default
+    - name: drop-down
+      topicUid: Specs.Data.Inputs.String-Dropdown
+    - name: drop-down-query
+      topicUid: Specs.Data.Inputs.String-Dropdown-Query
+    - name: wysiwyg
+      topicUid: Specs.Data.Inputs.String-Wysiwyg
+    - name: font-icon-picker
+      topicUid: Specs.Data.Inputs.String-Font-Icon-Picker
+    - name: url-path
+      topicUid: Specs.Data.Inputs.String-Url-Path

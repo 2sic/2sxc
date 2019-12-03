@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -43,6 +44,10 @@ namespace ToSic.Sxc.Code
 
 
         #region AsDynamic and AsEntity
+
+        /// <inheritdoc />
+        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => Parent?.AsDynamic(json, fallback);
+
         public dynamic AsDynamic(IEntity entity) => Parent?.AsDynamic(entity);
 
         [PrivateApi]
@@ -79,8 +84,8 @@ namespace ToSic.Sxc.Code
 
         [Obsolete("use CreateSource<T> instead")]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-            ILookUpEngine configurationProvider = null)
-            => Parent?.CreateSource(typeName, inSource, configurationProvider);
+            ILookUpEngine lookUpEngine = null)
+            => Parent?.CreateSource(typeName, inSource, lookUpEngine);
 
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource

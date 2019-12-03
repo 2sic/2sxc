@@ -102,5 +102,5 @@ You should find some code examples in this demo App
 
 ## History
 
-1. Introduced in 2sxc ??.??
+1. Introduced in 2sxc ca. 5.x
 2. Enhanced with Polymorph Editions in 2sxc 9.35 (allowing subfolder/api)

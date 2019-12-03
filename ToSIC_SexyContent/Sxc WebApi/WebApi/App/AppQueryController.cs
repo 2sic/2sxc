@@ -60,7 +60,7 @@ namespace ToSic.Sxc.WebApi.App
             if (query == null)
                 throw HttpErr(HttpStatusCode.NotFound, "query not found", $"query '{name}' not found");
 
-            var permissionChecker = new DnnPermissionCheck(log, targetItem: query.QueryDefinition, 
+            var permissionChecker = new DnnPermissionCheck(log, targetItem: query.QueryDefinition.Entity, 
                 instance: new Container(module), appIdentity: app);
             var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 

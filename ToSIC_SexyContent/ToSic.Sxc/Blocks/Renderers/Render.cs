@@ -1,9 +1,17 @@
 ﻿using System;
 using System.Web;
+using ToSic.Eav.Documentation;
+using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Blocks.Renderers
+namespace ToSic.Sxc.Blocks
 {
+    /// <summary>
+    /// Block-Rendering system. It's responsible for taking a Block and delivering HTML for the output. <br/>
+    /// It's used for InnerContent, so that Razor-Code can easily render additional content blocks. <br/>
+    /// See also [](xref:Specs.Cms.InnerContent)
+    /// </summary>
+    [PublicApi]
     public class Render
     {
         /// <summary>
@@ -17,7 +25,7 @@ namespace ToSic.Sxc.Blocks.Renderers
         /// <param name="field">Optional: </param>
         /// <param name="newGuid"></param>
         /// <returns></returns>
-        public static IHtmlString One(DynamicEntity context,
+        internal static IHtmlString One(DynamicEntity context,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             IDynamicEntity item = null, 
             string field = null,

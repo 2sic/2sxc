@@ -19,7 +19,7 @@ We're documenting it here to ensure you know what happened, in case you still ru
 1. Renamed `DataTableDataSource` to `DataTable`, old name still works.
 1. Renamed `ExternalDataDataSource` to `ExternalData`, old name still works.
 1. Renamed `ToSic.SexyContent.DataSources.ModuleDataSource` to `ToSic.Sxc.DataSources.CmsBlock`, old name still works.
-1. Renamed `ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute` to `ToSic.Eav.DataSources.Query.VisualQueryAttribute`, old name still works.
+1. Renamed `ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute` to `ToSic.Eav.DataSources.Queries.VisualQueryAttribute`, old name still works.
 1. Renamed `ToSic.SexyContent.Environment.Dnn7.Factory` to `ToSic.Sxc.Dnn.Factory`, old name still works.
 1. Renamed `ToSic.Eav.DataSources.BaseDataSource` to `ToSic.Eav.DataSources.DataSourceBase` for consistency, old name still works.
 
@@ -71,7 +71,7 @@ More internal changes which shouldn't affect anybody, but make the API ready for
 1. the internal interface `ILinkHelper` was moved to `ToSic.Sxc.Web`
 1. the internal interface `IHtmlHelper` was moved to `ToSic.Sxc.Dnn`
 1. the property `Configuration` on dynamic entities was deprecated in 2sxc 4 and removed in 2sxc 10 - we don't think it was ever used
-1. moved internal Metadata interfaces (ca. 5) into final namespace @ToSic.Eav.Metadata
+1. moved internal Metadata interfaces (ca. 5) into final namespace [](xref:ToSic.Eav.Metadata)
 1. Moved a bunch of internal interfaces which we believe were never used externally from `ToSic.Eav.Interfaces` to `ToSic.Eav.Data`
 	1. `ToSic.Eav.Data.IAttribute`
 	1. `ToSic.Eav.IAttribute<T>`

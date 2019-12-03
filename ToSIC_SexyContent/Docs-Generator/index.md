@@ -30,7 +30,7 @@ it also include instructions how to export/import data, working with the image r
 ## If you want to know more, then check out...
 
 1. The [Specs](xref:Specs.Home) which tells you about Architecture, Data Models and more
-1. The [C# .net API Docs](xref:Api.DotNet)
+1. The [C# .net API Docs](/api/dot-net/index.html)
 
 
 #### Documentation Version
@@ -43,36 +43,22 @@ Generated for EAV/2sxc 10.20.03
 Next to document
 
 1. Finish metadata documentation
-1. write about adam
-1. write about visual query
-1. Publish the VisualQuery attribute, link - see also specs/datasources/api-visualquery
-1. explain Query in general, as linked in specs/datasources/datasource.md
-1. Publish the 2sxc data sources in correct namespace, link
-    1. module DS
-    1. view DS
 
 These topics are not or insufficiently documented...
 
 1. URL and REST API for retrieving / changing data (todo)
-1. ADAM - the Automatic Digital Asset Manager (todo) and AsAdam(...)
-1. Metadata system
 1. Enhancing 2sxc with custom extensions
     1. Custom input field-types
     2. Custom data-types
-    3. Custom templating engines
-    4. Custom JS connectors to other libraries
     5. ...
 1. Future topics, lower priority
     1. Angular2-5 and 2sxc (todo)
     2. React and 2sxc (todo)
-    3. Knockout and 2sxc (todo)
     4. jQuery with 2sxc (todo)
 1. etc.
 
 These topics are already documented elsewhere, but should become part of these docs
 
-1. ADAM doesn't seem to be documented anywhere here
-1. Visual Query doesn't seem to be documented anywhere here
 1. [View-switching based on url-params](http://2sxc.org/en/Docs/Feature/feature/4680)
 1. [Security protecting views like admin-views](http://2sxc.org/en/Docs/Feature/feature/4737)
 1. [creating custom DataSource objects](https://2sxc.org/en/blog/tag/datasource)

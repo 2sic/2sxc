@@ -1,5 +1,5 @@
 ---
-uid: ToSic.Eav.DataSources.Query.VisualQueryAttribute
+uid: ToSic.Eav.DataSources.Queries.VisualQueryAttribute
 ---
 # DataSource API: VisualQuery Attribute
 

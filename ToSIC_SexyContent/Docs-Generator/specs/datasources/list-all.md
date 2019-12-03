@@ -6,7 +6,7 @@ uid: Specs.DataSources.ListAll
 2sxc provides a large set of [DataSource](xref:Specs.DataSources.DataSource) objects which either get data from somewhere (SQL, CSV, ...) or modify data on the `In` and passing it to `Out`. This page will give you an overview and link you to further sources if you need to know more. 
 
 ## How to use
-Many data-sources are simply used in the [Visual Query](xref:ToSic.Eav.DataSources.Query.VisualQueryAttribute), and if all you want is visual-query, then this reference will give you an overview regarding what things are possible. It will usually look like this: 
+Many data-sources are simply used in the [Visual Query](xref:ToSic.Eav.DataSources.Queries.VisualQueryAttribute), and if all you want is visual-query, then this reference will give you an overview regarding what things are possible. It will usually look like this: 
 
 <img src="/assets/data-sources/app-out-2-in-0.png" width="100%">
 
@@ -178,7 +178,7 @@ These are all the data sources which are either provided in the default installa
         <summary>
           DNN Sql DataSource (...)
         </summary>
-          SqlDataSource which only uses the DNN DB and nothing else, based on the SqlDataSource
+          Sql which only uses the DNN DB and nothing else, based on the Sql DataSource
       </details>
   </tr>
   <tr>
@@ -325,7 +325,7 @@ These are all the data sources which are either provided in the default installa
       New in 8.12: In-Stream "Fallback" which is returned if the filter didn't return any hits.
       </details>  </tr>
   <tr>
-    <td><a href="xref:ToSic.Eav.DataSources.SqlDataSource">SqlDataSource</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.Sql">Sql</a></td>
     <td>Get Data</td>
     <td>
       <details>

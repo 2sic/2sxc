@@ -2,7 +2,7 @@
 using System.Web.Http;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.DataSources.Caching;
 
 namespace ToSic.Sxc.WebApi.System
 {
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.WebApi.System
             ThrowIfNotSuperuser();
 
             var msg = h1("Apps In Cache");
-            var cache = (BaseCache) DataSource.GetCache(null);
+            var cache = (RootCacheBase) DataSource.GetCache(null);
 
             var zones = cache.ZoneApps.OrderBy(z => z.Key);
 

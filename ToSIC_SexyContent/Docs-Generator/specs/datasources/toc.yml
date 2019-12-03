@@ -1,0 +1,29 @@
+- topicUid: Specs.DataSources.DataSource
+- topicUid: Specs.DataSources.DataStream
+- name: All DataSources
+  topicUid: Specs.DataSources.ListAll
+- topicUid: Specs.DataSources.Query
+- topicUid: Specs.DataSources.VisualQuery
+- name: Configuration System
+  topicUid: Specs.DataSources.Configuration
+- topicUid: Specs.LookUp.Tokens
+- topicUid: Specs.LookUp.Intro
+
+- topicUid: Specs.DataSources.LinqGuide
+- name: Linq with DataSources
+  topicUid: Specs.DataSources.Linq
+
+- name: Create Custom DataSource
+  topicUid: Specs.DataSources.Custom
+  items:
+    - name: Internal APIs
+      topicUid: Specs.DataSources.Api
+      items:
+        - name: AsEntity
+          topicUid: Specs.DataSources.Api.AsEntity
+        - name: ConfigMask
+          topicUid: Specs.DataSources.Api.ConfigMask
+        - name: EnsureConfigurationIsLoaded
+          topicUid: Specs.DataSources.Api.EnsureConfigurationIsLoaded
+        - name: Provide
+          topicUid: Specs.DataSources.Api.Provide

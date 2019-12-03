@@ -11,7 +11,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi]
-    public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>
+    public class DynamicEntity : System.Dynamic.DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>
     {
 
         public IEntity Entity { get; }
@@ -70,7 +70,9 @@ namespace ToSic.Sxc.Data
 
             if (attributeName == "Toolbar")
 #pragma warning disable 612
+#pragma warning disable 618
                 return Toolbar.ToString();
+#pragma warning restore 618
 #pragma warning restore 612
 
             if (attributeName == ViewParts.Presentation)
@@ -132,7 +134,7 @@ namespace ToSic.Sxc.Data
         /// <returns></returns>
         public bool IsDemoItem => Entity is EntityInContentGroup entInCg && entInCg.IsDemoItem;
 
-        public IHtmlString Render() => Blocks.Renderers.Render.One(this);
+        public IHtmlString Render() => Blocks.Render.One(this);
 
 
         #region Changing comparison operation to internally compare the entities, not this wrapper

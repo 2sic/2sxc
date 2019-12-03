@@ -58,7 +58,7 @@ These fields will never return a null. If there is no content, you'll just get a
 
 ## Read also
 
-* @Specs.Data.Inputs.Entity
+* [](xref:Specs.Data.Inputs.Entity)
 * [Razor LINQ Tutorials](https://2sxc.org/dnn-tutorials/en/razor/linq/home)
 
 ## History

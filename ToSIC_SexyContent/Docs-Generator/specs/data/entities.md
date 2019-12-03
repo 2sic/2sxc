@@ -47,27 +47,27 @@ The input mask is automatically generated from the [Content-Type](xref:Specs.Dat
 
 ## APIs
 
-* @ToSic.Eav.Data Namespace has almost everything you see here
-* @ToSic.Eav.Data.IEntity describes the main unit, the Entity
-* @ToSic.Eav.Data.IContentType defines what fields exist, it's the ContentType / Schema
-* @ToSic.Eav.Data.IAttributeBase, @ToSic.Eav.Data.IAttribute,  
-	@ToSic.Eav.Data.IAttribute`1, @ToSic.Eav.Data.Attribute`1  
+* [](xref:ToSic.Eav.Data) Namespace has almost everything you see here
+* [](xref:ToSic.Eav.Data.IEntity) describes the main unit, the Entity
+* [](xref:ToSic.Eav.Data.IContentType) defines what fields exist, it's the ContentType / Schema
+* [](xref:ToSic.Eav.Data.IAttributeBase), [](xref:ToSic.Eav.Data.IAttribute),  
+	[](xref:ToSic.Eav.Data.IAttribute`1), [](xref:ToSic.Eav.Data.Attribute`1)  
 	determine the internal model how an attribute is built
-* @ToSic.Eav.Data.IValue, @ToSic.Eav.Data.IValue`1, @ToSic.Eav.Data.Value`1  
+* [](xref:ToSic.Eav.Data.IValue), [](xref:ToSic.Eav.Data.IValue`1), [](xref:ToSic.Eav.Data.Value`1)  
 	determines how values in an attribute are stored, because an attribute like `Description`  
 	can have many values in different languages
-* @ToSic.Eav.Data.ILanguage, @ToSic.Eav.Data.IDimension, @ToSic.Eav.Data.Language  
+* [](xref:ToSic.Eav.Data.ILanguage), [](xref:ToSic.Eav.Data.IDimension), [](xref:ToSic.Eav.Data.Language)  
 	languages and dimensions determine how the values are used in each language
-* @ToSic.Eav.Metadata.ITarget, @ToSic.Eav.Metadata.Target  
+* [](xref:ToSic.Eav.Metadata.ITarget), [](xref:ToSic.Eav.Metadata.Target)  
 	this determines if the Entity is by itself, or if it's enriching something else -  
 	in which case this Entity is Metadata. 
-* @ToSic.Eav.Metadata.MetadataOf`1  
+* [](xref:ToSic.Eav.Metadata.MetadataOf`1)  
 	sometimes an Entity may itself have more metadata, which would then be stored here.
 
 
 ## Future Features & Wishes
 
-1. Dynamic Attributes using JSON data or similar - see @Specs.Data.Values.Custom
+1. Dynamic Attributes using JSON data or similar - see [](xref:Specs.Data.Values.Custom)
 
 ## History
 

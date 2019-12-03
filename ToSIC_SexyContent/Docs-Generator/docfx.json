@@ -17,7 +17,8 @@
         }
       ],
       "dest": "obj/api/dot-net/",
-      "filter": "filterConfig.yml"
+      "filter": "filterConfig.yml",
+      "force": false
     }
   ],
   "build": {
@@ -33,6 +34,7 @@
           "api/**.md",
           "how-to/**.md",
           "specs/**.md",
+          "specs/**.yml",
           "toc.yml",
           "*.md"
         ],
@@ -74,7 +76,8 @@
     "template": [
       "default",
       "statictoc",
-      "material/material"
+      "material/material",
+      "templates/2sxc"
     ],
     "globalMetadata": {
       "_appTitle": "2sxc and EAV 10",

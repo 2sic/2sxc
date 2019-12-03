@@ -15,7 +15,7 @@ Often you need a text-based code which should be replaced at runtime with a real
 ## Token Basics
 A token is a piece of text that looks like `[Source:Property]`, which will be replaced by an engine so that it will then be a value. For example, `[QueryString:Page]` is replaced with `2` if the current url has `?page=2` in it. You can research more about tokens [in older docs here](https://2sxc.org/en/Learn/Token-Templates-and-Views) and in the [full list of standard tokens](https://2sxc.org/dnn-app-demos/en/Apps/Tutorial-Tokens), it's a standard DNN concept. 
 
-Internally it uses a LookUp-Engine which itself uses LookUp-Sources - see @Specs.LookUp.Intro. 
+Internally it uses a LookUp-Engine which itself uses LookUp-Sources - see [](xref:Specs.LookUp.Intro). 
 
 ## Additional Token Features in 2sxc/EAV
 The EAV and 2sxc have enhanced Tokens to a new level with these features:
@@ -54,11 +54,11 @@ Some situations will have token sources beyond the default. For example, when co
 
 ## Also Read
 
-* @Specs.LookUp.Intro
-* @Specs.DataSources.Configuration
-* @ToSic.Eav.DataSources.IDataStream
-* @Specs.DataSources.Api
-* @Specs.DataSources.Api.EnsureConfigurationIsLoaded
+* [](xref:Specs.LookUp.Intro)
+* [](xref:Specs.DataSources.Configuration)
+* [](xref:ToSic.Eav.DataSources.IDataStream)
+* [](xref:Specs.DataSources.Api)
+* [](xref:Specs.DataSources.Api.EnsureConfigurationIsLoaded)
 
 
 ## History

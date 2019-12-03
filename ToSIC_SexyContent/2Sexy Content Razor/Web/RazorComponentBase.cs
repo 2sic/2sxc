@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Web
         //[PrivateApi]
         //protected internal Blocks.ICmsBlock Sexy { get; set; }
         [PrivateApi]
-        protected internal Dnn.DynamicCodeHelper DynCodeHelper { get; set; }
+        protected internal Dnn.DynamicCode DynCode { get; set; }
 
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Web
             // Forward the context
             Html = typedParent.Html;
             //Sexy = typedParent.Sexy;
-            DynCodeHelper = typedParent.DynCodeHelper;
+            DynCode = typedParent.DynCode;
         }
 
         #region Compile Helpers
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Web
             var path = NormalizePath(virtualPath);
             VerifyFileExists(path);
             return path.EndsWith(CodeCompiler.CsFileExtension)
-                ? DynCodeHelper.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
+                ? DynCode.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
                 : CreateInstanceCshtml(path);
         }
 

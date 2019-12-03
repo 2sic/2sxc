@@ -11,7 +11,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Search;
-using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.DataSources.Caching;
 using ToSic.Eav.Environment;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
@@ -57,9 +57,9 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
 
             // Ensure cache builds up with correct primary language
-            var cache = Eav.Factory.Resolve<ICache>();
-            ((BaseCache)cache).ZoneId = zoneId;
-            ((BaseCache)cache).AppId = appId.Value;
+            var cache = Eav.Factory.Resolve<IRootCache>();
+            ((RootCacheBase)cache).ZoneId = zoneId;
+            ((RootCacheBase)cache).AppId = appId.Value;
             cache.PreLoadCache(portalSettings.DefaultLanguage.ToLower());
 
             // must find tenant through module, as the PortalSettings.Current is null in search mode

@@ -1,0 +1,128 @@
+
+- name: Introduction
+  topicUid: Specs.Home
+
+- name: Architecture
+  topicUid: Specs.Architecture.Intro
+  items:
+    - name: Data Flow
+      topicUid: Specs.Architecture.DataFlow
+
+- name: Data Models in EAV
+  href: data/toc.yml
+  topicUid: Specs.Data.Intro
+
+- name: ADAM - Automatic Digital Asset Management
+  href: adam/toc.yml
+  topicUid: Specs.Adam.Intro
+
+- name: CMS Edit Content
+  topicUid: Specs.Cms.Edit
+  items:
+    - name: Edit Toolbars
+      topicUid: Specs.Cms.Toolbars
+    - name: Quick-Edit (QuickE
+      topicUid: Specs.Cms.QuickE
+    - name: Page Publishing
+      topicUid: Specs.Cms.PagePublishing
+
+- name: CMS Create and Design
+  items:
+    - name: Views and Templates
+      topicUid: Specs.Cms.Views
+    - name: Template Files
+      topicUid: Specs.Cms.Templates
+    - name: Razor Templates
+      topicUid: Specs.Cms.Templates.Razor
+    - name: Token Templates
+      topicUid: Specs.Cms.Templates.Token
+    - name: App Folder Structure
+      topicUid: Specs.App.Folders
+    - topicUid: Specs.App.Icons
+    - name: Hide Features
+      topicUid: Concepts.HideAdvancedFeatures
+    - name: Permissions
+      topicUid: Concepts.Permissions
+    - name: Polymorph
+      topicUid: Specs.Cms.Polymorphism
+    - name: Inner Content
+      topicUid: Specs.Cms.InnerContent
+
+- name: CMS Technical
+  items:
+    - name: DNN Modules
+      topicUid: Specs.Cms.DnnModule
+    - name: Edit-Context Data
+      topicUid: Specs.Cms.EditContext
+
+
+- topicUid: Specs.DataSources.Intro
+  href: datasources/toc.yml
+
+- name: System Configuration
+  items:
+    - name: Features Concept
+      topicUid: Specs.Features.Concept
+    - name: Features API
+      topicUid: Specs.Features.Api
+
+- name: JavaScript and Html
+  topicUid: Specs.Js.Overview
+  items:
+    - name: Global $2sxc
+      topicUid: Specs.Js.$2sxc
+      items:
+        - name: $2sxc.cms...
+          topicUid: Specs.Js.$2sxc.Cms
+    - name: Instance Sxc
+      topicUid: Specs.Js.Sxc
+      items:
+        - name: Sxc.manage...
+          topicUid: Specs.Js.Sxc.Manage
+        - name: Sxc.webapi
+          topicUid: Specs.Js.Sxc.WebApi
+    - name: QuickE
+      topicUid: Specs.Js.QuickE
+    - name: Toolbars
+      topicUid: Specs.Js.Toolbar.Intro
+      items:
+        - name: JS Toolbar API
+          topicUid: Specs.Js.Toolbar.Js
+        - name: Settings
+          topicUid: Specs.Js.Toolbar.Settings
+        - name: Single Button
+          topicUid: Specs.Js.Toolbar.Buttons
+    - name: Commands
+      topicUid: Specs.Js.Commands
+      items:
+        - name: Custom Code
+          topicUid: Specs.Js.Commands.Code
+        - name: Content Items
+          topicUid: Specs.Js.Commands.ContentItems
+        - name: Delete
+          topicUid: Specs.Js.Commands.Delete
+
+- name: Angular Dnn-Sxc-Angular
+  items:
+    - name: Toolbars
+      topicUid: Specs.Angular.Toolbars
+    - name: AngularJs (old
+      topicUid: Specs.AngularJs
+
+- name: Style Guide (WIP)
+  topicUid: Specs.StyleGuide
+  items:
+    - name: Style Guide 2020 WIP
+      topicUid: Specs.StyleGuide2020
+
+- name: Roadmap & History
+  href: roadmap/toc.yml
+
+- name: Contribute & Docs
+  items:
+    - name: Contribute to Code
+      topicUid: Specs.Contribute
+    - name: Contribute to Docs
+      topicUid: Specs.DocsContribute
+    - name: Tags in Docs
+      topicUid: Specs.DocsTags

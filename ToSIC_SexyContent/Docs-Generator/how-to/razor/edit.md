@@ -19,7 +19,7 @@ Here's a quick example of using the `Edit` object in a Razor template:
 
 This example shows the title and will add the standard editing-buttons for the `Content` item.
 
-Here's an @Specs.Cms.InnerContent example:
+Here's an [](xref:Specs.Cms.InnerContent) example:
 
 ```html
 <div class="app-blog-text sc-content-block-list" @Edit.ContextAttributes(post, field: "DesignedContent")>
@@ -32,7 +32,7 @@ Here's an @Specs.Cms.InnerContent example:
 In this example, the `Edit.ContextAttributes` will add some attributes with JSON, which will help the toolbars _inside_ that loop to correctly edit those items, and not the main item around it.
 
 ## What's In the Edit Object
-The `Edit`-object is always available in all Razor-templates. Read the API: @ToSic.Sxc.Web.IInPageEditingSystem.
+The `Edit`-object is always available in all Razor-templates. Read the API: [](xref:ToSic.Sxc.Web.IInPageEditingSystem).
 
 A short summary of what's inside
 
@@ -66,7 +66,7 @@ for use in things like
 #### Create Context-Attributes for the UI (advanced use cases)
 
 `Edit.ContextAttributes(...)`  
-creates Context-Information for other edit-functionality. This is advanced, and currently only needed for @Specs.Cms.InnerContent) - read about it on [Razor Edit.ContextAttributes](xref:Razor.ContextAttributes]
+creates Context-Information for other edit-functionality. This is advanced, and currently only needed for [](xref:Specs.Cms.InnerContent)) - read about it on [Razor Edit.ContextAttributes](xref:Razor.ContextAttributes]
 
 
 
