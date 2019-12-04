@@ -4,7 +4,7 @@ uid: Specs.Roadmap.History
 
 # History of the EAV and 2sxc Code Base
 
-Here we'll track important changes, especially feature additions. @Articles.Changelog.BreakingChanges may also be relevant to you. 
+Here we'll track important changes, especially feature additions. [](xref:Specs.Roadmap.BreakingChanges) may also be relevant to you. 
 
 
 
@@ -117,3 +117,8 @@ didn't have time to document this yet, sorry.
 
 ### Version 10.01 - 10.09 LTS
 * Develop and fine-tuning of the new Edit-UI based on Angular 8
+
+### Version 10.20.05
+
+* Enhanced ListCache so it will prevent parallel buildup - important for long-loading DataSources like SharePoint DataSources
+* Updating to RazorBlade 3.1 which doesn't need extension methods

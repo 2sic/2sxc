@@ -22,6 +22,7 @@ We're documenting it here to ensure you know what happened, in case you still ru
 1. Renamed `ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute` to `ToSic.Eav.DataSources.Queries.VisualQueryAttribute`, old name still works.
 1. Renamed `ToSic.SexyContent.Environment.Dnn7.Factory` to `ToSic.Sxc.Dnn.Factory`, old name still works.
 1. Renamed `ToSic.Eav.DataSources.BaseDataSource` to `ToSic.Eav.DataSources.DataSourceBase` for consistency, old name still works.
+1. Moved the LookUp namespaces into the Core DLL
 
 #### Version 10.20.02 (ca. 2019-11-22)
 
