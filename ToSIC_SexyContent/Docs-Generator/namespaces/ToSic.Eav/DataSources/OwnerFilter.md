@@ -1,12 +1,13 @@
-# Data Source: OwnerFilter
+---
+uid: ToSic.Eav.DataSources.OwnerFilter
+---
 
-## Purpose / Description
-The **OwnerFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will only let items pass through, which a specific user (often the current one) has created initially. 
+The **OwnerFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will only let items pass through, which a specific user (often the current one) has created initially. 
 
 You will typically use the **OwnerFilter** in scenarios where users create their own data, and should only see/edit items which they own (usually in combination with security settings, which only allow the owner to modify their own items).
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. You must then edit the settings once - and usually you will use the recommended prefilled-form. But you can also do something different. This is what it usually looks like:
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Queries.VisualQueryAttribute) you can just drag it into your query. You must then edit the settings once - and usually you will use the recommended prefilled-form. But you can also do something different. This is what it usually looks like:
 
 <img src="/assets/data-sources/ownerfilter-configured.png" width="100%">
 
@@ -18,27 +19,16 @@ The above example shows:
 
 
 ## Programming With The OwnerFilter DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
-Because of limited resources we don't have code-examples. It works, but you'll probably never need it so we don't document it. 
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-FQN: `ToSic.Eav.DataSources.OwnerFilter`
-
-## Read also
-
-* [Source code of the OwnerFilter](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/OwnerFilter.cs)
-* [List of all EAV Data Sources][eavds]
-
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
 
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 3.x, 2sxc ?
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+[!include["Start-APIs"](shared-api-start.md)]

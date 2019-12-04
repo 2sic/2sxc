@@ -1,10 +1,8 @@
 
-- name: Articles
-  href: articles/
 - name: Specs
-  # xref: Specs.Home
-  homepage: specs/intro.md
+  href: specs/
+  homepage: specs/index.md
+- name: How To
+  topicUid: HowTo.Home
 - name: .net API
-  #href: obj/api/dot-net/
-  xref: Api.DotNet
-  homepage: api/dot-net/index.md
+  href: api/dot-net/index.html

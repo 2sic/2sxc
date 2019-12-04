@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Web.Hosting;
+using ToSic.Sxc;
 
 namespace ToSic.SexyContent.Environment.Dnn7.Installation
 {

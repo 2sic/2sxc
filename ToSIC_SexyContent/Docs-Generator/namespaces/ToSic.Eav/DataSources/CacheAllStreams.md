@@ -1,12 +1,13 @@
-# Data Source: CacheAllStreams
+---
+uid: ToSic.Eav.DataSources.CacheAllStreams
+---
 
-## Purpose / Description
-The **CacheAllStreams** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will cache all streams passing through it, based on the parameters which led to the current In-state.  
+The **CacheAllStreams** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will cache all streams passing through it, based on the parameters which led to the current In-state.  
 
 
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. You must then edit the settings once to set various timeouts. Note that every in-stream exists with the same name as an out-stream. This is what it usually looks like:
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Queries.VisualQueryAttribute) you can just drag it into your query. You must then edit the settings once to set various timeouts. Note that every in-stream exists with the same name as an out-stream. This is what it usually looks like:
 
 <img src="/assets/data-sources/cache-all-streams-basic.png" width="100%">
 
@@ -28,27 +29,16 @@ Note that the cache is extremely intelligent - it will ask all in-bound sources 
 
 
 ## Programming With The CacheAllStreams DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
-Because of limited resources we don't have code-examples. It works, but you'll have to figure it ouf if you need it. 
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-FQN: `ToSic.Eav.DataSources.Caches.CacheAllStreams`
-
-## Read also
-
-* [Source code of the CacheAllStreams](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/Caches/CacheAllStreams.cs)
-* [List of all EAV Data Sources][eavds]
-
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
 
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 3.x, 2sxc ?
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+[!include["Start-APIs"](shared-api-start.md)]

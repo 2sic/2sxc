@@ -2,9 +2,9 @@
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
-using ToSic.SexyContent.DataSources;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.DataSources;
+using ToSic.Sxc.LookUp;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Blocks
         public override bool ParentIsEntity => false;
 
         public override IBlockDataSource Data => _dataSource 
-            ?? (_dataSource = BlockDataSource.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log));
+            ?? (_dataSource = Block.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log));
 
         #region ContentBlock Definition Entity
 

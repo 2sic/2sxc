@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Engines
             CmsBlock = cmsBlock;
             var view = CmsBlock.View;
 
-            var templatePath = VirtualPathUtility.Combine(SexyContent.Internal.TemplateHelpers.GetTemplatePathRoot(view.Location, cmsBlock.App) + "/", view.Path);
+            var templatePath = VirtualPathUtility.Combine(TemplateHelpers.GetTemplatePathRoot(view.Location, cmsBlock.App) + "/", view.Path);
 
             Log.LinkTo(parentLog);
 

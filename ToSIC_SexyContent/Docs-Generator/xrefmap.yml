@@ -1,4 +1,80 @@
 references:
+
+# Important links
+# This doesn't really work :(
+#- uid: Api.DotNet
+#  name: .net API
+#  href: api/dot-net/index.html
+
+
+# Temp
 - uid: Temp.VisualQuery
   name: Visual Query
   href: https://2sxc.org/en/Learn/Visual-Query-Designer
+
+# Repos
+- uid: Repo.EavServer
+  name: EAV Server Code
+  href: https://github.com/2sic/eav-server/tree/master/ToSic.Eav.Core 
+
+
+# Apps
+- uid: AppsCatalog
+  name: Apps Catalog
+  href: https://2sxc.org/en/apps
+- uid: App.Accordion
+  name: Accordion App
+  href: https://2sxc.org/en/apps/app/accordion-for-collapsible-sections
+- uid: App.Blog
+  name: Blog App
+  href: https://2sxc.org/en/apps/app/dnn-blog-app-for-dnn-dotnetnuke
+- uid: App.TimelineJs
+  name: TimelineJs App
+  href: https://2sxc.org/en/apps/app/timelinejs-app-for-dnn-dotnetnuke
+- uid: App.TutorialJsToolbars
+  name: App Tutorial JS Toolbars
+  href: https://2sxc.org/en/apps/app/tutorial-for-the-javascript-apis-and-custom-toolbars
+- uid: App.Mobius
+  name: Mobius Forms App
+  href: (xref:App.Mobius)
+
+
+# Blogs
+- uid: Blog.CustomDataSource
+  name: Blog for custom data source
+  href: https://2sxc.org/en/blog/post/new-2sxc7-create-your-own-custom-datasource-for-visual-query
+- uid: Blog.DataVsContent
+  name: Differences Templating Data vs. Content
+  href: https://2sxc.org/en/blog/post/12-differences-when-templating-data-instead-of-content
+- uid: Blog.F12
+  name: Debugging with F12
+  href: https://2sxc.org/en/blog/post/debugging-javascript-errors-with-a-modern-browser-and-f12-(200)
+
+
+# Checklists
+- uid: Checklist.AdminsNoAdvFeatures
+  name: Prevent Admins from Using Advanced Features
+  href: https://azing.org/2sxc/r/t104-orQ
+
+
+# Features
+- uid: Feat.AppDataApi
+  name: App Data API
+  href: https://2sxc.org/en/Docs-Manuals/Feature/feature/3360
+- uid: Feat.AppConfig
+  name: App Configuration
+  href: https://2sxc.org/en/Docs-Manuals/Feature/feature/8182
+
+# Razor Blade Tutorials
+- uid: Tut.Razor.Home
+  name: Razor Tutorials
+  href: https://2sxc.org/dnn-tutorials/en/razor
+- uid: Tut.RazorBlade.Home
+  name: RazorBlade Tutorials
+  href: https://2sxc.org/dnn-tutorials/en/razor/
+- uid: Tut.RazorBlade.Text.Has
+  name: RazorBlade Text.Has(...) Tutorial
+  href: https://2sxc.org/dnn-tutorials/en/razor/blade120/page
+- uid: Tut.RazorBlade.Text.First
+  name: RazorBlade Text.First(...) Tutorial
+  href: https://2sxc.org/dnn-tutorials/en/razor/blade130/page

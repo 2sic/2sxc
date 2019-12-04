@@ -10,10 +10,10 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Dnn;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent
 {
@@ -29,9 +29,9 @@ namespace ToSic.SexyContent
                 if (_cmsBlockLoaded) return _cmsBlock;
                 _cmsBlockLoaded = true;
                 _cmsBlock = new BlockFromModule(
-                        new DnnInstanceInfo(ModuleConfiguration),
+                        new Container(ModuleConfiguration),
                         Log,
-                        new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
+                        new Tenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
                     .CmsInstance as CmsBlock;
                 return _cmsBlock;
             }
@@ -122,10 +122,12 @@ namespace ToSic.SexyContent
         /// </summary>
         private void RegisterResources()
         {
-            var loadJs = CmsBlock?.UiAddEditApi ?? false;
-            var loadCss = CmsBlock?.UiAddEditUi ?? false;
+            var editJs = CmsBlock?.UiAddEditApi ?? false;
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            var readJs = CmsBlock?.UiAddJsApi ?? editJs;
+            var editCss = CmsBlock?.UiAddEditUi ?? false;
 
-            if (!loadJs && !loadCss) return;
+            if (!readJs && !editJs && !editCss) return;
 
             Log.Add("user is editor, or template requested js/css, will add client material");
 
@@ -134,7 +136,7 @@ namespace ToSic.SexyContent
             // register scripts and css
             try
             {
-                new DnnRenderingHelpers(CmsBlock, Log).RegisterClientDependencies(Page, loadJs, loadCss);
+                new DnnRenderingHelpers(CmsBlock, Log).RegisterClientDependencies(Page, readJs, editJs, editCss);
             }
             catch (Exception ex)
             {

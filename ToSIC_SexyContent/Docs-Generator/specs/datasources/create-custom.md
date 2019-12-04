@@ -1,6 +1,9 @@
-# EAV DataSources: Creating Custom DataSources (2sxc 9.13)
+---
+uid: Specs.DataSources.Custom
+---
 
-## Purpose / Description
+# EAV DataSources: Create Your Custom DataSources
+
 If you want to create your own DataSource and use it in the VisualQuery designer, this is for you
 
 ## Basic Use Case
@@ -57,7 +60,7 @@ namespace ToSic.Tutorial.DataSource
 ## How it works
 Basically what you need are
 
-1. The **VisualQuery** attribute, so that this data-source will be shown in VisualQuery
+1. The [](xref:ToSic.Eav.DataSources).Query.VisualQueryAttribute attribute, so that this data-source will be shown in VisualQuery
 1. The **constructor**, which tells the source what Out-streams it has, in this case it's just the Default
 1. A **method** which gets the items, if ever requested
 
@@ -68,7 +71,7 @@ This source will only become available in the UI for use, if this attribute is g
 * NiceName (optional) a nice label in the UI
 * HelpLink (optional) a help-link
 
-there are more properties, but these are the important ones. 
+there are more properties, but these are the important ones. See [](xref:ToSic.Eav.DataSources).Query.VisualQueryAttribute
 
 ### More on the Constructor and Provide
 The constructor is in charge of _wiring up_ the data-source. It should not get any data - because the data may not be needed and because configuration isn't loaded yet. 
@@ -84,25 +87,14 @@ The first thing you need to know is that it won't be called if nobody requests t
 Note that `AsEntity` has many more features, which are not in this demo to keep it simpler. 
 
 
-## Notes and Clarifications
-We'll add some more advanced samples in a few days...
-
-## Read also
-todo
-
 ## Demo App and further links
-You should find some code examples in this visual studio project
+
+* [](xref:Specs.DataSources.Api.AsEntity)
 * [Basic DataSources for EAV and 2sxc](https://github.com/2sic/2sxc-eav-tutorial-custom-datasource)
 * [Blog about this feature](https://2sxc.org/en/blog/post/tutorial-custom-datasources-for-eav-2sxc-9-13-part-1)
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in 2sxc ca. 4 but with a difficult API
 1. API strongly enhanced and simplifield in 2sxc 09.13 
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
-[CustomizeData]:Razor-SexyContentWebPage.CustomizeData
-[InstancePurpose]:Razor-SexyContentWebPage.InstancePurpose
-[CustomizeSearch]:Razor-SexyContentWebPage.CustomizeSearch

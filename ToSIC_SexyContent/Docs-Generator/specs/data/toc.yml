@@ -1,0 +1,28 @@
+- name: AppState
+  topicUid: Specs.Data.AppState
+- name: Content Types
+  topicUid: Specs.Data.ContentTypes
+- name: Entities
+  topicUid: Specs.Data.Entities
+- name: Entity Relationships
+  topicUid: Specs.Data.Relationships
+- name: File Based Content-Types
+  topicUid: Specs.Data.FileBasedContentTypes
+- name: Metadata (WIP)
+  topicUid: Specs.Data.Metadata
+
+- name: Value Data Types
+  href: ../data-types/toc.yml
+  topicUid: Specs.Data.Values.Overview
+
+- name: Value Input Types
+  href: ../input-types/toc.yml
+  topicUid: Specs.Data.Inputs.Overview
+
+- name: Json Format
+  topicUid: Specs.Data.Formats.JsonV1
+  items:
+    - name: Json Entity
+      topicUid: Specs.Data.Formats.JsonV1-Entity
+    - name: Json ContentType
+      topicUid: Specs.Data.Formats.JsonV1-ContentType

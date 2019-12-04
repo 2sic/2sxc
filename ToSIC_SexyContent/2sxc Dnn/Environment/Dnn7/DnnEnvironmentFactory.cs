@@ -3,10 +3,11 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Dnn;
 using IApp = ToSic.Eav.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
+using PermissionCheckBase = ToSic.Eav.Security.PermissionCheckBase;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -28,6 +29,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
 
-        public AppAndDataHelpersBase AppAndDataHelpers(Sxc.Blocks.ICmsBlock cms) => new DnnAppAndDataHelpers(cms);
+        public Sxc.Web.DynamicCode AppAndDataHelpers(Sxc.Blocks.ICmsBlock cms) => new DynamicCode(cms);
     }
 }

@@ -1,10 +1,11 @@
-# Data Source: ValueFilter
+---
+uid: ToSic.Eav.DataSources.ValueFilter
+---
 
-## Purpose / Description
-The **ValueFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will filter items based on the values - and if none are found, will optionally return a fallback-list.
+The **ValueFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will filter items based on the values - and if none are found, will optionally return a fallback-list.
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Queries.VisualQueryAttribute) you can just drag it into your query. This is what it usually looks like:
 
 <img src="/assets/data-sources/value-filter-basic.png" width="100%">
 
@@ -38,9 +39,7 @@ The filter will return the items which match the requirement, but sometimes none
 
 
 ## Programming With The ValueFilter DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
-
-Because of limited resources we don't have many code-examples: 
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
 ```c#
 // A source which can filter by Content-Type (EntityType)
@@ -53,24 +52,15 @@ someAuthors.Attribute = "FullName";
 someAuthors.Value = "Daniel Mettler";
 
 ```
-FQN: `ToSic.Eav.DataSources.ValueFilter`
 
-## Read also
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-* [Source code of the ValueFilter](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/ValueFilter.cs)
-* [List of all EAV Data Sources][eavds]
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
-
-
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 3.x, 2sxc ?
 1. Enhanced in 2sxc 8.12 with fallback
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
 
-[eavds]: DotNet-DataSources-All
+[!include["Start-APIs"](shared-api-start.md)]

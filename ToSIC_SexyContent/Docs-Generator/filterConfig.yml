@@ -1,6 +1,6 @@
 ﻿attributeRules:
 - include: 
-    uid: ToSic.Eav.DataSources.VisualQuery.VisualQueryAttribute
+    uid: ToSic.Eav.DataSources.Query.VisualQueryAttribute
     type: Type
     type: Class
     type: Interface
@@ -17,6 +17,18 @@ apiRules:
 
 - exclude:
     uidRegex: ^System\.Attribute
+
+- exclude:
+    uidRegex: ^System\.IDisposable$
+
+- exclude:
+    uidRegex: ^System\.Web
+    # includes System.Web.WebPages and System.Web.ApiController
+
+- exclude:
+    uidRegex: ^DotNetNuke\.
+    # hides things like DotNetNuke.Web.Api.DnnApiController etc.
+
 
 # Exclude any tests
 - exclude:

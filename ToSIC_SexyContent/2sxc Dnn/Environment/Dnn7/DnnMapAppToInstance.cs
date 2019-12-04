@@ -6,14 +6,14 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.DataSources.Caching;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Internal;
+using ToSic.Sxc;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Interfaces;
-using ToSic.Sxc.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -69,7 +69,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, null, Log);
             else
             {
-                var appName = ((BaseCache)DataSource.GetCache(0, 0)).ZoneApps[zoneId].Apps[appId.Value];
+                var appName = ((RootCacheBase)DataSource.GetCache(0, 0)).ZoneApps[zoneId].Apps[appId.Value];
                 DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, appName, Log);
             }
 

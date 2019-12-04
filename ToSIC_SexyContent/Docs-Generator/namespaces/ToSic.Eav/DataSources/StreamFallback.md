@@ -1,10 +1,11 @@
-# Data Source: StreamFallback
+---
+uid: ToSic.Eav.DataSources.StreamFallback
+---
 
-## Purpose / Description
-The **StreamFallback** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It will pass on the first stream which has results. The order of evaluation is based on the names of the streams as they enter the StreamFallback. 
+The **StreamFallback** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It will pass on the first stream which has results. The order of evaluation is based on the names of the streams as they enter the StreamFallback. 
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. This is what it usually looks like:
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Queries.VisualQueryAttribute) you can just drag it into your query. This is what it usually looks like:
 
 <img src="/assets/data-sources/stream-fallback-4-stream-example.png" width="100%">
 
@@ -18,27 +19,14 @@ The StreamFallback therefor passes on the items provided by the author-filter. N
 
 
 ## Programming With The StreamFallback DataSource
-_Note: We recommend to use the Visual Query where possible, as it's easier to understand and is consistant for C# and JavaScript. It's also better because it separates data-retrieval from visualization._
+[!include["simpler-with-vqd"](shared-use-vqd.md)]
 
-Because of limited resources we don't have code-examples. 
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-FQN: `ToSic.Eav.DataSources.StreamFallback`
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
-## Read also
-
-* [Source code of the StreamFallback](//github.com/2sic/eav-server/blob/master/ToSic.Eav.DataSources/StreamFallback.cs)
-* [List of all EAV Data Sources][eavds]
-
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
-
-
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
 
 1. Introduced in EAV 3.x, 2sxc ?
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
-
-[eavds]: DotNet-DataSources-All
+[!include["Start-APIs"](shared-api-start.md)]

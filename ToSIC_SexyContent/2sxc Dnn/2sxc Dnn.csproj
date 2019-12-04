@@ -45,8 +45,8 @@
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.Extensions.DependencyInjection.1.1.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.1\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -61,7 +61,6 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Numerics" />
@@ -72,11 +71,9 @@
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -87,33 +84,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\AppDataDnnHelpers.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource.cs" />
     <Compile Include="Dnn920\SharpZipLibRedirect.cs" />
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
     <Compile Include="DnnHelper.cs" />
+    <Compile Include="Dnn\Factory.cs" />
     <Compile Include="Dnn\Interfaces\IDynamicWebApi.cs" />
     <Compile Include="Dnn\Interfaces\IDynamicCode.cs" />
     <Compile Include="Dnn\SecurityHelpers.cs" />
-    <Compile Include="Environment\Dnn7\DnnAppAndDataHelpers.cs" />
+    <Compile Include="Dnn\DynamicCodeHelper.cs" />
     <Compile Include="Environment\Dnn7\ClientDependencyManager.cs" />
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosAll.cs" />
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosEnvironment.cs" />
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosLanguages.cs" />
     <Compile Include="Environment\Dnn7\ClientInfos\ClientInfosUser.cs" />
-    <Compile Include="Environment\Dnn7\DataSources\DnnSqlDataSource.cs" />
-    <Compile Include="Environment\Dnn7\DataSources\DnnUserProfileDataSource.cs" />
-    <Compile Include="Environment\Dnn7\Deprecated\DnnSqlDataSource.cs" />
+    <Compile Include="Dnn\DataSources\DnnSql.cs" />
+    <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.DataSources.DnnSqlDataSource.cs" />
     <Compile Include="Environment\Dnn7\DnnFileSystem.cs" />
-    <Compile Include="Environment\Dnn7\DnnLinkHelper.cs" />
+    <Compile Include="Dnn\Web\LinkHelper.cs" />
     <Compile Include="Environment\Dnn7\DnnMapAppToInstance.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
-    <Compile Include="Environment\Dnn7\DnnInstanceInfo.cs" />
+    <Compile Include="Dnn\Container.cs" />
     <Compile Include="Environment\Dnn7\DnnPermissionCheck.cs" />
     <Compile Include="Environment\Dnn7\DnnRenderingHelpers.cs" />
-    <Compile Include="Environment\Dnn7\DnnTenant.cs" />
-    <Compile Include="Environment\Dnn7\EavImplementation\DnnValueConverter.cs" />
-    <Compile Include="Environment\Dnn7\Factory.cs" />
-    <Compile Include="Environment\Dnn7\FingerprintProvider.cs" />
+    <Compile Include="Dnn\Tenant.cs" />
+    <Compile Include="Dnn\ValueConverter.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.Factory.cs" />
+    <Compile Include="Dnn\FingerprintProvider.cs" />
     <Compile Include="Environment\Dnn7\ImportExportEnvironment.cs" />
     <Compile Include="Environment\Dnn7\ImportExport\DnnXmlExporter.cs" />
     <Compile Include="Environment\Dnn7\Installation\Helpers.cs" />
@@ -130,9 +130,9 @@
     <Compile Include="Search\SearchIndexException.cs" />
     <Compile Include="Environment\Dnn7\DnnEnvironmentFactory.cs" />
     <Compile Include="Environment\Dnn7\DnnUser.cs" />
-    <Compile Include="Environment\Dnn7\ValueProviders\DnnLookUps.cs" />
-    <Compile Include="Environment\Dnn7\ValueProviders\TokenReplaceDnn.cs" />
-    <Compile Include="Environment\Dnn7\ValueProviders\LookUpInDnnPropertyAccess.cs" />
+    <Compile Include="Dnn\LookUp\GetDnnEngine.cs" />
+    <Compile Include="Dnn\LookUp\TokenReplaceDnn.cs" />
+    <Compile Include="Dnn\LookUp\LookUpInDnnPropertyAccess.cs" />
     <Compile Include="Environment\Dnn7\ZoneMapper.cs" />
     <Compile Include="Environment\DnnEnvironment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

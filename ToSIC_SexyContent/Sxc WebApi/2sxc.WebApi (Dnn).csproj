@@ -7,7 +7,7 @@
     <ProjectGuid>{8398FE44-7164-48CB-96CF-74BA9C270BD2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ToSic.SexyContent.WebApi</RootNamespace>
+    <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.SexyContent.WebApi</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -66,6 +66,9 @@
     <Reference Include="JetBrains.Annotations, Version=10.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\JetBrains.Annotations.10.2.1\lib\net\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -78,6 +81,7 @@
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\eav-server\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
@@ -93,80 +97,82 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adam\AdamSecureState.cs" />
-    <Compile Include="Adam\AdamItem.cs" />
-    <Compile Include="Adam\AdamUploader.cs" />
-    <Compile Include="Adam\SecurityChecks.cs" />
-    <Compile Include="Adam\UploadResult.cs" />
-    <Compile Include="AppContentEntityBuilder.cs" />
-    <Compile Include="AutoDetectContext\Route.cs" />
-    <Compile Include="EavApiProxies\UiController_Save.cs" />
-    <Compile Include="EavApiProxies\UiController_Load.cs" />
-    <Compile Include="EavApiProxies\ValidatorBase.cs" />
-    <Compile Include="EavApiProxies\SaveDataValidator.cs" />
-    <Compile Include="AutoDetectContext\AppFinder.cs" />
-    <Compile Include="ImportExport\ExtensionsForIApp.cs" />
-    <Compile Include="Permissions\IMultiPermissionCheck.cs" />
-    <Compile Include="Permissions\MultiPermissionsBase.cs" />
-    <Compile Include="Permissions\MultiPermissionsApp.cs" />
-    <Compile Include="Permissions\MultiPermissionsTypes.cs" />
-    <Compile Include="Permissions\MultiPermissionsItems.cs" />
-    <Compile Include="Permissions\PermissionCheckWithEnsure.cs" />
-    <Compile Include="Permissions\PublicFormsPermissions.cs" />
-    <Compile Include="Permissions\ReuseApp.cs" />
-    <Compile Include="RouteParts.cs" />
-    <Compile Include="SaveHelpers\ContentGroupList.cs" />
-    <Compile Include="SaveHelpers\DnnPublishing.cs" />
-    <Compile Include="SaveHelpers\SaveHelperBase.cs" />
-    <Compile Include="SaveHelpers\Security.cs" />
-    <Compile Include="System\Insights\InsightsController_IsAlive.cs" />
-    <Compile Include="System\Insights\InsightsController_App.cs" />
-    <Compile Include="System\Insights\InsightsController_Help.cs" />
-    <Compile Include="System\Insights\InsightsController_Entities.cs" />
-    <Compile Include="System\Insights\InsightsController_Log.cs" />
-    <Compile Include="System\Insights\InsightsController_Metadata.cs" />
-    <Compile Include="System\Insights\InsightsController_Attributes.cs" />
-    <Compile Include="System\Insights\InsightsController_ParamChecks.cs" />
-    <Compile Include="System\Insights\InsightsController_Types.cs" />
-    <Compile Include="System\Insights\InsightsController_AppActions.cs" />
-    <Compile Include="System\Insights\InsightsController_Html.cs" />
-    <Compile Include="EavApiProxies\SystemController.cs" />
-    <Compile Include="EavApiProxies\AllInOne.cs" />
-    <Compile Include="EavApiProxies\UiController.cs" />
-    <Compile Include="Errors\Http.cs" />
-    <Compile Include="FeaturesManagementUtils.cs" />
-    <Compile Include="System\Insights\InsightsController.cs" />
-    <Compile Include="SxcApiControllerBase.cs" />
-    <Compile Include="WebApiLogDetails.cs" />
-    <Compile Include="Adam\AdamController.cs" />
-    <Compile Include="AppApiControllerSelector.cs" />
-    <Compile Include="AppAssetsController.cs" />
-    <Compile Include="AppContentController.cs" />
-    <Compile Include="AppQueryController.cs" />
-    <Compile Include="ContentGroupController.cs" />
-    <Compile Include="Dnn\DnnApiControllerWithFixes.cs" />
-    <Compile Include="Dnn\HyperlinkController.cs" />
-    <Compile Include="Dnn\ModuleController.cs" />
-    <Compile Include="EavApiProxies\ContentExportController.cs" />
-    <Compile Include="EavApiProxies\ContentImportController.cs" />
-    <Compile Include="EavApiProxies\ContentTypeController.cs" />
-    <Compile Include="EavApiProxies\EntitiesController.cs" />
-    <Compile Include="EavApiProxies\EntityPickerController.cs" />
-    <Compile Include="EavApiProxies\MetadataController.cs" />
-    <Compile Include="EavApiProxies\PipelineDesignerController.cs" />
-    <Compile Include="Helpers.cs" />
-    <Compile Include="ImportExportController.cs" />
-    <Compile Include="ImportExport\HttpResponseMessageHelper.cs" />
-    <Compile Include="ImportExport\SxcAppForWebApi.cs" />
-    <Compile Include="InstallerController.cs" />
+    <Compile Include="Adam\WebApi\AdamSecureState.cs" />
+    <Compile Include="Adam\WebApi\AdamItem.cs" />
+    <Compile Include="Adam\WebApi\AdamUploader.cs" />
+    <Compile Include="Adam\WebApi\SecurityChecks.cs" />
+    <Compile Include="Adam\WebApi\UploadResult.cs" />
+    <Compile Include="Dnn\ApiController.cs" />
+    <Compile Include="Dnn\ApiController_Obsolete.cs" />
+    <Compile Include="WebApi\App\AppContentEntityBuilder.cs" />
+    <Compile Include="WebApi\Routing\Route.cs" />
+    <Compile Include="WebApi\Cms\EditUi\UiController_Save.cs" />
+    <Compile Include="WebApi\Cms\EditUi\UiController_Load.cs" />
+    <Compile Include="WebApi\Helpers\ValidatorBase.cs" />
+    <Compile Include="WebApi\Cms\SaveDataValidator.cs" />
+    <Compile Include="WebApi\Routing\AppFinder.cs" />
+    <Compile Include="WebApi\ImportExport\ExtensionsForIApp.cs" />
+    <Compile Include="Security\IMultiPermissionCheck.cs" />
+    <Compile Include="Security\MultiPermissionsBase.cs" />
+    <Compile Include="Security\MultiPermissionsApp.cs" />
+    <Compile Include="Security\MultiPermissionsTypes.cs" />
+    <Compile Include="Security\MultiPermissionsItems.cs" />
+    <Compile Include="Security\PermissionCheckWithEnsure.cs" />
+    <Compile Include="Security\PublicFormsPermissions.cs" />
+    <Compile Include="WebApi\Routing\RouteParts.cs" />
+    <Compile Include="WebApi\Helpers\ContentGroupList.cs" />
+    <Compile Include="Dnn\DnnPublishing.cs" />
+    <Compile Include="WebApi\Helpers\SaveHelperBase.cs" />
+    <Compile Include="Security\Security.cs" />
+    <Compile Include="WebApi\DynamicApiController.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsController_IsAlive.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsController_App.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsController_Help.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsController_Entities.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsController_Log.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsController_Metadata.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsController_Attributes.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsController_ParamChecks.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsController_Types.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsController_AppActions.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsController_Html.cs" />
+    <Compile Include="WebApi\Cms\SystemController_Features.cs" />
+    <Compile Include="WebApi\Cms\EditUi\AllInOne.cs" />
+    <Compile Include="WebApi\Cms\EditUi\UiController.cs" />
+    <Compile Include="WebApi\Helpers\HttpErrors.cs" />
+    <Compile Include="WebApi\Cms\Helpers\FeaturesManagementUtils.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsController.cs" />
+    <Compile Include="WebApi\SxcApiControllerBase.cs" />
+    <Compile Include="WebApi\Helpers\WebApiLogDetails.cs" />
+    <Compile Include="Adam\WebApi\AdamController.cs" />
+    <Compile Include="WebApi\Routing\AppApiControllerSelector.cs" />
+    <Compile Include="WebApi\Cms\AppAssetsController.cs" />
+    <Compile Include="WebApi\App\AppContentController.cs" />
+    <Compile Include="WebApi\App\AppQueryController.cs" />
+    <Compile Include="WebApi\Cms\ContentGroupController.cs" />
+    <Compile Include="Dnn\WebApi\DnnApiControllerWithFixes.cs" />
+    <Compile Include="Dnn\WebApi\HyperlinkController.cs" />
+    <Compile Include="Dnn\WebApi\ModuleController.cs" />
+    <Compile Include="WebApi\Cms\ContentExportController.cs" />
+    <Compile Include="WebApi\Cms\ContentImportController.cs" />
+    <Compile Include="WebApi\Cms\ContentTypeController.cs" />
+    <Compile Include="WebApi\Cms\EntitiesController.cs" />
+    <Compile Include="WebApi\Cms\EditUi\EntityPickerController.cs" />
+    <Compile Include="WebApi\Cms\MetadataController.cs" />
+    <Compile Include="WebApi\Cms\PipelineDesignerController.cs" />
+    <Compile Include="WebApi\Helpers\Helpers.cs" />
+    <Compile Include="WebApi\Cms\ImportExportController.cs" />
+    <Compile Include="WebApi\ImportExport\HttpResponseMessageHelper.cs" />
+    <Compile Include="WebApi\ImportExport\SxcAppForWebApi.cs" />
+    <Compile Include="WebApi\Cms\InstallerController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouteMapper.cs" />
-    <Compile Include="SxcApiController.cs" />
-    <Compile Include="SxcWebApiExceptionHandling.cs" />
-    <Compile Include="SystemController.cs" />
-    <Compile Include="TemplateController.cs" />
-    <Compile Include="ToRefactorDeliverCBDataLight\GetContentBlockDataLight.cs" />
-    <Compile Include="View\ModuleController.cs" />
+    <Compile Include="WebApi\Routing\RouteMapper.cs" />
+    <Compile Include="SexyContent\WebApi\SxcApiController.cs" />
+    <Compile Include="WebApi\Helpers\SxcWebApiExceptionHandling.cs" />
+    <Compile Include="WebApi\Cms\SystemController.cs" />
+    <Compile Include="WebApi\Cms\TemplateController.cs" />
+    <Compile Include="WebApi\Cms\Refactor\GetContentBlockDataLight.cs" />
+    <Compile Include="WebApi\Cms\ModuleController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Engines.Razor
     /// <summary>
     /// helper to quickly "raw" some html.
     /// </summary>
-    [PrivateApi("basically shouldn't be used, because @: does the same thing")]
+    [PrivateApi]
     public class HtmlHelper: IHtmlHelper
     {
         /// <inheritdoc/>

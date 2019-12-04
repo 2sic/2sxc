@@ -12,10 +12,12 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Search;
+using ToSic.Sxc.Web;
+using DynamicCode = ToSic.Sxc.Dnn.DynamicCode;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Engines
@@ -29,7 +31,7 @@ namespace ToSic.Sxc.Engines
     public class RazorEngine : EngineBase
     {
         [PrivateApi]
-        protected SexyContentWebPage Webpage { get; set; }
+        protected /*SexyContentWebPage*/ RazorComponentBase  Webpage { get; set; }
 
         /// <inheritdoc />
         [PrivateApi]
@@ -51,17 +53,18 @@ namespace ToSic.Sxc.Engines
         protected HttpContextBase HttpContext 
             => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
 
-        [PrivateApi("not sure if this is actually sued anywhere?")]
-        public Type RequestedModelType()
-        {
-            if (Webpage != null)
-            {
-                var webpageType = Webpage.GetType();
-                if (webpageType.BaseType.IsGenericType)
-                    return webpageType.BaseType.GetGenericArguments()[0];
-            }
-            return null;
-        }
+        // 2019-11-28 2dm disabled, don't think it's used
+        //[PrivateApi("not sure if this is actually used anywhere?")]
+        //public Type RequestedModelType()
+        //{
+        //    if (Webpage != null)
+        //    {
+        //        var webpageType = Webpage.GetType();
+        //        if (webpageType.BaseType.IsGenericType)
+        //            return webpageType.BaseType.GetGenericArguments()[0];
+        //    }
+        //    return null;
+        //}
 
         [PrivateApi]
         public void Render(TextWriter writer)
@@ -119,14 +122,16 @@ namespace ToSic.Sxc.Engines
             }
         }
 
-        private void InitHelpers(SexyContentWebPage webPage)
+        private void InitHelpers(RazorComponentBase webPage)
         {
             webPage.Html = new Razor.HtmlHelper();
             // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
             // reactivate if it turns out to be used, otherwise delete ca. EOY 2019
             //webPage.Url = new UrlHelper(InstInfo);
-            webPage.Sexy = CmsBlock;
-            webPage.DnnAppAndDataHelpers = new DnnAppAndDataHelpers(CmsBlock);
+
+            // deprecated 2019-11-28 2dm, it's also in the CmsBlock
+            // webPage.Sexy = CmsBlock;
+            webPage.DynCode = new DynamicCode(CmsBlock);
 
         }
 
@@ -139,23 +144,25 @@ namespace ToSic.Sxc.Engines
             if (objectValue == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", TemplatePath));
 
-            Webpage = objectValue as SexyContentWebPage;
+            Webpage = objectValue as RazorComponentBase;// SexyContentWebPage;
 
             if ((Webpage == null))
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from SexyContentWebPage.", TemplatePath));
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
-            Webpage.Purpose = Purpose;
+            if(Webpage is RazorComponent rzrPage)
+                rzrPage.Purpose = Purpose;
 #pragma warning disable 618
-            Webpage.InstancePurpose = (InstancePurposes) Purpose;
+            if(Webpage is SexyContentWebPage oldPage)
+                oldPage.InstancePurpose = (InstancePurposes) Purpose;
 #pragma warning restore 618
             InitHelpers(Webpage);
         }
 
         /// <inheritdoc />
         public override void CustomizeData() 
-            => Webpage?.CustomizeData();
+            => (Webpage as IRazorComponent)?.CustomizeData();
 
         /// <inheritdoc />
         public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate)
@@ -163,11 +170,11 @@ namespace ToSic.Sxc.Engines
             if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
 
             // call new signature
-            Webpage.CustomizeSearch(searchInfos, moduleInfo, beginDate);
+            (Webpage as RazorComponent)?.CustomizeSearch(searchInfos, moduleInfo, beginDate);
 
             // also call old signature
             var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());
-            Webpage.CustomizeSearch(oldSignature, ((Container<ModuleInfo>) moduleInfo).Original, beginDate);
+            (Webpage as SexyContentWebPage)?.CustomizeSearch(oldSignature, ((Container<ModuleInfo>) moduleInfo).Original, beginDate);
         }
     }
 }

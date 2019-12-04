@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -8,6 +9,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
 using Constants = ToSic.Eav.Constants;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -42,6 +44,10 @@ namespace ToSic.Sxc.Code
 
 
         #region AsDynamic and AsEntity
+
+        /// <inheritdoc />
+        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => Parent?.AsDynamic(json, fallback);
+
         public dynamic AsDynamic(IEntity entity) => Parent?.AsDynamic(entity);
 
         [PrivateApi]
@@ -50,8 +56,8 @@ namespace ToSic.Sxc.Code
 
         public dynamic AsDynamic(dynamic dynamicEntity) => Parent?.AsDynamic(dynamicEntity);
 
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) 
-            => Parent?.AsDynamic(entityKeyValuePair);
+        //public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) 
+        //    => Parent?.AsDynamic(entityKeyValuePair);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
@@ -78,10 +84,10 @@ namespace ToSic.Sxc.Code
 
         [Obsolete("use CreateSource<T> instead")]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-            ITokenListFiller configurationProvider = null)
-            => Parent?.CreateSource(typeName, inSource, configurationProvider);
+            ILookUpEngine lookUpEngine = null)
+            => Parent?.CreateSource(typeName, inSource, lookUpEngine);
 
-        public T CreateSource<T>(IDataSource inSource = null, ITokenListFiller configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
             => Parent.CreateSource<T>(inSource, configurationProvider);
 

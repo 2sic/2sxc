@@ -5,30 +5,23 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Apps
 {
     /// <summary>
-    /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
+    /// A <em>single-use</em> app-object providing quick simple api to access
+    /// name, folder, data, metadata etc.
     /// </summary>
+    [PublicApi]
     public class App : Eav.Apps.App, IApp
     {
         #region Dynamic Properties: Configuration, Settings, Resources
-        public AppConfiguration Configuration
-        {
-            get
-            {
-                _appConfig = !_configLoaded && AppConfiguration != null
-                    ? new AppConfiguration(AppConfiguration, Log)
-                    : new AppConfiguration(null, Log);
+        /// <inheritdoc />
+        public AppConfiguration Configuration => _appConfig
+                                                 // Create config object. Note that AppConfiguration could be null, then it would use default values
+                                                 ?? (_appConfig = new AppConfiguration(AppConfiguration, Log));
 
-                _configLoaded = true;
-                return _appConfig;
-            }
-        }
-        private bool _configLoaded;
-        //private dynamic _config;
         private AppConfiguration _appConfig;
 
         [PrivateApi("obsolete, use the typed accessor instead, only included for old-compatibility")]
@@ -43,6 +36,7 @@ namespace ToSic.Sxc.Apps
             }
         }
 
+        /// <inheritdoc />
         public dynamic Settings
         {
             get
@@ -56,6 +50,7 @@ namespace ToSic.Sxc.Apps
         private bool _settingsLoaded;
         private dynamic _settings;
 
+        /// <inheritdoc />
         public dynamic Resources
         {
             get
@@ -75,6 +70,7 @@ namespace ToSic.Sxc.Apps
         /// <summary>
         /// New constructor which auto-configures the app-data
         /// </summary>
+        [PrivateApi]
         public App(ITenant tenant, 
             int zoneId, 
             int appId, 
@@ -84,7 +80,9 @@ namespace ToSic.Sxc.Apps
             : base(tenant, zoneId, appId, allowSideEffects, buildConfig, parentLog) { }
 
         #region Paths
+        /// <inheritdoc />
         public string Path => VirtualPathUtility.ToAbsolute(GetRootPath());
+        /// <inheritdoc />
         public string Thumbnail => System.IO.File.Exists(PhysicalPath + IconFile) ? Path + IconFile : null;
 
         #endregion

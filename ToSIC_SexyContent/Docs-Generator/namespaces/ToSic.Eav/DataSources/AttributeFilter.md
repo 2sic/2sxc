@@ -2,11 +2,10 @@
 uid: ToSic.Eav.DataSources.AttributeFilter
 ---
 
-## Purpose / Description
-The **AttributeFilter** [DataSource](xref:ToSic.Eav.DataSources.IDataSource) is part of the [Standard EAV Data Sources][eavds]. It removes values from items so that the result is smaller, and doesn't publish confidential data. It's primarily used when providing data as JSON, so that not all values are published. 
+The **AttributeFilter** [DataSource](xref:Specs.DataSources.DataSource) is part of the [Standard EAV Data Sources](xref:Specs.DataSources.ListAll). It removes values from items so that the result is smaller, and doesn't publish confidential data. It's primarily used when providing data as JSON, so that not all values are published. 
 
 ## How to use with the Visual Query
-When using the [Visual Query](xref:Temp.VisualQuery) you can just drag it into your query. Now you can configure what properties you want and not. The following shows a demo which delivers both the data as-is, and also filtered to only deliver `Name` and `Country`:
+When using the [Visual Query](xref:ToSic.Eav.DataSources.Queries.VisualQueryAttribute) you can just drag it into your query. Now you can configure what properties you want and not. The following shows a demo which delivers both the data as-is, and also filtered to only deliver `Name` and `Country`:
 
 <img src="/assets/data-sources/attribute-filter-basic.png" width="100%">
 
@@ -52,23 +51,17 @@ This is what you get on the filtered stream:
 As you can see, the secret `Notes` and the `Categories` are not in the _Cleaned_ stream any more. 
 There are three common use cases: 
 
+## Programming With The Attribute Filter
+
 [!include["simpler-with-vqd"](shared-use-vqd.md)]
 
+[!include["Read-Also-Section"](shared-read-also.md)]
 
-## Read also
-
-* [List of all EAV Data Sources][eavds]
-
-## Demo App and further links
-You should find some examples in this demo App
-* [Demo App with examples for most DataSources](https://github.com/2sic/app-demo-visual-query/releases/latest)
+[!include["Demo-App-Intro"](shared-demo-app.md)]
 
 
-## History
-[//]: # "If possible, tell when it was added or modified strongly"
+[!include["Heading-History"](shared-history.md)]
+1. Introduced in EAV 3.x, 2sxc ca. v6
 
-1. Introduced in EAV 3.x, 2sxc ?
 
-[//]: # "The following lines are a list of links used in this page, referenced from above"
-
-[eavds]: DotNet-DataSources-All
+[!include["Start-APIs"](shared-api-start.md)]

@@ -1,6 +1,5 @@
 ﻿---
 uid: ToSic.Eav.Security
-summary: *content
 ---
 
 Security is a first-class citizen in the EAV. 

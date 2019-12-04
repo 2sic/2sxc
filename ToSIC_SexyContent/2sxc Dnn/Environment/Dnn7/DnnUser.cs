@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Security;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
+    [PrivateApi("should probably be changed once we have IUser<T>")]
     public class DnnUser: IUser
     {
         private static string GetUserIdentityToken ()

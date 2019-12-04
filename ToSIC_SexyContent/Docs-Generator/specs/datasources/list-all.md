@@ -1,15 +1,17 @@
-# All DataSource Objects in 2sxc / EAV (dotnet)
+---
+uid: Specs.DataSources.ListAll
+---
+# All DataSource Objects in 2sxc / EAV
 
-## Purpose / Description
-2sxc provides a large set of [DataSource](DotNet-DataSource) objects which either get data from somewhere (SQL, CSV, ...) or modify data on the `In` and passing it to `Out`. This page will give you an overview and link you to further sources if you need to know more. 
+2sxc provides a large set of [DataSource](xref:Specs.DataSources.DataSource) objects which either get data from somewhere (SQL, CSV, ...) or modify data on the `In` and passing it to `Out`. This page will give you an overview and link you to further sources if you need to know more. 
 
 ## How to use
-Many data-sources are simply used in the [Visual Query](xref:Temp.VisualQuery), and if all you want is visual-query, then this reference will give you an overview regarding what things are possible. It will usually look like this: 
+Many data-sources are simply used in the [Visual Query](xref:ToSic.Eav.DataSources.Queries.VisualQueryAttribute), and if all you want is visual-query, then this reference will give you an overview regarding what things are possible. It will usually look like this: 
 
 <img src="/assets/data-sources/app-out-2-in-0.png" width="100%">
 
 
-If on the other hand you want to program with these [DataSource](DotNet-DataSource) objects, then it will usually look a bit like this: 
+If on the other hand you want to program with these [DataSource](xref:Specs.DataSources.DataSource) objects, then it will usually look a bit like this: 
 
 An example code 
 
@@ -27,7 +29,7 @@ sortedAuthors.Attributes = "FullName";
 The previous example creates an initial source `allAuthors` which has all data on the in, then filters to only provide those of type _Author_ to the out. This is then piped to the `sortedAuthors`, which sorts on the _Attributes_ field. 
 
 ## Understanding Data-Flow and Configuration
-This is explained in the [DataSource documentation](DotNet-DataSource). 
+This is explained in the [DataSource documentation](xref:Specs.DataSources.DataSource). 
 
 ## All Public DataSources
 These are all the data sources which are either provided in the default installation of 2sxc, or which are available for you to install (manually). 
@@ -43,7 +45,7 @@ These are all the data sources which are either provided in the default installa
     <td><strong>Description &amp; Details</strong></td>
   </tr>
   <tr>
-    <td><a href="DotNet-DataSource-App">App</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.App">App</a></td>
     <td>Organize</td>
     <td>
       <details>
@@ -54,7 +56,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
-    <td><a href="DotNet-DataSource-AttributeFilter">AttributeFilter</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.AttributeFilter">AttributeFilter</a></td>
     <td>Modify</td>
     <td>
       <details>
@@ -75,7 +77,6 @@ These are all the data sources which are either provided in the default installa
         </summary>
           The
       base class for all system caches (QuickCache, FarmCache, etc.) <br>
-      <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/Caches/BaseCache.cs">BaseCache code</a>
       </details>
   </tr>
   <tr>
@@ -87,11 +88,10 @@ These are all the data sources which are either provided in the default installa
           Base class (...)
         </summary>
           This is just a base class. <br>
-          <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/BaseDataSource.cs">BaseDataSource code</a>
       </details>
   </tr>
   <tr>
-    <td><a href="DotNet-DataSource-CacheAllStreams">CacheAllStreams</a></td>
+    <td>CacheAllStreams</td>
     <td>Caching</td>
     <td>
       <details>
@@ -102,7 +102,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
-    <td><a href="DotNet-DataSource-ContentTypeFilter">ContentTypeFilter</a> EntityTypeFilter </td>
+    <td><a href="xref:ToSic.Eav.DataSources.EntityTypeFilter">ContentTypeFilter</a> EntityTypeFilter </td>
     <td>Filter</td>
     <td>
       <details>
@@ -115,7 +115,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
-    <td>CsvDataSource</td>
+    <td>[CsvDataSource](xref:ToSic.Eav.DataSources.CsvDataSource)</td>
     <td>Get Data</td>
     <td>
       <details>
@@ -124,8 +124,7 @@ These are all the data sources which are either provided in the default installa
         </summary>
           Lets you read a CSV file and provide the data as
       Entities for further use.<br>
-      not well documented yet, see <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/CsvDataSource.cs">code here</a><br>
-      <code>ToSic.Eav.DataSources.CsvDataSource</code>
+      not well documented yet, see <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/CsvDataSource.cs">code here</a>
       </details>  </tr>
   <tr>
     <td>DataTable DataSource</td>
@@ -138,9 +137,7 @@ These are all the data sources which are either provided in the default installa
           Lets
       you convert a .net DataTable object into a DataSource. This is great for when
       you find it easier to generate a DataTable, and this will auto-provide it as
-      a stream.<br>
-      <code>ToSic.Eav.DataSources.DataTableDataSource</code> <br>
-      <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/DataTableDataSource.cs">DataTable DataSource code</a>
+      a stream.
       </details>
   </tr>
   <tr>
@@ -174,15 +171,14 @@ These are all the data sources which are either provided in the default installa
       </details> 
   </tr>
   <tr>
-    <td><a href="DotNet-DataSource-DnnSqlDataSource">DnnSql DataSource</a>
-    </td>
+    <td>DnnSql DataSource</td>
     <td>Get Data</td>
     <td>
       <details>
         <summary>
           DNN Sql DataSource (...)
         </summary>
-          SqlDataSource which only uses the DNN DB and nothing else, based on the SqlDataSource
+          Sql which only uses the DNN DB and nothing else, based on the Sql DataSource
       </details>
   </tr>
   <tr>
@@ -215,7 +211,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
-    <td><a href="DotNet-DataSource-ItemIdFilter">ItemIdFilter</a> EntityIdFilter</td>
+    <td><a href="xref:ToSic.Eav.DataSources.EntityIdFilter">ItemIdFilter</a> EntityIdFilter</td>
     <td>Filter</td>
     <td>
       <details>
@@ -230,7 +226,7 @@ These are all the data sources which are either provided in the default installa
 
 
   <tr>
-    <td><a href="DotNet-DataSource-ItemFilterDuplicates">ItemFilterDuplicates</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.ItemFilterDuplicates">ItemFilterDuplicates</a></td>
     <td>Logic</td>
     <td>
       <details>
@@ -242,8 +238,7 @@ These are all the data sources which are either provided in the default installa
   </tr>
 
   <tr>
-    <td><a href="DotNet-DataSource-ModuleDataSource">Module-Instance DataSource</a>
-    </td>
+    <td>Module-Instance DataSource</td>
     <td>Get Data</td>
     <td>
       <details>
@@ -254,7 +249,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
-    <td><a href="DotNet-DataSource-OwnerFilter">OwnerFilter</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.OwnerFilter">OwnerFilter</a></td>
     <td>Filter</td>
     <td>
       <details>
@@ -267,7 +262,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
-    <td><a href="DotNet-DataSource-Paging">Paging</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.Paging">Paging</a></td>
     <td>Logic</td>
     <td>
       <details>
@@ -278,7 +273,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
-    <td>PassThrough</td>
+    <td>[PassThrough](xref:ToSic.Eav.DataSources.PassThrough)</td>
     <td>(internal)</td>
     <td>
       <details>
@@ -287,13 +282,10 @@ These are all the data sources which are either provided in the default installa
         </summary>
           This data source doesn't actually do anything - it
       just lets the data on the in to the out. For (internal) and testing stuff.
-      <br>
-      <code>ToSic.Eav.DataSources.PassThrough</code> <br>
-      <a href="/2sic/eav-server/blob/master/ToSic.Eav.DataSources/PassThrough.cs">PassThrough code</a>
       </details>
   </tr>
   <tr >
-    <td ><a href="DotNet-DataSource-PublishingFilter">PublishingFilter</a></td>
+    <td ><a href="xref:ToSic.Eav.DataSources.PublishingFilter">PublishingFilter</a></td>
     <td>Filter</td>
     <td>
       <details>
@@ -322,7 +314,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr >
-    <td><a href="DotNet-DataSource-RelationshipFilter">RelationshipFilter</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.RelationshipFilter">RelationshipFilter</a></td>
     <td >Filter</td>
     <td>
       <details>
@@ -333,7 +325,7 @@ These are all the data sources which are either provided in the default installa
       New in 8.12: In-Stream "Fallback" which is returned if the filter didn't return any hits.
       </details>  </tr>
   <tr>
-    <td><a href="DotNet-DataSource-SqlDataSource">SqlDataSource</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.Sql">Sql</a></td>
     <td>Get Data</td>
     <td>
       <details>
@@ -346,7 +338,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
     <tr>
-    <td><a href="DotNet-DataSource-Shuffle">Shuffle</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.Shuffle">Shuffle</a></td>
     <td>Logic</td>
     <td>
       <details>
@@ -357,7 +349,7 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
-    <td><a href="DotNet-DataSource-StreamFallback">StreamFallback</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.StreamFallback">StreamFallback</a></td>
     <td>Logic</td>
     <td>
       <details>
@@ -369,7 +361,7 @@ These are all the data sources which are either provided in the default installa
   </tr>
 
   <tr>
-    <td><a href="DotNet-DataSource-StreamMerge">StreamMerge</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.StreamMerge">StreamMerge</a></td>
     <td>Logic</td>
     <td>
       <details>
@@ -382,7 +374,7 @@ These are all the data sources which are either provided in the default installa
 
 
   <tr >
-    <td><a href="DotNet-DataSource-ValueFilter">ValueFilter</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.ValueFilter">ValueFilter</a></td>
     <td>Filter</td>
     <td>
       <details>
@@ -393,7 +385,7 @@ These are all the data sources which are either provided in the default installa
       New in 8.12: In-Stream "Fallback" which is returned if the filter didn't return any hits. 
       </details>  </tr>
   <tr>
-    <td><a href="DotNet-DataSource-ValueSort">ValueSort</a></td>
+    <td><a href="xref:ToSic.Eav.DataSources.ValueSort">ValueSort</a></td>
     <td>Sort</td>
     <td>
       <details>
@@ -443,17 +435,7 @@ These are all the data sources which are either provided in the default installa
 
 
 
-## Notes and Clarifications
-[//]: # "just add your special cases etc. here"
-...
-
-## Read also
-[//]: # "Additional links - often within this documentation, but can also go elsewhere"
-
-* ...
-
 ## Demo App and further links
-[//]: # "Apps which provide sample code using this"
 
 You should find some code examples in this demo App
 * ...
@@ -461,10 +443,8 @@ You should find some code examples in this demo App
 More links: [Description of the feature on 2sxc docs](http://2sxc.org/en/Docs-Manuals/Feature/feature/2683)
 
 ## History
-[//]: # "If possible, tell when it was added or modified strongly"
 
 1. Introduced in 2sxc ??.??
 2. 
 
-[//]: # "This is a comment - for those who have never seen this"
-[//]: # "The following lines are a list of links used in this page, referenced from above"
+

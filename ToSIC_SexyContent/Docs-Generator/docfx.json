@@ -11,12 +11,14 @@
           "exclude": [
             "**/obj/**",
             "**/bin/**",
-            "_site/**"
+            "_site/**",
+            "**/*Testing/**"
           ]
         }
       ],
-      "dest": "obj/api/dot-net",
-      "filter": "filterConfig.yml"
+      "dest": "obj/api/dot-net/",
+      "filter": "filterConfig.yml",
+      "force": false
     }
   ],
   "build": {
@@ -30,8 +32,9 @@
       {
         "files": [
           "api/**.md",
-          "articles/**.md",
+          "how-to/**.md",
           "specs/**.md",
+          "specs/**.yml",
           "toc.yml",
           "*.md"
         ],
@@ -45,7 +48,7 @@
       {
         "files": [
           "images/**",
-          "assets/**"
+          "/assets/**"
         ],
         "exclude": [
           "obj/**",
@@ -61,7 +64,7 @@
         "files": [
           "apidoc/**.md",
           "namespaces/**.md",
-          "shared/**.md",
+          "shared/**.md"
         ],
         "exclude": [
           "obj/**",
@@ -69,11 +72,12 @@
         ]
       }
     ],
-    "dest": "../../docs",
+    "dest": "c:/Projects/2sxc-docs/docs",
     "template": [
       "default",
       "statictoc",
-      "material/material"
+      "material/material",
+      "templates/2sxc"
     ],
     "globalMetadata": {
       "_appTitle": "2sxc and EAV 10",
