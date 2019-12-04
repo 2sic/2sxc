@@ -35,7 +35,7 @@ it also include instructions how to export/import data, working with the image r
 
 #### Documentation Version
 
-Generated for EAV/2sxc 10.20.04
+Generated for EAV/2sxc 10.20.05
 
 
 #### Pending Work / Tasks
