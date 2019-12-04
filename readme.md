@@ -9,6 +9,12 @@ It's like mixing DNN with Umbraco and Drupal :).
 
 Visit [2sxc.org](https://2sxc.org/) for more information.
 
+Visit [docs.2sxc.org](https://docs.2sxc.org) for API docs.
+
+Visit [DNN & Razor Tutorials](https://2sxc.org/dnn-tutorials/) for tutorials.
+
+Visit [2sxc Blogs](https://2sxc.org/en/blog) for news, updates, articles.
+
 # Contents of this Repo
 
 1. 2sxc Core - containing the main 2sxc code (not dependant on DNN)
@@ -32,4 +38,4 @@ The full list with repo-links is maintained on the [2sxc github wiki setup-contr
 
 # Release Information
 
-This is version 10.09.00
+This is version 10.20.05
