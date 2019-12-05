@@ -18,7 +18,7 @@
       ],
       "dest": "obj/api/dot-net/",
       "filter": "filterConfig.yml",
-      "force": false
+      "force": true
     }
   ],
   "build": {
