@@ -12,10 +12,11 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
-using DynamicCode = ToSic.Sxc.Web.DynamicCode;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
+
+// ReSharper disable InheritdocInvalidUsage
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.WebApi
@@ -43,7 +44,8 @@ namespace ToSic.SexyContent.WebApi
 
         #region AsDynamic implementations
         /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => throw new Exception("AsDynamic for strings requires the new RazorComponent in 2sxc 10. See https://r.2sxc.org/RazorComponent");
+        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
+            => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your template type. See https://r.2sxc.org/RazorComponent");
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);

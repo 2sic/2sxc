@@ -67,39 +67,8 @@ namespace ToSic.Sxc.Web
 
         #region AsDynamic Implementations
 
-        [PrivateApi]
-        //private const char JObjStart = '{';
-        //private const char JArrayStart = '[';
-        //private const string JsonErrorCode = "error";
-
         /// <inheritdoc />
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
-        {
-            return DynamicJacket.AsDynamicJacket(json, fallback);
-            //if (!string.IsNullOrWhiteSpace(json))
-            //    try
-            //    {
-            //        // find first possible opening character
-            //        var firstCharPos = json.IndexOfAny(new[] {JObjStart, JArrayStart});
-            //        if (firstCharPos > -1)
-            //        {
-            //            var firstChar = json[firstCharPos];
-            //            if(firstChar == JObjStart)
-            //                return DynamicJacket.WrapOrUnwrap(JObject.Parse(json));
-            //            if (firstChar == JArrayStart)
-            //                return DynamicJacket.WrapOrUnwrap(JArray.Parse(json));
-            //        }
-            //    }
-            //    catch
-            //    {
-            //        if (fallback == JsonErrorCode) throw;
-            //    }
-
-            //// fallback
-            //return fallback == null
-            //    ? null
-            //    : DynamicJacket.WrapOrUnwrap(JObject.Parse(fallback));
-        }
+        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynamicJacket.AsDynamicJacket(json, fallback);
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, CmsInstance);
