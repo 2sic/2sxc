@@ -9,7 +9,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -129,8 +128,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     // ReSharper disable PossibleMultipleEnumeration
                     // Find related presentation entities
                     var attachedPresItems = list
-                        .Where(e => (e as EntityInContentGroup)?.Presentation != null)
-                        .Select(e => ((EntityInContentGroup)e).Presentation);
+                        .Where(e => (e as EntityInBlock)?.Presentation != null)
+                        .Select(e => ((EntityInBlock)e).Presentation);
                     Log.Add($"adding presentation item⋮{attachedPresItems.Count()}");
                     list = list.Concat(attachedPresItems);
                     // ReSharper restore PossibleMultipleEnumeration

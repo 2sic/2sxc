@@ -106,9 +106,9 @@ namespace ToSic.Sxc.Serializers
         internal void AddPresentation(IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add full presentation object if it has one...because there we need more than just id/title
-	        if (entity is EntityInContentGroup && !dictionary.ContainsKey(ViewParts.Presentation))
+	        if (entity is EntityInBlock && !dictionary.ContainsKey(ViewParts.Presentation))
 	        {
-	            var entityInGroup = (EntityInContentGroup) entity;
+	            var entityInGroup = (EntityInBlock) entity;
 	            if (entityInGroup.Presentation != null)
 	                dictionary.Add(ViewParts.Presentation, GetDictionaryFromEntity(entityInGroup.Presentation));//, language));
 	        }

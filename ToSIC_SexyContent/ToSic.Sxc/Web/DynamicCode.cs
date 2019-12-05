@@ -243,7 +243,7 @@ namespace ToSic.Sxc.Web
                     Content = AsDynamic(e)
                 };
 
-                if (e is EntityInContentGroup c)
+                if (e is EntityInBlock c)
                 {
                     el.GroupId = c.GroupId;
                     el.Presentation = c.Presentation == null ? null : AsDynamic(c.Presentation);

@@ -1,15 +1,14 @@
 ﻿using System;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.SexyContent.EAVExtensions;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Data
 {
-    [PrivateApi("final name not good yet, in future probably not called content-group")]
-    public class EntityInContentGroup : EntityDecorator, IHasEditingData
+    [PrivateApi]
+    public class EntityInBlock : EntityDecorator, IHasEditingData
     {
-        public EntityInContentGroup(IEntity baseEntity) : base(baseEntity)
+        public EntityInBlock(IEntity baseEntity) : base(baseEntity)
         {
         }
 

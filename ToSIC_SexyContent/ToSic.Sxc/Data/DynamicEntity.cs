@@ -119,11 +119,13 @@ namespace ToSic.Sxc.Data
         public dynamic Get(string name) => GetEntityValue(name, out _);
 
         /// <inheritdoc />
+        [PrivateApi("should use Content.Presentation")]
+        [Obsolete("should use Content.Presentation")]
         public dynamic Presentation => GetPresentation; 
 
         private IDynamicEntity GetPresentation
-            => _presentation ?? (_presentation = Entity is EntityInContentGroup
-                   ? new DynamicEntity(((EntityInContentGroup) Entity).Presentation, _dimensions, CmsInstance)
+            => _presentation ?? (_presentation = Entity is EntityInBlock entityInGroup
+                   ? new DynamicEntity(entityInGroup.Presentation, _dimensions, CmsInstance)
                    : null);
         private IDynamicEntity _presentation;
 
@@ -148,7 +150,7 @@ namespace ToSic.Sxc.Data
         /// 2019-09-18 trying to mark demo-items for better detection in output #1792
         /// </summary>
         /// <returns></returns>
-        public bool IsDemoItem => Entity is EntityInContentGroup entInCg && entInCg.IsDemoItem;
+        public bool IsDemoItem => Entity is EntityInBlock entInCg && entInCg.IsDemoItem;
 
         [PrivateApi("probably we won't continue recommending to use this, but first we must provide an alternative")]
         public IHtmlString Render() => Blocks.Render.One(this);
