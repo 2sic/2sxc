@@ -96,6 +96,9 @@ namespace ToSic.Sxc.Web
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AsDynamic(stream.List);
 
         /// <inheritdoc />
+        public IEnumerable<dynamic> AsDynamic(IDataSource source) => AsDynamic(source["Default"].List);
+
+        /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => ((IDynamicEntity) dynamicEntity).Entity;
 
         /// <inheritdoc />

@@ -65,11 +65,17 @@ namespace ToSic.Sxc.Code
             => Parent?.AsDynamic(entityKeyValuePair);
 
 
+        /// <inheritdoc />
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => Parent?.AsDynamic(stream);
 
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsDynamic(IDataSource source) => Parent?.AsDynamic(source);
+
+        /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => Parent?.AsEntity(dynamicEntity);
 
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Parent?.AsDynamic(entities);
+         /// <inheritdoc />
+       public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Parent?.AsDynamic(entities);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]

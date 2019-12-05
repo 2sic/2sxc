@@ -60,6 +60,9 @@ namespace ToSic.SexyContent.WebApi
         /// <inheritdoc />
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  DynCode.AsDynamic(stream.List);
 
+        /// <inheritdoc/>
+        public IEnumerable<dynamic> AsDynamic(IDataSource source) => DynCode.AsDynamic(source);
+
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) =>  DynCode.AsEntity(dynamicEntity);
 

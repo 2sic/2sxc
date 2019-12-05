@@ -129,6 +129,7 @@ namespace ToSic.Sxc.Web
         /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
         /// If you provide null for the fallback, then you will get null back.
         /// </returns>
+        /// <remarks>Added in 2sxc 10.20.06</remarks>
         dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson);
 
         #endregion 
@@ -161,12 +162,20 @@ namespace ToSic.Sxc.Web
 
 
         /// <summary>
-        /// Converts a list of entities from a <see cref="IDataSource"/> into a list of <see cref="IDynamicEntity"/> objects. 
+        /// Converts a list of entities from a <see cref="IDataStream"/> into a list of <see cref="IDynamicEntity"/> objects. 
         /// </summary>
         /// <param name="stream">the stream containing <see cref="IEntity"/> items</param>
         /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
         new IEnumerable<dynamic> AsDynamic(IDataStream stream);
 
+        /// <summary>
+        /// Converts a list of entities from a <see cref="IDataSource"/> into a list of <see cref="IDynamicEntity"/> objects. <br/>
+        /// It will use the "Default" stream to do this. For any other stream, use the AsDynamic(YourDataSource["streamname"]) syntax
+        /// </summary>
+        /// <param name="source">the DataSource containing <see cref="IEntity"/> items</param>
+        /// <remarks>Added in 2sxc 10.20.06</remarks>
+        /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
+        new IEnumerable<dynamic> AsDynamic(IDataSource source);
 
         /// <summary>
         /// Converts a list of <see cref="IEntity"/> objects into a list of <see cref="IDynamicEntity"/> objects. 
