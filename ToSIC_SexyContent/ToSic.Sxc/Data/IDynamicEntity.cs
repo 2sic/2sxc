@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
     /// The underlying IEntity <see cref="IEntity"/> is in the Entity property. 
     /// <blockquote>
     /// Normally you will use it without caring about these internals. <br/>
-    /// Please check @Articles.DynamicEntity
+    /// Please check @HowTo.DynamicCode.DynamicEntity
     /// </blockquote>
     /// </summary>
     [PublicApi]

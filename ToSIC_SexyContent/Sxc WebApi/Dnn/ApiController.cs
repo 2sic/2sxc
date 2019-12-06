@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Data;
@@ -6,7 +7,6 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent.WebApi;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public new IDnnContext Dnn => base.Dnn;// DynCodeHelpers.Dnn;
 
-        [PrivateApi]
+        [PrivateApi("try to remove")]
         public SxcHelper Sxc => DynCode.Sxc;
 
         /// <inheritdoc />
@@ -52,19 +52,28 @@ namespace ToSic.Sxc.Dnn
 
 
 
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  DynCode.AsDynamic(stream.List);
+        ///// <inheritdoc />
+        //public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  DynCode.AsDynamic(stream.List);
 
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataSource source) => DynCode.AsDynamic(source);
+        ///// <inheritdoc />
+        //public IEnumerable<dynamic> AsDynamic(IDataSource source) => DynCode.AsDynamic(source);
 
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) =>  DynCode.AsEntity(dynamicEntity);
 
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DynCode.AsDynamic(entities);
+        ///// <inheritdoc />
+        //public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DynCode.AsDynamic(entities);
         #endregion
 
+        #region AsList (experimental)
+
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsList(IDataSource source) => DynCode?.AsList(source);
+
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsList(IEnumerable entities) => DynCode?.AsList(entities);
+
+        #endregion
 
 
         #region CreateSource implementations

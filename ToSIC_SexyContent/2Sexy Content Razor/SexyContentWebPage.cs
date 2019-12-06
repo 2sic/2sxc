@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Data;
@@ -30,7 +31,13 @@ namespace ToSic.SexyContent.Razor
     /// The core page type for delivering a 2sxc page
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
-    public abstract class SexyContentWebPage : RazorComponentBase, IRazorComponent, IDynamicCodeBeforeV10
+    public abstract class SexyContentWebPage : 
+        RazorComponentBase, 
+        IRazorComponent, 
+        IDynamicCodeBeforeV10,
+#pragma warning disable 618
+        IAppAndDataHelpers
+#pragma warning restore 618
     {
         #region Helpers linked through AppAndData Helpers
 
@@ -46,6 +53,7 @@ namespace ToSic.SexyContent.Razor
         public IDnnContext Dnn => DynCode.Dnn;
 
         /// <inheritdoc />
+        [PrivateApi("try to remove")]
         public SxcHelper Sxc => DynCode.Sxc;
 
         /// <inheritdoc />
@@ -74,10 +82,6 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsDynamic(stream.List);
 
-        /// <inheritdoc/>
-        public IEnumerable<dynamic> AsDynamic(IDataSource source) => DynCode.AsDynamic(source);
-
-
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => DynCode.AsEntity(dynamicEntity);
 
@@ -86,6 +90,19 @@ namespace ToSic.SexyContent.Razor
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => DynCode.AsDynamic(entities);
 
         #endregion
+
+        #region AsList (experimental)
+
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsList(IDataSource source)
+            => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
+
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsList(IEnumerable entities)
+            => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
+
+        #endregion
+
 
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
         [PrivateApi]

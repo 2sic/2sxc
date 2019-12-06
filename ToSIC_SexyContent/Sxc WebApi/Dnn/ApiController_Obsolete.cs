@@ -51,6 +51,21 @@ namespace ToSic.Sxc.Dnn
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair)
             => throw new Exception($"AsDynamic(KeyValuePair<int, IEntity> {NotSupportedIn10}. Use AsDynamic(IEnumerable<IEntity>...).");
 
+        #region Old AsDynamic with correct warnings
+        /// <inheritdoc/>
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream)
+            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(ApiController)}. Please use AsList instead.");
+
+        /// <inheritdoc/>
+        public IEnumerable<dynamic> AsDynamic(IDataSource source)
+            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(ApiController)}. Please use AsList instead.");
+
+
+        /// <inheritdoc/>
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities)
+            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(ApiController)}. Please use AsList instead.");
+
+        #endregion
         #endregion
 
         #region Presentation, ListContent, ListPresentation, List

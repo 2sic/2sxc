@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -86,17 +87,17 @@ namespace ToSic.Sxc.Web
         public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
 
 
-        /// <inheritdoc />
-        /// <summary>
-        /// In case AsDynamic is used with Data["name"]
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("2019-03-07 2dm: probably not needed any more, as 2sxc 9.40.01 adds the IEnumerable to the IDatastream")]
-        [PrivateApi]
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AsDynamic(stream.List);
+        ///// <inheritdoc />
+        ///// <summary>
+        ///// In case AsDynamic is used with Data["name"]
+        ///// </summary>
+        ///// <returns></returns>
+        //[Obsolete("2019-03-07 2dm: probably not needed any more, as 2sxc 9.40.01 adds the IEnumerable to the IDatastream")]
+        //[PrivateApi]
+        //public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AsDynamic(stream.List);
 
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataSource source) => AsDynamic(source["Default"].List);
+        ///// <inheritdoc />
+        //public IEnumerable<dynamic> AsDynamic(IDataSource source) => AsDynamic(source["Default"].List);
 
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => ((IDynamicEntity) dynamicEntity).Entity;
@@ -108,6 +109,26 @@ namespace ToSic.Sxc.Web
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
         public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => entities.Select(e => AsDynamic(e));
+
+        #endregion
+
+        #region AsList (experimental)
+
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsList(IDataSource source) 
+            => AsList(source["Default"]);// as IDataSource);
+
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsList(IEnumerable entities)
+        {
+            if (entities is IDataSource dsEntities)
+                return AsList(dsEntities["Default"]);
+            if (entities is IEnumerable<IEntity> iEntities)
+                return AsDynamic(iEntities);
+            if (entities is IEnumerable<dynamic> dynEntities)
+                return dynEntities;
+            return null;
+        }
 
         #endregion
 

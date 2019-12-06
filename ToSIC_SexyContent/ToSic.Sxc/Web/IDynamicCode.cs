@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -21,22 +21,31 @@ namespace ToSic.Sxc.Web
     /// </summary>
     [PublicApi]
 #pragma warning disable 618
-    public interface IDynamicCode: SexyContent.IAppAndDataHelpers, ISharedCodeBuilder // inherit from old namespace to ensure compatibility
+    public interface IDynamicCode: /*SexyContent.IAppAndDataHelpers,*/ ISharedCodeBuilder // inherit from old namespace to ensure compatibility
 #pragma warning restore 618
     {
+        #region internal/obsolete but still needed, not public!
+        [PrivateApi]
+        SxcHelper Sxc { get; }
+
+        [PrivateApi]
+        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);
+
+        #endregion
+
 
         /// <summary>
         /// A fully prepared <see cref="IApp"/> object letting you access all the data and queries in the current app. 
         /// </summary>
         /// <returns>The current app</returns>
-        new IApp App { get; }
+        IApp App { get; }
 
         /// <summary>
         /// The data prepared for the current Code. Usually user data which was manually added to the instance, but can also be a query.
         /// </summary>
         /// <returns>
         /// An <see cref="IBlockDataSource"/> which is as <see cref="IDataSource"/>.</returns>
-        new IBlockDataSource Data { get; }
+        IBlockDataSource Data { get; }
 
         #region Content and Header
         /// <summary>
@@ -105,14 +114,6 @@ namespace ToSic.Sxc.Web
         IInPageEditingSystem Edit { get; }
         #endregion
 
-        //#region Configure a just generated object
-
-        //[PrivateApi("WIP")]
-        //void ConfigurePage(IDynamicCode parentPage);
-
-
-        //#endregion
-
         #region AsDynamic for Strings
 
         /// <summary>
@@ -141,7 +142,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="entity">the original object</param>
         /// <returns>a dynamic object for easier coding</returns>
-        new dynamic AsDynamic(IEntity entity);
+        dynamic AsDynamic(IEntity entity);
 
 
         /// <summary>
@@ -149,40 +150,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="dynamicEntity">the original object</param>
         /// <returns>a dynamic object for easier coding</returns>
-        new dynamic AsDynamic(dynamic dynamicEntity);
-
-
-        // 2019-11-28 2dm removed from primary IDynamicCode interface, now only in legacyinterface
-        ///// <summary>
-        ///// Converts a dictionary-style list of many <see cref="IEntity"/> objects into a key-value pair of <see cref="IDynamicEntity"/> objects. 
-        ///// </summary>
-        ///// <param name="entityKeyValuePair"></param>
-        ///// <returns></returns>
-        //new dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair);
-
-
-        /// <summary>
-        /// Converts a list of entities from a <see cref="IDataStream"/> into a list of <see cref="IDynamicEntity"/> objects. 
-        /// </summary>
-        /// <param name="stream">the stream containing <see cref="IEntity"/> items</param>
-        /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
-        new IEnumerable<dynamic> AsDynamic(IDataStream stream);
-
-        /// <summary>
-        /// Converts a list of entities from a <see cref="IDataSource"/> into a list of <see cref="IDynamicEntity"/> objects. <br/>
-        /// It will use the "Default" stream to do this. For any other stream, use the AsDynamic(YourDataSource["streamname"]) syntax
-        /// </summary>
-        /// <param name="source">the DataSource containing <see cref="IEntity"/> items</param>
-        /// <remarks>Added in 2sxc 10.20.06</remarks>
-        /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
-        new IEnumerable<dynamic> AsDynamic(IDataSource source);
-
-        /// <summary>
-        /// Converts a list of <see cref="IEntity"/> objects into a list of <see cref="IDynamicEntity"/> objects. 
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
-        new IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities);
+        dynamic AsDynamic(dynamic dynamicEntity);
 
         #endregion
 
@@ -193,9 +161,30 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="dynamicEntity">the wrapped IEntity</param>
         /// <returns>A normal IEntity</returns>
-        new IEntity AsEntity(dynamic dynamicEntity);
+        IEntity AsEntity(dynamic dynamicEntity);
 
-        // todo: there should be more overloads for AsEntity, but I assume we never needed it, so we don't have them
+        #endregion
+
+        #region AsList 
+
+        /// <summary>
+        /// Converts a list of entities from a <see cref="IDataSource"/> into a list of <see cref="IDynamicEntity"/> objects. <br/>
+        /// It will use the "Default" stream to do this. For any other stream, use the AsDynamic(YourDataSource["streamname"]) syntax
+        /// </summary>
+        /// <param name="source">the DataSource containing <see cref="IEntity"/> items</param>
+        /// <remarks>Added in 2sxc 10.20.06</remarks>
+        /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
+        IEnumerable<dynamic> AsList(IDataSource source);
+
+        /// <summary>
+        /// Converts a list of <see cref="IEntity"/> objects into a list of <see cref="IDynamicEntity"/> objects. 
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <remarks>Added in 2sxc 10.20.06</remarks>
+        /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
+        IEnumerable<dynamic> AsList(IEnumerable entities);
+
+
         #endregion
 
         #region Create Data Sources

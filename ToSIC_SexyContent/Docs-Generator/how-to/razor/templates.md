@@ -1,7 +1,7 @@
 ---
 uid: HowTo.Razor.Templates
 ---
-# Razor Templates - RazorComponent
+# Razor Templates = RazorComponent
 
 Razor Templates contain both normal HTML intermixed with Razor placeholders like `@Content.FirstName` or longer code blocks usually marked with `@{ ...}`.
 
@@ -9,6 +9,8 @@ All razor Templates derive from the RazorComponent, so the following variables a
 
 > [!TIP]
 > Read about [Razor Templates](xref:Specs.Cms.Templates.Razor) in the specs
+
+[!include["Tip Inherits"](shared-tip-inherits.md)]
 
 ## Example
 Visit the [App Catalog](xref:AppsCatalog) where almost all apps use Razor. There you can find hundreds of examples. 

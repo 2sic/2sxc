@@ -86,6 +86,22 @@ namespace ToSic.Sxc.Dnn
         //public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
         //    => throw new Exception($"ListPresentation {NotSupportedIn10}. Use Header.Presentation");
 
+        #region Old AsDynamic with correct warnings
+        /// <inheritdoc/>
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream)
+            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(RazorComponent)}. Please use AsList instead.");
+
+        /// <inheritdoc/>
+        public IEnumerable<dynamic> AsDynamic(IDataSource source)
+            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(RazorComponent)}. Please use AsList instead.");
+
+
+        /// <inheritdoc/>
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities)
+            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(RazorComponent)}. Please use AsList instead.");
+
+        #endregion
+
 
         [PrivateApi]
         [Obsolete("left for compatibility, use Purpose instead")]
