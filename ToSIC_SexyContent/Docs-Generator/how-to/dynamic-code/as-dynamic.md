@@ -1,7 +1,7 @@
 ---
 uid: HowTo.DynamicCode.AsDynamic
 ---
-# AsDynamic(...) - The Magic of Razor
+# AsDynamic(...) - Magic Objects
 
 To make a complex system like the EAV work, the real objects like the [](xref:ToSic.Eav.Data.IEntity) must very very smart and complicated. This would not be fun to use in razor, where you would prefer a simple `@Something.Property` syntax. This is where `AsDynamic(...)` comes in. 
 
@@ -15,7 +15,7 @@ AsDynamic has many signatures accepting a variety of input values. It then retur
 * a `string` containing JSON - will return a dynamic object for you to program with  
   added in 2sxc 10.20
 
-[!include["Tip Inherits"](razor/shared-tip-inherits.md)]
+[!include["Tip Inherits"](../razor/shared-tip-inherits.md)]
 
 ## Reversing AsDynamic with AsEntity
 
@@ -23,11 +23,11 @@ There are rare cases where you have a [](xref:ToSic.Sxc.Data.IDynamicEntity) and
 
 ## Obsolete use of AsDynamic() for Lists
 
-In previous versions of 2sxc you'll find AsDynamic(...) also used to convert lists (IEnumerable or DataStreams) into lists. 
-This caused a lot of issues with dynamic code compilation, so in 2sxc 10.20 we introduced [AsList(...)](xref:HowTo.DynamicCode.AsList) for that use case. So if you find that kind of code, it works because...
-
-* without a line `@inherits ToSic.Sxc.Dnn.RazorComponent` in the header, the old calls still work
-* with the line `@inherits ToSic.Sxc.Dnn.RazorComponent` in the header, you must use AsList
+> [!WARNING]
+> In previous versions of 2sxc you'll find AsDynamic(...) also used to convert lists (IEnumerable or DataStreams) into lists. 
+> This caused a lot of issues with dynamic code compilation, so in 2sxc 10.20 we introduced [AsList(...)](xref:HowTo.DynamicCode.AsList) for that use case. So if you find that kind of code, it works because...
+> * without `@inherits ToSic.Sxc.Dnn.RazorComponent` in the header, the old calls still work
+> * with `@inherits ToSic.Sxc.Dnn.RazorComponent` in the header, you must use `AsList(...)`
 
 ## History
 

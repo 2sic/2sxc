@@ -121,8 +121,10 @@ namespace ToSic.Sxc.Web
         /// <inheritdoc />
         public IEnumerable<dynamic> AsList(IEnumerable entities)
         {
+            if(entities == null) 
+                return new List<dynamic>();
             if (entities is IDataSource dsEntities)
-                return AsList(dsEntities["Default"]);
+                return AsList(dsEntities[Eav.Constants.DefaultStreamName]);
             if (entities is IEnumerable<IEntity> iEntities)
                 return AsDynamic(iEntities);
             if (entities is IEnumerable<dynamic> dynEntities)
