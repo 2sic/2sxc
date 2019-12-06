@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Web
         #region AsList
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(object list)
+        public IEnumerable<dynamic> AsList(dynamic list)
         {
             switch (list)
             {

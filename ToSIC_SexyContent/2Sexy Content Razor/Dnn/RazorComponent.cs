@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
@@ -72,8 +71,9 @@ namespace ToSic.Sxc.Dnn
         #region AsList
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(object list) 
-            => DynCode?.AsList(list);
+        public IEnumerable<dynamic> AsList(dynamic list) => DynCode?.AsList(list);
+
+        public IEnumerable<dynamic> AsListTest(dynamic list) => AsList(list);
 
         #endregion
 

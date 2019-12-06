@@ -100,7 +100,7 @@ namespace ToSic.SexyContent.WebApi
         #region AsList - only in newer APIs
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(object list)
+        public IEnumerable<dynamic> AsList(dynamic list)
             => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(ApiController) + " see https://r.2sxc.org/RazorComponent");
 
         #endregion

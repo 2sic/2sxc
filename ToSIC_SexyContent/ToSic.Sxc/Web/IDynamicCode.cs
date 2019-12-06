@@ -173,7 +173,7 @@ namespace ToSic.Sxc.Web
         /// Can also be a <see cref="IDataSource"/> in which case it uses the default stream. </param>
         /// <remarks>Added in 2sxc 10.20.06</remarks>
         /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
-        IEnumerable<dynamic> AsList(object list);
+        IEnumerable<dynamic> AsList(dynamic list);
 
         #endregion
 

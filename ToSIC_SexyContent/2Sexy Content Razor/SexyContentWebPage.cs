@@ -94,7 +94,7 @@ namespace ToSic.SexyContent.Razor
         #region AsList (experimental)
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(object list)
+        public IEnumerable<dynamic> AsList(dynamic list)
             => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
 
         #endregion
