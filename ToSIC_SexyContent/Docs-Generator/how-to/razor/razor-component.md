@@ -1,7 +1,7 @@
 ---
 uid: HowTo.Razor.Templates
 ---
-# RazorComponents aka Razor Templates
+# RazorComponent aka Razor Templates
 
 Razor Components contain both normal HTML intermixed with Razor placeholders like `@Content.FirstName` or longer code blocks usually marked with `@{ ...}`.
 
@@ -16,7 +16,7 @@ All razor Templates derive from the RazorComponent, so the following variables a
 Visit the [App Catalog](xref:AppsCatalog) where almost all apps use Razor. There you can find hundreds of examples. 
 
 
-## Objects Added by 2sxc in Razor Templates
+## Objects Added by 2sxc in Razor Components / Templates
 
 1. [App](xref:HowTo.DynamicCode.App) - the current App and all it's data
 1. Content ([DynamicEntity](xref:HowTo.DynamicCode.Entity)) - primary and often the only content-item in the [Data](xref:HowTo.DynamicCode.Data) for this template
