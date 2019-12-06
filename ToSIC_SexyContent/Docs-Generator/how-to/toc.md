@@ -13,7 +13,7 @@
 ##[Use Named Parameters](xref:HowTo.DynamicCode.NamedParameters)
 
 # Razor
-##[Razor Templates](xref:HowTo.Razor.Templates)
+##[Razor Components/Templates](xref:HowTo.Razor.Templates)
 ##[Edit Object](xref:HowTo.Razor.Edit)
 ###[Edit.TagToolbar Edit.Toolbar](xref:HowTo.Razor.Edit.Toolbar)
 ###[Edit.Enable](xref:HowTo.Razor.Edit.Enable)

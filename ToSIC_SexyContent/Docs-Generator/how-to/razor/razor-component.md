@@ -8,7 +8,7 @@ Razor Components contain both normal HTML intermixed with Razor placeholders lik
 All razor Templates derive from the RazorComponent, so the following variables and objects are available for you to work with.
 
 > [!TIP]
-> Read about [Razor Templates](xref:Specs.Cms.Templates.Razor) in the specs
+> Read about Razor Components/Templas in the [Specs](xref:Specs.Cms.Templates.Razor) or the [API docs](xref:ToSic.Sxc.Dnn.RazorComponent).
 
 [!include["Tip Inherits"](shared-tip-inherits.md)]
 
