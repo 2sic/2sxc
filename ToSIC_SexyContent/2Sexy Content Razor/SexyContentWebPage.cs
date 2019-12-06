@@ -94,11 +94,7 @@ namespace ToSic.SexyContent.Razor
         #region AsList (experimental)
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(IDataSource source)
-            => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
-
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(IEnumerable entities)
+        public IEnumerable<dynamic> AsList(object list)
             => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
 
         #endregion
@@ -122,6 +118,7 @@ namespace ToSic.SexyContent.Razor
 
         #region Data Source Stuff
         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
+        [Obsolete]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
             => DynCode.CreateSource(typeName, inSource, lookUpEngine);
 

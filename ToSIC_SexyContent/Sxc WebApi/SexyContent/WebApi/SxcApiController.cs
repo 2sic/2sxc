@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using System.IO;
@@ -34,7 +33,9 @@ namespace ToSic.SexyContent.WebApi
         DynamicApiController, 
         IDynamicWebApi, 
         IDynamicCodeBeforeV10,
-        SexyContent.IAppAndDataHelpers
+#pragma warning disable 618
+        IAppAndDataHelpers
+#pragma warning restore 618
     {
         public new IDnnContext Dnn => base.Dnn;//  DynCodeHelpers.Dnn;
 
@@ -99,16 +100,13 @@ namespace ToSic.SexyContent.WebApi
         #region AsList - only in newer APIs
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(IDataSource source)
-            => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(ApiController) + " see https://r.2sxc.org/RazorComponent");
-
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(IEnumerable entities)
+        public IEnumerable<dynamic> AsList(object list)
             => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(ApiController) + " see https://r.2sxc.org/RazorComponent");
 
         #endregion
 
         #region CreateSource implementations
+        [Obsolete]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
 	        ILookUpEngine lookUpEngine = null)
 	        => DynCode.CreateSource(typeName, inSource, lookUpEngine);

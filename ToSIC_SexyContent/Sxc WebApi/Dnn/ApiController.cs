@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Data;
@@ -50,28 +49,16 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public dynamic AsDynamic(dynamic dynamicEntity) =>  DynCode.AsDynamic(dynamicEntity);
 
-
-
-        ///// <inheritdoc />
-        //public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  DynCode.AsDynamic(stream.List);
-
-        ///// <inheritdoc />
-        //public IEnumerable<dynamic> AsDynamic(IDataSource source) => DynCode.AsDynamic(source);
-
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) =>  DynCode.AsEntity(dynamicEntity);
 
-        ///// <inheritdoc />
-        //public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DynCode.AsDynamic(entities);
         #endregion
 
         #region AsList (experimental)
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(IDataSource source) => DynCode?.AsList(source);
-
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(IEnumerable entities) => DynCode?.AsList(entities);
+        public IEnumerable<dynamic> AsList(object list) 
+            => DynCode?.AsList(list);
 
         #endregion
 

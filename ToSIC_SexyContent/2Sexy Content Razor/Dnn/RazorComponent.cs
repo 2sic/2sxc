@@ -72,10 +72,8 @@ namespace ToSic.Sxc.Dnn
         #region AsList
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(IDataSource source) => DynCode?.AsList(source);
-
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(IEnumerable entities) => DynCode?.AsList(entities);
+        public IEnumerable<dynamic> AsList(object list) 
+            => DynCode?.AsList(list);
 
         #endregion
 

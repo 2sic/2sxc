@@ -87,14 +87,9 @@ namespace ToSic.Sxc.Code
 
         #region AsList (experimental
 
-        ///// <inheritdoc />
-        //public IEnumerable<dynamic> AsList(IDataStream stream) => Parent?.AsList(stream);
-
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(IDataSource source) => Parent?.AsList(source);
-
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(IEnumerable entities) => Parent?.AsList(entities);
+        public IEnumerable<dynamic> AsList(object list)
+            => Parent?.AsList(list);
 
 
         #endregion

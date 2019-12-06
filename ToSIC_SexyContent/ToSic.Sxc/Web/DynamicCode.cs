@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -112,24 +111,32 @@ namespace ToSic.Sxc.Web
 
         #endregion
 
-        #region AsList (experimental)
+        #region AsList
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(IDataSource source) 
-            => AsList(source["Default"]);// as IDataSource);
-
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(IEnumerable entities)
+        public IEnumerable<dynamic> AsList(object list)
         {
-            if(entities == null) 
-                return new List<dynamic>();
-            if (entities is IDataSource dsEntities)
-                return AsList(dsEntities[Eav.Constants.DefaultStreamName]);
-            if (entities is IEnumerable<IEntity> iEntities)
-                return AsDynamic(iEntities);
-            if (entities is IEnumerable<dynamic> dynEntities)
-                return dynEntities;
-            return null;
+            switch (list)
+            {
+                case null:
+                    return new List<dynamic>();
+                case IDataSource dsEntities:
+                    return AsList(dsEntities[Eav.Constants.DefaultStreamName]);
+                case IEnumerable<IEntity> iEntities:
+                    return AsDynamic(iEntities);
+                case IEnumerable<dynamic> dynEntities:
+                    return dynEntities;
+                //case IDynamicEntity iDynamicEntity:
+                //    if(name == null)
+                //        throw new Exception("AsList got a DynamicEntity but not a name. You must either provide list of DynamicEntities or add a name to access that property.");
+                //    return AsList(iDynamicEntity.Get(name));
+                //case IEntity iEntity:
+                //    if(name == null)
+                //        throw new Exception("AsList got an IEntity but not a name. You must either provide list of DynamicEntities or add a name to access that property.");
+                //    return AsList(iEntity.Children(name));
+                default:
+                    return null;
+            }
         }
 
         #endregion

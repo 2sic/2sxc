@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
@@ -168,22 +167,13 @@ namespace ToSic.Sxc.Web
         #region AsList 
 
         /// <summary>
-        /// Converts a list of entities from a <see cref="IDataSource"/> into a list of <see cref="IDynamicEntity"/> objects. <br/>
-        /// It will use the "Default" stream to do this. For any other stream, use the AsDynamic(YourDataSource["streamname"]) syntax
-        /// </summary>
-        /// <param name="source">the DataSource containing <see cref="IEntity"/> items</param>
-        /// <remarks>Added in 2sxc 10.20.06</remarks>
-        /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
-        IEnumerable<dynamic> AsList(IDataSource source);
-
-        /// <summary>
         /// Converts a list of <see cref="IEntity"/> objects into a list of <see cref="IDynamicEntity"/> objects. 
         /// </summary>
-        /// <param name="entities"></param>
+        /// <param name="list">typically a List/IEnumerable of Entities or DynamicEntities. <br/>
+        /// Can also be a <see cref="IDataSource"/> in which case it uses the default stream. </param>
         /// <remarks>Added in 2sxc 10.20.06</remarks>
         /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
-        IEnumerable<dynamic> AsList(IEnumerable entities);
-
+        IEnumerable<dynamic> AsList(object list);
 
         #endregion
 
@@ -194,7 +184,7 @@ namespace ToSic.Sxc.Web
         /// <param name="inStream">The stream which will be the default In of the new data-source.</param>
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
-        new T CreateSource<T>(IDataStream inStream) where T: IDataSource;
+        T CreateSource<T>(IDataStream inStream) where T: IDataSource;
 
 
         /// <summary>
@@ -204,7 +194,7 @@ namespace ToSic.Sxc.Web
         /// <param name="configurationProvider">An alternate configuration provider for the DataSource</param>
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
-        new T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
+        T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
         #endregion
 
 
