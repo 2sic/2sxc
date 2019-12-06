@@ -73,8 +73,6 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public IEnumerable<dynamic> AsList(dynamic list) => DynCode?.AsList(list);
 
-        public IEnumerable<dynamic> AsListTest(dynamic list) => AsList(list);
-
         #endregion
 
 

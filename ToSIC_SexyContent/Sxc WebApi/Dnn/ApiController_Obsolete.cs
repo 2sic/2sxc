@@ -53,15 +53,18 @@ namespace ToSic.Sxc.Dnn
 
         #region Old AsDynamic with correct warnings
         /// <inheritdoc/>
+        [PrivateApi]
         public IEnumerable<dynamic> AsDynamic(IDataStream stream)
             => throw new Exception($"AsDynamic for lists isn't supported in {nameof(ApiController)}. Please use AsList instead.");
 
         /// <inheritdoc/>
+        [PrivateApi]
         public IEnumerable<dynamic> AsDynamic(IDataSource source)
             => throw new Exception($"AsDynamic for lists isn't supported in {nameof(ApiController)}. Please use AsList instead.");
 
 
         /// <inheritdoc/>
+        [PrivateApi]
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities)
             => throw new Exception($"AsDynamic for lists isn't supported in {nameof(ApiController)}. Please use AsList instead.");
 
