@@ -56,5 +56,5 @@ The RazorComponent was created in v10.20 to provide a newer, cleaner API. To not
     1. `ListPresentation` is now called `Header.Presentation` (yep, it's the same thing)
 1. Change list uses of `AsDynamic(...)` to `AsList(...)`  
     _Previously AsDynamic was used both for single-items as well as for lists. The compiler couldn't always figure out what to use, so you had to cast objects - which was nasty. Now you use AsList for lists, and AsDynamic for single items._  
-    See also [](xref:HowTo.DynamicCode.AsDynamic) and [](HowTo.DynamicCode.AsList)
+    See also [](xref:HowTo.DynamicCode.AsDynamic) and [](xref:HowTo.DynamicCode.AsList)
 
