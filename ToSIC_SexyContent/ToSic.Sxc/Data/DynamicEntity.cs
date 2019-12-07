@@ -200,16 +200,23 @@ namespace ToSic.Sxc.Data
         /// Since we define two DynamicEntities to be equal when they host the same entity, this uses the Entity.HashCode
         /// </summary>
         /// <returns></returns>
-        [PrivateApi]
         public override int GetHashCode() => Entity != null ? Entity.GetHashCode() : 0;
 
-        [PrivateApi]
+        /// <inheritdoc />
         public bool Equals(IDynamicEntity dynObj) => Entity == dynObj?.Entity;
 
         #endregion
+
         /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)
             => Entity.Parents(type, field)
+                .Select(e => new DynamicEntity(e, _dimensions, CmsInstance))
+                .Cast<IDynamicEntity>()
+                .ToList();
+
+        /// <inheritdoc />
+        public List<IDynamicEntity> Children(string field = null, string type = null)
+            => Entity.Children(field, type)
                 .Select(e => new DynamicEntity(e, _dimensions, CmsInstance))
                 .Cast<IDynamicEntity>()
                 .ToList();

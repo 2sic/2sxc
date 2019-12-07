@@ -67,10 +67,10 @@ namespace ToSic.Sxc.Blocks
         bool IsContentApp { get; }
         #endregion
 
-        [PrivateApi]
+        [PrivateApi("naming not final")]
         ICmsBlock CmsInstance { get; }
 
-        [PrivateApi]
+        [PrivateApi("naming not final")]
         bool ContentGroupExists { get; }
 
         [PrivateApi("should get rid of this asap - shouldn't be in the Block object")]

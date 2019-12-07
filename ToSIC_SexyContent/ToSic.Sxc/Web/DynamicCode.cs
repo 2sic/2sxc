@@ -85,19 +85,6 @@ namespace ToSic.Sxc.Web
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
         public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
 
-
-        ///// <inheritdoc />
-        ///// <summary>
-        ///// In case AsDynamic is used with Data["name"]
-        ///// </summary>
-        ///// <returns></returns>
-        //[Obsolete("2019-03-07 2dm: probably not needed any more, as 2sxc 9.40.01 adds the IEnumerable to the IDatastream")]
-        //[PrivateApi]
-        //public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AsDynamic(stream.List);
-
-        ///// <inheritdoc />
-        //public IEnumerable<dynamic> AsDynamic(IDataSource source) => AsDynamic(source["Default"].List);
-
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => ((IDynamicEntity) dynamicEntity).Entity;
 
