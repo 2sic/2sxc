@@ -1,0 +1,25 @@
+- name: How To Introductions
+  href: index.md
+
+- name: C# / Razor Introduction
+  topicUid: HowTo.CSharp
+
+- name: Razor & WebApi Objects
+  href: dynamic-code/toc.yml
+
+- name: Razor
+  href: razor/toc.yml
+
+- name: Output/Templates
+  items:
+    - name: Assets
+      topicUid: HowTo.Output.Assets
+
+- name: WebApi
+  href: webapi/toc.yml
+
+
+- name: External Use
+  topicUid: HowTo.External
+
+

@@ -35,6 +35,7 @@
           "how-to/**.md",
           "specs/**.md",
           "specs/**.yml",
+          "how-to/**.yml",
           "toc.yml",
           "*.md"
         ],
