@@ -36,8 +36,8 @@ AsDynamic has many signatures accepting a variety of input values. It then retur
 * a [](xref:ToSic.Eav.Data.IEntity) - this will return a single [](xref:ToSic.Sxc.Data.IDynamicEntity)
 * [](xref:ToSic.Sxc.Data.IDynamicEntity) - will return the same [](xref:ToSic.Sxc.Data.IDynamicEntity)  
   _this option exists just so you don't have to pre-check what you pass in, making it easier to code for you_
-* a `string` containing JSON - will return a dynamic object for you to program with  
-  added in 2sxc 10.20
+* a `string` containing JSON - will return a dynamic object [](xref:ToSic.Eav.Data.DynamicJacket)   
+  _added in 2sxc 10.20.06_
 
 [!include["Tip Inherits"](../razor/shared-tip-inherits.md)]
 
