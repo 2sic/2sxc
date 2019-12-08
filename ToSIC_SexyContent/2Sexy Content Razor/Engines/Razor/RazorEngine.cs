@@ -69,31 +69,16 @@ namespace ToSic.Sxc.Engines
         [PrivateApi]
         public void Render(TextWriter writer)
         {
-            Log.Add("will render into textwriter");
+            Log.Add("will render into TextWriter");
             try
             {
                 Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, null), writer, Webpage);
             }
             catch (Exception maybeIEntityCast)
             {
-                ProvideSpecialErrorOnIEntityIssues(maybeIEntityCast);
+                Code.ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
                 throw;
             }
-        }
-
-        private const string IEntityErrDetection = "error CS0234: The type or namespace name 'IEntity' does not exist in the namespace 'ToSic.Eav'";
-        private const string IEntityErrorMessage =
-            "Error in your razor template. " +
-            "You are seeing this because 2sxc 9.3 has a breaking change on ToSic.Eav.IEntity. " +
-            "It's easy to fix - please read " +
-            "https://2sxc.org/en/blog/post/fixing-the-breaking-change-on-tosic-eav-ientity-in-2sxc-9-3 " +
-            ". What follows is the internal error: ";
-
-        private static void ProvideSpecialErrorOnIEntityIssues(Exception maybeIEntityCast)
-        {
-            if (maybeIEntityCast is HttpCompileException || maybeIEntityCast is InvalidCastException)
-                if (maybeIEntityCast.Message.IndexOf(IEntityErrDetection, StringComparison.Ordinal) > 0)
-                    throw new Exception(IEntityErrorMessage, maybeIEntityCast);
         }
 
         /// <inheritdoc/>
@@ -117,7 +102,7 @@ namespace ToSic.Sxc.Engines
             }
             catch (Exception ex)
             {
-                ProvideSpecialErrorOnIEntityIssues(ex);
+                Code.ErrorHelp.AddHelpIfKnownError(ex);
                 throw;
             }
         }

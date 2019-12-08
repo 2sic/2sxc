@@ -5,6 +5,30 @@ uid: HowTo.DynamicCode.AsDynamic
 
 To make a complex system like the EAV work, the real objects like the [](xref:ToSic.Eav.Data.IEntity) must very very smart and complicated. This would not be fun to use in razor, where you would prefer a simple `@Something.Property` syntax. This is where `AsDynamic(...)` comes in. 
 
+## How to Use
+
+If you have an [](xref:ToSic.Eav.Data.IEntity) 
+or you're not sure if it's either an IEntity or a [](xref:ToSic.Sxc.Data.IDynamicEntity), 
+just pass it through `AsDynamic(...)` and the result will be a [](xref:ToSic.Sxc.Data.IDynamicEntity). 
+You can then access the properties with the simple `thing.Property` syntax.
+
+```razor
+@inherits ToSic.Sxc.Dnn.RazorComponent
+@{
+    var unknown = App.Data["Default"].List.First(); // this will be an IEntity
+    var myThing = AsDynamic(unknown);
+}
+<div>@myThing.FirstName</div>
+```
+
+> [!NOTE]
+> Results of AsDynamic are dynamically typed, so you can write `.Anything` behind it. 
+> But the data coming out of it is strongly typed, so `Content.Birthday` is a real date object.
+
+> [!TIP]
+> [](xref:ToSic.Sxc.Data.IDynamicEntity) objects also have some additional properties like 
+> `EntityId` or `Parents(...)`. Check out the API docs.
+
 ## How it works
 
 AsDynamic has many signatures accepting a variety of input values. It then returns an `dynamic` object which is either a [](xref:ToSic.Sxc.Data.IDynamicEntity). These are the things AsDynamic can process:

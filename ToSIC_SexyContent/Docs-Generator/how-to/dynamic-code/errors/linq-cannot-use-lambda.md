@@ -46,7 +46,7 @@ var authors = (book.Authors as IEnumerable<dynamic>)
     .Select(a => a.FirstName + " " + a.LastName);
 ```
 
-### Cast with `@using Dynlist = ...`
+#### Cast with `@using Dynlist = ...`
 
 This is the same thing, but the nicest, easiest to read method:
 
