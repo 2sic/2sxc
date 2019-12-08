@@ -20,6 +20,7 @@ using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using DynamicCode = ToSic.Sxc.Web.DynamicCode;
+using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 // ReSharper disable InheritdocInvalidUsage
