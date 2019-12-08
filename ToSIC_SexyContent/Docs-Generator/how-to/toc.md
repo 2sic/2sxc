@@ -11,6 +11,8 @@
 ##[Dnn Object](xref:HowTo.DynamicCode.Dnn)
 ##[Link Object](xref:HowTo.DynamicCode.Link)
 ##[Use Named Parameters](xref:HowTo.DynamicCode.NamedParameters)
+## [Solving Common Errors](xref:HowTo.DynamicCode.Errors.Intro)
+### [LINQ Cannot Use Lambda](xref:HowTo.DynamicCode.Errors.LinqLambda)
 
 # Razor
 ##[Razor Components/Templates](xref:HowTo.Razor.Templates)
