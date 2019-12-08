@@ -57,11 +57,11 @@ namespace ToSic.Sxc.Data
             CmsInstance = sexy;
         }
 
-        [PrivateApi]
+        /// <inheritdoc />
         public override bool TryGetMember(GetMemberBinder binder, out object result)
             => TryGetMember(binder.Name, out result);
 
-        [PrivateApi]
+        /// <inheritdoc />
         public bool TryGetMember(string memberName, out object result)
         {
             result = GetEntityValue(memberName, out var propertyNotFound);
@@ -157,9 +157,9 @@ namespace ToSic.Sxc.Data
 
 
         #region Changing comparison operation to internally compare the entities, not this wrapper
-        [PrivateApi]
+        /// <inheritdoc />
         public static bool operator ==(DynamicEntity d1, IDynamicEntity d2) => OverrideIsEqual(d1, d2);
-        [PrivateApi]
+        /// <inheritdoc />
         public static bool operator !=(DynamicEntity d1, IDynamicEntity d2) => !OverrideIsEqual(d1, d2);
 
         /// <summary>
@@ -172,7 +172,6 @@ namespace ToSic.Sxc.Data
         /// But we can't use != null, because that would call the != operator and be recursive.
         /// </remarks>
         /// <returns></returns>
-        [PrivateApi]
         private static bool OverrideIsEqual(DynamicEntity d1, IDynamicEntity d2)
         {
             // check most basic case - they are really the same object or both null
@@ -182,15 +181,15 @@ namespace ToSic.Sxc.Data
             return d1?.Entity == d2?.Entity;
         }
 
-        [PrivateApi]
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))
                 return true;
-            if (obj is IDynamicEntity deobj)
-                return Entity == deobj.Entity;
-            if (obj is IEntity entobj)
-                return Entity == entobj;
+            if (obj is IDynamicEntity deObj)
+                return Entity == deObj.Entity;
+            if (obj is IEntity entObj)
+                return Entity == entObj;
 
             return false;
         }

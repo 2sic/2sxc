@@ -7,6 +7,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
