@@ -43,6 +43,14 @@
             </script>
           </scripts>
         </component>
+        <!-- 
+          Experiment in 10.20.0x always flush the dist folder before installing new stuff 
+          If it works, it must always run before the module is installed!
+          That means the node has to be in the xml-file before the Module nodes
+        -->
+        <component type="Cleanup" version="10.20.06" 
+                   fileName="cleanup\flush.txt">
+        </component>
         <component type="Module">
           <desktopModule>
             <moduleName>2sxc</moduleName>

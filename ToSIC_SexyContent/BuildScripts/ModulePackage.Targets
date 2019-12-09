@@ -186,6 +186,13 @@
     <Copy SourceFiles="@(PackageModuleIcon)" DestinationFolder="$(TempPackageFolder)" />
     <Copy SourceFiles="@(PackageTxtFiles)" DestinationFolder="$(TempPackageFolder)" />
 
+    <!-- include clean-up 10.21+ -->
+    <CreateItem Include="DnnPackageBuilder/Cleanup\*.txt">
+      <Output TaskParameter="Include" ItemName="CleanupFiles" />
+    </CreateItem>
+    <Copy SourceFiles="@(CleanupFiles)" DestinationFolder="$(TempPackageFolder)\Cleanup\%(RecursiveDir)" />
+
+
     <!-- include koi folder -->
     <ItemGroup>
       <KoiFiles Include="$(MSBuildProjectDirectory)/koi/*.*" Exclude="**\*.dll" />
