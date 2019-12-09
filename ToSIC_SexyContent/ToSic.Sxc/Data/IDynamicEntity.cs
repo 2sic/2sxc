@@ -110,7 +110,7 @@ namespace ToSic.Sxc.Data
         /// <param name="type">Optional type filter - would only return items of this type. </param>
         /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
         /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
-        /// <remarks>New in 10.21.01 - note also that the parameter-order is reversed to the Parents()</remarks>
+        /// <remarks>New in 10.21.00 - note also that the parameter-order is reversed to the Parents()</remarks>
         List<IDynamicEntity> Children(string field = null, string type = null);
         #endregion 
 

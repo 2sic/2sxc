@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.Web
     /// </summary>
     [PublicApi]
 #pragma warning disable 618
-    public interface IDynamicCode: /*SexyContent.IAppAndDataHelpers,*/ ISharedCodeBuilder // inherit from old namespace to ensure compatibility
+    public interface IDynamicCode: ISharedCodeBuilder // inherit from old namespace to ensure compatibility
 #pragma warning restore 618
     {
         #region internal/obsolete but still needed, not public!
@@ -172,7 +171,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="list">typically a List/IEnumerable of Entities or DynamicEntities. <br/>
         /// Can also be a <see cref="IDataSource"/> in which case it uses the default stream. </param>
-        /// <remarks>Added in 2sxc 10.21.01</remarks>
+        /// <remarks>Added in 2sxc 10.21.00</remarks>
         /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
         IEnumerable<dynamic> AsList(dynamic list);
 
