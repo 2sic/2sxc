@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// The query which provides data to this view. 
         /// </summary>
-        [PrivateApi("might be changed to type QueryDefinition")]
+        [PrivateApi]
         IEntity QueryRaw { get; }
 
         /// <summary>
