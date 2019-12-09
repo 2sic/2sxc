@@ -130,7 +130,7 @@ namespace ToSic.Sxc.Web
         /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
         /// If you provide null for the fallback, then you will get null back.
         /// </returns>
-        /// <remarks>Added in 2sxc 10.21.00</remarks>
+        /// <remarks>Added in 2sxc 10.21.01</remarks>
         dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson);
 
         #endregion 
@@ -172,7 +172,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="list">typically a List/IEnumerable of Entities or DynamicEntities. <br/>
         /// Can also be a <see cref="IDataSource"/> in which case it uses the default stream. </param>
-        /// <remarks>Added in 2sxc 10.21.00</remarks>
+        /// <remarks>Added in 2sxc 10.21.01</remarks>
         /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
         IEnumerable<dynamic> AsList(dynamic list);
 
