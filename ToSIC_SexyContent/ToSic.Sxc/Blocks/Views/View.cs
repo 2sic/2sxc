@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Blocks
         public bool PublishData => Entity.GetBestValue<bool>(FieldPublishEnable);
         public string StreamsToPublish => Entity.GetBestValue<string>(FieldPublishStreams);
 
-
+        [PrivateApi]
         public IEntity Query => GetBestRelationship(FieldPipeline);
 
         public string UrlIdentifier => Entity.GetBestValue<string>(FieldNameInUrl);
