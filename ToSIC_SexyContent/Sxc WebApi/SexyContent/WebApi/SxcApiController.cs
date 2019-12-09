@@ -12,10 +12,12 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
-using DynamicCode = ToSic.Sxc.Web.DynamicCode;
+using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
+
+// ReSharper disable InheritdocInvalidUsage
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.WebApi
@@ -28,7 +30,13 @@ namespace ToSic.SexyContent.WebApi
     /// safer because it can't accidentally mix the App with a different appId in the params
     /// </summary>
     [SxcWebApiExceptionHandling]
-    public abstract class SxcApiController : DynamicApiController, IDynamicWebApi, IDynamicCodeBeforeV10
+    public abstract class SxcApiController : 
+        DynamicApiController, 
+        IDynamicWebApi, 
+        IDynamicCodeBeforeV10,
+#pragma warning disable 618
+        IAppAndDataHelpers
+#pragma warning restore 618
     {
         public new IDnnContext Dnn => base.Dnn;//  DynCodeHelpers.Dnn;
 
@@ -40,23 +48,33 @@ namespace ToSic.SexyContent.WebApi
         /// <inheritdoc />
         public IBlockDataSource Data => DynCode.Data;
 
+        #region new AsDynamic - not supported
+
+        /// <inheritdoc/>
+        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
+            => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your base class. See https://r.2sxc.org/RazorComponent");
+
+        ///// <inheritdoc/>
+        //public IEnumerable<dynamic> AsDynamic(IDataSource source)
+        //    => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your base class. See https://r.2sxc.org/RazorComponent");
+
+
+        #endregion
 
         #region AsDynamic implementations
-        /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => throw new Exception("AsDynamic for strings requires the new RazorComponent in 2sxc 10. See https://r.2sxc.org/RazorComponent");
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) =>  DynCode.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(dynamic dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
         [PrivateApi("old api, only available in old API controller")]
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  DynCode.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value);
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  DynCode.AsDynamic(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsDynamic(stream.List);
 
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) =>  DynCode.AsEntity(dynamicEntity);
@@ -80,8 +98,16 @@ namespace ToSic.SexyContent.WebApi
         public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DynCode.AsDynamic(entities);
         #endregion
 
+        #region AsList - only in newer APIs
+
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsList(dynamic list)
+            => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(ApiController) + " see https://r.2sxc.org/RazorComponent");
+
+        #endregion
 
         #region CreateSource implementations
+        [Obsolete]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
 	        ILookUpEngine lookUpEngine = null)
 	        => DynCode.CreateSource(typeName, inSource, lookUpEngine);

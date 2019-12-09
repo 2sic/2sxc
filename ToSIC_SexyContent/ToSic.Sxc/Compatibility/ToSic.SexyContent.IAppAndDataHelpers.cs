@@ -41,11 +41,11 @@ namespace ToSic.SexyContent
         dynamic AsDynamic(dynamic dynamicEntity);
 
 
-        /// <summary>
-        /// In case AsDynamic is used with Data["name"]
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<dynamic> AsDynamic(IDataStream stream);
+        ///// <summary>
+        ///// In case AsDynamic is used with Data["name"]
+        ///// </summary>
+        ///// <returns></returns>
+        //IEnumerable<dynamic> AsDynamic(IDataStream stream);
 
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
@@ -54,12 +54,12 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         IEntity AsEntity(dynamic dynamicEntity);
 
-        /// <summary>
-        /// Returns a list of DynamicEntities
-        /// </summary>
-        /// <param name="entities">List of entities</param>
-        /// <returns></returns>
-        IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities);
+        ///// <summary>
+        ///// Returns a list of DynamicEntities
+        ///// </summary>
+        ///// <param name="entities">List of entities</param>
+        ///// <returns></returns>
+        //IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities);
 
 
         #region Create Data Sources

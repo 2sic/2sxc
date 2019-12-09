@@ -1,17 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.SexyContent;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
-using Constants = ToSic.Eav.Constants;
+using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Code
@@ -25,6 +24,7 @@ namespace ToSic.Sxc.Code
         /// instance data, not the app data
         /// </summary>
         public IBlockDataSource Data => Sxc?.Cms?.Block.Data;
+        [PrivateApi]
         public SxcHelper Sxc { get; private set; }
 
         internal IDynamicCode Parent;
@@ -48,6 +48,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => Parent?.AsDynamic(json, fallback);
 
+        /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => Parent?.AsDynamic(entity);
 
         [PrivateApi]
@@ -59,21 +60,37 @@ namespace ToSic.Sxc.Code
         //public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) 
         //    => Parent?.AsDynamic(entityKeyValuePair);
 
-        [PrivateApi]
-        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) 
-            => Parent?.AsDynamic(entityKeyValuePair);
+        //[PrivateApi]
+        //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+        //public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) 
+        //    => Parent?.AsDynamic(entityKeyValuePair);
 
 
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => Parent?.AsDynamic(stream);
-
+        /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => Parent?.AsEntity(dynamicEntity);
 
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Parent?.AsDynamic(entities);
+        ///// <inheritdoc />
+        //public IEnumerable<dynamic> AsDynamic(IDataStream stream) => Parent?.AsDynamic(stream);
+
+        ///// <inheritdoc />
+        //public IEnumerable<dynamic> AsDynamic(IDataSource source) => Parent?.AsDynamic(source);
+
+
+       //  /// <inheritdoc />
+       //public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Parent?.AsDynamic(entities);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
         public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => Parent?.AsDynamic(entities);
+
+
+        #endregion
+
+        #region AsList (experimental
+
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsList(dynamic list)
+            => Parent?.AsList(list);
 
 
         #endregion

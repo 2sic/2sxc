@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 
 		        // look it up first, because we need to know if the result is in ADAM or not (different security scenario)
 		        var conv = new ValueConverter();
-                var resolved = conv.ToValue(guid, hyperlink);
+                var resolved = conv.ToValue(hyperlink, guid);
 
 		        if (lookupPage)
 		        {

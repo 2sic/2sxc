@@ -1,0 +1,19 @@
+- name: Razor Components/Templates
+  topicUid: HowTo.Razor.Templates
+- name: Edit Object
+  topicUid: HowTo.Razor.Edit
+  items: 
+    - name: Edit.TagToolbar Edit.Toolbar
+      topicUid: HowTo.Razor.Edit.Toolbar
+    - name: Edit.Enable
+      topicUid: HowTo.Razor.Edit.Enable
+    - name: Edit.ContextAttributes
+      topicUid: HowTo.Razor.ContextAttributes
+- name: Customize Data
+  topicUid: HowTo.Razor.CustomizeData
+- name: Customize Search
+  topicUid: HowTo.Razor.CustomizeSearch
+- name: Execution Purpose
+  topicUid: HowTo.Razor.Purpose
+- name: Content Black
+  topicUid: HowTo.Razor.Blocks

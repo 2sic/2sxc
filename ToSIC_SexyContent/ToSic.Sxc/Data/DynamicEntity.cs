@@ -7,17 +7,23 @@ using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
+// ReSharper disable InheritdocInvalidUsage
 
 namespace ToSic.Sxc.Data
 {
-    [PrivateApi]
-    public class DynamicEntity : System.Dynamic.DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>
+    /// <summary>
+    /// A dynamic entity object - the main object you use when templating things in RazorComponent objects <br/>
+    /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
+    /// </summary>
+    [PublicApi]
+    public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>
     {
-
+        [PrivateApi]
         public IEntity Entity { get; }
 
         /// <inheritdoc />
         [Obsolete("use Edit.Toolbar instead")]
+        [PrivateApi]
         public HtmlString Toolbar {
             get
             {
@@ -37,11 +43,13 @@ namespace ToSic.Sxc.Data
         }
 
         private readonly string[] _dimensions;
+        [PrivateApi]
         internal ICmsBlock CmsInstance { get; }   // must be internal for further use cases
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
+        [PrivateApi]
         public DynamicEntity(IEntity entityModel, string[] dimensions, ICmsBlock sexy)
         {
             Entity = entityModel;
@@ -49,9 +57,11 @@ namespace ToSic.Sxc.Data
             CmsInstance = sexy;
         }
 
+        /// <inheritdoc />
         public override bool TryGetMember(GetMemberBinder binder, out object result)
             => TryGetMember(binder.Name, out result);
 
+        /// <inheritdoc />
         public bool TryGetMember(string memberName, out object result)
         {
             result = GetEntityValue(memberName, out var propertyNotFound);
@@ -62,6 +72,7 @@ namespace ToSic.Sxc.Data
             return true;
         }
 
+        [PrivateApi]
         public object GetEntityValue(string attributeName, out bool propertyNotFound)
         {
             propertyNotFound = false;   // assume found, as that's usually the case
@@ -103,28 +114,35 @@ namespace ToSic.Sxc.Data
         /// <summary>
         /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">the property name. </param>
+        /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
         public dynamic Get(string name) => GetEntityValue(name, out _);
 
         /// <inheritdoc />
+        [PrivateApi("should use Content.Presentation")]
+        [Obsolete("should use Content.Presentation")]
         public dynamic Presentation => GetPresentation; 
 
         private IDynamicEntity GetPresentation
-            => _presentation ?? (_presentation = Entity is EntityInContentGroup
-                   ? new DynamicEntity(((EntityInContentGroup) Entity).Presentation, _dimensions, CmsInstance)
+            => _presentation ?? (_presentation = Entity is EntityInBlock entityInGroup
+                   ? new DynamicEntity(entityInGroup.Presentation, _dimensions, CmsInstance)
                    : null);
         private IDynamicEntity _presentation;
 
 
+        /// <inheritdoc />
         public int EntityId => Entity.EntityId;
 
+        /// <inheritdoc />
         public Guid EntityGuid => Entity.EntityGuid;
 
+        /// <inheritdoc />
         public object EntityTitle => Entity.Title[_dimensions];
 
+        /// <inheritdoc />
         public dynamic GetDraft() => new DynamicEntity(Entity.GetDraft(), _dimensions, CmsInstance);
         
+        /// <inheritdoc />
         public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, CmsInstance);
 
         /// <summary>
@@ -132,14 +150,16 @@ namespace ToSic.Sxc.Data
         /// 2019-09-18 trying to mark demo-items for better detection in output #1792
         /// </summary>
         /// <returns></returns>
-        public bool IsDemoItem => Entity is EntityInContentGroup entInCg && entInCg.IsDemoItem;
+        public bool IsDemoItem => Entity is EntityInBlock entInCg && entInCg.IsDemoItem;
 
+        [PrivateApi("probably we won't continue recommending to use this, but first we must provide an alternative")]
         public IHtmlString Render() => Blocks.Render.One(this);
 
 
         #region Changing comparison operation to internally compare the entities, not this wrapper
-
+        /// <inheritdoc />
         public static bool operator ==(DynamicEntity d1, IDynamicEntity d2) => OverrideIsEqual(d1, d2);
+        /// <inheritdoc />
         public static bool operator !=(DynamicEntity d1, IDynamicEntity d2) => !OverrideIsEqual(d1, d2);
 
         /// <summary>
@@ -161,14 +181,15 @@ namespace ToSic.Sxc.Data
             return d1?.Entity == d2?.Entity;
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))
                 return true;
-            if (obj is IDynamicEntity deobj)
-                return Entity == deobj.Entity;
-            if (obj is IEntity entobj)
-                return Entity == entobj;
+            if (obj is IDynamicEntity deObj)
+                return Entity == deObj.Entity;
+            if (obj is IEntity entObj)
+                return Entity == entObj;
 
             return false;
         }
@@ -180,12 +201,21 @@ namespace ToSic.Sxc.Data
         /// <returns></returns>
         public override int GetHashCode() => Entity != null ? Entity.GetHashCode() : 0;
 
+        /// <inheritdoc />
         public bool Equals(IDynamicEntity dynObj) => Entity == dynObj?.Entity;
 
         #endregion
 
+        /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)
             => Entity.Parents(type, field)
+                .Select(e => new DynamicEntity(e, _dimensions, CmsInstance))
+                .Cast<IDynamicEntity>()
+                .ToList();
+
+        /// <inheritdoc />
+        public List<IDynamicEntity> Children(string field = null, string type = null)
+            => Entity.Children(field, type)
                 .Select(e => new DynamicEntity(e, _dimensions, CmsInstance))
                 .Cast<IDynamicEntity>()
                 .ToList();

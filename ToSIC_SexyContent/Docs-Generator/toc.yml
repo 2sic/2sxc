@@ -3,6 +3,7 @@
   href: specs/
   homepage: specs/index.md
 - name: How To
+  href: how-to/
   topicUid: HowTo.Home
 - name: .net API
   href: api/dot-net/index.html

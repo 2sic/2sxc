@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Dnn
             => TryToResolveOneLinkToInternalDnnCode(value);
 
         /// <inheritdoc />
-        public string ToValue(Guid itemGuid, string reference)
+        public string ToValue(string reference, Guid itemGuid = default)
             => TryToResolveDnnCodeToLink(itemGuid, reference);
 
         /// <summary>

@@ -22,6 +22,9 @@ apiRules:
     uidRegex: ^System\.IDisposable$
 
 - exclude:
+    uidRegex: ^System\.Dynamic\.DynamicObject
+
+- exclude:
     uidRegex: ^System\.Web
     # includes System.Web.WebPages and System.Web.ApiController
 

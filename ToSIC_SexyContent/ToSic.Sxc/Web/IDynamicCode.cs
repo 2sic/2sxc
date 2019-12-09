@@ -4,10 +4,10 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
@@ -21,22 +21,31 @@ namespace ToSic.Sxc.Web
     /// </summary>
     [PublicApi]
 #pragma warning disable 618
-    public interface IDynamicCode: SexyContent.IAppAndDataHelpers, ISharedCodeBuilder // inherit from old namespace to ensure compatibility
+    public interface IDynamicCode: /*SexyContent.IAppAndDataHelpers,*/ ISharedCodeBuilder // inherit from old namespace to ensure compatibility
 #pragma warning restore 618
     {
+        #region internal/obsolete but still needed, not public!
+        [PrivateApi]
+        SxcHelper Sxc { get; }
+
+        [PrivateApi]
+        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);
+
+        #endregion
+
 
         /// <summary>
         /// A fully prepared <see cref="IApp"/> object letting you access all the data and queries in the current app. 
         /// </summary>
         /// <returns>The current app</returns>
-        new IApp App { get; }
+        IApp App { get; }
 
         /// <summary>
         /// The data prepared for the current Code. Usually user data which was manually added to the instance, but can also be a query.
         /// </summary>
         /// <returns>
         /// An <see cref="IBlockDataSource"/> which is as <see cref="IDataSource"/>.</returns>
-        new IBlockDataSource Data { get; }
+        IBlockDataSource Data { get; }
 
         #region Content and Header
         /// <summary>
@@ -105,14 +114,6 @@ namespace ToSic.Sxc.Web
         IInPageEditingSystem Edit { get; }
         #endregion
 
-        //#region Configure a just generated object
-
-        //[PrivateApi("WIP")]
-        //void ConfigurePage(IDynamicCode parentPage);
-
-
-        //#endregion
-
         #region AsDynamic for Strings
 
         /// <summary>
@@ -129,6 +130,7 @@ namespace ToSic.Sxc.Web
         /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
         /// If you provide null for the fallback, then you will get null back.
         /// </returns>
+        /// <remarks>Added in 2sxc 10.21.00</remarks>
         dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson);
 
         #endregion 
@@ -140,7 +142,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="entity">the original object</param>
         /// <returns>a dynamic object for easier coding</returns>
-        new dynamic AsDynamic(IEntity entity);
+        dynamic AsDynamic(IEntity entity);
 
 
         /// <summary>
@@ -148,32 +150,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="dynamicEntity">the original object</param>
         /// <returns>a dynamic object for easier coding</returns>
-        new dynamic AsDynamic(dynamic dynamicEntity);
-
-
-        // 2019-11-28 2dm removed from primary IDynamicCode interface, now only in legacyinterface
-        ///// <summary>
-        ///// Converts a dictionary-style list of many <see cref="IEntity"/> objects into a key-value pair of <see cref="IDynamicEntity"/> objects. 
-        ///// </summary>
-        ///// <param name="entityKeyValuePair"></param>
-        ///// <returns></returns>
-        //new dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair);
-
-
-        /// <summary>
-        /// Converts a list of entities from a <see cref="IDataSource"/> into a list of <see cref="IDynamicEntity"/> objects. 
-        /// </summary>
-        /// <param name="stream">the stream containing <see cref="IEntity"/> items</param>
-        /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
-        new IEnumerable<dynamic> AsDynamic(IDataStream stream);
-
-
-        /// <summary>
-        /// Converts a list of <see cref="IEntity"/> objects into a list of <see cref="IDynamicEntity"/> objects. 
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
-        new IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities);
+        dynamic AsDynamic(dynamic dynamicEntity);
 
         #endregion
 
@@ -184,9 +161,21 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="dynamicEntity">the wrapped IEntity</param>
         /// <returns>A normal IEntity</returns>
-        new IEntity AsEntity(dynamic dynamicEntity);
+        IEntity AsEntity(dynamic dynamicEntity);
 
-        // todo: there should be more overloads for AsEntity, but I assume we never needed it, so we don't have them
+        #endregion
+
+        #region AsList 
+
+        /// <summary>
+        /// Converts a list of <see cref="IEntity"/> objects into a list of <see cref="IDynamicEntity"/> objects. 
+        /// </summary>
+        /// <param name="list">typically a List/IEnumerable of Entities or DynamicEntities. <br/>
+        /// Can also be a <see cref="IDataSource"/> in which case it uses the default stream. </param>
+        /// <remarks>Added in 2sxc 10.21.00</remarks>
+        /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
+        IEnumerable<dynamic> AsList(dynamic list);
+
         #endregion
 
         #region Create Data Sources
@@ -196,7 +185,7 @@ namespace ToSic.Sxc.Web
         /// <param name="inStream">The stream which will be the default In of the new data-source.</param>
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
-        new T CreateSource<T>(IDataStream inStream) where T: IDataSource;
+        T CreateSource<T>(IDataStream inStream) where T: IDataSource;
 
 
         /// <summary>
@@ -206,7 +195,7 @@ namespace ToSic.Sxc.Web
         /// <param name="configurationProvider">An alternate configuration provider for the DataSource</param>
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
-        new T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
+        T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
         #endregion
 
 

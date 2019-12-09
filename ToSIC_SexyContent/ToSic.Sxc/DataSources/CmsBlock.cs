@@ -222,7 +222,7 @@ namespace ToSic.Sxc.DataSources
                         try
                         {
                             var itm = originals.One(entityId);
-                            entitiesToDeliver.Add(new EntityInContentGroup(itm)
+                            entitiesToDeliver.Add(new EntityInBlock(itm)
                             {
                                 SortOrder = isListHeader ? -1 : i,
                                 ContentGroupItemModified = itm.Modified,

@@ -14,7 +14,7 @@ We're documenting it here to ensure you know what happened, in case you still ru
 > All these things shouldn't affect you, because they were internal APIs, 
 > but in case it does - here's what we did.
 
-#### Version 10.20.04 (ca. 2019-12-03)
+#### Version 10.20-04 (ca. 2019-12-03)
 
 1. Renamed `DataTableDataSource` to `DataTable`, old name still works.
 1. Renamed `ExternalDataDataSource` to `ExternalData`, old name still works.
@@ -24,7 +24,7 @@ We're documenting it here to ensure you know what happened, in case you still ru
 1. Renamed `ToSic.Eav.DataSources.BaseDataSource` to `ToSic.Eav.DataSources.DataSourceBase` for consistency, old name still works.
 1. Moved the LookUp namespaces into the Core DLL
 
-#### Version 10.20.02 (ca. 2019-11-22)
+#### Version 10.20-02 (ca. 2019-11-22)
 
 More internal changes which shouldn't affect anybody, but make the API ready for public docs...
 

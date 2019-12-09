@@ -100,15 +100,18 @@ Mostly smaller bugfixes
 * [x] limit streams returned by a query
 
 ### Version 9.13
+
 * [x] Enhanced API to create custom DataSources + ca. 10 blog posts for that
 * [x] Standalone FnL / UDT DataSource (removed it from core distribution)
 
 ### Version 9.14 LTS
+
 * [x] New LTS Concept - see [blog post about LTS 9.14](https://2sxc.org/en/blog/post/special-edition-2sxc-9-14-lts-long-term-support)
 
 
 ### Version 9.15-9.42 LTS
-didn't have time to document this yet, sorry.
+
+Didn't have time to document this yet, sorry. If you need to know, best check the git-history.
 
 
 
@@ -118,7 +121,12 @@ didn't have time to document this yet, sorry.
 ### Version 10.01 - 10.09 LTS
 * Develop and fine-tuning of the new Edit-UI based on Angular 8
 
-### Version 10.20.05
+### Version 10.20-00 to 10.20-05
 
 * Enhanced ListCache so it will prevent parallel buildup - important for long-loading DataSources like SharePoint DataSources
 * Updating to RazorBlade 3.1 which doesn't need extension methods
+
+### Version 10.20-06
+
+* Created `AsDynamic(string)`
+* Created `AsDynamic(DataSource)` to enable `AsDynamic(Data)` instead of `AsDynamic(Data["Default"])`

@@ -18,7 +18,7 @@
       ],
       "dest": "obj/api/dot-net/",
       "filter": "filterConfig.yml",
-      "force": false
+      "force": true
     }
   ],
   "build": {
@@ -35,6 +35,7 @@
           "how-to/**.md",
           "specs/**.md",
           "specs/**.yml",
+          "how-to/**.yml",
           "toc.yml",
           "*.md"
         ],

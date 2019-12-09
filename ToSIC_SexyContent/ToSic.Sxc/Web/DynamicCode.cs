@@ -16,6 +16,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -67,39 +68,8 @@ namespace ToSic.Sxc.Web
 
         #region AsDynamic Implementations
 
-        [PrivateApi]
-        //private const char JObjStart = '{';
-        //private const char JArrayStart = '[';
-        //private const string JsonErrorCode = "error";
-
         /// <inheritdoc />
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
-        {
-            return DynamicJacket.AsDynamicJacket(json, fallback);
-            //if (!string.IsNullOrWhiteSpace(json))
-            //    try
-            //    {
-            //        // find first possible opening character
-            //        var firstCharPos = json.IndexOfAny(new[] {JObjStart, JArrayStart});
-            //        if (firstCharPos > -1)
-            //        {
-            //            var firstChar = json[firstCharPos];
-            //            if(firstChar == JObjStart)
-            //                return DynamicJacket.WrapOrUnwrap(JObject.Parse(json));
-            //            if (firstChar == JArrayStart)
-            //                return DynamicJacket.WrapOrUnwrap(JArray.Parse(json));
-            //        }
-            //    }
-            //    catch
-            //    {
-            //        if (fallback == JsonErrorCode) throw;
-            //    }
-
-            //// fallback
-            //return fallback == null
-            //    ? null
-            //    : DynamicJacket.WrapOrUnwrap(JObject.Parse(fallback));
-        }
+        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynamicJacket.AsDynamicJacket(json, fallback);
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, CmsInstance);
@@ -116,16 +86,6 @@ namespace ToSic.Sxc.Web
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
         public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
 
-
-        /// <inheritdoc />
-        /// <summary>
-        /// In case AsDynamic is used with Data["name"]
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("2019-03-07 2dm: probably not needed any more, as 2sxc 9.40.01 adds the IEnumerable to the IDatastream")]
-        [PrivateApi]
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AsDynamic(stream.List);
-
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => ((IDynamicEntity) dynamicEntity).Entity;
 
@@ -136,6 +96,36 @@ namespace ToSic.Sxc.Web
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
         public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => entities.Select(e => AsDynamic(e));
+
+        #endregion
+
+        #region AsList
+
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsList(dynamic list)
+        {
+            switch (list)
+            {
+                case null:
+                    return new List<dynamic>();
+                case IDataSource dsEntities:
+                    return AsList(dsEntities[Eav.Constants.DefaultStreamName]);
+                case IEnumerable<IEntity> iEntities:
+                    return AsDynamic(iEntities);
+                case IEnumerable<dynamic> dynEntities:
+                    return dynEntities;
+                //case IDynamicEntity iDynamicEntity:
+                //    if(name == null)
+                //        throw new Exception("AsList got a DynamicEntity but not a name. You must either provide list of DynamicEntities or add a name to access that property.");
+                //    return AsList(iDynamicEntity.Get(name));
+                //case IEntity iEntity:
+                //    if(name == null)
+                //        throw new Exception("AsList got an IEntity but not a name. You must either provide list of DynamicEntities or add a name to access that property.");
+                //    return AsList(iEntity.Children(name));
+                default:
+                    return null;
+            }
+        }
 
         #endregion
 
@@ -271,7 +261,7 @@ namespace ToSic.Sxc.Web
                     Content = AsDynamic(e)
                 };
 
-                if (e is EntityInContentGroup c)
+                if (e is EntityInBlock c)
                 {
                     el.GroupId = c.GroupId;
                     el.Presentation = c.Presentation == null ? null : AsDynamic(c.Presentation);

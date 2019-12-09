@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
     [Obsolete("use ToSic.Sxc.Dnn.Factory instead")]
     public static class Factory
     {
-        [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(tabId, modId) instead")]
+        [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(tabId, modId) instead. Note that tab/mod are reversed to this call.")]
         public static ICmsBlock SxcInstanceForModule(int modId, int tabId)
             => Sxc.Dnn.Factory.CmsBlock(tabId, modId);
         //{

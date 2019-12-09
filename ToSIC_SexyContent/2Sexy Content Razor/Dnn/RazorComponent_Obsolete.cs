@@ -26,19 +26,19 @@ namespace ToSic.Sxc.Dnn
 
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
 
-        [PrivateApi]
         [Obsolete("for compatibility only, will throw error with instructions how to fix. Cast your entities to ToSic.Eav.Data.IEntity")]
+        [PrivateApi]
         public dynamic AsDynamic(Eav.Interfaces.IEntity entity)
             => throw new Exception($"AsDynamic(Eav.Interfaces.IEntity) {NotSupportedIn10}. Please cast your data to ToSic.Eav.Data.IEntity.");
 
 
-        [PrivateApi]
         [Obsolete("for compatibility only, will throw error with instructions how to fix. Cast your entities to ToSic.Eav.Data.IEntity")]
+        [PrivateApi]
         public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair)
             => throw new Exception($"AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity>) {NotSupportedIn10}. Please cast your data to ToSic.Eav.Data.IEntity.");
 
-        [PrivateApi]
         [Obsolete("for compatibility only, will throw error with instructions how to fix. Cast your entities to ToSic.Eav.Data.IEntity")]
+        [PrivateApi]
         public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities)
             => throw new Exception($"AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) {NotSupportedIn10}. Please cast your data to ToSic.Eav.Data.IEntity.");
 
@@ -85,6 +85,25 @@ namespace ToSic.Sxc.Dnn
         // where two methods have almost the same signature
         //public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
         //    => throw new Exception($"ListPresentation {NotSupportedIn10}. Use Header.Presentation");
+
+        #region Old AsDynamic with correct warnings
+        /// <inheritdoc/>
+        [PrivateApi]
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream)
+            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(RazorComponent)}. Please use AsList instead.");
+
+        /// <inheritdoc/>
+        [PrivateApi]
+        public IEnumerable<dynamic> AsDynamic(IDataSource source)
+            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(RazorComponent)}. Please use AsList instead.");
+
+
+        /// <inheritdoc/>
+        [PrivateApi]
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities)
+            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(RazorComponent)}. Please use AsList instead.");
+
+        #endregion
 
 
         [PrivateApi]

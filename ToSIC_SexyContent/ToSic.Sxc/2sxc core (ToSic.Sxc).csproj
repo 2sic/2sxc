@@ -109,6 +109,10 @@
     <Compile Include="Compatibility\InputTypes.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Engines.InstancePurposes.cs" />
     <Compile Include="Compatibility\RemoveInV10\ToSic.SexyContent.Element.cs" />
+    <Compile Include="Data\DynamicJacket\DynamicJacket.cs" />
+    <Compile Include="Data\DynamicJacket\DynamicJacket.Statics.cs" />
+    <Compile Include="Data\DynamicJacket\DynamicJacketBase.cs" />
+    <Compile Include="Data\DynamicJacket\DynamicJacketList.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="Edit\ClientContextInfo\Ui.cs" />
     <Compile Include="Blocks\Views\IView.cs" />

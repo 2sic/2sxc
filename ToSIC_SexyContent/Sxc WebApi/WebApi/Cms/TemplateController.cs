@@ -78,7 +78,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	    {
             // todo: must add extra security to only allow zone change if host user
 	        Log.Add($"delete a{appId}, t:{id}");
-            var app = Factory.App(appId, false);
+            var app = Dnn.Factory.App(appId, false);
 
 
             var cms = new CmsManager(app, Log);

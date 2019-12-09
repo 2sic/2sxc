@@ -60,7 +60,7 @@ namespace ToSic.SexyContent.WebApi
                 // Look up if page publishing is enabled - if module context is not available, always false
                 var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);
-                var app = Environment.Dnn7.Factory.App(appId, publishingEnabled);
+                var app = Sxc.Dnn.Factory.App(appId, publishingEnabled);
                 DynCode.LateAttachApp(app);
                 found = true;
             } catch { /* ignore */ }

@@ -5,6 +5,8 @@ uid: HowTo.CSharp
 
 This is the C# .net API Documentations, usually meant for Razor-Templates, custom Web-APIs or when accessing 2sxc-instances from external code.
 
+[!include["Tip Inherits"](razor/shared-tip-inherits.md)]
+
 ## Working with C# Razor Templates
 1. [C# API in a normal Razor Template](xref:HowTo.Razor.Templates)
 1. Core Objects:

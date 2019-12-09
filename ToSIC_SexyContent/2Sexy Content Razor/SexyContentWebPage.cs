@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Data;
@@ -19,8 +20,10 @@ using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using DynamicCode = ToSic.Sxc.Web.DynamicCode;
+using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
+// ReSharper disable InheritdocInvalidUsage
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Razor
@@ -29,7 +32,13 @@ namespace ToSic.SexyContent.Razor
     /// The core page type for delivering a 2sxc page
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
-    public abstract class SexyContentWebPage : RazorComponentBase, IRazorComponent, IDynamicCodeBeforeV10
+    public abstract class SexyContentWebPage : 
+        RazorComponentBase, 
+        IRazorComponent, 
+        IDynamicCodeBeforeV10,
+#pragma warning disable 618
+        IAppAndDataHelpers
+#pragma warning restore 618
     {
         #region Helpers linked through AppAndData Helpers
 
@@ -45,6 +54,7 @@ namespace ToSic.SexyContent.Razor
         public IDnnContext Dnn => DynCode.Dnn;
 
         /// <inheritdoc />
+        [PrivateApi("try to remove")]
         public SxcHelper Sxc => DynCode.Sxc;
 
         /// <inheritdoc />
@@ -56,9 +66,6 @@ namespace ToSic.SexyContent.Razor
         public RazorPermissions Permissions => new RazorPermissions(DynCode.CmsBlock);
 
         #region AsDynamic in many variations
-
-        /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynCode.AsDynamic(json, fallback);
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
@@ -76,7 +83,6 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsDynamic(stream.List);
 
-
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => DynCode.AsEntity(dynamicEntity);
 
@@ -85,6 +91,15 @@ namespace ToSic.SexyContent.Razor
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => DynCode.AsDynamic(entities);
 
         #endregion
+
+        #region AsList (experimental)
+
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsList(dynamic list)
+            => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
+
+        #endregion
+
 
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
         [PrivateApi]
@@ -104,6 +119,7 @@ namespace ToSic.SexyContent.Razor
 
         #region Data Source Stuff
         /// <inheritdoc cref="ToSic.Sxc.Dnn.IDynamicCode" />
+        [Obsolete]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
             => DynCode.CreateSource(typeName, inSource, lookUpEngine);
 
@@ -128,7 +144,7 @@ namespace ToSic.SexyContent.Razor
         /// We are blocking this property on purpose, so that people will want to migrate to the new RazorComponent
         /// </summary>
         public dynamic Header 
-            => throw new Exception("The header property is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent));
+            => throw new Exception("The header property is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
             //=> DynCodeHelper.Header;
 
         [Obsolete("Use Header instead")]
@@ -139,6 +155,11 @@ namespace ToSic.SexyContent.Razor
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
         public List<Element> List => DynCode.List;
+
+        /// <inheritdoc/>
+        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
+            => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
+
         #endregion
 
         #endregion

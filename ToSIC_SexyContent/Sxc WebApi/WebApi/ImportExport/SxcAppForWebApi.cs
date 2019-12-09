@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         private SxcAppForWebApi(int appId, bool versioningEnabled)
         {
-            App = Factory.App(appId, versioningEnabled);
+            App = Dnn.Factory.App(appId, versioningEnabled);
         }
 
         private SxcAppForWebApi(int zoneId, int appId)

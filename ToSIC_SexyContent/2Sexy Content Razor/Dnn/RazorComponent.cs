@@ -12,6 +12,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
+using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Dnn
     public abstract partial class RazorComponent : RazorComponentBase, IRazorComponent
     {
 
-        #region AppAndDataHelpers implementation
+        #region Link, Edit, Dnn, App, Data
 
         /// <inheritdoc />
         public ILinkHelper Link => DynCode.Link;
@@ -60,17 +61,20 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc/>
         public dynamic AsDynamic(dynamic dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
 
-        /// <inheritdoc/>
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsDynamic(stream.List);
-
-        /// <inheritdoc/>
-        public IEntity AsEntity(dynamic dynamicEntity) => DynCode.AsEntity(dynamicEntity);
-
-        /// <inheritdoc/>
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => DynCode.AsDynamic(entities);
 
         #endregion
 
+        #region AsEntity
+        /// <inheritdoc/>
+        public IEntity AsEntity(dynamic dynamicEntity) => DynCode.AsEntity(dynamicEntity);
+        #endregion
+
+        #region AsList
+
+        /// <inheritdoc />
+        public IEnumerable<dynamic> AsList(dynamic list) => DynCode?.AsList(list);
+
+        #endregion
 
 
         #region Data Source Stuff
@@ -86,6 +90,8 @@ namespace ToSic.Sxc.Dnn
 
         #endregion
 
+
+
         #region Content, Header, etc. and List
         /// <inheritdoc/>
         public dynamic Content => DynCode.Content;
@@ -100,15 +106,11 @@ namespace ToSic.Sxc.Dnn
         #region Customize Data, Search, and Purpose
 
         /// <inheritdoc />
-        public virtual void CustomizeData()
-        {
-        }
+        public virtual void CustomizeData() { }
 
         /// <inheritdoc />
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
-            DateTime beginDate)
-        {
-        }
+            DateTime beginDate)  { }
 
         /// <inheritdoc />
         public Purpose Purpose { get; internal set; }

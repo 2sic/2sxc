@@ -5,7 +5,11 @@ uid: HowTo.DynamicCode.DynamicEntity
 
 Whenever you create a content-type - like _Person_ - and want to work with the data in your C# Razor templates, you'll be working with a _Dynamic Entity_. 
 
+> [!TIP]
+> Also read about [](xref:HowTo.DynamicCode.AsDynamic)
+
 ## Code example using a Dynamic Entity
+
 We'll assume we have a _Content Type_ called *Book* with the following properties:
 * Title (text, 1-line)
 * Teaser (text, multi-line)
@@ -29,6 +33,7 @@ Here's a code example in a C# Razor template:
 So basically all properties of this book can be shown using `[Object].[PropertyName]` - for example `Content.ReleaseDate`.
 
 ## What Dynamic Entity really does - and how...
+
 Technically the dynamic entity object is like a read-helper for the more complex [](xref:ToSic.Eav.Data.IEntity). So actually the _dynamic entity_ object will keep a reference to the underlying read-only `IEntity` item on a property `Entity`, and whenever your code accesses a property, the dynamic entity will query it from the underlying `Entity`.
 
 The main things that the _dynamic entity_ does for you, are
@@ -57,6 +62,7 @@ The following Methods exist on all dynamic entities
 TODO: write something about how-to-check if published/unpublished, navigating it, etc. - or link to such a page
 
 ## Appendix
+
 The following properties/methods exist, but shouldn't be used. They are documented here so that you know that they are not meant for public use:
 
 1. Created - the created date

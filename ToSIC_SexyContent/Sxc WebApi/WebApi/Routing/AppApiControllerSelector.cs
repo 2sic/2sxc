@@ -130,7 +130,11 @@ namespace ToSic.Sxc.WebApi
             }
             catch (Exception e)
             {
-                var exception = new Exception("2sxc Api Controller Finder: Error while selecting / compiling a controller for the request. Pls check the event-log and the code. See the inner exception for more details.", e);
+                var apiErrPrefix = "2sxc Api Controller Finder: " +
+                                   "Error selecting / compiling an API controller. " +
+                                   "Check event-log, code and inner exception. ";
+                var helpText = ErrorHelp.HelpText(e);
+                var exception = new Exception(apiErrPrefix + helpText, e);
                 DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
                 wrapLog("error", null);
                 throw new HttpResponseException(request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception.Message, e));
@@ -140,7 +144,7 @@ namespace ToSic.Sxc.WebApi
             throw new HttpResponseException(request.CreateErrorResponse(HttpStatusCode.NotFound, "2sxc Api Controller Finder: Controller " + controllerTypeName + " not found in app."));
         }
 
-        private static void AddToInsightsHistory(string url, Log log)
+        private static void AddToInsightsHistory(string url, ILog log)
         {
             var addToHistory = true;
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
