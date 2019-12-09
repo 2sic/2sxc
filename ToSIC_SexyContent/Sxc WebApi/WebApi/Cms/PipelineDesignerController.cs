@@ -85,7 +85,10 @@ namespace ToSic.Sxc.WebApi.Cms
 			// Stop if a Template uses this Pipeline
             //var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
             var cms = new CmsRuntime(appId, Log, true );
-			var templatesUsingPipeline = cms.Views.GetAll().Where(t => t.Query != null && t.Query.EntityId == id).Select(t => t.Id).ToArray();
+			var templatesUsingPipeline = cms.Views.GetAll()
+                .Where(t => t.Query?.Id == id)
+                .Select(t => t.Id)
+                .ToArray();
 			if (templatesUsingPipeline.Any())
 				throw new Exception(
 				        $"Pipeline is used by Views and cant be deleted. Pipeline EntityId: {id}. TemplateIds: {string.Join(", ", templatesUsingPipeline)}");

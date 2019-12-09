@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Apps.Blocks
                     templateEntity = Entity.Children("Template").FirstOrDefault();
                 //((EntityRelationship) Entity.Attributes["Template"][0]).FirstOrDefault();
 
-                _view = templateEntity == null ? null : new View(templateEntity);
+                _view = templateEntity == null ? null : new View(templateEntity, Log);
 
                 return _view;
             }

@@ -51,13 +51,13 @@ namespace ToSic.Sxc.DataSources
                 viewDataSource.Publish.Enabled = overrideView.PublishData;
                 viewDataSource.Publish.Streams = overrideView.StreamsToPublish;
 
-                log.Add($"override template, & pipe#{overrideView.Query?.EntityId}");
+                log.Add($"override template, & pipe#{overrideView.Query?.Id}");
                 // Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
                 if (overrideView.Query != null)
                 {
-                    var queryDef = new QueryDefinition(overrideView.Query, cms.Block.AppId, parentLog);
+                    // var queryDef = new QueryDefinition(overrideView.QueryRaw, cms.Block.AppId, parentLog);
 
-                    new QueryBuilder(parentLog).GetAsDataSource(queryDef,  /*cms.Block.AppId, overrideView.Query,*/
+                    new QueryBuilder(parentLog).GetAsDataSource(overrideView.Query,// queryDef,  /*cms.Block.AppId, overrideView.Query,*/
                         configurationProvider, null, viewDataSource, showDrafts: showDrafts);}
 
             }

@@ -30,7 +30,10 @@ namespace ToSic.Sxc.Apps
 			return dataSource;
 		}
 
-        public IEnumerable<IView> GetAll() => _all ?? (_all = ViewsDataSource().List.Select(p => new View(p)).OrderBy(p => p.Name));
+        public IEnumerable<IView> GetAll() 
+            => _all ?? (_all = ViewsDataSource().List
+                   .Select(p => new View(p, Log))
+                   .OrderBy(p => p.Name));
         private IEnumerable<IView> _all;
 
         public IEnumerable<IView> GetRazor() => GetAll().Where(t => t.IsRazor);
@@ -47,7 +50,7 @@ namespace ToSic.Sxc.Apps
 			if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");
 
-			return new View(templateEntity);
+			return new View(templateEntity, Log);
 		}
 
 
