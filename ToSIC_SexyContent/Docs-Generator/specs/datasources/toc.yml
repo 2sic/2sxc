@@ -4,6 +4,7 @@
   topicUid: Specs.DataSources.ListAll
 - topicUid: Specs.DataSources.Query
 - topicUid: Specs.DataSources.QueryParams
+- topicUid: Specs.DataSources.SystemQueries
 - topicUid: Specs.DataSources.VisualQuery
 - name: Configuration System
   topicUid: Specs.DataSources.Configuration
