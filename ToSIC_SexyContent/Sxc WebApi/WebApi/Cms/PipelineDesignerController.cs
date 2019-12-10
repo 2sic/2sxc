@@ -57,7 +57,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
 
 	    /// <summary>
-	    /// Query the Result of a Pipline using Test-Parameters
+	    /// Query the Result of a Pipeline using Test-Parameters
 	    /// </summary>
 	    [HttpGet]
 	    public dynamic QueryPipeline(int appId, int id)
