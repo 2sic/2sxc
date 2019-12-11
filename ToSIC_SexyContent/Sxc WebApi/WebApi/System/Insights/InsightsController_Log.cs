@@ -180,12 +180,12 @@ namespace ToSic.Sxc.WebApi.System
                 );
             var htmlEnc = h1($"{title}") + "\n" + HtmlEncode(dump);
             htmlEnc = htmlEnc
-                .Replace(ResStartPlaceholder, ResStart)//"<span style='color: green'>= ")
+                .Replace(ResStartPlaceholder, ResStart)
                 .Replace(ResEndPlaceholder, ResEnd)
                 .Replace(CallerPrefixPlaceholder, CallerPrefix)
                 .Replace(CallerSuffixPlaceholder, CallerSuffix);
 
-            return ToBr(htmlEnc);//.Replace("⋮", "&vellip;");
+            return ToBr(htmlEnc);
         }
 
         public static string HtmlEncode(string text)
