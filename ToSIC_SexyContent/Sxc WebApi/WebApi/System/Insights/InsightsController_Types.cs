@@ -110,8 +110,7 @@ namespace ToSic.Sxc.WebApi.System
         public string GlobalTypesLog()
         {
             ThrowIfNotSuperuser();
-
-            return ToBr(Global.Log.Dump(" - ", h1($"2sxc load log for global types") + "\n", "end of log"));
+            return FormatLog("2sxc load log for Global Types", Global.Log);
         }
 
         [HttpGet]

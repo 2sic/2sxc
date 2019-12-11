@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi.System
 
             Log.Add($"debug app-load {appId}");
             var appRead = new AppRuntime(appId.Value, Log);
-            return ToBr(appRead.Package.Log.Dump(" - ", h1($"2sxc load log for app {appId}") + "\n", "end of log"));
+            return FormatLog($"2sxc load log for app {appId}", appRead.Package.Log);
         }
 
         [HttpGet]

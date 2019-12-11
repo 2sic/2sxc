@@ -157,13 +157,34 @@ namespace ToSic.Sxc.WebApi.System
             return msg;
         }
 
+        private const string ResStartPlaceholder = "*resStart*";
+        private const string ResEndPlaceholder = "*resEnd*";
+        private const string ResStart = "<span style='color: green'>= ";
+        private const string ResEnd = "</span>";
+
+        private const string CallerPrefixPlaceholder = "*clrP*";
+        private const string CallerSuffixPlaceholder = "*clrS";
+        private const string CallerPrefix = " <span style='color: blue' title='";
+        private const string CallerSuffix = "'>#</span>";
+
         private static string FormatLog(string title, ILog log)
         {
-            var dump = log.Dump(" - ", "",
-                "end of log", "*resStart*", "*resEnd*");
+            var dump = log.Dump(" - ", 
+                "",
+                "end of log",
+                ResStartPlaceholder, 
+                ResEndPlaceholder,
+                withCaller: true,
+                callStart: CallerPrefixPlaceholder,
+                callEnd: CallerSuffixPlaceholder
+                );
             var htmlEnc = h1($"{title}") + "\n" + HtmlEncode(dump);
-            htmlEnc = htmlEnc.Replace("*resStart*", "<span style='color: green'>= ")
-                .Replace("*resEnd*", "</span>");
+            htmlEnc = htmlEnc
+                .Replace(ResStartPlaceholder, ResStart)//"<span style='color: green'>= ")
+                .Replace(ResEndPlaceholder, ResEnd)
+                .Replace(CallerPrefixPlaceholder, CallerPrefix)
+                .Replace(CallerSuffixPlaceholder, CallerSuffix);
+
             return ToBr(htmlEnc);//.Replace("⋮", "&vellip;");
         }
 
