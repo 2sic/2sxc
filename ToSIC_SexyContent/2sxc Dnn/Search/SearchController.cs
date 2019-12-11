@@ -8,6 +8,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Caching;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Search;
@@ -57,10 +58,12 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
 
             // Ensure cache builds up with correct primary language
-            var cache = Eav.Factory.Resolve<IRootCache>();
-            ((RootCacheBase)cache).ZoneId = zoneId;
-            ((RootCacheBase)cache).AppId = appId.Value;
-            cache.PreLoadCache(portalSettings.DefaultLanguage.ToLower());
+            var cache = Eav.Factory.Resolve<IAppsCache>();
+            cache.PreLoadCache(zoneId, appId.Value, portalSettings.DefaultLanguage.ToLower());
+            //var cache = Eav.Factory.Resolve<IRootCache>();
+            //((RootCacheBase)cache).ZoneId = zoneId;
+            //((RootCacheBase)cache).AppId = appId.Value;
+            //cache.PreLoadCache(portalSettings.DefaultLanguage.ToLower());
 
             // must find tenant through module, as the PortalSettings.Current is null in search mode
             var tenant = new Tenant(portalSettings);

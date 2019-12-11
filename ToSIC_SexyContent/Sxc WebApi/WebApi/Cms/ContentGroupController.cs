@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var context = GetContext(CmsBlock, Log);
 
-            var cache = context.App.Data.Cache; 
+            var cache = context.App.Data.Root; 
             var ct = cache.GetContentType(attributeSetName);
 
             var dataSource = context.App.Data[ct.Name]; 

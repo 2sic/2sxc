@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.DataSources.Caching;
+using ToSic.Eav.Apps.Caching;
 
 namespace ToSic.Sxc.Apps
 {
@@ -9,9 +9,10 @@ namespace ToSic.Sxc.Apps
     {
         internal static int GetAppIdFromGuidName(int zoneId, string appName, bool alsoCheckFolderName = false)
         {
-            var baseCache = (RootCacheBase) DataSource.GetCache(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId);
+            // var baseCache = (RootCacheBase) DataSource.GetCache(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId);
+            var baseCache = Factory.Resolve<IAppsCache>();
             // ReSharper disable once UnusedVariable
-            var dummy = baseCache.CacheTimestamp;
+            //var dummy = baseCache.CacheTimestamp;
 
             if (string.IsNullOrEmpty(appName))
                 return 0; 

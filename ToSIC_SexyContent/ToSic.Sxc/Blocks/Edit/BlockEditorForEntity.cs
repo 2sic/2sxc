@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Caching;
 using ToSic.Eav.Data;
-using ToSic.Eav.DataSources.Caching;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -26,8 +26,10 @@ namespace ToSic.Sxc.Blocks
             var appName = "";
             if (appId.HasValue)
             {
-                var zoneAppId = ((RootCacheBase)DataSource.GetCache(0, 0)).GetZoneAppId(null, appId);
-                appName = ((RootCacheBase)DataSource.GetCache(0, 0)).ZoneApps[zoneAppId.Item1].Apps[appId.Value];
+                var cache = Factory.Resolve<IAppsCache>();
+
+                var zoneAppId = cache.GetZoneAppId(null, appId);
+                appName = cache.ZoneApps[zoneAppId.Item1].Apps[appId.Value];
             }
             UpdateValue(BlockFromEntity.CbPropertyApp, appName);
         }
