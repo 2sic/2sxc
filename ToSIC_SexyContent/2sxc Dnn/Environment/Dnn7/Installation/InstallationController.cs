@@ -166,7 +166,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Installation
         {
             _installLogger.LogStep("", "Maybe reset logs start");
             // this condition only applies, if 2sxc upgrade 7 didn't happen yet
-            if (DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId)
+            if (DataSource.GetCache(DataSource.GetIdentity(Constants.DefaultZoneId, Constants.MetaDataAppId))
                     .GetContentType("2SexyContent-Template") != null) return;
 
             _installLogger.LogStep("", "Will reset all logs now");

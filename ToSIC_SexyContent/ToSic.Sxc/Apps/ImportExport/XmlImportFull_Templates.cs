@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Apps.ImportExport
             var templates = root.Element(XmlConstants.Templates);
             if (templates == null) return;
 
-            var cache = DataSource.GetCache(ZoneId, AppId);
+            var cache = DataSource.GetCache(DataSource.GetIdentity(ZoneId, AppId));
 
             foreach (var template in templates.Elements(XmlConstants.Template))
             {

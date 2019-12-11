@@ -115,7 +115,7 @@ namespace ToSic.Sxc.Engines
                 throw new RenderingException("Template Configuration Missing");
 
             if (Template.ContentType != "" &&
-                Eav.DataSource.GetCache(App.ZoneId, App.AppId).GetContentType(Template.ContentType) == null)
+                Eav.DataSource.GetCache(App).GetContentType(Template.ContentType) == null)
                 throw new RenderingException("The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
 
         }

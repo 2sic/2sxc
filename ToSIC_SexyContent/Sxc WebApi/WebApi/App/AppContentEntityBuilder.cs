@@ -17,7 +17,7 @@ namespace ToSic.Sxc.WebApi.App
 
 
         /// <summary>
-        /// Construct an import-friedly, type-controlled value-dictionary to create or update an entity
+        /// Construct an import-friendly, type-controlled value-dictionary to create or update an entity
         /// </summary>
         /// <param name="contentType"></param>
         /// <param name="newContentItem"></param>
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"create ent dic a#{appId}, type:{contentType}");
             // Retrieve content-type definition and check all the fields that this content-type has
-            var cache = (RootCacheBase)DataSource.GetCache(null, appId);
+            var cache = (RootCacheBase) DataSource.GetCache(DataSource.GetIdentity(null, appId));
             var listOfTypes = cache.GetContentType(contentType);
             var attribs = listOfTypes.Attributes;
 

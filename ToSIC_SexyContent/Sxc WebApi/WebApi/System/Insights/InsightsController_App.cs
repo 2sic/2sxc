@@ -39,7 +39,7 @@ namespace ToSic.Sxc.WebApi.System
             foreach (var zone in zones)
             {
                 var apps = zone.Value.Apps
-                    .Select(a => new { Id = a.Key, Guid = a.Value, InCache = cache.HasCacheItem(zone.Value.ZoneId, a.Key)})
+                    .Select(a => new { Id = a.Key, Guid = a.Value, InCache = cache.Has(zone.Value.ZoneId, a.Key)})
                     .OrderBy(a => a.Id);
                 foreach (var app in apps)
                 {
