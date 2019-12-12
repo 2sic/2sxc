@@ -37,7 +37,8 @@
           "specs/**.yml",
           "how-to/**.yml",
           "toc.yml",
-          "*.md"
+          "*.md",
+          "api-meta.json"
         ],
         "exclude": [
           "obj/**",
