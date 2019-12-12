@@ -165,7 +165,7 @@ namespace ToSic.Sxc.WebApi.System
         private const string CallerPrefixPlaceholder = "*clrP*";
         private const string CallerSuffixPlaceholder = "*clrS";
         private const string CallerPrefix = " <span style='color: blue' title='";
-        private const string CallerSuffix = "'>#</span>";
+        private const string CallerSuffix = "'>C#</span>";
 
         private static string FormatLog(string title, ILog log)
         {
