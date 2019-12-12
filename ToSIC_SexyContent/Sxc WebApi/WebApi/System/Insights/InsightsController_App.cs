@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.System
             var msg = h1("Apps In Cache");
             var cache = Factory.Resolve<IAppsCache>();
 
-            var zones = cache.ZoneApps.OrderBy(z => z.Key);
+            var zones = cache.Zones.OrderBy(z => z.Key);
 
             msg += "<table id='table'><thead>"
                 + tr(new []{"Zone", "App", "Guid", "InCache", "Details", "Actions"}, true)
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.WebApi.System
             foreach (var zone in zones)
             {
                 var apps = zone.Value.Apps
-                    .Select(a => new { Id = a.Key, Guid = a.Value, InCache = cache.Has(zone.Value.ZoneId, a.Key)})
+                    .Select(a => new { Id = a.Key, Guid = a.Value, InCache = cache.Has(new AppIdentity(zone.Value.ZoneId, a.Key))})
                     .OrderBy(a => a.Id);
                 foreach (var app in apps)
                 {

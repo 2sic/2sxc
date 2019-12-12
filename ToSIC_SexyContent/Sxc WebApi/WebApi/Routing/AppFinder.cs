@@ -32,7 +32,7 @@ namespace ToSic.Sxc.WebApi
         /// </summary>
         /// <param name="appPath"></param>
         /// <returns></returns>
-        internal IInAppAndZone GetCurrentAppIdFromPath(string appPath)
+        internal IAppIdentity GetCurrentAppIdFromPath(string appPath)
         {
             var wrapLog = Log.Call("GetCurrentAppIdFromPath", appPath);
             // check zone
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi
             // get app from appname
             var aid = AppHelpers.GetAppIdFromGuidName(zid, appPath, true);
             wrapLog($"found app:{aid}");
-            return new AppIdentity(zid, aid, Log);
+            return new AppBase(zid, aid, Log);
         }
 
 
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi
         /// Note that this will fail, if both appPath and context are missing
         /// </summary>
         /// <returns></returns>
-        internal IInAppAndZone GetAppIdFromPathOrContext(string appPath, /*SxcBlock*/ICmsBlock cmsInstance)
+        internal IAppIdentity GetAppIdFromPathOrContext(string appPath, /*SxcBlock*/ICmsBlock cmsInstance)
         {
             var wrapLog = Log.Call("GetAppIdFromPathOrContext", $"{appPath}, ...", "detect app from query string parameters");
 
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.WebApi
             {
                 Log.Add($"auto detect app and init eav - path:{appPath}, context null: {cmsInstance == null}");
                 appId = appPath == null || appPath == "auto"
-                    ? new AppIdentity(
+                    ? new AppBase(
                         cmsInstance?.Block?.ZoneId ??
                         throw new ArgumentException("try to get app-id from context, but none found"),
                         cmsInstance.Block.AppId // not nullable any more 2019-11-09 ?? 0
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.WebApi
         /// It's a temporary solution, because normally we want the control flow to be more obvious
         /// </summary>
         /// <returns></returns>
-        private IInAppAndZone GetAppIdentityFromQueryAppZone()
+        private IAppIdentity GetAppIdentityFromQueryAppZone()
         {
             var allUrlKeyValues = ControllerContext.Request.GetQueryNameValuePairs().ToList();
             var ok1 = int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == Route.ZoneIdKey).Value, out var zoneIdFromQueryString);
@@ -87,7 +87,7 @@ namespace ToSic.Sxc.WebApi
             if (ok1 && ok2)
             {
                 Log.Add($"Params in URL detected - will use appId:{appIdFromQueryString}, zoneId:{zoneIdFromQueryString}");
-                return new AppIdentity(zoneIdFromQueryString, appIdFromQueryString, Log);
+                return new AppBase(zoneIdFromQueryString, appIdFromQueryString, Log);
             }
             return null;
         }

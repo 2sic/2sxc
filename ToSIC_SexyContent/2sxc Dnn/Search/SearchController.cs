@@ -59,7 +59,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
 
             // Ensure cache builds up with correct primary language
             var cache = Eav.Factory.Resolve<IAppsCache>();
-            cache.ForceLoad(zoneId, appId.Value, portalSettings.DefaultLanguage.ToLower());
+            cache.Load(new AppIdentity(zoneId, appId.Value) , portalSettings.DefaultLanguage.ToLower());
             //var cache = Eav.Factory.Resolve<IRootCache>();
             //((RootCacheBase)cache).ZoneId = zoneId;
             //((RootCacheBase)cache).AppId = appId.Value;

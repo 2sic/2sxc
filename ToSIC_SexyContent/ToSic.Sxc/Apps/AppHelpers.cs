@@ -17,14 +17,14 @@ namespace ToSic.Sxc.Apps
             if (string.IsNullOrEmpty(appName))
                 return 0; 
 
-            var appId = baseCache.ZoneApps[zoneId].Apps
+            var appId = baseCache.Zones[zoneId].Apps
                     .Where(p => p.Value == appName).Select(p => p.Key).FirstOrDefault();
 
             // optionally check folder names
             if (appId == 0 && alsoCheckFolderName)
             {
                 var nameLower = appName.ToLower();
-                foreach (var p in baseCache.ZoneApps[zoneId].Apps)
+                foreach (var p in baseCache.Zones[zoneId].Apps)
                 {
                     var mds = DataSource.GetMetaDataSource(zoneId, p.Key);
                     var appMetaData = mds

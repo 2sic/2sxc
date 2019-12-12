@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Apps
             WithPublishing = withPublishing;
         }
 
-        public CmsRuntime(IInAppAndZone app, ILog parentLog, bool showDrafts, bool withPublishing) : base(app, parentLog)
+        public CmsRuntime(IAppIdentity app, ILog parentLog, bool showDrafts, bool withPublishing) : base(app, parentLog)
         {
             ShowDrafts = showDrafts;
             WithPublishing = withPublishing;

@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Blocks
             {
                 var cache = Factory.Resolve<IAppsCache>();
                 var zoneAppId = cache.GetIdentity(null, appId);
-                appName = cache.ZoneApps[zoneAppId.ZoneId].Apps[appId.Value];
+                appName = cache.Zones[zoneAppId.ZoneId].Apps[appId.Value];
             }
             UpdateValue(BlockFromEntity.CbPropertyApp, appName);
         }
