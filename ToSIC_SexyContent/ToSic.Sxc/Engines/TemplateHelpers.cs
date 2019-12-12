@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Hosting;
 using ToSic.SexyContent;
 using ToSic.Sxc.Apps;
@@ -52,7 +53,7 @@ namespace ToSic.Sxc.Engines
         public static string GetTemplatePathRoot(string locationId, IApp app)
         {
             var rootFolder = locationId == Settings.TemplateLocations.HostFileSystem
-                ? Settings.PortalHostDirectory + Settings.AppsRootFolder
+                ? VirtualPathUtility.ToAbsolute(Settings.PortalHostDirectory + Settings.AppsRootFolder)
                 : app.Tenant.SxcPath;
             rootFolder += "/" + app.Folder;
             return rootFolder;
