@@ -3,7 +3,6 @@ using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Caching.Apps;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Sxc.Blocks;

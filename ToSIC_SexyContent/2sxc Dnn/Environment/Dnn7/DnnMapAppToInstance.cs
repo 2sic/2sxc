@@ -5,7 +5,6 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Caching.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caching;
 using ToSic.Eav.Environment;
