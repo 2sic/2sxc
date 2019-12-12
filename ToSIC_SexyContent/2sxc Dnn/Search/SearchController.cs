@@ -8,7 +8,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Caching;
+using ToSic.Eav.Caching.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Search;

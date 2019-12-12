@@ -2,7 +2,7 @@
 using System.Web.Http;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Caching;
+using ToSic.Eav.Caching.Apps;
 
 namespace ToSic.Sxc.WebApi.System
 {

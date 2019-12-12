@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Caching;
+using ToSic.Eav.Caching.Apps;
 
 namespace ToSic.Sxc.Apps
 {

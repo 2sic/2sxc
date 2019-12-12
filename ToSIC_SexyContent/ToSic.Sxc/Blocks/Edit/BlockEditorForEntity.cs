@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Caching;
+using ToSic.Eav.Caching.Apps;
 using ToSic.Eav.Data;
 
 namespace ToSic.Sxc.Blocks
