@@ -5,6 +5,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
@@ -57,12 +58,12 @@ namespace ToSic.Sxc.WebApi.Cms
             if (string.IsNullOrEmpty(attributeSetName))
                 return null;
 
-            var context = GetContext(CmsBlock, Log);
+            //var context = GetContext(CmsBlock, Log);
 
-            var cache = context.App.Data.Root; 
-            var ct = cache.GetContentType(attributeSetName);
+            var appState = Factory.GetAppState(CmsBlock.App); // context.App.Data.Root.AppState; 
+            var ct = appState.GetContentType(attributeSetName);
 
-            var dataSource = context.App.Data[ct.Name]; 
+            var dataSource = CmsBlock.App.Data[ct.Name]; 
             var results = dataSource.List.ToDictionary(p => p.EntityId,
                 p => p.GetBestTitle() ?? "");
 

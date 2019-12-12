@@ -2,7 +2,6 @@
 using System.Web.Http;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Caching.Apps;
 
 namespace ToSic.Sxc.WebApi.System
 {
@@ -19,7 +18,7 @@ namespace ToSic.Sxc.WebApi.System
 
             Log.Add($"debug app-load {appId}");
             var appRead = new AppRuntime(appId.Value, Log);
-            return FormatLog($"2sxc load log for app {appId}", appRead.Package.Log);
+            return FormatLog($"2sxc load log for app {appId}", appRead.AppState.Log);
         }
 
         [HttpGet]
@@ -28,7 +27,7 @@ namespace ToSic.Sxc.WebApi.System
             ThrowIfNotSuperuser();
 
             var msg = h1("Apps In Cache");
-            var cache = Factory.Resolve<IAppsCache>();
+            var cache = Factory.GetAppsCache();
 
             var zones = cache.Zones.OrderBy(z => z.Key);
 
@@ -72,7 +71,7 @@ namespace ToSic.Sxc.WebApi.System
 
             Log.Add($"debug app-internals for {appId}");
             var appRead = new AppRuntime(appId.Value, Log);
-            var pkg = appRead.Package;
+            var pkg = appRead.AppState;
 
             var msg = h1($"App internals for {appId}");
             try

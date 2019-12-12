@@ -70,7 +70,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, null, Log);
             else
             {
-                var appName = Eav.Factory.Resolve<IAppsCache>().Zones[zoneId].Apps[appId.Value];
+                var appName = Eav.Factory.GetAppsCache().Zones[zoneId].Apps[appId.Value];
                 DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, appName, Log);
             }
 

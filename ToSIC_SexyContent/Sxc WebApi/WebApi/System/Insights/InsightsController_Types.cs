@@ -21,7 +21,7 @@ namespace ToSic.Sxc.WebApi.System
 
             Log.Add($"debug app types for {appId}");
             var appRead = new AppRuntime(appId.Value, Log);
-            var pkg = appRead.Package;
+            var pkg = appRead.AppState;
 
             var msg = TypesTable(appId.Value, pkg.ContentTypes, pkg.List.ToList());
 

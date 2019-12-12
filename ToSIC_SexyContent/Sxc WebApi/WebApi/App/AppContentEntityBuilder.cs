@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Caching.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Caching;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.WebApi.App
@@ -28,8 +27,10 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"create ent dic a#{appId}, type:{contentType}");
             // Retrieve content-type definition and check all the fields that this content-type has
-            var cache = (AppRoot) DataSource.GetCache(DataSource.GetIdentity(null, appId));
-            var listOfTypes = cache.GetContentType(contentType);
+            var appState = Factory.GetAppState(appId);
+            //.Get(new AppIdentity(
+            //var root = (AppRoot) DataSource.GetCache(DataSource.GetIdentity(null, appId));
+            var listOfTypes = appState.GetContentType(contentType);
             var attribs = listOfTypes.Attributes;
 
 

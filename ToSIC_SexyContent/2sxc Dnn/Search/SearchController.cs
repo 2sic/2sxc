@@ -8,11 +8,9 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Caching.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Search;
-using ToSic.Eav.DataSources.Caching;
 using ToSic.Eav.Environment;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
@@ -58,7 +56,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
 
             // Ensure cache builds up with correct primary language
-            var cache = Eav.Factory.Resolve<IAppsCache>();
+            var cache = Eav.Factory.GetAppsCache();
             cache.Load(new AppIdentity(zoneId, appId.Value) , portalSettings.DefaultLanguage.ToLower());
             //var cache = Eav.Factory.Resolve<IRootCache>();
             //((RootCacheBase)cache).ZoneId = zoneId;

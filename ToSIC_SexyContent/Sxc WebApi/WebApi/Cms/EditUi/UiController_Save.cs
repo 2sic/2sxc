@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var appMan = new AppManager(appId, Log);
             var appRead = appMan.Read;
-            var ser = new JsonSerializer(appRead.Package, Log)
+            var ser = new JsonSerializer(appRead.AppState, Log)
             {
                 // Since we're importing directly into this app, we would prefer local content-types
                 PreferLocalAppTypes = true

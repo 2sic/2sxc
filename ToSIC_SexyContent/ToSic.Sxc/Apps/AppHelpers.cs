@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Apps
         internal static int GetAppIdFromGuidName(int zoneId, string appName, bool alsoCheckFolderName = false)
         {
             // var baseCache = (RootCacheBase) DataSource.GetCache(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId);
-            var baseCache = Factory.Resolve<IAppsCache>();
+            var baseCache = Factory.GetAppsCache();
             // ReSharper disable once UnusedVariable
             //var dummy = baseCache.CacheTimestamp;
 

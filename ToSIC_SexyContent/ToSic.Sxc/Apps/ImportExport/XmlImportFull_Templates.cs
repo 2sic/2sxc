@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Caching.Apps;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Sxc.Blocks;
@@ -21,7 +23,9 @@ namespace ToSic.Sxc.Apps.ImportExport
             var templates = root.Element(XmlConstants.Templates);
             if (templates == null) return;
 
-            var cache = DataSource.GetCache(DataSource.GetIdentity(ZoneId, AppId));
+            //var appState = DataSource.GetCache(DataSource.GetIdentity(ZoneId, AppId));
+            //var cache = Factory.Resolve<IAppsCache>();
+            var appState = Factory.GetAppState(new AppIdentity(ZoneId, AppId));
 
             foreach (var template in templates.Elements(XmlConstants.Template))
             {
@@ -35,7 +39,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
                     Log.Add($"template:{name}, type:{contentTypeStaticName}, path:{path}");
 
-                    if (!String.IsNullOrEmpty(contentTypeStaticName) && cache.GetContentType(contentTypeStaticName) == null)
+                    if (!string.IsNullOrEmpty(contentTypeStaticName) && appState.GetContentType(contentTypeStaticName) == null)
                     {
                         Messages.Add(new Message($"Content Type for Template \'{name}\' could not be found. The template has not been imported.",
                                 Message.MessageTypes.Warning));
