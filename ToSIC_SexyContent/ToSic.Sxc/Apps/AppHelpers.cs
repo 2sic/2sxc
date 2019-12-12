@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Caching.Apps;
 
 namespace ToSic.Sxc.Apps
 {
@@ -26,7 +25,7 @@ namespace ToSic.Sxc.Apps
                 var nameLower = appName.ToLower();
                 foreach (var p in baseCache.Zones[zoneId].Apps)
                 {
-                    var mds = DataSource.GetMetaDataSource(zoneId, p.Key);
+                    var mds = Factory.GetAppState(new AppIdentity(zoneId, p.Key)); // DataSource.GetMetaDataSource(zoneId, p.Key);
                     var appMetaData = mds
                         .Get(SystemRuntime.MetadataType(Eav.Constants.AppAssignmentName), p.Key,
                             AppConstants.TypeAppConfig)
