@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data;
+using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Blocks
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Blocks
         string Name { get; }
 
         /// <summary>
-        /// Path to teh template
+        /// Path to the template
         /// </summary>
         string Path { get; }
 
@@ -55,7 +56,14 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// The query which provides data to this view. 
         /// </summary>
-        IEntity Query { get; }
+        [PrivateApi]
+        IEntity QueryRaw { get; }
+
+        /// <summary>
+        /// The query attached to this view (if one was specified)
+        /// </summary>
+        /// <returns>A query object or null</returns>
+        QueryDefinition Query { get; }
 
         /// <summary>
         /// An identifier which could occur in the url, causing the view to automatically switch to this one. 

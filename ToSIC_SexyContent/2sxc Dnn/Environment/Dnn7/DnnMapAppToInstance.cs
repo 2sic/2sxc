@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Caching.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caching;
 using ToSic.Eav.Environment;
@@ -69,7 +70,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, null, Log);
             else
             {
-                var appName = ((RootCacheBase)DataSource.GetCache(0, 0)).ZoneApps[zoneId].Apps[appId.Value];
+                var appName = Eav.Factory.GetAppsCache().Zones[zoneId].Apps[appId.Value];
                 DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, appName, Log);
             }
 

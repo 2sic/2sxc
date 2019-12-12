@@ -21,7 +21,7 @@ namespace ToSic.Sxc.WebApi.System
 
             Log.Add($"debug app types for {appId}");
             var appRead = new AppRuntime(appId.Value, Log);
-            var pkg = appRead.Package;
+            var pkg = appRead.AppState;
 
             var msg = TypesTable(appId.Value, pkg.ContentTypes, pkg.List.ToList());
 
@@ -110,8 +110,7 @@ namespace ToSic.Sxc.WebApi.System
         public string GlobalTypesLog()
         {
             ThrowIfNotSuperuser();
-
-            return ToBr(Global.Log.Dump(" - ", h1($"2sxc load log for global types") + "\n", "end of log"));
+            return FormatLog("2sxc load log for Global Types", Global.Log);
         }
 
         [HttpGet]

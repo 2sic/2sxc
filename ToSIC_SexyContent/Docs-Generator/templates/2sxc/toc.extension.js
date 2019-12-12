@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+var ns = require('./api-meta.js');
+
 /**
  * This method will be called at the start of exports.transform in toc.html.js
  */
@@ -15,13 +17,20 @@ exports.postTransform = function (model) {
   // console.warn('2dm-postTransform:');
 
   if(isApiToc(model))
-    shortenNamspaces(model, 1);
+    processNode(model, 1);
+
+  // console.error("count:" + count);
 
   return model;
 }
 
+// Constants etc.
+
 const prefix1 = 'ToSic.Sxc';
 const prefix2 = 'ToSic.Eav';
+
+// ----------------------------------------------------------------------------------------------------
+
 
 // find out if it's the API toc
 function isApiToc(model) {
@@ -35,11 +44,6 @@ function isApiToc(model) {
 
   var firstName = model.items[0].name;
   var match = isNamespace(firstName);
-  // if(!(firstName.indexOf(prefix1) === 0 || firstName.indexOf(prefix2) === 0))
-  //   return false;
-
-  // if(match)
-  //   console.warn('2dm-addlevel: its the right TOC!' + first100);
   return match;
 }
 
@@ -57,31 +61,74 @@ function repeatString(part, count) {
   return result;
 }
 
+let count = 0;
 const keepParts = 3;
+const truncateTo = 2;
 
-function shortenNamspaces(item, level) {
-  // console.warn('2dm-shortenNamspaces');
+function processNode(item, level) {
+  // console.warn('2dm-processNode');
 
-  // only do this on namespaces
   if(isNamespace(item.name)) {
-    item.fullName = item.name;
-    var parts = item.name.split('.');
-    var count = parts.length;
-    if(count > keepParts) {
-      parts.splice(0, count - keepParts);
-      var newName = repeatString("...", count - keepParts) + parts.join('.');
-      item.name = newName;
-    }
+    // add metadata - before changing the namespace
+    addMeta(item, level);
+    if(level <= 2)
+      shortenNamespace(item, level);
   }
+  else
+    removeMeta(item);
 
   // do recursively if necessary, but should only matter on the 1st or 2nd recursion
-  if(level > 2) return; 
+  // if(level > 2) return; 
 
   item.level = level;
   if (item.items && item.items.length > 0) {
     var length = item.items.length;
     for (var i = 0; i < length; i++) {
-      shortenNamspaces(item.items[i], level + 1);
+      processNode(item.items[i], level + 1);
     };
   } 
+}
+
+/**
+ * shorten ... the namespace
+ */
+function shortenNamespace(item, level) {
+  item.fullName = item.name;
+  var parts = item.name.split('.');
+  var count = parts.length;
+  if(count > keepParts) {
+    parts.splice(0, count - truncateTo);
+    var newName = repeatString("...", count - keepParts) + parts.join('.');
+    item.name = newName;
+  }
+}
+
+
+
+/**
+ * add metadata for the template to prioritizes
+ * @param {*} item 
+ * @param {*} level 
+ */
+function addMeta(item, level) {
+  count++;
+  // if(level > 2) return;
+  item.priority = ns.priorityNormal;
+
+  if(level > 2 || !item.topicUid) {
+    return;
+  };
+
+  var found = ns.data[item.topicUid];
+  if(found) {
+    // console.warn('uid:' + item.topicUid);
+    item.priority = found.priority;
+  }
+  // if(item.priority == "adam")
+  //   console.warn("found and added priority" + JSON.stringify(item));
+}
+
+function removeMeta(item) {
+  count++;
+  item.priority = ns.priorityNormal;
 }

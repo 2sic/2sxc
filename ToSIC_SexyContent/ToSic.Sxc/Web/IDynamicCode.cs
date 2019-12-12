@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.Web
     /// </summary>
     [PublicApi]
 #pragma warning disable 618
-    public interface IDynamicCode: /*SexyContent.IAppAndDataHelpers,*/ ISharedCodeBuilder // inherit from old namespace to ensure compatibility
+    public interface IDynamicCode: ISharedCodeBuilder // inherit from old namespace to ensure compatibility
 #pragma warning restore 618
     {
         #region internal/obsolete but still needed, not public!
@@ -130,7 +129,7 @@ namespace ToSic.Sxc.Web
         /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
         /// If you provide null for the fallback, then you will get null back.
         /// </returns>
-        /// <remarks>Added in 2sxc 10.21.00</remarks>
+        /// <remarks>Added in 2sxc 10.21.01</remarks>
         dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson);
 
         #endregion 

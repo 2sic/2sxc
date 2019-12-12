@@ -7,11 +7,10 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json;
-using ToSic.Eav.ImportExport.Json.Format;
+using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Security;
@@ -73,13 +72,23 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Select(ct => JsonSerializer.ToJson(ct, true))
                 .ToList();
 
+            // todo: ensure that sub-properties of the content-types are included
+            var entList = types.SelectMany(
+                // in all Content-Type attributes like title, body etc.
+                t => t.Attributes.SelectMany(
+                    // check all metadata of these attributes - get possible sub-entities attached
+                    a => a.Metadata.SelectMany(m => m.Children())
+                )
+            );
+            result.ContentTypeItems = entList.Select(e => jsonSerializer.ToJson(e, 0, Log)).ToList();
+
             // Fix not-supported input-type names; map to correct name
             result.ContentTypes
                 .ForEach(jt => jt.Attributes
                     .ForEach(at => at.InputType = InputTypes.MapInputTypeV10(at.InputType)));
 
             // load input-field configurations
-            result.InputTypes = GetNecessaryInputTypes(result.ContentTypes/*types*/, typeRead);
+            result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, typeRead);
 
             // also include UI features
             result.Features = SystemController.FeatureListWithPermissionCheck(appId, permCheck).ToList();

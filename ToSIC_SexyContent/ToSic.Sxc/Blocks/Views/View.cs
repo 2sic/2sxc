@@ -2,15 +2,17 @@
 using System.Linq;
 using System.Threading;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Blocks
 {
-    public partial class View: EntityBasedType, IView
+    public partial class View: EntityBasedWithLog, IView
     {
 
-        public View(IEntity templateEntity) : base(templateEntity)
+        public View(IEntity templateEntity, ILog parentLog) : base(templateEntity, parentLog, "Sxc.View")
         {
         }
 
@@ -68,8 +70,37 @@ namespace ToSic.Sxc.Blocks
         public bool PublishData => Entity.GetBestValue<bool>(FieldPublishEnable);
         public string StreamsToPublish => Entity.GetBestValue<string>(FieldPublishStreams);
 
+        [PrivateApi]
+        public IEntity QueryRaw
+        {
+            get
+            {
+                InitializeQueryStuff();
+                return _queryRaw;
+            }
+        }
+        private IEntity _queryRaw;
 
-        public IEntity Query => GetBestRelationship(FieldPipeline);
+        [PrivateApi]
+        public QueryDefinition Query
+        {
+            get
+            {
+                InitializeQueryStuff();
+                return _query;
+            }
+        }
+        private QueryDefinition _query;
+
+        private void InitializeQueryStuff()
+        {
+            if (_queryInitialized) return;
+            _queryInitialized = true;
+            _queryRaw = GetBestRelationship(FieldPipeline);
+            if (_queryRaw != null)
+                _query = new QueryDefinition(_queryRaw, Entity.AppId, Log);
+        }
+        private bool _queryInitialized;
 
         public string UrlIdentifier => Entity.GetBestValue<string>(FieldNameInUrl);
 

@@ -27,26 +27,27 @@
       topicUid: Specs.Cms.PagePublishing
 
 - name: CMS Create and Design
-  items:
-    - name: Views and Templates
-      topicUid: Specs.Cms.Views
-    - name: Template Files
-      topicUid: Specs.Cms.Templates
-    - name: Razor Templates
-      topicUid: Specs.Cms.Templates.Razor
-    - name: Token Templates
-      topicUid: Specs.Cms.Templates.Token
-    - name: App Folder Structure
-      topicUid: Specs.App.Folders
-    - topicUid: Specs.App.Icons
-    - name: Hide Features
-      topicUid: Concepts.HideAdvancedFeatures
-    - name: Permissions
-      topicUid: Concepts.Permissions
-    - name: Polymorph
-      topicUid: Specs.Cms.Polymorphism
-    - name: Inner Content
-      topicUid: Specs.Cms.InnerContent
+  href: cms/toc.yml
+# items:
+#   - name: Views and Templates
+#     topicUid: Specs.Cms.Views
+#   - name: Template Files
+#     topicUid: Specs.Cms.Templates
+#   - name: Razor Templates
+#     topicUid: Specs.Cms.Templates.Razor
+#   - name: Token Templates
+#     topicUid: Specs.Cms.Templates.Token
+#   - name: App Folder Structure
+#     topicUid: Specs.App.Folders
+#   - topicUid: Specs.App.Icons
+#   - name: Hide Features
+#     topicUid: Concepts.HideAdvancedFeatures
+#   - name: Permissions
+#     topicUid: Concepts.Permissions
+#   - name: Polymorph
+#     topicUid: Specs.Cms.Polymorphism
+#   - name: Inner Content
+#     topicUid: Specs.Cms.InnerContent
 
 - name: CMS Technical
   items:

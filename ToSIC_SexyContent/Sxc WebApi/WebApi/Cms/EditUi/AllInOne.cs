@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.ImportExport.Json.Format;
+using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -37,6 +37,8 @@ namespace ToSic.Sxc.WebApi.Cms
         /// List of system features the UI should know about
         /// </summary>
         public List<Feature> Features;
+
+        public List<JsonEntity> ContentTypeItems;
     }
 
 }

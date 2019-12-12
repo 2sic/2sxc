@@ -2,7 +2,6 @@
 using System.Web.Http;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.DataSources.Caching;
 
 namespace ToSic.Sxc.WebApi.System
 {
@@ -19,7 +18,7 @@ namespace ToSic.Sxc.WebApi.System
 
             Log.Add($"debug app-load {appId}");
             var appRead = new AppRuntime(appId.Value, Log);
-            return ToBr(appRead.Package.Log.Dump(" - ", h1($"2sxc load log for app {appId}") + "\n", "end of log"));
+            return FormatLog($"2sxc load log for app {appId}", appRead.AppState.Log);
         }
 
         [HttpGet]
@@ -28,9 +27,9 @@ namespace ToSic.Sxc.WebApi.System
             ThrowIfNotSuperuser();
 
             var msg = h1("Apps In Cache");
-            var cache = (RootCacheBase) DataSource.GetCache(null);
+            var cache = Factory.GetAppsCache();
 
-            var zones = cache.ZoneApps.OrderBy(z => z.Key);
+            var zones = cache.Zones.OrderBy(z => z.Key);
 
             msg += "<table id='table'><thead>"
                 + tr(new []{"Zone", "App", "Guid", "InCache", "Details", "Actions"}, true)
@@ -39,7 +38,7 @@ namespace ToSic.Sxc.WebApi.System
             foreach (var zone in zones)
             {
                 var apps = zone.Value.Apps
-                    .Select(a => new { Id = a.Key, Guid = a.Value, InCache = cache.HasCacheItem(zone.Value.ZoneId, a.Key)})
+                    .Select(a => new { Id = a.Key, Guid = a.Value, InCache = cache.Has(new AppIdentity(zone.Value.ZoneId, a.Key))})
                     .OrderBy(a => a.Id);
                 foreach (var app in apps)
                 {
@@ -72,7 +71,7 @@ namespace ToSic.Sxc.WebApi.System
 
             Log.Add($"debug app-internals for {appId}");
             var appRead = new AppRuntime(appId.Value, Log);
-            var pkg = appRead.Package;
+            var pkg = appRead.AppState;
 
             var msg = h1($"App internals for {appId}");
             try

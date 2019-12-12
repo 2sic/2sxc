@@ -22,20 +22,22 @@ Then you will usually configure a view to use this.
 
 In a Razor or WebApi file, you can always write something like this
 
-```razor
-
+```c#
 var query = App.Query["AllBlogPosts"];
 var posts = query["Default"];
 
 // you could now work with the data, or you could cast all results into dynamic objects, like...
-var categories = AsDynamic(query["Categories"]);
+var categories = AsList(query["Categories"]);
+
+// if all you need is the "Default" stream as dynamic, you can write
+var posts = AsList(query);
 ```
 
 Now you can loop through the data as you would otherwise, for example: 
 
 ```c#
 <ol>
-    @foreach(var person in AsDynamic(query["Persons"]))
+    @foreach(var person in AsList(query["Persons"]))
     {
         <li>@person.FullName</li>
     }
@@ -53,8 +55,10 @@ The data which defines a query is stored as IEntity data.
 
 ## Read also
 
+* [](xref:Specs.DataSources.QueryParams)
 * [Blog Posts about Visual Query Designer](https://2sxc.org/en/blog/tag/visual-query-designer)
 * [](xref:Specs.DataSources.DataSource)
+
 
 ## History
 

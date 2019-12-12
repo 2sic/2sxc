@@ -91,7 +91,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<AppUiInfo> GetSelectableApps() // => /*CmsRuntime.Blocks.get*/ BlockEditor.GetSelectableApps();
+        public IEnumerable<AppUiInfo> GetSelectableApps()
         {
             // we must get the zone-id from the environment,
             // since the app may not yet exist when inserted the first time
@@ -103,12 +103,12 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<ContentTypeUiInfo> GetSelectableContentTypes() =>
-            CmsRuntime?.Views.GetContentTypesWithStatus();// BlockConfig.GetSelectableContentTypes();
+            CmsRuntime?.Views.GetContentTypesWithStatus();
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => CmsRuntime?.Views.GetCompatibleViews(App, CmsBlock.Block.Configuration);// BlockConfig.GetSelectableTemplates();
+        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => CmsRuntime?.Views.GetCompatibleViews(App, CmsBlock.Block.Configuration);
 
         #endregion
 

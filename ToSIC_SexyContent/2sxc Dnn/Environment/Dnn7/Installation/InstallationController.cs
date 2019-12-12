@@ -7,10 +7,9 @@ using System.Web;
 using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Client.ClientResourceManagement;
-using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc;
 using ToSic.Sxc.Interfaces;
 using Constants = ToSic.Sxc.Constants;
@@ -166,7 +165,9 @@ namespace ToSic.SexyContent.Environment.Dnn7.Installation
         {
             _installLogger.LogStep("", "Maybe reset logs start");
             // this condition only applies, if 2sxc upgrade 7 didn't happen yet
-            if (DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId)
+            // var cache = Eav.Factory.Resolve<IAppsCache>();
+            var appState = Eav.Factory.GetAppState(new AppIdentity(Constants.DefaultZoneId, Constants.MetaDataAppId));
+            if (appState // DataSource.GetCache(DataSource.GetIdentity(Constants.DefaultZoneId, Constants.MetaDataAppId))
                     .GetContentType("2SexyContent-Template") != null) return;
 
             _installLogger.LogStep("", "Will reset all logs now");

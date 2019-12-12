@@ -33,7 +33,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         protected IApp App { get; }
 
-        protected IInAppAndZone AppIdentity;
+        protected IAppIdentity AppIdentity;
 
         public DnnPermissionCheck(
             ILog parentLog,
@@ -43,7 +43,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             IApp app = null,
             IEnumerable<Permission> permissions1 = null,
             PortalSettings portal = null,
-            IInAppAndZone appIdentity = null
+            IAppIdentity appIdentity = null
             )
             : base(parentLog, targetType, targetItem, app?.Metadata.Permissions, permissions1)
         {

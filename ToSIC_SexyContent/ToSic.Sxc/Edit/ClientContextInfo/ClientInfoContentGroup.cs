@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.Edit.ClientContextInfo
 
             ZoneId = cms.Block.ZoneId; // 2019-11-09, Id not nullable any more // ?? 0;
             TemplateId = cms.View?.Id ?? 0;
-            QueryId = cms.View?.Query?.EntityId; // will be null if not defined
+            QueryId = cms.View?.Query?.Id; // will be null if not defined
             ContentTypeName = cms.View?.ContentType ?? "";
             IsList = cms.Block.Configuration?.View?.UseForList ?? false;//  isCreated && ((sxc.BlockConfiguration?.Content?.Count ?? 0) > 1);
             SupportsAjax = cms.Block.IsContentApp || (cms.App?.Configuration?.EnableAjax ?? false);

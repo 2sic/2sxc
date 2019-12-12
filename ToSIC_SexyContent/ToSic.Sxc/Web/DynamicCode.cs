@@ -145,13 +145,13 @@ namespace ToSic.Sxc.Web
                 lookUpEngine = ConfigurationProvider;
 
             if (inSource != null)
-                return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, lookUpEngine);
+                return DataSource.GetDataSource(typeName, inSource, inSource, lookUpEngine);
 
             var userMayEdit = CmsInstance.UserMayEdit;
 
             var initialSource = DataSource.GetInitialDataSource(CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as LookUpEngine);
-            return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, lookUpEngine) : initialSource;
+            return typeName != "" ? DataSource.GetDataSource(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
         }
 
         /// <inheritdoc />

@@ -8,7 +8,7 @@
           <span class="expand-stub"></span>
         {{/leaf}}
         {{#topicHref}}
-          <a href="{{topicHref}}" name="{{tocHref}}" title="{{fullName}}">{{name}}</a>
+          <a href="{{topicHref}}" class="priority-{{priority}}" name="{{tocHref}}" title="{{fullName}}">{{name}}</a>
         {{/topicHref}}
         {{^topicHref}}
           <a>{{{name}}}</a>

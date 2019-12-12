@@ -121,7 +121,7 @@ namespace ToSic.Sxc.WebApi.System
             else
                 throw Http.BadRequest("can't use entityid - must be number or guid");
 
-            var ser = new JsonSerializer(appRead.Package, Log);
+            var ser = new JsonSerializer(appRead.AppState, Log);
             var json = ser.Serialize(ent);
 
             var msg = h1($"Entity Debug for {entity} in {appId}\n")
