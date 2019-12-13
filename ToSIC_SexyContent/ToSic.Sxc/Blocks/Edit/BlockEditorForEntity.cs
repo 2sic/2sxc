@@ -52,7 +52,8 @@ namespace ToSic.Sxc.Blocks
         private void Update(Dictionary<string, object> newValues)
         {
             var app = ((BlockBase)CmsContext.Block).Parent.App;
-            new AppManager(app.ZoneId, app.AppId, Log).Entities.UpdateParts(Math.Abs(CmsContext.Block.ContentBlockId), newValues);
+            new AppManager(app, Log)
+                .Entities.UpdateParts(Math.Abs(CmsContext.Block.ContentBlockId), newValues);
         }
 
         #endregion

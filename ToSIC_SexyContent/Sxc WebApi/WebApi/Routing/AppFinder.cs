@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi
             // get app from appname
             var aid = AppHelpers.GetAppIdFromGuidName(zid, appPath, true);
             wrapLog($"found app:{aid}");
-            return new AppBase(zid, aid, Log);
+            return new AppIdentity(zid, aid);
         }
 
 
@@ -61,11 +61,11 @@ namespace ToSic.Sxc.WebApi
             {
                 Log.Add($"auto detect app and init eav - path:{appPath}, context null: {cmsInstance == null}");
                 appId = appPath == null || appPath == "auto"
-                    ? new AppBase(
+                    ? new AppIdentity(
                         cmsInstance?.Block?.ZoneId ??
                         throw new ArgumentException("try to get app-id from context, but none found"),
                         cmsInstance.Block.AppId // not nullable any more 2019-11-09 ?? 0
-                        , Log)
+                        /*, Log*/)
                     : GetCurrentAppIdFromPath(appPath);
             }
 
@@ -87,7 +87,7 @@ namespace ToSic.Sxc.WebApi
             if (ok1 && ok2)
             {
                 Log.Add($"Params in URL detected - will use appId:{appIdFromQueryString}, zoneId:{zoneIdFromQueryString}");
-                return new AppBase(zoneIdFromQueryString, appIdFromQueryString, Log);
+                return new AppIdentity(zoneIdFromQueryString, appIdFromQueryString/*, Log*/);
             }
             return null;
         }

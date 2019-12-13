@@ -51,6 +51,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
         }
 
         public int GetZoneId(ITenant tenant) => GetZoneId(tenant.Id);
+        public IAppIdentity IdentityFromTenant(int tenantId, int appId) 
+            => new AppIdentity(GetZoneId(tenantId), appId);
 
         public ITenant Tenant(int zoneId)
         {

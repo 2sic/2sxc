@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps.Blocks
 {
-    public class BlockConfiguration: HasLog
+    public class BlockConfiguration: HasLog, IAppIdentity
     {
         internal IEntity Entity;
-        internal readonly int ZoneId;
-        internal readonly int AppId;
+        public  int ZoneId { get; }
+        public  int AppId { get; }
         internal readonly bool ShowDrafts;
         internal readonly bool VersioningEnabled;
         internal readonly Guid? PreviewTemplateId;
@@ -61,7 +62,7 @@ namespace ToSic.Sxc.Apps.Blocks
 
                 if (PreviewTemplateId.HasValue)
                 {
-                    var dataSource = DataSource.GetInitialDataSource(ZoneId, AppId);
+                    var dataSource = DataSource.GetInitialDataSource(this/*ZoneId, AppId*/);
                     // ToDo: Should use an indexed Guid filter
                     templateEntity =
                         IEntityExtensions.One(dataSource.List, PreviewTemplateId.Value);

@@ -117,7 +117,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 if (cb.ContentGroupExists)
                 {
                     Log.Add("cb exists");
-                    var appManager = new AppManager(cb.AppId, Log);
+                    var appManager = new AppManager(cb/*.AppId*/, Log);
 
                     // Add content entities
                     IEnumerable<IEntity> list = new List<IEntity>();

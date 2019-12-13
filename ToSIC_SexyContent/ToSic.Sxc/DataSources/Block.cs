@@ -30,8 +30,8 @@ namespace ToSic.Sxc.DataSources
 
             log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{overrideView?.Name}");
             // Get ModuleDataSource
-            var initialSource = DataSource.GetInitialDataSource(cms.Block.ZoneId, cms.Block.AppId, showDrafts, configurationProvider, parentLog);
-            var moduleDataSource = DataSource.GetDataSource<CmsBlock>(cms.Block.ZoneId, cms.Block.AppId, initialSource, configurationProvider, parentLog);
+            var initialSource = DataSource.GetInitialDataSource(cms.Block/*.ZoneId, cms.Block.AppId*/, showDrafts, configurationProvider, parentLog);
+            var moduleDataSource = DataSource.GetDataSource<CmsBlock>(/*cms.Block.ZoneId, cms.Block.AppId,*/ initialSource, /*configurationProvider,*/ parentLog);
             moduleDataSource.InstanceId = instanceId;
 
             moduleDataSource.OverrideView = overrideView;
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             log.Add($"use pipeline upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = DataSource.GetDataSource<Block>(cms.Block.ZoneId, cms.Block.AppId, viewDataSourceUpstream, configurationProvider, parentLog);
+            var viewDataSource = DataSource.GetDataSource<Block>(cms.Block/*.ZoneId, cms.Block.AppId*/, viewDataSourceUpstream, configurationProvider, parentLog);
 
             // Take Publish-Properties from the View-Template
             if (overrideView != null)
