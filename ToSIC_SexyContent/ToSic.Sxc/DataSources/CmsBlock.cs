@@ -54,7 +54,7 @@ namespace ToSic.Sxc.DataSources
         {
             get
             {
-                EnsureConfigurationIsLoaded();
+                ConfigurationParse();
                 var listIdString = Configuration["ModuleId"];
                 return int.TryParse(listIdString, out var listId) ? listId : new int?();
             }
@@ -71,7 +71,7 @@ namespace ToSic.Sxc.DataSources
                 if(!HasSxcContext)
                     throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
-                var sxciProvider = ConfigurationProvider.Sources[LookUp.ConfigurationProvider.SxcInstanceKey];
+                var sxciProvider = Configuration.LookUps.Sources[LookUp.ConfigurationProvider.SxcInstanceKey];
                 _cmsContext = (sxciProvider as LookUpCmsBlock)?
                               .CmsInstance 
                               ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.DataSources
         }
 
         [PrivateApi]
-        internal bool HasSxcContext => ConfigurationProvider.Sources.ContainsKey(LookUp.ConfigurationProvider.SxcInstanceKey);
+        internal bool HasSxcContext => Configuration.LookUps.Sources.ContainsKey(LookUp.ConfigurationProvider.SxcInstanceKey);
 
 		private BlockConfiguration _blockConfiguration;
 		private BlockConfiguration BlockConfiguration
@@ -117,7 +117,7 @@ namespace ToSic.Sxc.DataSources
             Out.Add(Eav.Constants.DefaultStreamName, new DataStream(this, Eav.Constants.DefaultStreamName, GetContent));
             Out.Add(ViewParts.ListContent, new DataStream(this, Eav.Constants.DefaultStreamName, GetListContent));
 
-			Configuration.Add("ModuleId", $"[Settings:{Settings.InstanceId}||[Module:ModuleId]]");
+			Configuration.Values.Add("ModuleId", $"[Settings:{Settings.InstanceId}||[Module:ModuleId]]");
         }
 
         #region Cached properties for Content, Presentation etc. --> not necessary, as each stream auto-caches

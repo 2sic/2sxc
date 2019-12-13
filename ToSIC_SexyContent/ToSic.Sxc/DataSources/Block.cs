@@ -30,7 +30,7 @@ namespace ToSic.Sxc.DataSources
 
             log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{overrideView?.Name}");
             // Get ModuleDataSource
-            var initialSource = DataSource.GetInitialDataSource(cms.Block/*.ZoneId, cms.Block.AppId*/, showDrafts, configurationProvider, parentLog);
+            var initialSource = DataSource.GetPublishing(cms.Block/*.ZoneId, cms.Block.AppId*/, showDrafts, configurationProvider, parentLog);
             var moduleDataSource = DataSource.GetDataSource<CmsBlock>(/*cms.Block.ZoneId, cms.Block.AppId,*/ initialSource, /*configurationProvider,*/ parentLog);
             moduleDataSource.InstanceId = instanceId;
 

@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Web
 
         private ILookUpEngine ConfigurationProvider
             => _configurationProvider ??
-               (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.ConfigurationProvider);
+               (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.Configuration.LookUps);
 
         /// <inheritdoc />
         [PrivateApi("obsolete")]
@@ -149,7 +149,7 @@ namespace ToSic.Sxc.Web
 
             var userMayEdit = CmsInstance.UserMayEdit;
 
-            var initialSource = DataSource.GetInitialDataSource(
+            var initialSource = DataSource.GetPublishing(
                 App,
                 // CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as LookUpEngine);
@@ -167,7 +167,7 @@ namespace ToSic.Sxc.Web
 
             var userMayEdit = CmsInstance.UserMayEdit;
 
-            var initialSource = DataSource.GetInitialDataSource(
+            var initialSource = DataSource.GetPublishing(
                 App,
                 //CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as LookUpEngine);

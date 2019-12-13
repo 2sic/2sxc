@@ -79,15 +79,15 @@ namespace ToSic.Sxc.Dnn.DataSources
 		public DnnUserProfile()
 		{
 			Out.Add(Constants.DefaultStreamName, new DataStream(this, Constants.DefaultStreamName, GetList));
-			Configuration.Add(UserIdsKey, UserIdsDefaultKeyToken);
-			Configuration.Add(PropertiesKey, PropertiesDefaultKeyToken);
-			Configuration.Add(ContentTypeKey, ContentTypeDefaultToken);
-			Configuration.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
+			Configuration.Values.Add(UserIdsKey, UserIdsDefaultKeyToken);
+			Configuration.Values.Add(PropertiesKey, PropertiesDefaultKeyToken);
+			Configuration.Values.Add(ContentTypeKey, ContentTypeDefaultToken);
+			Configuration.Values.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
 		}
 
 		private IEnumerable<IEntity> GetList()
 		{
-			EnsureConfigurationIsLoaded();
+			ConfigurationParse();
 
 			var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
 			var portalId = PortalSettings.Current.PortalId;
