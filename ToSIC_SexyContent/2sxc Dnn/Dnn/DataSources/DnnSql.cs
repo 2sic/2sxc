@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn.DataSources
     /// </summary>
     [PublicApi]
 	[VisualQuery(
-        GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnSql, ToSic.SexyContent",
+        GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnSql, ToSic.Sxc.Dnn",
         Type = DataSourceType.Source, 
         DynamicOut = false,
         Icon = "database",

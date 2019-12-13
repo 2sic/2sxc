@@ -54,7 +54,7 @@ namespace ToSic.Sxc.DataSources
         {
             get
             {
-                ConfigurationParse();
+                Configuration.Parse();
                 var listIdString = Configuration["ModuleId"];
                 return int.TryParse(listIdString, out var listId) ? listId : new int?();
             }

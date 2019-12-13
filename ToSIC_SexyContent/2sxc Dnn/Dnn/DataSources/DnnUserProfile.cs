@@ -87,9 +87,9 @@ namespace ToSic.Sxc.Dnn.DataSources
 
 		private IEnumerable<IEntity> GetList()
 		{
-			ConfigurationParse();
+            Configuration.Parse();
 
-			var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
+            var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
 			var portalId = PortalSettings.Current.PortalId;
 
 			// read all user Profiles
