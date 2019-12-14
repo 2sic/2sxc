@@ -47,7 +47,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             )
             : base(parentLog, targetType, targetItem, app?.Metadata.Permissions, permissions1)
         {
-            var logWrap = Log.New("DnnPermissionCheck", $"..., {targetItem?.EntityId}, app: {app?.AppId}, ");
+            var logWrap = Log.Call("DnnPermissionCheck", $"..., {targetItem?.EntityId}, app: {app?.AppId}, ");
             AppIdentity = appIdentity ?? app;
             App = app;
             Instance = instance;

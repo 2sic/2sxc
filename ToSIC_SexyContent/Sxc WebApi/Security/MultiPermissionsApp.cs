@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Security
         protected MultiPermissionsApp(ICmsBlock cmsInstance, int zoneId, int appId, ILog parentLog) 
             : base("Api.Perms", parentLog)
         {
-            var wrapLog = Log.New("AppAndPermissions", $"..., appId: {appId}, ...");
+            var wrapLog = Log.Call("AppAndPermissions", $"..., appId: {appId}, ...");
             CmsInstance = cmsInstance;
             var tenant = new Tenant(PortalSettings.Current);
             var environment = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
