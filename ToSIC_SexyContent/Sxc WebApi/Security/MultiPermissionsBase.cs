@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Security
         /// <returns>True if all pass, false if any one fails</returns>
         public bool EnsureAll(List<Grants> grants, out HttpResponseException preparedException)
         {
-            var wrap = Log.Call("EnsureAll");
+            var wrap = Log.Call();
             foreach (var set in PermissionCheckers)
                 if (!set.Value.Ensure(grants, out preparedException))
                 {

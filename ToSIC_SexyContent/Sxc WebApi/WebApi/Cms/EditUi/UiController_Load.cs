@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public AllInOne Load([FromBody] List<ItemIdentifier> items, int appId)
         {
             // Security check
-            var wraplog = Log.Call("Load", $"load many a#{appId}, items⋮{items.Count}");
+            var wraplog = Log.Call($"load many a#{appId}, items⋮{items.Count}");
 
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards

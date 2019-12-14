@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.WebApi
 
         private void TryToAttachAppFromUrlParams()
         {
-            var wrapLog = Log.Call("TryToAttachAppFromUrlParams");
+            var wrapLog = Log.Call();
             var found = false;
             try
             {

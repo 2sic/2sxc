@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Security
         /// <returns></returns>
         public static bool Ensure(this IPermissionCheck permCheck, List<Grants> grants, out HttpResponseException exception)
         {
-            var wrapLog = permCheck.Log.Call("Ensure", () => $"[{string.Join(",", grants)}]", () => "or throw");
+            var wrapLog = permCheck.Log.Call(() => $"[{string.Join(",", grants)}]", () => "or throw");
             var ok = permCheck.UserMay(grants);
             exception = ok ? null : Http.PermissionDenied("required permissions for this request are not given");
             wrapLog(ok ? "ok" : "permissions not ok");

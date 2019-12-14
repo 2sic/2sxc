@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi
         /// <returns></returns>
         protected bool BuildExceptionIfHasIssues(out HttpResponseException preparedException, string logMessage = null)
         {
-            var wrapLog = Log.Call(nameof(BuildExceptionIfHasIssues));
+            var wrapLog = Log.Call();
             preparedException = HasErrors ? Http.BadRequest(Errors): null;
             if (logMessage != null) Log.Add($"{nameof(logMessage)}:{logMessage}");
             if (HasErrors) Log.Add($"Errors:{Errors}");

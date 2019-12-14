@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi.App
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null, string cultureCode = null)
         {
-            var wraplog = Log.Call("GetEntities", $"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
+            var wraplog = Log.Call($"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
 
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);

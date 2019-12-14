@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Security
         /// <returns></returns>
         protected IPermissionCheck BuildItemPermissionChecker(IEntity item)
         {
-            Log.Call("BuildItemPermissionChecker", $"{item.EntityId}");
+            Log.Call($"{item.EntityId}");
             // now do relevant security checks
             return BuildPermissionChecker(item.Type, item);
         }

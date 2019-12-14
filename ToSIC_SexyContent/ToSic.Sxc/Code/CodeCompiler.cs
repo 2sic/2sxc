@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Code
         
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
-            var wrapLog = Log.Call("InstantiateClass", $"{virtualPath}, {className}, {throwOnError}");
+            var wrapLog = Log.Call($"{virtualPath}, {className}, {throwOnError}");
 
             // Perform various checks on the path values
             var hasErrorMessage = CheckIfPathsOkAndCleanUp(ref virtualPath, relativePath);

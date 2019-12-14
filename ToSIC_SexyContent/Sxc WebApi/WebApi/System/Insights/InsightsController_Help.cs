@@ -8,7 +8,7 @@ namespace ToSic.Sxc.WebApi.System
         [HttpGet]
         public string Help()
         {
-            var logWrap = Log.Call("Help");
+            var logWrap = Log.Call();
             ThrowIfNotSuperuser();
 
             const string typeattribs = "typeattributes?appid=&type=";

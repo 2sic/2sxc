@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi
         /// <returns></returns>
         internal IAppIdentity GetCurrentAppIdFromPath(string appPath)
         {
-            var wrapLog = Log.Call("GetCurrentAppIdFromPath", appPath);
+            var wrapLog = Log.Call(appPath);
             // check zone
             var zid = ZoneMapper.GetZoneId(Portal.PortalId);
 
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi
         /// <returns></returns>
         internal IAppIdentity GetAppIdFromPathOrContext(string appPath, /*SxcBlock*/ICmsBlock cmsInstance)
         {
-            var wrapLog = Log.Call("GetAppIdFromPathOrContext", $"{appPath}, ...", "detect app from query string parameters");
+            var wrapLog = Log.Call($"{appPath}, ...", message: "detect app from query string parameters");
 
             // try to override detection based on additional zone/app-id in urls
             var appId = GetAppIdentityFromQueryAppZone();

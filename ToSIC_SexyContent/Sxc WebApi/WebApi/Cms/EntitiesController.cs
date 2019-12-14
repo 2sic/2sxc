@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public dynamic GetManyForEditing([FromBody] List<ItemIdentifier> items, int appId)
         {
-            var wrapLog = Log.Call("GetManyForEditing", $"get many a#{appId}, items⋮{items.Count}");
+            var wrapLog = Log.Call($"get many a#{appId}, items⋮{items.Count}");
 
             // before we start, we have to convert the indexes into something more useful, because
             // otherwise in content-list scenarios we don't have the type
