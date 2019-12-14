@@ -3,10 +3,8 @@ using System.IO;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.DataSources.Caching;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Internal;
@@ -27,7 +25,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public int? GetAppIdFromInstance(IContainer instance, int zoneId)
         {
-            var wrapLog = Log.Call<int?>(nameof(GetAppIdFromInstance), $"..., {zoneId}");
+            var wrapLog = Log.Call<int?>(parameters: $"..., {zoneId}");
 
             var module = (instance as Container<ModuleInfo>)?.Original
                 ?? throw new Exception("instance is not of type ModuleInfo");
@@ -76,7 +74,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
             // Change to 1. available template if app has been set
             if (appId.HasValue)
             {
-                var cms = new CmsRuntime(zoneId, appId.Value, Log, true, env.PagePublishing.IsEnabled(instance.Id));
+                var appIdentity = new AppIdentity(zoneId, appId.Value);
+                var cms = new CmsRuntime(/*zoneId, appId.Value*/appIdentity, Log, true, env.PagePublishing.IsEnabled(instance.Id));
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue)
                     /*BlocksManager.*/SetPreviewTemplate(instance.Id, templateGuid.Value);

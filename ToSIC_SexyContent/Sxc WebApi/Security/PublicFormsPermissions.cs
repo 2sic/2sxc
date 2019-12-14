@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Security
     {
         internal static bool UserCanWriteAndPublicFormsEnabled(this MultiPermissionsApp mpa, out HttpResponseException preparedException)
         {
-            var wrapLog = mpa.Log.Call("UserCanWriteAndPublicFormsEnabled", "");
+            var wrapLog = mpa.Log.Call("");
             // 1. check if user is restricted
             var userIsRestricted = !mpa.UserMayOnAll(GrantSets.WritePublished);
 

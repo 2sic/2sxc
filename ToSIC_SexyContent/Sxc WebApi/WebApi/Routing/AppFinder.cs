@@ -34,14 +34,14 @@ namespace ToSic.Sxc.WebApi
         /// <returns></returns>
         internal IAppIdentity GetCurrentAppIdFromPath(string appPath)
         {
-            var wrapLog = Log.Call("GetCurrentAppIdFromPath", appPath);
+            var wrapLog = Log.Call(appPath);
             // check zone
             var zid = ZoneMapper.GetZoneId(Portal.PortalId);
 
             // get app from appname
             var aid = AppHelpers.GetAppIdFromGuidName(zid, appPath, true);
             wrapLog($"found app:{aid}");
-            return new AppBase(zid, aid, Log);
+            return new AppIdentity(zid, aid);
         }
 
 
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi
         /// <returns></returns>
         internal IAppIdentity GetAppIdFromPathOrContext(string appPath, /*SxcBlock*/ICmsBlock cmsInstance)
         {
-            var wrapLog = Log.Call("GetAppIdFromPathOrContext", $"{appPath}, ...", "detect app from query string parameters");
+            var wrapLog = Log.Call($"{appPath}, ...", message: "detect app from query string parameters");
 
             // try to override detection based on additional zone/app-id in urls
             var appId = GetAppIdentityFromQueryAppZone();
@@ -61,11 +61,11 @@ namespace ToSic.Sxc.WebApi
             {
                 Log.Add($"auto detect app and init eav - path:{appPath}, context null: {cmsInstance == null}");
                 appId = appPath == null || appPath == "auto"
-                    ? new AppBase(
+                    ? new AppIdentity(
                         cmsInstance?.Block?.ZoneId ??
                         throw new ArgumentException("try to get app-id from context, but none found"),
                         cmsInstance.Block.AppId // not nullable any more 2019-11-09 ?? 0
-                        , Log)
+                        /*, Log*/)
                     : GetCurrentAppIdFromPath(appPath);
             }
 
@@ -87,7 +87,7 @@ namespace ToSic.Sxc.WebApi
             if (ok1 && ok2)
             {
                 Log.Add($"Params in URL detected - will use appId:{appIdFromQueryString}, zoneId:{zoneIdFromQueryString}");
-                return new AppBase(zoneIdFromQueryString, appIdFromQueryString, Log);
+                return new AppIdentity(zoneIdFromQueryString, appIdFromQueryString/*, Log*/);
             }
             return null;
         }

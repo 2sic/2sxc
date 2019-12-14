@@ -30,7 +30,7 @@ namespace ToSic.Sxc.LookUp
 
                 // check if we'll use the config already on the sxc-instance, or generate a new one
                 var config = useExistingConfig
-                    ? cmsInstance.Block.Data.ConfigurationProvider
+                    ? cmsInstance.Block.Data.Configuration.LookUps
                     : GetConfigProviderForModule(envInstanceId, appToUse as IApp, cmsInstance);
 
                 // return results

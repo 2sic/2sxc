@@ -54,7 +54,7 @@ public class VerifiedController : ToSic.Sxc.Dnn.ApiController
         private readonly IApp _app;
 
         public AssetEditor(IApp app, int templateId, bool isSuperUser, bool isAdmin, ILog parentLog)
-            : base("Sxc.AstEdt", parentLog, className: nameof(AssetEditor))
+            : base("Sxc.AstEdt", parentLog)
         {
             _app = app;
             _userIsSuperUser = isSuperUser;
@@ -66,7 +66,7 @@ public class VerifiedController : ToSic.Sxc.Dnn.ApiController
         }
 
         public AssetEditor(IApp app, string path, bool isSuperUser, bool isAdmin, bool global, ILog parentLog)
-            : base("Sxc.AstEdt", parentLog, className: nameof(AssetEditor))
+            : base("Sxc.AstEdt", parentLog)
         {
             _app = app;
             _userIsSuperUser = isSuperUser;

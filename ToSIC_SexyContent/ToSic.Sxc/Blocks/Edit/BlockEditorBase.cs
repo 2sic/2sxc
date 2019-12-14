@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Blocks
 
             var hasPresentation = presEntity != null;
 
-            var appMan = new AppManager(CmsContext.App.ZoneId, CmsContext.App.AppId);
+            var appMan = new AppManager(CmsContext.App, Log);
 
             // make sure we really have the draft item an not the live one
             var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;

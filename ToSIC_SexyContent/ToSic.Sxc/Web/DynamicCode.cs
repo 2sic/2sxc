@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Web
 
         private ILookUpEngine ConfigurationProvider
             => _configurationProvider ??
-               (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.ConfigurationProvider);
+               (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.Configuration.LookUps);
 
         /// <inheritdoc />
         [PrivateApi("obsolete")]
@@ -149,7 +149,9 @@ namespace ToSic.Sxc.Web
 
             var userMayEdit = CmsInstance.UserMayEdit;
 
-            var initialSource = DataSource.GetInitialDataSource(CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
+            var initialSource = DataSource.GetPublishing(
+                App,
+                // CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as LookUpEngine);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
         }
@@ -161,13 +163,15 @@ namespace ToSic.Sxc.Web
                 configurationProvider = ConfigurationProvider;
 
             if (inSource != null)
-                return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider, Log);
+                return DataSource.GetDataSource<T>(inSource/*.ZoneId, inSource.AppId*/, inSource, configurationProvider, Log);
 
             var userMayEdit = CmsInstance.UserMayEdit;
 
-            var initialSource = DataSource.GetInitialDataSource(CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
+            var initialSource = DataSource.GetPublishing(
+                App,
+                //CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as LookUpEngine);
-            return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider, Log);
+            return DataSource.GetDataSource<T>(initialSource/*.ZoneId, initialSource.AppId*/, initialSource, configurationProvider, Log);
         }
 
         /// <inheritdoc />

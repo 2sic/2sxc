@@ -47,7 +47,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             )
             : base(parentLog, targetType, targetItem, app?.Metadata.Permissions, permissions1)
         {
-            var logWrap = Log.New("DnnPermissionCheck", $"..., {targetItem?.EntityId}, app: {app?.AppId}, ");
+            var logWrap = Log.Call($"..., {targetItem?.EntityId}, app: {app?.AppId}, ");
             AppIdentity = appIdentity ?? app;
             App = app;
             Instance = instance;
@@ -61,7 +61,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         protected override bool EnvironmentAllows(List<Grants> grants)
         {
-            var logWrap = Log.Call("EnvironmentAllows", () => $"[{string.Join(",", grants)}]");
+            var logWrap = Log.Call(() => $"[{string.Join(",", grants)}]");
             var ok = UserIsSuperuser(); // superusers are always ok
             if (!ok && CurrentZoneMatchesTenantZone())
                 ok = UserIsTenantAdmin()
@@ -112,7 +112,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// <returns></returns>
         private bool CurrentZoneMatchesTenantZone()
         {
-            var wrapLog = Log.Call("CurrentZoneMatchesTenantZone");
+            var wrapLog = Log.Call();
             // but is the current portal also the one we're asking about?
             var env = Eav.Factory.Resolve<IAppEnvironment>();
             if (Portal == null) return false; // this is the case when running out-of http-context

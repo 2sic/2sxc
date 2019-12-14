@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
         public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
         {
-            var wrapLog = Log.Call<bool>(nameof(ImportXml), $"{zoneId}, {appId}, ..., {leaveExistingValuesUntouched}");
+            var wrapLog = Log.Call<bool>(parameters: $"{zoneId}, {appId}, ..., {leaveExistingValuesUntouched}");
             var ok = base.ImportXml(zoneId, appId, doc, leaveExistingValuesUntouched);
             if (!ok)
                 return wrapLog("error", false);

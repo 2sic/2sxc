@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi
 
         internal static ICmsBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
         {
-            var wrapLog = log.Call<ICmsBlock>(nameof(GetCmsBlock), $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
+            var wrapLog = log.Call<ICmsBlock>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
             const string headerId = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();

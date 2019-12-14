@@ -15,5 +15,9 @@ If you do, here a short conceptual background:
 	This allows us to reproduce the chain of events in the original code, because you can track where  
 	loggers were made, and how they relate. 
 
+* The really amazing bit (added in 2sxc 10.22/10.23) is that the logger will also pick up the 
+	class names, code-file names and line of code where it was logged 😎.
+
 * Most objects which use the Log, implement the [](xref:ToSic.Eav.Logging.IHasLog), often by inheriting  
 	[](xref:ToSic.Eav.Logging).HasLog which automates things when initializing - like the chaining of the Loggers. 
+

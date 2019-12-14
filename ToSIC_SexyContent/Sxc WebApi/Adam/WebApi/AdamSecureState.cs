@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
         public bool FileTypeIsOkForThisField(out HttpResponseException preparedException)
         {
-            var wrapLog = Log.Call<bool>("FileTypeIsOkForThisField");
+            var wrapLog = Log.Call<bool>();
             var fieldDef = Attribute;
             bool result;
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
@@ -189,7 +189,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
         internal bool CustomFileFilterOk(string additionalFilter, string fileName)
         {
-            var wrapLog = Log.Call<bool>("CustomFileFilterOk");
+            var wrapLog = Log.Call<bool>();
             var extension = Path.GetExtension(fileName)?.TrimStart('.') ?? "";
             var hasNonAzChars = new Regex("[^a-z]", RegexOptions.IgnoreCase);
 

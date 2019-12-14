@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi.App
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null, string cultureCode = null)
         {
-            var wraplog = Log.Call("GetEntities", $"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
+            var wraplog = Log.Call($"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
 
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
@@ -193,7 +193,7 @@ namespace ToSic.Sxc.WebApi.App
             // todo: something looks wrong here, I think create/update would fail if it doesn't have a moduleid
             var currentApp = new Apps.App(new Tenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId, 
                 ConfigurationProvider.Build(false, publish.IsEnabled(ActiveModule.ModuleID),
-                    CmsBlock.Block.Data.ConfigurationProvider), true, Log);
+                    CmsBlock.Block.Data.Configuration.LookUps), true, Log);
             // 2018-09-22 old
             //currentApp.InitData(false, 
             //    publish.IsEnabled(ActiveModule.ModuleID), 

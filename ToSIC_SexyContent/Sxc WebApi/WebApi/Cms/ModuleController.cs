@@ -271,7 +271,7 @@ namespace ToSic.Sxc.WebApi.Cms
             if (!new MultiPermissionsApp(CmsBlock, App.AppId, Log)
                 .EnsureAll(GrantSets.WritePublished, out var exp))
                 throw exp;
-            new AppManager(App.ZoneId, App.AppId).Entities.Publish(id);
+            new AppManager(App, Log).Entities.Publish(id);
             return true;
         }
 

@@ -9,11 +9,12 @@ namespace ToSic.Sxc.Apps
 
         internal bool WithPublishing { get; }
 
-        public CmsRuntime(int zoneId, int appId, ILog parentLog, bool showDraft, bool withPublishing) : base(zoneId, appId, parentLog)
-        {
-            ShowDrafts = showDraft;
-            WithPublishing = withPublishing;
-        }
+        //public CmsRuntime(int zoneId, int appId, ILog parentLog, bool showDraft, bool withPublishing) 
+        //    : base(zoneId, appId, parentLog)
+        //{
+        //    ShowDrafts = showDraft;
+        //    WithPublishing = withPublishing;
+        //}
 
         public CmsRuntime(IAppIdentity app, ILog parentLog, bool showDrafts, bool withPublishing) : base(app, parentLog)
         {

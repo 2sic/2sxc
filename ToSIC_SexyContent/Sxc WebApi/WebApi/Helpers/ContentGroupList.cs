@@ -43,7 +43,7 @@ namespace ToSic.Sxc.WebApi
             Dictionary<Guid, int> postSaveIds,
             IEnumerable<IGrouping<string, BundleWithHeader<T>>> groupItems)
         {
-            var wrapLog = Log.Call(nameof(UpdateList), $"{appId}");
+            var wrapLog = Log.Call($"{appId}");
             var app = new Apps.App(new Tenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
                 ConfigurationProvider.Build(CmsInstance, true), false, Log);
 

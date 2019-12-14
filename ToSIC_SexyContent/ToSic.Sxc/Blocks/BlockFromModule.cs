@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Blocks
         /// <param name="overrideParams">optional override parameters</param>
         public BlockFromModule(IContainer container, ILog parentLog, ITenant tenant, IEnumerable<KeyValuePair<string, string>> overrideParams = null): base(parentLog, "CB.Mod")
         {
-            var wrapLog = Log.Call("constructor");
+            var wrapLog = Log.Call();
             Container = container ?? throw new Exception("Need valid Instance/ModuleInfo / ModuleConfiguration of runtime");
             ParentId = container.Id;
             ContentBlockId = ParentId;

@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         internal bool ContainsOnlyExpectedNodes(out HttpResponseException preparedException)
         {
-            var wrapLog = Log.Call(nameof(ContainsOnlyExpectedNodes));
+            var wrapLog = Log.Call();
             if (Package.ContentTypes != null)
                 Add("package contained content-types, unexpected!");
             if (Package.InputTypes != null)
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         private void ValidateEachItemInBundle(IList<BundleWithHeader<JsonEntity>> list)
         {
-            var wrapLog = Log.Call(nameof(ValidateEachItemInBundle), $"{list.Count}");
+            var wrapLog = Log.Call($"{list.Count}");
             foreach (var item in list)
             {
                 if (item.Header == null || item.Entity == null)
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         private void VerifyAllGroupAssignmentsValid(IReadOnlyCollection<BundleWithHeader<JsonEntity>> list)
         {
-            var wrapLog = Log.Call(nameof(VerifyAllGroupAssignmentsValid), $"{list.Count}");
+            var wrapLog = Log.Call($"{list.Count}");
             var groupAssignments = list.Select(i => i.Header.Group).Where(g => g != null).ToList();
             if (groupAssignments.Count == 0)
             {
@@ -102,7 +102,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         internal bool EntityIsOk(int count, IEntity newEntity, out HttpResponseException preparedException)
         {
-            var wrapLog = Log.Call<bool>(nameof(EntityIsOk));
+            var wrapLog = Log.Call<bool>();
             if (newEntity == null)
             {
                 Add($"entity {count} couldn't deserialize");
@@ -119,7 +119,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         internal bool IfUpdateValidateAndCorrectIds(int count, IEntity newEntity, out HttpResponseException preparedException)
         {
-            var wrapLog = Log.Call(nameof(IfUpdateValidateAndCorrectIds));
+            var wrapLog = Log.Call();
             var previousEntity = AppRead.Entities.Get(newEntity.EntityId)
                                  ?? AppRead.Entities.Get(newEntity.EntityGuid);
 
@@ -150,7 +150,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private void CompareTypes(int count, IEntityLight originalEntity, IEntityLight newEntity)
         {
-            var wrapLog = Log.Call(nameof(CompareTypes), $"ids:{newEntity.Type.StaticName}/{originalEntity.Type.StaticName}");
+            var wrapLog = Log.Call($"ids:{newEntity.Type.StaticName}/{originalEntity.Type.StaticName}");
             if(originalEntity.Type.StaticName != newEntity.Type.StaticName)
                 Add($"entity type mismatch on {count}");
             wrapLog("done");
@@ -158,7 +158,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private void CompareIdentities(int count, IEntityLight originalEntity, IEntityLight newEntity)
         {
-            var wrapLog = Log.Call(nameof(CompareIdentities), $"ids:{newEntity.EntityId}/{originalEntity.EntityId}");
+            var wrapLog = Log.Call($"ids:{newEntity.EntityId}/{originalEntity.EntityId}");
             if(originalEntity.EntityId != newEntity.EntityId)
                 Add($"entity ID mismatch on {count} - {newEntity.EntityId}/{originalEntity.EntityId}");
 
@@ -170,7 +170,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private void CompareAttributes(int count, IEntity original, IEntity ent)
         {
-            var wrapLog = Log.Call(nameof(CompareAttributes));
+            var wrapLog = Log.Call();
 
             if (original.Attributes.Count != ent.Attributes.Count)
                 Add($"entity {count} has different amount " +

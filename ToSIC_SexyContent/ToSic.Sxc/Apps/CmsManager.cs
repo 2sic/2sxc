@@ -23,19 +23,20 @@ namespace ToSic.Sxc.Apps
             EnablePublishing = enablePublishing;
         }
 
-        public CmsManager(int zoneId, int appId, bool showDrafts, bool enablePublishing, ILog parentLog) : base(zoneId, appId, parentLog)
-        {
-            ShowDrafts = showDrafts;
-            EnablePublishing = enablePublishing;
-        }
+        //public CmsManager(int zoneId, int appId, bool showDrafts, bool enablePublishing, ILog parentLog) : base(zoneId, appId, parentLog)
+        //{
+        //    ShowDrafts = showDrafts;
+        //    EnablePublishing = enablePublishing;
+        //}
 
-        // todo: th
-        public CmsManager(int appId, ILog parentLog) : base(appId, parentLog)
-        {
+        //// todo: th
+        //public CmsManager(int appId, ILog parentLog) : base(appId, parentLog)
+        //{
 
-        }
+        //}
 
-        public new CmsRuntime Read => _runtime ?? (_runtime = new CmsRuntime(Data, Log, ShowDrafts, EnablePublishing));
+        public new CmsRuntime Read 
+            => _runtime ?? (_runtime = new CmsRuntime(this, Log, ShowDrafts, EnablePublishing));
         private CmsRuntime _runtime;
 
 

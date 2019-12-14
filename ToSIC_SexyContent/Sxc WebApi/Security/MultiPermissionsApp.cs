@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Security
         protected MultiPermissionsApp(ICmsBlock cmsInstance, int zoneId, int appId, ILog parentLog) 
             : base("Api.Perms", parentLog)
         {
-            var wrapLog = Log.New("AppAndPermissions", $"..., appId: {appId}, ...");
+            var wrapLog = Log.Call($"..., appId: {appId}, ...");
             CmsInstance = cmsInstance;
             var tenant = new Tenant(PortalSettings.Current);
             var environment = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Security
 
         public sealed override bool ZoneIsOfCurrentContextOrUserIsSuper(out HttpResponseException exp)
         {
-            var wrapLog = Log.Call("ZoneChangedAndNotSuperUser()");
+            var wrapLog = Log.Call();
             var zoneSameOrSuperUser = SamePortal || PortalSettings.Current.UserInfo.IsSuperUser;
             exp = zoneSameOrSuperUser ? null: Http.PermissionDenied(
                 $"accessing app {App.AppId} in zone {App.ZoneId} is not allowed for this user");
