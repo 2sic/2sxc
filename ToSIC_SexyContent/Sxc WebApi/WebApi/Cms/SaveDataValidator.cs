@@ -102,7 +102,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         internal bool EntityIsOk(int count, IEntity newEntity, out HttpResponseException preparedException)
         {
-            var wrapLog = Log.Call<bool>(nameof(EntityIsOk));
+            var wrapLog = Log.Call<bool>();
             if (newEntity == null)
             {
                 Add($"entity {count} couldn't deserialize");

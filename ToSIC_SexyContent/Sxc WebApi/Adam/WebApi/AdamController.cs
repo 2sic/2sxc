@@ -93,8 +93,7 @@ namespace ToSic.Sxc.Adam.WebApi
         [HttpGet]
         public IEnumerable<AdamItem> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
-            var wrapLog = Log.Call<IEnumerable<AdamItem>>("Items",
-                $"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
+            var wrapLog = Log.Call<IEnumerable<AdamItem>>(parameters: $"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
             var state = new AdamSecureState(CmsBlock, appId, contentType, field, guid, usePortalRoot, Log);
 
 

@@ -73,7 +73,7 @@ namespace ToSic.Sxc.WebApi
             var log = new Log("Sxc.Http", null, request?.RequestUri?.AbsoluteUri);
             AddToInsightsHistory(request?.RequestUri?.AbsoluteUri, log);
 
-            var wrapLog = log.Call<HttpControllerDescriptor>(nameof(SelectController));
+            var wrapLog = log.Call<HttpControllerDescriptor>();
 
             if (!HandleRequestWithThisController(request))
                 return wrapLog("upstream", PreviousSelector.SelectController(request));

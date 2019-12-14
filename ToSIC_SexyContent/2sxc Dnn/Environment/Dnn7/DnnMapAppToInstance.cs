@@ -25,7 +25,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public int? GetAppIdFromInstance(IContainer instance, int zoneId)
         {
-            var wrapLog = Log.Call<int?>(nameof(GetAppIdFromInstance), $"..., {zoneId}");
+            var wrapLog = Log.Call<int?>(parameters: $"..., {zoneId}");
 
             var module = (instance as Container<ModuleInfo>)?.Original
                 ?? throw new Exception("instance is not of type ModuleInfo");
