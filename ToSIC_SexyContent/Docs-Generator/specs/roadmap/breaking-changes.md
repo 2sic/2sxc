@@ -14,6 +14,12 @@ We're documenting it here to ensure you know what happened, in case you still ru
 > All these things shouldn't affect you, because they were internal APIs, 
 > but in case it does - here's what we did.
 
+#### Version 10.22 and 10.23
+
+1. Renamed the `RootDataSource` and the Interface to `IAppRoot`
+1. Split SOC of the `AppRoot` DataSource so that caching, Root-Metadata and ListCache is fully separate
+1. Since the Logging system now auto-picks up the code lines and names of the methods, we simplified the commands and dropped some parameters.
+
 #### Version 10.20-04 (ca. 2019-12-03)
 
 1. Renamed `DataTableDataSource` to `DataTable`, old name still works.
