@@ -30,8 +30,8 @@ namespace ToSic.Sxc.DataSources
 
             log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{overrideView?.Name}");
             // Get ModuleDataSource
-            var initialSource = DataSource.GetPublishing(cms.Block/*.ZoneId, cms.Block.AppId*/, showDrafts, configurationProvider, parentLog);
-            var moduleDataSource = DataSource.GetDataSource<CmsBlock>(/*cms.Block.ZoneId, cms.Block.AppId,*/ initialSource, /*configurationProvider,*/ parentLog);
+            var initialSource = new DataSource(log).GetPublishing(cms.Block/*.ZoneId, cms.Block.AppId*/, showDrafts, configurationProvider/*, parentLog*/);
+            var moduleDataSource = new DataSource(log).GetDataSource<CmsBlock>(/*cms.Block.ZoneId, cms.Block.AppId,*/ initialSource /*,configurationProvider, parentLog*/);
             moduleDataSource.InstanceId = instanceId;
 
             moduleDataSource.OverrideView = overrideView;
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             log.Add($"use pipeline upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = DataSource.GetDataSource<Block>(cms.Block/*.ZoneId, cms.Block.AppId*/, viewDataSourceUpstream, configurationProvider, parentLog);
+            var viewDataSource = new DataSource(log).GetDataSource<Block>(cms.Block/*.ZoneId, cms.Block.AppId*/, viewDataSourceUpstream, configurationProvider/*, parentLog*/);
 
             // Take Publish-Properties from the View-Template
             if (overrideView != null)
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.DataSources
                 {
                     // var queryDef = new QueryDefinition(overrideView.QueryRaw, cms.Block.AppId, parentLog);
 
-                    new QueryBuilder(parentLog).GetAsDataSource(overrideView.Query,// queryDef,  /*cms.Block.AppId, overrideView.Query,*/
+                    new QueryBuilder(parentLog).BuildQuery(overrideView.Query,// queryDef,  /*cms.Block.AppId, overrideView.Query,*/
                         configurationProvider, null, viewDataSource, showDrafts: showDrafts);}
 
             }

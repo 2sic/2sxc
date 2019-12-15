@@ -58,7 +58,7 @@ namespace ToSic.Sxc.LookUp
         // will probably move again some day
         internal static LookUpEngine GetConfigProviderForModule(int moduleId, IApp app, ICmsBlock cms)
         {
-            var provider = new LookUpEngine();
+            var provider = new LookUpEngine(cms?.Log);
 
             // only add these in running inside an http-context. Otherwise leave them away!
             if (HttpContext.Current != null)
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.LookUp
             }
 
             // Add the standard DNN property sources if PortalSettings object is available (changed 2018-03-05)
-            var envProvs = Factory.Resolve<IGetEngine>().GetEngine(moduleId).Sources;
+            var envProvs = Factory.Resolve<IGetEngine>().GetEngine(moduleId, cms?.Log).Sources;
             foreach (var prov in envProvs)
                 provider.Sources.Add(prov.Key, prov.Value);
 

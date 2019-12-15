@@ -2,6 +2,7 @@
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
+using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
@@ -97,8 +98,12 @@ namespace ToSic.Sxc.Dnn
         /// <returns>An initialized App object which you can use to access App.Data</returns>
         public static IApp App(int appId, PortalSettings ownerPortalSettings, bool publishingEnabled = false, bool showDrafts = false)
         {
-            var appStuff = new App(new Tenant(ownerPortalSettings), Eav.Apps.App.AutoLookupZone, appId,
-                ConfigurationProvider.Build(showDrafts, publishingEnabled, new LookUpEngine()), true, null);
+            var appStuff = new App(
+                new Tenant(ownerPortalSettings), 
+                Eav.Apps.App.AutoLookupZone, appId,
+                ConfigurationProvider.Build(showDrafts, publishingEnabled, 
+                    new LookUpEngine(null as ILog)), 
+                true, null);
             return appStuff;
         }
 

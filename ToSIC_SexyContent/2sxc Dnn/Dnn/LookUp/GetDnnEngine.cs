@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 
 namespace ToSic.Sxc.Dnn.LookUp
@@ -13,9 +14,9 @@ namespace ToSic.Sxc.Dnn.LookUp
     public class GetDnnEngine : IGetEngine
     {
         /// <inheritdoc />
-        public ILookUpEngine GetEngine(int instanceId)
+        public ILookUpEngine GetEngine(int instanceId, ILog parentLog)
         {
-            var providers = new LookUpEngine();
+            var providers = new LookUpEngine(parentLog);
             var portalSettings = PortalSettings.Current;
 
             if (portalSettings == null) return providers;

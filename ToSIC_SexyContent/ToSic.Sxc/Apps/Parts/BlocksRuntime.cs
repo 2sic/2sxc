@@ -18,8 +18,8 @@ namespace ToSic.Sxc.Apps
 
         internal IDataSource ContentGroupSource()
         {
-            var dataSource = DataSource.GetPublishing(CmsRuntime/*.ZoneId, CmsRuntime.AppId*/, CmsRuntime.ShowDrafts);
-            var onlyCGs = DataSource.GetDataSource<EntityTypeFilter>(CmsRuntime, dataSource, parentLog: Log);
+            var dataSource = new DataSource(Log).GetPublishing(CmsRuntime/*.ZoneId, CmsRuntime.AppId*/, CmsRuntime.ShowDrafts);
+            var onlyCGs = new DataSource(Log).GetDataSource<EntityTypeFilter>(CmsRuntime, dataSource/*, parentLog: Log*/);
             onlyCGs.TypeName = BlockTypeName;
             return dataSource;
         }

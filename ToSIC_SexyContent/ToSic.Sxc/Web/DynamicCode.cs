@@ -145,15 +145,15 @@ namespace ToSic.Sxc.Web
                 lookUpEngine = ConfigurationProvider;
 
             if (inSource != null)
-                return DataSource.GetDataSource(typeName, inSource, inSource, lookUpEngine);
+                return new DataSource(Log).GetDataSource(typeName, inSource, inSource, lookUpEngine);
 
             var userMayEdit = CmsInstance.UserMayEdit;
 
-            var initialSource = DataSource.GetPublishing(
+            var initialSource = new DataSource(Log).GetPublishing(
                 App,
                 // CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as LookUpEngine);
-            return typeName != "" ? DataSource.GetDataSource(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
+            return typeName != "" ? new DataSource(Log).GetDataSource(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
         }
 
         /// <inheritdoc />
@@ -163,15 +163,15 @@ namespace ToSic.Sxc.Web
                 configurationProvider = ConfigurationProvider;
 
             if (inSource != null)
-                return DataSource.GetDataSource<T>(inSource/*.ZoneId, inSource.AppId*/, inSource, configurationProvider, Log);
+                return new DataSource(Log).GetDataSource<T>(inSource/*.ZoneId, inSource.AppId*/, inSource, configurationProvider/*, Log*/);
 
             var userMayEdit = CmsInstance.UserMayEdit;
 
-            var initialSource = DataSource.GetPublishing(
+            var initialSource = new DataSource(Log).GetPublishing(
                 App,
                 //CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
                 userMayEdit, ConfigurationProvider as LookUpEngine);
-            return DataSource.GetDataSource<T>(initialSource/*.ZoneId, initialSource.AppId*/, initialSource, configurationProvider, Log);
+            return new DataSource(Log).GetDataSource<T>(initialSource/*.ZoneId, initialSource.AppId*/, initialSource, configurationProvider/*, Log*/);
         }
 
         /// <inheritdoc />

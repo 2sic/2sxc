@@ -173,6 +173,7 @@
     <Compile Include="WebApi\Cms\TemplateController.cs" />
     <Compile Include="WebApi\Cms\Refactor\GetContentBlockDataLight.cs" />
     <Compile Include="WebApi\Cms\ModuleController.cs" />
+    <Compile Include="WebApi\System\Insights\InsightsHtml.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">

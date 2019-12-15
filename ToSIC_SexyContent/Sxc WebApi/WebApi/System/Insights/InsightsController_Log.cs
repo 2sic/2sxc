@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -40,13 +41,15 @@ namespace ToSic.Sxc.WebApi.System
                     var log = set.Take(position).LastOrDefault();
                     msg += log == null
                         ? p("log is null")
-                        : FormatLog($"Log for {key}[{position}]", log);
+                        : DumpTree($"Log for {key}[{position}]", log);
                 }
                 else
                     msg += $"position ({position}) > count ({set.Count})";
             }
             else
                 msg += $"position {position} not found in log set {key}";
+
+            msg += InsightsHtml.PageStyles();
             return msg;
         }
 
@@ -188,14 +191,93 @@ namespace ToSic.Sxc.WebApi.System
             return ToBr(htmlEnc);
         }
 
+        private static string DumpTree(string title, ILog log)
+        {
+            var lg = new StringBuilder(h1($"{title}") + "\n\n");
+            if (log.Entries.Count == 0) return "";
+            lg .AppendLine("<ol>");
+
+            var breadcrumb = new Stack<string>();
+
+            foreach (var e in log.Entries)
+            {
+                // a wrap-close should happen before adding a line, since it must go up a level
+                if (e.WrapClose)
+                {
+                    lg.AppendLine("</ol></li>");
+                    if (breadcrumb.Count > 0) breadcrumb.Pop();
+                }
+                else
+                {
+                    lg.AppendLine("<li>");
+                    lg.AppendLine(TreeDumpOneLine(e, breadcrumb.Count > 0 ? breadcrumb.Peek() : ""));
+                    if (e.WrapOpen)
+                    {
+                        breadcrumb.Push(e.ShortSource);
+                        lg.AppendLine("<ol>");
+                    }
+                    //else if (e.WrapClose)
+                    //{
+                    //    lg.AppendLine("</ol></li>");
+                    //    if (breadcrumb.Count > 0) breadcrumb.Pop();
+                    //}
+                    else lg.AppendLine("</li>");
+                }
+            }
+
+            lg.Append("</ol>");
+            lg.Append("end of log");
+            return lg.ToString();
+        }
+
+        private static string TreeDumpOneLine(Entry e, string parentName)
+        {
+            // if it's just a close, only repeat the result
+            if (e.WrapClose)
+                return $"{ResStart}{e.Result}{ResEnd}";
+
+            #region find perfect Label
+
+            var label = e.Source;
+            if (!string.IsNullOrEmpty(parentName) && !string.IsNullOrEmpty(e.Source))
+            {
+                var foundParent = e.Source?.IndexOf(parentName) ?? 0;
+                if (foundParent > 0)
+                {
+                    var cut = foundParent + parentName.Length;
+                    if (!(label.Length > cut))
+                        cut = foundParent;
+                    label = e.Source.Substring(cut);
+                }
+            }
+
+            #endregion
+
+            return InsightsHtml.HoverLabel(label, e.Source, "logIds")
+                   + " - "
+                   // + new string('~', e.Depth * 2)
+                   + HtmlEncode( e.Message)
+                   + (e.Result != null 
+                       ? ResStart + e.Result + ResEnd 
+                       : string.Empty)
+                   + (e.Elapsed != TimeSpan.Zero ? $" ⌚ {e.Elapsed.TotalSeconds}s " : "")
+                   + (e.Code != null
+
+                       ? " " + InsightsHtml.HoverLabel("C#", $"{e.Code.Path} - {e.Code.Name}() #{e.Code.Line}", "codePeek")
+                       // $"{CallerPrefix}{e.Code.Path} - {e.Code.Name}() #{e.Code.Line}{CallerSuffix}"
+                       : string.Empty)
+                    + "\n";
+        }
+
         public static string HtmlEncode(string text)
         {
-            char[] chars = HttpUtility.HtmlEncode(text).ToCharArray();
+            if (text == null) return "";
+            var chars = HttpUtility.HtmlEncode(text).ToCharArray();
             var result = new StringBuilder(text.Length + (int)(text.Length * 0.1));
 
-            foreach (char c in chars)
+            foreach (var c in chars)
             {
-                int value = Convert.ToInt32(c);
+                var value = Convert.ToInt32(c);
                 if (value > 127)
                     result.AppendFormat("&#{0};", value);
                 else
