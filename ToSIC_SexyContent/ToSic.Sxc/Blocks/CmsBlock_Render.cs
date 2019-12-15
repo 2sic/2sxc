@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Blocks
 
         public HtmlString Render()
         {
-            Log.Add("render");
+            var wrapLog = Log.Call<HtmlString>();
 
             try
             {
@@ -80,11 +80,14 @@ namespace ToSic.Sxc.Blocks
                     : body;
                 #endregion
 
-                return new HtmlString(result);
+                return wrapLog(null, new HtmlString(result));
             }
             catch (Exception ex)
             {
-                return new HtmlString(RenderingHelper.DesignErrorMessage(ex, true, null, true, true));
+                return wrapLog("error", 
+                    new HtmlString(RenderingHelper.DesignErrorMessage(ex, true, 
+                        null, true, true))
+                    );
             }
         }
 

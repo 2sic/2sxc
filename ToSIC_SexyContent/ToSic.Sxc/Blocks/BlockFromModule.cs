@@ -5,7 +5,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DnnWebForms.Helpers;

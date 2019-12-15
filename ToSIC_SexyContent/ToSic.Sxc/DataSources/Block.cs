@@ -30,8 +30,9 @@ namespace ToSic.Sxc.DataSources
 
             log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{overrideView?.Name}");
             // Get ModuleDataSource
-            var initialSource = new DataSource(log).GetPublishing(cms.Block/*.ZoneId, cms.Block.AppId*/, showDrafts, configurationProvider/*, parentLog*/);
-            var moduleDataSource = new DataSource(log).GetDataSource<CmsBlock>(/*cms.Block.ZoneId, cms.Block.AppId,*/ initialSource /*,configurationProvider, parentLog*/);
+            var dsFactory = new DataSource(log);
+            var initialSource = dsFactory.GetPublishing(cms.Block, showDrafts, configurationProvider);
+            var moduleDataSource = dsFactory.GetDataSource<CmsBlock>(initialSource);
             moduleDataSource.InstanceId = instanceId;
 
             moduleDataSource.OverrideView = overrideView;
@@ -43,7 +44,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             log.Add($"use pipeline upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = new DataSource(log).GetDataSource<Block>(cms.Block/*.ZoneId, cms.Block.AppId*/, viewDataSourceUpstream, configurationProvider/*, parentLog*/);
+            var viewDataSource = dsFactory.GetDataSource<Block>(cms.Block, viewDataSourceUpstream, configurationProvider);
 
             // Take Publish-Properties from the View-Template
             if (overrideView != null)
@@ -55,11 +56,9 @@ namespace ToSic.Sxc.DataSources
                 // Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
                 if (overrideView.Query != null)
                 {
-                    // var queryDef = new QueryDefinition(overrideView.QueryRaw, cms.Block.AppId, parentLog);
-
-                    new QueryBuilder(parentLog).BuildQuery(overrideView.Query,// queryDef,  /*cms.Block.AppId, overrideView.Query,*/
-                        configurationProvider, null, viewDataSource, showDrafts: showDrafts);}
-
+                    new QueryBuilder(parentLog).BuildQuery(overrideView.Query, configurationProvider, null,
+                        viewDataSource, showDrafts: showDrafts);
+                }
             }
             else
                 log.Add("no template override");
