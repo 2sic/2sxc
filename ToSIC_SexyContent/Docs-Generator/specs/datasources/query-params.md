@@ -60,7 +60,7 @@ In a Razor or WebApi file, you can always write something like this
 
 ```c#
 var allPosts = App.Query["AllBlogPosts"];
-allPosts.Param("Category", "Web");
+allPosts.Params("Category", "Web");
 var posts = allPosts["Default"];
 
 var dynPosts = AsList(posts);
@@ -74,15 +74,15 @@ var dynPosts = AsList(posts);
 
 ```c#
 var query = App.Query["AllBlogPosts"];
-query.Param("Category", "Web");
+query.Params("Category", "Web");
 var webPosts = AsList(query);
 
 // this would result in an error
-// allPosts.Param("Category", "IT");
+// allPosts.Params("Category", "IT");
 
 // this works
 query.Reset();
-query.Param("Category", "IT");
+query.Params("Category", "IT");
 var itPosts = AsList(query);
 ```
 
