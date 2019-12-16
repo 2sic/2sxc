@@ -3,7 +3,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent.Environment;
 using ToSic.SexyContent.Interfaces;
 using IApp = ToSic.Eav.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;

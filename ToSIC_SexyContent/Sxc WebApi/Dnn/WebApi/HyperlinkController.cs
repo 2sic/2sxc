@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 		        var lookupPage = hyperlink.Trim().StartsWith("page", StringComparison.OrdinalIgnoreCase);
 
 		        // look it up first, because we need to know if the result is in ADAM or not (different security scenario)
-		        var conv = new ValueConverter();
+		        var conv = new DnnValueConverter();
                 var resolved = conv.ToValue(hyperlink, guid);
 
 		        if (lookupPage)

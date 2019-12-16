@@ -3,9 +3,8 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Environment;
-using ToSic.Sxc.Dnn;
 
-namespace ToSic.Sxc
+namespace ToSic.Sxc.Dnn
 {
     public class DnnContext : IDnnContext
     {

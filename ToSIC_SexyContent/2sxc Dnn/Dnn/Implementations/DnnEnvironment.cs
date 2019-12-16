@@ -3,7 +3,6 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.Sxc.Dnn
 {
