@@ -181,7 +181,7 @@ namespace ToSic.Sxc.WebApi.System
                 callStart: CallerPrefixPlaceholder,
                 callEnd: CallerSuffixPlaceholder
                 );
-            var htmlEnc = h1($"{title}") + "\n" + HtmlEncode(dump);
+            var htmlEnc = h1($"{title}") + "\n" + InsightsHtml.HtmlEncode(dump);
             htmlEnc = htmlEnc
                 .Replace(ResStartPlaceholder, ResStart)
                 .Replace(ResEndPlaceholder, ResEnd)
@@ -255,36 +255,24 @@ namespace ToSic.Sxc.WebApi.System
 
             return InsightsHtml.HoverLabel(label, e.Source, "logIds")
                    + " - "
-                   // + new string('~', e.Depth * 2)
-                   + HtmlEncode( e.Message)
+                   + InsightsHtml.HtmlEncode( e.Message)
                    + (e.Result != null 
                        ? ResStart + e.Result + ResEnd 
                        : string.Empty)
-                   + (e.Elapsed != TimeSpan.Zero ? $" ⌚ {e.Elapsed.TotalSeconds}s " : "")
+                   + ShowTime(e)
                    + (e.Code != null
-
                        ? " " + InsightsHtml.HoverLabel("C#", $"{e.Code.Path} - {e.Code.Name}() #{e.Code.Line}", "codePeek")
-                       // $"{CallerPrefix}{e.Code.Path} - {e.Code.Name}() #{e.Code.Line}{CallerSuffix}"
                        : string.Empty)
                     + "\n";
         }
 
-        public static string HtmlEncode(string text)
+        private static string ShowTime(Entry e)
         {
-            if (text == null) return "";
-            var chars = HttpUtility.HtmlEncode(text).ToCharArray();
-            var result = new StringBuilder(text.Length + (int)(text.Length * 0.1));
-
-            foreach (var c in chars)
-            {
-                var value = Convert.ToInt32(c);
-                if (value > 127)
-                    result.AppendFormat("&#{0};", value);
-                else
-                    result.Append(c);
-            }
-
-            return result.ToString();
+            if (e.Elapsed == TimeSpan.Zero) return "";
+            var seconds = e.Elapsed.TotalSeconds;
+            var ms = seconds * 1000;
+            var time = ms < 1000 ? $"{ms}ms" : $"{seconds}s";
+            return InsightsHtml.HtmlEncode($" ⌚ {time} ");
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.WebApi.Helpers;
-using ToSic.SexyContent;
 using ToSic.SexyContent.Environment;
 using ToSic.Sxc.WebApi;
 
@@ -27,6 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 	        Helpers.RemoveLanguageChangingCookie();
 
             Log = new Log("DNN.WebApi", null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
+            WrapLogForEntireCall = Log.Call(useTimer: true);
 	        
             // ReSharper disable VirtualMemberCallInConstructor
 	        if (LogHistoryName != null)
@@ -36,11 +37,20 @@ namespace ToSic.Sxc.Dnn.WebApi
             Env = new DnnEnvironment(Log);
         }
 
+        // ReSharper disable once InconsistentNaming
+        private readonly Action<string> WrapLogForEntireCall;
+
         protected override void Initialize(HttpControllerContext controllerContext)
 	    {
             // Add the logger to the request, in case it's needed in error-reporting
 	        controllerContext.Request.Properties.Add(Constants.EavLogKey, Log);
 	        base.Initialize(controllerContext);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            WrapLogForEntireCall(null);
+            base.Dispose(disposing);
         }
 
 

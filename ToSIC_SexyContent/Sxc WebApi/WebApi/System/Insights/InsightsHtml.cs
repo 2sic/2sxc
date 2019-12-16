@@ -1,4 +1,8 @@
-﻿namespace ToSic.Sxc.WebApi.System
+﻿using System;
+using System.Text;
+using System.Web;
+
+namespace ToSic.Sxc.WebApi.System
 {
     internal class InsightsHtml
     {
@@ -40,6 +44,24 @@ ol li ol li:: before {
 
         internal static string HoverLabel(string label, string text, string classes)
             => $"<span class='{classes}' title='{text}'>{label}</span>";
+
+        internal static string HtmlEncode(string text)
+        {
+            if (text == null) return "";
+            var chars = HttpUtility.HtmlEncode(text).ToCharArray();
+            var result = new StringBuilder(text.Length + (int)(text.Length * 0.1));
+
+            foreach (var c in chars)
+            {
+                var value = Convert.ToInt32(c);
+                if (value > 127)
+                    result.AppendFormat("&#{0};", value);
+                else
+                    result.Append(c);
+            }
+
+            return result.ToString();
+        }
 
     }
 }
