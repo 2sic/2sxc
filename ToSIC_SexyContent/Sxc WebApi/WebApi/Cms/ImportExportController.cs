@@ -15,8 +15,8 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.ImportExport;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.WebApi.ImportExport;
 

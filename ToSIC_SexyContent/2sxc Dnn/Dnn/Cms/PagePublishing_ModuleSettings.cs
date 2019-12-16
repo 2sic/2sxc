@@ -1,7 +1,8 @@
 ﻿using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
+using ToSic.SexyContent.Environment.Dnn7;
 
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn.Cms
 {
     internal partial class PagePublishing
     {

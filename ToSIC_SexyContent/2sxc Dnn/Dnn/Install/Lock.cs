@@ -1,8 +1,7 @@
 ﻿using System.IO;
 using System.Web.Hosting;
-using ToSic.Sxc;
 
-namespace ToSic.SexyContent.Environment.Dnn7.Installation
+namespace ToSic.Sxc.Dnn.Install
 {
     internal class Lock
     {

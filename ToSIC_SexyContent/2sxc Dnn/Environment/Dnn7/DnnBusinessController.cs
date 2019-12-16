@@ -6,9 +6,9 @@ using ToSic.Eav.Apps;
 using ToSic.SexyContent.Search;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Environment.Dnn7.Installation;
 using ToSic.SexyContent.Environment.Dnn7.Search;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Install;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -39,7 +39,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 if (_publishing != null) return Publishing;
 
                 // if publishing is used, make sure it's in the log-history
-                _publishing = new PagePublishing(Log);
+                _publishing = new Sxc.Dnn.Cms.PagePublishing(Log);
                 ToSic.Eav.Logging.History.Add("dnn-publishing", Log);
                 return _publishing;
             }

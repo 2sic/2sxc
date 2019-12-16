@@ -6,10 +6,9 @@ using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn.Web
 {
-    public class ClientDependencyManager: Base.ClientDependencyManager
+    public class ClientDependencyManager: SexyContent.Environment.Base.ClientDependencyManager
     {
 
         public override string Process(string renderedTemplate)

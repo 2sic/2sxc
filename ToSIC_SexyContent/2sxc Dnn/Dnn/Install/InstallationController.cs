@@ -10,13 +10,10 @@ using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Sxc;
 using ToSic.Sxc.Interfaces;
-using Constants = ToSic.Sxc.Constants;
 using Exception = System.Exception;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent.Environment.Dnn7.Installation
+namespace ToSic.Sxc.Dnn.Install
 {
     public class InstallationController: IEnvironmentInstaller
     {

@@ -10,6 +10,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.Sxc.WebApi.Cms

@@ -4,7 +4,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Dnn
 {
-    public class DynamicCode : Web.DynamicCode, IDynamicCode
+    public class DynamicCode : Sxc.Web.DynamicCode, IDynamicCode
     {
         public ICmsBlock CmsBlock;
 

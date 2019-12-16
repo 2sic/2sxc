@@ -10,11 +10,10 @@ using ToSic.Eav.Environment;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
-using ToSic.Eav.Security.Permissions;
 using IEntity = ToSic.Eav.Data.IEntity;
 using PermissionCheckBase = ToSic.Eav.Security.PermissionCheckBase;
 
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn
 {
     /// <summary>
     /// Permissions object which checks if the user is allowed to do soemthing based on specific permission

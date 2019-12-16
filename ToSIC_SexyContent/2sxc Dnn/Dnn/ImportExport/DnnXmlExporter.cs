@@ -5,12 +5,9 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Adam;
-using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.Sxc;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.SxcTemp;
 
-namespace ToSic.SexyContent.ImportExport
+namespace ToSic.Sxc.Dnn.ImportExport
 {
     public class DnnXmlExporter: XmlExporter
     {

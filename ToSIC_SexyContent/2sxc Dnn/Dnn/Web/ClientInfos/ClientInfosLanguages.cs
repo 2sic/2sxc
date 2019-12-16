@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
-// ReSharper disable InconsistentNaming
+using ToSic.SexyContent.Environment.Dnn7;
 
-namespace ToSic.SexyContent.Environment.Dnn7
+
+namespace ToSic.Sxc.Dnn.Web.ClientInfos
 {
     public class ClientInfosLanguages
     {

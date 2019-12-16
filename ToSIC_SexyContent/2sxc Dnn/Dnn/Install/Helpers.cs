@@ -5,10 +5,8 @@ using System.Web;
 using System.Xml.Linq;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.Sxc;
 
-namespace ToSic.SexyContent.Environment.Dnn7.Installation
+namespace ToSic.Sxc.Dnn.Install
 {
     internal class Helpers
     {

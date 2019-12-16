@@ -4,6 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.SexyContent.Environment
 {

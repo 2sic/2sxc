@@ -9,10 +9,10 @@ using Newtonsoft.Json;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Sxc;
+using ToSic.Sxc.Dnn.Web.ClientInfos;
 using ToSic.Sxc.Interfaces;
 
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnRenderingHelpers : IHasLog, IRenderingHelpers
     {
@@ -74,7 +74,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             if (contentBlockId != 0) contextAttribs += $" data-cb-id='{contentBlockId}'";
 
             // optionally add editing infos
-            if (includeEditInfos) contextAttribs += Html.Build.Attribute("data-edit-context", UiContextInfos(autoToolbar));
+            if (includeEditInfos) contextAttribs += SexyContent.Html.Build.Attribute("data-edit-context", UiContextInfos(autoToolbar));
             return contextAttribs;
         }
 

@@ -1,22 +1,21 @@
-﻿using DotNetNuke.Common.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Logging;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Dnn;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn.Cms
 {
     internal partial class PagePublishing : HasLog, IPagePublishing
     {
@@ -65,7 +64,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Log.Add($"DoInsidePublishing(module:{moduleId}, user:{userId}, enabled:{enabled})");
             if (enabled)
             {
-                var moduleVersionSettings = new ModuleVersions(moduleId, Log);
+                var moduleVersionSettings = new PagePublishing.ModuleVersions(moduleId, Log);
                 
                 // Get an new version number and submit it to DNN
                 // The submission must be made every time something changes, because a "discard" could have happened
@@ -86,7 +85,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public int GetLatestVersion(int moduleId)
         {
-            var moduleVersionSettings = new ModuleVersions(moduleId, Log);
+            var moduleVersionSettings = new PagePublishing.ModuleVersions(moduleId, Log);
             var ver = moduleVersionSettings.GetLatestVersion();
             Log.Add($"GetLatestVersion(m:{moduleId}) = ver:{ver}");
             return ver;
@@ -94,7 +93,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public int GetPublishedVersion(int moduleId)
         {
-            var moduleVersionSettings = new ModuleVersions(moduleId, Log);
+            var moduleVersionSettings = new PagePublishing.ModuleVersions(moduleId, Log);
             var publ = moduleVersionSettings.GetPublishedVersion();
             Log.Add($"GetPublishedVersion(m:{moduleId}) = pub:{publ}");
             return publ;
@@ -152,7 +151,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 }
 
                 // Set published version
-                new ModuleVersions(instanceId, Log).PublishLatestVersion();
+                new PagePublishing.ModuleVersions(instanceId, Log).PublishLatestVersion();
                 Log.Add("publish completed");
             }
             catch (Exception ex)

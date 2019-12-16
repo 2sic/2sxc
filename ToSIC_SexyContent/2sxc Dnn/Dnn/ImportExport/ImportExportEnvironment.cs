@@ -7,17 +7,14 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Persistence;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.SexyContent.Internal;
-using ToSic.Sxc;
-using ToSic.Sxc.Dnn;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.SxcTemp;
 
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn.ImportExport
 {
     public class ImportExportEnvironment : HasLog, IImportExportEnvironment
     {

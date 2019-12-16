@@ -3,9 +3,10 @@ using DotNetNuke.Entities.Users;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Edit.ClientContextInfo;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Edit.ClientContextInfo;
 
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn.Web.ClientInfos
 {
     public class ClientInfosAll : HasLog
     {

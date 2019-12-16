@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 
-namespace ToSic.SexyContent.Environment.Dnn7.Installation
+namespace ToSic.Sxc.Dnn.Install
 {
     public class VersionBase
     {
