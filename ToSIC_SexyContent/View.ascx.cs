@@ -56,6 +56,7 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_PreRender(object sender, EventArgs e)
         {
+            var timerWrap = Log.Call(message: "timer", useTimer: true);
             try
             {
                 // throw better error if SxcInstance isn't available
@@ -84,11 +85,14 @@ namespace ToSic.SexyContent
                     {
                         // only attach debug, if it has been enabled for the current time period
                         if (UserInfo.IsSuperUser || Logging.EnableLogging(GlobalConfiguration.Configuration
-                            .Properties))
+                                .Properties))
                             renderedTemplate += HtmlLog();
                     }
                 }
-                catch { /* ignore */}
+                catch
+                {
+                    /* ignore */
+                }
 
                 // If standalone is specified, output just the template without anything else
                 if (renderNaked)
@@ -98,7 +102,12 @@ namespace ToSic.SexyContent
             }
             catch (Exception ex)
             {
+                timerWrap(null);
                 Exceptions.ProcessModuleLoadException(this, ex);
+            }
+            finally
+            {
+                timerWrap(null);
             }
         }
 

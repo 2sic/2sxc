@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 	        Helpers.RemoveLanguageChangingCookie();
 
             Log = new Log("DNN.WebApi", null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
-            WrapLogForEntireCall = Log.Call(useTimer: true);
+            TimerWrapLog = Log.Call(message: "timer", useTimer: true);
 	        
             // ReSharper disable VirtualMemberCallInConstructor
 	        if (LogHistoryName != null)
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         }
 
         // ReSharper disable once InconsistentNaming
-        private readonly Action<string> WrapLogForEntireCall;
+        private readonly Action<string> TimerWrapLog;
 
         protected override void Initialize(HttpControllerContext controllerContext)
 	    {
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 
         protected override void Dispose(bool disposing)
         {
-            WrapLogForEntireCall(null);
+            TimerWrapLog(null);
             base.Dispose(disposing);
         }
 
