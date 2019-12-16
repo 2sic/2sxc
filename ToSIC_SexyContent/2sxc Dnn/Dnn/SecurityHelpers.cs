@@ -3,7 +3,7 @@ using DotNetNuke.Security.Roles;
 
 namespace ToSic.Sxc.Dnn
 {
-    public class SecurityHelpers
+    public class DnnSecurity
     {
         /// <summary>
         /// Returns true if a DotNetNuke User Group "SexyContent Designers" exists and contains at minumum one user

@@ -1,8 +1,13 @@
 ﻿using System;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Documentation;
 
-namespace ToSic.SexyContent.Search
+namespace ToSic.Sxc.Search
 {
+    /// <summary>
+    /// Special search exception, so these exceptions can be handled in a special way if necessary.
+    /// </summary>
+    [PublicApi]
     public class SearchIndexException : Exception
     {
         public SearchIndexException(ModuleInfo moduleInfo, Exception innerException)

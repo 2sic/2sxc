@@ -9,7 +9,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -107,7 +106,7 @@ namespace ToSic.Sxc.Dnn.Cms
             {
                 // publish all entites of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
-                var instanceInfo = new Container(dnnModule);
+                var instanceInfo = new DnnContainer(dnnModule);
                 // must find tenant through module, as the PortalSettings.Current is null in search mode
                 var tenant = new Tenant(new PortalSettings(dnnModule.OwnerPortalID));
                 var cb = new BlockFromModule(instanceInfo, Log, tenant);
@@ -156,7 +155,7 @@ namespace ToSic.Sxc.Dnn.Cms
             }
             catch (Exception ex)
             {
-                Logging.LogToDnn("exception", "publishing", Log, force:true);
+                DnnLogging.LogToDnn("exception", "publishing", Log, force:true);
                 DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
                 throw;
             }

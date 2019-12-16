@@ -7,15 +7,13 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
-using ToSic.Sxc;
-using ToSic.Sxc.Dnn;
 
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn
 {
-    public class ZoneMapper : HasLog, IZoneMapper
+    public class DnnZoneMapper : HasLog, IZoneMapper
     {
         /// <inheritdoc />
-        public ZoneMapper(ILog parentLog = null) : base("DNN.ZoneMp", parentLog)
+        public DnnZoneMapper(ILog parentLog = null) : base("DNN.ZoneMp", parentLog)
         {
         }
 

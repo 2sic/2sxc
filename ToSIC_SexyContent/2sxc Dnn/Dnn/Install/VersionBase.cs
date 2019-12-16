@@ -3,13 +3,13 @@ using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public class VersionBase
+    public class InstallVersion
     {
         protected ILog Log;
 
-        protected Logger logger;
+        protected DnnInstallLogger logger;
         protected string _version;
-        internal VersionBase(string version, Logger sharedLogger, string logName, ILog parentLog = null)
+        internal InstallVersion(string version, DnnInstallLogger sharedLogger, string logName, ILog parentLog = null)
         {
             logger = sharedLogger;
             _version = version;

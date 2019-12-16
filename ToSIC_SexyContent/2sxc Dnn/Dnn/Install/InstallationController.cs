@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Install
     {
         public bool SaveUnimportantDetails = true;
 
-        private readonly Logger _installLogger;
+        private readonly DnnInstallLogger _installLogger;
 
         private ILog Log = new Log("Ist.InstCo");
 
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         public InstallationController()
         {
-            _installLogger = new Logger(SaveUnimportantDetails);
+            _installLogger = new DnnInstallLogger(SaveUnimportantDetails);
         }
 
         internal string UpgradeModule(string version)
@@ -234,7 +234,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         public bool IsUpgradeRunning
         {
-            get => _running ?? (_running = new Lock().IsSet).Value;
+            get => _running ?? (_running = new DnnFileLock().IsSet).Value;
             private set
             {
                 try
@@ -242,9 +242,9 @@ namespace ToSic.Sxc.Dnn.Install
                     _installLogger.LogStep("", "set upgrade running - " + value);
 
                     if (value)
-                        new Lock().Set();
+                        new DnnFileLock().Set();
                     else
-                        new Lock().Release();
+                        new DnnFileLock().Release();
                     _installLogger.LogStep("", "set upgrade running - " + value + " - done");
                 }
                 catch

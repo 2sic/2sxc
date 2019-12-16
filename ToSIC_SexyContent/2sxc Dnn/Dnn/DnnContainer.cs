@@ -8,9 +8,9 @@ namespace ToSic.Sxc.Dnn
     /// The DNN implementation of a Block Container (a Module).
     /// </summary>
     [PublicApi]
-    public class Container: Container<ModuleInfo>
+    public class DnnContainer: Container<ModuleInfo>
     {
-        public Container(ModuleInfo item) : base(item)
+        public DnnContainer(ModuleInfo item) : base(item)
         {
         }
 

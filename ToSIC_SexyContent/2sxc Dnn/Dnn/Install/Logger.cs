@@ -6,7 +6,7 @@ using System.Web.Hosting;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public class Logger
+    public class DnnInstallLogger
     {
         // private string _detailedLog;
         private readonly bool _saveUnimportantDetails;
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Install
         private StreamWriter _fileStreamWriter;
         private StreamWriter FileStreamWriter => _fileStreamWriter ?? OpenLogFiles();
 
-        public Logger(bool saveDetails)
+        public DnnInstallLogger(bool saveDetails)
         {
             _saveUnimportantDetails = saveDetails;
         }

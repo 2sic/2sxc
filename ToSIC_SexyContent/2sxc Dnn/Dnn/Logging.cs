@@ -3,16 +3,14 @@ using System.Collections.Concurrent;
 using System.Web.Http;
 using DotNetNuke.Services.Log.EventLog;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent.Razor.Helpers;
-using ToSic.Sxc;
 
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn
 {
-    public static class Logging
+    public static class DnnLogging
     {
         public const int MaxDuration = 10;
 
-        public static void LogToDnn(string key, string message, ILog log = null, DnnHelper dnnContext = null, bool force = false)
+        public static void LogToDnn(string key, string message, ILog log = null, DnnContext dnnContext = null, bool force = false)
         {
             if(!force)
                 if (!EnableLogging(GlobalConfiguration.Configuration.Properties)) return;
@@ -54,12 +52,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 new EventLogController().AddLog("2sxc logging",
                     $"failed to add log from {source}, something in the logging failed", EventLogController.EventLogType.ADMIN_ALERT);
             }
-            catch
-            {
-            }
+            catch { /* ignore */ }
         }
 
-        private static void AttachDnnStateIfPossible(DnnHelper dnn, LogInfo logInfo)
+        private static void AttachDnnStateIfPossible(DnnContext dnn, LogInfo logInfo)
         {
             try
             {
@@ -71,9 +67,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     logInfo.AddProperty("ModuleId", dnn.Module?.ModuleID.ToString() ?? "unknown");
                 }
             }
-            catch
-            {
-            }
+            catch { /* ignore */ }
         }
 
         public static bool EnableLogging(ConcurrentDictionary<object, object> props)

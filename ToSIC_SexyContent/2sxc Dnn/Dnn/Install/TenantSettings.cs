@@ -3,13 +3,12 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Logging;
-using ToSic.Sxc;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 
-namespace ToSic.SexyContent.Internal
+namespace ToSic.Sxc.Dnn.Install
 {
-    public class DnnStuffToRefactor
+    public class DnnTenantSettings
     {
         // todo: try to cache the result of settings-stored in a static variable, this full check
         // todo: shouldn't have to happen every time

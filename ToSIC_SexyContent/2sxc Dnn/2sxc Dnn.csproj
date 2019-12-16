@@ -176,8 +176,6 @@
     <None Include="packages.config" />
     <None Include="Search\readme.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Refactoring\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

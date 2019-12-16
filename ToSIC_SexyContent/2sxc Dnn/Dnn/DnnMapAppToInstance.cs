@@ -7,14 +7,12 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent.Internal;
-using ToSic.Sxc;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Interfaces;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn
 {
 
     public class DnnMapAppToInstance : HasLog, IMapAppToInstance
@@ -64,11 +62,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
             var zoneId = env.ZoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == 0 || !appId.HasValue)
-                DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, null, Log);
+                DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, null, Log);
             else
             {
                 var appName = Eav.Factory.GetAppsCache().Zones[zoneId].Apps[appId.Value];
-                DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, appName, Log);
+                DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, appName, Log);
             }
 
             // Change to 1. available template if app has been set
@@ -86,7 +84,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public void ClearPreviewTemplate(int instanceId)
         {
             Log.Add($"ClearPreviewTemplate(iid: {instanceId})");
-            DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, null, Log);
+            DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, null, Log);
         }
 
         public void SetContentGroup(int instanceId, bool wasCreated, Guid guid)
@@ -96,7 +94,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             ClearPreviewTemplate(instanceId);
             // Update blockConfiguration Guid for this module
             if (wasCreated)
-                DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instanceId, Settings.ContentGroupGuidString,
+                DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.ContentGroupGuidString,
                     guid.ToString(), Log);
         }
 
@@ -135,7 +133,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             if (settings[Settings.ContentGroupGuidString] != null)
                 throw new Exception("Preview template id cannot be set for a module that already has content.");
 
-            DnnStuffToRefactor.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString(), Log);
+            DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString(), Log);
         }
 
         public void UpdateTitle(Sxc.Blocks.ICmsBlock cmsInstance, IEntity titleItem)

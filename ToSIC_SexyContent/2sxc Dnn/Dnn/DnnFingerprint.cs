@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn
     /// DNN implementation of the Fingerprinting system for extra security.
     /// </summary>
     [PrivateApi("probably not useful in the API docs.")]
-    public class FingerprintProvider: IFingerprintProvider
+    public class DnnFingerprint: IFingerprintProvider
     {
         public string GetSystemFingerprint()
         {

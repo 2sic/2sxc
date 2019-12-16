@@ -238,7 +238,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public string ExtendedLogging(int duration = 1)
         {
             Log.Add("Extended logging will set for duration:" + duration);
-            var msg = Logging.ActivateForDuration(duration);
+            var msg = DnnLogging.ActivateForDuration(duration);
             Log.Add(msg);
             return msg;
         }

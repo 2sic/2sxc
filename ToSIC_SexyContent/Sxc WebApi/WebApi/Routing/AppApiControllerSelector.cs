@@ -14,6 +14,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.WebApi.System;
 
 namespace ToSic.Sxc.WebApi

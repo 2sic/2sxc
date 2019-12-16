@@ -3,7 +3,7 @@ using System.Web.Hosting;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    internal class Lock
+    internal class DnnFileLock
     {
         internal string LockFileName => HostingEnvironment.MapPath(Settings.Installation.LogDirectory + "lock.resources");
         internal string LockFolder => HostingEnvironment.MapPath(Settings.Installation.LogDirectory);
@@ -22,7 +22,6 @@ namespace ToSic.Sxc.Dnn.Install
         {
             get
             {
-                //if (!Directory.Exists(LockFolder))
                 Directory.CreateDirectory(LockFolder); // create if it doesn't exist (doesn't need checking beforehand)
 
                 var lockFilePath = LockFileName;// HostingEnvironment.MapPath(Settings.Installation.LogDirectory + "lock.resources");

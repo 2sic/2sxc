@@ -9,17 +9,14 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Logging;
-using ToSic.SexyContent.Search;
 using ToSic.Eav.Environment;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
-using ToSic.Sxc.Search;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent.Environment.Dnn7.Search
+namespace ToSic.Sxc.Search
 {
     internal class SearchController: HasLog
     {
@@ -136,7 +133,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.Search
             // check if the cshtml has search customizations
             try
             {
-                engine.CustomizeSearch(searchInfoDictionary, new Container(dnnModule), beginDate);
+                engine.CustomizeSearch(searchInfoDictionary, new DnnContainer(dnnModule), beginDate);
             }
             catch (Exception e)
             {

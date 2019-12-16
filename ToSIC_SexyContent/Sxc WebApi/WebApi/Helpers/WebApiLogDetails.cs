@@ -2,7 +2,7 @@
 using ToSic.Eav.Logging;
 using ToSic.SexyContent;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Razor.Helpers;
+using ToSic.Sxc.Dnn;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -29,17 +29,17 @@ namespace ToSic.Sxc.WebApi
                 // check if we have additional context information (portal, module, etc.)
                 reqProps.TryGetValue(Constants.DnnContextKey, out var dnnContext);
 
-                Logging.LogToDnn("2sxc-Api", 
+                DnnLogging.LogToDnn("2sxc-Api", 
                     actionContext.Request.RequestUri.PathAndQuery, 
                     log, 
-                    dnnContext as DnnHelper);
+                    dnnContext as DnnContext);
 
                 // set property, to prevent double-logging
                 actionContext.Request.Properties.Add(AlreadyLogged, true);
             }
             catch
             {
-                Logging.TryToReportLoggingFailure("WebApiLogDetails");
+                DnnLogging.TryToReportLoggingFailure("WebApiLogDetails");
             }
         }
 

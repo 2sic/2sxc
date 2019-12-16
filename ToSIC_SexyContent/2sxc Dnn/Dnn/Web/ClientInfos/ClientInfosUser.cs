@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 
         public ClientInfosUser(UserInfo uinfo)
         {
-            CanDesign = SecurityHelpers.IsInSexyContentDesignersGroup(uinfo);
+            CanDesign = DnnSecurity.IsInSexyContentDesignersGroup(uinfo);
             CanDevelop = uinfo.IsSuperUser;
         }
     }

@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Dnn
         public static ICmsBlock CmsBlock(int tabId, int modId)
         {
             var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
-            var instance = new Container(moduleInfo);
+            var instance = new DnnContainer(moduleInfo);
             return CmsBlock(instance);
         }
 
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="moduleInfo">A DNN ModuleInfo object</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static ICmsBlock CmsBlock(ModuleInfo moduleInfo)
-            => CmsBlock(new Container(moduleInfo));
+            => CmsBlock(new DnnContainer(moduleInfo));
 
         /// <summary>
         /// Get a Root CMS Block if you have the ModuleInfo object.

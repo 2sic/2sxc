@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Logging;
-using ToSic.SexyContent.Razor.Helpers;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Dnn
@@ -13,7 +12,7 @@ namespace ToSic.Sxc.Dnn
             CmsBlock = cmsBlock;
             // Init things than require module-info or similar, but not 2sxc
             var instance = cmsBlock?.Container;
-            Dnn = new DnnHelper(instance);
+            Dnn = new DnnContext(instance);
             Link = new LinkHelper(Dnn);
         }
 

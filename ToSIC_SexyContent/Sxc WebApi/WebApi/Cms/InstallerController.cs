@@ -33,12 +33,12 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Log.Add("install package:" + packageUrl);
             var zoneId = Env.ZoneMapper.GetZoneId(ActiveModule.PortalID);
-            var appId = new DnnMapAppToInstance(Log).GetAppIdFromInstance(new Container(ActiveModule), zoneId);
+            var appId = new DnnMapAppToInstance(Log).GetAppIdFromInstance(new DnnContainer(ActiveModule), zoneId);
             bool success;
 
             // Install package
             // var messages = new List<ExportImportMessage>();
-            var helper = new ImportExportEnvironment(Log);
+            var helper = new DnnImportExportEnvironment(Log);
             try
             {
                 // Increase script timeout to prevent timeouts

@@ -183,7 +183,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 Log.Add($"new app name: {name}");
             }
 
-            var helper = new ImportExportEnvironment(Log);
+            var helper = new DnnImportExportEnvironment(Log);
             try
             {
                 var zipImport = new ZipImport(helper, zoneId, null, PortalSettings.UserInfo.IsSuperUser, Log);
@@ -224,7 +224,7 @@ namespace ToSic.Sxc.WebApi.Cms
             {   // ZIP
                 try
                 {
-                    var env = new ImportExportEnvironment(Log);
+                    var env = new DnnImportExportEnvironment(Log);
                     var zipImport = new ZipImport(env, zoneId, appId, PortalSettings.UserInfo.IsSuperUser, Log);
                     // Increase script timeout to prevent timeouts
                     HttpContext.Current.Server.ScriptTimeout = 300;

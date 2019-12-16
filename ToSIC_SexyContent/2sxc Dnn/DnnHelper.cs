@@ -5,16 +5,16 @@ using DotNetNuke.Entities.Users;
 using ToSic.Eav.Environment;
 using ToSic.Sxc.Dnn;
 
-namespace ToSic.SexyContent.Razor.Helpers
+namespace ToSic.Sxc
 {
-    public class DnnHelper : IDnnContext
+    public class DnnContext : IDnnContext
     {
         /// <summary>
         /// Build DNN Helper
         /// Note that the context can be null, in which case it will have no module context, and default to the current portal
         /// </summary>
         /// <param name="moduleContext"></param>
-        public DnnHelper(IContainer moduleContext)
+        public DnnContext(IContainer moduleContext)
         {
             Module = (moduleContext as Container<ModuleInfo>)?.Original;
             Portal = PortalSettings.Current ?? 

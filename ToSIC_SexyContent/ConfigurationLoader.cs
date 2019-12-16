@@ -67,7 +67,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IUser, DnnUser>();
 
                 sc.AddTransient<XmlExporter, DnnXmlExporter>();
-                sc.AddTransient<IImportExportEnvironment, ImportExportEnvironment>();
+                sc.AddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
 
                 sc.AddTransient<IRuntime, Runtime>();
                 sc.AddTransient<IAppEnvironment, DnnEnvironment>();
@@ -84,7 +84,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IEnvironmentInstaller, InstallationController>();
                 sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
                 sc.AddTransient<IGetEngine, GetDnnEngine>();
-                sc.AddTransient<IFingerprintProvider, FingerprintProvider>();
+                sc.AddTransient<IFingerprintProvider, DnnFingerprint>();
 
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);
             });
