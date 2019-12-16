@@ -15,6 +15,7 @@ using ToSic.Sxc.Interfaces;
 using Constants = ToSic.Sxc.Constants;
 using Exception = System.Exception;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7.Installation
 {
     public class InstallationController: IEnvironmentInstaller

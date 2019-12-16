@@ -10,6 +10,7 @@ using ToSic.SexyContent.Environment.Dnn7.Installation;
 using ToSic.SexyContent.Environment.Dnn7.Search;
 using ToSic.Sxc.Dnn;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     /// <summary>

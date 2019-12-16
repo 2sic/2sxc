@@ -6,6 +6,7 @@ using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class ClientDependencyManager: Base.ClientDependencyManager
