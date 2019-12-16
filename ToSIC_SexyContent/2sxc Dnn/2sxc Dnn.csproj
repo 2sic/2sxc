@@ -108,14 +108,14 @@
     <Compile Include="Dnn\Web\LinkHelper.cs" />
     <Compile Include="Dnn\DnnMapAppToInstance.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
-    <Compile Include="Dnn\Container.cs" />
+    <Compile Include="Dnn\DnnContainer.cs" />
     <Compile Include="Dnn\DnnPermissionCheck.cs" />
     <Compile Include="Dnn\Web\DnnRenderingHelpers.cs" />
     <Compile Include="Dnn\Tenant.cs" />
     <Compile Include="Dnn\ValueConverter.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.Factory.cs" />
-    <Compile Include="Dnn\FingerprintProvider.cs" />
-    <Compile Include="Dnn\ImportExport\ImportExportEnvironment.cs" />
+    <Compile Include="Dnn\DnnFingerprint.cs" />
+    <Compile Include="Dnn\ImportExport\DnnImportExportEnvironment.cs" />
     <Compile Include="Dnn\ImportExport\DnnXmlExporter.cs" />
     <Compile Include="Dnn\Install\Helpers.cs" />
     <Compile Include="Dnn\Install\InstallationController.cs" />
@@ -124,8 +124,8 @@
     <Compile Include="Dnn\Install\VersionBase.cs" />
     <Compile Include="Dnn\Logging.cs" />
     <Compile Include="Dnn\Web\ModuleSettingsHelper.cs" />
-    <Compile Include="Dnn\Cms\PagePublishing.cs" />
-    <Compile Include="Dnn\Cms\PagePublishing_ModuleSettings.cs" />
+    <Compile Include="Dnn\Cms\DnnPagePublishing.cs" />
+    <Compile Include="Dnn\Cms\DnnPagePublishing_ModuleSettings.cs" />
     <Compile Include="Dnn\Interfaces\IDnnContext.cs" />
     <Compile Include="Search\SearchController.cs" />
     <Compile Include="Search\SearchIndexException.cs" />
@@ -134,10 +134,10 @@
     <Compile Include="Dnn\LookUp\GetDnnEngine.cs" />
     <Compile Include="Dnn\LookUp\TokenReplaceDnn.cs" />
     <Compile Include="Dnn\LookUp\LookUpInDnnPropertyAccess.cs" />
-    <Compile Include="Dnn\ZoneMapper.cs" />
-    <Compile Include="Environment\DnnEnvironment.cs" />
+    <Compile Include="Dnn\DnnZoneMapper.cs" />
+    <Compile Include="Dnn\DnnEnvironment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Refactoring\DnnStuffToRefactor.cs" />
+    <Compile Include="Dnn\Install\TenantSettings.cs" />
     <Compile Include="Search\SearchItem.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -177,8 +177,7 @@
     <None Include="Search\readme.md" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Environment\Dnn7\ImportExport\" />
-    <Folder Include="Environment\Dnn7\Installation\" />
+    <Folder Include="Refactoring\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
