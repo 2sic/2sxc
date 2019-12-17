@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Dnn
     public class DnnSecurity
     {
         /// <summary>
-        /// Returns true if a DotNetNuke User Group "SexyContent Designers" exists and contains at minumum one user
+        /// Returns true if a DotNetNuke User Group "SexyContent Designers" exists and contains at minimum one user
         /// </summary>
         /// <param name="portalId"></param>
         /// <returns></returns>

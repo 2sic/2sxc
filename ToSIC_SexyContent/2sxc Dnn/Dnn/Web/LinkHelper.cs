@@ -8,11 +8,11 @@ namespace ToSic.Sxc.Dnn
     /// The DNN implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
     [PublicApi]
-    public class LinkHelper: ILinkHelper
+    public class DnnLinkHelper: ILinkHelper
     {
         private readonly IDnnContext _dnn;
 
-        public LinkHelper(IDnnContext dnn)
+        public DnnLinkHelper(IDnnContext dnn)
         {
             _dnn = dnn;
         }

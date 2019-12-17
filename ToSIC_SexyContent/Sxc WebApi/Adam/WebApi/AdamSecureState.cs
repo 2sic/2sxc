@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             Log.Add("PrepCore(...)");
             var dnn = new DnnContext(CmsInstance?.Container);
-            var tenant = new Tenant(dnn.Portal);
+            var tenant = new DnnTenant(dnn.Portal);
             AdamAppContext = new AdamAppContext(tenant, app, CmsInstance, Log);
             ContainerContext = usePortalRoot
                 ? new ContainerOfTenant(AdamAppContext) as ContainerBase

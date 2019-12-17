@@ -191,7 +191,7 @@ namespace ToSic.Sxc.WebApi.App
             var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
             // 2018-09-22 new
             // todo: something looks wrong here, I think create/update would fail if it doesn't have a moduleid
-            var currentApp = new Apps.App(new Tenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId, 
+            var currentApp = new Apps.App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId, 
                 ConfigurationProvider.Build(false, publish.IsEnabled(ActiveModule.ModuleID),
                     CmsBlock.Block.Data.Configuration.LookUps), true, Log);
             // 2018-09-22 old

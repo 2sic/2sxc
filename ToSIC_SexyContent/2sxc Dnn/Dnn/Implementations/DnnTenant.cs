@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn
     /// This is a DNN implementation of a Tenant-object. 
     /// </summary>
     [PublicApi]
-    public class Tenant: Tenant<PortalSettings>
+    public class DnnTenant: Tenant<PortalSettings>
     {
         /// <inheritdoc />
         public override string DefaultLanguage => Original.DefaultLanguage;
@@ -30,6 +30,6 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public override string ContentPath => Original.HomeDirectory;
 
-        public Tenant(PortalSettings settings) : base(settings ?? PortalSettings.Current) {}
+        public DnnTenant(PortalSettings settings) : base(settings ?? PortalSettings.Current) {}
     }
 }

@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Security
         {
             var wrapLog = Log.Call($"..., appId: {appId}, ...");
             CmsInstance = cmsInstance;
-            var tenant = new Tenant(PortalSettings.Current);
+            var tenant = new DnnTenant(PortalSettings.Current);
             var environment = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
             var contextZoneId = environment.ZoneMapper.GetZoneId(tenant.Id);
             App = new App(tenant, zoneId, appId, 

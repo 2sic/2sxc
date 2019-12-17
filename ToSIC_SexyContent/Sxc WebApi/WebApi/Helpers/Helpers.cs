@@ -39,8 +39,8 @@ namespace ToSic.Sxc.WebApi
             var urlParams = PrepareUrlParamsForInternalUse(request);
             
             var tenant = moduleInfo == null
-                ? new Tenant(null)
-                : new Tenant(new PortalSettings(moduleInfo.OwnerPortalID));
+                ? new DnnTenant(null)
+                : new DnnTenant(new PortalSettings(moduleInfo.OwnerPortalID));
 
             IBlock contentBlock = new BlockFromModule(new DnnContainer(moduleInfo), log, tenant, urlParams);
 

@@ -16,7 +16,7 @@ using PermissionCheckBase = ToSic.Eav.Security.PermissionCheckBase;
 namespace ToSic.Sxc.Dnn
 {
     /// <summary>
-    /// Permissions object which checks if the user is allowed to do soemthing based on specific permission
+    /// Permissions object which checks if the user is allowed to do something based on specific permission
     /// This checks permissions based on EAV data related to an entity - so pure EAV, no DNN
     /// </summary>
     public class DnnPermissionCheck: PermissionCheckBase
@@ -24,7 +24,6 @@ namespace ToSic.Sxc.Dnn
         public string CustomPermissionKey = ""; // "CONTENT";
 
         private readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
-
 
         protected IContainer Instance { get; }
         protected ModuleInfo Module => ((Container<ModuleInfo>) Instance)?.Original;

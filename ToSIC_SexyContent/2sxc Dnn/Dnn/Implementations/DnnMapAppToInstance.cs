@@ -14,9 +14,12 @@ using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Dnn
 {
-
     public class DnnMapAppToInstance : HasLog, IMapAppToInstance
     {
+        /// <summary>
+        /// Empty constructor for DI
+        /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public DnnMapAppToInstance() : base("Dnn.MapA2I") { }
 
         public DnnMapAppToInstance(ILog parentLog) : base("Dnn.MapA2I", parentLog) { }

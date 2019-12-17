@@ -32,7 +32,7 @@ namespace ToSic.SexyContent
                 _cmsBlock = new BlockFromModule(
                         new DnnContainer(ModuleConfiguration),
                         Log,
-                        new Tenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
+                        new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
                     .CmsInstance as CmsBlock;
                 return _cmsBlock;
             }

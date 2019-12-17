@@ -56,7 +56,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // before we start, we have to convert the indexes into something more useful, because
             // otherwise in content-list scenarios we don't have the type
-            var appForSecurityChecks = GetApp.LightWithoutData(new Tenant(PortalSettings), SystemRuntime.ZoneIdOfApp(appId), appId, Log);
+            var appForSecurityChecks = GetApp.LightWithoutData(new DnnTenant(PortalSettings), SystemRuntime.ZoneIdOfApp(appId), appId, Log);
             items = new ContentGroupList(CmsBlock, Log).ConvertListIndexToId(items, appForSecurityChecks);
 
             // to do full security check, we'll have to see what content-type is requested

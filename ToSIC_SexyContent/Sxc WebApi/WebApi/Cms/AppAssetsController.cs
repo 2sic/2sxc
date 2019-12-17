@@ -130,7 +130,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private string ResolveAppPath(int appId, bool global,  bool allowFullAccess)
         {
-            var thisApp = GetApp.LightWithoutData(new Tenant(PortalSettings.Current), appId, Log);
+            var thisApp = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
 
             if (global && !allowFullAccess)
                 throw new NotSupportedException("only host user may access global files");
@@ -159,7 +159,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"create a#{appId}, path:{path}, global:{global}, cont-length:{content.Content?.Length}");
             path = path.Replace("/", "\\");
 
-            var thisApp = GetApp.LightWithoutData(new Tenant(PortalSettings.Current), appId, Log);
+            var thisApp = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
 
             if (content.Content == null)
                 content.Content = "";

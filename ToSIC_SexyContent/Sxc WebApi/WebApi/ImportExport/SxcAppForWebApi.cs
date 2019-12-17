@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         private SxcAppForWebApi(int zoneId, int appId)
         {
-            App = GetApp.LightWithoutData(new Tenant(PortalSettings.Current), zoneId, appId, false, null);
+            App = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), zoneId, appId, false, null);
         }
 
     }

@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Dnn
                     return zid == zoneId ? new PortalSettings(p) : null;
                 })
                 .FirstOrDefault(f => f != null);
-            return found != null ? new Tenant(found) : null;
+            return found != null ? new DnnTenant(found) : null;
         }
 
 
