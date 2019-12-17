@@ -1,12 +1,18 @@
-﻿using ToSic.Sxc.Dnn;
+﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
 using IDynamicCode = ToSic.Sxc.Web.IDynamicCode;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Dnn
 {
     // ReSharper disable once UnusedMember.Global
-    public abstract class AppDataDnnHelpers : WithContext, Dnn.Web.IDynamicCode
+    /// <summary>
+    /// This is a base class for custom code files with context. <br/>
+    /// If you create a class file for dynamic use and inherit from this, then the compiler will automatically add objects like Link, Dnn, etc.
+    /// The class then also has AsDynamic(...) and AsList(...) commands like a normal razor page.
+    /// </summary>
+    [PublicApi]
+    public abstract class DynamicCodeWithContext : WithContext, Dnn.Web.IDynamicCode
     {
         public IDnnContext Dnn { get; private set; }
 
