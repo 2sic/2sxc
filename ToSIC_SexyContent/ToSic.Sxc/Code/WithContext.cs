@@ -14,7 +14,8 @@ using IEntity = ToSic.Eav.Data.IEntity;
 namespace ToSic.Sxc.Code
 {
     /// <summary>
-    /// This is a base class for other dynamic code classes. It delegates all the real work to the original item. 
+    /// This is a base class for dynamic code which is compiled at runtime. <br/>
+    /// It delegates all properties like App and methods like AsDynamic() to the parent item. 
     /// </summary>
     public abstract class DynamicCodeChild : IDynamicCode
     {
