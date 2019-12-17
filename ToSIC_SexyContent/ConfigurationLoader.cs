@@ -60,7 +60,7 @@ namespace ToSic.SexyContent
         }
 
         /// <summary>
-        /// Expects something like "ToSic.Sxc.Dnn.AppsCacheDnnFarm, ToSic.Sxc.Dnn.Enterprise" - namespaces + class, DLL name without extension
+        /// Expects something like "ToSic.Sxc.Dnn.DnnAppsCacheFarm, ToSic.Sxc.Dnn.Enterprise" - namespaces + class, DLL name without extension
         /// </summary>
         /// <returns></returns>
         private string GetAppsCacheOverride()
