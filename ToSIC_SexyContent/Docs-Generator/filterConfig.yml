@@ -8,7 +8,17 @@
     type: Member
     type: Method
     type: Property
-    
+- include:
+    uid: ToSic.Eav.Documentation.InternalApi_DoNotUse_MayChangeWithoutNotice
+    type: Type
+    type: Class
+    type: Interface
+    type: Namespace
+    type: Member
+    type: Method
+    type: Property
+
+
 apiRules:
 # Exclude System.Object to avoid having .Equals and stuff
 # in the documentation
@@ -46,6 +56,9 @@ apiRules:
 - include:
     hasAttribute: 
         uid: ToSic.Eav.Documentation.PublicApi
+- include:
+    hasAttribute: 
+        uid: ToSic.Eav.Documentation.InternalApi_DoNotUse_MayChangeWithoutNotice
 - exclude:
     uidRegex: ^ToSic
     type: Member
