@@ -2,6 +2,7 @@
 using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Web;
 
 namespace ToSic.Sxc.Engines.Razor
 {

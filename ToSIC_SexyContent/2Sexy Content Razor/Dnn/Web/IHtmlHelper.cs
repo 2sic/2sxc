@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Web
 {
     /// <summary>
     /// helper to quickly "raw" some html

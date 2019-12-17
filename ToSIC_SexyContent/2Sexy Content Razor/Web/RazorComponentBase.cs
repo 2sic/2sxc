@@ -4,6 +4,7 @@ using System.Web.WebPages;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Web;
 using File = System.IO.File;
 
 namespace ToSic.Sxc.Web

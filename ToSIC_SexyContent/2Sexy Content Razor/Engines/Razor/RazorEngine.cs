@@ -15,6 +15,7 @@ using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using DynamicCode = ToSic.Sxc.Dnn.DynamicCode;
