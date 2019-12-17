@@ -16,7 +16,6 @@ namespace ToSic.Sxc.Apps
             EnablePublishing = app.EnablePublishing;
         }
 
-        [Obsolete("todo: drop this interface asap")]
         public CmsManager(IAppIdentity app, bool showDrafts, bool enablePublishing, ILog parentLog) : base(app, parentLog)
         {
             ShowDrafts = showDrafts;

@@ -31,8 +31,7 @@ namespace ToSic.Sxc.Apps
             get
             {
                 var c = Configuration;
-                if (c?.Entity != null) return new DynamicEntity(c.Entity, new[] {Thread.CurrentThread.CurrentCulture.Name}, null);
-                return null;
+                return c?.Entity != null ? new DynamicEntity(c.Entity, new[] {Thread.CurrentThread.CurrentCulture.Name}, null) : null;
             }
         }
 
