@@ -3,13 +3,13 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Code
 {
-    public class DynamicCode : Sxc.Web.DynamicCode, IDynamicCode
+    public class DnnDynamicCode : Sxc.Code.DynamicCodeBase, IDnnDynamicCode
     {
         public ICmsBlock CmsBlock;
 
-        public DynamicCode(ICmsBlock cmsBlock, ILog parentLog = null): base(cmsBlock, new DnnTenant(null), parentLog)
+        public DnnDynamicCode(ICmsBlock cmsBlock, ILog parentLog = null): base(cmsBlock, new DnnTenant(null), parentLog)
         {
             CmsBlock = cmsBlock;
             // Init things than require module-info or similar, but not 2sxc

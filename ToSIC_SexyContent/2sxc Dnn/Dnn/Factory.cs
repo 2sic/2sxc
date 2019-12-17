@@ -57,8 +57,8 @@ namespace ToSic.Sxc.Dnn
         /// Retrieve a helper object which provides commands like AsDynamic, AsEntity etc.
         /// </summary>
         /// <param name="cmsBlock">The CMS Block for which the helper is targeted. </param>
-        /// <returns>A Code Helper based on <see cref="IDynamicCode"/></returns>
-        public static IDynamicCode DynamicCode(ICmsBlock cmsBlock)
+        /// <returns>A Code Helper based on <see cref="IDnnDynamicCode"/></returns>
+        public static IDnnDynamicCode DynamicCode(ICmsBlock cmsBlock)
             => new DnnDynamicCode(cmsBlock as CmsBlock);
 
         /// <summary>

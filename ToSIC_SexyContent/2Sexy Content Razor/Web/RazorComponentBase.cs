@@ -4,6 +4,7 @@ using System.Web.WebPages;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
 using File = System.IO.File;
 
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Web
         //[PrivateApi]
         //protected internal Blocks.ICmsBlock Sexy { get; set; }
         [PrivateApi]
-        protected internal Dnn.DnnDynamicCode DynCode { get; set; }
+        protected internal DnnDynamicCode DynCode { get; set; }
 
 
         /// <summary>
