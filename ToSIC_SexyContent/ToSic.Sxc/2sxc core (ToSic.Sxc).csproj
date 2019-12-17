@@ -104,7 +104,7 @@
     <Compile Include="Apps\Parts\CmsRuntimeBase.cs" />
     <Compile Include="Blocks\Edit\BlockEditorBase_More.cs" />
     <Compile Include="Blocks\Edit\BlockEditor_Title.cs" />
-    <Compile Include="Code\WithContext.cs" />
+    <Compile Include="Code\DynamicCodeChild.cs" />
     <Compile Include="Code\CodeCompiler.cs" />
     <Compile Include="Compatibility\InputTypes.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Engines.InstancePurposes.cs" />
