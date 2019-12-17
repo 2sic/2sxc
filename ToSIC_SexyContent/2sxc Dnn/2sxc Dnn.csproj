@@ -105,7 +105,7 @@
     <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.DataSources.DnnSqlDataSource.cs" />
     <Compile Include="Dnn\Run\DnnFileSystem.cs" />
-    <Compile Include="Dnn\Web\LinkHelper.cs" />
+    <Compile Include="Dnn\Web\DnnLinkHelper.cs" />
     <Compile Include="Dnn\Run\DnnMapAppToInstance.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
     <Compile Include="Dnn\Run\DnnContainer.cs" />
