@@ -92,8 +92,8 @@
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
     <Compile Include="Dnn\Run\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />
-    <Compile Include="Dnn\Interfaces\IDynamicWebApi.cs" />
-    <Compile Include="Dnn\Interfaces\IDynamicCode.cs" />
+    <Compile Include="Dnn\Web\IDynamicWebApi.cs" />
+    <Compile Include="Dnn\Web\IDynamicCode.cs" />
     <Compile Include="Dnn\Run\DnnSecurity.cs" />
     <Compile Include="Dnn\DynamicCode.cs" />
     <Compile Include="Dnn\Web\DnnClientDependency.cs" />
@@ -126,7 +126,7 @@
     <Compile Include="Dnn\Web\DnnModuleSettings.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishing.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishing_ModuleSettings.cs" />
-    <Compile Include="Dnn\Interfaces\IDnnContext.cs" />
+    <Compile Include="Dnn\Run\IDnnContext.cs" />
     <Compile Include="Dnn\Search\SearchController.cs" />
     <Compile Include="Dnn\Search\SearchIndexException.cs" />
     <Compile Include="Dnn\Run\DnnEnvironmentFactory.cs" />
@@ -176,8 +176,6 @@
     <None Include="packages.config" />
     <None Include="Dnn\Search\readme.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dnn\Implementations\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

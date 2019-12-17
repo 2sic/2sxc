@@ -45,6 +45,7 @@ exports.data = {
   "ToSic.Sxc.Dnn.DataSources": prioData,
   "ToSic.Sxc.Dnn.LookUp": prioInternal,
   "ToSic.Sxc.Dnn.Run": prioInternal,
+  "ToSic.Sxc.Dnn.Web": prioInternal,
   "ToSic.Sxc.Engines": prioInternal,
   "ToSic.Sxc.LookUp": prioInternal,
   "ToSic.Sxc.Search": prioWeb,
