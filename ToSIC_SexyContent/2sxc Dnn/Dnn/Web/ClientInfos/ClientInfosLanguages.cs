@@ -2,6 +2,7 @@
 using System.Linq;
 using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.Sxc.Dnn.Run;
 
 
 namespace ToSic.Sxc.Dnn.Web.ClientInfos

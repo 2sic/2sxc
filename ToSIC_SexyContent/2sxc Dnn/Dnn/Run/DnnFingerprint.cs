@@ -5,7 +5,7 @@ using DotNetNuke.Application;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Run
 {
     /// <summary>
     /// DNN implementation of the Fingerprinting system for extra security.

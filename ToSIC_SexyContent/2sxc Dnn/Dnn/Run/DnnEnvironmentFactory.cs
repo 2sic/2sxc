@@ -8,7 +8,7 @@ using IApp = ToSic.Eav.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using PermissionCheckBase = ToSic.Eav.Security.PermissionCheckBase;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnEnvironmentFactory : IEnvironmentFactory, IWebFactoryTemp
     {

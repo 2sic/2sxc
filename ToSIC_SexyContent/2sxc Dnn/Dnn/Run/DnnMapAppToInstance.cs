@@ -12,7 +12,7 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Interfaces;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnMapAppToInstance : HasLog, IMapAppToInstance
     {

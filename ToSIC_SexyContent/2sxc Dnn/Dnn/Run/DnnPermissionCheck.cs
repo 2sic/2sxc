@@ -6,14 +6,13 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using IEntity = ToSic.Eav.Data.IEntity;
 using PermissionCheckBase = ToSic.Eav.Security.PermissionCheckBase;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Run
 {
     /// <summary>
     /// Permissions object which checks if the user is allowed to do something based on specific permission

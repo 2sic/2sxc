@@ -9,11 +9,10 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Run
 {
     /// <summary>
     /// The DNN implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,

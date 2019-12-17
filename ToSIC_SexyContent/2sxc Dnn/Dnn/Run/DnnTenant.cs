@@ -3,7 +3,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Run
 {
     /// <summary>
     /// This is a DNN implementation of a Tenant-object. 

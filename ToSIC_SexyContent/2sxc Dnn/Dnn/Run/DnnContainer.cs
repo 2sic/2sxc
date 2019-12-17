@@ -2,7 +2,7 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Run
 {
     /// <summary>
     /// The DNN implementation of a Block Container (a Module).

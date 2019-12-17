@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Roles;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnSecurity
     {

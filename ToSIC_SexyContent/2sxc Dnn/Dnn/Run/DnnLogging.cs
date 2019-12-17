@@ -4,7 +4,7 @@ using System.Web.Http;
 using DotNetNuke.Services.Log.EventLog;
 using ToSic.Eav.Logging;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Run
 {
     public static class DnnLogging
     {

@@ -1,11 +1,10 @@
 ﻿using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnEnvironment: HasLog, IAppEnvironment
     {
