@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="cmsBlock">The CMS Block for which the helper is targeted. </param>
         /// <returns>A Code Helper based on <see cref="IDynamicCode"/></returns>
-        public static IDynamicCode CodeHelpers(ICmsBlock cmsBlock)
+        public static IDynamicCode DynamicCode(ICmsBlock cmsBlock)
             => new DynamicCode(cmsBlock as CmsBlock);
 
         /// <summary>

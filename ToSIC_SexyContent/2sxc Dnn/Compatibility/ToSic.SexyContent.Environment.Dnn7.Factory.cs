@@ -39,9 +39,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
         //    return new BlockFromModule(moduleInfo, parentLog: null, tenant: tenant).CmsInstance;
         //}
 
-        [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(...) instead")]
+        [Obsolete("use ToSic.Sxc.Dnn.Factory.DynamicCode(...) instead")]
         public static IDynamicCode CodeHelpers(ICmsBlock cms) 
-            => Sxc.Dnn.Factory.CodeHelpers(cms);
+            => Sxc.Dnn.Factory.DynamicCode(cms);
             //=> new DynamicCodeHelper(cms as CmsBlock);
 
         /// <summary>
