@@ -19,6 +19,7 @@ We're documenting it here to ensure you know what happened, in case you still ru
 1. Renamed the `RootDataSource` and the Interface to `IAppRoot`
 1. Split SOC of the `AppRoot` DataSource so that caching, Root-Metadata and ListCache is fully separate
 1. Since the Logging system now auto-picks up the code lines and names of the methods, we simplified the commands and dropped some parameters.
+1. Moved quite a bit of the DataSource objects into sub-objects, again for SOC.
 
 #### Version 10.20-04 (ca. 2019-12-03)
 

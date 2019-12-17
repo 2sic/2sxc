@@ -4,11 +4,13 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.WebApi;
 using App = ToSic.Sxc.Apps.App;
@@ -40,7 +42,7 @@ namespace ToSic.Sxc.Security
         {
             var wrapLog = Log.Call($"..., appId: {appId}, ...");
             CmsInstance = cmsInstance;
-            var tenant = new Tenant(PortalSettings.Current);
+            var tenant = new DnnTenant(PortalSettings.Current);
             var environment = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
             var contextZoneId = environment.ZoneMapper.GetZoneId(tenant.Id);
             App = new App(tenant, zoneId, appId, 

@@ -19,14 +19,14 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         public override IEnumerator<object> GetEnumerator() 
-            => OriginalData.Select(DynamicJacket.WrapOrUnwrap).GetEnumerator();
+            => UnwrappedContents.Select(DynamicJacket.WrapOrUnwrap).GetEnumerator();
 
         /// <summary>
         /// Access the items in this object - but only if the underlying object is an array. 
         /// </summary>
         /// <param name="index">array index</param>
         /// <returns>the item or an error if not found</returns>
-        public override object this[int index] => DynamicJacket.WrapOrUnwrap(OriginalData[index]);
+        public override object this[int index] => DynamicJacket.WrapOrUnwrap(UnwrappedContents[index]);
 
     }
 }

@@ -29,7 +29,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	    protected override void Initialize(HttpControllerContext controllerContext)
 	    {
 	        base.Initialize(controllerContext); // very important!!!
-	        Log.Rename("2sPipC");
+	        Log.Rename("Sxc.QryCnt");
 			_eavCont = new QueryController(Log);
 	    }
 
@@ -63,9 +63,11 @@ namespace ToSic.Sxc.WebApi.Cms
 	    public dynamic QueryPipeline(int appId, int id)
 	    {
 	        var modId = ActiveModule?.ModuleID ?? 0;
-	        Log.Call($"app:{appId}, id:{id}", message: $"mid:{modId}");
-	        var dnnConfigProvider = new GetDnnEngine().GetEngine(modId);
-            return _eavCont.QueryPipeline(appId, id, dnnConfigProvider);
+	        var wrapLog = Log.Call($"app:{appId}, id:{id}", message: $"mid:{modId}");
+	        var dnnConfigProvider = new GetDnnEngine().GetEngine(modId, Log);
+            var result = _eavCont.QueryPipeline(appId, id, dnnConfigProvider);
+            wrapLog(null);
+            return result;
         }
 
         /// <summary>

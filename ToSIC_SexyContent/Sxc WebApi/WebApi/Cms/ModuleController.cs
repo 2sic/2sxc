@@ -24,6 +24,7 @@ using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Security;
 using Assembly = System.Reflection.Assembly;
@@ -95,7 +96,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             // we must get the zone-id from the environment,
             // since the app may not yet exist when inserted the first time
-            var tenant = new Tenant(PortalSettings.Current);
+            var tenant = new DnnTenant(PortalSettings.Current);
             var tenantZoneId = Env.ZoneMapper.GetZoneId(tenant);
             return new CmsZones(tenantZoneId, Env, Log).AppsRt.GetSelectableApps(tenant);
         }

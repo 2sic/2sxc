@@ -2,8 +2,8 @@
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
@@ -52,7 +52,6 @@ namespace ToSic.Sxc.Blocks
             ILog parentLog = null)
             : base("Sxc.CmsIns", parentLog, $"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
         {
-            Log.Add("constructor");
             EnvFac = Factory.Resolve<IEnvironmentFactory>();
             Environment = EnvFac.Environment(parentLog);
             Block = cb;

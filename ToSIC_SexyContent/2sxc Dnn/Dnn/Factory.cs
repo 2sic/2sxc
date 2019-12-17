@@ -1,9 +1,12 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Environment;
+using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -25,7 +28,7 @@ namespace ToSic.Sxc.Dnn
         public static ICmsBlock CmsBlock(int tabId, int modId)
         {
             var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
-            var instance = new Container(moduleInfo);
+            var instance = new DnnContainer(moduleInfo);
             return CmsBlock(instance);
         }
 
@@ -35,7 +38,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="moduleInfo">A DNN ModuleInfo object</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static ICmsBlock CmsBlock(ModuleInfo moduleInfo)
-            => CmsBlock(new Container(moduleInfo));
+            => CmsBlock(new DnnContainer(moduleInfo));
 
         /// <summary>
         /// Get a Root CMS Block if you have the ModuleInfo object.
@@ -44,8 +47,8 @@ namespace ToSic.Sxc.Dnn
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static ICmsBlock CmsBlock(IContainer container)
         {
-            var dnnModule = ((Container<ModuleInfo>)container).Original;
-            var tenant = new Tenant(new PortalSettings(dnnModule.OwnerPortalID));
+            var dnnModule = ((Container<ModuleInfo>)container).UnwrappedContents;
+            var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
             return new BlockFromModule(container, parentLog: null, tenant: tenant).CmsInstance;
         }
 
@@ -54,7 +57,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="cmsBlock">The CMS Block for which the helper is targeted. </param>
         /// <returns>A Code Helper based on <see cref="IDynamicCode"/></returns>
-        public static IDynamicCode CodeHelpers(ICmsBlock cmsBlock)
+        public static IDynamicCode DynamicCode(ICmsBlock cmsBlock)
             => new DynamicCode(cmsBlock as CmsBlock);
 
         /// <summary>
@@ -97,8 +100,12 @@ namespace ToSic.Sxc.Dnn
         /// <returns>An initialized App object which you can use to access App.Data</returns>
         public static IApp App(int appId, PortalSettings ownerPortalSettings, bool publishingEnabled = false, bool showDrafts = false)
         {
-            var appStuff = new App(new Tenant(ownerPortalSettings), Eav.Apps.App.AutoLookupZone, appId,
-                ConfigurationProvider.Build(showDrafts, publishingEnabled, new LookUpEngine()), true, null);
+            var appStuff = new App(
+                new DnnTenant(ownerPortalSettings), 
+                Eav.Apps.App.AutoLookupZone, appId,
+                ConfigurationProvider.Build(showDrafts, publishingEnabled, 
+                    new LookUpEngine(null as ILog)), 
+                true, null);
             return appStuff;
         }
 

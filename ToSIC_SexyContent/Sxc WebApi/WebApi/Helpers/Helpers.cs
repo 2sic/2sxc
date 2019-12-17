@@ -8,6 +8,7 @@ using ToSic.Eav.Logging;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -39,10 +40,10 @@ namespace ToSic.Sxc.WebApi
             var urlParams = PrepareUrlParamsForInternalUse(request);
             
             var tenant = moduleInfo == null
-                ? new Tenant(null)
-                : new Tenant(new PortalSettings(moduleInfo.OwnerPortalID));
+                ? new DnnTenant(null)
+                : new DnnTenant(new PortalSettings(moduleInfo.OwnerPortalID));
 
-            IBlock contentBlock = new BlockFromModule(new Container(moduleInfo), log, tenant, urlParams);
+            IBlock contentBlock = new BlockFromModule(new DnnContainer(moduleInfo), log, tenant, urlParams);
 
             // check if we need an inner block
             if (request.Headers.Contains(headerId)) { 

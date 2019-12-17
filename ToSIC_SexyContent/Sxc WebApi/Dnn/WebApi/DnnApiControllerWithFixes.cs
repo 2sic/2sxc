@@ -1,12 +1,14 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Helpers;
-using ToSic.SexyContent;
 using ToSic.SexyContent.Environment;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
@@ -27,6 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 	        Helpers.RemoveLanguageChangingCookie();
 
             Log = new Log("DNN.WebApi", null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
+            TimerWrapLog = Log.Call(message: "timer", useTimer: true);
 	        
             // ReSharper disable VirtualMemberCallInConstructor
 	        if (LogHistoryName != null)
@@ -36,11 +39,20 @@ namespace ToSic.Sxc.Dnn.WebApi
             Env = new DnnEnvironment(Log);
         }
 
+        // ReSharper disable once InconsistentNaming
+        private readonly Action<string> TimerWrapLog;
+
         protected override void Initialize(HttpControllerContext controllerContext)
 	    {
             // Add the logger to the request, in case it's needed in error-reporting
 	        controllerContext.Request.Properties.Add(Constants.EavLogKey, Log);
 	        base.Initialize(controllerContext);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            TimerWrapLog(null);
+            base.Dispose(disposing);
         }
 
 

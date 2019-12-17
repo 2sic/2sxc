@@ -10,6 +10,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Serializers;
 
@@ -44,7 +45,7 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"public query path:{appPath}, name:{name}");
             var appIdentity = AppFinder.GetCurrentAppIdFromPath(appPath);
-            var queryApp = new Apps.App(new Tenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId,
+            var queryApp = new Apps.App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId,
                 ConfigurationProvider.Build(false, false), false, Log);
 
             // now just run the default query check and serializer
@@ -61,7 +62,7 @@ namespace ToSic.Sxc.WebApi.App
                 throw HttpErr(HttpStatusCode.NotFound, "query not found", $"query '{name}' not found");
 
             var permissionChecker = new DnnPermissionCheck(log, targetItem: query.Definition.Entity, 
-                instance: new Container(module), appIdentity: app);
+                instance: new DnnContainer(module), appIdentity: app);
             var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 
             var isAdmin = module != null && DotNetNuke.Security.Permissions

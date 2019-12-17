@@ -6,9 +6,9 @@ using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Run;
 using ToSic.SexyContent;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
@@ -136,6 +136,10 @@ namespace ToSic.Sxc.Web
             => _configurationProvider ??
                (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.Configuration.LookUps);
 
+        private DataSource DataSourceFactory => _dataSourceFactory ?? (_dataSourceFactory = new DataSource(Log));
+        private DataSource _dataSourceFactory;
+
+
         /// <inheritdoc />
         [PrivateApi("obsolete")]
         [Obsolete("you should use the CreateSource<T> instead")]
@@ -145,15 +149,13 @@ namespace ToSic.Sxc.Web
                 lookUpEngine = ConfigurationProvider;
 
             if (inSource != null)
-                return DataSource.GetDataSource(typeName, inSource, inSource, lookUpEngine);
+                return DataSourceFactory.GetDataSource(typeName, inSource, inSource, lookUpEngine);
 
             var userMayEdit = CmsInstance.UserMayEdit;
 
-            var initialSource = DataSource.GetPublishing(
-                App,
-                // CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
-                userMayEdit, ConfigurationProvider as LookUpEngine);
-            return typeName != "" ? DataSource.GetDataSource(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
+            var initialSource = DataSourceFactory.GetPublishing(
+                App, userMayEdit, ConfigurationProvider as LookUpEngine);
+            return typeName != "" ? DataSourceFactory.GetDataSource(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
         }
 
         /// <inheritdoc />
@@ -163,15 +165,13 @@ namespace ToSic.Sxc.Web
                 configurationProvider = ConfigurationProvider;
 
             if (inSource != null)
-                return DataSource.GetDataSource<T>(inSource/*.ZoneId, inSource.AppId*/, inSource, configurationProvider, Log);
+                return DataSourceFactory.GetDataSource<T>(inSource, inSource, configurationProvider);
 
             var userMayEdit = CmsInstance.UserMayEdit;
 
-            var initialSource = DataSource.GetPublishing(
-                App,
-                //CmsInstance.Environment.ZoneMapper.GetZoneId(_tenant.Id), App.AppId,
-                userMayEdit, ConfigurationProvider as LookUpEngine);
-            return DataSource.GetDataSource<T>(initialSource/*.ZoneId, initialSource.AppId*/, initialSource, configurationProvider, Log);
+            var initialSource = DataSourceFactory.GetPublishing(
+                App, userMayEdit, ConfigurationProvider as LookUpEngine);
+            return DataSourceFactory.GetDataSource<T>(initialSource, initialSource, configurationProvider);
         }
 
         /// <inheritdoc />

@@ -10,6 +10,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -44,7 +45,7 @@ namespace ToSic.Sxc.WebApi
             IEnumerable<IGrouping<string, BundleWithHeader<T>>> groupItems)
         {
             var wrapLog = Log.Call($"{appId}");
-            var app = new Apps.App(new Tenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
+            var app = new Apps.App(new DnnTenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
                 ConfigurationProvider.Build(CmsInstance, true), false, Log);
 
             foreach (var entitySets in groupItems)

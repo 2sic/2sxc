@@ -13,6 +13,7 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.SxcTemp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -31,7 +32,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
-            var appForSecurityChecks = GetApp.LightWithoutData(new Tenant(PortalSettings), appId, Log);
+            var appForSecurityChecks = GetApp.LightWithoutData(new DnnTenant(PortalSettings), appId, Log);
             items = new ContentGroupList(CmsBlock, Log).ConvertListIndexToId(items, appForSecurityChecks);
 
             // now look up the types, and repeat security check with type-names

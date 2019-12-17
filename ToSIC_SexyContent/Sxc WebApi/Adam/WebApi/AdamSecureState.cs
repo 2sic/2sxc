@@ -10,8 +10,8 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Razor.Helpers;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi;
 using SysConf = ToSic.Eav.Configuration;
@@ -81,8 +81,8 @@ namespace ToSic.Sxc.Adam.WebApi
         private void PrepCore(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot)
         {
             Log.Add("PrepCore(...)");
-            var dnn = new DnnHelper(CmsInstance?.Container);
-            var tenant = new Tenant(dnn.Portal);
+            var dnn = new DnnContext(CmsInstance?.Container);
+            var tenant = new DnnTenant(dnn.Portal);
             AdamAppContext = new AdamAppContext(tenant, app, CmsInstance, Log);
             ContainerContext = usePortalRoot
                 ? new ContainerOfTenant(AdamAppContext) as ContainerBase

@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Apps
             if(_viewDs!= null)return _viewDs;
 		    // ReSharper disable once RedundantArgumentDefaultValue
             var dataSource = App.Data;
-			dataSource = DataSource.GetDataSource<EntityTypeFilter>(dataSource, Log);
+			dataSource = new DataSource(Log).GetDataSource<EntityTypeFilter>(dataSource);
 		    ((EntityTypeFilter) dataSource).TypeName = Configuration.TemplateContentType;
 		    _viewDs = dataSource;
 			return dataSource;
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Apps
         public IView Get(int templateId)
 		{
 			var dataSource = ViewsDataSource();
-			dataSource = DataSource.GetDataSource<EntityIdFilter>(dataSource, Log);
+			dataSource = new DataSource(Log).GetDataSource<EntityIdFilter>(dataSource);
 			((EntityIdFilter)dataSource).EntityIds = templateId.ToString();
 			var templateEntity = dataSource.List.FirstOrDefault();
 

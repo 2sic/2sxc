@@ -16,6 +16,7 @@ using ToSic.SexyContent;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.SxcTemp;
 using Assembly = System.Reflection.Assembly;
@@ -79,7 +80,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public dynamic Apps(int zoneId)
         {
             var cms = new CmsZones(zoneId, Env, Log);
-            var list = cms.AppsRt.GetApps(new Tenant(new PortalSettings(ActiveModule.OwnerPortalID)), true);
+            var list = cms.AppsRt.GetApps(new DnnTenant(new PortalSettings(ActiveModule.OwnerPortalID)), true);
             // AppManagement.GetApps(zoneId, true, new DnnTenant(new PortalSettings(ActiveModule.OwnerPortalID)), Log);
             return list.Select(a => new
             {
@@ -96,7 +97,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private string GetPath(int zoneId, int appId)
         {
-            var app = GetApp.LightWithoutData(new Tenant(PortalSettings), zoneId, appId, parentLog: Log);
+            var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings), zoneId, appId, parentLog: Log);
             return app.Path;
         }
 
@@ -104,7 +105,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public void DeleteApp(int zoneId, int appId)
         {
             var userId = PortalSettings.Current.UserId;
-            new CmsZones(zoneId, Env, Log).AppsMan.RemoveAppInTenantAndEav(appId, new Tenant(PortalSettings));
+            new CmsZones(zoneId, Env, Log).AppsMan.RemoveAppInTenantAndEav(appId, new DnnTenant(PortalSettings));
             //AppManagement.RemoveAppInTenantAndEav(Env.ZoneMapper, zoneId, appId, new DnnTenant(PortalSettings), userId, Log);
         }
 
@@ -238,7 +239,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public string ExtendedLogging(int duration = 1)
         {
             Log.Add("Extended logging will set for duration:" + duration);
-            var msg = Logging.ActivateForDuration(duration);
+            var msg = DnnLogging.ActivateForDuration(duration);
             Log.Add(msg);
             return msg;
         }

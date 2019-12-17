@@ -11,9 +11,11 @@ using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.SexyContent.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Install;
+using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.Web;
 
 namespace ToSic.SexyContent
 {
@@ -29,9 +31,9 @@ namespace ToSic.SexyContent
                 if (_cmsBlockLoaded) return _cmsBlock;
                 _cmsBlockLoaded = true;
                 _cmsBlock = new BlockFromModule(
-                        new Container(ModuleConfiguration),
+                        new DnnContainer(ModuleConfiguration),
                         Log,
-                        new Tenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
+                        new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
                     .CmsInstance as CmsBlock;
                 return _cmsBlock;
             }
@@ -56,6 +58,7 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_PreRender(object sender, EventArgs e)
         {
+            var timerWrap = Log.Call(message: "timer", useTimer: true);
             try
             {
                 // throw better error if SxcInstance isn't available
@@ -67,7 +70,7 @@ namespace ToSic.SexyContent
                 // check things if it's a module of this portal (ensure everything is ok, etc.)
                 var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
                 if (!isSharedModule && !CmsBlock.Block.ContentGroupExists && CmsBlock.App != null)
-                    new DnnStuffToRefactor().EnsureTenantIsConfigured(CmsBlock, Server, ControlPath);
+                    new DnnTenantSettings().EnsureTenantIsConfigured(CmsBlock, Server, ControlPath);
 
                 var renderNaked = Request.QueryString["standalone"] == "true";
                 if (renderNaked)
@@ -83,12 +86,15 @@ namespace ToSic.SexyContent
                     if (Request.QueryString["debug"] == "true")
                     {
                         // only attach debug, if it has been enabled for the current time period
-                        if (UserInfo.IsSuperUser || Logging.EnableLogging(GlobalConfiguration.Configuration
-                            .Properties))
+                        if (UserInfo.IsSuperUser || DnnLogging.EnableLogging(GlobalConfiguration.Configuration
+                                .Properties))
                             renderedTemplate += HtmlLog();
                     }
                 }
-                catch { /* ignore */}
+                catch
+                {
+                    /* ignore */
+                }
 
                 // If standalone is specified, output just the template without anything else
                 if (renderNaked)
@@ -98,7 +104,12 @@ namespace ToSic.SexyContent
             }
             catch (Exception ex)
             {
+                timerWrap(null);
                 Exceptions.ProcessModuleLoadException(this, ex);
+            }
+            finally
+            {
+                timerWrap(null);
             }
         }
 
@@ -202,8 +213,8 @@ namespace ToSic.SexyContent
                     SecurityAccessLevel.Edit, true, false);
             }
 
-            if (!SecurityHelpers.SexyContentDesignersGroupConfigured(PortalId) ||
-                SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo))
+            if (!DnnSecurity.SexyContentDesignersGroupConfigured(PortalId) ||
+                DnnSecurity.IsInSexyContentDesignersGroup(UserInfo))
             {
                 // Edit Template Button
                 if (appIsKnown && CmsBlock.View != null)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -40,13 +41,15 @@ namespace ToSic.Sxc.WebApi.System
                     var log = set.Take(position).LastOrDefault();
                     msg += log == null
                         ? p("log is null")
-                        : FormatLog($"Log for {key}[{position}]", log);
+                        : DumpTree($"Log for {key}[{position}]", log);
                 }
                 else
                     msg += $"position ({position}) > count ({set.Count})";
             }
             else
                 msg += $"position {position} not found in log set {key}";
+
+            msg += InsightsHtml.PageStyles();
             return msg;
         }
 
@@ -178,7 +181,7 @@ namespace ToSic.Sxc.WebApi.System
                 callStart: CallerPrefixPlaceholder,
                 callEnd: CallerSuffixPlaceholder
                 );
-            var htmlEnc = h1($"{title}") + "\n" + HtmlEncode(dump);
+            var htmlEnc = h1($"{title}") + "\n" + InsightsHtml.HtmlEncode(dump);
             htmlEnc = htmlEnc
                 .Replace(ResStartPlaceholder, ResStart)
                 .Replace(ResEndPlaceholder, ResEnd)
@@ -188,21 +191,88 @@ namespace ToSic.Sxc.WebApi.System
             return ToBr(htmlEnc);
         }
 
-        public static string HtmlEncode(string text)
+        private static string DumpTree(string title, ILog log)
         {
-            char[] chars = HttpUtility.HtmlEncode(text).ToCharArray();
-            var result = new StringBuilder(text.Length + (int)(text.Length * 0.1));
+            var lg = new StringBuilder(h1($"{title}") + "\n\n");
+            if (log.Entries.Count == 0) return "";
+            lg .AppendLine("<ol>");
 
-            foreach (char c in chars)
+            var breadcrumb = new Stack<string>();
+
+            foreach (var e in log.Entries)
             {
-                int value = Convert.ToInt32(c);
-                if (value > 127)
-                    result.AppendFormat("&#{0};", value);
+                // a wrap-close should happen before adding a line, since it must go up a level
+                if (e.WrapClose)
+                {
+                    lg.AppendLine("</ol></li>");
+                    if (breadcrumb.Count > 0) breadcrumb.Pop();
+                }
                 else
-                    result.Append(c);
+                {
+                    lg.AppendLine("<li>");
+                    lg.AppendLine(TreeDumpOneLine(e, breadcrumb.Count > 0 ? breadcrumb.Peek() : ""));
+                    if (e.WrapOpen)
+                    {
+                        breadcrumb.Push(e.ShortSource);
+                        lg.AppendLine("<ol>");
+                    }
+                    //else if (e.WrapClose)
+                    //{
+                    //    lg.AppendLine("</ol></li>");
+                    //    if (breadcrumb.Count > 0) breadcrumb.Pop();
+                    //}
+                    else lg.AppendLine("</li>");
+                }
             }
 
-            return result.ToString();
+            lg.Append("</ol>");
+            lg.Append("end of log");
+            return lg.ToString();
+        }
+
+        private static string TreeDumpOneLine(Entry e, string parentName)
+        {
+            // if it's just a close, only repeat the result
+            if (e.WrapClose)
+                return $"{ResStart}{e.Result}{ResEnd}";
+
+            #region find perfect Label
+
+            var label = e.Source;
+            if (!string.IsNullOrEmpty(parentName) && !string.IsNullOrEmpty(e.Source))
+            {
+                var foundParent = e.Source?.IndexOf(parentName) ?? 0;
+                if (foundParent > 0)
+                {
+                    var cut = foundParent + parentName.Length;
+                    if (!(label.Length > cut))
+                        cut = foundParent;
+                    label = e.Source.Substring(cut);
+                }
+            }
+
+            #endregion
+
+            return InsightsHtml.HoverLabel(label, e.Source, "logIds")
+                   + " - "
+                   + InsightsHtml.HtmlEncode( e.Message)
+                   + (e.Result != null 
+                       ? ResStart + e.Result + ResEnd 
+                       : string.Empty)
+                   + ShowTime(e)
+                   + (e.Code != null
+                       ? " " + InsightsHtml.HoverLabel("C#", $"{e.Code.Path} - {e.Code.Name}() #{e.Code.Line}", "codePeek")
+                       : string.Empty)
+                    + "\n";
+        }
+
+        private static string ShowTime(Entry e)
+        {
+            if (e.Elapsed == TimeSpan.Zero) return "";
+            var seconds = e.Elapsed.TotalSeconds;
+            var ms = seconds * 1000;
+            var time = ms < 1000 ? $"{ms}ms" : $"{seconds}s";
+            return InsightsHtml.HtmlEncode($" ⌚ {time} ");
         }
     }
 }
