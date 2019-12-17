@@ -9,8 +9,8 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Engines;
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Search
         public IList<SearchDocument> GetModifiedSearchDocuments(IContainer container, DateTime beginDate)
         {
             var searchDocuments = new List<SearchDocument>();
-            var dnnModule = (container as Container<ModuleInfo>)?.Original;
+            var dnnModule = (container as Container<ModuleInfo>)?.UnwrappedContents;
             // always log with method, to ensure errors are caught
             Log.Add($"start search for mod#{dnnModule?.ModuleID}");
 

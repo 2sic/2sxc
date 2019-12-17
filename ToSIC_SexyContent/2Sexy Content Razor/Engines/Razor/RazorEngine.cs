@@ -10,7 +10,7 @@ using System.Web.Compilation;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Environment;
+using ToSic.Eav.Run;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
@@ -159,7 +159,7 @@ namespace ToSic.Sxc.Engines
 
             // also call old signature
             var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());
-            (Webpage as SexyContentWebPage)?.CustomizeSearch(oldSignature, ((Container<ModuleInfo>) moduleInfo).Original, beginDate);
+            (Webpage as SexyContentWebPage)?.CustomizeSearch(oldSignature, ((Container<ModuleInfo>) moduleInfo).UnwrappedContents, beginDate);
         }
     }
 }

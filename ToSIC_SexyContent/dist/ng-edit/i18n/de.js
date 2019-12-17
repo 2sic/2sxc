@@ -186,6 +186,9 @@
     "H1": "Ü1",
     "H2": "Ü2",
     "H3": "Ü3",
+    "H4": "Ü4",
+    "H5": "Ü5",
+    "H6": "Ü6",
     "ContentBlock.Add": "App oder Inhaltsbaustein einfügen"
   }
 }

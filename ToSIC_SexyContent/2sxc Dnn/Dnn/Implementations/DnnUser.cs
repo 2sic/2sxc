@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web.Security;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Interfaces;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn
 {

@@ -6,9 +6,9 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Environment;
 using ToSic.Eav.Interfaces;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using IEntity = ToSic.Eav.Data.IEntity;
 using PermissionCheckBase = ToSic.Eav.Security.PermissionCheckBase;
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Dnn
         private readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
 
         protected IContainer Instance { get; }
-        protected ModuleInfo Module => ((Container<ModuleInfo>) Instance)?.Original;
+        protected ModuleInfo Module => ((Container<ModuleInfo>) Instance)?.UnwrappedContents;
         protected PortalSettings Portal { get; }
 
         protected IApp App { get; }

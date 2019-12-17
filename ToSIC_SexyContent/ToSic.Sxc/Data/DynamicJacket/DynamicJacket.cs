@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Data
         /// Use the [key] accessor to get the values as <see cref="DynamicJacket"/> or <see cref="DynamicJacketList"/>
         /// </summary>
         /// <returns>the string names of the keys</returns>
-        public override IEnumerator<object> GetEnumerator() => OriginalData.Properties().Select(p => p.Name).GetEnumerator();
+        public override IEnumerator<object> GetEnumerator() => UnwrappedContents.Properties().Select(p => p.Name).GetEnumerator();
 
 
         /// <summary>
@@ -72,10 +72,10 @@ namespace ToSic.Sxc.Data
 
         private object FindValueOrNull(string name, StringComparison comparison)
         {
-            if (OriginalData == null || !OriginalData.HasValues)
+            if (UnwrappedContents == null || !UnwrappedContents.HasValues)
                 return null;
 
-            var found = OriginalData.Properties()
+            var found = UnwrappedContents.Properties()
                 .FirstOrDefault(
                     p => string.Equals(p.Name, name, comparison));
 
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Data
         #endregion
 
         /// <inheritdoc />
-        public override object this[int index] => (_propertyArray ?? (_propertyArray = OriginalData.Properties().ToArray()))[index];
+        public override object this[int index] => (_propertyArray ?? (_propertyArray = UnwrappedContents.Properties().ToArray()))[index];
 
         private JProperty[] _propertyArray;
 

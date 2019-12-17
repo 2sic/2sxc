@@ -2,7 +2,7 @@
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
-using ToSic.Eav.Environment;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="moduleContext"></param>
         public DnnContext(IContainer moduleContext)
         {
-            Module = (moduleContext as Container<ModuleInfo>)?.Original;
+            Module = (moduleContext as Container<ModuleInfo>)?.UnwrappedContents;
             Portal = PortalSettings.Current ?? 
                 (moduleContext != null ? new PortalSettings(Module.PortalID): null);
         }

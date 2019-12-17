@@ -5,8 +5,8 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Dnn.Install;
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Dnn
         {
             var wrapLog = Log.Call<int?>(parameters: $"..., {zoneId}");
 
-            var module = (instance as Container<ModuleInfo>)?.Original
+            var module = (instance as Container<ModuleInfo>)?.UnwrappedContents
                 ?? throw new Exception("instance is not of type ModuleInfo");
 
             var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Dnn
 
             // ToDo: Should throw exception if a real BlockConfiguration exists
 
-            var module = (instance as Container<ModuleInfo>).Original;
+            var module = (instance as Container<ModuleInfo>).UnwrappedContents;
             var zoneId = env.ZoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == 0 || !appId.HasValue)

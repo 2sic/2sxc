@@ -1,6 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Environment;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -15,15 +15,15 @@ namespace ToSic.Sxc.Dnn
         }
 
         /// <inheritdoc />
-        public override int Id => Original.ModuleID;
+        public override int Id => UnwrappedContents.ModuleID;
 
         /// <inheritdoc />
-        public override int PageId => Original.TabID;
+        public override int PageId => UnwrappedContents.TabID;
 
         /// <inheritdoc />
-        public override int TenantId => Original.PortalID;
+        public override int TenantId => UnwrappedContents.PortalID;
 
         /// <inheritdoc />
-        public override bool IsPrimary => Original.DesktopModule.ModuleName == "2sxc";
+        public override bool IsPrimary => UnwrappedContents.DesktopModule.ModuleName == "2sxc";
     }
 }

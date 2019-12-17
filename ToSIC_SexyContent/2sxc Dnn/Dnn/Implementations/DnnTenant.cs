@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Environment;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -12,23 +12,23 @@ namespace ToSic.Sxc.Dnn
     public class DnnTenant: Tenant<PortalSettings>
     {
         /// <inheritdoc />
-        public override string DefaultLanguage => Original.DefaultLanguage;
+        public override string DefaultLanguage => UnwrappedContents.DefaultLanguage;
 
         /// <inheritdoc />
-        public override int Id => Original.PortalId;
+        public override int Id => UnwrappedContents.PortalId;
 
         /// <inheritdoc />
-        public override string Name => Original.PortalName;
+        public override string Name => UnwrappedContents.PortalName;
 
         [PrivateApi]
-        public override string SxcPath => Path.Combine(Original.HomeDirectory, Settings.AppsRootFolder);
+        public override string SxcPath => Path.Combine(UnwrappedContents.HomeDirectory, Settings.AppsRootFolder);
 
         [PrivateApi]
         public override bool RefactorUserIsAdmin
-            => Original.UserInfo.IsInRole(Original.AdministratorRoleName);
+            => UnwrappedContents.UserInfo.IsInRole(UnwrappedContents.AdministratorRoleName);
 
         /// <inheritdoc />
-        public override string ContentPath => Original.HomeDirectory;
+        public override string ContentPath => UnwrappedContents.HomeDirectory;
 
         public DnnTenant(PortalSettings settings) : base(settings ?? PortalSettings.Current) {}
     }

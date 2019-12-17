@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Data
@@ -11,12 +12,12 @@ namespace ToSic.Sxc.Data
     /// </summary>
     /// <typeparam name="T">The underlying type, either a JObject or a JToken</typeparam>
     [PublicApi]
-    public abstract class DynamicJacketBase<T>: DynamicObject, IReadOnlyList<object>
+    public abstract class DynamicJacketBase<T>: DynamicObject, IReadOnlyList<object>, IWrapper<T>
     {
         /// <summary>
         /// The underlying data, in case it's needed for various internal operations.
         /// </summary>
-        public T OriginalData;
+        public T UnwrappedContents { get; }
 
         /// <summary>
         /// Check if it's an array.
@@ -29,7 +30,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="originalData">the original data we're wrapping</param>
         [PrivateApi]
-        protected DynamicJacketBase(T originalData) => OriginalData = originalData;
+        protected DynamicJacketBase(T originalData) => UnwrappedContents = originalData;
 
         /// <summary>
         /// Enable enumeration. When going through objects (properties) it will return the keys, not the values. <br/>
@@ -46,10 +47,10 @@ namespace ToSic.Sxc.Data
         /// If the object is just output, it should show the underlying json string
         /// </summary>
         /// <returns>the inner json string</returns>
-        public override string ToString() => OriginalData.ToString();
+        public override string ToString() => UnwrappedContents.ToString();
 
         /// <inheritdoc />
-        public int Count => ((IList) OriginalData).Count;
+        public int Count => ((IList) UnwrappedContents).Count;
 
         /// <summary>
         /// Not yet implemented accessor - must be implemented by the inheriting class.

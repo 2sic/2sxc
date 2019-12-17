@@ -1,9 +1,9 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Dnn
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static ICmsBlock CmsBlock(IContainer container)
         {
-            var dnnModule = ((Container<ModuleInfo>)container).Original;
+            var dnnModule = ((Container<ModuleInfo>)container).UnwrappedContents;
             var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
             return new BlockFromModule(container, parentLog: null, tenant: tenant).CmsInstance;
         }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Environment;
+using ToSic.Eav.Run;
 
 // ReSharper disable InconsistentNaming
 namespace ToSic.Sxc.Dnn.Web.ClientInfos
