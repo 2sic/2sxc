@@ -5,13 +5,13 @@ using IDynamicCode = ToSic.Sxc.Web.IDynamicCode;
 namespace ToSic.Sxc.Code
 {
     // ReSharper disable once UnusedMember.Global
-    public abstract class AppDataDnnHelpers : WithContext, Dnn.IDynamicCode
+    public abstract class AppDataDnnHelpers : WithContext, Dnn.Web.IDynamicCode
     {
         public IDnnContext Dnn { get; private set; }
 
         internal override void InitShared(IDynamicCode parent)
         {
-            if (parent is Dnn.IDynamicCode withDnn) Dnn = withDnn.Dnn;
+            if (parent is Dnn.Web.IDynamicCode withDnn) Dnn = withDnn.Dnn;
 
             base.InitShared(parent);
         }

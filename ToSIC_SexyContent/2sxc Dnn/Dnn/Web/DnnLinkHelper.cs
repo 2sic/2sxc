@@ -2,7 +2,7 @@
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Web
 {
     /// <summary>
     /// The DNN implementation of the <see cref="ILinkHelper"/>.

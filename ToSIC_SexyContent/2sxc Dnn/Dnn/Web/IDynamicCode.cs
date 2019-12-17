@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Web
 {
     /// <summary>
     /// This interface extends the IAppAndDataHelpers with the DNN Context.

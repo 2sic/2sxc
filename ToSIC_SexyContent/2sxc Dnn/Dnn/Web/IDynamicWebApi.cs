@@ -2,9 +2,10 @@
 using System.IO;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Adam;
+
 // ReSharper disable UnusedMember.Global
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn.Web
 {
     /// <summary>
     /// This interface extends the IAppAndDataHelpers with the DNN Context.
