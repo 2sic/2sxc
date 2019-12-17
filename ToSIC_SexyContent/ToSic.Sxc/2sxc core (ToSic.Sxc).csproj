@@ -143,7 +143,7 @@
     <Compile Include="Blocks\IBlock.cs" />
     <Compile Include="Data\IDynamicEntity.cs" />
     <Compile Include="Web\ILinkHelper.cs" />
-    <Compile Include="Code\ISharedCodeBuilder.cs" />
+    <Compile Include="Code\ICreateInstance.cs" />
     <Compile Include="Interfaces\IWebFactoryTemp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Search.ISearchInfo.cs" />
