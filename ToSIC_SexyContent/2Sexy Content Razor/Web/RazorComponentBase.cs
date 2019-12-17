@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract class RazorComponentBase: WebPageBase, ISharedCodeBuilder
+    public abstract class RazorComponentBase: WebPageBase, ICreateInstance
     {
         public IHtmlHelper Html { get; internal set; }
 
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Web
 
         #region Compile Helpers
 
-        public string SharedCodeVirtualRoot { get; set; }
+        public string CreateInstancePath { get; set; }
 
         /// <summary>
         /// Creates instances of the shared pages with the given relative path

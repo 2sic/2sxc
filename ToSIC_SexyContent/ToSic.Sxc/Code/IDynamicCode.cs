@@ -20,15 +20,15 @@ namespace ToSic.Sxc.Code
     /// </summary>
     [PublicApi]
 #pragma warning disable 618
-    public interface IDynamicCode: ISharedCodeBuilder // inherit from old namespace to ensure compatibility
+    public interface IDynamicCode: ICreateInstance // inherit from old namespace to ensure compatibility
 #pragma warning restore 618
     {
         #region internal/obsolete but still needed, not public!
         [PrivateApi("will be removed soon")]
         SxcHelper Sxc { get; }
 
-        [PrivateApi]
-        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);
+        //[PrivateApi]
+        //IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);
 
         #endregion
 

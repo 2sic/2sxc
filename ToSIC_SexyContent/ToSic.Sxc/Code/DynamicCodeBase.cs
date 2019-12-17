@@ -322,6 +322,6 @@ namespace ToSic.Sxc.Code
         #endregion
 
         /// <inheritdoc />
-        public string SharedCodeVirtualRoot { get; set; }
+        public string CreateInstancePath { get; set; }
     }
 }

@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.WebApi
     /// </summary>
     [PrivateApi]
     [SxcWebApiExceptionHandling]
-    public abstract class DynamicApiController : SxcApiControllerBase
+    public abstract class DynamicApiController : SxcApiControllerBase, ICreateInstance
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -45,7 +45,7 @@ namespace ToSic.SexyContent.WebApi
             controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); 
 
             if(controllerContext.Request.Properties.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var value))
-                SharedCodeVirtualRoot = value as string;
+                CreateInstancePath = value as string;
         }
 
         [PrivateApi]
@@ -104,7 +104,7 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
-        public string SharedCodeVirtualRoot { get; set; }
+        public string CreateInstancePath { get; set; }
 
         public dynamic CreateInstance(string virtualPath, 
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
@@ -112,6 +112,6 @@ namespace ToSic.SexyContent.WebApi
             string relativePath = null, 
             bool throwOnError = true) =>
             DynCode.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
-                SharedCodeVirtualRoot, throwOnError);
+                CreateInstancePath, throwOnError);
     }
 }

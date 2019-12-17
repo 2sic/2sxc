@@ -87,8 +87,8 @@ namespace ToSic.Sxc.Code
         private static void AttachRelativePath(string virtualPath, object instance)
         {
             // in case it supports shared code again, give it the relative path
-            if (instance is ISharedCodeBuilder codeForwarding)
-                codeForwarding.SharedCodeVirtualRoot = Path.GetDirectoryName(virtualPath);
+            if (instance is ICreateInstance codeForwarding)
+                codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
         }
     }
 }
