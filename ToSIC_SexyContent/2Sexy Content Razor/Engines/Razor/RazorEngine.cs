@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Engines
 
             // deprecated 2019-11-28 2dm, it's also in the CmsBlock
             // webPage.Sexy = CmsBlock;
-            webPage.DynCode = new DnnDynamicCode(CmsBlock);
+            webPage.DynCode = new DnnDynamicCode(CmsBlock, Log);
 
         }
 
@@ -130,9 +130,9 @@ namespace ToSic.Sxc.Engines
             if (objectValue == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", TemplatePath));
 
-            Webpage = objectValue as RazorComponentBase;// SexyContentWebPage;
+            Webpage = objectValue as RazorComponentBase;
 
-            if ((Webpage == null))
+            if (Webpage == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from SexyContentWebPage.", TemplatePath));
 
             Webpage.Context = HttpContext;

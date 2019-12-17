@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Engines
         #endregion
 
 
-        private DynamicCodeBase _data;
+        private DynamicCodeRoot _data;
 
         private TokenReplaceEav _tokenReplace;
 
@@ -98,13 +98,11 @@ namespace ToSic.Sxc.Engines
             
             // Add the Content and ListContent property sources used always
             _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new LookUpInDynamicEntity(SourcePropertyName.ListContent, _data.Header));
-#pragma warning disable 618
-            var contentProperty = _data.List.FirstOrDefault();
-#pragma warning restore 618
-            if (contentProperty != null)
-            {
-                _tokenReplace.ValueSources.Add(SourcePropertyName.Content, new LookUpInDynamicEntity(SourcePropertyName.Content, contentProperty.Content));
-            }
+            //var content = _data.Data.List.FirstOrDefault();
+            //if (content != null)
+            //{
+                _tokenReplace.ValueSources.Add(SourcePropertyName.Content, new LookUpInDynamicEntity(SourcePropertyName.Content, _data.Content));
+            //}
         }
 
 

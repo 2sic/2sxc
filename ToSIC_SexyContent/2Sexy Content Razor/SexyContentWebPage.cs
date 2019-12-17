@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
@@ -67,6 +68,7 @@ namespace ToSic.SexyContent.Razor
         #region AsDynamic in many variations
 
         /// <inheritdoc />
+        [Obsolete]
         public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
 
 
@@ -75,19 +77,22 @@ namespace ToSic.SexyContent.Razor
 
         // todo: only in "old" controller, not in new one
         /// <inheritdoc />
+        [Obsolete]
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value);
 
 
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsDynamic(stream.List);
+        [Obsolete]
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsList(stream.List);
 
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => DynCode.AsEntity(dynamicEntity);
 
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => DynCode.AsDynamic(entities);
+        [Obsolete]
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => DynCode.AsList(entities);
 
         #endregion
 
@@ -103,16 +108,16 @@ namespace ToSic.SexyContent.Razor
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DynCode.AsDynamic(entity);
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DynCode.AsDynamic(entity as IEntity);
 
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value as IEntity);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DynCode.AsDynamic(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DynCode.AsList(entities.Cast<IEntity>());
         #endregion
 
 
@@ -120,7 +125,7 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         [Obsolete]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
-            => DynCode.CreateSource(typeName, inSource, lookUpEngine);
+            => new DynamicCodeObsolete(DynCode).CreateSource(typeName, inSource, lookUpEngine);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
@@ -153,7 +158,7 @@ namespace ToSic.SexyContent.Razor
         public dynamic ListPresentation => DynCode.Header?.Presentation;
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
-        public List<Element> List => DynCode.List;
+        public List<Element> List => new DynamicCodeObsolete(DynCode).ElementList;
 
         /// <inheritdoc/>
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)

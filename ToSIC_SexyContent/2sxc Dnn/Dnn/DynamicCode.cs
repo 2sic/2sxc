@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn
     /// The class then also has AsDynamic(...) and AsList(...) commands like a normal razor page.
     /// </summary>
     [PublicApi]
-    public abstract class DynamicCode : DynamicCodeChild, Code.IDnnDynamicCode
+    public abstract class DynamicCode : Sxc.Code.DynamicCode, Code.IDnnDynamicCode
     {
         public IDnnContext Dnn { get; private set; }
 
