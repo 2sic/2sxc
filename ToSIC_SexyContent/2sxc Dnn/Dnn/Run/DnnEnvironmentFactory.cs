@@ -28,6 +28,6 @@ namespace ToSic.Sxc.Dnn.Run
 
 
 
-        public Sxc.Web.DynamicCode AppAndDataHelpers(Sxc.Blocks.ICmsBlock cms) => new DynamicCode(cms);
+        public Code.DynamicCodeBase AppAndDataHelpers(Sxc.Blocks.ICmsBlock cms) => new DnnDynamicCode(cms);
     }
 }

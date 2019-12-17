@@ -13,7 +13,10 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Code
 {
-    public abstract class WithContext : IDynamicCode
+    /// <summary>
+    /// This is a base class for other dynamic code classes. It delegates all the real work to the original item. 
+    /// </summary>
+    public abstract class DynamicCodeChild : IDynamicCode
     {
         public IApp App => Parent?.App;
 
@@ -55,27 +58,8 @@ namespace ToSic.Sxc.Code
 
         public dynamic AsDynamic(dynamic dynamicEntity) => Parent?.AsDynamic(dynamicEntity);
 
-        //public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) 
-        //    => Parent?.AsDynamic(entityKeyValuePair);
-
-        //[PrivateApi]
-        //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        //public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) 
-        //    => Parent?.AsDynamic(entityKeyValuePair);
-
-
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => Parent?.AsEntity(dynamicEntity);
-
-        ///// <inheritdoc />
-        //public IEnumerable<dynamic> AsDynamic(IDataStream stream) => Parent?.AsDynamic(stream);
-
-        ///// <inheritdoc />
-        //public IEnumerable<dynamic> AsDynamic(IDataSource source) => Parent?.AsDynamic(source);
-
-
-       //  /// <inheritdoc />
-       //public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Parent?.AsDynamic(entities);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]

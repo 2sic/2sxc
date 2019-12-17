@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -21,7 +19,6 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
-using DynamicCode = ToSic.Sxc.Web.DynamicCode;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -120,17 +117,17 @@ namespace ToSic.SexyContent.Razor
 
 
         #region Data Source Stuff
-        /// <inheritdoc cref="ToSic.Sxc.Dnn.Web.IDynamicCode" />
+        /// <inheritdoc />
         [Obsolete]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
             => DynCode.CreateSource(typeName, inSource, lookUpEngine);
 
-        /// <inheritdoc cref="ToSic.Sxc.Dnn.Web.IDynamicCode" />
+        /// <inheritdoc />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
             => DynCode.CreateSource<T>(inSource, configurationProvider);
 
-        /// <inheritdoc cref="ToSic.Sxc.Dnn.Web.IDynamicCode" />
+        /// <inheritdoc />
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
             => DynCode.CreateSource<T>(inStream);
 

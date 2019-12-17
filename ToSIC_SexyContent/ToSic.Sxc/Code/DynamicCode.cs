@@ -28,14 +28,14 @@ namespace ToSic.Sxc.Code
     /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
     /// </summary>
     [PublicApi]
-    public abstract class DynamicCode : HasLog, IDynamicCode
+    public abstract class DynamicCodeBase : HasLog, IDynamicCode
     {
         [PrivateApi]
         protected readonly ICmsBlock CmsInstance;
 
         private readonly ITenant _tenant;
         [PrivateApi]
-        protected DynamicCode(ICmsBlock cmsInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsInstance?.Log)
+        protected DynamicCodeBase(ICmsBlock cmsInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsInstance?.Log)
         {
             if (cmsInstance == null)
                 return;
@@ -113,14 +113,6 @@ namespace ToSic.Sxc.Code
                     return AsDynamic(iEntities);
                 case IEnumerable<dynamic> dynEntities:
                     return dynEntities;
-                //case IDynamicEntity iDynamicEntity:
-                //    if(name == null)
-                //        throw new Exception("AsList got a DynamicEntity but not a name. You must either provide list of DynamicEntities or add a name to access that property.");
-                //    return AsList(iDynamicEntity.Get(name));
-                //case IEntity iEntity:
-                //    if(name == null)
-                //        throw new Exception("AsList got an IEntity but not a name. You must either provide list of DynamicEntities or add a name to access that property.");
-                //    return AsList(iEntity.Children(name));
                 default:
                     return null;
             }
@@ -320,7 +312,7 @@ namespace ToSic.Sxc.Code
                 .InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them
-            if (instance is WithContext isShared)
+            if (instance is DynamicCodeChild isShared)
                 isShared.InitShared(this);
 
             return instance;

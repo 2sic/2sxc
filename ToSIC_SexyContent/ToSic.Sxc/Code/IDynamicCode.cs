@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Code
 #pragma warning restore 618
     {
         #region internal/obsolete but still needed, not public!
-        [PrivateApi]
+        [PrivateApi("will be removed soon")]
         SxcHelper Sxc { get; }
 
         [PrivateApi]

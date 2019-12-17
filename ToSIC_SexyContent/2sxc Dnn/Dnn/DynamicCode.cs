@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
-using IDynamicCode = ToSic.Sxc.Web.IDynamicCode;
+using IDynamicCode = ToSic.Sxc.Code.IDynamicCode;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn
     /// The class then also has AsDynamic(...) and AsList(...) commands like a normal razor page.
     /// </summary>
     [PublicApi]
-    public abstract class DynamicCodeWithContext : WithContext, Dnn.Web.IDynamicCode
+    public abstract class DynamicCode : Code.DynamicCodeChild, Dnn.Web.IDynamicCode
     {
         public IDnnContext Dnn { get; private set; }
 

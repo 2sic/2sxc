@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Web
         //[PrivateApi]
         //protected internal Blocks.ICmsBlock Sexy { get; set; }
         [PrivateApi]
-        protected internal Dnn.DynamicCode DynCode { get; set; }
+        protected internal Dnn.DnnDynamicCode DynCode { get; set; }
 
 
         /// <summary>

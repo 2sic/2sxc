@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.WebApi
         {
             base.Initialize(controllerContext);
             // Note that the SxcBlock is created by the BaseClass, if it's detectable. Otherwise it's null
-            DynCode = new DynamicCode(CmsBlock, CmsBlock?.Log ?? Log);
+            DynCode = new DnnDynamicCode(CmsBlock, CmsBlock?.Log ?? Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (DynCode.App == null)
@@ -48,7 +48,7 @@ namespace ToSic.SexyContent.WebApi
         }
 
         [PrivateApi]
-        protected DynamicCode DynCode { get; private set; }
+        protected DnnDynamicCode DynCode { get; private set; }
 
         public IDnnContext Dnn => DynCode.Dnn;
 
