@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Search;
 
 // ReSharper disable UnusedMemberInSuper.Global

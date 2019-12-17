@@ -93,9 +93,9 @@
     <Compile Include="Dnn\Run\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />
     <Compile Include="Dnn\Web\IDynamicWebApi.cs" />
-    <Compile Include="Dnn\Web\IDynamicCode.cs" />
+    <Compile Include="Dnn\Code\IDynamicCode.cs" />
     <Compile Include="Dnn\Run\DnnSecurity.cs" />
-    <Compile Include="Dnn\DynamicCodeBase.cs" />
+    <Compile Include="Dnn\Code\DnnDynamicCode.cs" />
     <Compile Include="Dnn\Web\DnnClientDependency.cs" />
     <Compile Include="Dnn\Web\ClientInfos\ClientInfosAll.cs" />
     <Compile Include="Dnn\Web\ClientInfos\ClientInfosEnvironment.cs" />

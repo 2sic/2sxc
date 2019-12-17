@@ -12,13 +12,13 @@ namespace ToSic.Sxc.Dnn
     /// The class then also has AsDynamic(...) and AsList(...) commands like a normal razor page.
     /// </summary>
     [PublicApi]
-    public abstract class DynamicCode : Code.DynamicCodeChild, Dnn.Web.IDynamicCode
+    public abstract class DynamicCode : DynamicCodeChild, Code.IDynamicCode
     {
         public IDnnContext Dnn { get; private set; }
 
         internal override void InitShared(IDynamicCode parent)
         {
-            if (parent is Dnn.Web.IDynamicCode withDnn) Dnn = withDnn.Dnn;
+            if (parent is Code.IDynamicCode withDnn) Dnn = withDnn.Dnn;
 
             base.InitShared(parent);
         }
