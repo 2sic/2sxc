@@ -1,32 +1,26 @@
-﻿using ToSic.Eav.Logging;
-using ToSic.Sxc.Blocks;
+﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.Web;
+using IDynamicCode = ToSic.Sxc.Web.IDynamicCode;
 
 namespace ToSic.Sxc.Dnn
 {
-    public class DynamicCode : Sxc.Web.DynamicCode, IDynamicCode
+    // ReSharper disable once UnusedMember.Global
+    /// <summary>
+    /// This is a base class for custom code files with context. <br/>
+    /// If you create a class file for dynamic use and inherit from this, then the compiler will automatically add objects like Link, Dnn, etc.
+    /// The class then also has AsDynamic(...) and AsList(...) commands like a normal razor page.
+    /// </summary>
+    [PublicApi]
+    public abstract class DynamicCodeWithContext : WithContext, Dnn.Web.IDynamicCode
     {
-        public ICmsBlock CmsBlock;
+        public IDnnContext Dnn { get; private set; }
 
-        public DynamicCode(ICmsBlock cmsBlock, ILog parentLog = null): base(cmsBlock, new DnnTenant(null), parentLog)
+        internal override void InitShared(IDynamicCode parent)
         {
-            CmsBlock = cmsBlock;
-            // Init things than require module-info or similar, but not 2sxc
-            var instance = cmsBlock?.Container;
-            Dnn = new DnnContext(instance);
-            Link = new DnnLinkHelper(Dnn);
+            if (parent is Dnn.Web.IDynamicCode withDnn) Dnn = withDnn.Dnn;
+
+            base.InitShared(parent);
         }
-
-        #region IHasDnnContext
-
-        /// <summary>
-        /// Dnn context with module, page, portal etc.
-        /// </summary>
-        public IDnnContext Dnn { get; }
-
-        #endregion
-
-
     }
 }
