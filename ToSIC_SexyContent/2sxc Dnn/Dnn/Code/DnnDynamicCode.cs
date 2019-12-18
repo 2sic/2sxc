@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Code
         /// </summary>
         /// <param name="cmsBlock">The CMS Block which is used in this code.</param>
         /// <param name="parentLog">parent logger for logging what's happening</param>
-        public DnnDynamicCode(ICmsBlock cmsBlock, ILog parentLog = null): base(cmsBlock, new DnnTenant(null), parentLog)
+        public DnnDynamicCode(ICmsBlock cmsBlock, int compatibility, ILog parentLog = null): base(cmsBlock, new DnnTenant(null), compatibility, parentLog)
         {
             //CmsBlock = cmsBlock;
             // Init things than require module-info or similar, but not 2sxc

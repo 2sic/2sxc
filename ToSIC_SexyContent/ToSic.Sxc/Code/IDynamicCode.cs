@@ -2,6 +2,7 @@
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Code
     /// </summary>
     [PublicApi]
 #pragma warning disable 618
-    public interface IDynamicCode: ICreateInstance // inherit from old namespace to ensure compatibility
+    public interface IDynamicCode: ICreateInstance, ICompatibilityLevel // inherit from old namespace to ensure compatibility
 #pragma warning restore 618
     {
         #region internal/obsolete but still needed, not public!
@@ -31,6 +32,7 @@ namespace ToSic.Sxc.Code
         //IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);
 
         #endregion
+
 
 
         /// <summary>

@@ -37,13 +37,14 @@ namespace ToSic.Sxc.Code
 
         private readonly ITenant _tenant;
         [PrivateApi]
-        protected DynamicCodeRoot(ICmsBlock cmsBlock, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsBlock?.Log)
+        protected DynamicCodeRoot(ICmsBlock cmsBlock, ITenant tenant, int compatibility, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsBlock?.Log)
         {
             if (cmsBlock == null)
                 return;
 
             CmsBlock = cmsBlock;
             _tenant = tenant;
+            CompatibilityLevel = compatibility;
             App = cmsBlock.App;
             Data = cmsBlock.Block.Data;
 			Sxc = new SxcHelper(cmsBlock);
@@ -53,6 +54,8 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         internal void LateAttachApp(IApp app) => App = app;
 
+        [PrivateApi]
+        public int CompatibilityLevel { get; }
 
         /// <inheritdoc />
         public IApp App { get; private set; }
@@ -73,7 +76,7 @@ namespace ToSic.Sxc.Code
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynamicJacket.AsDynamicJacket(json, fallback);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, CmsBlock);
+        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, CompatibilityLevel, CmsBlock);
 
 
 
@@ -257,7 +260,7 @@ namespace ToSic.Sxc.Code
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
             if (_adamAppContext == null)
-                _adamAppContext = new AdamAppContext(_tenant, App, CmsBlock, Log);
+                _adamAppContext = new AdamAppContext(_tenant, App, CmsBlock, CompatibilityLevel, Log);
             return new FolderOfField(envFs, _adamAppContext, entity.EntityGuid, fieldName);
         }
         private AdamAppContext _adamAppContext;

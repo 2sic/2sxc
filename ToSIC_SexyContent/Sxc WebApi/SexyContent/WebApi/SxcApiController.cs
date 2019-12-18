@@ -43,6 +43,7 @@ namespace ToSic.SexyContent.WebApi
         public new IDnnContext Dnn => base.Dnn;//  DynCodeHelpers.Dnn;
 
         public SxcHelper Sxc => DynCode.Sxc;
+        [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 
         /// <inheritdoc />
         public IApp App => DynCode.App;

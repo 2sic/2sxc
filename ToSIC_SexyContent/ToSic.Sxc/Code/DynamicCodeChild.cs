@@ -20,6 +20,8 @@ namespace ToSic.Sxc.Code
     [PublicApi]
     public abstract class DynamicCode : IDynamicCode, IWrapper<IDynamicCode>
     {
+        [PrivateApi] public int CompatibilityLevel => UnwrappedContents?.CompatibilityLevel ?? 9;
+
         /// <inheritdoc />
         public IApp App => UnwrappedContents?.App;
 

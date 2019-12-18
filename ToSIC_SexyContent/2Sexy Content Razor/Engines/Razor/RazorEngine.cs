@@ -108,7 +108,7 @@ namespace ToSic.Sxc.Engines
             }
         }
 
-        private void InitHelpers(RazorComponentBase webPage)
+        private void InitHelpers(RazorComponentBase webPage, int compatibiltiy)
         {
             webPage.Html = new Razor.HtmlHelper();
             // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Engines
 
             // deprecated 2019-11-28 2dm, it's also in the CmsBlock
             // webPage.Sexy = CmsBlock;
-            webPage.DynCode = new DnnDynamicCode(CmsBlock, Log);
+            webPage.DynCode = new DnnDynamicCode(CmsBlock, compatibiltiy, Log);
 
         }
 
@@ -137,13 +137,17 @@ namespace ToSic.Sxc.Engines
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
-            if(Webpage is RazorComponent rzrPage)
+            int compatibility = 9;
+            if (Webpage is RazorComponent rzrPage)
+            {
                 rzrPage.Purpose = Purpose;
+                compatibility = 10;
+            }
 #pragma warning disable 618
             if(Webpage is SexyContentWebPage oldPage)
                 oldPage.InstancePurpose = (InstancePurposes) Purpose;
 #pragma warning restore 618
-            InitHelpers(Webpage);
+            InitHelpers(Webpage, compatibility);
         }
 
         /// <inheritdoc />
