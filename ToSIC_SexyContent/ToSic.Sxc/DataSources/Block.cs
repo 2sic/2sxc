@@ -1,4 +1,5 @@
-﻿using ToSic.Eav;
+﻿using System;
+using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
@@ -6,6 +7,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.DataSources
@@ -22,6 +24,12 @@ namespace ToSic.Sxc.DataSources
 
         [PrivateApi("older use case, probably don't publish")]
         public DataPublishing Publish { get; }= new DataPublishing();
+
+        [Obsolete]
+        [PrivateApi]
+        public CacheWithGetContentType Cache => _cache ?? (_cache = new CacheWithGetContentType(Factory.GetAppState(this)));
+        [Obsolete]
+        private CacheWithGetContentType _cache;
 
         internal static IBlockDataSource ForContentGroupInSxc(ICmsBlock cms, IView overrideView, ILookUpEngine configurationProvider, ILog parentLog, int instanceId = 0)
         {

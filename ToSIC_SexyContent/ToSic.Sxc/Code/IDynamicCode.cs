@@ -2,15 +2,16 @@
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Code
 {
     /// <summary>
     /// Dynamic code files like Razor or WebApis.
@@ -20,17 +21,18 @@ namespace ToSic.Sxc.Web
     /// </summary>
     [PublicApi]
 #pragma warning disable 618
-    public interface IDynamicCode: ISharedCodeBuilder // inherit from old namespace to ensure compatibility
+    public interface IDynamicCode: ICreateInstance, ICompatibilityLevel // inherit from old namespace to ensure compatibility
 #pragma warning restore 618
     {
         #region internal/obsolete but still needed, not public!
-        [PrivateApi]
+        [PrivateApi("will be removed soon")]
         SxcHelper Sxc { get; }
 
-        [PrivateApi]
-        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);
+        //[PrivateApi]
+        //IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);
 
         #endregion
+
 
 
         /// <summary>

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -21,7 +20,6 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
-using DynamicCode = ToSic.Sxc.Web.DynamicCode;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -59,6 +57,8 @@ namespace ToSic.SexyContent.Razor
         [PrivateApi("try to remove")]
         public SxcHelper Sxc => DynCode.Sxc;
 
+        [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
+
         /// <inheritdoc />
         public new IApp App => DynCode.App;
 
@@ -70,6 +70,7 @@ namespace ToSic.SexyContent.Razor
         #region AsDynamic in many variations
 
         /// <inheritdoc />
+        [Obsolete]
         public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
 
 
@@ -78,19 +79,22 @@ namespace ToSic.SexyContent.Razor
 
         // todo: only in "old" controller, not in new one
         /// <inheritdoc />
+        [Obsolete]
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value);
 
 
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsDynamic(stream.List);
+        [Obsolete]
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsList(stream.List);
 
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => DynCode.AsEntity(dynamicEntity);
 
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => DynCode.AsDynamic(entities);
+        [Obsolete]
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => DynCode.AsList(entities);
 
         #endregion
 
@@ -106,31 +110,31 @@ namespace ToSic.SexyContent.Razor
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DynCode.AsDynamic(entity);
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DynCode.AsDynamic(entity as IEntity);
 
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value as IEntity);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DynCode.AsDynamic(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DynCode.AsList(entities.Cast<IEntity>());
         #endregion
 
 
         #region Data Source Stuff
-        /// <inheritdoc cref="ToSic.Sxc.Dnn.Web.IDynamicCode" />
+        /// <inheritdoc />
         [Obsolete]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
-            => DynCode.CreateSource(typeName, inSource, lookUpEngine);
+            => new DynamicCodeObsolete(DynCode).CreateSource(typeName, inSource, lookUpEngine);
 
-        /// <inheritdoc cref="ToSic.Sxc.Dnn.Web.IDynamicCode" />
+        /// <inheritdoc />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
             => DynCode.CreateSource<T>(inSource, configurationProvider);
 
-        /// <inheritdoc cref="ToSic.Sxc.Dnn.Web.IDynamicCode" />
+        /// <inheritdoc />
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
             => DynCode.CreateSource<T>(inStream);
 
@@ -156,7 +160,7 @@ namespace ToSic.SexyContent.Razor
         public dynamic ListPresentation => DynCode.Header?.Presentation;
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
-        public List<Element> List => DynCode.List;
+        public List<Element> List => new DynamicCodeObsolete(DynCode).ElementList;
 
         /// <inheritdoc/>
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)

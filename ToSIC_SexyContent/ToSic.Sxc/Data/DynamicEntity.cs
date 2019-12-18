@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Web;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -16,10 +17,13 @@ namespace ToSic.Sxc.Data
     /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
     /// </summary>
     [PublicApi]
-    public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>
+    public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>, ICompatibilityLevel
     {
         [PrivateApi]
         public IEntity Entity { get; }
+
+        [PrivateApi]
+        public int CompatibilityLevel { get; }
 
         /// <inheritdoc />
         [Obsolete("use Edit.Toolbar instead")]
@@ -28,14 +32,17 @@ namespace ToSic.Sxc.Data
             get
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
-                if (CmsInstance == null)
+                if (CmsBlock == null)
                     return new HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = CmsInstance?.UserMayEdit ?? false;
+                var userMayEdit = CmsBlock?.UserMayEdit ?? false;
 
                 if (!userMayEdit)
                     return new HtmlString("");
+
+                if(CompatibilityLevel == 10)
+                    throw new Exception("content.Toolbar is deprecated in the new RazorComponent. Use @Edit.TagToolbar(content) or @Edit.Toolbar(content) instead. See https://r.2sxc.org/EditToolbar");
 
                 var toolbar = new ItemToolbar(Entity).Toolbar;
                 return new HtmlString(toolbar);
@@ -44,17 +51,18 @@ namespace ToSic.Sxc.Data
 
         private readonly string[] _dimensions;
         [PrivateApi]
-        internal ICmsBlock CmsInstance { get; }   // must be internal for further use cases
+        internal ICmsBlock CmsBlock { get; }   // must be internal for further use cases
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entityModel, string[] dimensions, ICmsBlock sexy)
+        public DynamicEntity(IEntity entityModel, string[] dimensions, int compatibility, ICmsBlock sexy)
         {
             Entity = entityModel;
             _dimensions = dimensions;
-            CmsInstance = sexy;
+            CompatibilityLevel = compatibility;
+            CmsBlock = sexy;
         }
 
         /// <inheritdoc />
@@ -100,7 +108,7 @@ namespace ToSic.Sxc.Data
                 if (result is IEnumerable<IEntity> rel)
                 {
                     var relList = rel.Select(
-                        p => new DynamicEntity(p, _dimensions, CmsInstance)
+                        p => new DynamicEntity(p, _dimensions, CompatibilityLevel, CmsBlock)
                     ).ToList();
                     result = relList;
                 }
@@ -125,7 +133,7 @@ namespace ToSic.Sxc.Data
 
         private IDynamicEntity GetPresentation
             => _presentation ?? (_presentation = Entity is EntityInBlock entityInGroup
-                   ? new DynamicEntity(entityInGroup.Presentation, _dimensions, CmsInstance)
+                   ? new DynamicEntity(entityInGroup.Presentation, _dimensions, CompatibilityLevel, CmsBlock)
                    : null);
         private IDynamicEntity _presentation;
 
@@ -140,10 +148,10 @@ namespace ToSic.Sxc.Data
         public object EntityTitle => Entity.Title[_dimensions];
 
         /// <inheritdoc />
-        public dynamic GetDraft() => new DynamicEntity(Entity.GetDraft(), _dimensions, CmsInstance);
+        public dynamic GetDraft() => new DynamicEntity(Entity.GetDraft(), _dimensions, CompatibilityLevel, CmsBlock);
         
         /// <inheritdoc />
-        public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, CmsInstance);
+        public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, CompatibilityLevel, CmsBlock);
 
         /// <summary>
         /// Tell the system that it's a demo item, not one added by the user
@@ -152,8 +160,15 @@ namespace ToSic.Sxc.Data
         /// <returns></returns>
         public bool IsDemoItem => Entity is EntityInBlock entInCg && entInCg.IsDemoItem;
 
+        [Obsolete]
         [PrivateApi("probably we won't continue recommending to use this, but first we must provide an alternative")]
-        public IHtmlString Render() => Blocks.Render.One(this);
+        public IHtmlString Render()
+        {
+            if(CompatibilityLevel == 10)
+                throw new Exception("content.Toolbar() is deprecated in the new RazorComponent. Use ToSic.Sxc.Blocks.Render.One(content) instead. See https://r.2sxc.org/EditToolbar");
+
+            return Blocks.Render.One(this);
+        }
 
 
         #region Changing comparison operation to internally compare the entities, not this wrapper
@@ -209,14 +224,14 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)
             => Entity.Parents(type, field)
-                .Select(e => new DynamicEntity(e, _dimensions, CmsInstance))
+                .Select(e => new DynamicEntity(e, _dimensions, CompatibilityLevel, CmsBlock))
                 .Cast<IDynamicEntity>()
                 .ToList();
 
         /// <inheritdoc />
         public List<IDynamicEntity> Children(string field = null, string type = null)
             => Entity.Children(field, type)
-                .Select(e => new DynamicEntity(e, _dimensions, CmsInstance))
+                .Select(e => new DynamicEntity(e, _dimensions, CompatibilityLevel, CmsBlock))
                 .Cast<IDynamicEntity>()
                 .ToList();
     }

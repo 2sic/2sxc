@@ -2,6 +2,7 @@
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.Sxc.WebApi
@@ -24,8 +25,8 @@ namespace ToSic.Sxc.WebApi
         internal ICmsBlock CmsBlock { get; private set; }
 
 
-        internal static DynamicCode GetContext(ICmsBlock cmsInstance, ILog log) 
-            => new DynamicCode(cmsInstance, cmsInstance?.Log ?? log);
+        internal static DnnDynamicCode GetContext(ICmsBlock cmsInstance, ILog log) 
+            => new DnnDynamicCode(cmsInstance, 10, cmsInstance?.Log ?? log);
 
 
         #region App-Helpers for anonyous access APIs

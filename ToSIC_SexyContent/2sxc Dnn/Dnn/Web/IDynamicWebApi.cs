@@ -2,6 +2,7 @@
 using System.IO;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Dnn.Code;
 
 // ReSharper disable UnusedMember.Global
 
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Web
     /// It's important, because if 2sxc also runs on other CMS platforms, then the Dnn Context won't be available, so it's in a separate interface.
     /// </summary>
     [PublicApi]
-    public interface IDynamicWebApi : IDynamicCode
+    public interface IDynamicWebApi : IDnnDynamicCode
     {
         /// <summary>
         /// Save a file from a stream (usually an upload from the browser) into an adam-field

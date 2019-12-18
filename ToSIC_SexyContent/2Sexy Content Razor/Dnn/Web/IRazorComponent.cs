@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Search;
 
 // ReSharper disable UnusedMemberInSuper.Global
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Web
     /// All DNN Razor Pages inherit from this class
     /// </summary>
     [PublicApi]
-    public interface IRazorComponent: IDynamicCode
+    public interface IRazorComponent: IDnnDynamicCode
     {
         /// <summary>
         /// Helper for Html.Raw - for creating raw html output which doesn't encode &gt; and &lt;

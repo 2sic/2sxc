@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName),
                 stream);
 
-            var adamcontext = new AdamAppContext(CmsInstance.Block.Tenant, state.App, CmsInstance, Log);
+            var adamcontext = new AdamAppContext(CmsInstance.Block.Tenant, state.App, CmsInstance, 10, Log);
             var eavFile = new File(adamcontext)
             {
                 Created = dnnFile.CreatedOnDate,

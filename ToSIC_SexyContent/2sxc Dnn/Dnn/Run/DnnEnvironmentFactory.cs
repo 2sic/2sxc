@@ -4,6 +4,8 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.SexyContent.Interfaces;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.Code;
 using IApp = ToSic.Eav.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using PermissionCheckBase = ToSic.Eav.Security.PermissionCheckBase;
@@ -28,6 +30,6 @@ namespace ToSic.Sxc.Dnn.Run
 
 
 
-        public Sxc.Web.DynamicCode AppAndDataHelpers(Sxc.Blocks.ICmsBlock cms) => new DynamicCode(cms);
+        public DynamicCodeRoot AppAndDataHelpers(Sxc.Blocks.ICmsBlock cms) => new DnnDynamicCode(cms, 9);
     }
 }

@@ -41,10 +41,10 @@ namespace ToSic.Sxc.Blocks.Renderers
         internal static string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid = null, IInPageEditingSystem edit = null)
         {
             if (edit == null)
-                edit = new InPageEditingHelper(parent.CmsInstance, parent.CmsInstance.Log);
+                edit = new InPageEditingHelper(parent.CmsBlock, parent.CmsBlock.Log);
 
             var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(parent.CmsInstance.Block, subItem.Entity, parent.CmsInstance.Log).ToString();
+            var inner = subItem == null ? "": Render(parent.CmsBlock.Block, subItem.Entity, parent.CmsBlock.Log).ToString();
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
@@ -57,12 +57,12 @@ namespace ToSic.Sxc.Blocks.Renderers
             {
                 if (objFound is IList<DynamicEntity> itms)
                     foreach (var cb in itms)
-                        innerBuilder.Append(Render(cb.CmsInstance.Block, cb.Entity, parent.CmsInstance.Log));
+                        innerBuilder.Append(Render(cb.CmsBlock.Block, cb.Entity, parent.CmsBlock.Log));
             }
 
             // create edit object if missing...to re-use in the wh
             if (edit == null)
-                edit = new InPageEditingHelper(parent.CmsInstance, parent.CmsInstance.Log);
+                edit = new InPageEditingHelper(parent.CmsBlock, parent.CmsBlock.Log);
 
             return string.Format(WrapperTemplate, new object[]
             {

@@ -5,8 +5,8 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -44,21 +44,22 @@ namespace ToSic.Sxc.Dnn
         /// Get a Root CMS Block if you have the ModuleInfo object.
         /// </summary>
         /// <param name="container"></param>
+        /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
-        public static ICmsBlock CmsBlock(IContainer container)
+        public static ICmsBlock CmsBlock(IContainer container, ILog parentLog = null)
         {
             var dnnModule = ((Container<ModuleInfo>)container).UnwrappedContents;
             var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
-            return new BlockFromModule(container, parentLog: null, tenant: tenant).CmsInstance;
+            return new BlockFromModule(container, parentLog: parentLog, tenant: tenant).CmsInstance;
         }
 
         /// <summary>
         /// Retrieve a helper object which provides commands like AsDynamic, AsEntity etc.
         /// </summary>
         /// <param name="cmsBlock">The CMS Block for which the helper is targeted. </param>
-        /// <returns>A Code Helper based on <see cref="IDynamicCode"/></returns>
-        public static IDynamicCode DynamicCode(ICmsBlock cmsBlock)
-            => new DynamicCode(cmsBlock as CmsBlock);
+        /// <returns>A Code Helper based on <see cref="IDnnDynamicCode"/></returns>
+        public static IDnnDynamicCode DynamicCode(ICmsBlock cmsBlock)
+            => new DnnDynamicCode(cmsBlock as CmsBlock, 10);
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside
@@ -69,9 +70,10 @@ namespace ToSic.Sxc.Dnn
         /// So changes will me auto-drafted for a future release as the whole page together.
         /// </param>
         /// <param name="showDrafts">Show draft items - usually false for visitors, true for editors/admins.</param>
+        /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized App object which you can use to access App.Data</returns>
-        public static IApp App(int appId, bool publishingEnabled = false, bool showDrafts = false)
-            => App(appId, PortalSettings.Current, publishingEnabled, showDrafts);
+        public static IApp App(int appId, bool publishingEnabled = false, bool showDrafts = false, ILog parentLog = null)
+            => App(appId, PortalSettings.Current, publishingEnabled, showDrafts, parentLog);
 
         ///// <summary>
         ///// Get a full app-object for accessing data of the app from outside
@@ -97,15 +99,16 @@ namespace ToSic.Sxc.Dnn
         /// So changes will me auto-drafted for a future release as the whole page together.
         /// </param>
         /// <param name="showDrafts">Show draft items - usually false for visitors, true for editors/admins.</param>
+        /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized App object which you can use to access App.Data</returns>
-        public static IApp App(int appId, PortalSettings ownerPortalSettings, bool publishingEnabled = false, bool showDrafts = false)
+        public static IApp App(int appId, PortalSettings ownerPortalSettings, bool publishingEnabled = false, bool showDrafts = false, ILog parentLog = null)
         {
             var appStuff = new App(
                 new DnnTenant(ownerPortalSettings), 
                 Eav.Apps.App.AutoLookupZone, appId,
                 ConfigurationProvider.Build(showDrafts, publishingEnabled, 
-                    new LookUpEngine(null as ILog)), 
-                true, null);
+                    new LookUpEngine(parentLog)), 
+                true, parentLog);
             return appStuff;
         }
 

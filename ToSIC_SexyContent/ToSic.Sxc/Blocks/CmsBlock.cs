@@ -19,7 +19,8 @@ namespace ToSic.Sxc.Blocks
     public partial class CmsBlock : HasLog, ICmsBlock
     {
         #region App-level information
-
+        [PrivateApi]
+        public int Compatibility { get; }
         public IApp App => Block.App;
 
         #endregion
@@ -48,8 +49,8 @@ namespace ToSic.Sxc.Blocks
         #region Constructor
         internal CmsBlock(IBlock cb, 
             IContainer container, 
-            IEnumerable<KeyValuePair<string, string>> urlParams = null, 
-            ILog parentLog = null)
+            IEnumerable<KeyValuePair<string, string>> urlParams,// = null, 
+            ILog parentLog/* = null*/)
             : base("Sxc.CmsIns", parentLog, $"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
         {
             EnvFac = Factory.Resolve<IEnvironmentFactory>();

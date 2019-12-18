@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Adam
     /// The app-context of ADAM
     /// In charge of managing assets inside this app
     /// </summary>
-    public class AdamAppContext: HasLog, IContext
+    public class AdamAppContext: HasLog, IContext, ICompatibilityLevel
     {
         /// <summary>
         /// the app is only used to get folder / guid etc.
@@ -23,16 +24,17 @@ namespace ToSic.Sxc.Adam
         private readonly IApp _app;
         public readonly AppRuntime AppRuntime;
         public readonly ITenant Tenant;
-        public readonly ICmsBlock CmsInstance;
+        public readonly ICmsBlock CmsBlock;
         internal readonly IEnvironmentFileSystem EnvironmentFs;
 
 
-        public AdamAppContext(ITenant tenant, IApp app, ICmsBlock cmsInstance, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
+        public AdamAppContext(ITenant tenant, IApp app, ICmsBlock cmsBlock, int compatibility, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
         {
             Tenant = tenant;
             _app = app;
             AppRuntime = new AppRuntime(app, null);
-            CmsInstance = cmsInstance;
+            CmsBlock = cmsBlock;
+            CompatibilityLevel = compatibility;
             EnvironmentFs = Factory.Resolve<IEnvironmentFileSystem>();
         }
 
@@ -92,5 +94,7 @@ namespace ToSic.Sxc.Adam
         #endregion
 
         public Export Export => new Export(this);
+        [PrivateApi]
+        public int CompatibilityLevel { get; }
     }
 }

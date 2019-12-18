@@ -15,10 +15,10 @@ using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
-using DynamicCode = ToSic.Sxc.Dnn.DynamicCode;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Engines
@@ -108,7 +108,7 @@ namespace ToSic.Sxc.Engines
             }
         }
 
-        private void InitHelpers(RazorComponentBase webPage)
+        private void InitHelpers(RazorComponentBase webPage, int compatibiltiy)
         {
             webPage.Html = new Razor.HtmlHelper();
             // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Engines
 
             // deprecated 2019-11-28 2dm, it's also in the CmsBlock
             // webPage.Sexy = CmsBlock;
-            webPage.DynCode = new DynamicCode(CmsBlock);
+            webPage.DynCode = new DnnDynamicCode(CmsBlock, compatibiltiy, Log);
 
         }
 
@@ -130,20 +130,24 @@ namespace ToSic.Sxc.Engines
             if (objectValue == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", TemplatePath));
 
-            Webpage = objectValue as RazorComponentBase;// SexyContentWebPage;
+            Webpage = objectValue as RazorComponentBase;
 
-            if ((Webpage == null))
+            if (Webpage == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from SexyContentWebPage.", TemplatePath));
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
-            if(Webpage is RazorComponent rzrPage)
+            int compatibility = 9;
+            if (Webpage is RazorComponent rzrPage)
+            {
                 rzrPage.Purpose = Purpose;
+                compatibility = 10;
+            }
 #pragma warning disable 618
             if(Webpage is SexyContentWebPage oldPage)
                 oldPage.InstancePurpose = (InstancePurposes) Purpose;
 #pragma warning restore 618
-            InitHelpers(Webpage);
+            InitHelpers(Webpage, compatibility);
         }
 
         /// <inheritdoc />

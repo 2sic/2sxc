@@ -14,7 +14,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.WebApi;
@@ -40,7 +39,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public dynamic GetAppInfo(int appId, int zoneId)
         {
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo);// AppWithRestrictedZoneChange(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
 
             var zipExport = new ZipExport(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var cultCount = Env.ZoneMapper
@@ -70,7 +69,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public dynamic GetContentInfo(int appId, int zoneId, string scope)
         {
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{UserInfo.IsSuperUser}");
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId,appId, UserInfo);// AppWithRestrictedZoneChange(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId,appId, UserInfo, Log);// AppWithRestrictedZoneChange(appId, zoneId);
 
             var cms = new CmsRuntime(currentApp, Log, true, false);
             var contentTypes = cms.ContentTypes.FromScope(scope);
@@ -113,7 +112,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
             EnsureUserIsAdmin(); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo);// AppWithRestrictedZoneChange(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);// AppWithRestrictedZoneChange(appId, zoneId);
 
             var zipExport = new ZipExport(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
@@ -136,7 +135,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             EnsureUserIsAdmin();
 
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo);// AppWithRestrictedZoneChange(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);// AppWithRestrictedZoneChange(appId, zoneId);
 
             var zipExport = new ZipExport(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
@@ -150,7 +149,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
             EnsureUserIsAdmin();
 
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo);// AppWithRestrictedZoneChange(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);// AppWithRestrictedZoneChange(appId, zoneId);
             var appRuntime = new AppRuntime(currentApp, Log);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";

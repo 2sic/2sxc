@@ -31,8 +31,7 @@ namespace ToSic.Sxc.Apps
             get
             {
                 var c = Configuration;
-                if (c?.Entity != null) return new DynamicEntity(c.Entity, new[] {Thread.CurrentThread.CurrentCulture.Name}, null);
-                return null;
+                return c?.Entity != null ? new DynamicEntity(c.Entity, new[] {Thread.CurrentThread.CurrentCulture.Name}, 10, null) : null;
             }
         }
 
@@ -42,7 +41,7 @@ namespace ToSic.Sxc.Apps
             get
             {
                 if(!_settingsLoaded && AppSettings != null)
-                    _settings = new DynamicEntity(AppSettings, new[] {Thread.CurrentThread.CurrentCulture.Name}, null);
+                    _settings = new DynamicEntity(AppSettings, new[] {Thread.CurrentThread.CurrentCulture.Name}, 10, null);
                 _settingsLoaded = true;
                 return _settings;
             }
@@ -56,7 +55,7 @@ namespace ToSic.Sxc.Apps
             get
             {
                 if(!_resLoaded && AppResources!= null)
-                    _res = new DynamicEntity(AppResources, new[] {Thread.CurrentThread.CurrentCulture.Name}, null);
+                    _res = new DynamicEntity(AppResources, new[] {Thread.CurrentThread.CurrentCulture.Name}, 10, null);
                 _resLoaded = true;
                 return _res;
             }

@@ -4,17 +4,15 @@ using System.Web.Http.Controllers;
 using Factory = ToSic.Eav.Factory;
 using ToSic.Sxc.Adam.WebApi;
 using System.IO;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.WebApi;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.WebApi
@@ -28,13 +26,13 @@ namespace ToSic.SexyContent.WebApi
     /// </summary>
     [PrivateApi]
     [SxcWebApiExceptionHandling]
-    public abstract class DynamicApiController : SxcApiControllerBase
+    public abstract class DynamicApiController : SxcApiControllerBase, ICreateInstance
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
             // Note that the SxcBlock is created by the BaseClass, if it's detectable. Otherwise it's null
-            DynCode = new DynamicCode(CmsBlock, CmsBlock?.Log ?? Log);
+            DynCode = GetContext(CmsBlock, CmsBlock.Log);// new DnnDynamicCode(CmsBlock, 10, CmsBlock?.Log ?? Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (DynCode.App == null)
@@ -44,11 +42,11 @@ namespace ToSic.SexyContent.WebApi
             controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); 
 
             if(controllerContext.Request.Properties.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var value))
-                SharedCodeVirtualRoot = value as string;
+                CreateInstancePath = value as string;
         }
 
         [PrivateApi]
-        protected DynamicCode DynCode { get; private set; }
+        protected DnnDynamicCode DynCode { get; private set; }
 
         public IDnnContext Dnn => DynCode.Dnn;
 
@@ -103,7 +101,7 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
-        public string SharedCodeVirtualRoot { get; set; }
+        public string CreateInstancePath { get; set; }
 
         public dynamic CreateInstance(string virtualPath, 
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
@@ -111,6 +109,6 @@ namespace ToSic.SexyContent.WebApi
             string relativePath = null, 
             bool throwOnError = true) =>
             DynCode.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
-                SharedCodeVirtualRoot, throwOnError);
+                CreateInstancePath, throwOnError);
     }
 }

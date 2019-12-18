@@ -6,7 +6,7 @@ uid: Specs.Adam.AsAdam
 
 When a content-item has a `Library` field (see [](xref:Specs.Data.Inputs.Hyperlink-Library)) you will need to find the files and maybe folders of that field, to show galleries or something. 
 
-This is where `AsAdam(...)` comes in. All RazorComponents and ApiControllers have this command. Here's the [official API docs](xref:ToSic.Sxc.Web.IDynamicCode.AsAdam*).
+This is where `AsAdam(...)` comes in. All RazorComponents and ApiControllers have this command. Here's the [official API docs](xref:ToSic.Sxc.Code.IDynamicCode.AsAdam*).
 
 Basically all you need for `AsAdam(...)` is
 

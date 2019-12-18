@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using ToSic.Eav;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -12,46 +11,51 @@ using ToSic.Eav.Run;
 using ToSic.SexyContent;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Code
 {
     /// <summary>
-    /// Base class for any dynamic code.
+    /// Base class for any dynamic code root objects. <br/>
+    /// Root objects are the ones compiled by 2sxc - like the RazorComponent or ApiController. <br/>
+    /// If you create code for dynamic compilation, you'll always inherit from ToSic.Sxc.Dnn.DynamicCode. 
     /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
     /// </summary>
     [PublicApi]
-    public abstract class DynamicCode : HasLog, IDynamicCode
+    public abstract class DynamicCodeRoot : HasLog, IDynamicCode
     {
         [PrivateApi]
-        protected readonly ICmsBlock CmsInstance;
+        protected internal readonly ICmsBlock CmsBlock;
 
         private readonly ITenant _tenant;
         [PrivateApi]
-        protected DynamicCode(ICmsBlock cmsInstance, ITenant tenant, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsInstance?.Log)
+        protected DynamicCodeRoot(ICmsBlock cmsBlock, ITenant tenant, int compatibility, ILog parentLog): base("Sxc.AppHlp", parentLog ?? cmsBlock?.Log)
         {
-            if (cmsInstance == null)
+            if (cmsBlock == null)
                 return;
 
-            CmsInstance = cmsInstance;
+            CmsBlock = cmsBlock;
             _tenant = tenant;
-            App = cmsInstance.App;
-            Data = cmsInstance.Block.Data;
-			Sxc = new SxcHelper(cmsInstance);
-            Edit = new InPageEditingHelper(cmsInstance, Log);
+            CompatibilityLevel = compatibility;
+            App = cmsBlock.App;
+            Data = cmsBlock.Block.Data;
+			Sxc = new SxcHelper(cmsBlock);
+            Edit = new InPageEditingHelper(cmsBlock, Log);
         }
 
         [PrivateApi]
         internal void LateAttachApp(IApp app) => App = app;
 
+        [PrivateApi]
+        public int CompatibilityLevel { get; }
 
         /// <inheritdoc />
         public IApp App { get; private set; }
@@ -72,30 +76,21 @@ namespace ToSic.Sxc.Web
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynamicJacket.AsDynamicJacket(json, fallback);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, CmsInstance);
+        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, CompatibilityLevel, CmsBlock);
 
-        [PrivateApi]
-        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => AsDynamic(entity as IEntity);
 
 
         /// <inheritdoc />
         public dynamic AsDynamic(dynamic dynamicEntity) => dynamicEntity;
 
-        [PrivateApi]
-        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
 
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => ((IDynamicEntity) dynamicEntity).Entity;
 
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => entities.Select(e => AsDynamic(e));
+        ///// <inheritdoc />
+        //public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => entities.Select(e => AsDynamic(e));
 
 
-        [PrivateApi]
-        [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => entities.Select(e => AsDynamic(e));
 
         #endregion
 
@@ -111,17 +106,9 @@ namespace ToSic.Sxc.Web
                 case IDataSource dsEntities:
                     return AsList(dsEntities[Eav.Constants.DefaultStreamName]);
                 case IEnumerable<IEntity> iEntities:
-                    return AsDynamic(iEntities);
+                    return iEntities.Select(e => AsDynamic(e));
                 case IEnumerable<dynamic> dynEntities:
                     return dynEntities;
-                //case IDynamicEntity iDynamicEntity:
-                //    if(name == null)
-                //        throw new Exception("AsList got a DynamicEntity but not a name. You must either provide list of DynamicEntities or add a name to access that property.");
-                //    return AsList(iDynamicEntity.Get(name));
-                //case IEntity iEntity:
-                //    if(name == null)
-                //        throw new Exception("AsList got an IEntity but not a name. You must either provide list of DynamicEntities or add a name to access that property.");
-                //    return AsList(iEntity.Children(name));
                 default:
                     return null;
             }
@@ -132,31 +119,14 @@ namespace ToSic.Sxc.Web
         #region DataSource and ConfigurationProvider (for DS) section
         private ILookUpEngine _configurationProvider;
 
-        private ILookUpEngine ConfigurationProvider
+        internal ILookUpEngine ConfigurationProvider
             => _configurationProvider ??
                (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.Configuration.LookUps);
 
-        private DataSource DataSourceFactory => _dataSourceFactory ?? (_dataSourceFactory = new DataSource(Log));
+        internal DataSource DataSourceFactory => _dataSourceFactory ?? (_dataSourceFactory = new DataSource(Log));
         private DataSource _dataSourceFactory;
 
 
-        /// <inheritdoc />
-        [PrivateApi("obsolete")]
-        [Obsolete("you should use the CreateSource<T> instead")]
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
-        {
-            if (lookUpEngine == null)
-                lookUpEngine = ConfigurationProvider;
-
-            if (inSource != null)
-                return DataSourceFactory.GetDataSource(typeName, inSource, inSource, lookUpEngine);
-
-            var userMayEdit = CmsInstance.UserMayEdit;
-
-            var initialSource = DataSourceFactory.GetPublishing(
-                App, userMayEdit, ConfigurationProvider as LookUpEngine);
-            return typeName != "" ? DataSourceFactory.GetDataSource(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
-        }
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource
@@ -167,7 +137,7 @@ namespace ToSic.Sxc.Web
             if (inSource != null)
                 return DataSourceFactory.GetDataSource<T>(inSource, inSource, configurationProvider);
 
-            var userMayEdit = CmsInstance.UserMayEdit;
+            var userMayEdit = CmsBlock.UserMayEdit;
 
             var initialSource = DataSourceFactory.GetPublishing(
                 App, userMayEdit, ConfigurationProvider as LookUpEngine);
@@ -190,10 +160,11 @@ namespace ToSic.Sxc.Web
         #region basic properties like Content, Presentation, ListContent, ListPresentation
 
         /// <inheritdoc />
-        public dynamic Content {
+        public dynamic Content
+        {
             get
             {
-                if(_content == null) TryToBuildContentAndList();
+                if(_content == null) TryToBuildContent();
                 return _content;
             } 
         }
@@ -201,7 +172,8 @@ namespace ToSic.Sxc.Web
 
 
         /// <inheritdoc />
-		public dynamic Header {
+		public dynamic Header 
+        {
             get
             {
                 if(_header == null) TryToBuildHeaderObject();
@@ -210,10 +182,6 @@ namespace ToSic.Sxc.Web
         }
         private dynamic _header;
 
-        [PrivateApi]
-        [Obsolete("use Header instead")]
-        public dynamic ListContent => Header;
-
         /// <remarks>
         /// This must be lazy-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
         /// - this would break API even though the List etc. are never accessed
@@ -221,7 +189,7 @@ namespace ToSic.Sxc.Web
         private void TryToBuildHeaderObject()
         {
             Log.Add("try to build ListContent (header) object");
-            if (Data == null || CmsInstance.View == null) return;
+            if (Data == null || CmsBlock.View == null) return;
             if (!Data.Out.ContainsKey(ViewParts.ListContent)) return;
 
             var listEntity = Data[ViewParts.ListContent].List.FirstOrDefault();
@@ -229,51 +197,52 @@ namespace ToSic.Sxc.Web
         }
 
 #pragma warning disable 618
-        [PrivateApi]
-        [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
-        public List<Element> List {
-            get
-            {
-                if(_list == null) TryToBuildContentAndList();
-                return _list;
-            } 
-        }
-        private List<Element> _list;
+        //[PrivateApi]
+        //[Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
+        //public List<Element> List {
+        //    get
+        //    {
+        //        if(_list == null) TryToBuildContentAndList();
+        //        return _list;
+        //    } 
+        //}
+        //private List<Element> _list;
 
         /// <remarks>
         /// This must be lazy-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
         /// - this would break API even though the List etc. are never accessed
         /// </remarks>
-        private void TryToBuildContentAndList()
+        [PrivateApi]
+        internal void TryToBuildContent()
         {
-            Log.Add("try to build List and Content objects");
-            _list = new List<Element>();
+            Log.Add("try to build Content objects");
+            //_list = new List<Element>();
 
-            if (Data == null || CmsInstance.View == null) return;
+            if (Data == null || CmsBlock.View == null) return;
             if (!Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
             var entities = Data.List.ToList();
             if (entities.Any()) _content = AsDynamic(entities.First());
 
-            _list = entities.Select(GetElementFromEntity).ToList();
+            //_list = entities.Select(GetElementFromEntity).ToList();
 
-            Element GetElementFromEntity(IEntity e)
-            {
-                var el = new Element
-                {
-                    EntityId = e.EntityId,
-                    Content = AsDynamic(e)
-                };
+            //Element GetElementFromEntity(IEntity e)
+            //{
+            //    var el = new Element
+            //    {
+            //        EntityId = e.EntityId,
+            //        Content = AsDynamic(e)
+            //    };
 
-                if (e is EntityInBlock c)
-                {
-                    el.GroupId = c.GroupId;
-                    el.Presentation = c.Presentation == null ? null : AsDynamic(c.Presentation);
-                    el.SortOrder = c.SortOrder;
-                }
+            //    if (e is EntityInBlock c)
+            //    {
+            //        el.GroupId = c.GroupId;
+            //        el.Presentation = c.Presentation == null ? null : AsDynamic(c.Presentation);
+            //        el.SortOrder = c.SortOrder;
+            //    }
 
-                return el;
-            }
+            //    return el;
+            //}
         }
 #pragma warning restore 618
 
@@ -291,7 +260,7 @@ namespace ToSic.Sxc.Web
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
             if (_adamAppContext == null)
-                _adamAppContext = new AdamAppContext(_tenant, App, CmsInstance, Log);
+                _adamAppContext = new AdamAppContext(_tenant, App, CmsBlock, CompatibilityLevel, Log);
             return new FolderOfField(envFs, _adamAppContext, entity.EntityGuid, fieldName);
         }
         private AdamAppContext _adamAppContext;
@@ -321,7 +290,7 @@ namespace ToSic.Sxc.Web
                 .InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them
-            if (instance is WithContext isShared)
+            if (instance is DynamicCode isShared)
                 isShared.InitShared(this);
 
             return instance;
@@ -331,6 +300,6 @@ namespace ToSic.Sxc.Web
         #endregion
 
         /// <inheritdoc />
-        public string SharedCodeVirtualRoot { get; set; }
+        public string CreateInstancePath { get; set; }
     }
 }

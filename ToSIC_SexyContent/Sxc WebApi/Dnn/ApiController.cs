@@ -35,6 +35,9 @@ namespace ToSic.Sxc.Dnn
         [PrivateApi("try to remove")]
         public SxcHelper Sxc => DynCode.Sxc;
 
+        [PrivateApi]
+        public int CompatibilityLevel => DynCode.CompatibilityLevel;
+
         /// <inheritdoc />
         public IApp App => DynCode.App;
 

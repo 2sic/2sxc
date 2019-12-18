@@ -83,7 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\AppDataDnnHelpers.cs" />
+    <Compile Include="Dnn\DynamicCode.cs" />
     <Compile Include="Code\ErrorHelp.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource.cs" />
@@ -93,9 +93,9 @@
     <Compile Include="Dnn\Run\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />
     <Compile Include="Dnn\Web\IDynamicWebApi.cs" />
-    <Compile Include="Dnn\Web\IDynamicCode.cs" />
+    <Compile Include="Dnn\Code\IDnnDynamicCode.cs" />
     <Compile Include="Dnn\Run\DnnSecurity.cs" />
-    <Compile Include="Dnn\DynamicCode.cs" />
+    <Compile Include="Dnn\Code\DnnDynamicCode.cs" />
     <Compile Include="Dnn\Web\DnnClientDependency.cs" />
     <Compile Include="Dnn\Web\ClientInfos\ClientInfosAll.cs" />
     <Compile Include="Dnn\Web\ClientInfos\ClientInfosEnvironment.cs" />
