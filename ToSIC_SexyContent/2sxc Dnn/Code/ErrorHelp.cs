@@ -14,6 +14,10 @@ namespace ToSic.Sxc.Code
         private const string DynamicListErrDetection = "error CS1977: Cannot use a lambda expression as an argument to a dynamically dispatched operation without first casting it to a delegate or expression tree type";
         private const string DynamicListErrMessage = ErrHelpPre + "ErrLambda" + ErrHelpSuf;
 
+
+        private const string DynamicEntityErrDetection = "error CS0246: The type or namespace name 'DynamicEntity' could not be found";
+        private const string DynamicEntityErrMessage = ErrHelpPre + "ErrDynamicEntity" + ErrHelpSuf;
+
         public static void AddHelpIfKnownError(Exception exp, bool autoThrow = true)
         {
             var additionalMsg = HelpText(exp);
@@ -31,6 +35,10 @@ namespace ToSic.Sxc.Code
             if (exp is HttpCompileException)
                 if (exp.Message.Contains(DynamicListErrDetection))
                     return DynamicListErrMessage;
+
+            if (exp is HttpCompileException)
+                if (exp.Message.Contains(DynamicEntityErrDetection))
+                    return DynamicEntityErrMessage;
 
             return null;
 
