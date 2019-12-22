@@ -10,6 +10,9 @@ You can override this event to change how data is presented to the search, for e
 In your razor page (.cshtml file) you can add a script block implementing this, as follows:
 
 ```c#
+@using ToSic.Eav.Run;
+@using ToSic.Sxc.Dnn.Run;
+@using ToSic.Sxc.Search;
 @functions
 {
     // this method is optional - your code wouldn't need it, but it's in here to show how it would work together
@@ -25,11 +28,12 @@ In your razor page (.cshtml file) you can add a script block implementing this, 
     /// <param name="searchInfos"></param>
     /// <param name="moduleInfo"></param>
     /// <param name="startDate"></param>
-    public override void CustomizeSearch(Dictionary<string, List<ToSic.SexyContent.Search.ISearchInfo>> searchInfos, DotNetNuke.Entities.Modules.ModuleInfo moduleInfo, DateTime startDate)
+    public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate)
     {
         foreach (var si in searchInfos["Default"])
         {
-            si.QueryString = "mid="+ moduleInfo.ModuleID + "&feature=" + si.Entity.EntityId;
+            // tell the search system what url it should use in the result
+            si.QueryString = "mid="+ (moduleInfo as DnnContainer).Id + "&feature=" + si.Entity.EntityId;
         }
     }
 }
@@ -45,7 +49,7 @@ In general everything will work automatically. This is what happens:
     1. Note that during the search index, no Request-variables exist.
     1. So your method will cause an error if it does something like var x = Request["Category"].
     1. In case of an error, the index will still continue to work, but your changes to the data will fail
-    1. To help you with this, a new property called InstancePurpose was added. It tells you if this view/template was created for displaying or for indexing.
+    1. To help you with this, a new property called Purpose was added. It tells you if this view/template was created for displaying or for indexing.
 1. 2sxc will then use the data and create SearchItems, ready to index.
     1. Each entity will be turned into a SearchItem
     1. Each Content-Type will have an own list (so you can differentiate between all the SearchItems for the Categories and the SearchItems for the Questions)
@@ -57,7 +61,7 @@ In general everything will work automatically. This is what happens:
 
 
 ## Read also
-* [InstancePurpose](xref:HowTo.Razor.Purpose) - which tells you why the current code is running so you could change the data added
+* [Purpose](xref:HowTo.Razor.Purpose) - which tells you why the current code is running so you could change the data added
 * [CustomizeData](xref:HowTo.Razor.CustomizeData)
 
 ## Demo App and further links
