@@ -30,6 +30,7 @@ exports.data = {
   "ToSic.Eav.DataSources": prioData,
   "ToSic.Eav.DataSources.Caching": prioInternal,
   "ToSic.Eav.DataSources.Queries": prioData,
+  "ToSic.Eav.DataSources.System": prioInternal,
   "ToSic.Eav.Environment": prioInternal,
   "ToSic.Eav.Logging": prioInternal,
   "ToSic.Eav.LookUp": prioInternal,
