@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Blocks
     /// <summary>
     /// Defines a view configuration which is loaded from an <see cref="EntityBasedType"/>.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public interface IView: IEntityBasedType
     {
         /// <summary>
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Blocks
         /// Determines if the view should behave as a list or not. Views that are lists also
         /// have Header configuration and treat content in a special way. 
         /// </summary>
-        bool UseForList { get; }
+        [PrivateApi] bool UseForList { get; }
 
         [PrivateApi] bool PublishData { get; }
         [PrivateApi] string StreamsToPublish { get; }
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// An identifier which could occur in the url, causing the view to automatically switch to this one. 
         /// </summary>
-        string UrlIdentifier { get; }
+        [PrivateApi] string UrlIdentifier { get; }
 
         /// <summary>
         /// Returns true if the current template uses Razor

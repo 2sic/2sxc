@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Data
     /// Please check @HowTo.DynamicCode.DynamicEntity
     /// </blockquote>
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity
     {
         /// <summary>

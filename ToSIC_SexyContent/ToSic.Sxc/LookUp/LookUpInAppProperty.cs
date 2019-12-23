@@ -8,7 +8,7 @@ namespace ToSic.Sxc.LookUp
     /// <summary>
     /// Look up things in app-settings, app-resources etc.
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     internal class LookUpInAppProperty : LookUpBase
     {
         private readonly IApp _app;

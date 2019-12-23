@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.LookUp
     /// Translator component which creates a LookUp object and internally accesses
     /// DNN PropertyAccess objects (which DNN uses for the same concept as LookUp)
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class LookUpInDnnPropertyAccess: LookUpBase
     {
         private readonly IPropertyAccess _source;

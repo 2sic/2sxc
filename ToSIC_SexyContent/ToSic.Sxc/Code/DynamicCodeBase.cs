@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Code
     /// If you create code for dynamic compilation, you'll always inherit from ToSic.Sxc.Dnn.DynamicCode. 
     /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public abstract class DynamicCodeRoot : HasLog, IDynamicCode
     {
         [PrivateApi]

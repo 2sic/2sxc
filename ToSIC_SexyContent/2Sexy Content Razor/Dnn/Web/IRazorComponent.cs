@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Web
     /// <summary>
     /// All DNN Razor Pages inherit from this class
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public interface IRazorComponent: IDnnDynamicCode
     {
         /// <summary>

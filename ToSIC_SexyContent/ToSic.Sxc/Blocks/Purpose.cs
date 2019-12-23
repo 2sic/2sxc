@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Blocks
     /// <summary>
     /// These are the purposes of a block as it's being built. It can be built to generate a web-view, juts for indexing or possibly also for json publishing. 
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public enum Purpose
     {
         /// <summary>

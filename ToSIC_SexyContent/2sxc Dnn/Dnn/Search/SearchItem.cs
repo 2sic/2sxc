@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Search
     /// <summary>
     /// A search item which is passed around before handed over to the indexing system
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public class SearchItem : SearchDocument, ISearchItem
     {
         public IEntity Entity { get; set; }

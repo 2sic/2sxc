@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Engines
     /// <summary>
     /// The foundation for engines - must be inherited by other engines
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public abstract class EngineBase : HasLog, IEngine
     {
         [PrivateApi] protected IView Template;

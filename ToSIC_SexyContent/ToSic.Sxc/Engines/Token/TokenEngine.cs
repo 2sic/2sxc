@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Engines
     /// <summary>
     /// Rendering Engine for Token based templates (html using [Content:Title] kind of placeholders. 
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     [EngineDefinition(Name = "Token")]
     public class TokenEngine : EngineBase
     {

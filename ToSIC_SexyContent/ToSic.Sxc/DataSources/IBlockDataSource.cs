@@ -10,7 +10,7 @@ namespace ToSic.Sxc.DataSources
     /// This marks data sources which are meant for Blocks (Modules, Content-Block Instances). <br/>
     /// They have some internal functionality which isn't published as of now.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public interface IBlockDataSource: IDataSource, IDataTarget
     {
         [PrivateApi("older use case, will probably become obsolete some day")]

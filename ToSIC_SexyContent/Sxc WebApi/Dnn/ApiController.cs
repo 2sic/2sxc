@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Dnn
     /// This is the base class for all custom API Controllers. <br/>
     /// With this, your code receives the full context  incl. the current App, DNN, Data, etc.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     [SxcWebApiExceptionHandling]
     public abstract partial class ApiController : DynamicApiController, IDynamicWebApi, IDynamicCodeBeforeV10
     {

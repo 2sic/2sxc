@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Code
     /// Also provides many Conversions between <see cref="IEntity"/> and <see cref="IDynamicEntity"/>.
     /// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data. 
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
 #pragma warning disable 618
     public interface IDynamicCode: ICreateInstance, ICompatibilityLevel // inherit from old namespace to ensure compatibility
 #pragma warning restore 618

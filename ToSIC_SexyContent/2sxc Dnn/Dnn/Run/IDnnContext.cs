@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// Provides information about the current context within DNN.
     /// This only applies to 2sxc running inside DNN, not inside another platform. 
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public interface IDnnContext
     {
         /// <summary>

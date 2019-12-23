@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.Web
     /// <summary>
     /// The DNN implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public class DnnLinkHelper: ILinkHelper
     {
         private readonly IDnnContext _dnn;

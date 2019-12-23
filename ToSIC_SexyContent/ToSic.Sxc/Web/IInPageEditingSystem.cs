@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Web
     /// <summary>
     /// Contains status and commands to configure the in-page editing system. 
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public interface IInPageEditingSystem
     {
         /// <summary>

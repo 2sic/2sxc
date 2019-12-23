@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn
     /// <summary>
     /// This is a factory to create CmsBlocks, Apps etc. and related objects from DNN.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public static class Factory
     {
         /// <summary>

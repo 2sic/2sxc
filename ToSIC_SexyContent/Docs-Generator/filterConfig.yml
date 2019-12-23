@@ -8,6 +8,15 @@
     type: Member
     type: Method
     type: Property
+- include: 
+    uid: ToSic.Eav.Documentation.PublicApi_Stable_ForUseInYourCode
+    type: Type
+    type: Class
+    type: Interface
+    type: Namespace
+    type: Member
+    type: Method
+    type: Property
 - include:
     uid: ToSic.Eav.Documentation.InternalApi_DoNotUse_MayChangeWithoutNotice
     type: Type
@@ -59,6 +68,9 @@ apiRules:
 - include:
     hasAttribute: 
         uid: ToSic.Eav.Documentation.InternalApi_DoNotUse_MayChangeWithoutNotice
+- include:
+    hasAttribute: 
+        uid: ToSic.Eav.Documentation.PublicApi_Stable_ForUseInYourCode
 - exclude:
     uidRegex: ^ToSic
     type: Member

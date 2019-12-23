@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Engines
     /// <summary>
     /// The razor engine, which compiles / runs engine templates
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     [EngineDefinition(Name = "Razor")]
     // ReSharper disable once UnusedMember.Global
     public class RazorEngine : EngineBase

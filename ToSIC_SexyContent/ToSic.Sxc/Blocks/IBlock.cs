@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Blocks
     /// <summary>
     /// A unit / block of output in a CMS. 
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public interface IBlock: IAppIdentity
     {
         [PrivateApi("should probably be factored out of this object, but not sure yet")]

@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Dnn
     /// The base class for Razor-Components in 2sxc 10+ <br/>
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public abstract partial class RazorComponent : RazorComponentBase, IRazorComponent
     {
 

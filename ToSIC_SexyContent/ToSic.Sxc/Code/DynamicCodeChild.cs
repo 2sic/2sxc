@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Code
     /// This is a base class for dynamic code which is compiled at runtime. <br/>
     /// It delegates all properties like App and methods like AsDynamic() to the parent item which initially caused it to be compiled.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public abstract class DynamicCode : IDynamicCode, IWrapper<IDynamicCode>
     {
         [PrivateApi] public int CompatibilityLevel => UnwrappedContents?.CompatibilityLevel ?? 9;

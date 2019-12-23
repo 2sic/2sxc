@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.DataSources
     /// <summary>
     /// Get DNN user profiles as <see cref="IEntity"/> objects of one or many users.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
 	[VisualQuery(
         GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
         Type = DataSourceType.Source, 

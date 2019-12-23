@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Engines
     /// - a template
     /// and using all that to produce an html-string for the browser. 
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public interface IEngine
     {
         /// <summary>
