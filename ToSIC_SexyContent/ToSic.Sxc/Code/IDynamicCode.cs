@@ -131,7 +131,7 @@ namespace ToSic.Sxc.Code
         /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
         /// If you provide null for the fallback, then you will get null back.
         /// </returns>
-        /// <remarks>Added in 2sxc 10.24.00</remarks>
+        /// <remarks>Added in 2sxc 10.22.00</remarks>
         dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson);
 
         #endregion 
