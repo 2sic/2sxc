@@ -2,12 +2,10 @@
 using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Helpers;
-using ToSic.SexyContent.Environment;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.WebApi;
 
@@ -55,7 +53,7 @@ namespace ToSic.Sxc.Dnn.WebApi
             base.Dispose(disposing);
         }
 
-
+        /// <inheritdoc />
         public ILog Log { get; }
 
         protected virtual string LogHistoryName { get; } = "web-api";

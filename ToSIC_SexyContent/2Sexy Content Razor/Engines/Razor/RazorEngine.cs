@@ -108,7 +108,7 @@ namespace ToSic.Sxc.Engines
             }
         }
 
-        private void InitHelpers(RazorComponentBase webPage, int compatibiltiy)
+        private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             webPage.Html = new Razor.HtmlHelper();
             // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Engines
 
             // deprecated 2019-11-28 2dm, it's also in the CmsBlock
             // webPage.Sexy = CmsBlock;
-            webPage.DynCode = new DnnDynamicCode(CmsBlock, compatibiltiy, Log);
+            webPage.DynCode = new DnnDynamicCode(CmsBlock, compatibility, Log);
 
         }
 

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
@@ -27,7 +26,7 @@ namespace ToSic.Sxc.Dnn
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     [SxcWebApiExceptionHandling]
-    public abstract partial class ApiController : DynamicApiController, IDynamicWebApi, IDynamicCodeBeforeV10
+    public abstract partial class ApiController : DynamicApiController, IDynamicWebApi
     {
         /// <inheritdoc />
         public new IDnnContext Dnn => base.Dnn;// DynCodeHelpers.Dnn;

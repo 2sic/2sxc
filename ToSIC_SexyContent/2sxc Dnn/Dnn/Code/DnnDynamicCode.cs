@@ -15,10 +15,11 @@ namespace ToSic.Sxc.Dnn.Code
         /// Standard constructor
         /// </summary>
         /// <param name="cmsBlock">The CMS Block which is used in this code.</param>
+        /// <param name="compatibility">compatibility level - changes behaviour if level 9 or 10</param>
         /// <param name="parentLog">parent logger for logging what's happening</param>
-        public DnnDynamicCode(ICmsBlock cmsBlock, int compatibility, ILog parentLog = null): base(cmsBlock, new DnnTenant(null), compatibility, parentLog)
+        public DnnDynamicCode(ICmsBlock cmsBlock, int compatibility, ILog parentLog = null)
+            : base(cmsBlock, new DnnTenant(null), compatibility, parentLog ?? cmsBlock?.Log)
         {
-            //CmsBlock = cmsBlock;
             // Init things than require module-info or similar, but not 2sxc
             var instance = cmsBlock?.Container;
             Dnn = new DnnContext(instance);

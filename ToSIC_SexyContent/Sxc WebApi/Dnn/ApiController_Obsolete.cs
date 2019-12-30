@@ -4,10 +4,11 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Compatibility;
 
 namespace ToSic.Sxc.Dnn
 {
-    public partial class ApiController
+    public partial class ApiController: IDynamicCodeBeforeV10
     {
         // Obsolete stuff - not supported any more in RazorPage10 - maybe re-activate to show helpfull error messages
 

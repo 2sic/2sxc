@@ -1,7 +1,6 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.WebApi;
 
