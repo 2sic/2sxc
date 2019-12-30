@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Dnn
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class RazorComponent : RazorComponentBase, IRazorComponent
+    public abstract partial class RazorComponent : RazorComponentBase, IRazorComponent, IHasLog
     {
 
         #region Link, Edit, Dnn, App, Data
@@ -133,5 +133,11 @@ namespace ToSic.Sxc.Dnn
 
         #endregion
 
+        #region IHasLog
+
+        /// <inheritdoc />
+        public ILog Log => DynCode.Log;
+
+        #endregion
     }
 }
