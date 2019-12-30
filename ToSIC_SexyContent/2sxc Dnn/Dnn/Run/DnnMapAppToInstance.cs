@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Dnn.Run
                 DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, null, Log);
             else
             {
-                var appName = Eav.Factory.GetAppsCache().Zones[zoneId].Apps[appId.Value];
+                var appName = /*Factory.GetAppsCache*/Eav.Apps.Apps.Cache.Zones[zoneId].Apps[appId.Value];
                 DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, appName, Log);
             }
 

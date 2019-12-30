@@ -60,7 +60,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             //var context = GetContext(CmsBlock, Log);
 
-            var appState = Factory.GetAppState(CmsBlock.App); // context.App.Data.Root.AppState; 
+            var appState = /*Factory.GetAppState*/Eav.Apps.Apps.Get(CmsBlock.App); // context.App.Data.Root.AppState; 
             var ct = appState.GetContentType(attributeSetName);
 
             var dataSource = CmsBlock.App.Data[ct.Name]; 

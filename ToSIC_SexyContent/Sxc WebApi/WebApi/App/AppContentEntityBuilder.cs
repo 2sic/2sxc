@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"create ent dic a#{appId}, type:{contentType}");
             // Retrieve content-type definition and check all the fields that this content-type has
-            var appState = Factory.GetAppState(appId);
+            var appState = Eav.Apps.Apps.Get(appId); // Factory.GetAppState(appId);
             //.Get(new AppIdentity(
             //var root = (AppRoot) DataSource.GetCache(DataSource.GetIdentity(null, appId));
             var listOfTypes = appState.GetContentType(contentType);
