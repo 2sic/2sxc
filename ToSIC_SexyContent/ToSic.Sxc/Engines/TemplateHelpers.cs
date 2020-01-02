@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
-using ToSic.SexyContent;
 using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Engines
@@ -26,8 +25,8 @@ namespace ToSic.Sxc.Engines
         public void EnsureTemplateFolderExists(string templateLocation)
         {
             var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
-                ? Path.Combine(HostingEnvironment.MapPath(Settings.PortalHostDirectory), Settings.AppsRootFolder) 
-                : HostingEnvironment.MapPath(App.Tenant.SxcPath);
+                ? Path.Combine(HostingEnvironment.MapPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder) 
+                : HostingEnvironment.MapPath(App.Tenant.SxcPath) ?? "";
             var sexyFolderPath = portalPath;
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);

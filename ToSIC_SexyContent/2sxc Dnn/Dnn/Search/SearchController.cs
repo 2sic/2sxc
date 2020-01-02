@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Search
             var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
 
             // Ensure cache builds up with correct primary language
-            var cache = /*Factory.GetAppsCache*/Eav.Apps.Apps.Cache;
+            var cache = /*Factory.GetAppsCache*/Eav.Apps.State.Cache;
             cache.Load(new AppIdentity(zoneId, appId.Value) , portalSettings.DefaultLanguage.ToLower());
             //var cache = Eav.Factory.Resolve<IRootCache>();
             //((RootCacheBase)cache).ZoneId = zoneId;

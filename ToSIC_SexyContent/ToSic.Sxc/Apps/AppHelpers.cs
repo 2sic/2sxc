@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Apps
         internal static int GetAppIdFromGuidName(int zoneId, string appName, bool alsoCheckFolderName = false)
         {
             // var baseCache = (RootCacheBase) DataSource.GetCache(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId);
-            var zones = /*Factory.GetAppsCache*/Eav.Apps.Apps.Zones;
+            var zones = /*Factory.GetAppsCache*/Eav.Apps.State.Zones;
             // ReSharper disable once UnusedVariable
             //var dummy = baseCache.CacheTimestamp;
 
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Apps
                 var nameLower = appName.ToLower();
                 foreach (var p in zones[zoneId].Apps)
                 {
-                    var mds = /*Factory.GetAppState*/Eav.Apps.Apps.Get(new AppIdentity(zoneId, p.Key)); // DataSource.GetMetaDataSource(zoneId, p.Key);
+                    var mds = /*Factory.GetAppState*/Eav.Apps.State.Get(new AppIdentity(zoneId, p.Key)); // DataSource.GetMetaDataSource(zoneId, p.Key);
                     var appMetaData = mds
                         .Get(SystemRuntime.MetadataType(Eav.Constants.AppAssignmentName), p.Key,
                             AppConstants.TypeAppConfig)

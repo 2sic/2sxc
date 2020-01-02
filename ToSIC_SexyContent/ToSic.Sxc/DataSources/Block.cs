@@ -28,7 +28,7 @@ namespace ToSic.Sxc.DataSources
         [Obsolete]
         [PrivateApi]
         public CacheWithGetContentType Cache 
-            => _cache ?? (_cache = new CacheWithGetContentType(/*Factory.GetAppState*/Eav.Apps.Apps.Get(this)));
+            => _cache ?? (_cache = new CacheWithGetContentType(/*Factory.GetAppState*/Eav.Apps.State.Get(this)));
         [Obsolete]
         private CacheWithGetContentType _cache;
 
