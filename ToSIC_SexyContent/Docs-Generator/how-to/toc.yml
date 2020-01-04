@@ -15,7 +15,8 @@
     - name: Assets
       topicUid: HowTo.Output.Assets
 
-- name: WebApi
+- name: WebApi and REST
+  topicUid: HowTo.WebApi.Intro
   href: webapi/toc.yml
 
 

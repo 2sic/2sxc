@@ -17,6 +17,7 @@ Here's a quick example of using the `Link` object in a Razor template:
     @item.Title 
 </a>
 ```
+
 This example creates a link to the current page, adding _either_ `?id=27` _or_ `/id/27`, depending on the DNN configuration. 
 
 ## How it works
@@ -39,10 +40,11 @@ This is new in 2sxc v9.5.1. It ensures that the url can be used for SPAs, as som
 ```
 
 ## Notes and Clarifications
-### Object and Interfaces
-The Edit-Object is of type `ToSic.SexyContent.Interfaces.ILinkHelper`.
+
+The Link-Object is of type [](xref:ToSic.Sxc.Web.ILinkHelper).
 
 ### Enforced Parameter Naming
+
 To promote long term API stability, we require all parameters to be [named](xref:HowTo.DynamicCode.NamedParameters) when used. This allows us to add further parameters later on, and the calls will still work.
 
 ```html
@@ -56,9 +58,6 @@ To promote long term API stability, we require all parameters to be [named](xref
 <!-- this won't work -->
 @Link.To("id=17")
 ```
-
-## Read also
-...
 
 ## Demo App and further links
 

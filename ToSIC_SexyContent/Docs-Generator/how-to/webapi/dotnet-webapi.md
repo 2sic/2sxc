@@ -1,6 +1,7 @@
 ---
 uid: HowTo.WebApi
 ---
+
 # ASP.net WebAPI in 2sxc
 
 You can create your own custom WebAPI in 2sxc to allow external systems to interact with your data.
@@ -18,7 +19,7 @@ _New in 2sxc 9.35+_: you can now also create `api` folders as _subfolders_ to ru
   `[app-folder]/[edition]/api/YourController.cs`
   access url: `[api-root]/app/auto/[edition]/api/[Your]`
 
-Read more about urls in the [WebApi](xref:HowTo.WebApis) docs.
+Read more about urls in the [WebApi](xref:HowTo.WebApi.Intro) docs.
 
 ## How to use
 A file named **DemoController.cs** could look like the following:
@@ -26,14 +27,13 @@ A file named **DemoController.cs** could look like the following:
 ```c#
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.WebApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 
-public class DemoController : SxcApiController
+public class DemoController : ToSic.Sxc.Dnn.ApiController
 {
       [HttpGet]
       [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
@@ -80,7 +80,7 @@ The `SxcApiController` provides various command / helpers to get you productiv. 
 
 ## Read also
 
-* [WebApi](xref:HowTo.WebApis)
+* [WebApi](xref:HowTo.WebApi.Intro)
 * [Concepts: Polymorphisms](xref:Specs.Cms.Polymorphism)
 
 ## History
