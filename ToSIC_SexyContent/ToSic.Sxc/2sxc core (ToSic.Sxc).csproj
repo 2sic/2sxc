@@ -197,7 +197,6 @@
     <Compile Include="Conversion\DataToDictionary.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Engines\SexyContentException.cs" />
-    <Compile Include="Code\SxcHelper.cs" />
     <Compile Include="Blocks\CmsBlock.cs" />
     <Compile Include="Blocks\CmsBlock_Render.cs" />
     <Compile Include="Blocks\CmsBlock_Template.cs" />

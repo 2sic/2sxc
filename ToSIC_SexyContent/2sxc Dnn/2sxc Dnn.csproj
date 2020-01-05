@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compatibility\Sxc\SxcHelper.cs" />
     <Compile Include="Dnn\DynamicCode.cs" />
     <Compile Include="Code\ErrorHelp.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource.cs" />
