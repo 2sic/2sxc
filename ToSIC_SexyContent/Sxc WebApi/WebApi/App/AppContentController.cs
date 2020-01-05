@@ -253,7 +253,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region helpers / initializers to prep the EAV and Serializer
 
-        private Eav.Serialization.EntitiesToDictionary InitEavAndSerializer(int appId)
+        private Eav.Conversion.EntitiesToDictionary InitEavAndSerializer(int appId)
         {
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)

@@ -2,13 +2,10 @@
 using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Persistence.File;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Plumbing.Booting;
@@ -18,7 +15,6 @@ using ToSic.Sxc.Adam;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Apps.ImportExport;
 using ToSic.Sxc.Conversion;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.LookUp;
@@ -77,7 +73,7 @@ namespace ToSic.SexyContent
         {
             Eav.Factory.ActivateNetCoreDi(sc =>
             {
-                sc.AddTransient<Eav.Serialization.EntitiesToDictionary, DataToDictionary>();
+                sc.AddTransient<Eav.Conversion.EntitiesToDictionary, DataToDictionary>();
                 sc.AddTransient<IValueConverter, DnnValueConverter>();
                 sc.AddTransient<IUser, DnnUser>();
 

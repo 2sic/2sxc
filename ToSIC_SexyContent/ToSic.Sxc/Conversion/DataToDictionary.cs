@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Conversion
     /// Mainly used for serialization scenarios, like in WebApis
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public class DataToDictionary: Eav.Serialization.EntitiesToDictionary, IDynamicEntityTo<IDictionary<string, object>>
+    public class DataToDictionary: Eav.Conversion.EntitiesToDictionary, IDynamicEntityTo<IDictionary<string, object>>
     {
         /// <summary>
         /// Determines if we should use edit-information
