@@ -109,8 +109,10 @@
     <Compile Include="Code\DynamicCodeRootWithObsolete.cs" />
     <Compile Include="Compatibility\CacheWithGetContentType.cs" />
     <Compile Include="Compatibility\InputTypes.cs" />
+    <Compile Include="Compatibility\OldContentBlockJsonSerialization.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Engines.InstancePurposes.cs" />
     <Compile Include="Compatibility\RemoveInV10\ToSic.SexyContent.Element.cs" />
+    <Compile Include="Conversion\IDynamicEntityTo_T.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacket.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacket.Statics.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacketBase.cs" />

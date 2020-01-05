@@ -1,25 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Conversion;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Conversion;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Interfaces;
 using IDynamicEntity = ToSic.Sxc.Data.IDynamicEntity;
 
 namespace ToSic.Sxc.Serializers
 {
-	public class Serializer: Eav.Serialization.EntitiesToDictionary
-	{
+    public class Serializer: Eav.Serialization.EntitiesToDictionary, IDynamicEntityTo<Dictionary<string, object>>
+    {
 		public ICmsBlock Cms { get; internal set; }
 
         /// <summary>
-        /// Standard constructor, important for Unity when opening this class in dependency-injection mode
+        /// Standard constructor, important for opening this class in dependency-injection
         /// </summary>
-	    public Serializer()
-        {
-	        
-	    }
+	    public Serializer() { }
 
 	    /// <summary>
 	    /// Common constructor, directly preparing it with 2sxc
@@ -35,17 +32,11 @@ namespace ToSic.Sxc.Serializers
 
         #region Prepare statements expecting dynamic objects - extending the EAV Prepare variations
 
-	    /// <summary>
-	    /// Return an object that represents an IDataStream, but is serializable
-	    /// </summary>
+	    /// <inheritdoc />
 	    public IEnumerable<Dictionary<string, object>> Prepare(IEnumerable<dynamic> dynamicList)
 	        => dynamicList.Select(c => GetDictionaryFromEntity(c.Entity) as Dictionary<string, object>).ToList();
 
-
-
-	    /// <summary>
-	    /// Return an object that represents an IDataStream, but is serializable
-	    /// </summary>
+        /// <inheritdoc />
 	    public Dictionary<string, object> Prepare(IDynamicEntity dynamicEntity)
 	        => GetDictionaryFromEntity(dynamicEntity.Entity);
         
@@ -66,58 +57,19 @@ namespace ToSic.Sxc.Serializers
 
         #region to enhance serializable IEntities with 2sxc specific infos
 
-        #region special "old" serializer which provides data in the older format
-        internal Dictionary<string, object> PrepareOldFormat(IEntity entity)
+        private void AddPresentation(IEntity entity, Dictionary<string, object> dictionary)
         {
-            // var ser = new Serializer(SxcInstance, _dimensions);
-            var dicNew = GetDictionaryFromEntity(entity);
-            var dicToSerialize = ConvertNewSerRelToOldSerRel(dicNew);
-
-            dicToSerialize.Add(Constants.JsonEntityIdNodeName, entity.EntityId);
-
-            return dicToSerialize;
-        }
-
-        internal Dictionary<string, object> ConvertNewSerRelToOldSerRel(Dictionary<string, object> dicNew)
-        {
-            // find all items which are of type List<SerializableRelationship>
-            // then convert to EntityId and EntityTitle to conform to "old" format
-            var dicToSerialize = new Dictionary<string, object>();
-            foreach (string key in dicNew.Keys)
-            {
-                var list = dicNew[key] as List<RelationshipReference>;
-                dicToSerialize.Add(key,
-                    list?.Select(p => new SerializableRelationshipOld() { EntityId = p.Id, EntityTitle = p.Title }).ToList() ??
-                    dicNew[key]);
-            }
-            return dicToSerialize;
-        }
-
-        // Helper to provide old interface with "EntityId" and "EntityTitle" instead of 
-        // "Id" and "Title"
-        public class SerializableRelationshipOld
-        {
-            public int? EntityId;
-            public object EntityTitle;
-        }
-
-        #endregion
-
-        internal void AddPresentation(IEntity entity, Dictionary<string, object> dictionary)
-	    {
             // Add full presentation object if it has one...because there we need more than just id/title
-	        if (entity is EntityInBlock && !dictionary.ContainsKey(ViewParts.Presentation))
-	        {
-	            var entityInGroup = (EntityInBlock) entity;
-	            if (entityInGroup.Presentation != null)
-	                dictionary.Add(ViewParts.Presentation, GetDictionaryFromEntity(entityInGroup.Presentation));//, language));
-	        }
-	    }
+            if (!(entity is EntityInBlock entityInGroup) || dictionary.ContainsKey(ViewParts.Presentation)) return;
 
-	    internal void AddEditInfo(IEntity entity, Dictionary<string, object> dictionary)
+            if (entityInGroup.Presentation != null)
+                dictionary.Add(ViewParts.Presentation, GetDictionaryFromEntity(entityInGroup.Presentation));
+        }
+
+	    private void AddEditInfo(IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add additional information in case we're in edit mode
-	        var userMayEdit = Cms?.UserMayEdit ?? false;// Factory.Resolve<IPermissions>().UserMayEditContent(Sxc?.InstanceInfo);
+	        var userMayEdit = Cms?.UserMayEdit ?? false;
 
 	        if (!userMayEdit) return;
 
@@ -125,9 +77,9 @@ namespace ToSic.Sxc.Serializers
 	        var title = entity.GetBestTitle(Languages);
 	        if (string.IsNullOrEmpty(title))
 	            title = "(no title)";
-	        dictionary.Add(Constants.JsonEntityEditNodeName, entity is IHasEditingData
+	        dictionary.Add(Constants.JsonEntityEditNodeName, entity is IHasEditingData entWithEditing
 	            ? (object) new {
-	                sortOrder = ((IHasEditingData) entity).SortOrder,
+	                sortOrder = entWithEditing.SortOrder,
 	                isPublished = entity.IsPublished,
 	            }
 	            : new {

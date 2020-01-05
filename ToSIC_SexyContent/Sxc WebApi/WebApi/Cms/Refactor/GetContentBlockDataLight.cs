@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using ToSic.Eav.DataSources;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Serializers;
+using ToSic.Sxc.Compatibility;
 
 namespace ToSic.Sxc.WebApi.Cms.Refactor
 {
@@ -11,7 +11,7 @@ namespace ToSic.Sxc.WebApi.Cms.Refactor
         private readonly ICmsBlock _sxci;
         // todo i18n in the client - probably just use a code, and use the json translation
         private string errorText =
-            "A module (contet-block) is trying to retrieve data from the server as JSON. If you see this message, it is because Data Publishing is not enabled on the appropriate view. Please enable it in the view settings. \\nThis is happening on the module {0}.";
+            "A module (content-block) is trying to retrieve data from the server as JSON. If you see this message, it is because Data Publishing is not enabled on the appropriate view. Please enable it in the view settings. \\nThis is happening on the module {0}.";
         public GetContentBlockDataLight(ICmsBlock cms)
         {
             _sxci = cms;
@@ -25,7 +25,8 @@ namespace ToSic.Sxc.WebApi.Cms.Refactor
         /// </summary>
         internal string GetJsonFromStreams(IDataSource source, string[] streamsToPublish)
         {
-            var ser = new Serializer(_sxci);
+            //var ser = new Serializer(_sxci);
+            var ser = new OldContentBlockJsonSerialization(_sxci);
 
             var y = streamsToPublish
                 .Where(k => source.Out.ContainsKey(k))
@@ -36,6 +37,7 @@ namespace ToSic.Sxc.WebApi.Cms.Refactor
 
             return JsonConvert.SerializeObject(y);
         }
+
 
 
     }
