@@ -1,10 +1,10 @@
-﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Conversion;
+﻿using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Compatibility.Sxc
 {
-    [PrivateApi("this is an internal API, not sure if location is final.")]
+    /// <summary>
+    /// This is for compatibility - old code had a Sxc.Serializer.Prepare code which should still work
+    /// </summary>
 	public class SxcHelper
 	{
 		public readonly ICmsBlock Cms;
@@ -13,8 +13,8 @@ namespace ToSic.Sxc.Code
 			Cms = cms;
 		}
 
-		private DataToDictionary _entityToDictionary;
-		public DataToDictionary Serializer 
-            => _entityToDictionary ?? (_entityToDictionary = new DataToDictionary(Cms?.UserMayEdit ?? false));
+		private OldDataToDictionaryWrapper _entityToDictionary;
+		public OldDataToDictionaryWrapper Serializer 
+            => _entityToDictionary ?? (_entityToDictionary = new OldDataToDictionaryWrapper(Cms?.UserMayEdit ?? false));
 	}
 }
