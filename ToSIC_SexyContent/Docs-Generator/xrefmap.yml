@@ -84,3 +84,6 @@ references:
 - uid: Tut.Linq.Home
   name: LINQ Tutorials
   href: https://2sxc.org/dnn-tutorials/en/razor/linq/home
+- uid: Tut.WebApi
+  name: Web API Tutorials
+  href: https://2sxc.org/dnn-tutorials/en/razor/webapi/home

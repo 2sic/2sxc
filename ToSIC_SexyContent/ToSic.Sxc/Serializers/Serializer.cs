@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Serializers;
+using ToSic.Eav.Serialization;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Interfaces;
@@ -9,7 +9,7 @@ using IDynamicEntity = ToSic.Sxc.Data.IDynamicEntity;
 
 namespace ToSic.Sxc.Serializers
 {
-	public class Serializer: Eav.Serializers.Serializer
+	public class Serializer: Eav.Serialization.Serializer
 	{
 		public ICmsBlock Cms { get; internal set; }
 

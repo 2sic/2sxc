@@ -48,7 +48,7 @@ public class DemoController : ToSic.Sxc.Dnn.ApiController
 }
 ```
 
-The custom controller **DemoController** must have the same name as the file and extends the **SxcApiController** controller. It has a method returning all items of the **MyData** data type. The method is decorated with several attributes:
+The custom controller **DemoController** must have the same name as the file and extends the **ApiController** controller. It has a method returning all items of the **MyData** data type. The method is decorated with several attributes:
 * [HttGet] defines that the method must be invoked with HTTP GET
 * [DnnModuleAuthorize(AccessLevel = ...)] defines the permission an invoker must have
 * [ValidateAntiForgeryToken] ensures that a security token from the cookies is validated before the mehod is invoked
@@ -64,9 +64,9 @@ return $http.get("app-api/Demo/Get").then(function (result) {
 
 The 2sxc4ng API ensures that the GET request is send to the correct url /DesktopModules/2sxc/API/app-api/Demo/Get. You can also read more about the jQuery [sxc Controller](xref:Specs.Js.Sxc) to use 2sxc-WebApis from jQuery pages.
 
-## Special Object / Commands in SxcApiController
+## Special Object / Commands in ApiController
 
-The `SxcApiController` provides various command / helpers to get you productiv. Most are the same as in a normal Razor view, but some are additional. Here are the main ones:
+The `ApiController` provides various command / helpers to get you productiv. Most are the same as in a normal Razor view, but some are additional. Here are the main ones:
 
 1. AsDynamic(...)
 1. AsEntity(...)
@@ -80,6 +80,7 @@ The `SxcApiController` provides various command / helpers to get you productiv. 
 
 ## Read also
 
+* [](xref:Tut.WebApi)
 * [WebApi](xref:HowTo.WebApi.Intro)
 * [Concepts: Polymorphisms](xref:Specs.Cms.Polymorphism)
 

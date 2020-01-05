@@ -108,7 +108,7 @@ namespace ToSic.Sxc.WebApi.App
             var permCheck = new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
                 throw exception;
-            return InitEavAndSerializer(appIdentity.AppId).Prepare(itm);
+            return InitEavAndSerializer(appIdentity.AppId).Convert(itm);
         }
 
         #endregion
@@ -208,7 +208,7 @@ namespace ToSic.Sxc.WebApi.App
             }
 
             currentApp.Data.Update(id.Value, cleanedNewItem, userName);
-            return InitEavAndSerializer(appIdentity.AppId).Prepare(currentApp.Data.List.One(id.Value));
+            return InitEavAndSerializer(appIdentity.AppId).Convert(currentApp.Data.List.One(id.Value));
         }
 
         #endregion
@@ -264,7 +264,7 @@ namespace ToSic.Sxc.WebApi.App
         #region helpers / initializers to prep the EAV and Serializer
 
         // 2018-04-18 2dm disabled init-serializer, don't think it's actually ever used!
-        private Eav.Serializers.Serializer InitEavAndSerializer(int appId)
+        private Eav.Serialization.Serializer InitEavAndSerializer(int appId)
         {
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
