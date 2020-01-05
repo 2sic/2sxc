@@ -77,7 +77,7 @@ namespace ToSic.SexyContent
         {
             Eav.Factory.ActivateNetCoreDi(sc =>
             {
-                sc.AddTransient<Eav.Serialization.Serializer, Serializer>();
+                sc.AddTransient<Eav.Serialization.EntitiesToDictionary, Serializer>();
                 sc.AddTransient<IValueConverter, DnnValueConverter>();
                 sc.AddTransient<IUser, DnnUser>();
 

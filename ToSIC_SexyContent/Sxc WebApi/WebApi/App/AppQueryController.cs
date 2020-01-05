@@ -72,8 +72,8 @@ namespace ToSic.Sxc.WebApi.App
             if (!(readExplicitlyAllowed || isAdmin))
                 throw HttpErr(HttpStatusCode.Unauthorized, "Request not allowed", $"Request not allowed. User does not have read permissions for query '{name}'");
             
-            var serializer = new Serializer(cms) { IncludeGuid = includeGuid };
-            return serializer.Prepare(query, stream?.Split(','));
+            var serializer = new Serializer(cms) { WithGuid = includeGuid };
+            return serializer.Convert(query, stream?.Split(','));
         }
 
         private static HttpResponseException HttpErr(HttpStatusCode status, string title, string msg)

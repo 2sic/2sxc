@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Conversion;
 using ToSic.Eav.Data;
-using ToSic.Eav.Serialization;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Interfaces;
@@ -9,7 +9,7 @@ using IDynamicEntity = ToSic.Sxc.Data.IDynamicEntity;
 
 namespace ToSic.Sxc.Serializers
 {
-	public class Serializer: Eav.Serialization.Serializer
+	public class Serializer: Eav.Serialization.EntitiesToDictionary
 	{
 		public ICmsBlock Cms { get; internal set; }
 
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Serializers
             var dicToSerialize = new Dictionary<string, object>();
             foreach (string key in dicNew.Keys)
             {
-                var list = dicNew[key] as List<SerializableRelationship>;
+                var list = dicNew[key] as List<RelationshipReference>;
                 dicToSerialize.Add(key,
                     list?.Select(p => new SerializableRelationshipOld() { EntityId = p.Id, EntityTitle = p.Title }).ToList() ??
                     dicNew[key]);

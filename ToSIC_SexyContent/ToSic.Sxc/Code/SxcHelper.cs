@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Code
 			Cms = cms;
 		}
 
-		private Serializer _serializer;
-		public Serializer Serializer => _serializer ?? (_serializer = new Serializer(Cms));
+		private Serializer _entityToDictionary;
+		public Serializer Serializer => _entityToDictionary ?? (_entityToDictionary = new Serializer(Cms));
 	}
 }

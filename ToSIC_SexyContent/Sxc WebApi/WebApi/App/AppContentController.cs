@@ -264,7 +264,7 @@ namespace ToSic.Sxc.WebApi.App
         #region helpers / initializers to prep the EAV and Serializer
 
         // 2018-04-18 2dm disabled init-serializer, don't think it's actually ever used!
-        private Eav.Serialization.Serializer InitEavAndSerializer(int appId)
+        private Eav.Serialization.EntitiesToDictionary InitEavAndSerializer(int appId)
         {
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
