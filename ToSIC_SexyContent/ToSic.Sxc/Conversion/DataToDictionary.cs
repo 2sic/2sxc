@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
@@ -39,7 +41,21 @@ namespace ToSic.Sxc.Conversion
 
 	    /// <inheritdoc />
 	    public IEnumerable<IDictionary<string, object>> Convert(IEnumerable<dynamic> dynamicList)
-	        => dynamicList.Select(c => GetDictionaryFromEntity(c.Entity) as Dictionary<string, object>).ToList();
+        {
+            if (dynamicList is IDataStream stream) return base.Convert(stream);
+
+            return dynamicList
+                .Select(c =>
+                {
+                    IEntity entity = null;
+                    if (c is IEntity) entity = c;
+                    else if (c is IDynamicEntity dynEnt) entity = dynEnt.Entity;
+                    if (entity == null)
+                        throw new Exception("tried to convert an item, but it was not a known Entity-type");
+                    return GetDictionaryFromEntity(entity);
+                })
+                .ToList();
+        }
 
         /// <inheritdoc />
 	    public IDictionary<string, object> Convert(IDynamicEntity dynamicEntity)

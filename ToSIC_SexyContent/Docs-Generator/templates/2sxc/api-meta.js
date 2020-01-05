@@ -43,6 +43,7 @@ exports.data = {
   "ToSic.Sxc.Apps": prioInternal,
   "ToSic.Sxc.Blocks": prioInternal,
   "ToSic.Sxc.Code": prioInternal,
+  "ToSic.Sxc.Conversion": prioInternal,
   "ToSic.Sxc.Data": prioWeb,
   "ToSic.Sxc.DataSources": prioData,
   "ToSic.Sxc.Dnn": prioWeb,
