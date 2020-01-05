@@ -11,12 +11,17 @@ using IDynamicEntity = ToSic.Sxc.Data.IDynamicEntity;
 
 namespace ToSic.Sxc.Conversion
 {
+    /// <summary>
+    /// Convert various types of entities (standalone, dynamic, in streams, etc.) to Dictionaries <br/>
+    /// Mainly used for serialization scenarios, like in WebApis
+    /// </summary>
+    [PublicApi_Stable_ForUseInYourCode]
     public class DataToDictionary: Eav.Serialization.EntitiesToDictionary, IDynamicEntityTo<IDictionary<string, object>>
     {
         /// <summary>
         /// Determines if we should use edit-information
         /// </summary>
-        public bool WithEdit { get; set; }
+        public bool WithEdit { get; internal set; }
 
         /// <summary>
         /// Standard constructor, important for opening this class in dependency-injection
