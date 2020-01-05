@@ -17,6 +17,7 @@ using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Apps.ImportExport;
+using ToSic.Sxc.Conversion;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Install;
@@ -24,7 +25,6 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Interfaces;
-using ToSic.Sxc.Serializers;
 
 namespace ToSic.SexyContent
 {
@@ -77,7 +77,7 @@ namespace ToSic.SexyContent
         {
             Eav.Factory.ActivateNetCoreDi(sc =>
             {
-                sc.AddTransient<Eav.Serialization.EntitiesToDictionary, Serializer>();
+                sc.AddTransient<Eav.Serialization.EntitiesToDictionary, DataToDictionary>();
                 sc.AddTransient<IValueConverter, DnnValueConverter>();
                 sc.AddTransient<IUser, DnnUser>();
 

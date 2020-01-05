@@ -40,9 +40,11 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public IDnnContext Dnn => DynCode.Dnn;
 
-        /// <inheritdoc />
-        [PrivateApi("todo: try to remove thi")]
-        public SxcHelper Sxc => DynCode.Sxc;
+        ///// <inheritdoc />
+        //[PrivateApi("todo: try to remove thi")]
+        //public SxcHelper Sxc => DynCode.Sxc;
+
+        [PrivateApi] public ICmsBlock CmsBlock => throw new NotSupportedException("don't use this");
 
         [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 

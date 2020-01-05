@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Conversion;
 using ToSic.Eav.Data;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Conversion;
 
 namespace ToSic.Sxc.Compatibility
 {
     [Obsolete]
-    public class OldContentBlockJsonSerialization: Serializers.Serializer
+    public class OldContentBlockJsonSerialization: DataToDictionary
     {
-        public OldContentBlockJsonSerialization(ICmsBlock cmsInstance): base(cmsInstance)
+        public OldContentBlockJsonSerialization(bool withEdit): base(withEdit)
         { }
 
         internal Dictionary<string, object> PrepareOldFormat(IEntity entity)

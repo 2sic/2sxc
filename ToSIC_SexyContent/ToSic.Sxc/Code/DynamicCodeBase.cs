@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using ToSic.Eav;
@@ -8,7 +7,6 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
-using ToSic.SexyContent;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
@@ -33,7 +31,7 @@ namespace ToSic.Sxc.Code
     public abstract class DynamicCodeRoot : HasLog, IDynamicCode
     {
         [PrivateApi]
-        protected internal readonly ICmsBlock CmsBlock;
+        public ICmsBlock CmsBlock { get; }
 
         private readonly ITenant _tenant;
         [PrivateApi]
@@ -47,7 +45,7 @@ namespace ToSic.Sxc.Code
             CompatibilityLevel = compatibility;
             App = cmsBlock.App;
             Data = cmsBlock.Block.Data;
-			Sxc = new SxcHelper(cmsBlock);
+			//Sxc = new SxcHelper(cmsBlock);
             Edit = new InPageEditingHelper(cmsBlock, Log);
         }
 
@@ -63,8 +61,8 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public IBlockDataSource Data { get; }
 
-        [PrivateApi]
-		public SxcHelper Sxc { get; }
+  //      [PrivateApi]
+		//public SxcHelper Sxc { get; }
 
         /// <inheritdoc />
         public ILinkHelper Link { get; protected set; }

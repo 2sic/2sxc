@@ -8,20 +8,16 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
-using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Conversion;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Security;
-using ToSic.Sxc.Serializers;
 using ToSic.Sxc.WebApi.Cms.Refactor;
 using Factory = ToSic.Eav.Factory;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -196,10 +192,7 @@ namespace ToSic.Sxc.WebApi.App
             var currentApp = new Apps.App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId, 
                 ConfigurationProvider.Build(false, publish.IsEnabled(ActiveModule.ModuleID),
                     CmsBlock.Block.Data.Configuration.LookUps), true, Log);
-            // 2018-09-22 old
-            //currentApp.InitData(false, 
-            //    publish.IsEnabled(ActiveModule.ModuleID), 
-            //    SxcBlock.Data.ConfigurationProvider);
+
             if (id == null)
             {
                 currentApp.Data.Create(contentType, cleanedNewItem, userName);
@@ -233,9 +226,6 @@ namespace ToSic.Sxc.WebApi.App
             var permCheck = new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log);
             if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var exception))
                 throw exception;
-            //2018-09-15 2dm moved/disabled
-            //var context = GetContext(SxcBlock, Log);
-            //PerformSecurityCheck(appIdentity, itm.Type.Name, Grants.Delete, appPath == null ? context.Dnn.Module : null, itm);
             new EntityApi(appIdentity.AppId, Log).Delete(itm.Type.Name, id);
         }
 
@@ -263,13 +253,12 @@ namespace ToSic.Sxc.WebApi.App
 
         #region helpers / initializers to prep the EAV and Serializer
 
-        // 2018-04-18 2dm disabled init-serializer, don't think it's actually ever used!
         private Eav.Serialization.EntitiesToDictionary InitEavAndSerializer(int appId)
         {
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             var ser = Eav.WebApi.Helpers.Serializers.GetSerializerWithGuidEnabled();
-            ((Serializer)ser).Cms = CmsBlock;
+            ((DataToDictionary)ser).WithEdit = CmsBlock?.UserMayEdit ?? false;
             return ser;
         }
         #endregion

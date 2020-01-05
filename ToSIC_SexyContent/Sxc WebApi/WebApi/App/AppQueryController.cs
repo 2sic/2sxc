@@ -9,10 +9,10 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Conversion;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.Serializers;
 
 namespace ToSic.Sxc.WebApi.App
 {
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.WebApi.App
             if (!(readExplicitlyAllowed || isAdmin))
                 throw HttpErr(HttpStatusCode.Unauthorized, "Request not allowed", $"Request not allowed. User does not have read permissions for query '{name}'");
             
-            var serializer = new Serializer(cms) { WithGuid = includeGuid };
+            var serializer = new DataToDictionary(cms?.UserMayEdit ?? false) { WithGuid = includeGuid };
             return serializer.Convert(query, stream?.Split(','));
         }
 

@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Cms.Refactor
         internal string GetJsonFromStreams(IDataSource source, string[] streamsToPublish)
         {
             //var ser = new Serializer(_sxci);
-            var ser = new OldContentBlockJsonSerialization(_sxci);
+            var ser = new OldContentBlockJsonSerialization(_sxci.UserMayEdit);
 
             var y = streamsToPublish
                 .Where(k => source.Out.ContainsKey(k))

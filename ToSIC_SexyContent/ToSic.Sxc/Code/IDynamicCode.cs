@@ -4,6 +4,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
@@ -25,8 +26,11 @@ namespace ToSic.Sxc.Code
 #pragma warning restore 618
     {
         #region internal/obsolete but still needed, not public!
-        [PrivateApi("will be removed soon")]
-        SxcHelper Sxc { get; }
+        //[PrivateApi("will be removed soon")]
+        //SxcHelper Sxc { get; }
+
+        [PrivateApi("will be moved/removed/renamed")]
+        ICmsBlock CmsBlock { get; }
 
         //[PrivateApi]
         //IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);

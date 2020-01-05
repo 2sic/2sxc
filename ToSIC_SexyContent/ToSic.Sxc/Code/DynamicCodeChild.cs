@@ -5,6 +5,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
@@ -26,9 +27,11 @@ namespace ToSic.Sxc.Code
         public IApp App => UnwrappedContents?.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => Sxc?.Cms?.Block.Data;
-        [PrivateApi]
-        public SxcHelper Sxc { get; private set; }
+        public IBlockDataSource Data => UnwrappedContents?.CmsBlock?.Block?.Data; // Sxc?.Cms?.Block.Data;
+        //[PrivateApi]
+        //public SxcHelper Sxc { get; private set; }
+
+        [PrivateApi] public ICmsBlock CmsBlock => UnwrappedContents?.CmsBlock;
 
         /// <inheritdoc />
         /// <remarks>
@@ -40,7 +43,7 @@ namespace ToSic.Sxc.Code
         internal virtual void InitShared(IDynamicCode parent)
         {
             UnwrappedContents = parent;
-            Sxc = parent.Sxc;
+            //Sxc = parent.Sxc;
         }
 
         #region Content and Header

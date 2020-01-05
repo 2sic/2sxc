@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Serializers;
+using ToSic.Sxc.Conversion;
 
 namespace ToSic.Sxc.Code
 {
@@ -13,7 +13,8 @@ namespace ToSic.Sxc.Code
 			Cms = cms;
 		}
 
-		private Serializer _entityToDictionary;
-		public Serializer Serializer => _entityToDictionary ?? (_entityToDictionary = new Serializer(Cms));
+		private DataToDictionary _entityToDictionary;
+		public DataToDictionary Serializer 
+            => _entityToDictionary ?? (_entityToDictionary = new DataToDictionary(Cms?.UserMayEdit ?? false));
 	}
 }

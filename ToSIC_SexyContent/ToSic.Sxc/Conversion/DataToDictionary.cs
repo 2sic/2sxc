@@ -1,43 +1,48 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Conversion;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Interfaces;
 using IDynamicEntity = ToSic.Sxc.Data.IDynamicEntity;
 
-namespace ToSic.Sxc.Serializers
+namespace ToSic.Sxc.Conversion
 {
-    public class Serializer: Eav.Serialization.EntitiesToDictionary, IDynamicEntityTo<Dictionary<string, object>>
+    public class DataToDictionary: Eav.Serialization.EntitiesToDictionary, IDynamicEntityTo<IDictionary<string, object>>
     {
-		public ICmsBlock Cms { get; internal set; }
+        /// <summary>
+        /// Determines if we should use edit-information
+        /// </summary>
+        public bool WithEdit { get; set; }
 
         /// <summary>
         /// Standard constructor, important for opening this class in dependency-injection
         /// </summary>
-	    public Serializer() { }
+        [PrivateApi]
+	    public DataToDictionary() { }
 
-	    /// <summary>
-	    /// Common constructor, directly preparing it with 2sxc
-	    /// </summary>
-	    /// <param name="cmsInstance"></param>
-	    /// <param name="languages"></param>
-	    public Serializer(ICmsBlock cmsInstance, string[] languages = null)
+        /// <summary>
+        /// Common constructor, directly preparing it with 2sxc
+        /// </summary>
+        /// <param name="withEdit">Include editing information in serialized result</param>
+        ///// <param name="languages"></param>
+	    public DataToDictionary(bool withEdit)
         {
-            Cms = cmsInstance;
-            Languages = languages;
+            //Cms = cmsInstance;
+            WithEdit = withEdit;
+            //Languages = languages;
         }
 
 
-        #region Prepare statements expecting dynamic objects - extending the EAV Prepare variations
+        #region Convert statements expecting dynamic objects - extending the EAV Prepare variations
 
 	    /// <inheritdoc />
-	    public IEnumerable<Dictionary<string, object>> Prepare(IEnumerable<dynamic> dynamicList)
+	    public IEnumerable<IDictionary<string, object>> Convert(IEnumerable<dynamic> dynamicList)
 	        => dynamicList.Select(c => GetDictionaryFromEntity(c.Entity) as Dictionary<string, object>).ToList();
 
         /// <inheritdoc />
-	    public Dictionary<string, object> Prepare(IDynamicEntity dynamicEntity)
+	    public IDictionary<string, object> Convert(IDynamicEntity dynamicEntity)
 	        => GetDictionaryFromEntity(dynamicEntity.Entity);
         
         #endregion
@@ -69,7 +74,7 @@ namespace ToSic.Sxc.Serializers
 	    private void AddEditInfo(IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add additional information in case we're in edit mode
-	        var userMayEdit = Cms?.UserMayEdit ?? false;
+            var userMayEdit = WithEdit;// Cms?.UserMayEdit ?? false;
 
 	        if (!userMayEdit) return;
 

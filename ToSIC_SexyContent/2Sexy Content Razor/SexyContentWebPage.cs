@@ -20,6 +20,7 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
+using CmsBlock = ToSic.Sxc.Blocks.CmsBlock;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -55,7 +56,10 @@ namespace ToSic.SexyContent.Razor
 
         /// <inheritdoc />
         [PrivateApi("try to remove")]
-        public SxcHelper Sxc => DynCode.Sxc;
+        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(DynCode.CmsBlock));
+        private SxcHelper _sxc;
+
+        [PrivateApi] public ICmsBlock CmsBlock => DynCode.CmsBlock;
 
         [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 

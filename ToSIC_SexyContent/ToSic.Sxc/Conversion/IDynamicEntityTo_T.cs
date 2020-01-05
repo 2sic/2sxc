@@ -8,11 +8,11 @@ namespace ToSic.Sxc.Conversion
         /// <summary>
         /// Return a converted list of dynamic objects
         /// </summary>
-        IEnumerable<T> Prepare(IEnumerable<object> dynamicList);
+        IEnumerable<T> Convert(IEnumerable<object> dynamicList);
 
         /// <summary>
         /// Return a converted dynamic Entity
         /// </summary>
-        T Prepare(IDynamicEntity dynamicEntity);
+        T Convert(IDynamicEntity dynamicEntity);
     }
 }

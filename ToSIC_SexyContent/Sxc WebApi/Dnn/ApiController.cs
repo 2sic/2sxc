@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Code;
@@ -32,7 +31,7 @@ namespace ToSic.Sxc.Dnn
         public new IDnnContext Dnn => base.Dnn;// DynCodeHelpers.Dnn;
 
         [PrivateApi("try to remove")]
-        public SxcHelper Sxc => DynCode.Sxc;
+        //public SxcHelper Sxc => DynCode.Sxc;
 
         [PrivateApi]
         public int CompatibilityLevel => DynCode.CompatibilityLevel;
