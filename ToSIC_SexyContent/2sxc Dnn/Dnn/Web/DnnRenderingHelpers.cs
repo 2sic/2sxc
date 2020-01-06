@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.UI;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using Newtonsoft.Json;
@@ -98,7 +99,11 @@ namespace ToSic.Sxc.Dnn.Web
             if (editCss) RegisterCss(page, root + "dist/inpage/inpage.min.css");
 
             // add read-js
-            if(readJs|| editJs) RegisterJs(page, ver, root + "js/2sxc.api" + ext);
+            if (readJs || editJs)
+            {
+                RegisterJs(page, ver, root + "js/2sxc.api" + ext);
+                JavaScript.RequestRegistration(CommonJs.jQuery);
+            }
 
             // add edit-js (commands, manage, etc.)
             if (editJs) RegisterJs(page, ver, root + "dist/inpage/inpage.min.js");
