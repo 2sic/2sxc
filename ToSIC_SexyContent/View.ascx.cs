@@ -10,9 +10,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
@@ -47,7 +45,10 @@ namespace ToSic.SexyContent
         protected void Page_Load(object sender, EventArgs e)
         {
             // always do this, part of the guarantee that everything will work
-            ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+            // 2020-01-06 2sxc 10.25 - moved away to DnnRenderingHelpers
+            // to only load when we're actually activating the JS.
+            // might be a breaking change for some code that "just worked" before
+            // ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             History.Add("module", Log);
         }
 
@@ -133,6 +134,11 @@ namespace ToSic.SexyContent
         /// </summary>
         private void RegisterResources()
         {
+            // new in 10.25 - by default jQuery isn't loaded!
+            var jQuery = CmsBlock?.TemporaryWorkaroundForCompatibilityAddJQuery ?? true;
+            if(jQuery) ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+
+            // normal scripts
             var editJs = CmsBlock?.UiAddEditApi ?? false;
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             var readJs = CmsBlock?.UiAddJsApi ?? editJs;

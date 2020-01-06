@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.UI;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using DotNetNuke.Framework;
 using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Client.ClientResourceManagement;
@@ -103,6 +104,8 @@ namespace ToSic.Sxc.Dnn.Web
             {
                 RegisterJs(page, ver, root + "js/2sxc.api" + ext);
                 JavaScript.RequestRegistration(CommonJs.jQuery);
+                // 2020-01-06 2sxc 10.25 - moved to here, might be a breaking change!
+                ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
 
             // add edit-js (commands, manage, etc.)

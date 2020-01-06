@@ -14,6 +14,7 @@ using ToSic.Eav.Run;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
@@ -118,6 +119,11 @@ namespace ToSic.Sxc.Engines
             // deprecated 2019-11-28 2dm, it's also in the CmsBlock
             // webPage.Sexy = CmsBlock;
             webPage.DynCode = new DnnDynamicCode(CmsBlock, compatibility, Log);
+
+            #region New in 10.25 - ensure jquery is not included by default
+            if (compatibility == 10 && CmsBlock is CmsBlock block)
+                block.TemporaryWorkaroundForCompatibilityAddJQuery = false;
+            #endregion
 
         }
 
