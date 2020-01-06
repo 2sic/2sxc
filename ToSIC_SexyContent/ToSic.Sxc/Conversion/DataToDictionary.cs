@@ -69,8 +69,8 @@ namespace ToSic.Sxc.Conversion
         #endregion
 
 
-
-        public override Dictionary<string, object> GetDictionaryFromEntity(IEntity entity)
+        [PrivateApi]
+        protected override Dictionary<string, object> GetDictionaryFromEntity(IEntity entity)
 		{
             // Do groundwork
             var dictionary = base.GetDictionaryFromEntity(entity);

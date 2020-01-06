@@ -35,16 +35,14 @@ using System.Web.Http;
 
 public class DemoController : ToSic.Sxc.Dnn.ApiController
 {
-      [HttpGet]
-      [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
-      [ValidateAntiForgeryToken]
-      public object Get()
-      {
-            return new
-            {
-                  Data = Sxc.Serializer.Prepare(App.Data["MyData"].List)
-            };
-      }
+  [HttpGet]
+  [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+  [ValidateAntiForgeryToken]
+  public object Get()
+  {
+    return new ToSic.Sxc.Conversion.DataToDictionary(Edit.Enabled)
+      .Convert(App.Data["MyData"]);
+  }
 }
 ```
 
@@ -54,15 +52,32 @@ The custom controller **DemoController** must have the same name as the file and
 * [ValidateAntiForgeryToken] ensures that a security token from the cookies is validated before the mehod is invoked
 You can implement any other methods.
 
-The custom controller can be called with JavaScript and the 2sxc4ng API like this:
+The custom controller can be called with JavaScript like this:
 
-```JavaScript
-return $http.get("app-api/Demo/Get").then(function (result) {
-      return results.data.Data;
-});
+```html
+<!-- this ensures the $2sxc scripts are loaded -->
+@Edit.Enable(js: true)
+
+<!-- the button which loads everything -->
+<button type="button" class="btn btn-primary" onclick="getPersons(this)">
+  Get Persons Custom
+</button> 
+<script>
+  // this script does the API call and then shows the result
+  function getPersons(moduleContext) {
+    $2sxc(moduleContext)
+      .webApi.get('app/auto/api/books/persons')
+      .then(function (results) {
+        alert('Found ' + results.length + ' persons. \n'
+          + 'The first one is "' + results[0].FirstName + ' ' + results[0].LastName + '"\n\n'
+          + 'The raw JSON: \n' + JSON.stringify(results)
+        );
+      });
+  }
+</script>
 ```
 
-The 2sxc4ng API ensures that the GET request is send to the correct url /DesktopModules/2sxc/API/app-api/Demo/Get. You can also read more about the jQuery [sxc Controller](xref:Specs.Js.Sxc) to use 2sxc-WebApis from jQuery pages.
+The $2sxc API ensures that the GET request is send to the correct url /DesktopModules/2sxc/API/app-api/Demo/Get. You can also read more about the [sxc Controller](xref:Specs.Js.Sxc).
 
 ## Special Object / Commands in ApiController
 
