@@ -22,7 +22,7 @@ _New in 2sxc 9.35+_: you can now also create `api` folders as _subfolders_ to ru
 Read more about urls in the [WebApi](xref:HowTo.WebApi.Intro) docs.
 
 ## How to use
-A file named **DemoController.cs** could look like the following:
+A file named **BooksController.cs** could look like the following:
 
 ```c#
 using DotNetNuke.Security;
@@ -33,20 +33,20 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 
-public class DemoController : ToSic.Sxc.Dnn.ApiController
+public class BooksController : ToSic.Sxc.Dnn.ApiController
 {
   [HttpGet]
   [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
   [ValidateAntiForgeryToken]
-  public object Get()
+  public object Persons()
   {
     return new ToSic.Sxc.Conversion.DataToDictionary(Edit.Enabled)
-      .Convert(App.Data["MyData"]);
+      .Convert(App.Data["Persons"]);
   }
 }
 ```
 
-The custom controller **DemoController** must have the same name as the file and extends the **ApiController** controller. It has a method returning all items of the **MyData** data type. The method is decorated with several attributes:
+The custom controller **BooksController** must have the same name as the file and extends the **ApiController** controller. It has a method returning all items of the **Persons** data type. The method is decorated with several attributes:
 * [HttGet] defines that the method must be invoked with HTTP GET
 * [DnnModuleAuthorize(AccessLevel = ...)] defines the permission an invoker must have
 * [ValidateAntiForgeryToken] ensures that a security token from the cookies is validated before the mehod is invoked
