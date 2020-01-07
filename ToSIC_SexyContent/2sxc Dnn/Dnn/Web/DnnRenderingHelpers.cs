@@ -105,12 +105,15 @@ namespace ToSic.Sxc.Dnn.Web
                 JavaScript.RequestRegistration(CommonJs.jQuery);
                 // 2020-01-06 2sxc 10.25 - moved to here, might be a breaking change!
                 Eav.Factory.Resolve<DnnApiSupport>().AddHeaders();
-                // new DnnApiSupport().AddHeaders();
-                ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
 
             // add edit-js (commands, manage, etc.)
-            if (editJs) RegisterJs(page, ver, root + "dist/inpage/inpage.min.js");
+            if (editJs)
+            {
+                RegisterJs(page, ver, root + "dist/inpage/inpage.min.js");
+                // request full $services and jQuery etc.
+                ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+            }
         }
 
 
