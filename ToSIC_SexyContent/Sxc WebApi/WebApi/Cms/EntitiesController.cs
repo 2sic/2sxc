@@ -151,6 +151,10 @@ namespace ToSic.Sxc.WebApi.Cms
 	        var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentType, Log);
 	        if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
 	            throw exception;
+
+            // v10.25 - now that Content can manage settings and resources, we must be sure that they actually exist
+            // this is checked here, because often it won't exist yet...
+
             return new EntityApi(appId, Log).GetEntitiesForAdmin(contentType);
 	    }
 
