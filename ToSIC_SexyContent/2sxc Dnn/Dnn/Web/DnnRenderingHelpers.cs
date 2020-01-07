@@ -102,7 +102,6 @@ namespace ToSic.Sxc.Dnn.Web
             if (readJs || editJs)
             {
                 RegisterJs(page, ver, root + "js/2sxc.api" + ext);
-                JavaScript.RequestRegistration(CommonJs.jQuery);
                 // 2020-01-06 2sxc 10.25 - moved to here, might be a breaking change!
                 Eav.Factory.Resolve<DnnApiSupport>().AddHeaders();
             }
@@ -112,6 +111,7 @@ namespace ToSic.Sxc.Dnn.Web
             {
                 RegisterJs(page, ver, root + "dist/inpage/inpage.min.js");
                 // request full $services and jQuery etc.
+                JavaScript.RequestRegistration(CommonJs.jQuery);
                 ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
         }
