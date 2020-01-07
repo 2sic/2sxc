@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnRenderingHelpers : IHasLog, IRenderingHelpers
     {
-        private Sxc.Blocks.ICmsBlock _cmsInstance;
+        private Blocks.ICmsBlock _cmsInstance;
         private PortalSettings _portalSettings;
         private UserInfo _userInfo;
         private string _applicationRoot;
@@ -29,9 +29,9 @@ namespace ToSic.Sxc.Dnn.Web
         // Blank constructor for IoC
         public DnnRenderingHelpers() { }
 
-        public DnnRenderingHelpers(Sxc.Blocks.ICmsBlock cms, ILog parentLog) => Init(cms, parentLog);
+        public DnnRenderingHelpers(Blocks.ICmsBlock cms, ILog parentLog) => Init(cms, parentLog);
 
-        public IRenderingHelpers Init(Sxc.Blocks.ICmsBlock cms, ILog parentLog)
+        public IRenderingHelpers Init(Blocks.ICmsBlock cms, ILog parentLog)
         {
             this.LinkLog(parentLog);
             var appRoot = VirtualPathUtility.ToAbsolute("~/");
@@ -92,8 +92,7 @@ namespace ToSic.Sxc.Dnn.Web
             Log.Add("will auto-register client dependencies (js/css");
             var root = "~/desktopmodules/tosic_sexycontent/";
             root = page.ResolveUrl(root);
-            //var breakCache = "?sxcver=" + Settings.Version;
-            var ext = IsDebugUrl(page.Request) ? ".min.js" : ".js";// + breakCache;
+            var ext = IsDebugUrl(page.Request) ? ".min.js" : ".js";
             var ver = Settings.Version.ToString();
 
             // add edit-mode CSS
@@ -105,12 +104,15 @@ namespace ToSic.Sxc.Dnn.Web
                 RegisterJs(page, ver, root + "js/2sxc.api" + ext);
                 JavaScript.RequestRegistration(CommonJs.jQuery);
                 // 2020-01-06 2sxc 10.25 - moved to here, might be a breaking change!
+                Eav.Factory.Resolve<DnnApiSupport>().AddHeaders();
+                // new DnnApiSupport().AddHeaders();
                 ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
 
             // add edit-js (commands, manage, etc.)
             if (editJs) RegisterJs(page, ver, root + "dist/inpage/inpage.min.js");
         }
+
 
         #region add scripts / css with bypassing the official ClientResourceManager
 

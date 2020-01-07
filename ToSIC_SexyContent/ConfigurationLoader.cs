@@ -107,7 +107,6 @@ namespace ToSic.SexyContent
                     catch {  /* ignore */ }
                 }
 
-
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);
             });
         }

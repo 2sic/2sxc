@@ -15,6 +15,9 @@ namespace ToSic.Sxc.Dnn940
     {
         public void RegisterRoutes(IMapRoute mapRouteManager)
         {
+            // todo: 2020-01-07 probably replace the version check with this:
+            // DotNetNukeContext.Current.Application.Version
+
             // override the DNN 9.4 activator to activate it both the DNN way and the 2sxc way
             var dnnVersion = typeof(DotNetNuke.Common.Globals).GetTypeInfo()
                 .Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
