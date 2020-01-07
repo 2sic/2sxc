@@ -661,7 +661,7 @@ var Stats = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Environment; });
 var extensionPlaceholder = '{extension}';
-var maxRetries = 5;
+var maxRetries = 3;
 var Environment = (function () {
     function Environment() {
         this.ready = false;
@@ -685,10 +685,25 @@ var Environment = (function () {
             if (this.retries < maxRetries)
                 setTimeout(function () { _this.loadMetaFromHeader(); }, 0);
             else
-                console.warn("Tried to load _jsApi header values but failed despite " + maxRetries + 'attempts.');
+                this.fallbackToDnnSf();
             return;
         }
         this.load(JSON.parse(meta));
+    };
+    Environment.prototype.fallbackToDnnSf = function () {
+        if (typeof $ === 'undefined')
+            throw "Can't load pageid, moduleid, etc. and $ is not available.";
+        var sf = $.ServicesFramework;
+        if (typeof sf === 'undefined')
+            throw "can't load pageid, moduleid etc. and DNN Services Framework is not available.";
+        var dnnSf = sf(0);
+        var sfJsInfo = {
+            page: dnnSf.getTabId(),
+            root: 'unknown',
+            api: dnnSf.getServiceRoot('2sxc'),
+            rvt: dnnSf.getAntiForgeryValue()
+        };
+        this.load(sfJsInfo);
     };
     Environment.prototype.apiRoot = function (name) {
         if (!this.ready)

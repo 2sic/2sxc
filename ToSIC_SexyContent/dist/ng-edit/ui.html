@@ -18,19 +18,24 @@
       }
     })();
   </script>
+  <script>
+    // create an empty _jsApi so $2sxc can initialize - must fill afterwards!
+    window._jsApi = {};
+  </script>
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <!-- first load the main 2sxc because it contains some url-param methods -->
-  <script src="../../js/2sxc.api.min.js?sxcver=10.24.00.70314"></script>
+  <script src="../../js/2sxc.api.min.js?sxcver=10.25.00.25797"></script>
 
   <script>
     // the version to append to each asset, to ensure reload after an upgrade
-    var sxcVersion = "10.24.00.70314";
+    var sxcVersion = "10.25.00.25797";
 
     var apiUrl = reqParam("portalroot") + "desktopmodules/2sxc/api/";
     createFakeSf(apiUrl);
+    loadEnvironment();
 
     /**
      * first check in local storage if we have this parameter
@@ -69,17 +74,28 @@
         }
       }
     }
+
+    // New initializer for 10.25
+    function loadEnvironment() {
+      var jsApi = {
+          page: $2sxc.urlParams.require("tid"),
+          rvt: $2sxc.urlParams.require("rvt"),
+          root: $2sxc.urlParams.require("portalroot"),
+          api: $2sxc.urlParams.require("portalroot") + "desktopmodules/2sxc/api/"
+      }
+      $2sxc.env.load(jsApi);
+    }
   </script>
 </head>
 
 <body style="background-color:transparent">
   <app-root></app-root>
-  <script type="text/javascript" src="runtime.js?sxcver=10.24.00.70314"></script>
-  <script type="text/javascript" src="polyfills.js?sxcver=10.24.00.70314"></script>
-  <script type="text/javascript" src="styles.js?sxcver=10.24.00.70314"></script>
-  <script type="text/javascript" src="scripts.js?sxcver=10.24.00.70314"></script>
-  <script type="text/javascript" src="vendor.js?sxcver=10.24.00.70314"></script>
-  <script type="text/javascript" src="main.js?sxcver=10.24.00.70314"></script>
+  <script type="text/javascript" src="runtime.js?sxcver=10.25.00.25797"></script>
+  <script type="text/javascript" src="polyfills.js?sxcver=10.25.00.25797"></script>
+  <script type="text/javascript" src="styles.js?sxcver=10.25.00.25797"></script>
+  <script type="text/javascript" src="scripts.js?sxcver=10.25.00.25797"></script>
+  <script type="text/javascript" src="vendor.js?sxcver=10.25.00.25797"></script>
+  <script type="text/javascript" src="main.js?sxcver=10.25.00.25797"></script>
 </body>
 
 </html>
