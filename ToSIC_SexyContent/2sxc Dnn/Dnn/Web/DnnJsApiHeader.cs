@@ -6,24 +6,30 @@ using DotNetNuke.Common;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     [PrivateApi]
-    public class DnnApiSupport
+    public class DnnJsApiHeader: HasLog
     {
         private const string MetaName = "_jsApi";
         private const string ExtensionPlaceholder = "{extension}";
 
-        public void AddHeaders()
+        public DnnJsApiHeader(ILog parentLog) : base("Dnn.JsApiH", parentLog)
         {
+        }
+
+        public bool AddHeaders()
+        {
+            var wrapLog = Log.Call<bool>();
             // ensure we only do this once
-            if (MarkAddedAndReturnIfAlreadyDone()) return;
+            if (MarkAddedAndReturnIfAlreadyDone()) return wrapLog("already", false);
 
             var pageId = PortalSettings.Current.ActiveTab.TabID.ToString(CultureInfo.InvariantCulture);
             var path = ServicesFramework.GetServiceFrameworkRoot();
-            if (string.IsNullOrEmpty(path)) return;
+            if (string.IsNullOrEmpty(path)) return wrapLog("no path", false);
 
             var dnnVersion = DotNetNukeContext.Current.Application.Version.Major;
             var apiRoot = path + (dnnVersion < 9
@@ -38,6 +44,7 @@ namespace ToSic.Sxc.Dnn.Web
                        + "}";
 
             HtmlPage.AddMeta(MetaName, json);
+            return wrapLog("added", true);
         }
 
         private const string KeyToMarkAdded = "2sxcApiHeadersAdded";
@@ -49,7 +56,7 @@ namespace ToSic.Sxc.Dnn.Web
             return alreadyAdded;
         }
 
-        public string AntiForgeryToken()
+        private string AntiForgeryToken()
         {
             if (_antiForgeryToken != null) return _antiForgeryToken;
 

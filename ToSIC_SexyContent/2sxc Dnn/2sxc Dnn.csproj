@@ -108,7 +108,8 @@
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
     <Compile Include="Dnn\Run\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />
-    <Compile Include="Dnn\Web\DnnApiSupport.cs" />
+    <Compile Include="Dnn\Web\DnnJsApiHeader.cs" />
+    <Compile Include="Dnn\Web\DnnClientResources.cs" />
     <Compile Include="Dnn\Web\IDynamicWebApi.cs" />
     <Compile Include="Dnn\Code\IDnnDynamicCode.cs" />
     <Compile Include="Dnn\Run\DnnSecurity.cs" />

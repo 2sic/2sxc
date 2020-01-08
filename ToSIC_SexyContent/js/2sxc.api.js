@@ -662,48 +662,21 @@ var Stats = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Environment; });
 var extensionPlaceholder = '{extension}';
 var maxRetries = 3;
+var helpAutoDetect = 'You must either include jQuery on the page or inject the jsApi parameters to prevent auto-detection.';
 var Environment = (function () {
     function Environment() {
         this.ready = false;
         this.retries = 0;
-        if (typeof _jsApi !== typeof undefined) {
-            this.header = _jsApi;
-            this.ready = true;
-        }
+        this.source = '';
+        if (typeof _jsApi !== typeof undefined)
+            this.load(_jsApi, 'global variable _jsApi');
         else
             this.loadMetaFromHeader();
     }
-    Environment.prototype.load = function (newJsInfo) {
+    Environment.prototype.load = function (newJsInfo, source) {
         this.header = newJsInfo;
         this.ready = true;
-    };
-    Environment.prototype.loadMetaFromHeader = function () {
-        var _this = this;
-        var meta = this.getMeta('_jsApi');
-        if (!meta) {
-            this.retries++;
-            if (this.retries < maxRetries)
-                setTimeout(function () { _this.loadMetaFromHeader(); }, 0);
-            else
-                this.fallbackToDnnSf();
-            return;
-        }
-        this.load(JSON.parse(meta));
-    };
-    Environment.prototype.fallbackToDnnSf = function () {
-        if (typeof $ === 'undefined')
-            throw "Can't load pageid, moduleid, etc. and $ is not available.";
-        var sf = $.ServicesFramework;
-        if (typeof sf === 'undefined')
-            throw "can't load pageid, moduleid etc. and DNN Services Framework is not available.";
-        var dnnSf = sf(0);
-        var sfJsInfo = {
-            page: dnnSf.getTabId(),
-            root: 'unknown',
-            api: dnnSf.getServiceRoot('2sxc'),
-            rvt: dnnSf.getAntiForgeryValue()
-        };
-        this.load(sfJsInfo);
+        this.source = source || 'external/unknown';
     };
     Environment.prototype.apiRoot = function (name) {
         if (!this.ready)
@@ -712,14 +685,44 @@ var Environment = (function () {
     };
     Environment.prototype.page = function () { return this.header.page; };
     Environment.prototype.rvt = function () { return this.header.rvt; };
+    Environment.prototype.loadMetaFromHeader = function () {
+        var _this = this;
+        var meta = this.getMeta('_jsApi');
+        if (!meta) {
+            this.retries++;
+            if (this.retries < maxRetries)
+                setTimeout(function () { _this.loadMetaFromHeader(); }, 0);
+            else
+                this.dnnSfFallback();
+            return;
+        }
+        this.load(JSON.parse(meta), 'meta header');
+    };
     Environment.prototype.getMeta = function (metaName) {
         var metas = document.getElementsByTagName('meta');
-        for (var i = 0; i < metas.length; i++) {
-            if (metas[i].getAttribute('name') === metaName) {
+        for (var i = 0; i < metas.length; i++)
+            if (metas[i].getAttribute('name') === metaName)
                 return metas[i].getAttribute('content');
-            }
-        }
         return '';
+    };
+    Environment.prototype.dnnSfFallback = function () {
+        var _this = this;
+        if (typeof $ === 'undefined')
+            throw "Can't load pageid, moduleid, etc. and $ is not available. \n " + helpAutoDetect;
+        $(function () { return _this.dnnSfLoadWhenDocumentReady(); });
+    };
+    Environment.prototype.dnnSfLoadWhenDocumentReady = function () {
+        var sf = $.ServicesFramework;
+        if (typeof sf === 'undefined')
+            throw "can't load pageid, moduleid etc. and DNN SF is not available. \n " + helpAutoDetect;
+        var dnnSf = sf(0);
+        var sfJsInfo = {
+            page: dnnSf.getTabId(),
+            root: 'unknown',
+            api: dnnSf.getServiceRoot('2sxc'),
+            rvt: dnnSf.getAntiForgeryValue()
+        };
+        this.load(sfJsInfo, 'dnn SF');
     };
     return Environment;
 }());

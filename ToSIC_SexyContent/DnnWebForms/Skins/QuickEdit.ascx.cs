@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Dnn.Web;
 
 namespace ToSic.SexyContent.DnnWebForms.Skins
@@ -9,7 +8,9 @@ namespace ToSic.SexyContent.DnnWebForms.Skins
         protected void Page_Load(object sender, EventArgs e)
         {
             if(DotNetNuke.Security.Permissions.TabPermissionController.HasTabPermission("EDIT"))
-                new DnnRenderingHelpers(null, null).RegisterClientDependencies(Page, true, true, true);
+                new DnnClientResources(Page, null, null)
+                // new DnnRenderingHelpers(null, null)
+                    .RegisterClientDependencies(Page, true, true, true);
         }
     }
 }
