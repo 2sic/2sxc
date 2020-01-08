@@ -52,6 +52,8 @@
 - name: JavaScript and Html
   topicUid: Specs.Js.Overview
   items:
+    - name: jQuery in DNN and 2sxc
+      topicUid: Specs.Js.JQuery
     - name: Global $2sxc
       topicUid: Specs.Js.$2sxc
       items:

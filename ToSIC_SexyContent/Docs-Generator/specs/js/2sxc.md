@@ -165,6 +165,26 @@ TODO: document the properties, mention that they won't be stable in future versi
 
 _Till we find time to document more, please consult the [$2sxc API](https://github.com/2sic/2sxc-ui/blob/master/src/js-api/2sxc.api/2sxc.api.js)_
 
+## Background: How $2sxc works
+
+This is just some info for you to better understand what happens behind the scenes:
+
+### How Module-Level Information is found
+
+1. When you use `$2sxc(moduleId)` it scans the DOM for the `<div>` tag that contains the module with that ID
+1. When you use `$2sxc(htmlNode)` it starts from that node and scans all parents till it finds the `<div>` which is the module wrapper
+1. Once it finds that, it knows what module it's for and configures itself
+
+### How Page and Portal Information is Found
+
+This is for information the $2sxc needs for WebApi calls. _This here applies to 2sxc 10.25+_
+
+1. It first checks the html-head section for a `meta` tag with the name `_jsApi`. If this exists, it contains a JSON with everything it needs.
+1. If that doesn't exist it will retry 3x times (in case the head wasn't ready yet) and otherwise falls back to the old mechanism.
+1. The old mechanism is to ask DNN and the _ServicesFramework_ for this information. This is always available when you're logged on as an editor, but it's only on the page for anonymous users IF
+    1. ...you are either using the old mechanisms
+    1. ...or your Razor code asked for with `@Edit.Enable(js:true)`
+
 ## Demo App and further links
 
 You should find some code examples in this demo App
