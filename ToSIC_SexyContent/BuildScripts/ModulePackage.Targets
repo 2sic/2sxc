@@ -59,12 +59,14 @@
       <DefaultExclude Include="dist\inpage\**\*.map" />
       <DefaultExclude Include="dist\ng-edit\**\*.map" />
       <DefaultExclude Include="dist\ng\**\*.map" />
+      <DefaultExclude Include="js\**\*.map" />
     </ItemGroup>
 
     <ItemGroup>
       <ExternalSourceMaps Include="dist\*ng-edit\**\*.map" />
       <ExternalSourceMaps Include="dist\*inpage\**\*.map" />
       <ExternalSourceMaps Include="dist\*ng\**\*.map" />
+      <ExternalSourceMaps Include=".\*js\**\*.map" />
     </ItemGroup>
 
     <ItemGroup>
