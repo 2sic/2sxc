@@ -9,7 +9,7 @@ using DotNetNuke.Web.Client.Providers;
 
 namespace ToSic.Sxc.Dnn.Web
 {
-    public class ClientDependencyManager: SexyContent.Environment.Base.ClientDependencyManager
+    public class DnnClientDependencyOptimizer: Sxc.Web.ClientDependencyOptimizer
     {
 
         public override Tuple<string, bool> Process(string renderedTemplate)
@@ -28,9 +28,15 @@ namespace ToSic.Sxc.Dnn.Web
 
             foreach (Match match in scriptMatches)
             {
+                // always remove 2sxc JS requests from template and ensure it's added the standard way
+                var url = FixUrlWithSpaces(match.Groups["Src"].Value);
+                if (Is2SxcApiJs(url))
+                {
+                    include2SxcJs = true;
+                    scriptMatchesToRemove.Add(match);
+                }
                 var optMatch = OptimizeDetection.Match(match.Value);
-                if (!optMatch.Success)
-                    continue;
+                if (!optMatch.Success) continue;
 
                 var providerName = GetProviderName(optMatch, "body");
 
@@ -39,21 +45,17 @@ namespace ToSic.Sxc.Dnn.Web
                 if (prio <= 0) continue;    // don't register/remove if not within specs
 
                 #region Register, then add to remove-queue
-                var url = FixUrlWithSpaces(match.Groups["Src"].Value);
 
-                // check special case: the 2sxc.api script. only check the first part of the path
-                // because it could be .min, or have versions etc.
-                if (Is2SxcApiJs(url))
-                    include2SxcJs = true;
-                else
+                if (!Is2SxcApiJs(url))
+                {
                     ClientResourceManager.RegisterScript(page, url, prio, providerName);
-                scriptMatchesToRemove.Add(match);
-
-                
+                    scriptMatchesToRemove.Add(match);
+                }
 
                 #endregion
             }
 
+            // remove in reverse order, so that the indexes don't change
             scriptMatchesToRemove.Reverse();
             scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
             #endregion
@@ -94,6 +96,15 @@ namespace ToSic.Sxc.Dnn.Web
             return new Tuple<string, bool>(renderedTemplate, include2SxcJs);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// check special case: the 2sxc.api script. only check the first part of the path
+        /// because it could be .min, or have versions etc.
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <returns></returns>
         private static bool Is2SxcApiJs(string url) => url.ToLower()
             .Replace("\\", "/")
             .Contains("desktopmodules/tosic_sexycontent/js/2sxc.api");

@@ -21,6 +21,7 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Web;
 
 namespace ToSic.SexyContent
 {
@@ -87,7 +88,7 @@ namespace ToSic.SexyContent
                 // The file-importer - temporarily itself
                 sc.AddTransient<XmlImportWithFiles, XmlImportFull>();
 
-                sc.AddTransient<IClientDependencyManager, ClientDependencyManager>();
+                sc.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
                 sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();
                 sc.AddTransient<IWebFactoryTemp, DnnEnvironmentFactory>();
                 sc.AddTransient<IRenderingHelpers, DnnRenderingHelpers>();

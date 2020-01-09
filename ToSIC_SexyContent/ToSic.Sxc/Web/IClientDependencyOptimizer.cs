@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace ToSic.Sxc.Interfaces
+namespace ToSic.Sxc.Web
 {
     /// <summary>
     /// System to automatically pick up JS/CSS files which should be bundled
     /// </summary>
-    internal interface IClientDependencyManager
+    internal interface IClientDependencyOptimizer
     {
         /// <summary>
         /// Scan the html for possible JS/CSS files which should be bundled and extract these. 

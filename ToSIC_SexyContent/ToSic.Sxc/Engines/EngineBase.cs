@@ -13,6 +13,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Search;
+using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
@@ -102,7 +103,7 @@ namespace ToSic.Sxc.Engines
                 return AlternateRendering;
 
             var renderedTemplate = RenderTemplate();
-            var depMan = Factory.Resolve<IClientDependencyManager>();
+            var depMan = Factory.Resolve<IClientDependencyOptimizer>();
             var result = depMan.Process(renderedTemplate);
             ActivateJsApi = result.Item2;
             return result.Item1;

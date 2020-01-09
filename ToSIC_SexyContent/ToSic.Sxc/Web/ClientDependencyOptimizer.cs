@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using ToSic.Sxc.Interfaces;
 
-namespace ToSic.SexyContent.Environment.Base
+namespace ToSic.Sxc.Web
 {
-    public abstract class ClientDependencyManager: IClientDependencyManager
+    public abstract class ClientDependencyOptimizer: IClientDependencyOptimizer
     {
         public abstract Tuple<string, bool> Process(string renderedTemplate);
 

@@ -2,7 +2,9 @@
 using System.Web.UI;
 using DotNetNuke.Framework;
 using DotNetNuke.Framework.JavaScriptLibraries;
+using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
+using DotNetNuke.Web.Client.Providers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 
@@ -65,6 +67,7 @@ namespace ToSic.Sxc.Dnn.Web
             root = page.ResolveUrl(root);
             var ext = IsDebugUrl(page.Request) ? ".min.js" : ".js";
             var ver = Settings.Version.ToString();
+            var priority = (int) FileOrder.Js.DefaultPriority - 2;
 
             // add edit-mode CSS
             if (editCss) RegisterCss(page, root + "dist/inpage/inpage.min.css");
@@ -73,7 +76,7 @@ namespace ToSic.Sxc.Dnn.Web
             if (readJs || editJs)
             {
                 Log.Add("add $2sxc api and headers");
-                RegisterJs(page, ver, root + "js/2sxc.api" + ext);
+                RegisterJs(page, ver, root + "js/2sxc.api" + ext, true, priority);
                 Header.AddHeaders();
             }
 
@@ -81,7 +84,8 @@ namespace ToSic.Sxc.Dnn.Web
             if (editJs)
             {
                 Log.Add("add 2sxc edit api; also request jQuery and anti-forgery");
-                RegisterJs(page, ver, root + "dist/inpage/inpage.min.js");
+                // note: the inpage only works if it's not in the head, so we're adding it below
+                RegisterJs(page, ver, root + "dist/inpage/inpage.min.js", false, priority + 1);
                 // request full $services and jQuery etc.
                 JavaScript.RequestRegistration(CommonJs.jQuery);
                 ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
@@ -99,10 +103,13 @@ namespace ToSic.Sxc.Dnn.Web
 
         #region add scripts / css with bypassing the official ClientResourceManager
 
-        private static void RegisterJs(Page page, string version, string path)
+        private static void RegisterJs(Page page, string version, string path, bool toHead, int priority)
         {
             var url = $"{path}{(path.IndexOf('?') > 0 ? '&' : '?')}v={version}";
-            page.ClientScript.RegisterClientScriptInclude(typeof(Page), path, url);
+            if(toHead)
+                ClientResourceManager.RegisterScript(page, url, priority, DnnPageHeaderProvider.DefaultName);
+            else
+                page.ClientScript.RegisterClientScriptInclude(typeof(Page), path, url);
         }
 
         private static void RegisterCss(Page page, string path)
