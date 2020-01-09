@@ -43,9 +43,7 @@ namespace ToSic.Sxc.Dnn.Web
 
                 // check special case: the 2sxc.api script. only check the first part of the path
                 // because it could be .min, or have versions etc.
-                if (url.ToLower()
-                    .Replace("\\", "/")
-                    .Contains("desktopmodules/tosic_sexycontent/js/2sxc.api"))
+                if (Is2SxcApiJs(url))
                     include2SxcJs = true;
                 else
                     ClientResourceManager.RegisterScript(page, url, prio, providerName);
@@ -95,6 +93,10 @@ namespace ToSic.Sxc.Dnn.Web
 
             return new Tuple<string, bool>(renderedTemplate, include2SxcJs);
         }
+
+        private static bool Is2SxcApiJs(string url) => url.ToLower()
+            .Replace("\\", "/")
+            .Contains("desktopmodules/tosic_sexycontent/js/2sxc.api");
 
         /// <summary>
         /// Because of an issue with spaces, prepend tilde to urls that start at root

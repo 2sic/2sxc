@@ -141,7 +141,7 @@
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.IDynamicEntity.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.ILinkHelper.cs" />
     <Compile Include="Interfaces\IRenderingHelpers.cs" />
-    <Compile Include="Interfaces\Internal\IClientDependencyManager.cs" />
+    <Compile Include="Web\IClientDependencyManager.cs" />
     <Compile Include="Apps\IApp.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.IAppData.cs" />
     <Compile Include="Blocks\IBlock.cs" />
