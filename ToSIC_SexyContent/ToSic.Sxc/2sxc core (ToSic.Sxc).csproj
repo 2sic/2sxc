@@ -130,7 +130,7 @@
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
-    <Compile Include="Environment.Base\ClientDependencyManager.cs" />
+    <Compile Include="Web\ClientDependencyOptimizer.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfoContentBlock.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfoContentGroup.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfoEntity.cs" />
@@ -141,7 +141,7 @@
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.IDynamicEntity.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.ILinkHelper.cs" />
     <Compile Include="Interfaces\IRenderingHelpers.cs" />
-    <Compile Include="Web\IClientDependencyManager.cs" />
+    <Compile Include="Web\IClientDependencyOptimizer.cs" />
     <Compile Include="Apps\IApp.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.IAppData.cs" />
     <Compile Include="Blocks\IBlock.cs" />
@@ -242,6 +242,8 @@
     <Compile Include="Compatibility\ToSic.SexyContent.ContentBlocks.Render.cs" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Environment.Base\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

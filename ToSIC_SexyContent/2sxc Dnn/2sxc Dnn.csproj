@@ -114,7 +114,7 @@
     <Compile Include="Dnn\Code\IDnnDynamicCode.cs" />
     <Compile Include="Dnn\Run\DnnSecurity.cs" />
     <Compile Include="Dnn\Code\DnnDynamicCode.cs" />
-    <Compile Include="Dnn\Web\DnnClientDependency.cs" />
+    <Compile Include="Dnn\Web\DnnClientDependencyOptimizer.cs" />
     <Compile Include="Dnn\Web\ClientInfos\ClientInfosAll.cs" />
     <Compile Include="Dnn\Web\ClientInfos\ClientInfosEnvironment.cs" />
     <Compile Include="Dnn\Web\ClientInfos\ClientInfosLanguages.cs" />
