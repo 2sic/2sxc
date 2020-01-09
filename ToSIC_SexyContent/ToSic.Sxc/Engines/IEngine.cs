@@ -33,6 +33,8 @@ namespace ToSic.Sxc.Engines
         /// <returns>The string - usually HTML - which the engine created. </returns>
         string Render();
 
+        [PrivateApi] bool ActivateJsApi { get; }
+
         /// <summary>
         /// Mechanism which allows the view to change data it will show in a stream-based way.
         /// This helps to ensure that other parts like JSON-Streams or Search have the same information

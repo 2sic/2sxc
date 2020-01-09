@@ -1,11 +1,12 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Base
 {
     public abstract class ClientDependencyManager: IClientDependencyManager
     {
-        public abstract string Process(string renderedTemplate);
+        public abstract Tuple<string, bool> Process(string renderedTemplate);
 
         #region RegEx formulas and static compiled RegEx objects (performance)
 

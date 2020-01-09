@@ -659,23 +659,31 @@ var Stats = (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Environment; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__log__ = __webpack_require__(13);
+
 var extensionPlaceholder = '{extension}';
-var maxRetries = 3;
+var maxRetries = 10;
 var helpAutoDetect = 'You must either include jQuery on the page or inject the jsApi parameters to prevent auto-detection.';
 var Environment = (function () {
     function Environment() {
         this.ready = false;
         this.retries = 0;
         this.source = '';
-        if (typeof _jsApi !== typeof undefined)
+        this.log = new __WEBPACK_IMPORTED_MODULE_0__log__["a" /* Log */]('Environment', 'starting');
+        if (typeof _jsApi !== typeof undefined) {
+            this.log.add('found _jsApi, will use');
             this.load(_jsApi, 'global variable _jsApi');
-        else
+        }
+        else {
+            this.log.add('will start initializing');
             this.loadMetaFromHeader();
+        }
     }
     Environment.prototype.load = function (newJsInfo, source) {
         this.header = newJsInfo;
         this.ready = true;
         this.source = source || 'external/unknown';
+        this.log.add('loaded from ' + this.source);
     };
     Environment.prototype.apiRoot = function (name) {
         if (!this.ready)
@@ -686,11 +694,12 @@ var Environment = (function () {
     Environment.prototype.rvt = function () { return this.header.rvt; };
     Environment.prototype.loadMetaFromHeader = function () {
         var _this = this;
+        this.log.add('loadMetaFromHeader: start, retry:' + this.retries);
         var meta = this.getMeta('_jsApi');
         if (!meta) {
             this.retries++;
             if (this.retries < maxRetries)
-                setTimeout(function () { _this.loadMetaFromHeader(); }, 0);
+                setTimeout(function () { _this.loadMetaFromHeader(); }, 1);
             else
                 this.dnnSfFallback();
             return;
@@ -706,11 +715,13 @@ var Environment = (function () {
     };
     Environment.prototype.dnnSfFallback = function () {
         var _this = this;
+        this.log.add('dnnSfFallback start');
         if (typeof $ === 'undefined')
             throw "Can't load pageid, moduleid, etc. and $ is not available. \n " + helpAutoDetect;
         $(function () { return _this.dnnSfLoadWhenDocumentReady(); });
     };
     Environment.prototype.dnnSfLoadWhenDocumentReady = function () {
+        this.log.add('dnnSfLoadWhenDocumentReady start');
         var sf = $.ServicesFramework;
         if (typeof sf === 'undefined')
             throw "can't load pageid, moduleid etc. and DNN SF is not available. \n " + helpAutoDetect;
@@ -726,6 +737,35 @@ var Environment = (function () {
     return Environment;
 }());
 
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Log; });
+var Log = (function () {
+    function Log(name, message) {
+        this.text = "";
+        this.entries = [];
+        this.name = name;
+        this.start = new Date().getTime();
+        if (message)
+            this.add(message);
+    }
+    Log.prototype.add = function (message) {
+        this.text += message + '\n';
+        this.entries.push({ time: new Date().getTime() - this.start, message: message });
+    };
+    return Log;
+}());
+
+var LogEntry = (function () {
+    function LogEntry() {
+    }
+    return LogEntry;
+}());
 
 
 /***/ })

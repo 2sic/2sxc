@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
@@ -11,13 +12,13 @@ namespace ToSic.Sxc.Dnn.Web
     public class ClientDependencyManager: SexyContent.Environment.Base.ClientDependencyManager
     {
 
-        public override string Process(string renderedTemplate)
+        public override Tuple<string, bool> Process(string renderedTemplate)
         {
             if (HttpContext.Current == null || HttpContext.Current.CurrentHandler == null || !(HttpContext.Current.CurrentHandler is Page))
-                return renderedTemplate;
+                return new Tuple<string, bool>(renderedTemplate, false);
 
             var page = (HttpContext.Current.CurrentHandler as Page);
-
+            var include2SxcJs = false;
             #region  Handle Client Dependency injection
 
             #region Scripts
@@ -37,10 +38,22 @@ namespace ToSic.Sxc.Dnn.Web
 
                 if (prio <= 0) continue;    // don't register/remove if not within specs
 
-                // Register, then remember to remove later on
+                #region Register, then add to remove-queue
                 var url = FixUrlWithSpaces(match.Groups["Src"].Value);
-                ClientResourceManager.RegisterScript(page, url, prio, providerName);
+
+                // check special case: the 2sxc.api script. only check the first part of the path
+                // because it could be .min, or have versions etc.
+                if (url.ToLower()
+                    .Replace("\\", "/")
+                    .Contains("desktopmodules/tosic_sexycontent/js/2sxc.api"))
+                    include2SxcJs = true;
+                else
+                    ClientResourceManager.RegisterScript(page, url, prio, providerName);
                 scriptMatchesToRemove.Add(match);
+
+                
+
+                #endregion
             }
 
             scriptMatchesToRemove.Reverse();
@@ -80,7 +93,7 @@ namespace ToSic.Sxc.Dnn.Web
             #endregion
             #endregion
 
-            return renderedTemplate;
+            return new Tuple<string, bool>(renderedTemplate, include2SxcJs);
         }
 
         /// <summary>

@@ -6,12 +6,10 @@ using System.Web;
 using System.Web.Hosting;
 using Newtonsoft.Json;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Search;
@@ -105,8 +103,12 @@ namespace ToSic.Sxc.Engines
 
             var renderedTemplate = RenderTemplate();
             var depMan = Factory.Resolve<IClientDependencyManager>();
-            return depMan.Process(renderedTemplate);
+            var result = depMan.Process(renderedTemplate);
+            ActivateJsApi = result.Item2;
+            return result.Item1;
         }
+
+        [PrivateApi] public bool ActivateJsApi { get; private set; } = false;
 
 
         private void CheckExpectedTemplateErrors()
