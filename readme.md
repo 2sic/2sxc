@@ -38,4 +38,4 @@ The full list with repo-links is maintained on the [2sxc github wiki setup-contr
 
 # Release Information
 
-This is version 10.20.05
+This is version 10.25.00 LTS
