@@ -318,7 +318,7 @@ angular.module("SourceEditor")
                     if (!linksString)
                         return null;
                     var links = [];
-                    var llist = linksString.split("n");
+                    var llist = linksString.split("\n");
                     for (var i = 0; i < llist.length; i++) {
                         var pair = llist[i].split(":");
                         if (pair.length === 3) {

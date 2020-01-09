@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// <summary>
     /// The DNN implementation of a Block Container (a Module).
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class DnnContainer: Container<ModuleInfo>
     {
         public DnnContainer(ModuleInfo item) : base(item)

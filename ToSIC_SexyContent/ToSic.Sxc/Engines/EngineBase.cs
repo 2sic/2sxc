@@ -6,15 +6,14 @@ using System.Web;
 using System.Web.Hosting;
 using Newtonsoft.Json;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Search;
+using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
@@ -23,7 +22,7 @@ namespace ToSic.Sxc.Engines
     /// <summary>
     /// The foundation for engines - must be inherited by other engines
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public abstract class EngineBase : HasLog, IEngine
     {
         [PrivateApi] protected IView Template;
@@ -104,9 +103,13 @@ namespace ToSic.Sxc.Engines
                 return AlternateRendering;
 
             var renderedTemplate = RenderTemplate();
-            var depMan = Factory.Resolve<IClientDependencyManager>();
-            return depMan.Process(renderedTemplate);
+            var depMan = Factory.Resolve<IClientDependencyOptimizer>();
+            var result = depMan.Process(renderedTemplate);
+            ActivateJsApi = result.Item2;
+            return result.Item1;
         }
+
+        [PrivateApi] public bool ActivateJsApi { get; private set; } = false;
 
 
         private void CheckExpectedTemplateErrors()
@@ -115,7 +118,7 @@ namespace ToSic.Sxc.Engines
                 throw new RenderingException("Template Configuration Missing");
 
             if (Template.ContentType != "" &&
-                Factory.GetAppState(App)
+                /*Factory.GetAppState*/Eav.Apps.State.Get(App)
                 /*Eav.DataSource.GetCache(App).AppState*/.GetContentType(Template.ContentType) == null)
                 throw new RenderingException("The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
 

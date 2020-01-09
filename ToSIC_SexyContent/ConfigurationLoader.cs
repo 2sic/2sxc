@@ -2,13 +2,10 @@
 using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Persistence.File;
-using ToSic.Eav.Interfaces;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Plumbing.Booting;
@@ -17,14 +14,14 @@ using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Apps.ImportExport;
-using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Conversion;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Interfaces;
-using ToSic.Sxc.Serializers;
+using ToSic.Sxc.Web;
 
 namespace ToSic.SexyContent
 {
@@ -77,7 +74,7 @@ namespace ToSic.SexyContent
         {
             Eav.Factory.ActivateNetCoreDi(sc =>
             {
-                sc.AddTransient<Eav.Serializers.Serializer, Serializer>();
+                sc.AddTransient<Eav.Conversion.EntitiesToDictionary, DataToDictionary>();
                 sc.AddTransient<IValueConverter, DnnValueConverter>();
                 sc.AddTransient<IUser, DnnUser>();
 
@@ -91,7 +88,7 @@ namespace ToSic.SexyContent
                 // The file-importer - temporarily itself
                 sc.AddTransient<XmlImportWithFiles, XmlImportFull>();
 
-                sc.AddTransient<IClientDependencyManager, ClientDependencyManager>();
+                sc.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
                 sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();
                 sc.AddTransient<IWebFactoryTemp, DnnEnvironmentFactory>();
                 sc.AddTransient<IRenderingHelpers, DnnRenderingHelpers>();
@@ -110,7 +107,6 @@ namespace ToSic.SexyContent
                     }
                     catch {  /* ignore */ }
                 }
-
 
                 new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);
             });

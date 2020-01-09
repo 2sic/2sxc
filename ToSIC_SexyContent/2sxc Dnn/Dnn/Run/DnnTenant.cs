@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// <summary>
     /// This is a DNN implementation of a Tenant-object. 
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class DnnTenant: Tenant<PortalSettings>
     {
         /// <inheritdoc />

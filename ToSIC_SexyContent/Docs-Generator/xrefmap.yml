@@ -78,3 +78,12 @@ references:
 - uid: Tut.RazorBlade.Text.First
   name: RazorBlade Text.First(...) Tutorial
   href: https://2sxc.org/dnn-tutorials/en/razor/blade130/page
+
+
+# More Tutorials
+- uid: Tut.Linq.Home
+  name: LINQ Tutorials
+  href: https://2sxc.org/dnn-tutorials/en/razor/linq/home
+- uid: Tut.WebApi
+  name: Web API Tutorials
+  href: https://2sxc.org/dnn-tutorials/en/razor/webapi/home

@@ -16,7 +16,7 @@ namespace ToSic.Sxc.LookUp
     /// - repeater:isfirst
     /// - etc.
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class LookUpInDynamicEntity : ILookUp
 	{
         public const string TokenRepeater = "Repeater";

@@ -109,8 +109,10 @@
     <Compile Include="Code\DynamicCodeRootWithObsolete.cs" />
     <Compile Include="Compatibility\CacheWithGetContentType.cs" />
     <Compile Include="Compatibility\InputTypes.cs" />
+    <Compile Include="Compatibility\OldContentBlockJsonSerialization.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Engines.InstancePurposes.cs" />
     <Compile Include="Compatibility\RemoveInV10\ToSic.SexyContent.Element.cs" />
+    <Compile Include="Conversion\IDynamicEntityTo_T.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacket.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacket.Statics.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacketBase.cs" />
@@ -128,7 +130,7 @@
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
-    <Compile Include="Environment.Base\ClientDependencyManager.cs" />
+    <Compile Include="Web\ClientDependencyOptimizer.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfoContentBlock.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfoContentGroup.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfoEntity.cs" />
@@ -139,7 +141,7 @@
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.IDynamicEntity.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.ILinkHelper.cs" />
     <Compile Include="Interfaces\IRenderingHelpers.cs" />
-    <Compile Include="Interfaces\Internal\IClientDependencyManager.cs" />
+    <Compile Include="Web\IClientDependencyOptimizer.cs" />
     <Compile Include="Apps\IApp.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.IAppData.cs" />
     <Compile Include="Blocks\IBlock.cs" />
@@ -192,10 +194,9 @@
     <Compile Include="Interfaces\Internal\IMapAppToInstance.cs" />
     <Compile Include="Engines\TemplateHelpers.cs" />
     <Compile Include="Blocks\ICmsBlock.cs" />
-    <Compile Include="Serializers\Serializer.cs" />
+    <Compile Include="Conversion\DataToDictionary.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Engines\SexyContentException.cs" />
-    <Compile Include="Code\SxcHelper.cs" />
     <Compile Include="Blocks\CmsBlock.cs" />
     <Compile Include="Blocks\CmsBlock_Render.cs" />
     <Compile Include="Blocks\CmsBlock_Template.cs" />
@@ -241,6 +242,8 @@
     <Compile Include="Compatibility\ToSic.SexyContent.ContentBlocks.Render.cs" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Environment.Base\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

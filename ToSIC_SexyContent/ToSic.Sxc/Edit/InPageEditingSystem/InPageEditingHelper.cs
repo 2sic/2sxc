@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
@@ -91,7 +90,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         {
             Log.Add("ctx attribs - enabled:{Enabled}");
             if (!Enabled) return null;
-            Eav.Constants.ProtectAgainstMissingParameterNames(noParameterOrder, "ContextAttributes", $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(noParameterOrder, nameof(ContextAttributes), $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
 
             if (field == null) throw new Exception("need parameter 'field'");
 
@@ -114,7 +113,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             int contentBlockId = 0
         )
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(noParameterOrder, "WrapInContext", $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(noParameterOrder, nameof(WrapInContext), $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
             return new HtmlString(
                 ((CmsBlock)CmsInstance).RenderingHelper.WrapInContext(content.ToString(),

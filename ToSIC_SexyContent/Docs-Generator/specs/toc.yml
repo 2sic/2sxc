@@ -4,9 +4,7 @@
 
 - name: Architecture
   topicUid: Specs.Architecture.Intro
-  items:
-    - name: Data Flow
-      topicUid: Specs.Architecture.DataFlow
+  href: architecture/toc.yml
 
 - name: Data Models in EAV
   href: data/toc.yml
@@ -28,26 +26,6 @@
 
 - name: CMS Create and Design
   href: cms/toc.yml
-# items:
-#   - name: Views and Templates
-#     topicUid: Specs.Cms.Views
-#   - name: Template Files
-#     topicUid: Specs.Cms.Templates
-#   - name: Razor Templates
-#     topicUid: Specs.Cms.Templates.Razor
-#   - name: Token Templates
-#     topicUid: Specs.Cms.Templates.Token
-#   - name: App Folder Structure
-#     topicUid: Specs.App.Folders
-#   - topicUid: Specs.App.Icons
-#   - name: Hide Features
-#     topicUid: Concepts.HideAdvancedFeatures
-#   - name: Permissions
-#     topicUid: Concepts.Permissions
-#   - name: Polymorph
-#     topicUid: Specs.Cms.Polymorphism
-#   - name: Inner Content
-#     topicUid: Specs.Cms.InnerContent
 
 - name: CMS Technical
   items:
@@ -60,6 +38,10 @@
 - topicUid: Specs.DataSources.Intro
   href: datasources/toc.yml
 
+- name: Web API Endpoints
+  topicUid: Specs.WebApi.Intro
+  href: web-api/toc.yml
+
 - name: System Configuration
   items:
     - name: Features Concept
@@ -70,6 +52,8 @@
 - name: JavaScript and Html
   topicUid: Specs.Js.Overview
   items:
+    - name: jQuery in DNN and 2sxc
+      topicUid: Specs.Js.JQuery
     - name: Global $2sxc
       topicUid: Specs.Js.$2sxc
       items:

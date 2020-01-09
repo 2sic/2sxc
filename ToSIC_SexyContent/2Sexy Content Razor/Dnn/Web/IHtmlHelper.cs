@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Dnn.Web
     /// <summary>
     /// helper to quickly "raw" some html
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public interface IHtmlHelper
     {
         /// <summary>

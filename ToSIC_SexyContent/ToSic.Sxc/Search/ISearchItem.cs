@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Search
     /// <summary>
     /// Defines an item in the search system - which is prepared by Sxc, and can be customized as needed
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public interface ISearchItem 
         : ToSic.SexyContent.Search.ISearchInfo // backward compatibility
     {

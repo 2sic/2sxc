@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.DataSources
     /// <summary>
     /// Retrieves data from SQL, specifically using the DNN Connection String
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
 	[VisualQuery(
         GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnSql, ToSic.Sxc.Dnn",
         Type = DataSourceType.Source, 

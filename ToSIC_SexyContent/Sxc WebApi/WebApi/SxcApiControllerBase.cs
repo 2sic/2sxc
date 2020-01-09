@@ -1,7 +1,7 @@
 ﻿using System.Web.Http.Controllers;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.WebApi;
 
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi
             CmsBlock = Helpers.GetCmsBlock(Request, true, Log);
         }
 
-        internal ICmsBlock CmsBlock { get; private set; }
+        [PrivateApi] public ICmsBlock CmsBlock { get; private set; }
 
 
         internal static DnnDynamicCode GetContext(ICmsBlock cmsInstance, ILog log) 

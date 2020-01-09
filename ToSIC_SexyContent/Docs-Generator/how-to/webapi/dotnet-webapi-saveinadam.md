@@ -1,7 +1,7 @@
 ---
 uid: HowTo.WebApi.SaveInAdam
 ---
-# SaveInAdam command in SxcApiController
+# SaveInAdam command in ApiController
 
 The `SaveInAdam` command helps your WebApi to upload files so they are in an ADAM container of an item.
 

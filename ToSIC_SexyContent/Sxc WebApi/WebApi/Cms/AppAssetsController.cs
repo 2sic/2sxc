@@ -7,10 +7,7 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps.Assets;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.SxcTemp;
@@ -136,9 +133,10 @@ namespace ToSic.Sxc.WebApi.Cms
             if (global && !allowFullAccess)
                 throw new NotSupportedException("only host user may access global files");
 
-            var appPath = TemplateHelpers.GetTemplatePathRoot(global
-                ? Settings.TemplateLocations.HostFileSystem
-                : Settings.TemplateLocations.PortalFileSystem
+            var appPath = TemplateHelpers.GetTemplatePathRoot(
+                global
+                    ? Settings.TemplateLocations.HostFileSystem
+                    : Settings.TemplateLocations.PortalFileSystem
                 , thisApp); // get root in global system
 
             appPath = global::System.Web.Hosting.HostingEnvironment.MapPath(appPath);

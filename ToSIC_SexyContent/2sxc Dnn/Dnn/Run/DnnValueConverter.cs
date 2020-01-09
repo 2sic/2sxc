@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// <summary>
     /// The DNN implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class DnnValueConverter : IValueConverter
     {
         /// <inheritdoc />

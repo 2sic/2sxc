@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -35,7 +32,7 @@ namespace ToSic.Sxc.WebApi
                 Log.Add("no additional group processing necessary");
         }
 
-        private BlockConfiguration GetBlockConfig(IApp app, Guid blockGuid)
+        private BlockConfiguration GetBlockConfig(IAppIdentity app, Guid blockGuid)
             => new CmsRuntime(app, Log, CmsInstance.UserMayEdit,
                 CmsInstance.Environment.PagePublishing.IsEnabled(CmsInstance.Container.Id)).Blocks.GetBlockConfig(blockGuid);
 
@@ -108,7 +105,7 @@ namespace ToSic.Sxc.WebApi
             wrapLog("ok");
         }
 
-        internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers, IApp app)
+        internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers, IAppIdentity app)
         {
             Log.Add("ConvertListIndexToId()");
             var newItems = new List<ItemIdentifier>();

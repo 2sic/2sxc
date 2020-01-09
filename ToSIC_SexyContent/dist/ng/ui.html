@@ -7,6 +7,9 @@
       path = window.location.pathname,
       jsVersionCacheId = window.location.search;
 
+    // create an empty _jsApi so $2sxc can initialize - must fill afterwards!
+    // window._jsApi = {};
+
     document.write('<base href="' + path + '">');
     document.write('<script src="../../js/2sxc.api.js' + jsVersionCacheId + '"></scr' + 'ipt>');
     // must now close the script tag, so that the added tag is parsed before all other code
@@ -16,6 +19,7 @@
     // console.log('quick-edit: ng-ui loading...');
     var apiUrl = $2sxc.urlParams.require('portalroot') + 'desktopmodules/2sxc/api/';
     createFakeSf(apiUrl);
+    loadEnvironment();
 
     // Create a fake DNN Service-Framework, required by $2sxc to work properly
     function createFakeSf(apiUrl) {
@@ -37,6 +41,17 @@
         }
       };
     };
+
+    // New initializer for 10.25
+    function loadEnvironment() {
+      var jsApi = {
+        page: $2sxc.urlParams.require("tid"),
+        rvt: $2sxc.urlParams.require("rvt"),
+        root: $2sxc.urlParams.require("portalroot"),
+        api: $2sxc.urlParams.require("portalroot") + "desktopmodules/2sxc/api/"
+      }
+      $2sxc.env.load(jsApi);
+    }
 
     // add a script right then and there to the document, correctly cache-busting
     function addScript(src) {
@@ -84,7 +99,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<!-- 
+<!--
   dummy area to capture automatically added style tag which doesn't have cache-breaker
   <link rel="stylesheet" href="styles.css"></head>
  -->
@@ -102,7 +117,7 @@
     for (s = 0; s < styles.length; s++) addStyle(styles[s]);
 
   </script>
-<!-- 
+<!--
   dummy area to capture automatically added script tags which don't have cache-breaker
   <script type="text/javascript" src="runtime.js"></script><script type="text/javascript" src="polyfills.js"></script><script type="text/javascript" src="vendor.js"></script><script type="text/javascript" src="main.js"></script></body>
 -->

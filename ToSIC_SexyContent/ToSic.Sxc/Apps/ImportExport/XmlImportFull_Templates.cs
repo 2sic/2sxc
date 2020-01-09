@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
             //var appState = DataSource.GetCache(DataSource.GetIdentity(ZoneId, AppId));
             //var cache = Factory.Resolve<IAppsCache>();
-            var appState = Factory.GetAppState(new AppIdentity(ZoneId, AppId));
+            var appState = /*Factory.GetAppState*/Eav.Apps.State.Get(new AppIdentity(ZoneId, AppId));
 
             foreach (var template in templates.Elements(XmlConstants.Template))
             {

@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Blocks
     /// It's used for InnerContent, so that Razor-Code can easily render additional content blocks. <br/>
     /// See also [](xref:Specs.Cms.InnerContent)
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public class Render
     {
         /// <summary>
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Blocks
         /// <param name="field">Optional: </param>
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <returns></returns>
-        internal static IHtmlString One(DynamicEntity context,
+        public static IHtmlString One(DynamicEntity context,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             IDynamicEntity item = null, 
             string field = null,

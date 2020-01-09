@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.System
             ThrowIfNotSuperuser();
 
             var msg = h1("Apps In Cache");
-            var cache = Factory.GetAppsCache();
+            var cache = /*Factory.GetAppsCache*/Eav.Apps.State.Cache;
 
             var zones = cache.Zones.OrderBy(z => z.Key);
 

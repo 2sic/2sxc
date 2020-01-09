@@ -4,9 +4,9 @@ using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Conversion;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Serializers;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
@@ -107,7 +107,7 @@ namespace ToSic.Sxc.Apps
         {
             var templates = GetAll().ToList();
             var visible = templates.Where(t => !t.IsHidden).ToList();
-            var serializer = new Serializer();
+            var serializer = new EntitiesToDictionary();
 
             return App.ContentTypes.FromScope(Settings.AttributeSetScope) 
                 .Where(ct => templates.Any(t => t.ContentType == ct.StaticName)) // must exist in at least 1 template
@@ -120,7 +120,7 @@ namespace ToSic.Sxc.Apps
                         Name = ct.Name,
                         IsHidden = visible.All(t => t.ContentType != ct.StaticName),   // must check if *any* template is visible, otherise tell the UI that it's hidden
                         Thumbnail = metadata?.GetBestValue(View.TemplateIcon, true)?.ToString(),
-                        Metadata = serializer.Prepare(metadata)
+                        Metadata = serializer.Convert(metadata)
                     };
                 });
         }

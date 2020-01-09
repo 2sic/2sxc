@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Apps
     /// A <em>single-use</em> app-object providing quick simple api to access
     /// name, folder, data, metadata etc.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public class App : Eav.Apps.App, IApp
     {
         #region Dynamic Properties: Configuration, Settings, Resources

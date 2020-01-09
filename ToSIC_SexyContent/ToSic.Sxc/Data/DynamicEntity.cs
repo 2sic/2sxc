@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Data
     /// A dynamic entity object - the main object you use when templating things in RazorComponent objects <br/>
     /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>, ICompatibilityLevel
     {
         [PrivateApi]

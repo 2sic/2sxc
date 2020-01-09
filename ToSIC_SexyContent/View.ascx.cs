@@ -5,14 +5,11 @@ using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Framework;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
@@ -46,10 +43,29 @@ namespace ToSic.SexyContent
         /// </summary>
         protected void Page_Load(object sender, EventArgs e)
         {
-            // always do this, part of the guarantee that everything will work
-            ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+            // add to insights-history for analytics
             History.Add("module", Log);
+
+            // always do this, part of the guarantee that everything will work
+            // 2020-01-06 2sxc 10.25 - moved away to DnnRenderingHelpers
+            // to only load when we're actually activating the JS.
+            // might be a breaking change for some code that "just worked" before
+            //ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+            
+            // new mechanism in 10.25
+            // this must happen in Page-Load, so we know what supporting scripts to add
+            // at this stage of the lifecycle
+            Html = RenderViewAndGatherJsCssSpecs();
+
+            // call this after rendering templates, because the template may change what resources are registered
+            TryCatchAndLogToDnn(() => new DnnClientResources(Page, CmsBlock, Log).AddEverything());
         }
+
+        public bool RenderNaked 
+            => _renderNaked ?? (_renderNaked = Request.QueryString["standalone"] == "true").Value;
+        private bool? _renderNaked;
+
+        protected string Html;
 
         /// <summary>s
         /// Process View if a Template has been set
@@ -58,7 +74,20 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_PreRender(object sender, EventArgs e)
         {
-            var timerWrap = Log.Call(message: "timer", useTimer: true);
+            TryCatchAndLogToDnn(() =>
+            {
+                // If standalone is specified, output just the template without anything else
+                if (RenderNaked)
+                    SendStandalone(Html);
+                else
+                    phOutput.Controls.Add(new LiteralControl(Html));
+            });
+        }
+
+        private string RenderViewAndGatherJsCssSpecs()
+        {
+            var renderedTemplate = "";
+            var timerWrap = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
             try
             {
                 // throw better error if SxcInstance isn't available
@@ -72,35 +101,24 @@ namespace ToSic.SexyContent
                 if (!isSharedModule && !CmsBlock.Block.ContentGroupExists && CmsBlock.App != null)
                     new DnnTenantSettings().EnsureTenantIsConfigured(CmsBlock, Server, ControlPath);
 
-                var renderNaked = Request.QueryString["standalone"] == "true";
-                if (renderNaked)
+                //renderNaked = Request.QueryString["standalone"] == "true";
+                if (RenderNaked)
                     CmsBlock.RenderWithDiv = false;
-                var renderedTemplate = CmsBlock.Render().ToString();
-
-                // call this after rendering templates, because the template may change what resources are registered
-                RegisterResources();
+                renderedTemplate = CmsBlock.Render().ToString();
 
                 // optional detailed logging
                 try
                 {
+                    // if in debug mode and is super-user (or it's been enabled for all), then add to page debug
                     if (Request.QueryString["debug"] == "true")
-                    {
-                        // only attach debug, if it has been enabled for the current time period
-                        if (UserInfo.IsSuperUser || DnnLogging.EnableLogging(GlobalConfiguration.Configuration
-                                .Properties))
+                        if (UserInfo.IsSuperUser
+                            || DnnLogging.EnableLogging(GlobalConfiguration.Configuration.Properties))
                             renderedTemplate += HtmlLog();
-                    }
                 }
                 catch
                 {
                     /* ignore */
                 }
-
-                // If standalone is specified, output just the template without anything else
-                if (renderNaked)
-                    SendStandalone(renderedTemplate);
-                else
-                    phOutput.Controls.Add(new LiteralControl(renderedTemplate));
             }
             catch (Exception ex)
             {
@@ -111,6 +129,8 @@ namespace ToSic.SexyContent
             {
                 timerWrap(null);
             }
+
+            return renderedTemplate;
         }
 
 
@@ -124,39 +144,20 @@ namespace ToSic.SexyContent
         }
 
         private string HtmlLog() 
-            => Log.Dump(" - ", "<!-- 2sxc extensive log for " + ModuleId + "\n", "-->");
+            => Log.Dump(" - ", "<!-- 2sxc insights for " + ModuleId + "\n", "-->");
 
 
-        /// <summary>
-        /// Register all client parts (css/js, anti-forgery-token)
-        /// to enable editing or data work
-        /// </summary>
-        private void RegisterResources()
+        private void TryCatchAndLogToDnn(Action action)
         {
-            var editJs = CmsBlock?.UiAddEditApi ?? false;
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            var readJs = CmsBlock?.UiAddJsApi ?? editJs;
-            var editCss = CmsBlock?.UiAddEditUi ?? false;
-
-            if (!readJs && !editJs && !editCss) return;
-
-            Log.Add("user is editor, or template requested js/css, will add client material");
-
-            #region If logged in, inject Edit JavaScript, and delete / add items
-
-            // register scripts and css
             try
             {
-                new DnnRenderingHelpers(CmsBlock, Log).RegisterClientDependencies(Page, readJs, editJs, editCss);
+                action.Invoke();
             }
             catch (Exception ex)
             {
                 Exceptions.ProcessModuleLoadException(this, ex);
             }
-
-            #endregion
         }
-
 
 
         #region ModuleActions on THIS DNN-Module

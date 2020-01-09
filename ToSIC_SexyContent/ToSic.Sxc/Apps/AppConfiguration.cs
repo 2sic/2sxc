@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Apps
     /// <summary>
     /// The configuration of the app, as you can set it in the app-package definition.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public class AppConfiguration: EntityBasedWithLog
     {
         [PrivateApi]

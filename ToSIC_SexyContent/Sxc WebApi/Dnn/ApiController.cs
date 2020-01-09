@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
@@ -25,15 +23,15 @@ namespace ToSic.Sxc.Dnn
     /// This is the base class for all custom API Controllers. <br/>
     /// With this, your code receives the full context  incl. the current App, DNN, Data, etc.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     [SxcWebApiExceptionHandling]
-    public abstract partial class ApiController : DynamicApiController, IDynamicWebApi, IDynamicCodeBeforeV10
+    public abstract partial class ApiController : DynamicApiController, IDynamicWebApi
     {
         /// <inheritdoc />
         public new IDnnContext Dnn => base.Dnn;// DynCodeHelpers.Dnn;
 
         [PrivateApi("try to remove")]
-        public SxcHelper Sxc => DynCode.Sxc;
+        //public SxcHelper Sxc => DynCode.Sxc;
 
         [PrivateApi]
         public int CompatibilityLevel => DynCode.CompatibilityLevel;

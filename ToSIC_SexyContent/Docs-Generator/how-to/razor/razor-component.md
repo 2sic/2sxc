@@ -41,20 +41,12 @@ Visit the [App Catalog](xref:AppsCatalog) where almost all apps use Razor. There
 * `Overrideable` [CustomizeData](xref:HowTo.Razor.CustomizeData) - is like a "before-data-is-used" of the page, used to change what data is delivered to the page - or to the search.  
   Note that this is an older feature and many things this does can also be done using the visual query designer. But sometimes you will need code, and this is the place to do it.
 * `Overridable` [CustomizeSearch](xref:HowTo.Razor.CustomizeSearch)
-* `string` [InstancePurpose](xref:HowTo.Razor.Purpose) - tells you if the code is running to render into html, or for another reason like populating the search index - so your code can adapt
+* `string` [Purpose](xref:HowTo.Razor.Purpose) - tells you if the code is running to render into html, or for another reason like populating the search index - so your code can adapt
 
 
 ## Migrating from the old Razor (before 10.20) to the new RazorComponent
 
-The RazorComponent was created in v10.20 to provide a newer, cleaner API. To not break existing code, old templates still work, but you must migrate a template to RazorComponent if you wish to use the new features. Here are the things that are different:
+The RazorComponent was created in v10.20 to provide a newer, cleaner API. To not break existing code, old templates still work, but you must migrate a template to RazorComponent if you wish to use the new features. Here what you need to do:
 
-1. Add `@inherits ToSic.Sxc.Dnn.RazorComponent` as the first line in your code  
-    _this tells the compiler, that you want to use the new API_
-1. Rename any old object names you have been using
-    1. the object `ListContent` is now called `Header`
-    1. `ListContent.Presentation` is now called `Header.Presentation`
-    1. `ListPresentation` is now called `Header.Presentation` (yep, it's the same thing)
-1. Change list uses of `AsDynamic(...)` to `AsList(...)`  
-    _Previously AsDynamic was used both for single-items as well as for lists. The compiler couldn't always figure out what to use, so you had to cast objects - which was nasty. Now you use AsList for lists, and AsDynamic for single items._  
-    See also [](xref:HowTo.DynamicCode.AsDynamic) and [](xref:HowTo.DynamicCode.AsList)
-
+<iframe src="https://azing.org/2sxc/r/9g6xRMrD?embed=1" width="100%" height="400" frameborder="0" allowfullscreen style="box-shadow: 0 1px 3px rgba(60,64,67,.3), 0 4px 8px 3px rgba(60,64,67,.15)"></iframe>
+<script src="https://cdn.azing.org/e/1/embed.js"></script>

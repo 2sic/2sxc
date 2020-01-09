@@ -35,7 +35,7 @@ These examples example gets the $2sxc-controller related to the `<a>` tag using 
 Here's a fairly realistic setup using Razor and custom buttons in HTML:
 
 ```html
-@if(Permissions.UserMayEditContent)
+@if(Edit.Enabled)
 {
 
 

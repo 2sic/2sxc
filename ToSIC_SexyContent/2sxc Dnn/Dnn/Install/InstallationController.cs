@@ -164,7 +164,7 @@ namespace ToSic.Sxc.Dnn.Install
             _installLogger.LogStep("", "Maybe reset logs start");
             // this condition only applies, if 2sxc upgrade 7 didn't happen yet
             // var cache = Eav.Factory.Resolve<IAppsCache>();
-            var appState = Eav.Factory.GetAppState(new AppIdentity(Constants.DefaultZoneId, Constants.MetaDataAppId));
+            var appState = /*Factory.GetAppState*/Eav.Apps.State.Get(new AppIdentity(Constants.DefaultZoneId, Constants.MetaDataAppId));
             if (appState // DataSource.GetCache(DataSource.GetIdentity(Constants.DefaultZoneId, Constants.MetaDataAppId))
                     .GetContentType("2SexyContent-Template") != null) return;
 

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
     /// JS/C# code style differences. <br/>
     /// You will usually do things like `AsDynamic(jsonString).FirstName` etc.
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
     public partial class DynamicJacket: DynamicJacketBase<JObject>
     {
         /// <inheritdoc />

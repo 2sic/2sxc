@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn.LookUp
     /// Retrieves the current engine for a specific module. <br/>
     /// Internally it asks DNN for the current Property-Access objects and prepares them for use in EAV.
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class GetDnnEngine : IGetEngine
     {
         /// <inheritdoc />

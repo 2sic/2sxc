@@ -6,6 +6,8 @@
     <meta charset="utf-8" />
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
     <script>
+        // create an empty _jsApi so $2sxc can initialize - must fill afterwards!
+        window._jsApi = {};
         var jsVersionCacheId = window.location.search;    // use this to prevent
         document.write('<script src="../../js/2sxc.api.min.js' + jsVersionCacheId + '"></scr' + 'ipt>');
     </script>
@@ -17,6 +19,7 @@
         // this creates an object on $.ServicesFramework
         // it looks like the DNN object and is necessary so that scripts relying on it will work
         // it basically fakes it, but contains the correct infos like getTabId etc. without needing the full DNN
+        // the ui.html doesn't need this, but 2sxc4ng does
         function createFakeSf(apiUrl) {
             if ($2sxc.urlParams.require("mid") === "")
                 alert("ModuleId (mid) missing - cannot continue");
@@ -26,10 +29,21 @@
                     name: "This is a fake DNN ServicesFramework",
                     description: "It enables stuff requiring (but not really needing) the sf to work",
                     getTabId: function () { return $2sxc.urlParams.require("tid"); },
-                    getAntiForgeryValue: function () { return $2sxc.urlParams.require('rvt') /* "abcdefgihjklmnop" */; },
+                    getAntiForgeryValue: function () { return $2sxc.urlParams.require('rvt'); },
                     getServiceRoot: function () { return apiUrl; }
                 }
             }
+        }
+
+        // New initializer for 10.25
+        function loadEnvironment() {
+            var jsApi = {
+                page: $2sxc.urlParams.require("tid"),
+                rvt: $2sxc.urlParams.require("rvt"),
+                root: $2sxc.urlParams.require("portalroot"),
+                api: $2sxc.urlParams.require("portalroot") + "desktopmodules/2sxc/api/"
+            }
+            $2sxc.env.load(jsApi);
         }
 
         // add a script right then and there to the document
@@ -64,11 +78,11 @@
         var dialogName = $2sxc.urlParams.require("dialog");
 
         // this must come close to the end, after a closed script which might load jQuery
+        loadEnvironment();
         var apiUrl = $2sxc.urlParams.require("portalroot") + "desktopmodules/2sxc/api/";
         createFakeSf(apiUrl);
-    </script>
 
-    <script>
+        // set language
         var langTwoLetter = $2sxc.urlParams.get("lang") ? $2sxc.urlParams.get("lang").split('-')[0] : "en";
         var availableLanguages = ['en', 'de', 'es', 'fr', 'it', 'nl', 'uk'];
         if (availableLanguages.indexOf(langTwoLetter) === -1)

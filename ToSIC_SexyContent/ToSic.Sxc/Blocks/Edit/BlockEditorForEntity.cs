@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Blocks
             var appName = "";
             if (appId.HasValue)
             {
-                var cache = Factory.GetAppsCache();
+                var cache = /*Factory.GetAppsCache*/Eav.Apps.State.Cache;
                 var zoneAppId = cache.GetIdentity(null, appId);
                 appName = cache.Zones[zoneAppId.ZoneId].Apps[appId.Value];
             }

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Web;
-using System.Web.UI;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Exceptions;
-using DotNetNuke.Web.Client.ClientResourceManagement;
 using Newtonsoft.Json;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -16,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnRenderingHelpers : IHasLog, IRenderingHelpers
     {
-        private Sxc.Blocks.ICmsBlock _cmsInstance;
+        protected Blocks.ICmsBlock CmsBlock;
         private PortalSettings _portalSettings;
         private UserInfo _userInfo;
         private string _applicationRoot;
@@ -27,14 +25,14 @@ namespace ToSic.Sxc.Dnn.Web
         // Blank constructor for IoC
         public DnnRenderingHelpers() { }
 
-        public DnnRenderingHelpers(Sxc.Blocks.ICmsBlock cms, ILog parentLog) => Init(cms, parentLog);
+        public DnnRenderingHelpers(Blocks.ICmsBlock cms, ILog parentLog) => Init(cms, parentLog);
 
-        public IRenderingHelpers Init(Sxc.Blocks.ICmsBlock cms, ILog parentLog)
+        public IRenderingHelpers Init(Blocks.ICmsBlock cms, ILog parentLog)
         {
             this.LinkLog(parentLog);
             var appRoot = VirtualPathUtility.ToAbsolute("~/");
             _moduleInfo = cms?.Container;
-            _cmsInstance = cms;
+            CmsBlock = cms;
             _portalSettings = PortalSettings.Current;
 
             _userInfo = PortalSettings.Current.UserInfo;
@@ -78,50 +76,14 @@ namespace ToSic.Sxc.Dnn.Web
             return contextAttribs;
         }
 
-        /// <summary>
-        /// Return true if the URL is a debug URL
-        /// </summary>
-        private static bool IsDebugUrl(HttpRequest request) => string.IsNullOrEmpty(request.QueryString["debug"]);
 
 
-
-        public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss)
-        {
-            Log.Add("will auto-register client dependencies (js/css");
-            var root = "~/desktopmodules/tosic_sexycontent/";
-            root = page.ResolveUrl(root);
-            //var breakCache = "?sxcver=" + Settings.Version;
-            var ext = IsDebugUrl(page.Request) ? ".min.js" : ".js";// + breakCache;
-            var ver = Settings.Version.ToString();
-
-            // add edit-mode CSS
-            if (editCss) RegisterCss(page, root + "dist/inpage/inpage.min.css");
-
-            // add read-js
-            if(readJs|| editJs) RegisterJs(page, ver, root + "js/2sxc.api" + ext);
-
-            // add edit-js (commands, manage, etc.)
-            if (editJs) RegisterJs(page, ver, root + "dist/inpage/inpage.min.js");
-        }
-
-        #region add scripts / css with bypassing the official ClientResourceManager
-
-        private static void RegisterJs(Page page, string version, string path)
-        {
-            var url = $"{path}{(path.IndexOf('?') > 0 ? '&' : '?')}v={version}";
-            page.ClientScript.RegisterClientScriptInclude(typeof(Page), path, url);
-        }
-
-        private static void RegisterCss(Page page, string path) 
-            => ClientResourceManager.RegisterStyleSheet(page, path);
-
-        #endregion
 
         // new
         public string UiContextInfos(bool autoToolbars)
-            => JsonConvert.SerializeObject(new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, _cmsInstance, _userInfo,
-                _cmsInstance.Block.ZoneId // 2019-11-09, Id not nullable any more // ?? 0
-                , _cmsInstance.Block.ContentGroupExists, autoToolbars, Log));
+            => JsonConvert.SerializeObject(new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, CmsBlock, _userInfo,
+                CmsBlock.Block.ZoneId // 2019-11-09, Id not nullable any more // ?? 0
+                , CmsBlock.Block.ContentGroupExists, autoToolbars, Log));
 
 
 

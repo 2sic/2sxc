@@ -27,7 +27,7 @@ namespace ToSic.Sxc.DataSources
     /// It could also find that the template specifies a query, in which case it would retrieve that. <br/>
     /// <em>Was previously called ModuleDataSource</em>
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     [VisualQuery(
         GlobalName = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
         Type = DataSourceType.Source, 

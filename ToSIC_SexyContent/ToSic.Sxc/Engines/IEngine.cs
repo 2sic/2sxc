@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Engines
     /// - a template
     /// and using all that to produce an html-string for the browser. 
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public interface IEngine
     {
         /// <summary>
@@ -32,6 +32,8 @@ namespace ToSic.Sxc.Engines
         /// </summary>
         /// <returns>The string - usually HTML - which the engine created. </returns>
         string Render();
+
+        [PrivateApi] bool ActivateJsApi { get; }
 
         /// <summary>
         /// Mechanism which allows the view to change data it will show in a stream-based way.

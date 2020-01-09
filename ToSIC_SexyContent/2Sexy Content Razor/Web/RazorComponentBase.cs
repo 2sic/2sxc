@@ -3,7 +3,6 @@ using System.Web.Hosting;
 using System.Web.WebPages;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
 using File = System.IO.File;
@@ -31,6 +30,7 @@ namespace ToSic.Sxc.Web
         /// Override the base class ConfigurePage, and additionally update internal objects so sub-pages work just like the master
         /// </summary>
         /// <param name="parentPage"></param>
+        [PrivateApi]
         protected override void ConfigurePage(WebPageBase parentPage)
         {
             base.ConfigurePage(parentPage);

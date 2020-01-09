@@ -61,6 +61,11 @@ namespace ToSic.Sxc.Blocks
                             Log.Add("standard case, found template, will render");
                             var engine = GetRenderingEngine(Purpose.WebView);
                             body = engine.Render();
+                            if (engine.ActivateJsApi)
+                            {
+                                Log.Add("template referenced 2sxc.api JS. will enable");
+                                UiAddJsApi = true;
+                            }
                         }
                         else body = "";
                     }

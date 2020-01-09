@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Search
     /// <summary>
     /// Special search exception, so these exceptions can be handled in a special way if necessary.
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class SearchIndexException : Exception
     {
         public SearchIndexException(ModuleInfo moduleInfo, Exception innerException)

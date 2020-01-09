@@ -4,6 +4,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
@@ -19,14 +20,17 @@ namespace ToSic.Sxc.Code
     /// Also provides many Conversions between <see cref="IEntity"/> and <see cref="IDynamicEntity"/>.
     /// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data. 
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
 #pragma warning disable 618
     public interface IDynamicCode: ICreateInstance, ICompatibilityLevel // inherit from old namespace to ensure compatibility
 #pragma warning restore 618
     {
         #region internal/obsolete but still needed, not public!
-        [PrivateApi("will be removed soon")]
-        SxcHelper Sxc { get; }
+        //[PrivateApi("will be removed soon")]
+        //SxcHelper Sxc { get; }
+
+        [PrivateApi("will be moved/removed/renamed")]
+        ICmsBlock CmsBlock { get; }
 
         //[PrivateApi]
         //IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);
@@ -131,7 +135,7 @@ namespace ToSic.Sxc.Code
         /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
         /// If you provide null for the fallback, then you will get null back.
         /// </returns>
-        /// <remarks>Added in 2sxc 10.24.00</remarks>
+        /// <remarks>Added in 2sxc 10.22.00</remarks>
         dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson);
 
         #endregion 

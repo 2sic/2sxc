@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Apps
     /// <summary>
     /// An app-object as is available in a razor template or WebApi
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public interface IApp: 
         Eav.Apps.IApp,
         SexyContent.Interfaces.IApp // inherits from old namespace for compatibility

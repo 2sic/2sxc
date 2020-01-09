@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Web
     /// <summary>
     /// Helpers to create links with parameters or base-tag links (important for SPAs)
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public interface ILinkHelper: SexyContent.Interfaces.ILinkHelper    // inherits from old namespace for compatibility
     {
         /// <summary>

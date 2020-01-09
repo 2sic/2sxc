@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Code
     /// A special feature is that it must store a reference to the path it's in (provided by the compiler that created this instance).
     /// This is important, so that CreateInstance knows what path to start in. 
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public interface ICreateInstance
     {
         /// <summary>

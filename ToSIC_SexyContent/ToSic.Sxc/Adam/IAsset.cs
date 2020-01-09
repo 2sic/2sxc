@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Adam
     /// Describes an ADAM (Automatic Digital Asset Management) asset. <br/>
     /// This contains properties which both <see cref="IFolder"/> and <see cref="IFile"/> have in common.
     /// </summary>
-    [PublicApi]
+    [PublicApi_Stable_ForUseInYourCode]
     public interface IAsset
     {
         #region Metadata

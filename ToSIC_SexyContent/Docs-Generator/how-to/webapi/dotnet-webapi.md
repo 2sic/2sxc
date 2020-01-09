@@ -1,6 +1,7 @@
 ---
 uid: HowTo.WebApi
 ---
+
 # ASP.net WebAPI in 2sxc
 
 You can create your own custom WebAPI in 2sxc to allow external systems to interact with your data.
@@ -18,55 +19,69 @@ _New in 2sxc 9.35+_: you can now also create `api` folders as _subfolders_ to ru
   `[app-folder]/[edition]/api/YourController.cs`
   access url: `[api-root]/app/auto/[edition]/api/[Your]`
 
-Read more about urls in the [WebApi](xref:HowTo.WebApis) docs.
+Read more about urls in the [WebApi](xref:HowTo.WebApi.Intro) docs.
 
 ## How to use
-A file named **DemoController.cs** could look like the following:
+A file named **BooksController.cs** could look like the following:
 
 ```c#
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.WebApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 
-public class DemoController : SxcApiController
+public class BooksController : ToSic.Sxc.Dnn.ApiController
 {
-      [HttpGet]
-      [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
-      [ValidateAntiForgeryToken]
-      public object Get()
-      {
-            return new
-            {
-                  Data = Sxc.Serializer.Prepare(App.Data["MyData"].List)
-            };
-      }
+  [HttpGet]
+  [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+  [ValidateAntiForgeryToken]
+  public object Persons()
+  {
+    return new ToSic.Sxc.Conversion.DataToDictionary(Edit.Enabled)
+      .Convert(App.Data["Persons"]);
+  }
 }
 ```
 
-The custom controller **DemoController** must have the same name as the file and extends the **SxcApiController** controller. It has a method returning all items of the **MyData** data type. The method is decorated with several attributes:
+The custom controller **BooksController** must have the same name as the file and extends the **ApiController** controller. It has a method returning all items of the **Persons** data type. The method is decorated with several attributes:
 * [HttGet] defines that the method must be invoked with HTTP GET
 * [DnnModuleAuthorize(AccessLevel = ...)] defines the permission an invoker must have
 * [ValidateAntiForgeryToken] ensures that a security token from the cookies is validated before the mehod is invoked
 You can implement any other methods.
 
-The custom controller can be called with JavaScript and the 2sxc4ng API like this:
+The custom controller can be called with JavaScript like this:
 
-```JavaScript
-return $http.get("app-api/Demo/Get").then(function (result) {
-      return results.data.Data;
-});
+```html
+<!-- this ensures the $2sxc scripts are loaded -->
+@Edit.Enable(js: true)
+
+<!-- the button which loads everything -->
+<button type="button" class="btn btn-primary" onclick="getPersons(this)">
+  Get Persons Custom
+</button> 
+<script>
+  // this script does the API call and then shows the result
+  function getPersons(moduleContext) {
+    $2sxc(moduleContext)
+      .webApi.get('app/auto/api/books/persons')
+      .then(function (results) {
+        alert('Found ' + results.length + ' persons. \n'
+          + 'The first one is "' + results[0].FirstName + ' ' + results[0].LastName + '"\n\n'
+          + 'The raw JSON: \n' + JSON.stringify(results)
+        );
+      });
+  }
+</script>
 ```
 
-The 2sxc4ng API ensures that the GET request is send to the correct url /DesktopModules/2sxc/API/app-api/Demo/Get. You can also read more about the jQuery [sxc Controller](xref:Specs.Js.Sxc) to use 2sxc-WebApis from jQuery pages.
+The $2sxc API ensures that the GET request is send to the correct url /DesktopModules/2sxc/API/app-api/Demo/Get. You can also read more about the [sxc Controller](xref:Specs.Js.Sxc).
 
-## Special Object / Commands in SxcApiController
+## Special Object / Commands in ApiController
 
-The `SxcApiController` provides various command / helpers to get you productiv. Most are the same as in a normal Razor view, but some are additional. Here are the main ones:
+The `ApiController` provides various command / helpers to get you productiv. Most are the same as in a normal Razor view, but some are additional. Here are the main ones:
 
 1. AsDynamic(...)
 1. AsEntity(...)
@@ -80,7 +95,8 @@ The `SxcApiController` provides various command / helpers to get you productiv. 
 
 ## Read also
 
-* [WebApi](xref:HowTo.WebApis)
+* [](xref:Tut.WebApi)
+* [WebApi](xref:HowTo.WebApi.Intro)
 * [Concepts: Polymorphisms](xref:Specs.Cms.Polymorphism)
 
 ## History

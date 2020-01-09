@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Data
     /// To check if something is an array or an object, use "IsArray"
     /// </summary>
     /// <typeparam name="T">The underlying type, either a JObject or a JToken</typeparam>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
     public abstract class DynamicJacketBase<T>: DynamicObject, IReadOnlyList<object>, IWrapper<T>
     {
         /// <summary>
