@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi.Cms
         // in future, the JS front-end should send something clearer and not the whole object
         public bool Save(int appId, Dictionary<string, object> item)
         {
-            var cleanList = item.ToDictionary(i => i.Key, i => i.Value as string);
+            var cleanList = item.ToDictionary(i => i.Key, i => i.Value?.ToString());
             return _eavCtc.Save(appId, cleanList);
         }
 
