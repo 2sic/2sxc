@@ -21,9 +21,13 @@ Content-Types are structured as follows:
 
 Each [Entity](xref:Specs.Data.Entities) has many fields, some containing text, numbers etc. The fields an Entity can have is defined in the **Content-Type**, so each Entity is like a record of that type. The Content-Type will define what fields exist, what is required and what order the fields will appear in when editing the item. 
 
+#### Identity of a Content Type: Name and StaticName
+
+Each content-type has a _Name_, which is nice for a human to read, use and program with. There is a second identifier called _StaticName_ which is usually a GUID, but in rare cases it's a string like `App-Settings`. This identifier is used internally - for example when a View references a Content-Type.
+
 #### Storage
 Most Content-Types are stored in the database, including all the Content-Types in your App. 
-Special global Content-Types are stored in the file system. They are called [](xref:Specs.Data.FileBasedContentTypes)
+Special global Content-Types are stored in the file system. These are called [](xref:Specs.Data.FileBasedContentTypes)
 
 #### Metadata of Content-Types and Attributes
 Both the Content-Type and Attributes can have _Metadata_ providing more information about them. 
@@ -37,6 +41,12 @@ Fields can also be of type [Entity](xref:Specs.Data.Values.Entity) in which case
 #### Input Forms and Fields (like WYSIWYG)
 The input mask is automatically generated from the [Content-Type](xref:Specs.Data.ContentTypes). Based on the specifications, it will generate the correct [Input-Field](xref:Specs.Data.Inputs.Overview) like a simple text field, a multiline text field, a WYSIWYG or even a file-uploader. 
 
+#### Scopes
+
+Content-Types have a _Scope_. This is like a category for the Content-Type. Normally you only see the Content-Types and Entities of the default Scope. The other Scopes have internal and system Content-Types like `@String`. 
+
+* [Here's the full list of current Scopes](https://azing.org/2sxc/r/LqblhYXD)
+* Here are instructions how to [switch Scopes](https://azing.org/2sxc/r/MEa0dtBw) to manage data of other Scopes
 
 ## APIs
 
