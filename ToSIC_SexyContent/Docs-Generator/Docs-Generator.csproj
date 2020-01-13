@@ -140,8 +140,6 @@
     <None Include="namespaces\ToSic.Eav\DataSources\ValueSort.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\Query\api-visualquery.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\_intro.md" />
-    <None Include="namespaces\ToSic.Eav\Eav.Apps.Assets.md" />
-    <None Include="namespaces\ToSic.Eav\Eav.Apps.md" />
     <None Include="namespaces\ToSic.Eav\Eav.Caching.md" />
     <None Include="namespaces\ToSic.Eav\Eav.Data.md" />
     <None Include="namespaces\ToSic.Eav\Eav.Environment.md" />

@@ -3,9 +3,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -51,21 +49,28 @@ namespace ToSic.SexyContent
             // to only load when we're actually activating the JS.
             // might be a breaking change for some code that "just worked" before
             //ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-            
+
+
             // new mechanism in 10.25
             // this must happen in Page-Load, so we know what supporting scripts to add
             // at this stage of the lifecycle
-            Html = RenderViewAndGatherJsCssSpecs();
+            // temp note 2020-01-13 2dm: I believe we moved this to Page_Load because RequestAjaxAntiForgerySupport didn't work in later events, but I must verify this
 
-            // call this after rendering templates, because the template may change what resources are registered
-            TryCatchAndLogToDnn(() => new DnnClientResources(Page, CmsBlock, Log).AddEverything());
+            // 2020-01-13 revised again
+            // ensure everything is ready and that we know if we should activate the client-dependency
+            TryCatchAndLogToDnn(() =>
+            {
+                EnsureCmsBlockAndPortalIsReady();
+                DnnClientResources = new DnnClientResources(Page, CmsBlock, Log);
+                DnnClientResources.EnsurePre1025Behavior();
+            });
         }
+
+        protected DnnClientResources DnnClientResources;
 
         public bool RenderNaked 
             => _renderNaked ?? (_renderNaked = Request.QueryString["standalone"] == "true").Value;
         private bool? _renderNaked;
-
-        protected string Html;
 
         /// <summary>s
         /// Process View if a Template has been set
@@ -76,11 +81,14 @@ namespace ToSic.SexyContent
         {
             TryCatchAndLogToDnn(() =>
             {
+                var html = RenderViewAndGatherJsCssSpecs();
+                // call this after rendering templates, because the template may change what resources are registered
+                DnnClientResources.AddEverything();
                 // If standalone is specified, output just the template without anything else
                 if (RenderNaked)
-                    SendStandalone(Html);
+                    SendStandalone(html);
                 else
-                    phOutput.Controls.Add(new LiteralControl(Html));
+                    phOutput.Controls.Add(new LiteralControl(html));
             });
         }
 
@@ -88,22 +96,9 @@ namespace ToSic.SexyContent
         {
             var renderedTemplate = "";
             var timerWrap = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
-            try
+            TryCatchAndLogToDnn(() =>
             {
-                // throw better error if SxcInstance isn't available
-                // not sure if this doesn't have side-effects...
-                if (CmsBlock == null)
-                    throw new Exception("Error - can't find 2sxc instance configuration. " +
-                                        "Probably trying to show an app or content that has been deleted.");
-
-                // check things if it's a module of this portal (ensure everything is ok, etc.)
-                var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
-                if (!isSharedModule && !CmsBlock.Block.ContentGroupExists && CmsBlock.App != null)
-                    new DnnTenantSettings().EnsureTenantIsConfigured(CmsBlock, Server, ControlPath);
-
-                //renderNaked = Request.QueryString["standalone"] == "true";
-                if (RenderNaked)
-                    CmsBlock.RenderWithDiv = false;
+                if (RenderNaked) CmsBlock.RenderWithDiv = false;
                 renderedTemplate = CmsBlock.Render().ToString();
 
                 // optional detailed logging
@@ -115,22 +110,27 @@ namespace ToSic.SexyContent
                             || DnnLogging.EnableLogging(GlobalConfiguration.Configuration.Properties))
                             renderedTemplate += HtmlLog();
                 }
-                catch
-                {
-                    /* ignore */
-                }
-            }
-            catch (Exception ex)
-            {
-                timerWrap(null);
-                Exceptions.ProcessModuleLoadException(this, ex);
-            }
-            finally
-            {
-                timerWrap(null);
-            }
+                catch { /* ignore */ }
+            }, timerWrap);
 
             return renderedTemplate;
+        }
+
+        private void EnsureCmsBlockAndPortalIsReady()
+        {
+            var timerWrap = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
+            // throw better error if SxcInstance isn't available
+            // not sure if this doesn't have side-effects...
+            if (CmsBlock == null)
+                throw new Exception("Error - can't find 2sxc instance configuration. " +
+                                    "Probably trying to show an app or content that has been deleted.");
+
+            // check things if it's a module of this portal (ensure everything is ok, etc.)
+            var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
+            if (!isSharedModule && !CmsBlock.Block.ContentGroupExists && CmsBlock.App != null)
+                new DnnTenantSettings().EnsureTenantIsConfigured(CmsBlock, Server, ControlPath);
+
+            timerWrap(null);
         }
 
 
@@ -147,7 +147,7 @@ namespace ToSic.SexyContent
             => Log.Dump(" - ", "<!-- 2sxc insights for " + ModuleId + "\n", "-->");
 
 
-        private void TryCatchAndLogToDnn(Action action)
+        private void TryCatchAndLogToDnn(Action action, Action<string> timerWrap = null)
         {
             try
             {
@@ -155,90 +155,16 @@ namespace ToSic.SexyContent
             }
             catch (Exception ex)
             {
+                timerWrap?.Invoke(null);
                 Exceptions.ProcessModuleLoadException(this, ex);
             }
-        }
-
-
-        #region ModuleActions on THIS DNN-Module
-
-        /// <summary>
-        /// Causes DNN to create the menu with all actions like edit entity, new, etc.
-        /// </summary>
-        private ModuleActionCollection _moduleActions;
-        public ModuleActionCollection ModuleActions
-        {
-            get
+            finally
             {
-                try
-                {
-                    if (ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID)
-                        _moduleActions = new ModuleActionCollection();
-
-                    if (_moduleActions != null) return _moduleActions;
-
-                    InitModuleActions();
-                    return _moduleActions;
-                }
-                catch (Exception e)
-                {
-                    Exceptions.LogException(e);
-                    return new ModuleActionCollection();
-                }
+                timerWrap?.Invoke(null);
             }
         }
 
-        private void InitModuleActions()
-        {
-            _moduleActions = new ModuleActionCollection();
-            var actions = _moduleActions;
-            var appIsKnown = CmsBlock.Block.AppId > 0;
 
-            if (appIsKnown)
-            {
-                // Edit item
-                if (!CmsBlock.View?.UseForList ?? false)
-                    actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif",
-                        "javascript:$2sxcActionMenuMapper(" + ModuleId + ").edit();", "test", true,
-                        SecurityAccessLevel.Edit, true, false);
-
-                // Add Item
-                if (CmsBlock.View?.UseForList ?? false)
-                    actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif",
-                        "javascript:$2sxcActionMenuMapper(" + ModuleId + ").addItem();", true, SecurityAccessLevel.Edit, true,
-                        false);
-
-                // Change layout button
-                actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"), "", "", "action_settings.gif",
-                    "javascript:$2sxcActionMenuMapper(" + ModuleId + ").changeLayoutOrContent();", false,
-                    SecurityAccessLevel.Edit, true, false);
-            }
-
-            if (!DnnSecurity.SexyContentDesignersGroupConfigured(PortalId) ||
-                DnnSecurity.IsInSexyContentDesignersGroup(UserInfo))
-            {
-                // Edit Template Button
-                if (appIsKnown && CmsBlock.View != null)
-                    actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
-                        "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").develop();", "test",
-                        true,
-                        SecurityAccessLevel.Edit, true, false);
-
-                // App management
-                if (appIsKnown)
-                    actions.Add(GetNextActionID(), "Admin" + (CmsBlock.Block.IsContentApp ? "" : " " + CmsBlock.App?.Name), "",
-                        "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
-                        SecurityAccessLevel.Admin, true, false);
-
-                // Zone management (app list)
-                if (!CmsBlock.Block.IsContentApp)
-                    actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action", "", "action_settings.gif",
-                        "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminZone();", "", true,
-                        SecurityAccessLevel.Admin, true, false);
-            }
-        }
-
-        #endregion
 
     }
 }

@@ -9,8 +9,6 @@ namespace ToSic.Sxc.Blocks
 {
     public partial class CmsBlock
     {
-
-
         internal bool RenderWithDiv = true;
         public bool UserMayEdit => _userMayEdit
             ?? (_userMayEdit = EnvFac.InstancePermissions(Log, Container, App).UserMay(GrantSets.WriteSomething)).Value;
@@ -59,7 +57,7 @@ namespace ToSic.Sxc.Blocks
                         if (View != null) // when a content block is still new, there is no definition yet
                         {
                             Log.Add("standard case, found template, will render");
-                            var engine = GetRenderingEngine(Purpose.WebView);
+                            var engine = GetEngine(Purpose.WebView);
                             body = engine.Render();
                             if (engine.ActivateJsApi)
                             {
@@ -120,12 +118,20 @@ namespace ToSic.Sxc.Blocks
             return null;
         }
 
-        public IEngine GetRenderingEngine(Purpose renderingPurpose)
+        /// <summary>
+        /// Get the rendering engine, but avoid double execution.
+        /// In some cases, the engine is needed early on to be sure if we need to do some overrides, but execution should then be later on Render()
+        /// </summary>
+        /// <param name="renderingPurpose"></param>
+        /// <returns></returns>
+        public IEngine GetEngine(Purpose renderingPurpose = Purpose.WebView)
         {
-            var engine = EngineFactory.CreateEngine(View);
-            engine.Init(this, renderingPurpose, Log);
-            return engine;
+            if (_engine != null) return _engine;
+            _engine = EngineFactory.CreateEngine(View);
+            _engine.Init(this, renderingPurpose, Log);
+            return _engine;
         }
+        private IEngine _engine;
 
     }
 }

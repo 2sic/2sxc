@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Engines
     public class RazorEngine : EngineBase
     {
         [PrivateApi]
-        protected /*SexyContentWebPage*/ RazorComponentBase  Webpage { get; set; }
+        protected RazorComponentBase  Webpage { get; set; }
 
         /// <inheritdoc />
         [PrivateApi]
@@ -109,24 +109,6 @@ namespace ToSic.Sxc.Engines
             }
         }
 
-        private void InitHelpers(RazorComponentBase webPage, int compatibility)
-        {
-            webPage.Html = new Razor.HtmlHelper();
-            // Deprecated 2019-05-27 2dm - I'm very sure this isn't used anywhere or by anyone.
-            // reactivate if it turns out to be used, otherwise delete ca. EOY 2019
-            //webPage.Url = new UrlHelper(InstInfo);
-
-            // deprecated 2019-11-28 2dm, it's also in the CmsBlock
-            // webPage.Sexy = CmsBlock;
-            webPage.DynCode = new DnnDynamicCode(CmsBlock, compatibility, Log);
-
-            #region New in 10.25 - ensure jquery is not included by default
-            if (compatibility == 10 && CmsBlock is CmsBlock block)
-                block.TemporaryWorkaroundForCompatibilityAddJQuery = false;
-            #endregion
-
-        }
-
         private void InitWebpage()
         {
             if (string.IsNullOrEmpty(TemplatePath)) return;
@@ -143,7 +125,7 @@ namespace ToSic.Sxc.Engines
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
-            int compatibility = 9;
+            var compatibility = 9;
             if (Webpage is RazorComponent rzrPage)
             {
                 rzrPage.Purpose = Purpose;
@@ -155,6 +137,23 @@ namespace ToSic.Sxc.Engines
 #pragma warning restore 618
             InitHelpers(Webpage, compatibility);
         }
+
+        private void InitHelpers(RazorComponentBase webPage, int compatibility)
+        {
+            webPage.Html = new Razor.HtmlHelper();
+            webPage.DynCode = new DnnDynamicCode(CmsBlock, compatibility, Log);
+
+            #region New in 10.25 - ensure jquery is not included by default
+
+            if (compatibility == 10 && CmsBlock is CmsBlock block)
+            {
+                //block.AddjQueryAndRvtForCompatibility = false;
+                this.CompatibilityAutoLoadJQueryAndRVT = false;
+            }
+            #endregion
+
+        }
+
 
         /// <inheritdoc />
         public override void CustomizeData() 

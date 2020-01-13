@@ -56,5 +56,8 @@ namespace ToSic.Sxc.Engines
         /// </summary>
         [PrivateApi]
         RenderStatusType PreRenderStatus { get; }
+
+        [PrivateApi]
+        bool CompatibilityAutoLoadJQueryAndRVT { get; }
     }
 }
