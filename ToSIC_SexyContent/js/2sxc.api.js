@@ -323,7 +323,8 @@ var SxcInstanceWithEditing = (function (_super) {
             console.error('error in 2sxc - will only log but not throw', e);
         }
         if ($2sxc._translateInit && _this.manage)
-            $2sxc._translateInit(_this.manage);
+            if (_this.manage.context && _this.manage.context.app && _this.manage.context.app.currentLanguage)
+                $2sxc._translateInit(_this.manage);
         return _this;
     }
     SxcInstanceWithEditing.prototype.isEditMode = function () {
@@ -746,7 +747,7 @@ var LogEntry = (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EnvironmentMetaLoader; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__envDnnSfLoader__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__envDnnSfLoader__ = __webpack_require__(15);
 
 var maxRetries = 10;
 var EnvironmentMetaLoader = (function () {
@@ -788,8 +789,7 @@ var EnvironmentMetaLoader = (function () {
 
 
 /***/ }),
-/* 15 */,
-/* 16 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
