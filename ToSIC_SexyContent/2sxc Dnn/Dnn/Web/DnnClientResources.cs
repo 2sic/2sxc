@@ -52,8 +52,11 @@ namespace ToSic.Sxc.Dnn.Web
         public void EnsurePre1025Behavior()
         {
             // new in 10.25 - by default jQuery isn't loaded!
-            var addAntiForgeryToken = CmsBlock?.GetEngine(Purpose.WebView)
-                                          .CompatibilityAutoLoadJQueryAndRVT ?? true;
+            // but any old behaviour, incl. no-view defined, etc. should activate compatibility
+            var addAntiForgeryToken = CmsBlock
+                                          ?.GetEngine(Purpose.WebView)
+                                          ?.CompatibilityAutoLoadJQueryAndRVT
+                                      ?? true;
             if (!addAntiForgeryToken) return;
             Log.Add(nameof(EnsurePre1025Behavior) + ": Activate Anti-Forgery for compatibility with old behavior");
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();

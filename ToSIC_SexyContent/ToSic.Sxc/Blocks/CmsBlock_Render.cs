@@ -127,6 +127,8 @@ namespace ToSic.Sxc.Blocks
         public IEngine GetEngine(Purpose renderingPurpose = Purpose.WebView)
         {
             if (_engine != null) return _engine;
+            // edge case: view hasn't been built/configured yet, so no engine to find/attach
+            if (View == null) return null;
             _engine = EngineFactory.CreateEngine(View);
             _engine.Init(this, renderingPurpose, Log);
             return _engine;
