@@ -92,7 +92,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__jquery_ajax_ajax203_js__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__jquery_ajax_ajax203_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__jquery_ajax_ajax203_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__2sxc_SxcControllerBuilder__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__2_SxcRootV2__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__2_SxcRootV2__ = __webpack_require__(15);
 
 
 
@@ -414,7 +414,7 @@ var SxcDataWithInternals = (function () {
         this.List = [];
     }
     SxcDataWithInternals.prototype.sourceUrl = function (params) {
-        var url = this.controller.resolveServiceUrl('app-sys/appcontent/GetContentBlockData');
+        var url = this.controller.root.http.apiUrl('app-sys/appcontent/GetContentBlockData');
         if (typeof params === 'string')
             url += '&' + params;
         return url;
@@ -694,7 +694,26 @@ var AjaxPromise = (function () {
 
 
 /***/ }),
-/* 15 */,
+/* 15 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SxcRootV2; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__environment_Environment__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__SxcHttp__ = __webpack_require__(20);
+
+
+var SxcRootV2 = (function () {
+    function SxcRootV2() {
+        this.env = new __WEBPACK_IMPORTED_MODULE_0__environment_Environment__["a" /* Environment */]();
+        this.http = new __WEBPACK_IMPORTED_MODULE_1__SxcHttp__["a" /* SxcHttp */](this);
+    }
+    return SxcRootV2;
+}());
+
+
+
+/***/ }),
 /* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -867,26 +886,6 @@ var EnvironmentDnnSfLoader = (function () {
 
 /***/ }),
 /* 20 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SxcRootV2; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__environment_Environment__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__SxcHttp__ = __webpack_require__(21);
-
-
-var SxcRootV2 = (function () {
-    function SxcRootV2() {
-        this.env = new __WEBPACK_IMPORTED_MODULE_0__environment_Environment__["a" /* Environment */]();
-        this.http = new __WEBPACK_IMPORTED_MODULE_1__SxcHttp__["a" /* SxcHttp */](this);
-    }
-    return SxcRootV2;
-}());
-
-
-
-/***/ }),
-/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
