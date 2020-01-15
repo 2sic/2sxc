@@ -11,7 +11,6 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -34,6 +33,9 @@ namespace ToSic.Sxc.Engines
 
         [PrivateApi]
         public RenderStatusType PreRenderStatus { get; internal set; }
+
+        [PrivateApi] public bool CompatibilityAutoLoadJQueryAndRVT { get; protected set; } = true;
+
 
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
@@ -70,15 +72,6 @@ namespace ToSic.Sxc.Engines
 
             // Run engine-internal init stuff
             Init();
-
-            // call engine internal feature to optionally change what data is actually used or prepared for search...
-            CustomizeData();
-
-            // check if rendering is possible, or throw exceptions...
-            CheckExpectedNoRenderConditions();
-
-            if(PreRenderStatus == RenderStatusType.Unknown)
-                PreRenderStatus = RenderStatusType.Ok;
         }
 
         [PrivateApi]
@@ -99,6 +92,16 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         public string Render()
         {
+            // call engine internal feature to optionally change what data is actually used or prepared for search...
+            CustomizeData();
+
+            // check if rendering is possible, or throw exceptions...
+            CheckExpectedNoRenderConditions();
+
+            if(PreRenderStatus == RenderStatusType.Unknown)
+                PreRenderStatus = RenderStatusType.Ok;
+
+
             if (PreRenderStatus != RenderStatusType.Ok)
                 return AlternateRendering;
 

@@ -58,6 +58,6 @@ namespace ToSic.Sxc.Blocks
         /// This ensures that by default, jQuery is added, but for new RazorComponents it's not added by default any more!
         /// internal setting to enable jquery by default for old compatibility
         /// </summary>
-        internal bool TemporaryWorkaroundForCompatibilityAddJQuery { get; set; } = true;
+        internal bool AddjQueryAndRvtForCompatibility { get; set; } = true;
     }
 }

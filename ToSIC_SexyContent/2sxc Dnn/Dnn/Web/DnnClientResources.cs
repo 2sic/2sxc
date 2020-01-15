@@ -28,7 +28,8 @@ namespace ToSic.Sxc.Dnn.Web
             var wrapLog = Log.Call<bool>();
 
             // new in 10.25 - by default jQuery isn't loaded!
-            EnsurePre1025Behavior();
+            // 2020-01-13 disabled this, as the parent must call it in the right moment, not here
+            //EnsurePre1025Behavior();
 
             // normal scripts
             var editJs = CmsBlock?.UiAddEditApi ?? false;
@@ -51,8 +52,12 @@ namespace ToSic.Sxc.Dnn.Web
         public void EnsurePre1025Behavior()
         {
             // new in 10.25 - by default jQuery isn't loaded!
-            var jQuery = CmsBlock?.TemporaryWorkaroundForCompatibilityAddJQuery ?? true;
-            if (!jQuery) return;
+            // but any old behaviour, incl. no-view defined, etc. should activate compatibility
+            var addAntiForgeryToken = CmsBlock
+                                          ?.GetEngine(Purpose.WebView)
+                                          ?.CompatibilityAutoLoadJQueryAndRVT
+                                      ?? true;
+            if (!addAntiForgeryToken) return;
             Log.Add(nameof(EnsurePre1025Behavior) + ": Activate Anti-Forgery for compatibility with old behavior");
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             Header.AddHeaders();
