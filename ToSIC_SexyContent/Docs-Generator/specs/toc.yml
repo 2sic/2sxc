@@ -51,41 +51,7 @@
 
 - name: JavaScript and Html
   topicUid: Specs.Js.Overview
-  items:
-    - name: jQuery in DNN and 2sxc
-      topicUid: Specs.Js.JQuery
-    - name: Global $2sxc
-      topicUid: Specs.Js.$2sxc
-      items:
-        - name: $2sxc.cms...
-          topicUid: Specs.Js.$2sxc.Cms
-    - name: Instance Sxc
-      topicUid: Specs.Js.Sxc
-      items:
-        - name: Sxc.manage...
-          topicUid: Specs.Js.Sxc.Manage
-        - name: Sxc.webapi
-          topicUid: Specs.Js.Sxc.WebApi
-    - name: QuickE
-      topicUid: Specs.Js.QuickE
-    - name: Toolbars
-      topicUid: Specs.Js.Toolbar.Intro
-      items:
-        - name: JS Toolbar API
-          topicUid: Specs.Js.Toolbar.Js
-        - name: Settings
-          topicUid: Specs.Js.Toolbar.Settings
-        - name: Single Button
-          topicUid: Specs.Js.Toolbar.Buttons
-    - name: Commands
-      topicUid: Specs.Js.Commands
-      items:
-        - name: Custom Code
-          topicUid: Specs.Js.Commands.Code
-        - name: Content Items
-          topicUid: Specs.Js.Commands.ContentItems
-        - name: Delete
-          topicUid: Specs.Js.Commands.Delete
+  href: js/toc.yml
 
 - name: Angular Dnn-Sxc-Angular
   items:

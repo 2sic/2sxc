@@ -1,11 +1,15 @@
 ---
 uid: Specs.Js.$2sxc
 ---
-# JS: The $2sxc Manager
+# JS: The $2sxc Root Object
 
 The $2sxc-object is the core JavaScript object helping you to access data of your view or WebAPIs of your 2sxc-App.
 
-You need this in advanced use cases. _otherwise you don't need this_. Such advanced cases are:
+> [!NOTE]
+> 2sxc uses these objects internally for building the edit experience. You only need this if you wish to do 
+> custom JavaScript stuff in 2sxc, like retrieve data from a WebApi.
+
+Advanced cases where _you_ need $2sxc:
 
 1. When you want to use view-data as an asyc-JS call
 1. if you wish to work with WebAPI REST calls
@@ -22,8 +26,7 @@ _note 2: always use lower-case paths and the minified version_
 Here's a simple example of a template-file:
 
 ```HTML
-<script type="text/javascript" src="/desktopmodules/tosic_sexycontent/js/2sxc.api.min.js" 
-    data-enableoptimizations="true"></script>
+@Edit.Enable(js: true)
 <script>
     $(function () {
         var modId = 17;
@@ -35,12 +38,11 @@ Here's a simple example of a template-file:
 
 The code above shows
 
-1. how to include the api-file in the best way, [minified and optimized](xref:HowTo.Output.Assets) (so it will be picked up by the client-dependency framework)
+1. how to include the api-file in the best way using `@Edit.Enable(js: true)`
 2. how the sxc-object is resolved
 3. how to ask if we're in edit-mode
 
 The moduleId is usually dynamic, so you can't hardwire it with `var modId = 17` into your JS code. This is explained in the next section _Initialization_.
-
 
 
 ## Initialization of the $2sxc for a Module
@@ -141,6 +143,7 @@ var sxc3 = $2sxc(domNodeInsideTheModule42); // another call, will also used cach
 ```
 
 ### Metadata Needed by $2sxc to Work
+
 The $2sxc object needs a few pieces of information to work properly, which are stored in a JSON in the HTML. 
 So the Module-DIV-Tag is actually enhanced with additional pieces of information. 
 This structure is open and easy to read, but the structure can change from time to time, 
@@ -149,6 +152,7 @@ so don't read/rely on that JSON, use the $2sxc to access any information.
 There are even situations where additional metadata in inserted into the HTML rendered by your template. This has to do with inner-content (see next section) and the same "don't rely on the JSON" applies. 
 
 ### Module-Instances and Content-Blocks
+
 This is a very advanced topic, so if you're new - just skip this. Also if you use content-blocks you don't need to understand this, it's just included for completeness.
 
 A 2sxc-module can contain many [2sxc-content-blocks since version 8.4][content-blocks] because an item could have independent, inner content-blocks. Because of this, the controller may need an additional parameter, so instead of `$2sxc(moduleId)` it can also use `$2sxc(moduleId, contentBlockId)`.
