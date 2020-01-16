@@ -126,7 +126,8 @@ namespace ToSic.Sxc.WebApi.App
 
             // must access engine to ensure pre-processing of data has happened, 
             // especially if the cshtml contains a override void CustomizeData()
-            ((Sxc.Blocks.CmsBlock)CmsBlock).GetEngine(Purpose.PublishData);  
+            var engine = ((CmsBlock)CmsBlock).GetEngine(Purpose.PublishData);  
+            engine.CustomizeData();
 
             var dataSource = CmsBlock.Block.Data;
             string json;
