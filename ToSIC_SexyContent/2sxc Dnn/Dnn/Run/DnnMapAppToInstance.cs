@@ -103,11 +103,11 @@ namespace ToSic.Sxc.Dnn.Run
 
         public BlockConfiguration GetInstanceContentGroup(BlocksRuntime cgm, ILog log, int instanceId, int? pageId)
         {
+            var wrapLog = log.Call<BlockConfiguration>($"find content-group for mid#{instanceId} and page#{pageId}");
             var mci = ModuleController.Instance;
 
             var tabId = pageId ?? mci.GetTabModulesByModule(instanceId)[0].TabID;
 
-            log.Add($"find content-group for mid#{instanceId} and tab#{tabId}");
             var settings = mci.GetModule(instanceId, tabId, false).ModuleSettings;
 
             var maybeGuid = settings[Settings.ContentGroupGuidString];
@@ -118,7 +118,8 @@ namespace ToSic.Sxc.Dnn.Run
                 ? Guid.Parse(previewTemplateString)
                 : new Guid();
 
-            return cgm.GetContentGroupOrGeneratePreview(groupGuid, templateGuid);
+            var found = cgm.GetContentGroupOrGeneratePreview(groupGuid, templateGuid);
+            return wrapLog("ok", found);
         }
 
         /// <summary>
