@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi.System
                 return "please add appid to the url parameters";
 
             Log.Add($"debug app types for {appId}");
-            var appRead = new AppRuntime(appId.Value, Log);
+            var appRead = AppRt(appId);// new AppRuntime(appId.Value, Log);
             var pkg = appRead.AppState;
 
             var msg = TypesTable(appId.Value, pkg.ContentTypes, pkg.List.ToList());
@@ -122,8 +122,8 @@ namespace ToSic.Sxc.WebApi.System
                 return message;
 
             Log.Add($"debug app metadata for {appId} and {type}");
-            var appRead = new AppRuntime(appId.Value, Log);
-            var typ = appRead.ContentTypes.Get(type);
+            //var appRead = AppRt(appId);// new AppRuntime(appId.Value, Log);
+            var typ = AppState(appId).GetContentType(type);// appRead.ContentTypes.Get(type);
 
             var msg = h1($"Metadata for {typ.Name} ({typ.StaticName}) in {appId}\n");
             var metadata = typ.Metadata.ToList();
@@ -140,8 +140,8 @@ namespace ToSic.Sxc.WebApi.System
                 return message;
 
             Log.Add($"debug app metadata for {appId} and {type}");
-            var appRead = new AppRuntime(appId.Value, Log);
-            var typ = appRead.ContentTypes.Get(type);
+            //var appRead = AppRt(appId);// new AppRuntime(appId.Value, Log);
+            var typ = AppState(appId).GetContentType(type);// appRead.ContentTypes.Get(type);
 
             var msg = h1($"Permissions for {typ.Name} ({typ.StaticName}) in {appId}\n");
             var metadata = typ.Metadata.Permissions.Select(p => p.Entity).ToList();

@@ -5,8 +5,6 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsRuntime: AppRuntime
     {
-        internal bool ShowDrafts { get; }
-
         internal bool WithPublishing { get; }
 
         //public CmsRuntime(int zoneId, int appId, ILog parentLog, bool showDraft, bool withPublishing) 
@@ -16,15 +14,13 @@ namespace ToSic.Sxc.Apps
         //    WithPublishing = withPublishing;
         //}
 
-        public CmsRuntime(IAppIdentity app, ILog parentLog, bool showDrafts, bool withPublishing) : base(app, parentLog)
+        public CmsRuntime(IAppIdentity app, ILog parentLog, bool showDrafts, bool withPublishing) : base(app, showDrafts, parentLog)
         {
-            ShowDrafts = showDrafts;
             WithPublishing = withPublishing;
         }
 
-        public CmsRuntime(int appId, ILog parentLog, bool showDrafts) : base(appId, parentLog)
+        public CmsRuntime(int appId, ILog parentLog, bool showDrafts) : base(appId, showDrafts, parentLog)
         {
-            ShowDrafts = showDrafts;
         }
 
 

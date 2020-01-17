@@ -150,7 +150,7 @@ namespace ToSic.Sxc.WebApi.Cms
             EnsureUserIsAdmin();
 
             var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);// AppWithRestrictedZoneChange(appId, zoneId);
-            var appRuntime = new AppRuntime(currentApp, Log);
+            var appRuntime = new AppRuntime(currentApp, true, Log);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";
             var fileXml = new DnnXmlExporter().Init(zoneId, appId, appRuntime, false,

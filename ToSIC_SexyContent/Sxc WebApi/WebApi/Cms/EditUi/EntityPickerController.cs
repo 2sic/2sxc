@@ -26,9 +26,10 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // maybe in the future, ATM not relevant
             //var withDrafts = set.Item2.UserMay(GrantSets.ReadDraft);
+            var withDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
 
             return new Eav.WebApi.EntityPickerController(Log)
-                .GetAvailableEntities(appId, items, contentTypeName, dimensionId);
+                .GetAvailableEntities(appId, items, contentTypeName, withDrafts, dimensionId);
         }
     }
 }

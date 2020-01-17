@@ -3,7 +3,6 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
-using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
@@ -43,7 +42,7 @@ namespace ToSic.Sxc.Security
             return typeNames;
         }
 
-        protected AppRuntime AppRuntime => _appRuntime ?? (_appRuntime = new AppRuntime(App, Log));
+        protected AppRuntime AppRuntime => _appRuntime ?? (_appRuntime = new AppRuntime(App, true, Log));
         private AppRuntime _appRuntime;
         
 

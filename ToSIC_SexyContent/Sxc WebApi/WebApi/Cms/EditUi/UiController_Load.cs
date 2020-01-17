@@ -40,8 +40,8 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // load items - similar
             var result = new AllInOne();
-            var entityApi = new EntityApi(appId, Log);
-            var typeRead = entityApi.AppManager.Read.ContentTypes;
+            var entityApi = new EntityApi(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
+            var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(appId, items);
             var jsonSerializer = new JsonSerializer();
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>

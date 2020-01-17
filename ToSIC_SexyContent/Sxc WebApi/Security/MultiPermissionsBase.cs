@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
-using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.Sxc.Security
 {
@@ -39,24 +39,33 @@ namespace ToSic.Sxc.Security
         public bool UserMayOnAll(List<Grants> grants) => EnsureAll(grants, out var _);
 
         /// <summary>
-        /// Ensure that all checks pass
+        /// Ensure that all! checks pass
         /// </summary>
         /// <param name="grants"></param>
         /// <param name="preparedException">Out variable to use to throw upstream</param>
         /// <returns>True if all pass, false if any one fails</returns>
         public bool EnsureAll(List<Grants> grants, out HttpResponseException preparedException)
         {
-            var wrap = Log.Call();
+            var wrap = Log.Call<bool>();
             foreach (var set in PermissionCheckers)
                 if (!set.Value.Ensure(grants, out preparedException))
-                {
-                    wrap(false.ToString());
-                    return false;
-                }
+                    return wrap(false.ToString(), false);
 
             preparedException = null;
-            wrap(true.ToString());
-            return true;
+            return wrap(true.ToString(), true);
+        }
+
+        /// <summary>
+        /// Ensure that any! checks pass
+        /// </summary>
+        /// <param name="grants"></param>
+        /// <returns>True if all pass, false if any one fails</returns>
+        public bool EnsureAny(List<Grants> grants)
+        {
+            var wrap = Log.Call<bool>();
+            return PermissionCheckers.Any(set => set.Value.Ensure(grants, out _)) 
+                ? wrap(true.ToString(), true) 
+                : wrap(false.ToString(), false);
         }
 
         //2018-09-22 2dm removed again, as all internal checks actually already do this

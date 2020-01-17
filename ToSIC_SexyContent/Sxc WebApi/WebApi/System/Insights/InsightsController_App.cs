@@ -17,8 +17,8 @@ namespace ToSic.Sxc.WebApi.System
                 return message;
 
             Log.Add($"debug app-load {appId}");
-            var appRead = new AppRuntime(appId.Value, Log);
-            return FormatLog($"2sxc load log for app {appId}", appRead.AppState.Log);
+            //var appRead = new AppRuntime(appId.Value, true, Log);
+            return FormatLog($"2sxc load log for app {appId}", AppRt(appId).AppState.Log);
         }
 
         [HttpGet]
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.WebApi.System
                 return message;
 
             Log.Add($"debug app-internals for {appId}");
-            var appRead = new AppRuntime(appId.Value, Log);
+            var appRead = AppRt(appId);// new AppRuntime(appId.Value, true, Log);
             var pkg = appRead.AppState;
 
             var msg = h1($"App internals for {appId}");

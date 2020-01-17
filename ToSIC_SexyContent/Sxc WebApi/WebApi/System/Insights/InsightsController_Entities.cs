@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi.System
                 return message;
 
             Log.Add($"debug app attributes for {appId} and {type}");
-            var appRead = new AppRuntime(appId.Value, Log);
+            var appRead = AppRt(appId);// new AppRuntime(appId.Value, Log);
             
             var typ = appRead.ContentTypes.Get(type);
             //var pkg = appRead.Package;
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.WebApi.System
                 return message;
 
             Log.Add($"debug app entity metadata for {appId} and entity {entity}");
-            var appRead = new AppRuntime(appId.Value, Log);
+            var appRead = AppRt(appId);// new AppRuntime(appId.Value, Log);
             var ent = appRead.Entities.Get(entity.Value);
 
             var msg = h1($"Entity Metadata for {entity} in {appId}\n");
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.WebApi.System
                 return message;
 
             Log.Add($"debug app entity permissions for {appId} and entity {entity}");
-            var appRead = new AppRuntime(appId.Value, Log);
+            var appRead = AppRt(appId);// new AppRuntime(appId.Value, Log);
             var ent = appRead.Entities.Get(entity.Value);
 
             var msg = h1($"Entity Permissions for {entity} in {appId}\n");
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.WebApi.System
                 return message;
 
             Log.Add($"debug app entity metadata for {appId} and entity {entity}");
-            var appRead = new AppRuntime(appId.Value, Log);
+            var appRead = AppRt(appId);// new AppRuntime(appId.Value, Log);
 
             IEntity ent;
             if (Int32.TryParse(entity, out var entityId))
