@@ -61,8 +61,10 @@ namespace ToSic.Sxc.WebApi.App
             //2018-09-15 2dm replaced
             //var context = GetContext(SxcBlock, Log);
             //PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null);
-            var result = new EntityApi(appIdentity.AppId, Log).GetEntities(contentType, cultureCode);
-            wraplog("found: " + result?.Count());
+            var result = new EntityApi(appIdentity.AppId, permCheck.EnsureAny(GrantSets.ReadDraft), Log)
+                .GetEntities(contentType, cultureCode)
+                ?.ToList();
+            wraplog("found: " + result?.Count);
             return result;
         }
 
@@ -75,14 +77,14 @@ namespace ToSic.Sxc.WebApi.App
 	    [AllowAnonymous] // will check security internally, so assume no requirements
 	    public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
 	        => GetAndSerializeOneAfterSecurityChecks(contentType,
-	            appId => new EntityApi(appId, Log).GetOrThrow(contentType, id), appPath);
+                entityApi => entityApi.GetOrThrow(contentType, id), appPath);
 
 
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, object> GetOne(string contentType, Guid guid, string appPath = null)
             => GetAndSerializeOneAfterSecurityChecks(contentType,
-                appId => new EntityApi(appId, Log).GetOrThrow(contentType, guid), appPath);
+                entityApi => entityApi.GetOrThrow(contentType, guid), appPath);
         
 
 
@@ -94,16 +96,26 @@ namespace ToSic.Sxc.WebApi.App
         /// <param name="getOne"></param>
         /// <param name="appPath"></param>
         /// <returns></returns>
-        private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<int, IEntity> getOne, string appPath)
+        private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<EntityApi, IEntity> getOne, string appPath)
         {
             Log.Add($"get and serialie after security check type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
 
-            var itm = getOne(appIdentity.AppId);
+            var entityApi = new EntityApi(appIdentity.AppId, true, Log);
+
+            var itm = getOne(entityApi);
             var permCheck = new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
                 throw exception;
+
+            // in case draft wasn't allow, get again with more restricted permissions 
+            if (!permCheck.EnsureAny(GrantSets.ReadDraft))
+            {
+                entityApi = new EntityApi(appIdentity.AppId, false, Log);
+                itm = getOne(entityApi);
+            }
+
             return InitEavAndSerializer(appIdentity.AppId).Convert(itm);
         }
 
@@ -163,7 +175,7 @@ namespace ToSic.Sxc.WebApi.App
             // this throws an error if it's not the correct type
             var itm = id == null
                 ? null
-                : new EntityApi(appIdentity.AppId, Log).GetOrThrow(contentType, id.Value);
+                : new EntityApi(appIdentity.AppId, true, Log).GetOrThrow(contentType, id.Value);
 
             var ok = itm == null
                 ? new MultiPermissionsTypes(CmsBlock, appIdentity.AppId, contentType, Log)
@@ -223,11 +235,12 @@ namespace ToSic.Sxc.WebApi.App
             if (contentType == "any")
                 throw new Exception("type any not allowed with id-only, requires guid");
 
-            var itm = new EntityApi(appIdentity.AppId, Log).GetOrThrow(contentType, id);
+            var entityApi = new EntityApi(appIdentity.AppId, true, Log);
+            var itm = entityApi.GetOrThrow(contentType, id);
             var permCheck = new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log);
             if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var exception))
                 throw exception;
-            new EntityApi(appIdentity.AppId, Log).Delete(itm.Type.Name, id);
+            entityApi.Delete(itm.Type.Name, id);
         }
 
 
@@ -239,7 +252,7 @@ namespace ToSic.Sxc.WebApi.App
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
 
-            var entityApi = new EntityApi(appIdentity.AppId, Log);
+            var entityApi = new EntityApi(appIdentity.AppId, true, Log);
 	        var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
 	        var permCheck = new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log);
@@ -248,6 +261,7 @@ namespace ToSic.Sxc.WebApi.App
 
             entityApi.Delete(itm.Type.Name, guid);
         }
+
 
         #endregion
 

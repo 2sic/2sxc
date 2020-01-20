@@ -1,4 +1,6 @@
-﻿using System.Web.Http.Controllers;
+﻿using System.Configuration;
+using System.Web.Http.Controllers;
+using ToSic.Eav.Apps;
 using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.Sxc.WebApi.System
@@ -28,6 +30,10 @@ namespace ToSic.Sxc.WebApi.System
         /// </summary>
         protected override string LogHistoryName { get; } = "web-api.insights";
 
+
+        private AppRuntime AppRt(int? appId) => new AppRuntime(appId.Value, true, Log);
+
+        private AppState AppState(int? appId) => State.Get(appId.Value);
 
     }
 }

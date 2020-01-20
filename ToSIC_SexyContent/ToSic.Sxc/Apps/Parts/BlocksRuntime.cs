@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Apps
         internal IDataSource ContentGroupSource()
         {
             var dsFactory = new DataSource(Log);
-            var dataSource = dsFactory.GetPublishing(CmsRuntime, CmsRuntime.ShowDrafts);
+            var dataSource = CmsRuntime.Data;// dsFactory.GetPublishing(CmsRuntime, CmsRuntime.ShowDrafts);
             var onlyCGs = dsFactory.GetDataSource<EntityTypeFilter>(CmsRuntime, dataSource);
             onlyCGs.TypeName = BlockTypeName;
             return dataSource;
@@ -27,11 +27,13 @@ namespace ToSic.Sxc.Apps
 
         public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
         {
-            Log.Add($"get CG#{contentGroupGuid}");
+            var wrapLog = Log.Call($"get CG#{contentGroupGuid}");
             var dataSource = ContentGroupSource();
             // ToDo: Should use an indexed guid source
             var groupEntity = dataSource.List.One(contentGroupGuid);
-            return groupEntity != null
+            var found = groupEntity != null;
+            wrapLog(found ? "found" : "missing");
+            return found
                 ? new BlockConfiguration(groupEntity, CmsRuntime.ZoneId, CmsRuntime.AppId, CmsRuntime.ShowDrafts , CmsRuntime.WithPublishing, Log)
                 : new BlockConfiguration(Guid.Empty, CmsRuntime.ZoneId, CmsRuntime.AppId, CmsRuntime.ShowDrafts, CmsRuntime.WithPublishing, Log)
                 {
@@ -45,11 +47,15 @@ namespace ToSic.Sxc.Apps
 
         internal BlockConfiguration GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)
         {
-            Log.Add($"get CG or gen preview for grp#{groupGuid}, preview#{previewTemplateGuid}");
+            var wrapLog = Log.Call($"get CG or gen preview for grp#{groupGuid}, preview#{previewTemplateGuid}");
             // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
-            return groupGuid == Guid.Empty
+            var createFake = groupGuid == Guid.Empty;
+            Log.Add($"{nameof(createFake)}:{createFake}");
+            var result = createFake
                 ? new BlockConfiguration(previewTemplateGuid, CmsRuntime.ZoneId, CmsRuntime.AppId, CmsRuntime.ShowDrafts, CmsRuntime.WithPublishing, Log)
                 : GetBlockConfig(groupGuid);
+            wrapLog(null);
+            return result;
         }
 
     }

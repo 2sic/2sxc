@@ -10,7 +10,6 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
@@ -44,7 +43,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // 2018-09-15 old code, should have checked the same stuff mostly...
             //new AppPermissionBeforeUsing(SxcBlock, Log)
             //    .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
-            return new EntityApi(appId, Log).GetOne(contentType, id, cultureCode);  // note that the culture-code isn't actually used...
+            return new EntityApi(appId, true, Log).GetOne(contentType, id, cultureCode);  // note that the culture-code isn't actually used...
         }
 
 
@@ -66,7 +65,7 @@ namespace ToSic.Sxc.WebApi.Cms
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var exception))
                 throw exception;
 
-            var list = new EntityApi(appId, Log).GetEntitiesForEditing(appId, items);
+            var list = new EntityApi(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log).GetEntitiesForEditing(appId, items);
 
             // Reformat to the Entity-WithLanguage setup
             var listAsEwH = list.Select(p => new BundleWithHeader<EntityWithLanguages>
@@ -97,7 +96,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // log and do security check
             Log.Add($"save many started with a#{appId}, i⋮{items.Count}, partOfPage:{partOfPage}");
 
-            var appRead = new AppRuntime(appId, Log);
+            var appReadForSecurityCheckOnly = new AppRuntime(appId, true, Log);
             #region check if it's an update, and do more security checks - shared with UiController.Save
             // basic permission checks
             var permCheck = new Security.Security(CmsBlock, Log)
@@ -105,8 +104,8 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var foundItems = items.Where(i => i.EntityId != 0 && i.EntityGuid != Guid.Empty)
                 .Select(i => i.EntityGuid != Guid.Empty
-                    ? appRead.Entities.Get(i.EntityGuid) // prefer guid access if available
-                    : appRead.Entities.Get(i.EntityId)  // otherwise id
+                    ? appReadForSecurityCheckOnly.Entities.Get(i.EntityGuid) // prefer guid access if available
+                    : appReadForSecurityCheckOnly.Entities.Get(i.EntityId)  // otherwise id
                 );
             if (foundItems.Any(i => i != null) && !permCheck.EnsureAll(GrantSets.UpdateSomething, out var exception))
                 throw exception;
@@ -142,7 +141,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, int appId,
 	        string cultureCode = null)
-	        => new EntityApi(appId, Log).GetEntities(contentType, cultureCode);
+	        => new EntityApi(appId, true, Log).GetEntities(contentType, cultureCode);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -155,7 +154,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // v10.25 - now that Content can manage settings and resources, we must be sure that they actually exist
             // this is checked here, because often it won't exist yet...
 
-            return new EntityApi(appId, Log).GetEntitiesForAdmin(contentType);
+            return new EntityApi(appId, true, Log).GetEntitiesForAdmin(contentType);
 	    }
 
 
@@ -167,7 +166,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.DeleteSomething, out var exception))
                 throw exception;
-            new EntityApi(appId, Log).Delete(contentType, id, force);
+            new EntityApi(appId, true, Log).Delete(contentType, id, force);
         }
 
 	    [HttpDelete]
@@ -178,7 +177,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.DeleteSomething, out var exception))
                 throw exception;
-            new EntityApi(appId, Log).Delete(contentType, guid, force);
+            new EntityApi(appId, true, Log).Delete(contentType, guid, force);
         }
 
 

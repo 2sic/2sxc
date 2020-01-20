@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Apps
 		{
             if(_viewDs!= null)return _viewDs;
 		    // ReSharper disable once RedundantArgumentDefaultValue
-            var dataSource = App.Data;
+            var dataSource = AppRT.Data;
 			dataSource = new DataSource(Log).GetDataSource<EntityTypeFilter>(dataSource);
 		    ((EntityTypeFilter) dataSource).TypeName = Configuration.TemplateContentType;
 		    _viewDs = dataSource;
@@ -109,7 +109,7 @@ namespace ToSic.Sxc.Apps
             var visible = templates.Where(t => !t.IsHidden).ToList();
             var serializer = new EntitiesToDictionary();
 
-            return App.ContentTypes.FromScope(Settings.AttributeSetScope) 
+            return AppRT.ContentTypes.FromScope(Settings.AttributeSetScope) 
                 .Where(ct => templates.Any(t => t.ContentType == ct.StaticName)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>

@@ -9,8 +9,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi;
@@ -110,8 +108,9 @@ namespace ToSic.Sxc.Adam.WebApi
         private IContentTypeAttribute Definition(int appId, string contentType, string fieldName)
         {
             // try to find attribute definition - for later extra security checks
-            var appRead = new AppRuntime(appId, Log);
-            var type = appRead.ContentTypes.Get(contentType);
+            //var appRead = new AppRuntime(appId, true, Log);
+            var type = State.Get(appId).GetContentType(contentType);
+            // appRead.ContentTypes.Get(contentType);
             return type[fieldName];
         }
 

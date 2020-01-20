@@ -602,7 +602,6 @@ var SxcInstance = (function (_super) {
         return _this;
     }
     SxcInstance.prototype.resolveServiceUrl = function (virtualPath) {
-        console.warn('used resolveServiceUrl:' + virtualPath);
         var scope = virtualPath.split('/')[0].toLowerCase();
         if (serviceScopes.indexOf(scope) === -1)
             return virtualPath;

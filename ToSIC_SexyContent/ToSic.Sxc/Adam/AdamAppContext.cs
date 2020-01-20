@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Adam
         {
             Tenant = tenant;
             _app = app;
-            AppRuntime = new AppRuntime(app, null);
+            AppRuntime = new AppRuntime(app, cmsBlock?.UserMayEdit ?? false, null);
             CmsBlock = cmsBlock;
             CompatibilityLevel = compatibility;
             EnvironmentFs = Factory.Resolve<IEnvironmentFileSystem>();

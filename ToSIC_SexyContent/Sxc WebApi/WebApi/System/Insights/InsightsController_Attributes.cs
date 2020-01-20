@@ -17,8 +17,8 @@ namespace ToSic.Sxc.WebApi.System
                 return message;
 
             Log.Add($"debug app attributes for {appId} and {type}");
-            var appRead = new AppRuntime(appId, Log);
-            var typ = appRead.ContentTypes.Get(type);
+            //var appRead = AppRt(appId);// new AppRuntime(appId, true, Log);
+            var typ = AppState(appId).GetContentType(type);// appRead.ContentTypes.Get(type);
             //var pkg = appRead.Package;
 
             var msg = h1($"Attributes for {typ.Name} ({typ.StaticName}) in {appId}\n");
@@ -67,8 +67,8 @@ namespace ToSic.Sxc.WebApi.System
                 return message;
 
             Log.Add($"debug app metadata for {appId} and {type}");
-            var appRead = new AppRuntime(appId.Value, Log);
-            var typ = appRead.ContentTypes.Get(type);
+            //var appRead = AppRt(appId);// new AppRuntime(appId.Value, Log);
+            var typ = AppState(appId.Value).GetContentType(type);// appRead.ContentTypes.Get(type);
             var att = typ.Attributes.First(a => a.Name == attribute)
                       ?? throw Http.BadRequest($"can't find attribute {attribute}");
 
@@ -85,8 +85,8 @@ namespace ToSic.Sxc.WebApi.System
                 return message;
 
             Log.Add($"debug app metadata for {appId} and {type}");
-            var appRead = new AppRuntime(appId.Value, Log);
-            var typ = appRead.ContentTypes.Get(type);
+            //var appRead = AppRt(appId);// new AppRuntime(appId.Value, Log);
+            var typ = AppState(appId).GetContentType(type);//appRead.ContentTypes.Get(type);
             var att = typ.Attributes.First(a => a.Name == attribute)
                       ?? throw Http.BadRequest($"can't find attribute {attribute}");
 
