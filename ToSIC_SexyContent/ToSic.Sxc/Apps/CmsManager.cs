@@ -6,19 +6,19 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsManager: AppManager, IAppIdentityWithPublishingState
     {
-        public bool ShowDrafts { get; }
+        //public bool ShowDrafts { get; }
 
         public bool EnablePublishing { get; }
 
         public CmsManager(IAppIdentityWithPublishingState app, ILog parentLog) : base(app, parentLog)
         {
-            ShowDrafts = app.ShowDrafts;
+            //ShowDrafts = app.ShowDrafts;
             EnablePublishing = app.EnablePublishing;
         }
 
         public CmsManager(IAppIdentity app, bool showDrafts, bool enablePublishing, ILog parentLog) : base(app, parentLog)
         {
-            ShowDrafts = showDrafts;
+            //ShowDrafts = showDrafts;
             EnablePublishing = enablePublishing;
         }
 
