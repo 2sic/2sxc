@@ -165,7 +165,7 @@ namespace ToSic.Sxc.Data
         public IHtmlString Render()
         {
             if(CompatibilityLevel == 10)
-                throw new Exception("content.Toolbar() is deprecated in the new RazorComponent. Use ToSic.Sxc.Blocks.Render.One(content) instead. See https://r.2sxc.org/EditToolbar");
+                throw new Exception("content.Render() is deprecated in the new RazorComponent. Use ToSic.Sxc.Blocks.Render.One(content) instead. See https://r.2sxc.org/EditToolbar");
 
             return Blocks.Render.One(this);
         }
