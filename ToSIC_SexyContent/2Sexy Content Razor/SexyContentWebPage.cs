@@ -4,6 +4,7 @@ using System.Linq;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.SexyContent.Engines;
@@ -22,6 +23,7 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using CmsBlock = ToSic.Sxc.Blocks.CmsBlock;
+using DynamicCode = ToSic.Sxc.Code.DynamicCode;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -206,6 +208,7 @@ namespace ToSic.SexyContent.Razor
 
         #endregion
 
+        public ILog Log => DynCode.Log;
     }
 
 
