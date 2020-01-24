@@ -409,7 +409,7 @@ var Stats = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SxcInstanceWithInternals; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__SxcInstanceDataDeprecated__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__SxcInstanceWithEditing__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__SxcInstance__ = __webpack_require__(14);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -442,7 +442,7 @@ var SxcInstanceWithInternals = (function (_super) {
         return this.$2sxc(this.id, this.cbid);
     };
     return SxcInstanceWithInternals;
-}(__WEBPACK_IMPORTED_MODULE_1__SxcInstanceWithEditing__["a" /* SxcInstanceWithEditing */]));
+}(__WEBPACK_IMPORTED_MODULE_1__SxcInstance__["a" /* SxcInstance */]));
 
 
 
@@ -523,52 +523,7 @@ var SxcInstanceDataDeprecated = (function () {
 
 
 /***/ }),
-/* 13 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SxcInstanceWithEditing; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__SxcInstance__ = __webpack_require__(14);
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-var SxcInstanceWithEditing = (function (_super) {
-    __extends(SxcInstanceWithEditing, _super);
-    function SxcInstanceWithEditing(id, cbid, $2sxc) {
-        var _this = _super.call(this, id, cbid, $2sxc) || this;
-        _this.id = id;
-        _this.cbid = cbid;
-        _this.$2sxc = $2sxc;
-        _this.manage = null;
-        try {
-            if ($2sxc._manage)
-                $2sxc._manage.initInstance(_this);
-        }
-        catch (e) {
-            console.error('error in 2sxc - will only log but not throw', e);
-        }
-        if ($2sxc._translateInit && _this.manage)
-            if (_this.manage.context && _this.manage.context.app && _this.manage.context.app.currentLanguage)
-                $2sxc._translateInit(_this.manage);
-        return _this;
-    }
-    SxcInstanceWithEditing.prototype.isEditMode = function () {
-        return this.manage && this.manage._isEditMode();
-    };
-    return SxcInstanceWithEditing;
-}(__WEBPACK_IMPORTED_MODULE_0__SxcInstance__["a" /* SxcInstance */]));
-
-
-
-/***/ }),
+/* 13 */,
 /* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -598,7 +553,18 @@ var SxcInstance = (function (_super) {
         _this.id = id;
         _this.cbid = cbid;
         _this.root = root;
+        _this.manage = null;
         _this.webApi = new __WEBPACK_IMPORTED_MODULE_0__SxcWebApi__["a" /* SxcWebApi */](_this);
+        try {
+            if (root._manage)
+                root._manage.initInstance(_this);
+        }
+        catch (e) {
+            console.error('error in 2sxc - will only log but not throw', e);
+        }
+        if (root._translateInit && _this.manage)
+            if (_this.manage.context && _this.manage.context.app && _this.manage.context.app.currentLanguage)
+                root._translateInit(_this.manage);
         return _this;
     }
     SxcInstance.prototype.resolveServiceUrl = function (virtualPath) {
@@ -643,6 +609,9 @@ var SxcInstance = (function (_super) {
         infoText += '\n\nif you are an advanced user you can learn more about what went wrong - discover how on 2sxc.org/help?tag=debug';
         alert(infoText);
         return result;
+    };
+    SxcInstance.prototype.isEditMode = function () {
+        return this.manage && this.manage._isEditMode();
     };
     return SxcInstance;
 }(__WEBPACK_IMPORTED_MODULE_2__logging_HasLog__["a" /* HasLog */]));
