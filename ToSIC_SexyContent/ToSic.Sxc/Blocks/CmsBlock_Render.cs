@@ -63,6 +63,12 @@ namespace ToSic.Sxc.Blocks
                             {
                                 Log.Add("template referenced 2sxc.api JS. will enable");
                                 UiAddJsApi = true;
+                                // try to pass UiAddJsApi to parent
+                                if (Block.CmsInstance is CmsBlock parentCms)
+                                {
+                                    Log.Add("Seems to be an inner-content render, will forward " + nameof(UiAddJsApi));
+                                    parentCms.UiAddJsApi = UiAddJsApi;
+                                }
                             }
                         }
                         else body = "";
