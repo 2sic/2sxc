@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.UI;
+using DotNetNuke.Application;
 using DotNetNuke.Framework;
 using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Client;
@@ -111,8 +112,12 @@ namespace ToSic.Sxc.Dnn.Web
         private static void RegisterJs(Page page, string version, string path, bool toHead, int priority)
         {
             var url = $"{path}{(path.IndexOf('?') > 0 ? '&' : '?')}v={version}";
-            if(toHead)
+            if (toHead)
+            {
+                // don't add version in DNN 7 and probably 8, because it breaks the client-dependency - but only in the head
+                if (DotNetNukeContext.Current.Application.Version.Major < 9) url = path;
                 ClientResourceManager.RegisterScript(page, url, priority, DnnPageHeaderProvider.DefaultName);
+            }
             else
                 page.ClientScript.RegisterClientScriptInclude(typeof(Page), path, url);
         }
