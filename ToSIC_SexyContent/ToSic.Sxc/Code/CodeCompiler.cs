@@ -13,11 +13,13 @@ namespace ToSic.Sxc.Code
         }
 
         internal const string CsFileExtension = ".cs";
+        internal const string CsHtmlFileExtension = ".cshtml";
         internal const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
         
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
             var wrapLog = Log.Call($"{virtualPath}, {className}, {throwOnError}");
+            string errorMsg = null;
 
             // Perform various checks on the path values
             var hasErrorMessage = CheckIfPathsOkAndCleanUp(ref virtualPath, relativePath);
@@ -25,21 +27,42 @@ namespace ToSic.Sxc.Code
             {
                 Log.Add($"Error: {hasErrorMessage}");
                 wrapLog("failed");
-                if(!throwOnError) throw new Exception(hasErrorMessage);
+                if(throwOnError) throw new Exception(hasErrorMessage);
                 return null;
             }
 
-            // if no name provided, use the name which is the same as the file name
-            className = className ?? Path.GetFileNameWithoutExtension(virtualPath) ?? "unknown";
+            var pathLowerCase = virtualPath.ToLowerInvariant();
+            var isCs = pathLowerCase.EndsWith(CsFileExtension);
+            var isCshtml = pathLowerCase.EndsWith(CsHtmlFileExtension);
 
-            var assembly = BuildManager.GetCompiledAssembly(virtualPath);
-            var compiledType = assembly.GetType(className, throwOnError, true);
-
-            if (compiledType == null)
+            Type compiledType = null;
+            if (isCshtml && string.IsNullOrEmpty(className))
             {
-                wrapLog($"didn't find type '{className}'; throw error: {throwOnError}");
-                if (throwOnError)
-                    throw new Exception("Error while creating class instance.");
+                compiledType = BuildManager.GetCompiledType(virtualPath);
+
+                if (compiledType == null)
+                    errorMsg = $"Couldn't create instance of {virtualPath}. Compiled type == null";
+            }
+            // compile .cs files
+            else if (isCs || isCshtml)
+            {
+                // if no name provided, use the name which is the same as the file name
+                className = className ?? Path.GetFileNameWithoutExtension(virtualPath) ?? "unknown";
+
+                var assembly = BuildManager.GetCompiledAssembly(virtualPath);
+                compiledType = assembly.GetType(className, throwOnError, true);
+
+                if (compiledType == null) 
+                    errorMsg = $"didn't find type '{className}' in {virtualPath}";
+            }
+            else
+                errorMsg = $"Error: given path '{virtualPath}' doesn't point to a .cs or .cshtml";
+
+            if (errorMsg != null)
+            {
+                Log.Add(errorMsg + $"; throw error: {throwOnError}");
+                wrapLog("failed");
+                if (throwOnError) throw new Exception(errorMsg);
                 return null;
             }
 
@@ -48,6 +71,7 @@ namespace ToSic.Sxc.Code
 
             wrapLog($"found: {instance != null}");
             return instance;
+
         }
 
         /// <summary>
