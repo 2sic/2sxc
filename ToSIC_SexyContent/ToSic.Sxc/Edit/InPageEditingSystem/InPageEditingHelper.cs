@@ -158,7 +158,8 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
                     throw exp;
             }
 
-            var hostWithInternals = (CmsBlock) CmsInstance;
+            // find the root host, as this is the one we must tell what js etc. we need
+            var hostWithInternals = (CmsBlock) CmsInstance.RootHost;
 
             if (js.HasValue || api.HasValue || forms.HasValue)
                 hostWithInternals.UiAddJsApi = (js ?? false) || (api ?? false) || (forms ?? false);

@@ -59,16 +59,12 @@ namespace ToSic.Sxc.Blocks
                             Log.Add("standard case, found template, will render");
                             var engine = GetEngine(Purpose.WebView);
                             body = engine.Render();
+                            // Activate-js-api is true, if the html has some <script> tags which tell it to load the 2sxc
+                            // only set if true, because otherwise we may accidentally overwrite the previous setting
                             if (engine.ActivateJsApi)
                             {
-                                Log.Add("template referenced 2sxc.api JS. will enable");
-                                UiAddJsApi = true;
-                                // try to pass UiAddJsApi to parent
-                                if (Block.CmsInstance is CmsBlock parentCms)
-                                {
-                                    Log.Add("Seems to be an inner-content render, will forward " + nameof(UiAddJsApi));
-                                    parentCms.UiAddJsApi = UiAddJsApi;
-                                }
+                                Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
+                                if (RootHost is CmsBlock parentCms) parentCms.UiAddJsApi = UiAddJsApi;
                             }
                         }
                         else body = "";
