@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Blocks
 {
     internal class BlockEditorForModule: BlockEditorBase
     {
-        public BlockEditorForModule(IBlockBuilder cms) : base(cms)
+        public BlockEditorForModule(IBlockBuilder blockBuilder) : base(blockBuilder)
         {
         }
 

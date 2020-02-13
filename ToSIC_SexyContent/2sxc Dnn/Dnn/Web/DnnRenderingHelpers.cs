@@ -25,14 +25,14 @@ namespace ToSic.Sxc.Dnn.Web
         // Blank constructor for IoC
         public DnnRenderingHelpers() { }
 
-        public DnnRenderingHelpers(Blocks.IBlockBuilder cms, ILog parentLog) => Init(cms, parentLog);
+        public DnnRenderingHelpers(Blocks.IBlockBuilder blockBuilder, ILog parentLog) => Init(blockBuilder, parentLog);
 
-        public IRenderingHelpers Init(Blocks.IBlockBuilder cms, ILog parentLog)
+        public IRenderingHelpers Init(Blocks.IBlockBuilder blockBuilder, ILog parentLog)
         {
             this.LinkLog(parentLog);
             var appRoot = VirtualPathUtility.ToAbsolute("~/");
-            _moduleInfo = cms?.Container;
-            BlockBuilder = cms;
+            _moduleInfo = blockBuilder?.Container;
+            BlockBuilder = blockBuilder;
             _portalSettings = PortalSettings.Current;
 
             _userInfo = PortalSettings.Current.UserInfo;

@@ -8,9 +8,9 @@ namespace ToSic.Sxc.Compatibility.Sxc
 	public class SxcHelper
 	{
 		public readonly IBlockBuilder Cms;
-		public SxcHelper(IBlockBuilder cms)
+		public SxcHelper(IBlockBuilder blockBuilder)
 		{
-			Cms = cms;
+			Cms = blockBuilder;
 		}
 
 		private OldDataToDictionaryWrapper _entityToDictionary;

@@ -57,12 +57,12 @@ namespace ToSic.Sxc.Data
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entityModel, string[] dimensions, int compatibility, IBlockBuilder sexy)
+        public DynamicEntity(IEntity entityModel, string[] dimensions, int compatibility, IBlockBuilder blockBuilder)
         {
             Entity = entityModel;
             _dimensions = dimensions;
             CompatibilityLevel = compatibility;
-            BlockBuilder = sexy;
+            BlockBuilder = blockBuilder;
         }
 
         /// <inheritdoc />

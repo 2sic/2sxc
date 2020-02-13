@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks
 {
     internal class BlockEditorForEntity : BlockEditorBase
     {
-        internal BlockEditorForEntity(IBlockBuilder cms): base(cms) { }
+        internal BlockEditorForEntity(IBlockBuilder blockBuilder): base(blockBuilder) { }
 
         #region methods which the entity-implementation must customize 
 

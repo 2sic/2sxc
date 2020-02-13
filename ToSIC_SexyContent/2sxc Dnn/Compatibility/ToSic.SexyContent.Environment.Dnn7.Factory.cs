@@ -41,8 +41,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
         //}
 
         [Obsolete("use ToSic.Sxc.Dnn.Factory.DynamicCode(...) instead")]
-        public static IDynamicCode CodeHelpers(IBlockBuilder cms) 
-            => Sxc.Dnn.Factory.DynamicCode(cms);
+        public static IDynamicCode CodeHelpers(IBlockBuilder blockBuilder) 
+            => Sxc.Dnn.Factory.DynamicCode(blockBuilder);
             //=> new DynamicCodeHelper(cms as CmsBlock);
 
         /// <summary>

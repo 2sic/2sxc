@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Compatibility.RazorPermissions
     public class RazorPermissions
     {
         protected readonly IBlockBuilder BlockBuilder;
-        internal RazorPermissions(IBlockBuilder cms) => BlockBuilder = cms;
+        internal RazorPermissions(IBlockBuilder blockBuilder) => BlockBuilder = blockBuilder;
 
         /// <summary>
         /// This property is used publicly, so it must exist

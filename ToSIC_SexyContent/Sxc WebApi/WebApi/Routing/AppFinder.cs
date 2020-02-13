@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi
         /// Note that this will fail, if both appPath and context are missing
         /// </summary>
         /// <returns></returns>
-        internal IAppIdentity GetAppIdFromPathOrContext(string appPath, /*SxcBlock*/IBlockBuilder blockBuilder)
+        internal IAppIdentity GetAppIdFromPathOrContext(string appPath, IBlockBuilder blockBuilder)
         {
             var wrapLog = Log.Call($"{appPath}, ...", message: "detect app from query string parameters");
 

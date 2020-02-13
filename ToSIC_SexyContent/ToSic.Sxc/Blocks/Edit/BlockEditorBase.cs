@@ -18,9 +18,9 @@ namespace ToSic.Sxc.Blocks
 
         private BlockConfiguration _cGroup;
 
-        internal BlockEditorBase(IBlockBuilder cms): base("CG.RefMan", cms.Log)
+        internal BlockEditorBase(IBlockBuilder blockBuilder): base("CG.RefMan", blockBuilder.Log)
         {
-            BlockBuilder = cms;
+            BlockBuilder = blockBuilder;
             ModuleId = BlockBuilder.Container.Id;
         }
 
