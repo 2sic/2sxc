@@ -8,11 +8,11 @@ namespace ToSic.Sxc.WebApi
     /// </summary>
     internal abstract class SaveHelperBase: HasLog
     {
-        internal ICmsBlock CmsInstance;
+        internal IBlockBuilder BlockBuilder;
 
-        protected SaveHelperBase(ICmsBlock cmsInstance, ILog parentLog, string logName) : base(logName, parentLog)
+        protected SaveHelperBase(IBlockBuilder blockBuilder, ILog parentLog, string logName) : base(logName, parentLog)
         {
-            CmsInstance = cmsInstance;
+            BlockBuilder = blockBuilder;
         }
 
     }

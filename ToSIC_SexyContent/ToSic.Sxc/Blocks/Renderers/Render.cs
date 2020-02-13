@@ -31,12 +31,12 @@ namespace ToSic.Sxc.Blocks
             string field = null,
             Guid? newGuid = null)
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "One", $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(One), $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
             if (item == null)
                 item = context;
             
             return field == null
-                ? Simple.Render(context.CmsBlock.Block, item.Entity, context.CmsBlock.Log) // with edit-context
+                ? Simple.Render(context.BlockBuilder.Block, item.Entity, context.BlockBuilder.Log) // with edit-context
                 : new HtmlString(Simple.RenderWithEditContext(context, item, field, newGuid) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
         }
 
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Blocks
             string field = null, 
             string merge = null)
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "All", $"{nameof(field)},{nameof(merge)}");
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(All), $"{nameof(field)},{nameof(merge)}");
             if (field == null)
                 throw new ArgumentNullException(nameof(field));
 

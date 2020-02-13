@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Search
             // must find tenant through module, as the PortalSettings.Current is null in search mode
             var tenant = new DnnTenant(portalSettings);
             var mcb = new BlockFromModule(container, Log, tenant);
-            var cmsBlock = mcb.CmsInstance;
+            var cmsBlock = mcb.BlockBuilder;
 
             var language = dnnModule.CultureCode;
 

@@ -15,7 +15,7 @@ namespace ToSic.Sxc.WebApi
 {
     internal class ContentGroupList: SaveHelperBase
     {
-        public ContentGroupList(ICmsBlock cmsInstance, ILog parentLog) : base(cmsInstance, parentLog, "Api.GrpPrc") {}
+        public ContentGroupList(IBlockBuilder blockBuilder, ILog parentLog) : base(blockBuilder, parentLog, "Api.GrpPrc") {}
 
         internal void IfInListUpdateList<T>(int appId, List<BundleWithHeader<T>> items, Dictionary<Guid, int> ids)
         {
@@ -33,8 +33,8 @@ namespace ToSic.Sxc.WebApi
         }
 
         private BlockConfiguration GetBlockConfig(IAppIdentity app, Guid blockGuid)
-            => new CmsRuntime(app, Log, CmsInstance.UserMayEdit,
-                CmsInstance.Environment.PagePublishing.IsEnabled(CmsInstance.Container.Id)).Blocks.GetBlockConfig(blockGuid);
+            => new CmsRuntime(app, Log, BlockBuilder.UserMayEdit,
+                BlockBuilder.Environment.PagePublishing.IsEnabled(BlockBuilder.Container.Id)).Blocks.GetBlockConfig(blockGuid);
 
         private void UpdateList<T>(
             int appId,
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.WebApi
         {
             var wrapLog = Log.Call($"{appId}");
             var app = new Apps.App(new DnnTenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
-                ConfigurationProvider.Build(CmsInstance, true), false, Log);
+                ConfigurationProvider.Build(BlockBuilder, true), false, Log);
 
             foreach (var entitySets in groupItems)
             {
@@ -101,7 +101,7 @@ namespace ToSic.Sxc.WebApi
             }
 
             // update-module-title
-            CmsInstance.Block.Editor.UpdateTitle();
+            BlockBuilder.Block.Editor.UpdateTitle();
             wrapLog("ok");
         }
 

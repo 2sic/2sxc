@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Code
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
 #pragma warning disable 618
-    public interface IDynamicCode: ICreateInstance, ICompatibilityLevel // inherit from old namespace to ensure compatibility
+    public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // inherit from old namespace to ensure compatibility
 #pragma warning restore 618
     {
         #region internal/obsolete but still needed, not public!
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Code
         //SxcHelper Sxc { get; }
 
         [PrivateApi("will be moved/removed/renamed")]
-        ICmsBlock CmsBlock { get; }
+        IBlockBuilder BlockBuilder { get; }
 
         //[PrivateApi]
         //IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);

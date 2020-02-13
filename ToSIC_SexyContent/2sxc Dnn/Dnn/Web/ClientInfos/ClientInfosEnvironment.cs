@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 
         public bool IsEditable;
 
-        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, IContainer mic, Sxc.Blocks.ICmsBlock cmsInstance)
+        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, IContainer mic, Sxc.Blocks.IBlockBuilder blockBuilder)
         {
             WebsiteId = ps.PortalId;
 
@@ -36,10 +36,10 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 
             SxcRootUrl = systemRootUrl;
 
-            var userMayEdit = cmsInstance?.UserMayEdit ?? false;
+            var userMayEdit = blockBuilder?.UserMayEdit ?? false;
 
             IsEditable = userMayEdit;
-            parameters = cmsInstance?.Parameters;
+            parameters = blockBuilder?.Parameters;
         }
     }
 

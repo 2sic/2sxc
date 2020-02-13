@@ -16,21 +16,21 @@ namespace ToSic.SexyContent
 {
     public partial class View : PortalModuleBase, IActionable
     {
-        private CmsBlock _cmsBlock;
+        private BlockBuilder _blockBuilder;
         private bool _cmsBlockLoaded;
 
-        protected CmsBlock CmsBlock
+        protected BlockBuilder BlockBuilder
         {
             get
             {
-                if (_cmsBlockLoaded) return _cmsBlock;
+                if (_cmsBlockLoaded) return _blockBuilder;
                 _cmsBlockLoaded = true;
-                _cmsBlock = new BlockFromModule(
+                _blockBuilder = new BlockFromModule(
                         new DnnContainer(ModuleConfiguration),
                         Log,
                         new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
-                    .CmsInstance as CmsBlock;
-                return _cmsBlock;
+                    .BlockBuilder as BlockBuilder;
+                return _blockBuilder;
             }
         }
 
@@ -61,7 +61,7 @@ namespace ToSic.SexyContent
             TryCatchAndLogToDnn(() =>
             {
                 EnsureCmsBlockAndPortalIsReady();
-                DnnClientResources = new DnnClientResources(Page, CmsBlock, Log);
+                DnnClientResources = new DnnClientResources(Page, BlockBuilder, Log);
                 DnnClientResources.EnsurePre1025Behavior();
             });
         }
@@ -98,8 +98,8 @@ namespace ToSic.SexyContent
             var timerWrap = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
             TryCatchAndLogToDnn(() =>
             {
-                if (RenderNaked) CmsBlock.RenderWithDiv = false;
-                renderedTemplate = CmsBlock.Render().ToString();
+                if (RenderNaked) BlockBuilder.RenderWithDiv = false;
+                renderedTemplate = BlockBuilder.Render().ToString();
 
                 // optional detailed logging
                 try
@@ -121,14 +121,14 @@ namespace ToSic.SexyContent
             var timerWrap = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
             // throw better error if SxcInstance isn't available
             // not sure if this doesn't have side-effects...
-            if (CmsBlock == null)
+            if (BlockBuilder == null)
                 throw new Exception("Error - can't find 2sxc instance configuration. " +
                                     "Probably trying to show an app or content that has been deleted.");
 
             // check things if it's a module of this portal (ensure everything is ok, etc.)
             var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
-            if (!isSharedModule && !CmsBlock.Block.ContentGroupExists && CmsBlock.App != null)
-                new DnnTenantSettings().EnsureTenantIsConfigured(CmsBlock, Server, ControlPath);
+            if (!isSharedModule && !BlockBuilder.Block.ContentGroupExists && BlockBuilder.App != null)
+                new DnnTenantSettings().EnsureTenantIsConfigured(BlockBuilder, Server, ControlPath);
 
             timerWrap(null);
         }

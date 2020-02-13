@@ -7,7 +7,7 @@ using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Blocks
 {
-    public partial class CmsBlock
+    public partial class BlockBuilder
     {
         internal bool RenderWithDiv = true;
         public bool UserMayEdit => _userMayEdit
@@ -59,10 +59,12 @@ namespace ToSic.Sxc.Blocks
                             Log.Add("standard case, found template, will render");
                             var engine = GetEngine(Purpose.WebView);
                             body = engine.Render();
+                            // Activate-js-api is true, if the html has some <script> tags which tell it to load the 2sxc
+                            // only set if true, because otherwise we may accidentally overwrite the previous setting
                             if (engine.ActivateJsApi)
                             {
-                                Log.Add("template referenced 2sxc.api JS. will enable");
-                                UiAddJsApi = true;
+                                Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
+                                if (RootBuilder is BlockBuilder parentCms) parentCms.UiAddJsApi = UiAddJsApi;
                             }
                         }
                         else body = "";

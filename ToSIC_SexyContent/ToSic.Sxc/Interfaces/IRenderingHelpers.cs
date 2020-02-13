@@ -1,17 +1,16 @@
 ﻿using System;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
-using Constants = ToSic.Eav.Constants;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Interfaces
 {
     public interface IRenderingHelpers
     {
-        IRenderingHelpers Init(ICmsBlock cms, ILog parentLog);
+        IRenderingHelpers Init(IBlockBuilder blockBuilder, ILog parentLog);
 
         string WrapInContext(string content,
-            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             int instanceId = 0, 
             int contentBlockId = 0, 
             bool editContext = false, 

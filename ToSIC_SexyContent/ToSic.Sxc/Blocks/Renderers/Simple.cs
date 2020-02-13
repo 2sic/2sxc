@@ -5,7 +5,6 @@ using System.Web;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.SexyContent;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Web;
@@ -30,7 +29,7 @@ namespace ToSic.Sxc.Blocks.Renderers
             // render it
             log.Add("found, will render");
             var cb = new BlockFromEntity(parentCb, entity, log);
-            return cb.CmsInstance.Render();
+            return cb.BlockBuilder.Render();
         }
 
         private const string WrapperTemplate = "<div class='{0}' {1}>{2}</div>";
@@ -41,10 +40,10 @@ namespace ToSic.Sxc.Blocks.Renderers
         internal static string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid = null, IInPageEditingSystem edit = null)
         {
             if (edit == null)
-                edit = new InPageEditingHelper(parent.CmsBlock, parent.CmsBlock.Log);
+                edit = new InPageEditingHelper(parent.BlockBuilder, parent.BlockBuilder.Log);
 
             var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(parent.CmsBlock.Block, subItem.Entity, parent.CmsBlock.Log).ToString();
+            var inner = subItem == null ? "": Render(parent.BlockBuilder.Block, subItem.Entity, parent.BlockBuilder.Log).ToString();
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
@@ -57,12 +56,12 @@ namespace ToSic.Sxc.Blocks.Renderers
             {
                 if (objFound is IList<DynamicEntity> itms)
                     foreach (var cb in itms)
-                        innerBuilder.Append(Render(cb.CmsBlock.Block, cb.Entity, parent.CmsBlock.Log));
+                        innerBuilder.Append(Render(cb.BlockBuilder.Block, cb.Entity, parent.BlockBuilder.Log));
             }
 
             // create edit object if missing...to re-use in the wh
             if (edit == null)
-                edit = new InPageEditingHelper(parent.CmsBlock, parent.CmsBlock.Log);
+                edit = new InPageEditingHelper(parent.BlockBuilder, parent.BlockBuilder.Log);
 
             return string.Format(WrapperTemplate, new object[]
             {

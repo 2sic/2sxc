@@ -104,7 +104,7 @@
     <Compile Include="Apps\Parts\CmsRuntimeBase.cs" />
     <Compile Include="Blocks\Edit\BlockEditorBase_More.cs" />
     <Compile Include="Blocks\Edit\BlockEditor_Title.cs" />
-    <Compile Include="Code\DynamicCodeChild.cs" />
+    <Compile Include="Code\DynamicCode.cs" />
     <Compile Include="Code\CodeCompiler.cs" />
     <Compile Include="Code\DynamicCodeRootWithObsolete.cs" />
     <Compile Include="Compatibility\CacheWithGetContentType.cs" />
@@ -152,7 +152,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Search.ISearchInfo.cs" />
     <Compile Include="Apps\App.cs" />
-    <Compile Include="Code\DynamicCodeBase.cs" />
+    <Compile Include="Code\DynamicCodeRoot.cs" />
     <Compile Include="Apps\Assets\AssetEditInfo.cs" />
     <Compile Include="Apps\Assets\AssetEditor.cs" />
     <Compile Include="Constants.cs" />
@@ -193,11 +193,11 @@
     <Compile Include="Apps\AppHelpers.cs" />
     <Compile Include="Interfaces\Internal\IMapAppToInstance.cs" />
     <Compile Include="Engines\TemplateHelpers.cs" />
-    <Compile Include="Blocks\ICmsBlock.cs" />
+    <Compile Include="Blocks\IBlockBuilder.cs" />
     <Compile Include="Conversion\DataToDictionary.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Engines\SexyContentException.cs" />
-    <Compile Include="Blocks\CmsBlock.cs" />
+    <Compile Include="Blocks\BlockBuilder.cs" />
     <Compile Include="Blocks\CmsBlock_Render.cs" />
     <Compile Include="Blocks\CmsBlock_Template.cs" />
     <Compile Include="Blocks\CmsBlock_EditUi.cs" />

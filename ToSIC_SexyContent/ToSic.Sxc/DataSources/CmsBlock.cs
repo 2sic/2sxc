@@ -15,7 +15,6 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.LookUp;
-using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.DataSources
@@ -39,7 +38,7 @@ namespace ToSic.Sxc.DataSources
         /// <inheritdoc />
         public override string LogId => "Sxc.CmsBDs";
 
-        private ICmsBlock _cmsContext;
+        private IBlockBuilder _blockBuilder;
 
         [PrivateApi]
         public enum Settings
@@ -63,21 +62,21 @@ namespace ToSic.Sxc.DataSources
         }
 
         [PrivateApi]
-        internal ICmsBlock CmsInstance
+        internal IBlockBuilder BlockBuilder
         {
             get
             {
-                if (_cmsContext != null) return _cmsContext;
+                if (_blockBuilder != null) return _blockBuilder;
 
                 if(!HasSxcContext)
                     throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
                 var sxciProvider = Configuration.LookUps.Sources[LookUp.ConfigurationProvider.SxcInstanceKey];
-                _cmsContext = (sxciProvider as LookUpCmsBlock)?
-                              .CmsInstance 
+                _blockBuilder = (sxciProvider as LookUpCmsBlock)?
+                              .BlockBuilder 
                               ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
-                return _cmsContext;
+                return _blockBuilder;
             }
         }
 
@@ -94,7 +93,7 @@ namespace ToSic.Sxc.DataSources
                 if (UseSxcInstanceContentGroup)
                 {
                     Log.Add("need content-group, will use from sxc-context");
-                    _blockConfiguration = CmsInstance.Block.Configuration;
+                    _blockConfiguration = BlockBuilder.Block.Configuration;
                 }
                 else
                 {
@@ -102,7 +101,7 @@ namespace ToSic.Sxc.DataSources
                     if (!InstanceId.HasValue)
                         throw new Exception("Looking up BlockConfiguration failed because ModuleId is null.");
                     var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
-                    var userMayEdit = HasSxcContext && CmsInstance.UserMayEdit;
+                    var userMayEdit = HasSxcContext && BlockBuilder.UserMayEdit;
 
                     var cms = new CmsRuntime(/*ZoneId, AppId*/this, Log, HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value));
                     var cgm = cms.Blocks;

@@ -14,7 +14,6 @@ using ToSic.Eav.Run;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
@@ -141,15 +140,12 @@ namespace ToSic.Sxc.Engines
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             webPage.Html = new Razor.HtmlHelper();
-            webPage.DynCode = new DnnDynamicCode(CmsBlock, compatibility, Log);
+            webPage.DynCode = new DnnDynamicCode(BlockBuilder, compatibility, Log);
 
             #region New in 10.25 - ensure jquery is not included by default
 
-            if (compatibility == 10 && CmsBlock is CmsBlock block)
-            {
-                //block.AddjQueryAndRvtForCompatibility = false;
-                this.CompatibilityAutoLoadJQueryAndRVT = false;
-            }
+            if (compatibility == 10) CompatibilityAutoLoadJQueryAndRVT = false;
+
             #endregion
 
         }

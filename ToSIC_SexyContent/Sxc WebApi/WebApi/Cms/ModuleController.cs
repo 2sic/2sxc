@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             base.Initialize(controllerContext); // very important!!!
             Log.Rename("2sModC");
-            BlockEditor = CmsBlock.Block.Editor;
+            BlockEditor = BlockBuilder.Block.Editor;
         }
 
         private BlockEditorBase BlockEditor { get; set;  }
@@ -62,10 +62,10 @@ namespace ToSic.Sxc.WebApi.Cms
         public void AddItem([FromUri] int? sortOrder = null)
         {
             Log.Add($"add order:{sortOrder}");
-            var versioning = CmsBlock.Environment.PagePublishing;
+            var versioning = BlockBuilder.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) =>
-                CmsManager.Blocks.AddItem(CmsBlock.Block.Configuration, sortOrder);
+                CmsManager.Blocks.AddItem(BlockBuilder.Block.Configuration, sortOrder);
                 //BlockEditor.AddItem(sortOrder);
 
             // use dnn versioning - this is always part of page
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
-            var permCheck = new MultiPermissionsApp(CmsBlock, App.AppId, Log);
+            var permCheck = new MultiPermissionsApp(BlockBuilder, App.AppId, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
@@ -109,7 +109,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => CmsRuntime?.Views.GetCompatibleViews(App, CmsBlock.Block.Configuration);
+        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => CmsRuntime?.Views.GetCompatibleViews(App, BlockBuilder.Block.Configuration);
 
         #endregion
 
@@ -129,22 +129,22 @@ namespace ToSic.Sxc.WebApi.Cms
             var entityId = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, newGuid);
 
             // now return a rendered instance
-            var newContentBlock = new BlockFromEntity(CmsBlock.Block, entityId, Log);
-            return newContentBlock.CmsInstance.Render().ToString();
+            var newContentBlock = new BlockFromEntity(BlockBuilder.Block, entityId, Log);
+            return newContentBlock.BlockBuilder.Render().ToString();
 
         }
 
         private int CreateItemAndAddToList(int parentId, string field, int sortOrder, string contentTypeName,
             Dictionary<string, object> values, Guid newGuid)
         {
-            var cgApp = CmsBlock.App;
+            var cgApp = BlockBuilder.App;
 
             // create the new entity 
             var entityId = new AppManager(cgApp, Log).Entities.GetOrCreate(newGuid, contentTypeName, values);
 
             #region attach to the current list of items
 
-            var cbEnt = CmsBlock.App.Data.List.One(parentId);
+            var cbEnt = BlockBuilder.App.Data.List.One(parentId);
             var blockList = ((IEnumerable<IEntity>) cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
@@ -166,9 +166,9 @@ namespace ToSic.Sxc.WebApi.Cms
         public void MoveItemInList(int parentId, string field, int indexFrom, int indexTo, [FromUri] bool partOfPage = false)
         {
             Log.Add($"move item in list parent:{parentId}, field:{field}, from:{indexFrom}, to:{indexTo}, partOfpage:{partOfPage}");
-            var versioning = CmsBlock.Environment.PagePublishing;
+            var versioning = BlockBuilder.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => new AppManager(CmsBlock.App, Log)
+            void InternalSave(VersioningActionInfo args) => new AppManager(BlockBuilder.App, Log)
                 .Entities.ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
 
             // use dnn versioning if partOfPage
@@ -188,9 +188,9 @@ namespace ToSic.Sxc.WebApi.Cms
         public void RemoveItemInList(int parentId, string field, int index, [FromUri] bool partOfPage = false)
         {
             Log.Add($"remove item: parent{parentId}, field:{field}, index:{index}, partOfPage{partOfPage}");
-            var versioning = CmsBlock.Environment.PagePublishing;
+            var versioning = BlockBuilder.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) => new AppManager(CmsBlock.App, Log)
+            void InternalSave(VersioningActionInfo args) => new AppManager(BlockBuilder.App, Log)
                 .Entities.ModifyItemList(parentId, field, new Remove(index));
 
             // use dnn versioning if partOfPage
@@ -215,16 +215,16 @@ namespace ToSic.Sxc.WebApi.Cms
                     // Fallback / ignore if the language specified has not been found
                     catch (global::System.Globalization.CultureNotFoundException) { }
 
-                var cbToRender = CmsBlock.Block;
+                var cbToRender = BlockBuilder.Block;
 
                 // if a real templateid was specified, swap to that
                 if (templateId > 0)
                 {
                     var template = new CmsRuntime(cbToRender.App, Log, Edit.Enabled, false).Views.Get(templateId);
-                    ((Sxc.Blocks.CmsBlock)cbToRender.CmsInstance).View = template;
+                    ((Sxc.Blocks.BlockBuilder)cbToRender.BlockBuilder).View = template;
                 }
 
-                var rendered = cbToRender.CmsInstance.Render().ToString();
+                var rendered = cbToRender.BlockBuilder.Render().ToString();
 
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -244,10 +244,10 @@ namespace ToSic.Sxc.WebApi.Cms
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {
             Log.Add($"change order sort:{sortOrder}, dest:{destinationSortOrder}");
-            var versioning = CmsBlock.Environment.PagePublishing;
+            var versioning = BlockBuilder.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) =>
-                CmsManager.Blocks.ChangeOrder(CmsBlock.Block.Configuration, sortOrder, destinationSortOrder);// BlockEditor.ChangeOrder(sortOrder, destinationSortOrder);
+                CmsManager.Blocks.ChangeOrder(BlockBuilder.Block.Configuration, sortOrder, destinationSortOrder);// BlockEditor.ChangeOrder(sortOrder, destinationSortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
@@ -258,7 +258,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public bool Publish(string part, int sortOrder)
         {
             Log.Add($"try to publish #{sortOrder} on '{part}'");
-            if (!new MultiPermissionsApp(CmsBlock, App.AppId, Log)
+            if (!new MultiPermissionsApp(BlockBuilder, App.AppId, Log)
                 .EnsureAll(GrantSets.WritePublished, out var exp))
                 throw exp;
             return BlockEditor.Publish(part, sortOrder);
@@ -269,7 +269,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public bool Publish(int id)
         {
             Log.Add($"try to publish id #{id}");
-            if (!new MultiPermissionsApp(CmsBlock, App.AppId, Log)
+            if (!new MultiPermissionsApp(BlockBuilder, App.AppId, Log)
                 .EnsureAll(GrantSets.WritePublished, out var exp))
                 throw exp;
             new AppManager(App, Log).Entities.Publish(id);
@@ -281,10 +281,10 @@ namespace ToSic.Sxc.WebApi.Cms
         public void RemoveFromList([FromUri] int sortOrder)
         {
             Log.Add($"remove from index:{sortOrder}");
-            var versioning = CmsBlock.Environment.PagePublishing;
+            var versioning = BlockBuilder.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) =>
-                CmsManager.Blocks.RemoveFromList(CmsBlock.Block.Configuration, sortOrder);
+                CmsManager.Blocks.RemoveFromList(BlockBuilder.Block.Configuration, sortOrder);
                 //BlockEditor.RemoveFromList(sortOrder);
 
             // use dnn versioning - items here are always part of list
@@ -314,7 +314,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 try
                 {
-                    var all = new CmsRuntime(CmsBlock.App, Log, Edit.Enabled, false).Views.GetAll();
+                    var all = new CmsRuntime(BlockBuilder.App, Log, Edit.Enabled, false).Views.GetAll();
                     if (all.Any())
                         return null;
                 }

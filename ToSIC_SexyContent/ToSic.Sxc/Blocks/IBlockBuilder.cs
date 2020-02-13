@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Blocks
     /// Sxc Block to get everything rendered. 
     /// </summary>
     [PrivateApi("not sure yet what to call this, CmsBlock isn't right, because it's more of a BlockHost or something")]
-    public interface ICmsBlock: IHasLog
+    public interface IBlockBuilder: IHasLog
     {
         /// <summary>
         /// The app relevant to this instance - contains much more material like
@@ -38,6 +38,11 @@ namespace ToSic.Sxc.Blocks
         /// The real block / unit of content which will be rendered. 
         /// </summary>
         IBlock Block { get; }
+
+        /// <summary>
+        /// The root block, which controls what assets / js etc. will be rendered
+        /// </summary>
+        IBlockBuilder RootBuilder { get; }
 
         /// <summary>
         /// Determines if the current user may edit content here.

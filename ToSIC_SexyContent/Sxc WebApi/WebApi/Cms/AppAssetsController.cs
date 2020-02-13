@@ -228,8 +228,8 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"asset templ:{templateId}, path:{path}, global:{global}");
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(CmsBlock.App, templateId, UserInfo.IsSuperUser, isAdmin, Log)
-                : new AssetEditor(CmsBlock.App, path, UserInfo.IsSuperUser, isAdmin, global, Log);
+                ? new AssetEditor(BlockBuilder.App, templateId, UserInfo.IsSuperUser, isAdmin, Log)
+                : new AssetEditor(BlockBuilder.App, path, UserInfo.IsSuperUser, isAdmin, global, Log);
             assetEditor.EnsureUserMayEditAsset();
             return assetEditor.EditInfoWithSource;
         }
@@ -249,8 +249,8 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"asset templ:{templateId}, global:{global}, path:{path}");
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(CmsBlock.App, templateId, UserInfo.IsSuperUser, isAdmin, Log)
-                : new AssetEditor(CmsBlock.App, path, UserInfo.IsSuperUser, isAdmin, global, Log);
+                ? new AssetEditor(BlockBuilder.App, templateId, UserInfo.IsSuperUser, isAdmin, Log)
+                : new AssetEditor(BlockBuilder.App, path, UserInfo.IsSuperUser, isAdmin, global, Log);
             assetEditor.EnsureUserMayEditAsset();
             assetEditor.Source = template.Code;
             return true;

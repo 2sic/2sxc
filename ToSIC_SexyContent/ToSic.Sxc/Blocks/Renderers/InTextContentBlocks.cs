@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Blocks.Renderers
                 return textTemplate;
 
             // create edit-object which is necessary for context attributes
-            var edit = new InPageEditingHelper(parent.CmsBlock, parent.CmsBlock.Log);
+            var edit = new InPageEditingHelper(parent.BlockBuilder, parent.BlockBuilder.Log);
 
             foreach (Match curMatch in matches)
             {

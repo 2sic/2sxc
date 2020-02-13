@@ -22,51 +22,64 @@ namespace ToSic.Sxc.DataSources
         [PrivateApi]
         public override string LogId => "Sxc.BlckDs";
 
+        //public Query Query { get; private set; }
+
+
         [PrivateApi("older use case, probably don't publish")]
         public DataPublishing Publish { get; }= new DataPublishing();
 
         [Obsolete]
         [PrivateApi]
         public CacheWithGetContentType Cache 
-            => _cache ?? (_cache = new CacheWithGetContentType(/*Factory.GetAppState*/Eav.Apps.State.Get(this)));
+            => _cache ?? (_cache = new CacheWithGetContentType(Eav.Apps.State.Get(this)));
         [Obsolete]
         private CacheWithGetContentType _cache;
 
-        internal static IBlockDataSource ForContentGroupInSxc(ICmsBlock cms, IView overrideView, ILookUpEngine configurationProvider, ILog parentLog, int instanceId = 0)
+
+
+
+        [PrivateApi]
+        internal static IBlockDataSource ForContentGroupInSxc(IBlockBuilder blockBuilder, IView view, ILookUpEngine configurationProvider, ILog parentLog, int instanceId = 0)
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
-            var showDrafts = cms.UserMayEdit;
+            var showDrafts = blockBuilder.UserMayEdit;
 
-            log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{overrideView?.Name}");
+            log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{view?.Name}");
             // Get ModuleDataSource
             var dsFactory = new DataSource(log);
-            var initialSource = dsFactory.GetPublishing(cms.Block, showDrafts, configurationProvider);
+            var initialSource = dsFactory.GetPublishing(blockBuilder.Block, showDrafts, configurationProvider);
             var moduleDataSource = dsFactory.GetDataSource<CmsBlock>(initialSource);
             moduleDataSource.InstanceId = instanceId;
 
-            moduleDataSource.OverrideView = overrideView;
+            moduleDataSource.OverrideView = view;
             moduleDataSource.UseSxcInstanceContentGroup = true;
 
             // If the Template has a Data-Pipeline, use an empty upstream, else use the ModuleDataSource created above
-            var viewDataSourceUpstream = overrideView?.Query == null
+            var viewDataSourceUpstream = view?.Query == null
                 ? moduleDataSource
                 : null;
             log.Add($"use pipeline upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = dsFactory.GetDataSource<Block>(cms.Block, viewDataSourceUpstream, configurationProvider);
+            var viewDataSource = dsFactory.GetDataSource<Block>(blockBuilder.Block, viewDataSourceUpstream, configurationProvider);
 
             // Take Publish-Properties from the View-Template
-            if (overrideView != null)
+            if (view != null)
             {
-                viewDataSource.Publish.Enabled = overrideView.PublishData;
-                viewDataSource.Publish.Streams = overrideView.StreamsToPublish;
+                viewDataSource.Publish.Enabled = view.PublishData;
+                viewDataSource.Publish.Streams = view.StreamsToPublish;
 
-                log.Add($"override template, & pipe#{overrideView.Query?.Id}");
+                log.Add($"use template, & pipe#{view.Query?.Id}");
                 // Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
-                if (overrideView.Query != null)
+                if (view.Query != null)
                 {
-                    new QueryBuilder(parentLog).BuildQuery(overrideView.Query, configurationProvider, null,
-                        viewDataSource, showDrafts: showDrafts);
+                    log.Add("Generate query");
+                    var query = new Query(blockBuilder.App.ZoneId, blockBuilder.App.AppId, view.Query.Entity, configurationProvider, showDrafts, viewDataSource, parentLog);
+                    log.Add("attaching");
+                    viewDataSource.Out = query.Out;
+
+                    //// build the query and attach it to the view-data-source
+                    //new QueryBuilder(parentLog)
+                    //    .BuildQuery(view.Query, configurationProvider, /*paramsLookUp*/null , viewDataSource, showDrafts);
                 }
             }
             else
@@ -74,5 +87,6 @@ namespace ToSic.Sxc.DataSources
 
             return viewDataSource;
         }
+
     }
 }

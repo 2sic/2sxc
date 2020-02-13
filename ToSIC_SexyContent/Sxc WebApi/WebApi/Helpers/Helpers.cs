@@ -22,9 +22,9 @@ namespace ToSic.Sxc.WebApi
             public string Value{ get; set; }
         }
 
-        internal static ICmsBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
+        internal static IBlockBuilder GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
         {
-            var wrapLog = log.Call<ICmsBlock>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
+            var wrapLog = log.Call<IBlockBuilder>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
             const string headerId = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.WebApi
                 }
             }
 
-            return wrapLog("ok", contentBlock.CmsInstance);
+            return wrapLog("ok", contentBlock.BlockBuilder);
         }
 
         /// <summary>

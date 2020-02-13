@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Blocks
 {
     internal class BlockEditorForModule: BlockEditorBase
     {
-        public BlockEditorForModule(ICmsBlock cms) : base(cms)
+        public BlockEditorForModule(IBlockBuilder blockBuilder) : base(blockBuilder)
         {
         }
 
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Blocks
             //=> BlocksManager.SetPreviewTemplate(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
-            => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(CmsContext.Container, CmsContext.Environment, appId, Log);
+            => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(BlockBuilder.Container, BlockBuilder.Environment, appId, Log);
         
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Blocks
         internal override void UpdateTitle(IEntity titleItem)
         {
             Log.Add("update title");
-            Factory.Resolve<IMapAppToInstance>().UpdateTitle(CmsContext, titleItem);
+            Factory.Resolve<IMapAppToInstance>().UpdateTitle(BlockBuilder, titleItem);
         }
 
         

@@ -32,11 +32,11 @@ namespace ToSic.Sxc.Data
             get
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
-                if (CmsBlock == null)
+                if (BlockBuilder == null)
                     return new HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = CmsBlock?.UserMayEdit ?? false;
+                var userMayEdit = BlockBuilder?.UserMayEdit ?? false;
 
                 if (!userMayEdit)
                     return new HtmlString("");
@@ -51,18 +51,18 @@ namespace ToSic.Sxc.Data
 
         private readonly string[] _dimensions;
         [PrivateApi]
-        internal ICmsBlock CmsBlock { get; }   // must be internal for further use cases
+        internal IBlockBuilder BlockBuilder { get; }   // must be internal for further use cases
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entityModel, string[] dimensions, int compatibility, ICmsBlock sexy)
+        public DynamicEntity(IEntity entityModel, string[] dimensions, int compatibility, IBlockBuilder blockBuilder)
         {
             Entity = entityModel;
             _dimensions = dimensions;
             CompatibilityLevel = compatibility;
-            CmsBlock = sexy;
+            BlockBuilder = blockBuilder;
         }
 
         /// <inheritdoc />
@@ -108,7 +108,7 @@ namespace ToSic.Sxc.Data
                 if (result is IEnumerable<IEntity> rel)
                 {
                     var relList = rel.Select(
-                        p => new DynamicEntity(p, _dimensions, CompatibilityLevel, CmsBlock)
+                        p => new DynamicEntity(p, _dimensions, CompatibilityLevel, BlockBuilder)
                     ).ToList();
                     result = relList;
                 }
@@ -133,7 +133,7 @@ namespace ToSic.Sxc.Data
 
         private IDynamicEntity GetPresentation
             => _presentation ?? (_presentation = Entity is EntityInBlock entityInGroup
-                   ? new DynamicEntity(entityInGroup.Presentation, _dimensions, CompatibilityLevel, CmsBlock)
+                   ? new DynamicEntity(entityInGroup.Presentation, _dimensions, CompatibilityLevel, BlockBuilder)
                    : null);
         private IDynamicEntity _presentation;
 
@@ -148,10 +148,10 @@ namespace ToSic.Sxc.Data
         public object EntityTitle => Entity.Title[_dimensions];
 
         /// <inheritdoc />
-        public dynamic GetDraft() => new DynamicEntity(Entity.GetDraft(), _dimensions, CompatibilityLevel, CmsBlock);
+        public dynamic GetDraft() => new DynamicEntity(Entity.GetDraft(), _dimensions, CompatibilityLevel, BlockBuilder);
         
         /// <inheritdoc />
-        public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, CompatibilityLevel, CmsBlock);
+        public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, CompatibilityLevel, BlockBuilder);
 
         /// <summary>
         /// Tell the system that it's a demo item, not one added by the user
@@ -165,7 +165,7 @@ namespace ToSic.Sxc.Data
         public IHtmlString Render()
         {
             if(CompatibilityLevel == 10)
-                throw new Exception("content.Toolbar() is deprecated in the new RazorComponent. Use ToSic.Sxc.Blocks.Render.One(content) instead. See https://r.2sxc.org/EditToolbar");
+                throw new Exception("content.Render() is deprecated in the new RazorComponent. Use ToSic.Sxc.Blocks.Render.One(content) instead. See https://r.2sxc.org/EditToolbar");
 
             return Blocks.Render.One(this);
         }
@@ -224,14 +224,14 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)
             => Entity.Parents(type, field)
-                .Select(e => new DynamicEntity(e, _dimensions, CompatibilityLevel, CmsBlock))
+                .Select(e => new DynamicEntity(e, _dimensions, CompatibilityLevel, BlockBuilder))
                 .Cast<IDynamicEntity>()
                 .ToList();
 
         /// <inheritdoc />
         public List<IDynamicEntity> Children(string field = null, string type = null)
             => Entity.Children(field, type)
-                .Select(e => new DynamicEntity(e, _dimensions, CompatibilityLevel, CmsBlock))
+                .Select(e => new DynamicEntity(e, _dimensions, CompatibilityLevel, BlockBuilder))
                 .Cast<IDynamicEntity>()
                 .ToList();
     }

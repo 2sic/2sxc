@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Blocks
         public BlockConfiguration Configuration { get; protected set; }
 
 
-        public ICmsBlock CmsInstance { get; protected set; }
+        public IBlockBuilder BlockBuilder { get; protected set; }
 
         public virtual bool IsContentApp => false;
 

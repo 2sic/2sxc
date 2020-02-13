@@ -20,9 +20,14 @@ namespace ToSic.Sxc.WebApi.System
 .result {
     color: green;
 }
+/* first ol level needs more padding, because it can number up to 4 digits */
+body>ol {
+    padding-inline-start: 40px;
+}
 
+/* all other OL levels need smaller padding, as they should be aligned nicely */
 ol {
-    padding-inline-start: 20px;
+    padding-inline-start: 23px;
     list-style: none; 
     counter-reset: li;
 }

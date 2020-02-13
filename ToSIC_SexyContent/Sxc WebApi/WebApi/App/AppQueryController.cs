@@ -6,11 +6,9 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Conversion;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
 
@@ -34,8 +32,8 @@ namespace ToSic.Sxc.WebApi.App
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null)
         {
-            var context = GetContext(CmsBlock, Log);
-            return BuildQueryAndRun(CmsBlock.App, name, stream, includeGuid, context.Dnn.Module, Log, CmsBlock);
+            var context = GetContext(BlockBuilder, Log);
+            return BuildQueryAndRun(BlockBuilder.App, name, stream, includeGuid, context.Dnn.Module, Log, BlockBuilder);
         }
 
 
@@ -49,11 +47,11 @@ namespace ToSic.Sxc.WebApi.App
                 ConfigurationProvider.Build(false, false), false, Log);
 
             // now just run the default query check and serializer
-            return BuildQueryAndRun(queryApp, name, stream, false, null, Log, CmsBlock);
+            return BuildQueryAndRun(queryApp, name, stream, false, null, Log, BlockBuilder);
         }
 
 
-        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, ModuleInfo module, ILog log, /*SxcBlock*/ICmsBlock cms)
+        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, ModuleInfo module, ILog log, IBlockBuilder blockBuilder)
         {
             log.Add($"build and run query name:{name}, with module:{module?.ModuleID}");
             var query = app.GetQuery(name);
@@ -72,7 +70,7 @@ namespace ToSic.Sxc.WebApi.App
             if (!(readExplicitlyAllowed || isAdmin))
                 throw HttpErr(HttpStatusCode.Unauthorized, "Request not allowed", $"Request not allowed. User does not have read permissions for query '{name}'");
             
-            var serializer = new DataToDictionary(cms?.UserMayEdit ?? false) { WithGuid = includeGuid };
+            var serializer = new DataToDictionary(blockBuilder?.UserMayEdit ?? false) { WithGuid = includeGuid };
             return serializer.Convert(query, stream?.Split(','));
         }
 

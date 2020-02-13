@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.UI;
+using DotNetNuke.Application;
 using DotNetNuke.Framework;
 using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Client;
@@ -12,14 +13,14 @@ namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnClientResources: HasLog
     {
-        protected CmsBlock CmsBlock;
+        protected BlockBuilder BlockBuilder;
         protected Page Page;
         protected DnnJsApiHeader Header;
 
-        public DnnClientResources(Page page, CmsBlock cmsBlock, ILog parentLog) : base("Dnn.JsCss", parentLog)
+        public DnnClientResources(Page page, BlockBuilder blockBuilder, ILog parentLog) : base("Dnn.JsCss", parentLog)
         {
             Page = page;
-            CmsBlock = cmsBlock;
+            BlockBuilder = blockBuilder;
             Header = new DnnJsApiHeader(Log);
         }
 
@@ -32,10 +33,10 @@ namespace ToSic.Sxc.Dnn.Web
             //EnsurePre1025Behavior();
 
             // normal scripts
-            var editJs = CmsBlock?.UiAddEditApi ?? false;
+            var editJs = BlockBuilder?.UiAddEditApi ?? false;
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            var readJs = CmsBlock?.UiAddJsApi ?? editJs;
-            var editCss = CmsBlock?.UiAddEditUi ?? false;
+            var readJs = BlockBuilder?.UiAddJsApi ?? editJs;
+            var editCss = BlockBuilder?.UiAddEditUi ?? false;
 
             if (!readJs && !editJs && !editCss)
                 return wrapLog("nothing added", true);
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.Dnn.Web
         {
             // new in 10.25 - by default jQuery isn't loaded!
             // but any old behaviour, incl. no-view defined, etc. should activate compatibility
-            var addAntiForgeryToken = CmsBlock
+            var addAntiForgeryToken = BlockBuilder
                                           ?.GetEngine(Purpose.WebView)
                                           ?.CompatibilityAutoLoadJQueryAndRVT
                                       ?? true;
@@ -111,8 +112,12 @@ namespace ToSic.Sxc.Dnn.Web
         private static void RegisterJs(Page page, string version, string path, bool toHead, int priority)
         {
             var url = $"{path}{(path.IndexOf('?') > 0 ? '&' : '?')}v={version}";
-            if(toHead)
+            if (toHead)
+            {
+                // don't add version in DNN 7 and probably 8, because it breaks the client-dependency - but only in the head
+                if (DotNetNukeContext.Current.Application.Version.Major < 9) url = path;
                 ClientResourceManager.RegisterScript(page, url, priority, DnnPageHeaderProvider.DefaultName);
+            }
             else
                 page.ClientScript.RegisterClientScriptInclude(typeof(Page), path, url);
         }

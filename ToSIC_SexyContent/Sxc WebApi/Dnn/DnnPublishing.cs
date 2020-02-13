@@ -6,15 +6,15 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi;
-using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
 namespace ToSic.Sxc.Dnn
 {
     internal class DnnPublishing:SaveHelperBase
     {
-        public DnnPublishing(ICmsBlock cmsInstance, ILog parentLog) : base(cmsInstance, parentLog, "Api.DnnPub") { }
+        public DnnPublishing(IBlockBuilder blockBuilder, ILog parentLog) : base(blockBuilder, parentLog, "Api.DnnPub") { }
 
         internal Dictionary<Guid, int> SaveWithinDnnPagePublishing<T>(
             int appId,
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn
             {
                 var ids = call.Invoke(forceSaveAsDraft);
                 // now assign all content-groups as needed
-                new ContentGroupList(CmsInstance, Log)
+                new ContentGroupList(BlockBuilder, Log)
                     .IfInListUpdateList(appId, items, ids);
                 return ids;
             }
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Dnn
             {
                 Log.Add("partOfPage - save with publishing");
                 var versioning = Eav.Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
-                var context = SxcApiControllerBase.GetContext(CmsInstance, Log);
+                var context = SxcApiControllerBase.GetContext(BlockBuilder, Log);
                 versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID,
                     args => postSaveIds = SaveAndSaveGroups(internalSaveMethod, forceDraft));
             }

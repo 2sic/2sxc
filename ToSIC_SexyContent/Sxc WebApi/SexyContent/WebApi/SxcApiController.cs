@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.WebApi
     {
         public new IDnnContext Dnn => base.Dnn;//  DynCodeHelpers.Dnn;
 
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(CmsBlock));
+        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(BlockBuilder));
         private SxcHelper _sxc;
 
         [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;

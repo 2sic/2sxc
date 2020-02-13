@@ -31,10 +31,10 @@ namespace ToSic.Sxc.WebApi.Cms
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
             var appIdentity = State.Identity(null, appId);
-            items = new ContentGroupList(CmsBlock, Log).ConvertListIndexToId(items, appIdentity);
+            items = new ContentGroupList(BlockBuilder, Log).ConvertListIndexToId(items, appIdentity);
 
             // now look up the types, and repeat security check with type-names
-            var permCheck = new MultiPermissionsTypes(CmsBlock, appId, items, Log);
+            var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, items, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exception))
                 throw exception;
 

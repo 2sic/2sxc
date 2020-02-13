@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
             // basic permission checks
-            var permCheck = new Security.Security(CmsBlock, Log)
+            var permCheck = new Security.Security(BlockBuilder, Log)
                 .DoPreSaveSecurityCheck(appId, package.Items);
 
             var foundItems = package.Items.Where(i => i.EntityId != 0 && i.EntityGuid != Guid.Empty)
@@ -94,7 +94,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             Log.Add("items to save generated, all data tests passed");
 
-            return new DnnPublishing(CmsBlock, Log)
+            return new DnnPublishing(BlockBuilder, Log)
                 .SaveWithinDnnPagePublishing(appId, items, partOfPage,
                     forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);

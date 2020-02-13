@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -16,11 +15,9 @@ namespace ToSic.Sxc.Blocks
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
     [PrivateApi("not sure yet what to call this, CmsBlock isn't right, because it's more of a BlockHost or something")]
-    public partial class CmsBlock : HasLog, ICmsBlock
+    public partial class BlockBuilder : HasLog, IBlockBuilder
     {
         #region App-level information
-        [PrivateApi]
-        public int Compatibility { get; }
         public IApp App => Block.App;
 
         #endregion
@@ -38,16 +35,20 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         public IAppEnvironment Environment { get; }
 
+        /// <inheritdoc />
         public IEnvironmentFactory EnvFac { get; }
 
+        /// <inheritdoc />
         public IContainer Container { get; }
 
+        /// <inheritdoc />
         public IBlock Block { get; }
 
+        public IBlockBuilder RootBuilder { get; }
         #endregion
 
         #region Constructor
-        internal CmsBlock(IBlock cb, 
+        internal BlockBuilder(IBlockBuilder rootBlockBuilder, IBlock cb, 
             IContainer container, 
             IEnumerable<KeyValuePair<string, string>> urlParams,// = null, 
             ILog parentLog/* = null*/)
@@ -55,6 +56,8 @@ namespace ToSic.Sxc.Blocks
         {
             EnvFac = Factory.Resolve<IEnvironmentFactory>();
             Environment = EnvFac.Environment(parentLog);
+            // the root block is the main container. If there is none yet, use this, as it will be the root
+            RootBuilder = rootBlockBuilder ?? this;
             Block = cb;
             Container = container;
 

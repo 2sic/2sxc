@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
     public static class Factory
     {
         [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(tabId, modId) instead. Note that tab/mod are reversed to this call.")]
-        public static ICmsBlock SxcInstanceForModule(int modId, int tabId)
+        public static IBlockBuilder SxcInstanceForModule(int modId, int tabId)
             => Sxc.Dnn.Factory.CmsBlock(tabId, modId);
         //{
         //    var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
@@ -27,12 +27,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
         //}
 
         [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(...) instead")]
-        public static ICmsBlock SxcInstanceForModule(ModuleInfo moduleInfo)
+        public static IBlockBuilder SxcInstanceForModule(ModuleInfo moduleInfo)
             => Sxc.Dnn.Factory.CmsBlock(moduleInfo);
             //=> SxcInstanceForModule(new DnnInstanceInfo(moduleInfo));
 
         [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(...) instead")]
-        public static ICmsBlock SxcInstanceForModule(IContainer moduleInfo)
+        public static IBlockBuilder SxcInstanceForModule(IContainer moduleInfo)
             => Sxc.Dnn.Factory.CmsBlock(moduleInfo);
         //{
         //    var dnnModule = ((Container<ModuleInfo>) moduleInfo).Original;
@@ -41,8 +41,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
         //}
 
         [Obsolete("use ToSic.Sxc.Dnn.Factory.DynamicCode(...) instead")]
-        public static IDynamicCode CodeHelpers(ICmsBlock cms) 
-            => Sxc.Dnn.Factory.DynamicCode(cms);
+        public static IDynamicCode CodeHelpers(IBlockBuilder blockBuilder) 
+            => Sxc.Dnn.Factory.DynamicCode(blockBuilder);
             //=> new DynamicCodeHelper(cms as CmsBlock);
 
         /// <summary>
