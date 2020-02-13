@@ -5,8 +5,8 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
-using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
 namespace ToSic.Sxc.Adam
 {
@@ -24,16 +24,16 @@ namespace ToSic.Sxc.Adam
         private readonly IApp _app;
         public readonly AppRuntime AppRuntime;
         public readonly ITenant Tenant;
-        public readonly ICmsBlock CmsBlock;
+        public readonly IBlockBuilder BlockBuilder;
         internal readonly IEnvironmentFileSystem EnvironmentFs;
 
 
-        public AdamAppContext(ITenant tenant, IApp app, ICmsBlock cmsBlock, int compatibility, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
+        public AdamAppContext(ITenant tenant, IApp app, IBlockBuilder blockBuilder, int compatibility, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
         {
             Tenant = tenant;
             _app = app;
-            AppRuntime = new AppRuntime(app, cmsBlock?.UserMayEdit ?? false, null);
-            CmsBlock = cmsBlock;
+            AppRuntime = new AppRuntime(app, blockBuilder?.UserMayEdit ?? false, null);
+            BlockBuilder = blockBuilder;
             CompatibilityLevel = compatibility;
             EnvironmentFs = Factory.Resolve<IEnvironmentFileSystem>();
         }

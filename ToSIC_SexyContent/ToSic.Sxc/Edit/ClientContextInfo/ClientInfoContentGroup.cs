@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.Edit.ClientContextInfo
         public bool HasContent;
         public bool SupportsAjax;
 
-        public ClientInfoContentGroup(ICmsBlock cms, bool isCreated)
+        public ClientInfoContentGroup(IBlockBuilder cms, bool isCreated)
         {
             IsCreated = isCreated;
             IsContent = cms.Block.IsContentApp;

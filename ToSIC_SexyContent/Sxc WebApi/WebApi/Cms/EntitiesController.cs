@@ -37,7 +37,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
-            var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentType, Log);
+            var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
                 throw exception;
             // 2018-09-15 old code, should have checked the same stuff mostly...
@@ -57,10 +57,10 @@ namespace ToSic.Sxc.WebApi.Cms
             // before we start, we have to convert the indexes into something more useful, because
             // otherwise in content-list scenarios we don't have the type
             var appForSecurityChecks = GetApp.LightWithoutData(new DnnTenant(PortalSettings), SystemRuntime.ZoneIdOfApp(appId), appId, Log);
-            items = new ContentGroupList(CmsBlock, Log).ConvertListIndexToId(items, appForSecurityChecks);
+            items = new ContentGroupList(BlockBuilder, Log).ConvertListIndexToId(items, appForSecurityChecks);
 
             // to do full security check, we'll have to see what content-type is requested
-            var permCheck = new MultiPermissionsTypes(CmsBlock, appId, items, Log);
+            var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, items, Log);
 
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var exception))
                 throw exception;
@@ -99,7 +99,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var appReadForSecurityCheckOnly = new AppRuntime(appId, true, Log);
             #region check if it's an update, and do more security checks - shared with UiController.Save
             // basic permission checks
-            var permCheck = new Security.Security(CmsBlock, Log)
+            var permCheck = new Security.Security(BlockBuilder, Log)
                 .DoPreSaveSecurityCheck(appId, items);
 
             var foundItems = items.Where(i => i.EntityId != 0 && i.EntityGuid != Guid.Empty)
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 throw exception;
             #endregion
 
-            return new DnnPublishing(CmsBlock, Log)
+            return new DnnPublishing(BlockBuilder, Log)
                 .SaveWithinDnnPagePublishing(appId, items, partOfPage,
                     forceSaveAsDraft => SaveOldFormatKeepTillReplaced(appId, items, partOfPage, forceSaveAsDraft),
                     permCheck);
@@ -147,7 +147,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
-	        var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentType, Log);
+	        var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, contentType, Log);
 	        if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
 	            throw exception;
 
@@ -163,7 +163,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
-            var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentType, Log);
+            var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.DeleteSomething, out var exception))
                 throw exception;
             new EntityApi(appId, true, Log).Delete(contentType, id, force);
@@ -174,7 +174,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
-            var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentType, Log);
+            var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.DeleteSomething, out var exception))
                 throw exception;
             new EntityApi(appId, true, Log).Delete(contentType, guid, force);

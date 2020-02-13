@@ -7,8 +7,8 @@ namespace ToSic.Sxc.Compatibility.Sxc
     /// </summary>
 	public class SxcHelper
 	{
-		public readonly ICmsBlock Cms;
-		public SxcHelper(ICmsBlock cms)
+		public readonly IBlockBuilder Cms;
+		public SxcHelper(IBlockBuilder cms)
 		{
 			Cms = cms;
 		}

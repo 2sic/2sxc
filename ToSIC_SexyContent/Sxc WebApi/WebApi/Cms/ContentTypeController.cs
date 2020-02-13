@@ -43,7 +43,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
 	    {
-	        var permCheck = new MultiPermissionsTypes(CmsBlock, appId, contentTypeStaticName, Log);
+	        var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, contentTypeStaticName, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
@@ -90,7 +90,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName)
         {
             Log.Add($"get fields for a:{appId} type:{staticName}");
-	        var permCheck = new MultiPermissionsTypes(CmsBlock, appId, staticName, Log);
+	        var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, staticName, Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
             if(!permCheck.UserCanWriteAndPublicFormsEnabled(out exp))

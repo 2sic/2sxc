@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Blocks
         #endregion
 
         [PrivateApi("naming not final")]
-        ICmsBlock CmsInstance { get; }
+        IBlockBuilder BlockBuilder { get; }
 
         [PrivateApi("naming not final")]
         bool ContentGroupExists { get; }

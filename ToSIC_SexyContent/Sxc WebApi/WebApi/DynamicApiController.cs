@@ -33,7 +33,7 @@ namespace ToSic.SexyContent.WebApi
             base.Initialize(controllerContext);
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
-            DynCode = GetContext(CmsBlock, CmsBlock?.Log ?? Log);// new DnnDynamicCode(CmsBlock, 10, CmsBlock?.Log ?? Log);
+            DynCode = GetContext(BlockBuilder, BlockBuilder?.Log ?? Log);// new DnnDynamicCode(CmsBlock, 10, CmsBlock?.Log ?? Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (DynCode.App == null)
@@ -94,8 +94,8 @@ namespace ToSic.SexyContent.WebApi
             if (!Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
-            return new AdamUploader(CmsBlock, 
-                CmsBlock.Block.AppId, // 2019-11-09 not nullable any more ?? throw new Exception("can't save in adam - full context not available"), 
+            return new AdamUploader(BlockBuilder, 
+                BlockBuilder.Block.AppId, // 2019-11-09 not nullable any more ?? throw new Exception("can't save in adam - full context not available"), 
                 Log)
                 .UploadOne(stream, fileName, contentType, guid.Value, field, subFolder, false, true);
         }

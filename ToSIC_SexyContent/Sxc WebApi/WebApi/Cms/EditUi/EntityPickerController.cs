@@ -19,8 +19,8 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             // do security check
             var permCheck = string.IsNullOrEmpty(contentTypeName) 
-                ? new MultiPermissionsApp(CmsBlock, appId, Log)
-                : new MultiPermissionsTypes(CmsBlock, appId, contentTypeName, Log);
+                ? new MultiPermissionsApp(BlockBuilder, appId, Log)
+                : new MultiPermissionsTypes(BlockBuilder, appId, contentTypeName, Log);
             if(!permCheck.EnsureAll(GrantSets.ReadSomething, out var exp))
                 throw exp;
 

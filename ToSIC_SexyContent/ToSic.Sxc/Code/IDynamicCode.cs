@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Code
         //SxcHelper Sxc { get; }
 
         [PrivateApi("will be moved/removed/renamed")]
-        ICmsBlock CmsBlock { get; }
+        IBlockBuilder BlockBuilder { get; }
 
         //[PrivateApi]
         //IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);

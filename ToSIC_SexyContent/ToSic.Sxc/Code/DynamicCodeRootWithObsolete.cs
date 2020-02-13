@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Code
             if (inSource != null)
                 return DynCode.DataSourceFactory.GetDataSource(typeName, inSource, inSource, lookUpEngine);
 
-            var userMayEdit = DynCode.CmsBlock.UserMayEdit;
+            var userMayEdit = DynCode.BlockBuilder.UserMayEdit;
 
             var initialSource = DynCode.DataSourceFactory.GetPublishing(
                 DynCode.App, userMayEdit, DynCode.ConfigurationProvider as LookUpEngine);
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Code
             DynCode.Log.Add("try to build old List");
             _list = new List<Element>();
 
-            if (DynCode.Data == null || DynCode.CmsBlock.View == null) return;
+            if (DynCode.Data == null || DynCode.BlockBuilder.View == null) return;
             if (!DynCode.Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
             var entities = DynCode.Data.List.ToList();

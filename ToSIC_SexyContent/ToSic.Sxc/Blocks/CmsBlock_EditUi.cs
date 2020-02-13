@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Blocks
 {
-    public partial class CmsBlock
+    public partial class BlockBuilder
     {
         /// <summary>
         /// Activate the normal 2sxc read-js API - the $2sxc

@@ -18,13 +18,13 @@ namespace ToSic.Sxc.Blocks
     {
         public IContainer Container;
 
-        public override BlockEditorBase Editor => new BlockEditorForModule(CmsInstance);
+        public override BlockEditorBase Editor => new BlockEditorForModule(BlockBuilder);
 
         public override bool ParentIsEntity => false;
 
 
         public override IBlockDataSource Data => _dataSource 
-            ?? (_dataSource = Block.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log, Container.Id));
+            ?? (_dataSource = Block.ForContentGroupInSxc(BlockBuilder, View, App?.ConfigurationProvider, Log, Container.Id));
 
         /// <summary>
         /// Create a module-content block
@@ -61,18 +61,18 @@ namespace ToSic.Sxc.Blocks
 
             // 2018-09-22 new with auto-init-data
             var urlParams = overrideParams ?? SystemWeb.GetUrlParams();
-            CmsInstance = new CmsBlock(null, this, Container, urlParams, Log);
+            BlockBuilder = new BlockBuilder(null, this, Container, urlParams, Log);
 
             if (AppId != 0)
             {
                 Log.Add("real app, will load data");
 
                 // 2018-09-22 new with auto-init-data
-                App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(CmsInstance, false), true, Log);
+                App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(BlockBuilder, false), true, Log);
 
                 // 2019-11-11 2dm new, with CmsRuntime
-                var cms = new CmsRuntime(App, Log, CmsInstance.UserMayEdit,
-                    CmsInstance.Environment.PagePublishing.IsEnabled(CmsInstance.Container.Id));
+                var cms = new CmsRuntime(App, Log, BlockBuilder.UserMayEdit,
+                    BlockBuilder.Environment.PagePublishing.IsEnabled(BlockBuilder.Container.Id));
 
                 Configuration = cms.Blocks.GetInstanceContentGroup(container.Id, container.PageId);
 
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Blocks
                     return;
                 }
 
-                ((CmsBlock)CmsInstance).SetTemplateOrOverrideFromUrl(Configuration.View);                
+                ((BlockBuilder)BlockBuilder).SetTemplateOrOverrideFromUrl(Configuration.View);                
             }
 
             wrapLog($"ok a:{AppId}, container:{container.Id}, content-group:{Configuration?.ContentGroupId}");

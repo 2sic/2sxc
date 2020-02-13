@@ -126,7 +126,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            var appAndPerms = new MultiPermissionsApp(CmsBlock, appId, Log);
+            var appAndPerms = new MultiPermissionsApp(BlockBuilder, appId, Log);
             if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var exp))
                 throw exp;
 

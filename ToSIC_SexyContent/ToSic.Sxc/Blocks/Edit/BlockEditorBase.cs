@@ -13,15 +13,15 @@ namespace ToSic.Sxc.Blocks
     // todo: move some parts out into a BlockManagement
     public abstract partial class BlockEditorBase : HasLog
     {
-        protected ICmsBlock CmsContext;
+        protected IBlockBuilder BlockBuilder;
         protected int ModuleId;
 
         private BlockConfiguration _cGroup;
 
-        internal BlockEditorBase(ICmsBlock cms): base("CG.RefMan", cms.Log)
+        internal BlockEditorBase(IBlockBuilder cms): base("CG.RefMan", cms.Log)
         {
-            CmsContext = cms;
-            ModuleId = CmsContext.Container.Id;
+            BlockBuilder = cms;
+            ModuleId = BlockBuilder.Container.Id;
         }
 
 
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Blocks
         #region methods which are fairly stable / the same across content-block implementations
 
         protected BlockConfiguration BlockConfiguration
-            => _cGroup ?? (_cGroup = CmsContext.Block.Configuration);
+            => _cGroup ?? (_cGroup = BlockBuilder.Block.Configuration);
 
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Blocks
             {
                 var existedBeforeSettingTemplate = BlockConfiguration.Exists;
 
-                var app = CmsContext.Block.App;
+                var app = BlockBuilder.Block.App;
                 var cms = new CmsManager(app, Log);
 
                 var contentGroupGuid = cms.Blocks // CmsContext.Block.App.BlocksManager
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Blocks
             else
             {
                 // only set preview / content-group-reference - but must use the guid
-                var dataSource = CmsContext.App.Data;
+                var dataSource = BlockBuilder.App.Data;
                 var templateGuid = dataSource.List.One(templateId).EntityGuid;
                 SavePreviewTemplateId(templateGuid);
                 result = null; // send null back
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Blocks
 
             var hasPresentation = presEntity != null;
 
-            var appMan = new AppManager(CmsContext.App, Log);
+            var appMan = new AppManager(BlockBuilder.App, Log);
 
             // make sure we really have the draft item an not the live one
             var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;

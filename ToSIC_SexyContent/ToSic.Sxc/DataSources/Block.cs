@@ -39,7 +39,7 @@ namespace ToSic.Sxc.DataSources
 
 
         [PrivateApi]
-        internal static IBlockDataSource ForContentGroupInSxc(ICmsBlock cms, IView view, ILookUpEngine configurationProvider, ILog parentLog, int instanceId = 0)
+        internal static IBlockDataSource ForContentGroupInSxc(IBlockBuilder cms, IView view, ILookUpEngine configurationProvider, ILog parentLog, int instanceId = 0)
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
             var showDrafts = cms.UserMayEdit;

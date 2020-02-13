@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Blocks
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
     [PrivateApi("not sure yet what to call this, CmsBlock isn't right, because it's more of a BlockHost or something")]
-    public partial class CmsBlock : HasLog, ICmsBlock
+    public partial class BlockBuilder : HasLog, IBlockBuilder
     {
         #region App-level information
         public IApp App => Block.App;
@@ -44,11 +44,11 @@ namespace ToSic.Sxc.Blocks
         /// <inheritdoc />
         public IBlock Block { get; }
 
-        public ICmsBlock RootHost { get; }
+        public IBlockBuilder RootBuilder { get; }
         #endregion
 
         #region Constructor
-        internal CmsBlock(ICmsBlock rootBlock, IBlock cb, 
+        internal BlockBuilder(IBlockBuilder rootBlockBuilder, IBlock cb, 
             IContainer container, 
             IEnumerable<KeyValuePair<string, string>> urlParams,// = null, 
             ILog parentLog/* = null*/)
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Blocks
             EnvFac = Factory.Resolve<IEnvironmentFactory>();
             Environment = EnvFac.Environment(parentLog);
             // the root block is the main container. If there is none yet, use this, as it will be the root
-            RootHost = rootBlock ?? this;
+            RootBuilder = rootBlockBuilder ?? this;
             Block = cb;
             Container = container;
 

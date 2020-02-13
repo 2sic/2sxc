@@ -8,7 +8,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
-using CmsBlock = ToSic.Sxc.Blocks.CmsBlock;
 using Feats = ToSic.Eav.Configuration.Features;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -19,16 +18,16 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         private readonly string _jsonTemplate =
             "data-list-context='{{ `parent`: {0}, `field`: `{1}`, `type`: `{2}`, `guid`: `{3}`}}'".Replace("`", "\"");
 
-        internal InPageEditingHelper(ICmsBlock cmsInstance, ILog parentLog) : base("Edt", parentLog)
+        internal InPageEditingHelper(IBlockBuilder blockBuilder, ILog parentLog) : base("Edt", parentLog)
         {
-            Enabled = cmsInstance.UserMayEdit;
-            CmsInstance = cmsInstance;
+            Enabled = blockBuilder.UserMayEdit;
+            BlockBuilder = blockBuilder;
         }
 
         /// <inheritdoc />
         public bool Enabled { get; }
         [PrivateApi]
-        protected  ICmsBlock CmsInstance;
+        protected  IBlockBuilder BlockBuilder;
 
         #region Toolbar
 
@@ -116,13 +115,13 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             Eav.Constants.ProtectAgainstMissingParameterNames(noParameterOrder, nameof(WrapInContext), $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
             return new HtmlString(
-                ((CmsBlock)CmsInstance).RenderingHelper.WrapInContext(content.ToString(),
+                ((BlockBuilder)BlockBuilder).RenderingHelper.WrapInContext(content.ToString(),
                     instanceId: instanceId > 0
                         ? instanceId
-                        : CmsInstance?.Block?.ParentId ?? 0,
+                        : BlockBuilder?.Block?.ParentId ?? 0,
                     contentBlockId: contentBlockId > 0
                         ? contentBlockId
-                        : CmsInstance?.Block?.ContentBlockId ?? 0,
+                        : BlockBuilder?.Block?.ContentBlockId ?? 0,
                     editContext: enableEdit ?? Enabled)
             );
         }
@@ -159,7 +158,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             }
 
             // find the root host, as this is the one we must tell what js etc. we need
-            var hostWithInternals = (CmsBlock) CmsInstance.RootHost;
+            var hostWithInternals = (BlockBuilder) BlockBuilder.RootBuilder;
 
             if (js.HasValue || api.HasValue || forms.HasValue)
                 hostWithInternals.UiAddJsApi = (js ?? false) || (api ?? false) || (forms ?? false);

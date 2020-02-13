@@ -8,11 +8,11 @@ namespace ToSic.Sxc.WebApi.Cms.Refactor
 {
     internal class GetContentBlockDataLight
     {
-        private readonly ICmsBlock _sxci;
+        private readonly IBlockBuilder _sxci;
         // todo i18n in the client - probably just use a code, and use the json translation
         private string errorText =
             "A module (content-block) is trying to retrieve data from the server as JSON. If you see this message, it is because Data Publishing is not enabled on the appropriate view. Please enable it in the view settings. \\nThis is happening on the module {0}.";
-        public GetContentBlockDataLight(ICmsBlock cms)
+        public GetContentBlockDataLight(IBlockBuilder cms)
         {
             _sxci = cms;
         }

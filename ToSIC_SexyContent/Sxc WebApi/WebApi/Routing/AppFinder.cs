@@ -7,7 +7,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
-using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi
         /// Note that this will fail, if both appPath and context are missing
         /// </summary>
         /// <returns></returns>
-        internal IAppIdentity GetAppIdFromPathOrContext(string appPath, /*SxcBlock*/ICmsBlock cmsInstance)
+        internal IAppIdentity GetAppIdFromPathOrContext(string appPath, /*SxcBlock*/IBlockBuilder blockBuilder)
         {
             var wrapLog = Log.Call($"{appPath}, ...", message: "detect app from query string parameters");
 
@@ -60,12 +60,12 @@ namespace ToSic.Sxc.WebApi
 
             if (appId == null)
             {
-                Log.Add($"auto detect app and init eav - path:{appPath}, context null: {cmsInstance == null}");
+                Log.Add($"auto detect app and init eav - path:{appPath}, context null: {blockBuilder == null}");
                 appId = appPath == null || appPath == "auto"
                     ? new AppIdentity(
-                        cmsInstance?.Block?.ZoneId ??
+                        blockBuilder?.Block?.ZoneId ??
                         throw new ArgumentException("try to get app-id from context, but none found"),
-                        cmsInstance.Block.AppId // not nullable any more 2019-11-09 ?? 0
+                        blockBuilder.Block.AppId // not nullable any more 2019-11-09 ?? 0
                         /*, Log*/)
                     : GetCurrentAppIdFromPath(appPath);
             }

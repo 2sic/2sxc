@@ -15,11 +15,11 @@ namespace ToSic.Sxc.Blocks
         internal const string CbPropertyTemplate = "Template";
         internal const string CbPropertyShowChooser = "ShowTemplateChooser";
 
-        public override BlockEditorBase Editor => new BlockEditorForEntity(CmsInstance);
+        public override BlockEditorBase Editor => new BlockEditorForEntity(BlockBuilder);
         public override bool ParentIsEntity => false;
 
         public override IBlockDataSource Data => _dataSource 
-            ?? (_dataSource = Block.ForContentGroupInSxc(CmsInstance, View, App?.ConfigurationProvider, Log));
+            ?? (_dataSource = Block.ForContentGroupInSxc(BlockBuilder, View, App?.ConfigurationProvider, Log));
 
         #region ContentBlock Definition Entity
 
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Blocks
         {
             var wrapLog = Log.Call();
             contentBlockId = Math.Abs(contentBlockId); // for various reasons this can be introduced as a negative value, make sure we neutralize that
-            var cbDef = parent.CmsInstance.App.Data.List.One(contentBlockId);  // get the content-block definition
+            var cbDef = parent.BlockBuilder.App.Data.List.One(contentBlockId);  // get the content-block definition
             _constructor(parent, cbDef);
             wrapLog($"ok, id:{contentBlockId}");
         }
@@ -81,15 +81,15 @@ namespace ToSic.Sxc.Blocks
             }
 
             // 2018-09-22 new, must come before the AppId == 0 check
-            CmsInstance = new CmsBlock(parent.CmsInstance, this, Parent.CmsInstance.Container, Parent.CmsInstance.Parameters, Log);
+            BlockBuilder = new BlockBuilder(parent.BlockBuilder, this, Parent.BlockBuilder.Container, Parent.BlockBuilder.Parameters, Log);
 
             if (AppId == 0) return;
 
-            App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(CmsInstance, false), true, Log);
+            App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(BlockBuilder, false), true, Log);
             
             // 2019-11-11 2dm new, with CmsRuntime
-            var cms = new CmsRuntime(App, Log, parent.CmsInstance.UserMayEdit,
-                parent.CmsInstance.Environment.PagePublishing.IsEnabled(parent.CmsInstance.Container.Id));
+            var cms = new CmsRuntime(App, Log, parent.BlockBuilder.UserMayEdit,
+                parent.BlockBuilder.Environment.PagePublishing.IsEnabled(parent.BlockBuilder.Container.Id));
 
             Configuration = cms.Blocks.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 
@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Blocks
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
-            ((CmsBlock)CmsInstance).SetTemplateOrOverrideFromUrl(Configuration.View);
+            ((BlockBuilder)BlockBuilder).SetTemplateOrOverrideFromUrl(Configuration.View);
 
             wrapLog("ok");
         }

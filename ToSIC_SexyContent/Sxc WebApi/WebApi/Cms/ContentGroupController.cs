@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private BlockConfiguration GetContentGroup(Guid contentGroupGuid)
         {
             Log.Add($"get group:{contentGroupGuid}");
-            var cms = new CmsRuntime(CmsBlock.App, Log, true, false);
+            var cms = new CmsRuntime(BlockBuilder.App, Log, true, false);
             var contentGroup = cms.Blocks.GetBlockConfig(contentGroupGuid);
 
             if (contentGroup == null)
@@ -60,10 +60,10 @@ namespace ToSic.Sxc.WebApi.Cms
 
             //var context = GetContext(CmsBlock, Log);
 
-            var appState = /*Factory.GetAppState*/Eav.Apps.State.Get(CmsBlock.App); // context.App.Data.Root.AppState; 
+            var appState = /*Factory.GetAppState*/Eav.Apps.State.Get(BlockBuilder.App); // context.App.Data.Root.AppState; 
             var ct = appState.GetContentType(attributeSetName);
 
-            var dataSource = CmsBlock.App.Data[ct.Name]; 
+            var dataSource = BlockBuilder.App.Data[ct.Name]; 
             var results = dataSource.List.ToDictionary(p => p.EntityId,
                 p => p.GetBestTitle() ?? "");
 
@@ -83,18 +83,18 @@ namespace ToSic.Sxc.WebApi.Cms
         public void Replace(Guid guid, string part, int index, int entityId)
         {
             Log.Add($"replace target:{guid}, part:{part}, index:{index}, id:{entityId}");
-            var versioning = CmsBlock.Environment.PagePublishing;
+            var versioning = BlockBuilder.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args)
             {
-                var cms = new CmsManager(CmsBlock.App, Log);
+                var cms = new CmsManager(BlockBuilder.App, Log);
                 var contentGroup = cms.Read.Blocks.GetBlockConfig(guid);
                 cms.Blocks.UpdateEntityIfChanged(contentGroup, part, index, entityId, false, null);
                 //contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
             }
 
             // use dnn versioning - this is always part of page
-            var context = GetContext(CmsBlock, Log);
+            var context = GetContext(BlockBuilder, Log);
             versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
         }
 
@@ -126,19 +126,19 @@ namespace ToSic.Sxc.WebApi.Cms
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
 
-            var versioning = CmsBlock.Environment.PagePublishing;
+            var versioning = BlockBuilder.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args)
             {
                 var cg = GetContentGroup(guid);
 
                 var sequence = list.Select(i => i.Index).ToArray();
-                new CmsManager(CmsBlock.App, Log).Blocks.ReorderAll(cg, sequence);
+                new CmsManager(BlockBuilder.App, Log).Blocks.ReorderAll(cg, sequence);
                 //cg.ReorderAll(sequence);
             }
 
             // use dnn versioning - items here are always part of list
-            var context = GetContext(CmsBlock, Log);
+            var context = GetContext(BlockBuilder, Log);
             versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
 
             return true;

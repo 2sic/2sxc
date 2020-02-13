@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Interfaces
 {
     public interface IRenderingHelpers
     {
-        IRenderingHelpers Init(ICmsBlock cms, ILog parentLog);
+        IRenderingHelpers Init(IBlockBuilder cms, ILog parentLog);
 
         string WrapInContext(string content,
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,

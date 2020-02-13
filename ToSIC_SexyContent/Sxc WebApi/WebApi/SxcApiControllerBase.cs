@@ -19,14 +19,14 @@ namespace ToSic.Sxc.WebApi
         {
             base.Initialize(controllerContext);
             Log.Rename("Api.CntBas");
-            CmsBlock = Helpers.GetCmsBlock(Request, true, Log);
+            BlockBuilder = Helpers.GetCmsBlock(Request, true, Log);
         }
 
-        [PrivateApi] public ICmsBlock CmsBlock { get; private set; }
+        [PrivateApi] public IBlockBuilder BlockBuilder { get; private set; }
 
 
-        internal static DnnDynamicCode GetContext(ICmsBlock cmsInstance, ILog log) 
-            => new DnnDynamicCode(cmsInstance, 10, cmsInstance?.Log ?? log);
+        internal static DnnDynamicCode GetContext(IBlockBuilder blockBuilder, ILog log) 
+            => new DnnDynamicCode(blockBuilder, 10, blockBuilder?.Log ?? log);
 
 
         #region App-Helpers for anonyous access APIs

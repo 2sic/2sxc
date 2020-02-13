@@ -28,11 +28,11 @@ namespace ToSic.Sxc.Code
         public IApp App => UnwrappedContents?.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => UnwrappedContents?.CmsBlock?.Block?.Data; // Sxc?.Cms?.Block.Data;
+        public IBlockDataSource Data => UnwrappedContents?.BlockBuilder?.Block?.Data; // Sxc?.Cms?.Block.Data;
         //[PrivateApi]
         //public SxcHelper Sxc { get; private set; }
 
-        [PrivateApi] public ICmsBlock CmsBlock => UnwrappedContents?.CmsBlock;
+        [PrivateApi] public IBlockBuilder BlockBuilder => UnwrappedContents?.BlockBuilder;
 
         /// <inheritdoc />
         /// <remarks>

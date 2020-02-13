@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="tabId">The DNN tab id (page id)</param>
         /// <param name="modId">The DNN Module id</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
-        public static ICmsBlock CmsBlock(int tabId, int modId)
+        public static IBlockBuilder CmsBlock(int tabId, int modId)
         {
             var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
             var instance = new DnnContainer(moduleInfo);
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="moduleInfo">A DNN ModuleInfo object</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
-        public static ICmsBlock CmsBlock(ModuleInfo moduleInfo)
+        public static IBlockBuilder CmsBlock(ModuleInfo moduleInfo)
             => CmsBlock(new DnnContainer(moduleInfo));
 
         /// <summary>
@@ -46,20 +46,20 @@ namespace ToSic.Sxc.Dnn
         /// <param name="container"></param>
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
-        public static ICmsBlock CmsBlock(IContainer container, ILog parentLog = null)
+        public static IBlockBuilder CmsBlock(IContainer container, ILog parentLog = null)
         {
             var dnnModule = ((Container<ModuleInfo>)container).UnwrappedContents;
             var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
-            return new BlockFromModule(container, parentLog: parentLog, tenant: tenant).CmsInstance;
+            return new BlockFromModule(container, parentLog: parentLog, tenant: tenant).BlockBuilder;
         }
 
         /// <summary>
         /// Retrieve a helper object which provides commands like AsDynamic, AsEntity etc.
         /// </summary>
-        /// <param name="cmsBlock">The CMS Block for which the helper is targeted. </param>
+        /// <param name="blockBuildere CMS Block for which the helper is targeted. </param>
         /// <returns>A Code Helper based on <see cref="IDnnDynamicCode"/></returns>
-        public static IDnnDynamicCode DynamicCode(ICmsBlock cmsBlock)
-            => new DnnDynamicCode(cmsBlock as CmsBlock, 10);
+        public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder)
+            => new DnnDynamicCode(blockBuilder as BlockBuilder, 10);
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside

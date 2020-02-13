@@ -51,10 +51,10 @@ namespace ToSic.Sxc.WebApi.App
             var wraplog = Log.Call($"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
 
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, BlockBuilder);
 
             // verify that read-access to these content-types is permitted
-            var permCheck = new MultiPermissionsTypes(CmsBlock, appIdentity.AppId, contentType, Log);
+            var permCheck = new MultiPermissionsTypes(BlockBuilder, appIdentity.AppId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exp))
                 throw exp;
 
@@ -100,12 +100,12 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"get and serialie after security check type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, BlockBuilder);
 
             var entityApi = new EntityApi(appIdentity.AppId, true, Log);
 
             var itm = getOne(entityApi);
-            var permCheck = new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log);
+            var permCheck = new MultiPermissionsItems(BlockBuilder, appIdentity.AppId, itm, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
                 throw exception;
 
@@ -134,14 +134,14 @@ namespace ToSic.Sxc.WebApi.App
             // - note that it's really not needed, as you can always use a query or something similar instead
             // - not also that if ever you do support view switching, you will need to ensure security checks
 
-            var dataHandler = new GetContentBlockDataLight(CmsBlock);
+            var dataHandler = new GetContentBlockDataLight(BlockBuilder);
 
             // must access engine to ensure pre-processing of data has happened, 
             // especially if the cshtml contains a override void CustomizeData()
-            var engine = ((CmsBlock)CmsBlock).GetEngine(Purpose.PublishData);  
+            var engine = ((BlockBuilder)BlockBuilder).GetEngine(Purpose.PublishData);  
             engine.CustomizeData();
 
-            var dataSource = CmsBlock.Block.Data;
+            var dataSource = BlockBuilder.Block.Data;
             string json;
             if (dataSource.Publish.Enabled)
             {
@@ -152,7 +152,7 @@ namespace ToSic.Sxc.WebApi.App
             else
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
-                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(CmsBlock.Container.Id)});
+                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(BlockBuilder.Container.Id)});
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -169,7 +169,7 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, BlockBuilder);
 
             // Check that this ID is actually of this content-type,
             // this throws an error if it's not the correct type
@@ -178,9 +178,9 @@ namespace ToSic.Sxc.WebApi.App
                 : new EntityApi(appIdentity.AppId, true, Log).GetOrThrow(contentType, id.Value);
 
             var ok = itm == null
-                ? new MultiPermissionsTypes(CmsBlock, appIdentity.AppId, contentType, Log)
+                ? new MultiPermissionsTypes(BlockBuilder, appIdentity.AppId, contentType, Log)
                     .EnsureAll(Grants.Create.AsSet(), out var exp)
-                : new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log)
+                : new MultiPermissionsItems(BlockBuilder, appIdentity.AppId, itm, Log)
                     .EnsureAll(Grants.Update.AsSet(), out exp);
             if (!ok)
                 throw exp;
@@ -204,7 +204,7 @@ namespace ToSic.Sxc.WebApi.App
             // todo: something looks wrong here, I think create/update would fail if it doesn't have a moduleid
             var currentApp = new Apps.App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId, 
                 ConfigurationProvider.Build(false, publish.IsEnabled(ActiveModule.ModuleID),
-                    CmsBlock.Block.Data.Configuration.LookUps), true, Log);
+                    BlockBuilder.Block.Data.Configuration.LookUps), true, Log);
 
             if (id == null)
             {
@@ -229,7 +229,7 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"delete id:{id}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, BlockBuilder);
 
             // don't allow type "any" on this
             if (contentType == "any")
@@ -237,7 +237,7 @@ namespace ToSic.Sxc.WebApi.App
 
             var entityApi = new EntityApi(appIdentity.AppId, true, Log);
             var itm = entityApi.GetOrThrow(contentType, id);
-            var permCheck = new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log);
+            var permCheck = new MultiPermissionsItems(BlockBuilder, appIdentity.AppId, itm, Log);
             if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var exception))
                 throw exception;
             entityApi.Delete(itm.Type.Name, id);
@@ -250,12 +250,12 @@ namespace ToSic.Sxc.WebApi.App
 	    {
             Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, CmsBlock);
+            var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, BlockBuilder);
 
             var entityApi = new EntityApi(appIdentity.AppId, true, Log);
 	        var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
-	        var permCheck = new MultiPermissionsItems(CmsBlock, appIdentity.AppId, itm, Log);
+	        var permCheck = new MultiPermissionsItems(BlockBuilder, appIdentity.AppId, itm, Log);
 	        if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var exception))
 	            throw exception;
 
@@ -273,7 +273,7 @@ namespace ToSic.Sxc.WebApi.App
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             var ser = Eav.WebApi.Helpers.Serializers.GetSerializerWithGuidEnabled();
-            ((DataToDictionary)ser).WithEdit = CmsBlock?.UserMayEdit ?? false;
+            ((DataToDictionary)ser).WithEdit = BlockBuilder?.UserMayEdit ?? false;
             return ser;
         }
         #endregion

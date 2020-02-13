@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnRenderingHelpers : IHasLog, IRenderingHelpers
     {
-        protected Blocks.ICmsBlock CmsBlock;
+        protected Blocks.IBlockBuilder BlockBuilder;
         private PortalSettings _portalSettings;
         private UserInfo _userInfo;
         private string _applicationRoot;
@@ -25,14 +25,14 @@ namespace ToSic.Sxc.Dnn.Web
         // Blank constructor for IoC
         public DnnRenderingHelpers() { }
 
-        public DnnRenderingHelpers(Blocks.ICmsBlock cms, ILog parentLog) => Init(cms, parentLog);
+        public DnnRenderingHelpers(Blocks.IBlockBuilder cms, ILog parentLog) => Init(cms, parentLog);
 
-        public IRenderingHelpers Init(Blocks.ICmsBlock cms, ILog parentLog)
+        public IRenderingHelpers Init(Blocks.IBlockBuilder cms, ILog parentLog)
         {
             this.LinkLog(parentLog);
             var appRoot = VirtualPathUtility.ToAbsolute("~/");
             _moduleInfo = cms?.Container;
-            CmsBlock = cms;
+            BlockBuilder = cms;
             _portalSettings = PortalSettings.Current;
 
             _userInfo = PortalSettings.Current.UserInfo;
@@ -81,9 +81,9 @@ namespace ToSic.Sxc.Dnn.Web
 
         // new
         public string UiContextInfos(bool autoToolbars)
-            => JsonConvert.SerializeObject(new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, CmsBlock, _userInfo,
-                CmsBlock.Block.ZoneId // 2019-11-09, Id not nullable any more // ?? 0
-                , CmsBlock.Block.ContentGroupExists, autoToolbars, Log));
+            => JsonConvert.SerializeObject(new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, BlockBuilder, _userInfo,
+                BlockBuilder.Block.ZoneId // 2019-11-09, Id not nullable any more // ?? 0
+                , BlockBuilder.Block.ContentGroupExists, autoToolbars, Log));
 
 
 

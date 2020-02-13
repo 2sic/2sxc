@@ -30,6 +30,6 @@ namespace ToSic.Sxc.Dnn.Run
 
 
 
-        public DynamicCodeRoot AppAndDataHelpers(Sxc.Blocks.ICmsBlock cms) => new DnnDynamicCode(cms, 9);
+        public DynamicCodeRoot AppAndDataHelpers(Sxc.Blocks.IBlockBuilder cms) => new DnnDynamicCode(cms, 9);
     }
 }

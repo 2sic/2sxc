@@ -4,7 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Formats;
-using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Security
 {
@@ -12,16 +12,16 @@ namespace ToSic.Sxc.Security
     {
         protected IEnumerable<string> ContentTypes;
 
-        public MultiPermissionsTypes(ICmsBlock cmsInstance, int appId, string contentType, ILog parentLog) 
-            : this(cmsInstance, appId, new []{contentType}, parentLog)
+        public MultiPermissionsTypes(IBlockBuilder blockBuilder, int appId, string contentType, ILog parentLog) 
+            : this(blockBuilder, appId, new []{contentType}, parentLog)
         { }
 
-        public MultiPermissionsTypes(ICmsBlock cmsInstance, int appId, IEnumerable<string> contentTypes, ILog parentLog) 
-            : base(cmsInstance, appId, parentLog) 
+        public MultiPermissionsTypes(IBlockBuilder blockBuilder, int appId, IEnumerable<string> contentTypes, ILog parentLog) 
+            : base(blockBuilder, appId, parentLog) 
             => ContentTypes = contentTypes;
 
-        public MultiPermissionsTypes(ICmsBlock cmsInstance, int appId, List<ItemIdentifier> items, ILog parentLog) 
-            : base(cmsInstance, appId, parentLog) 
+        public MultiPermissionsTypes(IBlockBuilder blockBuilder, int appId, List<ItemIdentifier> items, ILog parentLog) 
+            : base(blockBuilder, appId, parentLog) 
             => ContentTypes = ExtractTypeNamesFromItems(items);
 
 

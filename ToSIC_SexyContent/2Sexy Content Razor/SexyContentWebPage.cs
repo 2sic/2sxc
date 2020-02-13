@@ -22,7 +22,6 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
-using CmsBlock = ToSic.Sxc.Blocks.CmsBlock;
 using DynamicCode = ToSic.Sxc.Code.DynamicCode;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -59,10 +58,10 @@ namespace ToSic.SexyContent.Razor
 
         /// <inheritdoc />
         [PrivateApi("try to remove")]
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(DynCode.CmsBlock));
+        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(DynCode.BlockBuilder));
         private SxcHelper _sxc;
 
-        [PrivateApi] public ICmsBlock CmsBlock => DynCode.CmsBlock;
+        [PrivateApi] public IBlockBuilder BlockBuilder => DynCode.BlockBuilder;
 
         [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 
@@ -72,7 +71,7 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public IBlockDataSource Data => DynCode.Data;
 
-        public RazorPermissions Permissions => new RazorPermissions(DynCode.CmsBlock);
+        public RazorPermissions Permissions => new RazorPermissions(DynCode.BlockBuilder);
 
         #region AsDynamic in many variations
 

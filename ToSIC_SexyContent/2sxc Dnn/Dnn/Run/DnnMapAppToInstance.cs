@@ -140,16 +140,16 @@ namespace ToSic.Sxc.Dnn.Run
             DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString(), Log);
         }
 
-        public void UpdateTitle(Sxc.Blocks.ICmsBlock cmsInstance, IEntity titleItem)
+        public void UpdateTitle(Sxc.Blocks.IBlockBuilder blockBuilder, IEntity titleItem)
         {
             Log.Add("update title");
 
-            var languages = cmsInstance.Environment.ZoneMapper.CulturesWithState(cmsInstance.Container.TenantId,
-                cmsInstance.Block.ZoneId); // not nullable any more 2019-11-09 // .Value);
+            var languages = blockBuilder.Environment.ZoneMapper.CulturesWithState(blockBuilder.Container.TenantId,
+                blockBuilder.Block.ZoneId); // not nullable any more 2019-11-09 // .Value);
 
             // Find Module for default language
             var moduleController = new ModuleController();
-            var originalModule = moduleController.GetModule(cmsInstance.Container.Id);
+            var originalModule = moduleController.GetModule(blockBuilder.Container.Id);
 
             foreach (var dimension in languages)
             {
@@ -167,7 +167,7 @@ namespace ToSic.Sxc.Dnn.Run
 
                     // Find module for given Culture
                     var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
-                        originalModule.TabID, cmsInstance.Container.TenantId,
+                        originalModule.TabID, blockBuilder.Container.TenantId,
                         DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
 
                     // Break if no title module found

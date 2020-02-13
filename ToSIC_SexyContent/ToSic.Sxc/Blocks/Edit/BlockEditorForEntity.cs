@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks
 {
     internal class BlockEditorForEntity : BlockEditorBase
     {
-        internal BlockEditorForEntity(ICmsBlock cms): base(cms) { }
+        internal BlockEditorForEntity(IBlockBuilder cms): base(cms) { }
 
         #region methods which the entity-implementation must customize 
 
@@ -51,9 +51,9 @@ namespace ToSic.Sxc.Blocks
 
         private void Update(Dictionary<string, object> newValues)
         {
-            var app = ((BlockBase)CmsContext.Block).Parent.App;
+            var app = ((BlockBase)BlockBuilder.Block).Parent.App;
             new AppManager(app, Log)
-                .Entities.UpdateParts(Math.Abs(CmsContext.Block.ContentBlockId), newValues);
+                .Entities.UpdateParts(Math.Abs(BlockBuilder.Block.ContentBlockId), newValues);
         }
 
         #endregion

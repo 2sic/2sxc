@@ -13,14 +13,14 @@ namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnClientResources: HasLog
     {
-        protected CmsBlock CmsBlock;
+        protected BlockBuilder BlockBuilder;
         protected Page Page;
         protected DnnJsApiHeader Header;
 
-        public DnnClientResources(Page page, CmsBlock cmsBlock, ILog parentLog) : base("Dnn.JsCss", parentLog)
+        public DnnClientResources(Page page, BlockBuilder blockBuilder, ILog parentLog) : base("Dnn.JsCss", parentLog)
         {
             Page = page;
-            CmsBlock = cmsBlock;
+            BlockBuilder = blockBuilder;
             Header = new DnnJsApiHeader(Log);
         }
 
@@ -33,10 +33,10 @@ namespace ToSic.Sxc.Dnn.Web
             //EnsurePre1025Behavior();
 
             // normal scripts
-            var editJs = CmsBlock?.UiAddEditApi ?? false;
+            var editJs = BlockBuilder?.UiAddEditApi ?? false;
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            var readJs = CmsBlock?.UiAddJsApi ?? editJs;
-            var editCss = CmsBlock?.UiAddEditUi ?? false;
+            var readJs = BlockBuilder?.UiAddJsApi ?? editJs;
+            var editCss = BlockBuilder?.UiAddEditUi ?? false;
 
             if (!readJs && !editJs && !editCss)
                 return wrapLog("nothing added", true);
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Dnn.Web
         {
             // new in 10.25 - by default jQuery isn't loaded!
             // but any old behaviour, incl. no-view defined, etc. should activate compatibility
-            var addAntiForgeryToken = CmsBlock
+            var addAntiForgeryToken = BlockBuilder
                                           ?.GetEngine(Purpose.WebView)
                                           ?.CompatibilityAutoLoadJQueryAndRVT
                                       ?? true;

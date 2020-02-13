@@ -10,12 +10,12 @@ namespace ToSic.Sxc.Security
 {
     internal class Security:SaveHelperBase
     {
-        public Security(ICmsBlock cmsInstance, ILog parentLog) : base(cmsInstance, parentLog, "Api.SavSec") { }
+        public Security(IBlockBuilder blockBuilder, ILog parentLog) : base(blockBuilder, parentLog, "Api.SavSec") { }
 
 
         public IMultiPermissionCheck DoPreSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)
         {
-            var permCheck = new MultiPermissionsTypes(CmsInstance, appId, items.Select(i => i.Header).ToList(), Log);
+            var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, items.Select(i => i.Header).ToList(), Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething,  out var exp))
                 throw exp;
             if (!permCheck.UserCanWriteAndPublicFormsEnabled(out exp))

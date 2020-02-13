@@ -34,8 +34,8 @@ namespace ToSic.Sxc.WebApi.App
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null)
         {
-            var context = GetContext(CmsBlock, Log);
-            return BuildQueryAndRun(CmsBlock.App, name, stream, includeGuid, context.Dnn.Module, Log, CmsBlock);
+            var context = GetContext(BlockBuilder, Log);
+            return BuildQueryAndRun(BlockBuilder.App, name, stream, includeGuid, context.Dnn.Module, Log, BlockBuilder);
         }
 
 
@@ -49,11 +49,11 @@ namespace ToSic.Sxc.WebApi.App
                 ConfigurationProvider.Build(false, false), false, Log);
 
             // now just run the default query check and serializer
-            return BuildQueryAndRun(queryApp, name, stream, false, null, Log, CmsBlock);
+            return BuildQueryAndRun(queryApp, name, stream, false, null, Log, BlockBuilder);
         }
 
 
-        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, ModuleInfo module, ILog log, /*SxcBlock*/ICmsBlock cms)
+        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, ModuleInfo module, ILog log, /*SxcBlock*/IBlockBuilder cms)
         {
             log.Add($"build and run query name:{name}, with module:{module?.ModuleID}");
             var query = app.GetQuery(name);

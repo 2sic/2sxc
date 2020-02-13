@@ -40,18 +40,18 @@ namespace ToSic.SexyContent
         {
             _moduleActions = new ModuleActionCollection();
             var actions = _moduleActions;
-            var appIsKnown = CmsBlock.Block.AppId > 0;
+            var appIsKnown = BlockBuilder.Block.AppId > 0;
 
             if (appIsKnown)
             {
                 // Edit item
-                if (!CmsBlock.View?.UseForList ?? false)
+                if (!BlockBuilder.View?.UseForList ?? false)
                     actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif",
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").edit();", "test", true,
                         SecurityAccessLevel.Edit, true, false);
 
                 // Add Item
-                if (CmsBlock.View?.UseForList ?? false)
+                if (BlockBuilder.View?.UseForList ?? false)
                     actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif",
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").addItem();", true, SecurityAccessLevel.Edit, true,
                         false);
@@ -66,7 +66,7 @@ namespace ToSic.SexyContent
                 DnnSecurity.IsInSexyContentDesignersGroup(UserInfo))
             {
                 // Edit Template Button
-                if (appIsKnown && CmsBlock.View != null)
+                if (appIsKnown && BlockBuilder.View != null)
                     actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
                         "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").develop();", "test",
                         true,
@@ -74,12 +74,12 @@ namespace ToSic.SexyContent
 
                 // App management
                 if (appIsKnown)
-                    actions.Add(GetNextActionID(), "Admin" + (CmsBlock.Block.IsContentApp ? "" : " " + CmsBlock.App?.Name), "",
+                    actions.Add(GetNextActionID(), "Admin" + (BlockBuilder.Block.IsContentApp ? "" : " " + BlockBuilder.App?.Name), "",
                         "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
                         SecurityAccessLevel.Admin, true, false);
 
                 // Zone management (app list)
-                if (!CmsBlock.Block.IsContentApp)
+                if (!BlockBuilder.Block.IsContentApp)
                     actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action", "", "action_settings.gif",
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminZone();", "", true,
                         SecurityAccessLevel.Admin, true, false);

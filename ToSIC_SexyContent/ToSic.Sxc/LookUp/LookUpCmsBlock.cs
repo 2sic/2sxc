@@ -14,12 +14,12 @@ namespace ToSic.Sxc.LookUp
         /// <summary>
         /// The class constructor, can optionally take a dictionary to reference with, otherwise creates a new one
         /// </summary>
-        public LookUpCmsBlock(string name, Dictionary<string, string> valueList, ICmsBlock cms): base(name, valueList)
+        public LookUpCmsBlock(string name, Dictionary<string, string> valueList, IBlockBuilder cms): base(name, valueList)
         {
-            CmsInstance = cms;
+            BlockBuilder = cms;
         }
 
-        public ICmsBlock CmsInstance;
+        public IBlockBuilder BlockBuilder;
 
 
     }

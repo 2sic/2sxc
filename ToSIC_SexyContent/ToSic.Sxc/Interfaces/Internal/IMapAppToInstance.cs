@@ -23,6 +23,6 @@ namespace ToSic.Sxc.Interfaces
 
         BlockConfiguration GetInstanceContentGroup(BlocksRuntime cgm, ILog log, int instanceId, int? pageId);
 
-        void UpdateTitle(Blocks.ICmsBlock cmsInstance, IEntity titleItem);
+        void UpdateTitle(Blocks.IBlockBuilder blockBuilder, IEntity titleItem);
     }
 }

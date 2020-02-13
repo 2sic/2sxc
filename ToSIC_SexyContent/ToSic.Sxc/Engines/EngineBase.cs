@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Engines
         [PrivateApi] protected IApp App;
         [PrivateApi] protected IDataSource DataSource;
         [PrivateApi] protected Purpose Purpose;
-        [PrivateApi] protected ICmsBlock CmsBlock;
+        [PrivateApi] protected IBlockBuilder BlockBuilder;
 
         [PrivateApi]
         public RenderStatusType PreRenderStatus { get; internal set; }
@@ -44,12 +44,12 @@ namespace ToSic.Sxc.Engines
         { }
 
         /// <inheritdoc />
-        public void Init(ICmsBlock cmsBlock, Purpose purpose, ILog parentLog)
+        public void Init(IBlockBuilder blockBuilder, Purpose purpose, ILog parentLog)
         {
-            CmsBlock = cmsBlock;
-            var view = CmsBlock.View;
+            BlockBuilder = blockBuilder;
+            var view = BlockBuilder.View;
 
-            var templatePath = VirtualPathUtility.Combine(TemplateHelpers.GetTemplatePathRoot(view.Location, cmsBlock.App) + "/", view.Path);
+            var templatePath = VirtualPathUtility.Combine(TemplateHelpers.GetTemplatePathRoot(view.Location, blockBuilder.App) + "/", view.Path);
 
             Log.LinkTo(parentLog);
 
@@ -60,15 +60,15 @@ namespace ToSic.Sxc.Engines
 
             Template = view;
             TemplatePath = templatePath;
-            App = cmsBlock.App;
-            DataSource = cmsBlock.Block.Data;
+            App = blockBuilder.App;
+            DataSource = blockBuilder.Block.Data;
             Purpose = purpose;
 
             // check common errors
             CheckExpectedTemplateErrors();
 
             // check access permissions - before initializing or running data-code in the template
-            CheckTemplatePermissions(cmsBlock.Block.Tenant);
+            CheckTemplatePermissions(blockBuilder.Block.Tenant);
 
             // Run engine-internal init stuff
             Init();
@@ -133,7 +133,7 @@ namespace ToSic.Sxc.Engines
         private void CheckExpectedNoRenderConditions()
         {
             if (Template.ContentType != "" && Template.ContentItem == null &&
-                CmsBlock.Block.Configuration.Content.All(e => e == null))
+                BlockBuilder.Block.Configuration.Content.All(e => e == null))
             {
                 PreRenderStatus = RenderStatusType.MissingData;
 
@@ -162,7 +162,7 @@ namespace ToSic.Sxc.Engines
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
             var templatePermissions = Factory.Resolve<IEnvironmentFactory>()
-                .ItemPermissions(App, Template.Entity, Log, /*InstInfo*/CmsBlock.Container);
+                .ItemPermissions(App, Template.Entity, Log, /*InstInfo*/BlockBuilder.Container);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
             if (tenant.RefactorUserIsAdmin || !templatePermissions.HasPermissions)

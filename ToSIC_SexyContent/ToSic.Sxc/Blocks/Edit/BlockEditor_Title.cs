@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Blocks
 
         private CmsRuntime GetCmsRuntime()
             // todo: this must be changed, set showDrafts to true for now, as it's probably only used in the view-picker, but it shoudln't just be here
-            => CmsContext.App == null ? null : new CmsRuntime(CmsContext.App, Log, true, false);
+            => BlockBuilder.App == null ? null : new CmsRuntime(BlockBuilder.App, Log, true, false);
 
     }
 }

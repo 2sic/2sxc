@@ -9,13 +9,13 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi;
 using SysConf = ToSic.Eav.Configuration;
 using Feats = ToSic.Eav.Configuration.Features;
 using IApp = ToSic.Sxc.Apps.IApp;
-using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
 namespace ToSic.Sxc.Adam.WebApi
 {
@@ -38,8 +38,8 @@ namespace ToSic.Sxc.Adam.WebApi
         /// <summary>
         /// Initializes the object and performs all the initial security checks
         /// </summary>
-        public AdamSecureState(ICmsBlock cmsInstance, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
-            : base(cmsInstance, appId, contentType, log)
+        public AdamSecureState(IBlockBuilder blockBuilder, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
+            : base(blockBuilder, appId, contentType, log)
         {
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
             if (!usePortalRoot)
@@ -79,9 +79,9 @@ namespace ToSic.Sxc.Adam.WebApi
         private void PrepCore(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot)
         {
             Log.Add("PrepCore(...)");
-            var dnn = new DnnContext(CmsInstance?.Container);
+            var dnn = new DnnContext(BlockBuilder?.Container);
             var tenant = new DnnTenant(dnn.Portal);
-            AdamAppContext = new AdamAppContext(tenant, app, CmsInstance, 10, Log);
+            AdamAppContext = new AdamAppContext(tenant, app, BlockBuilder, 10, Log);
             ContainerContext = usePortalRoot
                 ? new ContainerOfTenant(AdamAppContext) as ContainerBase
                 : new ContainerOfField(AdamAppContext, entityGuid, fieldName);
@@ -156,9 +156,9 @@ namespace ToSic.Sxc.Adam.WebApi
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
             var fieldPermissions = new DnnPermissionCheck(Log,
-                instance: CmsInstance.Container,
+                instance: BlockBuilder.Container,
                 permissions1: Attribute.Permissions,
-                appIdentity: CmsInstance.App);
+                appIdentity: BlockBuilder.App);
 
             return fieldPermissions.UserMay(requiredGrant);
         }

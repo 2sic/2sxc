@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
 
             return FeatureListWithPermissionCheck(appId,
-                new MultiPermissionsApp(CmsBlock, appId, Log));
+                new MultiPermissionsApp(BlockBuilder, appId, Log));
         }
 
 

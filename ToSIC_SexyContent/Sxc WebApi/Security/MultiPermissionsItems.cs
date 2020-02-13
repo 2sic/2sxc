@@ -12,8 +12,8 @@ namespace ToSic.Sxc.Security
     {
         protected List<IEntity> Items;
 
-        public MultiPermissionsItems(ICmsBlock cmsInstance, int appId, IEntity item, ILog parentLog) 
-            : base(cmsInstance, appId, parentLog)
+        public MultiPermissionsItems(IBlockBuilder blockBuilder, int appId, IEntity item, ILog parentLog) 
+            : base(blockBuilder, appId, parentLog)
         {
             Items = new List<IEntity> {item};
         }

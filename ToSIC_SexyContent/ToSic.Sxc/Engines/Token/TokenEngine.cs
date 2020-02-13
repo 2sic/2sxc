@@ -87,13 +87,13 @@ namespace ToSic.Sxc.Engines
 
         private void InitDataHelper()
         {
-            _data = Factory.Resolve<IWebFactoryTemp>().AppAndDataHelpers(CmsBlock) ;
+            _data = Factory.Resolve<IWebFactoryTemp>().AppAndDataHelpers(BlockBuilder) ;
         }
 
         private void InitTokenReplace()
         {
-            var confProv = ConfigurationProvider.GetConfigProviderForModule(CmsBlock.Container.Id, CmsBlock.App, CmsBlock);
-            _tokenReplace = new TokenReplaceEav(CmsBlock.Container.Id, confProv);
+            var confProv = ConfigurationProvider.GetConfigProviderForModule(BlockBuilder.Container.Id, BlockBuilder.App, BlockBuilder);
+            _tokenReplace = new TokenReplaceEav(BlockBuilder.Container.Id, confProv);
             
             // Add the Content and ListContent property sources used always
             _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new LookUpInDynamicEntity(SourcePropertyName.ListContent, _data.Header));

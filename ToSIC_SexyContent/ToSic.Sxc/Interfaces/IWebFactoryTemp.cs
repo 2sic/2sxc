@@ -6,6 +6,6 @@ namespace ToSic.SexyContent.Interfaces
 {
     public interface IWebFactoryTemp
     {
-        DynamicCodeRoot AppAndDataHelpers(ICmsBlock cms);
+        DynamicCodeRoot AppAndDataHelpers(IBlockBuilder cms);
     }
 }

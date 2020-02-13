@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 
         public Ui Ui;
 
-        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IContainer mic, Sxc.Blocks.ICmsBlock cms, UserInfo uinfo, int zoneId, bool isCreated, bool autoToolbar, ILog parentLog)
+        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IContainer mic, Sxc.Blocks.IBlockBuilder cms, UserInfo uinfo, int zoneId, bool isCreated, bool autoToolbar, ILog parentLog)
             : base("Sxc.CliInf", parentLog, "building entire client-context")
         {
             var versioning = cms.Environment.PagePublishing;
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 
             ContentBlock = new ClientInfoContentBlock(cms.Block, null, 0, versioning.Requirements(mic.Id));
             ContentGroup = new ClientInfoContentGroup(cms, isCreated);
-            Ui = new Ui(((Sxc.Blocks.CmsBlock)cms).UiAutoToolbar);
+            Ui = new Ui(((Sxc.Blocks.BlockBuilder)cms).UiAutoToolbar);
 
             error = new ClientInfosError(cms.Block);
         }

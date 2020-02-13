@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Blocks
                 item = context;
             
             return field == null
-                ? Simple.Render(context.CmsBlock.Block, item.Entity, context.CmsBlock.Log) // with edit-context
+                ? Simple.Render(context.BlockBuilder.Block, item.Entity, context.BlockBuilder.Log) // with edit-context
                 : new HtmlString(Simple.RenderWithEditContext(context, item, field, newGuid) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
         }
 

@@ -7,7 +7,7 @@ using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Blocks
 {
-    public partial class CmsBlock
+    public partial class BlockBuilder
     {
         internal bool RenderWithDiv = true;
         public bool UserMayEdit => _userMayEdit
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Blocks
                             if (engine.ActivateJsApi)
                             {
                                 Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
-                                if (RootHost is CmsBlock parentCms) parentCms.UiAddJsApi = UiAddJsApi;
+                                if (RootBuilder is BlockBuilder parentCms) parentCms.UiAddJsApi = UiAddJsApi;
                             }
                         }
                         else body = "";

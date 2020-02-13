@@ -5,8 +5,8 @@ using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
-using ICmsBlock = ToSic.Sxc.Blocks.ICmsBlock;
 
 namespace ToSic.Sxc.LookUp
 {
@@ -21,21 +21,21 @@ namespace ToSic.Sxc.LookUp
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
         /// </summary>
-        internal static Func<App, IAppDataConfiguration> Build(ICmsBlock cmsInstance, bool useExistingConfig)
+        internal static Func<App, IAppDataConfiguration> Build(IBlockBuilder blockBuilder, bool useExistingConfig)
         {
             return appToUse =>
             {
                 // the module id
-                var envInstanceId = cmsInstance.Container.Id;
+                var envInstanceId = blockBuilder.Container.Id;
 
                 // check if we'll use the config already on the sxc-instance, or generate a new one
                 var config = useExistingConfig
-                    ? cmsInstance.Block.Data.Configuration.LookUps
-                    : GetConfigProviderForModule(envInstanceId, appToUse as IApp, cmsInstance);
+                    ? blockBuilder.Block.Data.Configuration.LookUps
+                    : GetConfigProviderForModule(envInstanceId, appToUse as IApp, blockBuilder);
 
                 // return results
-                return new AppDataConfiguration(cmsInstance.UserMayEdit,
-                    cmsInstance.Environment.PagePublishing.IsEnabled(envInstanceId), config);
+                return new AppDataConfiguration(blockBuilder.UserMayEdit,
+                    blockBuilder.Environment.PagePublishing.IsEnabled(envInstanceId), config);
             };
         }
 
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.LookUp
 
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal static LookUpEngine GetConfigProviderForModule(int moduleId, IApp app, ICmsBlock cms)
+        internal static LookUpEngine GetConfigProviderForModule(int moduleId, IApp app, IBlockBuilder cms)
         {
             var provider = new LookUpEngine(cms?.Log);
 

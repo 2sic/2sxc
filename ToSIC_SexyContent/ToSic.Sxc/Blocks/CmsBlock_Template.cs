@@ -3,7 +3,7 @@ using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Blocks
 {
-    public partial class CmsBlock
+    public partial class BlockBuilder
     {
 
         public IView View
