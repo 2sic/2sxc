@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Blocks
             }
 
             // 2018-09-22 new, must come before the AppId == 0 check
-            CmsInstance = new CmsBlock(this, Parent.CmsInstance.Container, Parent.CmsInstance.Parameters, Log);
+            CmsInstance = new CmsBlock(parent.CmsInstance, this, Parent.CmsInstance.Container, Parent.CmsInstance.Parameters, Log);
 
             if (AppId == 0) return;
 

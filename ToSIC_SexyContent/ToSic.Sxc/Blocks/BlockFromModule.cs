@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -62,7 +61,7 @@ namespace ToSic.Sxc.Blocks
 
             // 2018-09-22 new with auto-init-data
             var urlParams = overrideParams ?? SystemWeb.GetUrlParams();
-            CmsInstance = new CmsBlock(this, Container, urlParams, Log);
+            CmsInstance = new CmsBlock(null, this, Container, urlParams, Log);
 
             if (AppId != 0)
             {

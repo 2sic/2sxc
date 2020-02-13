@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -38,16 +37,20 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         public IAppEnvironment Environment { get; }
 
+        /// <inheritdoc />
         public IEnvironmentFactory EnvFac { get; }
 
+        /// <inheritdoc />
         public IContainer Container { get; }
 
+        /// <inheritdoc />
         public IBlock Block { get; }
 
+        public ICmsBlock RootHost { get; }
         #endregion
 
         #region Constructor
-        internal CmsBlock(IBlock cb, 
+        internal CmsBlock(ICmsBlock rootBlock, IBlock cb, 
             IContainer container, 
             IEnumerable<KeyValuePair<string, string>> urlParams,// = null, 
             ILog parentLog/* = null*/)
@@ -55,6 +58,8 @@ namespace ToSic.Sxc.Blocks
         {
             EnvFac = Factory.Resolve<IEnvironmentFactory>();
             Environment = EnvFac.Environment(parentLog);
+            // the root block is the main container. If there is none yet, use this, as it will be the root
+            RootHost = rootBlock ?? this;
             Block = cb;
             Container = container;
 

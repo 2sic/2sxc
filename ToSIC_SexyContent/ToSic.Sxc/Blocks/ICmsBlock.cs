@@ -40,6 +40,11 @@ namespace ToSic.Sxc.Blocks
         IBlock Block { get; }
 
         /// <summary>
+        /// The root block, which controls what assets / js etc. will be rendered
+        /// </summary>
+        ICmsBlock RootHost { get; }
+
+        /// <summary>
         /// Determines if the current user may edit content here.
         /// </summary>
         bool UserMayEdit { get; }
