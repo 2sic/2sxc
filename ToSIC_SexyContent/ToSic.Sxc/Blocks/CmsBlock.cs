@@ -18,8 +18,6 @@ namespace ToSic.Sxc.Blocks
     public partial class CmsBlock : HasLog, ICmsBlock
     {
         #region App-level information
-        [PrivateApi]
-        public int Compatibility { get; }
         public IApp App => Block.App;
 
         #endregion

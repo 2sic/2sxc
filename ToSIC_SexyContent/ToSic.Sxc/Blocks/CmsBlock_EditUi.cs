@@ -51,13 +51,5 @@ namespace ToSic.Sxc.Blocks
             set => _uiAutoToolbar = value;
         }
         private bool? _uiAutoToolbar;
-
-
-        /// <summary>
-        /// Temporary workaround!
-        /// This ensures that by default, jQuery is added, but for new RazorComponents it's not added by default any more!
-        /// internal setting to enable jquery by default for old compatibility
-        /// </summary>
-        internal bool AddjQueryAndRvtForCompatibility { get; set; } = true;
     }
 }
