@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Blocks
                             if (engine.ActivateJsApi)
                             {
                                 Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
-                                if (RootBuilder is BlockBuilder parentCms) parentCms.UiAddJsApi = UiAddJsApi;
+                                if (RootBuilder is BlockBuilder parentBlock) parentBlock.UiAddJsApi = engine.ActivateJsApi;
                             }
                         }
                         else body = "";
