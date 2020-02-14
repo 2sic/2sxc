@@ -198,9 +198,9 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Engines\SexyContentException.cs" />
     <Compile Include="Blocks\BlockBuilder.cs" />
-    <Compile Include="Blocks\CmsBlock_Render.cs" />
-    <Compile Include="Blocks\CmsBlock_Template.cs" />
-    <Compile Include="Blocks\CmsBlock_EditUi.cs" />
+    <Compile Include="Blocks\BlockBuilder_Render.cs" />
+    <Compile Include="Blocks\BlockBuilder_View.cs" />
+    <Compile Include="Blocks\BlockBuilder_EditUi.cs" />
     <Compile Include="Apps\Parts\ViewsRuntime.cs" />
     <Compile Include="SxcTemp\GetApp.cs" />
   </ItemGroup>
