@@ -34,23 +34,25 @@ namespace ToSic.Sxc.Dnn.Web
                 {
                     include2SxcJs = true;
                     scriptMatchesToRemove.Add(match);
+                    continue;
                 }
+                
                 var optMatch = OptimizeDetection.Match(match.Value);
                 if (!optMatch.Success) continue;
 
                 var providerName = GetProviderName(optMatch, "body");
 
-                var prio = GetPriority(optMatch, (int)FileOrder.Js.DefaultPriority);
+                var prio = GetPriority(optMatch, (int) FileOrder.Js.DefaultPriority);
 
-                if (prio <= 0) continue;    // don't register/remove if not within specs
+                if (prio <= 0) continue; // don't register/remove if not within specs
 
                 #region Register, then add to remove-queue
 
-                if (!Is2SxcApiJs(url))
-                {
-                    ClientResourceManager.RegisterScript(page, url, prio, providerName);
-                    scriptMatchesToRemove.Add(match);
-                }
+                //if (!Is2SxcApiJs(url))
+                //{
+                ClientResourceManager.RegisterScript(page, url, prio, providerName);
+                scriptMatchesToRemove.Add(match);
+                //}
 
                 #endregion
             }

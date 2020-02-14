@@ -50,9 +50,8 @@ namespace ToSic.Sxc.Blocks
         #region Constructor
         internal BlockBuilder(IBlockBuilder rootBlockBuilder, IBlock cb, 
             IContainer container, 
-            IEnumerable<KeyValuePair<string, string>> urlParams,// = null, 
-            ILog parentLog/* = null*/)
-            : base("Sxc.CmsIns", parentLog, $"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
+            IEnumerable<KeyValuePair<string, string>> urlParams, ILog parentLog)
+            : base("Sxc.BlkBld", parentLog, $"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
         {
             EnvFac = Factory.Resolve<IEnvironmentFactory>();
             Environment = EnvFac.Environment(parentLog);
