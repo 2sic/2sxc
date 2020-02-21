@@ -4,7 +4,6 @@ using System.Web.Http;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
@@ -18,6 +17,7 @@ namespace ToSic.SexyContent
     {
         private BlockBuilder _blockBuilder;
         private bool _cmsBlockLoaded;
+        internal bool IsError;
 
         protected BlockBuilder BlockBuilder
         {
@@ -54,9 +54,7 @@ namespace ToSic.SexyContent
             // new mechanism in 10.25
             // this must happen in Page-Load, so we know what supporting scripts to add
             // at this stage of the lifecycle
-            // temp note 2020-01-13 2dm: I believe we moved this to Page_Load because RequestAjaxAntiForgerySupport didn't work in later events, but I must verify this
-
-            // 2020-01-13 revised again
+            // We moved this to Page_Load because RequestAjaxAntiForgerySupport didn't work in later events
             // ensure everything is ready and that we know if we should activate the client-dependency
             TryCatchAndLogToDnn(() =>
             {
@@ -79,6 +77,10 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_PreRender(object sender, EventArgs e)
         {
+            // skip this if something before this caused an error
+            if (IsError) return;
+
+            // Try to build the html
             TryCatchAndLogToDnn(() =>
             {
                 var html = RenderViewAndGatherJsCssSpecs();
@@ -99,21 +101,30 @@ namespace ToSic.SexyContent
             TryCatchAndLogToDnn(() =>
             {
                 if (RenderNaked) BlockBuilder.RenderWithDiv = false;
-                renderedTemplate = BlockBuilder.Render().ToString();
-
-                // optional detailed logging
-                try
-                {
-                    // if in debug mode and is super-user (or it's been enabled for all), then add to page debug
-                    if (Request.QueryString["debug"] == "true")
-                        if (UserInfo.IsSuperUser
-                            || DnnLogging.EnableLogging(GlobalConfiguration.Configuration.Properties))
-                            renderedTemplate += HtmlLog();
-                }
-                catch { /* ignore */ }
+                renderedTemplate = BlockBuilder.Render()
+                    + GetOptionalDetailedLogToAttach();
             }, timerWrap);
 
             return renderedTemplate;
+        }
+
+        /// <summary>
+        /// optional detailed logging
+        /// </summary>
+        /// <returns></returns>
+        private string GetOptionalDetailedLogToAttach()
+        {
+            try
+            {
+                // if in debug mode and is super-user (or it's been enabled for all), then add to page debug
+                if (Request.QueryString["debug"] == "true")
+                    if (UserInfo.IsSuperUser
+                        || DnnLogging.EnableLogging(GlobalConfiguration.Configuration.Properties))
+                        return HtmlLog();
+            }
+            catch { /* ignore */ }
+
+            return "";
         }
 
         private void EnsureCmsBlockAndPortalIsReady()
@@ -155,8 +166,14 @@ namespace ToSic.SexyContent
             }
             catch (Exception ex)
             {
-                timerWrap?.Invoke(null);
-                Exceptions.ProcessModuleLoadException(this, ex);
+                IsError = true;
+                try
+                {
+                    var msg = BlockBuilder.RenderingHelper.DesignErrorMessage(ex, true, null, false, true);
+                    var wrappedMsg = BlockBuilder.UserMayEdit ? BlockBuilder.WrapInDivWithContext(msg) : msg;
+                    phOutput.Controls.Add(new LiteralControl(wrappedMsg));
+                } 
+                catch { /* ignore */  }
             }
             finally
             {
