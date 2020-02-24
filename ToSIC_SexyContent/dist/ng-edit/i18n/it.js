@@ -189,6 +189,7 @@
     "H4": "H4",
     "H5": "H5",
     "H6": "H6",
+    "Paragraph": "Paragrafo",
     "ContentBlock.Add": "add app or content-block"
   }
 }

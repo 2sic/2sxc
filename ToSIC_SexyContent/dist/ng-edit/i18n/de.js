@@ -189,6 +189,7 @@
     "H4": "Ü4",
     "H5": "Ü5",
     "H6": "Ü6",
+    "Paragraph": "Absatz",
     "ContentBlock.Add": "App oder Inhaltsbaustein einfügen"
   }
 }
