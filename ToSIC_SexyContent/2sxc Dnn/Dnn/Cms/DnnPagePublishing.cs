@@ -120,7 +120,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
                     // Add content entities
                     IEnumerable<IEntity> list = new List<IEntity>();
-                    list = TryToAddStream(list, cb.Data, "Default");
+                    list = TryToAddStream(list, cb.Data, Constants.DefaultStreamName);
                     list = TryToAddStream(list, cb.Data, "ListContent");
                     list = TryToAddStream(list, cb.Data, "PartOfPage");
 
