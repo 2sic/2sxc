@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 			Configuration.Values.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
 		}
 
-		private IEnumerable<IEntity> GetList()
+		private List<IEntity> GetList()
 		{
             Configuration.Parse();
 

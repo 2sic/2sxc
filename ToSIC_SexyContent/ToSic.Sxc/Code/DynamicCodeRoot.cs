@@ -118,7 +118,7 @@ namespace ToSic.Sxc.Code
 
         internal ILookUpEngine ConfigurationProvider
             => _configurationProvider ??
-               (_configurationProvider = Data.In[Eav.Constants.DefaultStreamName].Source.Configuration.LookUps);
+               (_configurationProvider = Data.Configuration.LookUps);// Data.In[Eav.Constants.DefaultStreamName].Source.Configuration.LookUps);
 
         internal DataSource DataSourceFactory => _dataSourceFactory ?? (_dataSourceFactory = new DataSource(Log));
         private DataSource _dataSourceFactory;
