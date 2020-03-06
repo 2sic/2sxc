@@ -180,4 +180,11 @@ Didn't have time to document this yet, sorry. If you need to know, best check th
 
 ### Version 10.27
 
-* Changed DynamicEntity so that accessing a property which contains many other entities it will return a `DynamicEntityWithList`. This allows Razor files to access the properties like `.EntityId` or `.FirstName` of the main entity in a sub-list easily without requiring `AsList(...)`
+* Changed DynamicEntity so that accessing a property which contains many other entities it will return a `DynamicEntityWithList`. This allows Razor files to access the properties like `.EntityId` or `.FirstName` of the main entity in a sub-list easily without requiring `AsList(...)` [#1993](https://github.com/2sic/2sxc/issues/1993)
+* Updated Quick-Dialog to use Angular 9, Ivy and the latest Dnn-Sxc-Angular [#1992](https://github.com/2sic/2sxc/issues/1992)
+* Performance-Enhance App DataSource to delay building objects until needed [#1991](https://github.com/2sic/2sxc/issues/1991)
+
+Bugfixes
+
+* Cache-All-Streams only used the Default-Streams for Cache-Key identification [#1988](https://github.com/2sic/2sxc/issues/1988)
+* QueryRun DataSource doesn't show statitics on all streams [#1989](https://github.com/2sic/2sxc/issues/1989)
