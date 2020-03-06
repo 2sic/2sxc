@@ -130,3 +130,54 @@ Didn't have time to document this yet, sorry. If you need to know, best check th
 
 * Created `AsDynamic(string)`
 * Created `AsDynamic(DataSource)` to enable `AsDynamic(Data)` instead of `AsDynamic(Data["Default"])`
+
+### Version 10.21
+
+* New `AsList()` for better code
+* New `AsDynamic(string)` to work with json
+* `/dist/` is now cleaned up on every update, to better distribute changing JS file structures
+
+### Version 10.22
+
+* Query Params added for Visual Query
+* Created QueryRun DataSource
+* Insights now includes the code file and line numbers
+* Insights now also measures time needed to execute some code
+* Various performance enhancements
+* Improved SoC for AppsCache and AppRoot DataSource
+
+### Version 10.23
+
+* Lots of logging enhancements
+
+### Version 10.24 LTS
+
+* New stable LTS
+* Improved/fixed QueryRun DataSource
+* Improved Insights
+* Enhancements to use 2sxc with Redis Cache
+* WYSIWYG enhancements for better H1-Hx, P and Blockquote
+* Performance enhancements
+* Intenal refactoring for APIs
+* Introduced an internal Compatibility-Level to disable very old features when using new RazorComponents
+
+### Version 10.25 LTS
+
+* Changed how the $2sxc client JavaScripts are loaded for much better performance and better Google PageSpeed
+* Enabled various features for the Content area which previously were hidden, like Resources and Settings
+* Released brand new Content-Templates App with best-practices for 10.25
+* Fixed bugs with Evoq Page Publishing
+* Enhanced the ValueFilter DataSource to handle dates which were null
+
+### Version 10.26
+
+* TinyMCE Updated to 5.1
+* Enhanced `CreateInstance` API to also work when compiling Razor files from a WebApi
+* New DataSource `StreamPick`
+* New automatic Param called `[Params:ShowDrafts]` to be used in VisualQuery - returns `True` or `False`
+* New tokens `[App:AppId]` and `[App:ZoneId]` to use in VisualQuery calles (dropdown from query)
+* Changed List-Caching behaviour to create more reliable cache-keys for complex queries (previously it only went through `Default` streams to generate the cache-key)
+
+### Version 10.27
+
+* Changed DynamicEntity so that accessing a property which contains many other entities it will return a `DynamicEntityWithList`. This allows Razor files to access the properties like `.EntityId` or `.FirstName` of the main entity in a sub-list easily without requiring `AsList(...)`
