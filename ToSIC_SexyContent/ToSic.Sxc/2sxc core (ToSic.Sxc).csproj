@@ -113,6 +113,7 @@
     <Compile Include="Compatibility\ToSic.SexyContent.Engines.InstancePurposes.cs" />
     <Compile Include="Compatibility\RemoveInV10\ToSic.SexyContent.Element.cs" />
     <Compile Include="Conversion\IDynamicEntityTo_T.cs" />
+    <Compile Include="Data\DynamicEntityWithList.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacket.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacket.Statics.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacketBase.cs" />
