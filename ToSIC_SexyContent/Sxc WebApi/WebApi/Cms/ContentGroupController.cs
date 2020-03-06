@@ -5,7 +5,6 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
@@ -43,7 +42,9 @@ namespace ToSic.Sxc.WebApi.Cms
             var contentGroup = GetContentGroup(guid);
 
             // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
-            var set = part == ViewParts.ContentLower ? contentGroup.Content : contentGroup.Header;
+            var set = part == ViewParts.ContentLower 
+                ? contentGroup.Content 
+                : contentGroup.Header;
 
             // not sure what this check is for, just leaving it in for now (2015-09-19 2dm)
             if (set == null || contentGroup.View == null)
@@ -58,9 +59,7 @@ namespace ToSic.Sxc.WebApi.Cms
             if (string.IsNullOrEmpty(attributeSetName))
                 return null;
 
-            //var context = GetContext(CmsBlock, Log);
-
-            var appState = /*Factory.GetAppState*/Eav.Apps.State.Get(BlockBuilder.App); // context.App.Data.Root.AppState; 
+            var appState = Eav.Apps.State.Get(BlockBuilder.App);
             var ct = appState.GetContentType(attributeSetName);
 
             var dataSource = BlockBuilder.App.Data[ct.Name]; 
@@ -69,7 +68,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var selectedId = set.Count == 0 ? null : set[index]?.EntityId;
 
-            return new /*ReplaceSet*/
+            return new
             {
                 SelectedId = selectedId,
                 Items = results,
@@ -90,7 +89,6 @@ namespace ToSic.Sxc.WebApi.Cms
                 var cms = new CmsManager(BlockBuilder.App, Log);
                 var contentGroup = cms.Read.Blocks.GetBlockConfig(guid);
                 cms.Blocks.UpdateEntityIfChanged(contentGroup, part, index, entityId, false, null);
-                //contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
             }
 
             // use dnn versioning - this is always part of page
@@ -134,7 +132,6 @@ namespace ToSic.Sxc.WebApi.Cms
 
                 var sequence = list.Select(i => i.Index).ToArray();
                 new CmsManager(BlockBuilder.App, Log).Blocks.ReorderAll(cg, sequence);
-                //cg.ReorderAll(sequence);
             }
 
             // use dnn versioning - items here are always part of list

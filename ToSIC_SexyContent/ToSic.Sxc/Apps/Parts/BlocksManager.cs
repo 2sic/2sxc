@@ -13,19 +13,13 @@ namespace ToSic.Sxc.Apps
         {
         }
 
-        // 2019-11-11 2dm - this doesn't seem used anywhere
-		//public IEnumerable<BlockConfiguration> GetContentGroups() 
-  //          => CmsManager.Read.Blocks.ContentGroupSource().List
-  //              .Select(p => new BlockConfiguration(p, CmsManager.ZoneId, CmsManager.AppId, CmsManager.ShowDrafts, CmsManager.EnablePublishing, Log));
-
-
 	    public Guid UpdateOrCreateContentGroup(BlockConfiguration blockConfiguration, int templateId)
 		{
 		    var appMan = CmsManager;
 
 		    if (!blockConfiguration.Exists)
 		    {
-		        Log.Add($"doesn't exist, will creat new CG with template#{templateId}");
+		        Log.Add($"doesn't exist, will create new CG with template#{templateId}");
 		        return appMan.Entities.Create(BlocksRuntime.BlockTypeName, new Dictionary<string, object>
 		        {
 		            {"Template", new List<int> {templateId}},

@@ -64,12 +64,10 @@ namespace ToSic.Sxc.Apps.Blocks
                 {
                     var dataSource = new DataSource(Log).GetPublishing(this);
                     // ToDo: Should use an indexed Guid filter
-                    templateEntity =
-                        IEntityExtensions.One(dataSource.List, PreviewTemplateId.Value);
+                    templateEntity = dataSource.List.One(PreviewTemplateId.Value);
                 }
                 else if (Entity != null)
                     templateEntity = Entity.Children("Template").FirstOrDefault();
-                //((EntityRelationship) Entity.Attributes["Template"][0]).FirstOrDefault();
 
                 _view = templateEntity == null ? null : new View(templateEntity, Log);
 
@@ -129,10 +127,5 @@ namespace ToSic.Sxc.Apps.Blocks
             => this[type].Select(p => p?.EntityId).ToList();
 
         #endregion
-
-
-
-
-
     }
 }

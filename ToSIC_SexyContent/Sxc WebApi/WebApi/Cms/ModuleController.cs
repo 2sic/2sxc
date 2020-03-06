@@ -247,7 +247,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var versioning = BlockBuilder.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) =>
-                CmsManager.Blocks.ChangeOrder(BlockBuilder.Block.Configuration, sortOrder, destinationSortOrder);// BlockEditor.ChangeOrder(sortOrder, destinationSortOrder);
+                CmsManager.Blocks.ChangeOrder(BlockBuilder.Block.Configuration, sortOrder, destinationSortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);

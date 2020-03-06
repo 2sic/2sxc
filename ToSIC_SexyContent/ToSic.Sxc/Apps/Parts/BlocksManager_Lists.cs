@@ -23,7 +23,6 @@ namespace ToSic.Sxc.Apps
         public void RemoveFromList(BlockConfiguration block, int sortOrder)
         {
             Log.Add($"remove from list order:{sortOrder}");
-            //var contentGroup = BlockConfiguration;
             RemoveContentAndPresentationEntities(block, ViewParts.ContentLower, sortOrder);
         }
 
@@ -94,11 +93,9 @@ namespace ToSic.Sxc.Apps
                 ((Entity)saveEnt).IsPublished = false;
             }
 
-            // var cms =  new CmsManager(block.ZoneId, block.AppId, block.ShowDrafts, block.VersioningEnabled, Log);
             CmsManager.Entities.Save(saveEnt, saveOpts);
 
-            block.Entity = CmsManager.Read.Blocks // new BlocksManager(_zoneId, _appId, _showDrafts, _versioningEnabled, Log)
-                .GetBlockConfig(block.Entity.EntityGuid).Entity;
+            block.Entity = CmsManager.Read.Blocks.GetBlockConfig(block.Entity.EntityGuid).Entity;
         }
 
         /// <summary>
@@ -122,6 +119,7 @@ namespace ToSic.Sxc.Apps
         /// <summary>
         /// If SortOrder is not specified, adds at the end
         /// </summary>
+        /// <param name="block"></param>
         /// <param name="type"></param>
         /// <param name="sortOrder"></param>
         /// <param name="contentId"></param>

@@ -53,9 +53,11 @@ These topics are not or insufficiently documented...
     2. Custom data-types
     5. ...
 1. Future topics, lower priority
-    1. Angular2-5 and 2sxc (todo)
+    1. Angular2-9 and 2sxc (todo)
     2. React and 2sxc (todo)
     4. jQuery with 2sxc (todo)
+1. Super Basic stuff
+    1. How razor templates get their data (content, list, app.data, app.query, etc.)
 1. etc.
 
 These topics are already documented elsewhere, but should become part of these docs
