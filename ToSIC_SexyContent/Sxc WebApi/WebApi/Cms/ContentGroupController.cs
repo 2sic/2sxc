@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.Cms
             {
                 var cms = new CmsManager(BlockBuilder.App, Log);
                 var contentGroup = cms.Read.Blocks.GetBlockConfig(guid);
-                cms.Blocks.UpdateEntityIfChanged(contentGroup, part, index, entityId, false, null);
+                cms.Blocks.UpdateEntityIfChanged(contentGroup, index, entityId, false, null);
             }
 
             // use dnn versioning - this is always part of page
@@ -131,7 +131,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 var cg = GetContentGroup(guid);
 
                 var sequence = list.Select(i => i.Index).ToArray();
-                new CmsManager(BlockBuilder.App, Log).Blocks.ReorderAll(cg, sequence);
+                new CmsManager(BlockBuilder.App, Log).Blocks
+                    .ReorderAllAndSave(cg, sequence);
             }
 
             // use dnn versioning - items here are always part of list

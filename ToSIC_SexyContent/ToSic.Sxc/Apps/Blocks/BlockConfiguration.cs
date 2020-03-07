@@ -123,6 +123,7 @@ namespace ToSic.Sxc.Apps.Blocks
             }
         }
 
+        [Obsolete]
         internal List<int?> ListWithNulls(string type) 
             => this[type].Select(p => p?.EntityId).ToList();
 

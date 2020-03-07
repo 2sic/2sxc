@@ -59,10 +59,9 @@ namespace ToSic.Sxc.WebApi
                     entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ListPresentationLower);
 
                 // Get group to assign to and parameters
-                var contentGroup = GetBlockConfig(app, contItem.Header.Group.Guid);// app.BlocksManager.GetBlockConfig(contItem.Header.Group.Guid);
-                var partName = contItem.Header.Group.Part;
+                var contentGroup = GetBlockConfig(app, contItem.Header.Group.Guid);
+                //var partName = contItem.Header.Group.Part;
 
-                // var part = blockConfiguration[partName];
                 var index = contItem.Header.Group.Index;
 
                 // Get saved entity (to get its ID)
@@ -95,9 +94,12 @@ namespace ToSic.Sxc.WebApi
                 var cms = new CmsManager(app, Log);
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
-                    /*contentGroup*/cms.Blocks .AddContentAndPresentationEntity(contentGroup, partName, index, postSaveId, presentationId);
+                    cms.Blocks.AddContentAndPresentationEntity(contentGroup, index, postSaveId, presentationId);
                 else
-                    /*contentGroup*/cms.Blocks.UpdateEntityIfChanged(contentGroup, partName, index, postSaveId, true, presentationId);
+                    cms.Blocks.UpdateEntityIfChanged(contentGroup, index, postSaveId, true, presentationId);
+
+                // reset the content-group after the updates
+                cms.Blocks.ResetBlockEntity(contentGroup);
             }
 
             // update-module-title

@@ -18,12 +18,9 @@ using ToSic.Eav.Apps.ItemListActions;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Security;
@@ -65,12 +62,10 @@ namespace ToSic.Sxc.WebApi.Cms
             var versioning = BlockBuilder.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) =>
-                CmsManager.Blocks.AddItem(BlockBuilder.Block.Configuration, sortOrder);
-                //BlockEditor.AddItem(sortOrder);
+                CmsManager.Blocks.AddEmptyItem(BlockBuilder.Block.Configuration, sortOrder);
 
             // use dnn versioning - this is always part of page
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
-            //else internalSave(null);
         }
 
         [HttpGet]
@@ -285,7 +280,6 @@ namespace ToSic.Sxc.WebApi.Cms
 
             void InternalSave(VersioningActionInfo args) =>
                 CmsManager.Blocks.RemoveFromList(BlockBuilder.Block.Configuration, sortOrder);
-                //BlockEditor.RemoveFromList(sortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
