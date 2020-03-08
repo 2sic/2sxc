@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Parts;
+﻿using System;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 
@@ -21,12 +22,12 @@ namespace ToSic.Sxc.Apps
             => GetEntityListManager(block).Remove(sortOrder);
 
 
-        public void UpdateEntityIfChanged(BlockConfiguration block, int sortOrder, 
-            int? entityId, bool updatePair, int? presentationId) =>
-            GetEntityListManager(block).Replace(sortOrder, entityId, updatePair, presentationId);
+        public void UpdateEntityIfChanged(BlockConfiguration block, int sortOrder,
+            Tuple<bool, int?>[] values) =>
+            GetEntityListManager(block).Replace(sortOrder, values);
 
-        private EntityListManager GetEntityListManager(BlockConfiguration block)
-            => new EntityListManager(CmsManager, block.Entity,
+        private EntityListEditor GetEntityListManager(BlockConfiguration block)
+            => new EntityListEditor(CmsManager, block.Entity,
                 ViewParts.Content,
                 ViewParts.Presentation,
                 block.VersioningEnabled,

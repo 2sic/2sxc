@@ -96,7 +96,12 @@ namespace ToSic.Sxc.WebApi
                 if (willAdd) // this cannot be auto-detected, it must be specified
                     cms.Blocks.AddContentAndPresentationEntity(contentGroup, index, postSaveId, presentationId);
                 else
-                    cms.Blocks.UpdateEntityIfChanged(contentGroup, index, postSaveId, true, presentationId);
+                    cms.Blocks.UpdateEntityIfChanged(contentGroup, index,
+                        new []
+                        {
+                            new Tuple<bool, int?>(true, postSaveId), 
+                            new Tuple<bool, int?>(true, presentationId), 
+                        });
 
                 // reset the content-group after the updates
                 cms.Blocks.ResetBlockEntity(contentGroup);
@@ -120,7 +125,7 @@ namespace ToSic.Sxc.WebApi
                     continue;
                 }
 
-                var contentGroup = GetBlockConfig(app, identifier.Group.Guid);//  app.BlocksManager.GetBlockConfig(identifier.Group.Guid);
+                var contentGroup = GetBlockConfig(app, identifier.Group.Guid);
                 var contentTypeStaticName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Group.Part) ?? "";
 
                 // if there is no content-type for this, then skip it (don't deliver anything)
