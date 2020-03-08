@@ -212,11 +212,11 @@ namespace ToSic.Sxc.WebApi.Cms
 
                 var cbToRender = BlockBuilder.Block;
 
-                // if a real templateid was specified, swap to that
+                // if a real templateId was specified, swap to that
                 if (templateId > 0)
                 {
                     var template = new CmsRuntime(cbToRender.App, Log, Edit.Enabled, false).Views.Get(templateId);
-                    ((Sxc.Blocks.BlockBuilder)cbToRender.BlockBuilder).View = template;
+                    ((BlockBuilder)cbToRender.BlockBuilder).View = template;
                 }
 
                 var rendered = cbToRender.BlockBuilder.Render().ToString();
