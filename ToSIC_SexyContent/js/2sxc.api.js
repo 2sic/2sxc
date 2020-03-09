@@ -228,7 +228,7 @@ module.exports = __webpack_amd_options__;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tools_UrlParamManager__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Stats__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__instance_SxcInstanceWithInternals__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__SxcRoot__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__SxcRoot__ = __webpack_require__(16);
 
 
 
@@ -409,7 +409,7 @@ var Stats = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SxcInstanceWithInternals; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__SxcInstanceDataDeprecated__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__SxcInstance__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__SxcInstance__ = __webpack_require__(13);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -523,13 +523,12 @@ var SxcInstanceDataDeprecated = (function () {
 
 
 /***/ }),
-/* 13 */,
-/* 14 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SxcInstance; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__SxcWebApi__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__SxcWebApi__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__constants__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__logging_HasLog__ = __webpack_require__(1);
 var __extends = (this && this.__extends) || (function () {
@@ -619,12 +618,12 @@ var SxcInstance = (function (_super) {
 
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SxcWebApi; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ajax_AjaxPromise__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ajax_AjaxPromise__ = __webpack_require__(15);
 
 var SxcWebApi = (function () {
     function SxcWebApi(sxc) {
@@ -680,7 +679,7 @@ var SxcWebApi = (function () {
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -723,13 +722,13 @@ var AjaxPromise = (function () {
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = getRootParts;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__environment_Environment__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_SxcHttp__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__environment_Environment__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_SxcHttp__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__logging_Log__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__constants__ = __webpack_require__(0);
 
@@ -751,12 +750,12 @@ function getRootParts() {
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Environment; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__envMetaLoader__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__envMetaLoader__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__constants__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__logging_HasLog__ = __webpack_require__(1);
 var __extends = (this && this.__extends) || (function () {
@@ -826,12 +825,12 @@ var Environment = (function (_super) {
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EnvironmentMetaLoader; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__envDnnSfLoader__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__envDnnSfLoader__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__constants__ = __webpack_require__(0);
 
 
@@ -875,7 +874,7 @@ var EnvironmentMetaLoader = (function () {
 
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -912,7 +911,7 @@ var EnvironmentDnnSfLoader = (function () {
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
