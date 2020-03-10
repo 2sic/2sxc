@@ -51,11 +51,12 @@ namespace ToSic.Sxc.Blocks.Renderers
                     continue;
 
                 DynamicEntity subitem = null;
-                var found = parent.TryGetMember(entityField, out var objFound);
+                var objFound = parent.Children(entityField);//, out var objFound);
+                var found = objFound.Any();
 
                 if (found)
                 {
-                    var itms = (IList<DynamicEntity>)objFound;
+                    var itms = objFound as IList<DynamicEntity>;
                     if (itms?.Count > 0)
                         subitem = itms.FirstOrDefault(i => i.EntityGuid == guid);
                 }
