@@ -51,14 +51,14 @@ namespace ToSic.Sxc.Blocks.Renderers
                     continue;
 
                 DynamicEntity subitem = null;
-                var objFound = parent.Children(entityField);//, out var objFound);
-                var found = objFound.Any();
+                var itms = parent.Children(entityField);//, out var objFound);
+                var found = itms.Any();
 
                 if (found)
                 {
-                    var itms = objFound as IList<DynamicEntity>;
-                    if (itms?.Count > 0)
-                        subitem = itms.FirstOrDefault(i => i.EntityGuid == guid);
+                    //var itms = objFound as List<IDynamicEntity>;
+                    if (itms.Count > 0)
+                        subitem = itms.FirstOrDefault(i => i.EntityGuid == guid) as DynamicEntity;
                 }
 
                 result.Append(Simple.RenderWithEditContext(parent, subitem, entityField,  guid, edit));
