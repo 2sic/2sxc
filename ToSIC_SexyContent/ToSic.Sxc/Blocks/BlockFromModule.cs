@@ -67,7 +67,6 @@ namespace ToSic.Sxc.Blocks
             {
                 Log.Add("real app, will load data");
 
-                // 2018-09-22 new with auto-init-data
                 App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(BlockBuilder, false), true, Log);
 
                 // 2019-11-11 2dm new, with CmsRuntime

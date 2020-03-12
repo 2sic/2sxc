@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -58,47 +59,54 @@ namespace ToSic.Sxc.LookUp
         // will probably move again some day
         internal static LookUpEngine GetConfigProviderForModule(int moduleId, IApp app, IBlockBuilder blockBuilder)
         {
-            var provider = new LookUpEngine(blockBuilder?.Log);
+            var log = new Log("Stc.GetCnf", blockBuilder?.Log);
+
+            // Find the standard DNN property sources if PortalSettings object is available (changed 2018-03-05)
+            var dnnLookUps = Factory.Resolve<IGetEngine>().GetEngine(moduleId, blockBuilder?.Log);//.Sources;
+            log.Add($"Environment provided {dnnLookUps.Sources.Count} sources");
+            //foreach (var prov in dnnLookUps)
+            //    provider.Sources.Add(prov.Key, prov.Value);
+
+            var provider = new LookUpEngine(dnnLookUps, blockBuilder?.Log);
 
             // only add these in running inside an http-context. Otherwise leave them away!
             if (HttpContext.Current != null)
             {
+                log.Add("Found HttpContext, will ty to add params for querystring, server etc.");
                 var request = HttpContext.Current.Request;
 
                 // new
                 var paramList = new NameValueCollection();
-                if(blockBuilder?.Parameters != null)
+                if (blockBuilder?.Parameters != null)
                     foreach (var pair in blockBuilder.Parameters)
                         paramList.Add(pair.Key, pair.Value);
                 else
                     paramList = request.QueryString;
-                provider.Sources.Add("querystring", new LookUpInNameValueCollection("querystring", paramList));
+                provider.Add(new LookUpInNameValueCollection("querystring", paramList));
 
                 // old
-                provider.Sources.Add("server", new LookUpInNameValueCollection("server", request.ServerVariables));
-                provider.Sources.Add("form", new LookUpInNameValueCollection("form", request.Form));
+                provider.Add(new LookUpInNameValueCollection("server", request.ServerVariables));
+                provider.Add(new LookUpInNameValueCollection("form", request.Form));
             }
+            else
+                log.Add("No HttpContext found, won't add http params to look-up");
 
-            // Add the standard DNN property sources if PortalSettings object is available (changed 2018-03-05)
-            var envProvs = Factory.Resolve<IGetEngine>().GetEngine(moduleId, blockBuilder?.Log).Sources;
-            foreach (var prov in envProvs)
-                provider.Sources.Add(prov.Key, prov.Value);
 
-            provider.Sources.Add("app", new LookUpInAppProperty("app", app));
+            provider.Add(new LookUpInAppProperty("app", app));
 
             // add module if it was not already added previously
-            if (!provider.Sources.ContainsKey("module"))
+            if (!provider.HasSource("module")) // .Sources.ContainsKey("module"))
             {
                 var modulePropertyAccess = new LookUpInDictionary("module");
                 modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
-                provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
+                provider.Add(modulePropertyAccess);
             }
 
             // provide the current SxcInstance to the children where necessary
-            if (!provider.Sources.ContainsKey(SxcInstanceKey))
+            if (!provider.HasSource(SxcInstanceKey))//.Sources.ContainsKey(SxcInstanceKey))
             {
                 var blockBuilderLookUp = new LookUpCmsBlock(SxcInstanceKey, null, blockBuilder);
-                provider.Sources.Add(blockBuilderLookUp.Name, blockBuilderLookUp);
+                provider.Add(blockBuilderLookUp);
             }
             return provider;
         }

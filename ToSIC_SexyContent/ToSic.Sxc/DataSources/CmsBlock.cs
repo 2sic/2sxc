@@ -71,7 +71,7 @@ namespace ToSic.Sxc.DataSources
                 if(!HasSxcContext)
                     throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
-                var sxciProvider = Configuration.LookUps.Sources[LookUp.ConfigurationProvider.SxcInstanceKey];
+                var sxciProvider = Configuration.LookUps.FindSource(ConfigurationProvider.SxcInstanceKey); // .Sources[LookUp.ConfigurationProvider.SxcInstanceKey];
                 _blockBuilder = (sxciProvider as LookUpCmsBlock)?
                               .BlockBuilder 
                               ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.DataSources
         }
 
         [PrivateApi]
-        internal bool HasSxcContext => Configuration.LookUps.Sources.ContainsKey(LookUp.ConfigurationProvider.SxcInstanceKey);
+        internal bool HasSxcContext => Configuration.LookUps.HasSource(ConfigurationProvider.SxcInstanceKey);// .Sources.ContainsKey(LookUp.ConfigurationProvider.SxcInstanceKey);
 
 		private BlockConfiguration _blockConfiguration;
 		private BlockConfiguration BlockConfiguration

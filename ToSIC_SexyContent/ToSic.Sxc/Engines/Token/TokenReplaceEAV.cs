@@ -9,15 +9,14 @@ namespace ToSic.Sxc.Engines.Token
     {
         public int ModuleId;
 
-        public TokenReplaceEav(int instanceId, ILookUpEngine provider)
-        {
-            InitAppAndPortalSettings(instanceId, provider);
-        }
+        public TokenReplaceEav(int instanceId, ILookUpEngine lookUpEngine): base(lookUpEngine)
+            => InitAppAndPortalSettings(instanceId/*, lookUpEngine*/);
 
-        public void InitAppAndPortalSettings(int moduleId, ILookUpEngine provider)
+        private void InitAppAndPortalSettings(int moduleId/*, ILookUpEngine provider*/)
         {
-            foreach (var valueProvider in provider.Sources)
-                ValueSources.Add(valueProvider.Key, valueProvider.Value);
+            //foreach (var valueProvider in provider.Sources)
+            //    //ValueSources.Add(valueProvider.Key, valueProvider.Value);
+            //    LookupEngine.Add(valueProvider.Value);
 
             ModuleId = moduleId;
         }
