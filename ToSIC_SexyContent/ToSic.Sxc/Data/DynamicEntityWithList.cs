@@ -14,17 +14,17 @@ namespace ToSic.Sxc.Data
     /// </summary>
     /// <remarks>Added in 2sxc 10.27</remarks>
     [PublicApi_Stable_ForUseInYourCode]
-    public class DynamicEntityWithList: DynamicEntity, IReadOnlyList<IDynamicEntity>
+    public partial class DynamicEntityWithList: DynamicEntity, IDynamicEntity, IReadOnlyList<IDynamicEntity>
     {
         [PrivateApi]
-        protected List<DynamicEntity> DynEntities;
+        protected List<IDynamicEntity> DynEntities;
 
         [PrivateApi]
         public DynamicEntityWithList(IEnumerable<IEntity> entities, string[] dimensions, int compatibility, IBlockBuilder blockBuilder) 
             : base(null, dimensions, compatibility, blockBuilder)
         {
             DynEntities = entities.Select(
-                p => new DynamicEntity(p, Dimensions, CompatibilityLevel, BlockBuilder)
+                p => new DynamicEntity(p, Dimensions, CompatibilityLevel, BlockBuilder) as IDynamicEntity
             ).ToList();
             Entity = DynEntities.FirstOrDefault()?.Entity;
         }
@@ -35,6 +35,12 @@ namespace ToSic.Sxc.Data
 
         public int Count => DynEntities.Count;
 
-        public IDynamicEntity this[int index] => DynEntities[index];
+        public IDynamicEntity this[int index]
+        {
+            get => DynEntities[index];
+            // setter is for IList<IDynamicEntity>
+            set => throw new System.NotImplementedException();
+        }
+
     }
 }
