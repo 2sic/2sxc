@@ -10,6 +10,16 @@ The **AttributeRename** [DataSource](xref:Specs.DataSources.DataSource) is part 
 
 When using the [Visual Query](xref:ToSic.Eav.DataSources.Queries.VisualQueryAttribute) you can just drag it into your query. Now you can configure what properties you want and not. 
 
+<img src="/assets/data-sources/attribute-rename-example.png" width="100%">
+
+In this screenshot you can see:
+
+1. The DataSource which we're configuring
+1. The field map renaming fields
+1. Toggle to keep attributes which were not renamed - default is `True`
+1. The optional type name which you can give the modified entities - default is blank, resulting in the original type being used
+
+
 ## Programming With The AttributeRename DataSource
 
 [!include["simpler-with-vqd"](shared-use-vqd.md)]
