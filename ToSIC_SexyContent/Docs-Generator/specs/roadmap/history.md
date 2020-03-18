@@ -180,11 +180,29 @@ Didn't have time to document this yet, sorry. If you need to know, best check th
 
 ### Version 10.27
 
-* Changed DynamicEntity so that accessing a property which contains many other entities it will return a `DynamicEntityWithList`. This allows Razor files to access the properties like `.EntityId` or `.FirstName` of the main entity in a sub-list easily without requiring `AsList(...)` [#1993](https://github.com/2sic/2sxc/issues/1993)
-* Updated Quick-Dialog to use Angular 9, Ivy and the latest Dnn-Sxc-Angular [#1992](https://github.com/2sic/2sxc/issues/1992)
-* Performance-Enhance App DataSource to delay building objects until needed [#1991](https://github.com/2sic/2sxc/issues/1991)
+#### Possibly breaking changes
 
-Bugfixes
+1. Because the dynamic entity list now has a type which is dynamic, it cannot be cast to `List<dynamic>` any more. `IList<dynamic>` works, but in case you have any code casting it to `List<dynamic>` you'll need to change that to either `IList<dynamic>` or `IEnumerable<dynamic>`.
+
+#### New Features / Major Improvements
+
+*  Changed DynamicEntity so that accessing a property which contains many other entities it will return a `DynamicEntityWithList`. This allows Razor files to access the properties like `.EntityId` or `.FirstName` of the main entity in a sub-list easily without requiring `AsList(...)` [#1993](https://github.com/2sic/2sxc/issues/1993)
+* Updated Quick-Dialog to use Angular 9, Ivy and the latest Dnn-Sxc-Angular [#1992](https://github.com/2sic/2sxc/issues/1992)
+* New DataSource [](xref:ToSic.Eav.DataSources.AttributeRename) [#2004](https://github.com/2sic/2sxc/issues/2004)
+* Completely refactored internal list management API [#1995]((https://github.com/2sic/2sxc/issues/1995))
+* Complete refactoring of the inpage code to make it typesafe (no more `any` types)
+
+#### Enhancements
+
+* Performance-Enhance App DataSource to delay building objects until needed [#1991](https://github.com/2sic/2sxc/issues/1991)
+* Performance-Enhance internal Token Lookup [#1998](https://github.com/2sic/2sxc/issues/1998)
+* Enhanced DNN Search Index logging [#1997](https://github.com/2sic/2sxc/issues/1997)
+* Corrected help-links on all data sources [#1994](https://github.com/2sic/2sxc/issues/1994)
+
+#### Bugfixes
 
 * Cache-All-Streams only used the Default-Streams for Cache-Key identification [#1988](https://github.com/2sic/2sxc/issues/1988)
 * QueryRun DataSource doesn't show statitics on all streams [#1989](https://github.com/2sic/2sxc/issues/1989)
+* Modified date and Owner information were missing on json stored entities [#2005](https://github.com/2sic/2sxc/issues/2005) / [#2006](https://github.com/2sic/2sxc/issues/2006)
+* Fixed bug in JS API for non-2sxc endpoint resolution [#2000](https://github.com/2sic/2sxc/issues/2000)
+* Queries didn't resolve DNN tokens when accessed in the Search Index [#1999](https://github.com/2sic/2sxc/issues/1999)
