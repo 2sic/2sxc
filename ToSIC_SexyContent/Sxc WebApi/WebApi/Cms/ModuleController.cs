@@ -87,13 +87,25 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<AppUiInfo> GetSelectableApps()
+        public IEnumerable<AppUiInfo> GetSelectableApps(string apps = null)
         {
             // we must get the zone-id from the environment,
             // since the app may not yet exist when inserted the first time
             var tenant = new DnnTenant(PortalSettings.Current);
             var tenantZoneId = Env.ZoneMapper.GetZoneId(tenant);
-            return new CmsZones(tenantZoneId, Env, Log).AppsRt.GetSelectableApps(tenant);
+            var list = new CmsZones(tenantZoneId, Env, Log).AppsRt.GetSelectableApps(tenant).ToList();
+
+            if (string.IsNullOrWhiteSpace(apps)) return list;
+
+            // New feature in 10.27 - if app-list is provided, only return these
+            var appNames = apps.Split(',')
+                .Select(s => s.Trim())
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToList();
+            list = list.Where(ap => appNames
+                    .Any(name => string.Equals(name, ap.Name, StringComparison.InvariantCultureIgnoreCase)))
+                .ToList();
+            return list;
         }
 
         [HttpGet]
