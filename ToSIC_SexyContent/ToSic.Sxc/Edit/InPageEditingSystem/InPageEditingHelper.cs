@@ -15,8 +15,9 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
     public class InPageEditingHelper : HasLog, IInPageEditingSystem
     {
-        private readonly string _jsonTemplate =
-            "data-list-context='{{ `parent`: {0}, `field`: `{1}`, `type`: `{2}`, `guid`: `{3}`}}'".Replace("`", "\"");
+        private readonly string innerContentAttribute = "data-list-context";
+        //private readonly string _jsonTemplate =
+        //    "data-list-context='{{ `parent`: {0}, `field`: `{1}`, `type`: `{2}`, `guid`: `{3}`}}'".Replace("`", "\"");
 
         internal InPageEditingHelper(IBlockBuilder blockBuilder, ILog parentLog) : base("Edt", parentLog)
         {
@@ -85,7 +86,9 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             string noParameterOrder = Eav.Constants.RandomProtectionParameter, 
             string field = null,
             string contentType = null, 
-            Guid? newGuid = null)
+            Guid? newGuid = null,
+            string apps = null,
+            int max = 100)
         {
             Log.Add("ctx attribs - enabled:{Enabled}");
             if (!Enabled) return null;
@@ -93,12 +96,24 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
             if (field == null) throw new Exception("need parameter 'field'");
 
-            return new HtmlString(string.Format(
-                _jsonTemplate,
-                target.EntityId,
+            var serialized = JsonConvert.SerializeObject(new 
+            {
+                apps,
                 field,
-                contentType ?? Settings.AttributeSetStaticNameContentBlockTypeName,
-                newGuid));
+                guid = newGuid.ToString(),
+                max,
+                parent = target.EntityId,
+                type = contentType ?? Settings.AttributeSetStaticNameContentBlockTypeName,
+            });
+
+            return new HtmlString(innerContentAttribute + "='" + serialized + "'");
+
+            //return new HtmlString(string.Format(
+            //    _jsonTemplate,
+            //    target.EntityId,
+            //    field,
+            //    contentType ?? Settings.AttributeSetStaticNameContentBlockTypeName,
+            //    newGuid));
         }
 
         /// <inheritdoc/>

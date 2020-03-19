@@ -48,25 +48,22 @@ namespace ToSic.Sxc.Blocks.Renderers
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
 
-        internal static string RenderListWithContext(DynamicEntity parent, string fieldName, IInPageEditingSystem edit = null)
+        internal static string RenderListWithContext(DynamicEntity parent, string fieldName/*, IInPageEditingSystem edit = null*/, string apps = null, int max = 100)
         {
             var innerBuilder = new StringBuilder();
             var found = parent.TryGetMember(fieldName, out var objFound);
-            if (found)
-            {
-                if (objFound is IList<DynamicEntity> itms)
-                    foreach (var cb in itms)
-                        innerBuilder.Append(Render(cb.BlockBuilder.Block, cb.Entity, parent.BlockBuilder.Log));
-            }
+            if (found && objFound is IList<DynamicEntity> items)
+                foreach (var cb in items)
+                    innerBuilder.Append(Render(cb.BlockBuilder.Block, cb.Entity, parent.BlockBuilder.Log));
 
-            // create edit object if missing...to re-use in the wh
-            if (edit == null)
-                edit = new InPageEditingHelper(parent.BlockBuilder, parent.BlockBuilder.Log);
+            // create edit object if missing...to re-use of the parent
+            //if (edit == null)
+            IInPageEditingSystem edit = new InPageEditingHelper(parent.BlockBuilder, parent.BlockBuilder.Log);
 
             return string.Format(WrapperTemplate, new object[]
             {
                 edit.Enabled ? WrapperMultiItems : "",
-                edit.ContextAttributes(parent, field: fieldName),
+                edit.ContextAttributes(parent, field: fieldName, apps: apps, max: max),
                 innerBuilder
             });
         }
