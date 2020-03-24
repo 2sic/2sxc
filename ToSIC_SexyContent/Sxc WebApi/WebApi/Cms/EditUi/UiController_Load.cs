@@ -34,6 +34,7 @@ namespace ToSic.Sxc.WebApi.Cms
             items = new ContentGroupList(BlockBuilder, Log).ConvertListIndexToId(items, appIdentity);
 
             // now look up the types, and repeat security check with type-names
+            // todo: 2020-03-20 new feat 10.27, may not check inner type permissions ATM
             var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, items, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exception))
                 throw exception;

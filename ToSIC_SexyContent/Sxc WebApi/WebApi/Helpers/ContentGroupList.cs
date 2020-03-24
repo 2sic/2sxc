@@ -17,17 +17,17 @@ namespace ToSic.Sxc.WebApi
     {
         public ContentGroupList(IBlockBuilder blockBuilder, ILog parentLog) : base(blockBuilder, parentLog, "Api.GrpPrc") {}
 
-        internal void IfInListUpdateList<T>(int appId, List<BundleWithHeader<T>> items, Dictionary<Guid, int> ids)
+        internal void IfChangesAffectListUpdateIt<T>(int appId, List<BundleWithHeader<T>> items, Dictionary<Guid, int> ids)
         {
             Log.Add("check groupings");
             var groupItems = items.Where(i => i.Header.Group != null)
-                .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add)
+                .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index + i.Header.Group.Add)
                 .ToList();
 
             // if it's new, it has to be added to a group
             // only add if the header wants it, AND we started with ID unknown
             if (groupItems.Any())
-                UpdateList(appId, ids, groupItems);
+                PostSaveUpdateIdsInListEntity(appId, ids, groupItems);
             else
                 Log.Add("no additional group processing necessary");
         }
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi
             => new CmsRuntime(app, Log, BlockBuilder.UserMayEdit,
                 BlockBuilder.Environment.PagePublishing.IsEnabled(BlockBuilder.Container.Id)).Blocks.GetBlockConfig(blockGuid);
 
-        private void UpdateList<T>(
+        private void PostSaveUpdateIdsInListEntity<T>(
             int appId,
             Dictionary<Guid, int> postSaveIds,
             IEnumerable<IGrouping<string, BundleWithHeader<T>>> groupItems)
@@ -48,15 +48,23 @@ namespace ToSic.Sxc.WebApi
             foreach (var entitySets in groupItems)
             {
                 Log.Add("processing:" + entitySets.Key);
+                // experimental 10.27 new
+                var hasFieldName = entitySets.FirstOrDefault(e => !string.IsNullOrEmpty(e.Header.Field));
+                if (hasFieldName != null)
+                {
+                    // TODO: WIP, atm we're just saving, add / move won't work yet, just skip the rest
+                    continue;
+                }
+
                 var contItem =
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ContentLower) ??
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ListContentLower);
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ContentLower) 
+                    ?? entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ListContentLower);
                 if (contItem == null)
                     throw new Exception("unexpected group-entity assignment, cannot figure it out");
 
                 var presItem =
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.PresentationLower) ??
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ListPresentationLower);
+                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.PresentationLower)
+                    ?? entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ListPresentationLower);
 
                 // Get group to assign to and parameters
                 var contentGroup = GetBlockConfig(app, contItem.Header.Group.Guid);
@@ -125,8 +133,17 @@ namespace ToSic.Sxc.WebApi
                     continue;
                 }
 
+                // Experimental in 10.27
+                // assumes id and content-type are also given, so no further changes
+                if (identifier.Field != null)
+                {
+                    newItems.Add(identifier);
+                    continue;
+                }
+
                 var contentGroup = GetBlockConfig(app, identifier.Group.Guid);
-                var contentTypeStaticName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Group.Part) ?? "";
+                var contentTypeStaticName = (contentGroup.View as View)?
+                                            .GetTypeStaticName(identifier.Group.Part) ?? "";
 
                 // if there is no content-type for this, then skip it (don't deliver anything)
                 if (contentTypeStaticName == "")

@@ -24,6 +24,13 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public void PrepareForEntityChecks(AppRuntime appRead) => AppRead = appRead;
 
+        /// <summary>
+        /// The package format for loading and saving are the same, but we want to make sure
+        /// that the save package doesn't contain unexpected trash (which would indicate the UI was broken)
+        /// or that invalid combinations get back here
+        /// </summary>
+        /// <param name="preparedException"></param>
+        /// <returns></returns>
         internal bool ContainsOnlyExpectedNodes(out HttpResponseException preparedException)
         {
             var wrapLog = Log.Call();

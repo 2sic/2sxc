@@ -127,21 +127,28 @@ namespace ToSic.Sxc.Search
                         Description = "",
                         Body = GetJoinedAttributes(entity, language),
                         Title = entity.Title?[language]?.ToString() ?? "(no title)",
-                        ModifiedTimeUtc = (entity.Modified == DateTime.MinValue ? DateTime.Now.Date.AddHours(DateTime.Now.Hour) : entity.Modified).ToUniversalTime(),
+                        ModifiedTimeUtc = (entity.Modified == DateTime.MinValue 
+                            ? DateTime.Now.Date.AddHours(DateTime.Now.Hour) 
+                            : entity.Modified).ToUniversalTime(),
                         UniqueKey = "2sxc-" + dnnModule.ModuleID + "-" + (entity.EntityGuid != new Guid() ? entity.EntityGuid.ToString() : (stream.Key + "-" + entity.EntityId)),
                         IsActive = true,
                         TabId = dnnModule.TabID,
                         PortalId = dnnModule.PortalID
                     };
 
+                    // CodeChange #2020-03-20#ContentGroupItemModified - Delete if no side-effects till June 2020
+                    // 2020-03-20 2dm: unclear why this happens - the itm.Modified (above)
+                    // is identical with the typed.ContentGroupItemModified
+                    // because of this I'll turn the code off for now
+                    // I also marked 3 other code bits with the code 
                     // Take the newest value (from ContentGroupItem and Entity)
-                    if (entity is IHasEditingData typed)
-                    {
-                        var contentGroupItemModifiedUtc = typed.ContentGroupItemModified.ToUniversalTime();
-                        searchInfo.ModifiedTimeUtc = searchInfo.ModifiedTimeUtc > contentGroupItemModifiedUtc
-                            ? searchInfo.ModifiedTimeUtc
-                            : contentGroupItemModifiedUtc;
-                    }
+                    //if (entity is IHasEditingData typed)
+                    //{
+                    //    var contentGroupItemModifiedUtc = typed.ContentGroupItemModified.ToUniversalTime();
+                    //    searchInfo.ModifiedTimeUtc = searchInfo.ModifiedTimeUtc > contentGroupItemModifiedUtc
+                    //        ? searchInfo.ModifiedTimeUtc
+                    //        : contentGroupItemModifiedUtc;
+                    //}
 
                     return searchInfo;
                 }));
@@ -165,7 +172,6 @@ namespace ToSic.Sxc.Search
             {
                 // Filter by Date - take only SearchDocuments that changed since beginDate
                 var searchDocumentsToAdd = searchInfoList.Value.Where(p => p.ModifiedTimeUtc >= beginDate.ToUniversalTime()).Select(p => (SearchDocument) p);
-
                 searchDocuments.AddRange(searchDocumentsToAdd);
             }
 
