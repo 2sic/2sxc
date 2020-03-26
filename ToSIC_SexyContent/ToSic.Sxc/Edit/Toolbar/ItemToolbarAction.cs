@@ -10,15 +10,16 @@ namespace ToSic.Sxc.Edit.Toolbar
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal class ItemToolbarAction
     {
-        public ItemToolbarAction(IEntity dynEntityOrEntity = null)
+        public ItemToolbarAction(IEntity entity = null)
         {
             // a null value/missing is also valid, when all you want is a new/add toolbar
-            if (dynEntityOrEntity == null)
+            if (entity == null)
                 return;
 
-            var Entity = dynEntityOrEntity;
-            isPublished = Entity.IsPublished;
-            if (Entity is IHasEditingData editingData)
+            isPublished = entity.IsPublished;
+            title = entity.GetBestTitle();
+            entityGuid = entity.EntityGuid;
+            if (entity is IHasEditingData editingData)
             {
                 sortOrder = editingData.SortOrder;
                 if (editingData.Parent == null)
@@ -30,14 +31,14 @@ namespace ToSic.Sxc.Edit.Toolbar
                 {
                     parent = editingData.Parent;
                     fields = editingData.Fields;
-                    entityId = Entity.EntityId;
-                    contentType = Entity.Type.Name;
+                    entityId = entity.EntityId;
+                    contentType = entity.Type.Name;
                 }
             }
             else
             {
-                entityId = Entity.EntityId;
-                contentType = Entity.Type.Name;
+                entityId = entity.EntityId;
+                contentType = entity.Type.Name;
             }
         }
 
@@ -56,6 +57,9 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         [JsonProperty(NullValueHandling = Ignore)] public object prefill { get; set; }
 
+        [JsonProperty(NullValueHandling = Ignore)] public string title { get; set; }
+
+        [JsonProperty(NullValueHandling = Ignore)] public Guid? entityGuid { get; set; }
 
         /// <summary>
         /// Experimental 10.27
