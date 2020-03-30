@@ -191,7 +191,8 @@ Didn't have time to document this yet, sorry. If you need to know, best check th
 * New DataSource [](xref:ToSic.Eav.DataSources.AttributeRename) [#2004](https://github.com/2sic/2sxc/issues/2004)
 * Completely refactored internal list management API [#1995]((https://github.com/2sic/2sxc/issues/1995))
 * Complete refactoring of the inpage code to make it typesafe (no more `any` types)
-* Created brand-new, simpler way to create custom Toolbars
+* Created brand-new, [simpler way to create custom Toolbars](xref:HowTo.Customize.Toolbars) and [specs](xref:Specs.Cms.Toolbars.Build)
+* Introduces [JS/API 2sxc-Insights](xref:HowTo.Debug.Home) for debugging In-Page code
 
 #### Enhancements
 

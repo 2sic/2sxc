@@ -68,13 +68,14 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         }
 
-        private string ToolbarJson() => ToolbarV10 == null ? ToolbarObjJson() : ToolbarV10Json();
+        //private string ToolbarJson() => ToolbarV10 == null ? ToolbarObjJson() : ToolbarV10Json();
 
         private string ToolbarObjJson() => JsonConvert.SerializeObject(
             ToolbarObj ?? (Actions.Count == 1
                 ? Actions.First()
                 : (object) Actions));
 
+        private bool UseV10 => ToolbarV10 != null;
 
         private string ToolbarV10Json()
         {
@@ -101,10 +102,10 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         [JsonIgnore]
         public string Toolbar =>
-            $"<ul class=\"sc-menu\" {SexyContent.Html.Build.Attribute("toolbar", ToolbarJson())} {SexyContent.Html.Build.Attribute("settings", SettingsJson)}></ul>";
+            $"<ul class=\"sc-menu\" {SexyContent.Html.Build.Attribute("toolbar", UseV10 ? ToolbarV10Json() : ToolbarObjJson())} { (UseV10 ? null : SexyContent.Html.Build.Attribute("settings", SettingsJson))}></ul>";
 
         [JsonIgnore]
-        public string ToolbarAttribute => "{\"toolbar\":" + ToolbarObjJson() + ",\"settings\":"+ SettingsJson + "}";
+        public string ToolbarAttribute => UseV10 ? ToolbarV10Json() : "{\"toolbar\":" + ToolbarObjJson() + ",\"settings\":"+ SettingsJson + "}";
 
 
         public string GetQueryString(object obj)

@@ -121,7 +121,7 @@ namespace ToSic.Sxc.Web
         /// <remarks>
         /// **History** <br/>
         /// 1. Introduced in 2sxc 8.4
-        /// 1. Enhanced with apps & max in 10.27
+        /// 1. Enhanced with apps in 10.27
         /// </remarks>
         HtmlString ContextAttributes(IDynamicEntity target, 
             string noParameterOrder = Eav.Constants.RandomProtectionParameter, 

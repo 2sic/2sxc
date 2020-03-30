@@ -19,6 +19,8 @@
   items:
     - name: Edit Toolbars
       topicUid: Specs.Cms.Toolbars
+    - name: Custom Toolbars (Simple)
+      topicUid: Specs.Cms.Toolbars.Build
     - name: Quick-Edit (QuickE
       topicUid: Specs.Cms.QuickE
     - name: Page Publishing
