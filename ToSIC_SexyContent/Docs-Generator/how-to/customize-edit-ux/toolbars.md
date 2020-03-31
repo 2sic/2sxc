@@ -72,6 +72,11 @@ You should now have a _red_ + button like this:
 
 <img src="/assets/how-to/customize-edit-ux/toolbars/step-1-with-plus-button-red.png" width="100%">
 
+> [!IMPORTANT]
+> The term `new` in this example means we want a button of _type_ `new` which will open the dialog to create new entities.  
+> We could also write `app&color=red` which would add a button to manage the app. 
+> So `new` ≠ 'new button' but 'button to add a new entity'. The full list of button names can be found in the [CMS Commands list](xref:Specs.Js.Commands).
+
 ### Adding more Buttons
 
 Now we want to add another button - maybe to add a _Tag_. The `toolbar` attribute on the [Edit.TagToolbar](xref:HowTo.Razor.Edit.Toolbar) can take various kinds of objects, but for the new simple API it only accepts `string` objects or `string[]` arrays. So to make multiple changes to the toolbar, we'll have to give it a `string[]` array like this (note that we can use line-breaks, to make the code easier to read):
