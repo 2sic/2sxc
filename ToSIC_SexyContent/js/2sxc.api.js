@@ -991,25 +991,26 @@ var Log = (function () {
         }
     };
     Log.prototype.dump = function (one, separator) {
-        var _this = this;
         if (one === void 0) { one = null; }
         if (separator === void 0) { separator = ' - '; }
         if (one)
-            this.dumpOne(one, separator);
-        else
-            this.entries.forEach(function (e) { return _this.dumpOne(e, separator); });
+            this.dumpOne(0, one, separator);
+        else {
+            this.dumpList();
+        }
     };
     Log.prototype.dumpList = function (start, length) {
         var _this = this;
         if (start === void 0) { start = 0; }
+        var index = start;
         this.entries
             .slice(start, length ? start + length : undefined)
-            .forEach(function (e) { return _this.dumpOne(e); });
+            .forEach(function (e) { return _this.dumpOne(index++, e); });
     };
-    Log.prototype.dumpOne = function (e, separator) {
+    Log.prototype.dumpOne = function (index, e, separator) {
         if (separator === void 0) { separator = ' - '; }
         var result = (e.result) ? ' =' + e.result : '';
-        var line = e.source() + separator + '..'.repeat(e.depth) + e.message + result;
+        var line = ('0000' + index).slice(-4) + ' ' + e.source() + separator + '..'.repeat(e.depth) + e.message + result;
         if (e.data)
             console.log(line, e.data);
         else
