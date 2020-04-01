@@ -153,7 +153,16 @@
       <DependentUpon>View.ascx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View.ascx.Errors.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View.ascx.Logging.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="View.ascx.menu.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View.ascx.Standalone.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
   </ItemGroup>

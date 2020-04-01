@@ -1,9 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
-using ToSic.Eav.Data;
-using ToSic.Eav.Interfaces;
-using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Interfaces;
+using static Newtonsoft.Json.NullValueHandling;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Edit.Toolbar
@@ -11,47 +10,89 @@ namespace ToSic.Sxc.Edit.Toolbar
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal class ItemToolbarAction
     {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? sortOrder { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool? useModuleList { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool? isPublished { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? entityId { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string contentType { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string action { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public object prefill { get; set; }
-
-        public ItemToolbarAction(IEntity dynEntityOrEntity = null) 
+        public ItemToolbarAction(IEntity entity = null)
         {
             // a null value/missing is also valid, when all you want is a new/add toolbar
-            if (dynEntityOrEntity == null)
+            if (entity == null)
                 return;
 
-            var Entity = dynEntityOrEntity;
-            isPublished = Entity.IsPublished;
-            if (Entity is IHasEditingData editingData)
+            isPublished = entity.IsPublished;
+            title = entity.GetBestTitle();
+            entityGuid = entity.EntityGuid;
+            if (entity is IHasEditingData editingData)
             {
                 sortOrder = editingData.SortOrder;
-                useModuleList = true;
+                if (editingData.Parent == null)
+                {
+                    useModuleList = true;
+                }
+                else 
+                // only set parent if not empty - as it's always a valid int and wouldn't be null
+                {
+                    parent = editingData.Parent;
+                    fields = editingData.Fields;
+                    entityId = entity.EntityId;
+                    contentType = entity.Type.Name;
+                }
             }
             else
             {
-                entityId = Entity.EntityId;
-                contentType = Entity.Type.Name;
+                entityId = entity.EntityId;
+                contentType = entity.Type.Name;
             }
         }
 
 
+        [JsonProperty(NullValueHandling = Ignore)] public int? sortOrder { get; set; }
+
+        [JsonProperty(NullValueHandling = Ignore)] public bool? useModuleList { get; set; }
+
+        [JsonProperty(NullValueHandling = Ignore)] public bool? isPublished { get; set; }
+
+        [JsonProperty(NullValueHandling = Ignore)] public int? entityId { get; set; }
+
+        [JsonProperty(NullValueHandling = Ignore)] public string contentType { get; set; }
+
+        [JsonProperty(NullValueHandling = Ignore)] public string action { get; set; }
+
+        [JsonProperty(NullValueHandling = Ignore)] public object prefill { get; set; }
+
+        [JsonProperty(NullValueHandling = Ignore)] public string title { get; set; }
+
+        [JsonProperty(NullValueHandling = Ignore)] public Guid? entityGuid { get; set; }
+
+        /// <summary>
+        /// Experimental 10.27
+        /// </summary>
+        [JsonProperty(NullValueHandling = Ignore)] public Guid? parent { get; set; }
+
+        /// <summary>
+        /// Experimental 10.27
+        /// </summary>
+        [JsonProperty(NullValueHandling = Ignore)] public string fields { get; set; }
+
         [JsonIgnore]
         public string Json => JsonConvert.SerializeObject(this);
 
+        //public string ToUrl()
+        //{
+        //    var paramList = new List<string>();
+
+        //    void AddIfExists(string name, object value)
+        //    {
+        //        if (value != null) paramList.Add($"{name}={value}");
+        //    }
+
+        //    AddIfExists(nameof(entityId), entityId);
+        //    AddIfExists(nameof(contentType), contentType);
+        //    AddIfExists(nameof(sortOrder), sortOrder);
+        //    AddIfExists(nameof(useModuleList), useModuleList);
+        //    AddIfExists(nameof(isPublished), isPublished);
+        //    // TODO: AddIfExists(nameof(prefill));
+        //    AddIfExists(nameof(title), title == null ? title : Uri.EscapeUriString(title) );
+        //    AddIfExists(nameof(paramList), parent);
+        //    AddIfExists(nameof(fields), fields);
+        //    return string.Join("&", paramList);
+        //}
     }
 }

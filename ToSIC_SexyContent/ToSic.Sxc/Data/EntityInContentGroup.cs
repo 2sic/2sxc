@@ -11,13 +11,17 @@ namespace ToSic.Sxc.Data
         public EntityInBlock(IEntity baseEntity) : base(baseEntity)
         {
         }
+        public EntityInBlock(DynamicEntity dynEntity) : base(dynEntity.Entity)
+        {
+        }
 
         /// <summary>
         /// Sort order in the content-group, because it's often accessed by index
         /// </summary>
         public int SortOrder { get; set; }
 
-        public DateTime ContentGroupItemModified { get; set; }
+        // CodeChange #2020-03-20#ContentGroupItemModified - Delete if no side-effects till June 2020
+        //public DateTime ContentGroupItemModified { get; set; }
 
         /// <summary>
         /// Presentation entity of this content-item.
@@ -35,5 +39,11 @@ namespace ToSic.Sxc.Data
         /// new 2019-09-18 trying to mark demo-items for better detection in output #1792
         /// </summary>
         internal bool IsDemoItem { get; set; }
-    }
+
+        /// <inheritdoc />
+        public string Fields { get; set; }
+
+        /// <inheritdoc />
+        public Guid? Parent { get; set; }
+   }
 }

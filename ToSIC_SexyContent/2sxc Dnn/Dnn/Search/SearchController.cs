@@ -10,9 +10,10 @@ using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
@@ -34,7 +35,8 @@ namespace ToSic.Sxc.Search
             // always log with method, to ensure errors are caught
             Log.Add($"start search for mod#{dnnModule?.ModuleID}");
 
-            History.Add("dnn-search", Log);
+            // turn off logging into history by default - the template code can reactivate this if desired
+            Log.Preserve = false;
 
             if (dnnModule == null) return searchDocuments;
 
@@ -47,19 +49,14 @@ namespace ToSic.Sxc.Search
                 ? new DnnMapAppToInstance(Log).GetAppIdFromInstance(container, zoneId)
                 : new ZoneRuntime(zoneId, Log).DefaultAppId;
 
-            if (!appId.HasValue)
-                return searchDocuments;
+            if (!appId.HasValue) return searchDocuments;
 
             // As PortalSettings.Current is null, instantiate with modules' portal id
             var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
 
             // Ensure cache builds up with correct primary language
-            var cache = /*Factory.GetAppsCache*/Eav.Apps.State.Cache;
-            cache.Load(new AppIdentity(zoneId, appId.Value) , portalSettings.DefaultLanguage.ToLower());
-            //var cache = Eav.Factory.Resolve<IRootCache>();
-            //((RootCacheBase)cache).ZoneId = zoneId;
-            //((RootCacheBase)cache).AppId = appId.Value;
-            //cache.PreLoadCache(portalSettings.DefaultLanguage.ToLower());
+            var cache = State.Cache;
+            cache.Load(new AppIdentity(zoneId, appId.Value), portalSettings.DefaultLanguage.ToLower());
 
             // must find tenant through module, as the PortalSettings.Current is null in search mode
             var tenant = new DnnTenant(portalSettings);
@@ -68,17 +65,37 @@ namespace ToSic.Sxc.Search
 
             var language = dnnModule.CultureCode;
 
-            //var cms = new CmsRuntime(cmsBlock.App, Log, false, false);
-            //var contentGroup = cms.Blocks.GetInstanceContentGroup(dnnModule.ModuleID, dnnModule.TabID);
+            var view = cmsBlock.View;
 
-            var view = cmsBlock.View;// contentGroup.View;
-
-            if (view == null)
-                return searchDocuments;
+            if (view == null) return searchDocuments;
 
             // This list will hold all EAV entities to be indexed
             var dataSource = cmsBlock.Block.Data;
-			
+
+            // 2020-03-12 Try to attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
+            if (dataSource?.Configuration?.LookUps != null)
+            {
+                Log.Add("Will try to attach dnn providers to DataSource LookUps");
+                try
+                {
+                    //var provider = dataSource.Configuration.LookUps;
+                    var dnnLookUps = GetDnnEngine.GenerateDnnBasedLookupEngine(portalSettings, dnnModule.ModuleID, Log);
+                    ((LookUpEngine) dataSource.Configuration.LookUps).Link(dnnLookUps);
+                    //    .Sources;
+                    //Log.Add($"Environment provided {dnnLookUps.Count} sources");
+                    //foreach (var prov in dnnLookUps)
+                    //    if (!provider.Sources.ContainsKey(prov.Key))
+                    //        provider.Sources.Add(prov.Key, prov.Value);
+                    //    else
+                    //        Log.Add($"Couldn't add source '{prov.Key}', as it already existed");
+                }
+                catch(Exception e)
+                {
+                    Log.Add("Ran into an issue with an error: " + e.Message);
+                }
+            }
+
+
             var engine = EngineFactory.CreateEngine(view);
             engine.Init(cmsBlock, Purpose.IndexingForSearch, Log);
 
@@ -92,7 +109,6 @@ namespace ToSic.Sxc.Search
                 Exceptions.LogException(new SearchIndexException(dnnModule, e));
             }
 
-            
             var searchInfoDictionary = new Dictionary<string, List<ISearchItem>>();
 
             // Get DNN SearchDocuments from 2Sexy SearchInfos
@@ -111,21 +127,28 @@ namespace ToSic.Sxc.Search
                         Description = "",
                         Body = GetJoinedAttributes(entity, language),
                         Title = entity.Title?[language]?.ToString() ?? "(no title)",
-                        ModifiedTimeUtc = (entity.Modified == DateTime.MinValue ? DateTime.Now.Date.AddHours(DateTime.Now.Hour) : entity.Modified).ToUniversalTime(),
+                        ModifiedTimeUtc = (entity.Modified == DateTime.MinValue 
+                            ? DateTime.Now.Date.AddHours(DateTime.Now.Hour) 
+                            : entity.Modified).ToUniversalTime(),
                         UniqueKey = "2sxc-" + dnnModule.ModuleID + "-" + (entity.EntityGuid != new Guid() ? entity.EntityGuid.ToString() : (stream.Key + "-" + entity.EntityId)),
                         IsActive = true,
                         TabId = dnnModule.TabID,
                         PortalId = dnnModule.PortalID
                     };
 
+                    // CodeChange #2020-03-20#ContentGroupItemModified - Delete if no side-effects till June 2020
+                    // 2020-03-20 2dm: unclear why this happens - the itm.Modified (above)
+                    // is identical with the typed.ContentGroupItemModified
+                    // because of this I'll turn the code off for now
+                    // I also marked 3 other code bits with the code 
                     // Take the newest value (from ContentGroupItem and Entity)
-                    if (entity is IHasEditingData typed)
-                    {
-                        var contentGroupItemModifiedUtc = typed.ContentGroupItemModified.ToUniversalTime();
-                        searchInfo.ModifiedTimeUtc = searchInfo.ModifiedTimeUtc > contentGroupItemModifiedUtc
-                            ? searchInfo.ModifiedTimeUtc
-                            : contentGroupItemModifiedUtc;
-                    }
+                    //if (entity is IHasEditingData typed)
+                    //{
+                    //    var contentGroupItemModifiedUtc = typed.ContentGroupItemModified.ToUniversalTime();
+                    //    searchInfo.ModifiedTimeUtc = searchInfo.ModifiedTimeUtc > contentGroupItemModifiedUtc
+                    //        ? searchInfo.ModifiedTimeUtc
+                    //        : contentGroupItemModifiedUtc;
+                    //}
 
                     return searchInfo;
                 }));
@@ -141,12 +164,14 @@ namespace ToSic.Sxc.Search
                 Exceptions.LogException(new SearchIndexException(dnnModule, e));
             }
 
+            // add it to insights / history. It will only be preserved, if the inner code ran a Log.Preserve = true;
+            History.Add("dnn-search", Log);
+
             // reduce load by only keeping recently modified ites
             foreach (var searchInfoList in searchInfoDictionary)
             {
                 // Filter by Date - take only SearchDocuments that changed since beginDate
                 var searchDocumentsToAdd = searchInfoList.Value.Where(p => p.ModifiedTimeUtc >= beginDate.ToUniversalTime()).Select(p => (SearchDocument) p);
-
                 searchDocuments.AddRange(searchDocumentsToAdd);
             }
 

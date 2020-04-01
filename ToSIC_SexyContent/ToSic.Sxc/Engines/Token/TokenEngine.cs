@@ -96,11 +96,13 @@ namespace ToSic.Sxc.Engines
             _tokenReplace = new TokenReplaceEav(BlockBuilder.Container.Id, confProv);
             
             // Add the Content and ListContent property sources used always
-            _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new LookUpInDynamicEntity(SourcePropertyName.ListContent, _data.Header));
+            //_tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new LookUpInDynamicEntity(SourcePropertyName.ListContent, _data.Header));
+            confProv.Add(new LookUpInDynamicEntity(SourcePropertyName.ListContent, _data.Header));
             //var content = _data.Data.List.FirstOrDefault();
             //if (content != null)
             //{
-                _tokenReplace.ValueSources.Add(SourcePropertyName.Content, new LookUpInDynamicEntity(SourcePropertyName.Content, _data.Content));
+                //_tokenReplace.ValueSources.Add(SourcePropertyName.Content, new LookUpInDynamicEntity(SourcePropertyName.Content, _data.Content));
+                confProv.Add(new LookUpInDynamicEntity(SourcePropertyName.Content, _data.Content));
             //}
         }
 
@@ -174,14 +176,14 @@ namespace ToSic.Sxc.Engines
             // they can be restored after rendering the section
             foreach(var src in valuesForThisInstanceOnly)
             {
-                if (_tokenReplace.ValueSources.ContainsKey(src.Key))
+                if (_tokenReplace.LookupEngine.Sources/*.ValueSources*/.ContainsKey(src.Key))
                 {
-                    var oldSource = _tokenReplace.ValueSources[src.Key];
+                    var oldSource = _tokenReplace.LookupEngine.Sources/*.ValueSources*/[src.Key];
                     propertySourcesBackup.Add(src.Key, oldSource);
                     if (oldSource != null)
-                        _tokenReplace.ValueSources.Remove(src.Key);
+                        _tokenReplace.LookupEngine.Sources/*.ValueSources*/.Remove(src.Key);
                 }
-                _tokenReplace.ValueSources[src.Key] = src.Value;
+                _tokenReplace.LookupEngine.Sources/*.ValueSources*/[src.Key] = src.Value;
             }
 
             // Render
@@ -190,9 +192,9 @@ namespace ToSic.Sxc.Engines
             // Restore values list to original state
             foreach (var src in valuesForThisInstanceOnly)
             {
-                _tokenReplace.ValueSources.Remove(src.Key);
+                _tokenReplace.LookupEngine.Sources/*.ValueSources*/.Remove(src.Key);
                 if(propertySourcesBackup.ContainsKey(src.Key))
-                    _tokenReplace.ValueSources.Add(src.Key, src.Value);
+                    _tokenReplace.LookupEngine.Sources/*.ValueSources*/.Add(src.Key, src.Value);
             }
             
             return sectionRendered;

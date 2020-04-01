@@ -2113,98 +2113,119 @@ function enhanceEntity(entity) {
 
 })();
 /*
- * This is a special service which uses a field mask 
- * 
- * like "[Title] - [Subtitle]" 
- * 
+ * This is a special service which uses a field mask
+ *
+ * like "[Title] - [Subtitle]"
+ *
  * and will then provide a list of fields which were used, as well as a resolved value if needed
- * 
+ *
  */
 
-angular.module("eavFieldTemplates")
-    .factory("fieldMask", ["debugState", function (debugState) {
-        // mask: a string like "[FirstName] [LastName]"
-        // model: usually the $scope.model, passed into here
-        // overloadPreCleanValues: a function which will "scrub" the found field-values
-        // 
-        // use: first create an object like mask = fieldMask.createFieldMask("[FirstName]", $scope.model);
-        //      then: access result in your timer or whatever with mask.resolve();
-        function createFieldMask(mask, $scope, changeEvent, overloadPreCleanValues) {
-            var srv = {
-                mask: mask,
-                model: $scope.model,
-                fields: [],
-                value: undefined,
-                findFields: /\[.*?\]/ig,
-                unwrapField: /[\[\]]/ig
-            };
+angular
+  .module('eavFieldTemplates')
+  .factory('fieldMask', ["debugState", "appId", "zoneId", function(debugState, appId, zoneId) {
+    // mask: a string like "[FirstName] [LastName]"
+    // model: usually the $scope.model, passed into here
+    // overloadPreCleanValues: a function which will "scrub" the found field-values
+    //
+    // use: first create an object like mask = fieldMask.createFieldMask("[FirstName]", $scope.model);
+    //      then: access result in your timer or whatever with mask.resolve();
+    function createFieldMask(
+      mask,
+      $scope,
+      changeEvent,
+      overloadPreCleanValues
+    ) {
+      function resolveGlobalMask(mask) {
+        if (mask == null || mask == undefined) return mask;
+        return mask
+          .replace(/\[App:AppId\]/i, appId)
+          .replace(/\[App:ZoneId\]/i, zoneId);
+      }
 
-            // resolves a mask to the final value
-            srv.resolve = function getNewAutoValue() {
-                var value = srv.mask;
-                angular.forEach(srv.fields, function(e, i) {
-                    var replaceValue = (srv.model.hasOwnProperty(e) && srv.model[e] && srv.model[e]._currentValue && srv.model[e]._currentValue.Value)
-                        ? srv.model[e]._currentValue.Value : "";
-                    var cleaned = srv.preClean(e, replaceValue);
-                    value = value.replace("[" + e + "]", cleaned);
-                });
+      var srv = {
+        mask: resolveGlobalMask(mask),
+        model: $scope.model,
+        fields: [],
+        value: undefined,
+        findFields: /\[.*?\]/gi,
+        unwrapField: /[\[\]]/gi
+      };
 
-                return value;
-            };
+      // resolves a mask to the final value
+      srv.resolve = function getNewAutoValue() {
+        var value = srv.mask;
+        angular.forEach(srv.fields, function(e, i) {
+          var replaceValue =
+            srv.model.hasOwnProperty(e) &&
+            srv.model[e] &&
+            srv.model[e]._currentValue &&
+            srv.model[e]._currentValue.Value
+              ? srv.model[e]._currentValue.Value
+              : '';
+          var cleaned = srv.preClean(e, replaceValue);
+          value = value.replace('[' + e + ']', cleaned);
+        });
 
-            // retrieves a list of all fields used in the mask
-            srv.fieldList = function() {
-                var result = [];
-                if (!srv.mask) return result;
-                var matches = srv.mask.match(srv.findFields);
-                angular.forEach(matches, function(e, i) {
-                    var staticName = e.replace(srv.unwrapField, "");
-                    result.push(staticName);
-                });
-                return result;
-            };
+        return value;
+      };
 
-            srv.preClean = function(key, value) {
-                return value;
-            };
+      // retrieves a list of all fields used in the mask
+      srv.fieldList = function() {
+        var result = [];
+        if (!srv.mask) return result;
+        var matches = srv.mask.match(srv.findFields);
+        angular.forEach(matches, function(e, i) {
+          var staticName = e.replace(srv.unwrapField, '');
+          result.push(staticName);
+        });
+        return result;
+      };
 
-            // change-event - will only fire if it really changes
-            srv.onChange = function() {
-                var maybeNew = srv.resolve();
-                if (srv.value !== maybeNew)
-                    changeEvent(maybeNew);
-                srv.value = maybeNew;
-            };
+      srv.preClean = function(key, value) {
+        return value;
+      };
 
-            // add watcher and execute onChange
-            srv.watchAllFields = function() {
-                // add a watch for each field in the field-mask
-                angular.forEach(srv.fields, function (e, i) {
-                    $scope.$watch("model." + e + "._currentValue.Value", function () {
-                        if (debugState.on) console.log("url-path: " + e + " changed...");
-                        srv.onChange();
-                    });
-                });
-            };
+      // change-event - will only fire if it really changes
+      srv.onChange = function() {
+        var maybeNew = srv.resolve();
+        if (srv.value !== maybeNew) changeEvent(maybeNew);
+        srv.value = maybeNew;
+      };
 
-            function activate() {
-                srv.fields = srv.fieldList();
+      // add watcher and execute onChange
+      srv.watchAllFields = function() {
+        // add a watch for each field in the field-mask
+        angular.forEach(srv.fields, function(e, i) {
+          // only watch fields which are real fields of this
+          if (e && e.indexOf(':') === -1) {
+            $scope.$watch('model.' + e + '._currentValue.Value', function() {
+              if (debugState.on) console.log('url-path: ' + e + ' changed...');
+              srv.onChange();
+            });
+          }
+        });
+      };
 
-                if (overloadPreCleanValues) // got an overload...
-                    srv.preClean = overloadPreCleanValues;
+      function activate() {
+        srv.fields = srv.fieldList();
 
-                // bind auto-watch only if needed...
-                if ($scope && changeEvent)
-                    srv.watchAllFields();
-            }
+        if (overloadPreCleanValues)
+          // got an overload...
+          srv.preClean = overloadPreCleanValues;
 
-            activate();
+        // bind auto-watch only if needed...
+        if ($scope && changeEvent) srv.watchAllFields();
+      }
 
-            return srv;
-        }
+      activate();
 
-        return createFieldMask;
-    }]);
+      return srv;
+    }
+
+    return createFieldMask;
+  }]);
+
 angular.module("eavEditTemplates", []).run(["$templateCache", function($templateCache) {$templateCache.put("fields/boolean/boolean-default.html","<div class=\"checkbox checkbox-labeled\">\r\n    <!--<label>-->\r\n        <switch class=\"tosic-green pull-left\" ng-model=\"value.Value\"></switch>\r\n    <!-- maybe need the (hidden) input to ensure the label actually switches the boolean -->\r\n        <!--<input type=\"checkbox\" class=\"formly-field-checkbox\" ng-model=\"value.Value\" style=\"display: none\">-->\r\n        <div ng-include=\"\'wrappers/eav-label.html\'\"></div>\r\n        <!--{{to.label}} {{to.required ? \'*\' : \'\'}}-->\r\n    <!--</label>-->\r\n</div>");
 $templateCache.put("fields/custom/custom-default.html","<div class=\"alert alert-danger\">\r\n    ERROR - This is a custom field, you shouldn\'t see this. You only see this because the custom-dialog is missing.\r\n</div>\r\n<input class=\"form-control input-lg\" ng-pattern=\"vm.regexPattern\" ng-model=\"value.Value\">");
 $templateCache.put("fields/datetime/datetime-default.html","<div>\r\n    <div class=\"input-group\" style=\"width: 100%\">\r\n        <input class=\"form-control input-lg\" ng-model=\"value.Value\" is-open=\"to.isOpen\" uib-datepicker-popup=\"{{format}}\" close-text=\"{{datepickerPopup.closeText}}\" clear-text=\"{{datepickerPopup.clearText}}\" current-text=\"{{datepickerPopup.currentText}}\" datepicker-options=\"to.datepickerOptions\" />\r\n\r\n        <span class=\"input-group-btn\" style=\"vertical-align: top;\">\r\n            <button type=\"button\" class=\"btn btn-default eav-icon-field-button pull-right icon-field-button icon-field-button-calendar\"\r\n                    ng-disabled=\"to.disabled\"\r\n                    ng-click=\"to.isOpen = true;\">\r\n                <i class=\"eav-icon-calendar\"></i>\r\n            </button>\r\n        </span>\r\n        <!--<div class=\"input-group-addon\" style=\"cursor: pointer;\" ng-click=\"to.isOpen = true;\">\r\n            <i class=\"glyphicon glyphicon-calendar\"></i>\r\n        </div>-->\r\n        <div uib-timepicker ng-show=\"to.settings.merged.UseTimePicker\" ng-model=\"value.Value\" show-meridian=\"ismeridian\" style=\"display:table-row;\"></div>\r\n    </div>\r\n</div>\r\n");

@@ -18,7 +18,7 @@ The `Edit.ContextAttributes(...)` is always used inside an HTML-tag and will add
 ## What do You need to do?
 By default, this context is already provided by the 2sxc-environment, but sometimes a _new context_ must provide overrides. For example using [](xref:Specs.Cms.InnerContent). 
 
-For this you need the `Edit.ContextAttributes` - see [docs here](xref:ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes(ToSic.Sxc.Data.IDynamicEntity,System.String,System.String,System.String,System.Nullable{System.Guid})).
+For this you need the `Edit.ContextAttributes` - see [docs here](xref:ToSic.Sxc.Web.IInPageEditingSystem.ContextAttributes*).
 
 
 ## How to use

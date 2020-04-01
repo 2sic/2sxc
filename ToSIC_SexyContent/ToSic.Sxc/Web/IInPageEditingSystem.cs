@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web;
 using ToSic.Eav.Documentation;
-using ToSic.SexyContent;
 using ToSic.Sxc.Data;
 
 // ReSharper disable UnusedMember.Global
@@ -116,16 +115,21 @@ namespace ToSic.Sxc.Web
         /// <param name="field">the field of this content-item, which contains the inner-content-items</param>
         /// <param name="contentType">type name used for 'new' items in a toolbar - usually for inner-content and list-contexts</param>
         /// <param name="newGuid">the guid of a new item - use null for auto-generate</param>
+        /// <param name="apps">Beta / WIP</param>
+        /// <param name="max">Beta / WIP</param>
         /// <returns>An <see cref="HtmlString"/> object containing an html-attribute to add to the wrapper of the inner content</returns>
         /// <remarks>
         /// **History** <br/>
         /// 1. Introduced in 2sxc 8.4
+        /// 1. Enhanced with apps in 10.27
         /// </remarks>
         HtmlString ContextAttributes(IDynamicEntity target, 
             string noParameterOrder = Eav.Constants.RandomProtectionParameter, 
             string field = null, 
             string contentType = null,
-            Guid? newGuid = null);
+            Guid? newGuid = null,
+            string apps = null, 
+            int max = 100);
 
         /// <summary>
         /// Wrap something in a context wrapper-tag

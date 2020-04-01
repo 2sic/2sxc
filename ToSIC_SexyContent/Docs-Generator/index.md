@@ -1,5 +1,5 @@
 
-# EAV & 2sxc API Documentation v10.25.04
+# EAV & 2sxc API Documentation v10.27.00
 
 This is the documentation for EAV and 2sxc APIs. It's fairly advanced, so if you're new to 2sxc, best start with [2sxc.org](https://2sxc.org/).
 
@@ -35,7 +35,7 @@ it also include instructions how to export/import data, working with the image r
 
 #### Documentation Version
 
-Generated for EAV/2sxc 10.25.04
+Generated for EAV/2sxc 10.27.00
 
 
 
@@ -53,9 +53,11 @@ These topics are not or insufficiently documented...
     2. Custom data-types
     5. ...
 1. Future topics, lower priority
-    1. Angular2-5 and 2sxc (todo)
+    1. Angular2-9 and 2sxc (todo)
     2. React and 2sxc (todo)
     4. jQuery with 2sxc (todo)
+1. Super Basic stuff
+    1. How razor templates get their data (content, list, app.data, app.query, etc.)
 1. etc.
 
 These topics are already documented elsewhere, but should become part of these docs

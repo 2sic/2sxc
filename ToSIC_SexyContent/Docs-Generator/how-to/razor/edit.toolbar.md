@@ -23,6 +23,11 @@ This example will output the item title in an `h1` tag and add a hidden, appear-
 
 Let's assume you're building the details-page of a news-app and you only want the edit/remove buttons, to improve the UI for your use case. Additionally, you want the mouse-hover to react on the whole article, not just oven the title. Here's how:
 
+> [!WARNING]
+> 2sxc 10.27 introduces a new, simpler API to customize the toolbar.
+> So the instructions below are technically correct, but not recommended any more.
+> Check out the [much simpler toolbar customizations](xref:HowTo.Customize.Toolbars)
+
 ```razor
 @* this will show an "edit and remove" button for the current item *@
 <div @Edit.TagToolbar(Content, actions: "edit,remove")>

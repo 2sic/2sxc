@@ -1,38 +1,19 @@
-﻿using System;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Apps
 {
     public class CmsManager: AppManager, IAppIdentityWithPublishingState
     {
-        //public bool ShowDrafts { get; }
-
         public bool EnablePublishing { get; }
 
-        public CmsManager(IAppIdentityWithPublishingState app, ILog parentLog) : base(app, parentLog)
-        {
-            //ShowDrafts = app.ShowDrafts;
-            EnablePublishing = app.EnablePublishing;
-        }
+        public CmsManager(IAppIdentityWithPublishingState app, ILog parentLog) 
+            : base(app, parentLog) 
+            => EnablePublishing = app.EnablePublishing;
 
-        public CmsManager(IAppIdentity app, bool showDrafts, bool enablePublishing, ILog parentLog) : base(app, parentLog)
-        {
-            //ShowDrafts = showDrafts;
-            EnablePublishing = enablePublishing;
-        }
-
-        //public CmsManager(int zoneId, int appId, bool showDrafts, bool enablePublishing, ILog parentLog) : base(zoneId, appId, parentLog)
-        //{
-        //    ShowDrafts = showDrafts;
-        //    EnablePublishing = enablePublishing;
-        //}
-
-        //// todo: th
-        //public CmsManager(int appId, ILog parentLog) : base(appId, parentLog)
-        //{
-
-        //}
+        public CmsManager(IAppIdentity app, bool showDrafts, bool enablePublishing, ILog parentLog) 
+            : base(app, parentLog) 
+            => EnablePublishing = enablePublishing;
 
         public new CmsRuntime Read 
             => _runtime ?? (_runtime = new CmsRuntime(this, Log, ShowDrafts, EnablePublishing));

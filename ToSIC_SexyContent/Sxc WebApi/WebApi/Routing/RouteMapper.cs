@@ -1,7 +1,6 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent;
 using ToSic.Sxc.Adam.WebApi;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.WebApi.App;

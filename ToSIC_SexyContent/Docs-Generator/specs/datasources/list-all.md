@@ -68,6 +68,17 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
   <tr>
+    <td><a href="xref:ToSic.Eav.DataSources.AttributeRename">AttributeRename</a></td>
+    <td>Modify</td>
+    <td>
+      <details>
+        <summary>
+          Renames properties on the entities...
+        </summary>
+          Renames properties on the entities and optionally removes the remaining ones. 
+      </details>
+  </tr>
+  <tr>
     <td>BaseCache</td>
     <td width="84">(internal)</td>
     <td>
@@ -372,8 +383,20 @@ These are all the data sources which are either provided in the default installa
       </details>
   </tr>
 
+  <tr>
+    <td><a href="xref:ToSic.Eav.DataSources.StreamPick">StreamPick</a></td>
+    <td>Logic</td>
+    <td>
+      <details>
+        <summary>
+          Pick a stream (...)
+        </summary>
+        Use this to pick one of multiple in-streams by name. Often used together with the token [Params:ShowDrafts]
+      </details>
+  </tr>
 
-  <tr >
+
+  <tr>
     <td><a href="xref:ToSic.Eav.DataSources.ValueFilter">ValueFilter</a></td>
     <td>Filter</td>
     <td>

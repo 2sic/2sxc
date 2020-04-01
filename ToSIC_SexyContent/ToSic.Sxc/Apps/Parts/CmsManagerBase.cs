@@ -12,11 +12,8 @@ namespace ToSic.Sxc.Apps
 
         protected internal readonly CmsManager CmsManager;
 
-        public CmsManagerBase(CmsManager cmsManager, ILog parentLog, string logRename) : base(cmsManager, parentLog, logRename)
-        {
-            CmsManager = cmsManager;
-        }
-
-
+        public CmsManagerBase(CmsManager cmsManager, ILog parentLog, string logRename) 
+            : base(cmsManager, parentLog, logRename) 
+            => CmsManager = cmsManager;
     }
 }

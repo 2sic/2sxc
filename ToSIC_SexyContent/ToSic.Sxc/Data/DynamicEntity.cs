@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Data
     public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>, ICompatibilityLevel
     {
         [PrivateApi]
-        public IEntity Entity { get; }
+        public IEntity Entity { get; protected set; }
 
         [PrivateApi]
         public int CompatibilityLevel { get; }
@@ -49,7 +49,8 @@ namespace ToSic.Sxc.Data
             }
         }
 
-        private readonly string[] _dimensions;
+        [PrivateApi]
+        protected readonly string[] Dimensions;
         [PrivateApi]
         internal IBlockBuilder BlockBuilder { get; }   // must be internal for further use cases
 
@@ -57,10 +58,10 @@ namespace ToSic.Sxc.Data
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entityModel, string[] dimensions, int compatibility, IBlockBuilder blockBuilder)
+        public DynamicEntity(IEntity entity, string[] dimensions, int compatibility, IBlockBuilder blockBuilder)
         {
-            Entity = entityModel;
-            _dimensions = dimensions;
+            Entity = entity;
+            Dimensions = dimensions;
             CompatibilityLevel = compatibility;
             BlockBuilder = blockBuilder;
         }
@@ -72,19 +73,14 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public bool TryGetMember(string memberName, out object result)
         {
-            result = GetEntityValue(memberName, out var propertyNotFound);
-
-            if (propertyNotFound)
-                result = null;
-
+            result = GetEntityValue(memberName);//, out var propertyNotFound);
+            //if (propertyNotFound) result = null;
             return true;
         }
 
         [PrivateApi]
-        public object GetEntityValue(string attributeName, out bool propertyNotFound)
+        public object GetEntityValue(string attributeName)
         {
-            propertyNotFound = false;   // assume found, as that's usually the case
-
             #region check the two special cases Toolbar / Presentation which the EAV doesn't know
 
             if (attributeName == "Toolbar")
@@ -99,32 +95,28 @@ namespace ToSic.Sxc.Data
 
             #endregion
 
-            object result = null;
             // check Entity is null (in cases where null-objects are asked for properties)
-            if (Entity != null)
-            {
-                result = Entity.GetBestValue(attributeName, _dimensions, true);
+            if (Entity == null) return null;
 
-                if (result is IEnumerable<IEntity> rel)
-                {
-                    var relList = rel.Select(
-                        p => new DynamicEntity(p, _dimensions, CompatibilityLevel, BlockBuilder)
-                    ).ToList();
-                    result = relList;
-                }
-            }
+            // check if we already have it in the cache
+            if (_valCache.ContainsKey(attributeName)) return _valCache[attributeName];
 
-            //set out-information
-            propertyNotFound = result == null;
+            var result = Entity.GetBestValue(attributeName, Dimensions, true);
+            if (result is IEnumerable<IEntity> rel)
+                result = new DynamicEntityWithList(rel, Dimensions, CompatibilityLevel, BlockBuilder);
+
+            _valCache.Add(attributeName, result);
             return result;
         }
+
+        private readonly Dictionary<string, object> _valCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
         /// </summary>
         /// <param name="name">the property name. </param>
         /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
-        public dynamic Get(string name) => GetEntityValue(name, out _);
+        public dynamic Get(string name) => GetEntityValue(name);
 
         /// <inheritdoc />
         [PrivateApi("should use Content.Presentation")]
@@ -133,25 +125,28 @@ namespace ToSic.Sxc.Data
 
         private IDynamicEntity GetPresentation
             => _presentation ?? (_presentation = Entity is EntityInBlock entityInGroup
-                   ? new DynamicEntity(entityInGroup.Presentation, _dimensions, CompatibilityLevel, BlockBuilder)
+                   ? new DynamicEntity(entityInGroup.Presentation, Dimensions, CompatibilityLevel, BlockBuilder)
                    : null);
         private IDynamicEntity _presentation;
 
 
         /// <inheritdoc />
-        public int EntityId => Entity.EntityId;
+        /// <remarks>If the entity doesn't exist, it will return 0</remarks>
+        public int EntityId => Entity?.EntityId ?? 0;
 
         /// <inheritdoc />
-        public Guid EntityGuid => Entity.EntityGuid;
+        /// <remarks>If the entity doesn't exist, it will return an empty guid</remarks>
+        public Guid EntityGuid => Entity?.EntityGuid ?? Guid.Empty;
 
         /// <inheritdoc />
-        public object EntityTitle => Entity.Title[_dimensions];
+        /// <remarks>If the entity doesn't exist, it will return null</remarks>
+        public object EntityTitle => Entity?.Title[Dimensions];
 
         /// <inheritdoc />
-        public dynamic GetDraft() => new DynamicEntity(Entity.GetDraft(), _dimensions, CompatibilityLevel, BlockBuilder);
+        public dynamic GetDraft() => new DynamicEntity(Entity?.GetDraft(), Dimensions, CompatibilityLevel, BlockBuilder);
         
         /// <inheritdoc />
-        public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, CompatibilityLevel, BlockBuilder);
+        public dynamic GetPublished() => new DynamicEntity(Entity?.GetPublished(), Dimensions, CompatibilityLevel, BlockBuilder);
 
         /// <summary>
         /// Tell the system that it's a demo item, not one added by the user
@@ -224,14 +219,14 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)
             => Entity.Parents(type, field)
-                .Select(e => new DynamicEntity(e, _dimensions, CompatibilityLevel, BlockBuilder))
+                .Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, BlockBuilder))
                 .Cast<IDynamicEntity>()
                 .ToList();
 
         /// <inheritdoc />
         public List<IDynamicEntity> Children(string field = null, string type = null)
             => Entity.Children(field, type)
-                .Select(e => new DynamicEntity(e, _dimensions, CompatibilityLevel, BlockBuilder))
+                .Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, BlockBuilder))
                 .Cast<IDynamicEntity>()
                 .ToList();
     }

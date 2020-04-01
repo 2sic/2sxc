@@ -77,11 +77,7 @@ namespace ToSic.Sxc.Blocks
 
                 #region Wrap it all up into a nice wrapper tag
                 var result = RenderWithDiv
-                    ? RenderingHelper.WrapInContext(body,
-                        instanceId: Block.ParentId,
-                        contentBlockId: Block.ContentBlockId,
-                        editContext: UiAddEditContext,
-                        autoToolbar: UiAutoToolbar)
+                    ? WrapInDivWithContext(body)
                     : body;
                 #endregion
 
@@ -95,6 +91,13 @@ namespace ToSic.Sxc.Blocks
                     );
             }
         }
+
+        internal string WrapInDivWithContext(string body) =>
+            RenderingHelper.WrapInContext(body,
+                instanceId: Block.ParentId,
+                contentBlockId: Block.ContentBlockId,
+                editContext: UiAddEditContext,
+                autoToolbar: UiAutoToolbar);
 
 
         /// <summary>

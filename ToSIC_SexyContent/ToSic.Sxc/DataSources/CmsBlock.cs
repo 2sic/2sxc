@@ -1,10 +1,7 @@
-﻿//using DotNetNuke.Entities.Modules;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
@@ -71,7 +68,7 @@ namespace ToSic.Sxc.DataSources
                 if(!HasSxcContext)
                     throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
-                var sxciProvider = Configuration.LookUps.Sources[LookUp.ConfigurationProvider.SxcInstanceKey];
+                var sxciProvider = Configuration.LookUps.FindSource(ConfigurationProvider.SxcInstanceKey); // .Sources[LookUp.ConfigurationProvider.SxcInstanceKey];
                 _blockBuilder = (sxciProvider as LookUpCmsBlock)?
                               .BlockBuilder 
                               ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
@@ -81,7 +78,7 @@ namespace ToSic.Sxc.DataSources
         }
 
         [PrivateApi]
-        internal bool HasSxcContext => Configuration.LookUps.Sources.ContainsKey(LookUp.ConfigurationProvider.SxcInstanceKey);
+        internal bool HasSxcContext => Configuration.LookUps.HasSource(ConfigurationProvider.SxcInstanceKey);// .Sources.ContainsKey(LookUp.ConfigurationProvider.SxcInstanceKey);
 
 		private BlockConfiguration _blockConfiguration;
 		private BlockConfiguration BlockConfiguration
@@ -225,7 +222,8 @@ namespace ToSic.Sxc.DataSources
                             entitiesToDeliver.Add(new EntityInBlock(itm)
                             {
                                 SortOrder = isListHeader ? -1 : i,
-                                ContentGroupItemModified = itm.Modified,
+                                // CodeChange #2020-03-20#ContentGroupItemModified - Delete if no side-effects till June 2020
+                                //ContentGroupItemModified = itm.Modified,
                                 Presentation = presentationEntity,
                                 GroupId = BlockConfiguration.ContentGroupGuid,
                                 // new 2019-09-18 trying to mark demo-items for better detection in output #1792

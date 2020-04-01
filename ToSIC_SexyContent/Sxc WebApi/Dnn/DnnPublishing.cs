@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
@@ -32,12 +31,11 @@ namespace ToSic.Sxc.Dnn
             Dictionary<Guid, int> postSaveIds = null;
 
             // The internal call which will be used further down
-            Dictionary<Guid, int> SaveAndSaveGroups(Func<bool, Dictionary<Guid, int>> call, bool forceSaveAsDraft)
+            Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call, bool forceSaveAsDraft)
             {
                 var ids = call.Invoke(forceSaveAsDraft);
                 // now assign all content-groups as needed
-                new ContentGroupList(BlockBuilder, Log)
-                    .IfInListUpdateList(appId, items, ids);
+                new ContentGroupList(BlockBuilder, Log).IfChangesAffectListUpdateIt(appId, items, ids);
                 return ids;
             }
 
@@ -49,12 +47,12 @@ namespace ToSic.Sxc.Dnn
                 var versioning = Eav.Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 var context = SxcApiControllerBase.GetContext(BlockBuilder, Log);
                 versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID,
-                    args => postSaveIds = SaveAndSaveGroups(internalSaveMethod, forceDraft));
+                    args => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
             }
             else
             {
                 Log.Add("partOfPage false, save without publishing");
-                postSaveIds = SaveAndSaveGroups(internalSaveMethod, forceDraft);
+                postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft);
             }
 
             Log.Add(() => $"post save IDs: {string.Join(",", postSaveIds.Select(psi => psi.Key + "(" + psi.Value + ")"))}");

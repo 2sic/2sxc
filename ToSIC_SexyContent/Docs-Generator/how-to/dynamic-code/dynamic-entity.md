@@ -54,9 +54,11 @@ Additional properties that work (they are dynamic, so don't appear in the code)
 1. **IsPublished** _bool_ - true/false if this item is currently published
 1. **_AnyProperty_** _dynamic, but actually bool | string | decimal | datetime | List<DynamicEntity>_ any normal property of the content-item can be accessd directly. It's correctly .net typed (string, etc.)
 
-The following Methods exist on all dynamic entities
-
-1. **Render()** - will render HTML for the current item, if there is a configuration for this. Almost always returns a simple HTML-comment, unless used as inner-content (added in 2sxc 8.3)
+> [!TIP]
+> In 2sxc 10.27 any property that returns a `List<DynamicEntity>` now returns a [](xref:ToSic.Sxc.Data.DynamicEntityWithList). 
+> This means that if you expect the list to just return one item, you can directly access its properties like this:  
+> `Content.Author.FirstName`.  
+> To otherwise enumerate the items, we recommend [](xref:ToSic.Sxc.Code.DynamicCode.AsList(System.Object)) so `AsList(Content.Tags)`
 
 ## Working with unpublished/draft items
 TODO: write something about how-to-check if published/unpublished, navigating it, etc. - or link to such a page
@@ -83,4 +85,4 @@ The following properties/methods exist, but shouldn't be used. They are document
 1. Get added in 2sxc 9.42 and added to interface IDynamicEntity in 10.07
 1. Parents introduced in 2sxc 9.42, and added to interface IDynamicEntity in 10.07
 1. IsDemoItem property added in 2sxc 10.06
-
+1. Changed dynamic access to a property to return a DynamicEntity which is enumerable in 10.27

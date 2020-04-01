@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Engines
         /// This is not in the constructor, because IEngines usually get constructed with DI,
         /// so the constructor is off-limits. 
         /// </summary>
-        /// <param name="blockBuildere block within the cms</param>
+        /// <param name="blockBuilder">block within the cms</param>
         /// <param name="purpose">Purpose of the engine (show in web, search-index, etc.). The custom code may adapt its behavior depending on the purpose</param>
         /// <param name="parentLog">Log to chain with</param>
         void Init(IBlockBuilder blockBuilder, Purpose purpose, ILog parentLog);

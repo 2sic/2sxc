@@ -18,12 +18,9 @@ using ToSic.Eav.Apps.ItemListActions;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Data;
 using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Security;
@@ -65,12 +62,10 @@ namespace ToSic.Sxc.WebApi.Cms
             var versioning = BlockBuilder.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) =>
-                CmsManager.Blocks.AddItem(BlockBuilder.Block.Configuration, sortOrder);
-                //BlockEditor.AddItem(sortOrder);
+                CmsManager.Blocks.AddEmptyItem(BlockBuilder.Block.Configuration, sortOrder);
 
             // use dnn versioning - this is always part of page
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
-            //else internalSave(null);
         }
 
         [HttpGet]
@@ -92,13 +87,25 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<AppUiInfo> GetSelectableApps()
+        public IEnumerable<AppUiInfo> GetSelectableApps(string apps = null)
         {
             // we must get the zone-id from the environment,
             // since the app may not yet exist when inserted the first time
             var tenant = new DnnTenant(PortalSettings.Current);
             var tenantZoneId = Env.ZoneMapper.GetZoneId(tenant);
-            return new CmsZones(tenantZoneId, Env, Log).AppsRt.GetSelectableApps(tenant);
+            var list = new CmsZones(tenantZoneId, Env, Log).AppsRt.GetSelectableApps(tenant).ToList();
+
+            if (string.IsNullOrWhiteSpace(apps)) return list;
+
+            // New feature in 10.27 - if app-list is provided, only return these
+            var appNames = apps.Split(',')
+                .Select(s => s.Trim())
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToList();
+            list = list.Where(ap => appNames
+                    .Any(name => string.Equals(name, ap.Name, StringComparison.InvariantCultureIgnoreCase)))
+                .ToList();
+            return list;
         }
 
         [HttpGet]
@@ -217,11 +224,11 @@ namespace ToSic.Sxc.WebApi.Cms
 
                 var cbToRender = BlockBuilder.Block;
 
-                // if a real templateid was specified, swap to that
+                // if a real templateId was specified, swap to that
                 if (templateId > 0)
                 {
                     var template = new CmsRuntime(cbToRender.App, Log, Edit.Enabled, false).Views.Get(templateId);
-                    ((Sxc.Blocks.BlockBuilder)cbToRender.BlockBuilder).View = template;
+                    ((BlockBuilder)cbToRender.BlockBuilder).View = template;
                 }
 
                 var rendered = cbToRender.BlockBuilder.Render().ToString();
@@ -247,7 +254,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var versioning = BlockBuilder.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args) =>
-                CmsManager.Blocks.ChangeOrder(BlockBuilder.Block.Configuration, sortOrder, destinationSortOrder);// BlockEditor.ChangeOrder(sortOrder, destinationSortOrder);
+                CmsManager.Blocks.ChangeOrder(BlockBuilder.Block.Configuration, sortOrder, destinationSortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
@@ -285,7 +292,6 @@ namespace ToSic.Sxc.WebApi.Cms
 
             void InternalSave(VersioningActionInfo args) =>
                 CmsManager.Blocks.RemoveFromList(BlockBuilder.Block.Configuration, sortOrder);
-                //BlockEditor.RemoveFromList(sortOrder);
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);

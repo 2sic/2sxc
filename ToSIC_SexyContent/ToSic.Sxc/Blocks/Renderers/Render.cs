@@ -46,11 +46,15 @@ namespace ToSic.Sxc.Blocks
         /// <param name="context">The parent-item containing the content-blocks and providing edit-context</param>
         /// <param name="dontRelyOnParameterOrder"></param>
         /// <param name="field">Required: Field containing the content-blocks. </param>
+        /// <param name="max">BETA / WIP</param>
         /// <param name="merge">Optional: html-text containing special placeholders.</param>
+        /// <param name="apps">BETA / WIP</param>
         /// <returns></returns>
         public static IHtmlString All(DynamicEntity context,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string field = null, 
+            string apps = null,
+            int max = 100,
             string merge = null)
         {
             Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(All), $"{nameof(field)},{nameof(merge)}");
