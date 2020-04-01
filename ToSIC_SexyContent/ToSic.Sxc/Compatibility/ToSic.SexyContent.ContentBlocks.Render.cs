@@ -14,13 +14,13 @@ namespace ToSic.SexyContent.ContentBlocks
             IDynamicEntity item = null,
             string field = null,
             Guid? newGuid = null)
-            => Sxc.Blocks.Render.One(context, dontRelyOnParameterOrder, item, field, newGuid);
+            => Sxc.Blocks.Render.One(context, dontRelyOnParameterOrder, item: item, field: field, newGuid: newGuid);
 
         [Obsolete]
         public static IHtmlString All(DynamicEntity context,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string field = null,
             string merge = null)
-            => Sxc.Blocks.Render.All(context, dontRelyOnParameterOrder, field, merge);
+            => Sxc.Blocks.Render.All(context, dontRelyOnParameterOrder, field: field, merge: merge);
     }
 }
