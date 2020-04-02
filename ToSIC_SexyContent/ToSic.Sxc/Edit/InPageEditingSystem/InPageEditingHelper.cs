@@ -22,11 +22,11 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         /// <inheritdoc/>
         public HtmlString Attribute(string name, string value)
-            => !Enabled ? null : SexyContent.Html.Build.Attribute(name, value);
+            => !Enabled ? null : Build.Attribute(name, value);
 
         /// <inheritdoc/>
         public HtmlString Attribute(string name, object value)
-            => !Enabled ? null : SexyContent.Html.Build.Attribute(name, JsonConvert.SerializeObject(value));
+            => !Enabled ? null : Build.Attribute(name, JsonConvert.SerializeObject(value));
 
         #endregion Attribute Helper
 

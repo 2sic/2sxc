@@ -65,7 +65,7 @@ namespace ToSic.Sxc
                 "10.25.00", // LTS
                 "10.25.02", // LTS
                 "10.25.03",
-                "10.26.00", "10.27.00", "10.27.01",
+                "10.26.00", "10.27.00", "10.27.01", "10.27.02",
             };
 
             // this is the last version which must run server-side change-code

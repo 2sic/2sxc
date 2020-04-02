@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("2sic internet solutions GmbH")]
 [assembly: AssemblyProduct("ToSic.Sxc")]
-[assembly: AssemblyCopyright("Copyright © 2sic 2019")]
+[assembly: AssemblyCopyright("Copyright © 2sic 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("10.27.01.*")]
+[assembly: AssemblyVersion("10.27.02.*")]
 
 [assembly: InternalsVisibleTo("ToSic.SexyContent")]
 [assembly: InternalsVisibleTo("ToSic.SexyContent.WebApi")]

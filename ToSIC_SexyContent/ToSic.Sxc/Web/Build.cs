@@ -1,7 +1,9 @@
 ﻿using System.Web;
+using ToSic.Eav.Documentation;
 
-namespace ToSic.SexyContent.Html
+namespace ToSic.Sxc.Web
 {
+    [PrivateApi("internal use only, may be removed/changed some day")]
     public class Build
     {
         /// <summary>

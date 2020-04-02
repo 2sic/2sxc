@@ -51,7 +51,7 @@ Let's add an extra _new_ button to create an item of the content-type _Category_
 > This code will make the button appear, but on click you may see an error, because you probably don't have a ContentType _Category_ in your app. 
 
 ```html
-<div @Edit.TagToolbar(Content, toolbar: "new?contentType=Category")>
+<div @Edit.TagToolbar(Content, toolbar: "+new?contentType=Category")>
   ...
 </div>
 ```
@@ -60,7 +60,9 @@ You should now have an extra + button like this:
 
 <img src="/assets/how-to/customize-edit-ux/toolbars/step-1-with-plus-button.png" width="100%">
 
-Let's emphasize it, because for whatever reason it's a super important button: 
+
+
+Let's emphasize it, because for whatever reason it's a super important button. We'll also drop the leading `+` since it's optional and defaulted to: 
 
 ```html
 <div @Edit.TagToolbar(Content, toolbar: "new&color=red?contentType=Category")>
@@ -93,6 +95,9 @@ Now we want to add another button - maybe to add a _Tag_. The `toolbar` attribut
 You should now see this: 
 
 <img src="/assets/how-to/customize-edit-ux/toolbars/step-1-with-plus-button-red-and-teal.png" width="100%">
+
+> [!TIP]
+> When creating new items you can also add prefill default values. This is great for News-Apps where you want to prefill the date or for list of something where you want to prefill the category. Check out the [specs](xref:Specs.Cms.Toolbars.Build). 
 
 ### Removing Buttons with `-`
 

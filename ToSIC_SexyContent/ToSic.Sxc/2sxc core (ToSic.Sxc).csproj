@@ -141,7 +141,7 @@
     <Compile Include="Edit\ClientContextInfo\ClientInfoContentGroup.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfoEntity.cs" />
     <Compile Include="Edit\ClientContextInfo\ClientInfosError.cs" />
-    <Compile Include="Html\Build.cs" />
+    <Compile Include="Web\Build.cs" />
     <Compile Include="Interfaces\Internal\IEnvironmentInstaller.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.IApp.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Interfaces.IDynamicEntity.cs" />
@@ -248,8 +248,6 @@
     <Compile Include="Compatibility\ToSic.SexyContent.ContentBlocks.Render.cs" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Environment.Base\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
