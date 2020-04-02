@@ -24,6 +24,14 @@
 /* see also https://emojipedia.org/microsoft/ */
 
 
+/* Change link colors - too subtle */
+
+p a {
+  text-decoration: underline;
+  color: #4C87F0;
+}
+
+
 /* from the docfx material theme */
 
 body {

@@ -163,7 +163,8 @@ The following button groups exist by default. You can target them to add your bu
 
 
 ## Read also
-* TODO:
+
+* check out the list of [commands/buttons](xref:Specs.Js.Commands)
 
 
 ## Demo App and further links

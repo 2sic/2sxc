@@ -234,6 +234,9 @@ In most cases if your problems will be caused by invalid syntax. It's easy to fo
 
 If you really want to do deep debugging, you should use the `$2sxc.insights()` command in the console to see what whas processed and how. If you add `?debug=true` to the url of the page, it will also log way more intermediate data for you to review. 
 
-## Continue from here
+## Read More
 
-Basically you have what it takes. To go further, review the [specs](xref:Specs.Cms.Toolbars.Build).
+Basically you have what it takes. To go further: 
+
+* review the [specs](xref:Specs.Cms.Toolbars.Build).
+* check out the list of [commands/buttons](xref:Specs.Js.Commands)
