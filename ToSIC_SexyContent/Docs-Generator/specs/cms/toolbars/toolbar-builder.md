@@ -128,6 +128,7 @@ Params at the global level will be used by all buttons. The most common params a
 * `title=some-text` - mainly used to show a title when asking to delete something
 * `isPublished=true|false`
 * `prefill:Field1=val1&prefill:Field2=val2` etc.
+* `metadata=someKey` or `metadata=targetType,keyType,key`
 
 for list management
 * `useModuleList=true|false`
@@ -160,8 +161,16 @@ Special considerations for each type of field
 1. for related entities (like prefilling a category) use the target Guid, like `prefill:Category=b7c1c2e1-4896-4999-a0bc-87ddf3ce31cb`. As of now, you must always use the Guid, IDs are not supported because as the app is exported and re-imported, the IDs will change. 
 1. to assign multiple entities (like for category fields with multiple categories), separate them with commas, like `prefill:Category=b7c1c2e1-4896-4999-a0bc-87ddf3ce31cb,91753b4d-4932-4b22-af1c-f6ac2b76c67a`
 
-todo: metadata?
 
+### Using Metadata Parameters
+
+The metadata parameters are for creating new metadata or editing existing data. There is a short and a long syntax:
+
+`metadata=key` - for example, `metadata=file:930` - this will create metadata for a CMS-object with the ID `file:930`. 
+
+`metadata=targetType,keyType,key` like `metadata=10,string,file:930` which has the same effect as the previous example. 
+
+To use metadata, read more about metadata (TODO).
 
 
 
