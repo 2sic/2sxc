@@ -207,7 +207,7 @@ namespace ToSic.SexyContent.Razor
 
         #endregion
 
-        public ILog Log => DynCode.Log;
+        //public ILog Log => DynCode.Log;
     }
 
 

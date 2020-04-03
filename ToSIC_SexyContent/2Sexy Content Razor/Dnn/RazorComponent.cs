@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Dnn
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class RazorComponent : RazorComponentBase, IRazorComponent, IHasLog
+    public abstract partial class RazorComponent : RazorComponentBase, IRazorComponent
     {
 
         #region Link, Edit, Dnn, App, Data
@@ -134,11 +134,5 @@ namespace ToSic.Sxc.Dnn
 
         #endregion
 
-        #region IHasLog
-
-        /// <inheritdoc />
-        public ILog Log => DynCode.Log;
-
-        #endregion
     }
 }

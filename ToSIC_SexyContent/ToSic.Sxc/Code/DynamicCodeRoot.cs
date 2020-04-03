@@ -288,7 +288,7 @@ namespace ToSic.Sxc.Code
 
             // if it supports all our known context properties, attach them
             if (instance is DynamicCode isShared)
-                isShared.InitShared(this);
+                isShared.InitShared(this, virtualPath);
 
             return instance;
         }

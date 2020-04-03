@@ -28,9 +28,7 @@ namespace ToSic.Sxc.Code
         public IApp App => UnwrappedContents?.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => UnwrappedContents?.BlockBuilder?.Block?.Data; // Sxc?.Cms?.Block.Data;
-        //[PrivateApi]
-        //public SxcHelper Sxc { get; private set; }
+        public IBlockDataSource Data => UnwrappedContents?.BlockBuilder?.Block?.Data;
 
         [PrivateApi] public IBlockBuilder BlockBuilder => UnwrappedContents?.BlockBuilder;
 
@@ -41,10 +39,12 @@ namespace ToSic.Sxc.Code
         public IDynamicCode UnwrappedContents { get; private set; }
 
         [PrivateApi]
-        internal virtual void InitShared(IDynamicCode parent)
+        internal virtual void InitShared(IDynamicCode parent, string path)
         {
             UnwrappedContents = parent;
-            //Sxc = parent.Sxc;
+            try { 
+                Log.Add("DynamicCode created: " + path);
+            } catch { /* ignore */ }
         }
 
         #region Content and Header
@@ -95,11 +95,6 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
             => UnwrappedContents.CreateSource<T>(inStream);
-
-        //[Obsolete("use CreateSource<T> instead")]
-        //public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-        //    ILookUpEngine lookUpEngine = null)
-        //    => Parent?.CreateSource(typeName, inSource, lookUpEngine);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
