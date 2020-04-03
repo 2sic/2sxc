@@ -128,7 +128,7 @@ Params at the global level will be used by all buttons. The most common params a
 * `title=some-text` - mainly used to show a title when asking to delete something
 * `isPublished=true|false`
 * `prefill:Field1=val1&prefill:Field2=val2` etc.
-* `metadata=someKey` or `metadata=targetType,keyType,key`
+* `for=someKey` or `for=targetType,keyType,key`
 
 for list management
 * `useModuleList=true|false`
@@ -166,9 +166,14 @@ Special considerations for each type of field
 
 The metadata parameters are for creating new metadata or editing existing data. There is a short and a long syntax:
 
-`metadata=key` - for example, `metadata=file:930` - this will create metadata for a CMS-object with the ID `file:930`. 
+`for=key` - for example, `for=file:930` - this will create metadata for a CMS-object with the ID `file:930`. 
 
-`metadata=targetType,keyType,key` like `metadata=10,string,file:930` which has the same effect as the previous example. 
+`for=targetType,keyType,key` like `for=10,string,file:930` which has the same effect as the previous example. 
+
+> [!NOTE]
+> Metadata buttons always also need a `contentType` parameter and usually an `entityId` parameter. 
+> So if an entity already has this metadata-assignment, the dialog will show an edit for that and not create a new one. 
+> The entityId should be 0 when no entity exists yet. 
 
 To use metadata, read more about metadata (TODO).
 
