@@ -24,7 +24,6 @@ namespace ToSic.Sxc.Edit.Toolbar
             // Case 1 - use the simpler string format in V10.27
             if(settings is string || toolbar is string || prefill is string || ToolbarIsV10Format(toolbar))
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 ToolbarV10 = toolbar == null
                     ? new List<string>()
                     : toolbar is string tlbString

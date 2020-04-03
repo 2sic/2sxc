@@ -96,7 +96,7 @@
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApiExtensionPlaceholder; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return MetaHeaderJsApi; });
 var ToSxcName = "2sxc";
-var SxcVersion = "10.27.00";
+var SxcVersion = "10.28.00";
 var HeaderNames = {
     ContentBlockId: "ContentBlockId",
     ModuleId: "ModuleId",
@@ -202,10 +202,9 @@ function buildSxcRoot() {
         _insights: __WEBPACK_IMPORTED_MODULE_6__logging__["c" /* Insights */],
         parts: {
             getUrl: function (url, preventUnmin) {
-                var r = (preventUnmin || !debug.load) ? url : url.replace('.min', '');
-                if (debug.uncache && r.indexOf('sxcver') === -1)
-                    r = r + ((r.indexOf('?') === -1) ? '?' : '&') + 'sxcver=' + debug.uncache;
-                return r;
+                if (debug.uncache && url.indexOf('sxcver') === -1)
+                    return url + ((url.indexOf('?') === -1) ? '?' : '&') + 'sxcver=' + debug.uncache;
+                return url;
             },
         },
         jq: function () { return $2sxc_jQSuperlight; },
