@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
 using IDynamicCode = ToSic.Sxc.Code.IDynamicCode;
 
@@ -16,11 +15,11 @@ namespace ToSic.Sxc.Dnn
     {
         public IDnnContext Dnn { get; private set; }
 
-        internal override void InitShared(IDynamicCode parent)
+        internal override void InitShared(IDynamicCode parent, string path)
         {
             if (parent is Code.IDnnDynamicCode withDnn) Dnn = withDnn.Dnn;
 
-            base.InitShared(parent);
+            base.InitShared(parent, path);
         }
     }
 }

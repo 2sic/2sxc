@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using ToSic.Sxc.Web;
 using static System.String;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -23,7 +24,6 @@ namespace ToSic.Sxc.Edit.Toolbar
             // Case 1 - use the simpler string format in V10.27
             if(settings is string || toolbar is string || prefill is string || ToolbarIsV10Format(toolbar))
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 ToolbarV10 = toolbar == null
                     ? new List<string>()
                     : toolbar is string tlbString
@@ -68,8 +68,6 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         }
 
-        //private string ToolbarJson() => ToolbarV10 == null ? ToolbarObjJson() : ToolbarV10Json();
-
         private string ToolbarObjJson() => JsonConvert.SerializeObject(
             ToolbarObj ?? (Actions.Count == 1
                 ? Actions.First()
@@ -81,11 +79,17 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             // add params if we have any
             if (TargetV10 != null)
-                ToolbarV10.Add("params?" + GetQueryString(TargetV10));
+            {
+                var asUrl = GetQueryString(TargetV10);
+                if(!IsNullOrWhiteSpace(asUrl)) ToolbarV10.Add("params?" + GetQueryString(TargetV10));
+            }
 
             // Add settings if we have any
-            if (Settings != null) 
-                ToolbarV10.Add("settings?" + (Settings is string useRaw ? useRaw : GetQueryString(Settings)));
+            if (Settings != null)
+            {
+                var asUrl = Settings is string useRaw ? useRaw : GetQueryString(Settings);
+                if (!IsNullOrWhiteSpace(asUrl)) ToolbarV10.Add("settings?" + asUrl);
+            }
 
             // return result
             return JsonConvert.SerializeObject(ToolbarV10);
@@ -102,7 +106,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         [JsonIgnore]
         public string Toolbar =>
-            $"<ul class=\"sc-menu\" {SexyContent.Html.Build.Attribute("toolbar", UseV10 ? ToolbarV10Json() : ToolbarObjJson())} { (UseV10 ? null : SexyContent.Html.Build.Attribute("settings", SettingsJson))}></ul>";
+            $"<ul class=\"sc-menu\" {Build.Attribute("toolbar", UseV10 ? ToolbarV10Json() : ToolbarObjJson())} { (UseV10 ? null : Build.Attribute("settings", SettingsJson))}></ul>";
 
         [JsonIgnore]
         public string ToolbarAttribute => UseV10 ? ToolbarV10Json() : "{\"toolbar\":" + ToolbarObjJson() + ",\"settings\":"+ SettingsJson + "}";

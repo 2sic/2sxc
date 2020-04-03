@@ -2,6 +2,7 @@
 using System.Web.Hosting;
 using System.Web.WebPages;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
@@ -15,13 +16,10 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract class RazorComponentBase: WebPageBase, ICreateInstance
+    public abstract class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog
     {
         public IHtmlHelper Html { get; internal set; }
 
-        // 2019-11-28 2dm: see if we can drop this, I believe it's also attached to the DynCodeHelper
-        //[PrivateApi]
-        //protected internal Blocks.ICmsBlock Sexy { get; set; }
         [PrivateApi]
         protected internal DnnDynamicCode DynCode { get; set; }
 
@@ -43,8 +41,11 @@ namespace ToSic.Sxc.Web
 
             // Forward the context
             Html = typedParent.Html;
-            //Sexy = typedParent.Sexy;
             DynCode = typedParent.DynCode;
+            try
+            {
+                Log.Add("@RenderPage:" + VirtualPath);
+            } catch { /* ignore */ }
         }
 
         #region Compile Helpers
@@ -81,6 +82,13 @@ namespace ToSic.Sxc.Web
                 throw new FileNotFoundException("The shared file does not exist.", path);
         }
 
+
+        #endregion
+
+        #region IHasLog
+
+        /// <inheritdoc />
+        public ILog Log => DynCode.Log;
 
         #endregion
     }

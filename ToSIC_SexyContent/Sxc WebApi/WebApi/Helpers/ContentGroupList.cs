@@ -100,11 +100,12 @@ namespace ToSic.Sxc.WebApi
                 Log.Add($"will add: {willAdd}; add-pre-verified:{contItem.Header.Group.ReallyAddBecauseAlreadyVerified}; Group.Add:{contItem.Header.Group.Add}; {nameof(itemIsReallyNew)}:{itemIsReallyNew}; EntityId:{contItem.EntityId}");
 
                 var cms = new CmsManager(app, Log);
+                var fieldPair = ViewParts.PickPair(contItem.Header.Group.Part);
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
-                    cms.Blocks.AddContentAndPresentationEntity(contentGroup, index, postSaveId, presentationId);
+                    cms.Blocks.AddContentAndPresentationEntity(contentGroup, fieldPair, index, postSaveId, presentationId);
                 else
-                    cms.Blocks.UpdateEntityIfChanged(contentGroup, index,
+                    cms.Blocks.UpdateEntityIfChanged(contentGroup, fieldPair, index,
                         new []
                         {
                             new Tuple<bool, int?>(true, postSaveId), 

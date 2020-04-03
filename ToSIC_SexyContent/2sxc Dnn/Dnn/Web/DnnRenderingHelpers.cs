@@ -9,6 +9,7 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Dnn.Web.ClientInfos;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Web
 {
@@ -72,7 +73,7 @@ namespace ToSic.Sxc.Dnn.Web
             if (contentBlockId != 0) contextAttribs += $" data-cb-id='{contentBlockId}'";
 
             // optionally add editing infos
-            if (includeEditInfos) contextAttribs += SexyContent.Html.Build.Attribute("data-edit-context", UiContextInfos(autoToolbar));
+            if (includeEditInfos) contextAttribs += Build.Attribute("data-edit-context", UiContextInfos(autoToolbar));
             return contextAttribs;
         }
 

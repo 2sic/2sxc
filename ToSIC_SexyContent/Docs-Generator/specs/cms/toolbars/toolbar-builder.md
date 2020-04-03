@@ -127,12 +127,55 @@ Params at the global level will be used by all buttons. The most common params a
 * `contentType=ContentTypeName` - mainly used for adding new items
 * `title=some-text` - mainly used to show a title when asking to delete something
 * `isPublished=true|false`
-* `prefill=field1=val1;field2=val2` etc.
+* `prefill:Field1=val1&prefill:Field2=val2` etc.
+* `for=someKey` or `for=targetType,keyType,key`
 
 for list management
 * `useModuleList=true|false`
 * `sortOrder=#`
 
+
+### Using Prefill Parameters
+
+Prefill parameteres are mainly used for creating new items like
+
+`add?contentType=Book&prefill:Title=This is nice title`
+
+The syntax is a bit special because you may need to add multiple prefill parameters, like:
+
+`add?contentType=Book&prefill:Title=Please enter name&prefil:Author=unknown`
+
+Since many things can go wrong with prefills, this is what you need to know
+
+1. All prefill parameters start with `prefill:` followed by the field name. The field name is case sensitive, so you'll probably have to write `Title` instead of `title`.
+1. You can use multiple prefills, like `...&prefill:Title=Hello&Intro=welcome!`
+1. When using special characters which cause trouble in urls, make sure they are uriEncoded. If you do the prefill using the razor tag `@Edit.Toolbar(...)` or `@Edit.TagToolbar(...)` this happens automatically, but if you use JavaScript to prepare it, you should use [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent) to prepare the _value_ (not the prefix `prefill:...`)
+
+Special considerations for each type of field
+
+1. for text fields just write the text as is like `prefill:Title=Todays News` - remember to encode if you expect special characters. When you encode things, you can also prefill html.
+1. for number fields just use `prefill:Priority=47`
+1. for boolean switch fields just use `prefill:UseLightbox=true`
+1. for dates we suggest to use the same ISO format `prefill:PublicationDate=2020-04-01` as this will always be recognized correctly. If you use another format like `4/1/2020` you risk that the UI will auto-detect the date based on the user and maybe pick the wrong number as the month. 
+1. for dates with time you should really use ISO with `Zulu` time code like `prefill:ShowFrom=2020-04-01T10:30Z`. The `Z` at the end means that it won't adjust for time zones - otherwise the UI may show a different time. 
+1. for related entities (like prefilling a category) use the target Guid, like `prefill:Category=b7c1c2e1-4896-4999-a0bc-87ddf3ce31cb`. As of now, you must always use the Guid, IDs are not supported because as the app is exported and re-imported, the IDs will change. 
+1. to assign multiple entities (like for category fields with multiple categories), separate them with commas, like `prefill:Category=b7c1c2e1-4896-4999-a0bc-87ddf3ce31cb,91753b4d-4932-4b22-af1c-f6ac2b76c67a`
+
+
+### Using Metadata Parameters
+
+The metadata parameters are for creating new metadata or editing existing data. There is a short and a long syntax:
+
+`for=key` - for example, `for=file:930` - this will create metadata for a CMS-object with the ID `file:930`. 
+
+`for=targetType,keyType,key` like `for=10,string,file:930` which has the same effect as the previous example. 
+
+> [!NOTE]
+> Metadata buttons always also need a `contentType` parameter and usually an `entityId` parameter. 
+> So if an entity already has this metadata-assignment, the dialog will show an edit for that and not create a new one. 
+> The entityId should be 0 when no entity exists yet. 
+
+To use metadata, read more about metadata (TODO).
 
 
 
@@ -163,7 +206,8 @@ The following button groups exist by default. You can target them to add your bu
 
 
 ## Read also
-* TODO:
+
+* check out the list of [commands/buttons](xref:Specs.Js.Commands)
 
 
 ## Demo App and further links
@@ -174,4 +218,5 @@ You should find some code examples in this demo App
 
 ## History
 
-1. Added to 2sxc 10.27 in March 2020
+1. Added to 2sxc 10.27 .01 in March 2020
+1. Prefill support added in 10.27 .02 in April 2020

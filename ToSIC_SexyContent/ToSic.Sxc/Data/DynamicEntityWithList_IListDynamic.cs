@@ -18,7 +18,12 @@ namespace ToSic.Sxc.Data
 
         public void Add(object item) => throw new NotImplementedException();
 
-        public void CopyTo(object[] array, int arrayIndex) => throw new NotImplementedException();
+        public void CopyTo(object[] array, int arrayIndex)
+        {
+            var target = new IDynamicEntity[DynEntities.Count];
+            DynEntities.CopyTo(target, arrayIndex);
+            target.CopyTo(array, arrayIndex);
+        }
 
         public bool Remove(object item) => throw new NotImplementedException();
 
