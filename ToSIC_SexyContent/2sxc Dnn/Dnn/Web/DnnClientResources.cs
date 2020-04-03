@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Dnn.Web
             var wrapLog = Log.Call($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
             var root = "~/desktopmodules/tosic_sexycontent/";
             root = page.ResolveUrl(root);
-            var ext = IsDebugUrl(page.Request) ? ".min.js" : ".js";
+            //var ext = IsDebugUrl(page.Request) ? ".min.js" : ".js";
             var ver = Settings.Version.ToString();
             var priority = (int) FileOrder.Js.DefaultPriority - 2;
 
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Dnn.Web
             if (readJs || editJs)
             {
                 Log.Add("add $2sxc api and headers");
-                RegisterJs(page, ver, root + "js/2sxc.api" + ext, true, priority);
+                RegisterJs(page, ver, root + "js/2sxc.api.min.js", true, priority);
                 Header.AddHeaders();
             }
 
