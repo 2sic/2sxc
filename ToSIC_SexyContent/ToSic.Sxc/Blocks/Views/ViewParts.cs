@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Blocks
+﻿using System;
+
+namespace ToSic.Sxc.Blocks
 {
     internal class ViewParts
     {
@@ -7,6 +9,17 @@
 
         public const string Presentation = "Presentation";
         public const string PresentationLower = "presentation";
+
+        public static string[] ContentPair = { Content, Presentation };
+        public static string[] HeaderPair = {ListContent, ListPresentation};
+
+        public static string[] PickPair(string primaryField)
+        {
+            string lowered = primaryField.ToLower();
+            if (lowered == ContentLower || lowered == PresentationLower) return ContentPair;
+            if (lowered == ListContentLower || lowered == ListPresentationLower) return HeaderPair;
+            throw new Exception($"tried to find field pair, but input was '{primaryField}' - can't figure it out.");
+        }
 
 
         public const string ListContent = "ListContent";

@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.Cms
             {
                 var cms = new CmsManager(BlockBuilder.App, Log);
                 var contentGroup = cms.Read.Blocks.GetBlockConfig(guid);
-                cms.Blocks.UpdateEntityIfChanged(contentGroup, index, new []
+                cms.Blocks.UpdateEntityIfChanged(contentGroup, ViewParts.PickPair(part), index, new []
                     {
                         new Tuple<bool, int?>(true,entityId), 
                         new Tuple<bool, int?>(false, null), 
