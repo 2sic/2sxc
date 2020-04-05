@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi
             var moduleInfo = request.FindModuleInfo();
 
             if (allowNoContextFound & moduleInfo == null)
-                return wrapLog("not found, allowed", null);
+                return wrapLog("request ModuleInfo not found, allowed", null);
             
             if (moduleInfo == null)
                 log.Add("context/module not found");

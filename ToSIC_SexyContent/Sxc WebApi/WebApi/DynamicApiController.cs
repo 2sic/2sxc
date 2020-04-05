@@ -31,13 +31,18 @@ namespace ToSic.SexyContent.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
+            Log.Rename("Api.DynApi");
+            Log.Add($"HasBlock: {BlockBuilder != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
             DynCode = GetContext(BlockBuilder, BlockBuilder?.Log ?? Log);// new DnnDynamicCode(CmsBlock, 10, CmsBlock?.Log ?? Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (DynCode.App == null)
+            {
+                Log.Add("DynCode.App is null");
                 TryToAttachAppFromUrlParams();
+            }
 
             // must run this after creating AppAndDataHelpers
             controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); 
@@ -62,7 +67,8 @@ namespace ToSic.SexyContent.WebApi
                 // Look up if page publishing is enabled - if module context is not available, always false
                 var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
                 var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);
-                var app = Sxc.Dnn.Factory.App(appId, publishingEnabled);
+                Log.Add($"AppId: {appId}, publishing:{publishingEnabled}");
+                var app = Sxc.Dnn.Factory.App(appId, publishingEnabled, parentLog: Log);
                 DynCode.LateAttachApp(app);
                 found = true;
             } catch { /* ignore */ }
