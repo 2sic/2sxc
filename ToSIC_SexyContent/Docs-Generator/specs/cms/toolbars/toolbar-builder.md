@@ -78,7 +78,7 @@ If you have a build-instruction and need to add some parameters you must separat
 
 ### Build Parameters for Toolbar (`toolbar`)
 
-The toolbar currently doesn't have any additional parameters.
+The toolbar currently doesn't have any additional parameters. But you can add `&key=value` which will be used as settings, if settings are not also provided. 
 
 ### Build Parameters for Settings (`settings`)
 
@@ -116,7 +116,7 @@ Most instructions can have additional call-parameters - separated by a `?...`. F
 
 ### Call Parameters for Toolbars & Settings
 
-The `toolbar` and `settings` don't have any additional parameters.
+The `toolbar` and `settings` don't have any additional parameters. But you can use `?key=value&key2=value` on the toolbar, which will be used as `params` if `params` are not provided. 
 
 ### Call Parameters for Params
 
@@ -148,7 +148,7 @@ The syntax is a bit special because you may need to add multiple prefill paramet
 Since many things can go wrong with prefills, this is what you need to know
 
 1. All prefill parameters start with `prefill:` followed by the field name. The field name is case sensitive, so you'll probably have to write `Title` instead of `title`.
-1. You can use multiple prefills, like `...&prefill:Title=Hello&Intro=welcome!`
+1. You can use multiple prefills, like `...&prefill:Title=Hello&prefill:Intro=welcome!`
 1. When using special characters which cause trouble in urls, make sure they are uriEncoded. If you do the prefill using the razor tag `@Edit.Toolbar(...)` or `@Edit.TagToolbar(...)` this happens automatically, but if you use JavaScript to prepare it, you should use [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent) to prepare the _value_ (not the prefix `prefill:...`)
 
 Special considerations for each type of field
@@ -160,6 +160,25 @@ Special considerations for each type of field
 1. for dates with time you should really use ISO with `Zulu` time code like `prefill:ShowFrom=2020-04-01T10:30Z`. The `Z` at the end means that it won't adjust for time zones - otherwise the UI may show a different time. 
 1. for related entities (like prefilling a category) use the target Guid, like `prefill:Category=b7c1c2e1-4896-4999-a0bc-87ddf3ce31cb`. As of now, you must always use the Guid, IDs are not supported because as the app is exported and re-imported, the IDs will change. 
 1. to assign multiple entities (like for category fields with multiple categories), separate them with commas, like `prefill:Category=b7c1c2e1-4896-4999-a0bc-87ddf3ce31cb,91753b4d-4932-4b22-af1c-f6ac2b76c67a`
+
+
+### Using Filter Parameters
+
+Filter parameteres are mainly used for creating dialogs which show only some items like
+
+`contentitems?contentType=Book&filter:ModuleId=573`
+
+The syntax is a bit special because you may need to add multiple filter parameters, like:
+
+`contentitems?contentType=Book&filter:ModuleId=573&filter:Author=Daniel`
+
+Since many things can go wrong with filters, this is what you need to know
+
+1. All prefill parameters start with `filter:` (without an `s`) followed by the field name. The field name is case sensitive, so you'll probably have to write `Title` instead of `title`.
+1. You can use multiple filters, like `...&filter:Title=Hello&filter:ModuleId=52`
+1. When using special characters which cause trouble in urls, make sure they are uriEncoded. If you do the prefill using the razor tag `@Edit.Toolbar(...)` or `@Edit.TagToolbar(...)` this happens automatically, but if you use JavaScript to prepare it, you should use [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent) to prepare the _value_ (not the prefix `filter:...`)
+
+
 
 
 ### Using Metadata Parameters

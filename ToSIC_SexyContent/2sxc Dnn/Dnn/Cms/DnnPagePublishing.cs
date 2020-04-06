@@ -29,7 +29,8 @@ namespace ToSic.Sxc.Dnn.Cms
         
         public PublishingMode Requirements(int moduleId)
         {
-            if (_cache.ContainsKey(moduleId)) return _cache[moduleId];
+            var wrapLog = Log.Call<PublishingMode>($"{moduleId}");
+            if (_cache.ContainsKey(moduleId)) return wrapLog("in cache", _cache[moduleId]);
 
             Log.Add($"Requirements(mod:{moduleId}) - checking first time (others will be cached)");
             try
@@ -45,9 +46,9 @@ namespace ToSic.Sxc.Dnn.Cms
                 else
                     decision = PublishingMode.DraftRequired;
 
-                Log.Add($"decision: {decision}");
+                //Log.Add($"decision: {decision}");
                 _cache.Add(moduleId, decision);
-                return decision;
+                return wrapLog("decision: ", decision);
             }
             catch
             {

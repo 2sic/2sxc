@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
 
@@ -14,7 +15,10 @@ namespace ToSic.Sxc.LookUp
         /// <summary>
         /// The class constructor, can optionally take a dictionary to reference with, otherwise creates a new one
         /// </summary>
-        public LookUpCmsBlock(string name, Dictionary<string, string> valueList, IBlockBuilder blockBuilder): base(name, valueList)
+        public LookUpCmsBlock(string name, IBlockBuilder blockBuilder): base(name, new Dictionary<string, string>
+        {
+            { QueryConstants.ParamsShowDraftKey, blockBuilder.UserMayEdit.ToString() }
+        })
         {
             BlockBuilder = blockBuilder;
         }

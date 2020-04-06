@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Apps.Blocks
 
                 if (PreviewTemplateId.HasValue)
                 {
-                    var dataSource = new DataSource(Log).GetPublishing(this);
+                    var dataSource = new DataSource(Log).GetPublishing(this, ShowDrafts);
                     // ToDo: Should use an indexed Guid filter
                     templateEntity = dataSource.List.One(PreviewTemplateId.Value);
                 }

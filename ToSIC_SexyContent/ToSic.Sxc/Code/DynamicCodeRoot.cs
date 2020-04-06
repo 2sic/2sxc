@@ -44,7 +44,6 @@ namespace ToSic.Sxc.Code
             CompatibilityLevel = compatibility;
             App = blockBuilder.App;
             Data = blockBuilder.Block.Data;
-			//Sxc = new SxcHelper(cmsBlock);
             Edit = new InPageEditingHelper(blockBuilder, Log);
         }
 
@@ -59,9 +58,6 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public IBlockDataSource Data { get; }
-
-  //      [PrivateApi]
-		//public SxcHelper Sxc { get; }
 
         /// <inheritdoc />
         public ILinkHelper Link { get; protected set; }
