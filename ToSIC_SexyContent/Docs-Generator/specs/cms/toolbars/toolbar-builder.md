@@ -78,7 +78,7 @@ If you have a build-instruction and need to add some parameters you must separat
 
 ### Build Parameters for Toolbar (`toolbar`)
 
-The toolbar currently doesn't have any additional parameters.
+The toolbar currently doesn't have any additional parameters. But you can add `&key=value` which will be used as settings, if settings are not also provided. 
 
 ### Build Parameters for Settings (`settings`)
 
@@ -116,7 +116,7 @@ Most instructions can have additional call-parameters - separated by a `?...`. F
 
 ### Call Parameters for Toolbars & Settings
 
-The `toolbar` and `settings` don't have any additional parameters.
+The `toolbar` and `settings` don't have any additional parameters. But you can use `?key=value&key2=value` on the toolbar, which will be used as `params` if `params` are not provided. 
 
 ### Call Parameters for Params
 
