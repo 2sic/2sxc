@@ -192,7 +192,6 @@
     <Compile Include="Engines\RenderStatusType.cs" />
     <Compile Include="LookUp\LookUpInAppProperty.cs" />
     <Compile Include="LookUp\LookUpInDynamicEntity.cs" />
-    <Compile Include="Interfaces\Internal\IEnvironmentLookUps.cs" />
     <Compile Include="Engines\Token\TokenEngine.cs" />
     <Compile Include="Engines\Token\TokenReplaceEAV.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.IAppAndDataHelpers.cs" />

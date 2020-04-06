@@ -14,12 +14,6 @@ namespace ToSic.Sxc.LookUp
     public class ConfigurationProvider
     {
         /// <summary>
-        /// This is the key in the dictionary of providers, which contains the special one
-        /// meant to transport sxc-instance info to other sources needing it
-        /// </summary>
-        public const string SxcInstanceKey = "SxcInstance";
-
-        /// <summary>
         /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
         /// </summary>
         internal static Func<App, IAppDataConfiguration> Build(IBlockBuilder blockBuilder, bool useExistingConfig)
@@ -62,10 +56,8 @@ namespace ToSic.Sxc.LookUp
             var log = new Log("Stc.GetCnf", blockBuilder?.Log);
 
             // Find the standard DNN property sources if PortalSettings object is available (changed 2018-03-05)
-            var dnnLookUps = Factory.Resolve<IGetEngine>().GetEngine(moduleId, blockBuilder?.Log);//.Sources;
+            var dnnLookUps = Factory.Resolve<IGetEngine>().GetEngine(moduleId, blockBuilder?.Log);
             log.Add($"Environment provided {dnnLookUps.Sources.Count} sources");
-            //foreach (var prov in dnnLookUps)
-            //    provider.Sources.Add(prov.Key, prov.Value);
 
             var provider = new LookUpEngine(dnnLookUps, blockBuilder?.Log);
 
@@ -95,7 +87,7 @@ namespace ToSic.Sxc.LookUp
             provider.Add(new LookUpInAppProperty("app", app));
 
             // add module if it was not already added previously
-            if (!provider.HasSource("module")) // .Sources.ContainsKey("module"))
+            if (!provider.HasSource("module"))
             {
                 var modulePropertyAccess = new LookUpInDictionary("module");
                 modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
@@ -103,9 +95,9 @@ namespace ToSic.Sxc.LookUp
             }
 
             // provide the current SxcInstance to the children where necessary
-            if (!provider.HasSource(SxcInstanceKey))//.Sources.ContainsKey(SxcInstanceKey))
+            if (!provider.HasSource(LookUpConstants.InstanceContext) && blockBuilder != null)
             {
-                var blockBuilderLookUp = new LookUpCmsBlock(SxcInstanceKey, null, blockBuilder);
+                var blockBuilderLookUp = new LookUpCmsBlock(LookUpConstants.InstanceContext, blockBuilder);
                 provider.Add(blockBuilderLookUp);
             }
             return provider;
