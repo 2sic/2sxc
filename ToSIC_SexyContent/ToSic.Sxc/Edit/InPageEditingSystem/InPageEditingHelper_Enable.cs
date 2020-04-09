@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Configuration;
+using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
 using Feats = ToSic.Eav.Configuration.Features;
 
@@ -7,7 +8,11 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
     public partial class InPageEditingHelper
     {
         /// <inheritdoc />
-        public bool Enabled { get; }
+        public bool Enabled { 
+            get; 
+            [PrivateApi("hide, only used for demos")]
+            set;
+        }
 
         #region Scripts and CSS includes
 
