@@ -5,8 +5,6 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Data;
-using ToSic.SexyContent;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Apps;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -34,20 +32,22 @@ namespace ToSic.Sxc.WebApi.Cms
             var attributeSetList = cms.ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
             var templateList = cms.Views.GetAll().ToList();
             Log.Add($"attrib list count:{attributeSetList.Count}, template count:{templateList.Count}");
-            var templates = from c in templateList
-                            select new
-                            {
-                                Id = c.Id,
-                                c.Name,
-                                ContentType = MiniCTSpecs(attributeSetList, c.ContentType, c.ContentItem),
-                                PresentationType = MiniCTSpecs(attributeSetList, c.PresentationType, c.PresentationItem),
-                                ListContentType = MiniCTSpecs(attributeSetList, c.HeaderType, c.HeaderItem),
-                                ListPresentationType = MiniCTSpecs(attributeSetList, c.HeaderPresentationType, c.HeaderPresentationItem),
-                                TemplatePath = c.Path,
-                                c.IsHidden,
-                                ViewNameInUrl = c.UrlIdentifier,
-                                c.Guid
-                            };
+            var templates = templateList.Select(c => new
+            {
+                Id = c.Id,
+                c.Name,
+                ContentType = MiniCTSpecs(attributeSetList, c.ContentType, c.ContentItem),
+                PresentationType = MiniCTSpecs(attributeSetList, c.PresentationType, c.PresentationItem),
+                ListContentType = MiniCTSpecs(attributeSetList, c.HeaderType, c.HeaderItem),
+                ListPresentationType =
+                    MiniCTSpecs(attributeSetList, c.HeaderPresentationType, c.HeaderPresentationItem),
+                TemplatePath = c.Path,
+                c.IsHidden,
+                ViewNameInUrl = c.UrlIdentifier,
+                c.Guid,
+                List = c.UseForList,
+				HasQuery = c.QueryRaw != null
+            });
 	        return templates;
 	    }
 
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	            Id = found?.ContentTypeId ?? 0,
 	            Name = (found == null)? "no content type":  found.Name,
                 DemoId = maybeEntity?.EntityId ?? 0,
-                DemoTitle = maybeEntity?.GetBestValue("Title") ?? ""
+                DemoTitle = maybeEntity?.GetBestTitle() ?? ""
 
             };
 	    }

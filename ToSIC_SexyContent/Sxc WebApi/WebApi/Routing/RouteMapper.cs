@@ -57,6 +57,16 @@ namespace ToSic.Sxc.WebApi
             });
             #endregion
 
+            #region Constants for the Routes
+            // Fragment Placeholders Constants - to ensure that all routes use the correct names
+            const string frgQueryAppPath = "{apppath}";
+            const string frgQueryName = "{name}";
+            const string frgQueryStream = "{stream}";
+
+            const string cntrAppQuery = "AppQuery";
+
+            #endregion
+
             #region old API routes before 08.10
             // ADAM routes
             mapRouteManager.MapHttpRoute("2sxc", "adam-old-81", "app-content/{contenttype}/{guid}/{field}", new { controller = "Adam" }, stdNsAdam);
@@ -76,14 +86,15 @@ namespace ToSic.Sxc.WebApi
 
             // App-Query routes - to access designed queries
             // these are the old routes, before 2sxc v08.10
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-old-81", "app-query/{name}", new { controller = "AppQuery" }, stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-nomod-old-81", "app-query/{appname}/{name}", new { controller = "AppQuery" }, stdNsWebApi); // keep for backward compatibility...
+            const string rootQueryPre0810 = "app-query";
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-old-81", $"{rootQueryPre0810}/{frgQueryName}", new { controller = cntrAppQuery }, stdNsWebApi);
+            // Note 2020-04-09 - this had "appname" instead of "apppath" in it - probably for 2 years! only 1 app (Manor) now had trouble, so I think this is not in use elsewhere
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-nomod-old-81", $"{rootQueryPre0810}/{frgQueryAppPath}/{frgQueryName}", new { controller = cntrAppQuery }, stdNsWebApi); // keep for backward compatibility...
             #endregion
 
             #region new API routes after 08.10
-
             const string appAuto = "app/auto/";
-            const string appPath = "app/{apppath}/";
+            const string appPath = "app/" + frgQueryAppPath + "/";
             const string appAutoEdition = appAuto + RouteParts.EditionToken + "/";
             const string appPathWithEdition = appPath + RouteParts.EditionToken + "/";
 
@@ -115,10 +126,12 @@ namespace ToSic.Sxc.WebApi
 
             // App-Query routes - to access designed queries
             // new routes, v08.10+
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto", appAuto + "query/{name}", new { controller = "AppQuery" }, stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto-slash", appAuto + "query/{name}/", new { controller = "AppQuery" }, stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto-stream", appAuto + "query/{name}/{stream}", new { controller = "AppQuery" }, stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-public", appPath + "query/{name}", new { controller = "AppQuery" }, stdNsWebApi);
+            const string rootQueryAuto = appAuto + "query";
+            const string rootQueryNamed = appPath + "query";
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto", $"{rootQueryAuto}/{frgQueryName}", new { controller = cntrAppQuery }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto-slash", $"{rootQueryAuto}/{frgQueryName}/", new { controller = cntrAppQuery }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto-stream", $"{rootQueryAuto}/{frgQueryName}/{frgQueryStream}", new { controller = cntrAppQuery }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute("2sxc", "app-query-public", $"{rootQueryNamed}/{frgQueryName}", new { controller = cntrAppQuery }, stdNsWebApi);
             #endregion
 
 

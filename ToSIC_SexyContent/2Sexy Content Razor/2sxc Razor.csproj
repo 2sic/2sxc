@@ -95,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compatibility\Dnn8Bugs.cs" />
+    <Compile Include="Dnn\beta\InheritRazorComponent.cs" />
     <Compile Include="Dnn\Web\IRazorComponent.cs" />
     <Compile Include="Dnn\Web\IHtmlHelper.cs" />
     <Compile Include="Dnn\RazorComponent.cs" />

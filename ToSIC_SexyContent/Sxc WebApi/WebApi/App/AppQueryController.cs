@@ -25,15 +25,18 @@ namespace ToSic.Sxc.WebApi.App
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext); // very important!!!
-            Log.Rename("2sApQr");
+            Log.Rename("Sxc.ApQrCt");
         }
 
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null)
         {
+            var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
             var context = GetContext(BlockBuilder, Log);
-            return BuildQueryAndRun(BlockBuilder.App, name, stream, includeGuid, context.Dnn.Module, Log, BlockBuilder);
+            var result = BuildQueryAndRun(BlockBuilder.App, name, stream, includeGuid, context.Dnn.Module, Log, BlockBuilder);
+            wrapLog(null);
+            return result;
         }
 
 
@@ -41,23 +44,29 @@ namespace ToSic.Sxc.WebApi.App
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery([FromUri] string appPath, [FromUri] string name, [FromUri] string stream = null)
         {
-            Log.Add($"public query path:{appPath}, name:{name}");
+            var wrapLog = Log.Call($"path:{appPath}, name:{name}");
             var appIdentity = AppFinder.GetCurrentAppIdFromPath(appPath);
             var queryApp = new Apps.App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId,
                 ConfigurationProvider.Build(false, false), false, Log);
 
             // now just run the default query check and serializer
-            return BuildQueryAndRun(queryApp, name, stream, false, null, Log, BlockBuilder);
+            var result = BuildQueryAndRun(queryApp, name, stream, false, null, Log, BlockBuilder);
+            wrapLog(null);
+            return result;
         }
 
 
         private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, ModuleInfo module, ILog log, IBlockBuilder blockBuilder)
         {
-            log.Add($"build and run query name:{name}, with module:{module?.ModuleID}");
+            var wrapLog = log.Call($"name:{name}, withModule:{module?.ModuleID}");
             var query = app.GetQuery(name);
 
             if (query == null)
-                throw HttpErr(HttpStatusCode.NotFound, "query not found", $"query '{name}' not found");
+            {
+                var msg = $"query '{name}' not found";
+                wrapLog(msg);
+                throw HttpErr(HttpStatusCode.NotFound, "query not found", msg);
+            }
 
             var permissionChecker = new DnnPermissionCheck(log, targetItem: query.Definition.Entity, 
                 instance: new DnnContainer(module), appIdentity: app);
@@ -68,10 +77,16 @@ namespace ToSic.Sxc.WebApi.App
 
             // Only return query if permissions ok
             if (!(readExplicitlyAllowed || isAdmin))
-                throw HttpErr(HttpStatusCode.Unauthorized, "Request not allowed", $"Request not allowed. User does not have read permissions for query '{name}'");
-            
+            {
+                var msg = $"Request not allowed. User does not have read permissions for query '{name}'";
+                wrapLog(msg);
+                throw HttpErr(HttpStatusCode.Unauthorized, "Request not allowed", msg);
+            }
+
             var serializer = new DataToDictionary(blockBuilder?.UserMayEdit ?? false) { WithGuid = includeGuid };
-            return serializer.Convert(query, stream?.Split(','));
+            var result = serializer.Convert(query, stream?.Split(','));
+            wrapLog(null);
+            return result;
         }
 
         private static HttpResponseException HttpErr(HttpStatusCode status, string title, string msg)

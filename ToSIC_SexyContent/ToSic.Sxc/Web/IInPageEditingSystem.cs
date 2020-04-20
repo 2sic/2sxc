@@ -17,7 +17,12 @@ namespace ToSic.Sxc.Web
         /// If editing is enabled or not
         /// </summary>
         /// <returns>True if enabled, false if not.</returns>
-        bool Enabled { get; }
+        bool Enabled
+        {
+            get;
+            [PrivateApi("hide the set - it's only used for demo code")]
+            set;
+        }
 
         /// <summary>
         /// Generate a toolbar tag - must be used in normal html, not as an attribute. <br/>
