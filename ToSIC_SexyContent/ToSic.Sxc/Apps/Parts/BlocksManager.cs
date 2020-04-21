@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Apps
 		        Log.Add($"doesn't exist, will create new CG with template#{templateId}");
 		        return appMan.Entities.Create(BlocksRuntime.BlockTypeName, new Dictionary<string, object>
 		        {
-		            {"Template", new List<int> {templateId}},
+		            {ViewParts.TemplateContentType, new List<int> {templateId}},
 		            {ViewParts.Content, new List<int>()},
 		            {ViewParts.Presentation, new List<int>()},
 		            {ViewParts.ListContent, new List<int>()},
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Apps
 		    {
 		        Log.Add($"exists, create for group#{blockConfiguration.ContentGroupGuid} with template#{templateId}");
 		        appMan.Entities.UpdateParts(blockConfiguration.Entity.EntityId,
-		            new Dictionary<string, object> {{"Template", new List<int?> {templateId}}});
+		            new Dictionary<string, object> {{ ViewParts.TemplateContentType, new List<int?> {templateId}}});
 
 		        return blockConfiguration.ContentGroupGuid; // guid didn't change
 		    }

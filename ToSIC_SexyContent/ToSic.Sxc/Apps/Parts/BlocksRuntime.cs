@@ -34,8 +34,8 @@ namespace ToSic.Sxc.Apps
             var found = groupEntity != null;
             wrapLog(found ? "found" : "missing");
             return found
-                ? new BlockConfiguration(groupEntity, CmsRuntime.ZoneId, CmsRuntime.AppId, CmsRuntime.ShowDrafts , CmsRuntime.WithPublishing, Log)
-                : new BlockConfiguration(Guid.Empty, CmsRuntime.ZoneId, CmsRuntime.AppId, CmsRuntime.ShowDrafts, CmsRuntime.WithPublishing, Log)
+                ? new BlockConfiguration(groupEntity, CmsRuntime, Log)
+                : new BlockConfiguration(Guid.Empty, CmsRuntime, Log)
                 {
                     DataIsMissing = true
                 };
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Apps
             var createFake = groupGuid == Guid.Empty;
             Log.Add($"{nameof(createFake)}:{createFake}");
             var result = createFake
-                ? new BlockConfiguration(previewTemplateGuid, CmsRuntime.ZoneId, CmsRuntime.AppId, CmsRuntime.ShowDrafts, CmsRuntime.WithPublishing, Log)
+                ? new BlockConfiguration(previewTemplateGuid, CmsRuntime, Log)
                 : GetBlockConfig(groupGuid);
             wrapLog(null);
             return result;

@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Blocks
         internal const string CbPropertyApp = "App";
         internal const string CbPropertyTitle = "Title";
         internal const string CbPropertyContentGroup = "ContentGroup";
-        internal const string CbPropertyTemplate = "Template";
+        //internal const string CbPropertyTemplate = "Template";
         internal const string CbPropertyShowChooser = "ShowTemplateChooser";
 
         public override BlockEditorBase Editor => new BlockEditorForEntity(BlockBuilder);
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Blocks
             string temp = ContentBlockEntity.GetBestValue(CbPropertyContentGroup)?.ToString() ?? "";
             Guid.TryParse(temp, out _contentGroupGuid);
 
-            temp = ContentBlockEntity.GetBestValue(CbPropertyTemplate)?.ToString() ?? "";
+            temp = ContentBlockEntity.GetBestValue(ViewParts.TemplateContentType)?.ToString() ?? "";
             Guid.TryParse(temp, out _previewTemplateGuid);
 
             temp = ContentBlockEntity.GetBestValue(CbPropertyShowChooser)?.ToString() ?? "";
