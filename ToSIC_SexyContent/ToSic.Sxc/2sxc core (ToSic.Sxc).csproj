@@ -130,6 +130,9 @@
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper_Toolbar.cs" />
     <Compile Include="Engines\EngineDefinitionAttribute.cs" />
     <Compile Include="Blocks\Views\View.cs" />
+    <Compile Include="Polymorphism\IResolver.cs" />
+    <Compile Include="Polymorphism\Polymorphism.cs" />
+    <Compile Include="Polymorphism\PolymorphismConstants.cs" />
     <Compile Include="Search\ISearchItem.cs" />
     <Compile Include="Code\IDynamicCode.cs" />
     <Compile Include="Web\IInPageEditingSystem.cs" />

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
@@ -18,26 +17,34 @@ namespace ToSic.Sxc.Apps.Blocks
         internal readonly bool VersioningEnabled;
         internal readonly Guid? PreviewTemplateId;
 
-        public BlockConfiguration(IEntity contentGroupEntity, int zoneId, int appId, bool showDrafts, bool versioningEnabled, ILog parentLog)
-            : base("CG.Group", parentLog, "constructor from entity", nameof(BlockConfiguration))
+        private readonly CmsRuntime _cmsRuntime;
+
+        public BlockConfiguration(IEntity contentGroupEntity, CmsRuntime cmsRuntime, ILog parentLog)
+            : this(cmsRuntime, parentLog, "constructor from entity")
         {
-            Entity = contentGroupEntity ?? throw new Exception("BlockConfiguration entity is null. This usually happens when you are duplicating a site, and have not yet imported the other content/apps. If that is your issue, check 2sxc.org/help?tag=export-import");
-            ZoneId = zoneId;
-            AppId = appId;
-            ShowDrafts = showDrafts;
-            VersioningEnabled = versioningEnabled;
+            Entity = contentGroupEntity 
+                     ?? throw new Exception("BlockConfiguration entity is null. " +
+                                            "This usually happens when you are duplicating a site, and have not yet imported the other content/apps. " +
+                                            "If that is your issue, check 2sxc.org/help?tag=export-import");
         }
 
         /// <summary>
         /// Instantiate a "temporary" BlockConfiguration with the specified templateId and no Content items
         /// </summary>
-        public BlockConfiguration(Guid? previewTemplateId, int zoneId, int appId, bool showDrafts, bool versioningEnabled, ILog parentLog)
-            : base("CG.Group", parentLog, "constructor empty", nameof(BlockConfiguration))
+        public BlockConfiguration(Guid? previewTemplateId, CmsRuntime cmsRuntime, ILog parentLog)
+            : this(cmsRuntime, parentLog, "constructor empty")
         {
             PreviewTemplateId = previewTemplateId;
-            ZoneId = zoneId;
-            AppId = appId;
-            ShowDrafts = showDrafts;
+        }
+
+        public BlockConfiguration(CmsRuntime cmsRuntime, ILog parentLog, string logNote)
+            : base("Blk.Config", new CodeRef(), parentLog, logNote)
+        {
+            _cmsRuntime = cmsRuntime;
+            ZoneId = cmsRuntime.ZoneId;
+            AppId = cmsRuntime.AppId;
+            ShowDrafts = cmsRuntime.ShowDrafts;
+            VersioningEnabled = cmsRuntime.WithPublishing;
         }
 
         /// <summary>
@@ -60,14 +67,15 @@ namespace ToSic.Sxc.Apps.Blocks
 
                 IEntity templateEntity = null;
 
+                // if we're previewing another template, look that up
                 if (PreviewTemplateId.HasValue)
                 {
-                    var dataSource = new DataSource(Log).GetPublishing(this, ShowDrafts);
+                    //var dataSource = new DataSource(Log).GetPublishing(this, ShowDrafts);
                     // ToDo: Should use an indexed Guid filter
-                    templateEntity = dataSource.List.One(PreviewTemplateId.Value);
+                    templateEntity = _cmsRuntime.Data.List.One(PreviewTemplateId.Value);
                 }
                 else if (Entity != null)
-                    templateEntity = Entity.Children("Template").FirstOrDefault();
+                    templateEntity = Entity.Children(ViewParts.TemplateContentType).FirstOrDefault();
 
                 _view = templateEntity == null ? null : new View(templateEntity, Log);
 
