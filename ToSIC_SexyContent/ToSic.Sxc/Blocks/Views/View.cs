@@ -107,5 +107,8 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         [PrivateApi]
         public bool IsRazor => Type == TypeRazorValue;
+
+        [PrivateApi]
+        public string Edition { get; set; }
     }
 }

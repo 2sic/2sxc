@@ -18,6 +18,8 @@ namespace ToSic.SexyContent.Edit.ClientContextInfo
         public bool HasContent;
         public bool SupportsAjax;
 
+        public string TemplateEdition;
+
         public ClientInfoContentGroup(IBlockBuilder blockBuilder, bool isCreated)
         {
             IsCreated = isCreated;
@@ -36,6 +38,7 @@ namespace ToSic.SexyContent.Edit.ClientContextInfo
 
             ZoneId = blockBuilder.Block.ZoneId; // 2019-11-09, Id not nullable any more // ?? 0;
             TemplateId = blockBuilder.View?.Id ?? 0;
+            TemplateEdition = blockBuilder.View?.Edition;
             QueryId = blockBuilder.View?.Query?.Id; // will be null if not defined
             ContentTypeName = blockBuilder.View?.ContentType ?? "";
             IsList = blockBuilder.Block.Configuration?.View?.UseForList ?? false;//  isCreated && ((sxc.BlockConfiguration?.Content?.Count ?? 0) > 1);

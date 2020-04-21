@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Engines
             var root = TemplateHelpers.GetTemplatePathRoot(view.Location, blockBuilder.App);
             var subPath = view.Path;
             string templatePath = null;
-            if (enablePolymorphism) templatePath = TryToFindPolymorphPath(root, subPath);
+            if (enablePolymorphism) templatePath = TryToFindPolymorphPath(root, view, subPath);
 
             if (templatePath == null)
                 templatePath = VirtualPathUtility.Combine(root + "/", subPath);
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Engines
             Init();
         }
 
-        private string TryToFindPolymorphPath(string root, string subPath)
+        private string TryToFindPolymorphPath(string root, IView view, string subPath)
         {
             var wrapLog = Log.Call<string>($"{root}, {subPath}");
             var polymorph = new Polymorphism.Polymorphism(BlockBuilder.App.Data, Log);
@@ -93,7 +93,10 @@ namespace ToSic.Sxc.Engines
 
             var testPath = VirtualPathUtility.Combine($"{root}/{edition}/", subPath);
             if (File.Exists(HostingEnvironment.MapPath(testPath)))
+            {
+                view.Edition = edition;
                 return wrapLog($"edition {edition}", testPath);
+            }
 
             Log.Add("tried inserting path, will check if sub-path");
             var firstSlash = subPath.IndexOf('/');
@@ -102,7 +105,10 @@ namespace ToSic.Sxc.Engines
             subPath = subPath.Substring(firstSlash + 1);
             testPath = VirtualPathUtility.Combine($"{root}/{edition}/", subPath);
             if (File.Exists(HostingEnvironment.MapPath(testPath)))
+            {
+                view.Edition = edition;
                 return wrapLog($"edition {edition} up one path", testPath);
+            }
 
             return wrapLog($"edition {edition} never found", null);
         }
