@@ -51,10 +51,11 @@ namespace ToSic.SexyContent
                         SecurityAccessLevel.Edit, true, false);
 
                 // Add Item
-                if (BlockBuilder.View?.UseForList ?? false)
-                    actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif",
-                        "javascript:$2sxcActionMenuMapper(" + ModuleId + ").addItem();", true, SecurityAccessLevel.Edit, true,
-                        false);
+                // 2020-04-21 disabled this, as it doesn't make sense to have this in the DNN menu
+                //if (BlockBuilder.View?.UseForList ?? false)
+                //    actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif",
+                //        "javascript:$2sxcActionMenuMapper(" + ModuleId + ").addItem();", true, SecurityAccessLevel.Edit, true,
+                //        false);
 
                 // Change layout button
                 actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"), "", "", "action_settings.gif",
@@ -62,28 +63,27 @@ namespace ToSic.SexyContent
                     SecurityAccessLevel.Edit, true, false);
             }
 
-            if (!DnnSecurity.SexyContentDesignersGroupConfigured(PortalId) ||
-                DnnSecurity.IsInSexyContentDesignersGroup(UserInfo))
-            {
-                // Edit Template Button
-                if (appIsKnown && BlockBuilder.View != null)
-                    actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
-                        "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").develop();", "test",
-                        true,
-                        SecurityAccessLevel.Edit, true, false);
+            if (DnnSecurity.SexyContentDesignersGroupConfigured(PortalId) &&
+                !DnnSecurity.IsInSexyContentDesignersGroup(UserInfo)) return;
 
-                // App management
-                if (appIsKnown)
-                    actions.Add(GetNextActionID(), "Admin" + (BlockBuilder.Block.IsContentApp ? "" : " " + BlockBuilder.App?.Name), "",
-                        "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
-                        SecurityAccessLevel.Admin, true, false);
+            // Edit Template Button
+            if (appIsKnown && BlockBuilder.View != null)
+                actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
+                    "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").develop();", "test",
+                    true,
+                    SecurityAccessLevel.Edit, true, false);
 
-                // Zone management (app list)
-                if (!BlockBuilder.Block.IsContentApp)
-                    actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action", "", "action_settings.gif",
-                        "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminZone();", "", true,
-                        SecurityAccessLevel.Admin, true, false);
-            }
+            // App management
+            if (appIsKnown)
+                actions.Add(GetNextActionID(), "Admin" + (BlockBuilder.Block.IsContentApp ? "" : " " + BlockBuilder.App?.Name), "",
+                    "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
+                    SecurityAccessLevel.Admin, true, false);
+
+            // Zone management (app list)
+            if (!BlockBuilder.Block.IsContentApp)
+                actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action", "", "action_settings.gif",
+                    "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminZone();", "", true,
+                    SecurityAccessLevel.Admin, true, false);
         }
 
         #endregion
