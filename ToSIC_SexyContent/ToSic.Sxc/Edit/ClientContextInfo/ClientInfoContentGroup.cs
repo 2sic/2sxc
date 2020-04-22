@@ -1,7 +1,9 @@
 ﻿using System;
+using Newtonsoft.Json;
 using ToSic.Sxc.Blocks;
+using static Newtonsoft.Json.NullValueHandling;
 
-namespace ToSic.SexyContent.Edit.ClientContextInfo
+namespace ToSic.Sxc.Edit.ClientContextInfo
 {
     public class ClientInfoContentGroup : ClientInfoEntity
     {
@@ -18,6 +20,7 @@ namespace ToSic.SexyContent.Edit.ClientContextInfo
         public bool HasContent;
         public bool SupportsAjax;
 
+        [JsonProperty(NullValueHandling = Ignore)]
         public string TemplateEdition;
 
         public ClientInfoContentGroup(IBlockBuilder blockBuilder, bool isCreated)

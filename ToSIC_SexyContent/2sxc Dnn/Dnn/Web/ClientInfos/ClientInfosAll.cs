@@ -2,7 +2,6 @@
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.SexyContent.Edit.ClientContextInfo;
 using ToSic.Sxc.Edit.ClientContextInfo;
 
 namespace ToSic.Sxc.Dnn.Web.ClientInfos

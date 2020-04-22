@@ -1,9 +1,7 @@
 ﻿using ToSic.Eav.Apps.Enums;
-using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Interfaces;
 
-namespace ToSic.SexyContent.Edit.ClientContextInfo
+namespace ToSic.Sxc.Edit.ClientContextInfo
 {
     public class ClientInfoContentBlock
     {
