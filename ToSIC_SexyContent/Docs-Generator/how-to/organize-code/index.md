@@ -73,6 +73,56 @@ Note that the code-behind also has same methods/events which are automatically c
 > A typical `CustomizeSearch` is very technical and feels scary to people who just want to change the look and feel. 
 
 
+## Passing Around Anonymous Objects
+
+One of the advanced things you may want to do is have helper functions looking up multiple things, and returning a complex object like this example in the code-behind:
+
+```cs
+@inherits ToSic.Sxc.Dnn.RazorComponentCode
+
+@functions {
+  public dynamic Hello() {
+    return new { Title = "title", Message = "msg"};
+  }
+}
+```
+
+Which is used like this
+
+```html
+@inherits ToSic.Sxc.Dnn.RazorComponent
+
+<h1>Demo Code Use</h1>
+
+<div @Edit.TagToolbar(Content)>
+  @{
+    var hello = Code.Hello();
+  }
+    Something in it: @hello.Title <br>
+</div>
+```
+
+This works and is no big deal, but there are known cases where this breaks, usually with a message like somehing not found on `object`. The reason is bugs in the .net caching of compiled code, specifically if methods exists in various places with the same name. You can resolve this in 3 ways
+
+1. Restart iis (uncool)
+1. Rename the method (recommended)
+1. Return a typed object instead of untyped. In the above example, change to this:
+
+```cs
+@inherits ToSic.Sxc.Dnn.RazorComponentCode
+
+@functions {
+  public class TitleAndMessage {
+    public string Title;
+    public string Message;
+  }
+  public dynamic Hello() {
+    return new TitleAndMessage { Title = "title", Message = "msg"};
+  }
+}
+```
+
+
 ## Reuse a Partial View with RenderTemplate()
 
 `RenderTemplate(...)` is a standard asp.net function to render another razor file where you need it. You usually use it to make small component razor files which might just show a button or something, and then call that file. 
