@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Engines
                 if (code != null)
                 {
                     Log.Add("detected code, will OnRenderComplete");
-                    code.OnRenderComplete();
+                    code.OnRendered();
                 }
             }
             catch (Exception maybeIEntityCast)
