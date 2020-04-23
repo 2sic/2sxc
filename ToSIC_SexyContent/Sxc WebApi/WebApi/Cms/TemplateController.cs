@@ -6,6 +6,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Polymorphism;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -51,14 +52,32 @@ namespace ToSic.Sxc.WebApi.Cms
 	        return templates;
 	    }
 
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public dynamic Polymorphism(int appId)
+        {
+            var wraplog = Log.Call<dynamic>($"a#{appId}");
+            var cms = new CmsRuntime(appId, Log, true);
+            var poly = new Polymorphism.Polymorphism(cms.Data, Log);
+            var result = new
+            {
+                Id = poly.Entity?.EntityId,
+                Resolver = poly.Resolver,
+                TypeName = PolymorphismConstants.Name
+            };
+            //string result = null;
+            return wraplog(null, result);
+        }
+
+
         /// <summary>
-	    /// Helper to prepare a quick-info about 1 content type
-	    /// </summary>
-	    /// <param name="allCTs"></param>
-	    /// <param name="staticName"></param>
-	    /// <param name="maybeEntity"></param>
-	    /// <returns></returns>
-	    private dynamic MiniCTSpecs(IEnumerable<IContentType> allCTs, string staticName, IEntity maybeEntity)
+        /// Helper to prepare a quick-info about 1 content type
+        /// </summary>
+        /// <param name="allCTs"></param>
+        /// <param name="staticName"></param>
+        /// <param name="maybeEntity"></param>
+        /// <returns></returns>
+        private dynamic MiniCTSpecs(IEnumerable<IContentType> allCTs, string staticName, IEntity maybeEntity)
 	    {
 	        var found = allCTs.FirstOrDefault(ct => ct.StaticName == staticName);
 	        return new
