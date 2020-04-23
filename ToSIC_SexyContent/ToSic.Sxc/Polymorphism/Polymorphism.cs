@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Polymorphism
         public string Rule;
         public Polymorphism(IAppData data, ILog parentLog) : base("Plm.Managr", parentLog)
         {
+            if (!data.Out.ContainsKey(PolymorphismConstants.Name)) return;
             var polymorph = data[PolymorphismConstants.Name].List.FirstOrDefault();
             if (polymorph == null) return;
 
