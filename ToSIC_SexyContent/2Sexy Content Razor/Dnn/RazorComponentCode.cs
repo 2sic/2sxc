@@ -13,19 +13,19 @@ namespace ToSic.Sxc.Dnn
     [PublicApi_Stable_ForUseInYourCode]
     public abstract class RazorComponentCode: RazorComponent
     {
-        /// <summary>
-        /// This is called before rendering.
-        /// CustomizeData has already happened at this moment.
-        /// Override this method to also run any code automatically before rendering. <br/>
-        /// </summary>
-        public virtual void OnRender() { }
+        ///// <summary>
+        ///// This is called before rendering.
+        ///// CustomizeData has already happened at this moment.
+        ///// Override this method to also run any code automatically before rendering. <br/>
+        ///// </summary>
+        //public virtual void OnRender() { }
 
-        /// <summary>
-        /// Override this method to also run any code automatically after rendering. <br/>
-        /// It's meant for things like setting page headers etc. <br/>
-        /// Note that it's run at the end of the render-cycle.
-        /// </summary>
-        public virtual void OnRendered() { }
+        ///// <summary>
+        ///// Override this method to also run any code automatically after rendering. <br/>
+        ///// It's meant for things like setting page headers etc. <br/>
+        ///// Note that it's run at the end of the render-cycle.
+        ///// </summary>
+        //public virtual void OnRendered() { }
 
 
         /// <inheritdoc />

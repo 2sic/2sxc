@@ -61,22 +61,22 @@ namespace ToSic.Sxc.Engines
             try
             {
                 // new in 2sxc 11, execute "run" at the end if possible
-                var pageAsRzrComp = Webpage as RazorComponent;
-                var code = pageAsRzrComp?.CodeManager.CodeOrNull as RazorComponentCode;
-                if (code != null)
-                {
-                    Log.Add("Detected code, will try OnRender");
-                    code.OnRender();
-                }
+                //var pageAsRzrComp = Webpage as RazorComponent;
+                //var code = pageAsRzrComp?.CodeManager.CodeOrNull as RazorComponentCode;
+                //if (code != null)
+                //{
+                //    Log.Add("Detected code, will try OnRender");
+                //    code.OnRender();
+                //}
 
                 Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, null), writer, Webpage);
 
                 // new in 11
-                if (code != null)
-                {
-                    Log.Add("detected code, will OnRenderComplete");
-                    code.OnRendered();
-                }
+                //if (code != null)
+                //{
+                //    Log.Add("detected code, will OnRenderComplete");
+                //    code.OnRendered();
+                //}
             }
             catch (Exception maybeIEntityCast)
             {
