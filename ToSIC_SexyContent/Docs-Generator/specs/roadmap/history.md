@@ -208,3 +208,24 @@ Didn't have time to document this yet, sorry. If you need to know, best check th
 * Modified date and Owner information were missing on json stored entities [#2005](https://github.com/2sic/2sxc/issues/2005) / [#2006](https://github.com/2sic/2sxc/issues/2006)
 * Fixed bug in JS API for non-2sxc endpoint resolution [#2000](https://github.com/2sic/2sxc/issues/2000)
 * Queries didn't resolve DNN tokens when accessed in the Search Index [#1999](https://github.com/2sic/2sxc/issues/1999)
+
+
+
+## Version 11
+
+### Version 11.00
+
+#### Breaking Changes
+
+The following changes are all super-low-profile, but we want to document them just to be through:
+
+1. `DataStream` and `IDataStream` loses a very old property called `.LightList` - we're pretty sure it's not in use anywhere, if you have it, just use `.List` instead. 
+
+
+#### Enhancements
+
+1. Razor CodeBehind (TBD)
+1. Automatic Polymorphism (TBD)
+1. Brand new Admin UI based on Angular 9 and Ivy
+1. Updated Razor Blades to 3.02 (TODO)
+1. Updated Image Resizer (TODO)
