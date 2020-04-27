@@ -18,6 +18,10 @@
 - name: Customize the Edit UX
   href: customize-edit-ux/toc.yml
 
+- name: Organize and Split Code
+  topicUid: HowTo.OrganizeCode.Index
+  href: organize-code/toc.yml
+
 - name: WebApi and REST
   topicUid: HowTo.WebApi.Intro
   href: webapi/toc.yml

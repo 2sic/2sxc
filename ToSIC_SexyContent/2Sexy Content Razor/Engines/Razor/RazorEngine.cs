@@ -54,26 +54,29 @@ namespace ToSic.Sxc.Engines
         protected HttpContextBase HttpContext 
             => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
 
-        // 2019-11-28 2dm disabled, don't think it's used
-        //[PrivateApi("not sure if this is actually used anywhere?")]
-        //public Type RequestedModelType()
-        //{
-        //    if (Webpage != null)
-        //    {
-        //        var webpageType = Webpage.GetType();
-        //        if (webpageType.BaseType.IsGenericType)
-        //            return webpageType.BaseType.GetGenericArguments()[0];
-        //    }
-        //    return null;
-        //}
-
         [PrivateApi]
         public void Render(TextWriter writer)
         {
             Log.Add("will render into TextWriter");
             try
             {
+                // new in 2sxc 11, execute "run" at the end if possible
+                //var pageAsRzrComp = Webpage as RazorComponent;
+                //var code = pageAsRzrComp?.CodeManager.CodeOrNull as RazorComponentCode;
+                //if (code != null)
+                //{
+                //    Log.Add("Detected code, will try OnRender");
+                //    code.OnRender();
+                //}
+
                 Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, null), writer, Webpage);
+
+                // new in 11
+                //if (code != null)
+                //{
+                //    Log.Add("detected code, will OnRenderComplete");
+                //    code.OnRendered();
+                //}
             }
             catch (Exception maybeIEntityCast)
             {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Blocks
         protected override void SavePreviewTemplateId(Guid templateGuid)
             => Update(new Dictionary<string, object>
             {
-                {BlockFromEntity.CbPropertyTemplate, templateGuid.ToString()}
+                {ViewParts.TemplateContentType, templateGuid.ToString()}
             });
 
 
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.Blocks
             var appName = "";
             if (appId.HasValue)
             {
-                var cache = /*Factory.GetAppsCache*/Eav.Apps.State.Cache;
+                var cache = State.Cache;
                 var zoneAppId = cache.GetIdentity(null, appId);
                 appName = cache.Zones[zoneAppId.ZoneId].Apps[appId.Value];
             }

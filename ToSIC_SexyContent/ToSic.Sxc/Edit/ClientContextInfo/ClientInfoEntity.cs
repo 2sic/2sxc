@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ToSic.SexyContent.Edit.ClientContextInfo
+namespace ToSic.Sxc.Edit.ClientContextInfo
 {
     public abstract class ClientInfoEntity
     {

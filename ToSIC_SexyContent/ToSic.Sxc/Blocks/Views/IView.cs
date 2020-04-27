@@ -76,5 +76,11 @@ namespace ToSic.Sxc.Blocks
         [PrivateApi]
         bool IsRazor { get; }
 
+        /// <summary>
+        /// Contains the polymorph edition name for this view, which changes
+        /// what path is loaded.
+        /// </summary>
+        [PrivateApi]
+        string Edition { get; set; }
     }
 }

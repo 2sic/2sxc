@@ -51,7 +51,7 @@ namespace ToSic.SexyContent
                         SecurityAccessLevel.Edit, true, false);
 
                 // Add Item
-                // 2020-04-21 disabled this, as it doesn't make sense to have this in the DNN menu
+                // 2020-04-21 2dm disabled this, as it doesn't make sense to have this in the DNN menu - since add can be used in each position
                 //if (BlockBuilder.View?.UseForList ?? false)
                 //    actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif",
                 //        "javascript:$2sxcActionMenuMapper(" + ModuleId + ").addItem();", true, SecurityAccessLevel.Edit, true,

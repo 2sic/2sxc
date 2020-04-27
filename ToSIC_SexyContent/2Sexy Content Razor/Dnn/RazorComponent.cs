@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
@@ -38,10 +37,6 @@ namespace ToSic.Sxc.Dnn
 
         /// <inheritdoc />
         public IDnnContext Dnn => DynCode.Dnn;
-
-        ///// <inheritdoc />
-        //[PrivateApi("todo: try to remove thi")]
-        //public SxcHelper Sxc => DynCode.Sxc;
 
         [PrivateApi] public IBlockBuilder BlockBuilder => throw new NotSupportedException("don't use this");
 
@@ -111,11 +106,23 @@ namespace ToSic.Sxc.Dnn
         #region Customize Data, Search, and Purpose
 
         /// <inheritdoc />
-        public virtual void CustomizeData() { }
+        public virtual void CustomizeData()
+        {
+            // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
+            var code = CodeManager.CodeOrNull;
+            if (code == null) return;
+            if (code is RazorComponent codeAsRazor) codeAsRazor.CustomizeData();
+        }
 
         /// <inheritdoc />
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
-            DateTime beginDate)  { }
+            DateTime beginDate)
+        {
+            // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
+            var code = CodeManager.CodeOrNull;
+            if (code == null) return;
+            if (code is RazorComponent codeAsRazor) codeAsRazor.CustomizeSearch(searchInfos, moduleInfo, beginDate);
+        }
 
         /// <inheritdoc />
         public Purpose Purpose { get; internal set; }

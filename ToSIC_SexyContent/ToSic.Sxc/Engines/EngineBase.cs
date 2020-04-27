@@ -24,6 +24,9 @@ namespace ToSic.Sxc.Engines
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public abstract class EngineBase : HasLog, IEngine
     {
+        // temporary, wait with this feature till 2sxc 11
+        private const bool enablePolymorphism = true;
+
         [PrivateApi] protected IView Template;
         [PrivateApi] protected string TemplatePath;
         [PrivateApi] protected IApp App;
@@ -48,10 +51,16 @@ namespace ToSic.Sxc.Engines
         {
             BlockBuilder = blockBuilder;
             var view = BlockBuilder.View;
-
-            var templatePath = VirtualPathUtility.Combine(TemplateHelpers.GetTemplatePathRoot(view.Location, blockBuilder.App) + "/", view.Path);
-
             Log.LinkTo(parentLog);
+
+
+            var root = TemplateHelpers.GetTemplatePathRoot(view.Location, blockBuilder.App);
+            var subPath = view.Path;
+            string templatePath = null;
+            if (enablePolymorphism) templatePath = TryToFindPolymorphPath(root, view, subPath);
+
+            if (templatePath == null)
+                templatePath = VirtualPathUtility.Combine(root + "/", subPath);
 
             // Throw Exception if Template does not exist
             if (!File.Exists(HostingEnvironment.MapPath(templatePath)))
@@ -72,6 +81,36 @@ namespace ToSic.Sxc.Engines
 
             // Run engine-internal init stuff
             Init();
+        }
+
+        private string TryToFindPolymorphPath(string root, IView view, string subPath)
+        {
+            var wrapLog = Log.Call<string>($"{root}, {subPath}");
+            var polymorph = new Polymorphism.Polymorphism(BlockBuilder.App.Data, Log);
+            var edition = polymorph.Edition();
+            if (edition == null) return wrapLog("no edition detected", null);
+            Log.Add($"edition {edition} detected");
+
+            var testPath = VirtualPathUtility.Combine($"{root}/{edition}/", subPath);
+            if (File.Exists(HostingEnvironment.MapPath(testPath)))
+            {
+                view.Edition = edition;
+                return wrapLog($"edition {edition}", testPath);
+            }
+
+            Log.Add("tried inserting path, will check if sub-path");
+            var firstSlash = subPath.IndexOf('/');
+            if (firstSlash == -1) return wrapLog($"edition {edition} not found", null);
+
+            subPath = subPath.Substring(firstSlash + 1);
+            testPath = VirtualPathUtility.Combine($"{root}/{edition}/", subPath);
+            if (File.Exists(HostingEnvironment.MapPath(testPath)))
+            {
+                view.Edition = edition;
+                return wrapLog($"edition {edition} up one path", testPath);
+            }
+
+            return wrapLog($"edition {edition} never found", null);
         }
 
         [PrivateApi]

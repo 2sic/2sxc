@@ -22,6 +22,7 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Polymorphism;
 
 namespace ToSic.SexyContent
 {
@@ -46,7 +47,7 @@ namespace ToSic.SexyContent
             var appsCache = GetAppsCacheOverride();
             ConfigureIoC(appsCache);
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();
-
+            ConfigurePolymorphResolvers();
             _alreadyConfigured = true;
         }
 
@@ -69,6 +70,14 @@ namespace ToSic.SexyContent
             return farmCacheName;
         }
 
+        /// <summary>
+        /// Configure all the known polymorph resolvers
+        /// </summary>
+        private void ConfigurePolymorphResolvers()
+        {
+            Polymorphism.Add(new Koi());
+            Polymorphism.Add(new Permissions());
+        }
 
         private static void ConfigureIoC(string appsCacheOverride)
         {

@@ -16,15 +16,13 @@ namespace ToSic.Sxc.Blocks
         {
         }
 
-        private IEntity GetBestRelationship(string key)
-            => Entity.Children(key).FirstOrDefault();
+        private IEntity GetBestRelationship(string key) => Entity.Children(key).FirstOrDefault();
 
 
         public string Name => 
             Entity.GetBestValue<string>(FieldName, new[] {Thread.CurrentThread.CurrentUICulture.Name});
 
-        public string Path 
-            => Entity.GetBestValue<string>(FieldPath);
+        public string Path => Entity.GetBestValue<string>(FieldPath);
 
         public string ContentType  
             => Entity.GetBestValue<string>(FieldContentType);
@@ -109,5 +107,8 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         [PrivateApi]
         public bool IsRazor => Type == TypeRazorValue;
+
+        [PrivateApi]
+        public string Edition { get; set; }
     }
 }
