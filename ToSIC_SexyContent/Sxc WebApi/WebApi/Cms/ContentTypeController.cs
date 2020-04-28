@@ -45,12 +45,12 @@ namespace ToSic.Sxc.WebApi.Cms
             var scopes = appMan.Read.ContentTypes.GetScopes();
             var lookup = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
-                {"2SexyContent", "Default" },
-                {"2SexyContent-System","System: CMS" },
-                {"2SexyContent-App", "System: App" },
-                {"System", "System" },
-                {"System/DataSource", "System: DataSources" },
-                {"System/InputTypes", "System: InputTypes" }
+                {AppConstants.ScopeContentOld, "Default"},
+                {AppConstants.ScopeContentSystem, "System: CMS"},
+                {AppConstants.ScopeApp, "System: App"},
+                {Eav.Constants.ScopeSystem, "System: System"},
+                {"System.DataSources", "System: DataSources"},
+                {"System.Fields", "System: Fields"}
             };
             var dic = scopes
                 .Select(s => new {value = s, name = lookup.TryGetValue(s, out var label) ? label : s})

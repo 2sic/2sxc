@@ -29,7 +29,7 @@ namespace ToSic.Sxc.DataSources
         GlobalName = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
         Type = DataSourceType.Source, 
         ExpectsDataOfType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
-        HelpLink = "https://github.com/2sic/2sxc/wiki/DotNet-DataSource-ModuleDataSource",
+        HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html",
         PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
     public sealed class CmsBlock : DataSourceBase
     {
