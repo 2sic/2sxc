@@ -5,11 +5,48 @@
   <meta charset="utf-8">
   <title>NgDialogs</title>
   <base href="./">
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script>
+    (function obsoleteBrowserCheck() {
+      var isIE = navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0 || !!document.documentMode;
+      var isEdge = navigator.userAgent.indexOf("Edge") >= 0;
+      if (isIE || isEdge) {
+        alert("Error: Old Browser Detected\n\nIt seems that you are using an old browser like Internet Explorer or Edge. Editing doesn't work with obsolete browsers, so please use a modern browser like Chrome instead.");
+        window.parent.$2sxc.totalPopup.close();
+      }
+    })();
+
+    (function init2sxc() {
+      // https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+      function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+          results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+      }
+
+      // get sxcver from the url. If there is none, load it from the session storage
+      var sxcVersion = getParameterByName('sxcver');
+      if (!sxcVersion) sxcVersion = getParameterByName('sxcver', sessionStorage.getItem('eav-url'));
+      if (!sxcVersion) sxcVersion = Math.floor(Math.random() * 99999);
+
+      // the version to append to each asset, to ensure reload after an upgrade
+      window.sxcVersion = sxcVersion;
+      // create an empty _jsApi so $2sxc can initialize - must fill afterwards!
+      window._jsApi = {};
+      // first load the main 2sxc because it contains some url-param methods
+      document.write('<script src="../../js/2sxc.api.min.js?sxcver=' + sxcVersion + '"></scr' + 'ipt>');
+    })();
+  </script>
 </head>
 
 <body>
   <app-root></app-root>
-<script src="runtime.js" defer></script><script src="polyfills-es5.js" nomodule defer></script><script src="polyfills.js" defer></script><script src="styles.js" defer></script><script src="scripts.js" defer></script><script src="vendor.js" defer></script><script src="main.js" defer></script></body>
+<script src="runtime.97f26bd270d8a2da30fc.js" defer></script><script src="polyfills-es5.6e95ba8872ca9372e535.js" nomodule defer></script><script src="polyfills.ccd791a1c1b9bf0c8bcc.js" defer></script><script src="styles.25a83fee1cc439c6a04b.js" defer></script><script src="scripts.901f3ac9f9ac0b11bf0e.js" defer></script><script src="vendor.17d59c79f274017f7f09.js" defer></script><script src="main.e156abd07ed38b571e75.js" defer></script></body>
 
 </html>
