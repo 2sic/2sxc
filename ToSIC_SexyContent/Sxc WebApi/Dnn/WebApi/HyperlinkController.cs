@@ -6,6 +6,7 @@ using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Adam.WebApi;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 		public object GetFileByPath(string relativePath)
 		{
-		    var context = GetContext(BlockBuilder, Log);
+		    var context = DnnDynamicCode.Create(BlockBuilder, Log);
             relativePath = relativePath.Replace(context.Dnn.Portal.HomeDirectory, "");
 			var file = FileManager.Instance.GetFile(context.Dnn.Portal.PortalId, relativePath);
 			if (CanUserViewFile(file))

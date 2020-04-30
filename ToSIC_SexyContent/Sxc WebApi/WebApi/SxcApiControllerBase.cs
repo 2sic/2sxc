@@ -1,8 +1,6 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.Sxc.WebApi
@@ -25,8 +23,8 @@ namespace ToSic.Sxc.WebApi
         [PrivateApi] public IBlockBuilder BlockBuilder { get; private set; }
 
 
-        internal static DnnDynamicCode GetContext(IBlockBuilder blockBuilder, ILog log) 
-            => new DnnDynamicCode(blockBuilder, 10, blockBuilder?.Log ?? log);
+        //internal static DnnDynamicCode CreateDynCode(IBlockBuilder blockBuilder, ILog log) 
+        //    => new DnnDynamicCode(blockBuilder, 10, blockBuilder?.Log ?? log);
 
 
         #region App-Helpers for anonyous access APIs

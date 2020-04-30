@@ -9,6 +9,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
@@ -26,7 +27,7 @@ namespace ToSic.SexyContent.WebApi
     /// </summary>
     [PrivateApi]
     [SxcWebApiExceptionHandling]
-    public abstract class DynamicApiController : SxcApiControllerBase, ICreateInstance
+    public abstract class DynamicApiController : SxcApiControllerBase, ICreateInstance, IHasDynCodeContext
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -35,7 +36,7 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"HasBlock: {BlockBuilder != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
-            DynCode = GetContext(BlockBuilder, BlockBuilder?.Log ?? Log);// new DnnDynamicCode(CmsBlock, 10, CmsBlock?.Log ?? Log);
+            DynCode = DnnDynamicCode.Create(BlockBuilder, BlockBuilder?.Log ?? Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (DynCode.App == null)
@@ -52,7 +53,7 @@ namespace ToSic.SexyContent.WebApi
         }
 
         [PrivateApi]
-        protected DnnDynamicCode DynCode { get; private set; }
+        public DnnDynamicCode DynCode { get; private set; }
 
         public IDnnContext Dnn => DynCode.Dnn;
 

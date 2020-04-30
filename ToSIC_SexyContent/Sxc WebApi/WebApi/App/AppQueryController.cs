@@ -9,6 +9,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Conversion;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
 
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.WebApi.App
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
-            var context = GetContext(BlockBuilder, Log);
+            var context = DnnDynamicCode.Create(BlockBuilder, Log);
             var result = BuildQueryAndRun(BlockBuilder.App, name, stream, includeGuid, context.Dnn.Module, Log, BlockBuilder);
             wrapLog(null);
             return result;

@@ -17,5 +17,6 @@ namespace ToSic.Sxc.Dnn.Code
         /// The DNN context.
         /// </returns>
         IDnnContext Dnn { get; }
+
     }
 }

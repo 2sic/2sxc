@@ -6,6 +6,7 @@ using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi;
 
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.Dnn
             {
                 Log.Add("partOfPage - save with publishing");
                 var versioning = Eav.Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
-                var context = SxcApiControllerBase.GetContext(BlockBuilder, Log);
+                var context = DnnDynamicCode.Create(BlockBuilder, Log);
                 versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID,
                     args => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
             }
