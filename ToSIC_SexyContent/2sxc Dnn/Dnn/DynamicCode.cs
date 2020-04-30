@@ -15,15 +15,9 @@ namespace ToSic.Sxc.Dnn
     public abstract class DynamicCode : Sxc.Code.DynamicCode, IDnnDynamicCode, IHasDynCodeContext
     {
         /// <inheritdoc />
-        public IDnnContext Dnn => DynCode.Dnn;
+        public IDnnContext Dnn => DynCode?.Dnn;
 
-        [PrivateApi] public DnnDynamicCode DynCode => (UnwrappedContents as IHasDynCodeContext)?.DynCode; // { get; set; }
-
-        //internal override void InitShared(IDynamicCode parent, string path)
-        //{
-        //    if (parent is IHasDynCodeContext withDnn) DynCode = withDnn.DynCode;
-        //    base.InitShared(parent, path);
-        //}
+        [PrivateApi] public DnnDynamicCode DynCode => (UnwrappedContents as IHasDynCodeContext)?.DynCode;
 
         public new dynamic CreateInstance(string virtualPath,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,

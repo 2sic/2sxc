@@ -107,6 +107,7 @@
     <Compile Include="Code\DynamicCode.cs" />
     <Compile Include="Code\CodeCompiler.cs" />
     <Compile Include="Code\DynamicCodeRootWithObsolete.cs" />
+    <Compile Include="Code\ICoupledDynamicCode.cs" />
     <Compile Include="Compatibility\CacheWithGetContentType.cs" />
     <Compile Include="Compatibility\InputTypes.cs" />
     <Compile Include="Compatibility\OldContentBlockJsonSerialization.cs" />

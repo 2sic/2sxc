@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, IHasDynCodeContext, INeedsDynCodeContext
+    public abstract class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, IHasDynCodeContext, INeedsDynCodeContext, ICoupledDynamicCode
     {
         public IHtmlHelper Html { get; internal set; }
 
@@ -92,6 +92,11 @@ namespace ToSic.Sxc.Web
         public ILog Log => DynCode.Log;
 
         #endregion
+
+        public void DynamicCodeCoupling(IDynamicCode parent, string path)
+        {
+            if (parent is DnnDynamicCode isDynCode) DynCode = isDynCode;
+        }
     }
 
 

@@ -283,8 +283,8 @@ namespace ToSic.Sxc.Code
                 .InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them
-            if (instance is DynamicCode isShared)
-                isShared.InitShared(this, virtualPath);
+            if (instance is ICoupledDynamicCode isShared)
+                isShared.DynamicCodeCoupling(this, virtualPath);
 
             return instance;
         }
