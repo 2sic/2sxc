@@ -25,6 +25,8 @@ namespace ToSic.Sxc.Apps.Assets
         public const string CsExtension = ".cs";
 
         public const string CsApiFolder = "api";
+
+        public const string CsApiTemplateControllerName = "PleaseRenameController";
         // copied from the razor tutorial
         public const string DefaultCsBody = @"using System.Web.Http;		// this enables [HttpGet] and [AllowAnonymous]
 using DotNetNuke.Web.Api;	// this is to verify the AntiForgeryToken
@@ -32,7 +34,7 @@ using DotNetNuke.Web.Api;	// this is to verify the AntiForgeryToken
 [AllowAnonymous]			// define that all commands can be accessed without a login
 [ValidateAntiForgeryToken]	// protects the API from users not on your site (CSRF protection)
 // Inherit from ToSic...ApiController to get features like App, Data or Dnn - see https://r.2sxc.org/CustomWebApi
-public class VerifiedController : ToSic.Sxc.Dnn.ApiController
+public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
 {
 
 	[HttpGet]				// [HttpGet] says we're listening to GET requests

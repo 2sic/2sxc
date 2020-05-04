@@ -179,8 +179,11 @@ namespace ToSic.Sxc.WebApi.Cms
 
             if (ext?.ToLowerInvariant() == AssetEditor.CsExtension)
             {
-                if ((folder?.ToLower().IndexOf(AssetEditor.CsApiFolder) ?? -1) > -1) 
-                    content.Content = AssetEditor.DefaultCsBody;
+                if ((folder?.ToLower().IndexOf(AssetEditor.CsApiFolder, global::System.StringComparison.Ordinal) ?? -1) > -1)
+                {
+                    var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
+                    content.Content = AssetEditor.DefaultCsBody.Replace(AssetEditor.CsApiTemplateControllerName, nameWithoutExt);
+                }
                 return path;
             }
 
