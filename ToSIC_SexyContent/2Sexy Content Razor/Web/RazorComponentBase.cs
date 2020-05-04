@@ -4,6 +4,7 @@ using System.Web.WebPages;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
 using File = System.IO.File;
@@ -16,12 +17,12 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog
+    public abstract class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, IHasDynCodeContext, INeedsDynCodeContext, ICoupledDynamicCode
     {
         public IHtmlHelper Html { get; internal set; }
 
         [PrivateApi]
-        protected internal DnnDynamicCode DynCode { get; set; }
+        public DnnDynamicCode DynCode { get; set; }
 
 
         /// <summary>
@@ -91,6 +92,11 @@ namespace ToSic.Sxc.Web
         public ILog Log => DynCode.Log;
 
         #endregion
+
+        public void DynamicCodeCoupling(IDynamicCode parent, string path)
+        {
+            if (parent is DnnDynamicCode isDynCode) DynCode = isDynCode;
+        }
     }
 
 

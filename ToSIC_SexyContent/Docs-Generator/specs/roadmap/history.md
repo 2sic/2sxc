@@ -208,3 +208,23 @@ Didn't have time to document this yet, sorry. If you need to know, best check th
 * Modified date and Owner information were missing on json stored entities [#2005](https://github.com/2sic/2sxc/issues/2005) / [#2006](https://github.com/2sic/2sxc/issues/2006)
 * Fixed bug in JS API for non-2sxc endpoint resolution [#2000](https://github.com/2sic/2sxc/issues/2000)
 * Queries didn't resolve DNN tokens when accessed in the Search Index [#1999](https://github.com/2sic/2sxc/issues/1999)
+
+
+
+## Version 11
+
+### Version 11.00
+
+#### Breaking Changes
+
+The following changes are all super-low-profile, but we want to document them just to be through:
+
+1. `DataStream` and `IDataStream` loses a very old property called `.LightList` - we're pretty sure it's not in use anywhere, if you have it, just use `.List` instead. 
+1. Old helper JS for AngularJS apps (located in `/js/angularjs`) were removed from the distribution. They had not been updated for over 3 years and we believe they were not widely used. Anybody upgrading will still preserve the files that are there. If you really need them, download an old release of 2sxc and get them manually. 
+
+#### Enhancements
+
+1. Razor CodeBehind
+1. Automatic Polymorphism
+1. Brand new Admin UI based on Angular 9 and Ivy with new Code-Editor, new Visual Query and much more
+1. Updated Razor Blades to 3.02

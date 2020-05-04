@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Code
     /// It delegates all properties like App and methods like AsDynamic() to the parent item which initially caused it to be compiled.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract class DynamicCode : IDynamicCode, IWrapper<IDynamicCode>, IHasLog
+    public abstract class DynamicCode : IDynamicCode, IWrapper<IDynamicCode>, ICoupledDynamicCode, IHasLog
     {
         [PrivateApi] public int CompatibilityLevel => UnwrappedContents?.CompatibilityLevel ?? 9;
 
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Code
         public IDynamicCode UnwrappedContents { get; private set; }
 
         [PrivateApi]
-        internal virtual void InitShared(IDynamicCode parent, string path)
+        public virtual void DynamicCodeCoupling(IDynamicCode parent, string path)
         {
             UnwrappedContents = parent;
             try { 

@@ -3,39 +3,50 @@
 
 <head>
   <meta charset="utf-8">
-  <title>EavItemDialogAngular</title>
-  <base href=".\">
-
+  <title>NgDialogs</title>
+  <base href="./">
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script>
-    var jsVersionCacheId = window.location.search;    // use this to prevent
-    document.write('<script src="../../js/2sxc.api.min.js' + jsVersionCacheId + '"></scr' + 'ipt>');
-  </script>
+    (function obsoleteBrowserCheck() {
+      var isIE = navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0 || !!document.documentMode;
+      var isEdge = navigator.userAgent.indexOf("Edge") >= 0;
+      if (isIE || isEdge) {
+        alert("Error: Old Browser Detected\n\nIt seems that you are using an old browser like Internet Explorer or Edge. Editing doesn't work with obsolete browsers, so please use a modern browser like Chrome instead.");
+        window.parent.$2sxc.totalPopup.close();
+      }
+    })();
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i" rel="stylesheet" />
+    (function init2sxc() {
+      // https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+      function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+          results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+      }
 
-  <!-- <link rel="stylesheet" href="assets/style/bootstrap-glyphicons.css"> -->
+      // get sxcver from the url. If there is none, load it from the session storage
+      var sxcVersion = getParameterByName('sxcver');
+      if (!sxcVersion) sxcVersion = getParameterByName('sxcver', sessionStorage.getItem('eav-url'));
+      if (!sxcVersion) sxcVersion = Math.floor(Math.random() * 99999);
 
-  <!--fontawesome spm not used  -->
-  <!-- <link rel="stylesheet" href="assets/style/font-awesome/css/solid.min.css" />
-  <link rel="stylesheet" href="assets/style/font-awesome/css/fontawesome.min.css" /> -->
-  <!-- <script src="core.js"></script> -->
-  <script>
-    ng.core.enableProdMode();
+      // the version to append to each asset, to ensure reload after an upgrade
+      window.sxcVersion = sxcVersion;
+      // create an empty _jsApi so $2sxc can initialize - must fill afterwards!
+      window._jsApi = {};
+      // first load the main 2sxc because it contains some url-param methods
+      document.write('<script src="../../js/2sxc.api.min.js?sxcver=' + sxcVersion + '"></scr' + 'ipt>');
+    })();
   </script>
 </head>
 
-<body id="eav-app">
-  <script>
-    // Fix for IE11 - document.activeElement is not set in iframe
-    const isIE = navigator.userAgent.includes("MSIE") || navigator.userAgent.includes("Trident") || !!document.documentMode;
-    if (isIE) {
-      document.getElementById('eav-app').focus();
-    }
-  </script>
+<body>
   <app-root></app-root>
-<script src="runtime.js" defer></script><script src="polyfills-es5.js" nomodule defer></script><script src="polyfills.js" defer></script><script src="styles.js" defer></script><script src="scripts.js" defer></script><script src="vendor.js" defer></script><script src="main.js" defer></script></body>
+<script src="runtime.17b687df57d7ef896a31.js" defer></script><script src="polyfills-es5.abb3ba58c714c1e31ea4.js" nomodule defer></script><script src="polyfills.a4fae2806915b238190e.js" defer></script><script src="styles.2314e10b11019dc9dbdf.js" defer></script><script src="scripts.901f3ac9f9ac0b11bf0e.js" defer></script><script src="vendor.17d59c79f274017f7f09.js" defer></script><script src="main.ee9eab1b5c823cf52dc5.js" defer></script></body>
 
 </html>

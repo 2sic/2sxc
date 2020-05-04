@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Code
 
         internal ILookUpEngine ConfigurationProvider
             => _configurationProvider ??
-               (_configurationProvider = Data.Configuration.LookUps);// Data.In[Eav.Constants.DefaultStreamName].Source.Configuration.LookUps);
+               (_configurationProvider = Data.Configuration.LookUps);
 
         internal DataSource DataSourceFactory => _dataSourceFactory ?? (_dataSourceFactory = new DataSource(Log));
         private DataSource _dataSourceFactory;
@@ -269,7 +269,7 @@ namespace ToSic.Sxc.Code
 
         #region SharedCode Compiler
         /// <inheritdoc />
-        public dynamic CreateInstance(string virtualPath,
+        public virtual dynamic CreateInstance(string virtualPath,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
@@ -283,8 +283,8 @@ namespace ToSic.Sxc.Code
                 .InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them
-            if (instance is DynamicCode isShared)
-                isShared.InitShared(this, virtualPath);
+            if (instance is ICoupledDynamicCode isShared)
+                isShared.DynamicCodeCoupling(this, virtualPath);
 
             return instance;
         }

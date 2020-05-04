@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
@@ -34,7 +36,30 @@ namespace ToSic.Sxc.WebApi.Cms
         public IEnumerable<dynamic> Get(int appId, string scope = null, bool withStatistics = false) 
             => _eavCtc.Get(appId, scope, withStatistics);
 
-	    [HttpGet]
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public IDictionary<string, string> Scopes(int appId)
+        {
+            var appMan = new AppManager(appId, Log);
+            var scopes = appMan.Read.ContentTypes.GetScopes();
+            var lookup = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+            {
+                {AppConstants.ScopeContentOld, "Default"},
+                {AppConstants.ScopeContentSystem, "System: CMS"},
+                {AppConstants.ScopeApp, "System: App"},
+                {Eav.Constants.ScopeSystem, "System: System"},
+                {"System.DataSources", "System: DataSources"},
+                {"System.Fields", "System: Fields"}
+            };
+            var dic = scopes
+                .Select(s => new {value = s, name = lookup.TryGetValue(s, out var label) ? label : s})
+                .OrderBy(s => s.name)
+                .ToDictionary(s => s.value, s => s.name);
+            return dic;
+        }
+
+        [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public dynamic Get(int appId, string contentTypeId, string scope = null) 
             => _eavCtc.GetSingle(appId, contentTypeId, scope);

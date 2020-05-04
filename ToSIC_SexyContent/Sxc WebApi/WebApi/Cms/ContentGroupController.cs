@@ -9,6 +9,7 @@ using ToSic.Eav.Apps.Environment;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn.Code;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -96,7 +97,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
 
             // use dnn versioning - this is always part of page
-            var context = GetContext(BlockBuilder, Log);
+            var context = DnnDynamicCode.Create(BlockBuilder, Log);
             versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
         }
 
@@ -140,7 +141,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
 
             // use dnn versioning - items here are always part of list
-            var context = GetContext(BlockBuilder, Log);
+            var context = DnnDynamicCode.Create(BlockBuilder, Log);
             versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
 
             return true;

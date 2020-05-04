@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using IDynamicCode = ToSic.Sxc.Code.IDynamicCode;
 
@@ -11,15 +12,20 @@ namespace ToSic.Sxc.Dnn
     /// The class then also has AsDynamic(...) and AsList(...) commands like a normal razor page.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract class DynamicCode : Sxc.Code.DynamicCode, Code.IDnnDynamicCode
+    public abstract class DynamicCode : Sxc.Code.DynamicCode, IDnnDynamicCode, IHasDynCodeContext
     {
-        public IDnnContext Dnn { get; private set; }
+        /// <inheritdoc />
+        public IDnnContext Dnn => DynCode?.Dnn;
 
-        internal override void InitShared(IDynamicCode parent, string path)
-        {
-            if (parent is Code.IDnnDynamicCode withDnn) Dnn = withDnn.Dnn;
+        [PrivateApi] public DnnDynamicCode DynCode => (UnwrappedContents as IHasDynCodeContext)?.DynCode;
 
-            base.InitShared(parent, path);
-        }
+        public new dynamic CreateInstance(string virtualPath,
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string name = null,
+            string relativePath = null,
+            bool throwOnError = true) =>
+            // try to create a DNN instance, but if that's not possible, use base
+            DynCode?.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, relativePath, throwOnError)
+            ?? base.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, relativePath, throwOnError);
     }
 }

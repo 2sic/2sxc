@@ -12,19 +12,33 @@ namespace ToSic.Sxc.Apps.Assets
     internal class AssetEditor : HasLog
     {
         public const string CshtmlExtension = ".cshtml";
+        public const string CodeCshtmlExtension = ".code.cshtml";
         public const string CshtmlPrefix = "_";
 
-        public const string DefaultCshtmlBody = @"@* This tells the compiler to use the new RazorComponent - see https://r.2sxc.org/RazorComponent *@ 
-@inherits ToSic.Sxc.Dnn.RazorComponent
+        public const string DefaultCshtmlBody = @"@inherits ToSic.Sxc.Dnn.RazorComponent
 
-@* The following DIV will show a edit-hover-toolbar to admins - see https://r.2sxc.org/EditToolbar *@
 <div @Edit.TagToolbar(Content)>
     Put your content here
 </div>";
 
+        public const string DefaultCodeCshtmlBody = @"@inherits ToSic.Sxc.Dnn.RazorComponentCode
+
+@functions {
+  public string Hello() {
+    return ""Hello from inner code"";
+  }
+}
+
+@helper ShowDiv(string message) {
+  <div>@message</div>
+}
+";
+
         public const string CsExtension = ".cs";
 
         public const string CsApiFolder = "api";
+
+        public const string CsApiTemplateControllerName = "PleaseRenameController";
         // copied from the razor tutorial
         public const string DefaultCsBody = @"using System.Web.Http;		// this enables [HttpGet] and [AllowAnonymous]
 using DotNetNuke.Web.Api;	// this is to verify the AntiForgeryToken
@@ -32,7 +46,7 @@ using DotNetNuke.Web.Api;	// this is to verify the AntiForgeryToken
 [AllowAnonymous]			// define that all commands can be accessed without a login
 [ValidateAntiForgeryToken]	// protects the API from users not on your site (CSRF protection)
 // Inherit from ToSic...ApiController to get features like App, Data or Dnn - see https://r.2sxc.org/CustomWebApi
-public class VerifiedController : ToSic.Sxc.Dnn.ApiController
+public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
 {
 
 	[HttpGet]				// [HttpGet] says we're listening to GET requests
