@@ -220,12 +220,11 @@ Didn't have time to document this yet, sorry. If you need to know, best check th
 The following changes are all super-low-profile, but we want to document them just to be through:
 
 1. `DataStream` and `IDataStream` loses a very old property called `.LightList` - we're pretty sure it's not in use anywhere, if you have it, just use `.List` instead. 
-
+1. Old helper JS for AngularJS apps (located in `/js/angularjs`) were removed from the distribution. They had not been updated for over 3 years and we believe they were not widely used. Anybody upgrading will still preserve the files that are there. If you really need them, download an old release of 2sxc and get them manually. 
 
 #### Enhancements
 
-1. Razor CodeBehind (TBD)
-1. Automatic Polymorphism (TBD)
-1. Brand new Admin UI based on Angular 9 and Ivy
-1. Updated Razor Blades to 3.02 (TODO)
-1. Updated Image Resizer (TODO)
+1. Razor CodeBehind
+1. Automatic Polymorphism
+1. Brand new Admin UI based on Angular 9 and Ivy with new Code-Editor, new Visual Query and much more
+1. Updated Razor Blades to 3.02
