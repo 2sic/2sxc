@@ -12,15 +12,27 @@ namespace ToSic.Sxc.Apps.Assets
     internal class AssetEditor : HasLog
     {
         public const string CshtmlExtension = ".cshtml";
+        public const string CodeCshtmlExtension = ".code.cshtml";
         public const string CshtmlPrefix = "_";
 
-        public const string DefaultCshtmlBody = @"@* This tells the compiler to use the new RazorComponent - see https://r.2sxc.org/RazorComponent *@ 
-@inherits ToSic.Sxc.Dnn.RazorComponent
+        public const string DefaultCshtmlBody = @"@inherits ToSic.Sxc.Dnn.RazorComponent
 
-@* The following DIV will show a edit-hover-toolbar to admins - see https://r.2sxc.org/EditToolbar *@
 <div @Edit.TagToolbar(Content)>
     Put your content here
 </div>";
+
+        public const string DefaultCodeCshtmlBody = @"@inherits ToSic.Sxc.Dnn.RazorComponentCode
+
+@functions {
+  public string Hello() {
+    return ""Hello from inner code"";
+  }
+}
+
+@helper ShowDiv(string message) {
+  <div>@message</div>
+}
+";
 
         public const string CsExtension = ".cs";
 

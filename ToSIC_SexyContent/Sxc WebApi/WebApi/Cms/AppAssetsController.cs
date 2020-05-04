@@ -179,7 +179,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             if (ext?.ToLowerInvariant() == AssetEditor.CsExtension)
             {
-                if ((folder?.ToLower().IndexOf(AssetEditor.CsApiFolder, global::System.StringComparison.Ordinal) ?? -1) > -1)
+                if ((folder?.ToLower().IndexOf(AssetEditor.CsApiFolder, StringComparison.Ordinal) ?? -1) > -1)
                 {
                     var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
                     content.Content = AssetEditor.DefaultCsBody.Replace(AssetEditor.CsApiTemplateControllerName, nameWithoutExt);
@@ -189,12 +189,19 @@ namespace ToSic.Sxc.WebApi.Cms
 
             if (ext?.ToLowerInvariant() != AssetEditor.CshtmlExtension) return path;
 
+            // not sure what this is for, since I believe code should only get here if there was an ext and it's cshtml
             if (name == null) name = "missing-name.txt";
 
             if (!name.StartsWith(AssetEditor.CshtmlPrefix))
             {
                 name = AssetEditor.CshtmlPrefix + name;
                 path = (string.IsNullOrWhiteSpace(folder) ? "" : folder + "\\") + name;
+            }
+
+            if (name.EndsWith(AssetEditor.CodeCshtmlExtension))
+            {
+                content.Content = AssetEditor.DefaultCodeCshtmlBody;
+                return path;
             }
 
             // if we're creating a cshtml and it's empty, or has the dummy-text from the old 2sxc 9 admin-UI, then replace it
