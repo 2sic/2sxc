@@ -36,7 +36,7 @@ to make sure that it has all the new features.
 
 ## Razor Code-Behind
 
-If your Razor file is getting kind of large because of C# functions, best place it in a [Razor Code-Behind](xref:Specs.Cms.Templates.RazorCodeBehind).
+If your Razor file is getting kind of large because of C# functions, best place it in a [Razor Code-Behind](xref:Specs.Cms.Templates.RazorCodeBehind). Here's the [How To](xref:HowTo.Razor.OrganizeCode)
 
 ## Reusing Html-Helpers in Razor 
 

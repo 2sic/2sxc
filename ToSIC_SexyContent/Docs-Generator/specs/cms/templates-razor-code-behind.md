@@ -41,6 +41,15 @@ This is automatically compiled for you and provided to the `_something.cshtml` o
 }
 ```
 
+## Put Customize Search and Customize Data in Code Behind
+
+> [!TIP]
+> The Code-Behind can also be the place where you put [CustomizeData](xref:HowTo.Razor.CustomizeData) and [CustomizeSearch](xref:HowTo.Razor.CustomizeSearch).
+
+## Read Also
+
+* [How to Organize Code](xref:HowTo.Razor.OrganizeCode)
+
 ## History
 
 1. Introduced in 2sxc 11.0

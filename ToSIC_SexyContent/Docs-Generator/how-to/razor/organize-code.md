@@ -1,7 +1,7 @@
 ---
-uid: HowTo.OrganizeCode.Index
+uid: HowTo.Razor.OrganizeCode
 ---
-# How To Organize your Code in Razor (DOCS: WIP)
+# How To Organize your Code in Razor
 
 In simple scenarios you have some Razor files containing a bit of HTML and some code. As your solution grows, you'll want to organize your work better to ensure that you can maintain it. 2sxc offers various ways to do this:
 
@@ -12,7 +12,7 @@ In simple scenarios you have some Razor files containing a bit of HTML and some 
 
 ## Splitting Razor Templates with Code-Behind
 
-_This is a new feature in 2sxc 11_
+_This is new in 2sxc 11 - you can find a [video about this](xref:Specs.Cms.Templates.RazorCodeBehind) in the specs_
 
 Just create another file with the identical name as your template file, but with `.code.cshtml` as the extension. So you'll then have something like:
 
