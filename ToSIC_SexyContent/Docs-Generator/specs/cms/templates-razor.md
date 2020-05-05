@@ -34,6 +34,10 @@ to make sure that it has all the new features.
 > [!TIP]
 > You can see the full API available to to your code out-of-the box in the [RazorComponent API](xref:ToSic.Sxc.Dnn.RazorComponent)
 
+## Razor Code-Behind
+
+If your Razor file is getting kind of large because of C# functions, best place it in a [Razor Code-Behind](xref:Specs.Cms.Templates.RazorCodeBehind).
+
 ## Reusing Html-Helpers in Razor 
 
 Razor has a `@helper` syntax which allows you to create fragments and re-use them. 
