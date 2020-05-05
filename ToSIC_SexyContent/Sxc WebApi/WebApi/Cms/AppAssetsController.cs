@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Http;
@@ -9,7 +8,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Engines;
 using ToSic.Sxc.SxcTemp;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -21,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Cms
     [SxcWebApiExceptionHandling]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class AppAssetsController : SxcApiControllerBase
+    public partial class AppAssetsController : SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -51,101 +49,30 @@ namespace ToSic.Sxc.WebApi.Cms
             if (!Directory.Exists(fullPath))
                 return new List<string>();
 
-
             var opt = withSubfolders 
                 ? SearchOption.AllDirectories 
                 : SearchOption.TopDirectoryOnly;
 
             // try to collect all files, ignoring long paths errors and similar etc.
-            var files = new List<FileInfo>();  // List that will hold the files and sub-files in path
-            var folders = new List<DirectoryInfo>(); // List that hold directories that cannot be accessed
+            var files = new List<FileInfo>();           // List that will hold the files and sub-files in path
+            var folders = new List<DirectoryInfo>();    // List that hold directories that cannot be accessed
             var di = new DirectoryInfo(fullPath);
             FullDirList(di, mask, folders, files, opt);
 
             // return folders or files (depending on setting) with/without subfolders
             return (returnFolders
-                ? folders
-                    .Select(f => f.FullName) 
-                // Directory.GetDirectories(fullPath, mask, opt)
-                    //.Select(Path.GetDirectoryName)
-                : files.Select(f => f.FullName)
-                //Directory.GetFiles(fullPath, mask, opt)
-                //    .Select(Path.GetFullPath)
+                    ? folders.Select(f => f.FullName)
+                    : files.Select(f => f.FullName)
                 )
-                .Select(p => EnsurePathMayBeAccessed(p, appPath, allowFullAccess))   // do another security check
-                .Select(x => x.Replace(appPath + "\\", ""))         // truncate / remove internal server root path
-                .Select(x => x.Replace("\\", "/"))                  // tip the slashes to web-convention - important, because old entries for templates used that slash
+                .Select(p => EnsurePathMayBeAccessed(p, appPath, allowFullAccess))  // do another security check
+                .Select(x => x.Replace(appPath + "\\", ""))           // truncate / remove internal server root path
+                .Select(x =>
+                    x.Replace("\\", "/")) // tip the slashes to web-convention (old template entries used "\")
                 .ToList();
         }
 
-        private void FullDirList(DirectoryInfo dir, string searchPattern, List<DirectoryInfo> folders, List<FileInfo> files, SearchOption opt)
-        {
-            // Console.WriteLine("Directory {0}", dir.FullName);
-            // list the files
-            try
-            {
-                foreach (var f in dir.GetFiles(searchPattern))
-                {
-                    try
-                    {
-                        files.Add(f);
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
-            }
-            catch
-            {
-                // ignore errors
-                // Console.WriteLine("Directory {0}  \n could not be accessed!!!!", dir.FullName);
-                return;  // We alredy got an error trying to access dir so dont try to access it again
-            }
-
-            // process each directory
-            // If I have been able to see the files in the directory I should also be able 
-            // to look at its directories so I dont think I should place this in a try catch block
-            if (opt != SearchOption.AllDirectories) return;
-
-            foreach (var d in dir.GetDirectories())
-            {
-                try
-                {
-                    if (!Eav.ImportExport.Settings.ExcludeFolders.Contains(d.Name))
-                    {
-                        folders.Add(d);
-                        FullDirList(d, searchPattern, folders, files, opt);
-                    }
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
-        }
-
-
-        private string ResolveAppPath(int appId, bool global,  bool allowFullAccess)
-        {
-            var thisApp = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
-
-            if (global && !allowFullAccess)
-                throw new NotSupportedException("only host user may access global files");
-
-            var appPath = TemplateHelpers.GetTemplatePathRoot(
-                global
-                    ? Settings.TemplateLocations.HostFileSystem
-                    : Settings.TemplateLocations.PortalFileSystem
-                , thisApp); // get root in global system
-
-            appPath = global::System.Web.Hosting.HostingEnvironment.MapPath(appPath);
-            return appPath;
-        }
-
-
         /// <summary>
-        /// Create a new file (if it doesn't exist yet) and optionally prefill it with contetn
+        /// Create a new file (if it doesn't exist yet) and optionally prefill it with content
         /// </summary>
         /// <param name="appId"></param>
         /// <param name="path"></param>
@@ -167,49 +94,11 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var assetEditor = new AssetEditor(thisApp, path, UserInfo.IsSuperUser, isAdmin, global, Log);
-            assetEditor.EnsureUserMayEditAsset(path);
+            assetEditor.EnsureUserMayEditAssetOrThrow(path);
             return assetEditor.Create(content.Content);
         }
 
-        private static string SanitizePathAndContent(string path, ContentHelper content)
-        {
-            var name = Path.GetFileName(path);
-            var folder = Path.GetDirectoryName(path);
-            var ext = Path.GetExtension(path);
 
-            if (ext?.ToLowerInvariant() == AssetEditor.CsExtension)
-            {
-                if ((folder?.ToLower().IndexOf(AssetEditor.CsApiFolder, StringComparison.Ordinal) ?? -1) > -1)
-                {
-                    var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
-                    content.Content = AssetEditor.DefaultCsBody.Replace(AssetEditor.CsApiTemplateControllerName, nameWithoutExt);
-                }
-                return path;
-            }
-
-            if (ext?.ToLowerInvariant() != AssetEditor.CshtmlExtension) return path;
-
-            // not sure what this is for, since I believe code should only get here if there was an ext and it's cshtml
-            if (name == null) name = "missing-name.txt";
-
-            if (!name.StartsWith(AssetEditor.CshtmlPrefix))
-            {
-                name = AssetEditor.CshtmlPrefix + name;
-                path = (string.IsNullOrWhiteSpace(folder) ? "" : folder + "\\") + name;
-            }
-
-            if (name.EndsWith(AssetEditor.CodeCshtmlExtension))
-            {
-                content.Content = AssetEditor.DefaultCodeCshtmlBody;
-                return path;
-            }
-
-            // if we're creating a cshtml and it's empty, or has the dummy-text from the old 2sxc 9 admin-UI, then replace it
-            if (string.IsNullOrEmpty(content.Content) || content.Content.StartsWith("<p>You successfully"))
-                content.Content = AssetEditor.DefaultCshtmlBody;
-
-            return path;
-        }
 
         /// <summary>
         /// helper class, because it's really hard to get a post-body in a web-api call if it's not in a json-object format
@@ -223,63 +112,60 @@ namespace ToSic.Sxc.WebApi.Cms
         #endregion
 
 
-        
         /// <summary>
-        /// 
+        /// Get details and source code
         /// </summary>
         /// <param name="templateId"></param>
+        /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
         /// <param name="path"></param>
-        /// <param name="global"></param>
+        /// <param name="appId"></param>
         /// <returns></returns>
+
         #region Template --> later neutralize to standard asset-editing
         [HttpGet]
-        public AssetEditInfo Asset(int templateId = 0, string path = null, bool global = false)
+        public AssetEditInfo Asset(int templateId = 0, string path = null, bool global = false, int appId = 0)
         {
-            Log.Add($"asset templ:{templateId}, path:{path}, global:{global}");
-            var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
-            var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(BlockBuilder.App, templateId, UserInfo.IsSuperUser, isAdmin, Log)
-                : new AssetEditor(BlockBuilder.App, path, UserInfo.IsSuperUser, isAdmin, global, Log);
-            assetEditor.EnsureUserMayEditAsset();
-            return assetEditor.EditInfoWithSource;
+            var wrapLog = Log.Call<AssetEditInfo>($"asset templ:{templateId}, path:{path}, global:{global}");
+            var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
+            assetEditor.EnsureUserMayEditAssetOrThrow();
+            return wrapLog(null, assetEditor.EditInfoWithSource);
         }
 
 
         /// <summary>
-        /// Get details and source code
+        /// Update an asset with POST
         /// </summary>
         /// <param name="template"></param>
         /// <param name="templateId"></param>
         /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
         /// <param name="path"></param>
+        /// <param name="appId"></param>
         /// <returns></returns>
         [HttpPost]
-        public bool Asset([FromBody] AssetEditInfo template,[FromUri] int templateId = 0, [FromUri] bool global = false, [FromUri] string path = null)
+        public bool Asset([FromBody] AssetEditInfo template,[FromUri] int templateId = 0, [FromUri] bool global = false, [FromUri] string path = null, [FromUri] int appId = 0)
         {
-            Log.Add($"asset templ:{templateId}, global:{global}, path:{path}");
-            var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
-            var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(BlockBuilder.App, templateId, UserInfo.IsSuperUser, isAdmin, Log)
-                : new AssetEditor(BlockBuilder.App, path, UserInfo.IsSuperUser, isAdmin, global, Log);
-            assetEditor.EnsureUserMayEditAsset();
+            var wrapLog = Log.Call<bool>($"templ:{templateId}, global:{global}, path:{path}");
+            var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
             assetEditor.Source = template.Code;
-            return true;
+            return wrapLog(null, true);
         }
 
-        #endregion
-
-        #region Helpers
-        private string EnsurePathMayBeAccessed(string p, string appPath, bool allowFullAccess)
+        private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
         {
-            if (appPath == null) throw new ArgumentNullException(nameof(appPath));
-            // security check, to ensure no results leak from outside the app
-
-            if (!allowFullAccess && !p.StartsWith(appPath))
-                throw new DirectoryNotFoundException("Result was not inside the app any more - must cancel");
-            return p;
+            var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
+            var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
+            var app = BlockBuilder.App;
+            if (appId != 0 && appId != app.AppId)
+                app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
+            var assetEditor = (templateId != 0 && path == null)
+                ? new AssetEditor(app, templateId, UserInfo.IsSuperUser, isAdmin, Log)
+                : new AssetEditor(app, path, UserInfo.IsSuperUser, isAdmin, global, Log);
+            assetEditor.EnsureUserMayEditAssetOrThrow();
+            return wrapLog(null, assetEditor);
         }
 
         #endregion
+
 
 
     }
