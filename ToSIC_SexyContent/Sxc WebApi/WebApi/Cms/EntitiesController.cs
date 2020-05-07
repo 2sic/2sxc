@@ -112,7 +112,7 @@ namespace ToSic.Sxc.WebApi.Cms
             #endregion
 
             return new DnnPublishing(BlockBuilder, Log)
-                .SaveWithinDnnPagePublishing(appId, items, partOfPage,
+                .SaveWithinDnnPagePublishingAndUpdateParent(appId, items, partOfPage,
                     forceSaveAsDraft => SaveOldFormatKeepTillReplaced(appId, items, partOfPage, forceSaveAsDraft),
                     permCheck);
         }
@@ -208,12 +208,11 @@ namespace ToSic.Sxc.WebApi.Cms
 	    private void ResolveItemIdOfGroup(int appId, ItemIdentifier item)
 	    {
             if (item.Group == null) return;
-	        //var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, null);
             var cms = new CmsRuntime(appId, Log, true);
 
-            var contentGroup = /*app.BlocksManager*/cms.Blocks.GetBlockConfig(item.Group.Guid);
+            var contentGroup = cms.Blocks.GetBlockConfig(item.Group.Guid);
 	        var part = contentGroup[item.Group.Part];
-	        item.EntityId = part[item.Group.Index].EntityId;
+	        item.EntityId = part[item.ListIndex() /*.Group.Index*/].EntityId;
 	    }
 
 	    [HttpPost]

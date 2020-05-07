@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 if (entity == null) throw new Exception($"Can't find item '{guid}'");
 
                 // correct casing of content / listcontent for now - TODO should already happen in JS-Call
-                if (entity.Type.StaticName == BlocksRuntime.BlockTypeName)
+                if (entity.Type.Name == BlocksRuntime.BlockTypeName)
                 {
                     if (string.Equals(part, ViewParts.Content, OrdinalIgnoreCase)) part = ViewParts.Content;
                     if (string.Equals(part, ViewParts.ListContent, OrdinalIgnoreCase)) part = ViewParts.ListContent;

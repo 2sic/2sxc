@@ -23,16 +23,16 @@ namespace ToSic.Sxc.Apps
         //    wrapLog(null);
         //}
 
-        public void UpdateEntityIfChanged(BlockConfiguration block, string[] fields, int sortOrder, Tuple<bool, int?>[] values)
-            => FieldListUpdate(block, fields, lists => lists.Replace(sortOrder, values));
+        //public void UpdateEntityIfChanged(BlockConfiguration block, string[] fields, int sortOrder, Tuple<bool, int?>[] values)
+        //    => FieldListUpdate(block, fields, lists => lists.Replace(sortOrder, values));
 
-        public void ResetBlockEntity(BlockConfiguration block) 
-            => block.Entity = CmsManager.Read.Blocks.GetBlockConfig(block.Entity.EntityGuid).Entity;
+        //public void ResetBlockEntity(BlockConfiguration block) 
+        //    => block.Entity = CmsManager.Read.Blocks.GetBlockConfig(block.Entity.EntityGuid).Entity;
 
         /// <summary>
         /// If SortOrder is not specified, adds at the end
         /// </summary>
-        public void AddContentAndPresentationEntity(BlockConfiguration block, string[] fields, int? sortOrder, int? contentId, int? presentationId)
+        private /*public*/ void AddContentAndPresentationEntity(BlockConfiguration block, string[] fields, int? sortOrder, int? contentId, int? presentationId)
             => FieldListUpdate(block, fields, lists => lists.Add(sortOrder, new[] { contentId, presentationId }));
 
         //public void ReorderAllAndSave(BlockConfiguration block, int[] newSequence) 

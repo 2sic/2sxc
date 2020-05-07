@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn
     {
         public DnnPublishing(IBlockBuilder blockBuilder, ILog parentLog) : base(blockBuilder, parentLog, "Api.DnnPub") { }
 
-        internal Dictionary<Guid, int> SaveWithinDnnPagePublishing<T>(
+        internal Dictionary<Guid, int> SaveWithinDnnPagePublishingAndUpdateParent<T>(
             int appId,
             List<BundleWithHeader<T>> items,
             bool partOfPage,

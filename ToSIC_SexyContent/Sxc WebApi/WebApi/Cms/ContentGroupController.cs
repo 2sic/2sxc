@@ -44,10 +44,10 @@ namespace ToSic.Sxc.WebApi.Cms
             var itemList = parent.Children(part);
             
             // find attribute-type-name
-            var attribute = parent.Type.Attributes.FirstOrDefault(a => string.Equals(a.Name, part, OrdinalIgnoreCase));
+            var attribute = parent.Type[part]; // .FirstOrDefault(a => string.Equals(a.Name, part, OrdinalIgnoreCase));
             if (attribute == null) throw new Exception($"Attribute definition for '{part}' not found on the item {guid}");
-            var itemTypeName = attribute.Metadata.GetBestValue<string>(Eav.Constants.EntityFieldType) ?? "";
-            attributeSetName = itemTypeName.Split(',').First().Trim();
+            //var itemTypeName = attribute.Metadata.GetBestValue<string>(Eav.Constants.EntityFieldType) ?? "";
+            attributeSetName = attribute.EntityFieldItemTypePrimary();// itemTypeName.Split(',').First().Trim();
             return itemList;
         }
 

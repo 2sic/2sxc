@@ -74,14 +74,16 @@ namespace ToSic.Sxc.WebApi.Cms
                 ent.IsPublished = package.IsPublished;
                 ent.PlaceDraftInBranch = package.DraftShouldBranch;
 
-                // only do this if we're adding to a group
-                if (i.Header.Group != null)
+                // new in 11.01
+                if (i.Header.ListHas())
                 {
+                    // Check if Add was true, and fix if it had already been saved (EntityId != 0)
                     // the entityId is reset by the validator if it turns out to be an update
-                    if (ent.EntityId > 0 && i.Header.Group.Add)
-                        i.Header.Group.Add = false;
-
-                    i.Header.Group.ReallyAddBecauseAlreadyVerified = i.Header.Group.Add;
+                    // todo: verify use - maybe it's to set before we save, as maybe afterwards it's always != 0?
+                    var add = i.Header.ListAdd();
+                    i.Header.Add = add;
+                    if (ent.EntityId > 0 && add) i.Header.Add = false;
+                    //i.Header.ReallyAddBecauseAlreadyVerified = i.Header.Add;
                 }
 
                 return new BundleWithHeader<IEntity>
@@ -95,19 +97,22 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add("items to save generated, all data tests passed");
 
             return new DnnPublishing(BlockBuilder, Log)
-                .SaveWithinDnnPagePublishing(appId, items, partOfPage,
+                .SaveWithinDnnPagePublishingAndUpdateParent(appId, items, partOfPage,
                     forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);
         }
 
         public Dictionary<Guid, int> DoSave(AppManager appMan, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
         {
-            var entitySetToImport = items
-                .Where(entity => entity.Header.Group == null || !entity.Header.Group.SlotIsEmpty)
+            // only save entities that are
+            // a) not in a group
+            // b) in a group where the slot isn't marked as empty
+            var entitiesToSave = items
+                .Where(e => e.Header.Group == null || !e.Header.Group.SlotIsEmpty)
                 .ToList();
 
             var save = new Eav.WebApi.SaveHelpers.SaveEntities(Log);
-            save.UpdateGuidAndPublishedAndSaveMany(appMan, entitySetToImport, forceSaveAsDraft);
+            save.UpdateGuidAndPublishedAndSaveMany(appMan, entitiesToSave, forceSaveAsDraft);
 
             return save.GenerateIdList(appMan.Read.Entities, items);
 

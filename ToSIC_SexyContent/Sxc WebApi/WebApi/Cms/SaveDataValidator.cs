@@ -34,16 +34,12 @@ namespace ToSic.Sxc.WebApi.Cms
         internal bool ContainsOnlyExpectedNodes(out HttpResponseException preparedException)
         {
             var wrapLog = Log.Call();
-            if (Package.ContentTypes != null)
-                Add("package contained content-types, unexpected!");
-            if (Package.InputTypes != null)
-                Add("package contained input types, unexpected!");
-            if (Package.Features != null)
-                Add("package contained features, unexpected!");
+            if (Package.ContentTypes != null) Add("package contained content-types, unexpected!");
+            if (Package.InputTypes != null) Add("package contained input types, unexpected!");
+            if (Package.Features != null) Add("package contained features, unexpected!");
 
             // check that items are mostly intact
-            if (Package.Items == null || Package.Items.Count == 0)
-                Add("package didn't contain items, unexpected!");
+            if (Package.Items == null || Package.Items.Count == 0) Add("package didn't contain items, unexpected!");
             else
             {
                 // do various validity tests on items
