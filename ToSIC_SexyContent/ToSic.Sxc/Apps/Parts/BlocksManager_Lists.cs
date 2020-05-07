@@ -35,8 +35,8 @@ namespace ToSic.Sxc.Apps
         public void AddContentAndPresentationEntity(BlockConfiguration block, string[] fields, int? sortOrder, int? contentId, int? presentationId)
             => FieldListUpdate(block, fields, lists => lists.Add(sortOrder, new[] { contentId, presentationId }));
 
-        public void ReorderAllAndSave(BlockConfiguration block, int[] newSequence) 
-            => FieldListUpdate(block, ViewParts.ContentPair, lists => lists.Reorder(newSequence));
+        //public void ReorderAllAndSave(BlockConfiguration block, int[] newSequence) 
+        //    => FieldListUpdate(block, ViewParts.ContentPair, lists => lists.Reorder(newSequence));
 
         private void FieldListUpdate(BlockConfiguration block, string[] fields, Func<CoupledIdLists, UpdateList> callback)
         {

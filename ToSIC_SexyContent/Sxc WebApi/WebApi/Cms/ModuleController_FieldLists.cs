@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var wrapLog = Log.Call($"change order sort:{index}, dest:{toIndex}");
             var entMan = CmsManager.Entities;
             FindTargetAndModifyList(parent, fields, index,
-                (entity, fieldList, idx, versioning) => entMan.FieldListReorder(entity, fieldList, idx, toIndex, versioning));
+                (entity, fieldList, idx, versioning) => entMan.FieldListMove(entity, fieldList, idx, toIndex, versioning));
             wrapLog(null);
         }
 
