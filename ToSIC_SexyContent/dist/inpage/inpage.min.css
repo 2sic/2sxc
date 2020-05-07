@@ -332,6 +332,10 @@ body.sc-tb-show-all [sxc-toolbar-hover] .sc-menu {
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
+.sc-menu.sc-sublist a div {
+    background-color: #0088f4ad;
+}
+
 .sc-menu a div:hover {
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25), 0 6px 10px rgba(0, 0, 0, 0.22);
 }
@@ -488,7 +492,9 @@ body.sc-tb-show-all [sxc-toolbar-hover] .sc-menu {
 
 
 /* Use SVG filters to correct positioning & color of the pure SVGs */
-.icon-sxc-filter, .icon-sxc-speed {
+.icon-sxc-filter, 
+.icon-sxc-speed, 
+.icon-sxc-add-existing {
     width: 100%;
     height: 100%;
     display: inline-block;
@@ -499,6 +505,8 @@ body.sc-tb-show-all [sxc-toolbar-hover] .sc-menu {
 
 .icon-sxc-filter { background: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0Ij48cGF0aCBkPSJNMCAwaDI0djI0SDBWMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTAgMThoNHYtMmgtNHYyek0zIDZ2MmgxOFY2SDN6bTMgN2gxMnYtMkg2djJ6Ii8+PC9zdmc+); }
 .icon-sxc-speed { background: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0Ij48cGF0aCBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTIwLjM4IDguNTdsLTEuMjMgMS44NWE4IDggMCAwIDEtLjIyIDcuNThINS4wN0E4IDggMCAwIDEgMTUuNTggNi44NWwxLjg1LTEuMjNBMTAgMTAgMCAwIDAgMy4zNSAxOWEyIDIgMCAwIDAgMS43MiAxaDEzLjg1YTIgMiAwIDAgMCAxLjc0LTEgMTAgMTAgMCAwIDAtLjI3LTEwLjQ0eiIvPjxwYXRoIGQ9Ik0xMC41OSAxNS40MWEyIDIgMCAwIDAgMi44MyAwbDUuNjYtOC40OS04LjQ5IDUuNjZhMiAyIDAgMCAwIDAgMi44M3oiLz48L3N2Zz4=); }
+.icon-sxc-add-existing { background: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0Ij48cGF0aCBkPSJNMCAwaDI0djI0SDBWMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTQgMTBIMnYyaDEydi0yem0wLTRIMnYyaDEyVjZ6bTQgOHYtNGgtMnY0aC00djJoNHY0aDJ2LTRoNHYtMmgtNHpNMiAxNmg4di0ySDJ2MnoiLz48L3N2Zz4=); } /* url(playlist_add-24px.svg); } */
+
 
 /* Options must wait, as it needs al the turn/rotation styling etc. */
 /* .icon-sxc-options {content: url(ellipsis-circles-wide.svg);} */
