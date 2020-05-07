@@ -6,10 +6,12 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Code;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -34,27 +36,16 @@ namespace ToSic.Sxc.WebApi.Cms
             return contentGroup;
         }
 
+        // TODO: WIP changing this from ContentGroup editing to any list editing
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public dynamic Replace(Guid guid, string part, int index)
         {
-            Log.Add($"replace target:{guid}, part:{part}, index:{index}");
+            var wrapLog = Log.Call<dynamic>($"target:{guid}, part:{part}, index:{index}");
             part = part.ToLower();
-            var contentGroup = GetContentGroup(guid);
 
-            // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
-            var set = part == ViewParts.ContentLower 
-                ? contentGroup.Content 
-                : contentGroup.Header;
-
-            // not sure what this check is for, just leaving it in for now (2015-09-19 2dm)
-            if (set == null || contentGroup.View == null)
-                throw new Exception("Cannot find content group");
-
-
-            var attributeSetName = part == ViewParts.ContentLower
-                ? contentGroup.View.ContentType
-                : contentGroup.View.HeaderType;
+            var itemList = FindContentGroupAndTypeName(guid, part, out var attributeSetName) 
+                           ?? FindItemAndFieldTypeName(guid, part, out attributeSetName);
 
             // if no type was defined in this set, then return an empty list as there is nothing to choose from
             if (string.IsNullOrEmpty(attributeSetName))
@@ -67,38 +58,83 @@ namespace ToSic.Sxc.WebApi.Cms
             var results = dataSource.List.ToDictionary(p => p.EntityId,
                 p => p.GetBestTitle() ?? "");
 
-            var selectedId = set.Count == 0 ? null : set[index]?.EntityId;
+            var selectedId = itemList.Count == 0 ? null : itemList[index]?.EntityId;
 
-            return new
+            var result = new
             {
                 SelectedId = selectedId,
                 Items = results,
                 ContentTypeName = ct.StaticName
             };
+            return wrapLog(null, result);
         }
 
+        private List<IEntity> FindItemAndFieldTypeName(Guid guid, string part, out string attributeSetName)
+        {
+            var parent = BlockBuilder.App.Data.List.One(guid);
+            if (parent == null) throw new Exception($"No item found for {guid}");
+            if (!parent.Attributes.ContainsKey(part)) throw new Exception($"Could not find field {part} in item {guid}");
+            var itemList = parent.Children(part);
+            
+            // find attribute-type-name
+            var attribute = parent.Type.Attributes.FirstOrDefault(a => string.Equals(a.Name, part, OrdinalIgnoreCase));
+            if (attribute == null) throw new Exception($"Attribute definition for '{part}' not found on the item {guid}");
+            var itemTypeName = attribute.Metadata.GetBestValue<string>(Eav.Constants.EntityFieldType) ?? "";
+            attributeSetName = itemTypeName.Split(',').First().Trim();
+            return itemList;
+        }
 
+        private List<IEntity> FindContentGroupAndTypeName(Guid guid, string part, out string attributeSetName)
+        {
+            var wrapLog = Log.Call<List<IEntity>>($"{guid}, {part}");
+            var contentGroup = GetContentGroup(guid);
+            attributeSetName = null;
+            var partIsContent = string.Equals(part, ViewParts.ContentLower, OrdinalIgnoreCase);
+            // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
+            var itemList = partIsContent ? contentGroup.Content : contentGroup.Header;
+
+            if (itemList == null) return wrapLog(null, null);
+
+            // not sure what this check is for, just leaving it in for now (2015-09-19 2dm)
+            if (contentGroup.View == null)
+            {
+                Log.Add("Something found, but doesn't seem to be a content-group. Cancel.");
+                return wrapLog(null, null);
+                //throw new Exception($"Found Content-Group but has no View: {guid}");
+            }
+
+            attributeSetName = partIsContent ? contentGroup.View.ContentType : contentGroup.View.HeaderType;
+            return wrapLog(null, itemList);
+        }
+
+        // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Replace(Guid guid, string part, int index, int entityId)
         {
-            Log.Add($"replace target:{guid}, part:{part}, index:{index}, id:{entityId}");
+            var wrapLog = Log.Call($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
             var versioning = BlockBuilder.Environment.PagePublishing;
 
             void InternalSave(VersioningActionInfo args)
             {
                 var cms = new CmsManager(BlockBuilder.App, Log);
-                var contentGroup = cms.Read.Blocks.GetBlockConfig(guid);
-                cms.Blocks.UpdateEntityIfChanged(contentGroup, ViewParts.PickPair(part), index, new []
-                    {
-                        new Tuple<bool, int?>(true,entityId), 
-                        new Tuple<bool, int?>(false, null), 
-                    });
+                var entity = cms.AppState.List.One(guid);
+                if(entity == null) throw new Exception($"Can't find item '{guid}'");
+
+                // correct casing of content / listcontent for now - TODO should already happen in JS-Call
+                if (entity.Type.StaticName == BlocksRuntime.BlockTypeName)
+                {
+                    if (string.Equals(part, ViewParts.Content, OrdinalIgnoreCase)) part = ViewParts.Content;
+                    if (string.Equals(part, ViewParts.ListContent, OrdinalIgnoreCase)) part = ViewParts.ListContent;
+                }
+
+                cms.Entities.FieldListReplaceIfModified(entity, new[] { part }, index, new int? [] {entityId}, cms.Read.WithPublishing);
             }
 
             // use dnn versioning - this is always part of page
             var context = DnnDynamicCode.Create(BlockBuilder, Log);
             versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
+            wrapLog(null);
         }
 
         [HttpGet]

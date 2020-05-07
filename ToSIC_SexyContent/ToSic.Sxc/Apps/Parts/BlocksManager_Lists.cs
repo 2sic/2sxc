@@ -8,19 +8,20 @@ namespace ToSic.Sxc.Apps
 {
     public partial class BlocksManager
     {
+        // TODO replace with direct call to Entities.FieldListReplaceIfModified
         public void AddEmptyItem(BlockConfiguration block, int? sortOrder = null)
             => AddContentAndPresentationEntity(block, ViewParts.ContentPair, sortOrder, null, null);
 
-        public void ChangeOrder(BlockConfiguration block, int sourceIndex, int targetIndex)
-        {
-            var wrapLog = Log.Call($"change order orig:{sourceIndex}, dest:{targetIndex}");
-            /*
-             * Known Issue 2017-08-28:
-             * Should case DRAFT copy of the BlockConfiguration if versioning is enabled.
-             */
-            FieldListUpdate(block, ViewParts.ContentPair, lists => lists.Move(sourceIndex, targetIndex));
-            wrapLog(null);
-        }
+        //public void ChangeOrder(BlockConfiguration block, int sourceIndex, int targetIndex)
+        //{
+        //    var wrapLog = Log.Call($"change order orig:{sourceIndex}, dest:{targetIndex}");
+        //    /*
+        //     * Known Issue 2017-08-28:
+        //     * Should case DRAFT copy of the BlockConfiguration if versioning is enabled.
+        //     */
+        //    FieldListUpdate(block, ViewParts.ContentPair, lists => lists.Move(sourceIndex, targetIndex));
+        //    wrapLog(null);
+        //}
 
         public void UpdateEntityIfChanged(BlockConfiguration block, string[] fields, int sortOrder, Tuple<bool, int?>[] values)
             => FieldListUpdate(block, fields, lists => lists.Replace(sortOrder, values));

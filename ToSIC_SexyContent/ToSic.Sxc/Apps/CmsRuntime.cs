@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsRuntime: AppRuntime
     {
-        internal bool WithPublishing { get; }
+        public bool WithPublishing { get; }
 
         //public CmsRuntime(int zoneId, int appId, ILog parentLog, bool showDraft, bool withPublishing) 
         //    : base(zoneId, appId, parentLog)
