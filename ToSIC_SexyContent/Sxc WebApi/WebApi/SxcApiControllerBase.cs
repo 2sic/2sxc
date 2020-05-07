@@ -23,10 +23,6 @@ namespace ToSic.Sxc.WebApi
         [PrivateApi] public IBlockBuilder BlockBuilder { get; private set; }
 
 
-        //internal static DnnDynamicCode CreateDynCode(IBlockBuilder blockBuilder, ILog log) 
-        //    => new DnnDynamicCode(blockBuilder, 10, blockBuilder?.Log ?? log);
-
-
         #region App-Helpers for anonyous access APIs
 
         internal AppFinder AppFinder => _appFinder ?? (_appFinder = new AppFinder(PortalSettings, Env.ZoneMapper, ControllerContext, Log));

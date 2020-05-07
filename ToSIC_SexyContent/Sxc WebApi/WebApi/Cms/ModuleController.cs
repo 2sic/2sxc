@@ -184,7 +184,7 @@ namespace ToSic.Sxc.WebApi.Cms
         }
 
         /// <summary>
-        /// 2016-04-07 2dm: note: remove was never tested! UI not clear yet
+        /// Delete a content-block inside a list of content-blocks
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="field"></param>
@@ -285,16 +285,23 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void RemoveFromList([FromUri] int sortOrder)
+        public void RemoveFromList(int sortOrder, Guid? parent, string fields)
         {
-            Log.Add($"remove from index:{sortOrder}");
+            var wrapLog = Log.Call($"remove from index:{sortOrder}");
             var versioning = BlockBuilder.Environment.PagePublishing;
 
-            void InternalSave(VersioningActionInfo args) =>
-                CmsManager.Blocks.RemoveFromList(BlockBuilder.Block.Configuration, sortOrder);
+            void InternalSave(VersioningActionInfo args)
+            {
+                var target = parent == null ? BlockBuilder.Block.Configuration.Entity : App.Data.List.One(parent.Value);
+                if (target == null) throw new Exception($"Can't find parent {parent}");
+                var useVersioning = BlockBuilder.Block.Configuration.VersioningEnabled;
+                var fieldList = fields?.Split(',').Select(f => f.Trim()).ToArray() ?? ViewParts.ContentPair;
+                CmsManager.Entities.FieldListRemove(target, fieldList, sortOrder, useVersioning);
+            }
 
             // use dnn versioning - items here are always part of list
             versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
+            wrapLog(null);
         }
 
         [HttpGet]
