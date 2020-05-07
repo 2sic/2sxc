@@ -13,12 +13,14 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    // TODO: these methods were once for ContentGroups only, now they work on every entity
+    // Some day they should be moved to an own controller or to EntitiesController
     public partial class ContentGroupController
     {
         // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void Replace(Guid guid, string part, int index, int entityId)
+        public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
         {
             var wrapLog = Log.Call($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
             var versioning = BlockBuilder.Environment.PagePublishing;
@@ -36,7 +38,11 @@ namespace ToSic.Sxc.WebApi.Cms
                     if (string.Equals(part, ViewParts.ListContent, OrdinalIgnoreCase)) part = ViewParts.ListContent;
                 }
 
-                cms.Entities.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId }, cms.Read.WithPublishing);
+                if (add)
+                    cms.Entities.FieldListAdd(entity, new[] {part}, index, new int?[] {entityId}, cms.EnablePublishing);
+                else
+                    cms.Entities.FieldListReplaceIfModified(entity, new[] {part}, index, new int?[] {entityId},
+                        cms.EnablePublishing);
             }
 
             // use dnn versioning - this is always part of page

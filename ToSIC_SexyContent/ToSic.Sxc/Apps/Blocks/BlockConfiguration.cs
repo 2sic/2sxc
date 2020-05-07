@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Apps.Blocks
             ZoneId = cmsRuntime.ZoneId;
             AppId = cmsRuntime.AppId;
             ShowDrafts = cmsRuntime.ShowDrafts;
-            VersioningEnabled = cmsRuntime.WithPublishing;
+            VersioningEnabled = cmsRuntime.EnablePublishing;
         }
 
         /// <summary>

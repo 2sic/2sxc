@@ -5,18 +5,11 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsRuntime: AppRuntime
     {
-        public bool WithPublishing { get; }
+        internal bool EnablePublishing { get; }
 
-        //public CmsRuntime(int zoneId, int appId, ILog parentLog, bool showDraft, bool withPublishing) 
-        //    : base(zoneId, appId, parentLog)
-        //{
-        //    ShowDrafts = showDraft;
-        //    WithPublishing = withPublishing;
-        //}
-
-        public CmsRuntime(IAppIdentity app, ILog parentLog, bool showDrafts, bool withPublishing) : base(app, showDrafts, parentLog)
+        public CmsRuntime(IAppIdentity app, ILog parentLog, bool showDrafts, bool enablePublishing) : base(app, showDrafts, parentLog)
         {
-            WithPublishing = withPublishing;
+            EnablePublishing = enablePublishing;
         }
 
         public CmsRuntime(int appId, ILog parentLog, bool showDrafts) : base(appId, showDrafts, parentLog)
