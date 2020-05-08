@@ -20,12 +20,22 @@ namespace ToSic.Sxc.Data
         protected List<IDynamicEntity> DynEntities;
 
         [PrivateApi]
-        public DynamicEntityWithList(IEnumerable<IEntity> entities, string[] dimensions, int compatibility, IBlockBuilder blockBuilder) 
+        internal DynamicEntityWithList(IEntity parent, string field, IEnumerable<IEntity> entities, string[] dimensions, int compatibility, IBlockBuilder blockBuilder) 
             : base(null, dimensions, compatibility, blockBuilder)
         {
+            var index = 0;
             DynEntities = entities.Select(
-                p => new DynamicEntity(p, Dimensions, CompatibilityLevel, BlockBuilder) as IDynamicEntity
-            ).ToList();
+                e =>
+                {
+                    // we create an Entity with some metadata-decoration, so that toolbars know it's part of a list
+                    var blockEntity = new EntityInBlock(e)
+                    {
+                        Parent = parent.EntityGuid,
+                        Fields = field,
+                        SortOrder = index++
+                    };
+                    return new DynamicEntity(blockEntity, Dimensions, CompatibilityLevel, BlockBuilder) as IDynamicEntity;
+                }).ToList();
             Entity = DynEntities.FirstOrDefault()?.Entity;
         }
 

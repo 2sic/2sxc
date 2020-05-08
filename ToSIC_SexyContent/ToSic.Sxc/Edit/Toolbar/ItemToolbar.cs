@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         protected readonly ItemToolbarAction TargetV10;
 
-        public ItemToolbar(IEntity dynamicEntity, string actions = null, string newType = null, object prefill = null, object toolbar = null, object settings = null)
+        public ItemToolbar(IEntity entity, string actions = null, string newType = null, object prefill = null, object toolbar = null, object settings = null)
         {
             Settings = settings;
 
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 if(prefill != null && !(prefill is string))
                     throw new Exception("Tried to build toolbar in new V10 format, but prefill is not a string. In V10.27+ it expects a string in url format like field=value&field2=value2");
 
-                TargetV10 = new ItemToolbarAction(dynamicEntity) { contentType = newType, prefill = prefill };
+                TargetV10 = new ItemToolbarAction(entity) { contentType = newType, prefill = prefill };
                 return;
             }
 
@@ -52,14 +52,14 @@ namespace ToSic.Sxc.Edit.Toolbar
             // Case 2 build a toolbar based on the actions or just from empty definition
             if (actions == null)
             {
-                Actions.Add(new ItemToolbarAction(dynamicEntity) {contentType = newType, prefill = prefill});
+                Actions.Add(new ItemToolbarAction(entity) {contentType = newType, prefill = prefill});
                 return;
             }
 
             // Case 3 - we have multiple actions
             var actList = actions.Split(',').Select(p => p.Trim()).ToList();
             foreach (string act in actList)
-                Actions.Add(new ItemToolbarAction(dynamicEntity)
+                Actions.Add(new ItemToolbarAction(entity)
                 {
                     action = act,
                     contentType = newType,

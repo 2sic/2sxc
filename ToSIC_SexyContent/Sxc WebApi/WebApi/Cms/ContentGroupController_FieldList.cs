@@ -72,7 +72,10 @@ namespace ToSic.Sxc.WebApi.Cms
             var results = dataSource.List.ToDictionary(p => p.EntityId,
                 p => p.GetBestTitle() ?? "");
 
-            var selectedId = itemList.Count == 0 ? null : itemList[index]?.EntityId;
+            // if list is empty or shorter than index (would happen in an add-to-end-request) return null
+            var selectedId = itemList.Count > index 
+                ? itemList[index]?.EntityId
+                : null;
 
             var result = new
             {
