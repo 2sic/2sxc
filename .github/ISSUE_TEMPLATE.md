@@ -37,7 +37,7 @@ please provide the *STEPS TO REPRODUCE* and/or a *MINIMAL DEMO* like a screensho
 **Please tell us about your environment:**
 <!-- Operating system, IDE, package manager, HTTP server, ... -->
 
-* **2sxc version(s):** 10.X.X  <!-- Check whether this is still an issue in the most recent version -->
+* **2sxc version(s):** 11.X.X  <!-- Check whether this is still an issue in the most recent version -->
 * **Browser:** [all | Chrome XX | Firefox XX | Edge XX | IE XX | Mobile Chrome XX | Android X.X Web Browser | iOS XX Safari ]
 * **DNN:** [all | 7.4.2 | 8.X.X | 9.X.X ] 
 * **Language:** [any/all | English | German | other ]

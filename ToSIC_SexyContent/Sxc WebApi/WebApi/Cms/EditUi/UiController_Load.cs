@@ -162,7 +162,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var fields = types
                 .SelectMany(t => t.Attributes)
-                .Select(a => a.InputType)//.InputTypeTempBetterForNewUi)
+                .Select(a => a.InputType)
                 .Distinct();
             return typeRead.GetInputTypes()
                 .Where(it => fields.Contains(it.Type))

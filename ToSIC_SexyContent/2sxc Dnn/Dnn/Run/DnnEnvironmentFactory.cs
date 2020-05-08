@@ -14,22 +14,29 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnEnvironmentFactory : IEnvironmentFactory, IWebFactoryTemp
     {
+        /// <inheritdoc />
         public PermissionCheckBase ItemPermissions(IAppIdentity appIdentity, IEntity targetItem, ILog parentLog, IContainer module = null) 
             => new DnnPermissionCheck(parentLog, targetItem: targetItem, instance: module, portal: PortalSettings.Current, appIdentity: appIdentity);
 
+        /// <inheritdoc />
         public PermissionCheckBase TypePermissions(IAppIdentity appIdentity, IContentType targetType, IEntity targetItem, ILog parentLog, IContainer module = null) 
             => new DnnPermissionCheck(parentLog, targetType, targetItem, module, portal: PortalSettings.Current, appIdentity: appIdentity);
 
+        /// <inheritdoc />
         public PermissionCheckBase InstancePermissions(ILog parentLog, IContainer module, IApp app)
             => new DnnPermissionCheck(parentLog, portal: PortalSettings.Current, instance: module, app: app);
 
-        public IPagePublishing PagePublisher(ILog parentLog) => new Sxc.Dnn.Cms.PagePublishing(parentLog);
+        /// <inheritdoc />
+        public IPagePublishing PagePublisher(ILog parentLog) => new Cms.PagePublishing(parentLog);
 
+        /// <inheritdoc />
         public IAppEnvironment Environment(ILog parentLog) => new DnnEnvironment(parentLog);
 
+        /// <inheritdoc />
+        public DynamicCodeRoot AppAndDataHelpers(Blocks.IBlockBuilder blockBuilder) => new DnnDynamicCode(blockBuilder, 9);
 
 
-
-        public DynamicCodeRoot AppAndDataHelpers(Sxc.Blocks.IBlockBuilder blockBuilder) => new DnnDynamicCode(blockBuilder, 9);
+        // experimental
+        public IAppFileSystemLoader AppFileSystemLoader(int appId, string path, ILog log) => new DnnAppFileSystemLoader(appId, path, PortalSettings.Current, log);
     }
 }

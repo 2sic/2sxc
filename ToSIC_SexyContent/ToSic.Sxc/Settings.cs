@@ -20,6 +20,7 @@ namespace ToSic.Sxc
 
         public const string PortalHostDirectory = "~/Portals/_default/";
         public const string AppsRootFolder = "2sxc";
+        public const string AppsSystemFolder = "System";
         public const string PortalSettingsPrefix = "ToSIC_SexyContent_";
         public const string PortalSettingZoneId = PortalSettingsPrefix + "ZoneID";
         public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
