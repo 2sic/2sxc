@@ -186,7 +186,7 @@
     <Compile Include="Data\DynamicEntity.cs" />
     <Compile Include="Data\DynamicEntityList.cs" />
     <Compile Include="Data\EntityDecorator.cs" />
-    <Compile Include="Data\EntityInContentGroup.cs" />
+    <Compile Include="Data\EntityInBlock.cs" />
     <Compile Include="Interfaces\Internal\IHasEditingData.cs" />
     <Compile Include="Engines\EngineBase.cs" />
     <Compile Include="Engines\EngineFactory.cs" />
