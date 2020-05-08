@@ -13,6 +13,8 @@ namespace ToSic.Sxc.WebApi.System
 
         private static string p(string content) => Tag("p", content);
 
+        private static string div(string content) => Tag("div", content);
+
         private static string em(string content) => Tag("em", content);
         private static string strong(string content) => Tag("strong", content);
 
