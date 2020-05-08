@@ -11,6 +11,10 @@ Whenever you press a button in the edit-ui, a edit-command is handled by the jav
 To keep things simple, these commands all have the convention of using a **short command name** like `new`, some **parameters** like `entityId` which differ for each command and usually some context like _this is happening in the module 7503_.   
 
 ## How to use
+
+> [!TIP]
+> These examples are fairly technical - in most cases you just want the commands for custom toolbars. You can find them below.
+
 In most cases you don't have to even think about this, because the hover-buttons will automatically call the command as needed. But there are cases where you may want to do so yourself - for example with very custom buttons or if you want to automate something. Here's an example:
 
 ```html
@@ -175,6 +179,18 @@ To understand the internals, check out the [source code](https://github.com/2sic
   current list of items, right below the item where it was clicked.<br>
     * useModuleList: true (required to be true for it to work)<br>
     * sortOrder: [number] (important so it knows the position)</td>
+ </tr>
+ <tr height="80" style="height:60.0pt">
+  <td height="80" class="xl6522490" align="left" width="130" style="height:60.0pt;
+  width:98pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri">add-existing</td>
+  <td class="xl6522490" align="left" width="84" style="width:63pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri">Edit</td>
+  <td class="xl6522490" align="left" width="436" style="width:327pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri">New in 11.01. Adds a content-item to the
+  current list of items, right below the item where it was clicked. But to do this, it shows the user a list of existing items.<br>
  </tr>
  <tr height="160" style="height:120.0pt">
   <td height="160" class="xl6522490" align="left" width="130" style="height:120.0pt;
