@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn.Run
             try
             {
                 var tenant = new DnnTenant(portalSettings);
-                var fullPath = tenant.SxcPath + "/" + path + "/" + Settings.AppsSystemFolder;
+                var fullPath = tenant.SxcPath + "/" + path + "/" + Eav.Constants.FolderAppExtensions;
                 Path = HostingEnvironment.MapPath(fullPath);
                 Log.Add("System path:" + Path);
             }
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Dnn.Run
                     var input = name.Substring(FieldFolderPrefix.Length);
                     // TODO: use metadata information if available
                     return new InputTypeInfo(input, "Extension: " + name, "Field in App System", "", false,
-                        $"[App:Path]/{Settings.AppsSystemFolder}/{name}/index.js", "", false);
+                        $"[App:Path]/{Eav.Constants.FolderAppExtensions}/{name}/index.js", "", false);
                 })
                 .ToList();
             return wrapLog(null, types);
@@ -102,8 +102,7 @@ namespace ToSic.Sxc.Dnn.Run
             var dir = new DirectoryInfo(Path);
             if(!dir.Exists) return new List<string>();
             var sub = dir.GetDirectories();
-            // TODO: move ".data" into a global constant, replace everywhere
-            var subDirs = sub.SelectMany(s => s.GetDirectories(".data"));
+            var subDirs = sub.SelectMany(s => s.GetDirectories(Eav.Constants.FolderData));
             var paths = subDirs.Select(s => s.FullName).ToList();
             return paths;
         }
