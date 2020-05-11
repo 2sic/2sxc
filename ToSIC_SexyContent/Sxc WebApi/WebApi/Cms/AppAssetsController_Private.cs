@@ -45,6 +45,7 @@ namespace ToSic.Sxc.WebApi.Cms
             {
                 try
                 {
+                    // todo: possibly re-include subfolders with ".data"
                     if (!Eav.ImportExport.Settings.ExcludeFolders.Contains(d.Name))
                     {
                         folders.Add(d);

@@ -69,14 +69,14 @@ namespace ToSic.Sxc.Dnn.Run
             return wrapLog(null, types);
         }
 
-        public IList<IContentType> ContentTypes()
+        public IList<IContentType> ContentTypes(IEntitiesSource entitiesSource)
         {
             var wrapLog = Log.Call<IList<IContentType>>();
             try
             {
                 var extPaths = ExtensionPaths();
                 Log.Add($"Found {extPaths.Count} extensions with .data folder");
-                var allTypes = extPaths.SelectMany(LoadTypesFromOneExtensionPath)
+                var allTypes = extPaths.SelectMany(p => LoadTypesFromOneExtensionPath(p, entitiesSource))
                     .Distinct(new EqualityComparer_ContentType())
                     .ToList();
                 return wrapLog("ok", allTypes);
@@ -89,10 +89,10 @@ namespace ToSic.Sxc.Dnn.Run
             return wrapLog("error", new List<IContentType>());
         }
 
-        private IEnumerable<IContentType> LoadTypesFromOneExtensionPath(string extensionPath)
+        private IEnumerable<IContentType> LoadTypesFromOneExtensionPath(string extensionPath, IEntitiesSource entitiesSource)
         {
             var wrapLog = Log.Call<IList<IContentType>>(extensionPath);
-            var fsLoader = new FileSystemLoader(extensionPath, RepositoryTypes.Folder, true, Log);
+            var fsLoader = new FileSystemLoader(extensionPath, RepositoryTypes.Folder, true, entitiesSource, Log);
             var types = fsLoader.ContentTypes();
             return wrapLog("ok", types);
         }
