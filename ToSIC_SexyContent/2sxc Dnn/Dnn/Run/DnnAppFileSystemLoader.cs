@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Persistence.File;
+using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.Run
@@ -22,17 +26,26 @@ namespace ToSic.Sxc.Dnn.Run
         {
             var wrapLog = Log.Call($"{appId}, {path}, ...");
             AppId = appId;
-            //Path = path;
             PortalSettings = portalSettings;
 
-            var tenant = new DnnTenant(portalSettings);
-            var fullPath = tenant.SxcPath + "/" + path + "/" + Settings.AppsSystemFolder;
-            Path = HostingEnvironment.MapPath(fullPath);
-            Log.Add("System path:" + Path);
+            try
+            {
+                var tenant = new DnnTenant(portalSettings);
+                var fullPath = tenant.SxcPath + "/" + path + "/" + Settings.AppsSystemFolder;
+                Path = HostingEnvironment.MapPath(fullPath);
+                Log.Add("System path:" + Path);
+            }
+            catch (Exception e)
+            {
+                // ignore
+                wrapLog("error: " + e.Message);
+                return;
+            }
+
             wrapLog(null);
         }
 
-        public List<InputTypeInfo> FindInputTypes()
+        public List<InputTypeInfo> InputTypes()
         {
             var wrapLog = Log.Call<List<InputTypeInfo>>();
             var di = new DirectoryInfo(Path);
@@ -48,11 +61,51 @@ namespace ToSic.Sxc.Dnn.Run
             var types = withIndexJs.Select(name =>
                 {
                     var input = name.Substring(FieldFolderPrefix.Length);
+                    // TODO: use metadata information if available
                     return new InputTypeInfo(input, "Extension: " + name, "Field in App System", "", false,
                         $"[App:Path]/{Settings.AppsSystemFolder}/{name}/index.js", "", false);
                 })
                 .ToList();
             return wrapLog(null, types);
+        }
+
+        public IList<IContentType> ContentTypes()
+        {
+            var wrapLog = Log.Call<IList<IContentType>>();
+            try
+            {
+                var extPaths = ExtensionPaths();
+                Log.Add($"Found {extPaths.Count} extensions with .data folder");
+                var allTypes = extPaths.SelectMany(LoadTypesFromOneExtensionPath)
+                    .Distinct(new EqualityComparer_ContentType())
+                    .ToList();
+                return wrapLog("ok", allTypes);
+            }
+            catch (Exception e)
+            {
+                Log.Add("error " + e.Message);
+            }
+
+            return wrapLog("error", new List<IContentType>());
+        }
+
+        private IEnumerable<IContentType> LoadTypesFromOneExtensionPath(string extensionPath)
+        {
+            var wrapLog = Log.Call<IList<IContentType>>(extensionPath);
+            var fsLoader = new FileSystemLoader(extensionPath, RepositoryTypes.Folder, true, Log);
+            var types = fsLoader.ContentTypes();
+            return wrapLog("ok", types);
+        }
+
+        private List<string> ExtensionPaths()
+        {
+            var dir = new DirectoryInfo(Path);
+            if(!dir.Exists) return new List<string>();
+            var sub = dir.GetDirectories();
+            // TODO: move ".data" into a global constant, replace everywhere
+            var subDirs = sub.SelectMany(s => s.GetDirectories(".data"));
+            var paths = subDirs.Select(s => s.FullName).ToList();
+            return paths;
         }
     }
 }

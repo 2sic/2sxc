@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Code;
@@ -38,5 +39,16 @@ namespace ToSic.Sxc.Dnn.Run
 
         // experimental
         public IAppFileSystemLoader AppFileSystemLoader(int appId, string path, ILog log) => new DnnAppFileSystemLoader(appId, path, PortalSettings.Current, log);
+
+        // experimental
+        /// <summary>
+        /// This is the simpler signature, which is used from Eav.Core
+        /// The more advance signature which can also deliver InputTypes is the AppFileSystemLoader
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="path"></param>
+        /// <param name="log"></param>
+        /// <returns></returns>
+        public IAppRepositoryLoader AppRepositoryLoader(int appId, string path, ILog log) => AppFileSystemLoader(appId, path, log);
     }
 }

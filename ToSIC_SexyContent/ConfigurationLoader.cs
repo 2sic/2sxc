@@ -98,6 +98,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<XmlImportWithFiles, XmlImportFull>();
 
                 sc.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
+                sc.AddTransient<IRuntimeFactory, DnnEnvironmentFactory>();
                 sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();
                 sc.AddTransient<IWebFactoryTemp, DnnEnvironmentFactory>();
                 sc.AddTransient<IRenderingHelpers, DnnRenderingHelpers>();
