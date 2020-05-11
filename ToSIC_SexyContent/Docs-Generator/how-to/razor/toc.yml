@@ -1,5 +1,7 @@
 - name: Razor Components/Templates
   topicUid: HowTo.Razor.Templates
+- name: Organize and Split Code
+  topicUid: HowTo.Razor.OrganizeCode
 - name: Edit Object
   topicUid: HowTo.Razor.Edit
   items: 

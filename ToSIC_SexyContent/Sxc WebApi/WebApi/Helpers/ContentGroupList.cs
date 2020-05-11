@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Apps;
@@ -10,6 +11,7 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -17,156 +19,166 @@ namespace ToSic.Sxc.WebApi
     {
         public ContentGroupList(IBlockBuilder blockBuilder, ILog parentLog) : base(blockBuilder, parentLog, "Api.GrpPrc") {}
 
-        internal void IfChangesAffectListUpdateIt<T>(int appId, List<BundleWithHeader<T>> items, Dictionary<Guid, int> ids)
+        internal bool IfChangesAffectListUpdateIt<T>(int appId, List<BundleWithHeader<T>> items, Dictionary<Guid, int> ids)
         {
-            Log.Add("check groupings");
-            var groupItems = items.Where(i => i.Header.Group != null)
-                .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index + i.Header.Group.Add)
+            var wrapLog = Log.Call<bool>();
+            var groupItems = items.Where(i => i.Header.ListHas())
+                .GroupBy(i => i.Header.ListParent().ToString() + i.Header.ListIndex() + i.Header.ListAdd())
                 .ToList();
 
             // if it's new, it has to be added to a group
             // only add if the header wants it, AND we started with ID unknown
-            if (groupItems.Any())
-                PostSaveUpdateIdsInListEntity(appId, ids, groupItems);
-            else
-                Log.Add("no additional group processing necessary");
+            return groupItems.Any() 
+                ? wrapLog(null, PostSaveUpdateIdsInParent(appId, ids, groupItems)) 
+                : wrapLog("no additional group processing necessary", true);
         }
 
         private BlockConfiguration GetBlockConfig(IAppIdentity app, Guid blockGuid)
             => new CmsRuntime(app, Log, BlockBuilder.UserMayEdit,
                 BlockBuilder.Environment.PagePublishing.IsEnabled(BlockBuilder.Container.Id)).Blocks.GetBlockConfig(blockGuid);
 
-        private void PostSaveUpdateIdsInListEntity<T>(
+        private bool PostSaveUpdateIdsInParent<T>(
             int appId,
             Dictionary<Guid, int> postSaveIds,
-            IEnumerable<IGrouping<string, BundleWithHeader<T>>> groupItems)
+            IEnumerable<IGrouping<string, BundleWithHeader<T>>> pairsOrSingleItems)
         {
-            var wrapLog = Log.Call($"{appId}");
+            var wrapLog = Log.Call<bool>($"{appId}");
             var app = new Apps.App(new DnnTenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
                 ConfigurationProvider.Build(BlockBuilder, true), false, Log);
 
-            foreach (var entitySets in groupItems)
+            foreach (var bundle in pairsOrSingleItems)
             {
-                Log.Add("processing:" + entitySets.Key);
-                // experimental 10.27 new
-                var hasFieldName = entitySets.FirstOrDefault(e => !string.IsNullOrEmpty(e.Header.Field));
-                if (hasFieldName != null)
-                {
-                    // TODO: WIP, atm we're just saving, add / move won't work yet, just skip the rest
-                    continue;
-                }
+                Log.Add("processing:" + bundle.Key);
+                var entity = app.Data.List.One(bundle.First().Header.ListParent());
+                var targetIsContentBlock = entity.Type.Name == BlocksRuntime.BlockTypeName;
+                
+                var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();
+                var primaryId = GetIdFromGuidOrError(postSaveIds, primaryItem.EntityGuid);
 
-                var contItem =
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ContentLower) 
-                    ?? entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ListContentLower);
-                if (contItem == null)
-                    throw new Exception("unexpected group-entity assignment, cannot figure it out");
+                var ids = targetIsContentBlock
+                    ? new[] {primaryId, FindPresentationItem(postSaveIds, bundle)}
+                    : new[] {primaryId as int?};
 
-                var presItem =
-                    entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.PresentationLower)
-                    ?? entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == ViewParts.ListPresentationLower);
-
-                // Get group to assign to and parameters
-                var contentGroup = GetBlockConfig(app, contItem.Header.Group.Guid);
-                //var partName = contItem.Header.Group.Part;
-
-                var index = contItem.Header.Group.Index;
-
-                // Get saved entity (to get its ID)
-                if (!postSaveIds.ContainsKey(contItem.EntityGuid))
-                    throw new Exception("Saved entity not found - not able to update BlockConfiguration");
-
-                var postSaveId = postSaveIds[contItem.EntityGuid];
-
-                int? presentationId = null;
-
-                if (presItem != null)
-                {
-                    if (postSaveIds.ContainsKey(presItem.EntityGuid))
-                        presentationId = postSaveIds[presItem.EntityGuid];
-
-                    presentationId = presItem.Header.Group.SlotIsEmpty ? null : presentationId;
-                    // use null if it shouldn't have one
-                }
+                var index = primaryItem.Header.ListIndex();
 
                 // add or update slots
-                var itemIsReallyNew = contItem.EntityId == 0; // only really add if it's really new
-                var willAdd = contItem.Header.Group.Add && itemIsReallyNew;
+                //var itemIsReallyNew = primaryItem.EntityId == 0; // only really add if it's really new
+                var willAdd = primaryItem.Header.ListAdd();// && itemIsReallyNew;
 
                 // 2019-07-01 2dm needed to add this, because new-save already gives it an ID
-                if (contItem.Header.Group.ReallyAddBecauseAlreadyVerified != null)
-                    willAdd = contItem.Header.Group.ReallyAddBecauseAlreadyVerified.Value;
+                //if (primaryItem.Header.ReallyAddBecauseAlreadyVerified != null)
+                //    willAdd = primaryItem.Header.ReallyAddBecauseAlreadyVerified.Value;
 
-                Log.Add($"will add: {willAdd}; add-pre-verified:{contItem.Header.Group.ReallyAddBecauseAlreadyVerified}; Group.Add:{contItem.Header.Group.Add}; {nameof(itemIsReallyNew)}:{itemIsReallyNew}; EntityId:{contItem.EntityId}");
+                Log.Add($"will add: {willAdd}; " + // add-pre-verified:{primaryItem.Header.ReallyAddBecauseAlreadyVerified}; " +
+                        $"Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.EntityId}");
 
                 var cms = new CmsManager(app, Log);
-                var fieldPair = ViewParts.PickPair(contItem.Header.Group.Part);
+                var fieldPair = targetIsContentBlock
+                    ? ViewParts.PickPair(primaryItem.Header.Group.Part)
+                    : new[] {primaryItem.Header.Field};
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
-                    cms.Blocks.AddContentAndPresentationEntity(contentGroup, fieldPair, index, postSaveId, presentationId);
+                    cms.Entities.FieldListAdd(entity, fieldPair, index, ids, cms.EnablePublishing);
                 else
-                    cms.Blocks.UpdateEntityIfChanged(contentGroup, fieldPair, index,
-                        new []
-                        {
-                            new Tuple<bool, int?>(true, postSaveId), 
-                            new Tuple<bool, int?>(true, presentationId), 
-                        });
+                    cms.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, cms.EnablePublishing);
 
-                // reset the content-group after the updates
-                cms.Blocks.ResetBlockEntity(contentGroup);
             }
 
             // update-module-title
             BlockBuilder.Block.Editor.UpdateTitle();
-            wrapLog("ok");
+            return wrapLog("ok", true);
+        }
+
+        private static BundleWithHeader<T> FindContentItem<T>(IGrouping<string, BundleWithHeader<T>> bundle)
+        {
+            var primaryItem = bundle.FirstOrDefault(e => string.Equals(e.Header.Group.Part, ViewParts.Content, OrdinalIgnoreCase)) 
+                   ?? bundle.FirstOrDefault(e => string.Equals(e.Header.Group.Part, ViewParts.ListContent, OrdinalIgnoreCase));
+            if (primaryItem == null)
+                throw new Exception("unexpected group-entity assignment, cannot figure it out");
+            return primaryItem;
+        }
+
+        /// <summary>
+        /// Get saved entity (to get its ID)
+        /// </summary>
+        private static int GetIdFromGuidOrError(Dictionary<Guid, int> postSaveIds, Guid guid)
+        {
+            if (!postSaveIds.ContainsKey(guid))
+                throw new Exception("Saved entity not found - not able to update BlockConfiguration");
+
+            return postSaveIds[guid];
+        }
+
+        private static int? FindPresentationItem<T>(Dictionary<Guid, int> postSaveIds, IGrouping<string, BundleWithHeader<T>> bundle)
+        {
+            int? presentationId = null;
+            var presItem =
+                bundle.FirstOrDefault(e => string.Equals(e.Header.Group.Part, ViewParts.Presentation, OrdinalIgnoreCase))
+                ?? bundle.FirstOrDefault(e =>
+                    string.Equals(e.Header.Group.Part, ViewParts.ListPresentation, OrdinalIgnoreCase));
+
+            if (presItem == null) return null;
+
+            if (postSaveIds.ContainsKey(presItem.EntityGuid))
+                presentationId = postSaveIds[presItem.EntityGuid];
+
+            presentationId = presItem.Header.Group.SlotIsEmpty ? null : presentationId;
+            // use null if it shouldn't have one
+
+            return presentationId;
         }
 
         internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers, IAppIdentity app)
         {
-            Log.Add("ConvertListIndexToId()");
+            var wrapLog = Log.Call<List<ItemIdentifier>>();
             var newItems = new List<ItemIdentifier>();
             foreach (var identifier in identifiers)
             {
-                // only do special processing if it's a "group" item
-                if (identifier.Group == null)
+                // Case one, it's a Content-Group (older model, probably drop soon)
+                if (identifier.Group != null)
                 {
+                    var contentGroup = GetBlockConfig(app, identifier.Group.Guid);
+                    var contentTypeStaticName = (contentGroup.View as View)?
+                                                .GetTypeStaticName(identifier.Group.Part) ?? "";
+
+                    // if there is no content-type for this, then skip it (don't deliver anything)
+                    if (contentTypeStaticName == "")
+                        continue;
+
+                    identifier.ContentTypeName = contentTypeStaticName;
+                    ConvertListIndexToEntityIds(identifier, contentGroup);
                     newItems.Add(identifier);
                     continue;
                 }
 
-                // Experimental in 10.27
-                // assumes id and content-type are also given, so no further changes
-                if (identifier.Field != null)
+                // New in v11.01
+                if (identifier.Parent != null && identifier.Field != null)
                 {
+                    // look up type
+                    var target = BlockBuilder.App.Data.List.One(identifier.Parent.Value);
+                    var field = target.Type[identifier.Field];
+                    identifier.ContentTypeName = field.EntityFieldItemTypePrimary();
                     newItems.Add(identifier);
                     continue;
                 }
 
-                var contentGroup = GetBlockConfig(app, identifier.Group.Guid);
-                var contentTypeStaticName = (contentGroup.View as View)?
-                                            .GetTypeStaticName(identifier.Group.Part) ?? "";
-
-                // if there is no content-type for this, then skip it (don't deliver anything)
-                if (contentTypeStaticName == "")
-                    continue;
-
-                identifier.ContentTypeName = contentTypeStaticName;
-
-                ConvertListIndexToEntityIds(identifier, contentGroup);
-
+                // Default case - just a normal identifier
                 newItems.Add(identifier);
             }
-            return newItems;
+            return wrapLog(null, newItems);
         }
 
 
         private static void ConvertListIndexToEntityIds(ItemIdentifier identifier, BlockConfiguration blockConfiguration)
         {
             var part = blockConfiguration[identifier.Group.Part];
-            if (!identifier.Group.Add && // not in add-mode
-                part.Count > identifier.Group.Index && // has as many items as desired
-                part[identifier.Group.Index] != null) // and the slot has something
-                identifier.EntityId = part[identifier.Group.Index].EntityId;
+            if (!identifier.ListAdd()) // not in add-mode
+            {
+                var idx = identifier.ListIndex();
+                if(part.Count > idx && // has as many items as desired
+                   part[idx] != null) // and the slot has something
+                    identifier.EntityId = part[idx].EntityId;
+            }
 
             // tell the UI that it should not actually use this data yet, keep it locked
             if (!identifier.Group.Part.ToLower().Contains(ViewParts.PresentationLower))

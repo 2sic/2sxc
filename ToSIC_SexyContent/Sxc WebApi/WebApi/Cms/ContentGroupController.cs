@@ -5,17 +5,17 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn.Code;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     [SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]
-    public class ContentGroupController : SxcApiControllerBase
+    public partial class ContentGroupController : SxcApiControllerBase
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -34,119 +34,49 @@ namespace ToSic.Sxc.WebApi.Cms
             return contentGroup;
         }
 
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public dynamic Replace(Guid guid, string part, int index)
-        {
-            Log.Add($"replace target:{guid}, part:{part}, index:{index}");
-            part = part.ToLower();
-            var contentGroup = GetContentGroup(guid);
 
+
+        private List<IEntity> FindItemAndFieldTypeName(Guid guid, string part, out string attributeSetName)
+        {
+            var parent = BlockBuilder.App.Data.List.One(guid);
+            if (parent == null) throw new Exception($"No item found for {guid}");
+            if (!parent.Attributes.ContainsKey(part)) throw new Exception($"Could not find field {part} in item {guid}");
+            var itemList = parent.Children(part);
+            
+            // find attribute-type-name
+            var attribute = parent.Type[part]; // .FirstOrDefault(a => string.Equals(a.Name, part, OrdinalIgnoreCase));
+            if (attribute == null) throw new Exception($"Attribute definition for '{part}' not found on the item {guid}");
+            //var itemTypeName = attribute.Metadata.GetBestValue<string>(Eav.Constants.EntityFieldType) ?? "";
+            attributeSetName = attribute.EntityFieldItemTypePrimary();// itemTypeName.Split(',').First().Trim();
+            return itemList;
+        }
+
+        private List<IEntity> FindContentGroupAndTypeName(Guid guid, string part, out string attributeSetName)
+        {
+            var wrapLog = Log.Call<List<IEntity>>($"{guid}, {part}");
+            var contentGroup = GetContentGroup(guid);
+            attributeSetName = null;
+            var partIsContent = string.Equals(part, ViewParts.ContentLower, OrdinalIgnoreCase);
             // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
-            var set = part == ViewParts.ContentLower 
-                ? contentGroup.Content 
-                : contentGroup.Header;
+            var itemList = partIsContent ? contentGroup.Content : contentGroup.Header;
+
+            if (itemList == null) return wrapLog(null, null);
 
             // not sure what this check is for, just leaving it in for now (2015-09-19 2dm)
-            if (set == null || contentGroup.View == null)
-                throw new Exception("Cannot find content group");
-
-
-            var attributeSetName = part == ViewParts.ContentLower
-                ? contentGroup.View.ContentType
-                : contentGroup.View.HeaderType;
-
-            // if no type was defined in this set, then return an empty list as there is nothing to choose from
-            if (string.IsNullOrEmpty(attributeSetName))
-                return null;
-
-            var appState = Eav.Apps.State.Get(BlockBuilder.App);
-            var ct = appState.GetContentType(attributeSetName);
-
-            var dataSource = BlockBuilder.App.Data[ct.Name]; 
-            var results = dataSource.List.ToDictionary(p => p.EntityId,
-                p => p.GetBestTitle() ?? "");
-
-            var selectedId = set.Count == 0 ? null : set[index]?.EntityId;
-
-            return new
+            if (contentGroup.View == null)
             {
-                SelectedId = selectedId,
-                Items = results,
-                ContentTypeName = ct.StaticName
-            };
-        }
-
-
-        [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void Replace(Guid guid, string part, int index, int entityId)
-        {
-            Log.Add($"replace target:{guid}, part:{part}, index:{index}, id:{entityId}");
-            var versioning = BlockBuilder.Environment.PagePublishing;
-
-            void InternalSave(VersioningActionInfo args)
-            {
-                var cms = new CmsManager(BlockBuilder.App, Log);
-                var contentGroup = cms.Read.Blocks.GetBlockConfig(guid);
-                cms.Blocks.UpdateEntityIfChanged(contentGroup, ViewParts.PickPair(part), index, new []
-                    {
-                        new Tuple<bool, int?>(true,entityId), 
-                        new Tuple<bool, int?>(false, null), 
-                    });
+                Log.Add("Something found, but doesn't seem to be a content-group. Cancel.");
+                return wrapLog(null, null);
+                //throw new Exception($"Found Content-Group but has no View: {guid}");
             }
 
-            // use dnn versioning - this is always part of page
-            var context = DnnDynamicCode.Create(BlockBuilder, Log);
-            versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
+            attributeSetName = partIsContent ? contentGroup.View.ContentType : contentGroup.View.HeaderType;
+            return wrapLog(null, itemList);
         }
 
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public List<SortedEntityItem> ItemList(Guid guid)
-        {
-            Log.Add($"item list for:{guid}");
-            var cg = GetContentGroup(guid);
 
-            var list = cg.Content.Select((c, index) => new SortedEntityItem
-            {
-                Index = index,
-                Id = c?.EntityId ?? 0,
-                Guid = c?.EntityGuid ?? Guid.Empty,
-                Title = c?.GetBestTitle() ?? "",
-                Type = c?.Type.StaticName ?? cg.View.ContentType
-            }).ToList();
 
-            return list;
-        }
-         
 
-        [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> list)
-        {
-            Log.Add($"list for:{guid}, items:{list?.Count}");
-            if (list == null)
-                throw new ArgumentNullException(nameof(list));
-
-            var versioning = BlockBuilder.Environment.PagePublishing;
-
-            void InternalSave(VersioningActionInfo args)
-            {
-                var cg = GetContentGroup(guid);
-
-                var sequence = list.Select(i => i.Index).ToArray();
-                new CmsManager(BlockBuilder.App, Log).Blocks
-                    .ReorderAllAndSave(cg, sequence);
-            }
-
-            // use dnn versioning - items here are always part of list
-            var context = DnnDynamicCode.Create(BlockBuilder, Log);
-            versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
-
-            return true;
-
-        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -154,6 +84,9 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Log.Add($"header for:{guid}");
             var cg = GetContentGroup(guid);
+
+            // new in v11 - this call might be run on a non-content-block, in which case we return null
+            if (cg.Entity.Type.Name != BlocksRuntime.BlockTypeName) return null;
 
             var header = cg.Header.FirstOrDefault();
 

@@ -62,12 +62,12 @@ namespace ToSic.Sxc.Edit.Toolbar
         [JsonProperty(NullValueHandling = Ignore)] public Guid? entityGuid { get; set; }
 
         /// <summary>
-        /// Experimental 10.27
+        /// Experimental 11.01
         /// </summary>
         [JsonProperty(NullValueHandling = Ignore)] public Guid? parent { get; set; }
 
         /// <summary>
-        /// Experimental 10.27
+        /// Experimental 11.01
         /// </summary>
         [JsonProperty(NullValueHandling = Ignore)] public string fields { get; set; }
 

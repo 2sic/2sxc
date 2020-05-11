@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Hosting;
+using ToSic.Eav;
 using ToSic.Eav.Repositories;
 
 namespace ToSic.SexyContent
@@ -14,15 +15,16 @@ namespace ToSic.SexyContent
     /// <remarks>
     /// Is used by reflection, so you won't see any direct references to this anywhere
     /// </remarks>
+    // ReSharper disable once UnusedMember.Global
     public class RepositoryInfoEavAndUi: RepositoryInfoOfFolder
     {
         public override List<string> RootPaths => new List<string>
         {
-            BuildPath(".data"),
-            BuildPath("dist/edit/.data"),
-            BuildPath("dist/sxc-edit/.data"),
-            BuildPath(".databeta"),
-            BuildPath(".data-custom")
+            BuildPath(Constants.FolderData),
+            //BuildPath("dist/edit/" + Constants.FolderData),
+            //BuildPath("dist/sxc-edit/" + Constants.FolderData),
+            BuildPath(Constants.FolderDataBeta),
+            BuildPath(Constants.FolderDataCustom)
         };
 
         private string BuildPath(string pathEnd) =>

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.WebApi.System
             if (appId == null)
                 return "please add appid to the url parameters";
 
-            SystemManager.Purge(appId.Value);
+            SystemManager.Purge(appId.Value, Log);
 
             return $"app {appId} has been purged";
         }

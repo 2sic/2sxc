@@ -6,6 +6,9 @@ This event is called by the view-engine _after_ calling [CustomizeData](xref:How
 
 You can override this event to change how data is presented to the search, for example by bundling items together, or by giving items different URLs so that search knows that they are to appear on a sub-page. 
 
+> [!TIP]
+> 2sxc 11 introduces Code-Behind. You can now place the `CustomizeSearch(...)` method in the [code-behind](xref:HowTo.Razor.OrganizeCode) file.
+
 ## How to use
 In your razor page (.cshtml file) you can add a script block implementing this, as follows:
 

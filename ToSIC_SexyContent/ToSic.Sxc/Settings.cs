@@ -20,6 +20,7 @@ namespace ToSic.Sxc
 
         public const string PortalHostDirectory = "~/Portals/_default/";
         public const string AppsRootFolder = "2sxc";
+        //public const string AppsSystemFolder = "System";
         public const string PortalSettingsPrefix = "ToSIC_SexyContent_";
         public const string PortalSettingZoneId = PortalSettingsPrefix + "ZoneID";
         public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -65,8 +66,8 @@ namespace ToSic.Sxc
                 "10.25.00", // LTS
                 "10.25.02", // LTS
                 "10.25.03",
-                "10.26.00", "10.27.00", "10.27.01", "10.28.00", "10.30.00", 
-                "11.00.00",
+                "10.26.00", "10.27.00", "10.27.01", "10.28.00", "10.30.00",
+                "11.00.00", "11.00.01",
             };
 
             // this is the last version which must run server-side change-code

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Apps
 {
     public class BlocksRuntime: CmsRuntimeBase
     {
-        internal const string BlockTypeName = "2SexyContent-ContentGroup";
+        public const string BlockTypeName = "2SexyContent-ContentGroup";
 
         internal BlocksRuntime(CmsRuntime cmsRuntime, ILog parentLog) : base(cmsRuntime, parentLog, "Sxc.BlkRdr")
         {
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Apps
         internal IDataSource ContentGroupSource()
         {
             var dsFactory = new DataSource(Log);
-            var dataSource = CmsRuntime.Data;// dsFactory.GetPublishing(CmsRuntime, CmsRuntime.ShowDrafts);
+            var dataSource = CmsRuntime.Data;
             var onlyCGs = dsFactory.GetDataSource<EntityTypeFilter>(CmsRuntime, dataSource);
             onlyCGs.TypeName = BlockTypeName;
             return dataSource;

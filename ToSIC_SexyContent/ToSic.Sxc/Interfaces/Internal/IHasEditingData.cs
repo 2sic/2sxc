@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Interfaces
         /// The parent item which has the list containing this item.
         /// </summary>
         /// <remarks>
-        /// Experimental 2020-03-20 v10.27
+        /// Experimental 2020-03-20 v11.01
         /// </remarks>
         Guid? Parent { get; set; }
 
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Interfaces
         /// The field which has the list containing this item.
         /// </summary>
         /// <remarks>
-        /// Experimental 2020-03-20 v10.27
+        /// Experimental 2020-03-20 v11.01
         /// </remarks>
         string Fields { get; set; }
     }

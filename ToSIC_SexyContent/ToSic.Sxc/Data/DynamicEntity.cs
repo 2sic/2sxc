@@ -79,18 +79,18 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi]
-        public object GetEntityValue(string attributeName)
+        public object GetEntityValue(string field)
         {
             #region check the two special cases Toolbar / Presentation which the EAV doesn't know
 
-            if (attributeName == "Toolbar")
+            if (field == "Toolbar")
 #pragma warning disable 612
 #pragma warning disable 618
                 return Toolbar.ToString();
 #pragma warning restore 618
 #pragma warning restore 612
 
-            if (attributeName == ViewParts.Presentation)
+            if (field == ViewParts.Presentation)
                 return GetPresentation;
 
             #endregion
@@ -99,13 +99,13 @@ namespace ToSic.Sxc.Data
             if (Entity == null) return null;
 
             // check if we already have it in the cache
-            if (_valCache.ContainsKey(attributeName)) return _valCache[attributeName];
+            if (_valCache.ContainsKey(field)) return _valCache[field];
 
-            var result = Entity.GetBestValue(attributeName, Dimensions, true);
+            var result = Entity.GetBestValue(field, Dimensions, true);
             if (result is IEnumerable<IEntity> rel)
-                result = new DynamicEntityWithList(rel, Dimensions, CompatibilityLevel, BlockBuilder);
+                result = new DynamicEntityWithList(Entity, field, rel, Dimensions, CompatibilityLevel, BlockBuilder);
 
-            _valCache.Add(attributeName, result);
+            _valCache.Add(field, result);
             return result;
         }
 
@@ -209,7 +209,8 @@ namespace ToSic.Sxc.Data
         /// Since we define two DynamicEntities to be equal when they host the same entity, this uses the Entity.HashCode
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode() => Entity != null ? Entity.GetHashCode() : 0;
+        // ReSharper disable once NonReadonlyMemberInGetHashCode - required so we can set the entity in inherited object
+        public override int GetHashCode() => Entity?.GetHashCode() ?? 0;
 
         /// <inheritdoc />
         public bool Equals(IDynamicEntity dynObj) => Entity == dynObj?.Entity;

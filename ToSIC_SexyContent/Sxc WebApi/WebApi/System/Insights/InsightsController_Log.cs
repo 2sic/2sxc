@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.Http;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -73,8 +72,10 @@ namespace ToSic.Sxc.WebApi.System
 
         private static string LogHeader(string key = null)
         {
-            var msg = h1($"Log {key}")
-                      + p($"Status: {(History.Pause ? "paused" : "running")} collecting #{History.Count} of max {History.MaxCollect} (keep max {History.Size} per set, then FIFO) - "
+            var msg = div("back to " + a("2sxc insights home", "./help"))
+                      + h1($"2sxc Insights: Log {key}")
+                      + p(
+                          $"Status: {(History.Pause ? "paused" : "running")} collecting #{History.Count} of max {History.MaxCollect} (keep max {History.Size} per set, then FIFO) - "
                           + a("change", $"logs?pause={!History.Pause}")
                           + " (pause to see details of the log)\n");
             return msg;

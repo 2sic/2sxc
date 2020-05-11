@@ -102,7 +102,7 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
         /// <summary>
         /// Check permissions and if not successful, give detailed explanation
         /// </summary>
-        public void EnsureUserMayEditAsset(string fullPath = null)
+        public void EnsureUserMayEditAssetOrThrow(string fullPath = null)
         {
             // check super user permissions - then all is allowed
             if (_userIsSuperUser)
@@ -163,7 +163,7 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
         {
             get
             {
-                EnsureUserMayEditAsset(InternalPath);
+                EnsureUserMayEditAssetOrThrow(InternalPath);
                 if (File.Exists(InternalPath))
                     return File.ReadAllText(InternalPath);
 
@@ -175,7 +175,7 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
             }
             set
             {
-                EnsureUserMayEditAsset(InternalPath);
+                EnsureUserMayEditAssetOrThrow(InternalPath);
 
                 if (File.Exists(InternalPath))
                     File.WriteAllText(InternalPath, value);
