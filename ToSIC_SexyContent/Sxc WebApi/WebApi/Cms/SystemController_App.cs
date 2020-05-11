@@ -4,6 +4,8 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.LookUp;
+using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -13,7 +15,9 @@ namespace ToSic.Sxc.WebApi.Cms
         public dynamic Apps(int zoneId)
         {
             var cms = new CmsZones(zoneId, Env, Log);
-            var list = cms.AppsRt.GetApps(new DnnTenant(new PortalSettings(ActiveModule.OwnerPortalID)), true);
+            var tenant = new DnnTenant(new PortalSettings(ActiveModule.OwnerPortalID));
+            var configurationBuilder = ConfigurationProvider.Build(BlockBuilder, true);
+            var list = cms.AppsRt.GetApps(tenant, configurationBuilder);
             return list.Select(a => new
             {
                 Id = a.AppId,
@@ -23,7 +27,10 @@ namespace ToSic.Sxc.WebApi.Cms
                 a.Folder,
                 AppRoot = a.Path,
                 IsHidden = a.Hidden,
-                ConfigurationId = a.Configuration?.Id
+                ConfigurationId = a.Configuration?.Id,
+                Items = a.Data.List.Count(),
+                a.Thumbnail,
+                Version = a.VersionSafe()
             }).ToList();
         }
 
