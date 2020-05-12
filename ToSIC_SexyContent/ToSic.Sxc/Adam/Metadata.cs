@@ -4,7 +4,6 @@ using System.Threading;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
-using ToSic.SexyContent;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam
@@ -14,19 +13,6 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class Metadata
     {
-        /// <summary>
-        /// Generate an empty, fake metadata item
-        /// Important so that all ADAM items have a metadata - and don't throw errors when accessed
-        /// </summary>
-        /// <returns></returns>
-        internal static Entity CreateFakeMetadata()
-        {
-            var emptyMetadata = new Dictionary<string, object> { { "Title", "" } };
-            var fakeMeta = new Entity(Eav.Constants.TransientAppId, 0, ContentTypeBuilder.Fake(""), emptyMetadata,
-                "Title");
-            return fakeMeta;
-        }
-
         /// <summary>
         /// Find the first metadata entity for this file/folder
         /// </summary>
@@ -45,7 +31,8 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         internal static IDynamicEntity GetFirstOrFake(AdamAppContext appContext, int id, bool isFolder)
         {
-            var meta = GetFirstMetadata(appContext.AppRuntime, id, isFolder) ?? CreateFakeMetadata();
+            var meta = GetFirstMetadata(appContext.AppRuntime, id, isFolder) 
+                       ?? Build.FakeEntity(Eav.Constants.TransientAppId); ;
             return new DynamicEntity(meta, new[] { Thread.CurrentThread.CurrentCulture.Name }, appContext.CompatibilityLevel, appContext.BlockBuilder);
         }
 

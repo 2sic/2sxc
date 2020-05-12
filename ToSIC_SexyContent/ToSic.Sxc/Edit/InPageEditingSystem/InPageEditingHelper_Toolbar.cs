@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             => ToolbarInternal(true, target, noParameterOrder, actions, contentType, prefill, toolbar,
             settings);
 
-        private HtmlString ToolbarInternal(bool inline, object target,
+        private HtmlString ToolbarInternal(bool inTag, object target,
             string dontRelyOnParameterOrder,
             string actions,
             string contentType,
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             object toolbar,
             object settings)
         {
-            Log.Add($"context toolbar - enabled:{Enabled}; inline{inline}");
+            Log.Add($"context toolbar - enabled:{Enabled}; inline{inTag}");
             if (!Enabled) return null;
             Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar", $"{nameof(actions)},{nameof(contentType)},{nameof(prefill)},{nameof(toolbar)},{nameof(settings)}");
 
@@ -54,8 +54,8 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
                 Log.Warn("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
             var itmToolbar = new ItemToolbar(eTarget, actions, contentType, prefill, toolbar, settings);
 
-            return inline 
-                ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute) 
+            return inTag 
+                ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute()) 
                 : new HtmlString(itmToolbar.Toolbar);
         }
 
