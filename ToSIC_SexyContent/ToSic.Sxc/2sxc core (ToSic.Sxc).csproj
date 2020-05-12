@@ -115,8 +115,10 @@
     <Compile Include="Compatibility\RemoveInV10\ToSic.SexyContent.Element.cs" />
     <Compile Include="Conversion\IDynamicEntityTo_T.cs" />
     <Compile Include="Data\DynamicEntityWithList.cs" />
+    <Compile Include="Data\DynamicEntityWithList_Equality.cs" />
     <Compile Include="Data\DynamicEntityWithList_IList.cs" />
     <Compile Include="Data\DynamicEntityWithList_IListDynamic.cs" />
+    <Compile Include="Data\DynamicEntity_Equality.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacket.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacket.Statics.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacketBase.cs" />
@@ -184,7 +186,6 @@
     <Compile Include="LookUp\LookUpCmsBlock.cs" />
     <Compile Include="DataSources\Block.cs" />
     <Compile Include="Data\DynamicEntity.cs" />
-    <Compile Include="Data\DynamicEntityList.cs" />
     <Compile Include="Data\EntityInBlock.cs" />
     <Compile Include="Interfaces\Internal\IHasEditingData.cs" />
     <Compile Include="Engines\EngineBase.cs" />

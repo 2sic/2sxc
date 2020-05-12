@@ -49,5 +49,6 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         public Guid? Parent { get; set; }
-   }
+
+    }
 }
