@@ -34,9 +34,9 @@ namespace ToSic.Sxc.Data
                         IDynamicEntity;
                 })
                 .ToList();
-            Entity = DynEntities.FirstOrDefault()?.Entity
+            SetEntity(DynEntities.FirstOrDefault()?.Entity
                      // check empty list - create a dummy Entity so toolbars will know what to do
-                     ?? EntityInBlock.PlaceHolder(parent, field);
+                     ?? EntityInBlock.PlaceHolder(parent, field));
         }
 
         public IEnumerator<IDynamicEntity> GetEnumerator() => DynEntities.GetEnumerator();

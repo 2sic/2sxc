@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Web;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntity : DynamicObject, IDynamicEntity, ICompatibilityLevel
     {
         [PrivateApi]
-        public IEntity Entity { get; protected set; }
+        public IEntity Entity { get; private set; }
 
         [PrivateApi]
         public int CompatibilityLevel { get; }
@@ -60,10 +61,16 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         public DynamicEntity(IEntity entity, string[] dimensions, int compatibility, IBlockBuilder blockBuilder)
         {
-            Entity = entity;
+            SetEntity(entity);
             Dimensions = dimensions;
             CompatibilityLevel = compatibility;
             BlockBuilder = blockBuilder;
+        }
+
+        protected void SetEntity(IEntity entity)
+        {
+            Entity = entity;
+            _EntityForEqualityCheck = (Entity as IEntityWrapper)?._EntityForEqualityCheck ?? Entity;
         }
 
         /// <inheritdoc />
