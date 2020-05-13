@@ -16,6 +16,8 @@ namespace ToSic.Sxc.Dnn.Run
     public class DnnAppFileSystemLoader : HasLog, IAppFileSystemLoader
     {
         public const string FieldFolderPrefix = "field-";
+        public const string JsFile = "index.js";
+
         public int AppId { get;  }
 
         public string Path { get; set; }
@@ -54,19 +56,37 @@ namespace ToSic.Sxc.Dnn.Run
             Log.Add($"found {inputFolders.Length} field-directories");
 
             var withIndexJs = inputFolders
-                .Where(fld => fld.GetFiles("index.js").Any())
+                .Where(fld => fld.GetFiles(JsFile).Any())
                 .Select(fld => fld.Name).ToArray();
-            Log.Add($"found {withIndexJs.Length} folders with index.js");
+            Log.Add($"found {withIndexJs.Length} folders with {JsFile}");
 
             var types = withIndexJs.Select(name =>
                 {
-                    var input = name.Substring(FieldFolderPrefix.Length);
+                    var fullName = name.Substring(FieldFolderPrefix.Length);
+                    var niceName = NiceName(name);
                     // TODO: use metadata information if available
-                    return new InputTypeInfo(input, "Extension: " + name, "Field in App System", "", false,
-                        $"[App:Path]/{Eav.Constants.FolderAppExtensions}/{name}/index.js", "", false);
+                    return new InputTypeInfo(fullName, niceName, "Extension Field", "", false,
+                        $"[App:Path]/{Eav.Constants.FolderAppExtensions}/{name}/{JsFile}", "", false);
                 })
                 .ToList();
             return wrapLog(null, types);
+        }
+
+        private static string NiceName(string name)
+        {
+            var nameStack = name.Split('-');
+            if (nameStack.Length < 3) return "[Bad Name Format]";
+            // drop "field-" and "string-" or whatever type name is used
+            nameStack = nameStack.Skip(2).ToArray();
+            var caps = nameStack.Select(n =>
+            {
+                if (string.IsNullOrWhiteSpace(n)) return "";
+                if (n.Length <= 1) return n;
+                return char.ToUpper(n[0]) + n.Substring(1);
+            });
+
+            var niceName = string.Join(" ", caps);
+            return niceName;
         }
 
         public IList<IContentType> ContentTypes(IEntitiesSource entitiesSource)

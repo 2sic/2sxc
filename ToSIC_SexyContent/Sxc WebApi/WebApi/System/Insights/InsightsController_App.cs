@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Web.Http;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 
 namespace ToSic.Sxc.WebApi.System
@@ -17,7 +16,6 @@ namespace ToSic.Sxc.WebApi.System
                 return message;
 
             Log.Add($"debug app-load {appId}");
-            //var appRead = new AppRuntime(appId.Value, true, Log);
             return FormatLog($"2sxc load log for app {appId}", AppRt(appId).AppState.Log);
         }
 
@@ -27,7 +25,7 @@ namespace ToSic.Sxc.WebApi.System
             ThrowIfNotSuperuser();
 
             var msg = h1("Apps In Cache");
-            var cache = /*Factory.GetAppsCache*/Eav.Apps.State.Cache;
+            var cache = State.Cache;
 
             var zones = cache.Zones.OrderBy(z => z.Key);
 

@@ -12,13 +12,8 @@ using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
-using ToSic.SexyContent;
-using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
-using ToSic.Sxc.SxcTemp;
 using Assembly = System.Reflection.Assembly;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -42,7 +37,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
 	    public dynamic GetLanguages()
 	    {
-            Log.Add("get langs");
+            Log.Add("get languages");
 	        var portalId = PortalSettings.PortalId;
 	        var zoneId = Env.ZoneMapper.GetZoneId(portalId);
 	        // ReSharper disable once PossibleInvalidOperationException
@@ -54,7 +49,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	                IsEnabled = c.Active
 	            });
 
-            Log.Add("langs - found:" + cultures.Count());
+            Log.Add("languages - found:" + cultures.Count());
 	        return cultures;
 	    }
 
@@ -73,49 +68,6 @@ namespace ToSic.Sxc.WebApi.Cms
             new ZoneManager(zoneId, Log).SaveLanguage(cultureCode, cultureText, enable);
 	    }
 
-
-        #region Apps
-
-        [HttpGet]
-        public dynamic Apps(int zoneId)
-        {
-            var cms = new CmsZones(zoneId, Env, Log);
-            var list = cms.AppsRt.GetApps(new DnnTenant(new PortalSettings(ActiveModule.OwnerPortalID)), true);
-            // AppManagement.GetApps(zoneId, true, new DnnTenant(new PortalSettings(ActiveModule.OwnerPortalID)), Log);
-            return list.Select(a => new
-            {
-                Id = a.AppId,
-                IsApp = a.AppGuid != Eav.Constants.DefaultAppName,
-                Guid = a.AppGuid,
-                a.Name,
-                a.Folder,
-                AppRoot = GetPath(zoneId, a.AppId),
-                IsHidden = a.Hidden,
-                ConfigurationId = a.Configuration?.Id
-            }).ToList();
-        }
-
-        private string GetPath(int zoneId, int appId)
-        {
-            var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings), zoneId, appId, parentLog: Log);
-            return app.Path;
-        }
-
-        [HttpGet]
-        public void DeleteApp(int zoneId, int appId)
-        {
-            var userId = PortalSettings.Current.UserId;
-            new CmsZones(zoneId, Env, Log).AppsMan.RemoveAppInTenantAndEav(appId, new DnnTenant(PortalSettings));
-            //AppManagement.RemoveAppInTenantAndEav(Env.ZoneMapper, zoneId, appId, new DnnTenant(PortalSettings), userId, Log);
-        }
-
-        [HttpPost]
-        public void App(int zoneId, string name)
-        {
-            AppManager.AddBrandNewApp(zoneId, name, Log);
-        }
-
-        #endregion
 
         #region Dialog Helpers
         /// <summary>
@@ -137,7 +89,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 IsContent = app?.AppGuid == "Default",
                 Language = PortalSettings.Current.CultureCode,
                 LanguageDefault = PortalSettings.Current.DefaultLanguage,
-                GettingStartedUrl = app == null ? "" : IntroductionToAppUrl(app)
+                GettingStartedUrl = app == null ? "" : IntroductionToAppUrl(app),
+                AppPath = app?.Path
             };
         }
 

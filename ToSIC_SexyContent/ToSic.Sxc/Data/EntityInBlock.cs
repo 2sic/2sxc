@@ -8,12 +8,16 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     public class EntityInBlock : EntityDecorator, IHasEditingData
     {
-        public EntityInBlock(IEntity baseEntity) : base(baseEntity)
+        public EntityInBlock(IEntity baseEntity, Guid? parentGuid, string field = null, int index = 0) : base(baseEntity)
         {
+            Parent = parentGuid;
+            Fields = field;
+            SortOrder = index;
         }
-        public EntityInBlock(DynamicEntity dynEntity) : base(dynEntity.Entity)
-        {
-        }
+
+
+        public static EntityInBlock PlaceHolder(IEntity parent, string field)
+            => new EntityInBlock(Build.FakeEntity(parent.AppId), parent.EntityGuid, field, 0);
 
         /// <summary>
         /// Sort order in the content-group, because it's often accessed by index
@@ -45,5 +49,6 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         public Guid? Parent { get; set; }
-   }
+
+    }
 }

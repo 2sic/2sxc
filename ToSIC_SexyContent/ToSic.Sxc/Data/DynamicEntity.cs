@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Web;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
@@ -17,10 +18,10 @@ namespace ToSic.Sxc.Data
     /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public class DynamicEntity : DynamicObject, IDynamicEntity, IEquatable<IDynamicEntity>, ICompatibilityLevel
+    public partial class DynamicEntity : DynamicObject, IDynamicEntity, ICompatibilityLevel
     {
         [PrivateApi]
-        public IEntity Entity { get; protected set; }
+        public IEntity Entity { get; private set; }
 
         [PrivateApi]
         public int CompatibilityLevel { get; }
@@ -60,10 +61,16 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         public DynamicEntity(IEntity entity, string[] dimensions, int compatibility, IBlockBuilder blockBuilder)
         {
-            Entity = entity;
+            SetEntity(entity);
             Dimensions = dimensions;
             CompatibilityLevel = compatibility;
             BlockBuilder = blockBuilder;
+        }
+
+        protected void SetEntity(IEntity entity)
+        {
+            Entity = entity;
+            _EntityForEqualityCheck = (Entity as IEntityWrapper)?._EntityForEqualityCheck ?? Entity;
         }
 
         /// <inheritdoc />
@@ -165,57 +172,6 @@ namespace ToSic.Sxc.Data
             return Blocks.Render.One(this);
         }
 
-
-        #region Changing comparison operation to internally compare the entities, not this wrapper
-        /// <inheritdoc />
-        public static bool operator ==(DynamicEntity d1, IDynamicEntity d2) => OverrideIsEqual(d1, d2);
-        /// <inheritdoc />
-        public static bool operator !=(DynamicEntity d1, IDynamicEntity d2) => !OverrideIsEqual(d1, d2);
-
-        /// <summary>
-        /// Check if they are equal, based on the underlying entity. 
-        /// </summary>
-        /// <param name="d1"></param>
-        /// <param name="d2"></param>
-        /// <remarks>
-        /// It's important to do null-checks first, because if anything in here is null, it will otherwise throw an error. 
-        /// But we can't use != null, because that would call the != operator and be recursive.
-        /// </remarks>
-        /// <returns></returns>
-        private static bool OverrideIsEqual(DynamicEntity d1, IDynamicEntity d2)
-        {
-            // check most basic case - they are really the same object or both null
-            if (ReferenceEquals(d1, d2))
-                return true;
-
-            return d1?.Entity == d2?.Entity;
-        }
-
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(this, obj))
-                return true;
-            if (obj is IDynamicEntity deObj)
-                return Entity == deObj.Entity;
-            if (obj is IEntity entObj)
-                return Entity == entObj;
-
-            return false;
-        }
-
-        /// <summary>
-        /// This is used by various equality comparison. 
-        /// Since we define two DynamicEntities to be equal when they host the same entity, this uses the Entity.HashCode
-        /// </summary>
-        /// <returns></returns>
-        // ReSharper disable once NonReadonlyMemberInGetHashCode - required so we can set the entity in inherited object
-        public override int GetHashCode() => Entity?.GetHashCode() ?? 0;
-
-        /// <inheritdoc />
-        public bool Equals(IDynamicEntity dynObj) => Entity == dynObj?.Entity;
-
-        #endregion
 
         /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)

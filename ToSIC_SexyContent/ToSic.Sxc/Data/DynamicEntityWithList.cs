@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Data
     /// </summary>
     /// <remarks>Added in 2sxc 10.27</remarks>
     [PublicApi_Stable_ForUseInYourCode]
-    public partial class DynamicEntityWithList: DynamicEntity, IDynamicEntity, IReadOnlyList<IDynamicEntity>
+    public partial class DynamicEntityWithList: DynamicEntity, IReadOnlyList<IDynamicEntity>
     {
         [PrivateApi]
         protected List<IDynamicEntity> DynEntities;
@@ -24,19 +25,18 @@ namespace ToSic.Sxc.Data
             : base(null, dimensions, compatibility, blockBuilder)
         {
             var index = 0;
-            DynEntities = entities.Select(
-                e =>
+            DynEntities = entities
+                .Select(e =>
                 {
                     // we create an Entity with some metadata-decoration, so that toolbars know it's part of a list
-                    var blockEntity = new EntityInBlock(e)
-                    {
-                        Parent = parent.EntityGuid,
-                        Fields = field,
-                        SortOrder = index++
-                    };
-                    return new DynamicEntity(blockEntity, Dimensions, CompatibilityLevel, BlockBuilder) as IDynamicEntity;
-                }).ToList();
-            Entity = DynEntities.FirstOrDefault()?.Entity;
+                    var blockEntity = new EntityInBlock(e, parent.EntityGuid, field, index++);
+                    return new DynamicEntity(blockEntity, Dimensions, CompatibilityLevel, BlockBuilder) as
+                        IDynamicEntity;
+                })
+                .ToList();
+            SetEntity(DynEntities.FirstOrDefault()?.Entity
+                     // check empty list - create a dummy Entity so toolbars will know what to do
+                     ?? EntityInBlock.PlaceHolder(parent, field));
         }
 
         public IEnumerator<IDynamicEntity> GetEnumerator() => DynEntities.GetEnumerator();
@@ -49,8 +49,7 @@ namespace ToSic.Sxc.Data
         {
             get => DynEntities[index];
             // setter is for IList<IDynamicEntity>
-            set => throw new System.NotImplementedException();
+            set => throw new NotImplementedException();
         }
-
     }
 }

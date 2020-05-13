@@ -220,12 +220,16 @@ namespace ToSic.Sxc.DataSources
                         try
                         {
                             var itm = originals.One(entityId);
-                            entitiesToDeliver.Add(new EntityInBlock(itm)
+                            entitiesToDeliver.Add(new EntityInBlock(itm, null, null, isListHeader ? -1 : i)
                             {
-                                SortOrder = isListHeader ? -1 : i,
+                                //SortOrder = isListHeader ? -1 : i,
+
                                 // CodeChange #2020-03-20#ContentGroupItemModified - Delete if no side-effects till June 2020
                                 //ContentGroupItemModified = itm.Modified,
                                 Presentation = presentationEntity,
+
+                                // todo: merge with Parent property, if possible
+                                // actually unclear if this is ever used, maybe for automatic serialization?
                                 GroupId = BlockConfiguration.ContentGroupGuid,
                                 // new 2019-09-18 trying to mark demo-items for better detection in output #1792
                                 IsDemoItem = usingDemoItem

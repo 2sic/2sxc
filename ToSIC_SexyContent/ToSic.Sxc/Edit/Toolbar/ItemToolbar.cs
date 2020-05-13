@@ -108,8 +108,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         public string Toolbar =>
             $"<ul class=\"sc-menu\" {Build.Attribute("toolbar", UseV10 ? ToolbarV10Json() : ToolbarObjJson())} { (UseV10 ? null : Build.Attribute("settings", SettingsJson))}></ul>";
 
-        [JsonIgnore]
-        public string ToolbarAttribute => UseV10 ? ToolbarV10Json() : "{\"toolbar\":" + ToolbarObjJson() + ",\"settings\":"+ SettingsJson + "}";
+        public string ToolbarAttribute() => UseV10 ? ToolbarV10Json() : "{\"toolbar\":" + ToolbarObjJson() + ",\"settings\":"+ SettingsJson + "}";
 
 
         public string GetQueryString(object obj)

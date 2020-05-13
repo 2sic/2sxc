@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Cms
     [SupportedModules("2sxc,2sxc-app")]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public partial class SystemController : SxcApiControllerBase, ISystemController
+    public partial class SystemController : ISystemController
     {
 
         [HttpGet]
@@ -34,18 +34,14 @@ namespace ToSic.Sxc.WebApi.Cms
                 appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
             }
 
-            return FeatureListWithPermissionCheck(appId,
-                new MultiPermissionsApp(BlockBuilder, appId, Log));
+            return FeatureListWithPermissionCheck(new MultiPermissionsApp(BlockBuilder, appId, Log));
         }
 
 
-        internal static IEnumerable<Feature> FeatureListWithPermissionCheck(int appId, MultiPermissionsApp permCheck)
+        internal static IEnumerable<Feature> FeatureListWithPermissionCheck(MultiPermissionsApp permCheck)
 	    {
-            // if the user has full edit permissions, he may also get the unpublic features
+            // if the user has full edit permissions, he may also get the un-public features
             // otherwise just the public Ui features
-            //var permCheck = new AppAndPermissions(sxcInstance, appId, log);
-	        //if (permCheck.Permissions == null)
-	        //    permCheck.GetTypePermissionChecker(null);
 	        var includeNonPublic = permCheck.UserMayOnAll(GrantSets.WritePublished);
 
 	        return Eav.Configuration.Features.Ui

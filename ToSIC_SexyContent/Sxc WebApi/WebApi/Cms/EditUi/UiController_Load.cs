@@ -91,7 +91,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, typeRead);
 
             // also include UI features
-            result.Features = SystemController.FeatureListWithPermissionCheck(appId, permCheck).ToList();
+            result.Features = SystemController.FeatureListWithPermissionCheck(permCheck).ToList();
 
             // done - return
             wraplog($"ready, sending items:{result.Items.Count}, " +

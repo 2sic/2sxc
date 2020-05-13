@@ -14,7 +14,7 @@ namespace ToSic.Sxc.SxcTemp
         /// which often isn't needed for simpler operations
         /// </summary>
         public static IApp LightWithoutData(ITenant tenant, int appId, ILog parentLog)
-            => new App(tenant, ToSic.Eav.Apps.App.AutoLookupZone, appId, null, true, parentLog);
+            => new App(tenant, Eav.Apps.App.AutoLookupZone, appId, null, true, parentLog);
 
         public static IApp LightWithoutData(ITenant tenant, int zoneId, int appId, ILog parentLog)
             => new App(tenant, zoneId, appId, null, true, parentLog);
