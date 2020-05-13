@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Data
     /// </blockquote>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity
+    public interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity, IEntityWrapper
     {
         /// <summary>
         /// The underlying entity which provides all the data for the DynamicEntity

@@ -29,8 +29,8 @@ namespace ToSic.Sxc.Data
                 return true;
             if (obj is DynamicEntityWithList listObj)
                 return Equals(Entity, listObj.Entity);
-            //if (obj is IDynamicEntity deObj)
-            //    return Entity == deObj.Entity;
+            if (obj is IDynamicEntity deObj)
+                return Entity == deObj.Entity;
             if (obj is IEntity entObj)
                 return Entity == entObj;
 
