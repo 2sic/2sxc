@@ -89,7 +89,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 IsContent = app?.AppGuid == "Default",
                 Language = PortalSettings.Current.CultureCode,
                 LanguageDefault = PortalSettings.Current.DefaultLanguage,
-                GettingStartedUrl = app == null ? "" : IntroductionToAppUrl(app)
+                GettingStartedUrl = app == null ? "" : IntroductionToAppUrl(app),
+                AppPath = app?.Path
             };
         }
 
