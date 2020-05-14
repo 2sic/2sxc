@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"attrib list count:{attributeSetList.Count}, template count:{templateList.Count}");
             var templates = templateList.Select(c => new
             {
-                Id = c.Id,
+                c.Id,
                 c.Name,
                 ContentType = MiniCTSpecs(attributeSetList, c.ContentType, c.ContentItem),
                 PresentationType = MiniCTSpecs(attributeSetList, c.PresentationType, c.PresentationItem),
@@ -47,7 +47,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 ViewNameInUrl = c.UrlIdentifier,
                 c.Guid,
                 List = c.UseForList,
-				HasQuery = c.QueryRaw != null
+				HasQuery = c.QueryRaw != null,
+                Used = c.Entity.Parents().Count
             });
 	        return templates;
 	    }

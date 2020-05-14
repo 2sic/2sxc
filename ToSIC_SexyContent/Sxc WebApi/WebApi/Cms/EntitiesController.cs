@@ -40,9 +40,6 @@ namespace ToSic.Sxc.WebApi.Cms
             var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
                 throw exception;
-            // 2018-09-15 old code, should have checked the same stuff mostly...
-            //new AppPermissionBeforeUsing(SxcBlock, Log)
-            //    .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
             return new EntityApi(appId, true, Log).GetOne(contentType, id, cultureCode);  // note that the culture-code isn't actually used...
         }
 
