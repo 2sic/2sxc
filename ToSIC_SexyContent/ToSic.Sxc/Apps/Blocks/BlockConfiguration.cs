@@ -8,6 +8,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps.Blocks
 {
+    // Todo: make an EntityBasedType
     public class BlockConfiguration: HasLog, IAppIdentity
     {
         internal IEntity Entity;
@@ -75,7 +76,7 @@ namespace ToSic.Sxc.Apps.Blocks
                     templateEntity = _cmsRuntime.Data.List.One(PreviewTemplateId.Value);
                 }
                 else if (Entity != null)
-                    templateEntity = Entity.Children(ViewParts.TemplateContentType).FirstOrDefault();
+                    templateEntity = Entity.Children(ViewParts.ViewFieldInContentBlock).FirstOrDefault();
 
                 _view = templateEntity == null ? null : new View(templateEntity, Log);
 
@@ -89,9 +90,9 @@ namespace ToSic.Sxc.Apps.Blocks
 
 
 
-        public int ContentGroupId => Entity?.EntityId ?? 0;
+        public int Id => Entity?.EntityId ?? 0;
 
-        public Guid ContentGroupGuid => Entity?.EntityGuid ?? Guid.Empty;
+        public Guid Guid => Entity?.EntityGuid ?? Guid.Empty;
 
         #region Retrieve the lists - either as object or by the type-indexer
 
@@ -130,10 +131,6 @@ namespace ToSic.Sxc.Apps.Blocks
                 }
             }
         }
-
-        [Obsolete]
-        internal List<int?> ListWithNulls(string type) 
-            => this[type].Select(p => p?.EntityId).ToList();
 
         #endregion
     }

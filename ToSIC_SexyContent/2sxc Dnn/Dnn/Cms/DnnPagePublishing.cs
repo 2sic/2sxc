@@ -139,8 +139,8 @@ namespace ToSic.Sxc.Dnn.Cms
                     // publish BlockConfiguration as well - if there already is one
                     if (cb.Configuration != null)
                     {
-                        Log.Add($"add group id:{cb.Configuration.ContentGroupId}");
-                        ids.Add(cb.Configuration.ContentGroupId);
+                        Log.Add($"add group id:{cb.Configuration.Id}");
+                        ids.Add(cb.Configuration.Id);
                     }
 
                     Log.Add(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]");

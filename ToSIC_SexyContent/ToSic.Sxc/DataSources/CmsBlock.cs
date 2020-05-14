@@ -230,7 +230,7 @@ namespace ToSic.Sxc.DataSources
 
                                 // todo: merge with Parent property, if possible
                                 // actually unclear if this is ever used, maybe for automatic serialization?
-                                GroupId = BlockConfiguration.ContentGroupGuid,
+                                GroupId = BlockConfiguration.Guid,
                                 // new 2019-09-18 trying to mark demo-items for better detection in output #1792
                                 IsDemoItem = usingDemoItem
                             });

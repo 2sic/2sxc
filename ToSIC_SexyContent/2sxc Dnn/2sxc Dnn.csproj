@@ -109,6 +109,8 @@
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
     <Compile Include="Dnn\INeedsDynCodeContext.cs" />
     <Compile Include="Dnn\IHasDynCodeContext.cs" />
+    <Compile Include="Dnn\Pages\ModuleWithContent.cs" />
+    <Compile Include="Dnn\Pages\Pages.cs" />
     <Compile Include="Dnn\Run\DnnAppFileSystemLoader.cs" />
     <Compile Include="Dnn\Run\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />
