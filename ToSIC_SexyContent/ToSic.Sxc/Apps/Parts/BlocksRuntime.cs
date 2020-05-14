@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
@@ -18,12 +19,13 @@ namespace ToSic.Sxc.Apps
 
         internal IDataSource ContentGroupSource()
         {
-            var dsFactory = new DataSource(Log);
             var dataSource = CmsRuntime.Data;
-            var onlyCGs = dsFactory.GetDataSource<EntityTypeFilter>(CmsRuntime, dataSource);
+            var onlyCGs = CmsRuntime.DataSourceFactory.GetDataSource<EntityTypeFilter>(CmsRuntime, dataSource);
             onlyCGs.TypeName = BlockTypeName;
             return dataSource;
         }
+
+        public IEnumerable<IEntity> ContentBlockEntities() => ContentGroupSource().List;
 
         public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
         {

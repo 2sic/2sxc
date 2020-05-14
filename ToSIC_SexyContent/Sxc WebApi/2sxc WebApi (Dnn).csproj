@@ -111,6 +111,7 @@
     <Compile Include="WebApi\Cms\ModuleController_FieldLists.cs" />
     <Compile Include="WebApi\Cms\ModuleController_Install.cs" />
     <Compile Include="WebApi\Cms\SystemController_App.cs" />
+    <Compile Include="WebApi\Cms\TemplateController_Pages.cs" />
     <Compile Include="WebApi\Routing\Route.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController_Save.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController_Load.cs" />

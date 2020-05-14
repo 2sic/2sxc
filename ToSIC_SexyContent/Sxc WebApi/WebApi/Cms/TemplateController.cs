@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
 	[SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]
-	public class TemplateController : SxcApiControllerBase
+	public partial class TemplateController : SxcApiControllerBase
 	{
 
 	    protected override void Initialize(HttpControllerContext controllerContext)
@@ -63,10 +63,9 @@ namespace ToSic.Sxc.WebApi.Cms
             var result = new
             {
                 Id = poly.Entity?.EntityId,
-                Resolver = poly.Resolver,
+                poly.Resolver,
                 TypeName = PolymorphismConstants.Name
             };
-            //string result = null;
             return wraplog(null, result);
         }
 
@@ -96,7 +95,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public bool Delete(int appId, int id)
 	    {
-            // todo: must add extra security to only allow zone change if host user
+            // todo: extra security to only allow zone change if host user
 	        Log.Add($"delete a{appId}, t:{id}");
             var app = Dnn.Factory.App(appId, false);
 

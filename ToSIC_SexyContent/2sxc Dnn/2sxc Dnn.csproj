@@ -99,6 +99,7 @@
   <ItemGroup>
     <Compile Include="Compatibility\Sxc\OldDataToDictionaryWrapper.cs" />
     <Compile Include="Compatibility\Sxc\SxcHelper.cs" />
+    <Compile Include="Dnn\DnnConstants.cs" />
     <Compile Include="Dnn\DynamicCode.cs" />
     <Compile Include="Code\ErrorHelp.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource.cs" />
