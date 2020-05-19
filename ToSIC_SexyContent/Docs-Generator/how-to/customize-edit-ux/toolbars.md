@@ -10,6 +10,10 @@ A lot in 2sxc is fully automatic. But sometimes you want to customize how the co
 > Previously everything was possible, but quite complicated. 
 > So if you find examples out there which look very different - they work as well, but here's the simple system. 
 
+## Live Examples
+
+The [DNN Tutorials have a live demo of toolbar customization](https://2sxc.org/dnn-tutorials/en/razor/ui100/page). Head over there while reading these docs to see all this in action. 
+
 ## Overview - What You can Customize
 
 You can customize just about everything: 

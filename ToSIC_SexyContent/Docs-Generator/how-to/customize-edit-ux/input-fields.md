@@ -6,7 +6,7 @@ uid: HowTo.Customize.InputFields
 Sometimes you want a custom input field - as color-picker, dropdown-from-api or whatever. 
 
 > [!TIP]
-> 1. 2sxc 11 finally allows you to do this using simple [WebComponents](https://developer.mozilla.org/en-US/docs/Web/Web_Components)  
+> 1. 2sxc 11 finally allows you to do this using simple [WebComponents](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
 > 1. Registering these happens by placing them in a specific folder  
 > 1. You can also make them configurable by placing a content-type json in another folder  
 
@@ -44,6 +44,16 @@ Here's a checklist to get this setup
 
 > [!Note]
 > Once you have that setup, the input field is automatically detected and a user can choose it as a field type in the configuration. 
+
+
+## Some Background on WebComponents
+
+1. The WebComponent has a simple lifecycle - from when it's created to when it receives data and can push changes back to the form.
+1. The form itself is reactive. This means that your field will receive messages when the value changes or when other values change (in case you want to use other field values in your input).
+1. The API to communicate with the form has a few complexities you need to know. This is because the form is very dynamic - so the user could switch languages, and your input field needs to react to this.
+
+So let's get started 🚀!
+
 
 ## Getting the HTML into the Custom Input
 
@@ -120,10 +130,10 @@ Here's what you need to know
 
 * The WYSIWYG field is based on [TinyMCE](https://www.tiny.cloud/) - so to make configuration changes, you'll need to understand that API pretty well.
 * To change it, you need to create a wrapper component which contains the standard 2sxc-wysiwyg and give it different configurations.
-* To do this, there are a few callbacks we created so you can override most of the defaults
+* To do this, we are calling various methods on a `reconfigure` object of your wrapper - so you can override most of the defaults
 * This API is WIP (work-in-progress) so we make have to make some minor breaking changes in 2020. This shouldn't stop you, but just be aware of this. 
 
-TODO: 
+TODO: This is still WIP, should get done within a few days...
 
 
 
@@ -131,4 +141,4 @@ TODO:
 
 Basically you have what it takes. To go further: 
 
-* review the [specs](TODO)
+* review the specs WIP
