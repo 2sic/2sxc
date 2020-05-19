@@ -36,16 +36,14 @@ namespace ToSic.Sxc.Blocks
                     if (Block.DataIsMissing)
                     {
                         Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
-                        if (UserMayEdit)
-                            body = ""; // stop further processing
-                        else // end users should see server error as no js-side processing will happen
-                        {
-                            var ex =
-                                new Exception(
-                                    "Data is missing - usually when a site is copied but the content / apps have not been imported yet - check 2sxc.org/help?tag=export-import");
-                            body = RenderingHelper.DesignErrorMessage(ex, true,
-                                "Error - needs admin to fix", false, true);
-                        }
+                        body = UserMayEdit
+                            ? "" // stop further processing
+                            // end users should see server error as no js-side processing will happen
+                            : RenderingHelper.DesignErrorMessage(
+                                new Exception("Data is missing - usually when a site is copied " +
+                                              "but the content / apps have not been imported yet" +
+                                              " - check 2sxc.org/help?tag=export-import"),
+                                true, "Error - needs admin to fix", false, true);
                     }
                 }
                 #endregion
