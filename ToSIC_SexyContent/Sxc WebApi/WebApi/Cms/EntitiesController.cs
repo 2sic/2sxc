@@ -16,6 +16,7 @@ using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.SxcTemp;
+using ToSic.Sxc.WebApi.DataTransferObjects.Usage;
 using Guid = System.Guid;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -142,7 +143,8 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var appData = permCheck.App.Data;
             var item = appData.List.One(guid);
-            var parents = item.Parents();
+            var relationships = item.Relationships.AllRelationships;
+            var result = relationships.Select(r => new EntityInRelationDto(r.))
             // todo: don't forget Metadata relationships
             return null;
         }

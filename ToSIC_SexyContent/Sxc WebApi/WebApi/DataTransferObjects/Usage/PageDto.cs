@@ -10,6 +10,7 @@ namespace ToSic.Sxc.WebApi.DataTransferObjects.Usage
         public string Title;
         public string Url;
         public bool Visible;
+        public PortalDto Portal;
 
         public PageDto(TabInfo page)
         {
@@ -19,6 +20,7 @@ namespace ToSic.Sxc.WebApi.DataTransferObjects.Usage
             CultureCode = page.CultureCode;
             Visible = page.IsVisible;
             Title = page.Title;
+            Portal = new PortalDto(page.PortalID);
         }
     }
 }

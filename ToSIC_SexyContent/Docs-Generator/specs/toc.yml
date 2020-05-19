@@ -35,8 +35,6 @@
 
 - name: CMS Technical
   items:
-    - name: DNN Modules
-      topicUid: Specs.Cms.DnnModule
     - name: Edit-Context Data
       topicUid: Specs.Cms.EditContext
 
