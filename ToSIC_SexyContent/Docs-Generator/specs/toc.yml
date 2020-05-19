@@ -6,9 +6,13 @@
   topicUid: Specs.Architecture.Intro
   href: architecture/toc.yml
 
-- name: Data Models in EAV
+- name: EVA Data Models
   href: data/toc.yml
   topicUid: Specs.Data.Intro
+
+- name: Content Data Models
+  href: content/toc.yml
+  topicUid: Specs.Content.Index
 
 - name: ADAM - Automatic Digital Asset Management
   href: adam/toc.yml

@@ -143,6 +143,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var appData = permCheck.App.Data;
             var item = appData.List.One(guid);
             var parents = item.Parents();
+            // todo: don't forget Metadata relationships
             return null;
         }
 

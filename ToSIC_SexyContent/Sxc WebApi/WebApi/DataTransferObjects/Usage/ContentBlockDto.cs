@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Dnn.Pages;
 
 namespace ToSic.Sxc.WebApi.DataTransferObjects.Usage
 {
-    public class ContentBlockDto
+    public class ContentBlockDto: IdentifierBase
     {
-        public int Id;
-        public Guid Guid;
         public IEnumerable<ModuleDto> Modules;
 
         public ContentBlockDto(BlockConfiguration block, IEnumerable<ModuleWithContent> blockModules)
