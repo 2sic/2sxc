@@ -144,7 +144,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var appData = permCheck.App.Data;
             var item = appData.List.One(guid);
             var relationships = item.Relationships.AllRelationships;
-            var result = relationships.Select(r => new EntityInRelationDto(r.))
+            // var result = relationships.Select(r => new EntityInRelationDto(r.))
             // todo: don't forget Metadata relationships
             return null;
         }
