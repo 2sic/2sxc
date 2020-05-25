@@ -2,7 +2,7 @@
 uid: Specs.Form.Field.Wysiwyg
 ---
 
-# Customizing the WYSIWYG Field in 2sxc 11 - WIP
+# Customizing the WYSIWYG Field in 2sxc 11
 
 > [!TIP]
 > These are the technical specs for reference. Make sure you first read the [how to](xref:HowTo.Customize.EditUx) before you start. 
@@ -11,50 +11,80 @@ Since WYSIWYG is so complex, with image-handling, special paste etc. we believe 
 
 ## Make sure TinyMCE is loaded
 
-TODO:
+We must first load the standard WYSIWYG control before we start, otherwise you'll run into timing issues. The best way to do this can be seen in the [tutorial](https://2sxc.org/dnn-tutorials/en/razor/ui241/page), but this is what you need:
+
+```ts
+  const builtInWysiwyg = '[System:Path]/system/field-string-wysiwyg/index.js';
+
+  /** Our WebComponent which is a custom, lightweight wysiwyg editor */
+  class StringWysiwygCustom extends HTMLElement {
+
+    /* connectedCallback() is the standard callback  when the component has been attached */
+    connectedCallback() {
+      // We need to ensure that the standard WYSIWYG is also loaded
+      this.connector.loadScript('tinymce', builtInWysiwyg, (x) => { this.initWysiwygCallback() })
+    }
+
+    initWysiwygCallback() {
+      // ...
+    }
+  }
+```
+
+This way the form will load the built-in WYSIWYG control and trigger your callback, OR if it has already been loaded, immediately trigger your callback. 
 
 ## Configure the TinyMCE WYSIWYG Web Control
 
 The control has these public properties:
 
 1. `mode` - values can be `edit` and `preview`, default is `preview`
-1. `connector` - the object that every form control needs.  
-You must connect this to the child for it to work
-TODO: `bridge` ?
+1. `connector` - the object that every form control needs. You must connect this
 1. `reconfigure` a special object that can change the configuration at various points
 
 Code Sample:
 
 ```js
-class StringWysiwygCustom extends HTMLElement {
-  /* Constructor for WebComponents - the first line must always be super() */
-  constructor() {
-    super();
+  const tagName = 'field-string-wysiwyg-micro';
+  const builtInWysiwyg = '[System:Path]/system/field-string-wysiwyg/index.js';
+
+  /** Our WebComponent which is a custom, lightweight wysiwyg editor */
+  class StringWysiwygCustom extends HTMLElement {
+
+    /* connectedCallback() is the standard callback  when the component has been attached */
+    connectedCallback() {
+      // We need to ensure that the standard WYSIWYG is also loaded
+      this.connector.loadScript('tinymce', builtInWysiwyg, (x) => { this.initWysiwygCallback() })
+    }
+
+    initWysiwygCallback() {
+      // 1. Create a built-in field-string-wysiwyg control
+      const wysiwyg = document.createElement('field-string-wysiwyg');
+      // 2. tell it if it should start in preview or edit
+      wysiwyg.mode = 'edit'; // can be 'preview' or 'edit'
+      // 3. attach connector
+      wysiwyg.connector = this.connector;
+      // 4. also attach reconfigure object which can change the TinyMCE as it's initialized
+      wysiwyg.reconfigure = new WysiwygReconfigurator();
+      // 5. Append it to the DOM. Do this last, as it will trigger connectedCallback() in the wysiwyg
+      this.appendChild(wysiwyg);
+    }
   }
 
-  /* connectedCallback() is the standard callback  when the component has been attached */
-  connectedCallback() {
-    // 1. Create a built-in field-string-wysiwyg control
-    const wysiwyg = document.createElement('field-string-wysiwyg');
-    // 2. tell it if it should start in preview or edit
-    wysiwyg.mode = 'edit'; // can also be 'preview'
-    // 3. attach connector
-    wysiwyg.connector = this.connector;
-    // 4. also attach reconfigure object which can change the TinyMCE as it's initialized
-    wysiwyg.reconfigure = new WysiwygReconfigurator();
-    console.log('wysiwyg reconfigure', wysiwyg.configure);
-    // 5. Append it to the DOM. Do this last, as it will trigger connectedCallback() in the wysiwyg
-    this.appendChild(wysiwyg);
+  /** The object which helps reconfigure what the editor will do */
+  class WysiwygReconfigurator {
+    configureOptions(options) {
+      options.toolbar = "undo redo | bold italic"
+      return options;
+    }
   }
-}
+
+  // Register this web component - if it hasn't been registered yet
+  if (!customElements.get(tagName)) customElements.define(tagName, StringWysiwygCustom);
 ```
 
+## `connector` Object
 
-
-## Connector Object
-
-For this, please consult TODO:
-
+* for the `connector` object please consult [connector API](xref:Specs.Form.JsConnector)
 
 
 ## Understanding TinyMCE and Life-Cycle
@@ -122,8 +152,10 @@ In this phase, translation maps are built, so buttons can show labels in various
 
 ## How to Modify the Behavior
 
-TODO:
+Best check out these tutorials
 
+* [Basic tutorial, just providing 4 standard buttons](https://2sxc.org/dnn-tutorials/en/razor/ui241/page)
+* [Advanced tutorial adding a custom button](https://2sxc.org/dnn-tutorials/en/razor/ui242/page)
 
 
 ## History

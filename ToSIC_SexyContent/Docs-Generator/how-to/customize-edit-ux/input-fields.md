@@ -14,6 +14,14 @@ Sometimes you want a custom input field - as color-picker, dropdown-from-api or 
 > There are more ways to provide and register custom input fields - like when you need them globally across many apps and portals. 
 > That is not discussed here. 
 
+## Quick-Start Video and Tutorial
+
+If you're new here, best watch this video:
+
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/RQgarsil1Bo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Then check out the [tutorials](https://2sxc.org/dnn-tutorials/en/razor/ui/home).
+
 ## What kind of Custom Input Field can you Create
 
 You can create any kind of custom input field, as a JavaScript WebComponent. 
@@ -24,7 +32,7 @@ You can create any kind of custom input field, as a JavaScript WebComponent.
 1. Talking to any endpoint (weather APIs)
 
 > [!TIP]
-> This overview will get you started, but we've already created demos on the [2sxc Tutorials](TODO:). If you want to know more, you should also read the [specs](TODO:)
+> This overview will get you started, but we've already created demos on the [2sxc Tutorials](https://2sxc.org/dnn-tutorials/en/razor/ui/home). If you want to know more, you should also read the [specs](xref:Specs.Form.Index)
 
 ## Getting Started with Custom Input Fields
 
@@ -118,7 +126,7 @@ Now you have a color-picker, but each field may require a different set of preco
 
 <iframe src="https://azing.org/2sxc/r/1_bUtjCH?embed=1" width="100%" height="400" frameborder="0" allowfullscreen style="box-shadow: 0 1px 3px rgba(60,64,67,.3), 0 4px 8px 3px rgba(60,64,67,.15)"></iframe>
 
-## Create Your own WYSIWYG Field (WIP)
+## Create Your own WYSIWYG Field 
 
 WYSIWYG fields are very hard to do right. Basically you can simply create your own using the same principles as mentioned above. But we recommend that you use the existing WYSIWYG field provided by 2sxc and just change some of the configurations. 
 
@@ -131,14 +139,10 @@ Here's what you need to know
 * The WYSIWYG field is based on [TinyMCE](https://www.tiny.cloud/) - so to make configuration changes, you'll need to understand that API pretty well.
 * To change it, you need to create a wrapper component which contains the standard 2sxc-wysiwyg and give it different configurations.
 * To do this, we are calling various methods on a `reconfigure` object of your wrapper - so you can override most of the defaults
-* This API is WIP (work-in-progress) so we make have to make some minor breaking changes in 2020. This shouldn't stop you, but just be aware of this. 
 
-TODO: This is still WIP, should get done within a few days...
+To learn more, best look at the tutorials and the API
 
+* [Basic tutorial, just providing 4 standard buttons](https://2sxc.org/dnn-tutorials/en/razor/ui241/page)
+* [Advanced tutorial adding a custom button](https://2sxc.org/dnn-tutorials/en/razor/ui242/page)
+* [WYSIWYG Reconfigure API](xref:Specs.Form.Field.Wysiwyg)
 
-
-## Read More
-
-Basically you have what it takes. To go further: 
-
-* review the specs WIP
