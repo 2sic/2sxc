@@ -16,7 +16,6 @@ using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.SxcTemp;
-using ToSic.Sxc.WebApi.DataTransferObjects.Usage;
 using Guid = System.Guid;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -133,7 +132,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	    }
         #endregion
 
-        #region New feature in 11.02/03 - Usage Statitics
+        #region New feature in 11.03 - Usage Statitics
 
         public dynamic Usage(int appId, Guid guid)
         {
