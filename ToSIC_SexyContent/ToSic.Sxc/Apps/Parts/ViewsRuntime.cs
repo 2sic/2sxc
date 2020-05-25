@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Conversion;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Apps
             if(_viewDs!= null)return _viewDs;
 		    // ReSharper disable once RedundantArgumentDefaultValue
             var dataSource = AppRT.Data;
-			dataSource = new DataSource(Log).GetDataSource<EntityTypeFilter>(dataSource);
+			dataSource = CmsRuntime.DataSourceFactory.GetDataSource<EntityTypeFilter>(dataSource);
 		    ((EntityTypeFilter) dataSource).TypeName = Configuration.TemplateContentType;
 		    _viewDs = dataSource;
 			return dataSource;
@@ -42,16 +42,26 @@ namespace ToSic.Sxc.Apps
 
         public IView Get(int templateId)
 		{
-			var dataSource = ViewsDataSource();
-			dataSource = new DataSource(Log).GetDataSource<EntityIdFilter>(dataSource);
-			((EntityIdFilter)dataSource).EntityIds = templateId.ToString();
-			var templateEntity = dataSource.List.FirstOrDefault();
+			//var dataSource = ViewsDataSource();
+			//dataSource = DsFactory.GetDataSource<EntityIdFilter>(dataSource);
+			//((EntityIdFilter)dataSource).EntityIds = templateId.ToString();
+            var templateEntity = ViewsDataSource().List.One(templateId); // dataSource.List.FirstOrDefault();
 
 			if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");
 
 			return new View(templateEntity, Log);
 		}
+
+        public IView Get(Guid guid)
+        {
+            var templateEntity = ViewsDataSource().List.One(guid);
+
+            if (templateEntity == null)
+                throw new Exception("The template with id " + guid + " does not exist.");
+
+            return new View(templateEntity, Log);
+        }
 
 
         internal IEnumerable<TemplateUiInfo> GetCompatibleViews(IApp app, BlockConfiguration blockConfiguration)

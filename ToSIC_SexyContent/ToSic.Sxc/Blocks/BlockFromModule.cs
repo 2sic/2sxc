@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Blocks
                 ((BlockBuilder)BlockBuilder).SetTemplateOrOverrideFromUrl(Configuration.View);                
             }
 
-            wrapLog($"ok a:{AppId}, container:{container.Id}, content-group:{Configuration?.ContentGroupId}");
+            wrapLog($"ok a:{AppId}, container:{container.Id}, content-group:{Configuration?.Id}");
         }
 
         public override bool IsContentApp => Container.IsPrimary;

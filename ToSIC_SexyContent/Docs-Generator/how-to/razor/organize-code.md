@@ -12,7 +12,7 @@ In simple scenarios you have some Razor files containing a bit of HTML and some 
 
 ## Splitting Razor Templates with Code-Behind
 
-_This is new in 2sxc 11 - you can find a [video about this](xref:Specs.Cms.Templates.RazorCodeBehind) in the specs_
+_This is new in 2sxc 11 - you can find a [video about this](xref:Specs.Cms.Templates.RazorCodeBehind) in the specs and [here's a live demo in the DNN Tutorials](https://2sxc.org/dnn-tutorials/en/razor/reuse410/page)_
 
 Just create another file with the identical name as your template file, but with `.code.cshtml` as the extension. So you'll then have something like:
 

@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Apps
@@ -16,21 +19,41 @@ namespace ToSic.Sxc.Apps
         {
         }
 
-        internal IDataSource ContentGroupSource()
+        private IDataSource ContentGroupSource()
         {
-            var dsFactory = new DataSource(Log);
+            if (_contentGroupSource != null) return _contentGroupSource;
             var dataSource = CmsRuntime.Data;
-            var onlyCGs = dsFactory.GetDataSource<EntityTypeFilter>(CmsRuntime, dataSource);
+            var onlyCGs = CmsRuntime.DataSourceFactory.GetDataSource<EntityTypeFilter>(CmsRuntime, dataSource);
             onlyCGs.TypeName = BlockTypeName;
-            return dataSource;
+            return _contentGroupSource = dataSource;
         }
+        private IDataSource _contentGroupSource;
+
+        public List<BlockConfiguration> AllWithView()
+        {
+            return Entities()
+                .Select(b =>
+                {
+                    var templateGuid = b.Children(ViewParts.ViewFieldInContentBlock)
+                        .FirstOrDefault()
+                        ?.EntityGuid;
+                    return templateGuid != null
+                        ? new { Entity = b, ViewGuid = templateGuid }
+                        : null;
+                })
+                .Where(b => b != null)
+                .Select(e => new BlockConfiguration(e.Entity, CmsRuntime, Log))
+                .ToList();
+        }
+
+        public IEnumerable<IEntity> Entities() => ContentGroupSource().List;
 
         public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
         {
             var wrapLog = Log.Call($"get CG#{contentGroupGuid}");
-            var dataSource = ContentGroupSource();
+            //var dataSource = ContentGroupSource();
             // ToDo: Should use an indexed guid source
-            var groupEntity = dataSource.List.One(contentGroupGuid);
+            var groupEntity = Entities().One(contentGroupGuid);
             var found = groupEntity != null;
             wrapLog(found ? "found" : "missing");
             return found

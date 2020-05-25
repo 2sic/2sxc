@@ -37,7 +37,8 @@
     "Saving": "saving...",
     "DebugEnabled": "debug aktiviert",
     "DebugDisabled": "debug deaktiviert",
-    "SwitchedLanguageToDefault": "We have switched language to default {{language}} because it's missing some or all values"
+    "SwitchedLanguageToDefault": "We have switched language to default {{language}} because it's missing some or all values",
+    "CantSwitchLanguage": "Sprachwechsel erst möglich wenn alle Pflichtfelder in der aktuellen Sprache befüllt sind"
   },
   "LangMenu": {
     "Translate": "Übersetzen",

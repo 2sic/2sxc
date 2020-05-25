@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
 	[SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]
-	public class TemplateController : SxcApiControllerBase
+	public partial class TemplateController : SxcApiControllerBase
 	{
 
 	    protected override void Initialize(HttpControllerContext controllerContext)
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"attrib list count:{attributeSetList.Count}, template count:{templateList.Count}");
             var templates = templateList.Select(c => new
             {
-                Id = c.Id,
+                c.Id,
                 c.Name,
                 ContentType = MiniCTSpecs(attributeSetList, c.ContentType, c.ContentItem),
                 PresentationType = MiniCTSpecs(attributeSetList, c.PresentationType, c.PresentationItem),
@@ -47,7 +47,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 ViewNameInUrl = c.UrlIdentifier,
                 c.Guid,
                 List = c.UseForList,
-				HasQuery = c.QueryRaw != null
+				HasQuery = c.QueryRaw != null,
+                Used = c.Entity.Parents().Count
             });
 	        return templates;
 	    }
@@ -62,10 +63,9 @@ namespace ToSic.Sxc.WebApi.Cms
             var result = new
             {
                 Id = poly.Entity?.EntityId,
-                Resolver = poly.Resolver,
+                poly.Resolver,
                 TypeName = PolymorphismConstants.Name
             };
-            //string result = null;
             return wraplog(null, result);
         }
 
@@ -95,7 +95,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public bool Delete(int appId, int id)
 	    {
-            // todo: must add extra security to only allow zone change if host user
+            // todo: extra security to only allow zone change if host user
 	        Log.Add($"delete a{appId}, t:{id}");
             var app = Dnn.Factory.App(appId, false);
 

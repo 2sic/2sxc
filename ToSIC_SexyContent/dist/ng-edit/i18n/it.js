@@ -37,7 +37,8 @@
     "Saving": "salvataggio...",
     "DebugEnabled": "debug mode enabled",
     "DebugDisabled": "debug mode disabled",
-    "SwitchedLanguageToDefault": "We have switched language to default {{language}} because it's missing some or all values"
+    "SwitchedLanguageToDefault": "We have switched language to default {{language}} because it's missing some or all values",
+    "CantSwitchLanguage": "Can't switch languages until current language has all required values"
   },
   "LangMenu": {
     "Translate": "Translate",

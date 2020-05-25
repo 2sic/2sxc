@@ -5,6 +5,7 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -40,15 +41,13 @@ namespace ToSic.Sxc.WebApi.Cms
             var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
                 throw exception;
-            // 2018-09-15 old code, should have checked the same stuff mostly...
-            //new AppPermissionBeforeUsing(SxcBlock, Log)
-            //    .ConfirmPermissionsOrThrow(contentType, appId, Grants.Read);
             return new EntityApi(appId, true, Log).GetOne(contentType, id, cultureCode);  // note that the culture-code isn't actually used...
         }
 
+        #region Old API for V3 - Obsolete, must remove when we drop the old UI
 
-	    /// <inheritdoc />
-	    [HttpPost]
+        /// <inheritdoc />
+        [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public dynamic GetManyForEditing([FromBody] List<ItemIdentifier> items, int appId)
         {
@@ -131,13 +130,31 @@ namespace ToSic.Sxc.WebApi.Cms
 	        var eavEntitiesController = new Eav.WebApi.EntitiesController(Log);
 	        return eavEntitiesController.SaveMany(appId, items, partOfPage, forceDraft);
 	    }
+        #endregion
+
+        #region New feature in 11.03 - Usage Statitics
+
+        public dynamic Usage(int appId, Guid guid)
+        {
+            var permCheck = new MultiPermissionsApp(BlockBuilder, appId, Log);
+            if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
+                throw exception;
+
+            var appData = permCheck.App.Data;
+            var item = appData.List.One(guid);
+            var relationships = item.Relationships.AllRelationships;
+            // var result = relationships.Select(r => new EntityInRelationDto(r.))
+            // todo: don't forget Metadata relationships
+            return null;
+        }
+
+        #endregion
 
 
-
-	    /// <summary>
-	    /// Get all Entities of specified Type
-	    /// </summary>
-	    [HttpGet]
+        /// <summary>
+        /// Get all Entities of specified Type
+        /// </summary>
+        [HttpGet]
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, int appId,
 	        string cultureCode = null)
@@ -150,9 +167,6 @@ namespace ToSic.Sxc.WebApi.Cms
 	        var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, contentType, Log);
 	        if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
 	            throw exception;
-
-            // v10.25 - now that Content can manage settings and resources, we must be sure that they actually exist
-            // this is checked here, because often it won't exist yet...
 
             return new EntityApi(appId, true, Log).GetEntitiesForAdmin(contentType);
 	    }
@@ -212,7 +226,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var contentGroup = cms.Blocks.GetBlockConfig(item.Group.Guid);
 	        var part = contentGroup[item.Group.Part];
-	        item.EntityId = part[item.ListIndex() /*.Group.Index*/].EntityId;
+	        item.EntityId = part[item.ListIndex()].EntityId;
 	    }
 
 	    [HttpPost]

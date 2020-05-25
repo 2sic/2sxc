@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Blocks
             // note: it also correctly handles published/unpublished, but I'm not sure why :)
 
             var cms = GetCmsRuntime();
-            var contentGroup = cms.Blocks.GetBlockConfig(BlockConfiguration.ContentGroupGuid);
+            var contentGroup = cms.Blocks.GetBlockConfig(BlockConfiguration.Guid);
 
             var titleItem = contentGroup.Header.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
 

@@ -28,8 +28,8 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             IsCreated = isCreated;
             IsContent = blockBuilder.Block.IsContentApp;
 
-            Id = blockBuilder.Block.Configuration?.ContentGroupId ?? 0;
-            Guid = blockBuilder.Block.Configuration?.ContentGroupGuid ?? Guid.Empty;
+            Id = blockBuilder.Block.Configuration?.Id ?? 0;
+            Guid = blockBuilder.Block.Configuration?.Guid ?? Guid.Empty;
             AppId = blockBuilder.Block.AppId;// 2019-11-09, Id not nullable any more // ?? 0;
             AppUrl = blockBuilder.App?.Path ?? "" + "/";
             AppSettingsId = (blockBuilder.App?.Settings?.Entity?.Attributes?.Count > 0)

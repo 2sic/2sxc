@@ -31,11 +31,11 @@ namespace ToSic.Sxc.Apps
 		    }
 		    else
 		    {
-		        Log.Add($"exists, create for group#{blockConfiguration.ContentGroupGuid} with template#{templateId}");
+		        Log.Add($"exists, create for group#{blockConfiguration.Guid} with template#{templateId}");
 		        appMan.Entities.UpdateParts(blockConfiguration.Entity.EntityId,
 		            new Dictionary<string, object> {{ ViewParts.TemplateContentType, new List<int?> {templateId}}});
 
-		        return blockConfiguration.ContentGroupGuid; // guid didn't change
+		        return blockConfiguration.Guid; // guid didn't change
 		    }
 		}
 

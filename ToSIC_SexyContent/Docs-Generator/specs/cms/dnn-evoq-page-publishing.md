@@ -174,7 +174,7 @@ As mentioned, this is the default setup. In the case of data-oriented apps, whic
 
 ## Read also
 
-* [Data Model of DNN-Modules mapping to content](xref:Specs.Cms.DnnModule)
+* [Data Model of DNN-Modules mapping to content](xref:Specs.Content.DnnIntegration)
 * [In-Depth information about content-binding](http://2sxc.org/en/blog/post/understanding-content-binding-to-modules-and-pages-(300))
 
 

@@ -2,8 +2,9 @@
 
 namespace ToSic.Sxc.Blocks
 {
-    internal class ViewParts
+    public class ViewParts
     {
+        public const string ViewFieldInContentBlock = "Template";
         public const string TemplateContentType = "Template";
 
         public const string Content = "Content";

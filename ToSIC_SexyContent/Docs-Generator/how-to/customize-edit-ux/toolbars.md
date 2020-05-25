@@ -10,6 +10,10 @@ A lot in 2sxc is fully automatic. But sometimes you want to customize how the co
 > Previously everything was possible, but quite complicated. 
 > So if you find examples out there which look very different - they work as well, but here's the simple system. 
 
+## Live Examples
+
+The [DNN Tutorials have a live demo of toolbar customization](https://2sxc.org/dnn-tutorials/en/razor/ui100/page). Head over there while reading these docs to see all this in action. 
+
 ## Overview - What You can Customize
 
 You can customize just about everything: 
@@ -199,6 +203,11 @@ You'll get this result, and hitting the ellipsis will show you the default butto
 
 > [!TIP]
 > A new group can also go after the `default` group of buttons. If you add a `&pos=1` or another number the group will be placed later on in the sequence. 
+> You can also use `&pos=-0` or `&pos=-1` or similar to place it counting from the end of the list.
+
+> [!WARNING]
+> When using position like `pos=#` you may have unexpected results, because the button is added to the list _before_ some buttons decide to hide themselves. 
+> So you may think you're adding it to `pos=1` but if the edit button (which would be at position 0) shouldn't be shown, your button will still appear to be the first one.
 
 There is also a hidden group called `edit-advanced` - you can find the [list of groups](xref:Specs.Cms.Toolbars.Build) here. As of now, it only contains the `delete` button which is hidden by default. 
 

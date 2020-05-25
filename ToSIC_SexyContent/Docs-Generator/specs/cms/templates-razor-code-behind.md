@@ -7,6 +7,8 @@ uid: Specs.Cms.Templates.RazorCodeBehind
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/wIa23gy26js" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
+You can also see a [live demo in the DNN Tutorials](https://2sxc.org/dnn-tutorials/en/razor/reuse410/page). 
+
 ## How Code Behind Works
 
 Take any existing `_something.cshtml` and create a new `_something.code.cshtml`. Put something simple in it like 
