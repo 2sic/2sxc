@@ -865,8 +865,6 @@
               <name>ImageResizer.Plugins.DiskCache.dll</name>
             </assembly>
 
-            <basePath>DesktopModules/ToSIC_Imazen_ImageResizer</basePath>
-            <file>
             <assembly>
               <name>ImageResizer.Plugins.WebP.dll</name>
             </assembly>
