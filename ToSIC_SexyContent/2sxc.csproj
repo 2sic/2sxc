@@ -179,10 +179,6 @@
     <Content Include="DnnPackageBuilder\Cleanup\flush.txt" />
     <Content Include="razorblade-old\bin\Connect.Razor.dll" />
     <Content Include="ClientScripts\ModuleEditor.js" />
-    <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.dll" />
-    <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.pdb" />
-    <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.Plugins.DiskCache.dll" />
-    <Content Include="DnnPackageBuilder\BuildScripts\Binary Dependencies\ImageResizer.Plugins.DiskCache.pdb" />
     <Content Include="DnnPackageBuilder\icon-app.png" />
     <Content Include="DnnPackageBuilder\icon.png" />
     <Content Include="DnnPackageBuilder\license.txt" />
@@ -191,7 +187,7 @@
     <Content Include="DnnWebForms\WebFormsBridge.ascx" />
     <Content Include="DnnWebForms\Wysiwyg.ascx" />
     <Content Include="Extensions\404.png" />
-    <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
+    <Content Include="Extensions\ImageResizer\ImageResizer.txt" />
     <Content Include="icon-app-black.png" />
     <Content Include="icon-black.png" />
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
@@ -238,6 +234,7 @@
     <Folder Include=".data-custom\configurations\" />
     <Folder Include=".data-custom\contenttypes\" />
     <Folder Include=".databeta\queries\" />
+    <Folder Include="Extensions\ImageResizer\bin\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">
