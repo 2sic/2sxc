@@ -44,12 +44,10 @@
           </scripts>
         </component>
         <!-- 
-          Experiment in 10.20.0x always flush the dist folder before installing new stuff 
-          If it works, it must always run before the module is installed!
+          Always flush the dist folder before installing new stuff - must always run before the module is installed!
           That means the node has to be in the xml-file before the Module nodes
         -->
-        <component type="Cleanup" version="11.02.01" 
-                   fileName="cleanup\flush.txt">
+        <component type="Cleanup" version="11.02.01" fileName="cleanup\flush.txt">
         </component>
         <component type="Module">
           <desktopModule>
@@ -104,6 +102,19 @@
               <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,09.00.01,09.00.02,09.01.00,09.01.02,09.01.03,09.02.00,09.03.00,09.03.01,09.03.02,09.03.03,09.04.00,09.04.01,09.04.02,09.04.03,09.05.00,09.05.01,09.05.02,09.06.00,09.06.01,09.07.00,09.08.00,09.09.00,09.10.00,09.11.00,09.11.01,09.12.00,09.13.00,09.14.00,09.20.00,09.21.00,09.22.00,09.23.00,09.30.00,09.31.00,09.32.00,09.33.00,09.35.00,09.40.00,09.40.01,09.41.00,09.42.00,09.43.00,09.43.01,10.00.00,10.01.00,10.02.00,10.03.00,10.04.00,10.05.00,10.06.00,10.07.00,10.08.00,10.09.00,10.09.01,10.20.00,10.20.01,10.20.02,10.20.03,10.20.04,10.20.05,10.21.00,10.22.00,10.23.00,10.24.00,10.25.00,10.25.02,10.25.03,10.26.00,10.27.00,10.27.01,10.28.00,10.30.00,11.00.00,11.01.00,11.02.00,11.02.01</upgradeVersionsList>
             </attributes>
           </eventMessage>
+        </component>
+
+        <!-- 
+          2020-06 2dm: Previously 2sxc also included the copy-image-resizer 
+          which causes issues on update, because DNN thinks that image resizer was included with the 
+          version which 2sxc has, like V9 or V10. That's why we must say we don't use it any more
+        -->
+        <component type="Assembly">
+          <assemblies>
+            <assembly action="UnRegister">
+              <name>ImageResizer.dll</name>
+            </assembly>
+          </assemblies>
         </component>
 
         <component type="Assembly">
@@ -850,10 +861,13 @@
         <dependency type="CoreVersion">07.02.00</dependency>
       </dependencies>
       <components>
-        <component type="Script">
-          <scripts>
-            <basePath>DesktopModules\ToSIC_Imazen_ImageResizer</basePath>
-          </scripts>
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath>DesktopModules/ToSIC_Imazen_ImageResizer/</basePath>
+            <resourceFile>
+              <name>Extensions/ImageResizer/Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
         </component>
         <component type="Assembly">
           <assemblies>
@@ -871,9 +885,9 @@
             <assembly>
               <name>Imazen.WebP.dll</name>
             </assembly>
-            <assembly>
-              <name>libwebp.dll</name>
-            </assembly>
+            <!-- Do not include libwebp.dll - it will be auto-loaded later on
+            if you do include it, then on future upgrades IIS will lock it, and will cause errors on updates -->
+            <!--<assembly><name>libwebp.dll</name></assembly>-->
 
           </assemblies>
         </component>
@@ -894,7 +908,7 @@
                       <pipeline defaultCommands="autorotate.default=true" />
                       <plugins>
                         <add name="DiskCache" />
-                        <add name="WebPEncoder" />
+                        <add name="WebPEncoder" downloadnativedependencies="true"/>
                       </plugins>
                     </resizer>
                   </node>
