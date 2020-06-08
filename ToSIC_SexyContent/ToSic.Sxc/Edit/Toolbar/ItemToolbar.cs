@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 ToolbarV10 = toolbar == null
                     ? new List<string>()
                     : toolbar is string tlbString
-                        ? tlbString.Split(',').ToList() //new List<string> {tlbString}
+                        ? tlbString.Split('|').ToList() //new List<string> {tlbString}
                         : (toolbar as IEnumerable<string>).ToList();
 
                 // check conflicting prefill format
