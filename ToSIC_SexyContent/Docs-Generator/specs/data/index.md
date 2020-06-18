@@ -5,6 +5,17 @@ uid: Specs.Data.Intro
 
 [!include["Before you Start"](../../shared/before-you-start-idynamicentity.md)]
 
+## Zones (Tenants)
+
+The EAV is multi-tenant, and each tenant is called a **Zone**. This corresponds to a _Portal_ in DNN. Each Zone contains at least 1 default app called **Content** and additional Apps as configured. 
+
+> [!NOTE]
+> The ZoneId is usually different than the DNN PortalId, 
+> so [DNN has a PortalSetting for this](xref:Specs.Content.DnnIntegration). 
+
+
+## Apps and Data in Apps
+
 Every App contains [Content-Types](xref:Specs.Data.ContentTypes) and [Entities](xref:Specs.Data.Entities) - like this:  
 
 <br>
