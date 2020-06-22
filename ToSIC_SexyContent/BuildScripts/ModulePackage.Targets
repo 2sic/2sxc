@@ -67,6 +67,7 @@
       <ExternalSourceMaps Include="dist\*ng-edit\**\*.map" />
       <ExternalSourceMaps Include="dist\*inpage\**\*.map" />
       <ExternalSourceMaps Include="dist\*ng\**\*.map" />
+      <!--include the js and system folders, but as a subfolder (that's why the strange syntax) -->
       <ExternalSourceMaps Include=".\*js\**\*.map" />
       <ExternalSourceMaps Include=".\*system\**\*.map" />
     </ItemGroup>
