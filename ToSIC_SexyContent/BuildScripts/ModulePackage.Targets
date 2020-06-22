@@ -60,6 +60,7 @@
       <DefaultExclude Include="dist\ng-edit\**\*.map" />
       <DefaultExclude Include="dist\ng\**\*.map" />
       <DefaultExclude Include="js\**\*.map" />
+      <DefaultExclude Include="system\**\*.map" />
     </ItemGroup>
 
     <ItemGroup>
@@ -67,6 +68,7 @@
       <ExternalSourceMaps Include="dist\*inpage\**\*.map" />
       <ExternalSourceMaps Include="dist\*ng\**\*.map" />
       <ExternalSourceMaps Include=".\*js\**\*.map" />
+      <ExternalSourceMaps Include=".\*system\**\*.map" />
     </ItemGroup>
 
     <ItemGroup>
