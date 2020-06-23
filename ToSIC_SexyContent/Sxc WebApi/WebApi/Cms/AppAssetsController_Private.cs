@@ -84,36 +84,45 @@ namespace ToSic.Sxc.WebApi.Cms
             var folder = Path.GetDirectoryName(path);
             var ext = Path.GetExtension(path);
 
-            if (ext?.ToLowerInvariant() == AssetEditor.CsExtension)
-            {
-                if ((folder?.ToLower().IndexOf(AssetEditor.CsApiFolder, StringComparison.Ordinal) ?? -1) > -1)
-                {
-                    var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
-                    content.Content = AssetEditor.DefaultCsBody.Replace(AssetEditor.CsApiTemplateControllerName, nameWithoutExt);
-                }
-                return path;
-            }
-
-            if (ext?.ToLowerInvariant() != AssetEditor.CshtmlExtension) return path;
-
             // not sure what this is for, since I believe code should only get here if there was an ext and it's cshtml
+            // probably just to prevent some very unexpected create
             if (name == null) name = "missing-name.txt";
 
-            if (!name.StartsWith(AssetEditor.CshtmlPrefix))
+            switch (ext?.ToLowerInvariant())
             {
-                name = AssetEditor.CshtmlPrefix + name;
-                path = (string.IsNullOrWhiteSpace(folder) ? "" : folder + "\\") + name;
-            }
+                // .cs files - usually API controllers
+                case AssetEditor.CsExtension:
+                    if ((folder?.ToLower().IndexOf(AssetEditor.CsApiFolder, StringComparison.Ordinal) ?? -1) > -1)
+                    {
+                        var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
+                        content.Content =
+                            AssetEditor.DefaultCsBody.Replace(AssetEditor.CsApiTemplateControllerName, nameWithoutExt);
+                    }
+                    break;
 
-            if (name.EndsWith(AssetEditor.CodeCshtmlExtension))
-            {
-                content.Content = AssetEditor.DefaultCodeCshtmlBody;
-                return path;
-            }
+                // .cshtml files (razor) or .code.cshtml (razor code-behind)
+                case AssetEditor.CshtmlExtension:
+                {
+                    // ensure all .cshtml start with "_"
+                    if (!name.StartsWith(AssetEditor.CshtmlPrefix))
+                    {
+                        name = AssetEditor.CshtmlPrefix + name;
+                        path = (string.IsNullOrWhiteSpace(folder) ? "" : folder + "\\") + name;
+                    }
 
-            // if we're creating a cshtml and it's empty, or has the dummy-text from the old 2sxc 9 admin-UI, then replace it
-            if (string.IsNullOrEmpty(content.Content) || content.Content.StartsWith("<p>You successfully"))
-                content.Content = AssetEditor.DefaultCshtmlBody;
+                    // first check the code-extension, because it's longer but also would contain the non-code extension
+                    if (name.EndsWith(AssetEditor.CodeCshtmlExtension)) 
+                        content.Content = AssetEditor.DefaultCodeCshtmlBody;
+                    else if (name.EndsWith(AssetEditor.CshtmlExtension))
+                        content.Content = AssetEditor.DefaultCshtmlBody;
+                    break;
+                }
+
+                // .html files (Tokens)
+                case AssetEditor.TokenHtmlExtension:
+                    content.Content = AssetEditor.DefaultTokenHtmlBody;
+                    break;
+            }
 
             return path;
         }
