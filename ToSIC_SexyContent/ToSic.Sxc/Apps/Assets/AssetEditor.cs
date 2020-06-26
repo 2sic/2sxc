@@ -11,6 +11,13 @@ namespace ToSic.Sxc.Apps.Assets
 {
     internal class AssetEditor : HasLog
     {
+        public const string TokenHtmlExtension = ".html";
+        public const string DefaultTokenHtmlBody = @"<p>
+    You successfully created your own template.
+    Start editing it by hovering the ""Manage"" button and opening the ""Edit Template"" dialog.
+</p>";
+
+
         public const string CshtmlExtension = ".cshtml";
         public const string CodeCshtmlExtension = ".code.cshtml";
         public const string CshtmlPrefix = "_";

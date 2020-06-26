@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="11.02.00">
+    <package name="2SexyContent" type="Module" version="11.03.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -39,17 +39,15 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>11.02.00</version>
+              <version>11.03.00</version>
             </script>
           </scripts>
         </component>
         <!-- 
-          Experiment in 10.20.0x always flush the dist folder before installing new stuff 
-          If it works, it must always run before the module is installed!
+          Always flush the dist folder before installing new stuff - must always run before the module is installed!
           That means the node has to be in the xml-file before the Module nodes
         -->
-        <component type="Cleanup" version="11.02.00" 
-                   fileName="cleanup\flush.txt">
+        <component type="Cleanup" version="11.03.00" fileName="cleanup\flush.txt">
         </component>
         <component type="Module">
           <desktopModule>
@@ -101,9 +99,22 @@
             <attributes>
               <businessControllerClass>ToSic.SexyContent.Environment.Dnn7.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,09.00.01,09.00.02,09.01.00,09.01.02,09.01.03,09.02.00,09.03.00,09.03.01,09.03.02,09.03.03,09.04.00,09.04.01,09.04.02,09.04.03,09.05.00,09.05.01,09.05.02,09.06.00,09.06.01,09.07.00,09.08.00,09.09.00,09.10.00,09.11.00,09.11.01,09.12.00,09.13.00,09.14.00,09.20.00,09.21.00,09.22.00,09.23.00,09.30.00,09.31.00,09.32.00,09.33.00,09.35.00,09.40.00,09.40.01,09.41.00,09.42.00,09.43.00,09.43.01,10.00.00,10.01.00,10.02.00,10.03.00,10.04.00,10.05.00,10.06.00,10.07.00,10.08.00,10.09.00,10.09.01,10.20.00,10.20.01,10.20.02,10.20.03,10.20.04,10.20.05,10.21.00,10.22.00,10.23.00,10.24.00,10.25.00,10.25.02,10.25.03,10.26.00,10.27.00,10.27.01,10.28.00,10.30.00,11.00.00,11.01.00,11.02.00</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,09.00.01,09.00.02,09.01.00,09.01.02,09.01.03,09.02.00,09.03.00,09.03.01,09.03.02,09.03.03,09.04.00,09.04.01,09.04.02,09.04.03,09.05.00,09.05.01,09.05.02,09.06.00,09.06.01,09.07.00,09.08.00,09.09.00,09.10.00,09.11.00,09.11.01,09.12.00,09.13.00,09.14.00,09.20.00,09.21.00,09.22.00,09.23.00,09.30.00,09.31.00,09.32.00,09.33.00,09.35.00,09.40.00,09.40.01,09.41.00,09.42.00,09.43.00,09.43.01,10.00.00,10.01.00,10.02.00,10.03.00,10.04.00,10.05.00,10.06.00,10.07.00,10.08.00,10.09.00,10.09.01,10.20.00,10.20.01,10.20.02,10.20.03,10.20.04,10.20.05,10.21.00,10.22.00,10.23.00,10.24.00,10.25.00,10.25.02,10.25.03,10.26.00,10.27.00,10.27.01,10.28.00,10.30.00,11.00.00,11.01.00,11.02.00,11.03.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
+        </component>
+
+        <!-- 
+          2020-06 2dm: Previously 2sxc also included the copy-image-resizer 
+          which causes issues on update, because DNN thinks that image resizer was included with the 
+          version which 2sxc has, like V9 or V10. That's why we must say we don't use it any more
+        -->
+        <component type="Assembly">
+          <assemblies>
+            <assembly action="UnRegister">
+              <name>ImageResizer.dll</name>
+            </assembly>
+          </assemblies>
         </component>
 
         <component type="Assembly">
@@ -155,31 +166,7 @@
             <assembly>
               <name>ToSic.Eav.WebApi.dll</name>
             </assembly>
-            <!--<assembly>
-              <name>Microsoft.Practices.Unity.dll</name>
-            </assembly>
-            <assembly>
-              <name>Microsoft.Practices.Unity.Configuration.dll</name>
-            </assembly>-->
-            <assembly>
-              <name>ImageResizer.dll</name>
-            </assembly>
 
-            <!--<assembly>
-              <name>ImageResizer.Plugins.SimpleFilters.dll</name>
-            </assembly>
-            <assembly>
-              <name>ImageResizer.Plugins.AdvancedFilters.dll</name>
-            </assembly>
-            <assembly>
-              <name>AForge.dll</name>
-            </assembly>
-            <assembly>
-              <name>AForge.Imaging.dll</name>
-            </assembly>
-            <assembly>
-              <name>AForge.Math.dll</name>
-            </assembly>-->
             <assembly>
               <name>CsvHelper.dll</name>
             </assembly>
@@ -245,9 +232,6 @@
               <path>bin\2sxc</path>
               <name>System.Interactive.Async.dll</name>
             </assembly>
-            <!--<assembly>
-              <name>System.Runtime.dll</name>
-            </assembly>-->
           </assemblies>
         </component>
 
@@ -542,7 +526,7 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="11.02.00">
+    <package name="2SexyContent-App" type="Module" version="11.03.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
@@ -858,10 +842,10 @@
     </package>
 
 
-    <!-- the Image-Resizer Pro package - should be identical to the one from http://dnnimageresizer.codeplex.com-->
+    <!-- the Image-Resizer Pro package - should be identical to the one from https://github.com/2sic/dnn-imazen-imageresizer -->
     <!-- note that the version number needs the last digits, because otherwise the user will always be informed that it's already installed -->
-    <package name="2sic_Imazen_ImageResizerPro" type="Library" version="04.00.05.01">
-      <friendlyName>2sic presents Imazen ImageResizer Pro</friendlyName>
+    <package name="2sic_Imazen_ImageResizerPro" type="Library" version="04.02.05.01">
+      <friendlyName>2sic Imazen ImageResizer Pro</friendlyName>
       <description>The Imazen ImageResizer Pro is the legendary ImageResizer by Imazen. The Pro-package contains some advanced plugins which are AGPL licensed. If you need non-AGPL components, use the 2sic_Imazen_ImageResizerLight or license the pro as a commercial component from Imazen. </description>
       <iconFile>DesktopModules\ToSIC_Imazen_ImageResizer\icon.png</iconFile>
       <owner>
@@ -870,17 +854,20 @@
         <url>http://2sxc.org/</url>
         <email>info@2sxc.org</email>
       </owner>
-      <license src="License.txt"/>
-      <releaseNotes src="ReleaseNotes.txt"/>
+      <license src="License.txt"></license>
+      <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
       <azureCompatible>true</azureCompatible>
       <dependencies>
         <dependency type="CoreVersion">07.02.00</dependency>
       </dependencies>
       <components>
-        <component type="Script">
-          <scripts>
-            <basePath>DesktopModules\ToSIC_Imazen_ImageResizer</basePath>
-          </scripts>
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath>DesktopModules/ToSIC_Imazen_ImageResizer/</basePath>
+            <resourceFile>
+              <name>Extensions/ImageResizer/Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
         </component>
         <component type="Assembly">
           <assemblies>
@@ -891,25 +878,22 @@
             <assembly>
               <name>ImageResizer.Plugins.DiskCache.dll</name>
             </assembly>
+
+            <assembly>
+              <name>ImageResizer.Plugins.WebP.dll</name>
+            </assembly>
+            <assembly>
+              <name>Imazen.WebP.dll</name>
+            </assembly>
+            <!-- Do not include libwebp.dll - it will be auto-loaded later on
+            if you do include it, then on future upgrades IIS will lock it, and will cause errors on updates -->
+            <!--<assembly><name>libwebp.dll</name></assembly>-->
+
           </assemblies>
         </component>
 
-        <component type="File">
-          <files>
-            <basePath>DesktopModules/ToSIC_Imazen_ImageResizer</basePath>
-            <file>
-              <name>icon.png</name>
-            </file>
-            <file>
-              <name>License.txt</name>
-            </file>
-            <file>
-              <name>ReleaseNotes.txt</name>
-            </file>
-          </files>
-        </component>
-
         <component type="Config">
+          <!-- more on this here https://www.dnnsoftware.com/wiki/manifest-xml-merge -->
           <config>
             <configFile>web.config</configFile>
             <install>
@@ -921,11 +905,28 @@
 
                   <node path="/configuration" targetpath="/configuration/resizer" action="update" collision="save">
                     <resizer>
+                      <pipeline defaultCommands="autorotate.default=true" />
                       <plugins>
                         <add name="DiskCache" />
+                        <add name="WebPEncoder" downloadnativedependencies="true"/>
                       </plugins>
-                      <pipeline defaultCommands="autorotate.default=true" />
                     </resizer>
+                  </node>
+
+                  <!-- register the WebP Mime Type - seems complicated, but copied from DNNs registration of svg  https://github.com/dnnsoftware/Dnn.Platform/blob/c35fdc7fb75db0438f3b872ce4e279e3ea73e7c2/Dnn.AdminExperience/Library/Dnn.PersonaBar.UI/Dnn.PersonaBar.UI.dnn#L68-L97 -->
+                  <node path="/configuration/system.webServer" targetpath="/configuration/system.webServer/staticContent" action="update" collision="ignore">
+                    <staticContent>
+                      <remove fileExtension=".webp" />
+                      <mimeMap fileExtension=".webp" mimeType="image/webp" />
+                    </staticContent>
+                  </node>
+                  <node path="/configuration/system.webServer/staticContent/remove[@fileExtension='.webp']" action="remove" />
+                  <node path="/configuration/system.webServer/staticContent" action="add" key="remove" collision="overwrite">
+                    <remove fileExtension=".webp" />
+                  </node>
+                  <node path="/configuration/system.webServer/staticContent/mimeMap[@fileExtension='.webp']" action="remove" />
+                  <node path="/configuration/system.webServer/staticContent" action="add" key="mimeMap" collision="overwrite">
+                    <mimeMap fileExtension=".webp" mimeType="image/webp" />
                   </node>
 
                   <!-- Register the http-modules in old/new versions as needed -->
@@ -935,7 +936,6 @@
                   <node path="/configuration/system.webServer/modules" action="update" key="name" collision="ignore">
                     <add name="ImageResizingModule" type="ImageResizer.InterceptModule"/>
                   </node>
-
                 </nodes>
               </configuration>
             </install>

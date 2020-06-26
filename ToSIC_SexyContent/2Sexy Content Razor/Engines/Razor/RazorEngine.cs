@@ -167,8 +167,13 @@ namespace ToSic.Sxc.Engines
             (Webpage as RazorComponent)?.CustomizeSearch(searchInfos, moduleInfo, beginDate);
 
             // also call old signature
+            if (!(Webpage is SexyContentWebPage asWebPage)) return;
             var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());
-            (Webpage as SexyContentWebPage)?.CustomizeSearch(oldSignature, ((Container<ModuleInfo>) moduleInfo).UnwrappedContents, beginDate);
+            asWebPage.CustomizeSearch(oldSignature,
+                ((Container<ModuleInfo>) moduleInfo).UnwrappedContents, beginDate);
+            searchInfos.Clear();
+            foreach (var item in oldSignature) 
+                searchInfos.Add(item.Key, item.Value.Cast<ISearchItem>().ToList());
         }
     }
 }

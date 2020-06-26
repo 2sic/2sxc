@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Documentation;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ToSic.Sxc.Adam
 {
@@ -18,7 +17,7 @@ namespace ToSic.Sxc.Adam
         }
 
         /// <inheritdoc />
-        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true) as dynamic;
+        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true);
 
         /// <inheritdoc />
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
@@ -29,15 +28,10 @@ namespace ToSic.Sxc.Adam
         /// <inheritdoc />
         public string Type => Classification.Folder;
 
-        [PrivateApi]
-        [Obsolete]
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public int FileId => throw new NotImplementedException();
 
-        [PrivateApi]
-        [Obsolete]
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public string FileName => throw new NotImplementedException();
+        /// <inheritdoc />
+        public override bool HasChildren => _hasChildren ?? (_hasChildren = _fileSystem.GetFiles(Id, AppContext).Any() || _fileSystem.GetFiles(Id, AppContext).Any()).Value;
+        private bool? _hasChildren;
 
 
         /// <inheritdoc />
@@ -46,23 +40,17 @@ namespace ToSic.Sxc.Adam
             get
             {
                 if (_folders != null) return _folders;
-
-                // this is to skip it if it doesn't have subfolders...
-                if (!HasChildren || string.IsNullOrEmpty(Name))
-                    return _folders = new List<Folder>();
-                
-                _folders = _fileSystem.GetFolders(Id, AppContext);
-                return _folders;
+                return _folders = string.IsNullOrEmpty(Name)
+                    ? new List<Folder>()
+                    : _fileSystem.GetFolders(Id, AppContext);
             }
         }
         private IEnumerable<IFolder> _folders;
 
 
-
-
         /// <inheritdoc/>
-        public IEnumerable<Sxc.Adam.IFile> Files 
+        public IEnumerable<IFile> Files 
             => _files ?? (_files = _fileSystem.GetFiles(Id, AppContext));
-        private IEnumerable<Sxc.Adam.IFile> _files;
+        private IEnumerable<IFile> _files;
     }
 }

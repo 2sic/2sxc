@@ -231,6 +231,41 @@ The following changes are all super-low-profile, but we want to document them ju
 1. Field: Boolean-Tristate which saves true/false/null
 1. `App.Data.Create(...)` now returns entities it just created
 
+### Version 11.01
+
+#### Enhancements
+
+1. In-Page Toolbar now recognises sub-item lists and provides sorting and editing buttons #2009
+1. Item-lists now have a button to add existing items to them #1278
+1. New system to create extensions in an app, in the system folder
+1. Ability to create custom Input Fields just by placing them in the system folder #2070
+
+#### Minor
+
+1. Improve Equality Check for DynamicEntities and EntitiesInList #2075 
+1. Data-table in admin UI now shows `Title` field no matter if there is another field which is the title #1639 
+1. Button to flush app-cache in admin-ui #2073 
+1. 2sxc Insights now available from the super-user toolbar #2069 
+1. PT translations are added again #2064 
+1. Loads of enhancements and minor issues in the UI
+
+### Version 11.02
+
+#### Enhancements
+
+1. App-Extensions system in the folder `system`
+1. Custom WebComponent based input fields #2082 
+1. API to reconfigure the wysiwyg input control #2090
+1. Show view use with links to pages and more #2077 
+1. UI - fields can now be set to not-translate #2086 
+1. UI - boolean can now show different labels based on the value it has #2085 
+
+#### Minor
+
+1. Add HR language pack for editor #2087 
+1. show app-name in admin ui
+1. show app-icon in apps-management #2078 
+
 
 ## Future
 

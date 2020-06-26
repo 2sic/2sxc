@@ -1,4 +1,6 @@
 - name: Form and Field Customizations
   topicUid: Specs.Form.Index
-- name: Customize WYSIWYG - WIP
+- name: connector Object API
+  topicUid: Specs.Form.JsConnector
+- name: Customize WYSIWYG
   topicUid: Specs.Form.Field.Wysiwyg

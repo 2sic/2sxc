@@ -1,0 +1,24 @@
+<div>
+Most ImageResizer plugins are under the permissive Apache 2 license.
+</div>
+
+<div>
+    <strong>The Light Bundle</strong> <br>
+    The light-package only contains work with Apache 2.0 licenses. 
+</div>
+
+<div>
+    <strong>The Pro Bundle</strong> <br>
+The  Pro-Package includes plugins under the copyleft AGPL license. 
+</div>
+
+<div>
+This means, if you create anything using the additonal plugins, you must also publish your work as open-source, or purchase a license.
+
+Please visit http://imageresizing.net/licenses/ or http://2sxc.org/license <br>
+</div>
+
+<div>
+Our (2sics) work creating this DNN bundle is licensed under MIT. But that's just the DNN-Packager. <br>
+Basically if you're using the Resizer in a fully open source setup and publish your work (AGPL-Style) you can also use the pro-edition for free, otherwise you must get a licenses from Imazen.
+</div>

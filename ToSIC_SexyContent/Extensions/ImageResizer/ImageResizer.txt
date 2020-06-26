@@ -1,0 +1,5 @@
+﻿2sxc contains ImageResizer from http://imageresizing.net/ (see license.md for the license)
+
+- While installing 2sxc, it is registered in the web.config and a few dll files are created in the bin folder
+- 2sxc includes the ImageResizer DiskCache plugin which has better performance. 
+- The DiskCache is AGPL = CopyLeft. if you prefer a Apache cache, check out: http://imageresizing.net/licenses

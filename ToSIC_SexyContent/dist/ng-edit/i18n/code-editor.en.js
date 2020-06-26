@@ -1,7 +1,7 @@
 {
   "Note To Translators": {
     "1": "You probably don't want to translate this",
-    "2": "Because it's mostly technical and these users will probably be fine with English. ",
+    "2": "Because it's mostly technical and these users will probably be fine with English.",
     "3": "But if you do translate it, great! Just remember that it means more maintenance"
   },
   "SourceEditorSnippets": {
@@ -20,9 +20,14 @@
         "Title": "General placeholders",
         "Help": "Various common placeholders",
         "Toolbar.Key": "Toolbar",
-        "Toolbar.Help": "Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will automatically float",
         "ToolbarFloat.Key": "Toolbar floating",
-        "ToolbarFloat.Help": "Toolbar together with the <div> tag in which it floats"
+        "ToolbarFloat.Help": "Toolbar together with the <div> tag in which it floats",
+        "Toolbar.Title": "Hover Toolbars (recommended)",
+        "Toolbar.Help": "Hover toolbars let the editor experience the page as it will be",
+        "Toolbar.Attrib.Title": "Hover Toolbar Attribute Examples (put inside an html-tag)",
+        "Toolbar.Attrib.Help": "These are examples to help you bild cool toolbars. They are always used inside a tag as an attribute - like <div>@Edit.TagToolbar(...)</div>",
+        "Toolbar.Inline.Title": "Inline Toolbars (not recommended)",
+        "Toolbar.Inline.Help": "Inline toolbars are not recommended, because they change the look of the output for the editor. But sometimes you just need them"
       },
       "Fields.Title": "Fields",
       "Fields.Help": "Fields of the content item as configured in the content-type",
@@ -45,7 +50,7 @@
       "Repeater": {
         "Title": "Repeaters",
         "Help": "Placeholders as well as loop-templates and more",
-        "Repeater.Help": "Allows defining the repeating part of the template."
+        "Repeater.Help": "Allows defining the repeating part of the template"
       },
       "LoopItems": {
         "Title": "Loop Items (inside a repeater)",
@@ -69,7 +74,7 @@
           "Title": "Important List Codes",
           "Items": [
             {
-              "<repeat repeat=\"Employee in Data:Default\">...[Employee:...]...</repeat>": "Allows defining the repeating part of the template."
+              "<repeat repeat=\"Employee in Data:Default\">...[Employee:...]...</repeat>": "Allows defining the repeating part of the template"
             },
             {
               "[Content:Repeater:Index]": "Index of the current item"
@@ -111,6 +116,7 @@
     },
     "App": {
       "Title": "App",
+      "Help": "App",
       "App.Title": "App",
       "App.Help": "App fields and placeholders",
       "General.Title": "General",
@@ -124,12 +130,15 @@
       "Title": "Dnn (Portal, Tab, Module, ...)",
       "Help": "Every dnn-token like Portal, Tab, Module, etc.",
       "Portal.Title": "Portal Tokens",
+      "Portal.Help": "Portal Tokens",
       "TabTokens.Title": "Tab (Page) Tokens",
-      "ModuleTokens.Title": "Module Tokens"
+      "TabTokens.Help": "Tab (Page) Tokens",
+      "ModuleTokens.Title": "Module Tokens",
+      "ModuleTokens.Help": "Module Tokens"
     },
     "DnnRazor": {
       "Title": "Dnn objects (module, tab, portal, etc.)",
-      "Help": "Find more on <a href='http://2sxc.org/en/Docs-Manuals/Feature/feature/3602'>token list</a>",
+      "Help": "Find more on https://2sxc.org/en/Docs-Manuals/Feature/feature/3602",
       "Module.Title": "Module",
       "Module.Help": "All module properties",
       "Tab.Title": "Tab (page)",
@@ -139,6 +148,7 @@
     },
     "User": {
       "Title": "Dnn user information",
+      "Help": "Dnn user information",
       "Basic.Title": "Basic user properties",
       "Basic.Help": "Default properties which exist in every DNN",
       "Profile.Title": "Profile",
@@ -148,29 +158,71 @@
     },
     "Environment": {
       "Title": "Environment / System",
+      "Help": "Environment / System",
       "QueryString.Title": "QueryString (URL-Parameters) Tokens",
-      "Time.Title": "Time Tokens"
+      "QueryString.Help": "QueryString (URL-Parameters) Tokens",
+      "Time.Title": "Time Tokens",
+      "Time.Help": "Time Tokens"
     },
     "C#": {
       "Title": "C# code",
+      "Help": "C# code",
       "Basics.Title": "Basics like using or function blocks",
+      "Basics.Help": "Basics like using or function blocks",
       "InnerContent.Title": "Inner Content / Very-Rich-Text",
-      "Headers.Title": "Page headers / titles"
+      "InnerContent.Help": "Inner Content / Very-Rich-Text",
+      "Headers.Title": "Page headers / titles",
+      "Headers.Help": "Page headers / titles"
     },
     "Koi": {
       "Title": "Koi - Multi-CSS Framework Views",
+      "Help": "Koi - Multi-CSS Framework Views",
       "Using.Title": "Using statement",
+      "Using.Help": "Using statement",
       "CssFramework.Title": "Detect CSS Framework",
+      "CssFramework.Help": "Detect CSS Framework",
       "IsUnknown.Title": "Handle Unknown Frameworks",
+      "IsUnknown.Help": "Handle Unknown Frameworks",
       "GetFromCdn.Title": "Load missing CSS framework from CDN",
+      "GetFromCdn.Help": "Load missing CSS framework from CDN",
       "Class.Title": "Generate Class Attributes",
+      "Class.Help": "Generate Class Attributes",
       "If.Title": "If Statements",
-      "Include.Title": "Include CSS Files"
+      "If.Help": "If Statements",
+      "Include.Title": "Include CSS Files",
+      "Include.Help": "Include CSS Files"
+    },
+    "RazorBlade": {
+      "Title": "RazorBlade 3",
+      "Help": "Read more on https://razor-blade.net",
+      "Basics.Title": "Basics",
+      "Basics.Help": "Basics like using statements",
+      "Text.Title": "Text / String handling",
+      "Text.Help": "Various text operations",
+      "HtmlPage.Title": "HtmlPage",
+      "HtmlPage.Help": "Add icons, headers, etc.",
+      "Tags.Title": "Tags - HTML manipulations",
+      "Tags.Help": "Modify / manipulate html",
+      "Tag.Title": "Tag - generate HTML",
+      "Tag.Help": "Generate safe HTML"
+    },
+    "Linq": {
+      "Title": "LINQ - Querying Lists of Data",
+      "Help": "LINQ - Querying Lists of Data",
+      "Using.Title": "Using statements for LINQ",
+      "Using.Help": "Using statements for LINQ",
+      "SimpleQueries.Title": "Simple Queries",
+      "SimpleQueries.Help": "Simple Queries",
+      "Relationships.Title": "Relationship Queries",
+      "Relationships.Help": "Relationship Queries"
     },
     "Html": {
       "Title": "Html snippets",
+      "Help": "Html snippets",
       "Resources.Title": "Resources like javascripts and css",
-      "2sxcScripts.Title": "2sxc Scripts"
+      "Resources.Help": "Resources like javascripts and css",
+      "2sxcScripts.Title": "2sxc Scripts",
+      "2sxcScripts.Help": "2sxc Scripts"
     }
   }
 }
