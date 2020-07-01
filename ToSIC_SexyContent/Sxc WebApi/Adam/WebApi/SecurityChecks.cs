@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
         internal static bool DestinationIsInItem(Guid guid, string field, string path, out HttpResponseException preparedException)
         {
-            var inAdam = Sxc.Adam.Security.PathIsInItemAdam(guid, field, path);
+            var inAdam = Security.PathIsInItemAdam(guid, field, path);
             preparedException = inAdam
                 ? null
                 : Http.PermissionDenied("Can't access a resource which is not part of this item.");

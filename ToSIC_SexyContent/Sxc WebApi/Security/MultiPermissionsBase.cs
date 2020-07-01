@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Security
         /// </summary>
         /// <param name="grants"></param>
         /// <returns>True if all pass, false if any one fails</returns>
-        public bool UserMayOnAll(List<Grants> grants) => EnsureAll(grants, out var _);
+        public bool UserMayOnAll(List<Grants> grants) => EnsureAll(grants, out _);
 
         /// <summary>
         /// Ensure that all! checks pass
@@ -67,20 +67,6 @@ namespace ToSic.Sxc.Security
                 ? wrap(true.ToString(), true) 
                 : wrap(false.ToString(), false);
         }
-
-        //2018-09-22 2dm removed again, as all internal checks actually already do this
-        //public bool SameAppOrIsSuperUserAndEnsure(List<Grants> grants, out HttpResponseException preparedException)
-        //{
-        //    if (!ZoneIsOfCurrentContextOrUserIsSuper(out preparedException))
-        //        return false;
-        //    if (!EnsureAll(grants, out preparedException))
-        //        return false;
-        //    preparedException = null;
-        //    return true;
-        //}
-
-
-
 
     }
 }

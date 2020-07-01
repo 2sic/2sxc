@@ -83,7 +83,6 @@ namespace ToSic.Sxc.WebApi.Cms
                     var add = i.Header.ListAdd();
                     i.Header.Add = add;
                     if (ent.EntityId > 0 && add) i.Header.Add = false;
-                    //i.Header.ReallyAddBecauseAlreadyVerified = i.Header.Add;
                 }
 
                 return new BundleWithHeader<IEntity>

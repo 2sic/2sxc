@@ -100,7 +100,6 @@ namespace ToSic.Sxc.WebApi.Cms
                 Id = c?.EntityId ?? 0,
                 Guid = c?.EntityGuid ?? Guid.Empty,
                 Title = c?.GetBestTitle() ?? "",
-                //Type = c?.Type.StaticName ?? cg.View.ContentType
             }).ToList();
 
             return list;

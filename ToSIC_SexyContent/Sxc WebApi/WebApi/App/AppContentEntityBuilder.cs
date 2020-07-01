@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 
@@ -26,9 +25,7 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"create ent dic a#{appId}, type:{contentType}");
             // Retrieve content-type definition and check all the fields that this content-type has
-            var appState = Eav.Apps.State.Get(appId); // Factory.GetAppState(appId);
-            //.Get(new AppIdentity(
-            //var root = (AppRoot) DataSource.GetCache(DataSource.GetIdentity(null, appId));
+            var appState = Eav.Apps.State.Get(appId);
             var listOfTypes = appState.GetContentType(contentType);
             var attribs = listOfTypes.Attributes;
 

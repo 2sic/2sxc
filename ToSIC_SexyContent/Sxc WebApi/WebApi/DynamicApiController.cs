@@ -101,9 +101,7 @@ namespace ToSic.SexyContent.WebApi
             if (!Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
-            return new AdamUploader(BlockBuilder, 
-                BlockBuilder.Block.AppId, // 2019-11-09 not nullable any more ?? throw new Exception("can't save in adam - full context not available"), 
-                Log)
+            return new AdamUploader(BlockBuilder, BlockBuilder.Block.AppId, Log)
                 .UploadOne(stream, fileName, contentType, guid.Value, field, subFolder, false, true);
         }
 

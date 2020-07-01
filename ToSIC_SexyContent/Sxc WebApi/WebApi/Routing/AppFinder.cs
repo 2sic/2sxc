@@ -39,7 +39,7 @@ namespace ToSic.Sxc.WebApi
             // check zone
             var zid = ZoneMapper.GetZoneId(Portal.PortalId);
 
-            // get app from appname
+            // get app from AppName
             var aid = AppHelpers.GetAppIdFromGuidName(zid, appPath, true);
             wrapLog($"found app:{aid}");
             return new AppIdentity(zid, aid);
@@ -65,8 +65,7 @@ namespace ToSic.Sxc.WebApi
                     ? new AppIdentity(
                         blockBuilder?.Block?.ZoneId ??
                         throw new ArgumentException("try to get app-id from context, but none found"),
-                        blockBuilder.Block.AppId // not nullable any more 2019-11-09 ?? 0
-                        /*, Log*/)
+                        blockBuilder.Block.AppId)
                     : GetCurrentAppIdFromPath(appPath);
             }
 

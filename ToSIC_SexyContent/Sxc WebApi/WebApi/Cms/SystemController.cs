@@ -112,7 +112,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 return "error: user needs host permissions";
             }
 
-            return "//gettingstarted.2sxc.org/router.aspx?" // change to use protocoll neutral base URL, also change to 2sxc
+            return "//gettingstarted.2sxc.org/router.aspx?"
                 + $"DnnVersion={DotNetNukeContext.Current.Application.Version.ToString(4)}"
                 + $"&2SexyContentVersion={Settings.ModuleVersion}"
                 + $"&fp={HttpUtility.UrlEncode(Fingerprint.System)}"
@@ -157,8 +157,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var dnn = PortalSettings.Current;
             var mod = Request.FindModuleInfo();
-            //int appId = sxc.AppId.Value;
-            var gsUrl = "//gettingstarted.2sxc.org/router.aspx?" // change to use protocoll neutral base URL, also change to 2sxc
+            var gsUrl = "//gettingstarted.2sxc.org/router.aspx?"
 
                         // Add version & module infos
                         + "DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)

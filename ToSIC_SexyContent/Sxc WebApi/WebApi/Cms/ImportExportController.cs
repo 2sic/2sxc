@@ -256,17 +256,5 @@ namespace ToSic.Sxc.WebApi.Cms
             if (!PortalSettings.UserInfo.Roles.Contains(PortalSettings.AdministratorRoleName) && !PortalSettings.UserInfo.IsSuperUser)
                 throw new AuthenticationException("user doesn't seem to be admin or super-user");
         }
-
-        ///// <summary>
-        ///// get the app, but only switch to another zone if the user is super-user
-        ///// </summary>
-        ///// <param name="appId"></param>
-        ///// <param name="zoneId"></param>
-        ///// <returns></returns>
-        ///// <exception>
-        ///// will throw exception if the app is in another zone, and the user is not a super-user
-        ///// </exception>
-        //private SxcAppWrapper AppWithRestrictedZoneChange(int appId, int zoneId) 
-        //    => SxcAppWrapper.GetBasedOnUserPermissions(zoneId, appId, UserInfo);
     }
 }

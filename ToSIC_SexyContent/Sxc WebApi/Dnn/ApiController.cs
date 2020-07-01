@@ -5,7 +5,6 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent.WebApi;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
@@ -28,10 +27,9 @@ namespace ToSic.Sxc.Dnn
     public abstract partial class ApiController : DynamicApiController, IDynamicWebApi
     {
         /// <inheritdoc />
-        public new IDnnContext Dnn => base.Dnn;// DynCodeHelpers.Dnn;
+        public new IDnnContext Dnn => base.Dnn;
 
         [PrivateApi("try to remove")]
-        //public SxcHelper Sxc => DynCode.Sxc;
 
         [PrivateApi]
         public int CompatibilityLevel => DynCode.CompatibilityLevel;
@@ -58,11 +56,10 @@ namespace ToSic.Sxc.Dnn
 
         #endregion
 
-        #region AsList (experimental)
+        #region AsList
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(dynamic list) 
-            => DynCode?.AsList(list);
+        public IEnumerable<dynamic> AsList(dynamic list) => DynCode?.AsList(list);
 
         #endregion
 

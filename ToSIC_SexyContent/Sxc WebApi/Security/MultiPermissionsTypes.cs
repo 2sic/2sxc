@@ -57,7 +57,5 @@ namespace ToSic.Sxc.Security
             // now do relevant security checks
             return BuildPermissionChecker(AppRuntime.ContentTypes.Get(typeName));
         }
-
-
     }
 }

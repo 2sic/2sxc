@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Eav.Security;
-using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.Sxc.Security
 {
@@ -11,6 +10,5 @@ namespace ToSic.Sxc.Security
 
         bool EnsureAll(List<Grants> grants, out HttpResponseException preparedException);
 
-        //bool SameAppOrIsSuperUserAndEnsure(List<Grants> grants, out HttpResponseException preparedException);
     }
 }

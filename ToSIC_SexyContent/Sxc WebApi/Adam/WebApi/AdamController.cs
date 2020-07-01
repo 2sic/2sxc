@@ -85,9 +85,7 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             // if app-path specified, use that app, otherwise use from context
             var appId = BlockBuilder.Block.AppId;
-            // 2019-11-09 not nullable any more
-            //if (appId == null) throw new Exception("Can't detect app-id, module-context missing in http request");
-            return Items(appId/*.Value*/, contenttype, guid, field, folder);
+            return Items(appId, contenttype, guid, field, folder);
         }
 
         [HttpGet]

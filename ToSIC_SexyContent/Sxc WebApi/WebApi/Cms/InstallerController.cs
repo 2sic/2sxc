@@ -8,8 +8,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.ImportExport;
-using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
@@ -29,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        //[ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken] - never activate this, because this is a GET and can't include the RVT
         public HttpResponseMessage InstallPackage(string packageUrl)
         {
             Log.Add("install package:" + packageUrl);
@@ -37,8 +35,6 @@ namespace ToSic.Sxc.WebApi.Cms
             var appId = new DnnMapAppToInstance(Log).GetAppIdFromInstance(new DnnContainer(ActiveModule), zoneId);
             bool success;
 
-            // Install package
-            // var messages = new List<ExportImportMessage>();
             var helper = new DnnImportExportEnvironment(Log);
             try
             {
