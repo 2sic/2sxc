@@ -42,7 +42,8 @@ namespace ToSic.Sxc.Dnn.Run
             if (module.ModuleSettings.ContainsKey(Settings.AppNameString))
             {
                 var guid = module.ModuleSettings[Settings.AppNameString].ToString();
-                var appId = AppHelpers.GetAppIdFromGuidName(zoneId, guid);
+                var appId = new ZoneRuntime(zoneId, Log).FindAppId(guid);
+                //var appId = AppHelpers.GetAppIdFromGuidName(zoneId, guid);
                 Log.Add($"{msg} AppG:{guid} = app:{appId}");
                 return wrapLog("ok", appId);
             }

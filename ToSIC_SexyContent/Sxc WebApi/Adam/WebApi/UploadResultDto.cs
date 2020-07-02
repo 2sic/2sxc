@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Adam.WebApi
 {
-    public class UploadResult
+    public class UploadResultDto
     {
         public bool Success { get; set; }
         public string Error { get; set; }

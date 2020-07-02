@@ -32,10 +32,10 @@ namespace ToSic.Sxc.Adam.WebApi
 
         [HttpPost]
         [HttpPut]
-        public UploadResult Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false)
+        public UploadResultDto Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false)
             => UploadOne(appId, contentType, guid, field, subFolder, usePortalRoot);
 
-        private UploadResult UploadOne(int appId, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot)
+        private UploadResultDto UploadOne(int appId, string contentType, Guid guid, string field, string subFolder, bool usePortalRoot)
         {
             // wrap all of it in try/catch, to reformat error in better way for js to tell the user
             try
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Adam.WebApi
                     var file = new AdamUploader(BlockBuilder, appId, Log)
                         .UploadOne(originalFile.InputStream, originalFile.FileName, contentType, guid, field, subFolder, usePortalRoot, false);
 
-                    return new UploadResult
+                    return new UploadResultDto
                     {
                         Success = true,
                         Error = "",
@@ -64,15 +64,15 @@ namespace ToSic.Sxc.Adam.WebApi
                 }
 
                 Log.Add("upload one complete");
-                return new UploadResult { Success = false, Error = "No image was uploaded." };
+                return new UploadResultDto { Success = false, Error = "No image was uploaded." };
             }
             catch (HttpResponseException he)
             {
-                return new UploadResult { Success = false, Error = he.Response.ReasonPhrase };
+                return new UploadResultDto { Success = false, Error = he.Response.ReasonPhrase };
             }
             catch (Exception e)
             {
-                return new UploadResult { Success = false, Error = e.Message };
+                return new UploadResultDto { Success = false, Error = e.Message };
             }
         }
 

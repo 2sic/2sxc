@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -11,11 +12,12 @@ namespace ToSic.Sxc.Apps
     [PublicApi_Stable_ForUseInYourCode]
     public class AppConfiguration: EntityBasedWithLog
     {
+        // todo: probably move most to Eav.Apps.AppConstants
         [PrivateApi]
         public const string
             FieldDescription = "Description",
             FieldName = "DisplayName",
-            FieldFolder = "Folder",
+            //FieldFolder = "Folder",
             FieldOriginalId = "OriginalId",
             FieldVersion = "Version",
             FieldAllowRazor = "AllowRazorTemplates",
@@ -39,7 +41,7 @@ namespace ToSic.Sxc.Apps
 
         public string Description => Get(FieldDescription, "");
 
-        public string Folder => Get(FieldFolder, "");
+        public string Folder => Get( AppConstants.FieldFolder, "");
 
         public bool EnableRazor => Get(FieldAllowRazor, false);
 

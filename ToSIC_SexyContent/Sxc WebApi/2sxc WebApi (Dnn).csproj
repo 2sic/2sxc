@@ -101,7 +101,7 @@
     <Compile Include="Adam\WebApi\AdamItem.cs" />
     <Compile Include="Adam\WebApi\AdamUploader.cs" />
     <Compile Include="Adam\WebApi\SecurityChecks.cs" />
-    <Compile Include="Adam\WebApi\UploadResult.cs" />
+    <Compile Include="Adam\WebApi\UploadResultDto.cs" />
     <Compile Include="Dnn\ApiController.cs" />
     <Compile Include="Dnn\ApiController_Obsolete.cs" />
     <Compile Include="WebApi\App\AppContentEntityBuilder.cs" />

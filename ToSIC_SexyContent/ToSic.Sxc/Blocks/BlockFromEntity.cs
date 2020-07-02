@@ -1,9 +1,11 @@
 ﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
+using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -72,9 +74,10 @@ namespace ToSic.Sxc.Blocks
 
             ZoneId = Parent.ZoneId;
 
-            AppId = AppHelpers.GetAppIdFromGuidName(ZoneId, _appName); // should be 0 if unknown, must test
+            AppId = new ZoneRuntime(ZoneId, Log).FindAppId(_appName);
+            //AppId = AppHelpers.GetAppIdFromGuidName(ZoneId, _appName); // should be 0 if unknown, must test
 
-            if (AppId == Settings.DataIsMissingInDb)
+            if (AppId == AppConstants.AppIdNotFound)
             {
                 _dataIsMissing = true;
                 return;
