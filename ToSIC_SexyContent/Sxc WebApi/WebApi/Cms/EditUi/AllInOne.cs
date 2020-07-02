@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -39,6 +40,8 @@ namespace ToSic.Sxc.WebApi.Cms
         public List<Feature> Features;
 
         public List<JsonEntity> ContentTypeItems;
+
+        public ContextDto Context;
     }
 
 }

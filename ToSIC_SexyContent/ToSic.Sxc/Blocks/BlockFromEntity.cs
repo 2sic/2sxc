@@ -42,8 +42,7 @@ namespace ToSic.Sxc.Blocks
             Guid.TryParse(temp, out _previewTemplateGuid);
 
             temp = ContentBlockEntity.GetBestValue(CbPropertyShowChooser)?.ToString() ?? "";
-            bool show;
-            if (bool.TryParse(temp, out show))
+            if (bool.TryParse(temp, out var show))
                 ShowTemplateChooser = show;
 
         }

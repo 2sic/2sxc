@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Security
             exp = zoneSameOrSuperUser ? null: Http.PermissionDenied(
                 $"accessing app {App.AppId} in zone {App.ZoneId} is not allowed for this user");
 
-            wrapLog(zoneSameOrSuperUser ? $"sameportal:{SamePortal} - ok": "not ok, generate error");
+            wrapLog(zoneSameOrSuperUser ? $"SamePortal:{SamePortal} - ok": "not ok, generate error");
 
             return zoneSameOrSuperUser;
         }

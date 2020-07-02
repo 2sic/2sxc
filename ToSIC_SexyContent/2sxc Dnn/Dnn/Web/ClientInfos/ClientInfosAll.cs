@@ -8,7 +8,6 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 {
     public class ClientInfosAll : HasLog
     {
-
         public ClientInfosEnvironment Environment;
         public ClientInfosUser User;
         public ClientInfosLanguages Language;
@@ -19,14 +18,14 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 
         public Ui Ui;
 
-        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IContainer mic, Blocks.IBlockBuilder blockBuilder, UserInfo uinfo, int zoneId, bool isCreated, bool autoToolbar, ILog parentLog)
+        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IContainer mic, Blocks.IBlockBuilder blockBuilder, UserInfo user, int zoneId, bool isCreated, ILog parentLog)
             : base("Sxc.CliInf", parentLog, "building entire client-context")
         {
             var versioning = blockBuilder.Environment.PagePublishing;
 
             Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic, blockBuilder);
             Language = new ClientInfosLanguages(ps, zoneId);
-            User = new ClientInfosUser(uinfo);
+            User = new ClientInfosUser(user);
 
             ContentBlock = new ClientInfoContentBlock(blockBuilder.Block, null, 0, versioning.Requirements(mic.Id));
             ContentGroup = new ClientInfoContentGroup(blockBuilder, isCreated);

@@ -10,7 +10,10 @@ namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class SxcAppForWebApi
     {
-
+        /// <summary>
+        /// Get an app - but only allow zone change if super-user
+        /// </summary>
+        /// <returns></returns>
         internal static IApp AppBasedOnUserPermissions(int zoneId, int appId, UserInfo user, ILog log)
         {
             var wrapLog = log.Call<IApp>($"superuser: {user.IsSuperUser}");

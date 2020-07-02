@@ -14,6 +14,7 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Security;
+using ToSic.Sxc.WebApi.Context;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -92,6 +93,12 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // also include UI features
             result.Features = SystemController.FeatureListWithPermissionCheck(permCheck).ToList();
+
+            // Attach context
+            result.Context = new ContextBuilder(
+                    PortalSettings, ActiveModule, UserInfo,
+                    appIdentity.ZoneId, permCheck.App)
+                .Get(app: true, language:true, site: true, system: true);
 
             // done - return
             wraplog($"ready, sending items:{result.Items.Count}, " +

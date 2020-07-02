@@ -83,8 +83,7 @@ namespace ToSic.Sxc.Dnn.Web
         // new
         public string UiContextInfos(bool autoToolbars)
             => JsonConvert.SerializeObject(new ClientInfosAll(_applicationRoot, _portalSettings, _moduleInfo, BlockBuilder, _userInfo,
-                BlockBuilder.Block.ZoneId // 2019-11-09, Id not nullable any more // ?? 0
-                , BlockBuilder.Block.ContentGroupExists, autoToolbars, Log));
+                BlockBuilder.Block.ZoneId, BlockBuilder.Block.ContentGroupExists, Log));
 
 
 

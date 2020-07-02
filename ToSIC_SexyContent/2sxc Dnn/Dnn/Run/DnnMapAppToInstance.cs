@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Dnn.Run
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
-            /*BlocksManager.*/ClearPreviewTemplate(instance.Id);
+            ClearPreviewTemplate(instance.Id);
 
             // ToDo: Should throw exception if a real BlockConfiguration exists
 
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Dnn.Run
                 DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, null, Log);
             else
             {
-                var appName = /*Factory.GetAppsCache*/Eav.Apps.State.Zones[zoneId].Apps[appId.Value];
+                var appName = State.Zones[zoneId].Apps[appId.Value];
                 DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, appName, Log);
             }
 
@@ -77,10 +77,9 @@ namespace ToSic.Sxc.Dnn.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
-                var cms = new CmsRuntime(/*zoneId, appId.Value*/appIdentity, Log, true, env.PagePublishing.IsEnabled(instance.Id));
+                var cms = new CmsRuntime(appIdentity, Log, true, env.PagePublishing.IsEnabled(instance.Id));
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
-                if (templateGuid.HasValue)
-                    /*BlocksManager.*/SetPreviewTemplate(instance.Id, templateGuid.Value);
+                if (templateGuid.HasValue) SetPreviewTemplate(instance.Id, templateGuid.Value);
             }
         }
 
@@ -125,28 +124,28 @@ namespace ToSic.Sxc.Dnn.Run
 
         /// <summary>
         /// Saves a temporary templateId to the module's settings
-        /// This templateId will be used until a contentgroup exists
+        /// This templateId will be used until a ContentGroup exists
         /// </summary>
         public void SetPreviewTemplate(int instanceId, Guid previewTemplateGuid)
         {
             // todo: 2rm - I believe you are accidentally using uncached module settings access - pls check and probably change
             // todo: note: this is done ca. 3x in this class
             var moduleController = new ModuleController();
-            var settings = moduleController.GetModule(instanceId).ModuleSettings;// older, deprecated api: .GetModuleSettings(instanceId);
+            var settings = moduleController.GetModule(instanceId).ModuleSettings;
 
-            // Do not allow saving the temporary template id if a contentgroup exists for this module
+            // Do not allow saving the temporary template id if a ContentGroup exists for this module
             if (settings[Settings.ContentGroupGuidString] != null)
                 throw new Exception("Preview template id cannot be set for a module that already has content.");
 
             DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString(), Log);
         }
 
-        public void UpdateTitle(Sxc.Blocks.IBlockBuilder blockBuilder, IEntity titleItem)
+        public void UpdateTitle(Blocks.IBlockBuilder blockBuilder, IEntity titleItem)
         {
             Log.Add("update title");
 
             var languages = blockBuilder.Environment.ZoneMapper.CulturesWithState(blockBuilder.Container.TenantId,
-                blockBuilder.Block.ZoneId); // not nullable any more 2019-11-09 // .Value);
+                blockBuilder.Block.ZoneId);
 
             // Find Module for default language
             var moduleController = new ModuleController();
@@ -163,7 +162,7 @@ namespace ToSic.Sxc.Dnn.Run
                     if (originalModule == null)
                         return;
 
-                    // Get Title value of Entitiy in current language
+                    // Get Title value of Entity in current language
                     var titleValue = titleItem.Title[dimension.Key].ToString();
 
                     // Find module for given Culture
@@ -178,10 +177,7 @@ namespace ToSic.Sxc.Dnn.Run
                     moduleByCulture.ModuleTitle = titleValue;
                     moduleController.UpdateModule(moduleByCulture);
                 }
-                catch
-                {
-                    // ignored
-                }
+                catch { /* ignored */ }
             }
         }
 

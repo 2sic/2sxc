@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ToSic.Eav.Security;
-using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.Sxc.WebApi
 {

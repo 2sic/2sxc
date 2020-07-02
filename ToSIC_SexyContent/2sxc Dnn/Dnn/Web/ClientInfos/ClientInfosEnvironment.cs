@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 
         public bool IsEditable;
 
-        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, IContainer mic, Sxc.Blocks.IBlockBuilder blockBuilder)
+        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, IContainer mic, Blocks.IBlockBuilder blockBuilder)
         {
             WebsiteId = ps.PortalId;
 
