@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Apps
         /// Returns all Apps for the current zone
         /// </summary>
         /// <returns></returns>
-        public List<IApp> GetApps(ITenant tenant, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig/*, bool includeDefaultApp*/)
+        public List<IApp> GetApps(ITenant tenant, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig)
         {
             var appIds = new ZoneRuntime(ZoneRuntime.ZoneId, Log).Apps;
             return appIds

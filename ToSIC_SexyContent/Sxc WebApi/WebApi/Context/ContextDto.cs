@@ -6,9 +6,9 @@ namespace ToSic.Sxc.WebApi.Context
 {
     public class ContextDto
     {
-        [JsonProperty(NullValueHandling = Ignore)] public WebResourceDto App;
+        [JsonProperty(NullValueHandling = Ignore)] public AppDto App;
         [JsonProperty(NullValueHandling = Ignore)] public LanguageDto Language;
-        [JsonProperty(NullValueHandling = Ignore)] public UserDto User;
+        //[JsonProperty(NullValueHandling = Ignore)] public UserDto User;
         [JsonProperty(NullValueHandling = Ignore)] public WebResourceDto System;
         [JsonProperty(NullValueHandling = Ignore)] public WebResourceDto Site;
         [JsonProperty(NullValueHandling = Ignore)] public WebResourceDto Page;
@@ -21,9 +21,17 @@ namespace ToSic.Sxc.WebApi.Context
         [JsonProperty(NullValueHandling = Ignore)] public string Url;
     }
 
+    public class AppDto: WebResourceDto
+    {
+        public string Name;
+        public string Identifier;
+    }
+
     public class EnableDto
     {
-        public bool App;
+        public bool AppPermissions;
+        public bool CodeEditor;
+        public bool Query;
     }
 
     public class LanguageDto
@@ -33,11 +41,11 @@ namespace ToSic.Sxc.WebApi.Context
         public Dictionary<string, string> All;
     }
 
-    public class UserDto
-    {
-        public bool CanDesign;
-        public bool CanDevelop;
-        // todo
-        //public bool CanEdit;
-    }
+    //public class UserDto
+    //{
+    //    public bool CanDesign;
+    //    public bool CanDevelop;
+    //    // todo
+    //    //public bool CanEdit;
+    //}
 }

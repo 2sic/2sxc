@@ -41,7 +41,8 @@ namespace ToSic.Sxc.WebApi.Context
             if (enable ?? all == true) ctx.Enable = GetEnable();
             if (language ?? all == true) ctx.Language = GetLanguage();
             if (page ?? all == true) ctx.Page = GetPage();
-            if (user ?? all == true) ctx.User = GetUser();
+            // atm user data not used at all
+            //if (user ?? all == true) ctx.User = GetUser();
             if (site ?? all == true) ctx.Site = GetSite();
             if (system ?? all == true) ctx.System = GetSystem();
             return ctx;
@@ -59,16 +60,16 @@ namespace ToSic.Sxc.WebApi.Context
             };
         }
 
-        private UserDto GetUser()
-        {
-            if (User == null) return null;
-            var tmp = new ClientInfosUser(User);
-            return new UserDto
-            {
-                CanDesign = tmp.CanDesign,
-                CanDevelop = tmp.CanDevelop
-            };
-        }
+        //private UserDto GetUser()
+        //{
+        //    if (User == null) return null;
+        //    var tmp = new ClientInfosUser(User);
+        //    return new UserDto
+        //    {
+        //        CanDesign = tmp.CanDesign,
+        //        CanDevelop = tmp.CanDevelop
+        //    };
+        //}
 
         private WebResourceDto GetSystem()
         {
@@ -99,22 +100,27 @@ namespace ToSic.Sxc.WebApi.Context
             };
         }
 
-        private WebResourceDto GetApp()
+        private AppDto GetApp()
         {
             if (App == null) return null;
-            return new WebResourceDto
+            return new AppDto
             {
                 Id = App.AppId,
                 Url = App.Path,
+                Name = App.Name,
+                Identifier = App.AppGuid,
             };
         }
 
         private EnableDto GetEnable()
         {
-            if (App == null) return null;
+            var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
+            var tmp = User == null ? null : new ClientInfosUser(User);
             return new EnableDto
             {
-                App = App.AppGuid != Eav.Constants.DefaultAppName
+                AppPermissions = isRealApp,
+                CodeEditor = tmp?.CanDevelop ?? false,
+                Query = isRealApp,
             };
         }
 
