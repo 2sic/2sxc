@@ -98,7 +98,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.Context = new ContextBuilder(
                     PortalSettings, ActiveModule, UserInfo,
                     appIdentity.ZoneId, permCheck.App)
-                .Get(app: true, language:true, site: true, system: true);
+                .Get(Ctx.AppBasic | Ctx.Language | Ctx.Site | Ctx.System);
 
             // done - return
             wraplog($"ready, sending items:{result.Items.Count}, " +

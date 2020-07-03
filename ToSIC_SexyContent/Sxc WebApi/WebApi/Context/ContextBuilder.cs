@@ -28,23 +28,20 @@ namespace ToSic.Sxc.WebApi.Context
             ZoneId = zoneId ?? 0;
         }
 
-        public ContextDto Get(bool? all = null, bool? app = null, bool? enable = null, 
-            bool? language = null, bool? page = null, bool? user = null, bool? site = null,
-            bool? system = null)
+        public ContextDto Get(Ctx flags)
         {
             var ctx = new ContextDto();
             // logic for activating each part
             // 1. either that switch is on
             // 2. or the null-check: all is on
             // 3. This also means if the switch is off, it's off
-            if (app ?? all == true) ctx.App = GetApp();
-            if (enable ?? all == true) ctx.Enable = GetEnable();
-            if (language ?? all == true) ctx.Language = GetLanguage();
-            if (page ?? all == true) ctx.Page = GetPage();
-            // atm user data not used at all
-            //if (user ?? all == true) ctx.User = GetUser();
-            if (site ?? all == true) ctx.Site = GetSite();
-            if (system ?? all == true) ctx.System = GetSystem();
+            if (flags.HasFlag(Ctx.AppBasic) | flags.HasFlag(Ctx.AppAdvanced)) 
+                ctx.App = GetApp(flags);
+            if (flags.HasFlag(Ctx.Enable)) ctx.Enable = GetEnable();
+            if (flags.HasFlag(Ctx.Language)) ctx.Language = GetLanguage();
+            if (flags.HasFlag(Ctx.Page)) ctx.Page = GetPage();
+            if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite();
+            if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem();
             return ctx;
         }
 
@@ -100,16 +97,20 @@ namespace ToSic.Sxc.WebApi.Context
             };
         }
 
-        private AppDto GetApp()
+        private AppDto GetApp(Ctx flags)
         {
             if (App == null) return null;
-            return new AppDto
+            var result = new AppDto
             {
                 Id = App.AppId,
                 Url = App.Path,
                 Name = App.Name,
-                Identifier = App.AppGuid,
             };
+            if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
+
+            result.GettingStartedUrl = GettingStartedUrl();
+            result.Identifier = App.AppGuid;
+            return result;
         }
 
         private EnableDto GetEnable()
@@ -131,7 +132,7 @@ namespace ToSic.Sxc.WebApi.Context
         /// redirects based on the app he's looking at, etc.
         /// </summary>
         /// <returns></returns>
-        internal string IntroductionToAppUrl()
+        internal string GettingStartedUrl()
         {
             if (App == null) return "";
 

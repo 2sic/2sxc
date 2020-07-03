@@ -92,9 +92,9 @@ namespace ToSic.Sxc.WebApi.Cms
                 IsContent = app?.AppGuid == "Default",
                 Language = PortalSettings.Current.CultureCode,
                 LanguageDefault = PortalSettings.Current.DefaultLanguage,
-                GettingStartedUrl = cb.IntroductionToAppUrl(),
+                GettingStartedUrl = cb.GettingStartedUrl(),
                 AppPath = app?.Path,
-                Context = cb.Get(all:true),
+                Context = cb.Get(Ctx.All),
             };
         }
 

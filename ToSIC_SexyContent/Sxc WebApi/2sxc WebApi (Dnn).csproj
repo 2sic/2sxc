@@ -114,6 +114,7 @@
     <Compile Include="WebApi\Cms\TemplateController_Usage.cs" />
     <Compile Include="WebApi\Context\ContextBuilder.cs" />
     <Compile Include="WebApi\Context\ContextDto.cs" />
+    <Compile Include="WebApi\Context\Ctx.cs" />
     <Compile Include="WebApi\DataTransferObjects\Usage\ContentBlockDto.cs" />
     <Compile Include="WebApi\DataTransferObjects\Usage\ContentTypeDto.cs" />
     <Compile Include="WebApi\DataTransferObjects\Usage\EntityDto.cs" />
