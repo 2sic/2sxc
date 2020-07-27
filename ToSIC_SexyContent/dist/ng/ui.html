@@ -3,66 +3,27 @@
 
 <head>
   <script>
-    var
-      path = window.location.pathname,
-      jsVersionCacheId = window.location.search;
-
-    // create an empty _jsApi so $2sxc can initialize - must fill afterwards!
-    // window._jsApi = {};
-
-    document.write('<base href="' + path + '">');
+    var jsVersionCacheId = window.location.search;
+    document.write('<base href="' + window.location.pathname + '">');
     document.write('<script src="../../js/2sxc.api.min.js' + jsVersionCacheId + '"></scr' + 'ipt>');
-    // must now close the script tag, so that the added tag is parsed before all other code
-
   </script>
+
+
   <script>
-    // console.log('quick-edit: ng-ui loading...');
-    var apiUrl = $2sxc.urlParams.require('portalroot') + 'desktopmodules/2sxc/api/';
-    createFakeSf(apiUrl);
-    loadEnvironment();
-
-    // Create a fake DNN Service-Framework, required by $2sxc to work properly
-    function createFakeSf(apiUrl) {
-      if ($2sxc.urlParams.require('mid') === '') alert('ModuleId (mid) missing - cannot continue');
-      if (window.$ === undefined) window.$ = {};
-      window.$.ServicesFramework = function (id) {
-        return {
-          name: "This is a fake DNN ServicesFramework",
-          description: "It enables stuff requiring (but not really needing) the sf to work",
-          getTabId: function () {
-            return $2sxc.urlParams.require("tid");
-          },
-          getAntiForgeryValue: function () {
-            return $2sxc.urlParams.require("rvt");
-          },
-          getServiceRoot: function () {
-            return apiUrl;
-          }
-        }
-      };
-    };
-
-    // New initializer for 10.25
-    function loadEnvironment() {
-      var jsApi = {
-        page: $2sxc.urlParams.require("tid"),
-        rvt: $2sxc.urlParams.require("rvt"),
-        root: $2sxc.urlParams.require("portalroot"),
-        api: $2sxc.urlParams.require("portalroot") + "desktopmodules/2sxc/api/"
-      }
-      $2sxc.env.load(jsApi);
+    // This must be a new script tag, so that the previously dynamic-script tag has already been run
+    // Tell 2sxc all the parameters it needs to work properly
+    var jsApi = {
+      page: $2sxc.urlParams.require("tid"),
+      rvt: $2sxc.urlParams.require("rvt"),
+      root: $2sxc.urlParams.require("portalroot"),
     }
+    $2sxc.env.load(jsApi);
 
     // add a script right then and there to the document, correctly cache-busting
     function addScript(src) {
-      var async = src.async || false;
-      src = typeof src === "string" ? src : src.url;
       var script = document.createElement('script');
       script.setAttribute('defer', 'defer');
       script.src = src + jsVersionCacheId;
-
-      // needs doc.write to ensure in-sync loading of the files
-      if (async) return document.getElementsByTagName("head")[0].appendChild(script);
       document.write(script.outerHTML);
     }
 
@@ -75,21 +36,19 @@
     }
 
     var scripts = [
-        // 'inline.bundle.js', // purpose unknown
-        'runtime.js', // webpack?
-        'polyfills.js', // js polyfills
-        'vendor.js', // dependencies
-        'main.js' // our app, with everything
-      ],
-      styles = [
-        'styles.css'
-      ];
+      'runtime.js', // webpack?
+      'polyfills.js', // js polyfills
+      'vendor.js', // dependencies
+      'main.js' // our app, with everything
+    ],
+    styles = [
+      'styles.css'
+    ];
 
     // send message to the angular-observable to restart the app
     window.reboot = function () {
       // if called to early, the bootController doesn't exist yet
-      if (window.bootController)
-        window.bootController.reboot();
+      if (window.bootController) window.bootController.reboot();
     }
 
   </script>
