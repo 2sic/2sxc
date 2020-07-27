@@ -111,6 +111,11 @@
         -->
         <component type="Assembly">
           <assemblies>
+            <!-- 2020-07-27 2dm try to pretend we need it, so it can then Unregister it again :( https://github.com/2sic/2sxc/issues/2126  
+                 If this works, it's because we need the UnRegister for upgrades, but can't have it on new installs without breaking the install -->
+            <assembly>
+              <name>ImageResizer.dll</name>
+            </assembly>
             <assembly action="UnRegister">
               <name>ImageResizer.dll</name>
             </assembly>
