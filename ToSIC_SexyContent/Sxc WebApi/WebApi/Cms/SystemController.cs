@@ -32,7 +32,8 @@ namespace ToSic.Sxc.WebApi.Cms
         }
 
         [HttpGet]
-	    public dynamic GetLanguages()
+        // todo: deprecate PARAMS find out if / where used
+        public dynamic GetLanguages()
 	    {
             Log.Add("get languages");
 	        var portalId = PortalSettings.PortalId;
@@ -89,11 +90,13 @@ namespace ToSic.Sxc.WebApi.Cms
 
             return new
             {
+                // TODO: Deprecate PARAMS these properties as soon as old UI is gone
                 IsContent = app?.AppGuid == "Default",
                 Language = PortalSettings.Current.CultureCode,
                 LanguageDefault = PortalSettings.Current.DefaultLanguage,
-                GettingStartedUrl = cb.GettingStartedUrl(),
                 AppPath = app?.Path,
+                GettingStartedUrl = cb.GettingStartedUrl(),
+                // END TODO
                 Context = cb.Get(Ctx.All),
             };
         }
