@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 
         public ClientInfosLanguages(PortalSettings ps, int zoneId)
         {
-            // 2016-05-09 had to ignore the Portalsettings, as that is wrong ps.CultureCode.ToLower();
+            // Don't use PortalSettings, as that provides a wrong ps.CultureCode.ToLower();
             Current = System.Threading.Thread.CurrentThread.CurrentCulture.Name.ToLower(); 
             Primary = ps.DefaultLanguage.ToLower();
             All = new DnnZoneMapper().CulturesWithState(ps.PortalId, zoneId)
@@ -26,7 +26,9 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
     public class ClientInfoLanguage
     {
         // key and name must be lowercase, has side effects in EAV
+        // ReSharper disable InconsistentNaming
         public string key;
         public string name;
+        // ReSharper restore InconsistentNaming
     }
 }

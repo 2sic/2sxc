@@ -13,6 +13,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi.Context;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -76,11 +77,15 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            var appAndPerms = new MultiPermissionsApp(BlockBuilder, appId, Log);
-            if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var exp))
-                throw exp;
-
-            var app = appAndPerms.App;
+            IApp app = null;
+            // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
+            if (appId != 0)
+            {
+                var appAndPerms = new MultiPermissionsApp(BlockBuilder, appId, Log);
+                if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var exp))
+                    throw exp;
+                app = appAndPerms.App;
+            }
 
             var cb = new ContextBuilder(PortalSettings.Current, 
                 Request.FindModuleInfo(),

@@ -6,6 +6,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web.ClientInfos;
 using Assembly = System.Reflection.Assembly;
 
@@ -26,6 +27,10 @@ namespace ToSic.Sxc.WebApi.Context
             Module = module;
             User = user;
             ZoneId = zoneId ?? 0;
+
+            // check if we're providing context for missing app
+            // in this case we must find the zone based on the portals.
+            if (ZoneId == 0 && App == null) ZoneId = new DnnZoneMapper().GetZoneId(portal.PortalId);
         }
 
         public ContextDto Get(Ctx flags)

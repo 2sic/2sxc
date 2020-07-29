@@ -71,6 +71,8 @@ namespace ToSic.Sxc.Dnn.Run
         /// <summary>
         /// Returns all DNN Cultures with active / inactive state
         /// </summary>
+        /// <param name="tenantId">The ID of the tenant in the host system</param>
+        /// <param name="zoneId">The ID of the zone, to check which languages are enabled in this zone</param>
         public List<TempTempCulture> CulturesWithState(int tenantId, int zoneId)
         {
             // note: 
