@@ -23,3 +23,6 @@
 /ToSIC_Imazen_ImageResizer/*
 ToSIC_SexyContent/dist/ng-edit/ng-dialogs/*
 /2sxc-docs/*
+ToSIC_SexyContent/dist/ng/*.map
+ToSIC_SexyContent/dist/inpage/*.map
+ToSIC_SexyContent/dist/ng-edit/*.map
